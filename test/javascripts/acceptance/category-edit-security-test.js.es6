@@ -33,7 +33,7 @@ QUnit.test("removing a permission", async assert => {
   await click(".edit-category");
   await click("li.edit-category-security a");
   await click(".edit-category-tab-security .edit-permission");
-  availableGroups.expand();
+  await availableGroups.expand();
 
   assert.notOk(
     availableGroups.rowByValue("everyone").exists(),
@@ -43,7 +43,7 @@ QUnit.test("removing a permission", async assert => {
   await click(
     ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
   );
-  availableGroups.expand();
+  await availableGroups.expand();
 
   assert.ok(
     availableGroups.rowByValue("everyone").exists(),
@@ -60,8 +60,10 @@ QUnit.test("adding a permission", async assert => {
   await click(".edit-category");
   await click("li.edit-category-security a");
   await click(".edit-category-tab-security .edit-permission");
-  availableGroups.expand().selectRowByValue("staff");
-  permissionSelector.expand().selectRowByValue("2");
+  await availableGroups.expand();
+  await availableGroups.selectRowByValue("staff");
+  await permissionSelector.expand();
+  await permissionSelector.selectRowByValue("2");
   await click(".edit-category-tab-security .add-permission");
 
   const $addedPermissionItem = find(
@@ -93,7 +95,8 @@ QUnit.test("adding a previously removed permission", async assert => {
     "it removes the permission from the list"
   );
 
-  availableGroups.expand().selectRowByValue("everyone");
+  await availableGroups.expand();
+  await availableGroups.selectRowByValue("everyone");
   await click(".edit-category-tab-security .add-permission");
 
   assert.equal(

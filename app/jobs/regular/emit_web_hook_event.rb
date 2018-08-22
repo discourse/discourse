@@ -70,6 +70,7 @@ module Jobs
 
       body = build_web_hook_body(args, web_hook)
       web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id)
+      response = nil
 
       begin
         content_type =
@@ -118,7 +119,7 @@ module Jobs
         web_hook_event.destroy!
       end
 
-      retry_web_hook if response.status != 200
+      retry_web_hook if response&.status != 200
     end
 
     def retry_web_hook

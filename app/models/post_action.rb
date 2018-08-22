@@ -143,7 +143,7 @@ class PostAction < ActiveRecord::Base
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id]) if opts[:category_id]
+    result = result.joins(post: :topic).merge(Topic.in_category_and_categories(opts[:category_id])) if opts[:category_id]
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
       .count
@@ -165,8 +165,11 @@ class PostAction < ActiveRecord::Base
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_agreed, actions.first) if actions.first.present?
+
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_agreed, actions.first)
+    end
 
     update_flagged_posts_count
   end
@@ -199,8 +202,11 @@ class PostAction < ActiveRecord::Base
     end
 
     Post.with_deleted.where(id: post.id).update_all(cached)
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_disagreed, actions.first) if actions.first.present?
+
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_disagreed, actions.first)
+    end
 
     update_flagged_posts_count
   end
@@ -218,8 +224,11 @@ class PostAction < ActiveRecord::Base
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_deferred, actions.first) if actions.first.present?
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_deferred, actions.first)
+    end
+
     update_flagged_posts_count
   end
 

@@ -41,7 +41,7 @@ describe FileStore::S3Store do
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_object = stub
 
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
@@ -109,13 +109,40 @@ describe FileStore::S3Store do
     end
   end
 
+  context 'copying files in S3' do
+    include_context "s3 helpers"
+
+    describe '#copy_file' do
+      it "copies the from in S3 with the right paths" do
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+
+        upload.update!(
+          url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+        )
+
+        source = Discourse.store.get_path_for_upload(upload)
+        destination = Discourse.store.get_path_for_upload(upload).sub('.png', '.jpg')
+
+        s3_object = stub
+
+        s3_bucket.expects(:object).with(destination).returns(s3_object)
+
+        s3_object.expects(:copy_from).with(
+          copy_source: "s3-upload-bucket/#{source}"
+        )
+
+        store.copy_file(upload.url, source, destination)
+      end
+    end
+  end
+
   context 'removal from s3' do
     include_context "s3 helpers"
 
     describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
         s3_object = stub
 
@@ -134,7 +161,7 @@ describe FileStore::S3Store do
 
         it "removes the file from s3 with the right paths" do
           store.expects(:get_depth_for).with(upload.id).returns(0)
-          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
@@ -158,7 +185,7 @@ describe FileStore::S3Store do
 
       it "removes the file from s3 with the right paths" do
         store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
@@ -176,7 +203,7 @@ describe FileStore::S3Store do
 
         it "removes the file from s3 with the right paths" do
           store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
-          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)

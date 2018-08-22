@@ -1,4 +1,3 @@
-require_dependency 'i18n'
 require_dependency 'user'
 
 module Jobs

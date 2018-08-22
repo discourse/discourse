@@ -9,7 +9,6 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -196,71 +195,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     createNewMessageViaParams(username, title, body) {
       this.openComposerWithMessageParams(username, title, body);
-    },
-
-    showAvatarSelector(user) {
-      user = user || this.modelFor("user");
-
-      const props = user.getProperties(
-        "id",
-        "email",
-        "username",
-        "avatar_template",
-        "system_avatar_template",
-        "gravatar_avatar_template",
-        "custom_avatar_template",
-        "system_avatar_upload_id",
-        "gravatar_avatar_upload_id",
-        "custom_avatar_upload_id"
-      );
-
-      switch (props.avatar_template) {
-        case props.system_avatar_template:
-          props.selected = "system";
-          break;
-        case props.gravatar_avatar_template:
-          props.selected = "gravatar";
-          break;
-        default:
-          props.selected = "uploaded";
-      }
-
-      props.user = user;
-
-      const modal = showModal("avatar-selector");
-      modal.setProperties(props);
-
-      if (this.siteSettings.selectable_avatars_enabled) {
-        ajax("/site/selectable-avatars.json").then(avatars =>
-          modal.set("selectableAvatars", avatars)
-        );
-      }
-    },
-
-    selectAvatar(url) {
-      const modal = this.controllerFor("avatar-selector");
-      modal.send("closeModal");
-
-      modal
-        .get("user")
-        .selectAvatar(url)
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
-    },
-
-    saveAvatarSelection() {
-      const modal = this.controllerFor("avatar-selector");
-      const selectedUploadId = modal.get("selectedUploadId");
-      const selectedAvatarTemplate = modal.get("selectedAvatarTemplate");
-      const type = modal.get("selected");
-
-      modal.send("closeModal");
-
-      modal
-        .get("user")
-        .pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
     }
   },
 

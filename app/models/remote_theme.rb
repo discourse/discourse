@@ -6,6 +6,9 @@ class RemoteTheme < ActiveRecord::Base
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
+  GITHUB_REGEXP = /^https?:\/\/github\.com\//
+  GITHUB_SSH_REGEXP = /^git@github\.com:/
+
   has_one :theme
 
   def self.update_tgz_theme(filename, user: Discourse.system_user)
@@ -56,11 +59,18 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
+  def self.out_of_date_themes
+    self.joins("JOIN themes ON themes.remote_theme_id = remote_themes.id")
+      .where.not(remote_url: "")
+      .where("commits_behind > 0 OR remote_version <> local_version")
+      .pluck("themes.name", "themes.id")
+  end
+
   def update_remote_version
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
     importer.import!
     self.updated_at = Time.zone.now
-    self.remote_version, self.commits_behind = importer.commits_since(remote_version)
+    self.remote_version, self.commits_behind = importer.commits_since(local_version)
   end
 
   def update_from_remote(importer = nil, skip_update: false)
@@ -182,6 +192,21 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
+  def github_diff_link
+    if github_repo_url.present? && local_version != remote_version
+      "#{github_repo_url.gsub(/\.git$/, "")}/compare/#{local_version}...#{remote_version}"
+    end
+  end
+
+  def github_repo_url
+    url = remote_url.strip
+    return url if url.match?(GITHUB_REGEXP)
+
+    if url.match?(GITHUB_SSH_REGEXP)
+      org_repo = url.gsub(GITHUB_SSH_REGEXP, "")
+      "https://github.com/#{org_repo}"
+    end
+  end
 end
 
 # == Schema Information

@@ -27,25 +27,22 @@ describe TopicLink do
 
   describe 'external links' do
     before do
-      post = Fabricate(:post, raw: "
-http://a.com/
-http://b.com/b
-http://#{'a' * 200}.com/invalid
-http://b.com/#{'a' * 500}
-                        ", user: user, topic: topic)
+      post = Fabricate(:post, raw: <<~RAW, user: user, topic: topic)
+        http://a.com/
+        https://b.com/b
+        http://#{'a' * 200}.com/invalid
+        //b.com/#{'a' * 500}
+      RAW
 
       TopicLink.extract_from(post)
     end
 
     it 'works' do
-      # has the forum topic links
-      expect(topic.topic_links.count).to eq(3)
-
-      # works with markdown links
-      expect(topic.topic_links.exists?(url: "http://a.com/")).to eq(true)
-
-      #works with markdown links followed by a period
-      expect(topic.topic_links.exists?(url: "http://b.com/b")).to eq(true)
+      expect(topic.topic_links.pluck(:url)).to contain_exactly(
+        "http://a.com/",
+        "https://b.com/b",
+        "//b.com/#{'a' * 500}"[0...TopicLink.max_url_length]
+      )
     end
 
   end

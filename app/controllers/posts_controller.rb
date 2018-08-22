@@ -615,8 +615,8 @@ class PostsController < ApplicationController
       :visible
     ]
 
-    if Post.permitted_create_params.present?
-      permitted.concat(Post.permitted_create_params.to_a)
+    Post.plugin_permitted_create_params.each do |key, plugin|
+      permitted << key if plugin.enabled?
     end
 
     # param munging for WordPress
@@ -651,6 +651,11 @@ class PostsController < ApplicationController
       result[:is_warning] = (params[:is_warning] == "true")
     else
       result[:is_warning] = false
+    end
+
+    if params[:no_bump] == "true"
+      raise Discourse::InvalidParameters.new(:no_bump) unless guardian.can_skip_bump?
+      result[:no_bump] = true
     end
 
     if params[:shared_draft] == 'true'

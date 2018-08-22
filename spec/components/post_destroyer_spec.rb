@@ -91,6 +91,12 @@ describe PostDestroyer do
       reply1.reload
       expect(reply1.deleted_at).to eq(nil)
 
+      # defer the flag, we should be able to delete the stub
+      PostAction.defer_flags!(reply1, Discourse.system_user)
+      PostDestroyer.destroy_stubs
+
+      reply1.reload
+      expect(reply1.deleted_at).to_not eq(nil)
     end
 
     it 'uses the delete_removed_posts_after site setting' do
@@ -602,6 +608,16 @@ describe PostDestroyer do
       SiteSetting.delete_removed_posts_after = 0
       second_post.expects(:update_flagged_posts_count)
       PostDestroyer.new(second_post.user, second_post).destroy
+      expect(
+        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
+      ).to eq(false)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
+      second_post.expects(:update_flagged_posts_count)
+      PostAction.defer_flags!(second_post, moderator)
+      second_post.reload
+      PostDestroyer.new(moderator, second_post).destroy
       expect(
         Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
       ).to eq(false)

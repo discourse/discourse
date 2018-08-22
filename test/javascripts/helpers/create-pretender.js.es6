@@ -33,14 +33,14 @@ export function success() {
 }
 
 const loggedIn = () => !!Discourse.User.current();
-
 const helpers = { response, success, parsePostData };
+export let fixturesByUrl;
 
 export default function() {
   const server = new Pretender(function() {
     storePretender.call(this, helpers);
     flagPretender.call(this, helpers);
-    const fixturesByUrl = fixturePretender.call(this, helpers);
+    fixturesByUrl = fixturePretender.call(this, helpers);
 
     this.get("/admin/plugins", () => response({ plugins: [] }));
 
@@ -225,7 +225,15 @@ export default function() {
       return response({ category });
     });
 
-    this.get("/draft.json", () => response({}));
+    this.get("/draft.json", request => {
+      if (request.queryParams.draft_key === "new_topic") {
+        return response(fixturesByUrl["/draft.json"]);
+      }
+
+      return response({});
+    });
+
+    this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
     this.put("/queued_posts/:queued_post_id", function(request) {
       return response({ queued_post: { id: request.params.queued_post_id } });
@@ -293,6 +301,10 @@ export default function() {
 
     this.get("/session/csrf", function() {
       return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
+    });
+
+    this.get("/groups/check-name", () => {
+      return response({ available: true });
     });
 
     this.get("/u/check_username", function(request) {

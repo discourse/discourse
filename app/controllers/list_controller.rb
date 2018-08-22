@@ -344,7 +344,7 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      permalink_redirect_or_not_found && (return) if parent_category_id.blank? && !id
+      raise Discourse::NotFound.new("category not found", check_permalinks: true) if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
@@ -355,7 +355,7 @@ class ListController < ApplicationController
       (redirect_to category.url, status: 301) && return if category
     end
 
-    permalink_redirect_or_not_found && (return) if !@category
+    raise Discourse::NotFound.new("category not found", check_permalinks: true) if !@category
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
@@ -371,7 +371,12 @@ class ListController < ApplicationController
     params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
-      options[key] = params[key]
+      if params.key?(key)
+        val = options[key] = params[key]
+        if !TopicQuery.validate?(key, val)
+          raise Discourse::InvalidParameters.new key
+        end
+      end
     end
 
     # hacky columns get special handling

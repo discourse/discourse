@@ -31,6 +31,7 @@ module Email
     class TopicNotFoundError           < ProcessingError; end
     class TopicClosedError             < ProcessingError; end
     class InvalidPost                  < ProcessingError; end
+    class TooShortPost                 < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
@@ -231,9 +232,12 @@ module Email
           reason = I18n.t("user.deactivated", email: user.email)
           StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
         elsif range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails, nothing to do here other than log it happened.
+          # NOTE: we check bounce_score before sending emails
+          # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
           StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+          # ... and PM the user
+          SystemMessage.create_from_system_user(user, :email_revoked)
         end
       end
     end
@@ -523,14 +527,16 @@ module Email
     end
 
     def sent_to_mailinglist_mirror?
-      destinations.each do |destination|
-        next unless destination[:type] == :category
+      @sent_to_mailinglist_mirror ||= begin
+        destinations.each do |destination|
+          next unless destination[:type] == :category
 
-        category = destination[:obj]
-        return true if category.mailinglist_mirror?
+          category = destination[:obj]
+          return true if category.mailinglist_mirror?
+        end
+
+        false
       end
-
-      false
     end
 
     def self.check_address(address)
@@ -932,7 +938,14 @@ module Email
       user = options.delete(:user)
       result = NewPostManager.new(user, options).perform
 
-      raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
+      errors = result.errors.full_messages
+      if errors.any? do |message|
+           message.include?(I18n.t("activerecord.attributes.post.raw").strip) &&
+           message.include?(I18n.t("errors.messages.too_short", count: SiteSetting.min_post_length).strip)
+         end
+        raise TooShortPost
+      end
+      raise InvalidPost, errors.join("\n") if result.errors.any?
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)

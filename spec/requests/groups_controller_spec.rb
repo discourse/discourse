@@ -48,7 +48,14 @@ describe GroupsController do
         get "/groups.json", params: { filter: 'test' }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["groups"].first["id"]).to eq(other_group.id)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body["groups"].first["id"]).to eq(other_group.id)
+
+        expect(response_body["load_more_groups"]).to eq(
+          "/groups?filter=test&page=1"
+        )
       end
     end
 
@@ -72,8 +79,14 @@ describe GroupsController do
             group_ids = [moderator_group_id, group.id, other_group.id]
             group_ids.reverse! if !is_asc
 
-            expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+            response_body = JSON.parse(response.body)
+
+            expect(response_body["groups"].map { |group| group["id"] })
               .to eq(group_ids)
+
+            expect(response_body["load_more_groups"]).to eq(
+              "/groups?#{is_asc ? 'asc=true&' : '' }order=name&page=1"
+            )
           end
         end
       end
@@ -85,8 +98,14 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
 
-          expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+          response_body = JSON.parse(response.body)
+
+          expect(response_body["groups"].map { |group| group["id"] })
             .to eq([other_group.id, group.id, moderator_group_id])
+
+          expect(response_body["load_more_groups"]).to eq(
+            "/groups?order=name&page=1"
+          )
         end
       end
     end
@@ -1318,6 +1337,24 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe '#check_name' do
+    describe 'for an anon user' do
+      it 'should return the right response' do
+        get "/groups/check-name.json", params: { group_name: 'test' }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    it 'should return the right response' do
+      sign_in(Fabricate(:user))
+      SiteSetting.reserved_usernames = 'test|donkey'
+      get "/groups/check-name.json", params: { group_name: 'test' }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["available"]).to eq(true)
     end
   end
 end

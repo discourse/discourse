@@ -1,5 +1,6 @@
 import RestModel from "discourse/models/rest";
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -150,7 +151,9 @@ const Theme = RestModel.extend({
 
   saveChanges() {
     const hash = this.getProperties.apply(this, arguments);
-    return this.save(hash).then(() => this.set("changed", false));
+    return this.save(hash)
+      .finally(() => this.set("changed", false))
+      .catch(popupAjaxError);
   },
 
   saveSettings(name, value) {

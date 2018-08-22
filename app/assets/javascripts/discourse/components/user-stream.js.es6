@@ -2,6 +2,10 @@ import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
 import { selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
+import DiscourseURL from "discourse/lib/url";
+import Draft from "discourse/models/draft";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -55,6 +59,41 @@ export default Ember.Component.extend(LoadMore, {
       Post.updateBookmark(userAction.get("post_id"), false).then(() => {
         stream.remove(userAction);
       });
+    },
+
+    resumeDraft(item) {
+      const composer = getOwner(this).lookup("controller:composer");
+      if (composer.get("model.viewOpen")) {
+        composer.close();
+      }
+      if (item.get("postUrl")) {
+        DiscourseURL.routeTo(item.get("postUrl"));
+      } else {
+        Draft.get(item.draft_key)
+          .then(d => {
+            if (d.draft) {
+              composer.open({
+                draft: d.draft,
+                draftKey: item.draft_key,
+                draftSequence: d.draft_sequence
+              });
+            }
+          })
+          .catch(error => {
+            popupAjaxError(error);
+          });
+      }
+    },
+
+    removeDraft(draft) {
+      const stream = this.get("stream");
+      Draft.clear(draft.draft_key, draft.sequence)
+        .then(() => {
+          stream.remove(draft);
+        })
+        .catch(error => {
+          popupAjaxError(error);
+        });
     },
 
     loadMore() {

@@ -1,11 +1,6 @@
-$border-color: rgb(219, 219, 219);
-$text-color: #9e9e9e;
-
-$option-background: dark-light-diff($primary, $secondary, 90%, -65%);
-
 div.poll {
   margin: 10px 0;
-  border: 1px solid $border-color;
+  border: 1px solid $primary-low;
 
   @include unselectable;
 
@@ -34,23 +29,8 @@ div.poll {
     height: auto;
   }
 
-  .button {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-right: 5px;
-    text-align: center;
-    cursor: pointer;
-    color: $primary;
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
-
-    &:hover {
-      background: dark-light-diff($primary, $secondary, 65%, -75%);
-      color: #fff;
-    }
-  }
-
   .poll-info {
-    color: $text-color;
+    color: $primary-medium;
     text-align: center;
     vertical-align: middle;
 
@@ -83,7 +63,7 @@ div.poll {
     }
     .info-text {
       margin: 0 5px;
-      color: $text-color;
+      color: $primary-medium;
     }
   }
 
@@ -111,17 +91,17 @@ div.poll {
     .percentage {
       font-size: 20px;
       float: right;
-      color: $text-color;
+      color: $primary-medium;
       margin-left: 5px;
     }
 
     .bar-back {
-      background: $option-background;
+      background: $primary-low;
     }
 
     .bar {
       height: 10px;
-      background: dark-light-diff($primary, $secondary, 50%, -25%);
+      background: $primary-medium;
     }
 
     .chosen .bar {

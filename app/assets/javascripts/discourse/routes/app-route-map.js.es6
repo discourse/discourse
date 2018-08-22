@@ -112,6 +112,7 @@ export default function() {
           this.route("likesGiven", { path: "likes-given" });
           this.route("bookmarks");
           this.route("pending");
+          this.route("drafts");
         }
       );
 

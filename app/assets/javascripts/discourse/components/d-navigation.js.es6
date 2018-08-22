@@ -18,7 +18,8 @@ export default Ember.Component.extend({
     return hasDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed("category.can_edit") showCategoryEdit: canEdit => canEdit,
+  @computed("category.can_edit")
+  showCategoryEdit: canEdit => canEdit,
 
   @computed("filterMode", "category", "noSubcategories")
   navItems(filterMode, category, noSubcategories) {

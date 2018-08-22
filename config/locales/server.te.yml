@@ -180,9 +180,6 @@ te:
     cannot_delete:
       uncategorized: "అవర్గీకృతాన్ని తొలగించలేరు"
       has_subcategories: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనికి ఉప వర్గాలు ఉన్నాయి."
-      topic_exists:
-        one: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో ఒక విషయం ఉంది. పురాతన విషయం %{topic_link}."
-        other: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %[count] విషయాలు ఉన్నాయి. పురాతన విషయం %{topic_link}."
       topic_exists_no_oldest: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %{count} విషయాలు ఉన్నాయి."
   trust_levels:
     newuser:
@@ -314,10 +311,6 @@ te:
       title: 'ఇష్టం'
       description: 'ఈ టపాను ఇష్టపడు'
       long_form: 'ఈ టపాను ఇష్టపడ్డారు'
-    vote:
-      title: 'వోటు'
-      description: 'ఈ టపాకు ఓటు వేయి'
-      long_form: 'ఈ టపాకు వోటు వేసారు'
   topic_flag_types:
     spam:
       title: 'స్పాము'
@@ -407,8 +400,6 @@ te:
       num_users: "సభ్యులు"
     top_referred_topics:
       title: "అగ్ర రిఫరరు విషయాలు"
-      xaxis: "విషయం"
-      num_clicks: "నొక్కులు"
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
@@ -518,7 +509,6 @@ te:
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     missing_user_field: "మీరు అన్ని సభ్య క్షేత్రాలూ నింపలేదు"
   user:
-    no_accounts_associated: "ఎటువంటి ఖాతాలు భాగమవలేదు"
     username:
       short: "కనీసం %[min] అక్షరాలు ఉండాలి"
       long: "గరిష్టం %{max} అక్షరాలు ఉండాలి"
@@ -541,7 +531,6 @@ te:
     recent_topics: "తాజా"
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
-    search_google: "గూగుల్"
   terms_of_service:
     title: "సేవా నియమాలు"
     signup_form_message: 'నేను <a href="/tos" target="_blank">సేవా నియమాలను</a> చదివాను, వాటికి అంగీకరిస్తున్నాను.'
@@ -549,14 +538,6 @@ te:
   upload:
     images:
       size_not_found: "క్షమించండి, కానీ మేము చిత్రం యొక్క పరిమాణం నిర్ణయించలేదు. బహుశా మీ చిత్రం పాడై ఉండవచ్చు?"
-  email_log:
-    seen_recently: "వినియోగదారు కొత్తగా చూశారు"
-    notification_already_read: "ఈ ఈమెయిల్ గురించి ప్రకటన ఇప్పటికే చదివబడింది"
-    post_deleted: "టపా రచయితచే తొలగింపబడింది"
-    user_suspended: "వినియోగదారు నిలిపివేయబడ్డారు"
-    already_read: "వినియోగదారు ఇప్పటికే ఈ టపా చదివారు"
-    message_blank: "ఖాళీ సందేశం"
-    body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
   color_schemes:
     base_theme_name: "ఆధారం"
   about: "గురించి"

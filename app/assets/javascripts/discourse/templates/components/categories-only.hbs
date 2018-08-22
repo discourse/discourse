@@ -13,14 +13,12 @@
       {{#each categories as |c|}}
         <tr data-category-id={{c.id}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
           <td class="category" style={{border-color c.color}}>
-            <div>
               {{category-title-link category=c}}
               <div class="category-description">
                 {{{dir-span c.description_excerpt}}}
+            
               </div>
-              <div class="clearfix"></div>
-            </div>
-            {{#if c.subcategories}}
+                   {{#if c.subcategories}}
               <div class='subcategories'>
                 {{#each c.subcategories as |s|}}
                   <span class='subcategory'>
@@ -31,6 +29,7 @@
                 {{/each}}
               </div>
             {{/if}}
+           
           </td>
           <td class="topics">
             <div title={{c.statTitle}}>{{{c.stat}}}</div>

@@ -284,6 +284,23 @@ describe ::DiscoursePoll::PollsController do
       # no user3 cause voter_limit is 2
       expect(json["poll"][first].map { |h| h["id"] }.sort).to eq([user1.id, user2.id])
       expect(json["poll"][second].map { |h| h["id"] }).to eq([user3.id])
+
+      reloaded = Post.find(multi_poll.id)
+
+      # break the custom poll and make sure we still return something sane here
+      # TODO: normalize this data so we don't store the information twice and there is a chance
+      # that somehow a bg job can cause both fields to be out-of-sync
+      poll_votes = reloaded.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
+      poll_votes.delete user2.id.to_s
+
+      reloaded.save_custom_fields(true)
+
+      get :voters, params: {
+        poll_name: 'poll', post_id: multi_poll.id, voter_limit: 2
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
     end
 
   end

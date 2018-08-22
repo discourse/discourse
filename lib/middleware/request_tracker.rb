@@ -258,7 +258,7 @@ class Middleware::RequestTracker
 
       if !limiter_assets10.can_perform?
         if warn
-          Rails.logger.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit, uri: #{request.env["REQUEST_URI"]}")
+          Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
         end
 
         return !(GlobalSetting.max_reqs_per_ip_mode == "warn")
@@ -272,7 +272,7 @@ class Middleware::RequestTracker
         false
       rescue RateLimiter::LimitExceeded
         if warn
-          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{request.env["REQUEST_URI"]}")
+          Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
           !(GlobalSetting.max_reqs_per_ip_mode == "warn")
         else
           true

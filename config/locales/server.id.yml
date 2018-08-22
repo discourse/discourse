@@ -372,9 +372,6 @@ id:
       num_clicks: "Klik"
       num_topics: "Topik"
       num_users: "Pengguna"
-    top_referred_topics:
-      xaxis: "Topik"
-      num_clicks: "Klik"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Hari"
@@ -453,9 +450,6 @@ id:
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
-  email_log:
-    no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
-    post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
   guidelines: "Petunjuk"
   privacy: "Privasi"
   tos_topic:

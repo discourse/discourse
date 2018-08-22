@@ -182,7 +182,6 @@ export default createWidget("search-menu", {
   },
 
   html(attrs) {
-    searchData.contextEnabled = attrs.contextEnabled;
     const searchContext = this.searchContext();
 
     const shouldTriggerSearch =
@@ -195,6 +194,8 @@ export default createWidget("search-menu", {
     if (shouldTriggerSearch && searchData.term) {
       this.triggerSearch();
     }
+
+    searchData.contextEnabled = attrs.contextEnabled;
 
     return this.attach("menu-panel", {
       maxWidth: 500,

@@ -359,9 +359,17 @@ class Guardian
   end
 
   def allow_themes?(theme_ids)
-    theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
-    allowed_ids = is_staff? ? Theme.theme_ids : Theme.user_theme_ids
-    (theme_ids - allowed_ids.to_a).empty?
+    return true if theme_ids.blank?
+
+    if is_staff? && (theme_ids - Theme.theme_ids).blank?
+      return true
+    end
+
+    parent = theme_ids.first
+    components = theme_ids[1..-1] || []
+
+    Theme.user_theme_ids.include?(parent) &&
+      (components - Theme.components_for(parent)).empty?
   end
 
   private

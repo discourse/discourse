@@ -93,8 +93,13 @@ class ThemeSettingsManager
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
   end
 
-  class List    < self; end
-  class String  < self
+  class List < self
+    def list_type
+      @opts[:list_type]
+    end
+  end
+
+  class String < self
     def is_valid_value?(new_value)
       (@opts[:min]..@opts[:max]).include? new_value.to_s.length
     end

@@ -1,6 +1,7 @@
 module Email
 
   class Processor
+    attr_reader :receiver
 
     def initialize(mail, retry_on_rate_limit = true)
       @mail = mail
@@ -52,6 +53,7 @@ module Email
                          when Email::Receiver::TopicNotFoundError          then :email_reject_topic_not_found
                          when Email::Receiver::TopicClosedError            then :email_reject_topic_closed
                          when Email::Receiver::InvalidPost                 then :email_reject_invalid_post
+                         when Email::Receiver::TooShortPost                then :email_reject_post_too_short
                          when Email::Receiver::UnsubscribeNotAllowed       then :email_reject_invalid_post
                          when ActiveRecord::Rollback                       then :email_reject_invalid_post
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
@@ -67,6 +69,10 @@ module Email
       if message_template == :email_reject_invalid_post && e.message.size > 6
         message_template = :email_reject_invalid_post_specified
         template_args[:post_error] = e.message
+      end
+
+      if message_template == :email_reject_post_too_short
+        template_args[:count] = SiteSetting.min_post_length
       end
 
       if message_template == :email_reject_unrecognized_error

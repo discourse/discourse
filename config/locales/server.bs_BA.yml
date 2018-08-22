@@ -167,27 +167,6 @@ bs_BA:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
   lounge_welcome:
     title: "Welcome to the Lounge"
-    body: |2
-
-        Congratulations! :confetti_ball:
-
-        If you can see this topic, you were recently promoted to **regular** (trust level 3).
-
-        You can now &hellip;
-
-        * Edit the title of any topic
-        * Change the category of any topic
-        * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-        * Access a private Lounge category only visible to users at trust level 3 and higher
-        * Hide spam with a single flag
-
-        Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
-
-        Thanks for being an important part of this community!
-
-        (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "About the %{category} category"
     errors:
@@ -261,10 +240,6 @@ bs_BA:
       title: 'Like'
       description: 'Lajkuj ovaj post'
       long_form: 'lajkovao si ovo'
-    vote:
-      title: 'Glasaj'
-      description: 'Glasaj za ovaj post'
-      long_form: 'glasao za ovaj post'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -361,8 +336,6 @@ bs_BA:
       num_users: "Users"
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
     page_view_anon_reqs:
       xaxis: "Dan"
     time_to_first_response:
@@ -430,7 +403,6 @@ bs_BA:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
@@ -610,8 +582,6 @@ bs_BA:
   redirected_to_top_reasons:
     new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
-  change_owner:
-    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -641,7 +611,6 @@ bs_BA:
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
   user:
-    no_accounts_associated: "No accounts associated"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -709,7 +678,6 @@ bs_BA:
     recent_topics: "Nove"
     see_more: "Više"
     search_title: "Pretraži stranicu"
-    search_google: "Google"
   terms_of_service:
     title: "Terms of Service"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
@@ -724,20 +692,6 @@ bs_BA:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  email_log:
-    no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is suspended, not a private message"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
   guidelines: "Guidelines"

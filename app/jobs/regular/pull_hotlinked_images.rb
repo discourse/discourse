@@ -20,6 +20,7 @@ module Jobs
         downloaded = FileHelper.download(
           src,
           max_file_size: @max_size,
+          retain_on_max_file_size_exceeded: true,
           tmp_file_name: "discourse-hotlinked",
           follow_redirect: true
         )
@@ -149,7 +150,7 @@ module Jobs
       # parse the src
       begin
         uri = URI.parse(src)
-      rescue URI::InvalidURIError
+      rescue URI::Error
         return false
       end
 

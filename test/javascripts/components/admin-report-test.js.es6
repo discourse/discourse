@@ -10,12 +10,10 @@ componentTest("default", {
   async test(assert) {
     assert.ok(exists(".admin-report.signups"));
 
-    assert.ok(
-      exists(".admin-report.table.signups", "it defaults to table mode")
-    );
+    assert.ok(exists(".admin-report.signups", "it defaults to table mode"));
 
     assert.equal(
-      find(".report-header .title")
+      find(".header .item.report")
         .text()
         .trim(),
       "Signups",
@@ -23,13 +21,13 @@ componentTest("default", {
     );
 
     assert.equal(
-      find(".report-header .info").attr("data-tooltip"),
+      find(".header .info").attr("data-tooltip"),
       "New account registrations for this period",
       "it has a description"
     );
 
     assert.equal(
-      find(".report-body .report-table thead tr th:first-child")
+      find(".admin-report-table thead tr th:first-child .title")
         .text()
         .trim(),
       "Day",
@@ -37,7 +35,7 @@ componentTest("default", {
     );
 
     assert.equal(
-      find(".report-body .report-table thead tr th:nth-child(2)")
+      find(".admin-report-table thead tr th:nth-child(2) .title")
         .text()
         .trim(),
       "Count",
@@ -45,7 +43,7 @@ componentTest("default", {
     );
 
     assert.equal(
-      find(".report-body .report-table tbody tr:nth-child(1) td:nth-child(1)")
+      find(".admin-report-table tbody tr:nth-child(1) td:nth-child(1)")
         .text()
         .trim(),
       "June 16, 2018",
@@ -53,18 +51,19 @@ componentTest("default", {
     );
 
     assert.equal(
-      find(".report-body .report-table tbody tr:nth-child(1) td:nth-child(2)")
+      find(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
         .text()
         .trim(),
       "12",
       "it has rows"
     );
 
-    assert.ok(exists(".totals-sample-table"), "it has totals");
+    assert.ok(exists(".total-row"), "it has totals");
 
-    await click(".admin-report-table-header.y .sort-button");
+    await click(".admin-report-table-header.y .sort-btn");
+
     assert.equal(
-      find(".report-body .report-table tbody tr:nth-child(1) td:nth-child(2)")
+      find(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
         .text()
         .trim(),
       "7",
@@ -98,13 +97,13 @@ componentTest("options", {
 });
 
 componentTest("switch modes", {
-  template: "{{admin-report dataSourceName='signups'}}",
+  template: "{{admin-report dataSourceName='signups' showFilteringUI=true}}",
 
   async test(assert) {
-    await click(".mode-button.chart");
+    await click(".mode-btn.chart");
 
-    assert.notOk(exists(".admin-report.table.signups"), "it removes the table");
-    assert.ok(exists(".admin-report.chart.signups"), "it shows the chart");
+    assert.notOk(exists(".admin-report-table"), "it removes the table");
+    assert.ok(exists(".admin-report-chart"), "it shows the chart");
   }
 });
 
@@ -112,6 +111,22 @@ componentTest("timeout", {
   template: "{{admin-report dataSourceName='signups_timeout'}}",
 
   test(assert) {
-    assert.ok(exists(".alert-error"), "it displays a timeout error");
+    assert.ok(exists(".alert-error.timeout"), "it displays a timeout error");
+  }
+});
+
+componentTest("no data", {
+  template: "{{admin-report dataSourceName='posts'}}",
+
+  test(assert) {
+    assert.ok(exists(".no-data"), "it displays a no data alert");
+  }
+});
+
+componentTest("exception", {
+  template: "{{admin-report dataSourceName='signups_exception'}}",
+
+  test(assert) {
+    assert.ok(exists(".alert-error.exception"), "it displays an error");
   }
 });

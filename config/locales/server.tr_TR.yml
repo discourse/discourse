@@ -268,27 +268,6 @@ tr_TR:
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
   lounge_welcome:
     title: "Lobiye hoş geldiniz"
-    body: |2
-
-        Tebrikler! :confetti_ball:
-
-        Bu konuyu görebiliyorsanız, yakın süre önce **müdavim** (güven seviyesi 3) seviyesine terfi etmişsiniz demektir.
-
-        Artık &hellip;
-
-        * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
-        * Herhangi bir konunun kategorisini değiştirebilirsiniz
-        * Eklediğiniz linkler takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
-        * Sadece 3. güven seviyesi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
-        * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
-
-        [Şu anki müdavim seviyedeki kişilerin listesi](/badges/3/regular). Merhaba demeyi unutmayın.
-
-        Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
-
-        (Güven seviyeleriyle ilgili daha fazla bilgi için, [bu konuya bakın][trust]. Lütfen, sadece sürekli olarak kriterlere uyan üyelerin standart seviyede kalacağını unutmayın.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
     replace_paragraph: "(Bu paragrafın yerine yeni kategorinizin kısa bir açıklamasını girin. Buraya yazılanlar kategori seçim alanında görüneceği için, açıklamanızı 200 karakterin altında tutmaya çalışın.**Siz bu metni düzenleyene veya herhangi bir konu oluşturana kadar bu kategori, kategori sayfasında gözükmeyecek.**)"
@@ -303,9 +282,6 @@ tr_TR:
     cannot_delete:
       uncategorized: "Kategorisiz silinemez"
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
-      topic_exists:
-        one: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
-        other: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
     uncategorized_description: "Kategoriye ihtiyacı olmayan, ya da diğer kategorilere uymayan konular."
   trust_levels:
@@ -459,10 +435,6 @@ tr_TR:
       description: 'Bu gönderiyi beğen'
       short_description: 'Bu gönderiyi beğen'
       long_form: 'bu beğenildi'
-    vote:
-      title: 'Oyla'
-      description: 'Bu gönderiyi oyla'
-      long_form: 'bu gönderi oylandı'
   topic_flag_types:
     spam:
       title: 'İstenmeyen'
@@ -581,8 +553,6 @@ tr_TR:
       num_users: "Kullanıcılar"
     top_referred_topics:
       title: "En çok atıfta bulunulan konular"
-      xaxis: "Konu"
-      num_clicks: "Tıklamalar"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Gün"
@@ -737,7 +707,6 @@ tr_TR:
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
-    track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi öntanımlı ayarlarda devre dışı bırakılmıştır."
     site_contact_username: "Tüm otomatik iletiler için gönderen kişi olarak gözükecek geçerli bir görevli kullanıcı adı. Boş bırakılırsa öntanımlı Sistem hesabı kullanılacak."
     send_welcome_message: "Tüm yeni kullanıcılara bir hoş geldiniz iletisi ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."
@@ -1056,9 +1025,6 @@ tr_TR:
     existing_topic_moderator_post:
       one: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
       other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
-  change_owner:
-    post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
-    deleted_user: "silinmiş kullanıcı"
   topic_statuses:
     archived_enabled: "Konu şimdi arşivlendi. Donduruldu ve herhangi bir şekilde değişiklik yapılamaz."
     archived_disabled: "Konu şimdi arşivden çıkarıldı. Artık donmuş değil, değiştirilebilir."
@@ -1117,7 +1083,6 @@ tr_TR:
     reserved_username: "Bu kullanıcı adını kullanamazsın."
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
   user:
-    no_accounts_associated: "İlgili hesap yok"
     username:
       short: "en az %{min} karakter olmalı"
       long: "%{max} karakterden fazla olmamalı"
@@ -1396,7 +1361,6 @@ tr_TR:
     recent_topics: "Yeni"
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
-    search_google: "Google"
   terms_of_service:
     title: "Üyelik Sözleşmesi"
     signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'
@@ -1414,24 +1378,6 @@ tr_TR:
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
   avatar:
     missing: "Üzgünüz, bu e-posta adresiyle ilişkilendirilmiş bir avatar bulamadık. Tekrar yüklemeyi deneyebilir misiniz?"
-  email_log:
-    post_user_deleted: "Konunun kullanıcısı silindi."
-    no_user: "%{user_id} id'sine sahip bir kullanıcı bulunamadı"
-    anonymous_user: "Kullanıcı anonim"
-    suspended_not_pm: "Kullanıcı uzaklaştırıldı, ileti değil"
-    seen_recently: "Kullanıcı kısa süre önce görüldü"
-    post_not_found: "%{post_id} id'sine sahip bir gönderi bulunamadı"
-    notification_already_read: "Bu e-postanın içerdiği bildiri önceden okundu"
-    topic_nil: "post.topic boş"
-    post_deleted: "gönderi sahibi tarafından silindi"
-    user_suspended: "kullanıcı uzaklaştırıldı"
-    already_read: "kullanıcı bu gönderiyi önceden okumuş"
-    exceeded_emails_limit: "max_emails_per_day_per_user aşıldı"
-    exceeded_bounces_limit: "bounce_score_threshold aşıldı"
-    message_blank: "ileti boş"
-    message_to_blank: "message.to boş"
-    text_part_body_blank: "text_part.body boş"
-    body_blank: "içerik boş"
   color_schemes:
     base_theme_name: "Baz"
   about: "Hakkında"
@@ -1453,70 +1399,40 @@ tr_TR:
     editor:
       name: Düzenleyici
       description: İlk gönderini düzenledin
-      long_description: |
-        Bu rozet gönderilerinizden birini düzenlediğinizde verilecektir. Gönderilerinizi düzenlemek her zaman için iyidir — gönderilerinizi geliştirebilir, küçük hataları düzeltebilir, ya da unuttuğunuz ayrıntıları ekleyebilirsiniz. Daha iyi gönderi oluşturabilmek için düzenleyin.
     basic_user:
       name: Acemi
-      description: "Bütün esas forum uygulamalarını kullanabilmeye <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">hak kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 1. güven seviyesine ulaştığın için verildi. Forumda neler olduğunu takip ettiğin için ve konuları okuduğun için teşekkürler. Artık yeni özelliklere sahipsin; özel iletiler, bildirme, düzenleme, ve çoklu resim ve bağlantı paylaşabilme gibi.
     member:
       name: Üye
-      description: "Davetler, grup iletileri, ve daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 2. güven seviyesine ulaştığın için verildi. Birkaç haftadır aramızda zaman geçirdiğin için teşekkürler. Artık kullanıcı sayfandan ya da konu sayfandan davetler gönderebilirsin, kişisel grup iletileri oluşturabilirsin ve günlük daha fazla beğeni yapabilirsin.
     regular:
       name: Müdavim
-      description: "Yeniden kategorize etme, yeniden isimlendirme, takip edilen bağlantılar, ve daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 3. güven seviyesine ulaştığın için verildi. Bir kaç aydır düzenli katılımcımız olduğun için teşekkür ederiz. Forumumuzun en etkin okuyucularından ve güvenilir katılımcılarından birisisin. Artık konuları tekrar kategorize edip, isimlendirebilirsin, bazı özel alanlara da girebilirsiniz ve günlük daha fazla beğeni yapabilirsin.
     leader:
       name: Lider
-      description: "Genel düzenleme, başa tutturma, kapama, arşivleme, ayırma ve birleştirme, daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 4. güven seviyesine ulaştığın için verildi. Forumda yönetim tarafından seçilmiş bir lidersiniz ve yaptığınız paylaşımlarla diğer üyelere örnek oluyorsunuz. Bütün gönderileri düzenleme hakkına sahipsiniz. Moderatörlerin yapabileceği, başa tutturma, kapama, arşivleme, ayırma ve birleştirme gibi işlemleri yapabilirsiniz. Artık günlük çok daha fazla beğeni yapabilirsiniz.
     welcome:
       name: Hoş geldiniz
       description: İlk beğeni alma
-      long_description: |
-        Bu rozet gönderine ilk beğenini aldığın için verildi. Tebrikler forumda diğer üyelerin ilgisini çeken, yararlı bir paylaşımda bulundun!
     autobiographer:
       name: Güncel Profil
     anniversary:
       name: Yıldönümü
       description: "Bir sene içerisinde, en az bir kere gönderi yazmış etkin üye"
-      long_description: |
-        Bu rozet en az bir gönderi yazarak bir yıllık üyeliğinizi tamamladığınız için size verilmiştir. Forumda zaman geçirdiğiniz ve bizlere katkıda bulunduğunuz için teşekkür ederiz. Sizler olmasanız yapamazdık.
     nice_post:
       name: Hoş Cevap
       description: Cevaba 10 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 10 beğeniden dolayı verilmiştir. Cevabınız forumda etki yarattı ve sohbetin ilerlemesine yardımcı oldu.
     good_post:
       name: Çok İyi Cevap
       description: Cevaba 25 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 25 beğeniden dolayı verilmiştir. Cevabın çok iyiydi ve forumda herkes için faydalı oldu.
     great_post:
       name: Muhteşem Cevap
       description: Cevaba 50 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 50 beğeniden dolayı verilmiştir.Süper! Cevabın muhteşem, büyüleyici ve ilham verici. Forum üyeleri cevabına bayıldı!
     nice_topic:
       name: Hoş Konu
       description: Konu 10 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 10 beğeniden dolayı verilmiştir. Forum üyelerinin beğendiği ilginç bir konu başlattınız.
     good_topic:
       name: Çok İyi Konu
       description: Konu 25 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 25 beğeniden dolayı verilmiştir. Forum üyeleri tarafından çok beğenilen hareketli bir konu açtınız.
     great_topic:
       name: Muhteşem Konu
       description: Konu 50 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 50 beğeniden dolayı size verilmiştir. Forum üyelerini harekete geçiren muhteşem bir konu başlattınız. Tebrikler!
     nice_share:
       name: Hoş Paylaşım
       description: Bir gönderiniz 25 tekil ziyaretci tarafından paylaşıldı
@@ -1525,13 +1441,9 @@ tr_TR:
     good_share:
       name: Çok İyi Paylaşım
       description: Bir gönderiniz 300 tekil ziyaretci tarafından paylaşıldı
-      long_description: |
-        Bu rozeti paylaştığınız bağlantı forum dışından 300 kişi tarafından tıklandığı için kazandınız. Çok iyi iş başardın! Paylaşımların daha fazla kişiye ulaşmasını ve forumun gelişmesini sağladın.
     great_share:
       name: "Muhteşem Paylaşım "
       description: Bir gönderiniz 1000 tekil ziyaretci tarafından paylaşıldı
-      long_description: |
-        Bu rozeti paylaştığınız bağlantı forum dışından 1000 kişi tarafından tıklandığı için kazandınız.Süper! Tartışmayı çok büyük kitlelere ulaştırdın ve forumun büyümesine muhteşem bir katkı yaptın.
     first_like:
       name: İlk Beğeni
       description: Bir gönderiyi beğendin
@@ -1540,21 +1452,15 @@ tr_TR:
     first_flag:
       name: İlk Bildirim
       description: Gönderiyi bildirdi
-      long_description: |
-        Bu rozet ilk kez bir gönderiyi bildirdiğiniz için verilmiştir. Bildirme daha huzurlu bir ortam oluşturmaya yardımcı olmak açısından oldukça önemlidir. Eğer herhangi bir gönderinin yönetici tarafından incelenmesini istiyorsanız, lütfen bildirmekten çekinmeyin. Eğer gönderileriyle ilgili bir sorun fark ederseniz, diğer üyelere de <b>kişisel iletiler</b> gönderebilirsiniz. Eğer bir problem fark ederseniz, :flag_black: şikayet edin!
     promoter:
       name: Destekçi
       description: Kullanıcı davet etme
     campaigner:
       name: Mücadeleci
       description: 3 Acemi kullanıcı davet edildi
-      long_description: |
-        Bu rozet davet ettiğiniz 3 kişi sitede vakit geçirerek acemi üye seviyesine ulaştığı için size verilmiştir. Hareketli bir forumun düzenli katkıda bulunan katılımcıları ve destekçileri olmalıdır.
     champion:
       name: Şampiyon
       description: 5 üye davet edildi
-      long_description: |
-        Bu rozet davet ettiğiniz 5 kişi sitede vakit geçirerek üye seviyesine ulaştığı için size verilmiştir. Süper! Yeni üyelerle tanışmamıza sebep olduğunuz için teşekkürler!
     first_share:
       name: İlk Paylaşım
       description: Bir gönderi paylaşma
@@ -1568,8 +1474,6 @@ tr_TR:
     first_quote:
       name: İlk Alıntı
       description: Bir gönderiyi alıntıladı
-      long_description: |
-        Bu rozet cevabınızda başkasından alıntı yaptığınız için verilmiştir. Başka konulardan ve gönderilerden alıntı yapmak mesajlar arasındaki bağlantıyı kuvvetlendirir. En kolay alıntı yapma yolu alıntı yapacağınız bölümü seçip cevap düğmesine basmaktır.
     read_guidelines:
       name: Yönergeleri Okuma
     reader:
@@ -1618,8 +1522,6 @@ tr_TR:
     crazy_in_love:
       name: Beğeni Delisi
       description: "20 gün boyunca, günde 50 beğeni hakkını kullanma "
-      long_description: |
-        Bu rozet 20 gün boyunca 50 beğeni hakkınızı kullandığınız için verilmiştir. Süper! Diğer üyelere tam bir örneksin. Tebrik ederiz!
     thank_you:
       name: Teşekkürler
       description: "20 beğeni sahibi olma ve 10 beğenme "
@@ -1633,14 +1535,11 @@ tr_TR:
     empathetic:
       name: Empatik
       description: 500 beğeni sahibi olma ve 1000 beğeni
-      long_description: |
-        Bu rozet 500 beğenilmiş gönderisahibi olduğunuz ve bunun karşılığında 1000 ya da daha fazla beğeni yaptığınızdan dolayı size verilmiştir. Süper! Cömetliğin ve takdirin örneğisin :two_hearts:.
     first_emoji:
       name: İlk Emoji
       description: "Bir gönderide emoji kullanma "
     first_mention:
       name: İlk Bahsetme
-      long_description: "Bu rozet ilk defa gönderinizde başka bir kullanıcıdan bahsettiğiniz için verilmiştir. Her bahsetme bahsi geçen kullanıcıya bildirim gitmesini sağlar, böylece bu kullanıcı sizin gönderinizden haberdar olur. Sadece bahsi geçen kullanıcı adına @ gerekir."
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi

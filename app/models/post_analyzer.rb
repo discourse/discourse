@@ -98,7 +98,7 @@ class PostAnalyzer
         uri = self.class.parse_uri_rfc2396(u)
         host = uri.host
         @linked_hosts[host] ||= 1 unless host.nil?
-      rescue URI::InvalidURIError, URI::InvalidComponentError
+      rescue URI::Error
         # An invalid URI does not count as a host
         next
       end

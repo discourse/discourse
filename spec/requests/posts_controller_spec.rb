@@ -1055,6 +1055,67 @@ describe PostsController do
         end
       end
     end
+
+    context "topic bump" do
+      shared_examples "it works" do
+        let(:original_bumped_at) { 1.day.ago }
+        let!(:topic) { Fabricate(:topic, bumped_at: original_bumped_at) }
+
+        it "should be able to skip topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id,
+            no_bump: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to be_within_one_second_of(original_bumped_at)
+        end
+
+        it "should be able to post with topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+        end
+      end
+
+      context "admins" do
+        before do
+          sign_in(Fabricate(:admin))
+        end
+
+        include_examples "it works"
+      end
+
+      context "moderators" do
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        include_examples "it works"
+      end
+
+      context "users" do
+        let(:topic) { Fabricate(:topic) }
+
+        [:user, :trust_level_4].each do |user|
+          it "will raise an error for #{user}" do
+            sign_in(Fabricate(user))
+            post "/posts.json", params: {
+              raw: 'this is the test content',
+              topic_id: topic.id,
+              no_bump: true
+            }
+            expect(response.status).to eq(400)
+          end
+        end
+      end
+    end
+
   end
 
   describe '#revisions' do
@@ -1524,5 +1585,4 @@ describe PostsController do
       expect(public_post).not_to be_locked
     end
   end
-
 end

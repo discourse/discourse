@@ -12,8 +12,10 @@ class SpamRulesEnforcer
   end
 
   def enforce!
-    SpamRule::AutoSilence.new(@user).perform if @user
-    SpamRule::FlagSockpuppets.new(@post).perform if @post
+    I18n.with_locale(SiteSetting.default_locale) do
+      SpamRule::AutoSilence.new(@user).perform if @user
+      SpamRule::FlagSockpuppets.new(@post).perform if @post
+    end
     true
   end
 

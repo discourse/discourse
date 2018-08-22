@@ -2,8 +2,50 @@ require "rails_helper"
 require "email/processor"
 
 describe Email::Processor do
+  after do
+    $redis.flushall
+  end
 
   let(:from) { "foo@bar.com" }
+
+  context "when reply via email is too short" do
+    let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
+    let(:post) { Fabricate(:post) }
+    let(:user) { Fabricate(:user, email: 'discourse@bar.com') }
+
+    let!(:post_reply_key) do
+      Fabricate(:post_reply_key,
+        user: user,
+        post: post,
+        reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8'
+      )
+    end
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+      SiteSetting.min_post_length = 1000
+    end
+
+    it "rejects reply and sends an email with custom error message" do
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      rejection_raw = ActionMailer::Base.deliveries.first.body.raw_source
+
+      count = SiteSetting.min_post_length
+      destination = processor.receiver.mail.to
+      former_title = processor.receiver.mail.subject
+
+      expect(rejection_raw.gsub(/\r/, "")).to eq(
+        I18n.t("system_messages.email_reject_post_too_short.text_body_template",
+          count: count,
+          destination: destination,
+          former_title: former_title
+        ).gsub(/\r/, "")
+      )
+    end
+  end
 
   describe "rate limits" do
 

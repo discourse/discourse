@@ -33,7 +33,7 @@ componentTest("regular topic notification level descriptions", {
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
   async test(assert) {
-    await selectKit().expandAwait();
+    await selectKit().expand();
     await this.set("topic", buildTopic("regular"));
 
     const uiTexts = extractDescs(selectKit().rows());
@@ -59,7 +59,7 @@ componentTest("PM topic notification level descriptions", {
     "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
 
   async test(assert) {
-    await selectKit().expandAwait();
+    await selectKit().expand();
     await this.set("topic", buildTopic("private_message"));
 
     const uiTexts = extractDescs(selectKit().rows());

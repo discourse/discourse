@@ -424,8 +424,6 @@ sv:
       reorder:
         title: "Sortera kategorier"
         title_long: "Sortera listan av katergorier"
-        fix_order: "Fixera positioner"
-        fix_order_tooltip: "Inte alla kategorier har ett unikt positionsnummer, vilket kan få oväntade resultat."
         save: "Spara order"
         apply_all: "Tillämpa"
         position: "Position"
@@ -594,7 +592,6 @@ sv:
         upload_title: "Ladda upp din bild"
         upload_picture: "Ladda upp bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
-        cache_notice: "Du har nu bytt profilbild men det kan ta lite tid innan den visas på grund av webbläsarens s.k. cache."
       change_profile_background:
         title: "Profilbakgrund"
         instructions: "Bakgrunderna är centrerade och har en förinställd bredd på 850px"
@@ -767,7 +764,6 @@ sv:
         most_liked_users: "Mest gillad"
         most_replied_to_users: "Mest svarad till"
         no_likes: "Inga gillningar ännu."
-      associated_accounts: "Inloggningar"
       ip_address:
         title: "Senaste IP-adress"
       registration_ip_address:
@@ -913,9 +909,6 @@ sv:
       preferences: "Du behöver logga in för att ändra dina användarpreferenser."
       forgot: "Jag kommer inte ihåg mina kontouppgifter"
       not_approved: "Ert konto har inte blivit godkänt än. Du kommer att meddelas via email när det är klart att logga in."
-      google:
-        title: "med Google"
-        message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
       google_oauth2:
         title: "med Google"
         message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
@@ -1536,7 +1529,6 @@ sv:
           inappropriate: "Ångra flaggning"
           bookmark: "Ångra bokmärkning"
           like: "Ångra gillning"
-          vote: "Ångra röstning"
         people:
           off_topic: "flaggade det här som orelevant."
           spam: "flaggade det här som spam"
@@ -1545,7 +1537,6 @@ sv:
           notify_user: "skickade ett meddelande"
           bookmark: "bokmärkte det här"
           like: "gillade det här"
-          vote: "röstade för det här"
         by_you:
           off_topic: "Du flaggade detta som orelevant"
           spam: "Du flaggade detta som spam"
@@ -1554,7 +1545,6 @@ sv:
           notify_user: "Du skickade ett meddelande till denna användare"
           bookmark: "Du bokmärkte detta inlägg"
           like: "Du gillade detta"
-          vote: "Du röstade för detta inlägg"
         by_you_and_others:
           off_topic:
             one: "Du och 1 annan flaggade detta som orelevant"
@@ -1577,9 +1567,6 @@ sv:
           like:
             one: "Du och 1 annan gillade detta"
             other: "Du och {{count}} andra personer gillade detta"
-          vote:
-            one: "Du och 1 annan röstade för detta inlägg"
-            other: "Du och {{count}} andra personer röstade för detta inlägg"
         by_others:
           off_topic:
             one: "1 person flaggade detta som orelevant"
@@ -1602,9 +1589,6 @@ sv:
           like:
             one: "1 person gillade detta"
             other: "{{count}} personer gillade detta"
-          vote:
-            one: "1 person röstade för detta inlägg"
-            other: "{{count}} personer röstade för detta inlägg"
       revisions:
         controls:
           first: "Första revision"
@@ -1639,7 +1623,6 @@ sv:
       can: 'can&hellip; '
       none: '(ingen kategori)'
       all: 'Alla kategorier'
-      choose: 'Välj en kategori&hellip;'
       edit: 'redigera'
       edit_long: "Redigera"
       view: 'Visa ämnen i kategori'
@@ -1683,7 +1666,6 @@ sv:
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
       show_subcategory_list: "Visa listan med underkategorier ovanför ämnen i denna kategori."
       num_featured_topics: "Antal ämnen som visas på sidan kategorier:"
-      all_topics_wiki: "Gör nya inlägg till wikis som standard"
       subcategory_list_style: "Liststil på underkategori:"
       sort_order: "Sortera ämneslista enligt:"
       default_view: "Förvald ämneslista"
@@ -1691,7 +1673,6 @@ sv:
       edit_permissions: "Redigera behörigheter"
       add_permission: "Lägg till behörighet"
       this_year: "i år"
-      position: "position"
       default_position: "Standardposition"
       position_disabled: "Kategorier kommer att sorteras efter deras aktivitet. För att ställa in sorteringen av kategorier i den här listan,"
       position_disabled_click: 'aktivera "fasta kategoripositioner" inställningen.'
@@ -2458,7 +2439,6 @@ sv:
             address_placeholder: "namn@exempel.se"
             type_placeholder: "sammanfattning, registrering..."
             reply_key_placeholder: "svarsnyckel"
-            skipped_reason_placeholder: "anledning"
       logs:
         title: "Loggar"
         action: "Åtgärd"

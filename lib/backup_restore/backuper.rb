@@ -1,3 +1,5 @@
+require 'disk_space'
+
 module BackupRestore
 
   class Backuper
@@ -276,7 +278,13 @@ module BackupRestore
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
+      refresh_disk_space
       log "Finished!"
+    end
+
+    def refresh_disk_space
+      log "Refreshing disk cache..."
+      DiskSpace.reset_cached_stats
     end
 
     def remove_tar_leftovers

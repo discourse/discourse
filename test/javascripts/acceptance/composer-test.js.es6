@@ -295,8 +295,8 @@ QUnit.test(
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:eq(0) button.reply");
 
-    await selectKit(".toolbar-popup-menu-options").expandAwait();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValueAwait(
+    await selectKit(".toolbar-popup-menu-options").expand();
+    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
       "toggleWhisper"
     );
 
@@ -318,8 +318,8 @@ QUnit.test(
       "it should reset the state of the composer's model"
     );
 
-    await selectKit(".toolbar-popup-menu-options").expandAwait();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValueAwait(
+    await selectKit(".toolbar-popup-menu-options").expand();
+    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
       "toggleInvisible"
     );
 
@@ -409,8 +409,8 @@ QUnit.test("Disable body until category is selected", async assert => {
 
   const categoryChooser = selectKit(".category-chooser");
 
-  await categoryChooser.expandAwait();
-  await categoryChooser.selectRowByValueAwait(2);
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(2);
 
   assert.ok(
     find(".d-editor-textarea-wrapper.disabled").length === 0,
@@ -418,7 +418,7 @@ QUnit.test("Disable body until category is selected", async assert => {
   );
 
   await fillIn(".d-editor-input", "Now I can type stuff");
-  await categoryChooser.expandAwait();
+  await categoryChooser.expand();
   await categoryChooser.selectRowByValue("__none__");
 
   assert.ok(

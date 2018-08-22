@@ -25,7 +25,8 @@ class FileHelper
                     follow_redirect: false,
                     read_timeout: 5,
                     skip_rate_limit: false,
-                    verbose: false)
+                    verbose: false,
+                    retain_on_max_file_size_exceeded: false)
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
@@ -54,22 +55,27 @@ class FileHelper
           end
         end
 
-        # first run
-        tmp_file_ext = File.extname(uri.path)
-
-        if tmp_file_ext.blank? && response.content_type.present?
+        if response.content_type.present?
           ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
           ext = "jpg" if ext == "jpe"
           tmp_file_ext = "." + ext if ext.present?
         end
 
+        tmp_file_ext ||= File.extname(uri.path)
         tmp = Tempfile.new([tmp_file_name, tmp_file_ext])
         tmp.binmode
       end
 
       tmp.write(chunk)
 
-      throw :done if tmp.size > max_file_size
+      if tmp.size > max_file_size
+        unless retain_on_max_file_size_exceeded
+          tmp.close
+          tmp = nil
+        end
+
+        throw :done
+      end
     end
 
     tmp&.rewind

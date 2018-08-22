@@ -581,7 +581,6 @@ class UsersController < ApplicationController
 
         email_token_user = EmailToken.confirmable(token)&.user
         totp_enabled = email_token_user&.totp_enabled?
-        backup_enabled = email_token_user&.backup_codes_enabled?
         second_factor_token = params[:second_factor_token]
         second_factor_method = params[:second_factor_method].to_i
         confirm_email = false
@@ -1079,8 +1078,8 @@ class UsersController < ApplicationController
 
     # Using Discourse.authenticators rather than Discourse.enabled_authenticators so users can
     # revoke permissions even if the admin has temporarily disabled that type of login
-    authenticator = Discourse.authenticators.find { |authenticator| authenticator.name == provider_name }
-    raise Discourse::NotFound if authenticator.nil?
+    authenticator = Discourse.authenticators.find { |a| a.name == provider_name }
+    raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
 
     skip_remote = params.permit(:skip_remote)
 
@@ -1088,9 +1087,9 @@ class UsersController < ApplicationController
     hijack do
       result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
-        return render json: success_json
+        render json: success_json
       else
-        return render json: {
+        render json: {
           success: false,
           message: I18n.t("associated_accounts.revoke_failed", provider_name: provider_name)
         }

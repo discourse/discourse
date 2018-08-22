@@ -1,5 +1,5 @@
 require "sidekiq/web"
-require_dependency "scheduler/web"
+require "mini_scheduler/web"
 require_dependency "admin_constraint"
 require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
@@ -236,9 +236,11 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard-next" => "dashboard_next#index"
-    get "dashboard-old" => "dashboard#index"
+    get "dashboard" => "dashboard_next#index"
     get "dashboard/general" => "dashboard_next#general"
+    get "dashboard/moderation" => "dashboard_next#moderation"
+
+    get "dashboard-old" => "dashboard#index"
 
     resources :dashboard, only: [:index] do
       collection do
@@ -326,6 +328,7 @@ Discourse::Application.routes.draw do
   get "password-reset" => "static#show", id: "password_reset", constraints: { format: /(json|html)/ }
   get "faq" => "static#show", id: "faq", constraints: { format: /(json|html)/ }
   get "guidelines" => "static#show", id: "guidelines", as: 'guidelines', constraints: { format: /(json|html)/ }
+  get "rules" => "static#show", id: "rules", as: 'rules', constraints: { format: /(json|html)/ }
   get "tos" => "static#show", id: "tos", as: 'tos', constraints: { format: /(json|html)/ }
   get "privacy" => "static#show", id: "privacy", as: 'privacy', constraints: { format: /(json|html)/ }
   get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
@@ -479,6 +482,7 @@ Discourse::Application.routes.draw do
     get 'logs' => 'groups#histories'
 
     collection do
+      get "check-name" => 'groups#check_name'
       get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
       get "search" => "groups#search"
     end
@@ -624,6 +628,7 @@ Discourse::Application.routes.draw do
   put "t/:id/convert-topic/:type" => "topics#convert_topic"
   put "t/:id/publish" => "topics#publish"
   put "t/:id/shared-draft" => "topics#update_shared_draft"
+  put "t/:id/reset-bump-date" => "topics#reset_bump_date"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -732,6 +737,7 @@ Discourse::Application.routes.draw do
 
   get "message-bus/poll" => "message_bus#poll"
 
+  resources :drafts, only: [:index]
   get "draft" => "draft#show"
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
@@ -809,7 +815,7 @@ Discourse::Application.routes.draw do
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-  get "/themes/assets/:id" => "themes#assets"
+  get "/themes/assets/:ids" => "themes#assets"
 
   if Rails.env == "test" || Rails.env == "development"
     get "/qunit" => "qunit#index"

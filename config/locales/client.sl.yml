@@ -443,15 +443,12 @@ sl:
       "14": "Čaka odobritev"
     categories:
       all: "vse kategorije"
-      all_subcategories: "vse v %{categoryName}"
       no_subcategory: "nič"
       category: "Kategorija"
       category_list: "Prikaži seznam kategorij"
       reorder:
         title: "Razvrsti Kategorije"
         title_long: "Reorganiziraj seznam kategorij"
-        fix_order: "Fiksiraj pozicije"
-        fix_order_tooltip: "Nimajo vse kategorije unikatne številke pozicije kar lahko pripelje do nepričakovanih rezultatov."
         save: "Shrani vrstni red"
         apply_all: "Uporabi"
         position: "Pozicija"
@@ -610,7 +607,6 @@ sl:
         upload_title: "Prenesi svojo sliko"
         upload_picture: "Prenesi sliko"
         image_is_not_a_square: "Opozorilo: obrezali smo vašo sliko; širina in višina nista bili enaki."
-        cache_notice: "Uspešno ste menjali profilno sliko, vendar utegne zaradi brskalnikovega predpomnilnika trajati nekaj časa, da se pojavi na strani."
       change_profile_background:
         title: "Ozadje profila"
         instructions: "Ozadje profila bo centrirano in imelo širino 850px."
@@ -801,8 +797,6 @@ sl:
       provide_new_email: "Vpišite nov naslov in ponovno vam bomo poslali potrditveno sporočilo."
       to_continue: "Prosimo če se prijavite"
       preferences: "Za spremembo nastavitev morate biti prijavljeni."
-      google:
-        message: "Overjanje z Googlom (pazi, da pojavno okno ne bo preprečeno)"
       google_oauth2:
         message: "Overjanje z Googlom (pazi, da pojavno okno ne bo preprečeno)"
       twitter:
@@ -1139,7 +1133,6 @@ sl:
     category:
       none: '(brez kategorije)'
       all: 'Vse kategorije'
-      choose: 'Izberi kategorijo&hellip;'
       edit: 'uredi'
       edit_long: "Uredi"
       view: 'Poglej teme v kategoriji'

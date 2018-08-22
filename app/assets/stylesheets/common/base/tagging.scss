@@ -29,6 +29,14 @@
   }
 }
 
+.tag-show-heading {
+  display: inline-flex;
+  align-items: center;
+  .d-icon {
+    margin: 0 0.25em;
+  }
+}
+
 .topic-header-extra .discourse-tag {
   -webkit-animation: fadein 0.7s;
   animation: fadein 0.7s;
@@ -199,12 +207,6 @@ header .discourse-tag {
 
 .title-wrapper .tag-chooser {
   width: 500px;
-}
-
-.admin-tag {
-  position: relative;
-  float: right;
-  margin-right: 8px;
 }
 
 .tag-sort-options {

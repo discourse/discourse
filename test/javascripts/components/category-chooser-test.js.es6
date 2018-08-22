@@ -30,7 +30,7 @@ componentTest("with excludeCategoryId", {
   template: "{{category-chooser excludeCategoryId=2}}",
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.notOk(
       this.get("subject")
@@ -44,7 +44,7 @@ componentTest("with scopedCategoryId", {
   template: "{{category-chooser scopedCategoryId=2}}",
 
   async test(assert) {
-    await this.get("subject").expandAwait();
+    await this.get("subject").expand();
 
     assert.equal(
       this.get("subject")

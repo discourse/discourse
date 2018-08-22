@@ -1,7 +1,7 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { LOGIN_METHODS } from "discourse/models/login-method";
+import { findAll } from "discourse/models/login-method";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -33,9 +33,7 @@ export default Ember.Controller.extend({
 
   @computed
   displayOAuthWarning() {
-    return LOGIN_METHODS.some(name => {
-      return this.siteSettings[`enable_${name}_logins`];
-    });
+    return findAll().length > 0;
   },
 
   toggleSecondFactor(enable) {

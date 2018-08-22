@@ -58,6 +58,7 @@ class BulkImport::Base
     db = ActiveRecord::Base.connection_config
     @encoder = PG::TextEncoder::CopyRow.new
     @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
+    # @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port], password: "discourse")
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
@@ -580,13 +581,18 @@ class BulkImport::Base
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
-        mapped = yield(row)
-        next unless mapped
-        processed = send(process_method_name, mapped)
-        imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-        imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-        @raw_connection.put_copy_data columns.map { |c| processed[c] }
-        print "\r%7d - %6d/sec".freeze % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
+        begin
+          mapped = yield(row)
+          next unless mapped
+          processed = send(process_method_name, mapped)
+          imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+          imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+          @raw_connection.put_copy_data columns.map { |c| processed[c] }
+          print "\r%7d - %6d/sec".freeze % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
+        rescue => e
+          puts "\n"
+          puts "ERROR: #{e.inspect}"
+        end
       end
     end
 
@@ -622,6 +628,10 @@ class BulkImport::Base
 
   def create_upload(user_id, path, source_filename)
     @uploader.create_upload(user_id, path, source_filename)
+  end
+
+  def html_for_upload(upload, display_filename)
+    @uploader.html_for_upload(upload, display_filename)
   end
 
   def fix_name(name)

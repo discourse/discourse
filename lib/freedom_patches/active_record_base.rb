@@ -1,5 +1,27 @@
 class ActiveRecord::Base
 
+  # Handle PG::UniqueViolation as well due to concurrency
+  # find_or_create does find_by(hash) || create!(hash)
+  # in some cases find will not find and multiple creates will be called
+  #
+  # note: Rails 6 has: https://github.com/rails/rails/blob/c83e30da27eafde79164ecb376e8a28ccc8d841f/activerecord/lib/active_record/relation.rb#L171-L201
+  # This means that in Rails 6 we would either use:
+  #
+  # create_or_find_by! (if we are generally creating)
+  #
+  # OR
+  #
+  # find_by(hash) || create_or_find_by(hash)  (if we are generally finding)
+  #
+  def self.find_or_create_by_safe!(hash)
+    begin
+      find_or_create_by!(hash)
+    rescue PG::UniqueViolation
+      # try again cause another transaction could have passed by now
+      find_or_create_by!(hash)
+    end
+  end
+
   # Execute SQL manually
   def self.exec_sql(*args)
 

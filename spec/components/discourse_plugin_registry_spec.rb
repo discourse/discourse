@@ -102,7 +102,7 @@ describe DiscoursePluginRegistry do
   context '.register_auth_provider' do
     let(:registry) { DiscoursePluginRegistry }
     let(:auth_provider) do
-      provider = Plugin::AuthProvider.new
+      provider = Auth::AuthProvider.new
       provider.authenticator = Auth::Authenticator.new
       provider
     end

@@ -315,7 +315,7 @@ describe Group do
         default_locale = SiteSetting.default_locale
         I18n.locale = SiteSetting.default_locale = 'de'
 
-        another_group = Fabricate(:group,
+        _another_group = Fabricate(:group,
           name: I18n.t('groups.default_names.staff').upcase
         )
 
@@ -380,6 +380,17 @@ describe Group do
     admin.revoke_moderation!
     expect(real_admins).to be_empty
     expect(real_staff).to eq []
+
+    # we need some ninja work to set min username to 6
+
+    User.where('length(username) < 6').each do |u|
+      u.username = u.username + "ZZZZZZ"
+      u.save!
+    end
+
+    SiteSetting.min_username_length = 6
+    Group.refresh_automatic_groups!(:staff)
+    # should not explode here
   end
 
   it "Correctly updates automatic trust level groups" do

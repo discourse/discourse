@@ -7,6 +7,26 @@ describe ThemeField do
     ThemeField.destroy_all
   end
 
+  describe "scope: find_by_theme_ids" do
+    it "returns result in the specified order" do
+      theme = Fabricate(:theme)
+      theme2 = Fabricate(:theme)
+      theme3 = Fabricate(:theme)
+
+      (0..1).each do |num|
+        ThemeField.create!(theme: theme, target_id: num, name: "header", value: "<a>html</a>")
+        ThemeField.create!(theme: theme2, target_id: num, name: "header", value: "<a>html</a>")
+        ThemeField.create!(theme: theme3, target_id: num, name: "header", value: "<a>html</a>")
+      end
+
+      expect(ThemeField.find_by_theme_ids(
+        [theme3.id, theme.id, theme2.id]
+      ).pluck(:theme_id)).to eq(
+        [theme3.id, theme3.id, theme.id, theme.id, theme2.id, theme2.id]
+      )
+    end
+  end
+
   it "correctly generates errors for transpiled js" do
     html = <<HTML
 <script type="text/discourse-plugin" version="0.8">

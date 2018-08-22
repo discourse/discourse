@@ -49,12 +49,15 @@ module Discourse
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    require 'discourse'
-    require 'es6_module_transpiler/rails'
-    require 'js_locale_helper'
+    # this pattern is somewhat odd but the reloader gets very
+    # confused here if we load the deps without `lib` it thinks
+    # discourse.rb is under the discourse folder incorrectly
+    require_dependency 'lib/discourse'
+    require_dependency 'lib/es6_module_transpiler/rails'
+    require_dependency 'lib/js_locale_helper'
 
     # tiny file needed by site settings
-    require 'highlight_js/highlight_js'
+    require_dependency 'lib/highlight_js/highlight_js'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
     #  require, patched in source, on upgrade remove this

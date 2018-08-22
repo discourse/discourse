@@ -125,6 +125,7 @@ fr:
       user_left: "%{who}a quitté cette conversation %{when}"
       removed_user: "a retiré %{who} %{when}"
       removed_group: "a retiré %{who} %{when}"
+      autobumped: "remonté automatiquement dans la liste %{when}"
       autoclosed:
         enabled: 'fermé automatiquement %{when}'
         disabled: 'ouvert automatiquement %{when}'
@@ -164,6 +165,7 @@ fr:
         eu_central_1: "UE (Francfort)"
         eu_west_1: "UE (Irlande)"
         eu_west_2: "UE (Londres)"
+        eu_west_3: "UE (Paris)"
         sa_east_1: "Amérique du Sud (Sao Paulo)"
         us_east_1: "États-Unis est (Virginie)"
         us_east_2: "États-Unis est (Ohio)"
@@ -247,6 +249,12 @@ fr:
       last_read: "ceci est le dernier message que vous avez lu ; cliquez pour y mettre un signet"
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
+    drafts:
+      resume: "Reprendre"
+      remove: "Supprimer"
+      new_topic: "Nouveau brouillon de sujet"
+      new_private_message: "Nouveau brouillon de message privé"
+      topic_reply: "Créer un brouillon de réponse"
     topic_count_latest:
       one: "Voir {{count}} sujet récent ou mis à jour."
       other: "Voir {{count}} sujets récents ou mis à jour"
@@ -486,17 +494,16 @@ fr:
       "12": "Éléments envoyés"
       "13": "Boîte de réception"
       "14": "En attente"
+      "15": "Brouillons"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "tout dans %{categoryName}"
+      all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
       reorder:
         title: "Réordonner les catégories"
         title_long: "Réorganiser la liste des catégories"
-        fix_order: "Corriger les positions"
-        fix_order_tooltip: "Toutes les catégories n'ont pas une position unique. Cela peut provoquer des résultats non souhaités."
         save: "Enregistrer l'ordre"
         apply_all: "Appliquer"
         position: "Position"
@@ -512,6 +519,7 @@ fr:
       topic_stat_sentence:
         one: "%{count} nouveau sujet par %{unit}."
         other: "%{count} nouveaux sujets par %{unit}."
+      more: "(%{count} de plus)…"
     ip_lookup:
       title: Rechercher l'adresse IP
       hostname: Nom de l'hôte
@@ -668,10 +676,23 @@ fr:
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
+      second_factor_backup:
+        title: "Codes de secours de l'authentification à deux étapes"
+        regenerate: "Regénérer"
+        disable: "Désactiver"
+        enable: "Activer"
+        enable_long: "Activer les codes de secours"
+        manage: "Gérer les codes de secours"
+        copied_to_clipboard: "Copié dans le presse-papier"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
+        codes:
+          title: "Codes de secours générés"
+          description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
-        title: "Authentification à deux facteurs"
-        disable: "Désactiver l'authentification à deux facteurs"
-        enable: "Activer <a href>l'authentification à deux facteurs</a> pour une sécurité accrue des comptes."
+        title: "Authentification à deux étapes"
+        disable: "Désactiver l'authentification à deux étapes"
+        enable: "Activer <a href>l'authentification à deux étapes</a> pour une sécurité accrue des comptes."
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         enable_description: |
@@ -679,9 +700,9 @@ fr:
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisi manuel"
         extended_description: |
-          L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en
+          L'authentification à deux étapes ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en
           plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, et <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
-        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
+        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux étapes aura été activée sur votre compte."
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -708,7 +729,6 @@ fr:
         upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
-        cache_notice: "Votre photo de profil a bien été modifié, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
@@ -717,6 +737,9 @@ fr:
         instructions: "Les images d'arrière-plan seront centrées avec une taille par défaut de 590 pixels."
       email:
         title: "Courriel"
+        primary: "Adresse courriel principale"
+        secondary: "Adresses courriel secondaires"
+        no_secondary: "Aucune adresse courriel secondaire"
         instructions: "jamais visible publiquement"
         ok: "Nous vous enverrons un courriel de confirmation"
         invalid: "Merci d'entrer une adresse de courriel valide"
@@ -725,6 +748,11 @@ fr:
         frequency:
           one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute."
           other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes."
+      associated_accounts:
+        title: "Comptes associés"
+        connect: "Connecter"
+        revoke: "Révoquer"
+        not_connected: "(non connecté)"
       name:
         title: "Nom d'utilisateur"
         instructions: "votre nom complet (facultatif)"
@@ -896,7 +924,9 @@ fr:
         most_liked_users: "A le plus aimé"
         most_replied_to_users: "A le plus répondu à"
         no_likes: "Pas encore de J'aime."
-      associated_accounts: "Identifiants"
+        top_categories: "Meilleures catégories"
+        topics: "Sujets"
+        replies: "Réponses"
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -1035,11 +1065,16 @@ fr:
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
-      second_factor_title: "Authentification à deux facteurs"
+      second_factor_title: "Authentification à deux étapes"
       second_factor_description: "Veuillez saisir le code d'authentification de votre app :"
+      second_factor_backup: "<a href>Se connecter avec un code de secours</a>"
+      second_factor_backup_title: "Authentification à deux étapes (code de secours)"
+      second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
+      second_factor: "<a href>Se connecter avec une application</a>"
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
+      cookies_error: "Les cookies de votre navigateur semblent désactiver. Vous ne pourrez pas vous connecter sans les activer."
       rate_limit: "Merci de patienter avant de vous reconnecter."
       blank_username: "Merci de saisir votre courriel ou pseudo."
       blank_username_or_password: "Merci de saisir votre courriel ou pseudo, et mot de passe."
@@ -1054,7 +1089,7 @@ fr:
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
-      omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
+      omniauth_disallow_totp: "L'authentification à deux étapes est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
       resend_title: "Renvoyer le courriel d'activation"
       change_email: "Changer l'adresse de courriel"
       provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
@@ -1064,25 +1099,28 @@ fr:
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
       forgot: "J'ai oublié les détails de mon compte"
       not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par mail lorsque vous pourrez vous connecter."
-      google:
-        title: "via Google"
-        message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       google_oauth2:
+        name: "Google"
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
+        name: "Twitter"
         title: "via Twitter"
         message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
       instagram:
+        name: "Instagram"
         title: "via Instagram"
         message: "Authentification via Instagtram (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
+        name: "Facebook"
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
+        name: "Yahoo"
         title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
+        name: "GitHub"
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
     invites:
@@ -1594,6 +1632,8 @@ fr:
         jump_prompt_of: "de %{count} messages"
         jump_prompt_long: "À quel message voulez-vous aller ?"
         jump_bottom_with_number: "aller au message %{post_number}"
+        jump_prompt_to_date: "à la date"
+        jump_prompt_or: "ou"
         total: total de messages
         current: message actuel
       notifications:
@@ -1888,6 +1928,8 @@ fr:
         lock_post_description: "empêcher l'utilisateur de modifier le message"
         unlock_post: "Déverrouiller message"
         unlock_post_description: "permettre l'utilisateur de modifier le message"
+        delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
+        delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -1899,7 +1941,6 @@ fr:
           inappropriate: "Annuler le signalement"
           bookmark: "Retirer le signet"
           like: "Annuler le J'aime"
-          vote: "Retirer le vote"
         people:
           off_topic: "signalé comme hors-sujet"
           spam: "signalé comme spam"
@@ -1911,7 +1952,6 @@ fr:
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
-          vote: "a voté pour ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -1920,7 +1960,6 @@ fr:
           notify_user: "Vous avez envoyé un message à cet utilisateur"
           bookmark: "Vous avez mis un signet à ce message"
           like: "Vous l'avez aimé"
-          vote: "Vous avez voté pour ce message"
         by_you_and_others:
           off_topic:
             one: "Vous et 1 autre personne l'avez signalé comme étant hors-sujet"
@@ -1943,9 +1982,6 @@ fr:
           like:
             one: "Vous et 1 autre personne l'ont aimé"
             other: "Vous et {{count}} autres personnes l'ont aimé"
-          vote:
-            one: "Vous et 1 autre personne ont voté pour"
-            other: "Vous et {{count}} autres personnes ont voté pour"
         by_others:
           off_topic:
             one: "1 personne l'a signalé comme étant hors-sujet"
@@ -1968,9 +2004,6 @@ fr:
           like:
             one: "1 personne a aimé ceci"
             other: "{{count}} personnes ont aimé ceci"
-          vote:
-            one: "1 personne a voté pour ce message"
-            other: "{{count}} personnes ont voté pour ce message"
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -2016,7 +2049,7 @@ fr:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'
       all: 'Toutes les catégories'
-      choose: 'Sélectionner une catégorie&hellip;'
+      choose: 'catégorie&hellip;'
       edit: 'modifier'
       edit_long: "Modifier"
       view: 'Voir les sujets dans la catégorie'
@@ -2073,13 +2106,17 @@ fr:
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
       add_permission: "Ajouter la permission"
+      require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
+      require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
-      position: "position"
+      position: "Position :"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
       minimum_required_tags: 'Nombre minimum de tags requis dans un sujet :'
       parent: "Catégorie parente"
+      num_auto_bump_daily: 'Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :'
+      navigate_to_first_post_after_read: 'Naviguer vers le premier message après que les sujets sont lus'
       notifications:
         watching:
           title: "Surveiller"
@@ -2312,6 +2349,7 @@ fr:
         bookmarks: '<b>g</b>, <b>b</b> Signets'
         profile: '<b>g</b>, <b>p</b> Profil'
         messages: '<b>g</b>, <b>m</b> Messages'
+        drafts: '<b>g</b>, <b>d</b> Brouillons'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Aller au sujet #'
@@ -2525,9 +2563,15 @@ fr:
         page_views_short: "Pages vues"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
         community_health: Santé communautaire
+        moderators_activity: Activité des modérateurs
         whats_new_in_discourse: "Quoi de neuf dans Discourse ?"
         activity_metrics: Mesures d'activité
         all_reports: "Tous les rapports"
+        general_tab: "Général"
+        moderation_tab: "Modération"
+        disabled: Désactivé
+        timeout_error: "Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court"
+        exception_error: "Désolé, une erreur s'est produite à l'exécution de la requête"
         reports:
           trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
@@ -2545,6 +2589,9 @@ fr:
           end_date: "Date de fin"
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
+          totals_for_sample: "Totaux pour l'échantillon"
+          total: "Total depuis toujours"
+          no_data: "Aucune donnée à afficher."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
@@ -2750,6 +2797,9 @@ fr:
         flag_event:
           name: "Evènement de signalement"
           details: "Quand un signalement est crée, approuvé, désapprouvé ou ignoré."
+        queued_post_event:
+          name: "Événement à l'approbation d'un message"
+          details: "Quand un nouveau message est créé, approuvé ou rejeté"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -3069,7 +3119,6 @@ fr:
             address_placeholder: "nom@exemple.com"
             type_placeholder: "résumé, inscription…"
             reply_key_placeholder: "clé de réponse"
-            skipped_reason_placeholder: "raison"
       moderation_history:
         performed_by: "Réalisé par"
         no_results: "Il n'y a pas d'historique de modération disponible."
@@ -3162,7 +3211,7 @@ fr:
             post_edit: "message modifié"
             post_unlocked: "message dévérouillé"
             check_personal_message: "contrôler messages directs"
-            disabled_second_factor: "désactiver l'authentification à deux facteurs"
+            disabled_second_factor: "désactiver l'authentification à deux étapes"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
             post_rejected: "message rejeté"
@@ -3362,7 +3411,7 @@ fr:
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
-        second_factor_enabled: Authentification à deux facteurs activée
+        second_factor_enabled: Authentification à deux étapes activée
         topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus
@@ -3518,6 +3567,17 @@ fr:
         clear_filter: "Effacer"
         add_url: "ajouter URL"
         add_host: "ajouter hôte"
+        value_list:
+          default_none: "Saisir pour filtrer ou créer…"
+          no_choices_none: "Saisir pour créer…"
+        uploaded_image_list:
+          label: "Modifier la liste"
+          empty: "Il n'y a aucune image pour le moment. Veuillez en envoyer une."
+          upload:
+            label: "Envoyer"
+            title: "Envoyer des images"
+        selectable_avatars:
+          title: "Liste d'avatars que les utilisateurs peuvent choisir"
         categories:
           all_results: 'Toutes'
           required: 'Requis'
@@ -3672,6 +3732,7 @@ fr:
       step: "%{current} sur %{total}"
       upload: "Envoi"
       uploading: "Envoi en cours…"
+      upload_error: "Désolé, il y a eu une erreur à l'envoi de ce fichier. Veuillez réessayer."
       quit: "Peut-être plus tard"
       staff_count:
         one: "Votre communauté a 1 responsable (vous)."
@@ -3683,3 +3744,7 @@ fr:
           admin: "Administrateur"
           moderator: "Modérateur"
           regular: "Utilisateur"
+      previews:
+        topic_title: "Sujet de discussion"
+        share_button: "Partager"
+        reply_button: "Répondre"

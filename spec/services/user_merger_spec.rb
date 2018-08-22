@@ -478,7 +478,7 @@ describe UserMerger do
   end
 
   it "updates themes" do
-    theme = Theme.create!(name: 'my name', user_id: source_user.id)
+    theme = Fabricate(:theme, user: source_user)
     merge_users!
 
     expect(theme.reload.user_id).to eq(target_user.id)

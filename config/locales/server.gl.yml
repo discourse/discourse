@@ -244,10 +244,6 @@ gl:
       title: 'Gústame'
       description: 'Gústame esta publicación'
       long_form: 'gustoume isto'
-    vote:
-      title: 'Votar'
-      description: 'Votar por esta publicación'
-      long_form: 'votei esta publicación'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -335,9 +331,6 @@ gl:
       num_clicks: "Clics"
       num_topics: "Temas"
       num_users: "Usuarios"
-    top_referred_topics:
-      xaxis: "Tema"
-      num_clicks: "Clics"
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Día"
@@ -428,7 +421,6 @@ gl:
       subject_template: "O convite en bloque procesouse correctamente"
   page_not_found:
     see_more: "Máis"
-    search_google: "Google"
   terms_of_service:
     title: "Termos do servizo"
   about: "Sobre"

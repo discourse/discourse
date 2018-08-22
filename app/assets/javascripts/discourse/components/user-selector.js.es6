@@ -56,14 +56,8 @@ export default TextField.extend({
         updateData: opts && opts.updateData ? opts.updateData : false,
 
         dataSource(term) {
-          const termRegex = Discourse.User.currentProp(
-            "can_send_private_email_messages"
-          )
-            ? /[^a-zA-Z0-9_\-\.@\+]/
-            : /[^a-zA-Z0-9_\-\.]/;
-
           var results = userSearch({
-            term: term.replace(termRegex, ""),
+            term,
             topicId: self.get("topicId"),
             exclude: excludedUsernames(),
             includeGroups,
@@ -73,7 +67,6 @@ export default TextField.extend({
             group: self.get("group"),
             disallowEmails
           });
-
           return results;
         },
 

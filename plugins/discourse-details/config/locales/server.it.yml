@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-it: {}
+it:
+  site_settings:
+    details_enabled: "Attiva la funzione dettagli. Se cambi questa impostazione, devi rielaborare tutti i Messaggi con \"rake posts:rebake\""

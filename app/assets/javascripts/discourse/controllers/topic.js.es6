@@ -940,6 +940,10 @@ export default Ember.Controller.extend(BufferedContent, {
 
     removeFeaturedLink() {
       this.set("buffered.featured_link", null);
+    },
+
+    resetBumpDate() {
+      this.get("content").resetBumpDate();
     }
   },
 

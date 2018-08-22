@@ -132,41 +132,6 @@ QUnit.test("updates badge counts correctly", function(assert) {
   badgeClickCount(assert, "with-badge", 2);
 });
 
-var trackRightClick = function() {
-  var clickEvent = generateClickEventOn("a");
-  clickEvent.which = 3;
-  return track(clickEvent);
-};
-
-QUnit.test("right clicks change the href", function(assert) {
-  assert.ok(trackRightClick());
-  assert.equal(
-    fixture("a")
-      .first()
-      .prop("href"),
-    "http://www.google.com/"
-  );
-});
-
-QUnit.test("right clicks are tracked", function(assert) {
-  Discourse.SiteSettings.track_external_right_clicks = true;
-  trackRightClick();
-  assert.equal(
-    fixture("a")
-      .first()
-      .attr("href"),
-    "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-  );
-});
-
-QUnit.test("preventDefault is not called for right clicks", function(assert) {
-  var clickEvent = generateClickEventOn("a");
-  clickEvent.which = 3;
-  sandbox.stub(clickEvent, "preventDefault");
-  assert.ok(track(clickEvent));
-  assert.ok(!clickEvent.preventDefault.calledOnce);
-});
-
 var testOpenInANewTab = function(description, clickEventModifier) {
   test(description, function(assert) {
     var clickEvent = generateClickEventOn("a");

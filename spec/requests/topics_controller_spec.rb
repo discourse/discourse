@@ -1218,48 +1218,6 @@ RSpec.describe TopicsController do
       expect(response.headers['X-Robots-Tag']).to eq(nil)
     end
 
-    describe "themes" do
-      let(:theme) { Theme.create!(user_id: -1, name: 'bob', user_selectable: true) }
-      let(:theme2) { Theme.create!(user_id: -1, name: 'bobbob', user_selectable: true) }
-
-      before do
-        sign_in(user)
-      end
-
-      it "selects the theme the user has selected" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
-
-        theme.update_attribute(:user_selectable, false)
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).not_to eq(theme.id)
-      end
-
-      it "can be overridden with a cookie" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-
-        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme2.id)
-      end
-
-      it "cookie can fail back to user if out of sync" do
-        user.user_option.update_columns(theme_ids: [theme.id])
-        cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
-
-        get "/t/#{topic.id}"
-        expect(response).to be_redirect
-        expect(controller.theme_id).to eq(theme.id)
-      end
-    end
-
     it "doesn't store an incoming link when there's no referer" do
       expect {
         get "/t/#{topic.id}.json"
@@ -2308,4 +2266,41 @@ RSpec.describe TopicsController do
 
   end
 
+  describe "#reset_bump_date" do
+    context "errors" do
+      let(:topic) { Fabricate(:topic) }
+
+      it "needs you to be logged in" do
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
+      end
+
+      [:user, :trust_level_4].each do |user|
+        it "denies access for #{user}" do
+          sign_in(Fabricate(user))
+          put "/t/#{topic.id}/reset-bump-date.json"
+          expect(response.status).to eq(403)
+        end
+      end
+
+      it "should fail for non-existend topic" do
+        sign_in(Fabricate(:admin))
+        put "/t/1/reset-bump-date.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    [:admin, :moderator].each do |user|
+      it "should reset bumped_at as #{user}" do
+        sign_in(Fabricate(user))
+        topic = Fabricate(:topic, bumped_at: 1.hour.ago)
+        timestamp = 1.day.ago
+        Fabricate(:post, topic: topic, created_at: timestamp)
+
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to be_within_one_second_of(timestamp)
+      end
+    end
+  end
 end

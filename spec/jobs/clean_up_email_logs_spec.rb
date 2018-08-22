@@ -11,7 +11,7 @@ describe Jobs::CleanUpEmailLogs do
     Fabricate(:skipped_email_log)
   end
 
-  it "removes old email logs without a reply_key" do
+  it "removes old email logs" do
     Jobs::CleanUpEmailLogs.new.execute({})
     expect(EmailLog.count).to eq(2)
     expect(SkippedEmailLog.count).to eq(1)

@@ -25,17 +25,14 @@
   </div>
 <% end %>
 
-<%- unless @hide_google %>
-  <% local_domain = "#{request.protocol}#{request.host_with_port}" %>
-
+<%- unless @hide_search%>
   <div class="row">
     <div class="page-not-found-search">
       <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
-        <form action='//google.com/search' id='google-search'>
+        <form action='/search' id='discourse-search'>
           <input type="text" name="q" value="<%= @slug %>">
-          <input type='hidden' name="as_sitesearch" value="<%= local_domain %>">
-          <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
+          <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
         </form>
       </p>
     </div>

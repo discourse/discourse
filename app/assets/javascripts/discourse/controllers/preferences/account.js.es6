@@ -76,7 +76,7 @@ export default Ember.Controller.extend(
       });
 
       return result.filter(value => {
-        return value.account || value.method.get("canConnect");
+        return value.account || value.method.get("can_connect");
       });
     },
 

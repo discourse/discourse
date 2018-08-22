@@ -348,27 +348,6 @@ ca:
         Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
   lounge_welcome:
     title: "Et donem la benvinguda al saló"
-    body: |2
-
-        Enhorabona! :confetti_ball:
-
-        Si pots veure aquest tema, se t'ha promogut recentment a **regular** (nivell 3 de confiança).
-
-        Ara pots &hellip;
-
-        * Editar el títol de qualsevol tema
-        * Canviar la categoria de qualsevol tema
-        * Tenir tots els teus enllaços seguits ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) és esborrat)
-        * Accedir a la categoria privada de Saló només visible per a persones usuàries a nivell 3 de confiança i superior
-        * Amagar correu brossa amb una única bandera
-
-        Vet aquí la llista [current list of fellow regulars](/badges/3/regular). Assegura't d'enviar-hi una salutació.
-
-        Gràcies per formar part d'una part important d'aquesta comunitat!
-
-        (Per a més informació sobre nivell de confiança [see this topic][trust]. Si us plau, fixa't que només membres que continuen reunint els requisits seguiran essent ordinaris).
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre la categoria %{category} "
     replace_paragraph: "(Reemplaça aquest primer paràgraf amb una breu descripció de la teva nova categoria. Aquesta guia apareixerà a l'àrea de selecció de categoria, perquè s'hi pugui mantenir per sota de 200 caràcters. **Fins que no editis aquesta descripció o en creïs temes, aquesta categoria no apareixerà a la pàgina de categories.**)"
@@ -383,9 +362,6 @@ ca:
     cannot_delete:
       uncategorized: "No es pot esborrar una descategoritzada"
       has_subcategories: "No es pot esborrar aquesta categoria perquè té subcategories"
-      topic_exists:
-        one: "No es pot esborrar aquesta categoria perquè hi conté 1 tema. El tema més antic és %{topic_link}."
-        other: "No es pot esborrar aquesta categoria perquè hi conté %{count} temes. El tema més antic és %{topic_link}."
       topic_exists_no_oldest: "No es pot esborrar aquesta categoria perquè el recompte de temes és %{count}."
     uncategorized_description: "Temes que no necessiten una categoria o no encaixen a cap altra categoria existent."
   trust_levels:
@@ -540,13 +516,8 @@ ca:
       title: 'Agrada'
       description: 'M''agrada aquesta publicació'
       long_form: 'ha agradat'
-    vote:
-      title: 'Vota'
-      description: 'Vota per aquesta publicació'
-      long_form: 'publicació votada'
   user_activity:
     no_bookmarks:
-      self: "No tens publicacions marcades com a preferits, fer-ho et permet accedir-hi després amb facilitat."
       others: "Sense preferits."
     no_likes_given:
       self: "Encara no t'ha agradat cap publicació."
@@ -612,6 +583,10 @@ ca:
       yaxis: "Quantitat de visites"
     signups:
       xaxis: "Dia"
+    dau_by_mau:
+      xaxis: "Dia"
+    daily_engaged_users:
+      xaxis: "Dia"
     profile_views:
       title: "Vistes de perfils de persones usuàries"
       xaxis: "Dia"
@@ -651,6 +626,8 @@ ca:
     user_to_user_private_messages:
       xaxis: "Dia"
       yaxis: "Quantitat de missatges"
+    user_to_user_private_messages_with_replies:
+      xaxis: "Dia"
     system_private_messages:
       title: "Sistema"
       xaxis: "Dia"
@@ -680,8 +657,6 @@ ca:
       num_users: "Persones usuàries"
     top_referred_topics:
       title: "Principals temes referits"
-      xaxis: "Tema"
-      num_clicks: "Clics"
     page_view_anon_reqs:
       title: "Anònim"
       xaxis: "Dia"
@@ -849,7 +824,6 @@ ca:
     post_menu: "Determina quins elements apareixen al menú de publicacions i en qui ordre. Per exemple,\nlike|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Els elements del menú que s'oculten per defecte al menú de publicacions, tret que es cliqui sobre una el·lipsi d'expansió."
     share_links: "Determina quins elements apareixen a diàleg d'acció i en qui ordre."
-    track_external_right_clicks: "Rastreig d'enllaços externs que es cliquen amb el botó dret (en obrir a una nova pestanya, per exemple) desactivat per defecte, perquè reescriu les URL."
     site_contact_username: "Un nom vàlid de membre de l'equip per emetre tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
     send_welcome_message: "Envia a totes les noves persones usuàries un missatge de benvinguda amb la guia ràpida d'inici."
     suppress_reply_directly_below: "No mostris el recompte de respostes expansibles a una publicació quan només hi hagi una resposta directa sota la publicació."
@@ -1250,9 +1224,6 @@ ca:
     existing_topic_moderator_post:
       one: "Una publicació ha estat fusionada a un tema existent: %{topic_link}"
       other: "%{count} publicacions han estat fusionades a un tema existent: %{topic_link}"
-  change_owner:
-    post_revision_text: "Propietat transferida per %{old_user} a %{new_user}"
-    deleted_user: "una persona usuària esborrada"
   topic_statuses:
     archived_enabled: "Aquest tema ara està arxivat. Està congelat i no es pot canviar de cap manera."
     archived_disabled: "Aquest tema ara està desarxivat. Ja no està congelat i es pot canviar."
@@ -1313,7 +1284,6 @@ ca:
     missing_user_field: "No has completat tots els camps."
     already_logged_in: "Ui, sembla que estàs provant d'acceptar una invitació per a una altra persona usuària. Si no ets %{current_user}, si us plau surt i torna a provar-ho."
   user:
-    no_accounts_associated: "No hi ha comptes associats"
     deactivated: "Ha estat desactivat per massa correus retornats a to '%{email}'."
     deactivated_by_staff: "Desactivat per l'equip"
     activated_by_staff: "Activat per l'equip"
@@ -1737,7 +1707,6 @@ ca:
     recent_topics: "Recent"
     see_more: "Més"
     search_title: "Busca aquest lloc"
-    search_google: "Google"
   terms_of_service:
     title: "Condicions d'ús"
     signup_form_message: 'He llegit i accepto les <a href="/tos" target="_blank">Condicions del servei</a>.'
@@ -1759,25 +1728,6 @@ ca:
   flag_reason:
     sockpuppet: "Una nova persona ha creat un tema i una altra amb la mateixa adreça IP  (%{ip_address}) ha respost. Mira la configuració <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Aquesta nova persona ha creat moltes publicacions amb enllaços al mateix domini (%{domain}). Mira la configuració <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
-  email_log:
-    post_user_deleted: "La persona de la publicació ha estat eliminada"
-    no_user: "No es pot trobar la persona amb id %{user_id}"
-    anonymous_user: "La persona és anònima"
-    suspended_not_pm: "Aquesta persona està suspesa, sense missatge "
-    seen_recently: "S'ha vist la persona recentment"
-    post_not_found: "No es pot trobar una publicació amb id %{post_id}"
-    notification_already_read: "Ja s'ha llegit la notificació sobre aquest correu"
-    topic_nil: "post.topic és ul"
-    post_deleted: "la persona autora va esborrar la publicació "
-    user_suspended: "la persona va ser suspesa"
-    already_read: "la persona ja ha llegit aquesta publicació"
-    exceeded_emails_limit: "S'ha excedit exceeded max_emails_per_day_per_user"
-    exceeded_bounces_limit: "S'ha excedit bounce_score_threshold"
-    message_blank: "missatge és buit"
-    message_to_blank: "message.to és buit"
-    text_part_body_blank: "text_part.body és buit"
-    body_blank: "el cos és buit"
-    no_echo_mailing_list_mode: "S'han inhabilitat les alertes de llista de correu per a les publicacions pròpies"
   color_schemes:
     base_theme_name: "Base"
   about: "Sobre"
@@ -1799,72 +1749,40 @@ ca:
     editor:
       name: Editor
       description: Edita la primera publicació
-      long_description: |
-        Aquest distintiu es concedeix el primer cop que edites una de les teves publicacions. Com no sempre podràs editar-les, fer-ho ara és una bona idea. Pots millorar-les, corregir petits errors o afegir qualsevol cosa que vas oblidar en publicar originalment. Edita per millorar encara més les teves publicacions!
     basic_user:
       name: Bàsic
-      description: "Totes les funcions essencials de la comunitat <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">concedides</a>"
-      long_description: |
-        Aquest distintiu es concedeix quan arribes al nivell 1 de confiança. Gràcies pel teu temps dedicat a llegir un grapat de temes i saber de què va la nostra comunitat. S'han aixecat les teves restriccions de nova persona usuària; t'hem concedit totes les capacitats essencials de la comunitat, com els missatges personals, les banderes, edició de wiki i la possibilitat de publicar múltiples imatges i enllaços.
     member:
       name: Membre
-      description: "Invitacions, missatges de grups i més m'agrades <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">concedits</a>"
-      long_description: |
-        Aquest distintiu es concedeix quan arribes al nivell 2 de confiança. Gràcies per participar durant setmanes per afegir-te de debò a la nostra comunitat. Ara pots enviar invitacions des de la teva pàgina personal o temes individuals, crear missatges personals en grup i donar uns pocs més m'agrades cada dia.
     regular:
       name: Ordinari
-      description: "Recategoritzar, reanomenar, enllaços seguits, wiki, més m'agrades <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">concedits</a>"
-      long_description: |
-        Aquest distintiu es concedeix quan arribes al nivell 3 de confiança. Gràcies per formar part de la nostra comunitat durant mesos. Ara ets una de les persones més actives en lectura i contribucions, a més de fer gran la nostra comunitat. Ara pots recategoritzar i reanomenar temes, aprofitar les banderes més potents de brossa, l'accés a l'àrea privada de saló i també rebràs cada dia més m'agrades.
     leader:
       name: Líder
-      description: "Edició global, clavar, tancar, arxivar, dividir i fusionar, més m'agrades <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">condedits</a>"
-      long_description: |
-        Aquest distintiu es concedeix quan has arribat al nivell de confiança 4. Lideres aquesta comunitat tal i com ha triat l'equip i ets un exemple positiu amb les teves paraules i accions per a la resta de la comunitat. Tens la possibilitat d'editar totes les publicacions, prendre accions moderadores típiques com ara clavar, desllistar, arxivar, dividir i fusionar i cada dia tens muntanyes de m'agrades.
     welcome:
       name: Benvinguda
       description: Ha rebut un m'agrada
-      long_description: |
-        Aquesta distinció es concedeix quan reps el teu primer m'agrada a una publicació. Enhorabona, has publicat alguna cosa que la resta de la teva comunitat considera interessant, bonic o útil.
     autobiographer:
       name: Autobiògraf
     anniversary:
       name: Aniversary
       description: "Membre amb activitat d'un any, ha publicat almenys un cop"
-      long_description: |
-        Aquest distintiu es concedeix quan has tingut activitat durant un any amb almenys una publicació. Gràcies per contribuir a la comunitat. Sense tu no ho aconseguiríem.
     nice_post:
       name: Bonica resposta
       description: Ha rebut 10 m'agrades a una resposta
-      long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 10 m'agrades. La teva resposta ha impressionat la comunitat i ha ajudat a empènyer la conversa!
     good_post:
       name: Bona resposta
       description: Ha rebut 25 m'agrades a una resposta
-      long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 25 m'agrades. La teva resposta ha estat excepcional ha fet la conversa millor per a tothom!
     great_post:
       name: Gran resposta
       description: Ha rebut 50 m'agrades a una resposta
-      long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 50 m'agrades. La teva resposta és font d'inspiració i fascinant i la comunitat se l'estima!
     nice_topic:
       name: Bonic tema
       description: Ha rebut 10 m'agrades a un tema
-      long_description: |
-        Aquest distintiu es concedeix quan el teu tema arriba a 10 m'agrades. Ep, has començat una conversa interessant i la comunitat en gaudeix!
     good_topic:
       name: Bon tema
       description: Ha rebut 25 m'agrades a un tema
-      long_description: |+
-        Aquest distintiu es concedeix quan el teu tema arriba a 25 m'agrades. Has encetat una conversa vibrant que la comunitat s'estima i comparteix!
-
     great_topic:
       name: Gran tema
       description: Ha rebut 50 m'agrades a un tema
-      long_description: |+
-        Aquest distintiu es concedeix quan el teu tema arriba a 50 m'agrades. Has provocat una conversa fascinant i la comunitat en gaudeix del dinamisme!
-
     nice_share:
       name: Bonica compartició
       description: Publicació compartida amb 25 visites úniques
@@ -1873,13 +1791,9 @@ ca:
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix quan comparteixes un enllaç a una entrada que ha estat visitat per 300 visitants externs. Has mostrat una discussió a molta gent nova i ens has ajudat a créixer.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1000 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix quan comparteixes un enllaç que és visitat per 1000 visitants externs. Uau! Has promocionat una discussió a una nova audiència, la qual cosa ha ajudat a fer créier la comunitat.
     first_like:
       name: Primer M'agrada
       description: Publicació agradada
@@ -1888,21 +1802,15 @@ ca:
     first_flag:
       name: Primera bandera
       description: Ha abanderat una publicació
-      long_description: |
-        Aquest distintiu es concedeix el primer cop que abanderes una publicació. La manera d'ajudar tothom i mantenir-ho tot net i polit és abanderant. Si observes publicacions que necessiten activitat moderadora per qualsevol motiu, no dubtis en abanderar-les. També pots abanderar per enviar <b>missatges personals</b> a altres persones usuàries si veus res sobre les seves publicacions. Si hi trobes cap problema, :flag_black: abandera'l!
     promoter:
       name: Promoció
       description: Ha convidat una persona
     campaigner:
       name: Activista
       description: Ha convidat 3 persones usuàries bàsiques
-      long_description: |
-        Aquesta insígnia es concedeix quan invites 3 persones que després passen prou temps al lloc web com per convertir-se en usuaris bàsics. Una comunitat vibrant necessita un influx constant de nouvinguts que regularment participen i afegeixen la seva veu a les converses.
     champion:
       name: De campionat
       description: Ha convidat 5 membres
-      long_description: |
-        Aquest distintiu es concedeix quan has convidat 5 persones amb prou temps invertit al lloc com per esdevenir-ne usuàries completes. Increïble! Gràcies per estendre la diversitat de la nostra comunitat amb noves participacions!
     first_share:
       name: Primera compartició
       description: Ha compartit una publicació
@@ -1917,8 +1825,6 @@ ca:
     first_quote:
       name: Primera cita
       description: Ha citat una publicació
-      long_description: |
-        Aquesta insígnia es concedeix quan cites per primera vegada una entrada en la teva resposta. Citar les parts rellevants en la teva resposta ajuda a matenir les discussions focalitzades en el tema en qüestió. La manera més fàcil de fer-ho és seleccionar una secció de l'entrada abans d'apretar el botó de respondre. Cita amb generositat!
     read_guidelines:
       name: Llegeix les guies
     reader:
@@ -1969,8 +1875,6 @@ ca:
     crazy_in_love:
       name: Enamorament boig
       description: Ha fet servir 50 M'agrada en un dia 20 cops
-      long_description: |
-        Aquest distintiu es concedeix quan fas servir tots els teus 50 M'agrada diaris en 20 dies. Ets un exemple de regularitat en animar activament la teva gent de la teva comunitat.
     thank_you:
       name: Gràcies
       description: Té 20 publicacions agradades i ha donat 10 M'agrada
@@ -1984,18 +1888,14 @@ ca:
     empathetic:
       name: Empàtic
       description: Té 500 publicacions agradades i ha donat 1000 M'agrada
-      long_description: |
-        Aquest distintiu es concedeix quan t'han agradat 500 publicacions i has donat 1000 M'agrada o més. Gran! Ets un model de generositat i apreci mutu :two_hearts:
     first_emoji:
       name: Primer emoji
       description: Ha fet servir un emoji a una publicació
     first_mention:
       name: Primera menció
-      long_description: "Aquest distintiu es concedeix el primer cop que menciones  @username d'algú a la teva publicació. Cada menció genera una alerta a aquella persona, perquè sàpiga de la teva publicació. Senzillament comença a escriure @ (símbol arrova) per mencionar qualsevol persona o grup, si està permès – és una forma interessant de cridar la seva atenció."
     first_onebox:
       name: Primera caixa
       description: Enllaç publicat que ha estat encaixat
-      long_description: "Aquest distintiu es concedeix el primer cop que publiques un enllaç sobre una línia, que automàticament s'ha estès a una caixa amb un breu resum de l'enllaç, un títol i (si hi és) una imatge."
     first_reply_by_email:
       name: Primera resposta per correu
       long_description: |
@@ -2020,7 +1920,6 @@ ca:
       button: "Regsitre"
       title: "Registrar un compte d'administració"
       help: "registra un nou compte per començar"
-      no_emails: "Malauradament no s'han definit correus d'administració durant la instal·lació i per això <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>pot ser difícil</a> concloure la configuració."
     confirm_email:
       title: "Confirma el teu correu"
       message: "<p>Hem enviat un correu d'activació a <b>%{email}</b>. Si us plau, segueix les instruccions del correu per activar el teu compte.</p><p>Si no t'arribam assegura't que has configurat al teu Discourse el teu correu correctament i revisa la teva carpeta de correu brossa.</p>"
@@ -2120,7 +2019,6 @@ ca:
         fields:
           favicon_url:
             label: "Icona petita"
-            description: "Imatge d'icona emprada per representar el teu lloc web a navegadors que tenen bon aspecte amb mides com ara de 32px per 32px."
           apple_touch_icon_url:
             label: "Icona gran"
       homepage:

@@ -37,7 +37,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     context "with a plugin-contributed auth provider" do
 
       let :provider do
-        provider = Plugin::AuthProvider.new
+        provider = Auth::AuthProvider.new
         provider.authenticator = Class.new(Auth::Authenticator) do
           def name
             'ubuntu'
@@ -289,6 +289,8 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email).to eq(old_email)
+
+        delete "/session/#{user.username}" # log out
 
         response = login(new_identity)
         expect(response['authenticated']).to eq(nil)

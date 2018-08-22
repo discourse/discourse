@@ -194,6 +194,7 @@ describe Wizard::StepUpdater do
 
     context "without an existing scheme" do
       it "creates the scheme" do
+        ColorScheme.destroy_all
         updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
         updater.update
         expect(updater.success?).to eq(true)

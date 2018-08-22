@@ -1,3 +1,4 @@
+import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 import {
@@ -7,9 +8,16 @@ import {
   LOREM
 } from "wizard/lib/preview";
 
-export default createPreviewComponent(225, 120, {
+export default createPreviewComponent(305, 165, {
   logo: null,
   avatar: null,
+
+  classNameBindings: ["isSelected"],
+
+  @computed("selectedId", "colorsId")
+  isSelected(selectedId, colorsId) {
+    return selectedId === colorsId;
+  },
 
   click() {
     this.sendAction("onChange", this.get("colorsId"));

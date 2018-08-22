@@ -16,7 +16,7 @@
   }
 
   .select-kit.is-expanded {
-    z-index: z("composer", "dropdown");
+    z-index: z("composer", "dropdown") + 1;
   }
 }
 

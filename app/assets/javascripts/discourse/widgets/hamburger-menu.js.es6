@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const flatten = array => [].concat.apply([], array);
 
@@ -176,20 +177,44 @@ export default createWidget("hamburger-menu", {
   },
 
   listCategories() {
-    const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
-    const isStaff = Discourse.User.currentProp("staff");
+    const maxCategoriesToDisplay = this.siteSettings
+      .header_dropdown_category_count;
+    let categories = this.site.get("categoriesByCount");
 
-    const categories = this.site.get("categoriesList").reject(c => {
-      if (c.get("parentCategory.show_subcategory_list")) {
-        return true;
-      }
-      if (hideUncategorized && c.get("isUncategorizedCategory") && !isStaff) {
-        return true;
-      }
-      return false;
-    });
+    if (this.currentUser) {
+      const allCategories = this.site
+        .get("categories")
+        .filter(c => c.notification_level !== NotificationLevels.MUTED);
 
-    return this.attach("hamburger-categories", { categories });
+      categories = allCategories
+        .filter(c => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
+        .sort((a, b) => {
+          return (
+            b.get("newTopics") +
+            b.get("unreadTopics") -
+            (a.get("newTopics") + a.get("unreadTopics"))
+          );
+        });
+
+      const topCategoryIds = this.currentUser.get("top_category_ids") || [];
+      topCategoryIds.forEach(id => {
+        const category = allCategories.find(c => c.id === id);
+        if (category && !categories.includes(category)) {
+          categories.push(category);
+        }
+      });
+
+      categories = categories.concat(
+        allCategories
+          .filter(c => !categories.includes(c))
+          .sort((a, b) => b.topic_count - a.topic_count)
+      );
+    }
+
+    const moreCount = categories.length - maxCategoriesToDisplay;
+    categories = categories.slice(0, maxCategoriesToDisplay);
+
+    return this.attach("hamburger-categories", { categories, moreCount });
   },
 
   footerLinks(prioritizeFaq, faqUrl) {

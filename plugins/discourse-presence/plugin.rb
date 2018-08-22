@@ -107,6 +107,9 @@ after_initialize do
     ACTIONS ||= [-"edit", -"reply"].freeze
 
     def publish
+
+      raise Discourse::NotFound if !current_user
+
       data = params.permit(
         :response_needed,
         current: [:action, :topic_id, :post_id],
