@@ -31,7 +31,8 @@ class SkippedEmailLog < ActiveRecord::Base
       sender_message_blank: 16,
       sender_message_to_blank: 17,
       sender_text_part_body_blank: 18,
-      sender_body_blank: 19
+      sender_body_blank: 19,
+      sender_post_deleted: 20
     )
   end
 
