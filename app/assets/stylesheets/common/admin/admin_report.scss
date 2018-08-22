@@ -59,6 +59,9 @@
 
     &.no-change {
       color: $primary-medium;
+      i {
+        display: none;
+      }
     }
 
     .value {
