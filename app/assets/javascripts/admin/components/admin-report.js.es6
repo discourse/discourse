@@ -43,6 +43,7 @@ export default Ember.Component.extend({
   isEnabled: true,
   disabledLabel: "admin.dashboard.disabled",
   isLoading: false,
+  rateLimitationString: null,
   dataSourceName: null,
   report: null,
   model: null,
@@ -303,7 +304,7 @@ export default Ember.Component.extend({
   _fetchReport() {
     this._super();
 
-    this.set("isLoading", true);
+    this.setProperties({ isLoading: true, rateLimitationString: null });
 
     let payload = this._buildPayload(["prev_period"]);
 
@@ -313,6 +314,12 @@ export default Ember.Component.extend({
           this._reports.push(this._loadReport(response.report));
         } else {
           console.log("failed loading", this.get("dataSource"));
+        }
+      })
+      .catch(data => {
+        if (data.jqXHR && data.jqXHR.status === 429) {
+          const error = data.jqXHR.responseJSON.errors[0];
+          this.set("rateLimitationString", error);
         }
       })
       .finally(() => {

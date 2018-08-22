@@ -96,10 +96,15 @@
       display: block;
     }
 
-    &.no-data {
+    &.no-data,
+    &.rate-limited {
       background: $secondary;
       border-color: $primary-low;
       color: $primary-low-mid;
+    }
+
+    &.rate-limited .d-icon {
+      color: $danger;
     }
 
     &.timeout,

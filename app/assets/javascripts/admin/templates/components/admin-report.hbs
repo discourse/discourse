@@ -57,21 +57,28 @@
             {{/if}}
           {{/if}}
         {{else}}
-          <div class="alert alert-info report-alert no-data">
-            {{d-icon "pie-chart"}}
-            {{#if model.reportUrl}}
-              <a href="{{model.reportUrl}}" class="report-url">
-                <span>
-                  {{#if model.title}}
-                    {{model.title}} — 
-                  {{/if}}
-                  {{i18n "admin.dashboard.reports.no_data"}}
-                </span>
-              </a>
-            {{else}}
-              <span>{{i18n "admin.dashboard.reports.no_data"}}</span>
-            {{/if}}
-          </div>
+          {{#if rateLimitationString}}
+            <div class="alert alert-error report-alert rate-limited">
+              {{d-icon "thermometer-three-quarters"}}
+              <span>{{rateLimitationString}}</span>
+            </div>
+          {{else}}
+            <div class="alert alert-info report-alert no-data">
+              {{d-icon "pie-chart"}}
+              {{#if model.reportUrl}}
+                <a href="{{model.reportUrl}}" class="report-url">
+                  <span>
+                    {{#if model.title}}
+                      {{model.title}} —
+                    {{/if}}
+                    {{i18n "admin.dashboard.reports.no_data"}}
+                  </span>
+                </a>
+              {{else}}
+                <span>{{i18n "admin.dashboard.reports.no_data"}}</span>
+              {{/if}}
+            </div>
+          {{/if}}
         {{/if}}
       {{else}}
         {{#if showTimeoutError}}
