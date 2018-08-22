@@ -717,7 +717,7 @@ export default RestModel.extend({
     }
 
     return this.get("posts").find(p => {
-      return p.get("post_number") == postNumber;
+      return p.get("post_number") === postNumber;
     });
   },
 

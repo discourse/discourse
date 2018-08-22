@@ -56,7 +56,7 @@ createWidget("notification-item", {
     const revisionNumber = data.revision_number;
 
     if (topicId && revisionNumber) {
-      return revisionUrl(attrs.slug, topicId, attrs.post_number, revisionNumber)
+      return revisionUrl(attrs.slug, topicId, attrs.post_number, revisionNumber);
     }
 
     if (topicId) {
