@@ -282,7 +282,11 @@ const TopicRoute = Discourse.Route.extend({
     Ember.run.scheduleOnce("afterRender", () => {
       this.appEvents.trigger("header:update-topic", model);
       if (this.revision) {
-        this.appEvents.trigger("post:show-revision", model.currentPost, this.revision);
+        this.appEvents.trigger(
+          "post:show-revision",
+          model.currentPost,
+          this.revision
+        );
         this.set("revision", undefined);
       }
     });

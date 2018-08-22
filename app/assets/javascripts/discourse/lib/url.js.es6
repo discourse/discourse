@@ -316,7 +316,7 @@ const DiscourseURL = Ember.Object.extend({
     if (newTopicId) {
       const oldMatches = TOPIC_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
-      const revision   = REVISION_REGEXP.exec(path);
+      const revision = REVISION_REGEXP.exec(path);
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {

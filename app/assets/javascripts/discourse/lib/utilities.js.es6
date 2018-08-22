@@ -106,7 +106,7 @@ export function postUrl(slug, topicId, postNumber) {
 }
 
 export function revisionUrl(slug, topicId, postNumber, revisionNumber) {
-  return postUrl(slug, topicId, postNumber) + '?revision=' + revisionNumber;
+  return postUrl(slug, topicId, postNumber) + "?revision=" + revisionNumber;
 }
 
 export function emailValid(email) {

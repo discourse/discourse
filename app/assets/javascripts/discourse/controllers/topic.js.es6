@@ -99,7 +99,7 @@ export default Ember.Controller.extend(BufferedContent, {
   init() {
     this._super();
     this.appEvents.on("post:show-revision", (postNumber, revision) => {
-      const post = this.model.get('postStream').postForPostNumber(postNumber);
+      const post = this.model.get("postStream").postForPostNumber(postNumber);
       if (!post) {
         return;
       }
