@@ -318,11 +318,10 @@ export default Ember.Component.extend({
       })
       .catch(data => {
         if (data.jqXHR && data.jqXHR.status === 429) {
-          const error = data.jqXHR.responseJSON
-            ? data.jqXHR.responseJSON.errors[0]
-            : data.jqXHR.responseText;
-
-          this.set("rateLimitationString", error);
+          this.set(
+            "rateLimitationString",
+            I18n.t("admin.dashboard.too_many_requests")
+          );
         }
       })
       .finally(() => {
