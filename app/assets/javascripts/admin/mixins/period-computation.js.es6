@@ -43,11 +43,28 @@ export default Ember.Mixin.create({
   },
 
   @computed()
+  lastMonth() {
+    return moment()
+      .locale("en")
+      .utc()
+      .startOf("day")
+      .subtract(1, "month");
+  },
+
+  @computed()
   endDate() {
     return moment()
       .locale("en")
       .utc()
       .subtract(1, "day")
+      .endOf("day");
+  },
+
+  @computed()
+  today() {
+    return moment()
+      .locale("en")
+      .utc()
       .endOf("day");
   },
 

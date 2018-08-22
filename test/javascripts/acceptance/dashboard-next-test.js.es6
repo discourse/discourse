@@ -29,3 +29,32 @@ QUnit.test("Visit dashboard next page", async assert => {
     "displays problems"
   );
 });
+
+QUnit.test("it has counters", async assert => {
+  await visit("/admin");
+
+  assert.equal(
+    $(".admin-report.page-view-total-reqs .today-count")
+      .text()
+      .trim(),
+    "1.1k"
+  );
+  assert.equal(
+    $(".admin-report.page-view-total-reqs .yesterday-count")
+      .text()
+      .trim(),
+    "2.5k"
+  );
+  assert.equal(
+    $(".admin-report.page-view-total-reqs .sevendays-count")
+      .text()
+      .trim(),
+    "18.6k"
+  );
+  assert.equal(
+    $(".admin-report.page-view-total-reqs .thirty-days-count")
+      .text()
+      .trim(),
+    "80.8k"
+  );
+});
