@@ -184,10 +184,12 @@ export default Discourse.Route.extend({
               var c = self.controllerFor("composer").get("model");
               c.set(
                 "tags",
-                _.compact(_.flatten([
-                  controller.get("model.id"),
-                  controller.get("additionalTags")
-                ]))
+                _.compact(
+                  _.flatten([
+                    controller.get("model.id"),
+                    controller.get("additionalTags")
+                  ])
+                )
               );
             }
           });
