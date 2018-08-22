@@ -783,8 +783,8 @@ class TopicsController < ApplicationController
     user_id = (current_user.id if current_user)
     track_visit = should_track_visit_to_topic?
 
-    Scheduler::Defer.later "Track Link" do
-      IncomingLink.add(
+    if !request.format.json?
+      hash = {
         referer: request.referer || flash[:referer],
         host: request.host,
         current_user: current_user,
@@ -792,14 +792,26 @@ class TopicsController < ApplicationController
         post_number: params[:post_number],
         username: request['u'],
         ip_address: request.remote_ip
-      )
-    end unless request.format.json?
+      }
+      # defer this way so we do not capture the whole controller
+      # in the closure
+      TopicsController.defer_add_incoming_link(hash)
+    end
 
+    TopicsController.defer_track_visit(topic_id, ip, user_id, track_visit)
+  end
+
+  def self.defer_track_visit(topic_id, ip, user_id, track_visit)
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
       TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
+  end
 
+  def self.defer_add_incoming_link(hash)
+    Scheduler::Defer.later "Track Link" do
+      IncomingLink.add(hash)
+    end
   end
 
   def should_track_visit_to_topic?
