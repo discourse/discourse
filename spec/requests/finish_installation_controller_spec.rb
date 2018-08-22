@@ -102,6 +102,15 @@ describe FinishInstallationController do
         end
       end
 
+      it "sets the admins trust level" do
+        post "/finish-installation/register.json", params: {
+          email: 'robin@example.com',
+          username: 'eviltrout',
+          password: 'disismypasswordokay'
+        }
+
+        expect(User.find_by(username: 'eviltrout').trust_level).to eq 1
+      end
     end
   end
 
