@@ -6,7 +6,6 @@ import { h } from "virtual-dom";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   postUrl,
-  revisionUrl,
   escapeExpression,
   formatUsername
 } from "discourse/lib/utilities";
