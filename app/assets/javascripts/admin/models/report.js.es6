@@ -439,7 +439,7 @@ const Report = Discourse.Model.extend({
       case "high-trending-down":
         return higherIsBetter ? "angle-double-down" : "angle-double-up";
       default:
-        return null;
+        return "minus";
     }
   }
 });
