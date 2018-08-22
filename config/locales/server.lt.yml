@@ -1,0 +1,3059 @@
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+lt:
+  dates:
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+    short_date_no_year: "D MMM"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+    short_date: "D MMM, YYYY"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+    long_date: "MMMM D, YYYY h:mma"
+
+  datetime_formats: &datetime_formats
+    formats:
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      short: "%m-%d-%Y"
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      short_no_year: "%B %-d"
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      date_only: "%B %-d, %Y"
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      long: ""
+  date:
+    # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
+    month_names:
+      [~, "", "", "", "", "", "", "", "", "", "", "", ""]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+    am: ""
+    pm: ""
+
+  title: "Discourse"
+  topics: "Temos"
+  posts: "žinutės"
+  loading: "Kraunama"
+  powered_by_html: ''
+  log_in: "Prisijungti"
+  submit: ""
+  purge_reason: ""
+  disable_remote_images_download_reason: ""
+  anonymous: ""
+  remove_posts_deleted_by_author: ""
+  redirect_warning: ""
+
+  themes:
+    bad_color_scheme: ""
+    other_error: ""
+    error_importing: ""
+    errors:
+      component_no_user_selectable: ""
+      component_no_default: ""
+      no_multilevels_components: ""
+    settings_errors:
+      invalid_yaml: ""
+      data_type_not_a_number: ""
+      name_too_long: ""
+      default_value_missing: ""
+      default_not_match_type: ""
+      default_out_range: ""
+      enum_value_not_valid: ""
+      number_value_not_valid: ""
+      number_value_not_valid_min_max: ""
+      number_value_not_valid_min: ""
+      number_value_not_valid_max: ""
+      string_value_not_valid: ""
+      string_value_not_valid_min_max: ""
+      string_value_not_valid_min: ""
+      string_value_not_valid_max: ""
+  emails:
+    incoming:
+      default_subject: ""
+      show_trimmed_content: ""
+      maximum_staged_user_per_email_reached: ""
+      no_subject: ""
+      no_body: ""
+      errors:
+        empty_email_error: ""
+        no_message_id_error: ""
+        auto_generated_email_error: ""
+        no_body_detected_error: ""
+        no_sender_detected_error: ""
+        from_reply_by_address_error: ""
+        inactive_user_error: ""
+        silenced_user_error: ""
+        bad_destination_address: ""
+        strangers_not_allowed_error: ""
+        insufficient_trust_level_error: ""
+        reply_user_not_matching_error: ""
+        topic_not_found_error: ""
+        topic_closed_error: ""
+        bounced_email_error: ""
+        screened_email_error: ""
+        unsubscribe_not_allowed: ""
+        email_not_allowed: ""
+      unrecognized_error: ""
+
+  errors: &errors
+    format: ''
+    format_with_full_message: ''
+    messages:
+      too_long_validation: ""
+      invalid_boolean: ""
+      taken: ""
+      accepted: ""
+      blank: ""
+      present: ""
+      confirmation: ""
+      empty: ""
+      equal_to: ""
+      even: ""
+      exclusion: ""
+      greater_than: ""
+      greater_than_or_equal_to: ""
+      has_already_been_used: ""
+      inclusion: ""
+      invalid: ""
+      is_invalid: ""
+      contains_censored_words: ""
+      less_than: ""
+      less_than_or_equal_to: ""
+      not_a_number: ""
+      not_an_integer: ""
+      odd: ""
+      record_invalid: ''
+      max_emojis: ""
+      ip_address_already_screened: ""
+      restrict_dependent_destroy:
+        one: ""
+        many: ""
+      too_long:
+        one: ''
+        few: ''
+        many: ''
+        other: ''
+
+      too_short:
+        one: ''
+        few: ''
+        many: ''
+        other: ''
+
+      wrong_length:
+        one: ''
+        few: ''
+        many: ''
+        other: ''
+
+      other_than: ""
+    template:
+      body: ''
+      header:
+        one: ''
+        few: ''
+        many: ''
+        other: ''
+
+    embed:
+      load_from_remote: ""
+    site_settings:
+      invalid_choice:
+        one: ''
+        few: ''
+        many: ''
+        other: ''
+
+      min_username_length_exists: ""
+      min_username_length_range: ""
+      max_username_length_exists: ""
+      max_username_length_range: ""
+      default_categories_already_selected: ""
+      s3_upload_bucket_is_required: ""
+    conflicting_google_user_id: ''
+
+  activemodel:
+    errors:
+      <<: *errors
+
+  invite:
+    not_found: ""
+    not_found_template: |
+    user_exists: ""
+
+  bulk_invite:
+    file_should_be_csv: ""
+    error: ""
+
+  topic_invite:
+    user_exists: ""
+
+  backup:
+    operation_already_running: ""
+    backup_file_should_be_tar_gz: ""
+    not_enough_space_on_disk: "Diske neužtenka vietos įkelti šiai atsarginei kopijai."
+    invalid_filename: ""
+
+  invalid_params: ""
+  not_logged_in: "Norint tęsti, jums reikia būti prisijungusiam."
+  not_found: ""
+  invalid_access: ""
+  authenticator_not_found: ""
+  invalid_api_credentials: ""
+  provider_not_enabled: ""
+  provider_not_found: ""
+  read_only_mode_enabled: ""
+
+  reading_time: ""
+  likes: "Patikimai"
+
+  too_many_replies:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+
+  embed:
+    start_discussion: "Pradėti diskusiją"
+    continue: "Tęsti diskusiją"
+    error: ""
+    referer: ""
+    mismatch: ""
+    no_hosts: ""
+    configure: ""
+    more_replies:
+      one: "dar %{count} atsakymas"
+      few: "dar %{count} atsakymai"
+      many: "dar %{count} atsakymų"
+      other: "dar %{count} atsakymų"
+
+
+    loading: "Kraunama diskusija..."
+    permalink: "Nuoroda"
+    imported_from: ""
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} atsakymas"
+      few: "%{count} atsakymai"
+      many: "%{count} atsakymų"
+      other: "%{count} atsakymų"
+
+
+  no_mentions_allowed: ""
+  too_many_mentions:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+  no_mentions_allowed_newuser: ""
+  too_many_mentions_newuser:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+  no_images_allowed_trust: ""
+  no_images_allowed: ""
+  too_many_images:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+  no_attachments_allowed: ""
+  too_many_attachments:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+  no_links_allowed: ""
+  links_require_trust: ""
+  too_many_links:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+  contains_blocked_words: ""
+
+  spamming_host: ""
+  user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
+  topic_not_found: ""
+  not_accepting_pms: ""
+  max_pm_recepients: ""
+
+  just_posted_that: "labai panašu į tai, ką parašėte prieš tai"
+  invalid_characters: "turi neleistinų simbolių"
+  is_invalid: ""
+  next_page: "kitas puslapis →"
+  prev_page: "← praeitas puslapis"
+  page_num: "%{num} Puslapis "
+  home_title: ""
+  topics_in_category: "Temos kategorijoje '%{category}'"
+  rss_posts_in_topic: ""
+  rss_topics_in_category: ""
+  author_wrote: "%{author} parašė:"
+  num_posts: "Pranešimai:"
+  num_participants: "Dalyviai:"
+  read_full_topic: "Skaityti pilną temą"
+  private_message_abbrev: ""
+
+  rss_description:
+    latest: "Naujausios temos"
+    hot: "Karštos temos"
+    top: ""
+    top_all: ""
+    top_yearly: ""
+    top_quarterly: ""
+    top_monthly: ""
+    top_weekly: ""
+    top_daily: ""
+    posts: ""
+    private_posts: ""
+    group_posts: ""
+    group_mentions: ""
+    user_posts: ""
+    user_topics: ""
+    tag: ""
+    badge: ""
+
+  too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
+  revert_version_same: ""
+
+  excerpt_image: ""
+
+  queue:
+    delete_reason: ""
+    not_found: ""
+
+  groups:
+    success:
+      bulk_add:
+        one: ""
+        few: ""
+        many: ""
+        other: ""
+
+    errors:
+      grant_trust_level_not_valid: ""
+      can_not_modify_automatic: ""
+      member_already_exist:
+        one: ""
+        few: ""
+        many: ""
+        other: ""
+
+      invalid_domain: ""
+      invalid_incoming_email: ""
+      email_already_used_in_group: ""
+      email_already_used_in_category: ""
+      cant_allow_membership_requests: ""
+    default_names:
+      everyone: "visi"
+      admins: "administratoriai"
+      moderators: "moderatoriai"
+      staff: "personalas"
+      trust_level_0: "pasitikėjimo_lygis_0"
+      trust_level_1: "pasitikėjimo_lygis_1"
+      trust_level_2: "pasitikėjimo_lygis_2"
+      trust_level_3: "pasitikėjimo_lygis_3"
+      trust_level_4: "pasitikėjimo_lygis_4"
+    request_membership_pm:
+      title: ""
+
+  education:
+    until_posts:
+      one: "%{count} pranešimas"
+      few: "%{count} pranešimai"
+      many: "%{count} pranešimų"
+      other: "%{count} pranešimų"
+
+
+    'new-topic': |
+    'new-reply': |
+    avatar: |
+    sequential_replies: |
+    dominating_topic: |
+    get_a_room: |
+    too_many_replies: |
+    reviving_old_topic: |
+  activerecord:
+    attributes:
+      category:
+        name: "Kategorijos pavadinimas"
+      topic:
+        title: ''
+        featured_link: ''
+      post:
+        raw: "Tekstas"
+      user_profile:
+        bio_raw: "Apie mane"
+      user:
+        ip_address: ""
+    errors:
+      <<: *errors
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: ""
+              too_many_users: "Vienu metu jūs galite siųsti įspėjimus tik vienam vartotojui."
+              cant_send_pm: ""
+              no_user_selected: ""
+              reply_by_email_disabled: ""
+              target_user_not_found: ""
+            featured_link:
+              invalid: ""
+              invalid_category: ""
+        user:
+          attributes:
+            password:
+              common: "yra vienas iš 10000 populiariausių slaptažodžių. Prašome pasirinkti saugesnį slaptažodį."
+              same_as_username: ""
+              same_as_email: ""
+              same_as_current: ""
+              unique_characters: ""
+            ip_address:
+              signup_not_allowed: "Registracijos nėra galimos iš šios paskyros."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: ""
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "netinkama spalva"
+        post_reply:
+          base:
+            different_topic: ""
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: ""
+        custom_emoji:
+          attributes:
+            name:
+              taken: ""
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: ""
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: ''
+        watched_word:
+          attributes:
+            word:
+              too_many: ""
+
+  user_profile:
+    no_info_me: ""
+    no_info_other: ""
+
+  vip_category_name: ""
+  vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
+
+  meta_category_name: ""
+  meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
+
+  staff_category_name: "Personalas"
+  staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
+
+  assets_topic_title: ""
+  assets_topic_body: ""
+
+  discourse_welcome_topic:
+    title: ""
+    body: |
+  lounge_welcome:
+    title: ""
+    body: |
+  category:
+    topic_prefix: ""
+    replace_paragraph: ""
+    post_template: ""
+    errors:
+      not_found: ""
+      uncategorized_parent: ""
+      self_parent: ""
+      depth: ""
+      invalid_email_in: ""
+      email_already_used_in_group: ""
+      email_already_used_in_category: ""
+      description_incomplete: ""
+    cannot_delete:
+      uncategorized: ""
+      has_subcategories: ""
+      topic_exists:
+        one: ""
+        few: ""
+        many: ""
+        other: ""
+
+      topic_exists_no_oldest: ""
+    uncategorized_description: ""
+  trust_levels:
+    newuser:
+      title: "naujas vartotojas"
+    basic:
+      title: "pagrindinis vartotojas"
+    member:
+      title: ""
+    regular:
+      title: ""
+    leader:
+      title: ""
+    change_failed_explanation: ""
+
+  post:
+    image_placeholder:
+      broken: ""
+
+  rate_limiter:
+    slow_down: ""
+    too_many_requests: ""
+    by_type:
+      first_day_replies_per_day: ""
+      first_day_topics_per_day: ""
+      create_topic: ""
+      create_post: ""
+      delete_post: ""
+      public_group_membership: ""
+      topics_per_day: ""
+      pms_per_day: ""
+      create_like: ""
+      create_bookmark: ""
+      edit_post: ""
+      live_post_counts: ""
+      unsubscribe_via_email: ""
+      topic_invitations_per_day: ""
+
+    hours:
+      one: "%{count} valanda"
+      few: "%{count} valandos"
+      many: "%{count} valandų"
+      other: "%{count} valandų"
+
+    minutes:
+      one: "%{count} minutė"
+      few: "%{count} minutės"
+      many: "%{count} minučių"
+      other: "%{count} minučių"
+
+    seconds:
+      one: "%{count} sekundė"
+      few: "%{count} sekundės"
+      many: "%{count} sekundžių"
+      other: "%{count} sekundžių"
+
+    short_time: ""
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "pusė minutės"
+      less_than_x_seconds:
+        one: "mažiau nei %{count} sekundė"
+        few: "mažiau nei %{count} sekundės"
+        many: "mažiau nei %{count} sekundžių"
+        other: "mažiau nei %{count} sekundžių"
+
+      x_seconds:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
+
+      less_than_x_minutes:
+        one: "mažiau nei %{count} minutė"
+        few: "mažiau nei %{count} minutės"
+        many: "mažiau nei %{count} minučių"
+        other: "mažiau nei %{count} minučių"
+
+      x_minutes:
+        one: "%{count} minutė"
+        few: "%{count} minutės"
+        many: "%{count} minučių"
+        other: "%{count} minučių"
+
+      about_x_hours:
+        one: "%{count} valanda"
+        few: "%{count} valandos"
+        many: "%{count} valandų"
+        other: "%{count} valandų"
+
+      x_days:
+        one: "%{count} diena"
+        few: "%{count} dienos"
+        many: "%{count} dienų"
+        other: "%{count} dienų"
+
+      about_x_months:
+        one: "apie %{count} mėnesį"
+        few: "apie %{count} mėnesius"
+        many: "apie %{count} mėnesių"
+        other: "apie %{count} mėnesių"
+
+      x_months:
+        one: "%{count} mėnesis"
+        few: "%{count} mėnesiai"
+        many: "%{count} mėnesių"
+        other: "%{count} mėnesių"
+
+      about_x_years:
+        one: "apie %{count} metus"
+        few: "apie %{count} metus"
+        many: "apie %{count} metų"
+        other: "apie %{count} metų"
+
+      over_x_years:
+        one: "virš %{count} metų"
+        few: "virš %{count} metų"
+        many: "virš %{count} metų"
+        other: "virš %{count} metų"
+
+      almost_x_years:
+        one: "beveik %{count} metai"
+        few: "beveik %{count} metai"
+        many: "beveik %{count} metų"
+        other: "beveik %{count} metų"
+
+
+    distance_in_words_verbose:
+      half_a_minute: "ką tik"
+      less_than_x_seconds:
+        one: "ką tik"
+        few: "ką tik"
+        many: "ką tik"
+        other: "ką tik"
+
+      x_seconds:
+        one: "prieš %{count} sekundę"
+        few: "prieš %{count} sekundes"
+        many: "prieš %{count} sekundžių"
+        other: "prieš %{count} sekundžių"
+
+      less_than_x_minutes:
+        one: "mažiau nei prieš %{count} minutę"
+        few: "mažiau nei prieš %{count} minutes"
+        many: "mažiau nei prieš %{count} minučių"
+        other: "mažiau nei prieš %{count} minučių"
+
+      x_minutes:
+        one: "prieš %{count} minutę"
+        few: "prieš %{count} minutes"
+        many: "prieš %{count} minučių"
+        other: "prieš %{count} minučių"
+
+      about_x_hours:
+        one: "prieš %{count} valandą"
+        few: "prieš %{count} valandas"
+        many: "prieš %{count} valandų"
+        other: "prieš %{count} valandų"
+
+      x_days:
+        one: "prieš %{count} dieną"
+        few: "prieš %{count} dienas"
+        many: "prieš %{count} dienų"
+        other: "prieš %{count} dienų"
+
+      about_x_months:
+        one: "apie prieš %{count} mėnesį"
+        few: "apie prieš %{count} mėnesius"
+        many: "apie prieš %{count} mėnesių"
+        other: "apie prieš %{count} mėnesių"
+
+      x_months:
+        one: "prieš %{count} mėnesį"
+        few: "prieš %{count} mėnesius"
+        many: "prieš %{count} mėnesių"
+        other: "prieš %{count} mėnesių"
+
+      about_x_years:
+        one: "apie prieš %{count} metus"
+        few: "apie prieš %{count} metus"
+        many: "apie prieš %{count} metų"
+        other: "apie prieš %{count} metų"
+
+      over_x_years:
+        one: "prieš daugiau nei %{count} metus"
+        few: "prieš daugiau nei %{count} metus"
+        many: "prieš daugiau nei %{count} metų"
+        other: "prieš daugiau nei %{count} metų"
+
+      almost_x_years:
+        one: "beveik prieš %{count} metus"
+        few: "beveik prieš %{count} metus"
+        many: "beveik prieš %{count} metų"
+        other: "beveik prieš %{count} metų"
+
+
+  password_reset:
+    no_token: ""
+    choose_new: ""
+    choose: ""
+    update: 'Atnaujinti slaptažodį'
+    save: ''
+    title: 'Keisti slaptažodį'
+    success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
+    success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
+
+  email_login:
+    invalid_token: ""
+    title: ""
+
+  change_email:
+    confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
+    please_continue: ""
+    error: ""
+    error_staged: ""
+    already_done: ""
+    authorizing_old:
+      title: ""
+      description: ""
+
+  associated_accounts:
+    revoke_failed: ""
+
+  activation:
+    action: ""
+    already_done: ""
+    please_continue: ""
+    continue_button: ""
+    welcome_to: ""
+    approval_required: ""
+    missing_session: ""
+    activated: ""
+    admin_confirm:
+      title: ""
+      description: ""
+      grant: ""
+      complete: ""
+      back_to: ""
+  post_action_types:
+    off_topic:
+      title: ''
+      description: ''
+      short_description: ''
+      long_form: ''
+    spam:
+      title: 'Šlamštas'
+      description: ''
+      short_description: ''
+      long_form: ''
+      email_title: ''
+      email_body: ""
+    inappropriate:
+      title: 'Nederamas'
+      description: ''
+      short_description: ''
+      long_form: ''
+    notify_user:
+      title: ''
+      description: ''
+      short_description: ''
+      long_form: ''
+      email_title: ''
+      email_body: ""
+    notify_moderators:
+      title: ""
+      description: ''
+      short_description: ''
+      long_form: ''
+      email_title: ''
+      email_body: ""
+    bookmark:
+      title: 'Žymės'
+      description: ''
+      short_description: ''
+      long_form: ''
+    like:
+      title: ''
+      description: ''
+      short_description: ''
+      long_form: ''
+
+  user_activity:
+    no_default:
+      self: ""
+      others: ""
+    no_bookmarks:
+      self: ""
+      others: ""
+    no_likes_given:
+      self: ""
+      others: ""
+    no_replies:
+      self: ""
+      others: ""
+    no_drafts:
+      self: ""
+      others: ""
+
+  topic_flag_types:
+    spam:
+      title: 'Šlamštas'
+      description: ''
+      long_form: 'pažymėtas kaip šlamštas'
+      short_description: ''
+    inappropriate:
+      title: ''
+      description: ''
+      long_form: ''
+      short_description: ''
+    notify_moderators:
+      title: ""
+      description: ''
+      long_form: ''
+      short_description: ''
+      email_title: ''
+      email_body: ""
+
+  flagging:
+    you_must_edit: ''
+    user_must_edit: ''
+
+  archetypes:
+    regular:
+      title: ""
+    banner:
+      title: "Paryškinta Tema"
+      message:
+        make: ""
+        remove: ""
+
+  unsubscribed:
+    title: ""
+    description: ""
+    topic_description: ""
+    private_topic_description: ""
+
+  unsubscribe:
+    title: ""
+    stop_watching_topic: ""
+    mute_topic: ""
+    unwatch_category: ""
+    mailing_list_mode: ""
+    disable_digest_emails: ""
+    all: ""
+    different_user_description: ""
+    not_found_description: ""
+    log_out: ""
+
+  user_api_key:
+    title: ""
+    authorize: ""
+    read: ""
+    read_write: ""
+    description: ""
+    no_trust_level: ""
+    generic_error: ""
+    scopes:
+      message_bus: ""
+      notifications: ""
+      push: ""
+      session_info: ""
+      read: ""
+      write: ""
+
+  reports:
+    default:
+      labels:
+        count: ""
+        percent: ""
+        day: ""
+    post_edits:
+      title: ""
+      labels:
+        post: ""
+        editor: ""
+        author: ""
+        edit_reason: ""
+    moderators_activity:
+      title: ""
+      labels:
+        moderator: ""
+        flag_count: ""
+        time_read: ""
+        topic_count: ""
+        post_count: ""
+        pm_count: ""
+        revision_count: ""
+    flags_status:
+      title: ""
+      values:
+        agreed: ""
+        disagreed: ""
+        deferred: ""
+        no_action: ""
+      labels:
+        flag: ""
+        assigned: ""
+        poster: ""
+        flagger: ""
+        time_to_resolution: ""
+    visits:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    signups:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+      description: ""
+    new_contributors:
+      title: ""
+      xaxis: ""
+      yaxis: ""
+      description: ""
+    dau_by_mau:
+      title: ""
+      xaxis: ""
+      yaxis: ""
+      description: ""
+    daily_engaged_users:
+      title: ""
+      xaxis: ""
+      yaxis: ""
+      description: ""
+    profile_views:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    topics:
+      title: "Temos"
+      xaxis: "Diena"
+      yaxis: ""
+      description: ""
+    posts:
+      title: "Pranešimai"
+      xaxis: "Diena"
+      yaxis: "Nauji pranešimai"
+      description: ""
+    likes:
+      title: "Patikimai"
+      xaxis: "Diena"
+      yaxis: ""
+    flags:
+      title: "Pažymėk!"
+      xaxis: "Diena"
+      yaxis: ""
+    bookmarks:
+      title: "Žymės"
+      xaxis: "Diena"
+      yaxis: ""
+    starred:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    users_by_trust_level:
+      title: ""
+      xaxis: "Patikimumo lygis"
+      yaxis: ""
+      labels:
+        level: ""
+    users_by_type:
+      title: ""
+      xaxis: ""
+      yaxis: ""
+      labels:
+        type: ""
+      xaxis_labels:
+        admin: ""
+        moderator: ""
+        suspended: ""
+        silenced: ""
+    trending_search:
+      title: ""
+      labels:
+        term: ""
+        searches: ""
+        click_through: ""
+    emails:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    user_to_user_private_messages:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    user_to_user_private_messages_with_replies:
+      title: ""
+      xaxis: ""
+      yaxis: ""
+    system_private_messages:
+      title: "Sistema"
+      xaxis: "Diena"
+      yaxis: ""
+    moderator_warning_private_messages:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    notify_moderators_private_messages:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    notify_user_private_messages:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    top_referrers:
+      title: ""
+      xaxis: ""
+      num_clicks: ""
+      num_topics: "Temos"
+    top_traffic_sources:
+      title: ""
+      xaxis: ""
+      num_clicks: "Paspaudimai"
+      num_topics: "Temos"
+      num_users: "Vartotojai"
+      labels:
+        domain: ""
+        num_clicks: ""
+        num_topics: ""
+    top_referred_topics:
+      title: ""
+      labels:
+        num_clicks: ""
+        topic: ""
+    page_view_anon_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    page_view_logged_in_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    page_view_crawler_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    page_view_total_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    page_view_logged_in_mobile_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    page_view_anon_mobile_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_background_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_2xx_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_3xx_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_4xx_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_5xx_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    http_total_reqs:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    time_to_first_response:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    topics_with_no_response:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    mobile_visits:
+      title: ""
+      xaxis: "Diena"
+      yaxis: ""
+    web_crawlers:
+      title: ""
+      labels:
+        user_agent: ""
+        page_views: ""
+
+  dashboard:
+    rails_env_warning: ""
+    host_names_warning: ""
+    gc_warning: ''
+    sidekiq_warning: ''
+    queue_size_warning: ''
+    memory_warning: ''
+    google_oauth2_config_warning: ''
+    facebook_config_warning: ''
+    twitter_config_warning: ''
+    github_config_warning: ''
+    s3_config_warning: ''
+    s3_backup_config_warning: ''
+    image_magick_warning: ''
+    failing_emails_warning: ''
+    subfolder_ends_in_slash: ""
+    email_polling_errored_recently:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    missing_mailgun_api_key: ""
+    bad_favicon_url: ""
+    poll_pop3_timeout: ""
+    poll_pop3_auth_error: ""
+    force_https_warning: ""
+    out_of_date_themes: ""
+
+  site_settings:
+    censored_words: ""
+    delete_old_hidden_posts: ""
+    default_locale: ""
+    allow_user_locale: ""
+    set_locale_from_accept_language_header: ""
+    support_mixed_text_direction: ""
+    min_post_length: ""
+    min_first_post_length: ""
+    min_personal_message_post_length: ""
+    max_post_length: ""
+    topic_featured_link_enabled: ""
+    show_topic_featured_link_in_digest: ""
+    min_topic_title_length: ""
+    max_topic_title_length: ""
+    min_personal_message_title_length: ""
+    max_emojis_in_title: ""
+    min_search_term_length: ""
+    search_tokenize_chinese_japanese_korean: ""
+    search_prefer_recent_posts: ""
+    search_recent_posts_size: ""
+    log_search_queries: ""
+    search_query_log_max_size: ""
+    search_query_log_max_retention_days: ""
+    allow_uncategorized_topics: ""
+    allow_duplicate_topic_titles: ""
+    unique_posts_mins: ""
+    educate_until_posts: ""
+    title: ""
+    site_description: ""
+    contact_email: ""
+    contact_url: ""
+    crawl_images: ""
+    download_remote_images_to_local: ""
+    download_remote_images_threshold: ""
+    download_remote_images_max_days_old: ""
+    disabled_image_download_domains: ""
+    editing_grace_period: ""
+    editing_grace_period_max_diff: ""
+    editing_grace_period_max_diff_high_trust: ""
+    staff_edit_locks_post: ""
+    post_edit_time_limit: ""
+    edit_history_visible_to_public: ""
+    delete_removed_posts_after: ""
+    max_image_width: ""
+    max_image_height: ""
+    fixed_category_positions: ""
+    fixed_category_positions_on_create: ""
+    add_rel_nofollow_to_user_content: ""
+    exclude_rel_nofollow_domains: ""
+
+    post_excerpt_maxlength: ""
+    show_pinned_excerpt_mobile: ""
+    show_pinned_excerpt_desktop: ""
+    post_onebox_maxlength: ""
+    onebox_domains_blacklist: ""
+    inline_onebox_domains_whitelist: ""
+    enable_inline_onebox_on_all_domains: ""
+    max_oneboxes_per_post: ""
+
+    logo_url: ""
+    digest_logo_url: ""
+    logo_small_url: ""
+    favicon_url: ""
+    mobile_logo_url: ""
+    large_icon_url: ""
+    apple_touch_icon_url: ""
+
+    notification_email: ""
+    email_custom_headers: ""
+    email_subject: ""
+    force_https: ""
+    same_site_cookies: ""
+    summary_score_threshold: ""
+    summary_posts_required: ""
+    summary_likes_required: ""
+    summary_percent_filter: ""
+    summary_max_results: ""
+
+    enable_personal_messages: ""
+    enable_system_message_replies: ""
+    enable_personal_email_messages: ""
+
+    enable_long_polling: ""
+    long_polling_base_url: ""
+    long_polling_interval: ""
+    polling_interval: ""
+    anon_polling_interval: ""
+    background_polling_interval: ""
+
+    flags_required_to_hide_post: ""
+    cooldown_minutes_after_hiding_posts: ""
+
+    max_topics_in_first_day: ""
+    max_replies_in_first_day: ""
+
+    tl2_additional_likes_per_day_multiplier: ""
+    tl3_additional_likes_per_day_multiplier: ""
+    tl4_additional_likes_per_day_multiplier: ""
+
+    num_spam_flags_to_silence_new_user: ""
+    num_users_to_silence_new_user: ""
+    num_tl3_flags_to_silence_new_user: ""
+    num_tl3_users_to_silence_new_user: ""
+    notify_mods_when_user_silenced: ""
+    flag_sockpuppets: ""
+
+    traditional_markdown_linebreaks: ""
+    enable_markdown_typographer: ""
+    enable_markdown_linkify: ""
+    markdown_linkify_tlds: ""
+    post_undo_action_window_mins: ""
+    must_approve_users: ""
+    pending_users_reminder_delay: ""
+    maximum_session_age: ""
+    ga_universal_tracking_code: ""
+    ga_universal_domain_name: ""
+    ga_universal_auto_link_domains: ""
+    gtm_container_id: ""
+    enable_escaped_fragments: ""
+    allow_moderators_to_create_categories: ""
+    cors_origins: ""
+    use_admin_ip_whitelist: ""
+    blacklist_ip_blocks: ""
+    whitelist_internal_hosts: ""
+    allowed_iframes: ""
+    whitelisted_crawler_user_agents: ''
+    blacklisted_crawler_user_agents: ''
+    slow_down_crawler_user_agents: ''
+    slow_down_crawler_rate: ''
+    top_menu: ""
+    post_menu: ""
+    post_menu_hidden_items: ""
+    share_links: ""
+    site_contact_username: ""
+    send_welcome_message: ""
+    send_tl1_welcome_message: ""
+    suppress_reply_directly_below: ""
+    suppress_reply_directly_above: ""
+    suppress_reply_when_quoting: ""
+    max_reply_history: ""
+    topics_per_period_in_top_summary: ""
+    topics_per_period_in_top_page: ""
+    redirect_users_to_top_page: ""
+    top_page_default_timeframe: ""
+    show_email_on_profile: ""
+    prioritize_username_in_ux: ""
+    enable_rich_text_paste: ""
+
+    email_token_valid_hours: ""
+
+    enable_badges: ""
+    enable_whispers: ""
+
+    allow_index_in_robots_txt: ""
+    email_domains_blacklist: ""
+    email_domains_whitelist: ""
+    hide_email_address_taken: ""
+    log_out_strict: ""
+    version_checks: ""
+    new_version_emails: ""
+
+    invite_expiry_days: ""
+
+    invite_only: ""
+
+    login_required: ""
+
+    min_username_length: ""
+    max_username_length: ""
+
+    reserved_usernames: ""
+
+    min_password_length: ""
+    min_admin_password_length: ""
+    password_unique_characters: ""
+    block_common_passwords: ""
+
+    enable_sso: ""
+    verbose_sso_logging: ""
+    enable_sso_provider: ""
+    sso_url: ""
+    sso_secret: ""
+    sso_overrides_bio: ""
+    sso_overrides_groups: ""
+    sso_overrides_email: ""
+    sso_overrides_username: ""
+    sso_overrides_name: ""
+    sso_overrides_avatar: ""
+    sso_overrides_profile_background: ""
+    sso_overrides_card_background: ""
+    sso_not_approved_url: ""
+    sso_allows_all_return_paths: ""
+
+    enable_local_logins: ""
+    enable_local_logins_via_email: ""
+    allow_new_registrations: ""
+    enable_signup_cta: ""
+    enable_yahoo_logins: ""
+
+    enable_google_oauth2_logins: ""
+    google_oauth2_client_id: ""
+    google_oauth2_client_secret: ""
+    google_oauth2_prompt: ""
+    google_oauth2_hd: ""
+
+    enable_twitter_logins: ""
+    twitter_consumer_key: ""
+    twitter_consumer_secret: ""
+
+    enable_instagram_logins: ""
+    instagram_consumer_key: ""
+    instagram_consumer_secret: ""
+
+    enable_facebook_logins: ""
+    facebook_app_id: ""
+    facebook_app_secret: ""
+
+    enable_github_logins: ""
+    github_client_id: ""
+    github_client_secret: ""
+
+    readonly_mode_during_backup: ""
+    enable_backups: ""
+    allow_restore: ""
+    maximum_backups: ""
+    automatic_backups_enabled: ""
+    backup_frequency: ""
+    enable_s3_backups: ""
+    s3_backup_bucket: ""
+    s3_endpoint: ""
+    s3_force_path_style: ""
+    s3_disable_cleanup: ""
+    backup_time_of_day: ""
+    backup_with_uploads: ""
+
+    active_user_rate_limit_secs: ""
+    verbose_localization: ""
+    previous_visit_timeout_hours: ""
+
+    top_topics_formula_log_views_multiplier: ""
+    top_topics_formula_first_post_likes_multiplier: ""
+    top_topics_formula_least_likes_per_post_multiplier: ""
+
+    rebake_old_posts_count: ""
+    enable_safe_mode: ""
+
+    rate_limit_create_topic: ""
+    rate_limit_create_post: ""
+    rate_limit_new_user_create_topic: ""
+    rate_limit_new_user_create_post: ""
+
+    max_likes_per_day: ""
+    max_flags_per_day: ""
+    max_bookmarks_per_day: ""
+    max_edits_per_day: ""
+    max_topics_per_day: ""
+    max_personal_messages_per_day: ""
+    max_invites_per_day: ""
+    max_topic_invitations_per_day: ""
+
+    max_logins_per_ip_per_hour: ""
+    max_logins_per_ip_per_minute: ""
+
+    max_post_deletions_per_minute: ""
+    max_post_deletions_per_day: ""
+
+    alert_admins_if_errors_per_minute: ""
+    alert_admins_if_errors_per_hour: ""
+
+    categories_topics: ""
+    suggested_topics: ""
+    limit_suggested_to_category: ""
+    suggested_topics_max_days_old: ""
+
+    clean_up_uploads: ""
+    clean_orphan_uploads_grace_period_hours: ""
+    purge_deleted_uploads_grace_period_days: ""
+    purge_unactivated_users_grace_period_days: ""
+    enable_s3_uploads: ""
+    s3_use_iam_profile: ''
+    s3_upload_bucket: ""
+    s3_access_key_id: ""
+    s3_secret_access_key: ""
+    s3_region: ""
+    s3_cdn_url: ""
+
+    avatar_sizes: ""
+
+    external_system_avatars_enabled: ""
+    external_system_avatars_url: ""
+
+    selectable_avatars_enabled: ""
+    selectable_avatars: ""
+
+    default_opengraph_image_url: ""
+    twitter_summary_large_image_url: ""
+
+    allow_all_attachments_for_group_messages: ""
+
+    png_to_jpg_quality: ""
+
+    allow_staff_to_upload_any_file_in_pm: ""
+
+    strip_image_metadata: ""
+
+    min_ratio_to_crop: ""
+
+    enable_flash_video_onebox: ""
+
+    default_invitee_trust_level: ""
+    default_trust_level: ""
+
+    tl1_requires_topics_entered: ""
+    tl1_requires_read_posts: ""
+    tl1_requires_time_spent_mins: ""
+
+    tl2_requires_topics_entered: ""
+    tl2_requires_read_posts: ""
+    tl2_requires_time_spent_mins: ""
+    tl2_requires_days_visited: ""
+    tl2_requires_likes_received: ""
+    tl2_requires_likes_given: ""
+    tl2_requires_topic_reply_count: ""
+
+    tl3_time_period: ""
+    tl3_requires_days_visited: ""
+    tl3_requires_topics_replied_to: ""
+    tl3_requires_topics_viewed: ""
+    tl3_requires_topics_viewed_cap: ""
+    tl3_requires_posts_read: ""
+    tl3_requires_posts_read_cap: ""
+    tl3_requires_topics_viewed_all_time: ""
+    tl3_requires_posts_read_all_time: ""
+    tl3_requires_max_flagged: ""
+    tl3_promotion_min_duration: ""
+    tl3_requires_likes_given: ""
+    tl3_requires_likes_received: ""
+    tl3_links_no_follow: ""
+    trusted_users_can_edit_others: ""
+
+    min_trust_to_create_topic: ""
+    allow_flagging_staff: ""
+
+    min_trust_to_edit_wiki_post: ""
+
+    min_trust_to_edit_post: ""
+
+    min_trust_to_allow_self_wiki: ""
+
+    min_trust_to_send_messages: ""
+
+    min_trust_to_send_email_messages: ""
+
+    min_trust_to_flag_posts: ""
+    min_trust_to_post_links: ""
+    min_trust_to_post_images: ""
+
+    whitelisted_link_domains: ""
+
+    newuser_max_links: ""
+    newuser_max_images: ""
+    newuser_max_attachments: ""
+    newuser_max_mentions_per_post: ""
+    newuser_max_replies_per_topic: ""
+    max_mentions_per_post: ""
+    max_users_notified_per_group_mention: ""
+    enable_mentions: ""
+
+    create_thumbnails: ""
+
+    email_time_window_mins: ""
+    personal_email_time_window_seconds: ""
+    email_posts_context: ""
+    flush_timings_secs: ""
+    title_max_word_length: ""
+    title_min_entropy: ""
+    body_min_entropy: ""
+    allow_uppercase_posts: ""
+
+    title_fancy_entities: ""
+
+    min_title_similar_length: ""
+    min_body_similar_length: ""
+
+    desktop_category_page_style: ""
+    category_colors: ""
+    category_style: ""
+
+    max_image_size_kb: ""
+    max_attachment_size_kb: ""
+    authorized_extensions: ""
+    authorized_extensions_for_staff: ""
+    theme_authorized_extensions: ""
+    max_similar_results: ""
+
+    max_image_megapixels: ""
+
+    title_prettify: ""
+
+    topic_views_heat_low: ""
+    topic_views_heat_medium: ""
+    topic_views_heat_high: ""
+
+    cold_age_days_low: ""
+    cold_age_days_medium: ""
+    cold_age_days_high: ""
+
+    history_hours_low: ""
+    history_hours_medium: ""
+    history_hours_high: ""
+
+    topic_post_like_heat_low: ""
+    topic_post_like_heat_medium: ""
+    topic_post_like_heat_high: ""
+
+    faq_url: ""
+    tos_url: ""
+    privacy_policy_url: ""
+    log_anonymizer_details: ""
+
+    newuser_spam_host_threshold: ""
+
+    white_listed_spam_host_domains: ""
+    staff_like_weight: ""
+    topic_view_duration_hours: ""
+    user_profile_view_duration_hours: ""
+
+    levenshtein_distance_spammer_emails: ""
+    max_new_accounts_per_registration_ip: ""
+    min_ban_entries_for_roll_up: ""
+
+    max_age_unmatched_emails: ""
+    max_age_unmatched_ips: ""
+
+    num_flaggers_to_close_topic: ""
+    num_flags_to_close_topic: ""
+    num_hours_to_close_topic: ""
+
+    auto_respond_to_flag_actions: ""
+    min_first_post_typing_time: ""
+    auto_silence_fast_typers_on_first_post: ""
+    auto_silence_fast_typers_max_trust_level: ""
+    auto_silence_first_post_regex: ""
+    flags_default_topics: ""
+    min_flags_staff_visibility: ""
+
+    reply_by_email_enabled: ""
+    reply_by_email_address: ""
+    alternative_reply_by_email_addresses: ""
+    incoming_email_prefer_html: ""
+
+    disable_emails: ""
+
+    strip_images_from_short_emails: ""
+    short_email_length: ""
+    display_name_on_email_from: ""
+
+    unsubscribe_via_email: ""
+    unsubscribe_via_email_footer: ""
+
+    delete_email_logs_after_days: ""
+    max_emails_per_day_per_user: ""
+    enable_staged_users: ""
+    maximum_staged_users_per_email: ""
+    auto_generated_whitelist: ""
+    block_auto_generated_emails: ""
+    ignore_by_title: ""
+    mailgun_api_key: ""
+
+    soft_bounce_score: ""
+    hard_bounce_score: ""
+    bounce_score_threshold: ""
+    bounce_score_threshold_deactivate: ""
+    reset_bounce_score_after_days: ""
+
+    attachment_content_type_blacklist: ""
+    attachment_filename_blacklist: ""
+
+    enable_forwarded_emails: ""
+    always_show_trimmed_content: ""
+    private_email: ""
+
+    manual_polling_enabled: ""
+    pop3_polling_enabled: ""
+    pop3_polling_ssl: ""
+    pop3_polling_openssl_verify: ""
+    pop3_polling_period_mins: ""
+    pop3_polling_port: ""
+    pop3_polling_host: ""
+    pop3_polling_username: ""
+    pop3_polling_password: ""
+    pop3_polling_delete_from_server: ""
+    log_mail_processing_failures: ""
+    email_in: ""
+    email_in_min_trust: ""
+    email_in_spam_header: ""
+    email_prefix: ""
+    email_site_title: ""
+
+    find_related_post_with_key: ""
+
+    minimum_topics_similar: ""
+
+    relative_date_duration: ""
+    delete_user_max_post_age: ""
+    delete_all_posts_max: ""
+    username_change_period: ""
+    email_editable: ""
+    logout_redirect: ""
+
+    allow_uploaded_avatars: ""
+    allow_animated_avatars: ""
+    allow_animated_thumbnails: ""
+    default_avatars: ""
+    automatically_download_gravatars: ""
+    digest_topics: ""
+    digest_posts: ""
+    digest_other_topics: ""
+    digest_min_excerpt_length: ""
+    suppress_digest_email_after_days: ""
+    digest_suppress_categories: ""
+    disable_digest_emails: ""
+    email_accent_bg_color: ""
+    email_accent_fg_color: ""
+    email_link_color: ""
+
+    detect_custom_avatars: ""
+    max_daily_gravatar_crawls: ""
+    public_user_custom_fields: ""
+    staff_user_custom_fields: ""
+    enable_user_directory: ""
+    enable_group_directory: ""
+    group_in_subject: ""
+    allow_anonymous_posting: ""
+    anonymous_posting_min_trust_level: ""
+    anonymous_account_duration_minutes: ""
+
+    hide_user_profiles_from_public: ""
+
+    show_inactive_accounts: ""
+
+    hide_suspension_reasons: ""
+
+    log_personal_messages_views: ""
+
+    user_website_domains_whitelist: ""
+
+    allow_profile_backgrounds: ""
+
+    sequential_replies_threshold: ""
+
+    get_a_room_threshold: ""
+
+    enable_mobile_theme: ""
+
+    dominating_topic_minimum_percent: ""
+
+    disable_avatar_education_message: ""
+
+    suppress_uncategorized_badge: ""
+
+    header_dropdown_category_count: ""
+
+    permalink_normalizations: ""
+
+    global_notice: ""
+
+    disable_edit_notifications: ""
+
+    automatically_unpin_topics: ""
+
+    read_time_word_count: ""
+
+    topic_page_title_includes_category: ""
+
+    native_app_install_banner: ""
+
+    share_anonymized_statistics: ""
+
+    auto_handle_queued_age: ""
+
+    max_prints_per_hour_per_user: ""
+
+    full_name_required: ""
+    enable_names: ""
+    display_name_on_posts: ""
+    show_time_gap_days: ""
+    short_progress_text_threshold: ""
+    default_code_lang: ""
+    warn_reviving_old_topic_age: ""
+    autohighlight_all_code: ""
+    highlighted_languages: ""
+
+    embed_truncate: ""
+    embed_support_markdown: ""
+    allowed_href_schemes: ""
+    embed_post_limit: ""
+    embed_username_required: ""
+    notify_about_flags_after: ""
+    show_create_topics_notice: ""
+
+    delete_drafts_older_than_n_days: ""
+
+    bootstrap_mode_min_users: ""
+
+    prevent_anons_from_downloading_files: ""
+
+    slug_generation_method: ""
+
+    enable_emoji: ""
+    enable_emoji_shortcuts: ""
+    emoji_set: ""
+    enforce_square_emoji: ""
+    emoji_autocomplete_min_chars: ""
+
+    approve_post_count: ""
+    approve_unless_trust_level: ""
+    approve_new_topics_unless_trust_level: ""
+    approve_unless_staged: ""
+    notify_about_queued_posts_after: ""
+    auto_close_messages_post_count: ""
+    auto_close_topics_post_count: ""
+
+    code_formatting_style: ""
+
+    max_allowed_message_recipients: ""
+    watched_words_regular_expressions: ""
+
+    default_email_digest_frequency: ""
+    default_include_tl0_in_digests: ""
+    default_email_personal_messages: ""
+    default_email_direct: ""
+    default_email_mailing_list_mode: ""
+    default_email_mailing_list_mode_frequency: ""
+    disable_mailing_list_mode: ""
+    default_email_always: ""
+    default_email_previous_replies: ""
+
+    default_email_in_reply_to: ""
+
+    default_other_new_topic_duration_minutes: ""
+    default_other_auto_track_topics_after_msecs: ""
+    default_other_notification_level_when_replying: ""
+    default_other_external_links_in_new_tab: ""
+    default_other_enable_quoting: ""
+    default_other_dynamic_favicon: ""
+    default_other_disable_jump_reply: ""
+
+    default_other_like_notification_frequency: ""
+
+    default_topics_automatic_unpin: ""
+
+    default_categories_watching: ""
+    default_categories_tracking: ""
+    default_categories_muted: ""
+    default_categories_watching_first_post: ""
+
+    retain_web_hook_events_period_days: ""
+    retry_web_hook_events: ""
+
+    allow_user_api_keys: ""
+    allow_user_api_key_scopes: ""
+    max_api_keys_per_user: ""
+    min_trust_level_for_user_api_key: ""
+    allowed_user_api_auth_redirects: ""
+    allowed_user_api_push_urls: ""
+    expire_user_api_keys_days: ""
+
+    tagging_enabled: ""
+    min_trust_to_create_tag: ""
+    max_tags_per_topic: ""
+    max_tag_length: ""
+    max_tag_search_results: ""
+    show_filter_by_tag: ""
+    max_tags_in_filter_list: ""
+    tags_sort_alphabetically: ""
+    tags_listed_by_group: ""
+    tag_style: ""
+    allow_staff_to_tag_pms: ""
+    min_trust_level_to_tag_topics: ""
+    suppress_overlapping_tags_in_list: ""
+    remove_muted_tags_from_latest: ""
+
+    company_short_name: ""
+    company_full_name: ""
+    company_domain: ""
+
+    shared_drafts_category: ""
+
+    push_notifications_prompt: ""
+    push_notifications_icon_url: ""
+
+    errors:
+      invalid_email: ""
+      invalid_username: ""
+      invalid_integer_min_max: ""
+      invalid_integer_min: ""
+      invalid_integer_max: ""
+      invalid_integer: ""
+      regex_mismatch: ""
+      must_include_latest: ""
+      invalid_string: ""
+      invalid_string_min_max: ""
+      invalid_string_min: ""
+      invalid_string_max: ""
+      invalid_reply_by_email_address: ""
+      invalid_alternative_reply_by_email_addresses: ""
+      pop3_polling_host_is_empty: ""
+      pop3_polling_username_is_empty: ""
+      pop3_polling_password_is_empty: ""
+      pop3_polling_authentication_failed: ""
+      reply_by_email_address_is_empty: ""
+      email_polling_disabled: ""
+      user_locale_not_enabled: ""
+      invalid_regex: ""
+      email_editable_enabled: ""
+      enable_sso_disabled: ""
+      staged_users_disabled: ""
+      reply_by_email_disabled: ""
+      sso_url_is_empty: ""
+      enable_local_logins_disabled: ""
+
+  search:
+    within_post: ""
+    types:
+      category: 'Kategorijos'
+      topic: 'Rezultatai'
+      user: 'Vartotojai'
+    results_page: ""
+
+  sso:
+    login_error: ""
+    not_found: ""
+    account_not_approved: ""
+    unknown_error: ""
+    timeout_expired: ""
+    no_email: ""
+    email_error: ""
+
+  original_poster: ""
+  most_posts: ""
+  most_recent_poster: ""
+  frequent_poster: ""
+
+  redirected_to_top_reasons:
+    new_user: ""
+    not_seen_in_a_month: ""
+
+  merge_posts:
+    edit_reason:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    errors:
+      different_topics: ""
+      different_users: ""
+
+  move_posts:
+    new_topic_moderator_post:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    existing_topic_moderator_post:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+
+  change_owner:
+    post_revision_text: ""
+
+  topic_statuses:
+    archived_enabled: ""
+    archived_disabled: ""
+    closed_enabled: ""
+    closed_disabled: ""
+    autoclosed_message_max_posts:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_topic_max_posts:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_days:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_hours:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_minutes:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_lastpost_days:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_lastpost_hours:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_enabled_lastpost_minutes:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+
+    autoclosed_disabled_days:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_disabled_hours:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_disabled_minutes:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_disabled_lastpost_days:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_disabled_lastpost_hours:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    autoclosed_disabled_lastpost_minutes:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+
+    autoclosed_disabled: ""
+    autoclosed_disabled_lastpost: ""
+    pinned_enabled: ""
+    pinned_disabled: ""
+    pinned_globally_enabled: ""
+    pinned_globally_disabled: ""
+    visible_enabled: ""
+    visible_disabled: ""
+    auto_deleted_by_timer: ""
+
+  login:
+    not_approved: ""
+    incorrect_username_email_or_password: ""
+    incorrect_password: ""
+    wait_approval: ""
+    active: ""
+    activate_email: ""
+    not_activated: ""
+    not_allowed_from_ip_address: ""
+    admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
+    suspended: ""
+    suspended_with_reason: ""
+    errors: ""
+    not_available: ""
+    something_already_taken: ""
+    omniauth_error: ""
+    omniauth_error_unknown: ""
+    authenticator_error_no_valid_email: ""
+    new_registrations_disabled: ""
+    password_too_long: ""
+    email_too_long: ""
+    reserved_username: ""
+    missing_user_field: ""
+    auth_complete: ""
+    click_to_continue: ""
+    already_logged_in: ""
+    second_factor_title: ""
+    second_factor_description: ""
+    second_factor_backup_description: ""
+    second_factor_backup_title: ""
+    invalid_second_factor_code: ""
+    second_factor_toggle:
+      totp: ""
+      backup_code: ""
+
+  user:
+    deactivated: ""
+    deactivated_by_staff: ""
+    activated_by_staff: ""
+    new_user_typed_too_fast: ""
+    content_matches_auto_block_regex: ""
+    username:
+      short: ""
+      long: ""
+      characters: ""
+      unique: ""
+      blank: ""
+      must_begin_with_alphanumeric_or_underscore: ""
+      must_end_with_alphanumeric: ""
+      must_not_contain_two_special_chars_in_seq: ""
+      must_not_end_with_confusing_suffix: ""
+    email:
+      not_allowed: ""
+      blocked: ""
+      revoked: ""
+    ip_address:
+      blocked: ""
+      max_new_accounts_per_registration_ip: ""
+    website:
+      domain_not_allowed: ""
+    auto_rejected: ""
+    destroy_reasons:
+      unused_staged_user: ""
+      fixed_primary_email: ""
+      same_ip_address: ""
+
+  flags_reminder:
+    flags_were_submitted:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    subject_template:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+
+  unsubscribe_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  invite_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  custom_invite_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  invite_forum_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  custom_invite_forum_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  invite_password_instructions:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  download_backup_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+    no_token: |
+  admin_confirmation_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  test_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  new_version_mailer:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  new_version_mailer_with_notes:
+    title: ""
+    subject_template: ""
+    text_body_template: |
+  flag_reasons:
+    off_topic: ""
+    inappropriate: ""
+    spam: ""
+    notify_moderators: ""
+
+  flags_dispositions:
+    agreed: ""
+    agreed_and_deleted: ""
+    disagreed: ""
+    deferred: ""
+    deferred_and_deleted: ""
+
+  temporarily_closed_due_to_flags:
+    one: ""
+    few: ""
+    many: ""
+    other: ""
+
+
+  system_messages:
+    private_topic_title: ""
+    contents_hidden: ""
+
+    post_hidden:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    post_hidden_again:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    flags_agreed_and_post_deleted:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    usage_tips:
+      text_body_template: |
+    welcome_user:
+      title: ""
+      subject_template: "Sveiki atvykę į %{site_name}!"
+      text_body_template: |
+    welcome_tl1_user:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    welcome_invite:
+      title: ""
+      subject_template: "Sveiki atvykę į %{site_name}!"
+      text_body_template: |
+    backup_succeeded:
+      title: ""
+      subject_template: "Atsarginė kopija sėkmingai užbaigta."
+      text_body_template: |
+    backup_failed:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    restore_succeeded:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    restore_failed:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    bulk_invite_succeeded:
+      title: ""
+      subject_template: ""
+      text_body_template: ""
+
+    bulk_invite_failed:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    csv_export_succeeded:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    csv_export_failed:
+      title: ""
+      subject_template: ""
+      text_body_template: ""
+
+    email_reject_insufficient_trust_level:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_user_not_found:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_screened_email:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_not_allowed_email:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_inactive_user:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_silenced_user:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_reply_user_not_matching:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_no_account:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_empty:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_parsing:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_invalid_access:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_strangers_not_allowed:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_invalid_post:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_invalid_post_specified:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_post_too_short:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_invalid_post_action:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_reply_key:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_bad_destination_address:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_old_destination:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_topic_not_found:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_topic_closed:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_auto_generated:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_reject_unrecognized_error:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_error_notification:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_revoked:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    too_many_spam_flags:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    too_many_tl3_flags:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    silenced_by_staff:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_automatically_silenced:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    spam_post_blocked:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    unsilenced:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    pending_users_reminder:
+      title: ""
+      subject_template:
+        one: ""
+        few: ""
+        many: ""
+        other: ""
+
+      text_body_template: |
+    download_remote_images_disabled:
+      title: ""
+      subject_template: ""
+      text_body_template: ""
+
+    dashboard_problems:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    new_user_of_the_month:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    queued_posts_reminder:
+      title: ""
+      subject_template:
+        one: ""
+        few: ""
+        many: ""
+        other: ""
+
+      text_body_template: |
+  unsubscribe_link: |
+  unsubscribe_link_and_mail: |
+  unsubscribe_mailing_list: |
+  subject_re: ""
+  subject_pm: "[AŽ]"
+
+  user_notifications:
+    previous_discussion: ""
+    reached_limit:
+      one: ""
+      few: ""
+      many: ""
+      other: ""
+
+    in_reply_to: ""
+    unsubscribe:
+      title: "Nebeprenumeruoti"
+      description: ""
+
+    header_instructions: ''
+    reply_by_email: ""
+    reply_by_email_pm: ""
+    only_reply_by_email: ""
+    only_reply_by_email_pm: ""
+    visit_link_to_respond: ""
+    visit_link_to_respond_pm: ""
+
+    posted_by: ""
+
+    pm_participants: ""
+
+    invited_group_to_private_message_body: |
+    invited_to_private_message_body: |
+    invited_to_topic_body: |
+    user_invited_to_private_message_pm_group:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_invited_to_private_message_pm:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_invited_to_private_message_pm_staged:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_invited_to_topic:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_replied:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_replied_pm:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_quoted:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_linked:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_mentioned:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_mentioned_pm:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_group_mentioned:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_posted:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_watching_first_post:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_posted_pm:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    user_posted_pm_staged:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    account_suspended:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    account_silenced:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    account_exists:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    account_second_factor_disabled:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    digest:
+      why: ""
+      since_last_visit: ""
+      new_topics: ""
+      unread_messages: ""
+      unread_notifications: ""
+      liked_received: ""
+      new_posts: ""
+      new_users: ""
+      popular_topics: ""
+      follow_topic: ""
+      join_the_discussion: ""
+      popular_posts: ""
+      more_new: ""
+      subject_template: ""
+      unsubscribe: ""
+      your_email_settings: ""
+      click_here: ""
+      from: ""
+      preheader: ""
+      custom:
+        html:
+          header: ''
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
+        text:
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
+
+    forgot_password:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    email_login:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    set_password:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    admin_login:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    account_created:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    confirm_new_email:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    confirm_old_email:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    notify_old_email:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    signup_after_approval:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+    signup:
+      title: ""
+      subject_template: ""
+      text_body_template: |
+  page_not_found:
+    title: ""
+    popular_topics: "Populiaros"
+    recent_topics: "Naujausios"
+    see_more: "Daugiau"
+    search_title: "Ieškoti svetainėje"
+    search_button: ""
+
+  offline:
+    title: ""
+    offline_page_message: ""
+
+  login_required:
+    welcome_message: |
+  terms_of_service:
+    title: ""
+    signup_form_message: ''
+
+  deleted: 'ištrintas'
+
+  image: ""
+
+  upload:
+    edit_reason: ""
+    unauthorized: ""
+    pasted_image_filename: ""
+    store_failure: ""
+    file_missing: ""
+    empty: ""
+    png_to_jpg_conversion_failure_message: ""
+    attachments:
+      too_large: ""
+    images:
+      too_large: ""
+      larger_than_x_megapixels: ""
+      size_not_found: ""
+    placeholders:
+      too_large: ""
+
+  avatar:
+    missing: ""
+
+  flag_reason:
+    sockpuppet: ""
+    spam_hosts: ""
+
+  skipped_email_log:
+    exceeded_emails_limit: ""
+    exceeded_bounces_limit: ""
+    mailing_list_no_echo_mode: ""
+    user_email_no_user: ""
+    user_email_post_not_found: ""
+    user_email_anonymous_user: ""
+    user_email_user_suspended_not_pm: ""
+    user_email_seen_recently: ""
+    user_email_notification_already_read: ""
+    user_email_notification_topic_nil: ""
+    user_email_post_user_deleted: ""
+    user_email_post_deleted: ""
+    user_email_user_suspended: ""
+    user_email_already_read: ""
+    sender_message_blank: ""
+    sender_message_to_blank: ""
+    sender_text_part_body_blank: ""
+    sender_text_body_blank: ""
+
+  color_schemes:
+    base_theme_name: ""
+    light: ""
+    dark: ""
+    neutral: ""
+    grey_amber: ""
+    shades_of_blue: ""
+    latte: ""
+    summer: ""
+    dark_rose: ""
+    default_theme_name: ""
+    light_theme_name: ""
+    dark_theme_name: ""
+    neutral_theme_name: ""
+    grey_amber_theme_name: ""
+    shades_of_blue_theme_name: ""
+    latte_theme_name: ""
+    summer_theme_name: ""
+    dark_rose_theme_name: ""
+
+  about: ""
+  guidelines: "Instrukcijos"
+  privacy: ""
+
+  edit_this_page: ""
+
+  csv_export:
+    boolean_yes: ""
+    boolean_no: ""
+
+  static_topic_first_reply: |
+  guidelines_topic:
+    title: ""
+    body: |
+  tos_topic:
+    title: ""
+    body: |
+  privacy_topic:
+    title: ""
+    body: |
+  badges:
+    editor:
+      name: ""
+      description: ""
+      long_description: |
+    basic_user:
+      name: ""
+      description: ""
+      long_description: |
+    member:
+      name: ""
+      description: ""
+      long_description: |
+    regular:
+      name: ""
+      description: ""
+      long_description: |
+    leader:
+      name: ""
+      description: ""
+      long_description: |
+    welcome:
+      name: ""
+      description: ""
+      long_description: |
+    autobiographer:
+      name: ""
+      description: ""
+      long_description: |
+    anniversary:
+      name: ""
+      description: ""
+      long_description: |
+    nice_post:
+      name: ""
+      description: ""
+      long_description: |
+    good_post:
+      name: ""
+      description: ""
+      long_description: |
+    great_post:
+      name: ""
+      description: ""
+      long_description: |
+    nice_topic:
+      name: ""
+      description: ""
+      long_description: |
+    good_topic:
+      name: ""
+      description: ""
+      long_description: |
+    great_topic:
+      name: ""
+      description: ""
+      long_description: |
+    nice_share:
+      name: ""
+      description: ""
+      long_description: |
+    good_share:
+      name: ""
+      description: ""
+      long_description: |
+    great_share:
+      name: ""
+      description: ""
+      long_description: |
+    first_like:
+      name: ""
+      description: ""
+      long_description: |
+    first_flag:
+      name: ""
+      description: ""
+      long_description: |
+    promoter:
+      name: ""
+      description: ""
+      long_description: |
+    campaigner:
+      name: ""
+      description: ""
+      long_description: |
+    champion:
+      name: ""
+      description: ""
+      long_description: |
+    first_share:
+      name: ""
+      description: ""
+      long_description: |
+    first_link:
+      name: ""
+      description: ""
+      long_description: |
+    first_quote:
+      name: ""
+      description: ""
+      long_description: |
+    read_guidelines:
+      name: ""
+      description: ""
+      long_description: |
+    reader:
+      name: ""
+      description: ""
+      long_description: |
+    popular_link:
+      name: ""
+      description: ""
+      long_description: |
+    hot_link:
+      name: ""
+      description: ""
+      long_description: |
+    famous_link:
+      name: ""
+      description: ""
+      long_description: |
+    appreciated:
+      name: ""
+      description: ""
+      long_description: |
+    respected:
+      name: ""
+      description: ""
+      long_description: |
+    admired:
+      name: ""
+      description: ""
+      long_description: |
+    out_of_love:
+      name: ""
+      description: ""
+      long_description: |
+    higher_love:
+      name: ""
+      description: ""
+      long_description: |
+    crazy_in_love:
+      name: ""
+      description: ""
+      long_description: |
+    thank_you:
+      name: ""
+      description: ""
+      long_description: |
+    gives_back:
+      name: ""
+      description: ""
+      long_description: |
+    empathetic:
+      name: ""
+      description: ""
+      long_description: |
+    first_emoji:
+      name: ""
+      description: ""
+      long_description: |
+    first_mention:
+      name: ""
+      description: ""
+      long_description: |
+    first_onebox:
+      name: ""
+      description: ""
+      long_description: |
+    first_reply_by_email:
+      name: ""
+      description: ""
+      long_description: |
+    new_user_of_the_month:
+      name: ""
+      description: ""
+      long_description: |
+    enthusiast:
+      name: ""
+      description:  ""
+      long_description: |
+    aficionado:
+      name: ""
+      description: ""
+      long_description: |
+    devotee:
+      name: ""
+      description: ""
+      long_description: |
+    badge_title_metadata: ""
+
+  admin_login:
+    success: ""
+    errors:
+      unknown_email_address: ""
+      invalid_token: ""
+    email_input: ""
+    submit_button: ""
+
+  performance_report:
+    initial_post_raw: ""
+    initial_topic_title: ""
+
+  tags:
+    title: ""
+    staff_tag_disallowed: ""
+    staff_tag_remove_disallowed: ""
+    minimum_required_tags: ""
+  rss_by_tag: ""
+
+  finish_installation:
+    congratulations: ""
+    register:
+      button: ""
+      title: ""
+      help: ""
+      no_emails: ""
+    confirm_email:
+      title: ""
+      message: ""
+    resend_email:
+      title: ""
+      message: ""
+
+  safe_mode:
+    title: ""
+    description: ""
+    no_customizations: ""
+    only_official: ""
+    no_plugins: ""
+    enter: ""
+    must_select: ""
+  wizard:
+    title: ""
+    step:
+      locale:
+        title: ""
+        fields:
+          default_locale:
+            description: ""
+
+      forum_title:
+        title: ""
+        description: ""
+
+        fields:
+          title:
+            label: ""
+            placeholder: ""
+          site_description:
+            label: ""
+            placeholder: ""
+
+      introduction:
+        title: ""
+
+        fields:
+          welcome:
+            label: ""
+            description: ""
+            one_paragraph: ""
+
+      privacy:
+        title: ""
+        description: ""
+
+        fields:
+          privacy:
+            choices:
+              open:
+                label: ""
+                description: ""
+              restricted:
+                label: ""
+                description: ""
+
+      contact:
+        title: ""
+        fields:
+          contact_email:
+            label: ""
+            placeholder: ""
+            description: ""
+          contact_url:
+            label: ""
+            placeholder: ""
+            description: ""
+          site_contact:
+            label: ""
+            description: ""
+
+      corporate:
+        title: ""
+        description: ""
+
+        fields:
+          company_short_name:
+            label: ""
+            placeholder: ""
+          company_full_name:
+            label: ""
+            placeholder: ""
+          company_domain:
+            label: ""
+            placeholder: ""
+
+      colors:
+        title: ""
+        fields:
+          theme_id:
+            description: ""
+            choices:
+              default:
+                label: ""
+              dark:
+                label: ""
+
+      logos:
+        title: ""
+        fields:
+          logo_url:
+            label: ""
+            description: ""
+          logo_small_url:
+            label: ""
+            description: ""
+
+      icons:
+        title: ""
+        fields:
+          favicon_url:
+            label: ""
+            description: ""
+          apple_touch_icon_url:
+            label: ""
+            description: ""
+
+      homepage:
+        description: ""
+        title: ""
+
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: ""
+              categories_only:
+                label: ""
+              categories_with_featured_topics:
+                label: ""
+              categories_and_latest_topics:
+                label: ""
+              categories_and_top_topics:
+                label: ""
+
+      emoji:
+        title: ""
+        description: ""
+
+      invites:
+        title: ""
+        description: ""
+
+      finished:
+        title: ""
+        description: |
+  search_logs:
+    graph_title: ""
+
+  joined: ""
+
+  discourse_push_notifications:
+    popup:
+      mentioned: ''
+      group_mentioned: ''
+      quoted: ''
+      replied: ''
+      posted: ''
+      private_message: ''
+      linked: ''
+      confirm_title: ''
+      confirm_body: ''
+
+  staff_action_logs:
+    not_found: ""
+    unknown: ""
+    user_merged: ""
+    user_delete_self: ""
