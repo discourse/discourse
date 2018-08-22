@@ -333,6 +333,25 @@ describe Email::Sender do
     end
   end
 
+  context 'with a deleted post' do
+
+    it 'should skip sending the email' do
+      post = Fabricate(:post, deleted_at: 1.day.ago)
+
+      message = Mail::Message.new to: 'disc@ourse.org', body: 'some content'
+      message.header['X-Discourse-Post-Id'] = post.id
+      message.header['X-Discourse-Topic-Id'] = post.topic_id
+      message.expects(:deliver_now).never
+
+      email_sender = Email::Sender.new(message, :valid_type)
+      expect { email_sender.send }.to change { SkippedEmailLog.count }
+
+      log = SkippedEmailLog.last
+      expect(log.reason_type).to eq(SkippedEmailLog.reason_types[:sender_post_deleted])
+    end
+
+  end
+
   context 'with a user' do
     let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain', body: 'test body'
