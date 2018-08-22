@@ -41,6 +41,14 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   },
 
   @computed
+  activityMetricsFilters() {
+    return {
+      startDate: this.get("lastMonth"),
+      endDate: this.get("today")
+    };
+  },
+
+  @computed
   trendingSearchOptions() {
     return { table: { total: false, limit: 8 } };
   },
