@@ -163,10 +163,6 @@ en:
       invalid_choice:
         one: 'You specified the invalid choice %{name}'
         other: 'You specified the invalid choices %{name}'
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1839,6 +1835,10 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
+      min_username_length_range: "You cannot set the minimum above the maximum."
+      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
+      max_username_length_range: "You cannot set the maximum below the minimum."
 
   search:
     within_post: "#%{post_number} by %{username}"
