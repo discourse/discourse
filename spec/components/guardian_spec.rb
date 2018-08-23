@@ -568,6 +568,7 @@ describe Guardian do
       let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       let!(:pm) { Fabricate(:private_message_topic, user: user) }
       let(:admin) { Fabricate(:admin) }
+      let(:moderator) { Fabricate(:moderator) }
 
       context "when private messages are disabled" do
         it "allows an admin to invite to the pm" do
@@ -584,6 +585,22 @@ describe Guardian do
         it "doesn't allow a regular user to invite" do
           expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
+
+      context "when PM has receached the maximum number of recipients" do
+        before do
+          SiteSetting.max_allowed_message_recipients = 2
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+
+        it "allows staff to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          pm.grant_permission_to_user(moderator.email)
+          expect(Guardian.new(moderator).can_invite_to?(pm)).to be_truthy
         end
       end
     end

@@ -2026,6 +2026,37 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
+      describe "when PM has reached maximum allowed numbers of recipients" do
+        let(:user2) { Fabricate(:user) }
+        let(:pm) { Fabricate(:private_message_topic, user: user) }
+
+        let(:moderator) { Fabricate(:moderator) }
+        let(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
+
+        before do
+          SiteSetting.max_allowed_message_recipients = 2
+        end
+
+        it "doesn't allow normal users to invite" do
+          post "/t/#{pm.id}/invite.json", params: {
+            user: user2.username
+          }
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["errors"]).to contain_exactly(
+            I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+          )
+        end
+
+        it "allows staff to bypass limits" do
+          sign_in(moderator)
+          post "/t/#{moderator_pm.id}/invite.json", params: {
+            user: user2.username
+          }
+          expect(response.status).to eq(200)
+          expect(moderator_pm.reload.topic_allowed_users.count).to eq(3)
+        end
+      end
+
       describe 'when user does not have permission to invite to the topic' do
         let(:topic) { Fabricate(:private_message_topic) }
 
@@ -2113,6 +2144,37 @@ RSpec.describe TopicsController do
       it "allows inviting a group to a PM" do
         invite_group(pm, 200)
         expect(pm.allowed_groups.first.id).to eq(admins.id)
+      end
+    end
+
+    context "when PM has reached maximum allowed numbers of recipients" do
+      let(:group) { Fabricate(:group, messageable_level: 99) }
+      let(:pm) { Fabricate(:private_message_topic, user: user) }
+
+      let(:moderator) { Fabricate(:moderator) }
+      let(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
+
+      before do
+        SiteSetting.max_allowed_message_recipients = 2
+      end
+
+      it "doesn't allow normal users to invite" do
+        post "/t/#{pm.id}/invite-group.json", params: {
+          group: group.name
+        }
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)["errors"]).to contain_exactly(
+          I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+        )
+      end
+
+      it "allows staff to bypass limits" do
+        sign_in(moderator)
+        post "/t/#{moderator_pm.id}/invite-group.json", params: {
+          group: group.name
+        }
+        expect(response.status).to eq(200)
+        expect(moderator_pm.reload.topic_allowed_users.count + moderator_pm.topic_allowed_groups.count).to eq(3)
       end
     end
   end

@@ -372,6 +372,18 @@ describe TopicUser do
         TopicUser.update_last_read(new_user, topic, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
       end
+
+      it 'should not automatically track PMs' do
+        new_user.user_option.update!(auto_track_topics_after_msecs: 0)
+
+        another_user = Fabricate(:user)
+        pm = Fabricate(:private_message_topic, user: another_user)
+        pm.invite(another_user, new_user.username)
+
+        TopicUser.track_visit!(pm.id, new_user.id)
+        TopicUser.update_last_read(new_user, pm.id, 2, 2, 1000)
+        expect(TopicUser.get(pm, new_user).notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
     end
   end
 

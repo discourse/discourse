@@ -263,6 +263,7 @@ en:
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
   max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
+  pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
