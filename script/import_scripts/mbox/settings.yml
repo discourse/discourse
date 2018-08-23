@@ -1,7 +1,7 @@
 data_dir: /shared/import/data
 
 # mbox files
-split_regex: "^From .+"
+split_regex: "^From .+@.+"
 #split_regex: "^From .+@example.com.+"
 
 # individual emails
@@ -11,7 +11,7 @@ split_regex: "^From .+"
 #split_regex: "^========================================================================="
 
 default_trust_level: 1
-prefer_html: false
+prefer_html: true
 staged: true
 index_only: false
 
