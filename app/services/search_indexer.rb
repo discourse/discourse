@@ -173,9 +173,10 @@ class SearchIndexer
     end
 
     def self.scrub(html)
+      return +"" if html.blank?
+
       me = new
-      parser = Nokogiri::HTML::SAX::Parser.new(me)
-      parser.parse("<div>#{html}</div>") if html.present?
+      Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
       me.scrubbed
     end
 
