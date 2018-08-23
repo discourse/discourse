@@ -161,4 +161,27 @@ describe Email::Processor do
       expect { Email::Processor.process!(email) }.to_not change { EmailLog.count }
     end
   end
+
+  describe 'when replying to a post that is too old' do
+    let(:mail) { file_from_fixtures("old_destination.eml", "emails").read }
+
+    it 'rejects the email with the right response' do
+      SiteSetting.disallow_reply_by_email_after_days = 2
+
+      topic = Fabricate(:topic, id: 424242)
+      post  = Fabricate(:post, topic: topic, id: 123456, created_at: 3.days.ago)
+
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      rejection_raw = ActionMailer::Base.deliveries.first.body.to_s
+
+      expect(rejection_raw).to eq(I18n.t("system_messages.email_reject_old_destination.text_body_template",
+        destination: '["reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com"]',
+        former_title: 'Some Old Post',
+        short_url: "#{Discourse.base_url}/p/#{post.id}",
+        number_of_days: 2
+      ))
+    end
+  end
 end
