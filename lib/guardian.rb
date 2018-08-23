@@ -272,6 +272,7 @@ class Guardian
 
     if object.is_a?(Topic) && object.private_message?
       return false unless SiteSetting.enable_personal_messages?
+      return false if object.reached_recipients_limit? && !is_staff?
     end
 
     if object.is_a?(Topic) && object.category
