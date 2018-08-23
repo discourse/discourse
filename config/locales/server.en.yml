@@ -2556,7 +2556,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        For security reasons we only accept replies to original notifications for %{number_of_days} days. Please [visit the topic](%{short_url}) to continue the conversation.
+        We only accept replies to original notifications for %{number_of_days} days. Please [visit the topic](%{short_url}) to continue the conversation.
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
