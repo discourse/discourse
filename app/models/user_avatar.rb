@@ -103,17 +103,17 @@ class UserAvatar < ActiveRecord::Base
 
     upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
 
-    user.create_user_avatar unless user.user_avatar
+    user.create_user_avatar! unless user.user_avatar
 
     if !user.user_avatar.contains_upload?(upload.id)
-      user.user_avatar.update_columns(custom_upload_id: upload.id)
-
+      user.user_avatar.update!(custom_upload_id: upload.id)
       override_gravatar = !options || options[:override_gravatar]
 
       if user.uploaded_avatar_id.nil? ||
           !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
           override_gravatar
-        user.update_columns(uploaded_avatar_id: upload.id)
+
+        user.update!(uploaded_avatar_id: upload.id)
       end
     end
 
