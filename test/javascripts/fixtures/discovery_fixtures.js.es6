@@ -11,7 +11,12 @@ export default {
         username: "stellarhopper",
         avatar_template: "/images/avatar.png"
       },
-      { id: 19, username: "eviltrout", avatar_template: "/images/avatar.png" },
+      {
+        id: 19,
+        username: "eviltrout",
+        name: "Evil Trout",
+        avatar_template: "/images/avatar.png"
+      },
       { id: 14, username: "clay", avatar_template: "/images/avatar.png" },
       {
         id: 32,
