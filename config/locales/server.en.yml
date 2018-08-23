@@ -3228,7 +3228,8 @@ en:
     sender_message_blank: "message is blank"
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
-    sender_text_body_blank: "body is blank"
+    sender_body_blank: "body is blank"
+    sender_post_deleted: "post has been deleted"
 
   color_schemes:
     base_theme_name: "Base"
