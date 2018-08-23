@@ -325,13 +325,17 @@ class PostCreator
   end
 
   def transaction(&blk)
-    Post.transaction do
-      if new_topic?
+    if new_topic?
+      Post.transaction do
         blk.call
-      else
-        # we need to ensure post_number is monotonically increasing with no gaps
-        # so we serialize creation to avoid needing rollbacks
-        DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
+      end
+    else
+      # we need to ensure post_number is monotonically increasing with no gaps
+      # so we serialize creation to avoid needing rollbacks
+      DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}") do
+        Post.transaction do
+          blk.call
+        end
       end
     end
   end
