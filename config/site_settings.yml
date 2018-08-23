@@ -935,6 +935,9 @@ files:
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
+  s3_canned_acl:
+    default: 'public-read'
+    enum: 'S3CannedACLSiteSetting'
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
