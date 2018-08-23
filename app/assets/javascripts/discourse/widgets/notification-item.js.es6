@@ -154,7 +154,7 @@ createWidget("notification-item", {
 
     this.sendWidgetEvent("linkClicked");
     DiscourseURL.routeTo(this.url(), {
-      callback: () => {
+      afterRouteComplete: () => {
         if (!this.attrs.data.revision_number) {
           return;
         }
