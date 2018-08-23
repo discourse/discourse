@@ -354,6 +354,14 @@ QUnit.test("update status through advanced search ui", async assert => {
 });
 
 QUnit.test("update post time through advanced search ui", async assert => {
+  await visit("/search?expanded=true&q=after:2018-08-22");
+
+  assert.equal(
+    find(".search-query").val(),
+    "after:2018-08-22",
+    "it should update the search term correctly"
+  );
+
   const postTimeSelector = selectKit(
     ".search-advanced-options .select-kit#postTime"
   );
@@ -369,6 +377,7 @@ QUnit.test("update post time through advanced search ui", async assert => {
     postTimeSelector.rowByName("after").exists(),
     'has "after" populated'
   );
+
   assert.equal(
     find(".search-query").val(),
     "none after:2016-10-05",

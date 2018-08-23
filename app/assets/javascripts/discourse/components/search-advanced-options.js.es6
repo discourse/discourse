@@ -38,6 +38,7 @@ export default Em.Component.extend({
     { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
     { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" }
   ],
+
   inOptionsForAll: [
     { name: I18n.t("search.advanced.filters.first"), value: "first" },
     { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
@@ -45,6 +46,7 @@ export default Em.Component.extend({
     { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
     { name: I18n.t("search.advanced.filters.images"), value: "images" }
   ],
+
   statusOptions: [
     { name: I18n.t("search.advanced.statuses.open"), value: "open" },
     { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
@@ -55,6 +57,7 @@ export default Em.Component.extend({
       value: "single_user"
     }
   ],
+
   postTimeOptions: [
     { name: I18n.t("search.advanced.post.time.before"), value: "before" },
     { name: I18n.t("search.advanced.post.time.after"), value: "after" }
@@ -116,29 +119,36 @@ export default Em.Component.extend({
     this.setSearchedTermValueForGroup();
     this.setSearchedTermValueForBadge();
     this.setSearchedTermValueForTags();
+
     this.setSearchedTermValue(
       "searchedTerms.in",
       REGEXP_IN_PREFIX,
       REGEXP_IN_MATCH
     );
+
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.likes",
       REGEXP_SPECIAL_IN_LIKES_MATCH
     );
+
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.title",
       REGEXP_SPECIAL_IN_TITLE_MATCH
     );
+
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.private",
       REGEXP_SPECIAL_IN_PRIVATE_MATCH
     );
+
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.seen",
       REGEXP_SPECIAL_IN_SEEN_MATCH
     );
+
     this.setSearchedTermValue("searchedTerms.status", REGEXP_STATUS_PREFIX);
     this.setSearchedTermValueForPostTime();
+
     this.setSearchedTermValue(
       "searchedTerms.min_post_count",
       REGEXP_MIN_POST_COUNT_PREFIX
@@ -304,14 +314,17 @@ export default Em.Component.extend({
       const userInputWhen = match[0].match(REGEXP_POST_TIME_WHEN)[0];
       const existingInputDays = this.get("searchedTerms.time.days");
       const userInputDays = match[0].replace(REGEXP_POST_TIME_PREFIX, "");
+      const properties = {};
 
       if (existingInputWhen !== userInputWhen) {
-        this.set("searchedTerms.time.when", userInputWhen);
+        properties["searchedTerms.time.when"] = userInputWhen;
       }
 
       if (existingInputDays !== userInputDays) {
-        this.set("searchedTerms.time.days", userInputDays);
+        properties["searchedTerms.time.days"] = userInputDays;
       }
+
+      this.setProperties(properties);
     } else {
       this.set("searchedTerms.time.days", "");
     }
