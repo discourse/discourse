@@ -53,10 +53,15 @@ export default Ember.Component.extend({
   _xhr: null,
   shouldBuildScrollMap: true,
   scrollMap: null,
+  uploadPosition: null,
 
-  @computed
-  uploadPlaceholder() {
-    return `[${I18n.t("uploading")}]() `;
+  @computed("uploadPosition")
+  uploadPlaceholder(uploadPosition) {
+    if (uploadPosition) {
+      return `[${I18n.t("uploading")} (${uploadPosition})]() `;
+    } else {
+      return `[${I18n.t("uploading")}]() `;
+    }
   },
 
   @computed("composer.requiredCategoryMissing")
@@ -216,6 +221,17 @@ export default Ember.Component.extend({
         lastShownAt: lastValidatedAt
       });
     }
+  },
+
+  _setUploadPosition(data) {
+    if (data.originalFiles.length > 1) {
+      let position = data.originalFiles.indexOf(data.files[0]) + 1;
+      this.set("uploadPosition", position);
+    }
+  },
+
+  _resetUploadPosition() {
+    this.set("uploadPosition", null);
   },
 
   _enableAdvancedEditorPreviewSync() {
@@ -568,7 +584,6 @@ export default Ember.Component.extend({
 
     const $element = this.$();
     const csrf = this.session.get("csrfToken");
-    const uploadPlaceholder = this.get("uploadPlaceholder");
 
     $element.fileupload({
       url: Discourse.getURL(
@@ -637,12 +652,20 @@ export default Ember.Component.extend({
     $element.on("fileuploadsend", (e, data) => {
       this._pasted = false;
       this._validUploads++;
-      this.appEvents.trigger("composer:insert-text", uploadPlaceholder);
+
+      this._setUploadPosition(data);
+
+      this.appEvents.trigger(
+        "composer:insert-text",
+        this.get("uploadPlaceholder")
+      );
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
         this._xhr = data.xhr();
       }
+
+      this._resetUploadPosition();
     });
 
     $element.on("fileuploaddone", (e, data) => {
@@ -651,12 +674,15 @@ export default Ember.Component.extend({
       if (!this._xhr || !this._xhr._userCancelled) {
         const markdown = getUploadMarkdown(upload);
         cacheShortUploadUrl(upload.short_url, upload.url);
+        this._setUploadPosition(data);
+
         this.appEvents.trigger(
           "composer:replace-text",
-          uploadPlaceholder.trim(),
+          this.get("uploadPlaceholder").trim(),
           markdown
         );
         this._resetUpload(false);
+        this._resetUploadPosition();
       } else {
         this._resetUpload(true);
       }
