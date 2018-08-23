@@ -30,11 +30,11 @@ describe SearchIndexer do
   end
 
   it 'removes diacritics' do
-    html = "<p>Hétérogénéité</p>"
+    html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
 
     scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
 
-    expect(scrubbed).to eq(" Heterogeneite ")
+    expect(scrubbed).to eq(" HELLO Heterogeneite Здравствуите هتاف للترحيب 你好 ")
   end
 
   it 'correctly indexes a post according to version' do
