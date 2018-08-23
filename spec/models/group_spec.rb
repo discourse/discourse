@@ -388,7 +388,7 @@ describe Group do
       u.save!
     end
 
-    SiteSetting.min_username_length = 6
+    SiteSetting.min_username_length = 5
     Group.refresh_automatic_groups!(:staff)
     # should not explode here
   end
