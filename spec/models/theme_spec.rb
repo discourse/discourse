@@ -149,14 +149,14 @@ HTML
     expect(field).to match(/<b>theme2test<\/b>/)
   end
 
-  describe "#switch_type!" do
+  describe "#switch_to_component!" do
     it "correctly converts a theme to component" do
       theme.add_child_theme!(child)
       scheme = ColorScheme.create!(name: 'test')
       theme.update!(color_scheme_id: scheme.id, user_selectable: true)
       theme.set_default!
 
-      theme.switch_type!
+      theme.switch_to_component!
       theme.reload
 
       expect(theme.component).to eq(true)
@@ -165,11 +165,13 @@ HTML
       expect(theme.color_scheme_id).to eq(nil)
       expect(ChildTheme.where(parent_theme: theme).exists?).to eq(false)
     end
+  end
 
+  describe "#switch_to_theme!" do
     it "correctly converts a component to theme" do
       theme.add_child_theme!(child)
 
-      child.switch_type!
+      child.switch_to_theme!
       theme.reload
       child.reload
 

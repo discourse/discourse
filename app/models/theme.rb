@@ -149,18 +149,27 @@ class Theme < ActiveRecord::Base
     errors.add(:base, I18n.t("themes.errors.component_no_default")) if default?
   end
 
-  def switch_type!
-    # converts theme to component and vice versa
+  def switch_to_component!
+    return if component
+
     Theme.transaction do
-      self.component = !self.component
+      self.component = true
 
-      if self.component
-        self.color_scheme_id = nil
-        self.user_selectable = false
-        Theme.clear_default! if default?
-      end
+      self.color_scheme_id = nil
+      self.user_selectable = false
+      Theme.clear_default! if default?
 
-      ChildTheme.where("child_theme_id = :id OR parent_theme_id = :id", id: id).destroy_all
+      ChildTheme.where("parent_theme_id = ?", id).destroy_all
+      self.save!
+    end
+  end
+
+  def switch_to_theme!
+    return unless component
+
+    Theme.transaction do
+      self.component = false
+      ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
     end
   end

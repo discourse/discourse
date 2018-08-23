@@ -25,7 +25,7 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model", "allThemes")
+  @computed("model", "allThemes", "model.component")
   parentThemes(model, allThemes) {
     if (!model.get("component")) {
       return null;

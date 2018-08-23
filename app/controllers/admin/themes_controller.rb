@@ -284,8 +284,10 @@ class Admin::ThemesController < Admin::AdminController
 
   def handle_switch
     param = theme_params[:component]
-    if ["true", "false"].include?(param.to_s) && param.to_s != @theme.component.to_s
-      @theme.switch_type!
+    if param.to_s == "false" && @theme.component?
+      @theme.switch_to_theme!
+    elsif param.to_s == "true" && !@theme.component?
+      @theme.switch_to_component!
     end
   end
 end
