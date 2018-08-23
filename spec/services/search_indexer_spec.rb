@@ -29,6 +29,14 @@ describe SearchIndexer do
     expect(scrubbed).to eq(" http://meta.discourse.org/  link ")
   end
 
+  it 'removes diacritics' do
+    html = "<p>Hétérogénéité</p>"
+
+    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+
+    expect(scrubbed).to eq(" Heterogeneite ")
+  end
+
   it 'correctly indexes a post according to version' do
     # Preparing so that they can be indexed to right version
     SearchIndexer.update_posts_index(post_id, "dummy", "", nil, nil)
