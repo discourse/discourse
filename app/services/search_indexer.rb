@@ -193,7 +193,7 @@ class SearchIndexer
     DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
     def characters(string)
-      scrubbed << " #{string.unicode_normalize(:nfd).gsub(DIACRITICS, "").strip} "
+      scrubbed << " #{string.unicode_normalize(:nfkd).gsub(DIACRITICS, "").strip} "
     end
   end
 end
