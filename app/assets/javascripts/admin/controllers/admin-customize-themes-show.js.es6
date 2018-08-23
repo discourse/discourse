@@ -39,7 +39,7 @@ export default Ember.Controller.extend({
   @computed("model.theme_fields.@each")
   hasEditedFields(fields) {
     return fields.any(
-      f => !Em.isBlank(f.value) && f.type_id != SETTINGS_TYPE_ID
+      f => !Em.isBlank(f.value) && f.type_id !== SETTINGS_TYPE_ID
     );
   },
 
