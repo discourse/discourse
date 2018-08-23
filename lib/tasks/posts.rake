@@ -138,10 +138,13 @@ def remap_posts(find, type, ignore_case, replace = "")
   i = 0
 
   Post.raw_match(find, type).find_each do |p|
-    regex = case type
-            when 'string' then Regexp.new(Regexp.escape(find), ignore_case)
-            when 'regex' then Regexp.new(find, ignore_case)
-            end
+    regex =
+      case type
+      when 'string' then
+        Regexp.new(Regexp.escape(find), ignore_case)
+      when 'regex' then
+        Regexp.new(find, ignore_case)
+      end
 
     new_raw = p.raw.gsub(regex, replace)
 
