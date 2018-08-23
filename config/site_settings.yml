@@ -816,6 +816,9 @@ email:
     default: true
   unsubscribe_via_email_footer:
     default: false
+  disallow_reply_by_email_after_days:
+    default: 90
+    shadowed_by_global: true
   delete_email_logs_after_days:
     default: 90
     shadowed_by_global: true

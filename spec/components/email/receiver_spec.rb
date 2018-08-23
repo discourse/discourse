@@ -79,10 +79,28 @@ describe Email::Receiver do
   end
 
   it "raises an OldDestinationError when notification is too old" do
-    topic = Fabricate(:topic, id: 424242)
-    post  = Fabricate(:post, topic: topic, id: 123456, created_at: 1.year.ago)
+    SiteSetting.disallow_reply_by_email_after_days = 2
 
-    expect { process(:old_destination) }.to raise_error(Email::Receiver::OldDestinationError)
+    topic = Fabricate(:topic, id: 424242)
+    post  = Fabricate(:post, topic: topic, id: 123456)
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::BadDestinationAddress
+    )
+
+    IncomingEmail.destroy_all
+    post.update!(created_at: 3.days.ago)
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::OldDestinationError
+    )
+
+    SiteSetting.disallow_reply_by_email_after_days = 0
+    IncomingEmail.destroy_all
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::BadDestinationAddress
+    )
   end
 
   it "raises a BouncerEmailError when email is a bounced email" do
