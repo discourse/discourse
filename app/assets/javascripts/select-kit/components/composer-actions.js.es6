@@ -275,6 +275,15 @@ export default DropdownSelectBoxComponent.extend({
       if (postUsername) {
         usernames = postUsername;
       }
+    } else if (this.get("composerModel.topic")) {
+      const stream = this.get("composerModel.topic.postStream");
+
+      if (stream.get("firstPostPresent")) {
+        const post = stream.get("posts.firstObject");
+        if (post && !post.get("yours") && post.get("username")) {
+          usernames = post.get("username");
+        }
+      }
     }
 
     options.action = PRIVATE_MESSAGE;

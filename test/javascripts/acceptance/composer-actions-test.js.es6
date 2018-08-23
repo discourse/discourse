@@ -304,3 +304,23 @@ QUnit.test("replying to post as regular user", async assert => {
     );
   });
 });
+
+QUnit.test(
+  "replying to first post - reply_as_private_message",
+  async assert => {
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_1 button.reply");
+
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_private_message");
+
+    assert.equal(find(".users-input .item:eq(0)").text(), "uwe_keim");
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .indexOf("Continuing the discussion") >= 0
+    );
+  }
+);
