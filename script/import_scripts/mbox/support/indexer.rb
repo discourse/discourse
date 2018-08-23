@@ -74,7 +74,7 @@ module ImportScripts::Mbox
             from_email: from_email,
             from_name: from_display_name,
             subject: extract_subject(receiver, category_name),
-            email_date: parsed_email.date&.to_s,
+            email_date: timestamp(parsed_email.date),
             raw_message: receiver.raw_email,
             body: body,
             elided: elided,
@@ -255,6 +255,10 @@ module ImportScripts::Mbox
 
     def monotonic_time
       Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
+    def timestamp(datetime)
+      Time.zone.at(datetime).to_i if datetime
     end
   end
 end
