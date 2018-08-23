@@ -106,6 +106,41 @@ describe Admin::EmailController do
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include('eviltrout@test.domain')
       end
     end
+
+    context 'with SiteSetting.disable_emails' do
+      let(:eviltrout) { Fabricate(:evil_trout) }
+      let(:admin) { Fabricate(:admin) }
+
+      it 'does not sends mail to anyone when setting is "yes"' do
+        SiteSetting.disable_emails = 'yes'
+
+        post "/admin/email/test.json", params: { email_address: admin.email }
+
+        incoming = JSON.parse(response.body)
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled"))
+      end
+
+      it 'sends mail to staff only when setting is "non-staff"' do
+        SiteSetting.disable_emails = 'non-staff'
+
+        post "/admin/email/test.json", params: { email_address: admin.email }
+        incoming = JSON.parse(response.body)
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+
+        post "/admin/email/test.json", params: { email_address: eviltrout.email }
+        incoming = JSON.parse(response.body)
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled_for_non_staff"))
+      end
+
+      it 'sends mail to everyone when setting is "no"' do
+        SiteSetting.disable_emails = 'no'
+
+        post "/admin/email/test.json", params: { email_address: eviltrout.email }
+
+        incoming = JSON.parse(response.body)
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+      end
+    end
   end
 
   describe '#preview_digest' do
