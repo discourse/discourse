@@ -1,0 +1,24 @@
+{{#d-modal-body class="create-theme-modal" title="admin.customize.theme.modal_title"}}
+  <div class="input">
+    <span class="label">
+      {{I18n "admin.customize.theme.create_name"}}
+    </span>
+    <span class="control">
+      {{input value=name}}
+    </span>
+  </div>
+
+  <div class="input">
+    <span class="label">
+      {{I18n "admin.customize.theme.create_type"}}
+    </span>
+    <span class="control">
+      {{combo-box valueAttribute="value" content=types value=selectedType}}
+    </span>
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn btn-primary" label="admin.customize.theme.create" action="createTheme" disabled=loading}}
+  {{d-modal-cancel close=(action "closeModal")}}
+</div>

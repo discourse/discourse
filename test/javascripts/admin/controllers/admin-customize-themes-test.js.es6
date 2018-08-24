@@ -8,7 +8,7 @@ moduleFor("controller:admin-customize-themes", {
   needs: ["controller:adminUser"]
 });
 
-QUnit.test("can list sorted themes", function(assert) {
+QUnit.test("can list themes correctly", function(assert) {
   const defaultTheme = Theme.create({ id: 2, default: true, name: "default" });
   const userTheme = Theme.create({
     id: 3,
@@ -17,16 +17,25 @@ QUnit.test("can list sorted themes", function(assert) {
   });
   const strayTheme1 = Theme.create({ id: 4, name: "stray1" });
   const strayTheme2 = Theme.create({ id: 5, name: "stray2" });
+  const componentTheme = Theme.create({
+    id: 6,
+    name: "component",
+    component: true
+  });
 
   const controller = this.subject({
-    model: {
-      content: [strayTheme2, strayTheme1, userTheme, defaultTheme]
-    }
+    model: [strayTheme2, strayTheme1, userTheme, defaultTheme, componentTheme]
   });
 
   assert.deepEqual(
-    controller.get("sortedThemes").map(t => t.get("name")),
+    controller.get("fullThemes").map(t => t.get("name")),
     [defaultTheme, userTheme, strayTheme1, strayTheme2].map(t => t.get("name")),
     "sorts themes correctly"
+  );
+
+  assert.deepEqual(
+    controller.get("childThemes").map(t => t.get("name")),
+    [componentTheme].map(t => t.get("name")),
+    "separate components from themes"
   );
 });

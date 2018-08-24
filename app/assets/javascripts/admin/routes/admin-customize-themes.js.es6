@@ -1,5 +1,4 @@
 import showModal from "discourse/lib/show-modal";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Route.extend({
   model() {
@@ -22,16 +21,8 @@ export default Ember.Route.extend({
       this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
     },
 
-    newTheme(obj) {
-      obj = obj || { name: I18n.t("admin.customize.new_style") };
-      const item = this.store.createRecord("theme");
-
-      item
-        .save(obj)
-        .then(() => {
-          this.send("addTheme", item);
-        })
-        .catch(popupAjaxError);
+    showCreateModal() {
+      showModal("admin-create-theme", { admin: true });
     }
   }
 });

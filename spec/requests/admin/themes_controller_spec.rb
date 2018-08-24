@@ -169,7 +169,7 @@ describe Admin::ThemesController do
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.save
 
-      child_theme = Fabricate(:theme)
+      child_theme = Fabricate(:theme, component: true)
 
       upload = Fabricate(:upload)
 
@@ -200,8 +200,7 @@ describe Admin::ThemesController do
     end
 
     it 'returns the right error message' do
-      parent = Fabricate(:theme)
-      parent.add_child_theme!(theme)
+      theme.update!(component: true)
 
       put "/admin/themes/#{theme.id}.json", params: {
         theme: { default: true }

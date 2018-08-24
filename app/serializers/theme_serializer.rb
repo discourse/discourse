@@ -33,7 +33,7 @@ class ThemeFieldSerializer < ApplicationSerializer
 end
 
 class ChildThemeSerializer < ApplicationSerializer
-  attributes :id, :name, :created_at, :updated_at, :default
+  attributes :id, :name, :created_at, :updated_at, :default, :component
 
   def include_default?
     object.id == SiteSetting.default_theme_id
@@ -75,6 +75,10 @@ class ThemeSerializer < ChildThemeSerializer
 
   def settings
     object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+  end
+
+  def include_child_themes?
+    !object.component?
   end
 end
 
