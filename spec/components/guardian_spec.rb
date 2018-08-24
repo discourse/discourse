@@ -2609,7 +2609,7 @@ describe Guardian do
       theme2.update!(user_selectable: true)
       expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
 
-      theme2.update!(user_selectable: false)
+      theme2.update!(user_selectable: false, component: true)
       theme.add_child_theme!(theme2)
       expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(true)
       expect(user_guardian.allow_themes?([theme2.id])).to eq(false)

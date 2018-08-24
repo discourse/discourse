@@ -25,7 +25,7 @@ describe Stylesheet::Manager do
 
     theme.save!
 
-    child_theme = Fabricate(:theme)
+    child_theme = Fabricate(:theme, component: true)
 
     child_theme.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
     child_theme.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")

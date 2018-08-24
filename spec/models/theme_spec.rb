@@ -23,7 +23,7 @@ describe Theme do
   end
 
   let(:theme) { Fabricate(:theme, user: user) }
-  let(:child) { Fabricate(:theme, user: user) }
+  let(:child) { Fabricate(:theme, user: user, component: true) }
   it 'can properly clean up color schemes' do
     scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
     scheme2 = ColorScheme.create!(theme_id: theme.id, name: 'test2')
@@ -76,7 +76,6 @@ describe Theme do
     grandchild = Fabricate(:theme, user: user)
     grandparent = Fabricate(:theme, user: user)
 
-    theme.add_child_theme!(child)
     expect do
       child.add_child_theme!(grandchild)
     end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.no_multilevels_components"))
@@ -87,16 +86,20 @@ describe Theme do
   end
 
   it "doesn't allow a child to be user selectable" do
-    theme.add_child_theme!(child)
     child.update(user_selectable: true)
     expect(child.errors.full_messages).to contain_exactly(I18n.t("themes.errors.component_no_user_selectable"))
   end
 
   it "doesn't allow a child to be set as the default theme" do
-    theme.add_child_theme!(child)
     expect do
       child.set_default!
     end.to raise_error(Discourse::InvalidParameters, I18n.t("themes.errors.component_no_default"))
+  end
+
+  it "doesn't allow a component to have color scheme" do
+    scheme = ColorScheme.create!(name: "test")
+    child.update(color_scheme: scheme)
+    expect(child.errors.full_messages).to contain_exactly(I18n.t("themes.errors.component_no_color_scheme"))
   end
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
@@ -146,14 +149,49 @@ HTML
     expect(field).to match(/<b>theme2test<\/b>/)
   end
 
-  describe ".transform_ids" do
-    it "adds the child themes of the parent" do
-      child = Fabricate(:theme)
-      child2 = Fabricate(:theme)
-      sorted = [child.id, child2.id].sort
+  describe "#switch_to_component!" do
+    it "correctly converts a theme to component" do
+      theme.add_child_theme!(child)
+      scheme = ColorScheme.create!(name: 'test')
+      theme.update!(color_scheme_id: scheme.id, user_selectable: true)
+      theme.set_default!
 
+      theme.switch_to_component!
+      theme.reload
+
+      expect(theme.component).to eq(true)
+      expect(theme.user_selectable).to eq(false)
+      expect(theme.default?).to eq(false)
+      expect(theme.color_scheme_id).to eq(nil)
+      expect(ChildTheme.where(parent_theme: theme).exists?).to eq(false)
+    end
+  end
+
+  describe "#switch_to_theme!" do
+    it "correctly converts a component to theme" do
+      theme.add_child_theme!(child)
+
+      child.switch_to_theme!
+      theme.reload
+      child.reload
+
+      expect(child.component).to eq(false)
+      expect(ChildTheme.where(child_theme: child).exists?).to eq(false)
+    end
+  end
+
+  describe ".transform_ids" do
+    let!(:child) { Fabricate(:theme, component: true) }
+    let!(:child2) { Fabricate(:theme, component: true) }
+
+    before do
       theme.add_child_theme!(child)
       theme.add_child_theme!(child2)
+    end
+
+    it "adds the child themes of the parent" do
+      sorted = [child.id, child2.id].sort
+
       expect(Theme.transform_ids([theme.id])).to eq([theme.id, *sorted])
 
       fake_id = [child.id, child2.id, theme.id].min - 5
@@ -164,12 +202,6 @@ HTML
     end
 
     it "doesn't insert children when extend is false" do
-      child = Fabricate(:theme)
-      child2 = Fabricate(:theme)
-
-      theme.add_child_theme!(child)
-      theme.add_child_theme!(child2)
-
       fake_id = theme.id + 1
       fake_id2 = fake_id + 2
       fake_id3 = fake_id2 + 3
@@ -219,6 +251,7 @@ HTML
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
       theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
       theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
+      theme.component = true
       theme.save
 
       parent_theme = Fabricate(:theme)
