@@ -8,6 +8,7 @@
 
 .lazyYT-container {
   position: relative;
+  z-index: z("base");
   display: block;
   height: 0;
   padding: 0 0 56.25% 0;
