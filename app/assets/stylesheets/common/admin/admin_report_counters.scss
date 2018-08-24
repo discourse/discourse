@@ -34,11 +34,9 @@
         }
       }
 
-      &.no-change {
-        i {
-          color: $primary-medium;
-          font-size: $font-down-3;
-        }
+      .d-icon-minus {
+        color: $primary-medium;
+        font-size: $font-down-3;
       }
 
       &.high-trending-up,

@@ -47,6 +47,8 @@
 
   .header .trend {
     margin-left: auto;
+    margin-right: 8px;
+
     &.trending-down,
     &.high-trending-down {
       color: $danger;
