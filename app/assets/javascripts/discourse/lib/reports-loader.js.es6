@@ -73,7 +73,10 @@ export default {
       })
       .finally(() => {
         _processing--;
-        debounce(this, this._processQueue, DEBOUNCING_DELAY);
+
+        // when a request is done we want to start processing queue
+        // without waiting for debouncing
+        debounce(this, this._processQueue, DEBOUNCING_DELAY, true);
       });
   },
 
