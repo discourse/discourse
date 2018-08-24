@@ -138,7 +138,7 @@ componentTest("rate limited", {
     };
 
     // prettier-ignore
-    server.get("/admin/reports/signups_rate_limited", () => { //eslint-disable-line
+    server.get("/admin/reports/bulk", () => { //eslint-disable-line
       return response({"errors":["You’ve performed this action too many times. Please wait 10 seconds before trying again."],"error_type":"rate_limit","extras":{"wait_seconds":10}});
     });
   },
