@@ -71,16 +71,28 @@ class TopicEmbed < ActiveRecord::Base
     else
       absolutize_urls(url, contents)
       post = embed.post
-      # Update the topic if it changed
-      if post && post.topic && content_sha1 != embed.content_sha1
-        post_revision_args = {
-          raw: absolutize_urls(url, contents),
-          user_id: user.id,
-          title: title,
-        }
 
-        post.revise(user, post_revision_args, skip_validations: true, bypass_rate_limiter: true)
-        embed.update_column(:content_sha1, content_sha1)
+      # Update the topic if it changed
+      if post&.topic
+        revision = {}
+
+        if post.user != user
+          PostOwnerChanger.new(
+            post_ids: [post.id],
+            topic_id: post.topic_id,
+            new_owner: user,
+            acting_user: Discourse.system_user
+          ).change_owner!
+
+          # make sure the post returned has the right author
+          post.reload
+        end
+
+        revision[:raw] = absolutize_urls(url, contents) if content_sha1 != embed.content_sha1
+        revision[:title] = title if title != post.topic.title
+
+        post.revise(user, revision, skip_validations: true, bypass_rate_limiter: true) unless revision.empty?
+        embed.update_column(:content_sha1, content_sha1) if revision[:raw]
       end
     end
 
