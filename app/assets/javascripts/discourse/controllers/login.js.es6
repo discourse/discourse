@@ -28,6 +28,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loggedIn: false,
   processingEmailLink: false,
   showLoginButtons: true,
+  showSecondFactor: false,
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
@@ -40,10 +41,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
       loggingIn: false,
       loggedIn: false,
       secondFactorRequired: false,
+      showSecondFactor: false,
       showLoginButtons: true
     });
-    $("#credentials").show();
-    $("#second-factor").hide();
+  },
+
+  @computed("showSecondFactor")
+  credentialsClass(showSecondFactor) {
+    console.log(showSecondFactor);
+    return showSecondFactor ? "hidden" : "";
+  },
+
+  @computed("showSecondFactor")
+  secondFactorClass(showSecondFactor) {
+    console.log(showSecondFactor);
+    return showSecondFactor ? "" : "hidden";
   },
 
   // Determines whether at least one login button is enabled
@@ -110,15 +122,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
               !self.get("secondFactorRequired")
             ) {
               $("#modal-alert").hide();
+              console.log("showing second factor...");
               self.setProperties({
                 secondFactorRequired: true,
                 showLoginButtons: false,
-                backupEnabled: result.backup_enabled
+                backupEnabled: result.backup_enabled,
+                showSecondFactor: true
               });
 
-              $("#credentials").hide();
-              $("#second-factor").show();
-              $("#second-factor input").focus();
+              Ember.run.next(() => {
+                $("#second-factor input").focus();
+              });
 
               return;
             } else if (result.reason === "not_activated") {
