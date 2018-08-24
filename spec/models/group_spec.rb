@@ -588,28 +588,28 @@ describe Group do
 
       # Add a group without one to consider `NULL` check
       g2.add(user)
-      expect(user.group_locked_trust_level).to be_nil
+      expect(user.group_granted_trust_level).to be_nil
       expect(user.manual_locked_trust_level).to be_nil
 
       g0.add(user)
       expect(user.reload.trust_level).to eq(2)
-      expect(user.group_locked_trust_level).to eq(2)
+      expect(user.group_granted_trust_level).to eq(2)
       expect(user.manual_locked_trust_level).to be_nil
 
       g1.add(user)
       expect(user.reload.trust_level).to eq(3)
-      expect(user.group_locked_trust_level).to eq(3)
+      expect(user.group_granted_trust_level).to eq(3)
       expect(user.manual_locked_trust_level).to be_nil
 
       g1.remove(user)
       expect(user.reload.trust_level).to eq(2)
-      expect(user.group_locked_trust_level).to eq(2)
+      expect(user.group_granted_trust_level).to eq(2)
       expect(user.manual_locked_trust_level).to be_nil
 
       g0.remove(user)
       user.reload
       expect(user.manual_locked_trust_level).to be_nil
-      expect(user.group_locked_trust_level).to be_nil
+      expect(user.group_granted_trust_level).to be_nil
       expect(user.trust_level).to eq(0)
     end
   end

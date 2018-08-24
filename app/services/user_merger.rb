@@ -209,7 +209,6 @@ class UserMerger
         primary_group_id          = COALESCE(t.primary_group_id, s.primary_group_id),
         registration_ip_address   = COALESCE(t.registration_ip_address, s.registration_ip_address),
         first_seen_at             = LEAST(t.first_seen_at, s.first_seen_at),
-        group_locked_trust_level  = GREATEST(t.group_locked_trust_level, s.group_locked_trust_level),
         manual_locked_trust_level = GREATEST(t.manual_locked_trust_level, s.manual_locked_trust_level)
       FROM users AS s
       WHERE t.id = :target_user_id AND s.id = :source_user_id
