@@ -1,7 +1,7 @@
+import ReportLoader from "discourse/lib/reports-loader";
 import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { ajax } from "discourse/lib/ajax";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 import {
@@ -95,7 +95,7 @@ export default Ember.Component.extend({
         this.get("currentMode")
       );
     } else if (this.get("dataSourceName")) {
-      this._fetchReport().finally(() => this._computeReport());
+      this._fetchReport();
     }
   },
 
@@ -306,29 +306,31 @@ export default Ember.Component.extend({
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
-    let payload = this._buildPayload(["prev_period"]);
+    Ember.run.next(() => {
+      let payload = this._buildPayload(["prev_period"]);
 
-    return ajax(this.get("dataSource"), payload)
-      .then(response => {
-        if (response && response.report) {
-          this._reports.push(this._loadReport(response.report));
-        } else {
-          console.log("failed loading", this.get("dataSource"));
+      const callback = response => {
+        if (!this.element || this.isDestroying || this.isDestroyed) {
+          return;
         }
-      })
-      .catch(data => {
-        if (data.jqXHR && data.jqXHR.status === 429) {
+
+        this.set("isLoading", false);
+
+        if (response === 429) {
           this.set(
             "rateLimitationString",
             I18n.t("admin.dashboard.too_many_requests")
           );
+        } else if (response === 500) {
+          this.set("model.error", "exception");
+        } else if (response) {
+          this._reports.push(this._loadReport(response));
+          this._computeReport();
         }
-      })
-      .finally(() => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          this.set("isLoading", false);
-        }
-      });
+      };
+
+      ReportLoader.enqueue(this.get("dataSourceName"), payload.data, callback);
+    });
   },
 
   _buildPayload(facets) {
