@@ -21,6 +21,10 @@ class User < ActiveRecord::Base
   include SecondFactorManager
   include HasDestroyedWebHook
 
+  self.ignored_columns = %w{
+    group_locked_trust_level
+  }
+
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -340,6 +344,13 @@ class User < ActiveRecord::Base
 
   def self.find_by_username(username)
     find_by(username_lower: username.downcase)
+  end
+
+  def group_granted_trust_level
+    GroupUser
+      .where(user_id: id)
+      .includes(:group)
+      .maximum("groups.grant_trust_level")
   end
 
   def enqueue_welcome_message(message_type)
