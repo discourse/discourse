@@ -48,13 +48,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("showSecondFactor")
   credentialsClass(showSecondFactor) {
-    console.log(showSecondFactor);
     return showSecondFactor ? "hidden" : "";
   },
 
   @computed("showSecondFactor")
   secondFactorClass(showSecondFactor) {
-    console.log(showSecondFactor);
     return showSecondFactor ? "" : "hidden";
   },
 
@@ -122,7 +120,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
               !self.get("secondFactorRequired")
             ) {
               $("#modal-alert").hide();
-              console.log("showing second factor...");
               self.setProperties({
                 secondFactorRequired: true,
                 showLoginButtons: false,
