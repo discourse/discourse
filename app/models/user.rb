@@ -308,6 +308,13 @@ class User < ActiveRecord::Base
     find_by(username_lower: username.downcase)
   end
 
+  def group_min_trust_level
+    GroupUser
+      .where(user_id: id)
+      .includes(:group)
+      .maximum("groups.grant_trust_level")
+  end
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)

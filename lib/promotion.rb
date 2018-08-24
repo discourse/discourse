@@ -121,9 +121,9 @@ class Promotion
     end
 
     # Then consider the group locked level
-    if user.group_locked_trust_level
+    if user.group_min_trust_level
       return user.update!(
-        trust_level: user.group_locked_trust_level
+        trust_level: user.group_min_trust_level
       )
     end
 
