@@ -40,14 +40,24 @@ describe TopicEmbed do
         expect(post.topic.category).to eq(embeddable_host.category)
       end
 
-      it "Supports updating the post" do
-        new_user = Fabricate(:user)
+      it "Supports updating the post title" do
+        post = TopicEmbed.import(user, url, "I am a new title", contents)
 
-        post = TopicEmbed.import(new_user, url, "I am a new title", "muhahaha new contents!")
+        expect(post.topic.title).to eq("I am a new title")
+      end
+
+      it "Supports updating the post content" do
+        post = TopicEmbed.import(user, url, title, "muhahaha new contents!")
 
         expect(post.cooked).to match(/new contents/)
-        expect(post.topic.title).to eq("I am a new title")
+      end
+
+      it "Supports updating the post author" do
+        new_user = Fabricate(:user)
+        post = TopicEmbed.import(new_user, url, title, contents)
+
         expect(post.user).to eq(new_user)
+        expect(post.topic.user).to eq(new_user)
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
