@@ -369,6 +369,7 @@ class PostAlerter
                              original_post_id: original_post.id,
                              original_post_type: original_post.post_type,
                              original_username: original_username,
+                             revision_number: opts[:revision_number],
                              display_username: opts[:display_username] || post.user.username)
 
     if group = opts[:group]

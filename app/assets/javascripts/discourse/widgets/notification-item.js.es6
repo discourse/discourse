@@ -52,6 +52,7 @@ createWidget("notification-item", {
     }
 
     const topicId = attrs.topic_id;
+
     if (topicId) {
       return postUrl(attrs.slug, topicId, attrs.post_number);
     }
@@ -152,6 +153,18 @@ createWidget("notification-item", {
     e.preventDefault();
 
     this.sendWidgetEvent("linkClicked");
-    DiscourseURL.routeTo(this.url());
+    DiscourseURL.routeTo(this.url(), {
+      afterRouteComplete: () => {
+        if (!this.attrs.data.revision_number) {
+          return;
+        }
+
+        this.appEvents.trigger(
+          "post:show-revision",
+          this.attrs.post_number,
+          this.attrs.data.revision_number
+        );
+      }
+    });
   }
 });

@@ -711,6 +711,16 @@ export default RestModel.extend({
     return resolved;
   },
 
+  postForPostNumber(postNumber) {
+    if (!this.get("hasPosts")) {
+      return;
+    }
+
+    return this.get("posts").find(p => {
+      return p.get("post_number") === postNumber;
+    });
+  },
+
   /**
     Returns the closest post given a postNumber that may not exist in the stream.
     For example, if the user asks for a post that's deleted or otherwise outside the range.
