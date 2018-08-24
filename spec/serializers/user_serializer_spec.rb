@@ -196,4 +196,25 @@ describe UserSerializer do
       expect(json[:custom_fields]['secret_field']).to eq(nil)
     end
   end
+
+  context "with user_api_keys" do
+    let(:user) { Fabricate(:user) }
+
+    it "sorts keys by last used time" do
+      freeze_time
+
+      user_api_key_0 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 2.days.ago, revoked_at: Time.zone.now)
+      user_api_key_1 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 7.days.ago)
+      user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.days.ago)
+      user_api_key_3 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 4.days.ago, revoked_at: Time.zone.now)
+      user_api_key_4 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 3.days.ago)
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_api_keys].size).to eq(3)
+      expect(json[:user_api_keys][0][:id]).to eq(user_api_key_1.id)
+      expect(json[:user_api_keys][1][:id]).to eq(user_api_key_4.id)
+      expect(json[:user_api_keys][2][:id]).to eq(user_api_key_2.id)
+    end
+  end
 end
