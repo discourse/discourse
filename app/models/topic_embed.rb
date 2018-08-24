@@ -88,11 +88,20 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        revision[:raw] = absolutize_urls(url, contents) if content_sha1 != embed.content_sha1
+        if content_sha1 != embed.content_sha1
+          revision[:raw] = absolutize_urls(url, contents)
+        end
+
         revision[:title] = title if title != post.topic.title
 
-        post.revise(user, revision, skip_validations: true, bypass_rate_limiter: true) unless revision.empty?
-        embed.update_column(:content_sha1, content_sha1) if revision[:raw]
+        unless revision.empty?
+          post.revise(user, revision,
+            skip_validations: true,
+            bypass_rate_limiter: true
+          )
+        end
+
+        embed.update!(content_sha1: content_sha1) if revision[:raw]
       end
     end
 
