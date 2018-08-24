@@ -1378,7 +1378,7 @@ describe User do
       expect(user.title).to eq("bars and wats")
       expect(user.trust_level).to eq(1)
       expect(user.manual_locked_trust_level).to be_nil
-      expect(user.group_locked_trust_level).to eq(1)
+      expect(user.group_granted_trust_level).to eq(1)
     end
   end
 
