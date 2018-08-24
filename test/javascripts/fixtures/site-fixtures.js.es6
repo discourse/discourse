@@ -206,7 +206,7 @@ export default {
         {
           id: 27,
           name: "translations",
-          color: "808281",
+          color: "27AA5B",
           text_color: "FFFFFF",
           slug: "translations",
           topic_count: 95,
@@ -376,7 +376,7 @@ export default {
         {
           id: 17,
           name: "uncategorized",
-          color: "AB9364",
+          color: "0088CC",
           text_color: "FFFFFF",
           slug: "uncategorized",
           topic_count: 342,
