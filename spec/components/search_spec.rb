@@ -990,6 +990,24 @@ describe Search do
     end
   end
 
+  context 'diacritics' do
+    let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }
+
+    it ('allows strips correctly') do
+      results = Search.execute('hello', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('regis', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('Régis', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('สวัสดี', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+    end
+  end
+
   context 'pagination' do
     let(:number_of_results) { 2 }
     let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello') }
