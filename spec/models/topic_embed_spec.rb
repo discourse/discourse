@@ -22,6 +22,7 @@ describe TopicEmbed do
 
     context 'creation of a post' do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
+      let(:topic_embed) { TopicEmbed.find_by(post: post) }
 
       it "works as expected with a new URL" do
         expect(post).to be_present
@@ -41,23 +42,27 @@ describe TopicEmbed do
       end
 
       it "Supports updating the post title" do
-        post = TopicEmbed.import(user, url, "I am a new title", contents)
+        TopicEmbed.import(user, url, "I am a new title", contents)
 
-        expect(post.topic.title).to eq("I am a new title")
+        topic_embed.reload
+        expect(topic_embed.post.topic.title).to eq("I am a new title")
       end
 
       it "Supports updating the post content" do
-        post = TopicEmbed.import(user, url, title, "muhahaha new contents!")
+        expect do
+          TopicEmbed.import(user, url, title, "muhahaha new contents!")
+        end.to change { topic_embed.reload.content_sha1 }
 
-        expect(post.cooked).to match(/new contents/)
+        expect(topic_embed.post.cooked).to match(/new contents/)
       end
 
       it "Supports updating the post author" do
         new_user = Fabricate(:user)
-        post = TopicEmbed.import(new_user, url, title, contents)
+        TopicEmbed.import(new_user, url, title, contents)
 
-        expect(post.user).to eq(new_user)
-        expect(post.topic.user).to eq(new_user)
+        topic_embed.reload
+        expect(topic_embed.post.user).to eq(new_user)
+        expect(topic_embed.post.topic.user).to eq(new_user)
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
