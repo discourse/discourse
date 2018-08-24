@@ -53,9 +53,10 @@
       display: flex;
       flex-direction: column;
     }
-  }
-  #second-factor {
-    display: none;
+
+    &.hidden {
+      display: none;
+    }
   }
 }
 
