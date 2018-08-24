@@ -132,11 +132,14 @@ class Search
     @valid = true
     @page = @opts[:page]
 
+    term = term.to_s.dup
+
     # Removes any zero-width characters from search terms
-    term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    term.gsub!(/[\u200B-\u200D\uFEFF]/, '')
     # Replace curly quotes to regular quotes
-    term.to_s.gsub!(/[\u201c\u201d]/, '"')
-    @clean_term = term.to_s.dup
+    term.gsub!(/[\u201c\u201d]/, '"')
+
+    @clean_term = term
 
     term = process_advanced_search!(term)
 
@@ -825,9 +828,10 @@ class Search
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
+    # we must strip diacritics otherwise we will get no matches
     @ts_query_cache ||= {}
     @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
-      Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
+      Search.ts_query(term: SearchIndexer::HtmlScrubber.strip_diacritics(@term), ts_config: ts_config, weight_filter: weight_filter)
   end
 
   def wrap_rows(query)
