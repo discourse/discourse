@@ -2,7 +2,6 @@ import ReportLoader from "discourse/lib/reports-loader";
 import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { ajax } from "discourse/lib/ajax";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 import {
