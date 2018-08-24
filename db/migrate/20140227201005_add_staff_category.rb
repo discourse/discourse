@@ -12,7 +12,7 @@ class AddStaffCategory < ActiveRecord::Migration[4.2]
 
           result = DB.query_single "INSERT INTO categories
                           (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
-                   VALUES (:name, '283890', 'FFFFFF', now(), now(), -1, '', :description, true, 2)
+                   VALUES (:name, 'E45735', 'FFFFFF', now(), now(), -1, '', :description, true, 2)
                    RETURNING id", name: name, description: description
 
           category_id = result.first.to_i

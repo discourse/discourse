@@ -216,7 +216,7 @@ PreloadStore.store("site", {
     {
       id: 17,
       name: "uncategorized",
-      color: "AB9364",
+      color: "0088CC",
       text_color: "FFFFFF",
       slug: "uncategorized",
       topic_count: 229,

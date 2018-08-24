@@ -624,7 +624,7 @@ end
 #
 #  id                                :integer          not null, primary key
 #  name                              :string(50)       not null
-#  color                             :string(6)        default("AB9364"), not null
+#  color                             :string(6)        default("0088CC"), not null
 #  topic_id                          :integer
 #  topic_count                       :integer          default(0), not null
 #  created_at                        :datetime         not null

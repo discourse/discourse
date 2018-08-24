@@ -1867,7 +1867,7 @@ export default {
         {
           id: 17,
           name: "uncategorized",
-          color: "AB9364",
+          color: "0088CC",
           text_color: "FFFFFF",
           slug: "uncategorized",
           topic_count: 229,
@@ -5911,7 +5911,7 @@ export default {
         {
           id: 1,
           name: "Uncategorized",
-          color: "AB9364",
+          color: "0088CC",
           text_color: "FFFFFF",
           slug: "uncategorized",
           topic_count: 1,
@@ -5940,7 +5940,7 @@ export default {
         {
           id: 3,
           name: "Site Feedback",
-          color: "808281",
+          color: "27AA5B",
           text_color: "FFFFFF",
           slug: "site-feedback",
           topic_count: 0,

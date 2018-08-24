@@ -16,7 +16,7 @@ class AddLoungeCategory < ActiveRecord::Migration[4.2]
 
         result = DB.query_single "INSERT INTO categories
                         (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
-                 VALUES (:name, 'EEEEEE', '652D90', now(), now(), -1, '', :description, true, 3)
+                 VALUES (:name, 'A461EF', '652D90', now(), now(), -1, '', :description, true, 3)
                  RETURNING id", name: name, description: description
 
         category_id = result.first.to_i

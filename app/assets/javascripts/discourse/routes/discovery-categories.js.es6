@@ -119,7 +119,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
         everyoneName = groups.findBy("id", 0).name;
 
       const model = this.store.createRecord("category", {
-        color: "AB9364",
+        color: "0088CC",
         text_color: "FFFFFF",
         group_permissions: [{ group_name: everyoneName, permission_type: 1 }],
         available_groups: groups.map(g => g.name),
