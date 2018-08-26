@@ -27,6 +27,12 @@ acceptance("User Preferences", {
       });
     });
 
+    server.put("/u/eviltrout/preferences/email", () => {
+      return helper.response({
+        success: true
+      });
+    });
+
     server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
       return helper.response({
         gravatar_upload_id: 6543,
@@ -117,6 +123,20 @@ QUnit.test("email", async assert => {
     I18n.t("user.email.invalid"),
     "it should display invalid email tip"
   );
+});
+
+QUnit.test("email field always shows up", async assert => {
+  await visit("/u/eviltrout/preferences/email");
+
+  assert.ok(exists("#change-email"), "it has the input element");
+
+  await fillIn("#change-email", "eviltrout@discourse.org");
+  await click(".user-preferences button.btn-primary");
+
+  await visit("/u/eviltrout/preferences");
+  await visit("/u/eviltrout/preferences/email");
+
+  assert.ok(exists("#change-email"), "it has the input element");
 });
 
 QUnit.test("connected accounts", async assert => {
