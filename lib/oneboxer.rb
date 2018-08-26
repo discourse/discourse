@@ -250,9 +250,11 @@ module Oneboxer
 
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, force_get_hosts: force_get_hosts)
+      ignored = SiteSetting.onebox_domains_blacklist.split("|")
+
+      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: ignored, force_get_hosts: force_get_hosts)
       uri = fd.resolve
-      return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
+      return blank_onebox if uri.blank? || ignored.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
         cache: {},
