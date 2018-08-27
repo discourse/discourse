@@ -327,62 +327,77 @@ aside.quote {
     }
   }
 
+  .controls {
+    display: flex;
+    align-items: center;
+
+    .btn {
+      margin-right: 0.5em;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
   .participants {
-    // PMs
-    box-sizing: border-box;
-    margin: 0 -10px;
-    margin-bottom: 0.5em;
-    display: flex; // IE11
+    display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    @supports (display: grid) {
-      // Overrides flex fallback above
-      display: grid;
-      grid-template-columns: repeat(4, auto);
-      @include breakpoint(tablet, min-width) {
-        grid-template-columns: repeat(5, auto);
+    align-items: center;
+    margin-bottom: 0.5em;
+
+    .user {
+      border: 1px solid $primary-low;
+      border-radius: 0.25em;
+      padding: 0;
+      margin: 0.125em 0.25em 0.125em 0;
+      display: flex;
+      align-items: center;
+      height: 26px;
+
+      .user-link,
+      .group-link {
+        color: $primary-high;
+
+        &:hover {
+          color: $primary;
+        }
       }
-      @include breakpoint(mobile) {
-        grid-template-columns: repeat(2, auto);
-        font-size: $font-down-1;
+
+      .avatar,
+      .d-icon-users {
+        margin-left: 0.25em;
+        margin-right: 0.25em;
       }
-      @include breakpoint(mobile-small) {
-        grid-template-columns: repeat(1, auto);
+
+      .username,
+      .group-name {
+        margin-right: 0.25em;
+
+        @include breakpoint(mobile) {
+          display: none;
+        }
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .remove-invited {
+        display: flex;
+        height: 100%;
+        padding: 0 0.5em;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        border-radius: 0 0.25em 0.25em 0;
       }
     }
 
-    .user {
-      display: flex;
-      align-items: center;
-      padding: 4px 8px;
-      overflow: hidden;
-      flex: 0 0 auto; // IE11
-      a {
-        color: $primary-high;
-        &[href] {
-          display: flex;
-          align-items: center;
-          white-space: nowrap;
-          min-width: 0;
-        }
-        span {
-          flex: 1 1 auto;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-      &.group {
-        margin: 0;
-        .d-icon {
-          margin-right: 4px;
-          width: 20px;
-          text-align: center;
-        }
-      }
-    }
-    .d-icon-times {
-      margin-left: 0.25em;
-      color: dark-light-choose($primary-medium, $secondary-high);
+    .edit-participants-btn {
+      margin: 0.125em 0 0.125em 0;
+      align-self: flex-start;
+      border-radius: 0.25em;
     }
   }
 }
