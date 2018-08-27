@@ -1540,6 +1540,15 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       expect(response.content_type).to eq('application/rss+xml')
     end
+
+    it 'renders rss of the topic correctly with subfolder' do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not include("/forum/forum")
+      expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
+    end
   end
 
   describe '#invite_group' do
