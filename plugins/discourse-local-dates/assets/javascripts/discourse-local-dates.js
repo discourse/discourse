@@ -46,10 +46,7 @@
 
       var html = "<span>";
       html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";
-      html += relativeTime.replace(
-        "TZ",
-        _formatTimezone(moment.tz.guess()).join(": ")
-      );
+      html += "<span class='relative-time'></span>";
       html += "</span>";
 
       var joinedPreviews = previews.join(" – ");
@@ -58,7 +55,14 @@
         .html(html)
         .attr("title", joinedPreviews)
         .attr("data-tooltip", joinedPreviews)
-        .addClass("cooked");
+        .addClass("cooked")
+        .find(".relative-time")
+        .text(
+          relativeTime.replace(
+            "TZ",
+            _formatTimezone(moment.tz.guess()).join(": ")
+          )
+        );
 
       if (repeat) {
         this.timeout = setTimeout(function() {
