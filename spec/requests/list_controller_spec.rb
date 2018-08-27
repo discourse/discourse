@@ -270,6 +270,17 @@ RSpec.describe ListController do
       expect(response.content_type).to eq('application/rss+xml')
     end
 
+    it 'renders links correctly with subfolder' do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      post = Fabricate(:post, topic: topic, user: user)
+      get "/latest.rss"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not include("/forum/forum")
+      expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
+      expect(response.body).to include("http://test.localhost/forum/u/#{post.user.username}")
+    end
+
     it 'renders top RSS' do
       get "/top.rss"
       expect(response.status).to eq(200)
