@@ -126,7 +126,7 @@ describe TopicCreator do
       end
     end
 
-    context 'private message' do
+    context 'personal message' do
 
       context 'success cases' do
         before do
@@ -146,7 +146,7 @@ describe TopicCreator do
         end
 
         it "should be possible for a trusted user to send private messages via email" do
-          SiteSetting.expects(:enable_personal_email_messages).returns(true)
+          SiteSetting.enable_personal_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
 
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
@@ -155,7 +155,7 @@ describe TopicCreator do
 
       context 'failure cases' do
         it "should be rollback the changes when email is invalid" do
-          SiteSetting.expects(:enable_personal_email_messages).returns(true)
+          SiteSetting.enable_personal_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           attrs = pm_to_email_valid_attrs.dup
           attrs[:target_emails] = "t" * 256
