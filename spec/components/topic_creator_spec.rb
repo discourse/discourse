@@ -146,6 +146,9 @@ describe TopicCreator do
         end
 
         it "should be possible for a trusted user to send private messages via email" do
+          SiteSetting.manual_polling_enabled = true
+          SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
+          SiteSetting.reply_by_email_enabled = true
           SiteSetting.enable_personal_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
 
@@ -155,6 +158,9 @@ describe TopicCreator do
 
       context 'failure cases' do
         it "should be rollback the changes when email is invalid" do
+          SiteSetting.manual_polling_enabled = true
+          SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
+          SiteSetting.reply_by_email_enabled = true
           SiteSetting.enable_personal_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           attrs = pm_to_email_valid_attrs.dup
