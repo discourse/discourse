@@ -6,7 +6,11 @@
 {{#if show}}
   <div class="location-box">
     <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
-    <a class="btn pull-right" {{action "copy"}}>{{d-icon "copy"}}</a>
+    {{#if copied}}
+      <a class="btn btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
+    {{else}}
+      <a class="btn pull-right" {{action "copy"}}>{{d-icon "copy"}}</a>
+    {{/if}}
     <h4>{{i18n 'ip_lookup.title'}}</h4>
     <p class='powered-by'>{{{i18n 'ip_lookup.powered_by'}}}</p>
     <dl>
