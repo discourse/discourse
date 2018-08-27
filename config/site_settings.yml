@@ -558,6 +558,7 @@ posting:
   enable_system_message_replies:
     default: true
   enable_personal_email_messages:
+    hidden: true
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
@@ -1018,6 +1019,7 @@ trust:
     default: 1
     enum: 'TrustLevelSetting'
   min_trust_to_send_email_messages:
+    hidden: true
     default: 4
     enum: 'TrustLevelSetting'
   min_trust_to_flag_posts:
