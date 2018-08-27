@@ -669,6 +669,7 @@ class Report
     report.labels = [
       {
         property: :term,
+        type: :text,
         title: I18n.t("reports.trending_search.labels.term")
       },
       {
