@@ -77,14 +77,14 @@ describe UserAvatarsController do
 
       GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")
 
-      upload = Fabricate(:upload, url: "//test.s3.amazonaws.com/something")
+      upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
 
       optimized_image = Fabricate(:optimized_image,
         sha1: SecureRandom.hex << "A" * 8,
         upload: upload,
         width: 98,
         height: 98,
-        url: "//test.s3.amazonaws.com/something/else"
+        url: "//test.s3.dualstack.us-east-1.amazonaws.com/something/else"
       )
 
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
