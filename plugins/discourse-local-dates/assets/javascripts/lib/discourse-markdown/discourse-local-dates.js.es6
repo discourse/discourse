@@ -25,13 +25,17 @@ function addLocalDate(buffer, matches, state) {
   token = new state.Token("span_open", "span", 1);
   token.attrs = [
     ["class", "discourse-local-date"],
-    ["data-date", config.date],
-    ["data-time", config.time],
-    ["data-format", config.format],
-    ["data-timezones", config.timezones]
+    ["data-date", state.md.utils.escapeHtml(config.date)],
+    ["data-time", state.md.utils.escapeHtml(config.time)],
+    ["data-format", state.md.utils.escapeHtml(config.format)],
+    ["data-timezones", state.md.utils.escapeHtml(config.timezones)]
   ];
+
   if (config.recurring) {
-    token.attrs.push(["data-recurring", config.recurring]);
+    token.attrs.push([
+      "data-recurring",
+      state.md.utils.escapeHtml(config.recurring)
+    ]);
   }
   buffer.push(token);
 
