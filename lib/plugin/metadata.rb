@@ -56,7 +56,8 @@ class Plugin::Metadata
     "discourse-characters-required",
     "discourse-auto-deactivate",
     "discourse-invite-tokens",
-    "discourse-checklist"
+    "discourse-checklist",
+    "discourse-etiquette"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
