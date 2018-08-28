@@ -41,13 +41,6 @@ describe TopicEmbed do
         expect(post.topic.category).to eq(embeddable_host.category)
       end
 
-      it "Supports updating the post title" do
-        TopicEmbed.import(user, url, "I am a new title", contents)
-
-        topic_embed.reload
-        expect(topic_embed.post.topic.title).to eq("I am a new title")
-      end
-
       it "Supports updating the post content" do
         expect do
           TopicEmbed.import(user, url, title, "muhahaha new contents!")
