@@ -45,6 +45,12 @@ class PostDestroyer
   end
 
   def destroy
+    DiscourseEvent.trigger(:post_before_destroy, @post, @opts, @user)
+
+    if @post.is_first_post? && @post.topic
+      DiscourseEvent.trigger(:topic_before_destroy, @post.topic, @user)
+    end
+
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
     if @user.staff? || delete_removed_posts_after < 1

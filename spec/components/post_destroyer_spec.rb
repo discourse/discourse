@@ -392,6 +392,22 @@ describe PostDestroyer do
       }.to_not change { author.topic_count }
       expect(author.post_count).to eq(0) # also unchanged
     end
+
+    it 'triggers the extensibility events' do
+      events = DiscourseEvent.track_events { PostDestroyer.new(admin, first_post).destroy }.last(4)
+
+      expect(events[0][:event_name]).to eq(:post_before_destroy)
+      expect(events[0][:params].first).to eq(first_post)
+
+      expect(events[1][:event_name]).to eq(:topic_before_destroy)
+      expect(events[1][:params].first).to eq(first_post.topic)
+
+      expect(events[2][:event_name]).to eq(:post_destroyed)
+      expect(events[2][:params].first).to eq(first_post)
+
+      expect(events[3][:event_name]).to eq(:topic_destroyed)
+      expect(events[3][:params].first).to eq(first_post.topic)
+    end
   end
 
   context 'deleting the second post in a topic' do
@@ -469,6 +485,16 @@ describe PostDestroyer do
 
       it "creates a new user history entry" do
         expect { subject }.to change { UserHistory.count }.by(1)
+      end
+
+      it 'triggers the extensibility events' do
+        events = DiscourseEvent.track_events { subject }
+
+        expect(events[0][:event_name]).to eq(:post_before_destroy)
+        expect(events[0][:params].first).to eq(post)
+
+        expect(events[1][:event_name]).to eq(:post_destroyed)
+        expect(events[1][:params].first).to eq(post)
       end
     end
   end

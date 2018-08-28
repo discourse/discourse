@@ -39,6 +39,8 @@ class Group < ActiveRecord::Base
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
 
+  before_destroy :trigger_group_before_destroy_event, prepend: true
+
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
   end
@@ -588,6 +590,7 @@ class Group < ActiveRecord::Base
   %i{
     group_created
     group_updated
+    group_before_destroy
     group_destroyed
   }.each do |event|
     define_method("trigger_#{event}_event") do

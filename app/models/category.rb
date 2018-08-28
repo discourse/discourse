@@ -75,6 +75,8 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
 
+  before_destroy :trigger_category_before_destroy_event, prepend: true
+
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
@@ -609,6 +611,7 @@ class Category < ActiveRecord::Base
   %i{
     category_created
     category_updated
+    category_before_destroy
     category_destroyed
   }.each do |event|
     define_method("trigger_#{event}_event") do

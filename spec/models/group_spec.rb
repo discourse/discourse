@@ -488,11 +488,13 @@ describe Group do
       expect(GroupUser.where(group_id: group.id).count).to eq 0
     end
 
-    it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { group.destroy! }.first
+    it 'triggers the extensibility events' do
+      events = DiscourseEvent.track_events { group.destroy! }
 
-      expect(event[:event_name]).to eq(:group_destroyed)
-      expect(event[:params].first).to eq(group)
+      expect(events[0][:event_name]).to eq(:group_before_destroy)
+      expect(events[0][:params].first).to eq(group)
+      expect(events[1][:event_name]).to eq(:group_destroyed)
+      expect(events[1][:params].first).to eq(group)
     end
   end
 

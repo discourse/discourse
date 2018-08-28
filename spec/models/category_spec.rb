@@ -404,11 +404,14 @@ describe Category do
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
-    it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { @category.destroy }.first
+    it 'triggers the extensibility events' do
+      events = DiscourseEvent.track_events { @category.destroy }
 
-      expect(event[:event_name]).to eq(:category_destroyed)
-      expect(event[:params].first).to eq(@category)
+      expect(events[0][:event_name]).to eq(:category_before_destroy)
+      expect(events[0][:params].first).to eq(@category)
+
+      expect(events[1][:event_name]).to eq(:category_destroyed)
+      expect(events[1][:params].first).to eq(@category)
     end
   end
 

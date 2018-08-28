@@ -20,6 +20,8 @@ class Tag < ActiveRecord::Base
   after_commit :trigger_tag_updated_event, on: :update
   after_commit :trigger_tag_destroyed_event, on: :destroy
 
+  before_destroy :trigger_tag_before_destroy_event, prepend: true
+
   def self.ensure_consistency!
     update_topic_counts
   end
@@ -126,6 +128,7 @@ class Tag < ActiveRecord::Base
   %i{
     tag_created
     tag_updated
+    tag_before_destroy
     tag_destroyed
   }.each do |event|
     define_method("trigger_#{event}_event") do

@@ -123,6 +123,8 @@ class User < ActiveRecord::Base
     TopicViewItem.where(user_id: self.id).delete_all
   end
 
+  before_destroy :trigger_user_before_destroy_event, prepend: true
+
   # Skip validating email, for example from a particular auth provider plugin
   attr_accessor :skip_email_validation
 
@@ -1265,14 +1267,15 @@ class User < ActiveRecord::Base
     end
   end
 
-  def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
-    true
-  end
-
-  def trigger_user_destroyed_event
-    DiscourseEvent.trigger(:user_destroyed, self)
-    true
+  %i{
+    user_created
+    user_before_destroy
+    user_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
   end
 
   def set_skip_validate_email

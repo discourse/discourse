@@ -1,4 +1,5 @@
 %i(
+  topic_before_destroy
   topic_destroyed
   topic_recovered
 ).each do |event|
@@ -17,6 +18,7 @@ end
 
 %i(
   post_created
+  post_before_destroy
   post_destroyed
   post_recovered
 ).each do |event|
@@ -41,6 +43,7 @@ end
   user_logged_in
   user_approved
   user_updated
+  user_before_destroy
   user_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |user|
@@ -51,6 +54,7 @@ end
 %i(
   group_created
   group_updated
+  group_before_destroy
   group_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |group|
@@ -61,6 +65,7 @@ end
 %i(
   category_created
   category_updated
+  category_before_destroy
   category_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |category|
@@ -71,6 +76,7 @@ end
 %i(
   tag_created
   tag_updated
+  tag_before_destroy
   tag_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |tag|
