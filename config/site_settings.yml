@@ -841,6 +841,9 @@ email:
     default: 4
     min: 1
   bounce_score_threshold_deactivate: 30
+  bounce_score_erode_on_send:
+    default: 0.1
+    hidden: true
   soft_bounce_score:
     default: 1
     min: 1
