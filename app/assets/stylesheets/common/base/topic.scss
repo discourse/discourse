@@ -50,6 +50,11 @@
   .topic-admin-popup-menu.right-side {
     right: 50px;
     bottom: -150px; // Prevents menu from being too high when a topic is very short
+    transform: translate3d(
+      0,
+      0,
+      0
+    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
   }
 }
 
