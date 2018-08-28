@@ -327,7 +327,17 @@ class CookedPostProcessor
 
     # replace the image by its thumbnail
     w, h = img["width"].to_i, img["height"].to_i
-    img["src"] = upload.thumbnail(w, h).url if upload && upload.has_thumbnail?(w, h)
+
+    if upload
+      thumbnail = upload.thumbnail(w, h)
+
+      img["src"] =
+        if thumbnail && thumbnail.filesize.to_i < upload.filesize
+          upload.thumbnail(w, h).url
+        else
+          upload.url
+        end
+    end
 
     # then, some overlay informations
     meta = create_node("div", "meta")

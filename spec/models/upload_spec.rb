@@ -46,6 +46,22 @@ describe Upload do
 
   end
 
+  it "can reconstruct dimensions on demand" do
+    upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
+
+    upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
+
+    upload = Upload.find(upload.id)
+
+    expect(upload.width).to eq(64250)
+    expect(upload.height).to eq(64250)
+
+    upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
+
+    expect(upload.thumbnail_width).to eq(500)
+    expect(upload.thumbnail_height).to eq(500)
+  end
+
   it "extracts file extension" do
     created_upload = UploadCreator.new(image, image_filename).create_for(user_id)
     expect(created_upload.extension).to eq("png")

@@ -161,8 +161,8 @@ var testUploadMarkdown = function(filename) {
   return getUploadMarkdown({
     original_filename: filename,
     filesize: 42,
-    width: 100,
-    height: 200,
+    thumbnail_width: 100,
+    thumbnail_height: 200,
     url: "/uploads/123/abcdef.ext"
   });
 };
