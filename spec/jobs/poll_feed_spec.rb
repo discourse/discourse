@@ -90,7 +90,6 @@ describe Jobs::PollFeed do
             expect { poller.poll_feed }.to_not change { Topic.count }
 
             post.reload
-            expect(post.topic.title).to eq('Poll Feed Spec Fixture')
             expect(post.raw).to include('<p>This is the body &amp; content. </p>')
             expect(post.user).to eq(feed_author)
           end

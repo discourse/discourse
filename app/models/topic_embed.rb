@@ -74,8 +74,6 @@ class TopicEmbed < ActiveRecord::Base
 
       # Update the topic if it changed
       if post&.topic
-        revision = {}
-
         if post.user != user
           PostOwnerChanger.new(
             post_ids: [post.id],
@@ -89,19 +87,14 @@ class TopicEmbed < ActiveRecord::Base
         end
 
         if content_sha1 != embed.content_sha1
-          revision[:raw] = absolutize_urls(url, contents)
-        end
-
-        revision[:title] = title if title != post.topic.title
-
-        unless revision.empty?
-          post.revise(user, revision,
+          post.revise(
+            user,
+            { raw: absolutize_urls(url, contents) },
             skip_validations: true,
             bypass_rate_limiter: true
           )
+          embed.update!(content_sha1: content_sha1)
         end
-
-        embed.update!(content_sha1: content_sha1) if revision[:raw]
       end
     end
 
