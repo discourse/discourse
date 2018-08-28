@@ -441,8 +441,9 @@ export function uploadLocation(url) {
 export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     const name = imageNameFromFileName(upload.original_filename);
-    return `![${name}|${upload.width}x${upload.height}](${upload.short_url ||
-      upload.url})`;
+    return `![${name}|${upload.thumbnail_width}x${
+      upload.thumbnail_height
+    }](${upload.short_url || upload.url})`;
   } else if (
     !Discourse.SiteSettings.prevent_anons_from_downloading_files &&
     /\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i.test(upload.original_filename)

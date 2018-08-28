@@ -81,6 +81,7 @@ class OptimizedImage < ActiveRecord::Base
         end
 
         if resized
+
           thumbnail = OptimizedImage.create!(
             upload_id: upload.id,
             sha1: Upload.generate_digest(temp_path),
@@ -88,6 +89,7 @@ class OptimizedImage < ActiveRecord::Base
             width: width,
             height: height,
             url: "",
+            filesize: File.size(temp_path)
           )
           # store the optimized image and update its url
           File.open(temp_path) do |file|
@@ -121,6 +123,32 @@ class OptimizedImage < ActiveRecord::Base
 
   def local?
     !(url =~ /^(https?:)?\/\//)
+  end
+
+  def calculate_filesize
+    path =
+      if local?
+        Discourse.store.path_for(self)
+      else
+        Discourse.store.download(self).path
+      end
+    File.size(path)
+  end
+
+  def filesize
+    if size = read_attribute(:filesize)
+      size
+    else
+      # we may have a bad optimized image so just skip for now
+      # and do not break here
+      size = calculate_filesize rescue nil
+
+      write_attribute(:filesize, size)
+      if !new_record?
+        update_columns(filesize: size)
+      end
+      size
+    end
   end
 
   def self.safe_path?(path)
