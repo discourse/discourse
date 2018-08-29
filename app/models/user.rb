@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+  has_many :user_auth_token_logs, dependent: :destroy
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users

@@ -6,6 +6,8 @@ import { setting } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { findAll } from "discourse/models/login-method";
+import { ajax } from "discourse/lib/ajax";
+import { userPath } from "discourse/lib/url";
 
 export default Ember.Controller.extend(
   CanCheckEmails,
@@ -192,6 +194,17 @@ export default Ember.Controller.extend(
           .finally(() => {
             this.set("revoking", false);
           });
+      },
+
+      toggleToken(token) {
+        Ember.set(token, 'visible', !token.visible);
+      },
+
+      revokeAuthToken() {
+        ajax(
+          userPath(`${this.get('model.username_lower')}/preferences/revoke-auth-token`),
+          { type: "POST" }
+        );
       },
 
       connectAccount(method) {

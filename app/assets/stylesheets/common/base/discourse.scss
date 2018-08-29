@@ -475,6 +475,16 @@ select {
 
   .control-group {
     @include clearfix;
+
+    .table {
+      width: 100%;
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+    }
   }
 
   .control-label {
@@ -543,4 +553,48 @@ select {
 
 .inline {
   display: inline;
+}
+
+.pref-auth-tokens {
+  .control-label {
+    display: inline-block;
+  }
+
+  .row {
+    margin: 5px 0px;
+  }
+
+  .muted {
+    color: #888;
+  }
+
+  .perf-auth-token {
+    background: #f9f9f9;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .auth-token-summary {
+    padding: 0px 10px;
+
+    .auth-token-label, .auth-token-value {
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
+  }
+
+  .auth-token-details {
+    background: #fff;
+    padding: 5px 10px;
+    margin: 10px 5px 5px 5px;
+
+    .auth-token-label {
+      color: #888;
+    }
+  }
+
+  .auth-token-label, .auth-token-value {
+    float: left;
+    width: 50%;
+  }
 }
