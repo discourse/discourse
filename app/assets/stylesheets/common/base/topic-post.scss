@@ -346,6 +346,13 @@ aside.quote {
     align-items: center;
     margin-bottom: 0.5em;
 
+    &.hide-names .user {
+      .username,
+      .group-name {
+        display: none;
+      }
+    }
+
     .user {
       border: 1px solid $primary-low;
       border-radius: 0.25em;
@@ -373,10 +380,6 @@ aside.quote {
       .username,
       .group-name {
         margin-right: 0.25em;
-
-        @include breakpoint(mobile) {
-          display: none;
-        }
       }
 
       &:last-child {
@@ -392,11 +395,11 @@ aside.quote {
         border-radius: 0 0.25em 0.25em 0;
       }
     }
+  }
 
-    .edit-participants-btn {
-      margin: 0.125em 0 0.125em 0;
-      align-self: flex-start;
-      border-radius: 0.25em;
+  .add-remove-participant-btn {
+    .d-icon {
+      margin-left: 0.25em;
     }
   }
 }
