@@ -8,7 +8,7 @@ class PluginGenerator < Rails::Generators::NamedBase
   class_option :author, type: :string, desc: "Plugin author", required: true
   class_option :stylesheet, type: :boolean, desc: "Generate Stylesheet", default: true
   class_option :javascript, type: :boolean, desc: "Generate Javascript initializer", default: true
-  class_option :scheduled_job, type: :boolean, desc: "Generate Stylesheet", default: false
+  class_option :scheduled_job, type: :boolean, desc: "Generate scheduled job", default: false
 
   def create_scheduled_job_file
     return unless @options['scheduled_job']
