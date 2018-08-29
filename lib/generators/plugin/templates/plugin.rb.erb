@@ -1,0 +1,26 @@
+# name: <%= name %>
+# about: AWESOME_PLUGIN
+# version: 0.1
+# authors: <%= @options['author'] %>
+# url: https://github.com/<%= @options['author'] %>
+
+<% if @options["stylesheet"] %>
+register_asset "stylesheets/common/<%= dasherized_name %>.scss"
+<% end %>
+
+enabled_site_setting :<%= underscored_name %>_enabled
+
+PLUGIN_NAME ||= "<%= name %>".freeze
+
+after_initialize do
+  module ::<%= classified_name %>
+    class Engine < ::Rails::Engine
+      engine_name PLUGIN_NAME
+      isolate_namespace <%= classified_name %>
+    end
+  end
+
+  <% if @options["scheduled_job"] %>
+  require File.expand_path("../jobs/scheduled/check_<%= underscored_name %>.rb", __FILE__)
+  <% end %>
+end
