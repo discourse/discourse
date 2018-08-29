@@ -70,7 +70,7 @@ QUnit.test("converts heading tags", assert => {
 });
 
 QUnit.test("converts ul list tag", assert => {
-  const html = `
+  let html = `
   <ul>
     <li>Item 1</li>
     <li>
@@ -84,7 +84,20 @@ QUnit.test("converts ul list tag", assert => {
     <li>Item 3</li>
   </ul>
   `;
-  const markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
+  let markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `
+<ul>
+  <li><p><span>Bullets at level 1</span></p></li>
+  <li><p><span>Bullets at level 1</span></p></li>  <ul>    <li><p><span>Bullets at level 2</span></p></li>    <li><p><span>Bullets at level 2</span></p></li>    <ul>      <li><p><span>Bullets at level 3</span></p></li>    </ul>    <li><p><span>Bullets at level 2</span></p></li>  </ul>  <li><p><span>Bullets at level 1</span></p></li></ul>  `;
+  markdown = `* Bullets at level 1
+* Bullets at level 1
+  * Bullets at level 2
+  * Bullets at level 2
+    * Bullets at level 3
+  * Bullets at level 2
+* Bullets at level 1`;
   assert.equal(toMarkdown(html), markdown);
 });
 
