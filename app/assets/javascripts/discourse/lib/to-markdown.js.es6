@@ -162,6 +162,24 @@ export class Tag {
     };
   }
 
+  static span() {
+    return class extends Tag {
+      constructor() {
+        super("span");
+      }
+
+      decorate(text) {
+        const attr = this.element.attributes;
+
+        if (attr.class === "badge badge-notification clicks") {
+          return "";
+        }
+
+        return super.decorate(text);
+      }
+    };
+  }
+
   static link() {
     return class extends Tag {
       constructor() {
@@ -200,6 +218,11 @@ export class Tag {
         const attr = e.attributes;
         const pAttr = (e.parent && e.parent.attributes) || {};
         const src = attr.src || pAttr.src;
+        const cssClass = attr.class || pAttr.class;
+
+        if (cssClass === "emoji") {
+          return attr.title || pAttr.title;
+        }
 
         if (src) {
           let alt = attr.alt || pAttr.alt || "";
@@ -443,7 +466,8 @@ function tags() {
     Tag.table(),
     Tag.tr(),
     Tag.ol(),
-    Tag.list("ul")
+    Tag.list("ul"),
+    Tag.span()
   ];
 }
 

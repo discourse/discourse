@@ -140,13 +140,6 @@ export function selectedText() {
     $div.append(range.cloneContents());
   }
 
-  // strip click counters
-  $div.find(".clicks").remove();
-  // replace emojis
-  $div.find("img.emoji").replaceWith(function() {
-    return this.title;
-  });
-
   return toMarkdown($div.html());
 }
 

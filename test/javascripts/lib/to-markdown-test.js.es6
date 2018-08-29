@@ -314,3 +314,16 @@ QUnit.test("keeps mention/hash class", assert => {
 
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("keeps emoji and removes click count", assert => {
+  const html = `
+    <p>
+      A <a href="http://example.com">link</a><span class="badge badge-notification clicks" title="1 click">1</span> with click count
+      and <img class="emoji" title=":boom:" src="https://d11a6trkgmumsb.cloudfront.net/images/emoji/twitter/boom.png?v=5" alt=":boom:" /> emoji.
+    </p>
+  `;
+
+  const markdown = `A [link](http://example.com) with click count and :boom: emoji.`;
+
+  assert.equal(toMarkdown(html), markdown);
+});
