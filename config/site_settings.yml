@@ -381,6 +381,7 @@ users:
     max: 60
   reserved_usernames:
     type: list
+    list_type: compact
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp|account-created|password-reset|admin-login|confirm-admin|account-created|activate-account|confirm-email-token|authorize-email"
   min_password_length:
     client: true
