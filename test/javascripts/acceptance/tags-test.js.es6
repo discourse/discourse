@@ -5,7 +5,7 @@ QUnit.test("list the tags", async assert => {
   await visit("/tags");
 
   assert.ok($("body.tags-page").length, "has the body class");
-  assert.ok(exists(".tag-eviltrout"), "shows the evil trout tag");
+  assert.ok($('*[data-tag-name="eviltrout"]').length, "shows the eviltrout tag");
 });
 
 acceptance("Tags listed by group", {
