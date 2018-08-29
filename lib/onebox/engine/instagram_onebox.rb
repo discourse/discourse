@@ -28,9 +28,7 @@ module Onebox
         end
 
         if !Onebox::Helpers.blank?(og[:video_secure_url])
-          result[:video_width] = og[:video_width]
-          result[:video_height] = og[:video_height]
-          result[:video_secure_url] = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
+          result[:video_link] = og[:url]
         end
 
         result
