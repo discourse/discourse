@@ -40,28 +40,28 @@ task 'docker:test' do
     @good = true
     unless ENV['SKIP_LINT']
       puts "Running linters/prettyfiers"
-      puts "eslint #{`eslint -v`}"
-      puts "prettier #{`prettier -v`}"
+      puts "eslint #{`yarn exec eslint -v`}"
+      puts "prettier #{`yarn exec prettier -v`}"
 
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
-        @good &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+        @good &&= run_or_fail("yarn exec eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
-        @good &&= run_or_fail("prettier --list-different 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss' 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6'")
+        @good &&= run_or_fail("yarn exec prettier --list-different 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss' 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6'")
       else
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+        @good &&= run_or_fail("yarn exec eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("yarn exec eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
+          @good &&= run_or_fail('yarn exec prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
         end
 
         unless ENV["SKIP_PLUGINS"]
           puts "Listing prettier offenses in plugins:"
-          @good &&= run_or_fail('prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
+          @good &&= run_or_fail('yarn exec prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
         end
       end
     end
