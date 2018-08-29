@@ -28,30 +28,25 @@ export default Ember.Controller.extend({
         sentTestEmail: false
       });
 
-      var self = this;
       ajax("/admin/email/test", {
         type: "POST",
         data: { email_address: this.get("testEmailAddress") }
       })
-        .then(
-          function() {
-            self.set("sentTestEmail", true);
-          },
-          function(e) {
-            if (e.responseJSON && e.responseJSON.errors) {
-              bootbox.alert(
-                I18n.t("admin.email.error", {
-                  server_error: e.responseJSON.errors[0]
-                })
-              );
-            } else {
-              bootbox.alert(I18n.t("admin.email.test_error"));
-            }
-          }
+        .then(response =>
+          this.set("sentTestEmailMessage", response.send_test_email_message)
         )
-        .finally(function() {
-          self.set("sendingEmail", false);
-        });
+        .catch(e => {
+          if (e.responseJSON && e.responseJSON.errors) {
+            bootbox.alert(
+              I18n.t("admin.email.error", {
+                server_error: e.responseJSON.errors[0]
+              })
+            );
+          } else {
+            bootbox.alert(I18n.t("admin.email.test_error"));
+          }
+        })
+        .finally(() => this.set("sendingEmail", false));
     }
   }
 });
