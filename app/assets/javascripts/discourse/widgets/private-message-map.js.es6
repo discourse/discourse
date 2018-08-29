@@ -142,13 +142,24 @@ export default createWidget("private-message-map", {
       );
     }
 
-    const result = [h("div.participants", participants)];
+    let hideNamesClass = "";
+    if (
+      !this.state.isEditing &&
+      this.site.mobileView &&
+      Ember.makeArray(participants[0]).length > 4
+    ) {
+      hideNamesClass = ".hide-names";
+    }
+
+    const result = [h(`div.participants${hideNamesClass}`, participants)];
 
     const controls = [
       this.attach("button", {
         action: "toggleEditing",
         label: "private_message_info.edit",
-        className: "btn"
+        icon: "user",
+        iconRight: true,
+        className: "btn add-remove-participant-btn"
       })
     ];
 

@@ -1130,7 +1130,7 @@ en:
     private_message_info:
       title: "Message"
       invite: "Invite Others..."
-      edit: "Add or remove participants..."
+      edit: "Add or remove"
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
       remove_allowed_group: "Do you really want to remove {{name}} from this message?"
