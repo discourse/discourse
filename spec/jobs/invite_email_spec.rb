@@ -20,6 +20,11 @@ describe Jobs::InviteEmail do
         Jobs::InviteEmail.new.execute(invite_id: invite.id)
       end
 
+      it "aborts without error when the invite doesn't exist anymore" do
+        invite.destroy
+        InviteMailer.expects(:send_invite).never
+        Jobs::InviteEmail.new.execute(invite_id: invite.id)
+      end
     end
 
   end
