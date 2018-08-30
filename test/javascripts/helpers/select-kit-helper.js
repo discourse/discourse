@@ -191,6 +191,11 @@ function selectKit(selector) {
       return selectKitSelectRowByValue(value, selector);
     },
 
+    // Remove when stable is updated to Discourse 2.1
+    selectRowByValueAwait: function(value) {
+      return selectKitSelectRowByValue(value, selector);
+    },
+
     selectRowByName: function(name) {
       selectKitSelectRowByValue(name, selector);
       return selectKit(selector);
