@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ru: {}
+ru:
+  js:
+    details:
+      title: Скрыть детали
+    composer:
+      details_title: Сводка
+      details_text: "Этот текст будет скрыт"

@@ -23,6 +23,15 @@ describe ApplicationHelper do
         set_env "COMPRESS_BROTLI", "1"
       end
 
+      after do
+        ActionController::Base.config.relative_url_root = nil
+      end
+
+      it "deals correctly with subfolder" do
+        ActionController::Base.config.relative_url_root = "/community"
+        expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+      end
+
       it "returns magic brotli mangling for brotli requests" do
 
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'

@@ -302,13 +302,16 @@ class Stylesheet::Manager
   end
 
   def settings_digest
+    theme_ids = Theme.components_for(@theme_id).dup
+    theme_ids << @theme_id
+
     fields = ThemeField.where(
       name: "yaml",
       type_id: ThemeField.types[:yaml],
-      theme_id: @theme_id
+      theme_id: theme_ids
     ).pluck(:updated_at)
 
-    settings = ThemeSetting.where(theme_id: @theme_id).pluck(:updated_at)
+    settings = ThemeSetting.where(theme_id: theme_ids).pluck(:updated_at)
     timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
 
     Digest::SHA1.hexdigest(timestamps)

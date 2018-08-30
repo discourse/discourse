@@ -133,15 +133,20 @@ task 'posts:normalize_code' => :environment do
   puts "#{i} posts normalized!"
 end
 
-def remap_posts(find, type, replace = "")
+def remap_posts(find, type, ignore_case, replace = "")
+  ignore_case = ignore_case == 'true'
   i = 0
 
   Post.raw_match(find, type).find_each do |p|
-    new_raw =
+    regex =
       case type
-      when 'string' then p.raw.gsub(/#{Regexp.escape(find)}/, replace)
-      when 'regex' then p.raw.gsub(/#{find}/, replace)
+      when 'string' then
+        Regexp.new(Regexp.escape(find), ignore_case)
+      when 'regex' then
+        Regexp.new(find, ignore_case)
       end
+
+    new_raw = p.raw.gsub(regex, replace)
 
     if new_raw != p.raw
       begin
@@ -158,13 +163,14 @@ def remap_posts(find, type, replace = "")
 end
 
 desc 'Remap all posts matching specific string'
-task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
+task 'posts:remap', [:find, :replace, :type, :ignore_case] => [:environment] do |_, args|
   require 'highline/import'
 
-  args.with_defaults(type: 'string')
+  args.with_defaults(type: 'string', ignore_case: 'false')
   find = args[:find]
   replace = args[:replace]
   type = args[:type]&.downcase
+  ignore_case = args[:ignore_case]&.downcase
 
   if !find
     puts "ERROR: Expecting rake posts:remap['find','replace']"
@@ -173,7 +179,10 @@ task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
     puts "ERROR: Expecting rake posts:remap['find','replace']. Want to delete a word/string instead? Try rake posts:delete_word['word-to-delete']"
     exit 1
   elsif type != 'string' && type != 'regex'
-    puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
+    puts "ERROR: Expecting rake posts:remap['find','replace',type] where type is string or regex"
+    exit 1
+  elsif ignore_case != 'true' && ignore_case != 'false'
+    puts "ERROR: Expecting rake posts:remap['find','replace',type,ignore_case] where ignore_case is true or false"
     exit 1
   else
     confirm_replace = ask("Are you sure you want to replace all #{type} occurrences of '#{find}' with '#{replace}'? (Y/n)")
@@ -181,17 +190,18 @@ task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
   end
 
   puts "Remapping"
-  total = remap_posts(find, type, replace)
+  total = remap_posts(find, type, ignore_case, replace)
   puts "", "#{total} posts remapped!", ""
 end
 
 desc 'Delete occurrence of a word/string'
-task 'posts:delete_word', [:find, :type] => [:environment] do |_, args|
+task 'posts:delete_word', [:find, :type, :ignore_case] => [:environment] do |_, args|
   require 'highline/import'
 
-  args.with_defaults(type: 'string')
+  args.with_defaults(type: 'string', ignore_case: 'false')
   find = args[:find]
   type = args[:type]&.downcase
+  ignore_case = args[:ignore_case]&.downcase
 
   if !find
     puts "ERROR: Expecting rake posts:delete_word['word-to-delete']"
@@ -199,13 +209,16 @@ task 'posts:delete_word', [:find, :type] => [:environment] do |_, args|
   elsif type != 'string' && type != 'regex'
     puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
     exit 1
+  elsif ignore_case != 'true' && ignore_case != 'false'
+    puts "ERROR: Expecting rake posts:delete_word[pattern, type,ignore_case] where ignore_case is true or false"
+    exit 1
   else
     confirm_delete = ask("Are you sure you want to remove all #{type} occurrences of '#{find}'? (Y/n)")
     exit 1 unless (confirm_delete == "" || confirm_delete.downcase == 'y')
   end
 
   puts "Processing"
-  total = remap_posts(find, type)
+  total = remap_posts(find, type, ignore_case)
   puts "", "#{total} posts updated!", ""
 end
 

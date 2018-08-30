@@ -125,6 +125,7 @@ fi:
       user_left: "%{who} poisti itsensä tästä yksityiskeskustelusta %{when}"
       removed_user: "poisti käyttäjän %{who} %{when}"
       removed_group: "poisti käyttäjän %{who} %{when}"
+      autobumped: "nousi automaattisesti %{when}"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -194,7 +195,7 @@ fi:
     guidelines: "Ohjeet"
     privacy_policy: "Tietosuojaseloste"
     privacy: "Tietosuoja"
-    terms_of_service: "Käyttöehdot"
+    tos: "Käyttöehdot"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
     you: "Sinä"
@@ -248,6 +249,12 @@ fi:
       last_read: "tämä on viimeisin viesti jonka olet lukenut, klikkaa lisätäksesi sen kirjanmerkkeihisi"
       remove: "Poista kirjanmerkki"
       confirm_clear: "Oletko varma, että haluat poistaa kaikki kirjanmerkit tässä ketjussa?"
+    drafts:
+      resume: "Jatka"
+      remove: "Poista"
+      new_topic: "Uusi ketjuluonnos"
+      new_private_message: "Uusi yksityisviestiluonnos"
+      topic_reply: "Vastausluonnos"
     topic_count_latest:
       one: "Katso {{count}} uusi tai päivittynyt ketju"
       other: "Katso {{count}} uutta tai päivittynyttä ketjua"
@@ -487,6 +494,7 @@ fi:
       "12": "Lähetetyt"
       "13": "Postilaatikko"
       "14": "Odottaa"
+      "15": "Luonnokset"
     categories:
       all: "kaikki alueet"
       all_subcategories: "kaikki"
@@ -511,6 +519,7 @@ fi:
       topic_stat_sentence:
         one: "%{count} uusi ketju viimeisen %{unit} aikana."
         other: "%{count} uutta ketjua viimeisen %{unit} aikana."
+      more: "(vielä %{count})..."
     ip_lookup:
       title: IP-osoitteen haku
       hostname: Isäntänimi
@@ -669,6 +678,7 @@ fi:
         choose_new: "Valitse uusi salasana"
         choose: "Valitse salasana"
       second_factor_backup:
+        title: "Kaksivaiheisen tunnistautumisen koodit"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
         enable: "Ota käyttöön"
@@ -677,6 +687,9 @@ fi:
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         remaining_codes: "Sinulla on <strong>{{count}}</strong> varakoodia jäljellä."
+        codes:
+          title: "Varakoodit luotiin"
+          description: "Jokaista näistä varakoodeista voi käyttää vain kerran. Säilö ne johonkin turvalliseen paikkaan, mistä kuitenkin löydät ne."
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
         disable: "Poista kaksivaiheinen tunnistautuminen käytöstä"
@@ -995,8 +1008,6 @@ fi:
       hide_session: "Muistuta huomenna"
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysyn huomenna uudestaan. Voit aina myös käyttää 'Kirjaudu sisään' -linkkiä luodaksesi tilin."
-      intro: "Hei siellä! :heart_eyes: Vaikuttaa siltä, että olet pitänyt keskusteluista, mutta et ole luonut omaa tiliä."
-      value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Vastauksia on <b>{{replyCount}}</b> kpl."
@@ -1010,7 +1021,6 @@ fi:
       disable: "Näytä poistetut viestit"
     private_message_info:
       title: "Viesti"
-      invite: "Kutsu muita..."
       leave_message: "Haluatko varmasti poistua yksityiskeskustelusta?"
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän {{name}} tästä keskustelusta?"
       remove_allowed_group: "Haluatko varmasti poistaa käyttäjän {{name}} tästä viestiketjusta?"
@@ -2156,7 +2166,7 @@ fi:
         off_topic: "Se eksyy aiheesta"
         inappropriate: "Se on sopimaton"
         spam: "Se on roskapostia"
-      custom_placeholder_notify_user: "Esitä asiasi ymmärrettäväsi, ole rakentava ja kohtelias."
+      custom_placeholder_notify_user: "Esitä asiasi ymmärrettävästi, ole rakentava ja kohtelias."
       custom_placeholder_notify_moderators: "Kerro ymmärrettävästi ja selvästi, mistä olet huolestunut ja lisää viestiin oleelliset esimerkit ja linkit, jos mahdollista."
       custom_message:
         at_least:
@@ -2336,6 +2346,7 @@ fi:
         bookmarks: '<b>g</b>, <b>b</b> Kirjanmerkit'
         profile: '<b>g</b>, <b>p</b> Käyttäjäprofiili'
         messages: '<b>g</b>, <b>m</b> Viestit'
+        drafts: '<b>g</b>, <b>d</b> Luonnokset'
       navigation:
         title: 'Navigointi'
         jump: '<b>#</b> Siirry viestiin #'
@@ -2557,6 +2568,7 @@ fi:
         moderation_tab: "Valvonta"
         disabled: Pois käytöstä
         timeout_error: Kyselyssä kestää liian kauan. Valitse lyhyempi ajanjakso.
+        exception_error: "Pahoittelut, kyselyä tehtäessä tapahtui virhe"
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           today: "Tänään"
@@ -2782,6 +2794,9 @@ fi:
         flag_event:
           name: "Lipputapahtuma"
           details: "Kun lippu luodaan tai sen kanssa ollaan yhtä tai eri mieltä tai se sivuutetaan."
+        queued_post_event:
+          name: "Viestinhyväksymistapahtuma"
+          details: "Kun uusi viesti ilmaantuu jonoon tai sellainen hyväksytään tai hylätään."
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei toiminnassa"
@@ -2959,7 +2974,6 @@ fi:
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
           about_theme: "Tietoa teemasta"
           license: "Lisenssi"
-          component_of: "Teema on osa teemaa:"
           update_to_latest: "Päivitä tuoreimpaan"
           check_for_updates: "Hae päivityksiä"
           updating: "Päivitetään..."

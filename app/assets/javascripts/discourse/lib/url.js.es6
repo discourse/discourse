@@ -242,6 +242,10 @@ const DiscourseURL = Ember.Object.extend({
 
     path = rewritePath(path);
 
+    if (typeof opts.afterRouteComplete === "function") {
+      Ember.run.schedule("afterRender", opts.afterRouteComplete);
+    }
+
     if (this.navigatedToPost(oldPath, path, opts)) {
       return;
     }

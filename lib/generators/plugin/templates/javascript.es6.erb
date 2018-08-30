@@ -1,0 +1,16 @@
+import { withPluginApi } from "discourse/lib/plugin-api";
+
+function initialize<%= classified_name %>(api) {
+  <% if @options['help'] %>
+  // see app/assets/javascripts/discourse/lib/plugin-api
+  // for the functions available via the api object
+  <% end %>
+}
+
+export default {
+  name: "<%= dasherized_name %>",
+
+  initialize() {
+    withPluginApi("0.8.24", initialize<%= classified_name %>);
+  }
+};

@@ -291,6 +291,34 @@ describe Jobs::UserEmail do
         end
       end
 
+      it "erodes bounce score each time an email is sent" do
+        SiteSetting.bounce_score_erode_on_send = 0.2
+
+        user.user_stat.update(bounce_score: 2.7)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(2.5)
+
+        user.user_stat.update(bounce_score: 0)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(0)
+      end
+
       it "does not send notification if bounce threshold is reached" do
         user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
 

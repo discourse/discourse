@@ -259,7 +259,15 @@ class Auth::DefaultCurrentUserProvider
       end
 
       api_key.update_columns(last_used_at: Time.zone.now)
+
       if client_id.present? && client_id != api_key.client_id
+
+        # invalidate old dupe api key for client if needed
+        UserApiKey
+          .where(client_id: client_id, user_id: api_key.user_id)
+          .where('id <> ?', api_key.id)
+          .destroy_all
+
         api_key.update_columns(client_id: client_id)
       end
 

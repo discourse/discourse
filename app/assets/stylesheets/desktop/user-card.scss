@@ -7,7 +7,7 @@ $user_card_background: $secondary;
 #user-card,
 #group-card {
   position: absolute;
-  width: 500px;
+  width: 580px;
   left: -9999px;
   top: -9999px;
   z-index: z("usercard");
@@ -268,42 +268,38 @@ $user_card_background: $secondary;
     color: scale-color($user_card_background, $lightness: 70%);
   }
 
-  &.show-badges {
-    width: 580px;
+  .names {
+    float: left;
+    width: 45%;
 
-    .names {
-      float: left;
-      width: 45%;
+    span {
+      display: block;
+      width: 250px;
+    }
+  }
 
-      span {
-        display: block;
-        width: 250px;
-      }
+  .badge-section {
+    float: left;
+    width: 500px;
+    padding-bottom: 10px;
+    margin-top: 5px;
+
+    .user-badge {
+      background: $primary-very-low;
+      border: 1px solid $primary-low;
+      color: $user_card_primary;
     }
 
-    .badge-section {
-      float: left;
-      width: 500px;
-      padding-bottom: 10px;
-      margin-top: 5px;
-
-      .user-badge {
-        background: $primary-very-low;
-        border: 1px solid $primary-low;
-        color: $user_card_primary;
-      }
-
-      h3 {
-        color: $user_card_background;
-        font-size: $font-0;
-        margin-bottom: -8px;
-      }
+    h3 {
+      color: $user_card_background;
+      font-size: $font-0;
+      margin-bottom: -8px;
     }
+  }
 
-    .more-user-badges {
-      @extend .user-badge;
-      padding: 3px 8px;
-    }
+  .more-user-badges {
+    @extend .user-badge;
+    padding: 3px 8px;
   }
 
   .suspended {

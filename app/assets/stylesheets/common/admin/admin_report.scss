@@ -47,6 +47,8 @@
 
   .header .trend {
     margin-left: auto;
+    margin-right: 8px;
+
     &.trending-down,
     &.high-trending-down {
       color: $danger;
@@ -59,6 +61,9 @@
 
     &.no-change {
       color: $primary-medium;
+      i {
+        display: none;
+      }
     }
 
     .value {
@@ -96,10 +101,15 @@
       display: block;
     }
 
-    &.no-data {
+    &.no-data,
+    &.rate-limited {
       background: $secondary;
       border-color: $primary-low;
       color: $primary-low-mid;
+    }
+
+    &.rate-limited .d-icon {
+      color: $danger;
     }
 
     &.timeout,

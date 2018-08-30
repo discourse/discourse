@@ -368,6 +368,26 @@ describe Auth::DefaultCurrentUserProvider do
       )
     end
 
+    it "can clear old duplicate keys correctly" do
+      dupe = UserApiKey.create!(
+        application_name: 'my app',
+        client_id: '12345',
+        scopes: ['read'],
+        key: SecureRandom.hex,
+        user_id: user.id
+      )
+
+      params = {
+        "REQUEST_METHOD" => "GET",
+        "HTTP_USER_API_KEY" => api_key.key,
+        "HTTP_USER_API_CLIENT_ID" => dupe.client_id,
+      }
+
+      good_provider = provider("/", params)
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(UserApiKey.find_by(id: dupe.id)).to eq(nil)
+    end
+
     it "allows user API access correctly" do
       params = {
         "REQUEST_METHOD" => "GET",

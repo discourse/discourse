@@ -7,5 +7,4 @@
 
 vi:
   site_settings:
-    discourse_narrative_bot_enabled: 'Bật Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Tắt tính năng gửi lời chào từ Discourse Narrative Bot"

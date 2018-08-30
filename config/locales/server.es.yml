@@ -39,6 +39,10 @@ es:
     bad_color_scheme: "No puedes actualizar theme, esquema de color inválido"
     other_error: "Algo salió mal actualizando el theme"
     error_importing: "Error al clonar el repositorio de git, acceso denegado o no se encuentra el repositorio"
+    errors:
+      component_no_user_selectable: "Los componentes de tema no pueden ser seleccionables por los usuarios"
+      component_no_default: "Los componentes de temas no pueden ser el tema por defecto"
+      no_multilevels_components: "Loa temas con temas hijos no pueden ser hijos de otros temas"
     settings_errors:
       invalid_yaml: "YAML provisto es inválido."
       data_type_not_a_number: "Tipo de ajuste `%{name}` no está soportado. Tipos soportados: `integer`, `bool`, `list` and `enum`"
@@ -169,7 +173,7 @@ es:
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
-  authenticator_not_found: "El método de autentificación no existe o se ha desactivado"
+  authenticator_not_found: "El método de verificación no existe o se ha desactivado"
   invalid_api_credentials: "No tienes permisos para visualizar el recurso solicitado. El nombre de usuario API o la clave es inválida. "
   provider_not_enabled: "No tienes permisos para visualizar el recurso solicitado. El proveedor de autenticación no está habilitado."
   provider_not_found: "No tienes permisos para visualizar el recurso solicitado. El proveedor de autenticación no existe."
@@ -225,6 +229,7 @@ es:
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
   not_accepting_pms: "Lo sentimos, %{username} no acepta mensajes en este momento."
   max_pm_recepients: "Lo sentimos, puedes enviar un mensaje a un máximo de %{recipients_limit} destinatarios."
+  pm_reached_recipients_limit: "Lo sentimos, no puedes tener más de %{recipients_limit} destinatarios en un mensaje."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   invalid_characters: "contiene caracteres no válidos"
   is_invalid: "parece poco claro, es una oración completa?"
@@ -695,6 +700,7 @@ es:
       self: "No tienes actividad aún."
       others: "Sin actividad."
     no_bookmarks:
+      self: "No tienes posts en marcadores; añadir a marcadores permite que vuelvas a los temas rápidamente."
       others: "Sin marcadores."
     no_likes_given:
       self: "No le has dado a \"Me gusta\" en ningún tema."
@@ -702,6 +708,9 @@ es:
     no_replies:
       self: "No tienes respuestas a ningún post."
       others: "Sin respuestas."
+    no_drafts:
+      self: "No tienes ningún borrador; empieza a escribir una respuesta en cualquier tema y se guardará automáticamente como nuevo borrador."
+      others: "No tienes permisos para ver los borradores de este usuario."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -766,9 +775,10 @@ es:
     default:
       labels:
         count: Cuenta
+        percent: Porcentaje
         day: Día
     post_edits:
-      title: "Edicione"
+      title: "Ediciones"
       labels:
         post: Post
         editor: Editor
@@ -783,6 +793,7 @@ es:
         topic_count: Temas creados
         post_count: Mensajes creados
         pm_count: Mensajes privados creados
+        revision_count: Ediciones
     flags_status:
       title: "Estado de los reportes"
       values:
@@ -861,7 +872,7 @@ es:
       xaxis: "Tipo"
       yaxis: "Número de Usuarios"
       labels:
-        type: Tip
+        type: Tipo
       xaxis_labels:
         admin: Admin
         moderator: Moderador
@@ -1010,6 +1021,7 @@ es:
     poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
     force_https_warning: "Tu sitio web está usando SSL. Pero  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` no está aún habilitado en la configuración de tu sitio."
+    out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
@@ -1087,7 +1099,6 @@ es:
     summary_max_results: "Máximo de posts devueltos en \"Resumen de este  tema\""
     enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Tenga en cuenta que el staff  siempre puede enviar mensajes pase lo que pase."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes privados están inhabilitados."
-    enable_personal_email_messages: "Permita que el nivel de confianza 4 (configurable a través del nivel mínimo de confianza para enviar mensajes) envíe mensajes de correo electrónico privados. Tenga en cuenta que el personal siempre puede enviar mensajes, pase lo que pase."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
@@ -1259,7 +1270,7 @@ es:
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
     external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     selectable_avatars_enabled: "Forzar a los usuarios a elegir una foto de perfil de la lista."
-    selectable_avatars: "Lista de fotos de perfil de la cual los usuarios pueden elegir"
+    selectable_avatars: "Lista de fotos de perfil de la cual los usuarios pueden elegir."
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     twitter_summary_large_image_url: "URL de la imagen por defecto para la tarjeta resumen de Twitter (debería ser al menos de 280px de ancho y 150 px de alto)."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
@@ -1301,7 +1312,6 @@ es:
     min_trust_to_edit_post: "El mínimo nivel de confianza requerido para editar posts."
     min_trust_to_allow_self_wiki: "El mínimo nivel de confianza requerido para que un usuario convierta sus propios posts a wiki."
     min_trust_to_send_messages: "El mínimo nivel de confianza requerido para crear nuevos mensajes personales."
-    min_trust_to_send_email_messages: "El nivel de confianza mínimo necesario para enviar nuevos mensajes privados por correo electrónico (a los usuarios staged)."
     min_trust_to_flag_posts: "El mínimo nivel de confianza requerido para reportar posts"
     min_trust_to_post_links: "El mínimo nivel de confianza requerido para incluir enlaces en posts"
     min_trust_to_post_images: "El nivel mínimo de confianza requerido para incluir imágenes en una publicación"
@@ -1496,7 +1506,7 @@ es:
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( serán convertidos a emojis"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
-    emoji_autocomplete_min_chars: "Número máximo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
+    emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
@@ -1622,6 +1632,8 @@ es:
     existing_topic_moderator_post:
       one: "Un post fue trasladado al siguiente tema: %{topic_link}"
       other: "%{count} posts fueron trasladados al siguiente tema: %{topic_link}"
+  change_owner:
+    post_revision_text: "Se ha transferido la propiedad"
   topic_statuses:
     archived_enabled: "Este tema está ahora archivado. Se paraliza y no puede ser cambiado en ningún modo."
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
@@ -1707,7 +1719,11 @@ es:
     second_factor_title: "Autenticación Dos Factores"
     second_factor_description: "Por favor ingrese el código de autenticación desde tu aplicación:"
     second_factor_backup_description: "Por favor, introduce uno de los códigos de respaldo:"
+    second_factor_backup_title: "Código de respaldo de verificación"
     invalid_second_factor_code: "Código de autentificación no válido. Cada código puede usarse solo una vez."
+    second_factor_toggle:
+      totp: "Usar una aplicación de verificación en su lugar"
+      backup_code: "Usar un código de respaldo en su lugar"
   user:
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
@@ -1981,6 +1997,18 @@ es:
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha sido eliminado.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Este mensaje ha sido reportado por la comunidad y un miembro del equipo ha decidido eliminarlo.
+
+        Por favor, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines) para más detalles.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2228,10 +2256,6 @@ es:
     email_reject_old_destination:
       title: "Correo electrónico rechazo antiguo destino"
       subject_template: "[%{email_prefix}] Problema con el correo -- Estás intentando responder a una notificación antigua"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de correo a %{destination} (titulado %{former_title}) no ha funcionado.
-
-        Por razones de seguridad nosotros solo aceptamos respuestas a notificaciones originales para 90 días. Por favor [visita el tema](%{short_url}) para continuar esta conversación.
     email_reject_topic_not_found:
       title: "Email rechazado, tema no encontrado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Tema no encontrado"
@@ -2738,6 +2762,7 @@ es:
     recent_topics: "Recientes"
     see_more: "Más"
     search_title: "Busca en este sitio"
+    search_button: "Buscar"
   offline:
     title: "No carga app"
     offline_page_message: "¡Parece que estás offline! Por favor revisa tu conexión a internet e intenta de nuevo."
@@ -2789,9 +2814,9 @@ es:
     neutral: "Esquema neutral"
     grey_amber: "Esquema gris-ámbar"
     shades_of_blue: "Esquema gama azul"
-    latte: "Esquema Latte"
-    summer: "Esquema veraniego"
-    dark_rose: "Esquema rosa oscuro"
+    latte: "Gama Latte"
+    summer: "Gama veraniega"
+    dark_rose: "Gama rosa oscura"
     default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Oscuro"
@@ -3342,6 +3367,7 @@ es:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
       help: "registra una nueva cuenta para empezar"
+      no_emails: "Por desgracia, no se han definido emails de administradores durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Por favor, añade un correo de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu email"
       message: "<p>Hemos enviado un email de activación a <b>%{email}</b>. Por favor, sigue las intrucciones en el email para activar tu cuenta.</p><p>Si no llega, asegúrate que el email esté configurado correctamente en Discourse y comprueba tu carpeta de spam</p>"
@@ -3493,4 +3519,4 @@ es:
     not_found: "no encontrado"
     unknown: "desconocido"
     user_merged: "%{username} se ha unido en esta cuenta"
-    user_delete_self: "Deleted by self from %{url}"
+    user_delete_self: "Eliminado a si mismo de %{url}"

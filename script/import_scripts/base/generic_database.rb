@@ -125,6 +125,10 @@ module ImportScripts
       @db.execute(sql)
     end
 
+    def get_first_value(sql)
+      @db.get_first_value(sql)
+    end
+
     private
 
     def configure_database

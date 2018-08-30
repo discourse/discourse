@@ -25,7 +25,7 @@ describe Stylesheet::Manager do
 
     theme.save!
 
-    child_theme = Fabricate(:theme)
+    child_theme = Fabricate(:theme, component: true)
 
     child_theme.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
     child_theme.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -65,13 +65,32 @@ describe Stylesheet::Manager do
     end
 
     it 'can correctly account for plugins in digest' do
-
       theme = Fabricate(:theme)
 
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.digest
 
       DiscoursePluginRegistry.stylesheets.add "fake_file"
+
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      digest2 = manager.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
+    it "can correctly account for settings in theme's components" do
+      theme = Fabricate(:theme)
+      child = Fabricate(:theme, component: true)
+      theme.add_child_theme!(child)
+
+      child.set_field(target: :settings, name: :yaml, value: "childcolor: red")
+      child.set_field(target: :common, name: :scss, value: "body {background-color: $childcolor}")
+      child.save!
+
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      digest1 = manager.digest
+
+      child.update_setting(:childcolor, "green")
 
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest2 = manager.digest

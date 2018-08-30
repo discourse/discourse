@@ -91,11 +91,11 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor("invite").reset();
     },
 
-    showHistory(model) {
+    showHistory(model, revision) {
       showModal("history", { model });
       const historyController = this.controllerFor("history");
 
-      historyController.refresh(model.get("id"), "latest");
+      historyController.refresh(model.get("id"), revision || "latest");
       historyController.set("post", model);
       historyController.set("topicController", this.controllerFor("topic"));
 

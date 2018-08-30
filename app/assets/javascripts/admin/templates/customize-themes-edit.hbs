@@ -31,14 +31,6 @@
             {{/link-to}}
           </li>
         {{/if}}
-        {{#if showSettings}}
-          <li class='theme-settings'>
-            {{#link-to 'adminCustomizeThemes.edit' model.id 'settings' fieldName replace=true}}
-              {{i18n 'admin.customize.theme.settings'}}
-              {{d-icon 'cog'}}
-            {{/link-to}}
-          </li>
-        {{/if}}
       </ul>
       <div class='show-overidden'>
         <label>

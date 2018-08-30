@@ -53,11 +53,6 @@ export default Ember.Controller.extend({
     return this.shouldShow("mobile");
   },
 
-  @computed("onlyOverridden", "model.remote_theme")
-  showSettings() {
-    return false;
-  },
-
   @observes("onlyOverridden")
   onlyOverriddenChanged() {
     if (this.get("onlyOverridden")) {

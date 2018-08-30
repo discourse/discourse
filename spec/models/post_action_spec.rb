@@ -477,6 +477,15 @@ describe PostAction do
       expect(post.topic.visible).to eq(false)
     end
 
+    it "doesn't fail when post has nil user" do
+      post = create_post
+      post.update!(user: nil)
+
+      PostAction.act(codinghorror, post, PostActionType.types[:spam], take_action: true)
+      post.reload
+      expect(post.hidden).to eq(true)
+    end
+
     it "hide tl0 posts that are flagged as spam by a tl3 user" do
       newuser = Fabricate(:newuser)
       post = create_post(user: newuser)

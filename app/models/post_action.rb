@@ -575,11 +575,11 @@ class PostAction < ActiveRecord::Base
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
     return if post.hidden?
-    return if (!acting_user.staff?) && post.user.staff?
+    return if (!acting_user.staff?) && post.user&.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&
-       post.user.trust_level == TrustLevel[0]
+       post.user&.trust_level == TrustLevel[0]
 
       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 

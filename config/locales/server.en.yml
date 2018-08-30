@@ -63,6 +63,7 @@ en:
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
+      component_no_color_scheme: "Theme components can't have color scheme"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
@@ -263,6 +264,7 @@ en:
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
   max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
+  pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -1184,8 +1186,6 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_personal_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send personal email messages. Note that staff can always send messages no matter what."
-
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
@@ -1454,9 +1454,6 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
-
-    min_trust_to_send_email_messages: "The minimum trust level required to send new personal messages via email (to staged users)."
-
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
@@ -1565,6 +1562,7 @@ en:
     unsubscribe_via_email_footer: "Attach an unsubscribe via email mailto: link to the footer of sent emails"
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
+    disallow_reply_by_email_after_days: "Disallow reply by email after (N) days. 0 to keep indefinitely"
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
@@ -1964,6 +1962,12 @@ en:
     second_factor_toggle:
       totp: "Use an authenticator app instead"
       backup_code: "Use a backup code instead"
+
+  admin:
+    email:
+      sent_test: "sent!"
+      sent_test_disabled: "cannot send because emails are disabled"
+      sent_test_disabled_for_non_staff: "cannot send because emails are disabled for non-staff"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
@@ -2554,7 +2558,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        For security reasons we only accept replies to original notifications for 90 days. Please [visit the topic](%{short_url}) to continue the conversation.
+        We only accept replies to original notifications for %{number_of_days} days. Please [visit the topic](%{short_url}) to continue the conversation.
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
@@ -3226,7 +3230,8 @@ en:
     sender_message_blank: "message is blank"
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
-    sender_text_body_blank: "body is blank"
+    sender_body_blank: "body is blank"
+    sender_post_deleted: "post has been deleted"
 
   color_schemes:
     base_theme_name: "Base"

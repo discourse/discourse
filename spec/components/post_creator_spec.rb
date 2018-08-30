@@ -1054,6 +1054,22 @@ describe PostCreator do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:regular])
     end
+
+    it "user preferences for notification level when replying doesn't affect PMs" do
+      user.user_option.update!(notification_level_when_replying: 1)
+
+      admin = Fabricate(:admin)
+      pm = Fabricate(:private_message_topic, user: admin)
+
+      pm.invite(admin, user.username)
+      PostCreator.create(
+        user,
+        topic_id: pm.id,
+        raw: "this is a test reply 123 123 ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: pm.id)
+      expect(topic_user.notification_level).to eq(3)
+    end
   end
 
   describe '#create!' do

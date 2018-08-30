@@ -16,5 +16,9 @@
 </div>
 
 <div class="cell value thirty-days-count {{model.thirtyDaysTrend}}" title={{model.thirtyDaysCountTitle}}>
-  {{number model.lastThirtyDaysCount}} {{d-icon model.thirtyDaysTrendIcon}}
+  {{number model.lastThirtyDaysCount}}
+
+  {{#if model.prev30Days}}
+    {{d-icon model.thirtyDaysTrendIcon}}
+  {{/if}}
 </div>

@@ -7,16 +7,11 @@ class ChildTheme < ActiveRecord::Base
   private
 
   def child_validations
-    if ChildTheme.exists?(["parent_theme_id = ? OR child_theme_id = ?", child_theme_id, parent_theme_id])
+    if Theme.where(
+         "(component IS true AND id = :parent) OR (component IS false AND id = :child)",
+         parent: parent_theme_id, child: child_theme_id
+       ).exists?
       errors.add(:base, I18n.t("themes.errors.no_multilevels_components"))
-    end
-
-    if Theme.exists?(id: child_theme_id, user_selectable: true)
-      errors.add(:base, I18n.t("themes.errors.component_no_user_selectable"))
-    end
-
-    if child_theme_id == SiteSetting.default_theme_id
-      errors.add(:base, I18n.t("themes.errors.component_no_default"))
     end
   end
 end

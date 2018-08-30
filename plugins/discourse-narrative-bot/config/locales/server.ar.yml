@@ -7,7 +7,6 @@
 
 ar:
   site_settings:
-    discourse_narrative_bot_enabled: 'فعل روبوت ديسكورس المتحدث'
     disable_discourse_narrative_bot_welcome_post: "عطل منشور الترحيب المنشور بواسطة روبوت ديسكورس المتحدث"
     discourse_narrative_bot_ignored_usernames: "اسماء الاعضاء التي يتوجب على روبوت ديسكورس المتحدث تجاهلها"
     discourse_narrative_bot_disable_public_replies: "عطل الردود العامة بواسطة روبوت ديسكورس المتحدث"

@@ -195,7 +195,7 @@ es:
     guidelines: "Directrices"
     privacy_policy: "Política de Privacidad"
     privacy: "Privacidad"
-    terms_of_service: "Condiciones de uso"
+    tos: "Condiciones de uso"
     mobile_view: "Versión móvil"
     desktop_view: "Versión de escritorio"
     you: "Tú"
@@ -677,7 +677,7 @@ es:
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
       second_factor_backup:
-        title: "Códigos Two Factor Backup"
+        title: "Código de seguridad de verificación en dos pasos"
         regenerate: "Regenerar"
         disable: "Deshabilitar"
         enable: "Habilitar"
@@ -687,7 +687,7 @@ es:
         copy_to_clipboard_error: "Error copiando datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
         codes:
-          title: "Códigos de Respaldo Generados"
+          title: "Códigos de seguridad generados"
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
       second_factor:
         title: "Autenticación Dos Factores"
@@ -737,8 +737,8 @@ es:
       email:
         title: "E-mail"
         primary: "Correo electrónico principal"
-        secondary: "Correo electrónico secundario"
-        no_secondary: "Sin correo electrónico secundario"
+        secondary: "Correos electrónicos secundarios"
+        no_secondary: "Sin correos electrónicos secundarios"
         instructions: "nunca se mostrará al público"
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
@@ -1007,8 +1007,6 @@ es:
       hide_session: "Recordar mañana"
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
-      intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
-      value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos posts. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{replyCount}}</b> respuestas."
@@ -1022,7 +1020,6 @@ es:
       disable: "Mostrar Posts Eliminados"
     private_message_info:
       title: "Mensaje"
-      invite: "Invitar a Otros..."
       leave_message: "¿Realmente quieres dejar este mensaje?"
       remove_allowed_user: "¿Seguro que quieres eliminar a {{name}} de este mensaje?"
       remove_allowed_group: "¿Seguro que quieres eliminar a {{name}} de este mensaje?"
@@ -2562,7 +2559,7 @@ es:
         page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         community_health: Salud de la Comunidad
-        moderators_activity: Actividad de los moderadores
+        moderators_activity: Actividad de moderación
         whats_new_in_discourse: "¿Qué hay de nuevo en Discourse?"
         activity_metrics: Métricas de Actividad
         all_reports: "Todos los reportes"
@@ -2976,7 +2973,6 @@ es:
           public_key: "Conceda la siguiente clave pública de acceso para el repositorio:"
           about_theme: "Acerca del Theme"
           license: "Licencia"
-          component_of: "Theme es un componente de:"
           update_to_latest: "Actualizar a lo último"
           check_for_updates: "Verificar por Actualizaciones"
           updating: "Actualizando..."
@@ -3566,9 +3562,6 @@ es:
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"
         add_host: "añadir host"
-        value_list:
-          default_none: "Escribe para filtrar o crear..."
-          no_choices_none: "Escribe para crear..."
         uploaded_image_list:
           label: "Editar lista"
           empty: "No hay imágenes todavía. Por favor, sube una."
@@ -3576,7 +3569,7 @@ es:
             label: "Subir"
             title: "Subir imagen(es)"
         selectable_avatars:
-          title: "Lista de avatares que los usuarios pueden elegir"
+          title: "Lista de avatares de la que los usuarios pueden elegir"
         categories:
           all_results: 'Todo'
           required: 'Requerido'

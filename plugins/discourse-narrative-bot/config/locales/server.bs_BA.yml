@@ -7,7 +7,6 @@
 
 bs_BA:
   site_settings:
-    discourse_narrative_bot_enabled: 'Uključi Discourse Narrative bot'
     disable_discourse_narrative_bot_welcome_post: "Isključi objavu dobrodošlice od strane Discourse Narrative bot"
     discourse_narrative_bot_ignored_usernames: "Korisnička imena koja Discourse Narrative bot bi trebao ignorisati"
     discourse_narrative_bot_disable_public_replies: "Isključi javne odgovore od strane Discourse Narrative bot"

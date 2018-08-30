@@ -155,10 +155,7 @@ export default createWidget("hamburger-menu", {
       });
     }
 
-    if (
-      this.siteSettings.enable_group_directory ||
-      (this.currentUser && this.currentUser.staff)
-    ) {
+    if (this.siteSettings.enable_group_directory) {
       links.push({
         route: "groups",
         className: "groups-link",

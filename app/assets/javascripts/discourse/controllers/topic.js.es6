@@ -98,6 +98,16 @@ export default Ember.Controller.extend(BufferedContent, {
 
   init() {
     this._super();
+    this.appEvents.on("post:show-revision", (postNumber, revision) => {
+      const post = this.model.get("postStream").postForPostNumber(postNumber);
+      if (!post) {
+        return;
+      }
+
+      Ember.run.scheduleOnce("afterRender", () => {
+        this.send("showHistory", post, revision);
+      });
+    });
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState()

@@ -161,7 +161,18 @@ describe TopicView do
     end
 
     it "provides an absolute url" do
-      expect(topic_view.absolute_url).to be_present
+      expect(topic_view.absolute_url).to eq("http://test.localhost/t/#{topic.slug}/#{topic.id}")
+    end
+
+    context 'subfolder' do
+      before do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+      end
+
+      it "provides the correct absolute url" do
+        expect(topic_view.absolute_url).to eq("http://test.localhost/forum/t/#{topic.slug}/#{topic.id}")
+      end
     end
 
     it "provides a summary of the first post" do

@@ -4,7 +4,7 @@ require 'rails_helper'
 require_dependency 'avatar_lookup'
 
 describe AvatarLookup do
-  let!(:user) { Fabricate(:user) }
+  let!(:user) { Fabricate(:user, username: "john_doe", name: "John Doe") }
 
   describe '#[]' do
     before do
@@ -20,7 +20,10 @@ describe AvatarLookup do
     end
 
     it 'returns user if user_id exists' do
-      expect(@avatar_lookup[user.id]).to eq(user)
+      avatar_lookup_user = @avatar_lookup[user.id]
+      expect(avatar_lookup_user).to eq(user)
+      expect(avatar_lookup_user.username).to eq("john_doe")
+      expect(avatar_lookup_user.name).to eq("John Doe")
     end
   end
 end

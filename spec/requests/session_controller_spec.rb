@@ -620,10 +620,10 @@ RSpec.describe SessionController do
         SiteSetting.s3_upload_bucket = "test"
         SiteSetting.s3_cdn_url = "http://cdn.com"
 
-        stub_request(:any, /test.s3.amazonaws.com/).to_return(status: 200, body: "", headers: {})
+        stub_request(:any, /test.s3.dualstack.us-east-1.amazonaws.com/).to_return(status: 200, body: "", headers: {})
 
         @user.create_user_avatar!
-        upload = Fabricate(:upload, url: "//test.s3.amazonaws.com/something")
+        upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
 
         Fabricate(:optimized_image,
           sha1: SecureRandom.hex << "A" * 8,
@@ -635,8 +635,8 @@ RSpec.describe SessionController do
 
         @user.update_columns(uploaded_avatar_id: upload.id)
         @user.user_profile.update_columns(
-          profile_background: "//test.s3.amazonaws.com/something",
-          card_background: "//test.s3.amazonaws.com/something"
+          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
+          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
         )
 
         @user.reload

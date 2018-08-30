@@ -19,6 +19,7 @@ class PluginTxUpdater
     'discourse-canned-replies',
     'discourse-characters-required',
     'discourse-chat-integration',
+    'discourse-checklist',
     'discourse-data-explorer',
     'discourse-math',
     'discourse-oauth2-basic',

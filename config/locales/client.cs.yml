@@ -235,7 +235,7 @@ cs:
     guidelines: "Pokyny"
     privacy_policy: "Ochrana soukromí"
     privacy: "Soukromí"
-    terms_of_service: "Podmínky používání"
+    tos: "Podmínky používání"
     mobile_view: "Mobilní verze"
     desktop_view: "Plná verze"
     you: "Vy"
@@ -269,6 +269,8 @@ cs:
       our_moderators: "Naši Moderátoři"
       stat:
         all_time: "Za celou dobu"
+        last_7_days: "Posledních 7"
+        last_30_days: "Posledních 30"
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
@@ -532,6 +534,7 @@ cs:
       "12": "Odeslané zprávy"
       "13": "Přijaté zprávy"
       "14": "Čeká na schválení"
+      "15": "Koncepty"
     categories:
       all: "všechny kategorie"
       no_subcategory: "žádné"
@@ -1033,8 +1036,6 @@ cs:
       hide_session: "Připomenout mi zítra"
       hide_forever: "děkuji, ne"
       hidden_for_session: "Dobrá, zeptám se tě zítra. Pro založení účtu můžeš také vždy použít 'Přihlásit se'."
-      intro: "Nazdar! :heart_eyes: Vypadá to, že si užíváš diskuzi, ale zatím jsi si nezaložil účet."
-      value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli přibudou nově příspěvky. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartbeat:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
       description: "Je tu <b>{{replyCount}}</b> odpovědí."
@@ -1048,7 +1049,6 @@ cs:
       disable: "Zobrazit smazané příspěvky"
     private_message_info:
       title: "Zpráva"
-      invite: "Pozvat další..."
       leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit {{name}} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit {{name}} z této zprávy?"
@@ -1113,21 +1113,27 @@ cs:
       forgot: "Nevybavuju si podrobnosti svého účtu"
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
+        name: "Google"
         title: "přes Google"
         message: "Přihlašování přes Google (ujistěte se že nemáte zaplé blokování pop up oken)"
       twitter:
+        name: "Twitter"
         title: "přes Twitter"
         message: "Autentizuji přes Twitter (ujistěte se, že nemáte zablokovaná popup okna)"
       instagram:
+        name: "Instagram"
         title: "s Instagramem"
         message: "Autentizuji pres Instagram (ujistěte se, že nemáte zablokovaná popup okna)"
       facebook:
+        name: "Facebook"
         title: "přes Facebook"
         message: "Autentizuji přes Facebook (ujistěte se, že nemáte zablokovaná popup okna)"
       yahoo:
+        name: "Yahoo"
         title: "přes Yahoo"
         message: "Autentizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
+        name: "GitHub"
         title: "přes GitHub"
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
     invites:
@@ -1283,6 +1289,7 @@ cs:
         body: "Nyní tuto zprávu posíláte pouze sám/sama sobě!"
       admin_options_title: "Volitelné redakční nastavení tématu"
       composer_actions:
+        edit: Upravit
         reply_to_post:
           label: "Odpovědět na příspěvek %{postNumber} od %{postUsername}"
           desc: Odpovědět na konkrétní příspěvek
@@ -1647,6 +1654,7 @@ cs:
         jump_prompt_of: "%{count} příspěvků"
         jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
+        jump_prompt_or: "nebo"
         total: celkem příspěvků
         current: aktuální příspěvek
       notifications:
@@ -2660,6 +2668,8 @@ cs:
         reports:
           today: "Dnes"
           yesterday: "Včera"
+          last_7_days: "Posledních 7"
+          last_30_days: "Posledních 30"
           all_time: "Za celou dobu"
           7_days_ago: "Týden"
           30_days_ago: "Měsíc"
@@ -3029,7 +3039,6 @@ cs:
           public_key: "Přidělit přístup k repo následujícím veřejným klíčem:"
           about_theme: "O motivu "
           license: "Licence"
-          component_of: "Motiv je součástí: "
           update_to_latest: "Aktualizovat na nejnovější"
           check_for_updates: "kontrola aktualizací"
           updating: "Aktualizace..."

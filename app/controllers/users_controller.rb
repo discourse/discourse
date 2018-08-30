@@ -675,7 +675,7 @@ class UsersController < ApplicationController
       if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       else
-        return redirect_to("/")
+        return redirect_to(path('/'))
       end
     end
 

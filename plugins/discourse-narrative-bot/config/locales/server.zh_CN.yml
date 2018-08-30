@@ -7,7 +7,6 @@
 
 zh_CN:
   site_settings:
-    discourse_narrative_bot_enabled: '启用 Discourse 代表机器人'
     disable_discourse_narrative_bot_welcome_post: "禁止 Discourse 代表机器人发送欢迎帖子"
     discourse_narrative_bot_ignored_usernames: "Discourse 代表机器人应该忽略的用户名"
     discourse_narrative_bot_disable_public_replies: "禁止 Discourse 代表机器人发布公开回复"

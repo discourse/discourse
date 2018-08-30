@@ -79,6 +79,7 @@
             {{#each activityMetrics as |metric|}}
               {{admin-report
                 showHeader=false
+                filters=activityMetricsFilters
                 forcedModes="counters"
                 dataSourceName=metric}}
             {{/each}}

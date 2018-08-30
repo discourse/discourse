@@ -184,7 +184,7 @@ da:
     guidelines: "Retningslinier"
     privacy_policy: "Privatlivspolitik"
     privacy: "Privatliv"
-    terms_of_service: "Betingelser"
+    tos: "Betingelser"
     mobile_view: "Mobil-visning"
     desktop_view: "Desktop-visning"
     you: "Dig"
@@ -862,8 +862,6 @@ da:
       hide_session: "Mind mig om det i morgen"
       hide_forever: "nej tak"
       hidden_for_session: "OK, jeg spørger dig i morgen. Du kan også altid bruge \"Log på\" til at oprette en konto."
-      intro: "Hejsa! :heart_eyes: Det ser ud til, at du følger godt med i samtalerne, men du har endnu ikke oprettet en konto."
-      value_prop: "Når du opretter en konto, så kan vi huske hvad du har læst, så du altid kan fortsætte, hvor du er kommet til. Du får også notifikationer - her og på email - når nye interessante indlæg postes. Og du kan like indlæg og dele begejstringen. :heartbeat:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description: "Der er <b>{{replyCount}}</b> svar."
@@ -877,7 +875,6 @@ da:
       disable: "Vis Slettede Indlæg"
     private_message_info:
       title: "Besked"
-      invite: "Invitér andre…"
       remove_allowed_user: "Ønsker du virkelig at fjerne {{name}} fra denne samtale?"
       remove_allowed_group: "Er du sikker på du vil fjerne {{name}} fra denne besked?"
     email: 'E-mail'
@@ -2458,7 +2455,6 @@ da:
           import_file_tip: "Tema som indeholder filen .dcstyle.json"
           about_theme: "Om temaet"
           license: "Licens"
-          component_of: "Temaet er et komponent fra:"
           update_to_latest: "Opdatér til seneste"
           check_for_updates: "Tjek efter opdateringer"
           updating: "Opdaterer..."

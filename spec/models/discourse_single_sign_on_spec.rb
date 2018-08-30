@@ -327,6 +327,36 @@ describe DiscourseSingleSignOn do
     expect(sso.nonce).to_not be_nil
   end
 
+  context 'user locale' do
+    it 'sets default user locale if specified' do
+      SiteSetting.allow_user_locale = true
+
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@test.com"
+      sso.external_id = "123"
+      sso.locale = "es"
+
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.locale).to eq("es")
+
+      user.update_column(:locale, "he")
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("he")
+
+      sso.locale_force_update = true
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("es")
+
+      sso.locale = "fake"
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("es")
+    end
+  end
+
   context 'trusting emails' do
     let(:sso) do
       sso = DiscourseSingleSignOn.new

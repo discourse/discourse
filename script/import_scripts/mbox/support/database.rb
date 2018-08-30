@@ -97,19 +97,20 @@ module ImportScripts::Mbox
 
       @db.execute <<-SQL
         WITH RECURSIVE
-          messages(msg_id, level, email_date) AS (
-            SELECT msg_id, 0 AS level, email_date
+          messages(msg_id, level, email_date, in_reply_to) AS (
+            SELECT msg_id, 0 AS level, email_date, in_reply_to
             FROM email
             WHERE in_reply_to IS NULL
             UNION ALL
-            SELECT e.msg_id, m.level + 1, e.email_date
+            SELECT e.msg_id, m.level + 1, e.email_date, e.in_reply_to
             FROM email e
               JOIN messages m ON e.in_reply_to = m.msg_id
-            ORDER BY level, email_date, msg_id
           )
         INSERT INTO email_order (msg_id)
-        SELECT msg_id
-        FROM messages
+        SELECT c.msg_id
+        FROM messages c
+          LEFT OUTER JOIN messages p ON (c.in_reply_to = p.msg_id)
+        ORDER BY MAX(c.email_date, p.email_date), c.level, c.email_date, c.msg_id
       SQL
     end
 
@@ -175,7 +176,6 @@ module ImportScripts::Mbox
       @db.get_first_value <<-SQL
         SELECT COUNT(*)
         FROM email
-        WHERE email_date IS NOT NULL
       SQL
     end
 
@@ -185,8 +185,7 @@ module ImportScripts::Mbox
           raw_message, body, elided, format, attachment_count, category
         FROM email e
           JOIN email_order o USING (msg_id)
-        WHERE email_date IS NOT NULL AND
-          o.ROWID > :last_row_id
+        WHERE o.ROWID > :last_row_id
         ORDER BY o.ROWID
         LIMIT #{@batch_size}
       SQL

@@ -203,12 +203,17 @@ export default Ember.Controller.extend({
 
   canUnlistTopic: Em.computed.and("model.creatingTopic", "isStaffUser"),
 
-  @computed("model.action", "isStaffUser")
-  canWhisper(action, isStaffUser) {
+  @computed("canWhisper", "model.whisper")
+  showWhisperToggle(canWhisper, isWhisper) {
+    return canWhisper && !isWhisper;
+  },
+
+  @computed("isStaffUser", "model.action")
+  canWhisper(isStaffUser, action) {
     return (
-      isStaffUser &&
       this.siteSettings.enable_whispers &&
-      action === Composer.REPLY
+      isStaffUser &&
+      Composer.REPLY === action
     );
   },
 
@@ -246,7 +251,7 @@ export default Ember.Controller.extend({
             action: "toggleWhisper",
             icon: "eye-slash",
             label: "composer.toggle_whisper",
-            condition: "canWhisper"
+            condition: "showWhisperToggle"
           };
         })
       );

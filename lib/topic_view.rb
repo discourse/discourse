@@ -144,7 +144,7 @@ class TopicView
   end
 
   def absolute_url
-    "#{Discourse.base_url}#{relative_url}"
+    "#{Discourse.base_url_no_prefix}#{relative_url}"
   end
 
   def relative_url

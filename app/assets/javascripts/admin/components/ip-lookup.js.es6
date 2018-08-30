@@ -88,10 +88,13 @@ export default Ember.Component.extend({
           text += `: ${location.phone}\n`;
         }
       }
-      const copyRange = $(`<textarea id="copy-range"></textarea>`);
-      copyRange.text(text);
+      const copyRange = $('<p id="copy-range"></p>');
+      copyRange.html(text.trim().replace("\n", "<br>"));
       $(document.body).append(copyRange);
-      copyText(text, copyRange[0]);
+      if (copyText(text, copyRange[0])) {
+        this.set("copied", true);
+        Ember.run.later(() => this.set("copied", false), 2000);
+      }
       copyRange.remove();
     },
 

@@ -77,14 +77,14 @@ describe UserAvatarsController do
 
       GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")
 
-      upload = Fabricate(:upload, url: "//test.s3.amazonaws.com/something")
+      upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
 
-      Fabricate(:optimized_image,
+      optimized_image = Fabricate(:optimized_image,
         sha1: SecureRandom.hex << "A" * 8,
         upload: upload,
         width: 98,
         height: 98,
-        url: "//test.s3.amazonaws.com/something/else"
+        url: "//test.s3.dualstack.us-east-1.amazonaws.com/something/else"
       )
 
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
@@ -98,6 +98,16 @@ describe UserAvatarsController do
 
       expect(response.body).to eq("image")
       expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
+      expect(response.headers["Last-Modified"]).to eq(optimized_image.upload.created_at.httpdate)
+    end
+
+    it 'serves a correct last modified for render blank' do
+      freeze_time
+
+      get "/user_avatar/default/xxx/51/777.png"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Last-Modified"]).to eq(10.minutes.ago.httpdate)
     end
 
     it 'serves image even if size missing and its in local mode' do

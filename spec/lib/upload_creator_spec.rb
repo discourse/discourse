@@ -14,7 +14,7 @@ RSpec.describe UploadCreator do
 
       it 'should store the upload with the right extension' do
         expect do
-          UploadCreator.new(file, filename).create_for(user.id)
+          UploadCreator.new(file, "utf-8\n.txt").create_for(user.id)
         end.to change { Upload.count }.by(1)
 
         upload = Upload.last

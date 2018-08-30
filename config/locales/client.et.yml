@@ -185,7 +185,7 @@ et:
     guidelines: "Juhised"
     privacy_policy: "Privaatsuspoliitika"
     privacy: "Privaatsus"
-    terms_of_service: "Teenuse tingimused"
+    tos: "Teenuse tingimused"
     mobile_view: "Mobiilne vaade"
     desktop_view: "Täisvaade"
     you: "Sina"
@@ -851,8 +851,6 @@ et:
       hide_session: "Tuleta mulle homme meelde"
       hide_forever: "tänan, ei"
       hidden_for_session: "OK, küsin homme uuesti. Samuti võid konto alati 'Logi sisse' lingi alt luua."
-      intro: "Hei! :heart_eyes: Näib, et sulle see vestlus meeldib, kuid sa pole endale veel kontot loonud."
-      value_prop: "Kui oled endale konto loonud, jätame me täpselt meelde, mida oled lugenud. Nii jätkad alati sealt, kus pooleli jätsid. Samuti tulevad sulle teavitused nii siia kui ka meilile, kui ilmuvad uued postitused. Ning võid postituste juurde märkida \"meeldib\", et näidata oma poolehoidu. :heartbeat:"
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
       description: "Kokku on <b>{{replyCount}}</b> vastust."
@@ -866,7 +864,6 @@ et:
       disable: "Näita kustutatud postitusi"
     private_message_info:
       title: "Sõnum"
-      invite: "Kutsu teisi..."
       remove_allowed_user: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
       remove_allowed_group: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
     email: 'Meiliaadress'

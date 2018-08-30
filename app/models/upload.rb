@@ -24,7 +24,7 @@ class Upload < ActiveRecord::Base
 
   validates_with ::Validators::UploadValidator
 
-  def thumbnail(width = self.width, height = self.height)
+  def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
 
@@ -41,10 +41,6 @@ class Upload < ActiveRecord::Base
     }
 
     if get_optimized_image(width, height, opts)
-      # TODO: this code is not right, we may have multiple
-      # thumbs
-      self.width = width
-      self.height = height
       save(validate: false)
     end
   end
@@ -101,6 +97,51 @@ class Upload < ActiveRecord::Base
 
   def short_url
     "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+  end
+
+  def local?
+    !(url =~ /^(https?:)?\/\//)
+  end
+
+  def fix_dimensions!
+    return if !FileHelper.is_image?("image.#{extension}")
+
+    path =
+      if local?
+        Discourse.store.path_for(self)
+      else
+        Discourse.store.download(self).path
+      end
+
+    self.width, self.height = size = FastImage.new(path).size
+    self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+    nil
+  end
+
+  # on demand image size calculation, this allows us to null out image sizes
+  # and still handle as needed
+  def get_dimension(key)
+    if v = read_attribute(key)
+      return v
+    end
+    fix_dimensions!
+    read_attribute(key)
+  end
+
+  def width
+    get_dimension(:width)
+  end
+
+  def height
+    get_dimension(:height)
+  end
+
+  def thumbnail_width
+    get_dimension(:thumbnail_width)
+  end
+
+  def thumbnail_height
+    get_dimension(:thumbnail_height)
   end
 
   def self.sha1_from_short_url(url)

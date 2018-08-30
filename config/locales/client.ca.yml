@@ -189,7 +189,7 @@ ca:
     guidelines: "Directrius"
     privacy_policy: "Política de privadesa"
     privacy: "Privadesa"
-    terms_of_service: "Condicions generals d'ús"
+    tos: "Condicions generals d'ús"
     mobile_view: "Visió Mòbil"
     desktop_view: "Visió d'Escriptori"
     you: "Tu"
@@ -846,8 +846,6 @@ ca:
       hide_session: "Recorda-m'ho demà"
       hide_forever: "no, gràcies"
       hidden_for_session: "D'acord, to demanarem demà. També podràs fer servir sempre <i>Iniciar sessió</i> per crear un compte."
-      intro: "Hola! :heart_eyes: Sembla que estàs gaudint amb la conversa, però no t'hi has registrat."
-      value_prop: "En crear un compte, et recordem exactament el que has llegit, i així sempre arribes just on ho has deixat. També pots obtenir notificacions, aquí i per correu electrònic, sempre que hi hagi nous missatges. I pots rebre missatges de compartir l'amor. :heartbeat:"
     summary:
       enabled_description: "Estàs mirant un resum d'aquest tema: les publicacions més interessants segons determina la comunitat."
       description: "Hi ha <b>{{replyCount}}</b> respostes."
@@ -861,7 +859,6 @@ ca:
       disable: "Mostra publicacions esborrades"
     private_message_info:
       title: "Missatge"
-      invite: "Convida altres..."
       remove_allowed_user: "De debò vols esborrar {{name}} d'aquest missatge?"
       remove_allowed_group: "De debò vols esborrar {{name}} d'aquest missatge?"
     email: 'Correu electrònic'

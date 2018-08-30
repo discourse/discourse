@@ -7,7 +7,6 @@
 
 el:
   site_settings:
-    discourse_narrative_bot_enabled: 'Ενεργοποίηση Bot αφηγηματικού λόγου'
     disable_discourse_narrative_bot_welcome_post: "Απενεργοποίηση του μηνύματος καλωσορίσματος από το bot αφηγηματικού λόγου"
     discourse_narrative_bot_ignored_usernames: "Ονόματα χρηστών τα οποία το bot αφηγηματικού λόγου θα πρέπει να αγνοεί"
     discourse_narrative_bot_disable_public_replies: "Απενεργοποίηση δημόσιων απαντήσεων από το bot αφηγηματικού λόγου"

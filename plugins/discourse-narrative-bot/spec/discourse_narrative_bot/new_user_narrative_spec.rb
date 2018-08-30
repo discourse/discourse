@@ -690,6 +690,23 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
+      describe 'when user mentions is disabled' do
+        before do
+          SiteSetting.enable_mentions = false
+        end
+
+        it 'should skip the mention tutorial step' do
+          post.update!(
+            raw: ':monkey: :fries:'
+          )
+
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
+        end
+      end
+
       it 'should create the right reply' do
         post.update!(
           raw: ':monkey: :fries:'

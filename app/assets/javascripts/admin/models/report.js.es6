@@ -8,7 +8,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 const Report = Discourse.Model.extend({
   average: false,
@@ -439,7 +439,7 @@ const Report = Discourse.Model.extend({
       case "high-trending-down":
         return higherIsBetter ? "angle-double-down" : "angle-double-up";
       default:
-        return null;
+        return "minus";
     }
   }
 });

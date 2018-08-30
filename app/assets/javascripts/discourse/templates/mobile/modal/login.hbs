@@ -10,14 +10,14 @@
 
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
-        <div id="credentials">
+        <div id="credentials" class={{credentialsClass}}>
           <table>
             <tr>
               <td>
                 <label for='login-account-name'>{{i18n 'login.username'}}</label>
               </td>
               <td>
-                {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
+                {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
               </td>
             </tr>
             <tr>
@@ -25,7 +25,7 @@
                 <label for='login-account-password'>{{i18n 'login.password'}}</label>
               </td>
               <td>
-                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200"}}
+                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
               </td>
             </tr>
             <tr>
@@ -36,7 +36,7 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled}}
+        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled class=secondFactorClass}}
           {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
         {{/second-factor-form}}
       </form>

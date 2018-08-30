@@ -7,7 +7,6 @@
 
 nl:
   site_settings:
-    discourse_narrative_bot_enabled: 'Discourse Narrative Bot inschakelen'
     disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot welkomstbericht uitschakelen"
     discourse_narrative_bot_ignored_usernames: "Gebruikersnamen die de Discourse Narrative Bot moet negeren"
     discourse_narrative_bot_disable_public_replies: "Antwoorden door de Discourse Narrative Bot uitschakelen"

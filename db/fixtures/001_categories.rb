@@ -16,7 +16,7 @@ if uncat_id == -1 || !Category.exists?(uncat_id)
 
   result = DB.query_single "INSERT INTO categories
           (name,color,slug,description,text_color, user_id, created_at, updated_at, position, name_lower)
-   VALUES ('#{name}', 'AB9364', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 1, '#{name.downcase}' )
+   VALUES ('#{name}', '0088CC', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 1, '#{name.downcase}' )
    RETURNING id
   "
   category_id = result.first.to_i

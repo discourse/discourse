@@ -140,13 +140,7 @@ module FlagQuery
       post_custom_field_names << field if plugin.enabled?
     end
 
-    post_custom_fields = {}
-    if post_custom_field_names.present?
-      PostCustomField.where(post_id: post_ids, name: post_custom_field_names).each do |f|
-        post_custom_fields[f.post_id] ||= {}
-        post_custom_fields[f.post_id][f.name] = f.value
-      end
-    end
+    post_custom_fields = Post.custom_fields_for_ids(post_ids, post_custom_field_names)
 
     # maintain order
     posts = post_ids.map { |id| post_lookup[id] }

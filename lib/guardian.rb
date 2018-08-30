@@ -272,6 +272,7 @@ class Guardian
 
     if object.is_a?(Topic) && object.private_message?
       return false unless SiteSetting.enable_personal_messages?
+      return false if object.reached_recipients_limit? && !is_staff?
     end
 
     if object.is_a?(Topic) && object.category
@@ -334,15 +335,20 @@ class Guardian
     (!is_silenced? || target.staff?)
   end
 
-  def cand_send_private_messages_to_email?
+  def can_send_private_messages_to_email?
     # Staged users must be enabled to create a temporary user.
     SiteSetting.enable_staged_users &&
     # User is authenticated
     authenticated? &&
     # User is trusted enough
-    @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
-    # PMs to email addresses are enabled
-    (is_staff? || SiteSetting.enable_personal_email_messages)
+    (is_staff? ||
+      (
+        # TODO: 2019 evaluate if we need this flexibility
+        # perhaps we enable this unconditionally to TL4?
+        @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
+        SiteSetting.enable_personal_email_messages
+      )
+    )
   end
 
   def can_see_emails?

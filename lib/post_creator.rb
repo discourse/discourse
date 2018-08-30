@@ -325,13 +325,17 @@ class PostCreator
   end
 
   def transaction(&blk)
-    Post.transaction do
-      if new_topic?
+    if new_topic?
+      Post.transaction do
         blk.call
-      else
-        # we need to ensure post_number is monotonically increasing with no gaps
-        # so we serialize creation to avoid needing rollbacks
-        DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
+      end
+    else
+      # we need to ensure post_number is monotonically increasing with no gaps
+      # so we serialize creation to avoid needing rollbacks
+      DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}") do
+        Post.transaction do
+          blk.call
+        end
       end
     end
   end
@@ -531,6 +535,7 @@ class PostCreator
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
     else
+      return if @topic.private_message?
       notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end

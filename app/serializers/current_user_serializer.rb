@@ -101,7 +101,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_send_private_email_messages
-    scope.cand_send_private_messages_to_email?
+    scope.can_send_private_messages_to_email?
   end
 
   def can_edit

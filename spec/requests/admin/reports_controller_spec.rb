@@ -13,6 +13,40 @@ describe Admin::ReportsController do
       sign_in(admin)
     end
 
+    describe '#bulk' do
+      context "valid params" do
+        it "renders the reports as JSON" do
+          Fabricate(:topic)
+          get "/admin/reports/bulk.json", params: {
+            reports: {
+              topics: { limit: 10 },
+              likes: { limit: 10 }
+            }
+          }
+
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["reports"].count).to eq(2)
+        end
+      end
+
+      context "invalid params" do
+        context "inexisting report" do
+          it "returns only existing reports" do
+            get "/admin/reports/bulk.json", params: {
+              reports: {
+                topics: { limit: 10 },
+                xxx: { limit: 10 }
+              }
+            }
+
+            expect(response.status).to eq(200)
+            expect(JSON.parse(response.body)["reports"].count).to eq(1)
+            expect(JSON.parse(response.body)["reports"][0]["type"]).to eq("topics")
+          end
+        end
+      end
+    end
+
     describe '#show' do
       context "invalid id form" do
         let(:invalid_id) { "!!&asdfasdf" }

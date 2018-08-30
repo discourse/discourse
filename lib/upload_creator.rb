@@ -22,8 +22,8 @@ class UploadCreator
   #  - for_export (boolean)
   def initialize(file, filename, opts = {})
     @file = file
-    @filename = filename || ''
-    @upload = Upload.new(original_filename: filename, filesize: 0)
+    @filename = (filename || "").gsub(/[^[:print:]]/, "")
+    @upload = Upload.new(original_filename: @filename, filesize: 0)
     @opts = opts
   end
 
@@ -106,7 +106,8 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
+        @upload.width, @upload.height = @image_info.size
       end
 
       @upload.for_private_message = true if @opts[:for_private_message]

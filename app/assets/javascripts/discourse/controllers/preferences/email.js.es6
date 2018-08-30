@@ -20,6 +20,16 @@ export default Ember.Controller.extend({
   ),
   unchanged: propertyEqual("newEmailLower", "currentUser.email"),
 
+  reset: function() {
+    this.setProperties({
+      taken: false,
+      saving: false,
+      error: false,
+      success: false,
+      newEmail: null
+    });
+  },
+
   newEmailLower: function() {
     return this.get("newEmail")
       .toLowerCase()
