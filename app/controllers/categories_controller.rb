@@ -134,6 +134,8 @@ class CategoriesController < ApplicationController
     else
       return render_json_error(@category) unless @category.save
     end
+  rescue ArgumentError => e
+    render json: { errors: [e.message] }, status: 422
   end
 
   def update
