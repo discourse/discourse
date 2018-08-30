@@ -13,6 +13,10 @@ enabled_site_setting :<%= underscored_name %>_enabled
 PLUGIN_NAME ||= "<%= name %>".freeze
 
 after_initialize do
+  <% if @options['help'] %>
+  # see lib/plugin/instance.rb for the methods available in this context
+  <% end %>
+
   module ::<%= classified_name %>
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
