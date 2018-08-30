@@ -96,13 +96,13 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    attributes = user_params.merge!(custom_fields: params[:custom_fields])
+    attributes = user_params
 
     # We can't update the username via this route. Use the username route
     attributes.delete(:username)
 
     if params[:user_fields].present?
-      attributes[:custom_fields] = {} unless params[:custom_fields].present?
+      attributes[:custom_fields] = {}
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
