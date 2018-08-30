@@ -1,3 +1,5 @@
+import { SCHEMA_VERSION } from "admin/models/report";
+
 let signups = {
   type: "signups",
   title: "Signups",
@@ -155,7 +157,7 @@ const page_view_total_reqs = {
   dates_filtering: true,
   report_key: `reports:page_view_total_reqs:${startDate.format(
     "YYYYMMDD"
-  )}:${endDate.format("YYYYMMDD")}:[:prev_period]:2`,
+  )}:${endDate.format("YYYYMMDD")}:[:prev_period]:${SCHEMA_VERSION}`,
   labels: [
     { type: "date", property: "x", title: "Day" },
     { type: "number", property: "y", title: "Count" }
