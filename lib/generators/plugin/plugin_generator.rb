@@ -10,6 +10,7 @@ class PluginGenerator < Rails::Generators::NamedBase
   class_option :stylesheet, type: :boolean, desc: "Generate Stylesheet", default: true
   class_option :javascript, type: :boolean, desc: "Generate Javascript initializer", default: true
   class_option :scheduled_job, type: :boolean, desc: "Generate scheduled job", default: false
+  class_option :help, type: :boolean, desc: "Adds help comments in generated files", default: true
 
   def create_scheduled_job_file
     return unless @options['scheduled_job']
