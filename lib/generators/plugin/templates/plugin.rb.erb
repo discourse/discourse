@@ -27,4 +27,25 @@ after_initialize do
   <% if @options["scheduled_job"] %>
   require File.expand_path("../jobs/scheduled/check_<%= underscored_name %>.rb", __FILE__)
   <% end %>
+
+  <% if @options["controller"] %>
+  require_dependency "application_controller"
+  class <%= name %>::ActionsController < ::ApplicationController
+    requires_plugin PLUGIN_NAME
+
+    before_action :ensure_logged_in
+
+    def list
+      render json: success_json
+    end
+  end
+
+  <%= name %>::Engine.routes.draw do
+    get "/list" => "actions#list"
+  end
+
+  Discourse::Application.routes.append do
+    mount ::<%= name %>::Engine, at: "/<%= dasherized_name %>"
+  end
+  <% end %>
 end
