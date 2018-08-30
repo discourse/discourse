@@ -4,6 +4,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_UPLOAD_VAR = 2;
 
+export const THEMES = "themes";
+export const COMPONENTS = "components";
+
 const Theme = RestModel.extend({
   FIELDS_IDS: [0, 1],
 
@@ -31,6 +34,18 @@ const Theme = RestModel.extend({
     return fields.filter(
       f => f.target === "common" && f.type_id === THEME_UPLOAD_VAR
     );
+  },
+
+  @computed("theme_fields", "theme_fields.@each.error")
+  isBroken(fields) {
+    return (
+      fields && fields.some(field => field.error && field.error.length > 0)
+    );
+  },
+
+  @computed("remote_theme", "remote_theme.commits_behind")
+  isPendingUpdates(remote, commitsBehind) {
+    return remote && commitsBehind && commitsBehind > 0;
   },
 
   getKey(field) {

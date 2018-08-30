@@ -6,6 +6,7 @@ import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import ThemeSettings from "admin/models/theme-settings";
+import { THEMES, COMPONENTS } from "admin/models/theme";
 
 const THEME_UPLOAD_VAR = 2;
 const SETTINGS_TYPE_ID = 5;
@@ -111,9 +112,20 @@ export default Ember.Controller.extend({
   },
 
   @computed("model.component")
-  switchKey(component) {
+  convertKey(component) {
     const type = component ? "component" : "theme";
-    return `admin.customize.theme.switch_${type}`;
+    return `admin.customize.theme.convert_${type}`;
+  },
+
+  @computed("model.component")
+  convertIcon(component) {
+    return component ? "cube" : "";
+  },
+
+  @computed("model.component")
+  convertTooltip(component) {
+    const type = component ? "component" : "theme";
+    return `admin.customize.theme.convert_${type}_tooltip`;
   },
 
   @computed("model.settings")
@@ -127,6 +139,48 @@ export default Ember.Controller.extend({
   },
 
   downloadUrl: url("model.id", "/admin/themes/%@"),
+
+  commitSwitchType() {
+    const model = this.get("model");
+    const newValue = !model.get("component");
+    model.set("component", newValue);
+
+    if (newValue) {
+      // component
+      this.set("parentController.currentTab", COMPONENTS);
+    } else {
+      this.set("parentController.currentTab", THEMES);
+    }
+
+    model
+      .saveChanges("component")
+      .then(() => {
+        this.set("colorSchemeId", null);
+
+        model.setProperties({
+          default: false,
+          color_scheme_id: null,
+          user_selectable: false,
+          child_themes: [],
+          childThemes: []
+        });
+
+        this.get("parentController.model.content").forEach(theme => {
+          const children = Array.from(theme.get("childThemes"));
+          const rawChildren = Array.from(theme.get("child_themes") || []);
+          const index = children ? children.indexOf(model) : -1;
+          if (index > -1) {
+            children.splice(index, 1);
+            rawChildren.splice(index, 1);
+            theme.setProperties({
+              childThemes: children,
+              child_themes: rawChildren
+            });
+          }
+        });
+      })
+      .catch(popupAjaxError);
+  },
 
   actions: {
     updateToLatest() {
@@ -264,30 +318,26 @@ export default Ember.Controller.extend({
     },
 
     switchType() {
-      return bootbox.confirm(
-        I18n.t(`${this.get("switchKey")}_alert`),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        result => {
-          if (result) {
-            const model = this.get("model");
-            model.set("component", !model.get("component"));
-            model
-              .saveChanges("component")
-              .then(() => {
-                this.set("colorSchemeId", null);
-                model.setProperties({
-                  default: false,
-                  color_scheme_id: null,
-                  user_selectable: false,
-                  child_themes: [],
-                  childThemes: []
-                });
-              })
-              .catch(popupAjaxError);
+      const relatives = this.get("model.component")
+        ? this.get("parentThemes")
+        : this.get("model.childThemes");
+      if (relatives && relatives.length > 0) {
+        const names = relatives.map(relative => relative.get("name"));
+        bootbox.confirm(
+          I18n.t(`${this.get("convertKey")}_alert`, {
+            relatives: names.join(", ")
+          }),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          result => {
+            if (result) {
+              this.commitSwitchType();
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.commitSwitchType();
+      }
     }
   }
 });

@@ -1,5 +1,5 @@
 <div class="show-current-style">
-  <h1>
+  <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
@@ -7,65 +7,64 @@
     {{else}}
       {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
-  </h1>
+  </div>
 
   {{#if model.remote_theme}}
-  <p>
-    <a href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
-  </p>
-  {{#if model.remote_theme.license_url}}
-  <p>
-    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>
-  </p>
+    <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
+    {{#if model.remote_theme.license_url}}
+      <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>
+    {{/if}}
   {{/if}}
-  {{/if}}
-
 
   {{#if parentThemes}}
-    <h3>{{i18n "admin.customize.theme.component_of"}}</h3>
-    <ul>
-      {{#each parentThemes as |theme|}}
-        <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
-      {{/each}}
-    </ul>
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
+      <ul>
+        {{#each parentThemes as |theme|}}
+          <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
+        {{/each}}
+      </ul>
+    </div>
   {{/if}}
 
   {{#unless model.component}}
-    <p>
+    <div class="control-unit">
       {{inline-edit-checkbox action="applyDefault" labelKey="admin.customize.theme.is_default" checked=model.default}}
       {{inline-edit-checkbox action="applyUserSelectable" labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
-    </p>
+    </div>
 
-    <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
-    <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
-    <p>{{combo-box content=colorSchemes
-                    filterable=true
-                    forceEscape=true
-                    value=colorSchemeId
-                    icon="paint-brush"}}
-       {{#if colorSchemeChanged}}
-          {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
-          {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
-       {{/if}}
-    </p>
-    {{#link-to 'adminCustomize.colors' class="btn edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.color_scheme"}}</div>
+      <div class="description">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
+      <div class="control">{{combo-box content=colorSchemes
+                                       filterable=true
+                                       forceEscape=true
+                                       value=colorSchemeId
+                                       icon="paint-brush"}}
+         {{#if colorSchemeChanged}}
+            {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
+            {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
+         {{/if}}
+      </div>
+      {{#link-to 'adminCustomize.colors' class="btn edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
+    </div>
   {{/unless}}
 
-  <h3>{{i18n "admin.customize.theme.css_html"}}</h3>
-  {{#if hasEditedFields}}
-    <p>{{i18n "admin.customize.theme.custom_sections"}}</p>
-    <ul>
-      {{#each editedDescriptions as |desc|}}
-        <li>{{desc}}</li>
-      {{/each}}
-    </ul>
-  {{else}}
-    <p>
-      {{i18n "admin.customize.theme.edit_css_html_help"}}
-    </p>
-  {{/if}}
+  <div class="control-unit">
+    <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
+    {{#if hasEditedFields}}
+      <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
+      <ul>
+        {{#each editedDescriptions as |desc|}}
+          <li>{{desc}}</li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="description">
+        {{i18n "admin.customize.theme.edit_css_html_help"}}
+      </div>
+    {{/if}}
 
-  <p>
     {{#if model.remote_theme}}
       {{#if model.remote_theme.commits_behind}}
         {{#d-button action="updateToLatest" icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
@@ -75,7 +74,6 @@
     {{/if}}
 
     {{#d-button action="editTheme" class="btn edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
-
     {{#if model.remote_theme}}
       <span class='status-message'>
         {{#if updatingRemote}}
@@ -94,64 +92,67 @@
         {{/if}}
       </span>
     {{/if}}
-  </p>
+  </div>
 
-
-  <h3>{{i18n "admin.customize.theme.uploads"}}</h3>
-  {{#if model.uploads}}
-    <ul class='removable-list'>
-      {{#each model.uploads as |upload|}}
-      <li>
-        <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
-        <span class='col'>
-          {{d-button action="removeUpload" actionParam=upload class="second btn-small cancel-edit" icon="times"}}
-        </span>
-      </li>
-      {{/each}}
-    </ul>
-  {{else}}
-    <p>{{i18n "admin.customize.theme.no_uploads"}}</p>
-  {{/if}}
-  <p>
+  <div class="control-unit">
+    <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
+    {{#if model.uploads}}
+      <ul class='removable-list'>
+        {{#each model.uploads as |upload|}}
+        <li>
+          <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
+          <span class='col'>
+            {{d-button action="removeUpload" actionParam=upload class="second btn-small cancel-edit" icon="times"}}
+          </span>
+        </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
+    {{/if}}
     {{#d-button action="addUploadModal" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
-  </p>
+  </div>
 
   {{#if hasSettings}}
-  <h3>{{i18n "admin.customize.theme.theme_settings"}}</h3>
-  {{#d-section class="form-horizontal theme settings"}}
-    {{#each settings as |setting|}}
-      {{theme-setting setting=setting model=model class="theme-setting"}}
-    {{/each}}
-  {{/d-section}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
+      {{#d-section class="form-horizontal theme settings"}}
+        {{#each settings as |setting|}}
+          {{theme-setting setting=setting model=model class="theme-setting"}}
+        {{/each}}
+      {{/d-section}}
+    </div>
   {{/if}}
 
   {{#if availableChildThemes}}
-    <h3>{{i18n "admin.customize.theme.theme_components"}}</h3>
-    {{#unless model.childThemes.length}}
-    <p>
-      <label class='checkbox-label'>
-        {{input type="checkbox" checked=allowChildThemes}}
-        {{i18n "admin.customize.theme.child_themes_check"}}
-      </label>
-    </p>
-    {{else}}
-    <ul class='removable-list'>
-      {{#each model.childThemes as |child|}}
-      <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit col" icon="times"}}</li>
-      {{/each}}
-    </ul>
-    {{/unless}}
-    {{#if selectableChildThemes}}
-      <p>
-        {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId}}
-        {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
-      </p>
-    {{/if}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.theme_components"}}</div>
+      {{#unless model.childThemes.length}}
+      <div class="description">
+        <label class='checkbox-label'>
+          {{input type="checkbox" checked=allowChildThemes}}
+          {{i18n "admin.customize.theme.child_themes_check"}}
+        </label>
+      </div>
+      {{else}}
+      <ul class='removable-list'>
+        {{#each model.childThemes as |child|}}
+        <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit col" icon="times"}}</li>
+        {{/each}}
+      </ul>
+      {{/unless}}
+      {{#if selectableChildThemes}}
+        <div class="description">
+          {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId}}
+          {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+        </div>
+      {{/if}}
+    </div>
   {{/if}}
 
   <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
   <a class="btn export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
-  {{d-button action="switchType" label=switchKey icon="arrows-h" class="btn-danger"}}
+  {{d-button action="switchType" label="admin.customize.theme.convert" icon=convertIcon class="btn-normal" title=convertTooltip}}
   {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
 </div>
