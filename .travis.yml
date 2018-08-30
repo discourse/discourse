@@ -76,11 +76,11 @@ script:
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
         bundle exec danger && \
-        yarn exec eslint --ext .es6 app/assets/javascripts && \
-        yarn exec eslint --ext .es6 test/javascripts && \
-        yarn exec eslint --ext .es6 plugins/**/assets/javascripts && \
-        yarn exec eslint --ext .es6 plugins/**/test/javascripts && \
-        yarn exec eslint app/assets/javascripts test/javascripts
+        yarn eslint --ext .es6 app/assets/javascripts && \
+        yarn eslint --ext .es6 test/javascripts && \
+        yarn eslint --ext .es6 plugins/**/assets/javascripts && \
+        yarn eslint --ext .es6 plugins/**/test/javascripts && \
+        yarn eslint app/assets/javascripts test/javascripts
       else
         if [ '$QUNIT_RUN' == '1' ]; then
           bundle exec rake qunit:test['500000'] && \
