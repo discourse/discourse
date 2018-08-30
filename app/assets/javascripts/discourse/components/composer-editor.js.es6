@@ -53,15 +53,17 @@ export default Ember.Component.extend({
   _xhr: null,
   shouldBuildScrollMap: true,
   scrollMap: null,
-  uploadPosition: null,
+  uploadFilenamePlaceholder: null,
 
-  @computed("uploadPosition")
-  uploadPlaceholder(uploadPosition) {
-    if (uploadPosition) {
-      return `[${I18n.t("uploading")} (${uploadPosition})]() `;
-    } else {
-      return `[${I18n.t("uploading")}]() `;
-    }
+  @computed("uploadFilenamePlaceholder")
+  uploadPlaceholder(uploadFilenamePlaceholder) {
+    const clipboard = I18n.t("clipboard");
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+    return `[${I18n.t("uploading_filename", {
+      filename: filename
+    })}]() `;
   },
 
   @computed("composer.requiredCategoryMissing")
@@ -223,15 +225,32 @@ export default Ember.Component.extend({
     }
   },
 
-  _setUploadPosition(data) {
-    if (data.originalFiles.length > 1) {
-      let position = data.originalFiles.indexOf(data.files[0]) + 1;
-      this.set("uploadPosition", position);
+  _setUploadPlaceholderSend(data) {
+    const filename = this._filenamePlaceholder(data);
+    this.set("uploadFilenamePlaceholder", filename);
+    // adds size in bytes to the placeholder if multiple files have the same name
+    if (this.get("composer.reply").includes(this.get("uploadPlaceholder"))) {
+      const filenameWithSize = `${filename} (${data.total})`;
+      this.set("uploadFilenamePlaceholder", filenameWithSize);
     }
   },
 
-  _resetUploadPosition() {
-    this.set("uploadPosition", null);
+  _setUploadPlaceholderDone(data) {
+    const filename = this._filenamePlaceholder(data);
+    const filenameWithSize = `${filename} (${data.total})`;
+    this.set("uploadFilenamePlaceholder", filenameWithSize);
+
+    if (!this.get("composer.reply").includes(this.get("uploadPlaceholder"))) {
+      this.set("uploadFilenamePlaceholder", filename);
+    }
+  },
+
+  _filenamePlaceholder(data) {
+    return data.files[0].name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  },
+
+  _resetUploadFilenamePlaceholder() {
+    this.set("uploadFilenamePlaceholder", null);
   },
 
   _enableAdvancedEditorPreviewSync() {
@@ -575,6 +594,7 @@ export default Ember.Component.extend({
         ""
       );
     }
+    this._resetUploadFilenamePlaceholder();
   },
 
   _bindUploadTarget() {
@@ -653,7 +673,7 @@ export default Ember.Component.extend({
       this._pasted = false;
       this._validUploads++;
 
-      this._setUploadPosition(data);
+      this._setUploadPlaceholderSend(data);
 
       this.appEvents.trigger(
         "composer:insert-text",
@@ -664,31 +684,27 @@ export default Ember.Component.extend({
         this.set("isCancellable", true);
         this._xhr = data.xhr();
       }
-
-      this._resetUploadPosition();
     });
 
     $element.on("fileuploaddone", (e, data) => {
       let upload = data.result;
-
+      this._setUploadPlaceholderDone(data);
       if (!this._xhr || !this._xhr._userCancelled) {
         const markdown = getUploadMarkdown(upload);
         cacheShortUploadUrl(upload.short_url, upload.url);
-        this._setUploadPosition(data);
-
         this.appEvents.trigger(
           "composer:replace-text",
           this.get("uploadPlaceholder").trim(),
           markdown
         );
         this._resetUpload(false);
-        this._resetUploadPosition();
       } else {
         this._resetUpload(true);
       }
     });
 
     $element.on("fileuploadfail", (e, data) => {
+      this._setUploadPlaceholderDone(data);
       this._resetUpload(true);
 
       const userCancelled = this._xhr && this._xhr._userCancelled;
