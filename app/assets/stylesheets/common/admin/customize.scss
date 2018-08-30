@@ -52,6 +52,30 @@
       display: inline-block;
     }
   }
+
+  .error {
+    color: $danger;
+  }
+}
+
+.admin-customize.admin-customize-themes {
+  .customize-themes-header {
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+
+    .title {
+      color: $primary-medium;
+      flex-grow: 1;
+      h3 {
+        margin-bottom: 0;
+      }
+    }
+  }
+  .admin-container {
+    padding: 0;
+  }
 }
 
 .admin-customize {
@@ -99,70 +123,179 @@
     }
   }
   .show-current-style {
-    margin-left: 20px;
+    .url {
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: $font-up-4;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .about-url,
+    license-url {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .mini-title {
+      font-size: $font-up-1;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+    .control-unit {
+      margin-bottom: 25px;
+      margin-top: 15px;
+    }
+    .control {
+      margin-bottom: 10px;
+    }
+    .description {
+      margin-bottom: 12px;
+    }
+
+    padding-left: 15px;
+    padding-top: 10px;
     float: left;
     width: 70%;
-    h2 {
-      margin-bottom: 15px;
-    }
-    h3 {
-      margin-bottom: 10px;
-      margin-top: 30px;
-    }
-  }
-
-  .create-actions {
-    margin-bottom: 10px;
   }
 
   .themes-list {
-    margin-bottom: 20px;
+    border-right: 1px solid $primary-low;
+    border-bottom: 1px solid $primary-low;
+    float: left;
+    width: 28%;
   }
 
   .themes-list-header {
-    font-size: $font-up-1;
-    padding: 10px;
-    background-color: $primary-low;
+    width: 100%;
+    border-bottom: 1px solid $primary-low;
+
+    .tab {
+      display: inline-block;
+      padding: 10px;
+      width: 50%;
+      box-sizing: border-box;
+      text-align: center;
+      border-left: 1px solid $primary-low;
+
+      &.active {
+        font-weight: bold;
+        color: $secondary;
+        background-color: $tertiary;
+      }
+
+      &:not(.active) {
+        cursor: pointer;
+
+        &:hover {
+          background-color: $tertiary-low;
+        }
+      }
+    }
   }
 
   .themes-list-container {
-    max-height: 280px;
-    overflow-y: scroll;
+    max-height: 485px;
+    overflow-y: auto;
 
     &::-webkit-scrollbar-track {
-      border-radius: 10px;
       background-color: $secondary;
     }
-
     &::-webkit-scrollbar {
       width: 5px;
     }
-
     &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      background-color: $primary-low-mid;
+      background-color: $primary-low;
     }
-
+    .themes-list-item:last-child {
+      border-bottom: none;
+    }
     .themes-list-item {
       color: $primary;
       border-bottom: 1px solid $primary-low;
       display: flex;
+      border-left: 1px solid $primary-low;
 
-      &:hover {
+      &:not(.inactive-indicator):not(.active):hover {
         background-color: $tertiary-low;
+        .component {
+          border-color: $primary-low-mid;
+        }
       }
-
       &.active {
         color: $secondary;
-        font-weight: bold;
         background-color: $tertiary;
+        .fa {
+          color: inherit;
+        }
+      }
+      .light-grey-icon {
+        color: $primary-medium;
+      }
+      .info {
+        overflow: hidden;
+        font-weight: bold;
+        font-size: $font-up-1;
+
+        .name {
+          float: left;
+        }
+
+        .icons {
+          float: right;
+        }
+      }
+
+      .components-list {
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: $font-down-1;
+        align-items: baseline;
+
+        .component {
+          display: flex;
+          padding: 3px 5px 3px 5px;
+          border-radius: 2px;
+          border: 1px solid $primary-low;
+          margin-right: 5px;
+          margin-bottom: 5px;
+        }
+      }
+      &:not(.active) {
+        .broken-indicator {
+          color: $danger;
+        }
+
+        .default-indicator {
+          color: $success;
+        }
+      }
+
+      a {
+        padding: 10px;
+      }
+
+      &.inactive-indicator {
+        border-right: 0;
+        border-left: 0;
+        font-weight: bold;
+        color: $primary-medium;
+
+        span.empty {
+          padding-left: 5px;
+          padding-top: 15px;
+        }
+      }
+
+      span.empty {
+        padding: 3px 10px 3px 10px;
       }
 
       a,
       span.empty {
         color: inherit;
         width: 100%;
-        padding: 10px;
       }
     }
   }
@@ -170,7 +303,7 @@
   .theme.settings {
     .theme-setting {
       padding-bottom: 0;
-      padding-top: 18px;
+      margin-top: 18px;
       min-height: 35px;
     }
     .setting-label {

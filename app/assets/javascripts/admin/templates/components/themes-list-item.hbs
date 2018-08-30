@@ -1,0 +1,34 @@
+{{#link-to 'adminCustomizeThemes.show' theme replace=true}}
+  {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
+
+  <div class="info">
+    <span class="name">
+      {{theme.name}}
+    </span>
+
+    <span class="icons">
+      {{#if theme.default}}
+        {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
+      {{/if}}
+      {{#if theme.isPendingUpdates}}
+        {{d-icon "refresh" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
+      {{/if}}
+      {{#if theme.isBroken}}
+        {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
+      {{/if}}
+    </span>
+  </div>
+
+  {{#if hasComponents}}
+    <div class="components-list">
+      {{#each children as |child|}}
+        <span class="component">
+          {{child}}
+        </span>
+      {{/each}}
+      {{#if hasMore}}
+        <span class="others-count">{{I18n "admin.customize.theme.and_x_more" count=moreCount}}</span>
+      {{/if}}
+    </div>
+  {{/if}}
+{{/link-to}}
