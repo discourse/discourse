@@ -111,7 +111,8 @@ export class Tag {
       decorate(text) {
         const parent = this.element.parent;
 
-        if (this.name === "p" && parent && parent.name === "li") { // fix for google docs
+        if (this.name === "p" && parent && parent.name === "li") {
+          // fix for google docs
           this.gap = "";
         }
 
