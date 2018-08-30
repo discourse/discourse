@@ -187,7 +187,6 @@ sv:
     guidelines: "Riktlinjer"
     privacy_policy: "Integritetspolicy"
     privacy: "Integritet"
-    terms_of_service: "Användarvillkor"
     mobile_view: "Mobilvy"
     desktop_view: "Desktop-vy"
     you: "Du"
@@ -839,8 +838,6 @@ sv:
       hide_session: "Påminn mig imorgon"
       hide_forever: "nej tack"
       hidden_for_session: "Ok, jag frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också. "
-      intro: "Hejsan! :heart_eyes: Det verkar som att du uppskattar ämnet, men du har inte registrerat dig för ett konto. "
-      value_prop: "När du skapar ett konto så kommer vi ihåg precis vad du har läst, så att du alltid kan komma tillbaka precis där du lämnade oss. Du kan också få notifieringar, här och via e-post, närhelst nya inlägg skapas. Du kan också gilla inlägg för att sprida kärlek. :heartbeat:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description: "Det finns <b>{{replyCount}}</b> svar."
@@ -854,7 +851,6 @@ sv:
       disable: "Visa raderade inlägg"
     private_message_info:
       title: "Meddelande"
-      invite: "Bjud In Andra..."
       remove_allowed_user: "Vill du verkligen ta bort {{name}} från det här meddelandet?"
       remove_allowed_group: "Vill du verkligen ta bort {{name}} från det här meddelandet?"
     email: 'E-post'

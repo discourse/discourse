@@ -183,7 +183,6 @@ pt:
     guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
     privacy: "Privacidade"
-    terms_of_service: "Termos de Serviço"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
     you: "Você"
@@ -849,8 +848,6 @@ pt:
       hide_session: "Lembrar-me amanhã"
       hide_forever: "não, obrigado"
       hidden_for_session: "Está bem, eu irei perguntar-lhe amanhã. Pode utilizar sempre 'Iniciar a Sessão' para também criar uma conta."
-      intro: "Olá! :heart_eyes: parece que está a gostar da discussão, mas não está inscrito para uma conta."
-      value_prop: "Quando cria uma conta, nós lembramos exatamente o que leu, por isso, volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou via e-mail, sempre que são criadas novas publicações. E pode gostar de publicações para partilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       description: "Existem <b>{{replyCount}}</b> respostas."
@@ -864,7 +861,6 @@ pt:
       disable: "Mostrar Publicações Eliminadas"
     private_message_info:
       title: "Mensagem"
-      invite: "Convidar Outros..."
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover {{name}} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover {{name}} desta mensagem?"

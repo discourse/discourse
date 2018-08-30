@@ -183,7 +183,6 @@ nl:
     guidelines: "Richtlijnen"
     privacy_policy: "Privacybeleid"
     privacy: "Privacy"
-    terms_of_service: "Algemene Voorwaarden"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
     you: "Jij"
@@ -878,8 +877,6 @@ nl:
       hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, ik vraag het u morgen. U kunt ook altijd 'Aanmelden' gebruiken om een account aan te maken."
-      intro: "Hallo! :heart_eyes: Zo te zien beleeft u plezier aan de discussie, maar hebt u zich niet voor een account geregistreerd."
-      value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u direct kunt verdergaan waar u was gebleven. U ontvangt dan ook meldingen bij nieuwe berichten, hier en via e-mail, en u kunt ook nog berichten liken. :heartbeat:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
       description: "Er zijn <b>{{replyCount}}</b> antwoorden."
@@ -893,7 +890,6 @@ nl:
       disable: "Verwijderde berichten tonen"
     private_message_info:
       title: "Bericht"
-      invite: "Anderen uitnodigen..."
       remove_allowed_user: "Wilt u {{naam}} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u {{name}} echt uit dit bericht verwijderen?"
     email: 'E-mailadres'
@@ -2538,7 +2534,6 @@ nl:
           import_file_tip: ".dcstyle.json-bestand dat thema bevat"
           about_theme: "Over thema"
           license: "Licentie"
-          component_of: "Thema is een onderdeel van:"
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken..."

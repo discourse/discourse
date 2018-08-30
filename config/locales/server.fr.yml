@@ -1064,7 +1064,6 @@ fr:
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
-    enable_personal_email_messages: "Autoriser les utilisateurs de niveau de confiance 1 à envoyer des messages courriel personnels (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -1273,7 +1272,6 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages directs."
-    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages directs par courriel (aux utilisateurs distants)."
     min_trust_to_flag_posts: "Le niveau de confiance minimum requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimum requis pour inclure des liens dans les messages"
     min_trust_to_post_images: "Le niveau de confiance minimum requis pour inclure des images dans les messages"
@@ -2180,10 +2178,6 @@ fr:
     email_reject_old_destination:
       title: "Courriel rejeté - Mauvaise ancienne destination"
       subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Pour des raisons de sécurité, nous n'acceptons des réponses aux notifications que pendant 90 jours. Veuillez vous rendre sur [le sujet](%{short_url}) pour continuer la conversation.
     email_reject_topic_not_found:
       title: "Courriel rejeté - Sujet introuvable"
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet introuvable"

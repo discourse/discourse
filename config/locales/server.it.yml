@@ -39,10 +39,26 @@ it:
     bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
     error_importing: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
+    errors:
+      component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
+      component_no_default: "I componenti del tema non possono essere il tema predefinito"
+      no_multilevels_components: "I temi con temi figlio non possono essere essi stessi temi figlio"
     settings_errors:
       invalid_yaml: "Il codice YAML fornito è invalido."
+      data_type_not_a_number: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`, `bool`, `list` e `enum`"
       name_too_long: "Una delle impostazioni ha un nome troppo lungo. La lunghezza massima è 255 caratteri"
+      default_value_missing: "L'impostazione `%{name}` non ha valore predefinito"
+      default_not_match_type: "L'impostazione del valore di `%{name}` valore predefinito non corrisponde al tipo di impostazione."
+      default_out_range: "L'impostazione del valore predefinito `%{name}` non è nell'intervallo specificato."
+      enum_value_not_valid: "Il valore selezionato non è una delle opzioni enum."
       number_value_not_valid: "Il nuovo valore non è compreso nell'intervallo consentito."
+      number_value_not_valid_min_max: "Deve essere tra %{min} e %{max}."
+      number_value_not_valid_min: "Deve essere maggiore o uguale a %{min}."
+      number_value_not_valid_max: "Deve essere minore o uguale a %{max}."
+      string_value_not_valid: "La nuova lunghezza del valore non rientra nell'intervallo consentito."
+      string_value_not_valid_min_max: "Deve essere compreso tra %{min} e %{max} caratteri."
+      string_value_not_valid_min: "Deve contenere almeno %{min} caratteri."
+      string_value_not_valid_max: "Deve contenere al massimo %{max} caratteri."
   emails:
     incoming:
       default_subject: "L'argomento necessita di un titolo"
@@ -56,6 +72,7 @@ it:
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
+        from_reply_by_address_error: "Accade quando l'intestazione From corrisponde alla risposta per indirizzo email."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email presenti nei campi A/Cc/Ccn corrisponde ad alcun indirizzo email entrante tra quelli configurati."
@@ -97,6 +114,7 @@ it:
       not_an_integer: deve essere un intero
       odd: deve essere dispari
       record_invalid: 'Validazione fallita: %{errors}'
+      max_emojis: "non può avere più di %{max_emojis_count} emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
       restrict_dependent_destroy:
         one: "Impossibile cancellare il record poiché ne esistono %{record} dipendenti"
@@ -119,17 +137,27 @@ it:
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
+      invalid_choice:
+        one: 'Hai specificato la scelta non valida %{name}'
+        other: 'Hai specificato le scelte non valide %{name}'
       min_username_length_exists: "C'è almeno un utente con il nome più corto della lunghezza minima che stai cercando di impostare."
       min_username_length_range: "Non puoi impostare il minimo più grande del massimo."
       max_username_length_exists: "C'è almeno un utente con il nome più lungo della lunghezza massima che stai cercando di impostare."
       max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
+    conflicting_google_user_id: 'Il Google Account ID per questo account è cambiato; l''intervento dello staff è richiesto per motivi di sicurezza. Si prega di contattare staff e puntarli a  <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "Il tuo token di invito non è valido. Per favore contatta l'amministratore del sito."
+    not_found_template: |
+      <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
+
+      <p>Se ricordi la tua password puoi effettuare il <a href="%{base_url}/login">Login</a>.</p>
+
+      <p>In caso contrario <a href="%{base_url}/password-reset">Reimposta la Password</a>.</p>
     user_exists: "Non c'è bisogno di invitare <b>%{email}</b>, perché <a href='/u/%{username}/summary'>ha già un account!</a>"
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
@@ -141,10 +169,14 @@ it:
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
     invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
+  invalid_params: "Hai fornito parametri non validi alla richiesta: %{message}"
   not_logged_in: "Devi essere connesso per far ciò."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
+  authenticator_not_found: "Il metodo di autenticazione non esiste o è stato disabilitato."
   invalid_api_credentials: "Non ti è consentito visualizzare la risorsa richiesta. Il nome utente o la chiave API non sono validi."
+  provider_not_enabled: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non è abilitato."
+  provider_not_found: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non esiste."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
@@ -242,7 +274,7 @@ it:
         one: "%{count} utente è stato aggiunto al gruppo."
         other: "%{count} utenti sono stati aggiunti al gruppo."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' non è un Livello Esperienza valido."
+      grant_trust_level_not_valid: "'%{trust_level}' non è un livello di esperienza valido."
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist:
         one: "'%{username}' è già membro di questo gruppo."
@@ -327,11 +359,11 @@ it:
       Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
 
     reviving_old_topic: |+
-      ### Resuscitare questo Argomento?
+      ### Resuscitare questo argomento?
 
-      L'ultima risposta a questo Argomento è vecchia di %{days} giorni. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
+      L'ultima risposta a questo argomento risale a **%{time_ago}**. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
 
-      Sei davvero sicuro di voler continuare questa vecchia conversazione?
+      Sei sicuro di voler continuare questa vecchia discussione?
 
   activerecord:
     attributes:
@@ -339,7 +371,7 @@ it:
         name: "Nome Categoria"
       topic:
         title: 'Titolo'
-        featured_link: 'Collegamento in evidenza'
+        featured_link: 'Collegamento Evidenziato'
       post:
         raw: "Contenuto"
       user_profile:
@@ -350,9 +382,12 @@ it:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Puoi allegare solo avvertimenti ai messaggi personali."
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
+              cant_send_pm: "Spiacenti! Non puoi mandare messaggi personali a questo utente."
               no_user_selected: "Devi selezionare un utente valido."
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
+              target_user_not_found: "Non è stato possibile trovare uno degli utenti a cui stai inviando questo messaggio."
             featured_link:
               invalid: "è invalido. Un URL dovrebbe includere http:// o https://."
               invalid_category: "non può essere modificato in questa categoria."
@@ -366,6 +401,10 @@ it:
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "La riassegnazione di una email principale a un altro utente non è consentita."
         color_scheme_color:
           attributes:
             hex:
@@ -385,6 +424,10 @@ it:
           attributes:
             execute_at:
               in_the_past: "deve essere in data futura."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'Le seguenti chiavi(e) di interpolazione non sono valide: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -404,18 +447,18 @@ it:
     title: "Benvenuto in Discourse"
     body: |2
 
-        Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
+      Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
 
-        **Modificalo** con una breve descrizione della tua comunità:
+      **Modificalo** con una breve descrizione della tua comunità:
 
-        - A chi è rivolto?
-        - Cosa possono trovare qui?
-        - Perchè dovrebbero venire qui?
-        - Dove possono leggere di più (collegamenti, risorse, ecc)?
+      - A chi è rivolto?
+      - Cosa possono trovare qui?
+      - Perché dovrebbero venire qui?
+      - Dove possono leggere di più (collegamenti, risorse, ecc)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
+      Potresti voler chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Salotto"
     body: |2
@@ -455,6 +498,9 @@ it:
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Nessuna\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
+      topic_exists:
+        one: "Non puoi cancellare questa categoria perché ha 1 argomento. L'argomento più vecchio è %{topic_link}."
+        other: "Non puoi cancellare questa categoria perché ha %{count} argomenti. L'argomento più vecchio è %{topic_link}."
       topic_exists_no_oldest: "Non puoi cancellare questa categoria perché il numero di argomenti è di %{count}."
     uncategorized_description: "Argomenti che non necessitano di una categoria, o che non ricadono in nessuna categoria esistente."
   trust_levels:
@@ -473,6 +519,23 @@ it:
     image_placeholder:
       broken: "Questa immagine è assente"
   rate_limiter:
+    slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
+    too_many_requests: "Hai eseguito questa operazione troppe volte. Attendi %{time_left} prima di riprovare."
+    by_type:
+      first_day_replies_per_day: "Hai raggiunto il massimo numero di risposte che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
+      first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
+      create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      delete_post: "Stai cancellando i messaggi troppo velocemente. Per favore attendi %{time_left} prima di riprovare."
+      public_group_membership: "Stai entrando/uscendo dai gruppi troppo di frequente. Per favore aspetta %{time_left} prima di riprovare."
+      topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti. Per favore attendi %{time_left} prima di riprovare."
+      pms_per_day: "Hai raggiunto il massimo numero di messaggi. Per favore attendi %{time_left} prima di riprovare."
+      create_like: "Hai raggiunto il massimo numero di \"Mi piace\". Per favore attendi %{time_left} prima di riprovare."
+      create_bookmark: "Hai raggiunto il massimo numero di segnalibri. Per favore attendi %{time_left} prima di riprovare."
+      edit_post: "Hai raggiunto il massimo numero di modifiche. Per favore attendi %{time_left} prima di riprovare."
+      live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Per favore attendi %{time_left} prima di riprovare."
+      unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email. Per favore aspetta %{time_left}  prima di riprovare."
+      topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti. Per favore aspetta %{time_left} prima di riprovare."
     hours:
       one: "1 ora"
       other: "%{count} ore"
@@ -572,6 +635,8 @@ it:
     authorizing_old:
       title: "Grazie per aver confermato il tuo attuale indirizzo email"
       description: "Ti stiamo inviando una email al nuovo indirizzo per conferma."
+  associated_accounts:
+    revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
   activation:
     action: "Clicca qui per attivare il tuo account"
     already_done: "Spiacenti, questo collegamento di attivazione non è più valido. Forse il tuo account è già attivo?"
@@ -590,7 +655,7 @@ it:
   post_action_types:
     off_topic:
       title: 'Fuori Tema'
-      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrà probabilmente essere spostato. '
+      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrebbe probabilmente essere spostato altrove. '
       short_description: 'Non pertinente alla discussione'
       long_form: 'segnalato come fuori tema'
     spam:
@@ -607,12 +672,14 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
+      description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
+      short_description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
-      description: 'Questo messaggio richiede attenzione da parte dello staff per altri motivi non elencati.'
+      description: 'Questo messaggio richiede attenzione da parte dello staff per un altro motivo non elencato.'
       short_description: 'Richiede l''attenzione dello staff per un''altra ragione'
       long_form: 'segnalato all''attenzione dello staff'
       email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
@@ -696,12 +763,21 @@ it:
       read: "Leggi tutto"
       write: "Scrivi tutto"
   reports:
+    post_edits:
+      labels:
+        author: Autore
     visits:
       title: "Visite Utente"
       xaxis: "Giorno"
-      yaxis: "Numero visite"
+      yaxis: "Numero di visite"
     signups:
+      title: "Iscrizioni"
       xaxis: "Giorno"
+      yaxis: "Numero di iscrizioni"
+    daily_engaged_users:
+      xaxis: "Giorno"
+      yaxis: "Utenti Impegnati"
+      description: "Numero di utenti che hanno scritto o messo Mi piace nell'ultimo giorno"
     profile_views:
       title: "Visite Profilo Utente"
       xaxis: "Giorno"
@@ -710,10 +786,12 @@ it:
       title: "Argomenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi argomenti"
+      description: "Nuovi argomenti creati durante questo periodo"
     posts:
       title: "Messaggi"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi messaggi"
+      description: "Nuovi messaggi creati durante questo periodo"
     likes:
       title: "Mi piace"
       xaxis: "Giorno"
@@ -734,11 +812,16 @@ it:
       title: "Utenti per Livello Esperienza"
       xaxis: "Livello Esperienza"
       yaxis: "Numero Utenti"
+      labels:
+        level: Livello
     users_by_type:
       title: "Utenti per Tipo"
       xaxis: "Tipo"
       yaxis: "Numero di Utenti"
+      labels:
+        type: Tipo
       xaxis_labels:
+        admin: Amministratore
         moderator: Moderatore
         suspended: Sospeso
         silenced: Silenziato
@@ -752,9 +835,12 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di Email"
     user_to_user_private_messages:
+      title: "Utente-Utente (escluse le risposte)"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
     user_to_user_private_messages_with_replies:
+      title: "Utente-Utente (incluse le risposte)"
+      xaxis: "Giorno"
       yaxis: "Numero di Messaggi"
     system_private_messages:
       title: "Sistema"
@@ -783,8 +869,15 @@ it:
       num_clicks: "Click"
       num_topics: "Argomenti"
       num_users: "Utenti"
+      labels:
+        domain: Dominio
+        num_clicks: Clic
+        num_topics: Argomenti
     top_referred_topics:
       title: "Migliori Argomenti Referenziati"
+      labels:
+        num_clicks: "Clic"
+        topic: "Argomento"
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
@@ -798,6 +891,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
+      title: "Pagine viste"
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina totali"
     page_view_logged_in_mobile_reqs:
@@ -841,8 +935,13 @@ it:
       xaxis: "Giorno"
       yaxis: "Totali"
     mobile_visits:
+      title: "Visite Utente (telefono)"
       xaxis: "Giorno"
       yaxis: "Numero di visite"
+    web_crawlers:
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pagine viste"
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
@@ -862,6 +961,7 @@ it:
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
       other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli. "
+    missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
     bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='/admin/site_settings'>Impostazioni del sito</a>."
     poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
     poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='/admin/site_settings/category/email'>configurazione POP3</a>."
@@ -1390,9 +1490,9 @@ it:
     timeout_expired: "Il tempo di connessione dell'account è scaduto, prova a connetterti di nuovo."
     no_email: "Nessun indirizzo email è stato fornito. Si prega di contattare l'amministratore del sito."
     email_error: "Non è possibile registrare un account con l'indirizzo email <b>%{email}</b>. Si prega di contattare l'amministratore del sito."
-  original_poster: "Autore Iniziale"
+  original_poster: "Autore iniziale"
   most_posts: "Maggioranza Messaggi"
-  most_recent_poster: "Autore Più Recente"
+  most_recent_poster: "Autore più recente"
   frequent_poster: "Autore Assiduo"
   redirected_to_top_reasons:
     new_user: "Benvenuto nella nostra comunità! Questi sono gli argomenti recenti più popolari."

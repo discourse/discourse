@@ -137,6 +137,7 @@ he:
           other: "אחרי %{count} שנים"
       previous_month: 'חודש קודם'
       next_month: 'חודש הבא'
+      placeholder: תאריך
     share:
       topic: 'שתפו קישור לנושא זה'
       post: 'פוסט #%{postNumber}'
@@ -176,6 +177,7 @@ he:
     topic_admin_menu: "פעולות ניהול לנושא"
     wizard_required: "ברוכים הבאים לדיסקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
+    bootstrap_mode_disabled: "מצב Bootstrap יבוטל תוך 24 שעות."
     themes:
       default_description: "ברירת מחדל"
     s3:
@@ -219,7 +221,6 @@ he:
     guidelines: "הנחיות"
     privacy_policy: "מדיניות פרטיות"
     privacy: "פרטיות"
-    terms_of_service: "תנאי השירות"
     mobile_view: "תצוגת נייד"
     desktop_view: "תצוגת מחשב"
     you: "אתם"
@@ -313,7 +314,7 @@ he:
         many: "בנושא זה ישנם <b>{{count}}</b> פוסטים הממתינים לאישור"
         other: "בנושא זה ישנם <b>{{count}}</b> פוסטים הממתינים לאישור"
       confirm: "שמירת שינויים"
-      delete_prompt: "האם אתם בטוחים שאתם מעוניינים למחוק את <b>%{username}</b>? זה ימחוק את כל הפוסטים שלהם ויחסום את המייל וכתובת ה IP שלהם."
+      delete_prompt: "האם אתם בטוחים שאתם מעוניינים להסיר את <b>%{username}</b>? זה יסיר את כל הפוסטים שלהם ויחסום את המייל וכתובת ה IP שלהם."
       approval:
         title: "הפוסט זקוק לאישור"
         description: "קיבלנו את הפוסט אך נדרש אישור של מנחה לפני שהוא יוצג, אנא המתינו בסבלנות."
@@ -476,7 +477,7 @@ he:
       read_time: "זמן צפייה"
       topics_entered: "כניסה לנושאים"
       post_count: "# פוסטים"
-      confirm_delete_other_accounts: "אתם בטוחים שברצונכם למחוק חשבונות אלו?"
+      confirm_delete_other_accounts: "אתם בטוחים שברצונכם להסיר חשבונות אלו?"
     user_fields:
       none: "(בחרו אפשרות)"
     user:
@@ -516,7 +517,7 @@ he:
       dynamic_favicon: "הצגת מספר נושאים חדשים/מעודכנים על האייקון של הדפדפן"
       theme_default_on_all_devices: "הפכו תמה זאת לברירת המחדל בכל המכשירים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
-      enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
+      enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       change: "שנה"
       moderator: "{{user}} הוא מנחה"
       admin: "{{user}} הוא מנהל מערכת"
@@ -555,7 +556,7 @@ he:
       muted_categories_instructions: "אתם לא תיודעו על שום דבר לגבי נושאים חדשים בקטגוריות אלו, והם לא יופיעו ב״אחרונים״."
       no_category_access: "בתור מנחים יש לכם גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחק את החשבון שלי"
-      delete_account_confirm: "אתם בטוחים שברצונכם למחוק את החשבון? לא ניתן לבטל פעולה זו!"
+      delete_account_confirm: "אתם בטוחים שברצונכם להסיר את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
       unread_message_count: "הודעות"
       admin_delete: "מחק"
@@ -897,8 +898,6 @@ he:
       hide_session: "הזכר לי מחר"
       hide_forever: "לא תודה"
       hidden_for_session: "אוקיי, אשאל אתכם מחר. אתם כם תמיד יכולים להשתמש ב'התחברו' כדי ליצור משתמשים."
-      intro: "שלום לך :heart_eyes: זה נראה כאילו אתם נהנים מקריאה אבל אתם לא רשומים."
-      value_prop: "כשאתם נרשמים, אנחנו זוכרים בדיוק מה קראתם כך שכשתחזרו תמשיכו בדיוק איפה שהפסקתם. בנוסף תקבלו התראות דרך האתר ודרך הדואר האלקטרוני שלכם כשפוסטים חדשים נוצרים. ואתם יכולים לעשות לייק לפוסטים שאהבתם. :heartbeat:"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description: "ישנן <b>{{replyCount}}</b> תגובות."
@@ -912,7 +911,6 @@ he:
       disable: "הצגת פוסטים שנמחקו"
     private_message_info:
       title: "הודעה"
-      invite: "הזמינו אחרים..."
       remove_allowed_user: "האם אתם באמת רוצים להסיר את {{name}} מהודעה זו?"
       remove_allowed_group: "האם אתם באמת מעוניינים להסיר את {{name}} מהודעה זו?"
     email: 'דוא"ל'
@@ -1116,6 +1114,7 @@ he:
       empty: "לא נמצאו התראות."
       more: "הצגת התראות ישנות יותר"
       total_flagged: "סך הכל פוסטים מדוגלים"
+      granted_badge: "הרווחת '{{description}}'"
       popup:
         mentioned: '{{username}} הזכיר/ה אותך ב{{topic}}" - {{site_title}}"'
         group_mentioned: '{{username}} הזכיר/ה אתכם ב "{{topic}}" - {{site_title}}'
@@ -1726,12 +1725,12 @@ he:
             one: "אתה ועוד אחד סימנתם פוסט זה עם סימנייה"
             two: "אתה ועוד {{count}} אנשים אחרים סימנתם פוסט זה עם סימנייה"
             many: "אתה ועוד {{count}} אנשים אחרים סימנתם פוסט זה עם סימנייה"
-            other: "אתה ועוד {{count}} אנשים אחרים סימנתם פוסט זה עם סימנייה"
+            other: "אתם ועוד {{count}} משתמשים אחרים סימנתם פוסט זה עם סימנייה"
           like:
             one: "אתה ועוד אחד נתתם לייק לזה"
             two: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
             many: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
-            other: "אתה ועוד {{count}} אנשים אחרים נתתם לייק לזה"
+            other: "אתם ועוד {{count}} משתמשים אחרים נתתם לייק לזה"
         by_others:
           off_topic:
             one: "אדם אחד דיגל את זה כאוף-טופיק"
@@ -1840,7 +1839,7 @@ he:
       foreground_color: "צבע קדמי"
       name_placeholder: "מילה או שתיים לכל היותר"
       color_placeholder: "כל צבע אינטרנטי"
-      delete_confirm: "האם אתה בטוח שברצונך למחוק את הקטגוריה הזו?"
+      delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
       delete_error: "ארעה שגיאה במחיקת הקטגוריה."
       list: "הצג קטגוריות"
       no_description: "אנא הוסיפו תיאור לקטגוריה זו."
@@ -1908,7 +1907,7 @@ he:
       notify_action: 'הודעה'
       official_warning: 'אזהרה רשמית'
       delete_spammer: "מחק ספאמר"
-      delete_confirm_MF: "אתם עומדים למחוק {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}}  ו{TOPICS, plural, one {נושא <b>אחד</b>} other {<b>#</b> נושאים}} ממשתמש זה, להסיר את החשבון שלו, לחסום הרשמה מכתובת ה IP <b>{ip_address}</b>, ולהוסיף את כתובת המייל שלו <b>{email}</b> לרשימה שחורה. האם אתם בטוחים שמשתמש זה הוא באמת ספאמר?"
+      delete_confirm_MF: "אתם עומדים להסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}}  ו{TOPICS, plural, one {נושא <b>אחד</b>} other {<b>#</b> נושאים}} ממשתמש זה, להסיר את החשבון שלו, לחסום הרשמה מכתובת ה IP <b>{ip_address}</b>, ולהוסיף את כתובת המייל שלו <b>{email}</b> לרשימה שחורה. האם אתם בטוחים שמשתמש זה הוא באמת ספאמר?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
@@ -2258,7 +2257,7 @@ he:
         new_name: "קבוצת תגיות חדשה"
         save: "שמור"
         delete: "מחק"
-        confirm_delete: "האם אתם בטוחים שאתם מעוניינים למחוק את קבוצת התגיות הזו?"
+        confirm_delete: "האם ברצונכם להסיר את קבוצת התגיות הזו?"
       topics:
         none:
           unread: "אין לכם נושאים שלא-נקראו."
@@ -2380,8 +2379,8 @@ he:
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחק"
-        delete_confirm: "למחוק קבוצה זו?"
-        delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
+        delete_confirm: "להסיר קבוצה זו?"
+        delete_failed: "לא ניתן להסיר קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
         add: "הוספה"
         custom: "מותאם"
@@ -2399,7 +2398,7 @@ he:
         generate: "ייצר"
         regenerate: "ייצר מחדש"
         revoke: "שלול"
-        confirm_regen: "אתה בטוח שברצונך להחליף את מפתח ה-API באחד חדש?"
+        confirm_regen: "האם ברצונך להחליף את מפתח ה-API באחד חדש?"
         confirm_revoke: "אתם בטוחים שברצונכם לשלול את המפתח הזה?"
         info_html: "מפתח הAPI שלך יאפשר לך ליצור ולעדכן נושאים בעזרת קריאות JSON."
         all_users: "כל המשתמשים"
@@ -2435,7 +2434,7 @@ he:
         categories_filter: "קטגוריות מופעלות"
         groups_filter_instructions: "webhooks רלוונטיים יופעלו רק אם האירוע קשור לקבוצות שהוגדרו. השאירו ריק כדי להפעיל webhooks לכל הקבוצות."
         groups_filter: "קבוצות שהופעלו"
-        delete_confirm: "למחוק webhook זה?"
+        delete_confirm: "להסיר webhook זה?"
         topic_event:
           name: "אירוע נושא"
           details: "כאשר יש נושא חדש, מעודכן, ששונה, או נמחק."
@@ -2497,7 +2496,7 @@ he:
         none: "אין גיבויים זמינים."
         read_only:
           enable:
-            title: "אפשרו מצב קריאה-בלבד"
+            title: "הפעלת מצב קריאה-בלבד"
             label: "אפשר קריאה-בלבד"
             confirm: "האם אתם בטוחים שאתם מעוניינים לאפשר מצב של קריאה-בלבד?"
           disable:
@@ -2565,7 +2564,7 @@ he:
         new_style: "סגנון חדש"
         import: "יבוא"
         delete: "מחק"
-        delete_confirm: "למחוק תמה זאת?"
+        delete_confirm: "להסיר ערכת נושא זו?"
         about: "שינוי סגנונות CSS וכותרות HTML באתר. הוספת התאמות כדי להתחיל לערוך."
         color: "צבע"
         opacity: "שקיפות"
@@ -2609,12 +2608,11 @@ he:
           css_html: "CSS/HTML מותאמים"
           edit_css_html: "עריכת CSS/HTML"
           edit_css_html_help: "לא ערכתם אף CSS או HTML"
-          delete_upload_confirm: "למחוק העלאה זו? (תמת CSS עלולה להפסיק לעבוד!)"
+          delete_upload_confirm: "להסיר העלאה זו? (ערכת נושא CSS עלולה להפסיק לעבוד!)"
           import_web_tip: "מאגר שמכיל תמה"
           import_file_tip: "קובץ .dcstyle.json שמכיל תמה"
           about_theme: "אודות התמה"
           license: "רישיון"
-          component_of: "התמה היא רכיב של:"
           update_to_latest: "עדכון לגרסה אחרונה"
           check_for_updates: "בדיקת עדכונים"
           updating: "מעדכנים..."
@@ -2838,7 +2836,7 @@ he:
         screened_ips:
           title: "כתובות IP מסוננות"
           description: 'כתובות IP שנצפות כרגע. השתמש בכפתור "אפשר" בשביל לבטל חסימת כתובת'
-          delete_confirm: "אתה בטוח שברצונך להסיר את הכלל עבור הכתובת %{ip_address}?"
+          delete_confirm: "האם ברצונך להסיר את הכלל עבור הכתובת %{ip_address}?"
           roll_up_confirm: "האם אתם בטוחים שאתם מעוניינים לגלגל למעלה (roll up) כתובות IP שבדרך-כלל מסוננות לכדי subnets?"
           rolled_up_some_subnets: "ערכי IP אסורים גולגלו בהצלחה לרשתות המשנה הבאות: %{subnets}."
           rolled_up_no_subnet: "לא היה שום דבר לגלגל"
@@ -2947,7 +2945,7 @@ he:
         suspend_reason: "סיבה"
         suspended_by: "הושעה על ידי"
         delete_all_posts: "מחק את כל הפוסטים"
-        delete_all_posts_confirm_MF: "אתם עומדים למחוק {POSTS, plural, one {פוסט אחד} other {# פסוטים}} ו{TOPICS, plural, one {נושא אחד} other {# נושאים}}. האם אתם בטוחים?"
+        delete_all_posts_confirm_MF: "אתם עומדים להסיר {POSTS, plural, one {פוסט אחד} other {# פסוטים}} ו{TOPICS, plural, one {נושא אחד} other {# נושאים}}. האם אתם בטוחים?"
         moderator: "מנהל?"
         admin: "מנהל ראשי?"
         suspended: "מושעה?"
@@ -2991,8 +2989,8 @@ he:
         anonymize_yes: "כן, הפיכת חשבון זה לאנונימי"
         anonymize_failed: "התרחשה בעיה בהפיכת חשבון זה לאנונימי."
         delete: "מחק משתמש/ת"
-        delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומנחים."
-        delete_posts_forbidden_because_staff: "לא ניתן למחוק את כל הפרסומים של מנהלי מערכת ומפקחים."
+        delete_forbidden_because_staff: "לא ניתן להסיר מנהלים ומנחים."
+        delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפרסומים של מנהלי מערכת ומפקחים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. מחקו את כל ההודעות לפני ניסיון מחיקה של משתמש. (הודעות ישנות יותר מיום אחד לא ניתן למחוק.)"
           two: "לא ניתן למחוק משתמשים אם יש להם פוסטים. מחקו את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מ-%{count} ימים לא ניתן למחוק.)"
@@ -3002,17 +3000,17 @@ he:
           one: "לא ניתן למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
           two: "לא ניתן למחוק את כל הפוסטים. חלק מפוסטים ישנים יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
           many: "לא ניתן למחוק את כל הפוסטים. חלק מפוסטים ישנים יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
-          other: "לא ניתן למחוק את כל הפוסטים. חלק מפוסטים ישנים יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
+          other: "לא ניתן להסיר את כל הפוסטים. חלק מפוסטים ישנים יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           one: "לא ניתן למחוק את כל הפוסטים מפני שלמשתמשים יותר מפוסט אחד. (delete_all_posts_max)"
           two: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
           many: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
-          other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
-        delete_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים למחוק משתמש זה? פעולה זו קבועה ובלתי הפיכה!"
+          other: "לא ניתן להסיר את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
+        delete_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים להסיר משתמש זה? פעולה זו קבועה ובלתי הפיכה!"
         delete_and_block: "מחיקה ו<b>חסימת</b> כתובת דוא\"ל וכתובת IP אלה"
         delete_dont_block: "מחיקה בלבד"
         deleted: "המשתמש נמחק."
-        delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל הפוסטים נמחקו לפני ניסיון למחוק את המשתמש."
+        delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל הפוסטים נמחקו לפני ניסיון להסיר את המשתמש."
         send_activation_email: "שלח הודעת הפעלת חשבון"
         activation_email_sent: "נשלחה הודעת הפעלת חשבון"
         send_activation_email_failed: "הייתה בעיה בשליחת הודעת האישור. %{error}"
@@ -3088,7 +3086,7 @@ he:
         edit: "עריכה"
         delete: "מחיקה"
         cancel: "ביטול"
-        delete_confirm: "האם אתם בטוחים שאתם רוצים למחוק את שדה המשתמש הזה?"
+        delete_confirm: "האם ברצונכם להסיר את שדה המשתמש הזה?"
         options: "אפשרויות"
         required:
           title: "נדרש בעת הרשמה?"
@@ -3170,7 +3168,7 @@ he:
         reason_help: (קישור לפוסט או לנושא)
         save: שמור
         delete: מחק
-        delete_confirm: "אתם בטוחים שברצונכם למחוק את העיטור הזה?"
+        delete_confirm: "אתם שברצונכם להסיר את העיטור הזה?"
         revoke: שלול
         reason: סיבה
         expand: הרחבה &hellip;
@@ -3185,7 +3183,7 @@ he:
         allow_title: אפשר לעיטור להיות בשימוש ככותרת.
         multiple_grant: יכולים להינתן מספר פעמים
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
-        enabled: אפשרו עיטור
+        enabled: הפעלת עיטורים
         icon: סמליל
         image: תמונה
         query: שאילתת עיטור (SQL)
@@ -3227,11 +3225,11 @@ he:
         add: "הוספת אמוג'י חדש"
         name: "שם"
         image: "תמונה"
-        delete_confirm: "האם אתם בטוחים שאתם רוצים למחוק את האמוג'י :%{name}:?"
+        delete_confirm: "האם ברצונכם להסיר את האמוג'י :%{name}:?"
       embedding:
         get_started: "אם ברצונכם לשלב את דיסקורס באתר אחר, התחילו בהוספת השרת שלו."
-        confirm_delete: "האם אתם בטוחים שאתם רוצים למחוק את הhost הזה? "
-        sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> ב URL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
+        confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
+        sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> ב URL הקאנוני של העמוד שבו אתם כותבים נושא מכונן. "
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
         class_name: "שם מחלקה"
@@ -3266,7 +3264,7 @@ he:
         category_id: "מזהה לקטגוריה"
         category_title: "קטגוריה"
         external_url: "URL חיצוני"
-        delete_confirm: "אתם בטוחים שברצונכם למחוק את הלינק הקבוע?"
+        delete_confirm: "האם ברצונכם להסיר את הקישור הקבוע?"
         form:
           label: "חדש:"
           add: "הוסף"

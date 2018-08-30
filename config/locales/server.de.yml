@@ -1067,7 +1067,6 @@ de:
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden kann."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn Nachrichten deaktiviert sind"
-    enable_personal_email_messages: "Erlaube Benutzern mit Vertrauensstufe 4 (konfigurierbar über die Mindestvertrauensstufe, um Nachrichten zu senden), private E-Mail-Nachrichten zu senden. Bitte beachte, dass das Team immer Nachrichten senden kann."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -1283,7 +1282,6 @@ de:
     min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Die minimale Vertrauensstufe zur Erstellung neuer Nachrichten."
-    min_trust_to_send_email_messages: "Die minimale Vertrauensstufe zum Versenden neuer Nachrichten als E-Mail (an vorbereitete Benutzer)."
     min_trust_to_flag_posts: "Die minimale Vertrauensstufe zur Meldung von Beiträgen."
     min_trust_to_post_links: "Die minimale Vertrauensstufe zum Einfügen von Links in Beiträgen."
     min_trust_to_post_images: "Die minimale Vertrauensstufe zum Einfügen von Bildern in Beiträgen."
@@ -2207,10 +2205,6 @@ de:
     email_reject_old_destination:
       title: "E-Mail abgelehnt weil alter Empfänger"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination}(mit dem Betreff ) konnte nicht zugestellt werden.
-
-        Aus Sicherheitsgründen akzeptieren wir Antworten auf ursprüngliche Benachrichtigungen nur innerhalb von 90 Tagen. Bitte [besuche das Thema](%{short_url}), um die Unterhaltung fortzusetzen.
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
@@ -2767,7 +2761,6 @@ de:
     sender_message_blank: "Nachricht ist leer"
     sender_message_to_blank: "message.to ist leer"
     sender_text_part_body_blank: "text_part.body ist leer"
-    sender_text_body_blank: "body ist leer"
   color_schemes:
     base_theme_name: "Basis"
     light: "Helles Schema"

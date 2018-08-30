@@ -202,7 +202,6 @@ lv:
     guidelines: "Vadlīnijas"
     privacy_policy: "Privātuma politika"
     privacy: "Privātums"
-    terms_of_service: "Pakalpojuma noteikumi"
     mobile_view: "Mobilais skats"
     desktop_view: "Datora skats"
     you: "Tu"
@@ -865,8 +864,6 @@ lv:
       hide_session: "Atgādināt man rīt"
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, pajautāšu jums rīt. Starp citu, vienmēr var piereģistrēties, spiežot \"Ieiet sistēmā\"."
-      intro: "Hei! :heart_eyes: Šķiet, jums patīk diskusija, bet jums vēl nav profila."
-      value_prop: "Kad esat izveidojuši profilu, mēs precīzi atceramies, cik tālu esat lasījuši, tāpēc jūs vienmēr varat turpināt no turienes, kur pārtraucāt. Jūs arī saņemsiet paziņojumus šeit un e-pastā, kad tiks izveidoti jauni ieraksti. Un jūs varat izteikt atzinību ierakstiem, lai atbalstītu autoru. :heartbeat:"
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
       description: "Ir <b>{{replyCount}}</b> atbildes."
@@ -880,7 +877,6 @@ lv:
       disable: "Rādīt dzēstos ierakstus"
     private_message_info:
       title: "Ziņa"
-      invite: "Ielūgt citus..."
       remove_allowed_user: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
     email: 'E-pasts'
@@ -2482,7 +2478,6 @@ lv:
           import_file_tip: ".dcstyle.json fails, kas satur dizainu"
           about_theme: "Par dizainu"
           license: "Licence"
-          component_of: "Tēma ir sastāvdaļa:"
           update_to_latest: "Atjaunināt uz pēdējo"
           check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           updating: "Atjaunina..."

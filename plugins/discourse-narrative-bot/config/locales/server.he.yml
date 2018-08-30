@@ -7,7 +7,6 @@
 
 he:
   site_settings:
-    discourse_narrative_bot_enabled: 'אפשרו את בוט הסיפורים של דיסקורס'
     disable_discourse_narrative_bot_welcome_post: "נטרלו את פוסט הברוכים הבאים מאת בוט הסיפורים של דיסקורס"
     discourse_narrative_bot_ignored_usernames: "שמות משתמשים שבוט הסיפורים של דיסקורס צריך להתעלם מהם"
     discourse_narrative_bot_disable_public_replies: "נטרלו תגובות פומביות מאת בוט הסיפורים של דיסקורס"
@@ -205,6 +204,15 @@ he:
       mention:
         reply: |-
           _קראתם בשמי!?_ :raised_hand: אני מאמין שכן! :wave: ובכן, אני כאן! תודה שאיזכרתם אותי.  :ok_hand:
+      end:
+        message: |-
+          תודה שנשארת איתי @%{username}! עשיתי את זה בשבילך, ולדעתי הרווחת את זה:
+
+          %{certificate}
+
+          אז זהו ביינתים! אפשר לבדוק [**את הדיוני האחרונים**](/latest) או [**קטגוריות מדוברות**](/categories). :sunglasses:
+
+          (אם תרצו לשוחח איתי שוב, תשלחו לי הודעה או שתקראו לי עם סימן `@%{discobot_username}` בכל זמן!)
       certificate:
         alt: 'תעודת הישג'
     advanced_user_narrative:

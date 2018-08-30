@@ -178,7 +178,6 @@ gl:
     guidelines: "Directrices"
     privacy_policy: "Normas de confidencialidade"
     privacy: "Confidencialidade"
-    terms_of_service: "Termos do servizo"
     mobile_view: "Visualización móbil"
     desktop_view: "Visualización en escritorio"
     you: "Ti"
@@ -680,8 +679,6 @@ gl:
       hide_session: "Lembrarmo mañá"
       hide_forever: "non grazas"
       hidden_for_session: "De acordo, preguntareicho mañá. Tamén podes usar «Iniciar sesión» para crear unha conta."
-      intro: "Ei! :heart_eyes: Semella que gozas coa discusión pero non abriches ningunha conta."
-      value_prop: "Cando creas unha conta, lembramos exactamente o que liches. Deste xeito sempre volves exactamente onde o deixaches. Podes recibir notificación aquí e vía correo electrónico sempre que se fagan publicacións. E podes darlle a Gústame nas publicacións para compartir o cariño. :heartbeat: "
     summary:
       enabled_description: "Estás vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade"
       description: "Hai <b>{{replyCount}}</b> respostas."
@@ -695,7 +692,6 @@ gl:
       disable: "Amosar as publicacións eliminadas"
     private_message_info:
       title: "Mensaxe"
-      invite: "Convidar a outros..."
       remove_allowed_user: "Confirmas a eliminación de {{name}} desta mensaxe?"
     email: 'Correo electrónico'
     username: 'Nome do usuario'
