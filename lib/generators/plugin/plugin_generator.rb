@@ -7,10 +7,25 @@ class PluginGenerator < Rails::Generators::NamedBase
 
   source_root File.expand_path('templates', __dir__)
 
+  class_option :controller, type: :boolean, desc: "Generate controller", default: true
+  class_option :spec, type: :boolean, desc: "Generate spec", default: true
+  class_option :acceptance, type: :boolean, desc: "Generate acceptance test", default: true
   class_option :stylesheet, type: :boolean, desc: "Generate Stylesheet", default: true
   class_option :javascript, type: :boolean, desc: "Generate Javascript initializer", default: true
   class_option :scheduled_job, type: :boolean, desc: "Generate scheduled job", default: false
   class_option :help, type: :boolean, desc: "Adds help comments in generated files", default: true
+
+  def create_acceptance_file
+    return unless @options['acceptance']
+
+    template 'acceptance-test.js.es6.erb', File.join('plugins', dasherized_name, "test/javascripts/acceptance", "#{dasherized_name}-test.js.es6")
+  end
+
+  def create_spec_file
+    return if !@options['spec'] || !@options['controller']
+
+    template 'controller_spec.rb.erb', File.join('plugins', dasherized_name, "spec/requests/actions_controller_spec.rb")
+  end
 
   def create_scheduled_job_file
     return unless @options['scheduled_job']
