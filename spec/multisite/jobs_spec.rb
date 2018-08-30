@@ -9,6 +9,7 @@ RSpec.describe "Running Sidekiq Jobs in Multisite" do
 
   after do
     conn.clear_settings!
+    ActiveRecord::Base.establish_connection
   end
 
   it 'should revert back to the default connection' do
