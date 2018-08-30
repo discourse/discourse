@@ -1423,7 +1423,6 @@ describe UsersController do
 
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
-            custom_fields: { test: :it },
             muted_usernames: "#{user2.username},#{user3.username}",
             watched_tags: "#{tags[0].name},#{tags[1].name}"
           }
@@ -1433,7 +1432,7 @@ describe UsersController do
           user.reload
 
           expect(user.name).to eq 'Jim Tom'
-          expect(user.custom_fields['test']).to eq 'it'
+
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
           expect(TagUser.where(
             user: user,
@@ -1514,6 +1513,15 @@ describe UsersController do
 
               expect(response.status).to eq(200)
               expect(user.user_fields[user_field.id.to_s]).to be_blank
+            end
+          end
+
+          context "custom_field" do
+            it "does not update the custom field" do
+              put "/u/#{user.username}.json", params: { custom_fields: { test: :it } }
+
+              expect(response.status).to eq(200)
+              expect(user.custom_fields["test"]).to be_blank
             end
           end
         end
