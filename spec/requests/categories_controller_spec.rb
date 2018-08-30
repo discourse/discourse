@@ -105,7 +105,7 @@ describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
 
           post "/categories.json", params: {
-            name: category.name, color: "ff0", text_color: "fff", permissions: {"invalid_group" => readonly}
+            name: category.name, color: "ff0", text_color: "fff", permissions: { "invalid_group" => readonly }
           }
 
           expect(response.status).to eq(422)
