@@ -1,4 +1,5 @@
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { THEMES, COMPONENTS } from "admin/models/theme";
 
 export default Ember.Route.extend({
   serialize(model) {
@@ -14,19 +15,21 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     this._super(...arguments);
 
-    controller.set("model", model);
-
     const parentController = this.controllerFor("adminCustomizeThemes");
-    parentController.set("editingTheme", false);
-    controller.set("allThemes", parentController.get("model"));
+    parentController.setProperties({
+      editingTheme: false,
+      currentTab: model.get("component") ? COMPONENTS : THEMES
+    });
+
+    controller.setProperties({
+      model: model,
+      parentController: parentController,
+      allThemes: parentController.get("model"),
+      colorSchemeId: model.get("color_scheme_id"),
+      colorSchemes: parentController.get("model.extras.color_schemes")
+    });
 
     this.handleHighlight(model);
-
-    controller.set(
-      "colorSchemes",
-      parentController.get("model.extras.color_schemes")
-    );
-    controller.set("colorSchemeId", model.get("color_scheme_id"));
   },
 
   deactivate() {
