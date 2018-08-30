@@ -13,7 +13,7 @@
 
       var relativeTime = moment.utc(
         options.date + " " + options.time,
-        "YYYY-MM-DD HH:mm"
+        "YYYY-MM-DD HH:mm:ss"
       );
 
       if (options.recurring && relativeTime < moment().utc()) {
@@ -43,7 +43,13 @@
       });
 
       var relativeTime = relativeTime.tz(moment.tz.guess());
-      if (moment(relativeTime).isSame(moment(), "day")) {
+      if (
+        options.format !== "YYYY-MM-DD HH:mm:ss" &&
+        relativeTime.isBetween(
+          moment().subtract(1, "day"),
+          moment().add(2, "day")
+        )
+      ) {
         relativeTime = relativeTime.calendar();
       } else {
         relativeTime = relativeTime.format(options.format);
