@@ -42,7 +42,12 @@
         }
       });
 
-      relativeTime = relativeTime.tz(moment.tz.guess()).format(options.format);
+      var relativeTime = relativeTime.tz(moment.tz.guess());
+      if (moment(relativeTime).isSame(moment(), "day")) {
+        relativeTime = relativeTime.calendar();
+      } else {
+        relativeTime = relativeTime.format(options.format);
+      }
 
       var html = "<span>";
       html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";
