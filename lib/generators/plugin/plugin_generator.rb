@@ -49,6 +49,15 @@ class PluginGenerator < Rails::Generators::NamedBase
     template 'javascript.es6.erb', File.join('plugins', dasherized_name, 'assets/javascripts/initializers', "#{dasherized_name}.es6")
   end
 
+  def create_settings_file
+    template 'settings.yml.erb', File.join('plugins', dasherized_name, 'config', 'settings.yml')
+  end
+
+  def create_locales_file
+    template 'client.en.yml.erb', File.join('plugins', dasherized_name, 'config/locales', 'client.en.yml')
+    template 'server.en.yml.erb', File.join('plugins', dasherized_name, 'config/locales', 'server.en.yml')
+  end
+
   def create_gitignore_entry
     plugin_entry = "!/plugins/#{dasherized_name}"
 
