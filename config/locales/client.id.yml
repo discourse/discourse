@@ -165,7 +165,6 @@ id:
     guidelines: "Petunjuk"
     privacy_policy: "Kebijakan Privasi"
     privacy: "Privasi"
-    terms_of_service: "Ketentuan Layanan"
     mobile_view: "Tampilan Mobile"
     desktop_view: "Tampilan Desktop"
     you: "Anda"
@@ -756,7 +755,6 @@ id:
       enable: "Sembunyikan Tulisan Terhapus"
     private_message_info:
       title: "Pesan"
-      invite: "Undang Lainnya..."
     email: 'Surel'
     username: 'Nama Pengguna'
     last_seen: 'Terlihat'

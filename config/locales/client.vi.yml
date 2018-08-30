@@ -168,7 +168,6 @@ vi:
     guidelines: "Hướng dẫn"
     privacy_policy: "Chính sách về quyền riêng tư"
     privacy: "Sự riêng tư"
-    terms_of_service: "Điều khoản dịch vụ"
     mobile_view: "Xem ở chế độ di động"
     desktop_view: "Xem ở chế độ máy tính"
     you: "Bạn"
@@ -816,8 +815,6 @@ vi:
       hide_session: "Nhắc vào ngày mai"
       hide_forever: "không, cảm ơn"
       hidden_for_session: "OK, Tôi sẽ hỏi bạn vào ngày mai. Bạn có thể luôn luôn sử dụng chức năng đăng nhập để tạo tài khoản."
-      intro: "Xin chào! :heart_eyes: Có vẻ như bạn đang thích thú để thảo luận, nhưng bạn chưa đăng nhập."
-      value_prop: "Khi bạn tạo tài khoản, website nhớ chính xác những gì bạn đã đọc, vì vậy bạn sẽ luôn trở lại đúng nơi đã rời đi. Bạn cũng có thể nhận thông báo ở đây hoặc qua email mỗi khi có bài viết mới. Bạn cũng có thể like bài viết để chia sẻ cảm xúc của mình. :heartbeat:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description: "Có <b>{{replyCount}}</b> trả lời."
@@ -831,7 +828,6 @@ vi:
       disable: "Xem các bài viết bị xoá"
     private_message_info:
       title: "Tin nhắn"
-      invite: "Mời người khác..."
       remove_allowed_user: "Bạn thực sự muốn xóa {{name}} từ tin nhắn này?"
     email: 'Email'
     username: 'Username'

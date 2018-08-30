@@ -173,7 +173,6 @@ zh_CN:
     guidelines: "指引"
     privacy_policy: "隐私政策"
     privacy: "隐私"
-    terms_of_service: "服务条款"
     mobile_view: "移动版"
     desktop_view: "桌面版"
     you: "你"
@@ -907,8 +906,6 @@ zh_CN:
       hide_session: "明天提醒我"
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
-      intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
-      value_prop: "当你创建了帐号，我们就可以准确地记录你的阅读进度。这样你再次访问时就可以回到上次离开的地方。你也可以选择接受新帖通知或者邮件。而且你还可以赞帖子，向他人分享感激之情。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -922,7 +919,6 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "私信"
-      invite: "邀请其他人..."
       leave_message: "你真的想要发送消息么？"
       remove_allowed_user: "确定将 {{name}} 从本条私信中移除？"
       remove_allowed_group: "确定将 {{name}} 从本条私信中移除？"
@@ -2628,7 +2624,6 @@ zh_CN:
           import_file_tip: ".dcstyle.json 文件包含主题"
           about_theme: "关于主题"
           license: "许可证"
-          component_of: "主题是其组件："
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
           updating: "更新..."

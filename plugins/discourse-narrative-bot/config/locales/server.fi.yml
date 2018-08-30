@@ -7,7 +7,6 @@
 
 fi:
   site_settings:
-    discourse_narrative_bot_enabled: 'Ota Discoursen opastava botti käyttöön'
     disable_discourse_narrative_bot_welcome_post: "Estä bottia lähettämästä tervetuloviestejä"
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"

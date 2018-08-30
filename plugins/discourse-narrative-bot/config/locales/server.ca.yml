@@ -7,7 +7,6 @@
 
 ca:
   site_settings:
-    discourse_narrative_bot_enabled: 'Habilita el Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Deshabilita el missatge de benvinguda del Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Noms d'usuari que el Discourse Narrative Bot hauria d'ignorar"
     discourse_narrative_bot_disable_public_replies: "Deshabilita les respostes públiques del Discourse Narrative Bot"

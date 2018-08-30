@@ -7,7 +7,6 @@
 
 sv:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktivera Discourse digitala hjälpreda '
     disable_discourse_narrative_bot_welcome_post: "Avaktivera introduktionsmeddelandet från Discourse  digitala hjälpreda "
     discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse  digitala hjälpreda bör ignorera"
     discourse_narrative_bot_disable_public_replies: "Inaktivera publika svar från Discourse digitala hjälpreda "

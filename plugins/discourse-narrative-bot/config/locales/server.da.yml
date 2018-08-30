@@ -7,7 +7,6 @@
 
 da:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktiverer Discourse Botten'
     disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomst beskeden fra Discourse Botten"
   badges:
     certified:

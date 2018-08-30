@@ -195,7 +195,7 @@ fr:
     guidelines: "Charte"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
-    terms_of_service: "Conditions générales d'utilisation"
+    tos: "Conditions générales d'utilisation"
     mobile_view: "Vue mobile"
     desktop_view: "Vue bureau"
     you: "Vous"
@@ -1008,8 +1008,7 @@ fr:
       hide_session: "Me le rappeler demain"
       hide_forever: "non merci"
       hidden_for_session: "Très bien, je vous demanderai demain. Vous pouvez toujours cliquer sur « Se connecter » pour créer un compte."
-      intro: "Bonjour ! :heart_eyes: Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
-      value_prop: "Quand vous créez votre compte, nous stockons ce que vous avez lu pour vous positionner systématiquement sur le bon emplacement à votre retour. Vous  avez également des notifications, ici et par courriel, quand de nouveaux messages sont postés. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartbeat:"
+      intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description: "Il y a <b>{{replyCount}}</b> réponses."
@@ -1023,7 +1022,6 @@ fr:
       disable: "Afficher les messages supprimés"
     private_message_info:
       title: "Message direct"
-      invite: "Inviter d'autres utilisateurs…"
       leave_message: "Êtes-vous sûr de vouloir quitter cette conversation ?"
       remove_allowed_user: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
       remove_allowed_group: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
@@ -2977,7 +2975,6 @@ fr:
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
           about_theme: "À propos du thème"
           license: "Licence"
-          component_of: "Le thème est un composant de :"
           update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
@@ -3567,9 +3564,6 @@ fr:
         clear_filter: "Effacer"
         add_url: "ajouter URL"
         add_host: "ajouter hôte"
-        value_list:
-          default_none: "Saisir pour filtrer ou créer…"
-          no_choices_none: "Saisir pour créer…"
         uploaded_image_list:
           label: "Modifier la liste"
           empty: "Il n'y a aucune image pour le moment. Veuillez en envoyer une."

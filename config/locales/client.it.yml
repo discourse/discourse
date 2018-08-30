@@ -194,7 +194,6 @@ it:
     guidelines: "Linee Guida"
     privacy_policy: "Tutela Privacy"
     privacy: "Privacy"
-    terms_of_service: "Termini di Servizio"
     mobile_view: "Visualizzazione Mobile"
     desktop_view: "Visualizzazione Desktop"
     you: "Tu"
@@ -251,9 +250,9 @@ it:
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
-      new_topic: "Nuovo Argomento in bozza"
-      new_private_message: "Nuovo Messaggio Privato in bozza"
-      topic_reply: "Bozza di risposta"
+      new_topic: "Nuovo argomento in bozza"
+      new_private_message: "Nuovo messaggio privato in bozza"
+      topic_reply: "Risposta in bozza"
     topic_count_latest:
       one: "Visualizza {{count}} argomenti nuovi o aggiornati"
       other: "Visualizza {{count}} argomenti nuovi o aggiornati."
@@ -490,7 +489,7 @@ it:
       "7": "Menzioni"
       "9": "Citazioni"
       "11": "Modifiche"
-      "12": "Inviati"
+      "12": "Elementi Inviati"
       "13": "Posta in arrivo"
       "14": "In Attesa"
       "15": "Bozze"
@@ -530,11 +529,11 @@ it:
       delete_other_accounts: "Cancella %{count}"
       username: "nome utente"
       trust_level: "TL"
-      read_time: "durata lettura"
+      read_time: "tempo lettura"
       topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
       confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      powered_by: "fornito da <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(scegli un'opzione)"
     user:
@@ -570,8 +569,8 @@ it:
         enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
-      dismiss: 'Chiudi'
-      dismiss_notifications: "Chiudi Tutti"
+      dismiss: 'Nascondi'
+      dismiss_notifications: "Nascondi tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
@@ -859,7 +858,7 @@ it:
         reinvited: "Invito rinviato"
         reinvited_all: "Tutti gli inviti sono stati rispediti!"
         time_read: "Ora di Lettura"
-        days_visited: "Presenza (giorni)"
+        days_visited: "Giorni Frequenza"
         account_age_days: "Età dell'utente in giorni"
         create: "Invia un Invito"
         generate_link: "Copia il collegamento di invito"
@@ -1006,8 +1005,6 @@ it:
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
       hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Connetti\" per creare un account."
-      intro: "Ciao! :heart_eyes: A quanto pare ti sta piacendo la discussione, ma non sei ancora iscritto."
-      value_prop: "Quando hai un account ci ricordiamo esattamente cosa stavi leggendo, così potrai riprendere da dove ti eri fermato. Inoltre ricevi le notifiche, sia qui sia via email, ogni volta che ci saranno nuovi messaggi. Inoltre potrai metterei i \"Mi piace\" ai messaggi e condividerne l'apprezzamento. :heartbeat:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{replyCount}}</b> risposte."
@@ -1021,7 +1018,6 @@ it:
       disable: "Mostra Messaggi Eliminati"
     private_message_info:
       title: "Messaggio"
-      invite: "Invita altri utenti..."
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Davvero vuoi rimuovere {{name}} da questo messaggio?"
       remove_allowed_group: "Vuoi veramente rimuovere {{name}} da questo messaggio?"
@@ -1407,17 +1403,17 @@ it:
           label: Con etichetta
         filters:
           label: Mostra solamente argomenti/messaggi...
-          title: Corrispondenze solo nel titolo
+          title: cerca solo nel titolo
           likes: su cui ho messo "Mi Piace"
           posted: ho pubblicato in
           watching: sto osservando
           tracking: sto seguendo
-          private: Nei miei messaggi privati
+          private: nei miei messaggi privati
           bookmarks: Aggiunti ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
           unpinned: non sono appuntati
-          seen: Che ho letto
+          seen: messaggi che ho letto
           unseen: non ho letto
           wiki: sono wiki
           images: che includono immagini
@@ -1446,21 +1442,21 @@ it:
       bulk:
         select_all: "Seleziona Tutti"
         clear_all: "Deseleziona Tutto"
-        unlist_topics: "Deselezione Topics"
+        unlist_topics: "Rendi invisibili"
         relist_topics: "Ripubblica Argomenti"
-        reset_read: "Reimposta Lettura"
-        delete: "Elimina Argomenti"
-        dismiss: "Chiudi"
-        dismiss_read: "Chiudi tutti i non letti"
-        dismiss_button: "Chiudi..."
-        dismiss_tooltip: "Chiudi solo gli ultimi messaggi o smetti di seguire gli argomenti"
+        reset_read: "Reimposta stato lettura"
+        delete: "Elimina argomenti"
+        dismiss: "Nascondi"
+        dismiss_read: "Marca tutti come già letti"
+        dismiss_button: "Nascondi..."
+        dismiss_tooltip: "Nascondi solo i Nuovi messaggi o smetti di seguire gli Argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti così che non compariranno più come non letti per me"
-        dismiss_new: "Chiudi Nuovi"
+        dismiss_new: "Nascondi i Nuovi"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
-        change_category: "Imposta Categoria"
-        close_topics: "Chiudi Argomenti"
-        archive_topics: "Archivia Argomenti"
+        change_category: "Imposta categoria"
+        close_topics: "Chiudi argomenti"
+        archive_topics: "Archivia argomenti"
         notification_level: "Notifiche"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
@@ -1557,7 +1553,7 @@ it:
       suggest_create_topic: "Perché non crei un argomento?"
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
-      deleted: "L'argomento è stato cancellato"
+      deleted: "L'argomento è stato eliminato"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -1730,7 +1726,7 @@ it:
           other: "Argomenti attualmente appuntati globalmente {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
-        banner_note: "Gli utenti possono rimuovere lo striscione chiudendolo. Solo un argomento alla volta può diventare uno striscione."
+        banner_note: "Gli utenti possono rimuovere lo striscione nascondendolo. Solo un argomento per volta può diventare un Annuncio."
         no_banner_exists: "Non c'è alcun argomento annuncio."
         banner_exists: "<strong class='badge badge-notification unread'>C'è</strong> attualmente un argomento annuncio."
       inviting: "Sto invitando..."
@@ -2347,8 +2343,8 @@ it:
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> o <b>ctrl</b>+<b>alt</b>+<b>f</b> Cerca'
         help: '<b>?</b> Apri la legenda tasti'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
-        dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Marca i Nuovi messaggi come letti'
+        dismiss_topics: '<b>x</b>, <b>t</b> Marca gli Argomenti come letti'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Disconnetti'
       composing:
         title: 'Scrivendo'
@@ -2505,6 +2501,7 @@ it:
         title: "Cruscotto"
         last_updated: "Ultimo aggiornamento cruscotto:"
         find_old: "Stai cercando il vecchio cruscotto?"
+        old_link: "Lo trovi qui"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         critical_available: "È disponibile un aggiornamento essenziale."
@@ -2538,7 +2535,7 @@ it:
         community_health: Stato di salute
         moderators_activity: Attività dei Moderatori
         whats_new_in_discourse: "Novità in Discourse?"
-        activity_metrics: Metrica Attività
+        activity_metrics: Metriche Attività
         all_reports: "Tutti i rapporti"
         general_tab: "Generale"
         moderation_tab: "Moderazione"
@@ -2563,6 +2560,7 @@ it:
           no_data: "Non ci sono dati da mostrare."
           trending_search:
             more: '<a href="/admin/logs/search_logs">Cerca nei log</a>'
+            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione<a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>per iniziare a raccogliere i dati.'
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -2883,9 +2881,16 @@ it:
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
         theme:
+          theme: "Tema"
+          component: "Componente"
+          components: "Componenti"
           import_theme: "Importa Tema"
           customize_desc: "Personalizza:"
           title: "Temi"
+          modal_title: "Crea Tema"
+          create: "Crea"
+          create_type: "Tipo:"
+          create_name: "Nome:"
           long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
           edit: "Modifica"
           edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
@@ -2900,6 +2905,10 @@ it:
           color_scheme_select: "Seleziona i colori da usare nel tema"
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
+          switch_component: "Rendi tema"
+          switch_component_alert: "Sicuro di voler convertire questo componente in tema? Ciò lo renderà un tema indipendente e verrà rimosso come figlio da tutti i temi. "
+          switch_theme: "Rendi componente"
+          switch_theme_alert: "Sicuro di voler convertire questo tema in componente? Verrà rimosso come genitore da tutti i componenti. "
           uploads: "Carica"
           no_uploads: "Puoi caricare le risorse associate al tuo tema come il tipo di carattere e le immagini"
           add_upload: "Aggiungi Caricamento"
@@ -2915,13 +2924,15 @@ it:
           import_file_tip: "Il file .dcstyle.json contenente il tema"
           about_theme: "About Tema"
           license: "Licenza"
-          component_of: "Il tema è un componente di:"
+          component_of: "Componente di:"
           update_to_latest: "Aggiorna all'ultima versione"
           check_for_updates: "Controllo Aggiornamenti"
           updating: "Aggiornamento..."
           up_to_date: "Il tema è aggiornato, ultima verifica:"
           add: "Aggiungi"
           theme_settings: "Impostazioni Tema"
+          no_settings: "Questo tema non ha impostazioni."
+          empty: "Nessun elemento"
           commits_behind:
             one: "Il tema è indietro di 1 aggiornamento!"
             other: "Il tema è indietro di {{count}} aggiornamenti!"
@@ -3495,7 +3506,7 @@ it:
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorie'
-          basic: 'Di Base'
+          basic: 'Impostazioni di base'
           users: 'Utenti'
           posting: 'Pubblicazione'
           email: 'Email'

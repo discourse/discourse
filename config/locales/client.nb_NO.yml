@@ -195,7 +195,6 @@ nb_NO:
     guidelines: "Retningslinjer"
     privacy_policy: "Personvernerklæring"
     privacy: "Personvern"
-    terms_of_service: "Bruksvilkår"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
     you: "Du"
@@ -1007,8 +1006,6 @@ nb_NO:
       hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
       hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
-      intro: "Hei du! :heart_eyes: Det ser ut som du følger diskusjonen, men ikke har registrert deg ennå."
-      value_prop: "Når du registrerer deg husker vi hvor langt du har lest, så du starter på riktig sted neste gang du åpner en tråd. Du får også varsler, her og på e-post når det skjer ting i diskusjonene du vil følge. I tillegg kan du like innlegg :heartbeat:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description: "Det finnes <b>{{replyCount}}</b> svar."
@@ -1022,7 +1019,6 @@ nb_NO:
       disable: "Vis slettede innlegg"
     private_message_info:
       title: "Send"
-      invite: "Inviter andre…"
       leave_message: "Ønsker du virkelig å legge igjen denne meldingen?"
       remove_allowed_user: "Er du sikker på at du vil fjerne {{name}} fra denne meldingen?"
       remove_allowed_group: "Vil du virkelig fjerne {{name}} fra denne meldingen?"
@@ -2976,7 +2972,6 @@ nb_NO:
           public_key: "Gi den følgende public keyen tilgang til repoet:"
           about_theme: "Om drakt"
           license: "Lisens"
-          component_of: "Drakten er en del av:"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"
@@ -3566,9 +3561,6 @@ nb_NO:
         clear_filter: "Tøm"
         add_url: "legg til URL"
         add_host: "legg til vert"
-        value_list:
-          default_none: "Skriv for å filtrere eller opprette..."
-          no_choices_none: "Skriv for å opprette..."
         uploaded_image_list:
           label: "Rediger liste"
           empty: "Det finnes ingen bilder enda. Vennligst last opp ett."

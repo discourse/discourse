@@ -126,6 +126,8 @@ ko:
     topic_admin_menu: "토픽 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a> 로 시작해봅시다✨"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
+    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가 %{min_users}를 초과 할 때 자동으로 꺼집니다."
+    bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본값"
     s3:
@@ -139,6 +141,7 @@ ko:
         eu_central_1: "유럽연합 (프랑크푸르트)"
         eu_west_1: "유럽연합 (아일랜드)"
         eu_west_2: "EU (런던)"
+        eu_west_3: "EU (파리)"
         sa_east_1: "남 아메리카 (상파울로)"
         us_east_1: "미국 동부 (N. 버지니아)"
         us_east_2: "미국 동부 (오하이오)"
@@ -149,6 +152,7 @@ ko:
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
     yes_value: "예"
+    submit: "제출"
     generic_error: "죄송합니다. 오류가 발생하였습니다."
     generic_error_with_reason: "오류가 발생하였습니다: %{error}"
     sign_up: "회원가입"
@@ -166,14 +170,13 @@ ko:
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
     privacy: "개인정보처리방침"
-    terms_of_service: "서비스 이용약관"
     mobile_view: "모바일로 보기"
     desktop_view: "PC로 보기"
     you: "당신"
     or: "또는"
     now: "방금 전"
     read_more: '더 읽기'
-    more: "더"
+    more: "더 보기"
     less: "덜"
     never: "전혀"
     every_30_minutes: "매 30분 마다"
@@ -217,6 +220,8 @@ ko:
       last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
       remove: "북마크 삭제"
       confirm_clear: "정말로 이 토픽의 모든 북마크를 제거할까요?"
+    drafts:
+      remove: "삭제"
     preview: "미리보기"
     cancel: "취소"
     save: "변경사항 저장"
@@ -226,8 +231,10 @@ ko:
     uploading: "업로드 중..."
     uploading_filename: "{{filename}} 업로드 중..."
     uploaded: "업로드 완료!"
+    pasting: "붙혀넣는중..."
     enable: "활성화"
     disable: "비활성화"
+    continue: "계속"
     undo: "실행 취소"
     revert: "되돌리기"
     failed: "실패"
@@ -302,6 +309,21 @@ ko:
         make_user_group_owner: "소유자로 지정하기"
         remove_user_as_group_owner: "소유자 지정 취소하기"
     groups:
+      manage:
+        title: '관리'
+        name: '이름'
+        add_members: "멤버 추가"
+        profile:
+          title: 프로필
+        interaction:
+          posting: 포스팅
+          notification: 알림
+        membership:
+          title: 멤버십
+          access: 접근
+        logs:
+          title: "로그"
+          target_user: "타겟 사용자"
       public_admission: "사용자가 그룹에 자유롭게 가입할 수 있도록 허용합니다. (그룹이 공개되어야 함)"
       public_exit: "사용자가 그룹을 자유롭게 탈퇴할 수 있도록 허용합니다."
       empty:
@@ -326,9 +348,14 @@ ko:
       index:
         title: "그룹"
         empty: "보이는 그룹이 없습니다."
+        automatic_groups: "자동 그룹"
+        automatic: "자동"
       title:
         other: "그룹"
       activity: "활동"
+      members:
+        remove_member_description: "이 그룹에서 <b>%{username}</b>(을)를 삭제합니다."
+        make_owner_description: "이 그룹에서 <b>%{username}</b>(을)를 소유자로 설정합니다."
       topics: "토픽"
       posts: "게시글"
       mentions: "멘션"
@@ -448,6 +475,7 @@ ko:
         disable: "알림 비활성화"
         enable: "알림 활성화"
         each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 설정을 변경해야합니다."
+        consent_prompt: "포스트에 댓글이 달렸을때 실시간 알림을 받겠습니까?"
       dismiss: '해지'
       dismiss_notifications: "모두 해지"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
@@ -549,6 +577,20 @@ ko:
         set_password: "비밀번호 설정"
         choose_new: "새로운 비밀번호를 적어주세요"
         choose: "비밀번호를 적어주세요"
+      second_factor_backup:
+        regenerate: "재생성"
+        disable: "해제"
+        enable: "설정"
+        copied_to_clipboard: "클립보드에 복사됨"
+        copy_to_clipboard_error: "데이터를 클립보드에 복사하는데 오류가 발생했습니다."
+        codes:
+          title: "백업 코드가 재생성됨"
+      second_factor:
+        title: "이중 인증"
+        disable: "이중 인증 해제"
+        enable: "보다 향상된 계정 보안을 위해 <a href>이중 인증</a>을 활성화 하세요."
+        confirm_password_description: "비밀번호를 확인해주세요."
+        label: "코드"
       change_about:
         title: "내 소개 변경"
         error: "값을 바꾸는 중 에러가 발생했습니다."
@@ -824,8 +866,6 @@ ko:
       hide_session: "내일 다시 알려주기"
       hide_forever: "사양합니다."
       hidden_for_session: "알겠습니다. 내일 다시 물어볼께요. 언제든지 '로그인'을 통해서도 계정을 만들 수 있습니다."
-      intro: "안녕하세요! :heart_eyes: 글읽기는 좋아하시는데 아직 회원가입은 안하신 것 같네요."
-      value_prop: "회원가입 하시면 글을 어디까지 읽으셨는지 저희가 기억하기 때문에, 언제든지 마지막 읽은 위치로 바로 돌아갈 수 있답니다. 그리고 새글이 뜰때마다 이 화면과 이메일로 알림을 받을수도 있고, 좋아요를 클릭해서 글에 대한 애정을 표현하실 수도 있어요. :heartbeat:"
     summary:
       enabled_description: "현재 커뮤니티에서 가장 인기있는 주제의 요약본을 보고 있습니다:"
       description: "댓글이 <b>{{replyCount}}개</b> 있습니다."
@@ -839,7 +879,6 @@ ko:
       disable: "삭제된 글 보기"
     private_message_info:
       title: "메시지"
-      invite: "다른 사람 초대"
       leave_message: "정말로 이 메시지를 남길까요?"
       remove_allowed_user: "{{name}}에게서 온 메시지를 삭제할까요?"
       remove_allowed_group: "{{name}}에게서 온 메시지를 삭제할까요?"
@@ -2140,6 +2179,7 @@ ko:
           start_date: "시작일"
           end_date: "종료일"
           groups: "모든 그룹"
+          no_data: "표시할 정보가 없습니다."
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
@@ -2150,6 +2190,8 @@ ko:
         topics: "신고된 토픽"
         agree: "동의"
         agree_title: "이 신고가 올바르고 타당함을 확인합니다"
+        agree_flag_hide_post: "포스트 숨기기"
+        ignore_flag: "무시"
         delete: "삭제"
         delete_title: "신고에서 멘션된 글 삭제하기"
         delete_post_defer_flag_title: "글을 삭제하고 첫번째 글이면 주제 삭제하기"
@@ -2169,6 +2211,7 @@ ko:
         dispositions:
           agreed: "동의"
           disagreed: "반대"
+          deferred: "무시됨"
         flagged_by: "신고 한 사람"
         resolved_by: "해결 by"
         took_action: "처리하기"
@@ -2182,6 +2225,7 @@ ko:
         was_edited: "첫 신고 이후에 글이 수정되었음"
         previous_flags_count: "이 글은 이미 {{count}}번 이상 신고 되었습니다."
         show_details: "신고내용 자세히 보기"
+        details: "자세히"
         flagged_topics:
           topic: "토픽"
           type: "타입"
@@ -2194,6 +2238,21 @@ ko:
           notify_user: "커스텀"
           notify_moderators: "커스텀"
       groups:
+        new:
+          title: "새 그룹"
+          create: "생성"
+          name:
+            too_short: "그룹 이름이 너무 짧습니다"
+            too_long: "그룹 이름이 너무 깁니다"
+            available: "사용가능한 그룹 이름"
+            not_available: "사용 불가능한 그룹 이름"
+            blank: "그룹 이름은 공백이 될 수 없습니다"
+        manage:
+          interaction:
+            email: 이메일
+          membership:
+            automatic: 자동
+            trust_level: 신뢰도
         primary: "주 그룹"
         no_primary: "(주 그룹이 없습니다.)"
         title: "그룹"
@@ -2208,6 +2267,7 @@ ko:
         add: "추가"
         custom: "Custom"
         automatic: "자동화"
+        default_title: "기본 타이틀"
         group_owners: 소유자
         add_owners: 소유자 추가하기
         none_selected: "시작할 그룹을 선택하세요"
@@ -2328,6 +2388,7 @@ ko:
           label: "업로드"
           title: "백업을 업로드"
           uploading: "업로드 중..."
+          success: "'{{filename}}'이(가) 성공적으로 업로드 되었습니다.  파일은 처리중이며 몇분후에 리스트에 보여집니다."
           error: "'{{filename}}' 파일 업로드중 에러가 발생하였습니다. ({{message}})"
         operations:
           is_running: "실행 중입니다."
@@ -2420,6 +2481,10 @@ ko:
           add_upload: "업로드할 파일 추가하기"
           upload_file_tip: "업로드할 파일 선택하기(png, woff2, 기타..)"
           variable_name: "SCSS 변수 이름:"
+          variable_name_invalid: "불가능한 변수명입니다. 알파벳만 허용되며, 문자로 시작해야 하며, 반드시 고유해야 합니다."
+          variable_name_error:
+            invalid_syntax: "불가능한 변수명입니다. 알파벳만 허용되며, 문자로 시작해야 합니다."
+            must_be_unique: "불가능한 변수명입니다. 반드시 고유해야 합니다."
           upload: "업로드"
           child_themes_check: "다른 차일드 테마를  포함한 테마"
           css_html: "커스텀 CSS/HTML"
@@ -2430,7 +2495,6 @@ ko:
           import_file_tip: "테마정보가 있는 .dcstyle.json 파일"
           about_theme: "테마 정보"
           license: "라이센스 정보"
-          component_of: "이 테마는 다음에 속한 컴포넌트입니다:"
           update_to_latest: "최신버전으로 업데이트하기"
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
@@ -2459,6 +2523,8 @@ ko:
           body_tag:
             text: "</body>"
             title: "</body> 태그 전에 들어갈 HTML"
+          yaml:
+            text: "YAML"
         colors:
           select_base:
             title: "기본 컬러 scheme을 선택하세요"
@@ -2566,6 +2632,9 @@ ko:
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
+      moderation_history:
+        actions:
+          delete_user: "사용자 삭제됨"
       logs:
         title: "로그"
         action: "허용여부"

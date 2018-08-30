@@ -7,7 +7,6 @@
 
 it:
   site_settings:
-    discourse_narrative_bot_enabled: 'Abilita Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Disabilita il messaggio di benvenuto di Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomi utente che Discourse Narrative Bot deve ignorare"
     discourse_narrative_bot_disable_public_replies: "Disabilita le risposte pubbliche da Discourse Narrative Bot"
@@ -398,13 +397,13 @@ it:
 
           - Quando il tuo messaggio necessita di molti dettagli opzionali che potrebbero intralciare la lettura se letti tutti in una volta.
 
-          [details=Seleziona questo per vedere come funziona!]
-          1. Seleziona il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor.
+          [details=Seleziona qui per vedere come funziona!]
+          1. Clicca il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor.
           2. Seleziona "Nascondi Dettagli".
-          3. Modifica il sommario e aggiungi il tuo contenuto.
+          3. Inserisci un riassunto dei dettagli.
           [/details]
 
-          Puoi usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
+          Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quello che segue nella tua prossima risposta:
 

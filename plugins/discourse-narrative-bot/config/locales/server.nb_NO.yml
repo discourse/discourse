@@ -7,7 +7,6 @@
 
 nb_NO:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktiver Discourse Fortellerbot'
     disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomstinnlegget fra Discourse Fortellerbot"
     discourse_narrative_bot_ignored_usernames: "Brukernavn som Discourse Fortellerbot skal ignorere"
     discourse_narrative_bot_disable_public_replies: "Deaktiver åpne svar fra Discourse Fortellerbot"

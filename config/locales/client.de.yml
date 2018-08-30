@@ -117,7 +117,7 @@ de:
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     action_codes:
-      public_topic: "hat das Thema %{when} öffentlich gemacht"
+      public_topic: "hat das Thema öffentlich gemacht, %{when}"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt %{when}"
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
@@ -125,6 +125,7 @@ de:
       user_left: "%{who} hat sich selbst von dieser Nachricht entfernt %{when}"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
+      autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
       autoclosed:
         enabled: 'geschlossen, %{when}'
         disabled: 'geöffnet, %{when}'
@@ -194,7 +195,7 @@ de:
     guidelines: "Richtlinien"
     privacy_policy: "Datenschutzrichtlinie"
     privacy: "Datenschutz"
-    terms_of_service: "Nutzungsbedingungen"
+    tos: "Nutzungsbedingungen"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop Ansicht"
     you: "Du"
@@ -248,6 +249,9 @@ de:
       last_read: "Das ist der letzte Beitrag, den du gelesen hast. Klicke, um ein Lesezeichen zu setzen."
       remove: "Lesezeichen entfernen"
       confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest?"
+    drafts:
+      resume: "Fortsetzen"
+      remove: "Entfernen"
     topic_count_latest:
       one: "Zeige {{count}} neues oder aktualisiertes Thema"
       other: "Zeige {{count}} neue oder aktualisierte Themen"
@@ -511,6 +515,7 @@ de:
       topic_stat_sentence:
         one: "1 neues Thema seit 1 %{unit}."
         other: "%{count} neue Themen seit 1 %{unit}."
+      more: "(%{count}mehr) …"
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -994,8 +999,7 @@ de:
       hide_session: "Erinnere mich morgen"
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
-      intro: "Hallo! :heart_eyes: Es sieht so aus, als würde dir die Diskussion gefallen. Du hast aber noch kein Benutzerkonto."
-      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
+      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description: "Es gibt <b>{{replyCount}}</b> Antworten."
@@ -1009,7 +1013,6 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
-      invite: "Andere einladen…"
       leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
@@ -2331,6 +2334,7 @@ de:
         bookmarks: '<b>g</b>, <b>b</b> Lesezeichen'
         profile: '<b>g</b>, <b>p</b> Profil'
         messages: '<b>g</b>, <b>m</b> Nachrichten'
+        drafts: '<b>g</b>, <b>d</b> Entwürfe'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Gehe zu Beitrag #'
@@ -2957,7 +2961,6 @@ de:
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
           about_theme: "Über das Theme"
           license: "Lizenz"
-          component_of: "Theme ist eine Komponente von:"
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
           updating: "Wird aktualisiert..."

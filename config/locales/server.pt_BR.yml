@@ -1090,7 +1090,6 @@ pt_BR:
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
     enable_personal_messages: "Permitir que o nível de confiança 1 (configurável por meio do nível mínimo de confiança para enviar mensagens) os usuários criem mensagens e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, não importa o quê."
     enable_system_message_replies: "Permite que os usuários respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
-    enable_personal_email_messages: "Permitir que o nível de confiança 4 (configurável por meio do nível mínimo de confiança para enviar mensagens) os usuários enviem mensagens de email pessoais. Note que a equipe sempre pode enviar mensagens, não importa o quê."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
@@ -1306,7 +1305,6 @@ pt_BR:
     min_trust_to_edit_post: "O nível mínimo de confiança requerido para editar posts. "
     min_trust_to_allow_self_wiki: "O nível de confiança mínimo necessário para criar o próprio wiki do usuário."
     min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar novas mensagens pessoais."
-    min_trust_to_send_email_messages: "O nível de confiança mínimo necessário para enviar novas mensagens pessoais por e-mail (para usuários em estágio)."
     min_trust_to_flag_posts: "O nível de confiança mínimo necessário para sinalizar postagens"
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
     min_trust_to_post_images: "O nível de confiança mínimo necessário para incluir imagens em uma postagem"
@@ -2246,10 +2244,6 @@ pt_BR:
     email_reject_old_destination:
       title: "E-mail Rejeitado por Destino Antigo"
       subject_template: "[%{email_prefix}] Problema de e-mail: você está tentando responder a uma notificação antiga"
-      text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
-
-        Por motivos de segurança, aceitamos apenas respostas a notificações originais por 90 dias. Por favor [visite o tópico](%{short_url}) para continuar a conversa.
     email_reject_topic_not_found:
       title: "E-mail Rejeitado por Tópico Não Encontrado"
       subject_template: "[%{email_prefix}] Problema de e-mail - Tópico não encontrado"
@@ -2797,7 +2791,6 @@ pt_BR:
     sender_message_blank: "mensagem está em branco"
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
-    sender_text_body_blank: "o corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
     light: "Esquema de Luz"

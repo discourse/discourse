@@ -124,7 +124,6 @@ te:
     guidelines: "మార్గదర్శకాలు"
     privacy_policy: "అంతరంగికతా విధానం"
     privacy: "అంతరంగికత"
-    terms_of_service: "సేవా నిబంధనలు "
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
     you: "మీరు"
@@ -508,8 +507,6 @@ te:
       disabled_description: "ఈ విషయంలోని తొలగించిన టపాలు చూపుతున్నాము."
       enable: "తొలగించిన టపాలు దాయు"
       disable: "తొలగించిన టపాలు చూపు"
-    private_message_info:
-      invite: "ఇతరులను ఆహ్వానించు"
     email: 'ఈమెయిల్'
     username: 'వాడుకరి పేరు'
     last_seen: 'చూసిన'
