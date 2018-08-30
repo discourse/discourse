@@ -1,8 +1,8 @@
 # name: <%= name %>
-# about: AWESOME_PLUGIN
+# about:
 # version: 0.1
-# authors: <%= @options['author'] %>
-# url: https://github.com/<%= @options['author'] %>
+# authors: <%= @github_username %>
+# url: https://github.com/<%= @github_username %>
 
 <% if @options["stylesheet"] %>
 register_asset "stylesheets/common/<%= dasherized_name %>.scss"

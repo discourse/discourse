@@ -1,11 +1,12 @@
 require 'rails/generators/named_base'
 
 class PluginGenerator < Rails::Generators::NamedBase
+  attr_writer :github_username
+
   desc 'This generator creates a Discourse plugin skeleton'
 
   source_root File.expand_path('templates', __dir__)
 
-  class_option :author, type: :string, desc: "Plugin author", required: true
   class_option :stylesheet, type: :boolean, desc: "Generate Stylesheet", default: true
   class_option :javascript, type: :boolean, desc: "Generate Javascript initializer", default: true
   class_option :scheduled_job, type: :boolean, desc: "Generate scheduled job", default: false
@@ -18,14 +19,20 @@ class PluginGenerator < Rails::Generators::NamedBase
   end
 
   def create_readme_file
+    ensure_github_username
+
     template 'README.md.erb', File.join('plugins', dasherized_name, "README.md")
   end
 
   def create_license_file
+    ensure_github_username
+
     template 'LICENSE.erb', File.join('plugins', dasherized_name, "LICENSE")
   end
 
   def create_plugin_file
+    ensure_github_username
+
     template 'plugin.rb.erb', File.join('plugins', dasherized_name, "plugin.rb")
   end
 
@@ -47,6 +54,10 @@ class PluginGenerator < Rails::Generators::NamedBase
     unless File.readlines(".gitignore").grep(/#{plugin_entry}/).size > 0
       open('.gitignore', 'a') { |f| f.puts "\n#{plugin_entry}" }
     end
+  end
+
+  def ensure_github_username
+    @github_username ||= ask("Github username?")
   end
 
   def underscored_name
