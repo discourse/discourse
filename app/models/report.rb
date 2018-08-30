@@ -3,14 +3,14 @@ require_dependency 'topic_subtype'
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 2
+  SCHEMA_VERSION = 3
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :category_id, :group_id, :labels, :async,
                 :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error
+                :dates_filtering, :error, :primary_color, :secondary_color
 
   def self.default_days
     30
@@ -29,6 +29,8 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
+    @primary_color = rgba_color(ColorScheme.hex_for_name('tertiary'))
+    @secondary_color = rgba_color(ColorScheme.hex_for_name('tertiary'), 0.1)
   end
 
   def self.cache_key(report)
@@ -87,6 +89,8 @@ class Report
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
+      primary_color: self.primary_color,
+      secondary_color: self.secondary_color,
       labels: labels || [
         {
           type: :date,
@@ -1166,5 +1170,21 @@ class Report
 
       report.data << revision
     end
+  end
+
+  private
+
+  def hex_to_rgbs(hex_color)
+    hex_color = hex_color.gsub('#', '')
+    rgbs = hex_color.scan(/../)
+    rgbs
+      .map! { |color| color.hex }
+      .map! { |rgb| rgb.to_i }
+  end
+
+  def rgba_color(hex, opacity = 1)
+    rgbs = hex_to_rgbs(hex)
+
+    "rgba(#{rgbs.join(',')},#{opacity})"
   end
 end
