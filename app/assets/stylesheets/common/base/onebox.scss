@@ -247,6 +247,19 @@ aside.onebox {
     // instagram fixes
     .instagram-images {
       clear: both;
+      position: relative;
+
+      .instagram-video-icon {
+        &:before {
+          font-family: FontAwesome;
+          font-size: $font-up-5;
+          content: "\f144";
+        }
+        bottom: 10px;
+        right: 10px;
+        position: absolute;
+        color: white;
+      }
 
       .instagram-image {
         padding: 5px 5px 5px 5px;
