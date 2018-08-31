@@ -40,9 +40,12 @@ describe ActiveRecord::ConnectionHandling do
     postgresql_fallback_handler.setup!
     Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
     ActiveRecord::Base.unstub(:postgresql_connection)
-    ActiveRecord::Base.establish_connection
 
-    (Thread.list - @threads).each { |thread| thread.join(5) }
+    (Thread.list - @threads).each do |thread|
+      raise "Thread still running" unless thread.join(5)
+    end
+
+    ActiveRecord::Base.establish_connection
   end
 
   describe "#postgresql_fallback_connection" do
