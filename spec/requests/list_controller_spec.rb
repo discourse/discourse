@@ -27,6 +27,12 @@ RSpec.describe ListController do
       get "/latest?max_posts=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
 
+      get "/latest?page=-1"
+      expect(response.status).to eq(400)
+
+      get "/latest?page=0"
+      expect(response.status).to eq(400)
+
       get "/latest?page=2147483648"
       expect(response.status).to eq(400)
 
@@ -47,12 +53,10 @@ RSpec.describe ListController do
       get "/latest.json?min_posts=0"
       expect(response.status).to eq(200)
 
-      get "/latest.json?page=2147483647"
+      get "/latest?page=1"
       expect(response.status).to eq(200)
-    end
 
-    it "doesn't throw an error with page params as an array" do
-      get "/#{Discourse.anonymous_filters[1]}", params: { page: ['7'] }
+      get "/latest.json?page=2147483647"
       expect(response.status).to eq(200)
     end
 
