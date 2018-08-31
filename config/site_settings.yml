@@ -333,7 +333,7 @@ login:
   verbose_sso_logging: false
   verbose_auth_token_logging:
     hidden: true
-    default: false
+    default: true
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
