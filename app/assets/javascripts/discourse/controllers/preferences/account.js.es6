@@ -197,12 +197,14 @@ export default Ember.Controller.extend(
       },
 
       toggleToken(token) {
-        Ember.set(token, 'visible', !token.visible);
+        Ember.set(token, "visible", !token.visible);
       },
 
       revokeAuthToken() {
         ajax(
-          userPath(`${this.get('model.username_lower')}/preferences/revoke-auth-token`),
+          userPath(
+            `${this.get("model.username_lower")}/preferences/revoke-auth-token`
+          ),
           { type: "POST" }
         );
       },
