@@ -86,8 +86,9 @@ class Stylesheet::Manager
     themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
     themes << nil
     themes.each do |id, name|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
+      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
         theme_id = id || SiteSetting.default_theme_id
+        next if target =~ THEME_REGEX && theme_id == -1
         cache_key = "#{target}_#{theme_id}"
 
         STDERR.puts "precompile target: #{target} #{name}"
