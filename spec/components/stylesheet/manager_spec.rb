@@ -157,4 +157,65 @@ describe Stylesheet::Manager do
       expect(digest3).to_not eq(digest1)
     end
   end
+
+  # this test takes too long, we don't run it by default
+  describe ".precompile_css", if: ENV["RUN_LONG_TESTS"] == "1" do
+    before do
+      class << STDERR
+        alias_method :orig_write, :write
+        def write(x)
+        end
+      end
+    end
+
+    after do
+      class << STDERR
+        def write(x)
+          orig_write(x)
+        end
+      end
+      FileUtils.rm_rf("tmp/stylesheet-cache")
+    end
+
+    it "correctly generates precompiled CSS" do
+      scheme1 = ColorScheme.create!(name: "scheme1")
+      scheme2 = ColorScheme.create!(name: "scheme2")
+      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
+      theme_targets = [:desktop_theme, :mobile_theme]
+
+      Theme.update_all(user_selectable: false)
+      user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)
+      default_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme2)
+      default_theme.set_default!
+
+      StylesheetCache.destroy_all
+
+      Stylesheet::Manager.precompile_css
+      results = StylesheetCache.pluck(:target)
+
+      expect(results.size).to eq(14) # 2 themes x 7 targets
+      core_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
+      end
+
+      theme_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
+      end
+
+      Theme.clear_default!
+      StylesheetCache.destroy_all
+
+      Stylesheet::Manager.precompile_css
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(19) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets)
+
+      core_targets.each do |tar|
+        expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)
+      end
+
+      theme_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
+      end
+    end
+  end
 end
