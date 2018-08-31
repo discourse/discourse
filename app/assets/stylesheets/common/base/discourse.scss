@@ -560,43 +560,71 @@ select {
     display: inline-block;
   }
 
-  .row {
-    margin: 5px 0px;
+  .header {
+    display: flex;
+    justify-content: space-between;
   }
 
-  .muted {
-    color: #888;
-  }
+  .table .log-header {
+    background: $primary-very-low;
 
-  .perf-auth-token {
-    background: #f9f9f9;
-    padding: 5px;
-    margin-bottom: 10px;
-  }
-
-  .auth-token-summary {
-    padding: 0px 10px;
-
-    .auth-token-label,
-    .auth-token-value {
-      font-size: 1.2em;
-      margin-top: 5px;
+    th {
+      white-space: nowrap;
     }
   }
 
-  .auth-token-details {
-    background: #fff;
-    padding: 5px 10px;
-    margin: 10px 5px 5px 5px;
-
-    .auth-token-label {
-      color: #888;
+  .table .log-row {
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
-  .auth-token-label,
-  .auth-token-value {
-    float: left;
-    width: 50%;
+  .table {
+    table-layout: fixed;
+  }
+
+  .table.device-logs {
+    .device {
+      text-align: left;
+      width: 200px;
+    }
+
+    .ip {
+      text-align: left;
+    }
+
+    .first-seen-at, .last-seen-at {
+      text-align: right;
+      width: 180px;
+    }
+
+    .log-row {
+      .device .device-title {
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  .table.auth-logs {
+    .os {
+      width: 200px;
+      text-align: left;
+    }
+
+    .ip {
+      text-align: left;
+    }
+
+    .created-at {
+      text-align: right;
+    }
+
+    .log-row {
+      .os .os-title {
+        margin-left: 0.5em;
+      }
+    }
   }
 }
