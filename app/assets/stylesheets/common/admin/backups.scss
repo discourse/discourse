@@ -17,18 +17,6 @@ $rollback-darker: darken($rollback, 20%) !default;
   }
 }
 
-.backups {
-  .admin-controls {
-    .backup-operations {
-      margin-left: auto;
-      button {
-        display: flex;
-        margin-right: 20px;
-      }
-    }
-  }
-}
-
 .admin-backups {
   table {
     @media screen and (min-width: 550px) {
