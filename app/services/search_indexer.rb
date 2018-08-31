@@ -176,14 +176,16 @@ class SearchIndexer
 
     attr_reader :scrubbed
 
-    def initialize
+    def initialize(strip_diacritics: false)
       @scrubbed = +""
+      # for now we are disabling this per: https://meta.discourse.org/t/discourse-should-ignore-if-a-character-is-accented-when-doing-a-search/90198/16?u=sam
+      @strip_diacritics = strip_diacritics
     end
 
-    def self.scrub(html)
+    def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
-      me = new
+      me = new(strip_diacritics: strip_diacritics)
       Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
       me.scrubbed
     end
@@ -201,7 +203,8 @@ class SearchIndexer
     DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
     def characters(str)
-      scrubbed << " #{HtmlScrubber.strip_diacritics(str)} "
+      str = HtmlScrubber.strip_diacritics(str) if @strip_diacritics
+      scrubbed << " #{str} "
     end
   end
 end
