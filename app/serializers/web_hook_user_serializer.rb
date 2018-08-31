@@ -24,6 +24,8 @@ class WebHookUserSerializer < UserSerializer
     can_change_bio
     user_api_keys
     group_users
+    user_auth_tokens
+    user_auth_token_logs
   }.each do |attr|
     define_method("include_#{attr}?") do
       false
