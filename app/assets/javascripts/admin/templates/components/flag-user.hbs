@@ -7,7 +7,7 @@
       {{#link-to 'adminUser' user.id user.username class="flag-user-username"}}
         {{user.username}}
       {{/link-to}}
-      <div class='flag-user-date'>
+      <div class='flag-user-date' title='{{raw-date date}}'>
         {{format-age date}}
       </div>
     </div>
