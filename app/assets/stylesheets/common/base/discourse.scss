@@ -577,7 +577,8 @@ select {
   .auth-token-summary {
     padding: 0px 10px;
 
-    .auth-token-label, .auth-token-value {
+    .auth-token-label,
+    .auth-token-value {
       font-size: 1.2em;
       margin-top: 5px;
     }
@@ -593,7 +594,8 @@ select {
     }
   }
 
-  .auth-token-label, .auth-token-value {
+  .auth-token-label,
+  .auth-token-value {
     float: left;
     width: 50%;
   }
