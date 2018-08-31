@@ -123,6 +123,31 @@ class UserAvatar < ActiveRecord::Base
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
+  def self.ensure_consistency!
+    DB.exec <<~SQL
+      UPDATE user_avatars
+      SET gravatar_upload_id = NULL
+      WHERE gravatar_upload_id IN (
+        SELECT u1.gravatar_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.gravatar_upload_id = up.id
+        WHERE u1.gravatar_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE user_avatars
+      SET custom_upload_id = NULL
+      WHERE custom_upload_id IN (
+        SELECT u1.custom_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.custom_upload_id = up.id
+        WHERE u1.custom_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+  end
 end
 
 # == Schema Information

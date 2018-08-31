@@ -17,6 +17,8 @@ module Jobs
       UserOption.ensure_consistency!
       Tag.ensure_consistency!
       CategoryTagStat.ensure_consistency!
+      User.ensure_consistency!
+      UserAvatar.ensure_consistency!
     end
   end
 end

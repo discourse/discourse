@@ -24,6 +24,12 @@ class Upload < ActiveRecord::Base
 
   validates_with ::Validators::UploadValidator
 
+  after_destroy do
+    User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
+    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
+    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+  end
+
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
