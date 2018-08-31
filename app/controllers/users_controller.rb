@@ -1102,7 +1102,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    UserAuthToken.where(user_id: user.id).destroy_all
+    UserAuthToken.where(user_id: user.id).each(&:destroy!)
 
     MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 

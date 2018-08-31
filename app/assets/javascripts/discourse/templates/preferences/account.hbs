@@ -164,16 +164,16 @@
 {{#if canCheckEmails}}
   <div class="control-group pref-auth-tokens">
     <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
-    <a {{action "revokeAuthToken"}}>{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.logout'}}</a>
+    <a {{action "revokeAuthToken"}} class="pull-right">{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.logout'}}</a>
     {{#each model.user_auth_tokens as |token|}}
-      <div class="perf-auth-token">
+      <a class="perf-auth-token" {{action "toggleToken" token}}>
         <div class="row auth-token-summary">
           <div class="auth-token-label">
             {{d-icon token.icon}} {{token.device_name}}
             {{#if token.visible}}
-              <a {{action "toggleToken" token}}>{{d-icon "angle-double-up"}}</a>
+              {{d-icon "angle-double-up"}}
             {{else}}
-              <a {{action "toggleToken" token}}>{{d-icon "angle-double-down"}}</a>
+              {{d-icon "angle-double-down"}}
             {{/if}}
           </div>
           <div class="auth-token-value">
@@ -200,7 +200,7 @@
             </div>
           </div>
         {{/if}}
-      </div>
+      </a>
     {{/each}}
   </div>
 {{/if}}
