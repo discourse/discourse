@@ -39,7 +39,7 @@ class UserAuthTokenSerializer < ApplicationSerializer
       'Linux'
     when /Windows/i
       'Windows'
-    when /macOS/i
+    when /Macintosh|Mac OS X|macOS/i
       'macOS'
     when /iPhone|iPad|iPod/i
       'iOS'
@@ -56,7 +56,7 @@ class UserAuthTokenSerializer < ApplicationSerializer
       I18n.t('user_auth_tokens.devices.linux')
     when /Windows/i
       I18n.t('user_auth_tokens.devices.windows')
-    when /macOS/i
+    when /Macintosh|Mac OS X|macOS/i
       I18n.t('user_auth_tokens.devices.mac')
     when /iPhone/i
       I18n.t('user_auth_tokens.devices.iphone')
