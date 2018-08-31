@@ -4,13 +4,14 @@ class ThemeStore::GitImporter
 
   attr_reader :url
 
-  def initialize(url, private_key: nil)
+  def initialize(url, private_key: nil, branch: 'master')
     @url = url
     if @url.start_with?("https://github.com") && !@url.end_with?(".git")
       @url += ".git"
     end
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
+    @branch = branch
   end
 
   def import!
@@ -65,7 +66,7 @@ class ThemeStore::GitImporter
   protected
 
   def import_public!
-    Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
+    Discourse::Utils.execute_command("git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
   end
 
   def import_private!
@@ -79,7 +80,7 @@ class ThemeStore::GitImporter
 
     Discourse::Utils.execute_command({
       'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
-    }, "git", "clone", @url, @temp_folder)
+    }, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
   ensure
     FileUtils.rm_rf ssh_folder
   end

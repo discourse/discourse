@@ -44,7 +44,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         options.data.append("theme", $("#file-input")[0].files[0]);
       } else {
         options.data = {
-          remote: this.get("uploadUrl")
+          remote: this.get("uploadUrl"),
+          branch: this.get("branch")
         };
 
         if (this.get("privateChecked")) {

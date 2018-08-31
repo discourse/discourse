@@ -35,8 +35,8 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil)
-    importer = ThemeStore::GitImporter.new(url, private_key: private_key)
+  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: 'master')
+    importer = ThemeStore::GitImporter.new(url, private_key: private_key, branch: branch)
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
@@ -47,6 +47,7 @@ class RemoteTheme < ActiveRecord::Base
     theme.remote_theme = remote_theme
 
     remote_theme.private_key = private_key
+    remote_theme.branch = branch
     remote_theme.remote_url = importer.url
     remote_theme.update_from_remote(importer)
 
@@ -68,7 +69,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
-    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
     importer.import!
     self.updated_at = Time.zone.now
     self.remote_version, self.commits_behind = importer.commits_since(local_version)
@@ -80,7 +81,7 @@ class RemoteTheme < ActiveRecord::Base
 
     unless importer
       cleanup = true
-      importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
+      importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
       importer.import!
     end
 
@@ -217,6 +218,7 @@ end
 #  id                :integer          not null, primary key
 #  remote_url        :string           not null
 #  remote_version    :string
+#  branch            :string
 #  local_version     :string
 #  about_url         :string
 #  license_url       :string
