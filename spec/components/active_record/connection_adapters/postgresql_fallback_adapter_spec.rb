@@ -42,7 +42,9 @@ describe ActiveRecord::ConnectionHandling do
     ActiveRecord::Base.unstub(:postgresql_connection)
 
     (Thread.list - @threads).each do |thread|
-      raise "Thread still running" unless thread.join(5)
+      unless thread.join(5)
+        raise "Thread still running: #{thread}"
+      end
     end
 
     ActiveRecord::Base.establish_connection
