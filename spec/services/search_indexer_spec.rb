@@ -32,7 +32,7 @@ describe SearchIndexer do
   it 'removes diacritics' do
     html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
 
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = SearchIndexer::HtmlScrubber.scrub(html, strip_diacritics: true)
 
     expect(scrubbed).to eq(" HELLO Heterogeneite Здравствуите هتاف للترحيب 你好 ")
   end

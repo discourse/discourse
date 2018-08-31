@@ -828,10 +828,9 @@ class Search
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
-    # we must strip diacritics otherwise we will get no matches
     @ts_query_cache ||= {}
     @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
-      Search.ts_query(term: SearchIndexer::HtmlScrubber.strip_diacritics(@term), ts_config: ts_config, weight_filter: weight_filter)
+      Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
   end
 
   def wrap_rows(query)
