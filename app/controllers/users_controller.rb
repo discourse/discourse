@@ -13,7 +13,8 @@ class UsersController < ApplicationController
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
-    :update_second_factor, :create_second_factor_backup, :select_avatar
+    :update_second_factor, :create_second_factor_backup, :select_avatar,
+    :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -1095,6 +1096,19 @@ class UsersController < ApplicationController
         }
       end
     end
+  end
+
+  def revoke_auth_token
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    UserAuthToken.where(user_id: user.id).destroy_all
+
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+
+    render json: {
+      success: true
+    }
   end
 
   private
