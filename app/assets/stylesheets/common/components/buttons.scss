@@ -88,13 +88,14 @@
   }
   &:hover,
   &.btn-hover {
-    color: #fff;
-    background: dark-light-choose($tertiary, $tertiary);
+    background: scale-color($tertiary, $lightness: -20%);
   }
   &:active,
   &.btn-active {
-    @include linear-gradient($tertiary, $tertiary);
-    color: $secondary;
+    @include linear-gradient(
+      scale-color($tertiary, $lightness: -20%),
+      $tertiary
+    );
   }
   &[disabled],
   &.disabled {
