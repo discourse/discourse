@@ -219,6 +219,9 @@
         .avatar-flair {
           bottom: 8px;
           right: 2px;
+          .fa {
+            font-size: $font-0;
+          }
         }
       }
     }
