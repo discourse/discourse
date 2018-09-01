@@ -84,7 +84,7 @@ export default Ember.Mixin.create({
     this.$().on("keydown.setting-enter", ".input-setting-string", function(e) {
       if (e.keyCode === 13) {
         // enter key
-        self._save();
+        self.send("save");
       }
     });
   }.on("didInsertElement"),
@@ -122,7 +122,7 @@ export default Ember.Mixin.create({
 
     resetDefault() {
       this.set("buffered.value", this.get("setting.default"));
-      this._save();
+      this.send("save");
     },
 
     toggleSecret() {
