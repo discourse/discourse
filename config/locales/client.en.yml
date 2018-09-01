@@ -871,6 +871,7 @@ en:
         first_seen: "First Seen"
         last_seen: "Last Seen"
         operating_system: "Operating System"
+        device: "Device"
         location: "Location"
         action: "Action"
         login: "Log in"

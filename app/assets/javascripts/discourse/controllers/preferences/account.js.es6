@@ -196,10 +196,6 @@ export default Ember.Controller.extend(
           });
       },
 
-      toggleToken(token) {
-        Ember.set(token, "visible", !token.visible);
-      },
-
       revokeAuthToken() {
         ajax(
           userPath(

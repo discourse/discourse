@@ -155,3 +155,32 @@ blockquote {
 h1#site-text-logo {
   margin: 0 0 0 10px;
 }
+
+
+.pref-auth-tokens {
+  .table.device-logs, .table.auth-logs {
+    table-layout: auto;
+    .device, .ip, .os, .first-seen-at, .last-seen-at {
+      text-align: left;
+      width: auto;
+    }
+
+    .log-header .device .title, .log-header .os .title {
+      display: none;
+    }
+
+    .ip {
+      max-width: 80px;
+    }
+
+    .device {
+      max-width: auto;
+    }
+
+    .device, .os {
+      .os-title, .device-title {
+        display: none;
+      }
+    }
+  }
+}

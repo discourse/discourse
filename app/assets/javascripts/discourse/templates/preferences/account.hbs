@@ -163,45 +163,34 @@
 
 {{#if canCheckEmails}}
   <div class="control-group pref-auth-tokens">
-    <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
-    <a {{action "revokeAuthToken"}}>{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.logout'}}</a>
-    {{#each model.user_auth_tokens as |token|}}
-      <div class="perf-auth-token">
-        <div class="row auth-token-summary">
-          <div class="auth-token-label">
-            {{d-icon token.icon}} {{token.device_name}}
-            {{#if token.visible}}
-              <a {{action "toggleToken" token}}>{{d-icon "angle-double-up"}}</a>
-            {{else}}
-              <a {{action "toggleToken" token}}>{{d-icon "angle-double-down"}}</a>
-            {{/if}}
-          </div>
-          <div class="auth-token-value">
-            {{token.client_ip}} <span class="muted">&mdash; {{format-date token.seen_at}}</span>
-          </div>
-        </div>
-        {{#if token.visible}}
-          <div class="auth-token-details">
-            <div class="row">
-              <div class="auth-token-label">{{i18n 'user.auth_tokens.ip_address'}}</div>
-              <div class="auth-token-value">{{token.client_ip}}</div>
-            </div>
-            <div class="row">
-              <div class="auth-token-label">{{i18n 'user.auth_tokens.first_seen'}}</div>
-              <div class="auth-token-value">{{format-date token.created_at}}</div>
-            </div>
-            <div class="row">
-              <div class="auth-token-label">{{i18n 'user.auth_tokens.last_seen'}}</div>
-              <div class="auth-token-value">{{format-date token.seen_at}}</div>
-            </div>
-            <div class="row">
-              <div class="auth-token-label">{{i18n 'user.auth_tokens.operating_system'}}</div>
-              <div class="auth-token-value">{{token.os}}</div>
-            </div>
-          </div>
-        {{/if}}
-      </div>
-    {{/each}}
+    <div class="header">
+      <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
+      <a {{action "revokeAuthToken"}} class="logout-all">
+        {{d-icon "sign-out"}}
+        {{i18n 'user.auth_tokens.logout'}}
+      </a>
+    </div>
+
+    <table class="table device-logs">
+      <tr class="log-header">
+        <th class="device"><span class="title">{{i18n 'user.auth_tokens.device'}}</span></th>
+        <th class="ip">{{i18n 'user.auth_tokens.ip_address'}}</th>
+        <th class="last-seen-at">{{i18n 'user.auth_tokens.last_seen'}}</th>
+        <th class="first-seen-at">{{i18n 'user.auth_tokens.first_seen'}}</th>
+      </tr>
+
+      {{#each model.user_auth_tokens as |token|}}
+        <tr class="log-row">
+          <td class="device">
+            {{d-icon token.icon class="device-icon"}}
+            <span class="device-title">{{token.device_name}}</span>
+          </td>
+          <td class="ip">{{token.client_ip}}</td>
+          <td class="last-seen-at">{{format-date token.seen_at}}</td>
+          <td class="first-seen-at">{{format-date token.created_at}}</td>
+        </tr>
+      {{/each}}
+    </table>
   </div>
 {{/if}}
 
@@ -210,17 +199,20 @@
     <div class="control-group pref-auth-tokens">
       <label class="control-label">{{i18n 'user.auth_tokens.title_logs'}}</label>
       {{#if model.user_auth_token_logs}}
-        <table class="table">
-          <tr>
-            <th>{{i18n 'user.auth_tokens.ip_address'}}</th>
-            <th>{{i18n 'user.auth_tokens.created'}}</th>
-            <th>{{i18n 'user.auth_tokens.operating_system'}}</th>
+        <table class="table auth-logs">
+          <tr class="log-header">
+            <th class="os"><span class="title">{{i18n 'user.auth_tokens.operating_system'}}</span></th>
+            <th class="ip">{{i18n 'user.auth_tokens.ip_address'}}</th>
+            <th class="created-at">{{i18n 'user.auth_tokens.created'}}</th>
           </tr>
           {{#each model.user_auth_token_logs as |token|}}
-            <tr>
-              <td>{{token.client_ip}}</td>
-              <td>{{format-date token.created_at}}</td>
-              <td>{{d-icon token.icon}} {{token.os}}</td>
+            <tr class="log-row">
+              <td class="os">
+                {{d-icon token.icon class="os-icon"}}
+                <span class="os-title">{{token.os}}</span>
+              </td>
+              <td class="ip">{{token.client_ip}}</td>
+              <td class="created-at">{{format-date token.created_at}}</td>
             </tr>
           {{/each}}
         </table>
