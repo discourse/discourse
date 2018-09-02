@@ -12,8 +12,8 @@ export default {
       window.location.search.indexOf("?preview_theme_id=") === 0
     ) {
       // force preview theme id to always be carried along
-      const themeId = window.location.search.slice(19).split("&")[0];
-      if (themeId.match(/^[a-z0-9-]+$/i)) {
+      const themeId = parseInt(window.location.search.slice(18).split("&")[0]);
+      if (!isNaN(themeId)) {
         const patchState = function(f) {
           const patched = window.history[f];
 
