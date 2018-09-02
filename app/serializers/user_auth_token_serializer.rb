@@ -35,14 +35,14 @@ class UserAuthTokenSerializer < ApplicationSerializer
     case object.user_agent
     when /Android/i
       'Android'
+    when /iPhone|iPad|iPod/i
+      'iOS'
+    when /Macintosh/i
+      'macOS'
     when /Linux/i
       'Linux'
     when /Windows/i
       'Windows'
-    when /Macintosh|Mac OS X|macOS/i
-      'macOS'
-    when /iPhone|iPad|iPod/i
-      'iOS'
     else
       I18n.t('staff_action_logs.unknown')
     end
@@ -52,20 +52,20 @@ class UserAuthTokenSerializer < ApplicationSerializer
     case object.user_agent
     when /Android/i
       I18n.t('user_auth_tokens.devices.android')
-    when /Linux/i
-      I18n.t('user_auth_tokens.devices.linux')
-    when /Windows/i
-      I18n.t('user_auth_tokens.devices.windows')
-    when /Macintosh|Mac OS X|macOS/i
-      I18n.t('user_auth_tokens.devices.mac')
-    when /iPhone/i
-      I18n.t('user_auth_tokens.devices.iphone')
     when /iPad/i
       I18n.t('user_auth_tokens.devices.ipad')
+    when /iPhone/i
+      I18n.t('user_auth_tokens.devices.iphone')
     when /iPod/i
       I18n.t('user_auth_tokens.devices.ipod')
     when /Mobile/i
       I18n.t('user_auth_tokens.devices.mobile')
+    when /Macintosh/i
+      I18n.t('user_auth_tokens.devices.mac')
+    when /Linux/i
+      I18n.t('user_auth_tokens.devices.linux')
+    when /Windows/i
+      I18n.t('user_auth_tokens.devices.windows')
     else
       I18n.t('user_auth_tokens.devices.unknown')
     end
@@ -73,14 +73,14 @@ class UserAuthTokenSerializer < ApplicationSerializer
 
   def icon
     case os
+    when 'Android'
+      'android'
+    when 'macOS', 'iOS'
+      'apple'
     when 'Linux'
       'linux'
     when 'Windows'
       'windows'
-    when 'macOS', 'iOS'
-      'apple'
-    when 'Android'
-      'android'
     else
       'question'
     end

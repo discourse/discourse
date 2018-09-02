@@ -3167,4 +3167,24 @@ describe UsersController do
     end
 
   end
+
+  describe '#revoke_auth_token' do
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      it 'logs user out' do
+        expect(user.user_auth_tokens.count).to eq(1)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json"
+
+        expect(response.status).to eq(200)
+        expect(user.user_auth_tokens.count).to eq(0)
+      end
+
+    end
+
+  end
 end
