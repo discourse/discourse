@@ -116,7 +116,9 @@ describe I18n::Backend::DiscourseI18n do
       TranslationOverride.upsert!('en', 'wat', 'Overwritten value')
       expect(I18n.search('wat', backend: backend)).to eq('wat' => 'Overwritten value')
       expect(I18n.search('Overwritten', backend: backend)).to eq('wat' => 'Overwritten value')
-      expect(I18n.search('Hello', backend: backend)).to eq({})
+
+      TranslationOverride.upsert!('en', 'wat', 'Overwritten with (parentheses)')
+      expect(I18n.search('Overwritten with (', backend: backend)).to eq('wat' => 'Overwritten with (parentheses)')
     end
 
     it 'supports disabling' do
