@@ -74,7 +74,7 @@ Migration::ColumnDropper.drop(
   }
 )
 
-VIEW_NAME = "badge_posts".freeze
+badge_posts = "badge_posts".freeze
 
 def badge_posts_view_exists?
   sql = <<~SQL
@@ -82,7 +82,7 @@ def badge_posts_view_exists?
   FROM pg_catalog.pg_views
   WHERE schemaname
   IN ('public')
-  AND viewname = '#{VIEW_NAME}';
+  AND viewname = '#{badge_posts}';
   SQL
 
   DB.exec(sql) == 1
@@ -97,12 +97,12 @@ Migration::ColumnDropper.drop(
   on_drop: ->() {
     STDERR.puts "Removing superflous post columns!"
 
-    DB.exec("DROP VIEW #{VIEW_NAME}")
-    raise "Failed to drop '#{VIEW_NAME}' view" if badge_posts_view_exists?
+    DB.exec("DROP VIEW #{badge_posts}")
+    raise "Failed to drop '#{badge_posts}' view" if badge_posts_view_exists?
   },
   after_drop: -> () {
     sql = <<~SQL
-    CREATE VIEW #{VIEW_NAME} AS
+    CREATE VIEW #{badge_posts} AS
     SELECT p.*
     FROM posts p
     JOIN topics t ON t.id = p.topic_id
@@ -116,7 +116,7 @@ Migration::ColumnDropper.drop(
     SQL
 
     DB.exec(sql)
-    raise "Failed to create '#{VIEW_NAME}' view" unless badge_posts_view_exists?
+    raise "Failed to create '#{badge_posts}' view" unless badge_posts_view_exists?
   }
 )
 
