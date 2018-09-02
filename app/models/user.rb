@@ -1345,7 +1345,6 @@ end
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime
 #  silenced_till             :datetime
-#  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
 #
 # Indexes
