@@ -596,12 +596,14 @@ module Email
           raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
+        post = Post.with_deleted.find(post_reply_key.post_id)
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,
                      hidden_reason_id: hidden_reason_id,
-                     post: post_reply_key.post,
-                     topic: post_reply_key.post.topic,
+                     post: post,
+                     topic: post&.topic,
                      skip_validations: user.staged?)
       end
     end
@@ -834,13 +836,14 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:post] = nil if options[:post]&.trashed?
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
       else
         raise TopicClosedError if options[:topic].closed?
-        options[:topic_id] = options[:post].try(:topic_id)
-        options[:reply_to_post_number] = options[:post].try(:post_number)
+        options[:topic_id] = options[:topic].id
+        options[:reply_to_post_number] = options[:post]&.post_number
         options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
