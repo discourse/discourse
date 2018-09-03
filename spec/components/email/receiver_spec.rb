@@ -351,6 +351,12 @@ describe Email::Receiver do
       expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
     end
 
+    it "posts a reply to the topic when the post was deleted" do
+      post.update_columns(deleted_at: 1.day.ago)
+      expect { process(:reply_user_matching) }.to change { topic.posts.count }
+      expect(topic.ordered_posts.last.reply_to_post_number).to be_nil
+    end
+
     describe 'Unsubscribing via email' do
       let(:last_email) { ActionMailer::Base.deliveries.last }
 
