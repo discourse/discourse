@@ -24,8 +24,11 @@ describe Jobs::Tl3Promotions do
     run_job
   end
 
-  it "promotes a qualifying tl2 user who has a group_locked_trust_level" do
-    _group_locked_user = Fabricate(:user, trust_level: TrustLevel[2], group_locked_trust_level: TrustLevel[1])
+  it "promotes a qualifying tl2 user who has a group_min_trust_level" do
+    group = Fabricate(:group, grant_trust_level: 1)
+    _group_locked_user = Fabricate(:user, trust_level: TrustLevel[2])
+    group.add(_group_locked_user)
+
     create_qualifying_stats(_group_locked_user)
     TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(true)
     Promotion.any_instance.expects(:change_trust_level!).with(TrustLevel[3], anything).once
@@ -91,10 +94,12 @@ describe Jobs::Tl3Promotions do
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
 
-    it "demotes a user with a group_locked_trust_level of 2" do
+    it "demotes a user with a group_min_trust_level of 2" do
+      group = Fabricate(:group, grant_trust_level: 2)
       user = nil
       freeze_time(4.days.ago) do
-        user = Fabricate(:user, trust_level: TrustLevel[3], group_locked_trust_level: TrustLevel[2])
+        user = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(user)
       end
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
@@ -103,10 +108,12 @@ describe Jobs::Tl3Promotions do
 
     end
 
-    it "doesn't demote user if their group_locked_trust_level is 3" do
+    it "doesn't demote user if their group_min_trust_level is 3" do
+      group = Fabricate(:group, grant_trust_level: 3)
       user = nil
       freeze_time(4.days.ago) do
-        user = Fabricate(:user, trust_level: TrustLevel[3], group_locked_trust_level: TrustLevel[3])
+        user = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(user)
       end
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
