@@ -367,7 +367,6 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
-    params[:page] = params[:page].to_i rescue 1
     params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
