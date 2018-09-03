@@ -1195,6 +1195,25 @@ HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
+
+    it "invalidates the onebox url" do
+      topic = Fabricate(:topic)
+      url = topic.url
+      raw = "Hello #{url}"
+
+      PrettyText.cook(raw)
+
+      topic.title = "Updated: #{topic.title}"
+      topic.save
+
+      cooked = <<~HTML
+        <p>Hello <a href="#{url}">#{topic.title}</a></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).not_to eq(cooked.strip)
+      expect(PrettyText.cook(raw, invalidate_oneboxes: true)).to eq(cooked.strip)
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
   end
 
   describe "image decoding" do
