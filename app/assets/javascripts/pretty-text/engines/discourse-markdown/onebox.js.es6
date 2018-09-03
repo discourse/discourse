@@ -100,7 +100,10 @@ function applyOnebox(state, silent) {
               let options = state.md.options.discourse;
 
               if (options.lookupInlineOnebox) {
-                onebox = options.lookupInlineOnebox(href, options.invalidateOneboxes);
+                onebox = options.lookupInlineOnebox(
+                  href,
+                  options.invalidateOneboxes
+                );
               }
 
               if (onebox && onebox.title) {
