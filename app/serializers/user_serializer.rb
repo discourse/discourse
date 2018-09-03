@@ -196,11 +196,19 @@ class UserSerializer < BasicUserSerializer
   end
 
   def user_auth_tokens
-    ActiveModel::ArraySerializer.new(object.user_auth_tokens.order(:seen_at).reverse_order, each_serializer: UserAuthTokenSerializer)
+    ActiveModel::ArraySerializer.new(
+      object.user_auth_tokens.order(:seen_at).reverse_order,
+      each_serializer: UserAuthTokenSerializer
+    )
   end
 
   def user_auth_token_logs
-    ActiveModel::ArraySerializer.new(object.user_auth_token_logs.where(action: UserAuthToken::USER_ACTIONS).order(:created_at).reverse_order, each_serializer: UserAuthTokenSerializer)
+    ActiveModel::ArraySerializer.new(
+      object.user_auth_token_logs.where(
+        action: UserAuthToken::USER_ACTIONS
+      ).order(:created_at).reverse_order,
+      each_serializer: UserAuthTokenLogSerializer
+    )
   end
 
   def bio_raw
