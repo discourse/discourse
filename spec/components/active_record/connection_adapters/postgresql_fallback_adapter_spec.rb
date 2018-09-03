@@ -43,7 +43,8 @@ describe ActiveRecord::ConnectionHandling do
 
     (Thread.list - @threads).each do |thread|
       unless thread.join(5)
-        raise "Thread still running: #{thread}"
+        puts Thread.list - @threads
+        raise "Threads still running"
       end
     end
 
