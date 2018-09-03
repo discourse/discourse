@@ -40,14 +40,7 @@ describe ActiveRecord::ConnectionHandling do
     postgresql_fallback_handler.setup!
     Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
     ActiveRecord::Base.unstub(:postgresql_connection)
-
-    (Thread.list - @threads).each do |thread|
-      unless thread.join(5)
-        puts Thread.list - @threads
-        raise "Threads still running"
-      end
-    end
-
+    (Thread.list - @threads).each(&:kill)
     ActiveRecord::Base.establish_connection
   end
 
@@ -80,11 +73,6 @@ describe ActiveRecord::ConnectionHandling do
       end
 
       it 'should failover to a replica server' do
-        # erratically fails with: ActiveRecord::ConnectionTimeoutError:
-        # could not obtain a connection from the pool within 5.000 seconds (waited 5.000 seconds); all pooled connections were in use
-        #
-        skip("This test is failing erratically")
-
         RailsMultisite::ConnectionManagement.stubs(:all_dbs).returns(['default', multisite_db])
         postgresql_fallback_handler.expects(:verify_master).at_least(3)
 
@@ -178,8 +166,11 @@ describe ActiveRecord::ConnectionHandling do
   end
 
   def with_multisite_db(dbname)
-    RailsMultisite::ConnectionManagement.expects(:current_db).returns(dbname).at_least_once
-    yield
-    RailsMultisite::ConnectionManagement.unstub(:current_db)
+    begin
+      RailsMultisite::ConnectionManagement.expects(:current_db).returns(dbname).at_least_once
+      yield
+    ensure
+      RailsMultisite::ConnectionManagement.unstub(:current_db)
+    end
   end
 end
