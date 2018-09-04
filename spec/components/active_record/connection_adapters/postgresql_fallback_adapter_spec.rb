@@ -27,6 +27,8 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
+    # TODO: tgxworld will rewrite it without stubs
+    skip("Skip causes our build to be unstable")
     @threads = Thread.list
     postgresql_fallback_handler.initialized = true
 
