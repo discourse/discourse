@@ -788,7 +788,7 @@ EOM
     raw.gsub!(/&#39;/, "'")
     raw.gsub!(/\[url="(.+?)"\]http.+?\[\/url\]/, "\\1\n")
     raw.gsub!(/\[media\](.+?)\[\/media\]/, "\n\\1\n\n")
-    raw.gsub!(/\[php\](.+?)\[\/php\]/, "\n```php\n\\1\n```\n\n")
+    raw.gsub!(/\[php\](.+?)\[\/php\]/m) { |m| "\n```php\n" + $1.gsub(/\n\n/, "\n") + "\n```\n\n" }
     raw.gsub!(/\[\/quote\]/, "\n[/quote]\n")
     raw.gsub!(/date=\'(.+?)\'/, '')
     raw.gsub!(/timestamp=\'(.+?)\' /, '')
