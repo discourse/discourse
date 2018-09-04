@@ -88,6 +88,61 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    describe 'when user not found' do
+      let(:email) { "somename@gmail.com" }
+      before do
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+          provider: 'google_oauth2',
+          uid: '123545',
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: email,
+            name: 'Some name'
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: email,
+              family_name: 'Huh',
+              given_name: "Some name",
+              gender: 'male',
+              name: "Some name Huh",
+            )
+          },
+        )
+
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      it 'should return the right response' do
+        destination_url = 'http://thisisasite.com/somepath'
+        Rails.application.env_config["omniauth.origin"] = destination_url
+
+        get "/auth/google_oauth2/callback.json"
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body["email"]).to eq(email)
+        expect(response_body["username"]).to eq("Some_name")
+        expect(response_body["auth_provider"]).to eq("Google_oauth2")
+        expect(response_body["email_valid"]).to eq(true)
+        expect(response_body["omit_username"]).to eq(false)
+        expect(response_body["name"]).to eq("Some Name")
+        expect(response_body["destination_url"]).to eq(destination_url)
+      end
+
+      it 'should include destination url in response' do
+        destination_url = 'http://thisisasite.com/somepath'
+        cookies[:destination_url] = destination_url
+
+        get "/auth/google_oauth2/callback.json"
+
+        response_body = JSON.parse(response.body)
+        expect(response_body["destination_url"]).to eq(destination_url)
+      end
+    end
+
     describe 'when user has been verified' do
       before do
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
