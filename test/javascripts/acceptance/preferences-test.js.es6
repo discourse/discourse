@@ -211,12 +211,6 @@ QUnit.test("default avatar selector", async assert => {
   );
 });
 
-QUnit.test("email field always shows up", async assert => {
-  await visit("/u/eviltrout/preferences");
-
-  assert.ok(exists(".pref-auth-tokens"), "it shows the auth tokens");
-});
-
 acceptance("Avatar selector when selectable avatars is enabled", {
   loggedIn: true,
   settings: { selectable_avatars_enabled: true },
