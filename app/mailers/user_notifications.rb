@@ -20,15 +20,10 @@ class UserNotifications < ActionMailer::Base
   end
 
   def signup_after_approval(user, opts = {})
-    locale = user_locale(user)
-    tips = I18n.t('system_messages.usage_tips.text_body_template',
-                  base_url: Discourse.base_url,
-                  locale: locale)
-
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
-                locale: locale,
-                new_user_tips: tips)
+                locale: user_locale(user),
+                new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url, locale: locale))
   end
 
   def notify_old_email(user, opts = {})
@@ -325,7 +320,7 @@ class UserNotifications < ActionMailer::Base
   protected
 
   def user_locale(user)
-    user.effective_locale
+    (user.locale.present? && I18n.available_locales.include?(user.locale.to_sym)) ? user.locale : nil
   end
 
   def email_post_markdown(post, add_posted_by = false)
