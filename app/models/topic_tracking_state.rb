@@ -292,11 +292,11 @@ SQL
       topic_id: topic.id
     }
 
-    channels.each do |channel, user_ids|
+    channels.each do |channel, ids|
       MessageBus.publish(
         channel,
         message.as_json,
-        user_ids: user_ids
+        user_ids: ids
       )
     end
   end

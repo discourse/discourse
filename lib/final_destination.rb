@@ -38,10 +38,17 @@ class FinalDestination
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 
     @ignored = @opts[:ignore_hostnames] || []
-    [Discourse.base_url_no_prefix].concat(@opts[:ignore_redirects] || []).each do |url|
-      url = uri(url)
-      if url.present? && url.hostname
-        @ignored << url.hostname
+
+    ignore_redirects = [Discourse.base_url_no_prefix]
+
+    if @opts[:ignore_redirects]
+      ignore_redirects.concat(@opts[:ignore_redirects])
+    end
+
+    ignore_redirects.each do |ignore_redirect|
+      ignore_redirect = uri(ignore_redirect)
+      if ignore_redirect.present? && ignore_redirect.hostname
+        @ignored << ignore_redirect.hostname
       end
     end
 

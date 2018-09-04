@@ -27,21 +27,21 @@ class Typepad < Thor
     end
 
     inside_block = true
-    entry = ""
+    input = ""
 
     entries = []
     File.open(options[:file]).each_line do |l|
       l = l.scrub
 
       if l =~ /^--------$/
-        parsed_entry = process_entry(entry)
+        parsed_entry = process_entry(input)
         if parsed_entry
           puts "Parsed #{parsed_entry[:title]}"
           entries << parsed_entry
         end
-        entry = ""
+        input = ""
       else
-        entry << l
+        input << l
       end
     end
 
@@ -55,6 +55,7 @@ class Typepad < Thor
     SiteSetting.email_domains_blacklist = ""
 
     puts "Importing #{entries.size} entries"
+
     entries.each_with_index do |entry, idx|
       puts "Importing (#{idx + 1}/#{entries.size})"
       next if entry[:body].blank?
@@ -219,7 +220,7 @@ class Typepad < Thor
                 current << c
               end
             end
-            segments.delete_if { |s| s.nil? || s.size < 2 }
+            segments.delete_if { |segment| segment.nil? || segment.size < 2 }
             segments << current
 
             comment[:author] = segments[0]

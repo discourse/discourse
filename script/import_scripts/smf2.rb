@@ -201,15 +201,17 @@ class ImportScripts::Smf2 < ImportScripts::Base
     SQL
       skip = false
       ignore_quotes = false
+
       post = {
         id: message[:id_msg],
         user_id: user_id_from_imported_user_id(message[:id_member]) || -1,
         created_at: Time.zone.at(message[:poster_time]),
-        post_create_action: ignore_quotes && proc do |post|
-          post.custom_fields['import_rebake'] = 't'
-          post.save
+        post_create_action: ignore_quotes && proc do |p|
+          p.custom_fields['import_rebake'] = 't'
+          p.save
         end
       }
+
       if message[:id_msg] == message[:id_first_msg]
         post[:category] = category_id_from_imported_category_id(message[:id_board])
         post[:title] = decode_entities(message[:subject])
