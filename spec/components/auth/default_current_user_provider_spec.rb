@@ -2,19 +2,18 @@ require 'rails_helper'
 require_dependency 'auth/default_current_user_provider'
 
 describe Auth::DefaultCurrentUserProvider do
-  let(:rate_limit) { true }
 
   class TestProvider < Auth::DefaultCurrentUserProvider
     attr_reader :env
-    def initialize(env, rate_limit: true)
-      super(env, rate_limit: rate_limit)
+    def initialize(env)
+      super(env)
     end
   end
 
   def provider(url, opts = nil)
     opts ||= { method: "GET" }
     env = Rack::MockRequest.env_for(url, opts)
-    TestProvider.new(env, rate_limit: rate_limit)
+    TestProvider.new(env)
   end
 
   it "can be used to pretend that a user doesn't exist" do
@@ -145,26 +144,6 @@ describe Auth::DefaultCurrentUserProvider do
         ApiKey.create!(key: key, created_by_id: -1)
         provider("/?api_key=#{key}&api_username=#{user.username.downcase}").current_user
 
-      end
-
-      describe 'when rate limit is disabled' do
-        let(:rate_limit) { false }
-
-        it 'should not raise any rate limit errors' do
-          global_setting :max_admin_api_reqs_per_key_per_minute, 1
-
-          freeze_time
-
-          key = SecureRandom.hex
-          api_key = ApiKey.create!(key: key, created_by_id: -1)
-
-          2.times do
-            provider(
-              "/?api_key=#{key}&api_username=system",
-              nil
-            ).current_user
-          end
-        end
       end
     end
 
