@@ -458,6 +458,7 @@ DEPENDENCIES
   bullet
   byebug
   certified
+  colored2
   cppjieba_rb
   danger
   discourse_image_optim
