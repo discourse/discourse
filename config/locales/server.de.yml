@@ -39,6 +39,11 @@ de:
     bad_color_scheme: "Kann Motiv nicht aktualisieren, ungültiges Farbschema"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
     error_importing: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
+    errors:
+      component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein "
+      component_no_default: "Theme Komponenten können nicht Standard Theme sein"
+      component_no_color_scheme: "Theme Komponenten können kein Farb-Schema haben"
+      no_multilevels_components: "Themes mit Unter-Themes können nicht selber Unter-Themes sein"
     settings_errors:
       invalid_yaml: "Der  YAML-Code ist ungültig."
       data_type_not_a_number: "Der eingestellte Datentyp `%{name}` wird nicht unterstützt. Unterstützte Datentypen sind `integer`, `bool`, `list` und `enum`."
@@ -225,6 +230,7 @@ de:
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
   not_accepting_pms: "Entschuldige, %{username} akzeptiert gerade keine Nachrichten."
   max_pm_recepients: "Sorry, du kannst eine Nachricht nur an maximal %{recipients_limit} Emfpänger senden."
+  pm_reached_recipients_limit: "Entschuldige, aber Du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "scheint unklar, ist das ein ganzer Satz?"
@@ -252,7 +258,7 @@ de:
     top_daily: "Top-Themen der letzten 24 Stunden"
     posts: "Letzte Beiträge"
     private_posts: "Neueste Nachrichten"
-    group_posts: "Letzte Beiträge von %(Gruppen_name)"
+    group_posts: "Neueste Beiträge von %{group_name}"
     group_mentions: "Neueste Nennungen von %{group_name}"
     user_posts: "Neueste Beiträge von @%{username}"
     user_topics: "Neueste Themen von @%{username}"
@@ -474,7 +480,7 @@ de:
       topic_exists:
         one: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
         other: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
-      topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie #{category.topic_count} Themen enthält."
+      topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält."
     uncategorized_description: "Themen welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   trust_levels:
     newuser:
@@ -602,6 +608,17 @@ de:
   email_login:
     invalid_token: "Entschuldige, aber der Link zum Anmelden ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
     title: "E-Mail-Anmeldung"
+  user_auth_tokens:
+    devices:
+      android: 'Android Gerät'
+      linux: 'Linux Computer'
+      windows: 'Windows Computer'
+      mac: 'Mac'
+      iphone: 'iPhone'
+      ipad: 'iPad'
+      ipod: 'iPod'
+      mobile: 'Mobiles Gerät'
+      unknown: 'Unbekanntes Gerät'
   change_email:
     confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
     please_continue: "Weiter zu %{site_name}"
@@ -675,6 +692,7 @@ de:
       self: "Du hast noch keine Aktivität."
       others: "Keine Aktivität."
     no_bookmarks:
+      self: "Du hast keine Beiträge mit Lesezeichen; Lesezeichen erlauben es Dir schnell zu einem spezifischen Beitrag zu referenzieren."
       others: "Keine Lesezeichen."
     no_likes_given:
       self: "Du hast noch keine Beiträge mit einem „Like“ markiert."
@@ -682,6 +700,9 @@ de:
     no_replies:
       self: "Du hast auf keine Beiträge geantwortet."
       others: "Keine Antworten."
+    no_drafts:
+      self: "Du hast keine Entwürfe; beginne eine Antwort in einem beliebigen Thema und es wird automatisch als neuer Entwurf gespeichert."
+      others: "Du hast keine Berechtigung die Entwürfe dieses Benutzers zu sehen."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -746,6 +767,7 @@ de:
     default:
       labels:
         count: Anzahl
+        percent: Prozent
         day: Tag
     post_edits:
       title: "Beitragsbearbeitungen"
@@ -763,6 +785,7 @@ de:
         topic_count: Erstellte Themen
         post_count: Erstellte Beiträge
         pm_count: Erstellte Nachrichten
+        revision_count: Revisionen
     flags_status:
       title: "Meldungsstatus"
       values:
@@ -990,6 +1013,7 @@ de:
     poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='/admin/site_settings/category/email'>POP3-Einstellungen</a>."
     poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentisierungsfehler fehl. Überprüfe deine <a href='/admin/site_settings/category/email'>POP3-Einstellungen</a>."
     force_https_warning: "Deine Webseite verwendet SSL, aber die `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
+    out_of_date_themes: "Updates sind zu folgenden Themes verfügbar:"
   site_settings:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
@@ -1170,6 +1194,8 @@ de:
     enable_google_oauth2_logins: "Google OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Client-ID und Secret."
     google_oauth2_client_id: "Client-ID deiner Google-Anwendung."
     google_oauth2_client_secret: "Client-Secret deiner Google-Anwendung."
+    google_oauth2_prompt: "Eine optionale Leerzeichen getrennte Liste von Zeichen Werten die angeben ob der Berechtigungsserver den Benutzer zur Re-Authentifizierung auffordert. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#prompt für mögliche Werte."
+    google_oauth2_hd: "Eine optionale Google Apps gehostete Domain zu welches das Anmelden limitiert sein wird. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#hd-param für weitere Informationen."
     enable_twitter_logins: "Aktiviere Twitter-Authentifizierung (benötigt twitter_consumer_key und twitter_consumer_secret)."
     twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert auf https://apps.twitter.com/"
     twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert auf https://apps.twitter.com"
@@ -1364,6 +1390,7 @@ de:
     unsubscribe_via_email: "Erlaube es Benutzern eine E-Mail mit dem Betreff oder Text: \"unsubscribe\" zum Abbestellen der E-Mails zu senden."
     unsubscribe_via_email_footer: "Füge einen `mailto:`-Link zum Abbestellen im Fußbereich ausgehender E-Mails hinzu"
     delete_email_logs_after_days: "Lösche E-Mail Logs nach (N) Tagen. 0 um sie für immer zu behalten."
+    disallow_reply_by_email_after_days: "Verbiete Antworten per E-Mail nach (N) Tagen. 0 um es unbegrenzt zu lassen."
     max_emails_per_day_per_user: "Maximale Zahl an E-Mails, die Benutzern gesendet werden. 0 zum Deaktivieren der Grenze."
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
@@ -1442,6 +1469,7 @@ de:
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihr Profilbild ändern können"
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
+    header_dropdown_category_count: "Wie viele Kategorien im der Header Dropdown-Liste angezeigt werden können."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw. um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Benutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
@@ -1518,6 +1546,7 @@ de:
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
     allowed_user_api_auth_redirects: "Erlaubte URL für die Authentifizierungs-Umleitung von Benutzer API Schlüsseln"
     allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
+    expire_user_api_keys_days: "Anzahl Tage bevor ein Benutzer API Schlüssel automatisch abläuft. (0 für niemals)"
     tagging_enabled: "Schlagwörter für Themen aktivieren"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -1603,6 +1632,8 @@ de:
     existing_topic_moderator_post:
       one: "Ein Beitrag wurde in ein neues Thema verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in ein neues Thema verschoben: %{topic_link}"
+  change_owner:
+    post_revision_text: "Eigentümer übertragen."
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
@@ -1688,7 +1719,16 @@ de:
     second_factor_title: "Zwei-Faktor Authentifizierung"
     second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
     second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
+    second_factor_backup_title: "Zwei-Faktoren Wiederherstellungs-Code"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
+    second_factor_toggle:
+      totp: "Benutze stattdessen eine Authentifizierungs-App"
+      backup_code: "Benutze stattdessen einen Backup Code"
+  admin:
+    email:
+      sent_test: "gesendet!"
+      sent_test_disabled: "kann nicht gesendet werden da E-Mails deaktiviert sind"
+      sent_test_disabled_for_non_staff: "kann nicht gesendet werden da E-Mails für Nicht-Moderatoren deaktiviert sind"
   user:
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
     deactivated_by_staff: "Deaktiviert vom Team"
@@ -1961,6 +2001,18 @@ de:
     flags_agreed_and_post_deleted:
       title: "Gemeldeter Beitrag von Team entfernt"
       subject_template: "Gemeldeter Beitrag von Team entfernt"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatische Nachricht von %{site_name} um Dich wissen zu lassen, dass Dein Beitrag entfernt wurde.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Dieser Beitrag war von der Gemeinschaft gemeldet worden und ein Moderationsmitglied den Beitrag entfernt.
+
+        Bitte sieh Dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2181,6 +2233,13 @@ de:
         %{post_error}
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
+    email_reject_post_too_short:
+      title: "E-Mail Ablehnungsbeitrag zu kurz"
+      subject_template: "[%{email_prefix}] Email Problem -- Beitrag zu kurz"
+      text_body_template: |
+        Es tut uns leid aber Deine E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) funktionierte nicht.
+
+        Um eine tiefere Konversation zu fördern sind kurze Antworten nicht erlaubt. Bitte antworte mit mindestens %{count} Zeichen? Alternativ kannst Du auch einen Beitrag per E-Mail mit "+1" beantworten.
     email_reject_invalid_post_action:
       title: "E-Mail abgelehnt weil fehlerhafte Beitragsaktion"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitragsaktion ungültig"
@@ -2205,20 +2264,24 @@ de:
     email_reject_old_destination:
       title: "E-Mail abgelehnt weil alter Empfänger"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
+      text_body_template: |
+        Es tut uns leid aber Deine E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) funktionierte nicht.
+
+        Wir akzeptieren nur Anworten auf die Original Nachrichten für %{number_of_days} Tage. Bitte [besuche das Thema](%{short_url}) um mit der Konversation fortzufahren.
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Das Thema, auf das du geantwortet hast, gibt es nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
+        Das Thema, auf das du geantwortet hast, gibt es nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte [Kontakt mit einem Team-Mitglied](%{base_url}/about) auf.
     email_reject_topic_closed:
       title: "E-Mail abgelehnt weil Thema geschlossen"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Team-Mitglied auf.
+        Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte [Kontakt mit einem Team-Mitglied](%{base_url}/about) auf.
     email_reject_auto_generated:
       title: "E-Mail abgelehnt weil automatisch generierte Antwort"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort automatisch generiert"
@@ -2242,9 +2305,24 @@ de:
         Bitte stelle sicher, dass du die POP-Zugangsdaten in [den Einstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
 
         Wenn es eine Weboberfläche für das POP-E-Mail-Postfach gibt, möchtest du dich eventuell dort anmelden und die Einstellungen überprüfen.
+    email_revoked:
+      title: "E-Mail widerrufen"
+      subject_template: "Ist Deine E-Mail-Adresse korrekt?"
+      text_body_template: |
+        Es tut uns leid aber wir haben Probleme Dich per E-Mail zu erreichen. Unsere letzten E-Mails an Dich sind alle als unzustellbar zurück gekommen.
+
+        Bitte stelle sicher, dass [E-Mail Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
     too_many_spam_flags:
       title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"
+      text_body_template: |
+        Hello,
+
+        Dies ist eine automatische Nachricht von %{site_name} um Dich wissen zu lassen, dass deine Beiträge temporär ausgeblendet wurden, weil diese von der Gemeinschaft gemeldet wurden.
+
+        Als Vorsichtsmaßnahme wurde Dein Konto stumm geschaltet und Du kannst nun nicht mehr antworten neue Themen erzeugen bis ein Team Mitglied Dein Konto überprüft hat. Wir bitten diese Unannehmlichkeit zu entschuldigen.
+
+        Für weitere Hinweise, schaue Dir bitte unsere [Verhaltensregeln](%{base_url}/guidelines) an.
     too_many_tl3_flags:
       title: "E-Mail abgelehnt wegen Meldungen durch Vertrauensstufe 3"
       subject_template: "Neues Konto gesperrt"
@@ -2280,7 +2358,7 @@ de:
         Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_blocked:
       title: "Spam-Beitrag ausgeblendet"
-      subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
+      subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
 
@@ -2306,7 +2384,7 @@ de:
       text_body_template: |
         Es warten neuen Benutzer auf ihre Freigabe.
 
-        [Bitte bewerte diese im Administrationsbereich](/admin/users/list/pending).
+        [Bitte überprüfe diese im Administrationsbereich](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Download von externen Bildern deaktiviert"
       subject_template: "Download von externen Bildern deaktiviert"
@@ -2558,7 +2636,7 @@ de:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       text_body_template: |
-        Du wurdest im Forum stummgeschaltet bis %{suspended_till}.
+        Du wurdest im Forum stummgeschaltet bis %{silenced_till}.
 
         %{reason}
 
@@ -2678,16 +2756,16 @@ de:
         %{new_email}
     signup_after_approval:
       title: "Konto bestätigen nach Genehmigung"
-      subject_template: "You've been approved on %{site_name}!"
+      subject_template: "Dein Konto bei %{site_name} wurde genehmigt!"
       text_body_template: |
         Willkommen bei%{site_name}!
 
-        Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} bestätigt.
+        Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} genehmigt.
 
         Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
-        %{base_url}/u/activate-account/%{email_token}
+        %{base_url}
 
-        Wenn sich der obenstehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
+        Wenn sich der obenstehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
 
         %{new_user_tips}
 
@@ -2710,6 +2788,7 @@ de:
     recent_topics: "Aktuell"
     see_more: "Mehr"
     search_title: "Diese Site durchsuchen"
+    search_button: "Suche"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es nochmal."
@@ -2761,6 +2840,8 @@ de:
     sender_message_blank: "Nachricht ist leer"
     sender_message_to_blank: "message.to ist leer"
     sender_text_part_body_blank: "text_part.body ist leer"
+    sender_body_blank: "Textkörper ist leer"
+    sender_post_deleted: "Beitrag wurde gelöscht"
   color_schemes:
     base_theme_name: "Basis"
     light: "Helles Schema"
@@ -2892,7 +2973,7 @@ de:
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
-      SiteDie folgenden Geschäftsbedingungen sind maßgebend für die gesamte  Webseite und alle Inhalte, Dienstleistungen und Produkte, die auf oder über die Webseite zur Verfügung gestellt werden, einschließlich, aber nicht beschränkt auf die %{company_domain} Foren-Software, die %{company_domain} Support-Foren und den %{company_domain} Hosting-Dienst („Hosting”), (zusammengefasst: die „Webseite“). Die Webseite gehört und wird betrieben von  („“). Die Website wird angeboten vorbehaltlich der uneingeschränkten Zustimmung aller hierin enthaltenen Bedingungen und aller anderen sonstigen betrieblichen Regeln, Richtlinien (einschließlich, ohne Einschränkung, der [Datenschutzrichtlinien](/privacy) and [Community-Richtlinien](/faq)) von %{company_domain} und Verfahren, die von Zeit zu Zeit auf dieser Webseite von %{company_name} veröffentlicht werden können (zusammen die „Vereinbarung“).
+      Die folgenden Geschäftsbedingungen sind maßgebend für die gesamte  Webseite und alle Inhalte, Dienstleistungen und Produkte, die auf oder über die Webseite zur Verfügung gestellt werden, einschließlich, aber nicht beschränkt auf die %{company_domain} Foren-Software, die %{company_domain} Support-Foren und den %{company_domain} Hosting-Dienst („Hosting”), (zusammengefasst: die „Webseite“). Die Webseite gehört und wird betrieben von %{company_full_name} („%{company_name}“). Die Website wird angeboten vorbehaltlich der uneingeschränkten Zustimmung aller hierin enthaltenen Bedingungen und aller anderen sonstigen betrieblichen Regeln, Richtlinien (einschließlich, ohne Einschränkung, der [Datenschutzrichtlinien](/privacy) and [Community-Richtlinien](/faq)) von %{company_domain} und Verfahren, die von Zeit zu Zeit auf dieser Webseite von  veröffentlicht werden können (zusammen die „Vereinbarung“).
 
       Bitte lies diese Vereinbarung sorgfältig durch, bevor du die Webseite verwendest oder darauf zugreifst. Durch die Benutzung oder den Zugriff auf einen Teil der Webseite stimmst du den Geschäftsbedingungen dieser Vereinbarung zu. Wenn du nicht allen Geschäftsbedingungen in dieser Vereinbarung zustimmst, dann darfst du weder auf die Seite zugreifen noch irgendwelche Dienstleistungen in Anspruch nehmen. Wenn diese Geschäftsbedingungen als Angebot von %{company_name} erachtet werden, beschränkt sich die Zustimmung ausdrücklich auf diese Bedingungen. Die Website wird nur für Benutzer angeboten, die mindestens 13 Jahre alt sind.
 
