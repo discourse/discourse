@@ -38,22 +38,18 @@ describe ActiveRecord::ConnectionHandling do
   after do
     Sidekiq.unpause!
     postgresql_fallback_handler.setup!
-    Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
     ActiveRecord::Base.unstub(:postgresql_connection)
     (Thread.list - @threads).each(&:kill)
+    ActiveRecord::Base.connection_pool.disconnect!
     ActiveRecord::Base.establish_connection
   end
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      begin
-        connection = ActiveRecord::Base.postgresql_fallback_connection(config)
+      connection = ActiveRecord::Base.postgresql_fallback_connection(config)
 
-        expect(connection)
-          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
-      ensure
-        connection.disconnect!
-      end
+      expect(connection)
+        .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
     end
 
     context 'when master server is down' do
@@ -127,8 +123,6 @@ describe ActiveRecord::ConnectionHandling do
 
         expect(Discourse.readonly_mode?).to eq(false)
         expect(Sidekiq.paused?).to eq(false)
-
-        # fails sometimes on this line!
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
         expect(postgresql_fallback_handler.master_down?).to eq(nil)
 
