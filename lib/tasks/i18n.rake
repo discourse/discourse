@@ -3,12 +3,11 @@ require 'colored2'
 
 desc "Checks locale files for errors"
 task "i18n:check", [:locale] => [:environment] do |_, args|
-  locale = args[:locale]
   failed_locales = []
 
-  if locale.present?
-    if LocaleSiteSetting.valid_value?(locale)
-      locales = [locale]
+  if args[:locale].present?
+    if LocaleSiteSetting.valid_value?(args[:locale])
+      locales = [args[:locale]]
     else
       puts "ERROR: #{locale} is not a valid locale"
       exit 1
@@ -31,14 +30,15 @@ task "i18n:check", [:locale] => [:environment] do |_, args|
       puts "=" * 80
 
       errors.each do |error|
-        message = case error[:type]
-                  when LocaleFileChecker::TYPE_MISSING_INTERPOLATION_KEY
-                    "Missing interpolation key".red
-                  when LocaleFileChecker::TYPE_UNSUPPORTED_INTERPOLATION_KEY
-                    "Unsupported interpolation key".red
-                  when LocaleFileChecker::TYPE_MISSING_PLURAL_KEY
-                    "Missing plural key".yellow
-                  end
+        message =
+          case error[:type]
+          when LocaleFileChecker::TYPE_MISSING_INTERPOLATION_KEY
+            "Missing interpolation key".red
+          when LocaleFileChecker::TYPE_UNSUPPORTED_INTERPOLATION_KEY
+            "Unsupported interpolation key".red
+          when LocaleFileChecker::TYPE_MISSING_PLURAL_KEY
+            "Missing plural key".yellow
+          end
         details = error[:details] ? ": #{error[:details]}" : ""
 
         puts error[:key] << " -- " << message << details
@@ -46,7 +46,7 @@ task "i18n:check", [:locale] => [:environment] do |_, args|
     end
   end
 
-  failed_locales.each do |locale|
-    puts "", "Failed to check locale files for #{locale}".red
+  failed_locales.each do |failed_locale|
+    puts "", "Failed to check locale files for #{failed_locale}".red
   end
 end
