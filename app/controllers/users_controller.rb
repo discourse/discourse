@@ -104,7 +104,7 @@ class UsersController < ApplicationController
     attributes.delete(:username)
 
     if params[:user_fields].present?
-      attributes[:custom_fields] = {}
+      attributes[:custom_fields] ||= {}
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
@@ -1167,6 +1167,7 @@ class UsersController < ApplicationController
       :card_background
     ]
 
+    permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
