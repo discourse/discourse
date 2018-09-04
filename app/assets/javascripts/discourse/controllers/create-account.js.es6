@@ -208,7 +208,7 @@ export default Ember.Controller.extend(
         const destinationUrl = this.get("authOptions.destination_url");
 
         if (!Ember.isEmpty(destinationUrl)) {
-          $.cookie("destination_url", destinationUrl, { path: '/' });
+          $.cookie("destination_url", destinationUrl, { path: "/" });
         }
 
         // Add the userfields to the data
