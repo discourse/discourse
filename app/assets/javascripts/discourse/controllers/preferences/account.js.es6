@@ -87,8 +87,12 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
-    @computed()
-    canUpdateAssociatedAccounts() {
+    @computed("model.second_factor_enabled")
+    canUpdateAssociatedAccounts(secondFactorEnabled) {
+      if (secondFactorEnabled) {
+        return false;
+      }
+
       return (
         findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
           .length > 0
