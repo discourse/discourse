@@ -88,7 +88,10 @@
   }
   &:hover,
   &.btn-hover {
-    background: scale-color($tertiary, $lightness: -20%);
+    background: dark-light-choose(
+      scale-color($tertiary, $lightness: -20%),
+      scale-color($tertiary, $lightness: 20%)
+    );
   }
   &:active,
   &.btn-active {
@@ -115,7 +118,10 @@
   }
   &:hover,
   &.btn-hover {
-    background: scale-color($danger, $lightness: -20%);
+    background: dark-light-choose(
+      scale-color($danger, $lightness: -20%),
+      scale-color($danger, $lightness: 20%)
+    );
   }
   &:active,
   &.btn-active {
