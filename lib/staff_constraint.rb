@@ -3,7 +3,8 @@ require_dependency 'current_user'
 class StaffConstraint
 
   def matches?(request)
-    provider = Discourse.current_user_provider.new(request.env)
+    provider = Discourse.current_user_provider.new(request.env, rate_limit: false)
+
     provider.current_user &&
       provider.current_user.staff? &&
       custom_staff_check(request)

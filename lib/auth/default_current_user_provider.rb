@@ -17,9 +17,10 @@ class Auth::DefaultCurrentUserProvider
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
   # do all current user initialization here
-  def initialize(env)
+  def initialize(env, rate_limit: true)
     @env = env
     @request = Rack::Request.new(env)
+    @rate_limit = rate_limit
   end
 
   # our current user, return nil if none is found
@@ -62,7 +63,7 @@ class Auth::DefaultCurrentUserProvider
       if !current_user
         @env[BAD_TOKEN] = true
         begin
-          limiter.performed!
+          limiter.performed! if @rate_limit
         rescue RateLimiter::LimitExceeded
           raise Discourse::InvalidAccess.new(
             'Invalid Access',
@@ -85,7 +86,7 @@ class Auth::DefaultCurrentUserProvider
       # we do not run this rate limiter while profiling
       if Rails.env != "profile"
         limiter_min = RateLimiter.new(nil, "admin_api_min_#{api_key}", GlobalSetting.max_admin_api_reqs_per_key_per_minute, 60)
-        limiter_min.performed!
+        limiter_min.performed! if @rate_limit
       end
     end
 
@@ -96,19 +97,19 @@ class Auth::DefaultCurrentUserProvider
       limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
-        limiter_day.performed!
+        limiter_day.performed! if @rate_limit
       end
 
       unless  limiter_min.can_perform?
-        limiter_min.performed!
+        limiter_min.performed! if @rate_limit
       end
 
       current_user = lookup_user_api_user_and_update_key(user_api_key, @env[USER_API_CLIENT_ID])
       raise Discourse::InvalidAccess unless current_user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
 
-      limiter_min.performed!
-      limiter_day.performed!
+      limiter_min.performed! if @rate_limit
+      limiter_day.performed! if @rate_limit
 
       @env[USER_API_KEY_ENV] = true
     end
