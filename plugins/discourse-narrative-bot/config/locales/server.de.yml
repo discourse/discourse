@@ -7,6 +7,7 @@
 
 de:
   site_settings:
+    discourse_narrative_bot_enabled: 'Aktiviere den Discourse Lerntrainings-Bot (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Die vom Discourse Narrative Bot gesendete Willkommensnachricht deaktivieren"
     discourse_narrative_bot_ignored_usernames: "Benutzernamen, die vom Discourse Narrative Bot ignoriert werden sollen"
     discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten von Discourse Narrative Bot deaktivieren"
@@ -140,6 +141,7 @@ de:
           In der Zwischenzeit lass ich dich erst mal in Ruhe.
     new_user_narrative:
       reset_trigger: "neuer Benutzer"
+      title: "Zertifikat für erfolgreiche Beendigung des Lerntrainings"
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
         title: ":robot: Grüß dich!"
