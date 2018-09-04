@@ -8,8 +8,7 @@ class AdminConstraint
 
   def matches?(request)
     return false if @require_master && RailsMultisite::ConnectionManagement.current_db != "default"
-    provider = Discourse.current_user_provider.new(request.env, rate_limit: false)
-
+    provider = Discourse.current_user_provider.new(request.env)
     provider.current_user &&
       provider.current_user.admin? &&
       custom_admin_check(request)
