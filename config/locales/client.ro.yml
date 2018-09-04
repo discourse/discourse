@@ -212,7 +212,7 @@ ro:
     guidelines: "Indicații"
     privacy_policy: "Politică de confidențialitate"
     privacy: "Confidențialitate"
-    terms_of_service: "Termenii serviciului"
+    tos: "Termenii serviciului"
     mobile_view: "Vedere pentru mobil"
     desktop_view: "Vedere pentru desktop"
     you: "Tu"
@@ -745,7 +745,7 @@ ro:
         title: "Confirmă parola"
       last_posted: "Ultima postare"
       last_emailed: "Ultimul email"
-      last_seen: "Văzut acum"
+      last_seen: "Văzut "
       created: "Înscris"
       log_out: "Ieșire"
       location: "Locație"
@@ -980,8 +980,6 @@ ro:
       hide_session: "Amintește-mi mai târziu."
       hide_forever: "Nu, mulțumesc"
       hidden_for_session: "OK, vom reveni. Poți oricând folosi secțiunea de 'Autentificare' pentru a crea un cont."
-      intro: "Salutare! :heart_eyes: Se pare că îți place subiectul, dar nu ți-ai făcut cont pe site."
-      value_prop: "Când creezi un cont nou, noi reținem exact ce citești, astfel încât întotdeauna poți să te întorci exact unde ai rămas. Vei primi de asemenea și notificări, aici sau prin email, de câte ori apare o nouă postare. Și tu vei putea să apreciezi postări pentru a-ți arăta aprecierea. :heartbeat:"
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       description: "Există <b>{{replyCount}}</b> răspunsuri."
@@ -995,7 +993,6 @@ ro:
       disable: "Arată postările șterse"
     private_message_info:
       title: "Mesaj"
-      invite: "Invită alte persoane..."
       leave_message: "Sigur părăsești acest mesaj?"
       remove_allowed_user: "Chiar dorești să îl elimini pe {{name}} din acest mesaj privat?"
       remove_allowed_group: "Ești sigur că vrei să îl scoți pe {{name}} din acest mesaj?"
@@ -1704,6 +1701,8 @@ ro:
         select_replies:
           label: 'selectează +răspunsuri'
           title: 'Adaugă postarea și toate răspunsurile la selecție'
+        select_below:
+          label: 'selectează +tot ce urmează'
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -2097,9 +2096,9 @@ ro:
     posts_long: "sunt {{number}} (de) postări în acest subiect"
     posts_likes_MF: |
       Acest subiect are {count, plural, one {1 răspuns} other {# răspunsuri}} {ratio, select,
-      jos {cu o rată înaltă de aprecieri pe postare}
+      low {cu o rată înaltă de aprecieri pe postare}
       med {cu o foarte înaltă de aprecieri pe postare}
-      înalt {cu o rată extrem de înaltă de aprecieri pe postare}
+      high {cu o rată extrem de înaltă de aprecieri pe postare}
       other {}}
     original_post: "Postare inițială"
     views: "Vizualizări"
@@ -2729,7 +2728,6 @@ ro:
           import_file_tip: "Fișier .dcstyle.json care conține tema"
           about_theme: "Despre temă"
           license: "Licență"
-          component_of: "Tema este o componentă a:"
           update_to_latest: "Actualizat la ultima"
           check_for_updates: "Caută actualizări"
           updating: "Actualizare în curs..."

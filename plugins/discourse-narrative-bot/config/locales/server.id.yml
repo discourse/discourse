@@ -7,11 +7,10 @@
 
 id:
   site_settings:
-    discourse_narrative_bot_enabled: 'Aktifkan Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Matikan kiriman selamat datang dari Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nama Pengguna yang diabaikan oleh Discourse Narrative Bot"
     discourse_narrative_bot_disable_public_replies: "Matikan balasan publik oleh Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "Ketik kiriman selamat datang yang akan dikirim oleh Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Tipe kiriman selamat datang yang akan dikirim oleh Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_delay: "Tunggu (n) detik sebelum Discourse Narrative Bot mengirim pos selamat datang."
   badges:
     certified:

@@ -68,17 +68,48 @@ describe FinishInstallationController do
         expect(response).not_to be_redirect
       end
 
-      it "registers the admin when the email is in the list" do
-        expect do
-          post "/finish-installation/register.json", params: {
+      context "working params" do
+        let(:params) do
+          {
             email: 'robin@example.com',
             username: 'eviltrout',
             password: 'disismypasswordokay'
           }
-        end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+        end
 
-        expect(response).to be_redirect
-        expect(User.where(username: 'eviltrout').exists?).to eq(true)
+        it "registers the admin when the email is in the list" do
+          expect do
+            post "/finish-installation/register.json", params: params
+          end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+
+          expect(response).to be_redirect
+          expect(User.where(username: 'eviltrout').exists?).to eq(true)
+        end
+
+        it "automatically resends the signup email when the user already exists" do
+          expect do
+            post "/finish-installation/register.json", params: params
+          end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+
+          expect(User.where(username: 'eviltrout').exists?).to eq(true)
+
+          expect do
+            post "/finish-installation/register.json", params: params
+          end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+
+          expect(response).to be_redirect
+          expect(User.where(username: 'eviltrout').exists?).to eq(true)
+        end
+      end
+
+      it "sets the admins trust level" do
+        post "/finish-installation/register.json", params: {
+          email: 'robin@example.com',
+          username: 'eviltrout',
+          password: 'disismypasswordokay'
+        }
+
+        expect(User.find_by(username: 'eviltrout').trust_level).to eq 1
       end
     end
   end

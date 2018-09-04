@@ -29,6 +29,7 @@ ko:
   loading: "로딩중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a> 으로 호스팅되고 있습니다. JavaScript 가 활성화되어 있을 때 가장 멋지게 보입니다.'
   log_in: "로그인"
+  submit: "제출"
   purge_reason: "자동적으로 비활성화된 계정을 삭제하였습니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
@@ -36,6 +37,11 @@ ko:
   themes:
     bad_color_scheme: "색 스케마가 잘못되어서 테마를 업데이트할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"
+    settings_errors:
+      number_value_not_valid_min_max: "반드시 값은 %{min}와 %{max}사이어야 합니다."
+      number_value_not_valid_min: "%{min}과 같거나 커야합니다."
+      number_value_not_valid_max: "%{max}과 같거나 작아야합니다."
+      string_value_not_valid: "새로운 값의 길이가 허용된 범위를 벗어났습니다."
   emails:
     incoming:
       default_subject: "토픽에는 제목이 필요합니다"
@@ -58,6 +64,7 @@ ko:
       unrecognized_error: "인식되지 않은 에러"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>:%{message}'
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
       invalid_boolean: "잘못된 부울린값입니다."
@@ -83,6 +90,7 @@ ko:
       not_an_integer: 정수여야 함
       odd: 홀수여야 함
       record_invalid: '유효성검사 실패: %{errors}'
+      max_emojis: "가질수있는 이모티콘 개수가%{max_emojis_count}를 넘을수 없습니다."
       restrict_dependent_destroy:
         one: "연관된 %{record} 레코드가 존재하므로 레코드를 지울 수 없음."
         many: "연관된 %{record} 레코드가 존재하므로 레코드를 지울 수 없음."
@@ -152,6 +160,7 @@ ko:
   no_mentions_allowed_newuser: "죄송합니다. 새로운 사용자는 다른 사용자를 언급할 수 없습니다."
   too_many_mentions_newuser:
     other: "죄송합니다. 신규 회원은 %{count}명의 사용자만 언급할 수 있습니다."
+  no_images_allowed_trust: "죄송합니다, 포스트에 이미지를 넣을수 없습니다."
   no_images_allowed: "죄송합니다. 신규 회원은 글에 이미지를 넣을 수 없습니다."
   too_many_images:
     other: "죄송합니다. 신규회원은 글 하나에 %{count}개의 이미지만 넣을 수 있습니다."
@@ -372,6 +381,7 @@ ko:
     replace_paragraph: "(이 문단을 새로운 카테고리를 간단히 설명하는 내용으로 대체하세요. 이 가이드는 카테고리 섹션 영역에 표시되므로, 200자 이하로 유지하는 게 좋습니다. **이 설명을 편집하거나 토픽을 생성하기 전까지는, 이 카테고리는 카테고리 페이지에 표시되지 않습니다.**)"
     post_template: "%{replace_paragraph}\n\n다음 문단을 긴 설명을 쓰는데 활용하세요. 카테고리의 가이드라인이나 규칙을 쓰실 수도 있습니다.\n\n- 왜 이 카테고리를 사용해야하나요? 용도가 무엇인가요?\n\n- 기존의 다른 카테고리와 정확히 어떻게 다른가요?\n\n- 이 카테고리에 속한 토픽들은 대체로 무엇을 다루나요?\n\n- 이 카테고리가 필요한가요? 다른 카테고리와 병합하거나 서브 카테고리로 만들면 안되나요?\n"
     errors:
+      not_found: "카테고리를 찾을수 없습니다!"
       uncategorized_parent: "Uncategorized 카테고리는 부모 카테고리를 가질 수 없습니다."
       self_parent: "하위 카테고리의 부모는 자신이 될 수 없습니다."
       depth: "하위 카테고리는 계층 구조로 사용할 수 없습니다."
@@ -396,6 +406,9 @@ ko:
     leader:
       title: "리더"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
+  post:
+    image_placeholder:
+      broken: "이미지를 표시할수없음"
   rate_limiter:
     hours:
       other: "%{count}시간"
@@ -526,6 +539,8 @@ ko:
       short_description: '좋아요'
       long_form: '이것을 좋아함'
   user_activity:
+    no_default:
+      others: "활동 없음."
     no_bookmarks:
       others: "북마크가 없습니다"
     no_likes_given:
@@ -1177,9 +1192,6 @@ ko:
   redirected_to_top_reasons:
     new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 글타래들입니다."
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 글타래들입니다."
-  change_owner:
-    post_revision_text: "소유권이 %{old_user}에서 %{new_user}으로 이전되었습니다."
-    deleted_user: "삭제된 사용자"
   topic_statuses:
     archived_enabled: "이 글타래는 보관되었고 더이상 변경하실 수 없습니다."
     archived_disabled: "이 글타래의 보관이 풀렸고 이제 변경하실 수 있습니다."
@@ -1381,7 +1393,6 @@ ko:
     recent_topics: "최근"
     see_more: "더"
     search_title: "이 사이트 검색"
-    search_google: "Google"
   terms_of_service:
     title: "서비스 이용약관"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

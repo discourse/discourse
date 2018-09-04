@@ -72,7 +72,7 @@ module DiscourseNarrativeBot
           </linearGradient>
         </defs>
         <title>
-          test_cert
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.title')}
         </title>
         <g id="Layer_1" data-name="Layer 1">
           <path fill="url(#GradientFill_1)" d="M0 0h538.583v384.97H0z"/>

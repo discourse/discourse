@@ -4,13 +4,7 @@ class RobotsTxtController < ApplicationController
 
   # NOTE: order is important!
   DISALLOWED_PATHS ||= %w{
-    /auth/cas
-    /auth/facebook/callback
-    /auth/twitter/callback
-    /auth/google/callback
-    /auth/yahoo/callback
-    /auth/github/callback
-    /auth/cas/callback
+    /auth/
     /assets/browser-update*.js
     /users/
     /u/

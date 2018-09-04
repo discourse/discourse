@@ -194,7 +194,7 @@ sw:
     guidelines: "Miongozo"
     privacy_policy: "Sera ya Faragha"
     privacy: "Faragha"
-    terms_of_service: "Masharti ya Huduma"
+    tos: "Masharti ya Huduma"
     mobile_view: "Mtazamo wa Simu"
     desktop_view: "Muonekano wa Eneo Kazi"
     you: "Wewe"
@@ -248,6 +248,9 @@ sw:
       last_read: "hili ni chapisho la mwisho ulilosoma; bofya kualamisha"
       remove: "Ondoa Alamisho"
       confirm_clear: "una uhakika unataka kuondoa mialamisho ya mada hii?"
+    drafts:
+      new_topic: "Mswadajaribio wa mada mpya"
+      new_private_message: "Mswadajaribio wa ujumbe binafsi mpya"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho {{count}}"
       other: "Angalia Topiki Mpya au Masahisho  {{count}}"
@@ -992,8 +995,6 @@ sw:
       hide_session: "Nikumbushe kesho"
       hide_forever: "hapana asante"
       hidden_for_session: "OK, Nitakuuliza tena kesho. Unaweza kutumia 'Ingia' kutengeneza akaunti pia."
-      intro: "Habari! :heart_eyes: Inaonekana kama unafurahia majadiliano, lakini bado haujatengeneza akaunti."
-      value_prop: "Ukitengeneza akaunti, tunakumbuka ulichokisoma, ili uwezi kuanza ulipoishia. Unaweza kupata taarifa, hapa na kupitia barua pepe, kila kipindi machapisho mapya yakiandikwa. Na unaweza kupenda machapisho kugawiza upendo. :heartbeat:"
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
       description: "Kuna majibu <b>{{replyCount}}</b>. "
@@ -1007,7 +1008,6 @@ sw:
       disable: "Onyesha Machapisho Yaliyofutwa"
     private_message_info:
       title: "Ujumbe"
-      invite: "Wakaribishe Wengine..."
       leave_message: "Je, ni unataka kuiacha huu ujumbe?"
       remove_allowed_user: "Je, unataka kuondoa {{name}} kutoka kwenye huu ujumbe?"
       remove_allowed_group: "Je, unataka kuondoa {{name}} kutoka kwenye huu ujumbe?"
@@ -1765,6 +1765,7 @@ sw:
         error: "Hitilafu imetokea wakati wa kubadilisha mmiliki wa machapisho."
         label: "Mmiliki wa Machapisho"
         placeholder: "jina la mtumiaji la mmiliki mpya"
+        instructions_warn: "Taarifa mpya kuhusu chapisho hili hazita amishwa kwenda kwa mtumiaji mpya."
       change_timestamp:
         title: "Badilisha Mhuri wa mda"
         action: "badilisha mhuri wa mda"
@@ -1997,6 +1998,7 @@ sw:
       email_in_disabled_click: 'ruhusu mpangilio wa "barua pepe ndani"'
       suppress_from_latest: "Husuru kategoria hizi kutokea kwenye mada za hivi karibuni."
       num_featured_topics: "Idadi ya mada zitakazo onyeshwa ndani ya ukurasa wa kategoria:"
+      all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
       sort_order: "Orodha ya Maneno Imepangwa Kulingana Na:"
       default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
@@ -2758,7 +2760,6 @@ sw:
           public_key: "Ruhusu ufungo wa umma ufuatao ufikie hifadhi:"
           about_theme: "Kuhusu Mandhari"
           license: "Leseni"
-          component_of: "Mandhari hii ni sehemu ya:"
           update_to_latest: "Sasisha iwe Toleo Jipya"
           check_for_updates: "Angalia Masasisho"
           updating: "Inasasishwa..."

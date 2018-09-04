@@ -178,7 +178,7 @@ sq:
     guidelines: "Udhëzimet"
     privacy_policy: "Politika e Privatësisë"
     privacy: "Privatësia"
-    terms_of_service: "Kushtet e shërbimit"
+    tos: "Kushtet e shërbimit"
     mobile_view: "Pamja për celular"
     desktop_view: "Pamja për desktop"
     you: "Ju"
@@ -791,8 +791,6 @@ sq:
       hide_session: "Më rikujto nesër"
       hide_forever: "jo faleminderit"
       hidden_for_session: "OK, do t'ju rikujtojmë nesër. Sidoqoftë, ju mund të përdorni butonin 'Identifikohu' për të hapur një llogari. "
-      intro: "Njatjeta! :heart_eyes: Sikur po ju pëlqen diskutimi... po s'jeni anëtarësuar akoma në faqe. "
-      value_prop: "Kur krijoni një llogari në faqe, sistemi mban mend se çfarë keni lexuar, që të mund të riktheheni aty ku e latë. Ju ofrojmë gjithashtu njoftime në shfletues ose me email, sa herë që ka postime të reja. :heartbeat:"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
       description: "Ka <b>{{replyCount}}</b> përgjigje."
@@ -806,7 +804,6 @@ sq:
       disable: "Shfaq postimet e fshira"
     private_message_info:
       title: "Mesazh"
-      invite: "Fto të tjerë..."
       remove_allowed_user: "A doni vërtet të hiqni {{name}} nga ky mesazh?"
       remove_allowed_group: "Doni me të vërtetë të hiqni {{name}} nga ky mesazh? "
     email: 'Email'

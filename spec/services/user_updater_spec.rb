@@ -143,7 +143,7 @@ describe UserUpdater do
       expect(user.user_option.theme_ids).to eq([])
 
       theme = Fabricate(:theme)
-      child = Fabricate(:theme)
+      child = Fabricate(:theme, component: true)
       theme.add_child_theme!(child)
       theme.set_default!
 

@@ -30,6 +30,7 @@ function renderAvatar(user, options) {
   options = options || {};
 
   if (user) {
+    const name = Em.get(user, options.namePath || "name");
     const username = Em.get(user, options.usernamePath || "username");
     const avatarTemplate = Em.get(
       user,
@@ -40,7 +41,7 @@ function renderAvatar(user, options) {
       return "";
     }
 
-    let displayName = Ember.get(user, "name") || formatUsername(username);
+    let displayName = name || formatUsername(username);
 
     let title = options.title;
     if (!title && !options.ignoreTitle) {

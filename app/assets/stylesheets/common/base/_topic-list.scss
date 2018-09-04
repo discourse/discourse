@@ -13,6 +13,7 @@
 
 .list-controls {
   clear: both;
+  margin-bottom: 5px;
   .combo-box .combo-box-header {
     background: $primary-low;
     color: $primary;
@@ -35,6 +36,9 @@
     &.category-notifications-button,
     &.tag-notifications-button {
       float: right;
+      button {
+        display: inline-block;
+      }
     }
   }
 }

@@ -16,6 +16,7 @@ RSpec.describe 'Multisite SiteSettings' do
 
     conn.clear_settings!
     SiteSetting.provider = @original_provider
+    ActiveRecord::Base.establish_connection
   end
 
   describe '#default_locale' do

@@ -5,6 +5,7 @@ module Jobs
 
   # Asynchronously send an email to a user
   class UserEmail < Jobs::Base
+    include Skippable
 
     sidekiq_options queue: 'low'
 
@@ -44,6 +45,12 @@ module Jobs
 
       if message
         Email::Sender.new(message, type, user).send
+        if (b = user.user_stat.bounce_score) > SiteSetting.bounce_score_erode_on_send
+          # erode bounce score each time we send an email
+          # this means that we are punished a lot less for bounces
+          # and we can recover more quickly
+          user.user_stat.update(bounce_score: b - SiteSetting.bounce_score_erode_on_send)
+        end
       else
         skip_reason_type
       end
@@ -202,7 +209,7 @@ module Jobs
     end
 
     def skip(reason_type)
-      SkippedEmailLog.create!(
+      create_skipped_email_log(
         email_type: @skip_context[:type],
         to_address: @skip_context[:to_address],
         user_id: @skip_context[:user_id],

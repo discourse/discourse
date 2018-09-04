@@ -228,7 +228,8 @@ en:
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
     privacy: "Privacy"
-    terms_of_service: "Terms of Service"
+    tos: "Terms of Service"
+    rules: "Rules"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
     you: "You"
@@ -597,6 +598,7 @@ en:
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
       powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "copied"
 
     user_fields:
       none: "(select an option)"
@@ -704,6 +706,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      api_last_used_at: "Last used at:"
       theme: "Theme"
       home: "Default Home Page"
       staged: "Staged"
@@ -859,6 +862,19 @@ en:
 
       password_confirmation:
         title: "Password Again"
+
+      auth_tokens:
+        title: "Recently Used Devices"
+        title_logs: "Authentication Logs"
+        ip_address: "IP Address"
+        created: "Created"
+        first_seen: "First Seen"
+        last_seen: "Last Seen"
+        operating_system: "Operating System"
+        location: "Location"
+        action: "Action"
+        login: "Log in"
+        logout: "Log out everywhere"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
@@ -1109,7 +1125,7 @@ en:
       hide_forever: "no thanks"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. 💗"
+      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -1126,7 +1142,8 @@ en:
 
     private_message_info:
       title: "Message"
-      invite: "Invite Others..."
+      invite: "Invite Others ..."
+      edit: "Add or Remove ..."
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
       remove_allowed_group: "Do you really want to remove {{name}} from this message?"
@@ -2807,6 +2824,7 @@ en:
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
+        too_many_requests: You’ve performed this action too many times. Please wait before trying again.
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -3190,9 +3208,16 @@ en:
           revert_confirm: "Are you sure you want to revert your changes?"
 
         theme:
+          theme: "Theme"
+          component: "Component"
+          components: "Components"
           import_theme: "Import Theme"
           customize_desc: "Customize:"
           title: "Themes"
+          modal_title: "Create Theme"
+          create: "Create"
+          create_type: "Type:"
+          create_name: "Name:"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -3207,6 +3232,10 @@ en:
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
+          switch_component: "Make theme"
+          switch_component_alert: "Are you sure you want to convert this component to theme? This will make it an independant theme and it will be removed as a child from all themes."
+          switch_theme: "Make component"
+          switch_theme_alert: "Are you sure you want to convert this theme to component? It will be removed as a parent from all components."
           uploads: "Uploads"
           no_uploads: "You can upload assets associated with your theme such as fonts and images"
           add_upload: "Add Upload"
@@ -3229,7 +3258,7 @@ en:
           public_key: "Grant the following public key access to the repo:"
           about_theme: "About Theme"
           license: "License"
-          component_of: "Theme is a component of:"
+          component_of: "Component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
           updating: "Updating..."
@@ -3237,6 +3266,7 @@ en:
           add: "Add"
           theme_settings: "Theme Settings"
           no_settings: "This theme has no settings."
+          empty: "No items"
           commits_behind:
             one: "Theme is 1 commit behind!"
             other: "Theme is {{count}} commits behind!"

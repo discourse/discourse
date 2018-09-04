@@ -18,6 +18,14 @@ RSpec.describe ApplicationController do
   describe 'build_not_found_page' do
     describe 'topic not found' do
 
+      it 'should not redirect to permalink if topic/category does not exist' do
+        topic = create_post.topic
+        Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
+        topic.trash!
+        get topic.relative_url
+        expect(response.status).to eq(410)
+      end
+
       it 'should return permalink for deleted topics' do
         topic = create_post.topic
         external_url = 'https://somewhere.over.rainbow'
@@ -114,7 +122,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
 
-      theme2.update!(user_selectable: false)
+      theme2.update!(user_selectable: false, component: true)
       theme.add_child_theme!(theme2)
       cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 

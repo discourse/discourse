@@ -45,12 +45,12 @@ Fabricator(:reply, from: :post) do
 end
 
 Fabricator(:post_with_plenty_of_images, from: :post) do
-  cooked '
+  cooked <<~HTML
 <aside class="quote"><img src="/uploads/default/original/1X/1234567890123456.jpg"></aside>
 <div class="onebox-result"><img src="/uploads/default/original/1X/1234567890123456.jpg"></div>
 <div class="onebox"><img src="/uploads/default/original/1X/1234567890123456.jpg"></div>
-<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=1" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
-'
+<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
+HTML
 end
 
 Fabricator(:post_with_uploaded_image, from: :post) do

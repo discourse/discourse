@@ -81,12 +81,7 @@ class Auth::DefaultCurrentUserProvider
       raise Discourse::InvalidAccess.new(I18n.t('invalid_api_credentials'), nil, custom_message: "invalid_api_credentials") unless current_user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
-
-      # we do not run this rate limiter while profiling
-      if Rails.env != "profile"
-        limiter_min = RateLimiter.new(nil, "admin_api_min_#{api_key}", GlobalSetting.max_admin_api_reqs_per_key_per_minute, 60)
-        limiter_min.performed!
-      end
+      rate_limit_admin_api_requests(api_key)
     end
 
     # user api key handling
@@ -258,7 +253,16 @@ class Auth::DefaultCurrentUserProvider
         raise Discourse::InvalidAccess
       end
 
+      api_key.update_columns(last_used_at: Time.zone.now)
+
       if client_id.present? && client_id != api_key.client_id
+
+        # invalidate old dupe api key for client if needed
+        UserApiKey
+          .where(client_id: client_id, user_id: api_key.user_id)
+          .where('id <> ?', api_key.id)
+          .destroy_all
+
         api_key.update_columns(client_id: client_id)
       end
 
@@ -285,6 +289,19 @@ class Auth::DefaultCurrentUserProvider
         SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
       end
     end
+  end
+
+  private
+
+  def rate_limit_admin_api_requests(api_key)
+    return if Rails.env == "profile"
+
+    RateLimiter.new(
+      nil,
+      "admin_api_min_#{api_key}",
+      GlobalSetting.max_admin_api_reqs_per_key_per_minute,
+      60
+    ).performed!
   end
 
 end

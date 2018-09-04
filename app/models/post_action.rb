@@ -165,8 +165,11 @@ class PostAction < ActiveRecord::Base
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_agreed, actions.first) if actions.first.present?
+
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_agreed, actions.first)
+    end
 
     update_flagged_posts_count
   end
@@ -199,8 +202,11 @@ class PostAction < ActiveRecord::Base
     end
 
     Post.with_deleted.where(id: post.id).update_all(cached)
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_disagreed, actions.first) if actions.first.present?
+
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_disagreed, actions.first)
+    end
 
     update_flagged_posts_count
   end
@@ -218,8 +224,11 @@ class PostAction < ActiveRecord::Base
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
-    DiscourseEvent.trigger(:flag_reviewed, post)
-    DiscourseEvent.trigger(:flag_deferred, actions.first) if actions.first.present?
+    if actions.first.present?
+      DiscourseEvent.trigger(:flag_reviewed, post)
+      DiscourseEvent.trigger(:flag_deferred, actions.first)
+    end
+
     update_flagged_posts_count
   end
 
@@ -566,11 +575,11 @@ class PostAction < ActiveRecord::Base
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
     return if post.hidden?
-    return if (!acting_user.staff?) && post.user.staff?
+    return if (!acting_user.staff?) && post.user&.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&
-       post.user.trust_level == TrustLevel[0]
+       post.user&.trust_level == TrustLevel[0]
 
       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 

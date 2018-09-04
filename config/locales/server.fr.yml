@@ -39,6 +39,10 @@ fr:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
     other_error: "Il y a eu un problème pendant la mise à jour du thème"
     error_importing: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
+    errors:
+      component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
+      component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
+      no_multilevels_components: "Les thèmes incluant d'autres thèmes ne peuvent pas être inclus eux-mêmes"
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
       data_type_not_a_number: "Le type du paramètre `%{name}` n'est pas supporté. Les types supportés sont `integer`, `bool`, `list` et `enum`"
@@ -169,7 +173,10 @@ fr:
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
   invalid_access: "Vous n'avez pas la permission de voir cette ressource."
+  authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
   invalid_api_credentials: "Vous n'êtes pas autorisés à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
+  provider_not_enabled: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'est pas activé."
+  provider_not_found: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
   reading_time: "Temps de lecture"
   likes: "J'aime"
@@ -731,6 +738,41 @@ fr:
       read: "Tout lire"
       write: "Tout écrire"
   reports:
+    default:
+      labels:
+        count: Nombre
+        percent: Pourcentage
+        day: Jour
+    post_edits:
+      title: "Modifications de message"
+      labels:
+        post: Message
+        editor: Éditeur
+        author: Auteur
+        edit_reason: Raison
+    moderators_activity:
+      title: "Activité des modérateurs"
+      labels:
+        moderator: Modérateur
+        flag_count: Signalements examinés
+        time_read: Temps de lecture
+        topic_count: Sujets créés
+        post_count: Messages créés
+        pm_count: Messages privés créés
+        revision_count: Révisions
+    flags_status:
+      title: "Statut des signalements"
+      values:
+        agreed: Acceptés
+        disagreed: Rejetés
+        deferred: Reportés
+        no_action: Aucune action
+      labels:
+        flag: Type
+        assigned: Affectés
+        poster: Auteur
+        flagger: Signalant
+        time_to_resolution: Temps de résolution
     visits:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
@@ -789,10 +831,14 @@ fr:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
       yaxis: "Nombre d'utilisateurs"
+      labels:
+        level: Niveau
     users_by_type:
       title: "Utilisateurs par type"
       xaxis: "Type"
       yaxis: "Nombre d'utilisateurs"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Administrateur
         moderator: Modérateur
@@ -843,8 +889,15 @@ fr:
       num_clicks: "Clics"
       num_topics: "Sujets"
       num_users: "Utilisateurs"
+      labels:
+        domain: Domaine
+        num_clicks: Clics
+        num_topics: Sujets
     top_referred_topics:
       title: "Sujets les plus référencés"
+      labels:
+        num_clicks: "Clics"
+        topic: "Sujet"
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
@@ -907,6 +960,9 @@ fr:
       yaxis: "Nombre de visites"
     web_crawlers:
       title: "Requêtes de crawler web"
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pages vues"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
@@ -931,6 +987,7 @@ fr:
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
     force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
+    out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
@@ -1007,7 +1064,6 @@ fr:
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
-    enable_personal_email_messages: "Autoriser les utilisateurs de niveau de confiance 1 à envoyer des messages courriel personnels (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -1216,7 +1272,6 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages directs."
-    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages directs par courriel (aux utilisateurs distants)."
     min_trust_to_flag_posts: "Le niveau de confiance minimum requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimum requis pour inclure des liens dans les messages"
     min_trust_to_post_images: "Le niveau de confiance minimum requis pour inclure des images dans les messages"
@@ -1534,9 +1589,6 @@ fr:
     existing_topic_moderator_post:
       one: "Un message a été intégré dans un sujet existant : %{topic_link}"
       other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
-  change_owner:
-    post_revision_text: "Auteur du message changé de %{old_user} vers %{new_user}"
-    deleted_user: "un utilisateur supprimé"
   topic_statuses:
     archived_enabled: "Ce sujet est maintenant archivé. Il est gelé et ne peut plus être modifié d'aucune façon."
     archived_disabled: "Ce sujet est maintenant désarchivé. Il n'est plus figé et peut être modifié."
@@ -2126,10 +2178,6 @@ fr:
     email_reject_old_destination:
       title: "Courriel rejeté - Mauvaise ancienne destination"
       subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Pour des raisons de sécurité, nous n'acceptons des réponses aux notifications que pendant 90 jours. Veuillez vous rendre sur [le sujet](%{short_url}) pour continuer la conversation.
     email_reject_topic_not_found:
       title: "Courriel rejeté - Sujet introuvable"
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet introuvable"
@@ -2637,7 +2685,6 @@ fr:
     recent_topics: "Récents"
     see_more: "Plus"
     search_title: "Rechercher dans ce site"
-    search_google: "Google"
   offline:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connectés à Internet. Veuillez vérifier votre connexion réseau puis réessayez."

@@ -130,6 +130,12 @@ describe UsersEmailController do
         expect(response.status).to eq(400)
       end
 
+      it 'raises an error without an invalid email' do
+        put "/u/#{user.username}/preferences/email.json", params: { email: "sam@not-email.com'" }
+        expect(response.status).to eq(422)
+        expect(response.body).to include("email is invalid")
+      end
+
       it "raises an error if you can't edit the user's email" do
         Guardian.any_instance.expects(:can_edit_email?).with(user).returns(false)
 

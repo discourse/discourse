@@ -104,9 +104,11 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
     end
 
-    it "returns false when the user is silenced" do
+    it "works as expected for silenced users" do
       UserSilencer.silence(user, admin)
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
+      expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
     end
 
     it "allows flagging archived posts" do
@@ -120,16 +122,26 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
     end
 
-    it "doesn't allow flagging of staff posts when allow_flagging_staff is false" do
-      SiteSetting.allow_flagging_staff = false
-      staff_post = Fabricate(:post, user: Fabricate(:moderator))
-      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
-    end
+    describe 'when allow_flagging_staff is false' do
+      let(:staff_post) { Fabricate(:post, user: Fabricate(:moderator)) }
 
-    it "allows liking of staff when allow_flagging_staff is false" do
-      SiteSetting.allow_flagging_staff = false
-      staff_post = Fabricate(:post, user: Fabricate(:moderator))
-      expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+      before do
+        SiteSetting.allow_flagging_staff = false
+      end
+
+      it "doesn't allow flagging of staff posts" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
+      end
+
+      it "allows flagging of staff posts when staff has been deleted" do
+        staff_post.user.destroy!
+        staff_post.reload
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(true)
+      end
+
+      it "allows liking of staff" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+      end
     end
 
     it "returns false when liking yourself" do
@@ -556,6 +568,7 @@ describe Guardian do
       let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       let!(:pm) { Fabricate(:private_message_topic, user: user) }
       let(:admin) { Fabricate(:admin) }
+      let(:moderator) { Fabricate(:moderator) }
 
       context "when private messages are disabled" do
         it "allows an admin to invite to the pm" do
@@ -572,6 +585,22 @@ describe Guardian do
         it "doesn't allow a regular user to invite" do
           expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
+
+      context "when PM has receached the maximum number of recipients" do
+        before do
+          SiteSetting.max_allowed_message_recipients = 2
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+
+        it "allows staff to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          pm.grant_permission_to_user(moderator.email)
+          expect(Guardian.new(moderator).can_invite_to?(pm)).to be_truthy
         end
       end
     end
@@ -2580,7 +2609,7 @@ describe Guardian do
       theme2.update!(user_selectable: true)
       expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
 
-      theme2.update!(user_selectable: false)
+      theme2.update!(user_selectable: false, component: true)
       theme.add_child_theme!(theme2)
       expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(true)
       expect(user_guardian.allow_themes?([theme2.id])).to eq(false)

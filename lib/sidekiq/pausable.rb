@@ -74,7 +74,7 @@ class Sidekiq::Pausable
   end
 
   def call(worker, msg, queue)
-    if Sidekiq.paused?
+    if Sidekiq.paused? && !(Jobs::RunHeartbeat === worker)
       worker.class.perform_in(@delay, *msg['args'])
     else
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)

@@ -1,5 +1,18 @@
 import { acceptance, logIn } from "helpers/qunit-helpers";
-acceptance("Search");
+
+const emptySearchContextCallbacks = [];
+
+acceptance("Search", {
+  pretend(server) {
+    server.handledRequest = (verb, path, request) => {
+      if (request.queryParams["search_context[type]"] === undefined) {
+        emptySearchContextCallbacks.forEach(callback => {
+          callback.call();
+        });
+      }
+    };
+  }
+});
 
 QUnit.test("search", async assert => {
   await visit("/");
@@ -73,10 +86,17 @@ QUnit.test("Search with context", async assert => {
     "it should highlight the search term"
   );
 
+  let callbackCalled = false;
+
+  emptySearchContextCallbacks.push(() => {
+    callbackCalled = true;
+  });
+
   await visit("/");
   await click("#search-button");
 
   assert.ok(!exists(".search-context input[type='checkbox']"));
+  assert.ok(callbackCalled, "it triggers a new search");
 
   await visit("/t/internationalization-localization/280/1");
   await click("#search-button");

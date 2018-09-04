@@ -37,6 +37,12 @@ describe PostActionNotifier do
       }.to change(post.user.notifications, :count).by(1)
     end
 
+    it 'stores the revision number with the notification' do
+      post.revise(evil_trout, raw: "world is the new body of the message")
+      notification_data = JSON.parse post.user.notifications.last.data
+      expect(notification_data['revision_number']).to eq post.post_revisions.last.number
+    end
+
     context "edit notifications are disabled" do
 
       before { SiteSetting.disable_edit_notifications = true }

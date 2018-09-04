@@ -106,7 +106,7 @@ class Post < ActiveRecord::Base
     when 'string'
       where('raw ILIKE ?', "%#{pattern}%")
     when 'regex'
-      where('raw ~ ?', "(?n)#{pattern}")
+      where('raw ~* ?', "(?n)#{pattern}")
     end
   }
 
@@ -546,13 +546,7 @@ class Post < ActiveRecord::Base
   def set_owner(new_user, actor, skip_revision = false)
     return if user_id == new_user.id
 
-    edit_reason = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t(
-        'change_owner.post_revision_text',
-        old_user: self.user&.username_lower || I18n.t('change_owner.deleted_user'),
-        new_user: new_user.username_lower
-      )
-    end
+    edit_reason = I18n.t('change_owner.post_revision_text', locale: SiteSetting.default_locale)
 
     revise(
       actor,

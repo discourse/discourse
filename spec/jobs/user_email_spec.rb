@@ -245,12 +245,14 @@ describe Jobs::UserEmail do
 
         it "does not send notification if limit is reached" do
           expect do
-            Jobs::UserEmail.new.execute(
-              type: :user_mentioned,
-              user_id: user.id,
-              notification_id: notification.id,
-              post_id: post.id
-            )
+            2.times do
+              Jobs::UserEmail.new.execute(
+                type: :user_mentioned,
+                user_id: user.id,
+                notification_id: notification.id,
+                post_id: post.id
+              )
+            end
           end.to change { SkippedEmailLog.count }.by(1)
 
           expect(SkippedEmailLog.exists?(
@@ -260,6 +262,17 @@ describe Jobs::UserEmail do
             to_address: user.email,
             reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
           )).to eq(true)
+
+          freeze_time(Time.zone.now.tomorrow + 1.second)
+
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :user_mentioned,
+              user_id: user.id,
+              notification_id: notification.id,
+              post_id: post.id
+            )
+          end.to change { SkippedEmailLog.count }.by(0)
         end
 
         it "sends critical email" do
@@ -276,6 +289,34 @@ describe Jobs::UserEmail do
             user: user,
           )).to eq(true)
         end
+      end
+
+      it "erodes bounce score each time an email is sent" do
+        SiteSetting.bounce_score_erode_on_send = 0.2
+
+        user.user_stat.update(bounce_score: 2.7)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(2.5)
+
+        user.user_stat.update(bounce_score: 0)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(0)
       end
 
       it "does not send notification if bounce threshold is reached" do

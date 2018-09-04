@@ -39,21 +39,31 @@ module DiscourseHub
   end
 
   def self.singular_action(action, rel_url, params = {})
+    connect_opts = connect_opts(params)
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
-      headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
-      query: params,
-      omit_default_port: true
+      {
+        headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
+        query: params,
+        omit_default_port: true
+      }.merge(connect_opts)
     ).body)
   end
 
   def self.collection_action(action, rel_url, params = {})
+    connect_opts = connect_opts(params)
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
-      body: JSON[params],
-      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/json" },
-      omit_default_port: true
+      {
+        body: JSON[params],
+        headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/json" },
+        omit_default_port: true
+      }.merge(connect_opts)
     ).body)
+  end
+
+  def self.connect_opts(params = {})
+    params.delete(:connect_opts)&.except(:body, :headers, :query) || {}
   end
 
   def self.hub_base_url

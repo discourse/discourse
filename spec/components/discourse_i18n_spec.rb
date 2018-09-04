@@ -12,6 +12,7 @@ describe I18n::Backend::DiscourseI18n do
     backend.store_translations(:en, items: { one: 'one item', other: "%{count} items" })
     backend.store_translations(:de, bar: 'Bar in :de')
     backend.store_translations(:ru, baz: 'Baz in :ru')
+    backend.store_translations(:en, link: '[text](url)')
   end
 
   after do
@@ -32,6 +33,7 @@ describe I18n::Backend::DiscourseI18n do
     expect(backend.search(:en, 'Foo')).to eq('foo' => 'Foo in :en')
     expect(backend.search(:en, 'hello')).to eq('wat' => 'Hello %{count}')
     expect(backend.search(:en, 'items.one')).to eq('items.one' => 'one item')
+    expect(backend.search(:en, '](')).to eq('link' => '[text](url)')
   end
 
   it 'can return multiple results' do
@@ -114,7 +116,9 @@ describe I18n::Backend::DiscourseI18n do
       TranslationOverride.upsert!('en', 'wat', 'Overwritten value')
       expect(I18n.search('wat', backend: backend)).to eq('wat' => 'Overwritten value')
       expect(I18n.search('Overwritten', backend: backend)).to eq('wat' => 'Overwritten value')
-      expect(I18n.search('Hello', backend: backend)).to eq({})
+
+      TranslationOverride.upsert!('en', 'wat', 'Overwritten with (parentheses)')
+      expect(I18n.search('Overwritten with (', backend: backend)).to eq('wat' => 'Overwritten with (parentheses)')
     end
 
     it 'supports disabling' do

@@ -261,7 +261,7 @@ ar:
     guidelines: "القواعد العامة"
     privacy_policy: "سياسة الخصوصية "
     privacy: "الخصوصية "
-    terms_of_service: "شروط الخدمة"
+    tos: "شروط الخدمة"
     mobile_view: "نسخة الهواتف"
     desktop_view: "نسخة سطح المكتب"
     you: "انت"
@@ -1037,8 +1037,6 @@ ar:
       hide_session: "ذكرني غدا"
       hide_forever: "لا شكرا"
       hidden_for_session: "لا بأس، سأسلك غدًا. يمكنك دوما استخدام 'تسجيل الدخول' لإنشاء حساب ايضا."
-      intro: "مرحبًا! :heart_eyes: يبدو أنك مستمتع بقراءة هذا النقاش، يمكنك إنشاء حساب و مشاركتهم اطراف الحديث."
-      value_prop: "عندما تنتهي من إنشاء الحساب، سنعيدك بالضبط إلي النقطه التي توقفت عندها و سوف تتلقي إشعارات هنا و عبر البريد الإلكتروني بكل رد جديد ينشر. و سيمكنك الإعجاب بالمنشورات :heartbeat:"
     summary:
       enabled_description: "أنت تطالع ملخّصًا لهذا الموضوع، أي أكثر المنشورات الجديرة بالاهتمام حسب نظرة المجتمع."
       description: "هناك <b>{{replyCount}}</b> من الردود."
@@ -1052,7 +1050,6 @@ ar:
       disable: "أظهر المشاركات المحذوفة"
     private_message_info:
       title: "رسالة"
-      invite: " إدعو اخرين"
       remove_allowed_user: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
       remove_allowed_group: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
     email: 'البريد الإلكتروني'
@@ -2946,7 +2943,6 @@ ar:
           import_file_tip: "ملف الـ .dcstyle.json يحتوي على واجهة"
           about_theme: "عن الواجهة"
           license: "الرخصة"
-          component_of: "الواجهة مكونة من:"
           update_to_latest: "حدث لاحدث اصدار"
           check_for_updates: "تحقق من التحديثات"
           updating: "تحديث..."

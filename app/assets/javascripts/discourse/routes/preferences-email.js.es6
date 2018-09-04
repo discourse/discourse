@@ -12,6 +12,7 @@ export default RestrictedUserRoute.extend({
   },
 
   setupController: function(controller, model) {
+    controller.reset();
     controller.setProperties({ model: model, newEmail: model.get("email") });
   },
 

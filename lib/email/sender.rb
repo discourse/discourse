@@ -87,6 +87,10 @@ module Email
 
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
+
+        # guards against deleted posts
+        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
+
         topic = post.topic
         first_post = topic.ordered_posts.first
 
@@ -102,14 +106,14 @@ module Email
           .where(id: PostReply.where(reply_id: post_id).select(:post_id))
           .order(id: :desc)
 
-        referenced_post_message_ids = referenced_posts.map do |post|
-          if post.incoming_email&.message_id.present?
-            "<#{post.incoming_email.message_id}>"
+        referenced_post_message_ids = referenced_posts.map do |referenced_post|
+          if referenced_post.incoming_email&.message_id.present?
+            "<#{referenced_post.incoming_email.message_id}>"
           else
-            if post.post_number == 1
+            if referenced_post.post_number == 1
               "<topic/#{topic_id}@#{host}>"
             else
-              "<topic/#{topic_id}/#{post.id}@#{host}>"
+              "<topic/#{topic_id}/#{referenced_post.id}@#{host}>"
             end
           end
         end
@@ -124,7 +128,7 @@ module Email
         end
 
         # https://www.ietf.org/rfc/rfc2919.txt
-        if topic && topic.category && !topic.category.uncategorized?
+        if topic&.category && !topic.category.uncategorized?
           list_id = "#{SiteSetting.title} | #{topic.category.name} <#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
@@ -166,8 +170,8 @@ module Email
       email_log.post_id = post_id if post_id.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id']  = nil if topic_id.present?
-      @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
+      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id']  = nil if post_id.present?
 
       if reply_key.present?
         @message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = nil
@@ -199,7 +203,6 @@ module Email
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
 
-      # Save and return the email log
       email_log.save!
       email_log
     end
@@ -262,7 +265,8 @@ module Email
         post_id &&
         header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
-      reply_key = PostReplyKey.find_or_create_by!(
+      # use safe variant here cause we tend to see concurrency issue
+      reply_key = PostReplyKey.find_or_create_by_safe!(
         post_id: post_id,
         user_id: user_id
       ).reply_key

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingLink < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
@@ -15,7 +17,8 @@ class IncomingLink < ActiveRecord::Base
     current_user = opts[:current_user]
 
     username = opts[:username]
-    username = nil unless String === username
+    username = nil if !(String === username)
+    username = nil if username&.include?("\0")
     if username
       u = User.select(:id).find_by(username_lower: username.downcase)
       user_id = u.id if u

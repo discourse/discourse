@@ -70,7 +70,7 @@ QUnit.test("converts heading tags", assert => {
 });
 
 QUnit.test("converts ul list tag", assert => {
-  const html = `
+  let html = `
   <ul>
     <li>Item 1</li>
     <li>
@@ -84,7 +84,20 @@ QUnit.test("converts ul list tag", assert => {
     <li>Item 3</li>
   </ul>
   `;
-  const markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
+  let markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `
+<ul>
+  <li><p><span>Bullets at level 1</span></p></li>
+  <li><p><span>Bullets at level 1</span></p></li>  <ul>    <li><p><span>Bullets at level 2</span></p></li>    <li><p><span>Bullets at level 2</span></p></li>    <ul>      <li><p><span>Bullets at level 3</span></p></li>    </ul>    <li><p><span>Bullets at level 2</span></p></li>  </ul>  <li><p><span>Bullets at level 1</span></p></li></ul>  `;
+  markdown = `* Bullets at level 1
+* Bullets at level 1
+  * Bullets at level 2
+  * Bullets at level 2
+    * Bullets at level 3
+  * Bullets at level 2
+* Bullets at level 1`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -311,6 +324,19 @@ QUnit.test("keeps mention/hash class", assert => {
   `;
 
   const markdown = `User mention: @discourse\n\nGroup mention: @discourse-group\n\nCategory link: #foo\n\nSub-category link: #foo:bar`;
+
+  assert.equal(toMarkdown(html), markdown);
+});
+
+QUnit.test("keeps emoji and removes click count", assert => {
+  const html = `
+    <p>
+      A <a href="http://example.com">link</a><span class="badge badge-notification clicks" title="1 click">1</span> with click count
+      and <img class="emoji" title=":boom:" src="https://d11a6trkgmumsb.cloudfront.net/images/emoji/twitter/boom.png?v=5" alt=":boom:" /> emoji.
+    </p>
+  `;
+
+  const markdown = `A [link](http://example.com) with click count and :boom: emoji.`;
 
   assert.equal(toMarkdown(html), markdown);
 });

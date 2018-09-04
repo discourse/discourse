@@ -3,7 +3,7 @@ import Backup from "admin/models/backup";
 export default Ember.Route.extend({
   activate() {
     this.messageBus.subscribe("/admin/backups", backups =>
-      this.controller.set("model", backups)
+      this.controller.set("model", backups.map(backup => Backup.create(backup)))
     );
   },
 

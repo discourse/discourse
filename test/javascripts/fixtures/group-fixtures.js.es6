@@ -509,7 +509,7 @@ export default {
       category: {
         id: 27,
         name: "translations",
-        color: "808281",
+        color: "27AA5B",
         topic_id: 14549,
         topic_count: 146,
         created_at: "2014-04-07T20:30:17.623Z",

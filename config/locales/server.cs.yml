@@ -930,7 +930,6 @@ cs:
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"
-    search_google: "Google"
   terms_of_service:
     title: "Podmínky používání"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

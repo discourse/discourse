@@ -257,7 +257,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.57)
+    onebox (1.8.60)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -271,7 +271,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
-    pg (1.0.0)
+    pg (1.1.0)
     powerpack (0.1.2)
     progress (3.4.0)
     pry (0.10.4)
@@ -300,7 +300,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails_multisite (2.0.5)
+    rails_multisite (2.0.4)
       activerecord (> 4.2, < 6)
       railties (> 4.2, < 6)
     railties (5.2.0)
@@ -509,7 +509,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.57)
+  onebox (= 1.8.60)
   openid-redis-store
   pg
   pry-nav
@@ -554,4 +554,4 @@ DEPENDENCIES
   webpush
 
 BUNDLED WITH
-   1.16.3
+   1.16.4

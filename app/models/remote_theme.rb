@@ -40,7 +40,8 @@ class RemoteTheme < ActiveRecord::Base
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
-    theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+    component = [true, "true"].include?(theme_info["component"])
+    theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
 
     remote_theme = new
     theme.remote_theme = remote_theme
@@ -142,7 +143,7 @@ class RemoteTheme < ActiveRecord::Base
       self.commits_behind = 0
     end
 
-    update_theme_color_schemes(theme, theme_info["color_schemes"])
+    update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
     self
   ensure

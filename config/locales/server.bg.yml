@@ -878,9 +878,6 @@ bg:
   redirected_to_top_reasons:
     new_user: "Добре дошли в нашата общност! Това са най-популярните последни теми. "
     not_seen_in_a_month: "Добре дошли отново! Това са най-популярните теми за времето, през което Ви нямаше."
-  change_owner:
-    post_revision_text: "Собствеността е прехвърлена от %{old_user} към %{new_user}"
-    deleted_user: "изтрит потребител"
   topic_statuses:
     archived_enabled: "Тази тема в момента е в архив. Тя е замразена и не може да се променя по никакъв начин."
     archived_disabled: "Тази тема е разархивирана. Вече не е замразена и може да се променя."
@@ -1082,7 +1079,6 @@ bg:
     recent_topics: "Скорошни"
     see_more: "Повече"
     search_title: "Търси този сайт"
-    search_google: "Google"
   terms_of_service:
     title: "Правила за ползване"
     signup_form_message: 'Аз прочетох и приемам  <a href="/tos" target="_blank">правилата за ползване</a>.'

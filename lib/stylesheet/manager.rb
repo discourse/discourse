@@ -86,8 +86,9 @@ class Stylesheet::Manager
     themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
     themes << nil
     themes.each do |id, name|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
+      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
         theme_id = id || SiteSetting.default_theme_id
+        next if target =~ THEME_REGEX && theme_id == -1
         cache_key = "#{target}_#{theme_id}"
 
         STDERR.puts "precompile target: #{target} #{name}"
@@ -165,7 +166,10 @@ class Stylesheet::Manager
          source_map_file: source_map_filename
       )
     rescue SassC::SyntaxError => e
-      Rails.logger.error "Failed to compile #{@target} stylesheet: #{e.message}"
+
+      # we do not need this reported as we will report it in the UI anyway
+      Rails.logger.info "Failed to compile #{@target} stylesheet: #{e.message}"
+
       if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
@@ -299,13 +303,16 @@ class Stylesheet::Manager
   end
 
   def settings_digest
+    theme_ids = Theme.components_for(@theme_id).dup
+    theme_ids << @theme_id
+
     fields = ThemeField.where(
       name: "yaml",
       type_id: ThemeField.types[:yaml],
-      theme_id: @theme_id
+      theme_id: theme_ids
     ).pluck(:updated_at)
 
-    settings = ThemeSetting.where(theme_id: @theme_id).pluck(:updated_at)
+    settings = ThemeSetting.where(theme_id: theme_ids).pluck(:updated_at)
     timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
 
     Digest::SHA1.hexdigest(timestamps)

@@ -9,6 +9,7 @@ RSpec.describe 'Multisite SiteSettings' do
 
   after do
     conn.clear_settings!
+    ActiveRecord::Base.establish_connection
   end
 
   def cache(name, namespace: true)

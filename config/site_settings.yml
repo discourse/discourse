@@ -178,7 +178,7 @@ basic:
     client: true
     type: list
     list_type: compact
-    default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
+    default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735'
   category_style:
     client: true
     default: 'bullet'
@@ -381,6 +381,7 @@ users:
     max: 60
   reserved_usernames:
     type: list
+    list_type: compact
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp|account-created|password-reset|admin-login|confirm-admin|account-created|activate-account|confirm-email-token|authorize-email"
   min_password_length:
     client: true
@@ -558,6 +559,7 @@ posting:
   enable_system_message_replies:
     default: true
   enable_personal_email_messages:
+    hidden: true
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
@@ -816,6 +818,9 @@ email:
     default: true
   unsubscribe_via_email_footer:
     default: false
+  disallow_reply_by_email_after_days:
+    default: 90
+    shadowed_by_global: true
   delete_email_logs_after_days:
     default: 90
     shadowed_by_global: true
@@ -837,6 +842,9 @@ email:
     default: 4
     min: 1
   bounce_score_threshold_deactivate: 30
+  bounce_score_erode_on_send:
+    default: 0.1
+    hidden: true
   soft_bounce_score:
     default: 1
     min: 1
@@ -925,10 +933,14 @@ files:
     default: false
     client: true
   s3_use_iam_profile: false
-  s3_access_key_id: ''
+  s3_access_key_id: 
+    default: ''
+    secret: true
+    shadowed_by_global: true
   s3_secret_access_key:
     default: ''
     secret: true
+    shadowed_by_global: true
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
@@ -938,6 +950,7 @@ files:
   s3_endpoint:
     default: 'https://s3.amazonaws.com'
     regex: '^https?:\/\/.+[^\/]$'
+    shadowed_by_global: true
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -1015,6 +1028,7 @@ trust:
     default: 1
     enum: 'TrustLevelSetting'
   min_trust_to_send_email_messages:
+    hidden: true
     default: 4
     enum: 'TrustLevelSetting'
   min_trust_to_flag_posts:
@@ -1233,10 +1247,10 @@ rate_limits:
     default: 6
   max_post_deletions_per_minute:
     min: 1
-    default: 3
+    default: 2
   max_post_deletions_per_day:
     min: 1
-    default: 50
+    default: 10
 
 developer:
   force_hostname:
@@ -1681,6 +1695,8 @@ user_api:
   allowed_user_api_auth_redirects:
     default: 'https://api.discourse.org/api/auth_redirect|discourse://auth_redirect'
     type: list
+  expire_user_api_keys_days:
+    default: 180
 
 tags:
   tagging_enabled:

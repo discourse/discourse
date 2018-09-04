@@ -7,7 +7,6 @@
 
 pt:
   site_settings:
-    discourse_narrative_bot_enabled: 'Ativar Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Desativar a publicação de boas-vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de utilizador que o Discourse Narrative Bot deverá ignorar"
     discourse_narrative_bot_disable_public_replies: "Desativar as respostas públicas do Discourse Narrative Bot"

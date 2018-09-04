@@ -7,7 +7,6 @@
 
 ru:
   site_settings:
-    discourse_narrative_bot_enabled: 'Включить дискуссионный бот'
     disable_discourse_narrative_bot_welcome_post: "Отключить приветственный пост от бота"
     discourse_narrative_bot_ignored_usernames: "Имена пользователей, которые следует игнорировать"
     discourse_narrative_bot_disable_public_replies: "Отключить общедоступные ответы в боте."

@@ -13,7 +13,9 @@ module Autospec
     watch(%r{^app/(.+)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^spec/support/.+\.rb$})                    { "spec" }
-    watch("app/controllers/application_controller.rb")  { "spec/controllers" }
+    watch("app/controllers/application_controller.rb")  { "spec/requests" }
+
+    watch(%r{app/controllers/(.+).rb})  { |m| "spec/requests/#{m[1]}_spec.rb" }
 
     watch(%r{^app/views/(.+)/.+\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
 

@@ -13,7 +13,8 @@ class UsersController < ApplicationController
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
-    :update_second_factor, :create_second_factor_backup, :select_avatar
+    :update_second_factor, :create_second_factor_backup, :select_avatar,
+    :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -97,13 +98,13 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    attributes = user_params.merge!(custom_fields: params[:custom_fields])
+    attributes = user_params
 
     # We can't update the username via this route. Use the username route
     attributes.delete(:username)
 
     if params[:user_fields].present?
-      attributes[:custom_fields] = {} unless params[:custom_fields].present?
+      attributes[:custom_fields] ||= {}
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
@@ -675,7 +676,7 @@ class UsersController < ApplicationController
       if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       else
-        return redirect_to("/")
+        return redirect_to(path('/'))
       end
     end
 
@@ -1097,6 +1098,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def revoke_auth_token
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    UserAuthToken.where(user_id: user.id).each(&:destroy!)
+
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+
+    render json: {
+      success: true
+    }
+  end
+
   private
 
   def honeypot_value
@@ -1153,6 +1167,7 @@ class UsersController < ApplicationController
       :card_background
     ]
 
+    permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys

@@ -76,6 +76,7 @@ Discourse::Application.routes.draw do
     end
 
     get "reports" => "reports#index"
+    get "reports/bulk" => "reports#bulk"
     get "reports/:type" => "reports#show"
 
     resources :groups, constraints: AdminConstraint.new do
@@ -412,6 +413,7 @@ Discourse::Application.routes.draw do
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/select" => "users#select_avatar", constraints: { username: RouteFormat.username }
     post "#{root_path}/:username/preferences/revoke-account" => "users#revoke_account", constraints: { username: RouteFormat.username }
+    post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }

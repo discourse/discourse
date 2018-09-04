@@ -1,4 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
+import User from "discourse/models/user";
+
 acceptance("User Preferences", {
   loggedIn: true,
   pretend(server, helper) {
@@ -22,6 +24,19 @@ acceptance("User Preferences", {
     server.post("/u/eviltrout/preferences/revoke-account", () => {
       return helper.response({
         success: true
+      });
+    });
+
+    server.put("/u/eviltrout/preferences/email", () => {
+      return helper.response({
+        success: true
+      });
+    });
+
+    server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
+      return helper.response({
+        gravatar_upload_id: 6543,
+        gravatar_avatar_template: "something"
       });
     });
   }
@@ -110,6 +125,20 @@ QUnit.test("email", async assert => {
   );
 });
 
+QUnit.test("email field always shows up", async assert => {
+  await visit("/u/eviltrout/preferences/email");
+
+  assert.ok(exists("#change-email"), "it has the input element");
+
+  await fillIn("#change-email", "eviltrout@discourse.org");
+  await click(".user-preferences button.btn-primary");
+
+  await visit("/u/eviltrout/preferences");
+  await visit("/u/eviltrout/preferences/email");
+
+  assert.ok(exists("#change-email"), "it has the input element");
+});
+
 QUnit.test("connected accounts", async assert => {
   await visit("/u/eviltrout/preferences/account");
 
@@ -172,6 +201,14 @@ QUnit.test("default avatar selector", async assert => {
 
   await click(".pref-avatar .btn");
   assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
+
+  await click(".avatar-selector-refresh-gravatar");
+
+  assert.equal(
+    User.currentProp("gravatar_avatar_upload_id"),
+    6543,
+    "it should set the gravatar_avatar_upload_id property"
+  );
 });
 
 acceptance("Avatar selector when selectable avatars is enabled", {

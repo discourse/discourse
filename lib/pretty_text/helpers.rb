@@ -77,8 +77,8 @@ module PrettyText
       result
     end
 
-    def lookup_inline_onebox(url)
-      InlineOneboxer.lookup(url)
+    def lookup_inline_onebox(url, opts = {})
+      InlineOneboxer.lookup(url, opts)
     end
 
     def get_topic_info(topic_id)

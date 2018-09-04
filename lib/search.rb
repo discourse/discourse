@@ -132,11 +132,14 @@ class Search
     @valid = true
     @page = @opts[:page]
 
+    term = term.to_s.dup
+
     # Removes any zero-width characters from search terms
-    term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    term.gsub!(/[\u200B-\u200D\uFEFF]/, '')
     # Replace curly quotes to regular quotes
-    term.to_s.gsub!(/[\u201c\u201d]/, '"')
-    @clean_term = term.to_s.dup
+    term.gsub!(/[\u201c\u201d]/, '"')
+
+    @clean_term = term
 
     term = process_advanced_search!(term)
 
@@ -369,7 +372,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\#([a-zA-Z0-9\-:=]+)/) do |posts, match|
+  advanced_filter(/^\#([\p{L}0-9\-:=]+)/) do |posts, match|
 
     exact = true
 
@@ -465,11 +468,11 @@ class Search
     end
   end
 
-  advanced_filter(/^tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+  advanced_filter(/^tags?:([\p{L}0-9,\-_+]+)/) do |posts, match|
     search_tags(posts, match, positive: true)
   end
 
-  advanced_filter(/\-tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+  advanced_filter(/\-tags?:([\p{L}0-9,\-_+]+)/) do |posts, match|
     search_tags(posts, match, positive: false)
   end
 

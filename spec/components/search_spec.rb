@@ -822,8 +822,9 @@ describe Search do
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
 
       # tags
-      topic.tags = [Fabricate(:tag, name: 'alpha')]
+      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет')]
       expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #привет').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
@@ -862,6 +863,14 @@ describe Search do
 
         expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post4.id])
         expect(Search.execute('tags:plants').posts.size).to eq(0)
+      end
+
+      it 'can find posts with non-latin tag' do
+        topic = Fabricate(:topic)
+        topic.tags = [Fabricate(:tag, name: 'さようなら')]
+        post = Fabricate(:post, raw: 'Testing post', topic: topic)
+
+        expect(Search.execute('tags:さようなら').posts.map(&:id)).to eq([post.id])
       end
 
       it 'can find posts with any tag from multiple tags' do
@@ -987,6 +996,28 @@ describe Search do
 
       results = Search.execute('first in:title')
       expect(results.posts.length).to eq(0)
+    end
+  end
+
+  context 'diacritics' do
+    let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }
+
+    it ('allows strips correctly') do
+      results = Search.execute('hello', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      # TODO when we add diacritic support we should return 1 here
+      results = Search.execute('regis', type_filter: 'topic')
+      expect(results.posts.length).to eq(0)
+
+      results = Search.execute('Régis', type_filter: 'topic', include_blurbs: true)
+      expect(results.posts.length).to eq(1)
+
+      # this is a test we got to keep working
+      expect(results.blurb(results.posts.first)).to include('Régis')
+
+      results = Search.execute('สวัสดี', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
     end
   end
 

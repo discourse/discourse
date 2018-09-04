@@ -2,9 +2,9 @@ import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  timeFormat: "HH:mm",
+  timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
-  dateTimeFormat: "YYYY-MM-DD HH:mm",
+  dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
   config: null,
   date: null,
   toDate: null,

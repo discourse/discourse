@@ -1,6 +1,6 @@
 en:
   site_settings:
-    discourse_narrative_bot_enabled: 'Enable Discourse Narrative Bot'
+    discourse_narrative_bot_enabled: 'Enable Discourse Narrative Bot (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Disable the welcome post by Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Usernames that the Discourse Narrative Bot should ignore"
     discourse_narrative_bot_disable_public_replies: "Disable public replies by Discourse Narrative Bot"
@@ -145,6 +145,7 @@ en:
 
     new_user_narrative:
       reset_trigger: "new user"
+      title: "New user narrative completetion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:

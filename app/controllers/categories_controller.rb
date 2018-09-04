@@ -118,10 +118,14 @@ class CategoriesController < ApplicationController
 
   def create
     guardian.ensure_can_create!(Category)
-
     position = category_params.delete(:position)
 
-    @category = Category.create(category_params.merge(user: current_user))
+    @category =
+      begin
+        Category.new(category_params.merge(user: current_user))
+      rescue ArgumentError => e
+        return render json: { errors: [e.message] }, status: 422
+      end
 
     if @category.save
       @category.move_to(position.to_i) if position

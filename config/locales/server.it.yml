@@ -34,14 +34,31 @@ it:
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   remove_posts_deleted_by_author: "Cancellato dall'autore"
+  redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   themes:
     bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
     error_importing: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
+    errors:
+      component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
+      component_no_default: "I componenti del tema non possono essere il tema predefinito"
+      no_multilevels_components: "I temi con temi figlio non possono essere essi stessi temi figlio"
     settings_errors:
       invalid_yaml: "Il codice YAML fornito è invalido."
+      data_type_not_a_number: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`, `bool`, `list` e `enum`"
       name_too_long: "Una delle impostazioni ha un nome troppo lungo. La lunghezza massima è 255 caratteri"
+      default_value_missing: "L'impostazione `%{name}` non ha valore predefinito"
+      default_not_match_type: "L'impostazione del valore di `%{name}` valore predefinito non corrisponde al tipo di impostazione."
+      default_out_range: "L'impostazione del valore predefinito `%{name}` non è nell'intervallo specificato."
+      enum_value_not_valid: "Il valore selezionato non è una delle opzioni enum."
       number_value_not_valid: "Il nuovo valore non è compreso nell'intervallo consentito."
+      number_value_not_valid_min_max: "Deve essere tra %{min} e %{max}."
+      number_value_not_valid_min: "Deve essere maggiore o uguale a %{min}."
+      number_value_not_valid_max: "Deve essere minore o uguale a %{max}."
+      string_value_not_valid: "La nuova lunghezza del valore non rientra nell'intervallo consentito."
+      string_value_not_valid_min_max: "Deve essere compreso tra %{min} e %{max} caratteri."
+      string_value_not_valid_min: "Deve contenere almeno %{min} caratteri."
+      string_value_not_valid_max: "Deve contenere al massimo %{max} caratteri."
   emails:
     incoming:
       default_subject: "L'argomento necessita di un titolo"
@@ -55,6 +72,7 @@ it:
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
+        from_reply_by_address_error: "Accade quando l'intestazione From corrisponde alla risposta per indirizzo email."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email presenti nei campi A/Cc/Ccn corrisponde ad alcun indirizzo email entrante tra quelli configurati."
@@ -96,6 +114,7 @@ it:
       not_an_integer: deve essere un intero
       odd: deve essere dispari
       record_invalid: 'Validazione fallita: %{errors}'
+      max_emojis: "non può avere più di %{max_emojis_count} emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
       restrict_dependent_destroy:
         one: "Impossibile cancellare il record poiché ne esistono %{record} dipendenti"
@@ -118,17 +137,27 @@ it:
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
+      invalid_choice:
+        one: 'Hai specificato la scelta non valida %{name}'
+        other: 'Hai specificato le scelte non valide %{name}'
       min_username_length_exists: "C'è almeno un utente con il nome più corto della lunghezza minima che stai cercando di impostare."
       min_username_length_range: "Non puoi impostare il minimo più grande del massimo."
       max_username_length_exists: "C'è almeno un utente con il nome più lungo della lunghezza massima che stai cercando di impostare."
       max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
+    conflicting_google_user_id: 'Il Google Account ID per questo account è cambiato; l''intervento dello staff è richiesto per motivi di sicurezza. Si prega di contattare staff e puntarli a  <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "Il tuo token di invito non è valido. Per favore contatta l'amministratore del sito."
+    not_found_template: |
+      <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
+
+      <p>Se ricordi la tua password puoi effettuare il <a href="%{base_url}/login">Login</a>.</p>
+
+      <p>In caso contrario <a href="%{base_url}/password-reset">Reimposta la Password</a>.</p>
     user_exists: "Non c'è bisogno di invitare <b>%{email}</b>, perché <a href='/u/%{username}/summary'>ha già un account!</a>"
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
@@ -140,10 +169,14 @@ it:
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
     invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
+  invalid_params: "Hai fornito parametri non validi alla richiesta: %{message}"
   not_logged_in: "Devi essere connesso per far ciò."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
+  authenticator_not_found: "Il metodo di autenticazione non esiste o è stato disabilitato."
   invalid_api_credentials: "Non ti è consentito visualizzare la risorsa richiesta. Il nome utente o la chiave API non sono validi."
+  provider_not_enabled: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non è abilitato."
+  provider_not_found: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non esiste."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
@@ -241,7 +274,7 @@ it:
         one: "%{count} utente è stato aggiunto al gruppo."
         other: "%{count} utenti sono stati aggiunti al gruppo."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' non è un Livello Esperienza valido."
+      grant_trust_level_not_valid: "'%{trust_level}' non è un livello di esperienza valido."
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist:
         one: "'%{username}' è già membro di questo gruppo."
@@ -326,11 +359,11 @@ it:
       Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
 
     reviving_old_topic: |+
-      ### Resuscitare questo Argomento?
+      ### Resuscitare questo argomento?
 
-      L'ultima risposta a questo Argomento è vecchia di %{days} giorni. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
+      L'ultima risposta a questo argomento risale a **%{time_ago}**. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
 
-      Sei davvero sicuro di voler continuare questa vecchia conversazione?
+      Sei sicuro di voler continuare questa vecchia discussione?
 
   activerecord:
     attributes:
@@ -338,7 +371,7 @@ it:
         name: "Nome Categoria"
       topic:
         title: 'Titolo'
-        featured_link: 'Collegamento in evidenza'
+        featured_link: 'Collegamento Evidenziato'
       post:
         raw: "Contenuto"
       user_profile:
@@ -349,9 +382,12 @@ it:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Puoi allegare solo avvertimenti ai messaggi personali."
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
+              cant_send_pm: "Spiacenti! Non puoi mandare messaggi personali a questo utente."
               no_user_selected: "Devi selezionare un utente valido."
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
+              target_user_not_found: "Non è stato possibile trovare uno degli utenti a cui stai inviando questo messaggio."
             featured_link:
               invalid: "è invalido. Un URL dovrebbe includere http:// o https://."
               invalid_category: "non può essere modificato in questa categoria."
@@ -365,6 +401,10 @@ it:
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "La riassegnazione di una email principale a un altro utente non è consentita."
         color_scheme_color:
           attributes:
             hex:
@@ -384,6 +424,10 @@ it:
           attributes:
             execute_at:
               in_the_past: "deve essere in data futura."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'Le seguenti chiavi(e) di interpolazione non sono valide: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -403,20 +447,41 @@ it:
     title: "Benvenuto in Discourse"
     body: |2
 
-        Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
+      Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
 
-        **Modificalo** con una breve descrizione della tua comunità:
+      **Modificalo** con una breve descrizione della tua comunità:
 
-        - A chi è rivolto?
-        - Cosa possono trovare qui?
-        - Perchè dovrebbero venire qui?
-        - Dove possono leggere di più (collegamenti, risorse, ecc)?
+      - A chi è rivolto?
+      - Cosa possono trovare qui?
+      - Perché dovrebbero venire qui?
+      - Dove possono leggere di più (collegamenti, risorse, ecc)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
+      Potresti voler chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Salotto"
+    body: |2
+
+      Congratulazioni! :confetti_ball:
+
+      Se vedi questo messaggio, significa che sei stato promosso ad **Assiduo** (Livello Esperienza 3).
+
+      Da ora sarai in grado di: &hellip;
+
+      * Cambiare il titolo a qualsiasi Argomento
+      * Cambiare la Categoria di qualsiasi Argomento
+      * I tuoi collegamenti saranno seguibili ([il nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
+      * Accedere alla categoria privata Lounge visibile ai soli utenti che hanno raggiunto il Livello Esperienza 3 o superiore
+      * Nascondere messaggi spam con una sola segnalazione
+
+      Ecco la [lista degli attuali utenti con Livello Esperienza 3](/badges/3/regular). Lascia loro un saluto.
+
+      Grazie per essere un importante membro della nostra community!
+
+      (Per ulteriori informazioni sui Livelli Esperienza dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti resteranno Assidui nel tempo.)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -433,6 +498,9 @@ it:
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Nessuna\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
+      topic_exists:
+        one: "Non puoi cancellare questa categoria perché ha 1 argomento. L'argomento più vecchio è %{topic_link}."
+        other: "Non puoi cancellare questa categoria perché ha %{count} argomenti. L'argomento più vecchio è %{topic_link}."
       topic_exists_no_oldest: "Non puoi cancellare questa categoria perché il numero di argomenti è di %{count}."
     uncategorized_description: "Argomenti che non necessitano di una categoria, o che non ricadono in nessuna categoria esistente."
   trust_levels:
@@ -451,6 +519,23 @@ it:
     image_placeholder:
       broken: "Questa immagine è assente"
   rate_limiter:
+    slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
+    too_many_requests: "Hai eseguito questa operazione troppe volte. Attendi %{time_left} prima di riprovare."
+    by_type:
+      first_day_replies_per_day: "Hai raggiunto il massimo numero di risposte che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
+      first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
+      create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      delete_post: "Stai cancellando i messaggi troppo velocemente. Per favore attendi %{time_left} prima di riprovare."
+      public_group_membership: "Stai entrando/uscendo dai gruppi troppo di frequente. Per favore aspetta %{time_left} prima di riprovare."
+      topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti. Per favore attendi %{time_left} prima di riprovare."
+      pms_per_day: "Hai raggiunto il massimo numero di messaggi. Per favore attendi %{time_left} prima di riprovare."
+      create_like: "Hai raggiunto il massimo numero di \"Mi piace\". Per favore attendi %{time_left} prima di riprovare."
+      create_bookmark: "Hai raggiunto il massimo numero di segnalibri. Per favore attendi %{time_left} prima di riprovare."
+      edit_post: "Hai raggiunto il massimo numero di modifiche. Per favore attendi %{time_left} prima di riprovare."
+      live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Per favore attendi %{time_left} prima di riprovare."
+      unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email. Per favore aspetta %{time_left}  prima di riprovare."
+      topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti. Per favore aspetta %{time_left} prima di riprovare."
     hours:
       one: "1 ora"
       other: "%{count} ore"
@@ -550,6 +635,8 @@ it:
     authorizing_old:
       title: "Grazie per aver confermato il tuo attuale indirizzo email"
       description: "Ti stiamo inviando una email al nuovo indirizzo per conferma."
+  associated_accounts:
+    revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
   activation:
     action: "Clicca qui per attivare il tuo account"
     already_done: "Spiacenti, questo collegamento di attivazione non è più valido. Forse il tuo account è già attivo?"
@@ -568,7 +655,7 @@ it:
   post_action_types:
     off_topic:
       title: 'Fuori Tema'
-      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrà probabilmente essere spostato. '
+      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrebbe probabilmente essere spostato altrove. '
       short_description: 'Non pertinente alla discussione'
       long_form: 'segnalato come fuori tema'
     spam:
@@ -585,12 +672,14 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
+      description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
+      short_description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
-      description: 'Questo messaggio richiede attenzione da parte dello staff per altri motivi non elencati.'
+      description: 'Questo messaggio richiede attenzione da parte dello staff per un altro motivo non elencato.'
       short_description: 'Richiede l''attenzione dello staff per un''altra ragione'
       long_form: 'segnalato all''attenzione dello staff'
       email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
@@ -674,12 +763,21 @@ it:
       read: "Leggi tutto"
       write: "Scrivi tutto"
   reports:
+    post_edits:
+      labels:
+        author: Autore
     visits:
       title: "Visite Utente"
       xaxis: "Giorno"
-      yaxis: "Numero visite"
+      yaxis: "Numero di visite"
     signups:
+      title: "Iscrizioni"
       xaxis: "Giorno"
+      yaxis: "Numero di iscrizioni"
+    daily_engaged_users:
+      xaxis: "Giorno"
+      yaxis: "Utenti Impegnati"
+      description: "Numero di utenti che hanno scritto o messo Mi piace nell'ultimo giorno"
     profile_views:
       title: "Visite Profilo Utente"
       xaxis: "Giorno"
@@ -688,10 +786,12 @@ it:
       title: "Argomenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi argomenti"
+      description: "Nuovi argomenti creati durante questo periodo"
     posts:
       title: "Messaggi"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi messaggi"
+      description: "Nuovi messaggi creati durante questo periodo"
     likes:
       title: "Mi piace"
       xaxis: "Giorno"
@@ -712,11 +812,16 @@ it:
       title: "Utenti per Livello Esperienza"
       xaxis: "Livello Esperienza"
       yaxis: "Numero Utenti"
+      labels:
+        level: Livello
     users_by_type:
       title: "Utenti per Tipo"
       xaxis: "Tipo"
       yaxis: "Numero di Utenti"
+      labels:
+        type: Tipo
       xaxis_labels:
+        admin: Amministratore
         moderator: Moderatore
         suspended: Sospeso
         silenced: Silenziato
@@ -730,9 +835,12 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di Email"
     user_to_user_private_messages:
+      title: "Utente-Utente (escluse le risposte)"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
     user_to_user_private_messages_with_replies:
+      title: "Utente-Utente (incluse le risposte)"
+      xaxis: "Giorno"
       yaxis: "Numero di Messaggi"
     system_private_messages:
       title: "Sistema"
@@ -761,8 +869,15 @@ it:
       num_clicks: "Click"
       num_topics: "Argomenti"
       num_users: "Utenti"
+      labels:
+        domain: Dominio
+        num_clicks: Clic
+        num_topics: Argomenti
     top_referred_topics:
       title: "Migliori Argomenti Referenziati"
+      labels:
+        num_clicks: "Clic"
+        topic: "Argomento"
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
@@ -776,6 +891,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
+      title: "Pagine viste"
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina totali"
     page_view_logged_in_mobile_reqs:
@@ -819,8 +935,13 @@ it:
       xaxis: "Giorno"
       yaxis: "Totali"
     mobile_visits:
+      title: "Visite Utente (telefono)"
       xaxis: "Giorno"
       yaxis: "Numero di visite"
+    web_crawlers:
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pagine viste"
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
@@ -840,6 +961,7 @@ it:
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
       other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli. "
+    missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
     bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='/admin/site_settings'>Impostazioni del sito</a>."
     poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
     poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='/admin/site_settings/category/email'>configurazione POP3</a>."
@@ -955,9 +1077,9 @@ it:
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande in-risposta-a"
-    topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
-    topics_per_period_in_top_page: "Numero di argomenti di punta mostrati nella vista espansa 'Mostra Altro'"
-    redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti di punta."
+    topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
+    topics_per_period_in_top_page: "Numero di argomenti popolari mostrati nella vista espansa 'Mostra Altro'"
+    redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti popolari."
     top_page_default_timeframe: "Lasso di tempo di default per la pagina principale."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     prioritize_username_in_ux: "Nella pagina utente mostra prima il nome utente, la sua scheda e i suoi messaggi (quando l'opzione è disabilitata viene mostrato prima il nome)"
@@ -1368,9 +1490,9 @@ it:
     timeout_expired: "Il tempo di connessione dell'account è scaduto, prova a connetterti di nuovo."
     no_email: "Nessun indirizzo email è stato fornito. Si prega di contattare l'amministratore del sito."
     email_error: "Non è possibile registrare un account con l'indirizzo email <b>%{email}</b>. Si prega di contattare l'amministratore del sito."
-  original_poster: "Autore Iniziale"
+  original_poster: "Autore iniziale"
   most_posts: "Maggioranza Messaggi"
-  most_recent_poster: "Autore Più Recente"
+  most_recent_poster: "Autore più recente"
   frequent_poster: "Autore Assiduo"
   redirected_to_top_reasons:
     new_user: "Benvenuto nella nostra comunità! Questi sono gli argomenti recenti più popolari."
@@ -1389,9 +1511,6 @@ it:
     existing_topic_moderator_post:
       one: "Un messaggio è stato fuso in un argomento esistente: %{topic_link}"
       other: "%{count} messaggi sono stati fusi in un argomento esistente: %{topic_link}"
-  change_owner:
-    post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
-    deleted_user: "un utente eliminato"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
@@ -1588,6 +1707,11 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
+    usage_tips:
+      text_body_template: |
+        Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
+
+        Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [Livello Esperienza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
       subject_template: "Benvenuto su %{site_name}!"
@@ -2268,7 +2392,6 @@ it:
     recent_topics: "Recenti"
     see_more: "Altro"
     search_title: "Cerca nel sito"
-    search_google: "Google"
   offline:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
@@ -2505,41 +2628,69 @@ it:
     editor:
       name: Redattore
       description: Prima modifica ad un messaggio
+      long_description: |
+        Questo Distintivo è assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i messaggi per sempre, eventuali aggiornamenti sono incoraggiati: puoi migliorare la punteggiatura, sistemare errori di battitura, o aggiungere dettagli omessi nel primo invio. Modifica pure, e rendi i tuoi messaggi ancora migliori!
     basic_user:
       name: Base
+      long_description: |
+        Questo Distintivo è assegnato quando si raggiunge il Livello Esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
+      long_description: |
+        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 2. Grazie per aver essere stato partecipe per varie settimane, diventando veramente parte della comunità. Ora puoi mandare inviti dalla tua pagina utente, creare messaggi personali di gruppo, e lasciare più "Mi Piace" per giorno.
     regular:
       name: Assiduo
+      long_description: |
+        Questo Distintivo viene assegnato al raggiungimento del Livello Esperienza 3. Grazie per aver partecipato in modo assiduo alla nostra comunità per vari mesi. Ora sei uno dei nostri lettori più attivi, un contributore affidabile che rende la comunità sempre migliore. Ora puoi cambiare la categoria degli argomenti, trarre vantaggio da segnalazioni di spam più potenti, hai accesso all'esclusiva area Lounge, e potrai avere molti più "Mi piace" al giorno.
     leader:
       name: Veterano
+      long_description: |
+        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 4. Sei ormai un leader di questa comunità scelto dallo Staff, e rappresenti un esempio positivo per il resto del gruppo per come agisci e come ti esprimi. Hai ora la capacità di modificare tutti i messaggi e di compiere azioni di moderazione quali mettere in evidenza, chiudere, archiviare, dividere e unire messaggi.
     welcome:
       name: Benvenuto
       description: Ha ricevuto un "Mi piace"
+      long_description: |
+        Questo Distintivo viene assegnato quando ricevi il tuo primo "Mi piace". Congratulazioni, hai pubblicato qualcosa che gli altri membri della comunità hanno trovato interessante, utile o semplicemente cool!
     autobiographer:
       name: Autobiografo
       description: "Ha compilato le informazioni del <a href=\"%{base_uri}/my/preferences/profile\">profilo</a>"
+      long_description: |
+        Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine di profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
     anniversary:
       name: Compleanno
       description: "Membro attivo per un anno, ha scritto almeno una volta"
+      long_description: |
+        Questo Distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non esisterebbe senza persone come te.
     nice_post:
       name: Risposta Piacevole
       description: Ha ricevuto 10 mi piace su una risposta
+      long_description: |
+        Questo Distintivo viene assegnato quando una tua risposta ottiene 10 "Mi piace". Il tuo messaggio ha colpito la comunità e aiutato a portare avanti la discussione.
     good_post:
       name: Buona Risposta
       description: Ha ricevuto 25 mi piace su una risposta
+      long_description: |
+        Questo Distintivo viene assegnato quando una tua risposta ottiene 25 "Mi piace". Il tuo messaggio è stato eccezionale e ha reso la conversazione molto più interessante.
     great_post:
       name: Grande Risposta
       description: Ha ricevuto 50 mi piace su una risposta
+      long_description: |
+        Questo Distintivo viene assegnato quando una tua risposta ottiene 50 "Mi piace". Il tuo messaggio si è rivelato affascinante, simpatico, ha dato ispirazione e particolarmente sul punto, e la comunità lo ha davvero gradito!
     nice_topic:
       name: Argomento Piacevole
       description: Ha ricevuto 10 mi piace su un argomento
+      long_description: |
+        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 10 "Mi piace". Hai iniziato una conversazione interessante che la comunità ha gradito.
     good_topic:
       name: Buon Argomento
       description: Ha ricevuto 25 mi piace su un argomento
+      long_description: |
+        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 25 "Mi piace". Hai iniziato una conversazione interessante che ha attratto molto interesse nella comunità.
     great_topic:
       name: Grande Argomento
       description: Ha ricevuto 50 "Mi piace" in un argomento
+      long_description: |
+        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 50 "Mi piace". Hai iniziato una conversazione affascinante e la comunità è stata entusiasta dell'animata conversazione che ne è scaturita.
     nice_share:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori unici
@@ -2548,9 +2699,13 @@ it:
     good_share:
       name: Buona Condivisione
       description: Ha condiviso un messaggio con 300 visitatori unici
+      long_description: |
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Ottimo lavoro! Hai mostrato una bella discussione a un bel mucchio di persone e aiutato la crescita della comunità.
     great_share:
       name: Grande Condivisione
       description: Ha condiviso un messaggio con 1000 visitatori unici
+      long_description: |
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Hai promosso un'interessante discussione per un'audience enorme, e aiutato tantissimo la crescita di questa comunità.
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -2581,9 +2736,13 @@ it:
     first_quote:
       name: Prima Citazione
       description: Ha citato un messaggio
+      long_description: |
+        Questo Distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
     read_guidelines:
       name: Linee Guida
       description: "Ha letto le <a href=\"%{base_uri}/guidelines\">linee guida della comunità</a>"
+      long_description: |
+        Questo Distintivo è assegnato a chi <a href="%{base_uri}/guidelines">legge le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità che sia sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
     reader:
       name: Lettore
       description: Ha letto ogni risposta in un argomento con più di 100 risposte
@@ -2632,6 +2791,8 @@ it:
     crazy_in_love:
       name: Pazzo d’Amore
       description: Ha messo 50 mi piace al giorno per 20 volte
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per tutti i tuoi compagni di comunità!
     thank_you:
       name: Grazie
       description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace
@@ -2651,9 +2812,13 @@ it:
     first_mention:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio
+      long_description: |
+        Questo Distintivo viene assegnato la prima volta che menzioni lo @username di un altro utente in un tuo messaggio. Ogni menzione genera una notifica a quella persona, così che siano informati del tuo messaggio. Inizia col digitare il simbolo @ (il simbolo "at") per menzionare un altro utente o, se consentito, un gruppo. Si tratta di un modo semplice di portare qualcosa alla loro attenzione.
     first_onebox:
       name: Prima Onebox
       description: ha inserito un collegamento che ha generato una onebox
+      long_description: |
+        Questo Distintivo viene assegnato la prima volta che pubblichi un collegamento scrivendolo su una riga a sé stante, in modo che venga incorporato dalla funzione onebox insieme ad un sommario, un titolo e, se disponibile, ad un'immagine.
     first_reply_by_email:
       name: Prima Risposta Da Email
       description: Ha risposto ad un messaggio tramite email
@@ -2667,12 +2832,18 @@ it:
     enthusiast:
       name: Appassionato
       description: 10 giorni di frequenza
+      long_description: |
+        Questo Distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
     aficionado:
       name: Amatoriale
       description: 100 giorni di frequenza
+      long_description: |
+        Questo Distintivo viene assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
     devotee:
       name: Devoto
       description: 365 giorni di frequenza
+      long_description: |
+        Questo Distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"

@@ -195,7 +195,7 @@ pt_BR:
     guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
     privacy: "Privacidade"
-    terms_of_service: "Termos do Serviço"
+    tos: "Termos do Serviço"
     mobile_view: "VIsualização Mobile"
     desktop_view: "Visualização Desktop"
     you: "Você"
@@ -1007,8 +1007,6 @@ pt_BR:
       hide_session: "Lembre-me amanhã"
       hide_forever: "não obrigado"
       hidden_for_session: "OK, Eu vou perguntar amanhã. Você pode também sempre usar o 'Registre-se' para criar uma conta."
-      intro: "Ei você! :heart_eyes: Parece que você está gostando da discussão, mas ainda não criou uma conta."
-      value_prop: "Quando você cria uma conta, nós lembramos exatamente o que você leu, assim você sempre volta exatamente aonde estava. Você também recebe notificações, aqui e por e-mail, quando novas mensagens são feitas. E você pode curtir tópicos para compartilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
       description: "Existem <b>{{replyCount}}</b> respostas."
@@ -1022,7 +1020,6 @@ pt_BR:
       disable: "Mostrar Posts Deletados"
     private_message_info:
       title: "Mensagem"
-      invite: "Convidar outros..."
       leave_message: "Você quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Tem a certeza que deseja remover {{name}} desta mensagem?"
       remove_allowed_group: "Tem a certeza que deseja remover {{name}} desta mensagem?"
@@ -2976,7 +2973,6 @@ pt_BR:
           public_key: "Conceda o seguinte acesso de chave pública ao repo:"
           about_theme: "Sobre o Tema"
           license: "Licença"
-          component_of: "O tema é um componente de:"
           update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar Atualizações"
           updating: "Atualizando..."

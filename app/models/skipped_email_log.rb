@@ -12,7 +12,7 @@ class SkippedEmailLog < ActiveRecord::Base
   validate :ensure_valid_reason_type
 
   def self.reason_types
-    Enum.new(
+    @types ||= Enum.new(
       custom: 1,
       exceeded_emails_limit: 2,
       exceeded_bounces_limit: 3,
@@ -31,7 +31,10 @@ class SkippedEmailLog < ActiveRecord::Base
       sender_message_blank: 16,
       sender_message_to_blank: 17,
       sender_text_part_body_blank: 18,
-      sender_body_blank: 19
+      sender_body_blank: 19,
+      sender_post_deleted: 20
+      # you need to add the reason in server.en.yml below the "skipped_email_log" key
+      # when you add a new enum value
     )
   end
 

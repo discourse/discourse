@@ -112,7 +112,9 @@ class UserSerializer < BasicUserSerializer
                      :muted_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
-                     :user_api_keys
+                     :user_api_keys,
+                     :user_auth_tokens,
+                     :user_auth_token_logs
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -184,11 +186,29 @@ class UserSerializer < BasicUserSerializer
         id: k.id,
         application_name: k.application_name,
         scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
-        created_at: k.created_at
+        created_at: k.created_at,
+        last_used_at: k.last_used_at,
       }
     end
 
+    keys.sort! { |a, b| a[:last_used_at].to_time <=> b[:last_used_at].to_time }
     keys.length > 0 ? keys : nil
+  end
+
+  def user_auth_tokens
+    ActiveModel::ArraySerializer.new(
+      object.user_auth_tokens.order(:seen_at).reverse_order,
+      each_serializer: UserAuthTokenSerializer
+    )
+  end
+
+  def user_auth_token_logs
+    ActiveModel::ArraySerializer.new(
+      object.user_auth_token_logs.where(
+        action: UserAuthToken::USER_ACTIONS
+      ).order(:created_at).reverse_order,
+      each_serializer: UserAuthTokenLogSerializer
+    )
   end
 
   def bio_raw

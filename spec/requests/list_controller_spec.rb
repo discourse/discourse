@@ -11,11 +11,6 @@ RSpec.describe ListController do
   end
 
   describe '#index' do
-    it "doesn't throw an error with a negative page" do
-      get "/#{Discourse.anonymous_filters[1]}", params: { page: -1024 }
-      expect(response.status).to eq(200)
-    end
-
     it "does not return a 500 for invalid input" do
       get "/latest?min_posts=bob"
       expect(response.status).to eq(400)
@@ -28,6 +23,21 @@ RSpec.describe ListController do
 
       get "/latest?exclude_category_ids[]=bob"
       expect(response.status).to eq(400)
+
+      get "/latest?max_posts=1111111111111111111111111111111111111111"
+      expect(response.status).to eq(400)
+
+      get "/latest?page=-1"
+      expect(response.status).to eq(400)
+
+      get "/latest?page=0"
+      expect(response.status).to eq(400)
+
+      get "/latest?page=2147483648"
+      expect(response.status).to eq(400)
+
+      get "/latest?page=1111111111111111111111111111111111111111"
+      expect(response.status).to eq(400)
     end
 
     it "returns 200 for legit requests" do
@@ -36,10 +46,17 @@ RSpec.describe ListController do
 
       get "/latest.json?exclude_category_ids=-1"
       expect(response.status).to eq(200)
-    end
 
-    it "doesn't throw an error with page params as an array" do
-      get "/#{Discourse.anonymous_filters[1]}", params: { page: ['7'] }
+      get "/latest.json?max_posts=12"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?min_posts=0"
+      expect(response.status).to eq(200)
+
+      get "/latest?page=1"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?page=2147483647"
       expect(response.status).to eq(200)
     end
 
@@ -262,6 +279,17 @@ RSpec.describe ListController do
       get "/latest.rss"
       expect(response.status).to eq(200)
       expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders links correctly with subfolder' do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      post = Fabricate(:post, topic: topic, user: user)
+      get "/latest.rss"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not include("/forum/forum")
+      expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
+      expect(response.body).to include("http://test.localhost/forum/u/#{post.user.username}")
     end
 
     it 'renders top RSS' do
