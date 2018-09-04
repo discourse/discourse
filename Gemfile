@@ -193,3 +193,4 @@ if ENV["IMPORT"] == "1"
 end
 
 gem 'webpush', require: false
+gem 'colored2', require: false
