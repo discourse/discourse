@@ -34,8 +34,15 @@ class Discourse::Cors
     origin = nil
 
     if cors_origins
-      if origin = env['HTTP_ORIGIN']
-        origin = nil unless cors_origins.include?(origin)
+      if http_origin = env['HTTP_ORIGIN']
+        cors_origins.each do |cors_origin|
+		  cors_origin_regex_str = Regexp.escape(cors_origin).gsub('\*','.*?')
+		  cors_origin_regex = Regexp.new "^#{cors_origin_regex_str}$", Regexp::IGNORECASE
+          if !!(http_origin =~ cors_origin_regex)
+            origin = http_origin
+            break
+          end
+		end
       end
 
       headers['Access-Control-Allow-Origin'] = origin || cors_origins[0]
