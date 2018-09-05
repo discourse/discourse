@@ -47,6 +47,15 @@ function modifyCollectionHeader(pluginApiIdentifiers, contentFunction) {
   _modifyCollectionHeaderCallbacks[pluginApiIdentifiers].push(contentFunction);
 }
 
+let _onSelectNoneCallbacks = {};
+function onSelectNone(pluginApiIdentifiers, mutationFunction) {
+  if (Ember.isNone(_onSelectNoneCallbacks[pluginApiIdentifiers])) {
+    _onSelectNoneCallbacks[pluginApiIdentifiers] = [];
+  }
+
+  _onSelectNoneCallbacks[pluginApiIdentifiers].push(mutationFunction);
+}
+
 let _onSelectCallbacks = {};
 function onSelect(pluginApiIdentifiers, mutationFunction) {
   if (Ember.isNone(_onSelectCallbacks[pluginApiIdentifiers])) {
@@ -102,6 +111,12 @@ export function applyOnSelectPluginApiCallbacks(identifiers, val, context) {
   });
 }
 
+export function applyOnSelectNonePluginApiCallbacks(identifiers, context) {
+  identifiers.forEach(key => {
+    (_onSelectNoneCallbacks[key] || []).forEach(c => c(context));
+  });
+}
+
 export function modifySelectKit(pluginApiIdentifiers) {
   return {
     appendContent: content => {
@@ -131,6 +146,10 @@ export function modifySelectKit(pluginApiIdentifiers) {
     onSelect: callback => {
       onSelect(pluginApiIdentifiers, callback);
       return modifySelectKit(pluginApiIdentifiers);
+    },
+    onSelectNone: callback => {
+      onSelectNone(pluginApiIdentifiers, callback);
+      return modifySelectKit(pluginApiIdentifiers);
     }
   };
 }
@@ -142,6 +161,7 @@ export function clearCallbacks() {
   _modifyHeaderComputedContentCallbacks = {};
   _modifyCollectionHeaderCallbacks = {};
   _onSelectCallbacks = {};
+  _onSelectNoneCallbacks = {};
 }
 
 const EMPTY_ARRAY = Object.freeze([]);

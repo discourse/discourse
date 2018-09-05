@@ -297,6 +297,12 @@ export default Ember.Controller.extend({
   uploadIcon: () => uploadIcon(),
 
   actions: {
+    resetTagsSelection() {
+      if (this.get("model.tags")) {
+        this.set("model.tags", []);
+      }
+    },
+
     cancelUpload() {
       this.set("model.uploadCancelled", true);
     },
