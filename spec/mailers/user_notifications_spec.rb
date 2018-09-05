@@ -802,12 +802,15 @@ describe UserNotifications do
 
   describe "notifications from template" do
 
-    context "user locale has been set" do
+    context "user locale is allowed" do
+      before do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = true
+      end
 
       %w(signup signup_after_approval confirm_old_email notify_old_email confirm_new_email
          forgot_password admin_login account_created).each do |mail_type|
         include_examples "notification derived from template" do
-          SiteSetting.default_locale = "en"
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
@@ -817,29 +820,19 @@ describe UserNotifications do
       end
     end
 
-    context "user locale has not been set" do
+    context "user locale is not allowed" do
+      before do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = false
+      end
+
       %w(signup signup_after_approval notify_old_email confirm_old_email confirm_new_email
          forgot_password admin_login account_created).each do |mail_type|
         include_examples "notification derived from template" do
-          SiteSetting.default_locale = "en"
-          let(:locale) { nil }
+          let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
-            expects_build_with(has_entry(:locale, nil))
-          end
-        end
-      end
-    end
-
-    context "user locale is an empty string" do
-      %w(signup signup_after_approval notify_old_email confirm_new_email confirm_old_email
-         forgot_password admin_login account_created).each do |mail_type|
-        include_examples "notification derived from template" do
-          SiteSetting.default_locale = "en"
-          let(:locale) { "" }
-          let(:mail_type) { mail_type }
-          it "sets the locale" do
-            expects_build_with(has_entry(:locale, nil))
+            expects_build_with(has_entry(:locale, "en"))
           end
         end
       end
