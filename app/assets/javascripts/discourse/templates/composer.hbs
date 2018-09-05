@@ -60,7 +60,13 @@
 
                 {{#if model.showCategoryChooser}}
                   <div class="category-input">
-                    {{category-chooser fullWidthOnMobile=true value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
+                    {{category-chooser
+                      fullWidthOnMobile=true
+                      value=model.categoryId
+                      scopedCategoryId=scopedCategoryId
+                      onSelect=(action "resetTagsSelection")
+                      onSelectNone=(action "resetTagsSelection")
+                      tabindex="3"}}
                     {{popup-input-tip validation=categoryValidation}}
                   </div>
                 {{/if}}

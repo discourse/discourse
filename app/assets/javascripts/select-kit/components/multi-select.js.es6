@@ -2,7 +2,10 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, makeArray, run } = Ember;
-import { applyOnSelectPluginApiCallbacks } from "select-kit/mixins/plugin-api";
+import {
+  applyOnSelectPluginApiCallbacks,
+  applyOnSelectNonePluginApiCallbacks
+} from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -253,6 +256,11 @@ export default SelectKitComponent.extend({
       !computedContentItem ||
       computedContentItem.__sk_row_type === "noneRow"
     ) {
+      applyOnSelectNonePluginApiCallbacks(
+        this.get("pluginApiIdentifiers"),
+        this
+      );
+      this._boundaryActionHandler("onSelectNone");
       this.clearSelection();
       return;
     }
