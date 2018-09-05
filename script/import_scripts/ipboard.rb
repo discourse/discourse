@@ -790,7 +790,7 @@ EOM
     raw.gsub!(/\[media\](.+?)\[\/media\]/, "\n\\1\n\n")
     raw.gsub!(/\[php\](.+?)\[\/php\]/m) { |m| "\n\n```php\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n" }
     raw.gsub!(/\[code\](.+?)\[\/code\]/m) { |m| "\n\n```\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n" }
-    raw.gsub!(/\[list\](.+?)\[\/list\]/m) { |m| "\n" + $1.gsub(/\[\*\]/, "\n- ")) + "\n\n" }
+    raw.gsub!(/\[list\](.+?)\[\/list\]/m) { |m| "\n" + $1.gsub(/\[\*\]/, "\n- ") + "\n\n" }
     raw.gsub!(/\[\/quote\]/, "\n[/quote]\n")
     raw.gsub!(/date=\'(.+?)\'/, '')
     raw.gsub!(/timestamp=\'(.+?)\' /, '')
