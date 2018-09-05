@@ -15,7 +15,7 @@ end
 # List of locales that will break Discourse and need to be fixed
 # by translators in Transifex.
 def broken_locales
-  ['ja', 'zh_TW']
+  ['ja']
 end
 
 def supported_locales

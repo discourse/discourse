@@ -21,12 +21,13 @@ hu:
     <<: *datetime_formats
   time:
     <<: *datetime_formats
-    am: "de"
-    pm: "du"
+    am: "de."
+    pm: "du."
   title: "Discourse"
   topics: "Témák"
   posts: "Bejegyzések"
   loading: "Töltés"
+  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> által működtetve, legjobb megtekintés JavaScript engedélyezésével '
   log_in: "Bejelentkezés"
   submit: "Beküldés"
   purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált account"
@@ -36,8 +37,10 @@ hu:
   themes:
     bad_color_scheme: "Nem lehet az oldal stílust frissíteni, érvénytelen szín séma."
     other_error: "Hiba történt az oldal stílusának frissítése közben"
+    error_importing: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
     settings_errors:
       invalid_yaml: "Az adott YAML érvénytelen."
+      default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
       number_value_not_valid_min_max: "%{min} és %{max} között kell lennie."
   emails:
     incoming:
@@ -554,6 +557,7 @@ hu:
       num_topics: "Témák"
       num_users: "Felhasználók"
       labels:
+        domain: Domain
         num_clicks: Kattintások
         num_topics: Témák
     top_referred_topics:
@@ -571,9 +575,13 @@ hu:
       title: "Kereső Robotok"
       xaxis: "Nap"
     page_view_total_reqs:
+      title: "Oldalmegtekintések"
       xaxis: "Nap"
+      yaxis: "Összes Oldalmegtekintés"
     page_view_logged_in_mobile_reqs:
+      title: "Bejelentkezett Oldalmegtekintések"
       xaxis: "Nap"
+      yaxis: "Mobilos Bejelentkezett Oldalmegtekintések"
     page_view_anon_mobile_reqs:
       xaxis: "Nap"
     http_background_reqs:
@@ -587,10 +595,13 @@ hu:
       title: "HTTP 3xx (Átirányítás)"
       xaxis: "Nap"
     http_4xx_reqs:
+      title: "HTTP 4xx (Kliens Hiba)"
       xaxis: "Nap"
+      yaxis: "Kliens Hibák (Állapot 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (Szerver Hiba)"
       xaxis: "Nap"
+      yaxis: "Szerver Hibák (Állapot 5xx)"
     http_total_reqs:
       title: "Összes"
       xaxis: "Nap"
@@ -609,6 +620,7 @@ hu:
     web_crawlers:
       labels:
         user_agent: "User Agent"
+        page_views: "Oldalmegtekintések"
   dashboard:
     rails_env_warning: "A szerver jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
@@ -917,8 +929,33 @@ hu:
       name: Vezető
     welcome:
       name: Üdvözöllek
+    reader:
+      name: Olvasó
+    thank_you:
+      name: Köszönöm
+    first_emoji:
+      name: Első Emoji
+    first_mention:
+      name: Első Megemlítés
+  admin_login:
+    errors:
+      unknown_email_address: "Ismertlen email cím"
+      invalid_token: "Érvénytelen token."
+    email_input: "Adminisztrátor Email"
+    submit_button: "Email küldése"
   tags:
     title: "Címkék"
+    minimum_required_tags: "Választanod kell legalább %{count} címkét."
+  rss_by_tag: "Téma meg lett jelölve %{tag}"
+  finish_installation:
+    congratulations: "Gratulálunk, telepítetted a Discourse-t!"
+    register:
+      button: "Regisztrálás"
+      title: "Adminisztrátor Fiók Regisztrálása"
+    confirm_email:
+      title: "Erősítsd meg az Emailed"
+    resend_email:
+      title: "Aktiváló Email Újraküldése"
   wizard:
     step:
       forum_title:
@@ -926,28 +963,36 @@ hu:
       introduction:
         title: "Bemutatkozás"
       privacy:
+        title: "Hozzáférés"
         fields:
           privacy:
             choices:
               open:
-                label: "Publikus"
+                label: "Nyilvános"
               restricted:
                 label: "Privát"
       contact:
+        title: "Kapcsolat"
         fields:
           contact_email:
+            label: "Email"
             placeholder: "name@example.com"
+          contact_url:
+            label: "Weboldal"
+            placeholder: "http://www.example.com/contact-us"
+          site_contact:
+            label: "Automatikus Üzenetek"
       corporate:
         title: "Szervezet"
         fields:
           company_short_name:
-            label: "Cég neve (rövid forma)"
+            label: "Cég Neve (rövid)"
             placeholder: "Initech"
           company_full_name:
-            label: "Cég neve (teljes)"
+            label: "Cég Neve (teljes)"
             placeholder: "Initech, Inc."
           company_domain:
-            label: "Cég domain neve"
+            label: "Cég Domain Neve"
             placeholder: "initech.com"
       colors:
         title: "Téma"
@@ -1001,3 +1046,4 @@ hu:
   staff_action_logs:
     not_found: "nem található"
     unknown: "ismeretlen"
+    user_merged: "%{username} össze lett vonva ezzel a fiókkal"

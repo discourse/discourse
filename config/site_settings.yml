@@ -933,10 +933,14 @@ files:
     default: false
     client: true
   s3_use_iam_profile: false
-  s3_access_key_id: ''
+  s3_access_key_id: 
+    default: ''
+    secret: true
+    shadowed_by_global: true
   s3_secret_access_key:
     default: ''
     secret: true
+    shadowed_by_global: true
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
@@ -946,6 +950,7 @@ files:
   s3_endpoint:
     default: 'https://s3.amazonaws.com'
     regex: '^https?:\/\/.+[^\/]$'
+    shadowed_by_global: true
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -1242,10 +1247,10 @@ rate_limits:
     default: 6
   max_post_deletions_per_minute:
     min: 1
-    default: 3
+    default: 2
   max_post_deletions_per_day:
     min: 1
-    default: 20
+    default: 10
 
 developer:
   force_hostname:

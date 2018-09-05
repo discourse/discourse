@@ -232,7 +232,8 @@ pl_PL:
     guidelines: "Przewodnik"
     privacy_policy: "Polityka prywatności"
     privacy: "Prywatność"
-    terms_of_service: "Warunki użytkowania serwisu"
+    tos: "Warunki użytkowania serwisu"
+    rules: "Zasady"
     mobile_view: "Wersja mobilna"
     desktop_view: "Wersja komputerowa"
     you: "Ty"
@@ -288,6 +289,8 @@ pl_PL:
       last_read: "to ostatni przeczytany przez ciebie wpis: kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki ustawione w tym temacie?"
+    drafts:
+      remove: "Usuń"
     topic_count_latest:
       one: "Zobacz {{count}} nowy albo zaktualizowany temat"
       few: "Zobacz {{count}} nowe albo zaktualizowane tematy"
@@ -765,6 +768,8 @@ pl_PL:
           few: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
           many: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
           other: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
+      associated_accounts:
+        connect: "Połącz"
       name:
         title: "Pełna nazwa"
         instructions: "twoja pełna nazwa (opcjonalnie)"
@@ -953,6 +958,7 @@ pl_PL:
         most_liked_users: "Najbardziej lajkowane"
         most_replied_to_users: "Najwięcej odpowiedzi do"
         no_likes: "Brak lajków."
+        replies: "Odpowiedzi"
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -1035,8 +1041,6 @@ pl_PL:
       hide_session: "Przypomnij mi jutro"
       hide_forever: "nie, dziękuję"
       hidden_for_session: "Ok, zapytamy jutro. Pamiętaj, że konto możesz w każdej chwili założyć klikając na 'Logowanie'."
-      intro: "Hej! :heart_eyes: Wygląda na to, że zainteresowała Cię dyskusja, ale nie posiadasz jeszcze konta."
-      value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description: "Jest  <b>{{replyCount}}</b> odpowiedzi."
@@ -1050,7 +1054,6 @@ pl_PL:
       disable: "Pokaż usunięte wpisy."
     private_message_info:
       title: "Wiadomość"
-      invite: "Zaproś innych"
       remove_allowed_user: "Czy naprawdę chcesz usunąć {{name}} z tej dyskusji?"
       remove_allowed_group: "Czy naprawdę chcesz usunąć {{name}} z tej wiadomości?"
     email: 'Email'
@@ -1111,21 +1114,27 @@ pl_PL:
       forgot: "Nie pamiętam konta"
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
       google_oauth2:
+        name: "Google"
         title: "przez Google"
         message: "Uwierzytelniam przy pomocy Google (upewnij się wyskakujące okienka nie są blokowane)"
       twitter:
+        name: "Twitter"
         title: "przez Twitter"
         message: "Uwierzytelnianie przy pomocy konta na Twitterze (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       instagram:
+        name: "Instagram"
         title: "z Instagram"
         message: "Uwierzytelnianie przy pomocy konta na Instagramie (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       facebook:
+        name: "Facebook"
         title: "przez Facebook"
         message: "Uwierzytelnianie przy pomocy konta Facebook (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       yahoo:
+        name: "Yahoo"
         title: "przez Yahoo"
         message: "Uwierzytelnianie przy pomocy konta Yahoo (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       github:
+        name: "GitHub"
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
     invites:
@@ -2885,7 +2894,6 @@ pl_PL:
           import_file_tip: "Plik .dcstyle.json zawierający motyw"
           about_theme: "O motywie"
           license: "Licencja"
-          component_of: "Motyw jest częścią:"
           update_to_latest: "Aktualizuj do najnowszego"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."

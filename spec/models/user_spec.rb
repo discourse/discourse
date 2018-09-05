@@ -1794,4 +1794,24 @@ describe User do
     end
   end
 
+  describe "ensure_consistency!" do
+
+    it "will clean up dangling avatars" do
+      upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+
+      upload.destroy!
+      user.reload
+      expect(user.uploaded_avatar_id).to eq(nil)
+
+      user.update_columns(uploaded_avatar_id: upload.id)
+
+      User.ensure_consistency!
+
+      user.reload
+      expect(user.uploaded_avatar_id).to eq(nil)
+    end
+
+  end
+
 end

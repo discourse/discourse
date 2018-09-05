@@ -193,7 +193,7 @@ hu:
     guidelines: "Irányelvek"
     privacy_policy: "Adatvédelmi szabályzat"
     privacy: "Adatvédelem"
-    terms_of_service: "Szolgáltatási feltételek"
+    tos: "Szolgáltatási feltételek"
     mobile_view: "Mobil nézet"
     desktop_view: "Asztali nézet"
     you: "Te"
@@ -978,7 +978,6 @@ hu:
       hide_session: "Holnap emlékeztess"
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap emlékeztetni foglak. Bármikor használhatod a 'Belépés' gombot, hogy csinálj magadnak egy fiókot."
-      intro: "Üdv nálunk! :heart_eyes: Úgy tűnik, tetszik a beszélgetés, de még nem regisztráltál fiókot."
     summary:
       enabled_description: "A téma összefoglalását látod: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description: "Összesen <b>{{count}}</b> válasz."
@@ -991,7 +990,6 @@ hu:
       disable: "Törölt bejegyzések mutatása"
     private_message_info:
       title: "Üzenet"
-      invite: "Mások meghívása..."
       leave_message: "Valóban el akarod hagyni a beszélgetést?"
       remove_allowed_user: "Biztosan kitörlöd {{name}}-t ebből az üzenetből?"
       remove_allowed_group: "Valóban el akarod távolítani {{name}}-t ebből az üzenetből?"
@@ -2879,9 +2877,6 @@ hu:
         no_results: "Nincs találat."
         clear_filter: "Törlés"
         add_url: "URL hozzáadása"
-        value_list:
-          default_none: "Gépelj a szűréshez vagy létrehozáshoz..."
-          no_choices_none: "Gépelj a létrehozáshoz..."
         uploaded_image_list:
           label: "Lista szerkesztése"
           empty: "Még nincs hozzárendelt kép. Kérlek, tölts fel egyet."

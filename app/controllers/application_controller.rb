@@ -156,6 +156,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from ArgumentError do |e|
+    if e.message == "string contains null byte"
+      raise Discourse::InvalidParameters, e.message
+    else
+      raise e
+    end
+  end
+
   rescue_from Discourse::InvalidParameters do |e|
     message = I18n.t('invalid_params', message: e.message)
     if (request.format && request.format.json?) || request.xhr? || !request.get?

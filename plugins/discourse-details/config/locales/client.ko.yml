@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  js:
+    composer:
+      details_text: "이 텍스트는 숨겨집니다."

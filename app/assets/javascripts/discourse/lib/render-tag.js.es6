@@ -24,8 +24,8 @@ export default function renderTag(tag, params) {
     "<" +
     tagName +
     href +
-    " data-tag-name=" + 
-    tag + 
+    " data-tag-name=" +
+    tag +
     " class='" +
     classes.join(" ") +
     "'>" +

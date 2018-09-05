@@ -4,7 +4,6 @@ import loadScript from "discourse/lib/load-script";
 export default Ember.Component.extend({
   classNames: ["admin-report-chart"],
   limit: 8,
-  primaryColor: "rgb(0,136,204)",
   total: 0,
 
   willDestroyElement() {
@@ -38,8 +37,8 @@ export default Ember.Component.extend({
             data: chartData.map(d => Math.round(parseFloat(d.y))),
             backgroundColor: prevChartData.length
               ? "transparent"
-              : "rgba(200,220,240,0.3)",
-            borderColor: this.get("primaryColor")
+              : model.secondary_color,
+            borderColor: model.primary_color
           }
         ]
       };
@@ -47,7 +46,7 @@ export default Ember.Component.extend({
       if (prevChartData.length) {
         data.datasets.push({
           data: prevChartData.map(d => Math.round(parseFloat(d.y))),
-          borderColor: this.get("primaryColor"),
+          borderColor: model.primary_color,
           borderDash: [5, 5],
           backgroundColor: "transparent",
           borderWidth: 1,

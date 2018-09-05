@@ -13,7 +13,7 @@
 
       var relativeTime = moment.utc(
         options.date + " " + options.time,
-        "YYYY-MM-DD HH:mm"
+        "YYYY-MM-DD HH:mm:ss"
       );
 
       if (options.recurring && relativeTime < moment().utc()) {
@@ -42,7 +42,18 @@
         }
       });
 
-      relativeTime = relativeTime.tz(moment.tz.guess()).format(options.format);
+      var relativeTime = relativeTime.tz(moment.tz.guess());
+      if (
+        options.format !== "YYYY-MM-DD HH:mm:ss" &&
+        relativeTime.isBetween(
+          moment().subtract(1, "day"),
+          moment().add(2, "day")
+        )
+      ) {
+        relativeTime = relativeTime.calendar();
+      } else {
+        relativeTime = relativeTime.format(options.format);
+      }
 
       var html = "<span>";
       html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";

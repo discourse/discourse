@@ -863,6 +863,19 @@ en:
       password_confirmation:
         title: "Password Again"
 
+      auth_tokens:
+        title: "Recently Used Devices"
+        title_logs: "Authentication Logs"
+        ip_address: "IP Address"
+        created: "Created"
+        first_seen: "First Seen"
+        last_seen: "Last Seen"
+        operating_system: "Operating System"
+        location: "Location"
+        action: "Action"
+        login: "Log in"
+        logout: "Log out everywhere"
+
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
       last_seen: "Seen"
@@ -1129,8 +1142,8 @@ en:
 
     private_message_info:
       title: "Message"
-      invite: "Invite Others..."
-      edit: "Add or remove"
+      invite: "Invite Others ..."
+      edit: "Add or Remove ..."
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
       remove_allowed_group: "Do you really want to remove {{name}} from this message?"

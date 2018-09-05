@@ -565,6 +565,7 @@ sw:
       yaxis: "Idadi ya utembeleaji"
     signups:
       xaxis: "Siku"
+      description: "Akaunti mpya zilizosajiliwa katika kipindi hiki"
     new_contributors:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
@@ -577,10 +578,12 @@ sw:
       title: "Mada"
       xaxis: "Siku"
       yaxis: "Idadi ya mada mpya"
+      description: "Mada mpya zilizotengenezwa katika kipindi hiki"
     posts:
       title: "Machapisho"
       xaxis: "Siku"
       yaxis: "Namba ya machapisho mapya"
+      description: "Machapisho mapya yaliyotengenezwa kwenye kipindi hiki"
     likes:
       title: "Upendo"
       xaxis: "Siku"
@@ -770,7 +773,6 @@ sw:
     summary_max_results: "Kiwango cha juu cha machapisho zinazoonyeshwa kutoka kwa 'Muhtasari wa Hii Mada'"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
-    enable_personal_email_messages: "Ruhusu watumiaji wenye kiwango cha 4 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
     enable_markdown_linkify: "Otomatikali maneno yanayofanana na kiungo ni kiungo: www.site.com na http://site.com zitakuwa viungo otomatikali."
     markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali  ni  viungo."

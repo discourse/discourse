@@ -355,10 +355,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
           post[:archetype] = Archetype.private_message
           post[:title] = title
           post[:target_usernames] = User.where(id: recipients).pluck(:username)
-          post[:post_create_action] = proc do |p|
+          post[:post_create_action] = proc do |action_post|
             @pm_mapping[users] ||= {}
             @pm_mapping[users][title] ||= []
-            @pm_mapping[users][title] << p.topic_id
+            @pm_mapping[users][title] << action_post.topic_id
           end
         end
 

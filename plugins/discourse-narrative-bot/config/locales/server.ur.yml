@@ -7,7 +7,6 @@
 
 ur:
   site_settings:
-    discourse_narrative_bot_enabled: 'ڈِسکورس نَرَیٹِو بوٹ کو فعال کریں'
     disable_discourse_narrative_bot_welcome_post: "ڈِسکورس نَرَیٹِو بوٹ کی طرف سے استقبالیہ پوسٹ غیر فعال کریں"
     discourse_narrative_bot_ignored_usernames: "صارف نام جو ڈِسکورس نَرَیٹِو بوٹ نظر انداز کرے"
     discourse_narrative_bot_disable_public_replies: "ڈِسکورس نَرَیٹِو بوٹ کی طرف سے عوامی جوابات غیر فعال کریں"

@@ -109,6 +109,13 @@ export class Tag {
       }
 
       decorate(text) {
+        const parent = this.element.parent;
+
+        if (this.name === "p" && parent && parent.name === "li") {
+          // fix for google docs
+          this.gap = "";
+        }
+
         return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
       }
     };
@@ -400,6 +407,12 @@ export class Tag {
     return class extends Tag.block(name) {
       decorate(text) {
         let smallGap = "";
+        const parent = this.element.parent;
+
+        if (parent && parent.name === "ul") {
+          this.gap = "";
+          this.suffix = "\n";
+        }
 
         if (this.element.filterParentNames(["li"]).length) {
           this.gap = "";

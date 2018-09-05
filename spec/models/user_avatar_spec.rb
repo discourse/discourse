@@ -118,4 +118,38 @@ describe UserAvatar do
       end
     end
   end
+
+  describe "ensure_consistency!" do
+
+    it "will clean up dangling avatars" do
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      user_avatar = Fabricate(:user).user_avatar
+
+      user_avatar.update_columns(
+        gravatar_upload_id: upload1.id,
+        custom_upload_id: upload2.id
+      )
+
+      upload1.destroy!
+      upload2.destroy!
+
+      user_avatar.reload
+      expect(user_avatar.gravatar_upload_id).to eq(nil)
+      expect(user_avatar.custom_upload_id).to eq(nil)
+
+      user_avatar.update_columns(
+        gravatar_upload_id: upload1.id,
+        custom_upload_id: upload2.id
+      )
+
+      UserAvatar.ensure_consistency!
+
+      user_avatar.reload
+      expect(user_avatar.gravatar_upload_id).to eq(nil)
+      expect(user_avatar.custom_upload_id).to eq(nil)
+    end
+
+  end
 end

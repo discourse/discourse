@@ -273,8 +273,8 @@ class ImportScripts::Telligent < ImportScripts::Base
           user_id: user_id,
           created_at: row["DateCreated"],
           closed: row["IsLocked"],
-          post_create_action: proc do |post|
-            topic = post.topic
+          post_create_action: proc do |action_post|
+            topic = action_post.topic
             Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id) if topic.pinned_until
             url = "f/#{row['ForumId']}/t/#{row['ThreadId']}"
             Permalink.create(url: url, topic_id: topic.id) unless Permalink.exists?(url: url)

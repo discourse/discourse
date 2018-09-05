@@ -210,7 +210,7 @@ sr:
     guidelines: "Smernice"
     privacy_policy: "Politika Privatnosti"
     privacy: "Privatnost"
-    terms_of_service: "Uslovi Korišćenja"
+    tos: "Uslovi Korišćenja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Računarski pogled"
     you: "Ti"
@@ -700,8 +700,6 @@ sr:
       disabled_description: "Obrisane poruke u temi su prikazane."
       enable: "Sakrij Obrisane Poruke"
       disable: "Prikaži Obrisane Poruke"
-    private_message_info:
-      invite: "Pozovi Druge..."
     email: 'E-mail'
     username: 'Korisničko Ime'
     last_seen: 'Viđen'

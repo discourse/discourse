@@ -193,7 +193,7 @@ tr_TR:
     guidelines: "Öneriler"
     privacy_policy: "Gizlilik Sözleşmesi"
     privacy: "Gizlilik"
-    terms_of_service: "Kullanım Koşulları"
+    tos: "Kullanım Koşulları"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
     you: "Sen"
@@ -259,6 +259,9 @@ tr_TR:
     topic_count_unread:
       one: "{{count}} Okunmamış konuyu görün"
       other: "{{count}} Okunmamış konuları görün"
+    topic_count_new:
+      one: "{{count}} Yeni Konu Gör"
+      other: "{{count}} Yeni konular gör"
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"
@@ -437,6 +440,7 @@ tr_TR:
         make_owner: "Sahibi Yap"
         make_owner_description: " <b>%{username}</b> bu grubun sahibi yap"
         remove_owner: "Sahiplikten kaldır"
+        remove_owner_description: "<b>%{username}</b> grubun sahibi olmaktan çıkar"
         owner: "Sahip"
       topics: "Konular"
       posts: "Gönderiler"
@@ -513,6 +517,7 @@ tr_TR:
       topic_stat_sentence:
         one: "%{unit} beri %{count} yeni konu."
         other: "%{unit} beri %{count} yeni konu."
+      more: " (%{count} daha fazla) ..."
     ip_lookup:
       title: IP Adresi Ara
       hostname: Sunucu ismi
@@ -985,6 +990,9 @@ tr_TR:
     unmute: Sessiz iptali
     last_post: Gönderilen
     time_read: Okunan
+    time_read_recently: '%{time_read} son günlerde'
+    time_read_tooltip: '%{time_read} toplam okuma zamanı'
+    time_read_recently_tooltip: '%{time_read} toplam okuma zamanı (%{recent_time_read} son 60 gün içerisinde)'
     last_reply_lowercase: son cevap
     replies_lowercase:
       one: cevap
@@ -994,8 +1002,6 @@ tr_TR:
       hide_session: "Yarın bana hatırlat"
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, sana yarın soracağım. Her zaman \"Giriş Yap\" kısmını kullanarak da hesap oluşturabilirsin.."
-      intro: "Nasılsın?:heart_eyes: Görünüşe göre sohbetin keyfini çıkarıyorsun, fakat henüz bir hesap almak için kayıt olmamışsın."
-      value_prop: "Bir hesap oluşturduğunda, daha önce neyi okuduğunu hatırlarız. Bu yüzden okumayı bırakırsan geri döndüğünde okumayı bıraktığın yere gelirsin. Bunun yanında; yeni bildirimlerini hem burada görebilirsin hem de sana e-posta yolu ile göndereceğiz. Ayrıca, gönderileri beğenirsen sevgiyi paylaşmış olursun. :heartbeat:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
       description: "<b>{{replyCount}}</b> adet cevap var."
@@ -1009,7 +1015,6 @@ tr_TR:
       disable: "Silinen Gönderileri Göster"
     private_message_info:
       title: "Mesaj"
-      invite: "Diğerlerini Davet Et..."
       leave_message: "Gerçekten bu mesajdan çıkmak mı istiyorsun?"
       remove_allowed_user: "Bu mesajdan {{name}} isimli kullanıcıyı çıkarmak istediğine emin misin?"
       remove_allowed_group: "Gerçekten {{name}} isimli kullanıcıyı bu mesajdan kaldırmak istiyor musun?"
@@ -1044,6 +1049,7 @@ tr_TR:
       complete_email: "<b>%{email}</b> e-posta adresi bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_username_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap bulduk, kısa bir süre içerisinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_email_found: "<b>%{email}</b> e-posta adresi ile eşleşen bir hesap bulduk, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
+      complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "%{email} Hiçbir hesap bulunamadı"
     login:
       title: "Giriş Yap"
@@ -1141,6 +1147,13 @@ tr_TR:
       default_header_text: Seç...
       no_content: Hiçbir eşleşme bulunamadı
       filter_placeholder: Ara...
+      create: "'{{content}}' Oluştur"
+      max_content_reached:
+        one: "Yalnızca {{count}} konu seçebilirsiniz"
+        other: "Yalnızca {{count}} konuları seçebilirsiniz"
+      min_content_not_reached:
+        one: "En azından {{count}} konu seçiniz"
+        other: "En azından {{count}}konuları seçiniz"
     emoji_picker:
       filter_placeholder: Emoji ara
       people: İnsanlar
@@ -1196,6 +1209,7 @@ tr_TR:
         post_length: "Gönderi en az {{min}} karakter olmalı"
         try_like: '<i class="fa fa-heart"></i> düğmesini denedin mi?'
         category_missing: "Bir kategori seçmelisin"
+        tags_missing: "En azından {{count}} etiket seçmelisin"
       save_edit: "Değişikliği Kaydet"
       reply_original: "Asıl konu üzerinden cevap ver"
       reply_here: "Buradan Cevapla"
@@ -1320,6 +1334,7 @@ tr_TR:
         replied: '{{username}}, "{{topic}}" başlıklı konuda size cevap verdi - {{site_title}}'
         posted: '{{username}}, "{{topic}}" başlıklı konuya yazdı - {{site_title}}'
         linked: '{{username}}, "{{topic}}" başlıklı konudaki gönderinize bağlantı yaptı - {{site_title}}'
+        confirm_title: 'Bildirimler etkin - %{site_title}'
         confirm_body: 'Başarılı! Bildirimler etkinleştirildi.'
     upload_selector:
       title: "Resim ekle"
@@ -1578,6 +1593,7 @@ tr_TR:
         auto_open: "Bu konu %{timeLeft} otomatik olarak açılacak."
         auto_close: "Bu konu %{timeLeft} otomatik olarak kapanacak."
         auto_publish_to_category: "Bu konu %{timeLeft} <a href=%{categoryUrl}>#%{categoryName}</a> kategorisinde yayınlanacak."
+        auto_reminder: "%{timeLeft} Bu konu hakkında hatırlatılacaksınız"
       auto_close_title: 'Otomatik Kapatma Ayarları'
       auto_close_immediate:
         one: "Konudaki son gönderi zaten %{count} saat eski, bu yüzden konu hemen kapatılacak."
@@ -2357,6 +2373,7 @@ tr_TR:
         other: "%{count} izin verildi"
       select_badge_for_title: Başlık olarak kullanılacak bir rozet seç
       none: "(hiçbiri)"
+      successfully_granted: "%{username} başarıyla %{badge} kazanmıştır"
       badge_grouping:
         getting_started:
           name: Başlangıç
@@ -2497,6 +2514,7 @@ tr_TR:
         space_free: "{{size}} boş"
         uploads: "yüklemeler"
         backups: "yedekler"
+        lastest_backup: "Güncel: %{date}"
         traffic_short: "Akış"
         traffic: "Uygulama web istekleri"
         page_views: "Sayfa Görüntülemeleri"
@@ -2531,6 +2549,8 @@ tr_TR:
           totals_for_sample: "Örnek toplamlar"
           total: "Tüm zamanlar toplamı"
           no_data: "Gösterilecek bilgi yok."
+          trending_search:
+            more: '<a href="/admin/logs/search_logs">Arama Günlükleri</a>'
       commits:
         latest_changes: "En son değişiklikler: lütfen sık sık güncelle!"
         by: "tarafından"
@@ -2572,6 +2592,9 @@ tr_TR:
         more: "(daha fazla cevap...)"
         suspend_user: "Kullanıcıyı Askıya Al"
         suspend_user_title: "Bu gönderi için kullanıcıyı askıya al"
+        replies:
+          one: "[1 cevap]"
+          other: "[%{count} cevaplar]"
         dispositions:
           agreed: "onaylandı"
           disagreed: "onaylanmadı"
@@ -2906,7 +2929,6 @@ tr_TR:
           public_key: "Repo'ya aşağıdaki genel anahtar erişimini ver:"
           about_theme: "Tema Hakkında"
           license: "Lisans"
-          component_of: "Tema bileşeni:"
           update_to_latest: "Sona Doğru Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor..."
@@ -2929,6 +2951,10 @@ tr_TR:
           embedded_scss:
             text: "Gömülü CSS"
             title: "Gömülü sürüm yorumlarıyla yayınlamak için isteğe uyarlanmış CSS'yi gir"
+          head_tag:
+            text: "</head>"
+          body_tag:
+            text: "</body>"
           yaml:
             text: "YAML"
             title: "Tema ayarlarını YAML formatında tanımla"
@@ -3107,6 +3133,7 @@ tr_TR:
             delete_category: "kategoriyi sil"
             create_category: "kategori oluştur"
             silence_user: "sessiz kullanıcı"
+            unsilence_user: "sessiz kullanıcı"
             removed_silence_user: "sessiz kullanıcı (kaldırılmış)"
             removed_unsilence_user: "sessiz olmayan kullanıcı (kaldırılmış)"
             grant_admin: "yönetici yetkisi ver"
@@ -3284,6 +3311,7 @@ tr_TR:
         silence_reason_placeholder: "Susturulma sebebi"
         silence_message: "E-posta Mesajı"
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
+        suspended_until: "(%{until} a kadar)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
         delete_all_posts: "Tüm gönderileri sil"
         penalty_post_actions: "İlişkili gönderi ile ne yapmak istiyorsun? "
@@ -3484,9 +3512,6 @@ tr_TR:
         clear_filter: "Temizle"
         add_url: "URL ekle"
         add_host: "sunucu ekle"
-        value_list:
-          default_none: "Filtrelemek veya oluşturmak için yaz ..."
-          no_choices_none: "Oluşturmak için yaz ..."
         uploaded_image_list:
           label: "Listeyi düzenle"
           empty: "Henüz hiç resim yok. Lütfen bir tane yükle."

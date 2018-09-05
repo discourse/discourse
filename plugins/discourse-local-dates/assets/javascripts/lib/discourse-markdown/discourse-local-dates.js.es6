@@ -6,7 +6,7 @@ function addLocalDate(buffer, matches, state) {
   let config = {
     date: null,
     time: null,
-    format: "YYYY-MM-DD HH:mm",
+    format: "YYYY-MM-DD HH:mm:ss",
     timezones: ""
   };
 
@@ -44,7 +44,7 @@ function addLocalDate(buffer, matches, state) {
     .filter(t => t)
     .map(timezone => {
       const dateTime = moment
-        .utc(`${config.date} ${config.time}`, "YYYY-MM-DD HH:mm")
+        .utc(`${config.date} ${config.time}`, "YYYY-MM-DD HH:mm:ss")
         .tz(timezone)
         .format(config.format);
 

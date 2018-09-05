@@ -7,7 +7,6 @@
 
 hu:
   site_settings:
-    discourse_narrative_bot_enabled: 'Discourse alámondó bot bekapcsolása'
     disable_discourse_narrative_bot_welcome_post: "A Discourse alámondó bot üdvözlő üzenetének kikapcsolása"
     discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse alámondó bot figyelmen kívül hagyjon"
     discourse_narrative_bot_disable_public_replies: "A Discourse alámondó bot nyilvános válaszainak kikapcsolása"

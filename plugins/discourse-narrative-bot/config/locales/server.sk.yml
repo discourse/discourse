@@ -7,7 +7,6 @@
 
 sk:
   site_settings:
-    discourse_narrative_bot_enabled: 'Povoliť Rozprávacieho Robota Discourse'
     disable_discourse_narrative_bot_welcome_post: "Vypnúť uvítací príspevok Rozprávacieho Robota Discourse"
     discourse_narrative_bot_ignored_usernames: "Používateľské mená, ktoré má Rozprávací Robot Discourse ignorovať"
     discourse_narrative_bot_disable_public_replies: "Vypnúť verejné odpovede Rozprávacieho Robota Discourse"

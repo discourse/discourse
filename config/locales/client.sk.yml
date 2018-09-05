@@ -237,7 +237,7 @@ sk:
     guidelines: "Pokyny"
     privacy_policy: "Ochrana súkromia"
     privacy: "Súkromie"
-    terms_of_service: "Podmienky používania"
+    tos: "Podmienky používania"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
     you: "Vy"
@@ -1036,8 +1036,6 @@ sk:
       hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
       hidden_for_session: "Fajn, opýtam sa vás to zajtra. Stále môžete na vytvorenie účtu použiť aj možnosť 'Prihlásenie'."
-      intro: "Zdravím! :heart_eyes: Vyzerá, že sa vám diskusia páči, ale stále nie ste prihlásený na svojom účte."
-      value_prop: "Keď si vytvoríte účet, zapamätáme si čo ste čítali, takže sa môžete vrátiť presne tam, kde ste prestali. Okrem toho dostanete upozornenie tu, aj na váš e-mail, vždy keď pribudnú nové príspevky. A môžete označiť príspevky ktoré sa vám páčia. :heartbeat:"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
       description: "<b>{{replyCount}}</b> odpovedí."
@@ -1051,7 +1049,6 @@ sk:
       disable: "Zobraziť zmazané príspevky"
     private_message_info:
       title: "Správa"
-      invite: "Pozvať ostatných..."
       remove_allowed_user: "Skutočne chcete odstrániť {{name}} z tejto správy?"
     email: 'Email'
     username: 'Používateľské meno'

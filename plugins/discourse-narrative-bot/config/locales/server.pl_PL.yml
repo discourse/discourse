@@ -7,7 +7,6 @@
 
 pl_PL:
   site_settings:
-    discourse_narrative_bot_enabled: 'Włącz bota Discourse Narrative'
     disable_discourse_narrative_bot_welcome_post: "Dezaktywuj wpis powitalny Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nazwy użytkownika, które bot Discourse Narrative powinien zignorować"
     discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
