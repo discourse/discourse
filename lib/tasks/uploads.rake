@@ -715,3 +715,38 @@ task "uploads:fix_incorrect_extensions" => :environment do
   require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
 end
+
+task "uploads:list_posts_with_broken_images" => :environment do
+  if ENV["RAILS_DB"]
+    list_broken_posts
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      list_broken_posts
+    end
+  end
+end
+
+def list_broken_posts
+  Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
+    begin
+      begin
+        analyzer = PostAnalyzer.new(post.raw, post.topic_id)
+        cooked_stripped = analyzer.send(:cooked_stripped)
+      end
+
+      cooked_stripped.css("img").each do |img|
+        if dom_class = img["class"]
+          if (Post.white_listed_image_classes & dom_class.split).count > 0
+            next
+          end
+        end
+
+        if img["data-orig-src"]
+          puts "#{post.full_url} #{img["data-orig-src"]}"
+        end
+      end
+    rescue => e
+      puts "#{post.full_url} Error: #{e.message}"
+    end
+  end
+end
