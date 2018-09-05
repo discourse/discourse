@@ -1,7 +1,4 @@
-require_dependency 'email/message_builder'
-
-class TestMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
+class TestMailer < ApplicationMailer
 
   def send_test(to_address)
     build_email(to_address, template: 'test_mailer')

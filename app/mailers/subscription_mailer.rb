@@ -1,7 +1,4 @@
-require_dependency 'email/message_builder'
-
-class SubscriptionMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
+class SubscriptionMailer < ApplicationMailer
 
   def confirm_unsubscribe(user, opts = {})
     unsubscribe_key = UnsubscribeKey.create_key_for(user, "all")

@@ -864,6 +864,24 @@ email:
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
+  enable_secondary_smtp:
+    default: false
+  smtp_address:
+    default: ''
+  smtp_port:
+    default: ''
+  smtp_domain:
+    default: ''
+  smtp_user_name:
+    default: ''
+  smtp_password:
+    default: ''
+  smtp_authentication:
+    default: ''
+  smtp_enable_start_tls:
+    default: false
+  smtp_openssl_verify_mode:
+    default: ''
 
 files:
   max_image_size_kb:
