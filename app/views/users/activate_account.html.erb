@@ -15,7 +15,7 @@
   <%= render_google_universal_analytics_code %>
 <%- end %>
 
-<script language="javascript">
+<script nonce="<%= nonce %>">
   (function() {
     setTimeout(function() {
       var $activateButton = $('#activate-account-button');

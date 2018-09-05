@@ -159,4 +159,149 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme.id])
     end
   end
+
+  describe "#set_csp_header" do
+    let!(:nonce) { SecureRandom.base64 }
+
+    it "sets request.env" do
+      SecureRandom.stubs(:base64).returns(nonce)
+      get "/"
+      expect(request.env["nonce"]).to eq nonce
+    end
+
+    it "sets X-Discourse-CSP-Nonce header" do
+      SecureRandom.stubs(:base64).returns(nonce)
+      get "/"
+      expect(response.headers["X-Discourse-CSP-Nonce"]).to eq nonce
+    end
+
+    it "replaces %{nonce} with nonce" do
+      SiteSetting.content_security_policy = "%{nonce}"
+      SecureRandom.stubs(:base64).returns(nonce)
+      get "/"
+      expect(response.headers["Content-Security-Policy"]).to eq nonce
+    end
+
+    it "replaces %{host} with host" do
+      SiteSetting.content_security_policy = "%{host}"
+      get "/"
+      expect(response.headers["Content-Security-Policy"]).to eq "http://test.localhost"
+    end
+
+    it "replaces %{cdn} with host" do
+      SiteSetting.content_security_policy = "%{cdn}"
+      get "/"
+      expect(response.headers["Content-Security-Policy"]).to eq "http://test.localhost"
+    end
+
+    it "sets a nonce every request" do
+      SiteSetting.content_security_policy = "%{nonce}"
+
+      get "/"
+      first_nonce = request.env["nonce"]
+      expect(first_nonce).not_to be_blank
+      expect(response.headers["X-Discourse-CSP-Nonce"]).to eq first_nonce
+      expect(response.headers["Content-Security-Policy"]).to eq first_nonce
+
+      get "/"
+      second_nonce = request.env["nonce"]
+      expect(second_nonce).not_to be_blank
+      expect(second_nonce).not_to eq first_nonce
+      expect(response.headers["X-Discourse-CSP-Nonce"]).to eq second_nonce
+      expect(response.headers["Content-Security-Policy"]).to eq second_nonce
+    end
+
+    context "when https is used in the request" do
+      it "replaces %{host} with host including https://" do
+        SiteSetting.content_security_policy = "%{host}"
+        get "/", headers: { "HTTPS": "on" }
+        expect(response.headers["Content-Security-Policy"]).to eq "https://test.localhost"
+      end
+
+      it "replaces %{cdn} with host including https://" do
+        SiteSetting.content_security_policy = "%{cdn}"
+        get "/", headers: { "HTTPS": "on" }
+        expect(response.headers["Content-Security-Policy"]).to eq "https://test.localhost"
+      end
+    end
+
+    context "when https is forced" do
+      before { SiteSetting.force_https = true }
+
+      it "replaces %{host} with host including https://"  do
+        SiteSetting.content_security_policy = "%{host}"
+        get "/"
+        expect(response.headers["Content-Security-Policy"]).to eq "https://test.localhost"
+      end
+
+      it "replaces %{cdn} with host including https://" do
+        SiteSetting.content_security_policy = "%{cdn}"
+        get "/"
+        expect(response.headers["Content-Security-Policy"]).to eq "https://test.localhost"
+      end
+    end
+
+    context "when a CDN is set" do
+      before do
+        SiteSetting.content_security_policy = "%{cdn}"
+        GlobalSetting.stubs(:cdn_url).returns("proto://cdn.example.com")
+      end
+
+      it "replaces %{cdn} with cdn url" do
+        get "/"
+        expect(response.headers["Content-Security-Policy"]).to eq "proto://cdn.example.com"
+      end
+
+      context "and it's protocol relative" do
+        before { GlobalSetting.stubs(:cdn_url).returns("//cdn.example.com") }
+
+        it "replaces %{cdn} with cdn url including http://" do
+          get "/"
+          expect(response.headers["Content-Security-Policy"]).to eq "http://cdn.example.com"
+        end
+
+        context "and https is used in the request" do
+          it "replaces %{cdn} with cdn url including https://" do
+            get '/', headers: { "HTTPS": "on" }
+            expect(response.headers["Content-Security-Policy"]).to eq "https://cdn.example.com"
+          end
+        end
+
+        context "and https is forced" do
+          before { SiteSetting.force_https = true }
+
+          it "replaces %{cdn} with cdn url including https://" do
+            get "/"
+            expect(response.headers["Content-Security-Policy"]).to eq "https://cdn.example.com"
+          end
+        end
+      end
+    end
+
+    context "with base_uri set" do
+      before { ActionController::Base.config.stubs(:relative_url_root).returns("/subdirectory") }
+
+      it "replaces %{host} with host including subdirectory" do
+        SiteSetting.content_security_policy = "%{host}"
+        get "/"
+        expect(response.headers["Content-Security-Policy"]).to eq "http://test.localhost/subdirectory"
+      end
+    end
+
+    it "ignores Host header in setting %{host}" do
+      SiteSetting.content_security_policy = "%{host}"
+      get "/", headers: { "HTTP_HOST": "bad.proxy.site" }
+      expect(response.headers["Content-Security-Policy"]).to eq "http://test.localhost"
+    end
+
+    context "in development environment" do
+      before { Rails.env.stubs(:development?).returns(true) }
+
+      it "uses Host header in setting %{host}" do
+        SiteSetting.content_security_policy = "%{host}"
+        get "/", headers: { "HTTP_HOST": "localhost:3456" }
+        expect(response.headers["Content-Security-Policy"]).to eq "http://localhost:3456"
+      end
+    end
+  end
 end

@@ -17,7 +17,7 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
-    <script>
+    <script nonce="<%= nonce %>">
       window.EmberENV = window.EmberENV || {};
       window.EmberENV['FORCE_JQUERY'] = true;
     </script>
@@ -36,7 +36,7 @@
     <%- end %>
 
     <%- if staff? %>
-      <script src="<%= ExtraLocalesController.url('admin') %>"></script>
+      <script src="<%= ExtraLocalesController.url('admin') %>" nonce="<%= nonce %>"></script>
       <%= preload_script "admin" %>
     <%- end %>
 
@@ -105,7 +105,7 @@
     <% end %>
 
     <%- if @preloaded.present? %>
-      <script>
+      <script nonce="<%= nonce %>">
       (function() {
         var ps = require('preload-store').default;
         <%- @preloaded.each do |key, json| %>

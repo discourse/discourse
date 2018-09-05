@@ -30,7 +30,7 @@
   <%= hidden_field_tag 'scopes', @scopes%>
   <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-danger', id: 'submit' %>
 <% end %>
-<script>
+<script nonce="<%= nonce %>">
   window.__submitted = false;
 
   // prevent double submission which would invalidate the nonce
@@ -44,5 +44,3 @@
 </script>
 </div>
 <% end %>
-
-

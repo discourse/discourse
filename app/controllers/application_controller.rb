@@ -16,6 +16,8 @@ require_dependency 'topic_query'
 require_dependency 'hijack'
 
 class ApplicationController < ActionController::Base
+  before_action :set_csp_header
+
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
@@ -493,6 +495,28 @@ class ApplicationController < ActionController::Base
 
   def secure_session
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+  end
+
+  def set_csp_header
+    nonce = SecureRandom.base64
+    request.env["nonce"] = nonce
+    response.headers["X-Discourse-CSP-Nonce"] = nonce
+
+    if Rails.env.development?
+      # don't do this in prod, vulnerable to Host/X-Forwarded-Host modification
+      base_url = request.protocol + request.host_with_port
+    else
+      base_url = Discourse.base_url
+    end
+    protocol = SiteSetting.force_https? ? "https://" : request.protocol
+    host = base_url.sub("http://", protocol)
+    cdn = GlobalSetting.cdn_url.to_s.sub(/^\/\//, protocol).presence
+
+    response.headers["Content-Security-Policy"] =
+      SiteSetting.content_security_policy
+      .gsub("%{nonce}", nonce)
+      .gsub("%{host}", host)
+      .gsub("%{cdn}", cdn || host)
   end
 
   private
