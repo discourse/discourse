@@ -1,7 +1,7 @@
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-const NUM_ENTRIES = 8;
+const MAX_LIST_HEIGHT = 700;
 
 export default Ember.Component.extend({
   THEMES: THEMES,
@@ -63,15 +63,24 @@ export default Ember.Component.extend({
   },
 
   didRender() {
-    let height = -1;
-    this.$(".themes-list-item")
-      .slice(0, NUM_ENTRIES)
-      .each(function() {
-        height += $(this).outerHeight();
-      });
-    if (height >= 485 && height <= 800) {
-      this.$(".themes-list-container").css("max-height", `${height}px`);
+    this._super(...arguments);
+
+    // hide scrollbar
+    const $container = this.$(".themes-list-container");
+    const containerNode = $container[0];
+    if (containerNode) {
+      const width = containerNode.offsetWidth - containerNode.clientWidth;
+      $container.css("width", `calc(100% + ${width}px)`);
     }
+
+    let height = -1;
+    Array.from(this.$(".themes-list-item")).forEach(node => {
+      const nodeHeight = $(node).outerHeight();
+      if (height + nodeHeight <= MAX_LIST_HEIGHT) {
+        height += nodeHeight;
+      }
+    });
+    $container.css("max-height", `${height}px`);
   },
 
   actions: {
@@ -79,6 +88,11 @@ export default Ember.Component.extend({
       if (newTab !== this.get("currentTab")) {
         this.set("currentTab", newTab);
       }
+    },
+    navigateToTheme(theme) {
+      Em.getOwner(this)
+        .lookup("router:main")
+        .transitionTo("adminCustomizeThemes.show", theme);
     }
   }
 });
