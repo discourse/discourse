@@ -42,6 +42,7 @@ es:
     errors:
       component_no_user_selectable: "Los componentes de tema no pueden ser seleccionables por los usuarios"
       component_no_default: "Los componentes de temas no pueden ser el tema por defecto"
+      component_no_color_scheme: "Los componentes de tema no pueden tener esquemas de color"
       no_multilevels_components: "Loa temas con temas hijos no pueden ser hijos de otros temas"
     settings_errors:
       invalid_yaml: "YAML provisto es inválido."
@@ -627,6 +628,17 @@ es:
   email_login:
     invalid_token: "Lo sentimos, ese enlace de inicio de sesión de correo electrónico es demasiado viejo. Seleccione el botón Iniciar sesión y use 'Olvidé mi contraseña' para obtener un nuevo enlace."
     title: "Email login"
+  user_auth_tokens:
+    devices:
+      android: 'Dispositivo Android'
+      linux: 'Ordenador Linux'
+      windows: 'Ordenador Windows'
+      mac: 'Mac'
+      iphone: 'iPhone'
+      ipad: 'iPad'
+      ipod: 'iPod'
+      mobile: 'Dispositivo móvil'
+      unknown: 'Dispositivo desconocido'
   change_email:
     confirmed: "Tu email ha sido actualizado."
     please_continue: "Continuar a %{site_name}"
@@ -1724,6 +1736,10 @@ es:
     second_factor_toggle:
       totp: "Usar una aplicación de verificación en su lugar"
       backup_code: "Usar un código de respaldo en su lugar"
+  admin:
+    email:
+      sent_test: "¡enviado!"
+      sent_test_disabled: "no se ha podido enviar el email porque están desactivados"
   user:
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
@@ -2294,6 +2310,13 @@ es:
 
         Si dispones de una interfaz de usuario web para la cuenta de correo POP, es posible que debas iniciar sesión allí y comprobar su configuración.
 
+    email_revoked:
+      title: "Email revocado"
+      subject_template: "¿Es tu correo electrónico correcto?"
+      text_body_template: |
+        Lo sentimos, pero estamos teniendo problemas para contactarte por correo. Nuestros últimos mensajes nos han sido devueltos como imposibles de entregar.
+
+        ¿Podrías comprobar que [tu dirección de email](%{base_url}/my/preferences/email) es válida y funciona? También puedes añadir nuestra dirección a tu agenda para mejorar la entregabilidad.
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"

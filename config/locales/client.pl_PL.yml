@@ -183,11 +183,13 @@ pl_PL:
         enabled: 'wylistowanie %{when}'
         disabled: 'odlistowanie %{when}'
       banner:
-        enabled: 'Ten temat został ustawiony jako baner . Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika.'
+        enabled: 'ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika.'
         disabled: 'Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony.'
     topic_admin_menu: "akcje administratora"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
+    bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail. To zostanie automatyczonie wyłączone, kiedy %{min_users}osób dołączy."
+    bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
     themes:
       default_description: "Domyślny"
     s3:
@@ -678,6 +680,7 @@ pl_PL:
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
+      api_last_used_at: "Ostatnio użyto:"
       theme: "Motyw"
       home: "Domyślna strona domowa"
       staff_counters:
