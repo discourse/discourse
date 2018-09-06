@@ -5,6 +5,7 @@ class LocaleFileChecker
   TYPE_MISSING_INTERPOLATION_KEYS = 1
   TYPE_UNSUPPORTED_INTERPOLATION_KEYS = 2
   TYPE_MISSING_PLURAL_KEYS = 3
+  TYPE_INVALID_MESSAGE_FORMAT = 4
 
   def check(locale)
     @errors = {}
@@ -19,8 +20,7 @@ class LocaleFileChecker
 
       check_interpolation_keys
       check_plural_keys
-
-      # TODO check MessageFormat
+      check_message_format
     end
 
     @errors
@@ -109,6 +109,27 @@ class LocaleFileChecker
 
       add_error(keys, TYPE_MISSING_PLURAL_KEYS, missing_plural_keys, pluralized: true) unless missing_plural_keys.empty?
     end
+  end
+
+  def check_message_format
+    mf_locale, mf_filename = JsLocaleHelper.find_message_format_locale([@locale], true)
+
+    traverse_hash(@locale_yaml, []) do |keys, value|
+      next unless keys.last.ends_with?("_MF")
+
+      begin
+        JsLocaleHelper.with_context do |ctx|
+          ctx.load(mf_filename) if File.exist?(mf_filename)
+          ctx.eval("mf = new MessageFormat('#{mf_locale}');")
+          ctx.eval("mf.precompile(mf.parse(#{value.to_s.inspect}))")
+        end
+      rescue MiniRacer::EvalError => error
+        error_message = error.message.sub(/at undefined[:\d]+/, "").strip
+        add_error(keys, TYPE_INVALID_MESSAGE_FORMAT, error_message, pluralized: false)
+      end
+    end
+
+    JsLocaleHelper.reset_context
   end
 
   def reference_value(keys)

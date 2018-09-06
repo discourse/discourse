@@ -37,7 +37,9 @@ task "i18n:check", [:locale] => [:environment] do |_, args|
           when LocaleFileChecker::TYPE_UNSUPPORTED_INTERPOLATION_KEYS
             "Unsupported interpolation keys".red
           when LocaleFileChecker::TYPE_MISSING_PLURAL_KEYS
-            "Missing plural keys".yellow
+            "Missing plural keys".magenta
+          when LocaleFileChecker::TYPE_INVALID_MESSAGE_FORMAT
+            "Invalid message format".yellow
           end
         details = error[:details] ? ": #{error[:details]}" : ""
 
@@ -49,5 +51,7 @@ task "i18n:check", [:locale] => [:environment] do |_, args|
   failed_locales.each do |failed_locale|
     puts "", "Failed to check locale files for #{failed_locale}".red
   end
+
+  puts ""
   exit 1 unless failed_locales.empty?
 end
