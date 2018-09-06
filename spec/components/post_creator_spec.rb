@@ -186,11 +186,26 @@ describe PostCreator do
       end
 
       it 'queues up post processing job when saved' do
-        Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         creator.create
+
+        post = Post.last
+        post_id = post.id
+        topic_id = post.topic_id
+
+        process_post_args = Jobs::ProcessPost.jobs.first["args"].first
+        expect(process_post_args["skip_link_post_uploads"]).to eq(true)
+        expect(process_post_args["post_id"]).to eq(post_id)
+
+        feature_topic_users_args = Jobs::FeatureTopicUsers.jobs.first["args"].first
+        expect(feature_topic_users_args["topic_id"]).to eq(topic_id)
+
+        post_alert_args = Jobs::PostAlert.jobs.first["args"].first
+        expect(post_alert_args["post_id"]).to eq(post_id)
+
+        notify_mailing_list_subscribers_args =
+          Jobs::NotifyMailingListSubscribers.jobs.first["args"].first
+
+        expect(notify_mailing_list_subscribers_args["post_id"]).to eq(post_id)
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
