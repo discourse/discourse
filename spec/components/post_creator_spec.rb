@@ -193,7 +193,6 @@ describe PostCreator do
         topic_id = post.topic_id
 
         process_post_args = Jobs::ProcessPost.jobs.first["args"].first
-        expect(process_post_args["skip_link_post_uploads"]).to eq(true)
         expect(process_post_args["post_id"]).to eq(post_id)
 
         feature_topic_users_args = Jobs::FeatureTopicUsers.jobs.first["args"].first

@@ -189,7 +189,7 @@ class PostCreator
       publish
 
       track_latest_on_category
-      enqueue_jobs(skip_link_post_uploads: true) unless @opts[:skip_jobs]
+      enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
       trigger_after_events unless opts[:skip_events]
@@ -214,13 +214,12 @@ class PostCreator
     @post
   end
 
-  def enqueue_jobs(skip_link_post_uploads: false)
+  def enqueue_jobs
     return unless @post && !@post.errors.present?
 
     PostJobsEnqueuer.new(@post, @topic, new_topic?,
       import_mode: @opts[:import_mode],
-      post_alert_options: @opts[:post_alert_options],
-      skip_link_post_uploads: skip_link_post_uploads
+      post_alert_options: @opts[:post_alert_options]
     ).enqueue_jobs
   end
 

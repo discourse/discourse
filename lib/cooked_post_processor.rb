@@ -35,16 +35,12 @@ class CookedPostProcessor
       post_process_oneboxes
       post_process_images
       post_process_quotes
-
-      unless @opts[:skip_link_post_uploads]
-        @post.link_post_uploads(fragments: @doc)
-      end
-
       optimize_urls
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
       grant_badges
+      @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end
