@@ -984,13 +984,15 @@ class User < ActiveRecord::Base
     result
   end
 
+  USER_FIELD_PREFIX ||= "user_field_"
+
   def user_fields
     return @user_fields if @user_fields
     user_field_ids = UserField.pluck(:id)
     if user_field_ids.present?
       @user_fields = {}
       user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["user_field_#{fid}"]
+        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
     @user_fields
