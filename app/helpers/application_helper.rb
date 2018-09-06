@@ -129,7 +129,7 @@ module ApplicationHelper
       javascript = javascript.scrub
       javascript.gsub!(/\342\200\250/u, '&#x2028;')
       javascript.gsub!(/(<\/)/u, '\u003C/')
-      javascript.html_safe
+      javascript
     else
       ''
     end
@@ -400,5 +400,10 @@ module ApplicationHelper
     end
 
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
+  end
+
+  def preloaded_json
+    return '{}' if @preloaded.blank?
+    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
   end
 end

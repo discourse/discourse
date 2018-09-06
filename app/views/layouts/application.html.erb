@@ -55,6 +55,9 @@
     <%= render partial: "common/discourse_stylesheet" %>
     <%= render partial: "common/special_font_face" %>
 
+    <meta id="data-preloaded" data-preloaded="<%= preloaded_json %>">
+    <%= preload_script "preload-application-data" %>
+
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
@@ -103,17 +106,6 @@
         <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
       </form>
     <% end %>
-
-    <%- if @preloaded.present? %>
-      <script>
-      (function() {
-        var ps = require('preload-store').default;
-        <%- @preloaded.each do |key, json| %>
-          ps.store("<%= key %>", <%= escape_unicode(json) %>);
-        <% end %>
-      })();
-      </script>
-    <%- end %>
 
     <%= yield :data %>
 
