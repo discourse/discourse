@@ -52,11 +52,11 @@
 
   <div class="control-unit">
     <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
-    {{#if hasEditedFields}}
+    {{#if model.hasEditedFields}}
       <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
       <ul>
-        {{#each editedDescriptions as |desc|}}
-          <li>{{desc}}</li>
+        {{#each editedFieldsFormatted as |field|}}
+          <li>{{field}}</li>
         {{/each}}
       </ul>
     {{else}}
@@ -127,24 +127,17 @@
   {{#if availableChildThemes}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.theme_components"}}</div>
-      {{#unless model.childThemes.length}}
-      <div class="description">
-        <label class='checkbox-label'>
-          {{input type="checkbox" checked=allowChildThemes}}
-          {{i18n "admin.customize.theme.child_themes_check"}}
-        </label>
-      </div>
-      {{else}}
-      <ul class='removable-list'>
-        {{#each model.childThemes as |child|}}
-        <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit col" icon="times"}}</li>
-        {{/each}}
-      </ul>
-      {{/unless}}
+      {{#if model.childThemes.length}}
+        <ul class='removable-list'>
+          {{#each model.childThemes as |child|}}
+            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit col" icon="times"}}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
       {{#if selectableChildThemes}}
         <div class="description">
-          {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId}}
-          {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+          {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId none="admin.customize.theme.select_component"}}
+          {{#d-button action="addChildTheme" icon="plus" disabled=addButtonDisabled class="add-component-button"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
         </div>
       {{/if}}
     </div>

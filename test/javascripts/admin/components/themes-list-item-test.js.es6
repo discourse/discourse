@@ -62,7 +62,7 @@ componentTest("with children", {
   beforeEach() {
     this.set(
       "theme",
-      Theme.create({ name: "Test", childThemes: childrenList })
+      Theme.create({ name: "Test", childThemes: childrenList, default: true })
     );
   },
 

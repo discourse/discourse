@@ -7,16 +7,16 @@
   </div>
 </div>
 
-<div class="themes-list-container" style="max-height: 485px;">
+<div class="themes-list-container" style="max-height: 450px;">
   {{#if hasThemes}}
     {{#if componentsTabActive}}
       {{#each themesList as |theme|}}
-        {{themes-list-item theme=theme}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
       {{/each}}
     {{else}}
       {{#if hasUserThemes}}
         {{#each userThemes as |theme|}}
-          {{themes-list-item theme=theme}}
+          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
         {{/each}}
 
         {{#if hasInactiveThemes}}
@@ -28,7 +28,7 @@
 
       {{#if hasInactiveThemes}}
         {{#each inactiveThemes as |theme|}}
-          {{themes-list-item theme=theme}}
+          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
         {{/each}}
       {{/if}}
     {{/if}}

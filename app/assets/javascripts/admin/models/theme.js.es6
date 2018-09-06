@@ -6,9 +6,13 @@ const THEME_UPLOAD_VAR = 2;
 
 export const THEMES = "themes";
 export const COMPONENTS = "components";
+const SETTINGS_TYPE_ID = 5;
 
 const Theme = RestModel.extend({
   FIELDS_IDS: [0, 1],
+  isActive: Em.computed.or("default", "user_selectable"),
+  isPendingUpdates: Em.computed.gt("remote_theme.commits_behind", 0),
+  hasEditedFields: Em.computed.gt("editedFields.length", 0),
 
   @computed("theme_fields")
   themeFields(fields) {
@@ -43,9 +47,11 @@ const Theme = RestModel.extend({
     );
   },
 
-  @computed("remote_theme", "remote_theme.commits_behind")
-  isPendingUpdates(remote, commitsBehind) {
-    return remote && commitsBehind && commitsBehind > 0;
+  @computed("theme_fields.@each")
+  editedFields(fields) {
+    return fields.filter(
+      field => !Em.isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
+    );
   },
 
   getKey(field) {

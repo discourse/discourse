@@ -59,6 +59,18 @@
 }
 
 .admin-customize.admin-customize-themes {
+  .themes-intro {
+    float: right;
+    width: 34%;
+    margin-right: 20%;
+    margin-top: 60px;
+
+    .external-link {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+
   .customize-themes-header {
     border-bottom: 1px solid $primary-low;
     padding-bottom: 8px;
@@ -158,12 +170,15 @@
     float: left;
     width: 70%;
   }
-
+  .add-component-button {
+    vertical-align: middle;
+  }
   .themes-list {
     border-right: 1px solid $primary-low;
     border-bottom: 1px solid $primary-low;
     float: left;
     width: 28%;
+    overflow: hidden;
   }
 
   .themes-list-header {
@@ -180,8 +195,7 @@
 
       &.active {
         font-weight: bold;
-        color: $secondary;
-        background-color: $tertiary;
+        color: $tertiary;
       }
 
       &:not(.active) {
@@ -195,18 +209,10 @@
   }
 
   .themes-list-container {
-    max-height: 485px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    box-sizing: content-box;
+    width: 100%; /* overridden in javascript to hide scrollbar */
 
-    &::-webkit-scrollbar-track {
-      background-color: $secondary;
-    }
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary-low;
-    }
     .themes-list-item:last-child {
       border-bottom: none;
     }
@@ -216,22 +222,47 @@
       display: flex;
       border-left: 1px solid $primary-low;
 
-      &:not(.inactive-indicator):not(.active):hover {
+      &.inactive-indicator {
+        border-right: 0;
+        border-left: 0;
+        font-weight: bold;
+        color: $primary-medium;
+
+        span.empty {
+          padding-left: 5px;
+          padding-top: 15px;
+        }
+      }
+      &:not(.inactive-indicator):not(.selected):hover {
         background-color: $tertiary-low;
         .component {
           border-color: $primary-low-mid;
         }
       }
-      &.active {
+
+      &.selected {
         color: $secondary;
         background-color: $tertiary;
         .fa {
           color: inherit;
         }
       }
+      &:not(.selected) {
+        .broken-indicator {
+          color: $danger;
+        }
+        .fa {
+          opacity: 0.7;
+        }
+        .default-indicator {
+          color: $success;
+        }
+      }
+
       .light-grey-icon {
         color: $primary-medium;
       }
+
       .info {
         overflow: hidden;
         font-weight: bold;
@@ -253,6 +284,9 @@
         font-size: $font-down-1;
         align-items: baseline;
 
+        .others-count:hover {
+          text-decoration: underline;
+        }
         .component {
           display: flex;
           padding: 3px 5px 3px 5px;
@@ -262,37 +296,17 @@
           margin-bottom: 5px;
         }
       }
-      &:not(.active) {
-        .broken-indicator {
-          color: $danger;
-        }
 
-        .default-indicator {
-          color: $success;
-        }
-      }
-
-      a {
+      .inner-wrapper {
         padding: 10px;
-      }
-
-      &.inactive-indicator {
-        border-right: 0;
-        border-left: 0;
-        font-weight: bold;
-        color: $primary-medium;
-
-        span.empty {
-          padding-left: 5px;
-          padding-top: 15px;
-        }
+        cursor: pointer;
       }
 
       span.empty {
         padding: 3px 10px 3px 10px;
       }
 
-      a,
+      .inner-wrapper,
       span.empty {
         color: inherit;
         width: 100%;
