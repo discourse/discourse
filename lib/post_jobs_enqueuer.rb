@@ -38,7 +38,9 @@ class PostJobsEnqueuer
   end
 
   def trigger_post_post_process
-    @post.trigger_post_process
+    @post.trigger_post_process(
+      skip_link_post_uploads: @opts[:skip_link_post_uploads]
+    )
   end
 
   def after_post_create

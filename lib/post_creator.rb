@@ -173,6 +173,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
+        link_post_uploads
 
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -188,7 +189,7 @@ class PostCreator
       publish
 
       track_latest_on_category
-      enqueue_jobs unless @opts[:skip_jobs]
+      enqueue_jobs(skip_link_post_uploads: true) unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
       trigger_after_events unless opts[:skip_events]
@@ -213,12 +214,13 @@ class PostCreator
     @post
   end
 
-  def enqueue_jobs
+  def enqueue_jobs(skip_link_post_uploads: false)
     return unless @post && !@post.errors.present?
 
     PostJobsEnqueuer.new(@post, @topic, new_topic?,
       import_mode: @opts[:import_mode],
-      post_alert_options: @opts[:post_alert_options]
+      post_alert_options: @opts[:post_alert_options],
+      skip_link_post_uploads: skip_link_post_uploads
     ).enqueue_jobs
   end
 
@@ -347,6 +349,10 @@ class PostCreator
     return unless @opts[:embed_url].present?
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
+  end
+
+  def link_post_uploads
+    @post.link_post_uploads
   end
 
   def handle_spam
