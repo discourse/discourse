@@ -175,12 +175,12 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-
-    path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
-
-    return if path.blank?
-
-    Upload.find_by("url LIKE ?", "%#{path}")
+    data = uri.path.match(/(\/original\/\dX\/[\/\.\w]+\/([a-zA-Z0-9]+)[\.\w]+)/)
+    return if data.blank?
+    sha1 = data[2]
+    upload = nil
+    upload = Upload.find_by(sha1: sha1) if sha1
+    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)
