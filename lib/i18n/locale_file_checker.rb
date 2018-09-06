@@ -128,8 +128,6 @@ class LocaleFileChecker
         add_error(keys, TYPE_INVALID_MESSAGE_FORMAT, error_message, pluralized: false)
       end
     end
-
-    JsLocaleHelper.reset_context
   end
 
   def reference_value(keys)
