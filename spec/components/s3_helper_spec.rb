@@ -40,6 +40,7 @@ describe "S3Helper" do
       rules = hash["LifecycleConfiguration"]["Rule"]
 
       expect(rules.length).to eq(2)
+      expect(rules[1]["Expiration"]["Days"]).to eq("100")
 
       # fixes the bad filter
       expect(rules[0]["Filter"]["Prefix"]).to eq("projectdocs/")
