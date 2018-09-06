@@ -23,7 +23,7 @@ after_initialize do
 
   register_post_custom_field_type(DiscourseLocalDates::POST_CUSTOM_FIELD, :json)
 
-  on(:post_process_cooked) do |doc, post|
+  on(:before_post_process_cooked) do |doc, post|
     dates = doc.css('span.discourse-local-date').map do |cooked_date|
       date = {}
       cooked_date.attributes.values.each do |attribute|
@@ -39,8 +39,9 @@ after_initialize do
     if dates.present?
       post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] = dates.to_json
       post.save_custom_fields
-    elsif post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD].present?
-      PostCustomField.where(post_id: post.id, name: DiscourseLocalDates::POST_CUSTOM_FIELD).destroy_all
+    elsif !post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD].nil?
+      post.custom_fields.delete(DiscourseLocalDates::POST_CUSTOM_FIELD)
+      post.save_custom_fields
     end
   end
 
