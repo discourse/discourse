@@ -117,7 +117,7 @@ class UsersController < ApplicationController
         val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        attributes[:custom_fields]["user_field_#{f.id}"] = val
+        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{f.id}"] = val
       end
     end
 
@@ -352,7 +352,7 @@ class UsersController < ApplicationController
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
-          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
+          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length]
         end
       end
 
