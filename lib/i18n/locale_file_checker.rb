@@ -2,9 +2,9 @@ require 'i18n/i18n_interpolation_keys_finder'
 require 'yaml'
 
 class LocaleFileChecker
-  TYPE_MISSING_INTERPOLATION_KEY = 1
-  TYPE_UNSUPPORTED_INTERPOLATION_KEY = 2
-  TYPE_MISSING_PLURAL_KEY = 3
+  TYPE_MISSING_INTERPOLATION_KEYS = 1
+  TYPE_UNSUPPORTED_INTERPOLATION_KEYS = 2
+  TYPE_MISSING_PLURAL_KEYS = 3
 
   def check(locale)
     @errors = {}
@@ -86,8 +86,8 @@ class LocaleFileChecker
         missing_keys.delete("count")
       end
 
-      add_error(keys, TYPE_MISSING_INTERPOLATION_KEY, missing_keys) unless missing_keys.empty?
-      add_error(keys, TYPE_UNSUPPORTED_INTERPOLATION_KEY, unsupported_keys) unless unsupported_keys.empty?
+      add_error(keys, TYPE_MISSING_INTERPOLATION_KEYS, missing_keys, pluralized: pluralized) unless missing_keys.empty?
+      add_error(keys, TYPE_UNSUPPORTED_INTERPOLATION_KEYS, unsupported_keys, pluralized: pluralized) unless unsupported_keys.empty?
     end
   end
 
@@ -107,7 +107,7 @@ class LocaleFileChecker
       actual_plural_keys = parent.is_a?(Hash) ? parent.keys : []
       missing_plural_keys = expected_plural_keys - actual_plural_keys
 
-      add_error(keys, TYPE_MISSING_PLURAL_KEY, missing_plural_keys) unless missing_plural_keys.empty?
+      add_error(keys, TYPE_MISSING_PLURAL_KEYS, missing_plural_keys, pluralized: true) unless missing_plural_keys.empty?
     end
   end
 
@@ -136,10 +136,17 @@ class LocaleFileChecker
     end
   end
 
-  def add_error(keys, type, details)
+  def add_error(keys, type, details, pluralized:)
     @errors[@relative_locale_path] ||= []
+
+    if pluralized
+      joined_key = keys[1..-2].join(".") << " [#{keys.last}]"
+    else
+      joined_key = keys[1..-1].join(".")
+    end
+
     @errors[@relative_locale_path] << {
-      key: keys[1..-1].join("."),
+      key: joined_key,
       type: type,
       details: details.to_s
     }
