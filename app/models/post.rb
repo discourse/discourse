@@ -255,7 +255,7 @@ class Post < ActiveRecord::Base
     options[:cook_method] = cook_method
     options[:user_id] = self.user.id if self.user
     # At trust level 3, we don't apply nofollow to links
-    options[:omit_nofollow] = true   if add_nofollow?
+    options[:omit_nofollow] = true   if omit_nofollow?
 
     cooked = post_analyzer.cook(raw, options)
 
