@@ -9,63 +9,40 @@ import ThemeSettings from "admin/models/theme-settings";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 
 const THEME_UPLOAD_VAR = 2;
-const SETTINGS_TYPE_ID = 5;
 
 export default Ember.Controller.extend({
-  editRouteName: "adminCustomizeThemes.edit",
-
-  @observes("allowChildThemes")
-  setSelectedThemeId() {
-    const available = this.get("selectableChildThemes");
-    if (
-      !this.get("selectedChildThemeId") &&
-      available &&
-      available.length > 0
-    ) {
-      this.set("selectedChildThemeId", available[0].get("id"));
-    }
-  },
+  downloadUrl: url("model.id", "/admin/themes/%@"),
+  previewUrl: url("model.id", "/admin/themes/%@/preview"),
+  addButtonDisabled: Em.computed.empty("selectedChildThemeId"),
 
   @computed("model", "allThemes", "model.component")
   parentThemes(model, allThemes) {
     if (!model.get("component")) {
       return null;
     }
-    let parents = allThemes.filter(theme =>
+    const parents = allThemes.filter(theme =>
       _.contains(theme.get("childThemes"), model)
     );
     return parents.length === 0 ? null : parents;
   },
 
-  @computed("model.theme_fields.@each")
-  hasEditedFields(fields) {
-    return fields.any(
-      f => !Em.isBlank(f.value) && f.type_id !== SETTINGS_TYPE_ID
-    );
-  },
-
-  @computed("model.theme_fields.@each")
-  editedDescriptions(fields) {
-    let descriptions = [];
-    let description = target => {
-      let current = fields.filter(
-        field => field.target === target && !Em.isBlank(field.value)
-      );
-      if (current.length > 0) {
-        let text = I18n.t("admin.customize.theme." + target);
-        let localized = current.map(f =>
-          I18n.t("admin.customize.theme." + f.name + ".text")
-        );
-        return text + ": " + localized.join(" , ");
-      }
-    };
+  @computed("model.editedFields")
+  editedFieldsFormatted(fields) {
+    const descriptions = [];
     ["common", "desktop", "mobile"].forEach(target => {
-      descriptions.push(description(target));
+      const fields = this.editedFieldsForTarget(target);
+      if (fields.length < 1) {
+        return;
+      }
+      let resultString = I18n.t("admin.customize.theme." + target);
+      const formattedFields = fields
+        .map(f => I18n.t("admin.customize.theme." + f.name + ".text"))
+        .join(" , ");
+      resultString += `: ${formattedFields}`;
+      descriptions.push(resultString);
     });
-    return descriptions.reject(d => Em.isBlank(d));
+    return descriptions;
   },
-
-  previewUrl: url("model.id", "/admin/themes/%@/preview"),
 
   @computed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
@@ -73,42 +50,24 @@ export default Ember.Controller.extend({
     return colorSchemeId !== existingId;
   },
 
-  @computed(
-    "availableChildThemes",
-    "model.childThemes.@each",
-    "model",
-    "allowChildThemes"
-  )
-  selectableChildThemes(available, childThemes, allowChildThemes) {
-    if (!allowChildThemes && (!childThemes || childThemes.length === 0)) {
-      return null;
+  @computed("availableChildThemes", "model.childThemes.@each", "model")
+  selectableChildThemes(available, childThemes) {
+    if (available) {
+      const themes = !childThemes
+        ? available
+        : available.filter(theme => childThemes.indexOf(theme) === -1);
+      return themes.length === 0 ? null : themes;
     }
-
-    let themes = [];
-    available.forEach(t => {
-      if (!childThemes || childThemes.indexOf(t) === -1) {
-        themes.push(t);
-      }
-    });
-    return themes.length === 0 ? null : themes;
   },
 
-  @computed("allThemes", "allThemes.length", "model.component", "model")
-  availableChildThemes(allThemes, count, component) {
-    if (count === 1 || component) {
-      return null;
+  @computed("allThemes", "model.component", "model")
+  availableChildThemes(allThemes) {
+    if (!this.get("model.component")) {
+      const themeId = this.get("model.id");
+      return allThemes.filter(
+        theme => theme.get("id") !== themeId && theme.get("component")
+      );
     }
-
-    const themeId = this.get("model.id");
-
-    let themes = [];
-    allThemes.forEach(theme => {
-      if (themeId !== theme.get("id") && theme.get("component")) {
-        themes.push(theme);
-      }
-    });
-
-    return themes;
   },
 
   @computed("model.component")
@@ -137,8 +96,11 @@ export default Ember.Controller.extend({
   hasSettings(settings) {
     return settings.length > 0;
   },
-
-  downloadUrl: url("model.id", "/admin/themes/%@"),
+  editedFieldsForTarget(target) {
+    return this.get("model.editedFields").filter(
+      field => field.target === target
+    );
+  },
 
   commitSwitchType() {
     const model = this.get("model");
@@ -146,7 +108,6 @@ export default Ember.Controller.extend({
     model.set("component", newValue);
 
     if (newValue) {
-      // component
       this.set("parentController.currentTab", COMPONENTS);
     } else {
       this.set("parentController.currentTab", THEMES);
@@ -166,8 +127,8 @@ export default Ember.Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Array.from(theme.get("childThemes"));
-          const rawChildren = Array.from(theme.get("child_themes") || []);
+          const children = _.toArray(theme.get("childThemes"));
+          const rawChildren = _.toArray(theme.get("child_themes") || []);
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);
@@ -181,7 +142,14 @@ export default Ember.Controller.extend({
       })
       .catch(popupAjaxError);
   },
-
+  transitionToEditRoute() {
+    this.transitionToRoute(
+      "adminCustomizeThemes.edit",
+      this.get("model.id"),
+      "common",
+      "scss"
+    );
+  },
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
@@ -238,25 +206,17 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      let edit = () =>
-        this.transitionToRoute(
-          this.get("editRouteName"),
-          this.get("model.id"),
-          "common",
-          "scss"
-        );
-
       if (this.get("model.remote_theme")) {
         bootbox.confirm(
           I18n.t("admin.customize.theme.edit_confirm"),
           result => {
             if (result) {
-              edit();
+              this.transitionToEditRoute();
             }
           }
         );
       } else {
-        edit();
+        this.transitionToEditRoute();
       }
     },
 

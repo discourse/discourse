@@ -37,9 +37,11 @@ export default Ember.Route.extend({
   },
 
   handleHighlight(theme) {
-    this.get("controller.allThemes").forEach(t => t.set("active", false));
+    this.get("controller.allThemes")
+      .filter(t => t.get("selected"))
+      .forEach(t => t.set("selected", false));
     if (theme) {
-      theme.set("active", true);
+      theme.set("selected", true);
     }
   },
 
