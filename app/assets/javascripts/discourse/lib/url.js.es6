@@ -153,7 +153,12 @@ const DiscourseURL = Ember.Object.extend({
   },
 
   routeToTag(a) {
-    if (a && a.host !== document.location.host) {
+    // skip when we are provided nowhere to route to
+    if (!a || !a.href) {
+      return false;
+    }
+
+    if (a.host !== document.location.host) {
       document.location = a.href;
       return false;
     }
