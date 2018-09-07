@@ -1,7 +1,4 @@
-require_dependency 'email/message_builder'
-
-class AdminConfirmationMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
+class AdminConfirmationMailer < ApplicationMailer
 
   def send_email(to_address, target_username, token)
     build_email(

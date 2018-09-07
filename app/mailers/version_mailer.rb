@@ -1,7 +1,4 @@
-require_dependency 'email/message_builder'
-
-class VersionMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
+class VersionMailer < ApplicationMailer
 
   def send_notice
     if SiteSetting.contact_email.present?

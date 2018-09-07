@@ -1596,6 +1596,16 @@ en:
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     private_email: "Don't include content from posts or topics in emails for extra privacy."
 
+    enable_secondary_smtp: "Enable secondary smtp settings (Use secondary smtp settings over Global smtp settings"
+    smtp_address: "address of secondary smtp server used to send emails"
+    smtp_port: "port of secondary smtp server used to send emails"
+    smtp_domain: "domain passed to secondary smtp server"
+    smtp_user_name: "username for secondary smtp server"
+    smtp_password: "password for secondary smtp server"
+    smtp_authentication: "secondary smtp authentication mechanism"
+    smtp_enable_start_tls: "enable TLS encryption for secondary smtp connections"
+    smtp_openssl_verify_mode: "mode for verifying secondary smtp server certificates"
+
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"

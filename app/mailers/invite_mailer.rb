@@ -1,7 +1,4 @@
-require_dependency 'email/message_builder'
-
-class InviteMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
+class InviteMailer < ApplicationMailer
 
   class UserNotificationRenderer < ActionView::Base
     include UserNotificationsHelper

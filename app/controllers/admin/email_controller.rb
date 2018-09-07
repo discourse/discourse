@@ -216,6 +216,10 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def action_mailer_settings
-    ActionMailer::Base.public_send "#{delivery_method}_settings"
+    if SiteSetting.enable_secondary_smtp
+      ApplicationMailer.secondary_smtp_settings
+    else
+      ActionMailer::Base.public_send "#{delivery_method}_settings"
+    end
   end
 end

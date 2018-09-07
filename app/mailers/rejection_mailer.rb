@@ -1,8 +1,4 @@
-require_dependency 'email/message_builder'
-
-class RejectionMailer < ActionMailer::Base
-  include Email::BuildEmailHelper
-
+class RejectionMailer < ApplicationMailer
   DISALLOWED_TEMPLATE_ARGS = [:to,
                               :from,
                               :base_url,

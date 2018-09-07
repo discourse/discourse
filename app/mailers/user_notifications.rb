@@ -1,15 +1,12 @@
 require_dependency 'markdown_linker'
-require_dependency 'email/message_builder'
 require_dependency 'age_words'
 require_dependency 'rtl'
 
-class UserNotifications < ActionMailer::Base
+class UserNotifications < ApplicationMailer
   include UserNotificationsHelper
   include ApplicationHelper
   helper :application, :email
   default charset: 'UTF-8'
-
-  include Email::BuildEmailHelper
 
   def signup(user, opts = {})
     build_user_email_token_by_template(
