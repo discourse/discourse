@@ -60,7 +60,7 @@
       html += "<span class='relative-time'></span>";
       html += "</span>";
 
-      var joinedPreviews = previews.join(" – ");
+      var joinedPreviews = previews.join("\n");
 
       $element
         .html(html)
