@@ -2581,8 +2581,11 @@ describe Guardian do
     let(:theme2) { Fabricate(:theme) }
 
     it "allows staff to use any themes" do
-      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(true)
-      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(true)
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
     end
 
     it "only allows normal users to use user-selectable themes or default theme" do
