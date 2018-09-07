@@ -833,7 +833,7 @@ EOM
         puts "Attachment #{attach_id} not found."
         attach_string = "Attachment #{attach_id} not found."
       else
-        attach_url = "#{UPLOADS}/#{attachments.first['loc'].gsub(' ','%20')}"
+        attach_url = "#{UPLOADS}/#{attachments.first['loc'].gsub(' ', '%20')}"
         if attachments.first['filename'].match(/(png|jpg|jpeg|gif)$/)
           # images are rendered as a link that contains the image
           attach_string = "#{attach_id}\n\n[![#{attachments.first['filename']}](#{attach_url})](#{attach_url})\n"
