@@ -154,12 +154,14 @@
 
     <div class="section-column">
       {{admin-report
+        filters=topReferredTopicsFilters
         dataSourceName="top_referred_topics"
-        reportOptions=topReferredTopicsTopions}}
+        reportOptions=topReferredTopicsOptions}}
 
       {{admin-report
         dataSourceName="trending_search"
         reportOptions=trendingSearchOptions
+        filters=trendingSearchFilters
         isEnabled=logSearchQueriesEnabled
         disabledLabel="admin.dashboard.reports.trending_search.disabled"}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}
