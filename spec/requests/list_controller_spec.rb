@@ -393,6 +393,15 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(response.content_type).to eq('application/rss+xml')
         end
+
+        it "renders RSS in subfolder correctly" do
+          GlobalSetting.stubs(:relative_url_root).returns('/forum')
+          Discourse.stubs(:base_uri).returns("/forum")
+          get "/c/#{category.slug}.rss"
+          expect(response.status).to eq(200)
+          expect(response.body).to_not include("/forum/forum")
+          expect(response.body).to include("http://test.localhost/forum/c/#{category.slug}")
+        end
       end
 
       describe "category default views" do
