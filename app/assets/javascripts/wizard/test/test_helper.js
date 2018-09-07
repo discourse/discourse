@@ -19,7 +19,7 @@
 //= require locales/en
 //= require fake_xml_http_request
 //= require route-recognizer
-//= require pretender
+//= require pretender/pretender
 //= require ./wizard-pretender
 
 // Trick JSHint into allow document.write
