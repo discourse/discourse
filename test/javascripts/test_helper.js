@@ -11,7 +11,7 @@
 //= require ember-qunit
 //= require fake_xml_http_request
 //= require route-recognizer
-//= require pretender
+//= require pretender/pretender
 //= require discourse-loader
 //= require preload-store
 
