@@ -1118,6 +1118,7 @@ en:
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
+    unreachable_themes: "We were unable to check for updates on the following themes:"
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"

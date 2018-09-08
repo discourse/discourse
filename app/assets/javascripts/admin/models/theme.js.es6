@@ -54,6 +54,13 @@ const Theme = RestModel.extend({
     );
   },
 
+  @computed("remote_theme.last_error_text")
+  remoteError(errorText) {
+    if (errorText && errorText.length > 0) {
+      return errorText;
+    }
+  },
+
   getKey(field) {
     return `${field.target} ${field.name}`;
   },

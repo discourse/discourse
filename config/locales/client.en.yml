@@ -3287,6 +3287,7 @@ en:
             one: "Theme is 1 commit behind!"
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
+          repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"

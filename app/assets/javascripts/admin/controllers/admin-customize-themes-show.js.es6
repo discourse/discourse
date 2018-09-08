@@ -1,7 +1,4 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
+import { default as computed } from "ember-addons/ember-computed-decorators";
 import { url } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
@@ -27,7 +24,7 @@ export default Ember.Controller.extend({
   },
 
   @computed("model.editedFields")
-  editedFieldsFormatted(fields) {
+  editedFieldsFormatted() {
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach(target => {
       const fields = this.editedFieldsForTarget(target);
@@ -96,6 +93,12 @@ export default Ember.Controller.extend({
   hasSettings(settings) {
     return settings.length > 0;
   },
+
+  @computed("model.remoteError", "updatingRemote")
+  showRemoteError(errorMessage, updating) {
+    return errorMessage && !updating;
+  },
+
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       field => field.target === target
