@@ -87,10 +87,20 @@
               </a>
             {{/if}}
           {{else}}
-            {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+            {{#unless showRemoteError}}
+              {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+            {{/unless}}
           {{/if}}
         {{/if}}
       </span>
+      {{#if showRemoteError}}
+        <div class="error-message">
+          {{d-icon "exclamation-triangle"}} {{I18n "admin.customize.theme.repo_unreachable"}}
+        </div>
+        <div class="raw-error">
+          <code>{{model.remoteError}}</code>
+        </div>
+      {{/if}}
     {{/if}}
   </div>
 

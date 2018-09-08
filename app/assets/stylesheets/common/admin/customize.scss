@@ -88,6 +88,17 @@
   .admin-container {
     padding: 0;
   }
+  .error-message {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    .fa {
+      color: $danger;
+    }
+  }
+  .raw-error {
+    background-color: $primary-very-low;
+    padding: 5px;
+  }
 }
 
 .admin-customize {
