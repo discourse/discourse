@@ -17,7 +17,7 @@ const externalResources = [
 ];
 
 export default Ember.Route.extend({
-  setupController(controller, model) {
+  setupController(controller) {
     this._super(...arguments);
     this.controllerFor("adminCustomizeThemes").set("editingTheme", false);
     controller.set("externalResources", externalResources);
