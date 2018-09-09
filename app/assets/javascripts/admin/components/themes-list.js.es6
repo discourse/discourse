@@ -1,8 +1,6 @@
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
-const MAX_LIST_HEIGHT = 700;
-
 export default Ember.Component.extend({
   THEMES: THEMES,
   COMPONENTS: COMPONENTS,
@@ -72,15 +70,6 @@ export default Ember.Component.extend({
       const width = containerNode.offsetWidth - containerNode.clientWidth;
       $container.css("width", `calc(100% + ${width}px)`);
     }
-
-    let height = -1;
-    Array.from(this.$(".themes-list-item")).forEach(node => {
-      const nodeHeight = $(node).outerHeight();
-      if (height + nodeHeight <= MAX_LIST_HEIGHT) {
-        height += nodeHeight;
-      }
-    });
-    $container.css("max-height", `${height}px`);
   },
 
   actions: {

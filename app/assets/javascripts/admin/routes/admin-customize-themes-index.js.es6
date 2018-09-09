@@ -1,3 +1,5 @@
+import { emojiUrlFor } from "discourse/lib/text";
+
 const externalResources = [
   {
     key: "admin.customize.theme.beginners_guide_title",
@@ -20,6 +22,9 @@ export default Ember.Route.extend({
   setupController(controller) {
     this._super(...arguments);
     this.controllerFor("adminCustomizeThemes").set("editingTheme", false);
-    controller.set("externalResources", externalResources);
+    controller.setProperties({
+      externalResources,
+      womanArtistEmojiURL: emojiUrlFor("woman_artist:t5")
+    });
   }
 });
