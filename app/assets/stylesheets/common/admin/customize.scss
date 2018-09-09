@@ -59,18 +59,6 @@
 }
 
 .admin-customize.admin-customize-themes {
-  .themes-intro {
-    float: right;
-    width: 34%;
-    margin-right: 20%;
-    margin-top: 60px;
-
-    .external-link {
-      display: block;
-      margin-bottom: 5px;
-    }
-  }
-
   .customize-themes-header {
     border-bottom: 1px solid $primary-low;
     padding-bottom: 8px;
@@ -146,6 +134,12 @@
     }
   }
   .show-current-style {
+    padding-left: 10px;
+    padding-top: 10px;
+    display: inline-block;
+    width: 70%;
+    vertical-align: top;
+
     .url {
       margin-bottom: 10px;
     }
@@ -175,19 +169,42 @@
     .description {
       margin-bottom: 12px;
     }
-
-    padding-left: 15px;
-    padding-top: 10px;
-    float: left;
-    width: 70%;
   }
   .add-component-button {
     vertical-align: middle;
   }
+  .themes-intro {
+    display: inline-block;
+    width: 51%;
+    vertical-align: top;
+    margin-left: 20%;
+    margin-top: 60px;
+
+    img {
+      display: inline-block;
+      margin-right: 10px;
+      width: 10%;
+      vertical-align: top;
+      margin-top: 5px;
+    }
+    .content-wrapper {
+      display: inline-block;
+      vertical-align: top;
+      width: 65%;
+      h1 {
+        display: inline-block;
+      }
+    }
+    .external-link {
+      display: inline-block;
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
   .themes-list {
     border-right: 1px solid $primary-low;
     border-bottom: 1px solid $primary-low;
-    float: left;
+    display: inline-block;
     width: 28%;
     overflow: hidden;
   }
@@ -213,7 +230,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: $tertiary-low;
+          background-color: $primary-very-low;
         }
       }
     }
@@ -222,6 +239,7 @@
   .themes-list-container {
     overflow-y: scroll;
     box-sizing: content-box;
+    max-height: 700px;
     width: 100%; /* overridden in javascript to hide scrollbar */
 
     .themes-list-item:last-child {
@@ -245,7 +263,7 @@
         }
       }
       &:not(.inactive-indicator):not(.selected):hover {
-        background-color: $tertiary-low;
+        background-color: $primary-very-low;
         .component {
           border-color: $primary-low-mid;
         }
