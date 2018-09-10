@@ -18,7 +18,7 @@ class Validators::UploadValidator < ActiveModel::Validator
     extension = File.extname(upload.original_filename)[1..-1] || ""
 
     if is_authorized?(upload, extension)
-      if FileHelper.is_image?(upload.original_filename)
+      if FileHelper.is_supported_image?(upload.original_filename)
         authorized_image_extension(upload, extension)
         maximum_image_file_size(upload)
       else
