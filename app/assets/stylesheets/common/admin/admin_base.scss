@@ -458,9 +458,6 @@ $mobile-breakpoint: 700px;
   background-color: $primary-low;
   align-items: center;
 
-  .controls label {
-    margin-bottom: 0;
-  }
   .admin-actions {
     margin-left: auto;
   }
@@ -553,8 +550,11 @@ $mobile-breakpoint: 700px;
     @include breakpoint(mobile) {
       margin: 0 -10px;
     }
+    label {
+      margin-bottom: 0;
+    }
     input {
-      margin: 0;
+      margin-right: 5px;
       @include breakpoint(tablet) {
         max-width: 150px;
       }
@@ -627,11 +627,6 @@ $mobile-breakpoint: 700px;
   }
   #last-seen input[type="text"] {
     float: none;
-  }
-  .ac-wrap {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 0;
   }
   .pull-right {
     padding-right: 10px;
