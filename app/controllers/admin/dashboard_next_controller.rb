@@ -27,8 +27,7 @@ class Admin::DashboardNextController < Admin::AdminController
   private
 
   def last_backup_taken_at
-    if last_backup = Backup.all.first
-      File.ctime(last_backup.path).utc
-    end
+    store = BackupRestore::BackupStore.create
+    store.latest_file&.last_modified
   end
 end

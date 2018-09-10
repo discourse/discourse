@@ -172,6 +172,14 @@ class S3Helper
     opts
   end
 
+  def s3_bucket
+    @s3_bucket ||= begin
+      bucket = s3_resource.bucket(@s3_bucket_name)
+      bucket.create unless bucket.exists?
+      bucket
+    end
+  end
+
   private
 
   def default_s3_options
@@ -193,14 +201,6 @@ class S3Helper
 
   def s3_resource
     Aws::S3::Resource.new(@s3_options)
-  end
-
-  def s3_bucket
-    @s3_bucket ||= begin
-      bucket = s3_resource.bucket(@s3_bucket_name)
-      bucket.create unless bucket.exists?
-      bucket
-    end
   end
 
   def check_missing_site_options

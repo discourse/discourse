@@ -15,13 +15,24 @@ export default Em.Mixin.create({
     return {};
   },
 
+  calculateUploadUrl() {
+    return (
+      Discourse.getURL(this.getWithDefault("uploadUrl", "/uploads")) +
+      ".json?client_id=" +
+      this.messageBus.clientId +
+      "&authenticity_token=" +
+      encodeURIComponent(Discourse.Session.currentProp("csrfToken"))
+    );
+  },
+
+  uploadOptions() {
+    return {};
+  },
+
   _initialize: function() {
     const $upload = this.$(),
-      csrf = Discourse.Session.currentProp("csrfToken"),
-      uploadUrl = Discourse.getURL(
-        this.getWithDefault("uploadUrl", "/uploads")
-      ),
-      reset = () => this.setProperties({ uploading: false, uploadProgress: 0 });
+      reset = () => this.setProperties({ uploading: false, uploadProgress: 0 }),
+      maxFiles = this.getWithDefault("maxFiles", 10);
 
     $upload.on("fileuploaddone", (e, data) => {
       let upload = data.result;
@@ -29,20 +40,21 @@ export default Em.Mixin.create({
       reset();
     });
 
-    $upload.fileupload({
-      url:
-        uploadUrl +
-        ".json?client_id=" +
-        this.messageBus.clientId +
-        "&authenticity_token=" +
-        encodeURIComponent(csrf),
-      dataType: "json",
-      dropZone: $upload,
-      pasteZone: $upload
-    });
+    $upload.fileupload(
+      _.merge(
+        {
+          url: this.calculateUploadUrl(),
+          dataType: "json",
+          replaceFileInput: false,
+          dropZone: $upload,
+          pasteZone: $upload
+        },
+        this.uploadOptions()
+      )
+    );
 
     $upload.on("fileuploaddrop", (e, data) => {
-      if (data.files.length > 10) {
+      if (data.files.length > maxFiles) {
         bootbox.alert(I18n.t("post.errors.too_many_dragged_and_dropped_files"));
         return false;
       } else {
@@ -56,7 +68,8 @@ export default Em.Mixin.create({
         this.validateUploadedFilesOptions()
       );
       const isValid = validateUploadedFiles(data.files, opts);
-      let form = { type: this.get("type") };
+      const type = this.get("type");
+      let form = type ? { type: this.get("type") } : {};
       if (this.get("data")) {
         form = $.extend(form, this.get("data"));
       }
