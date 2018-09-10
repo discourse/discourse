@@ -54,7 +54,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   topReferredTopicsFilters() {
     return {
       startDate: moment()
-        .subtract(2, "days")
+        .subtract(6, "days")
         .startOf("day"),
       endDate: this.get("today")
     };
@@ -64,7 +64,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   trendingSearchFilters() {
     return {
       startDate: moment()
-        .subtract(2, "days")
+        .subtract(6, "days")
         .startOf("day"),
       endDate: this.get("today")
     };
