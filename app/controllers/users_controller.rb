@@ -13,7 +13,8 @@ class UsersController < ApplicationController
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
-    :update_second_factor, :create_second_factor_backup, :select_avatar
+    :update_second_factor, :create_second_factor_backup, :select_avatar,
+    :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -103,7 +104,7 @@ class UsersController < ApplicationController
     attributes.delete(:username)
 
     if params[:user_fields].present?
-      attributes[:custom_fields] = {}
+      attributes[:custom_fields] ||= {}
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
@@ -116,7 +117,7 @@ class UsersController < ApplicationController
         val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        attributes[:custom_fields]["user_field_#{f.id}"] = val
+        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{f.id}"] = val
       end
     end
 
@@ -351,7 +352,7 @@ class UsersController < ApplicationController
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
-          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
+          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length]
         end
       end
 
@@ -674,6 +675,8 @@ class UsersController < ApplicationController
     if current_user.present?
       if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
+      elsif destination_url = cookies.delete(:destination_url)
+        return redirect_to(destination_url)
       else
         return redirect_to(path('/'))
       end
@@ -1097,6 +1100,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def revoke_auth_token
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    UserAuthToken.where(user_id: user.id).each(&:destroy!)
+
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+
+    render json: {
+      success: true
+    }
+  end
+
   private
 
   def honeypot_value
@@ -1153,6 +1169,7 @@ class UsersController < ApplicationController
       :card_background
     ]
 
+    permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys

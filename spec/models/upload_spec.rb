@@ -74,8 +74,9 @@ describe Upload do
   end
 
   context ".get_from_url" do
-    let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
-    let(:upload) { Fabricate(:upload, url: url) }
+    let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
+    let(:url) { "/uploads/default/original/3X/1/0/#{sha1}.png" }
+    let(:upload) { Fabricate(:upload, url: url, sha1: sha1) }
 
     it "works when the file has been uploaded" do
       expect(Upload.get_from_url(upload.url)).to eq(upload)

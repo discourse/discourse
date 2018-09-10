@@ -536,7 +536,7 @@ class Post < ActiveRecord::Base
     QuotedPost.extract_from(self)
 
     # make sure we trigger the post process
-    trigger_post_process(true)
+    trigger_post_process(bypass_bump: true)
 
     publish_change_to_clients!(:rebaked)
 
@@ -650,10 +650,10 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump = false)
+  def trigger_post_process(bypass_bump: false)
     args = {
       post_id: id,
-      bypass_bump: bypass_bump
+      bypass_bump: bypass_bump,
     }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
@@ -782,6 +782,34 @@ class Post < ActiveRecord::Base
 
   def locked?
     locked_by_id.present?
+  end
+
+  def link_post_uploads(fragments: nil)
+    upload_ids = []
+    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+
+    fragments.css("a/@href", "img/@src").each do |media|
+      if upload = Upload.get_from_url(media.value)
+        upload_ids << upload.id
+      end
+    end
+
+    upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
+    values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
+
+    PostUpload.transaction do
+      PostUpload.where(post_id: self.id).delete_all
+
+      if values.size > 0
+        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
+      end
+    end
+  end
+
+  def downloaded_images
+    JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
+  rescue JSON::ParserError
+    {}
   end
 
   private

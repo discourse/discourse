@@ -1474,6 +1474,13 @@ ro:
         Anumite probleme îți sunt raportate pe spațul de lucru al adminului.
 
         [Te rugăm să le verifici și să le rezolvi](%{base_url}/admin).
+    new_user_of_the_month:
+      text_body_template: |
+        Felicitări, ai primit ecusonul **Premiul pentru utilizatorul nou al lunii %{month_year}**. :trophy:
+
+        În fiecare lună, doi utilizatori noi primesc acest premiu ce va fi vizibil permanent pe [pagina de ecusoane](%{url})
+
+        Ai devenit un membru valoros al comunității noastre. Mulțumim pentru participare!
   unsubscribe_link: |
     Pentru dezabonare de la aceste emailuri, [click aici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

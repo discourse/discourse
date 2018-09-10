@@ -53,4 +53,18 @@ describe "S3Helper" do
     helper.update_tombstone_lifecycle(100)
   end
 
+  describe '#list' do
+    it 'creates the prefix correctly' do
+      {
+        'some/bucket' => 'bucket/testing',
+        'some' => 'testing'
+      }.each do |bucket_name, prefix|
+        s3_helper = S3Helper.new(bucket_name)
+        bucket = stub('s3_bucket')
+        s3_helper.expects(:s3_bucket).returns(bucket)
+        bucket.expects(:objects).with(prefix: prefix)
+        s3_helper.list('testing')
+      end
+    end
+  end
 end

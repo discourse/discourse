@@ -205,6 +205,11 @@ export default Ember.Controller.extend(
           "accountChallenge"
         );
         const userFields = this.get("userFields");
+        const destinationUrl = this.get("authOptions.destination_url");
+
+        if (!Ember.isEmpty(destinationUrl)) {
+          $.cookie("destination_url", destinationUrl, { path: "/" });
+        }
 
         // Add the userfields to the data
         if (!Ember.isEmpty(userFields)) {
@@ -255,10 +260,12 @@ export default Ember.Controller.extend(
                 this.get("rejectedPasswords").pushObject(attrs.accountPassword);
               }
               this.set("formSubmitted", false);
+              $.cookie("destination_url", null);
             }
           },
           () => {
             this.set("formSubmitted", false);
+            $.cookie("destination_url", null);
             return this.flash(I18n.t("create_account.failed"), "error");
           }
         );

@@ -156,6 +156,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from ArgumentError do |e|
+    if e.message == "string contains null byte"
+      raise Discourse::InvalidParameters, e.message
+    else
+      raise e
+    end
+  end
+
   rescue_from Discourse::InvalidParameters do |e|
     message = I18n.t('invalid_params', message: e.message)
     if (request.format && request.format.json?) || request.xhr? || !request.get?
@@ -373,7 +381,8 @@ class ApplicationController < ActionController::Base
     theme_ids = []
 
     if preview_theme_id = request[:preview_theme_id]&.to_i
-      theme_ids << preview_theme_id
+      ids = [preview_theme_id]
+      theme_ids = ids if guardian.allow_themes?(ids, include_preview: true)
     end
 
     user_option = current_user&.user_option
@@ -386,10 +395,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    theme_ids = user_option&.theme_ids || [] if theme_ids.blank?
-
-    unless guardian.allow_themes?(theme_ids)
-      theme_ids = []
+    if theme_ids.blank?
+      ids = user_option&.theme_ids || []
+      theme_ids = ids if guardian.allow_themes?(ids)
     end
 
     if theme_ids.blank? && SiteSetting.default_theme_id != -1

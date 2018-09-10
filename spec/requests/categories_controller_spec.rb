@@ -99,6 +99,18 @@ describe CategoriesController do
 
           expect(response.status).to eq(422)
         end
+
+        it "returns errors with invalid group" do
+          category = Fabricate(:category, user: admin)
+          readonly = CategoryGroup.permission_types[:readonly]
+
+          post "/categories.json", params: {
+            name: category.name, color: "ff0", text_color: "fff", permissions: { "invalid_group" => readonly }
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)['errors']).to be_present
+        end
       end
 
       describe "success" do

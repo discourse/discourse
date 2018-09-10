@@ -7,6 +7,8 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  SHA1_LENGTH = 40
+
   belongs_to :user
 
   has_many :post_uploads, dependent: :destroy
@@ -23,6 +25,12 @@ class Upload < ActiveRecord::Base
   validates_presence_of :original_filename
 
   validates_with ::Validators::UploadValidator
+
+  after_destroy do
+    User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
+    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
+    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+  end
 
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
@@ -148,10 +156,10 @@ class Upload < ActiveRecord::Base
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
       sha1 = Base62.decode($2).to_s(16)
 
-      if sha1.length > 40
+      if sha1.length > SHA1_LENGTH
         nil
       else
-        sha1.rjust(40, '0')
+        sha1.rjust(SHA1_LENGTH, '0')
       end
     end
   end
@@ -169,12 +177,12 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-
-    path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
-
-    return if path.blank?
-
-    Upload.find_by("url LIKE ?", "%#{path}")
+    data = uri.path.match(/(\/original\/\dX\/[\/\.\w]+\/([a-zA-Z0-9]+)[\.\w]+)/)
+    return if data.blank?
+    sha1 = data[2]
+    upload = nil
+    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
+    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)

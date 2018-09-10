@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+  has_many :user_auth_token_logs, dependent: :destroy
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
@@ -219,6 +220,24 @@ class User < ActiveRecord::Base
     SiteSetting.reserved_usernames.split("|").any? do |reserved|
       !!lower.match("^#{Regexp.escape(reserved).gsub('\*', '.*')}$")
     end
+  end
+
+  def self.plugin_editable_user_custom_fields
+    @plugin_editable_user_custom_fields ||= {}
+  end
+
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin)
+    plugin_editable_user_custom_fields[custom_field_name] = plugin
+  end
+
+  def self.editable_user_custom_fields
+    fields = []
+
+    plugin_editable_user_custom_fields.each do |k, v|
+      fields << k if v.enabled?
+    end
+
+    fields.uniq
   end
 
   def self.plugin_staff_user_custom_fields
@@ -965,13 +984,15 @@ class User < ActiveRecord::Base
     result
   end
 
+  USER_FIELD_PREFIX ||= "user_field_"
+
   def user_fields
     return @user_fields if @user_fields
     user_field_ids = UserField.pluck(:id)
     if user_field_ids.present?
       @user_fields = {}
       user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["user_field_#{fid}"]
+        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
     @user_fields
@@ -1281,6 +1302,20 @@ class User < ActiveRecord::Base
     end
 
     true
+  end
+
+  def self.ensure_consistency!
+    DB.exec <<~SQL
+      UPDATE users
+      SET uploaded_avatar_id = NULL
+      WHERE uploaded_avatar_id IN (
+        SELECT u1.uploaded_avatar_id FROM users u1
+        LEFT JOIN uploads up
+          ON u1.uploaded_avatar_id = up.id
+        WHERE u1.uploaded_avatar_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
   end
 
 end

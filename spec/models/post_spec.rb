@@ -1153,4 +1153,74 @@ describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
+  describe '#link_post_uploads' do
+    let(:video_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.mp4'
+      )
+    end
+
+    let(:image_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
+      )
+    end
+
+    let(:audio_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.ogg'
+      )
+    end
+
+    let(:attachment_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.csv'
+      )
+    end
+
+    let(:raw) do
+      <<~RAW
+      <a href="#{attachment_upload.url}">Link</a>
+      <img src="#{image_upload.url}">
+
+      <video width="100%" height="100%" controls>
+        <source src="http://myforum.com#{video_upload.url}">
+        <a href="http://myforum.com#{video_upload.url}">http://myforum.com#{video_upload.url}</a>
+      </video>
+
+      <audio controls>
+        <source src="http://myforum.com#{audio_upload.url}">
+        <a href="http://myforum.com#{audio_upload.url}">http://myforum.com#{audio_upload.url}</a>
+      </audio>
+      RAW
+    end
+
+    let(:post) { Fabricate(:post, raw: raw) }
+
+    it "finds all the uploads in the post" do
+      post.custom_fields[Post::DOWNLOADED_IMAGES] = {
+        "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
+      }
+
+      post.save_custom_fields
+      post.link_post_uploads
+
+      expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
+        video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id
+      )
+    end
+
+    it "cleans the reverse index up for the current post" do
+      post.link_post_uploads
+
+      post_uploads_ids = post.post_uploads.pluck(:id)
+
+      post.link_post_uploads
+
+      expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
+        post_uploads_ids
+      )
+    end
+  end
+
 end

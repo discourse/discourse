@@ -242,7 +242,7 @@ class Report
       report_about report, User.real, :count_by_signup_date
     end
 
-    add_prev_data report, User.real, :count_by_signup_date, report.prev_start_date, report.prev_end_date
+    # add_prev_data report, User.real, :count_by_signup_date, report.prev_start_date, report.prev_end_date
   end
 
   def self.report_new_contributors(report)
@@ -262,7 +262,7 @@ class Report
     if report.facets.include?(:prev_period)
       prev_period_data = User.real.count_by_first_post(report.prev_start_date, report.prev_end_date)
       report.prev_period = prev_period_data.sum { |k, v| v }
-      report.prev_data = prev_period_data.map { |k, v| { x: k, y: v } }
+      # report.prev_data = prev_period_data.map { |k, v| { x: k, y: v } }
     end
 
     data.each do |key, value|

@@ -106,14 +106,14 @@ module Email
           .where(id: PostReply.where(reply_id: post_id).select(:post_id))
           .order(id: :desc)
 
-        referenced_post_message_ids = referenced_posts.map do |post|
-          if post.incoming_email&.message_id.present?
-            "<#{post.incoming_email.message_id}>"
+        referenced_post_message_ids = referenced_posts.map do |referenced_post|
+          if referenced_post.incoming_email&.message_id.present?
+            "<#{referenced_post.incoming_email.message_id}>"
           else
-            if post.post_number == 1
+            if referenced_post.post_number == 1
               "<topic/#{topic_id}@#{host}>"
             else
-              "<topic/#{topic_id}/#{post.id}@#{host}>"
+              "<topic/#{topic_id}/#{referenced_post.id}@#{host}>"
             end
           end
         end

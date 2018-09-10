@@ -219,8 +219,8 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = "#{Discourse.base_url}#{@category.url}"
-    @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
+    @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
+    @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
     @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
 
@@ -367,7 +367,6 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
-    params[:page] = params[:page].to_i rescue 1
     params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|

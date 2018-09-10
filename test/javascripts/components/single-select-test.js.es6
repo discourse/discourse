@@ -501,6 +501,32 @@ componentTest("support modifying on select behavior through plugin api", {
   }
 });
 
+componentTest("support modifying on select none behavior through plugin api", {
+  template:
+    '<span class="on-select-none-test"></span>{{single-select none="none" content=content}}',
+
+  beforeEach() {
+    withPluginApi("0.8.25", api => {
+      api.modifySelectKit("select-kit").onSelectNone(() => {
+        find(".on-select-none-test").html("NONE");
+      });
+    });
+
+    this.set("content", [{ id: "1", name: "robin" }]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(1);
+    await this.get("subject").expand();
+    await this.get("subject").selectNoneRow();
+
+    assert.equal(find(".on-select-none-test").html(), "NONE");
+
+    clearCallbacks();
+  }
+});
+
 componentTest("with nameChanges", {
   template: "{{single-select content=content nameChanges=true}}",
 

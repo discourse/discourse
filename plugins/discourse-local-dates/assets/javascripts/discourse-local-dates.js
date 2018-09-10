@@ -27,7 +27,10 @@
       }
 
       var previews = options.timezones.split("|").map(function(timezone) {
-        var dateTime = relativeTime.tz(timezone).format("LLL");
+        var dateTime = relativeTime
+          .tz(timezone)
+          .format(options.format || "LLL");
+
         var timezoneParts = _formatTimezone(timezone);
 
         if (dateTime.match(/TZ/)) {
@@ -60,7 +63,7 @@
       html += "<span class='relative-time'></span>";
       html += "</span>";
 
-      var joinedPreviews = previews.join(" – ");
+      var joinedPreviews = previews.join("\n");
 
       $element
         .html(html)

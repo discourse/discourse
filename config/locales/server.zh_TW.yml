@@ -1799,7 +1799,6 @@ zh_TW:
     recent_topics: "最近"
     see_more: "更多"
     search_title: "搜尋該網頁"
-    search_google: "Google"
   login_required:
     welcome_message: |
       ## [歡迎來到 %{title}](#welcome)

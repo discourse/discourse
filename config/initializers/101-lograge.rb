@@ -53,9 +53,9 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
           params[:file] = file.headers
         end
 
-        if (files = params[:files])
-          params[:files] = files.map do |file|
-            file.respond_to?(:headers) ? file.headers : file
+        if (files = params[:files]) && files.respond_to?(:map)
+          params[:files] = files.map do |f|
+            f.respond_to?(:headers) ? f.headers : f
           end
         end
 

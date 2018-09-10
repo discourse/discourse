@@ -9,6 +9,7 @@ require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
 
 class TopicQuery
+  PG_MAX_INT ||= 2147483647
 
   def self.validators
     @validators ||= begin
@@ -17,8 +18,12 @@ class TopicQuery
         Integer === x || (String === x && x.match?(/^-?[0-9]+$/))
       end
 
-      zero_or_more = lambda do |x|
-        int.call(x) && x.to_i >= 0
+      zero_up_to_max_int = lambda do |x|
+        int.call(x) && x.to_i.between?(0, PG_MAX_INT)
+      end
+
+      one_up_to_max_int = lambda do |x|
+        int.call(x) && x.to_i.between?(1, PG_MAX_INT)
       end
 
       array_int_or_int = lambda do |x|
@@ -28,8 +33,9 @@ class TopicQuery
       end
 
       {
-        max_posts: zero_or_more,
-        min_posts: zero_or_more,
+        max_posts: zero_up_to_max_int,
+        min_posts: zero_up_to_max_int,
+        page: zero_up_to_max_int,
         exclude_category_ids: array_int_or_int
       }
     end

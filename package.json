@@ -7,11 +7,12 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-eslint": "^8.2.3",
-    "chrome-launcher": "^0.10.2",
-    "chrome-remote-interface": "^0.25.6",
-    "eslint": "^4.19.1",
-    "prettier": "^1.13.0",
-    "puppeteer": "^1.4.0"
+    "babel-eslint": "^8.2",
+    "chrome-launcher": "^0.10",
+    "chrome-remote-interface": "^0.25",
+    "eslint": "^4.19",
+    "prettier": "^1.13",
+    "puppeteer": "^1.4",
+    "pretender": "^1.6"
   }
 }

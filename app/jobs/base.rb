@@ -119,11 +119,6 @@ module Jobs
           RailsMultisite::ConnectionManagement.all_dbs
         end
 
-      logster_env = {}
-      Logster.add_to_env(logster_env, :current_db, 'default')
-      Logster.add_to_env(logster_env, :job, self.class.to_s)
-      Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
-
       exceptions = []
       dbs.each do |db|
         begin
@@ -134,7 +129,11 @@ module Jobs
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
+                logster_env = {}
+                Logster.add_to_env(logster_env, :job, self.class.to_s)
                 Logster.add_to_env(logster_env, :db, db)
+                Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
+
                 execute(opts)
               rescue => e
                 exception[:ex] = e
@@ -146,7 +145,6 @@ module Jobs
               exception[:other] = { problem_db: db }
             ensure
               total_db_time += Instrumenter.stats.duration_ms
-              Thread.current[Logster::Logger::LOGSTER_ENV] = nil
             end
           end
 

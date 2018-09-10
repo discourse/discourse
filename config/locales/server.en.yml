@@ -698,6 +698,18 @@ en:
     invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
     title: "Email login"
 
+  user_auth_tokens:
+    devices:
+      android: 'Android Device'
+      linux: 'Linux Computer'
+      windows: 'Windows Computer'
+      mac: 'Mac'
+      iphone: 'iPhone'
+      ipad: 'iPad'
+      ipod: 'iPod'
+      mobile: 'Mobile Device'
+      unknown: 'Unknown device'
+
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -1398,8 +1410,8 @@ en:
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
     selectable_avatars: "List of avatars users can choose from."
 
-    default_opengraph_image_url: "URL of the default opengraph image."
-    twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
+    default_opengraph_image_url: "Default opengraph image, used when the page has no other suitable image or site logo."
+    twitter_summary_large_image_url: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 

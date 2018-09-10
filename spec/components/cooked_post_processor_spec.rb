@@ -4,18 +4,29 @@ require "cooked_post_processor"
 describe CookedPostProcessor do
 
   context ".post_process" do
+    let(:upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
+      )
+    end
 
-    let(:post) { build(:post) }
+    let(:post) do
+      Fabricate(:post, raw: <<~RAW)
+      <img src="#{upload.url}">
+      RAW
+    end
+
     let(:cpp) { CookedPostProcessor.new(post) }
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
-      cpp.expects(:keep_reverse_index_up_to_date).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
       cpp.post_process
+
+      expect(PostUpload.exists?(post: post, upload: upload)).to eq(true)
     end
 
   end
@@ -38,52 +49,6 @@ describe CookedPostProcessor do
         expect(cpp.cooking_options[:omit_nofollow]).to eq(true)
       end
     end
-  end
-
-  context ".keep_reverse_index_up_to_date" do
-    let(:video_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.mp4') }
-    let(:image_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.jpg') }
-    let(:audio_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.ogg') }
-    let(:attachment_upload) { Fabricate(:upload, url: '/uploads/default/original/1X/1/1234567890123456.csv') }
-
-    let(:raw) do
-      <<~RAW
-      <a href="#{attachment_upload.url}">Link</a>
-      <img src="#{image_upload.url}">
-
-      <video width="100%" height="100%" controls>
-        <source src="http://myforum.com#{video_upload.url}">
-        <a href="http://myforum.com#{video_upload.url}">http://myforum.com#{video_upload.url}</a>
-      </video>
-
-      <audio controls>
-        <source src="http://myforum.com#{audio_upload.url}">
-        <a href="http://myforum.com#{audio_upload.url}">http://myforum.com#{audio_upload.url}</a>
-      </audio>
-      RAW
-    end
-
-    let(:post) { Fabricate(:post, raw: raw) }
-    let(:cpp) { CookedPostProcessor.new(post) }
-
-    it "finds all the uploads in the post" do
-      cpp.keep_reverse_index_up_to_date
-
-      expect(PostUpload.where(post: post).map(&:upload_id).sort).to eq(
-        [video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id].sort
-      )
-    end
-
-    it "cleans the reverse index up for the current post" do
-      cpp.keep_reverse_index_up_to_date
-
-      post_uploads_ids = post.post_uploads.pluck(:id)
-
-      cpp.keep_reverse_index_up_to_date
-
-      expect(post.reload.post_uploads.pluck(:id)).to_not eq(post_uploads_ids)
-    end
-
   end
 
   context ".post_process_images" do

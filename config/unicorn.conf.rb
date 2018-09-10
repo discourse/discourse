@@ -25,7 +25,7 @@ pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 if ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"]
   logger Logger.new($stdout)
   # we want a longer timeout in dev cause first request can be really slow
-  timeout 60
+  timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
