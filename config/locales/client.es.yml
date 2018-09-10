@@ -781,6 +781,7 @@ es:
         title: "Introduce de nuevo la contraseña"
       auth_tokens:
         title: "Dispositivos utilizados recientemente"
+        title_logs: "Logs de Autenticación"
         ip_address: "Dirección IP"
         created: "Creado"
         first_seen: "Primera vez"
@@ -1021,6 +1022,8 @@ es:
       hide_session: "Recordar mañana"
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
+      intro: "¡Hola! Parece que estás disfrutando del debate, pero no tienes una cuenta registrada aún."
+      value_prop: "Cuando registras una cuenta, recordamos exactamente lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando alguien responde a tus mensajes. ¡También puedes darle a \"Me gusta\" a los mensajes para compartir amor! :heartpulse:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{replyCount}}</b> respuestas."
@@ -1106,7 +1109,7 @@ es:
       change_email: "Cambiar dirección de email"
       provide_new_email: "Poner un nuevo email, y te reenviaremos una confirmación de email."
       submit_new_email: "Actualizar Dirección de Email"
-      sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
+      sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentEmail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
       forgot: "No me acuerdo de los detalles de mi cuenta."
@@ -1321,6 +1324,9 @@ es:
         shared_draft:
           label: "Borrador Compartido"
           desc: "Haz borrador al tema que será visible únicamente por el staff"
+        toggle_topic_bump:
+          label: "Alternar BUMP del tema"
+          desc: "Responder sin alterar la fecha dump del tema"
     notifications:
       tooltip:
         regular:
@@ -1708,6 +1714,7 @@ es:
         reset_read: "Restablecer datos de lectura"
         make_public: "Convertir en tema público"
         make_private: "Crear Mensaje Personal"
+        reset_bump_date: "Resetear fecha Bump"
       feature:
         pin: "Destacar tema"
         unpin: "Dejar de destacar tema"
@@ -2977,6 +2984,9 @@ es:
           custom_sections: "Personalizaciones:"
           theme_components: "Componentes del Theme"
           switch_component: "Convertir a tema"
+          switch_component_alert: "¿Seguro que quieres convertir este componente en theme? Esto lo convertirá en un theme independiente y se eliminará como un secundario de todos los themes."
+          switch_theme: "Hacer componente"
+          switch_theme_alert: "¿Seguro que quieres convertir este theme en componente? Se eliminará como principal de todos los componentes."
           uploads: "Subidos"
           no_uploads: "Puedes subir archivos asociados con tu theme como fuentes e imágenes "
           add_upload: "Agregar Subido"
@@ -2999,6 +3009,7 @@ es:
           public_key: "Conceda la siguiente clave pública de acceso para el repositorio:"
           about_theme: "Acerca del Theme"
           license: "Licencia"
+          component_of: "Componente de:"
           update_to_latest: "Actualizar a lo último"
           check_for_updates: "Verificar por Actualizaciones"
           updating: "Actualizando..."
@@ -3006,6 +3017,7 @@ es:
           add: "Agregar"
           theme_settings: "Ajustes del Theme"
           no_settings: "Este theme no tiene ajustes."
+          empty: "Sin items"
           commits_behind:
             one: "Theme está 1 commit detrás!"
             other: "Theme está {{count}} commits detrás!"

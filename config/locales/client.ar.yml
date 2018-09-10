@@ -212,7 +212,7 @@ ar:
       banner:
         enabled: 'اجعل هذا إعلانا %{when}. سوف يظهر اعلى جميع الصفحات حتى يتم الغاؤه بواسطة المستخدم.'
         disabled: 'أزل هذا الإعلان %{when}. لن يظهر بعد الآن في أعلى كلّ صفحة.'
-    topic_admin_menu: "صلاحيات المدير علي الموضوعات"
+    topic_admin_menu: "صلاحيات المدير علي المواضيع"
     wizard_required: "مرحبًا في نسختك الجديدة من دسكورس! فلنبدأ مع <a href='%{url}' data-auto-route='true'>مُرشد الإعدادات</a> ✨"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
     themes:
@@ -287,7 +287,7 @@ ar:
       many: "{{count}} محرفا"
       other: "{{count}} حرف"
     suggested_topics:
-      title: "الموضوعات المقترحة"
+      title: "المواضيع المقترحة"
       pm_title: "رسائل مقترحة "
     about:
       simple_title: "عنّا"
@@ -298,7 +298,7 @@ ar:
       stat:
         all_time: "منذ التأسيس"
       like_count: "الإعجابات"
-      topic_count: "الموضوعات"
+      topic_count: "المواضيع"
       post_count: "المنشورات"
       user_count: "الأعضاء"
       active_user_count: "الأعضاء النشطون"
@@ -393,10 +393,10 @@ ar:
       likes_given: "المعطاة"
       likes_received: "المتلقاة"
       topics_entered: "المُشاهدة"
-      topics_entered_long: "الموضوعات المُشاهدة"
+      topics_entered_long: "المواضيع التي تمت مشاهدتها"
       time_read: "وقت القراءة"
-      topic_count: "الموضوعات"
-      topic_count_long: "الموضوعات المنشورة"
+      topic_count: "المواضيع"
+      topic_count_long: "المواضيع المنشورة"
       post_count: "الردود"
       post_count_long: "الردود المنشورة"
       no_results: "لا نتائج."
@@ -490,7 +490,7 @@ ar:
         filter_placeholder: "اسم المستخدم"
         remove_owner: "حذف كمالك"
         owner: "المالك"
-      topics: "الموضوعات"
+      topics: "المواضيع"
       posts: "المنشورات"
       mentions: "الإشارات"
       messages: "الرسائل"
@@ -531,7 +531,7 @@ ar:
       "1": "الإعجابات المعطاة"
       "2": "الإعجابات المتلقاة"
       "3": "العلامات المرجعية"
-      "4": "الموضوعات"
+      "4": "المواضيع"
       "5": "الردود"
       "6": "الردود"
       "7": "الإشارات"
@@ -552,8 +552,8 @@ ar:
         apply_all: "تطبيق"
         position: "مكان"
       posts: "المنشورات"
-      topics: "الموضوعات"
-      latest: "آخر الموضوعات"
+      topics: "المواضيع"
+      latest: "آخر المواضيع"
       latest_by: "الاحدث بـ"
       toggle_ordering: "تبديل التحكم في الترتيب"
       subcategories: "أقسام فرعية"
@@ -625,7 +625,7 @@ ar:
       dismiss_notifications_tooltip: "اجعل كل الإشعارات مقروءة"
       first_notification: "إشعارك الأول! قم بالضغط عليه للبدء."
       disable_jump_reply: "لا تنتقل إلى منشوري بعد النشر"
-      dynamic_favicon: "أظهر عدد الموضوعات الجديدة/المحدّثة في أيقونة المتصفح"
+      dynamic_favicon: "أظهر عدد المواضيع الجديدة/المحدّثة في أيقونة المتصفح"
       theme_default_on_all_devices: "اجعل هذة الواجهة افتراضية على جميع اجهزتي"
       external_links_in_new_tab: "فتح الروابط الخارجية في تبويب جديد"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
@@ -651,7 +651,7 @@ ar:
         few_per_day: "أرسل لي رسالة لكل منشور جديد (تقريبا إثنتان يوميا)"
       tag_settings: "الأوسمة"
       watched_tags: "مراقب"
-      watched_tags_instructions: "ستراقب آليا كل الموضوعات التي تستخدم هذه الأوسمة. ستصلك إشعارات بالمنشورات و الموضوعات الجديدة، وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
+      watched_tags_instructions: "ستراقب آليا كل المواضيع التي تستخدم هذه الأوسمة. ستصلك إشعارات بالمنشورات و الموضوعات الجديدة، وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
       tracked_tags: "متابع"
       tracked_tags_instructions: "ستتابع آليا كل الموضوعات التي تستخدم هذه الأوسمة. وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
       muted_tags: "مكتوم"
@@ -1150,7 +1150,7 @@ ar:
     category_page_style:
       categories_only: "الأقسام فقط"
       categories_with_featured_topics: "أقسام ذات مواضيع مُميزة"
-      categories_and_latest_topics: "الأقسام و الموضوعات الأخيرة"
+      categories_and_latest_topics: "الأقسام والمواضيع الأخيرة"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1886,7 +1886,7 @@ ar:
       abandon:
         confirm: "أمتأكد من التخلي عن المنشور؟"
         no_value: "لا، أبقها"
-        yes_value: "نعم، لا أريدها"
+        yes_value: "نعم، لا أريده"
       via_email: "وصل هذا المنشور عبر البريد"
       via_auto_generated_email: "وصل هذا المنشور عبر بريد مولّد آلياً"
       whisper: "هذا المنشور سري خاص بالمشرفين"
@@ -3598,7 +3598,7 @@ ar:
         topic_title: "موضوع"
         post_id: "رقم المشاركة"
         post_title: "مشاركة"
-        category_id: "رقم القسم"
+        category_id: "رقم التصنيف"
         category_title: "قسم"
         external_url: "رابط خارجي"
         delete_confirm: هل أنت متأكد من حذف هذا الرابط الثابت ؟
@@ -3613,7 +3613,8 @@ ar:
       next: "التالي"
       step: "%{current} من %{total}"
       upload: "رفع"
-      uploading: "يرفع..."
+      uploading: "جاري الرفع..."
+      upload_error: "عذرا ، حدث خطأ أثناء تحميل هذا الملف. حاول مرة اخرى."
       quit: "ربما لاحقا"
       invites:
         add_user: "أضف"
@@ -3622,3 +3623,7 @@ ar:
           admin: "مدير"
           moderator: "مشرف"
           regular: "مستخدم عادي"
+      previews:
+        topic_title: "موضوع النقاش"
+        share_button: "شاركها"
+        reply_button: "رد"

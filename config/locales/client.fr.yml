@@ -1325,6 +1325,9 @@ fr:
         shared_draft:
           label: "Ebauche partagée"
           desc: "Créer ébauche d'un sujet qui ne sera visible qu'aux responsables"
+        toggle_topic_bump:
+          label: "Basculer l'actualisation des sujets"
+          desc: "Répondre sans modifier la date d'actualisation du sujet"
     notifications:
       tooltip:
         regular:
@@ -1712,6 +1715,7 @@ fr:
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
         make_private: "Transformer en message direct"
+        reset_bump_date: "Réinitialiser la date d'actualisation"
       feature:
         pin: "Épingler le sujet"
         unpin: "Désépingler le sujet"
