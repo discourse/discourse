@@ -9,6 +9,8 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
+    attr_reader :s3_helper
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
     end

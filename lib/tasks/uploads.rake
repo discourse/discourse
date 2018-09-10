@@ -718,15 +718,17 @@ end
 
 task "uploads:list_posts_with_broken_images" => :environment do
   if ENV["RAILS_DB"]
-    list_broken_posts
+    list_broken_posts(recover_from_s3: ENV["RECOVER_MISSING"])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_broken_posts
+      list_broken_posts(recover_from_s3: ENV["RECOVER_MISSING"])
     end
   end
 end
 
-def list_broken_posts
+def list_broken_posts(recover_from_s3: false)
+  object_keys = nil
+
   Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
     begin
       begin
@@ -743,10 +745,51 @@ def list_broken_posts
 
         if img["data-orig-src"]
           puts "#{post.full_url} #{img["data-orig-src"]}"
+
+          if recover_from_s3 && Discourse.store.external?
+            object_keys ||= begin
+              s3_helper = Discourse.store.s3_helper
+
+              s3_helper.list("original").map(&:key).concat(
+                s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
+              )
+            end
+
+            recover_from_s3_by_sha1(
+              post: post,
+              sha1: Upload.sha1_from_short_url(img["data-orig-src"]),
+              object_keys: object_keys
+            )
+          end
         end
       end
     rescue => e
       puts "#{post.full_url} Error: #{e.message}"
+    end
+  end
+end
+
+def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
+  object_keys.each do |key|
+    if key =~ /#{sha1}/
+      url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
+
+      begin
+        tmp = FileHelper.download(
+          url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "recover_from_s3"
+        )
+
+        upload = UploadCreator.new(
+          tmp,
+          File.basename(key)
+        ).create_for(post.user_id)
+
+        post.rebake! if upload.persisted?
+      ensure
+        tmp&.close
+      end
     end
   end
 end
