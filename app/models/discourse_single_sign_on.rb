@@ -160,7 +160,8 @@ class DiscourseSingleSignOn < SingleSignOn
     # Use a mutex here to counter SSO requests that are sent at the same time w
     # the same email payload
     DistributedMutex.synchronize("discourse_single_sign_on_#{email}") do
-      unless user = User.find_by_email(email)
+      user = User.find_by_email(email) if !require_activation
+      if !user
         try_name = name.presence
         try_username = username.presence
 
