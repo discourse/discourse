@@ -2,12 +2,13 @@
 #   we are capturing all log output into a log array to return
 #   to the rake task rather than using `puts` statements.
 class DestroyTask
-  def self.destroy_topics(category)
-    c = Category.find_by_slug(category)
+  def self.destroy_topics(category, parent_category = nil)
+    c = Category.find_by_slug(category, parent_category)
     log = []
-    return "A category with the slug: #{category} could not be found" if c.nil?
+    descriptive_slug = parent_category ? "#{parent_category}/#{category}" : category
+    return "A category with the slug: #{descriptive_slug} could not be found" if c.nil?
     topics = Topic.where(category_id: c.id, pinned_at: nil).where.not(user_id: -1)
-    log << "There are #{topics.count} topics to delete in #{category} category"
+    log << "There are #{topics.count} topics to delete in #{descriptive_slug} category"
     topics.each do |topic|
       log << "Deleting #{topic.slug}..."
       first_post = topic.ordered_posts.first
@@ -24,7 +25,7 @@ class DestroyTask
     categories = Category.all
     log = []
     categories.each do |c|
-      log << destroy_topics(c.slug)
+      log << destroy_topics(c.slug, c.parent_category&.slug)
     end
     log
   end
