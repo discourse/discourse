@@ -458,6 +458,9 @@ $mobile-breakpoint: 700px;
   background-color: $primary-low;
   align-items: center;
 
+  .controls label {
+    margin-bottom: 0;
+  }
   .admin-actions {
     margin-left: auto;
   }
