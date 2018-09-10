@@ -56,6 +56,9 @@ sk:
         title: "Uzavrieť hlasovanie"
         label: "Zavrieť"
         confirm: "Ste si istý, že chcete uzavrieť toto hlasovanie?"
+      automatic_close:
+        closes_in: "uzavrie sa za"
+        age: "uzavreté"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
       error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
       error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."
@@ -79,3 +82,5 @@ sk:
           label: Ukázať kto hlasoval
         poll_options:
           label: Zadajte každú možnosť voľby do nového riadka
+        automatic_close:
+          label: Automaticky zatvoriť hlasovanie

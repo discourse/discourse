@@ -7,7 +7,6 @@
 
 it:
   site_settings:
-    discourse_narrative_bot_enabled: 'Abilita Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Disabilita il messaggio di benvenuto di Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomi utente che Discourse Narrative Bot deve ignorare"
     discourse_narrative_bot_disable_public_replies: "Disabilita le risposte pubbliche da Discourse Narrative Bot"
@@ -289,7 +288,7 @@ it:
           Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
       end:
         message: |-
-          Grazie per avermi seguito @%{username}! Ho fatto questo per te, penso che te lo sei guadagnato:
+          Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
 
           %{certificate}
 
@@ -357,6 +356,12 @@ it:
         reply: |-
           Eccellente! Ricorda che ciò funziona sia per le categorie _sia_ per le etichette, se queste etichette sono abilitate.
       change_topic_notification_level:
+        instructions: |-
+          Ogni argomento ha un livello di notifica. Parte da 'Normale', il che significa che riceverai una notifica quando qualcuno parlerà direttamente con te.
+
+          Per impostazione predefinita, il livello di notifica per un messaggio privato è impostato al livello più alto 'In osservazione', il che significa che riceverai una notifica ad ogni nuovo messaggio. Ma puoi sovrascrivere il livello di notifica per _ogni_ argomento su 'In osservazione', 'Seguito' o 'Silenziato'.
+
+          Prova a modificare il livello di notifica per questo argomento. In fondo alla discussione, troverai un pulsante che ti mostrerà che questo argomento è **In osservazione** . Puoi modificare il livello di notifica a **Seguito**?
         not_found: |-
           Sembra che tu stia ancora osservando :eyes: questo argomento! Se hai problemi a trovarlo, il pulsante relativo al livello della notifica è situato in fondo all'argomento.
         reply: |-
@@ -385,6 +390,20 @@ it:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Qualche volta potresti voler **nascondere dei dettagli** nelle tue risposte:
+
+          - Quando si stanno discutento punti della trama di un film o di uno show televisivo che potrebbero essere considerati degli spoiler.
+
+          - Quando il tuo messaggio necessita di molti dettagli opzionali che potrebbero intralciare la lettura se letti tutti in una volta.
+
+          [details=Seleziona qui per vedere come funziona!]
+          1. Clicca il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor.
+          2. Seleziona "Nascondi Dettagli".
+          3. Inserisci un riassunto dei dettagli.
+          [/details]
+
+          Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quello che segue nella tua prossima risposta:
 
@@ -397,11 +416,11 @@ it:
           Ottimo lavoro — la tua attenzione per i _dettagli_ è ammirevole!
       end:
         message: |-
-          Hai affrontato tutto questo come un _utente avanzato_ infatti :bow:
+          Hai davvero affrontato tutto ciò da _utente avanzato_ :bow:
 
           %{certificate}
 
-          Questo è tutto quello che posso fare per te.
+          Questo è quanto.
 
           Arrivederci per adesso! Se desideri parlare di nuovo con me mandami un messaggio in qualsiasi momento :sunglasses:
       certificate:

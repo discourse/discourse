@@ -7,13 +7,16 @@ DATA_DIR="$SOURCE_DIR/data/postgres"
 
 show_help() {
 cat <<EOF
-Usage: ${0##*/} [-h] [--init]
+Usage: ${0##*/} [-e VAR=VAL] [--env VAR=VAL] [--env-file filename] [-h] [--init]
 
-    --init        perform first-time initialization
+  -e, --env       set environment variables
+      --env-file  pass in a file containing a list of environment variable assignments
+      --init      perform first-time initialization
 EOF
 }
 
 initialize=""
+ENV_ARGS=""
 
 while [ "${#@}" -ne "0" ]; do
     case "$1" in
@@ -23,6 +26,24 @@ while [ "${#@}" -ne "0" ]; do
             ;;
         -i | --init)
             initialize="initialize"
+            ;;
+        -e | --env)
+            if [ -z "$2" ]; then
+                show_help
+                exit 0
+            else
+                ENV_ARGS+=" -e $2"
+                shift
+            fi
+            ;;
+        --env-file)
+            if [ -z "$2" ]; then
+                show_help
+                exit 0
+            else  
+                ENV_ARGS="--env-file=$2"
+                break
+            fi
             ;;
         *)
             echo "unexpected argument: $1" >& 2
@@ -38,7 +59,7 @@ echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
-docker run -d -p 1080:1080 -p 3000:3000 -v "$DATA_DIR:/shared/postgres_data:delegated" -v "$SOURCE_DIR:/src:delegated" --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:release /sbin/boot
+docker run -d -p 1080:1080 -p 3000:3000 -v "$DATA_DIR:/shared/postgres_data:delegated" -v "$SOURCE_DIR:/src:delegated" $ENV_ARGS --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:release /sbin/boot
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Installing gems..."

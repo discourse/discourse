@@ -7,8 +7,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:user) { Fabricate(:user) }
 
   let(:topic) do
-    Fabricate(:private_message_topic, first_post: first_post,
-                                      topic_allowed_users: [
+    Fabricate(:private_message_topic,
+      first_post: first_post,
+      topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
       ]
@@ -400,6 +401,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
           end
+
+          describe 'when allow_flagging_staff is false' do
+            it 'should go to the right state' do
+              SiteSetting.allow_flagging_staff = false
+              post.update!(raw: skip_trigger)
+
+              DiscourseNarrativeBot::TrackSelector.new(
+                :reply,
+                user,
+                post_id: post.id
+              ).select
+
+              expect(narrative.get_data(user)[:state].to_sym)
+                .to eq(:tutorial_search)
+            end
+          end
         end
       end
 
@@ -689,6 +706,23 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
+      describe 'when user mentions is disabled' do
+        before do
+          SiteSetting.enable_mentions = false
+        end
+
+        it 'should skip the mention tutorial step' do
+          post.update!(
+            raw: ':monkey: :fries:'
+          )
+
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
+        end
+      end
+
       it 'should create the right reply' do
         post.update!(
           raw: ':monkey: :fries:'
@@ -926,7 +960,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
           end.to change { Post.count }.by(2)
 
-          new_post = Post.offset(1).last
+          new_post = topic.ordered_posts.last(2).first
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.search.reply',
@@ -935,12 +969,15 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(first_post.reload.raw).to eq('Hello world')
 
-          expect(narrative.get_data(user)).to include("state" => "end",
-                                                      "topic_id" => new_post.topic_id,
-                                                      "track" => described_class.to_s)
+          expect(narrative.get_data(user)).to include(
+            "state" => "end",
+            "topic_id" => new_post.topic_id,
+            "track" => described_class.to_s
+          )
 
-          expect(user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?)
-            .to eq(true)
+          expect(user.badges.where(
+            name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+          ).to eq(true)
         end
       end
     end

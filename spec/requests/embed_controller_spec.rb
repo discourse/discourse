@@ -27,7 +27,7 @@ describe EmbedController do
     it "allows a topic to be embedded by id" do
       topic = Fabricate(:topic)
       get '/embed/comments', params: { topic_id: topic.id }, headers: headers
-      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
   end
 
@@ -71,21 +71,45 @@ describe EmbedController do
 
   context "with a host" do
     let!(:embeddable_host) { Fabricate(:embeddable_host) }
+    let(:headers) { { 'REFERER' => embed_url } }
+
+    before do
+      SiteSetting.queue_jobs = false
+    end
 
     it "raises an error with no referer" do
       get '/embed/comments', params: { embed_url: embed_url }
       expect(response.body).to match(I18n.t('embed.error'))
     end
 
+    it "includes CSS from embedded_scss field" do
+      theme = Fabricate(:theme)
+      theme.set_default!
+
+      ThemeField.create!(
+        theme_id: theme.id,
+        name: "embedded_scss",
+        target_id: 0,
+        type_id: 1,
+        value: ".test-osama-15 {\n" + "    color: red;\n" + "}\n"
+      )
+
+      topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+      post = Fabricate(:post, topic: topic_embed.topic)
+
+      get '/embed/comments', params: { embed_url: embed_url }, headers: headers
+
+      html = Nokogiri::HTML.fragment(response.body)
+      css_link = html.at("link[data-target=embedded_theme]").attribute("href").value
+
+      get css_link
+      expect(response.status).to eq(200)
+      expect(response.body).to include(".test-osama-15")
+    end
+
     context "success" do
-      let(:headers) { { 'REFERER' => embed_url } }
-
-      before do
-        SiteSetting.queue_jobs = false
-      end
-
       after do
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
       end
 
@@ -139,7 +163,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "http://eviltrout.com/wat/1-2-3.html" }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "works with the second host" do
@@ -147,7 +171,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "http://eviltrout.com/wat/1-2-3.html" }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "works with a host with a path" do
@@ -155,7 +179,7 @@ describe EmbedController do
           params: { embed_url: embed_url },
           headers: { 'REFERER' => "https://example.com/some-other-path" }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "contains custom class name" do

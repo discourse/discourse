@@ -16,12 +16,18 @@
 @import "mobile/upload";
 @import "mobile/user";
 @import "mobile/history";
+@import "mobile/lightbox";
 @import "mobile/directory";
 @import "mobile/search";
 @import "mobile/emoji";
 @import "mobile/ring";
 @import "mobile/group";
 @import "mobile/groups";
+@import "mobile/dashboard_next";
+@import "mobile/admin_reports";
+@import "mobile/admin_report";
+@import "mobile/admin_report_table";
+@import "mobile/admin_report_counters";
 
 // Import all component-specific files
 @import "mobile/components/*";

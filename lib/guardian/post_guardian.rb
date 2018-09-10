@@ -1,9 +1,25 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
-  def can_post_link?
-    authenticated? &&
-      @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  def unrestricted_link_posting?
+    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  end
+
+  def link_posting_access
+    if unrestricted_link_posting?
+      'full'
+    elsif SiteSetting.whitelisted_link_domains.present?
+      'limited'
+    else
+      'none'
+    end
+  end
+
+  def can_post_link?(host: nil)
+    return false if host.blank?
+
+    unrestricted_link_posting? ||
+      SiteSetting.whitelisted_link_domains.split('|').include?(host)
   end
 
   # Can the user act on the post in a particular way.
@@ -20,10 +36,14 @@ module PostGuardian
     already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
+
+      # Silenced users can't flag
+      return false if is_flag && @user.silenced?
+
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
         (!SiteSetting.allow_flagging_staff?) &&
-        post.user.staff?
+        post&.user&.staff?
 
       if [:notify_user, :notify_moderators].include?(action_key) &&
          (!SiteSetting.enable_personal_messages? ||
@@ -127,6 +147,9 @@ module PostGuardian
     end
 
     if is_my_own?(post)
+
+      return false if @user.silenced?
+
       if post.hidden?
         return false if post.hidden_at.present? &&
                         post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
@@ -147,9 +170,6 @@ module PostGuardian
 
     # Can't delete the first post
     return false if post.is_first_post?
-
-    # Can't delete after post_edit_time_limit minutes have passed
-    return false if !is_staff? && post.edit_time_limit_expired?
 
     # Can't delete posts in archived topics unless you are staff
     return false if !is_staff? && post.topic.archived?
@@ -241,5 +261,9 @@ module PostGuardian
 
   def can_unhide?(post)
     post.try(:hidden) && is_staff?
+  end
+
+  def can_skip_bump?
+    is_staff?
   end
 end

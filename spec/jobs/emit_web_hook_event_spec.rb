@@ -24,6 +24,48 @@ describe Jobs::EmitWebHookEvent do
     end.to raise_error(Discourse::InvalidParameters)
   end
 
+  context 'when the web hook is failed' do
+    before do
+      SiteSetting.retry_web_hook_events = true
+      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+        .to_return(body: 'Invalid Access', status: 403)
+    end
+
+    it 'retry if site setting is enabled' do
+      expect do
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT
+        )
+      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+
+      job = Jobs::EmitWebHookEvent.jobs.first
+      args = job["args"].first
+      expect(args["retry_count"]).to eq(1)
+    end
+
+    it 'does not retry for more than maximum allowed times' do
+      expect do
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT,
+          retry_count: described_class::MAX_RETRY_COUNT
+        )
+      end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+    end
+
+    it 'does not retry if site setting is disabled' do
+      SiteSetting.retry_web_hook_events = false
+
+      expect do
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT
+        )
+      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+    end
+  end
+
   it 'does not raise an error for a ping event without payload' do
     stub_request(:post, "https://meta.discourse.org/webhook_listener")
       .to_return(body: 'OK', status: 200)

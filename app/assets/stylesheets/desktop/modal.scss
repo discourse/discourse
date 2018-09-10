@@ -1,7 +1,7 @@
 // base styles for every modal popup used in Discourse
 
 .modal-middle-container {
-  display:table-cell;
+  display: table-cell;
   vertical-align: middle;
 }
 
@@ -17,8 +17,8 @@
 }
 
 .modal.in {
-    -webkit-animation: fade .25s;
-    animation: fade .25s;
+  -webkit-animation: fade 0.25s;
+  animation: fade 0.25s;
 }
 
 .modal-body {
@@ -68,14 +68,8 @@
   }
 
   .disable_info_wrap {
-    margin-top: -70px;
-    padding-top: 70px;
-    @media all and (min-width: 550px) {
-      padding-left: 170px;
-    }
-
     .cannot_delete_reason {
-      top: 4px;
+      top: -74px;
       right: 4px;
       max-width: 380px;
       min-width: 300px;
@@ -95,13 +89,26 @@
   .bulk-buttons {
     display: flex;
     flex-wrap: wrap;
+    margin-right: -1%;
 
     .btn {
-      flex: 1 1 0;
+      flex: 1 0 30%;
       margin-bottom: 1em;
-      margin-right: 1em;
+      margin-right: 1%;
       white-space: nowrap;
-      max-width: 23%;
+      overflow: hidden;
+      max-width: 33%;
+
+      @media screen and (max-width: 767px) {
+        flex: 1 0 48%;
+        max-width: 48%;
+      }
+
+      @include breakpoint(mobile) {
+        flex: 1 1 auto;
+        min-width: 49%;
+        max-width: unset;
+      }
     }
   }
 }
@@ -117,7 +124,7 @@
       margin-top: 0;
     }
 
-    input[type=radio] {
+    input[type="radio"] {
       margin-right: 10px;
     }
 
@@ -127,9 +134,14 @@
       width: 300px;
     }
 
+    .category-chooser {
+      margin-bottom: 9px;
+    }
+
     form {
       margin-top: 20px;
-      #split-topic-name, #choose-topic-title {
+      #split-topic-name,
+      #choose-topic-title {
         width: 520px;
       }
     }

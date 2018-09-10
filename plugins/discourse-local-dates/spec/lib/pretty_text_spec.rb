@@ -4,15 +4,15 @@ describe PrettyText do
   it 'supports inserting date' do
     freeze_time
     cooked = PrettyText.cook <<~MD
-      [date=2018-05-08 time=22:00 format=LLL timezones="Europe/Paris|America/Los_Angeles"]
+      [date=2018-05-08 time=22:00 format="L LTS" timezones="Europe/Paris|America/Los_Angeles"]
     MD
 
     expect(cooked).to include('class="discourse-local-date"')
     expect(cooked).to include('data-date="2018-05-08"')
-    expect(cooked).to include('data-format="LLL"')
+    expect(cooked).to include('data-format="L LTS"')
     expect(cooked).to include('data-timezones="Europe/Paris|America/Los_Angeles"')
-    expect(cooked).to include('May 8, 2018 3:00 PM (America: Los Angeles)')
-    expect(cooked).to include('May 9, 2018 12:00 AM (Europe: Paris)')
+    expect(cooked).to include('05/08/2018 3:00:00 PM (America: Los Angeles)')
+    expect(cooked).to include('05/09/2018 12:00:00 AM (Europe: Paris)')
   end
 
   it 'uses a simplified syntax in emails' do

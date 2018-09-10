@@ -1,4 +1,4 @@
-import RestAdapter from 'discourse/adapters/rest';
+import RestAdapter from "discourse/adapters/rest";
 
 export default RestAdapter.extend({
   pathFor(store, type, findArgs) {
@@ -17,20 +17,20 @@ export default RestAdapter.extend({
             hasMore: pa.conversation.has_more,
             response: {
               excerpt: pa.conversation.response.excerpt,
-              user: helper.lookup('user', pa.conversation.response.user_id)
+              user: helper.lookup("user", pa.conversation.response.user_id)
             }
           };
 
           if (pa.conversation.reply) {
             conversation.reply = {
               excerpt: pa.conversation.reply.excerpt,
-              user: helper.lookup('user', pa.conversation.reply.user_id)
+              user: helper.lookup("user", pa.conversation.reply.user_id)
             };
           }
           conversations.push(conversation);
         }
       });
-      flag.set('conversations', conversations);
+      flag.set("conversations", conversations);
     });
 
     return results;

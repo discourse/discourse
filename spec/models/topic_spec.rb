@@ -1144,7 +1144,6 @@ describe Topic do
     it 'is a regular topic by default' do
       expect(topic.archetype).to eq(Archetype.default)
       expect(topic.has_summary).to eq(false)
-      expect(topic.percent_rank).to eq(1.0)
       expect(topic).to be_visible
       expect(topic.pinned_at).to be_blank
       expect(topic).not_to be_closed
@@ -1181,6 +1180,12 @@ describe Topic do
       it "doesn't change the category when it can't be found" do
         topic.change_category_to_id(12312312)
         expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
+      end
+
+      it "changes the category even when the topic title is invalid" do
+        SiteSetting.min_topic_title_length = 5
+        topic.update_column(:title, "xyz")
+        expect { topic.change_category_to_id(category.id) }.to change { topic.category_id }.to(category.id)
       end
     end
 
@@ -1365,6 +1370,22 @@ describe Topic do
         expect(Topic.visible).not_to include a
         expect(Topic.visible).to include b
         expect(Topic.visible).to include c
+      end
+    end
+
+    describe '#in_category_and_subcategories' do
+      it 'returns topics in a category and its subcategories' do
+        c1 = Fabricate(:category)
+        c2 = Fabricate(:category, parent_category_id: c1.id)
+        c3 = Fabricate(:category)
+
+        t1 = Fabricate(:topic, category_id: c1.id)
+        t2 = Fabricate(:topic, category_id: c2.id)
+        t3 = Fabricate(:topic, category_id: c3.id)
+
+        expect(Topic.in_category_and_subcategories(c1.id)).not_to include(t3)
+        expect(Topic.in_category_and_subcategories(c1.id)).to include(t2)
+        expect(Topic.in_category_and_subcategories(c1.id)).to include(t1)
       end
     end
   end
@@ -1612,8 +1633,7 @@ describe Topic do
 
       it "doesn't return topics from TL0 users" do
         new_user = Fabricate(:user, trust_level: 0)
-        Fabricate(:topic, user_id: new_user.id)
-
+        Fabricate(:topic, user: new_user)
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
@@ -1626,7 +1646,7 @@ describe Topic do
 
       it "returns topics from TL0 users if enabled in preferences" do
         new_user = Fabricate(:user, trust_level: 0)
-        topic = Fabricate(:topic, user_id: new_user.id)
+        topic = Fabricate(:topic, user: new_user)
 
         u = Fabricate(:user)
         u.user_option.include_tl0_in_digests = true
@@ -1656,7 +1676,7 @@ describe Topic do
         user = Fabricate(:user)
         muted_tag = Fabricate(:tag)
         TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
-        topic1 = Fabricate(:topic, tags: [muted_tag])
+        _topic1 = Fabricate(:topic, tags: [muted_tag])
         topic2 = Fabricate(:topic, tags: [Fabricate(:tag), Fabricate(:tag)])
         topic3 = Fabricate(:topic)
 
@@ -1693,7 +1713,7 @@ describe Topic do
 
       it "excludes topics that are within the grace period" do
         topic1 = Fabricate(:topic, created_at: 6.minutes.ago)
-        topic2 = Fabricate(:topic, created_at: 4.minutes.ago)
+        _topic2 = Fabricate(:topic, created_at: 4.minutes.ago)
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic1])
       end
     end
@@ -2180,9 +2200,9 @@ describe Topic do
     end
 
     it "returns 0 with a topic with 1 reply" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      _post1 = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      _post2 = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
       expect(Topic.with_no_response_total).to eq(0)
     end
@@ -2280,6 +2300,29 @@ describe Topic do
         topic.featured_link = featured_link
         expect(topic.featured_link_root_domain).to eq("discourse.org")
       end
+    end
+  end
+
+  describe "#reset_bumped_at" do
+    it "ignores hidden and deleted posts when resetting the topic's bump date" do
+      post = create_post(created_at: 10.hours.ago)
+      topic = post.topic
+
+      expect { topic.reset_bumped_at }.to_not change { topic.bumped_at }
+
+      post = Fabricate(:post, topic: topic, post_number: 2, created_at: 9.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 8.hours.ago, deleted_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 7.hours.ago, hidden: true)
+      Fabricate(:post, topic: topic, post_number: 5, created_at: 6.hours.ago, user_deleted: true)
+      Fabricate(:post, topic: topic, post_number: 6, created_at: 5.hours.ago, post_type: Post.types[:whisper])
+
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+
+      post = Fabricate(:post, topic: topic, post_number: 7, created_at: 4.hours.ago, post_type: Post.types[:moderator_action])
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+
+      post = Fabricate(:post, topic: topic, post_number: 8, created_at: 3.hours.ago, post_type: Post.types[:small_action])
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
     end
   end
 end

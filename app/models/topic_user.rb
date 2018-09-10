@@ -40,7 +40,7 @@ class TopicUser < ActiveRecord::Base
     def auto_notification(user_id, topic_id, reason, notification_level)
       should_change = TopicUser
         .where(user_id: user_id, topic_id: topic_id)
-        .where("notifications_reason_id IS NULL OR (notification_level < :min AND notification_level > :max)", min: notification_level, max: notification_levels[:regular])
+        .where("notifications_reason_id IS NULL OR (notification_level < :max AND notification_level > :min)", max: notification_level, min: notification_levels[:regular])
         .exists?
 
       change(user_id, topic_id, notification_level: notification_level, notifications_reason_id: reason) if should_change
@@ -53,26 +53,26 @@ class TopicUser < ActiveRecord::Base
     def unwatch_categories!(user, category_ids)
       track_threshold = user.user_option.auto_track_topics_after_msecs
 
-      sql = <<SQL
-      UPDATE topic_users tu
-      SET notification_level = CASE
-        WHEN t.user_id = :user_id THEN :watching
-        WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
-        ELSE :regular
-      end
-      FROM topics t
-      WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
-SQL
+      sql = <<~SQL
+        UPDATE topic_users tu
+        SET notification_level = CASE
+          WHEN t.user_id = :user_id THEN :watching
+          WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
+          ELSE :regular
+        end
+        FROM topics t
+        WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
+      SQL
 
-     exec_sql(sql,
-                  watching: notification_levels[:watching],
-                  tracking: notification_levels[:tracking],
-                  regular: notification_levels[:regular],
-                  muted: notification_levels[:muted],
-                  category_ids: category_ids,
-                  user_id: user.id,
-                  track_threshold: track_threshold
-     )
+      DB.exec(sql,
+        watching: notification_levels[:watching],
+        tracking: notification_levels[:tracking],
+        regular: notification_levels[:regular],
+        muted: notification_levels[:muted],
+        category_ids: category_ids,
+        user_id: user.id,
+        track_threshold: track_threshold
+      )
     end
 
     # Find the information specific to a user in a forum topic
@@ -243,7 +243,8 @@ SQL
                                       notification_level =
                                          case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
                                             coalesce(uo.auto_track_topics_after_msecs,:threshold) and
-                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0 then
+                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
+                                            and t.archetype = 'regular' then
                                               :tracking
                                          else
                                             tu.notification_level
@@ -296,16 +297,15 @@ SQL
       # 86400000 = 1 day
       rows =
         if user.staff?
-          exec_sql(UPDATE_TOPIC_USER_SQL_STAFF, args).values
+          DB.query(UPDATE_TOPIC_USER_SQL_STAFF, args)
         else
-          exec_sql(UPDATE_TOPIC_USER_SQL, args).values
+          DB.query(UPDATE_TOPIC_USER_SQL, args)
         end
 
       if rows.length == 1
-        before = rows[0][1].to_i
-        after = rows[0][0].to_i
-
-        before_last_read = rows[0][2].to_i
+        before = rows[0].old_level.to_i
+        after = rows[0].notification_level.to_i
+        before_last_read = rows[0].last_read_post_number.to_i
 
         if before_last_read < post_number
           # The user read at least one new post
@@ -333,9 +333,9 @@ SQL
 
         begin
           if user.staff?
-            exec_sql(INSERT_TOPIC_USER_SQL_STAFF, args)
+            DB.exec(INSERT_TOPIC_USER_SQL_STAFF, args)
           else
-            exec_sql(INSERT_TOPIC_USER_SQL, args)
+            DB.exec(INSERT_TOPIC_USER_SQL, args)
           end
         rescue PG::UniqueViolation
           # if record is inserted between two statements this can happen
@@ -371,28 +371,28 @@ SQL
       return
     end
 
-    builder = SqlBuilder.new <<SQL
-    UPDATE topic_users tu
-    SET #{action_type_name} = x.state
-    FROM (
-      SELECT CASE WHEN EXISTS (
-        SELECT 1
-        FROM post_actions pa
-        JOIN posts p on p.id = pa.post_id
-        JOIN topics t ON t.id = p.topic_id
-        WHERE pa.deleted_at IS NULL AND
-              p.deleted_at IS NULL AND
-              t.deleted_at IS NULL AND
-              pa.post_action_type_id = :action_type_id AND
-              tu2.topic_id = t.id AND
-              tu2.user_id = pa.user_id
-        LIMIT 1
-      ) THEN true ELSE false END state, tu2.topic_id, tu2.user_id
-      FROM topic_users tu2
-      /*where*/
-    ) x
-    WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
-SQL
+    builder = DB.build <<~SQL
+      UPDATE topic_users tu
+      SET #{action_type_name} = x.state
+      FROM (
+        SELECT CASE WHEN EXISTS (
+          SELECT 1
+          FROM post_actions pa
+          JOIN posts p on p.id = pa.post_id
+          JOIN topics t ON t.id = p.topic_id
+          WHERE pa.deleted_at IS NULL AND
+                p.deleted_at IS NULL AND
+                t.deleted_at IS NULL AND
+                pa.post_action_type_id = :action_type_id AND
+                tu2.topic_id = t.id AND
+                tu2.user_id = pa.user_id
+          LIMIT 1
+        ) THEN true ELSE false END state, tu2.topic_id, tu2.user_id
+        FROM topic_users tu2
+        /*where*/
+      ) x
+      WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
+    SQL
 
     if user_id
       builder.where("tu2.user_id = :user_id", user_id: user_id)
@@ -431,7 +431,7 @@ SQL
           )
 SQL
 
-    TopicUser.exec_sql(sql, user_id: user_id, count: count)
+    DB.exec(sql, user_id: user_id, count: count)
   end
 
   def self.ensure_consistency!(topic_id = nil)
@@ -441,32 +441,31 @@ SQL
     # we up these numbers so they are not in-sync
     # the simple fix is to add a column here, but table is already quite big
     # long term we want to split up topic_users and allow for this better
-    builder = SqlBuilder.new <<SQL
+    builder = DB.build <<~SQL
+      UPDATE topic_users t
+        SET
+          last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
+          highest_seen_post_number = LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
+      FROM (
+        SELECT topic_id, user_id, MAX(post_number) last_read
+        FROM post_timings
+        GROUP BY topic_id, user_id
+      ) as X
+      JOIN (
+        SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
+        GROUP BY p.topic_id
+      ) as Y on Y.topic_id = X.topic_id
+      /*where*/
+    SQL
 
-UPDATE topic_users t
-  SET
-    last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
-    highest_seen_post_number = LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
-FROM (
-  SELECT topic_id, user_id, MAX(post_number) last_read
-  FROM post_timings
-  GROUP BY topic_id, user_id
-) as X
-JOIN (
-  SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
-  GROUP BY p.topic_id
-) as Y on Y.topic_id = X.topic_id
-/*where*/
-SQL
-
-    builder.where <<SQL
-X.topic_id = t.topic_id AND
-X.user_id = t.user_id AND
-(
-  last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
-  highest_seen_post_number <> LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
-)
-SQL
+    builder.where <<~SQL
+      X.topic_id = t.topic_id AND
+      X.user_id = t.user_id AND
+      (
+        last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
+        highest_seen_post_number <> LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
+      )
+    SQL
 
     if topic_id
       builder.where("t.topic_id = :topic_id", topic_id: topic_id)

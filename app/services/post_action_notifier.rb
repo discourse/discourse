@@ -103,7 +103,8 @@ class PostActionNotifier
       Notification.types[:edited],
       post,
       display_username: post_revision.user.username,
-      acting_user_id: post_revision.try(:user_id)
+      acting_user_id: post_revision.try(:user_id),
+      revision_number: post_revision.number
     )
   end
 

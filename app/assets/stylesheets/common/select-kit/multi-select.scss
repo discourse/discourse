@@ -64,9 +64,9 @@
     }
 
     .choices {
-      margin: 0;
+      margin: 1px;
       box-sizing: border-box;
-      display: inline-flex;
+      display: flex;
       justify-content: flex-start;
       flex-wrap: wrap;
 
@@ -79,7 +79,7 @@
         justify-content: space-between;
         flex-wrap: wrap;
         flex-direction: row;
-        margin: 2px;
+        margin: 1px;
       }
 
       .filter {
@@ -91,7 +91,8 @@
         outline: none;
         flex: 1;
 
-        .filter-input, .filter-input:focus {
+        .filter-input,
+        .filter-input:focus {
           border: none;
           background: none;
           display: inline-block;
@@ -137,9 +138,9 @@
           align-items: center;
 
           &:after {
-            content: '\f00d';
+            content: "\f00d";
             color: $primary-low-mid;
-            font-family: 'FontAwesome';
+            font-family: "FontAwesome";
             font-size: $font-down-2;
             margin-left: 5px;
           }
@@ -178,9 +179,9 @@
           line-height: $line-height-medium;
 
           &:after {
-            content: '\f00d';
+            content: "\f00d";
             color: $primary-low-mid;
-            font-family: 'FontAwesome';
+            font-family: "FontAwesome";
             font-size: $font-down-2;
           }
 
@@ -192,7 +193,7 @@
         }
 
         &.is-highlighted {
-          box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
+          box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
         }
       }
     }

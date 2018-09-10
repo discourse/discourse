@@ -24,7 +24,7 @@ class StylesheetCache < ActiveRecord::Base
         .pluck(:id)
         .last
 
-      exec_sql("DELETE FROM stylesheet_cache where id < :id", id: remove_lower)
+      DB.exec("DELETE FROM stylesheet_cache where id < :id", id: remove_lower)
     end
 
     success

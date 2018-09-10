@@ -4,9 +4,32 @@ class Auth::InstagramAuthenticator < Auth::Authenticator
     "instagram"
   end
 
-  # TODO twitter provides all sorts of extra info, like website/bio etc.
-  #  it may be worth considering pulling some of it in.
-  def after_authenticate(auth_token)
+  def enabled?
+    SiteSetting.enable_instagram_logins
+  end
+
+  def description_for_user(user)
+    info = InstagramUserInfo.find_by(user_id: user.id)
+    info&.screen_name || ""
+  end
+
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = InstagramUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+    # Instagram does not have any way for us to revoke tokens on their end
+    info.destroy!
+    true
+  end
+
+  def can_connect_existing_user?
+    true
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
 
     result = Auth::Result.new
 
@@ -23,7 +46,16 @@ class Auth::InstagramAuthenticator < Auth::Authenticator
 
     user_info = InstagramUserInfo.find_by(instagram_user_id: instagram_user_id)
 
-    result.user = user_info.try(:user)
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      user_info = InstagramUserInfo.create!(
+        user_id: existing_account.id,
+        screen_name: screen_name,
+        instagram_user_id: instagram_user_id
+      )
+    end
+
+    result.user = user_info&.user
 
     result
   end

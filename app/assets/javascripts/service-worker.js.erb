@@ -91,7 +91,7 @@ self.addEventListener('fetch', function(event) {
         if (!navigator.onLine) {
           return caches.match(OFFLINE_URL);
         } else {
-          throw error;
+          throw new Error(error);
         }
       })
     );

@@ -27,7 +27,9 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
-    skip("Figure out why this test leaks connections")
+    # TODO: tgxworld will rewrite it without stubs
+    skip("Skip causes our build to be unstable")
+    @threads = Thread.list
     postgresql_fallback_handler.initialized = true
 
     ['default', multisite_db].each do |db|
@@ -36,25 +38,24 @@ describe ActiveRecord::ConnectionHandling do
   end
 
   after do
+    Sidekiq.unpause!
     postgresql_fallback_handler.setup!
-    postgresql_fallback_handler.clear_connections
+    ActiveRecord::Base.unstub(:postgresql_connection)
+    (Thread.list - @threads).each(&:kill)
+    ActiveRecord::Base.connection_pool.disconnect!
+    ActiveRecord::Base.establish_connection
   end
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      begin
-        connection = ActiveRecord::Base.postgresql_fallback_connection(config)
+      connection = ActiveRecord::Base.postgresql_fallback_connection(config)
 
-        expect(connection)
-          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
-      ensure
-        connection.disconnect!
-      end
+      expect(connection)
+        .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
     end
 
     context 'when master server is down' do
       before do
-
         @replica_connection = mock('replica_connection')
       end
 
@@ -161,8 +162,11 @@ describe ActiveRecord::ConnectionHandling do
   end
 
   def with_multisite_db(dbname)
-    RailsMultisite::ConnectionManagement.expects(:current_db).returns(dbname).at_least_once
-    yield
-    RailsMultisite::ConnectionManagement.unstub(:current_db)
+    begin
+      RailsMultisite::ConnectionManagement.expects(:current_db).returns(dbname).at_least_once
+      yield
+    ensure
+      RailsMultisite::ConnectionManagement.unstub(:current_db)
+    end
   end
 end

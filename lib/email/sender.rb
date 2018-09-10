@@ -22,18 +22,26 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
+      return if SiteSetting.disable_emails == "yes" && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
 
-      return skip(I18n.t('email_log.message_blank'))    if @message.blank?
-      return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
+      return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
+      return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
+
+      if SiteSetting.disable_emails == "non-staff"
+        return unless User.find_by_email(to_address)&.staff?
+      end
 
       if @message.text_part
-        return skip(I18n.t('email_log.text_part_body_blank')) if @message.text_part.body.to_s.blank?
+        if @message.text_part.body.to_s.blank?
+          return skip(SkippedEmailLog.reason_types[:sender_text_part_body_blank])
+        end
       else
-        return skip(I18n.t('email_log.body_blank')) if @message.body.to_s.blank?
+        if @message.body.to_s.blank?
+          return skip(SkippedEmailLog.reason_types[:sender_body_blank])
+        end
       end
 
       @message.charset = 'UTF-8'
@@ -59,24 +67,31 @@ module Email
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![](' + url_prefix + '\1)')
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
+      user_id = @user&.id
 
       # Set up the email log
-      email_log = EmailLog.new(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
+      email_log = EmailLog.new(
+        email_type: @email_type,
+        to_address: to_address,
+        user_id: user_id
+      )
 
       host = Email::Sender.host_for(Discourse.base_url)
 
       post_id   = header_value('X-Discourse-Post-Id')
       topic_id  = header_value('X-Discourse-Topic-Id')
-      reply_key = header_value('X-Discourse-Reply-Key')
+      reply_key = set_reply_key(post_id, user_id)
 
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
 
-      if topic_id.present?
-        email_log.topic_id = topic_id
+      if topic_id.present? && post_id.present?
+        post = Post.find_by(id: post_id, topic_id: topic_id)
 
-        post = Post.find_by(id: post_id)
-        topic = Topic.find_by(id: topic_id)
+        # guards against deleted posts
+        return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
+
+        topic = post.topic
         first_post = topic.ordered_posts.first
 
         topic_message_id = first_post.incoming_email&.message_id.present? ?
@@ -91,14 +106,14 @@ module Email
           .where(id: PostReply.where(reply_id: post_id).select(:post_id))
           .order(id: :desc)
 
-        referenced_post_message_ids = referenced_posts.map do |post|
-          if post.incoming_email&.message_id.present?
-            "<#{post.incoming_email.message_id}>"
+        referenced_post_message_ids = referenced_posts.map do |referenced_post|
+          if referenced_post.incoming_email&.message_id.present?
+            "<#{referenced_post.incoming_email.message_id}>"
           else
-            if post.post_number == 1
+            if referenced_post.post_number == 1
               "<topic/#{topic_id}@#{host}>"
             else
-              "<topic/#{topic_id}/#{post.id}@#{host}>"
+              "<topic/#{topic_id}/#{referenced_post.id}@#{host}>"
             end
           end
         end
@@ -113,7 +128,7 @@ module Email
         end
 
         # https://www.ietf.org/rfc/rfc2919.txt
-        if topic && topic.category && !topic.category.uncategorized?
+        if topic&.category && !topic.category.uncategorized?
           list_id = "#{SiteSetting.title} | #{topic.category.name} <#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
@@ -153,12 +168,14 @@ module Email
       end
 
       email_log.post_id = post_id if post_id.present?
-      email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id']  = nil if topic_id.present?
-      @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
-      @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
+      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id']  = nil if post_id.present?
+
+      if reply_key.present?
+        @message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = nil
+      end
 
       # pass the original message_id when using mailjet/mandrill/sparkpost
       case ActionMailer::Base.smtp_settings[:address]
@@ -183,10 +200,9 @@ module Email
       begin
         @message.deliver_now
       rescue *SMTP_CLIENT_ERRORS => e
-        return skip(e.message)
+        return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
 
-      # Save and return the email log
       email_log.save!
       email_log
     end
@@ -205,7 +221,7 @@ module Email
         begin
           uri = URI.parse(base_url)
           host = uri.host.downcase if uri.host.present?
-        rescue URI::InvalidURIError
+        rescue URI::Error
         end
       end
       host
@@ -219,14 +235,16 @@ module Email
       header.value
     end
 
-    def skip(reason)
-      EmailLog.create!(
+    def skip(reason_type, custom_reason: nil)
+      attributes = {
         email_type: @email_type,
         to_address: to_address,
-        user_id: @user.try(:id),
-        skipped: true,
-        skipped_reason: "[Sender] #{reason}"
-      )
+        user_id: @user&.id,
+        reason_type: reason_type
+      }
+
+      attributes[:custom_reason] = custom_reason if custom_reason
+      SkippedEmailLog.create!(attributes)
     end
 
     def merge_json_x_header(name, value)
@@ -240,6 +258,21 @@ module Email
       @message.header[name] = ""
       @message.header[name] = nil
       @message.header[name] = data.to_json
+    end
+
+    def set_reply_key(post_id, user_id)
+      return unless user_id &&
+        post_id &&
+        header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
+
+      # use safe variant here cause we tend to see concurrency issue
+      reply_key = PostReplyKey.find_or_create_by_safe!(
+        post_id: post_id,
+        user_id: user_id
+      ).reply_key
+
+      @message.header['Reply-To'] =
+        header_value('Reply-To').gsub!("%{reply_key}", reply_key)
     end
 
   end

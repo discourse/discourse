@@ -1,6 +1,7 @@
 require_relative "base"
 require "mysql2"
 require "rake"
+require "htmlentities"
 
 class BulkImport::Vanilla < BulkImport::Base
 
@@ -18,7 +19,9 @@ class BulkImport::Vanilla < BulkImport::Base
     @client = Mysql2::Client.new(
       host: "localhost",
       username: "root",
-      database: VANILLA_DB
+      database: VANILLA_DB,
+      password: "",
+      reconnect: true
     )
 
     @import_tags = false
@@ -42,6 +45,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
     import_avatars # slow
     create_permalinks # TODO: do it bulk style
+    import_attachments # slow
   end
 
   def execute
@@ -54,8 +58,14 @@ class BulkImport::Vanilla < BulkImport::Base
     # other good ones:
 
     # SiteSetting.port = 3000
+    # SiteSetting.permalink_normalizations = "/discussion\/(\d+)\/.*/discussion/\1"
     # SiteSetting.automatic_backups_enabled = false
-    # SiteSetting.disable_emails = true
+    # SiteSetting.disable_emails = "non-staff"
+    # SiteSetting.authorized_extensions = '*'
+    # SiteSetting.max_image_size_kb = 102400
+    # SiteSetting.max_attachment_size_kb = 102400
+    # SiteSetting.clean_up_uploads = false
+    # SiteSetting.clean_orphan_uploads_grace_period_hours = 43200
     # etc.
 
     import_users
@@ -245,6 +255,86 @@ class BulkImport::Vanilla < BulkImport::Base
           u.update(uploaded_avatar_id: upload.id)
         else
           puts "Error: Upload did not persist for #{u.username} #{photo_real_filename}!"
+        end
+      end
+    end
+  end
+
+  def import_attachments
+    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+      puts "", "importing attachments"
+
+      start = Time.now
+      count = 0
+
+      # https://us.v-cdn.net/1234567/uploads/editor/xyz/image.jpg
+      cdn_regex = /https:\/\/us.v-cdn.net\/1234567\/uploads\/(\S+\/(\w|-)+.\w+)/i
+      # [attachment=10109:Screen Shot 2012-04-01 at 3.47.35 AM.png]
+      attachment_regex = /\[attachment=(\d+):(.*?)\]/i
+
+      Post.where("raw LIKE '%/us.v-cdn.net/%' OR raw LIKE '%[attachment%'").find_each do |post|
+        count += 1
+        print "\r%7d - %6d/sec".freeze % [count, count.to_f / (Time.now - start)]
+        new_raw = post.raw.dup
+
+        new_raw.gsub!(attachment_regex) do |s|
+          matches = attachment_regex.match(s)
+          attachment_id = matches[1]
+          file_name = matches[2]
+          next unless attachment_id
+
+          r = mysql_query("SELECT Path, Name FROM #{TABLE_PREFIX}Media WHERE MediaID = #{attachment_id};").first
+          next if r.nil?
+          path = r["Path"]
+          name = r["Name"]
+          next unless path.present?
+
+          path.gsub!("s3://content/", "")
+          path.gsub!("s3://uploads/", "")
+          file_path = "#{ATTACHMENTS_BASE_DIR}/#{path}"
+
+          if File.exists?(file_path)
+            upload = create_upload(post.user.id, file_path, File.basename(file_path))
+            if upload && upload.errors.empty?
+              # upload.url
+              filename = name || file_name || File.basename(file_path)
+              html_for_upload(upload, normalize_text(filename))
+            else
+              puts "Error: Upload did not persist for #{post.id} #{attachment_id}!"
+            end
+          else
+            puts "Couldn't find file for #{attachment_id}. Skipping."
+            next
+          end
+        end
+
+        new_raw.gsub!(cdn_regex) do |s|
+          matches = cdn_regex.match(s)
+          attachment_id = matches[1]
+
+          file_path = "#{ATTACHMENTS_BASE_DIR}/#{attachment_id}"
+
+          if File.exists?(file_path)
+            upload = create_upload(post.user.id, file_path, File.basename(file_path))
+            if upload && upload.errors.empty?
+              upload.url
+            else
+              puts "Error: Upload did not persist for #{post.id} #{attachment_id}!"
+            end
+          else
+            puts "Couldn't find file for #{attachment_id}. Skipping."
+            next
+          end
+        end
+
+        if new_raw != post.raw
+          begin
+            PostRevisor.new(post).revise!(post.user, { raw: new_raw }, skip_revision: true, skip_validations: true, bypass_bump: true)
+          rescue
+            puts "PostRevisor error for #{post.id}"
+            post.raw = new_raw
+            post.save(validate: false)
+          end
         end
       end
     end
@@ -538,16 +628,18 @@ class BulkImport::Vanilla < BulkImport::Base
         pcf = post.custom_fields
         if pcf && pcf["import_id"]
           topic = post.topic
-          id = pcf["import_id"].split('-').last
-          if post.post_number == 1
-            slug = Slug.for(topic.title) # probably matches what vanilla would do...
-            @raw_connection.put_copy_data(
-              ["discussion/#{id}/#{slug}", topic.id, nil, now, now]
-            )
-          else
-            @raw_connection.put_copy_data(
-              ["discussion/comment/#{id}", nil, post.id, now, now]
-            )
+          if topic.present?
+            id = pcf["import_id"].split('-').last
+            if post.post_number == 1
+              slug = Slug.for(topic.title) # probably matches what vanilla would do...
+              @raw_connection.put_copy_data(
+                ["discussion/#{id}/#{slug}", topic.id, nil, now, now]
+              )
+            else
+              @raw_connection.put_copy_data(
+                ["discussion/comment/#{id}", nil, post.id, now, now]
+              )
+            end
           end
         end
 
@@ -559,8 +651,44 @@ class BulkImport::Vanilla < BulkImport::Base
   def clean_up(raw)
     # post id is sometimes prefixed with "c-"
     raw.gsub!(/\[QUOTE="([^;]+);c-(\d+)"\]/i) { "[QUOTE=#{$1};#{$2}]" }
+    raw = raw.delete("\u0000")
+    raw = process_raw_text(raw)
 
     raw
+  end
+
+  def process_raw_text(raw)
+    return "" if raw.blank?
+    text = raw.dup
+    text = CGI.unescapeHTML(text)
+
+    text.gsub!(/:(?:\w{8})\]/, ']')
+
+    # Some links look like this: <!-- m --><a class="postlink" href="http://www.onegameamonth.com">http://www.onegameamonth.com</a><!-- m -->
+    text.gsub!(/<!-- \w --><a(?:.+)href="(\S+)"(?:.*)>(.+)<\/a><!-- \w -->/i, '[\2](\1)')
+
+    # phpBB shortens link text like this, which breaks our markdown processing:
+    #   [http://answers.yahoo.com/question/index ... 223AAkkPli](http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli)
+    #
+    # Work around it for now:
+    text.gsub!(/\[http(s)?:\/\/(www\.)?/i, '[')
+
+    # convert list tags to ul and list=1 tags to ol
+    # list=a is not supported, so handle it like list=1
+    # list=9 and list=x have the same result as list=1 and list=a
+    text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
+    text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi, '[ol]\1[/ol]')
+
+    # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    text.gsub!(/\[\*\](.*?)\[\/\*:m\]/mi, '[li]\1[/li]')
+
+    # [QUOTE="<username>"] -- add newline
+    text.gsub!(/(\[quote="[a-zA-Z\d]+"\])/i) { "#{$1}\n" }
+
+    # [/QUOTE] -- add newline
+    text.gsub!(/(\[\/quote\])/i) { "\n#{$1}" }
+
+    text
   end
 
   def staff_guardian

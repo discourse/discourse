@@ -1,15 +1,11 @@
-$border-color: rgb(219,219,219);
-$text-color: #9E9E9E;
-
-$option-background: dark-light-diff($primary, $secondary, 90%, -65%);
-
 div.poll {
-  margin: 10px 0;
-  border: 1px solid $border-color;
+  margin: 1em 0;
+  border: 1px solid $primary-low;
 
   @include unselectable;
 
-  ul, ol {
+  ul,
+  ol {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -19,41 +15,31 @@ div.poll {
 
   li {
     cursor: pointer;
-    font-size: 15px;
-    margin-bottom: 10px;
+    font-size: $font-up-1;
+    &:not(:last-of-type) {
+      margin-bottom: 0.5em;
+    }
   }
 
   li[data-poll-option-id] {
     color: $primary;
-    padding: .5em .7em .7em .5em;
+    padding: 0.5em 0.7em 0.7em 0.5em;
   }
 
-  .button {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-right: 5px;
-    text-align: center;
-    cursor: pointer;
-    color: $primary;
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
-
-    &:hover {
-      background: dark-light-diff($primary, $secondary, 65%, -75%);
-      color: #fff;
-    }
+  img {
+    max-width: 100% !important; /* needed to override internal styles */
+    height: auto;
+    margin-top: 0.25em;
   }
 
   .poll-info {
-    color: $text-color;
-    text-align: center;
+    color: $primary-medium;
     vertical-align: middle;
-
-    .info-number {
-      font-size: 3.5em;
-    }
+    padding: 1em 0;
 
     .info-label {
       font-size: 1.7em;
+      line-height: $line-height-medium;
     }
 
     .info-text {
@@ -64,7 +50,7 @@ div.poll {
 
   .poll-container {
     vertical-align: middle;
-    padding: 10px;
+    padding: 0.8em;
 
     .poll-results-number-rating {
       font-size: 2em;
@@ -77,16 +63,15 @@ div.poll {
     }
     .info-text {
       margin: 0 5px;
-      color: $text-color;
+      color: $primary-medium;
     }
   }
 
   .poll-voters-list {
+    margin-top: 0.25em;
     li {
       display: inline;
     }
-
-    margin-top: 4px;
   }
 
   .poll-voters-toggle-expand {
@@ -95,28 +80,30 @@ div.poll {
   }
 
   .results {
-
+    > li {
+      padding: 0.5em 0.7em 0.7em 0.5em;
+    }
     .option {
-      padding-bottom: 5px;
+      padding-bottom: 0.25em;
       p {
         margin: 0;
       }
     }
 
     .percentage {
-      font-size: 20px;
+      font-size: $font-up-1;
       float: right;
-      color: $text-color;
-      margin-left: 5px;
+      color: $primary-medium;
+      margin-left: 0.25em;
     }
 
     .bar-back {
-      background: $option-background;
+      background: $primary-low;
     }
 
     .bar {
-      height: 10px;
-      background: dark-light-diff($primary, $secondary, 50%, -25%);;
+      height: 0.75em;
+      background: $primary-medium;
     }
 
     .chosen .bar {
@@ -125,13 +112,10 @@ div.poll {
   }
 
   &[data-poll-type="number"] {
-
     li[data-poll-option-id] {
       display: inline-block;
-      width: 45px;
-      margin-right: 5px;
+      width: 3.25em;
+      margin-right: 0.25em;
     }
-
   }
-
 }

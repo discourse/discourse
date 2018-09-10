@@ -2,5 +2,5 @@
 
 export default {
   name: "inject-objects",
-  initialize() { }
+  initialize() {}
 };

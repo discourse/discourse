@@ -2,6 +2,7 @@
 class TwitterApi
 
   class << self
+    include ActionView::Helpers::NumberHelper
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
@@ -23,13 +24,17 @@ class TwitterApi
             end
           elsif m['type'] == 'video'
             if large = m['sizes']['large']
-              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe></div>"
+              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0' allowfullscreen></iframe></div>"
             end
           end
         end
       end
 
       result
+    end
+
+    def prettify_number(count)
+      number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
     end
 
     def user_timeline(screen_name)

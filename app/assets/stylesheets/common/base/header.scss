@@ -8,7 +8,7 @@
 
   .docked & {
     position: fixed;
-    backface-visibility: hidden;  /** do magic for scrolling performance **/
+    backface-visibility: hidden; /** do magic for scrolling performance **/
   }
 
   .contents {
@@ -17,13 +17,14 @@
 
   .title {
     float: left;
-    a, a:visited {
+    a,
+    a:visited {
       color: $header_primary;
     }
   }
 
   #site-logo {
-    max-height: 40px;
+    max-height: 2.8571em;
   }
 
   .d-icon-home {
@@ -37,27 +38,34 @@
     align-items: center;
   }
 
-  .hamburger-panel, .user-menu, .search-menu {
-    width: 0; // Flexbox fix for Safari 
+  .hamburger-panel,
+  .user-menu,
+  .search-menu {
+    width: 0; // Flexbox fix for Safari
   }
 
   .header-buttons {
-    margin-top: .2em;
+    margin-top: 0.2em;
   }
 
-  .login-button, button.sign-up-button {
+  .login-button,
+  button.sign-up-button {
     padding: 6px 10px;
-    .fa { margin-right: 3px; }
+    .fa {
+      margin-right: 3px;
+    }
   }
 
   button.login-button {
     margin-left: 7px;
   }
-
 }
 
-.header-dropdown-toggle, .drop-down, .panel-body {
-  .flagged-posts, .queued-posts {
+.header-dropdown-toggle,
+.drop-down,
+.panel-body {
+  .flagged-posts,
+  .queued-posts {
     background: $danger;
     min-width: 6px;
   }
@@ -78,20 +86,24 @@
     justify-content: center;
     width: 2.2857em;
     height: 2.2857em;
-    padding: .2143em;
-    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+    padding: 0.2143em;
+    color: dark-light-choose(
+      scale-color($header_primary, $lightness: 50%),
+      $header_primary
+    );
     text-decoration: none;
     cursor: pointer;
     border-top: 1px solid transparent;
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
-    transition: all linear .15s;
+    transition: all linear 0.15s;
     outline: none;
     img.avatar {
       width: 2.2857em;
       height: 2.2857em;
     }
-    &:hover, &:focus { 
+    &:hover,
+    &:focus {
       color: $primary;
       background-color: $primary-low;
       border-top: 1px solid transparent;
@@ -160,7 +172,8 @@
     right: -3px;
     background-color: dark-light-choose($tertiary-medium, $tertiary);
   }
-  .unread-private-messages, .ring {
+  .unread-private-messages,
+  .ring {
     left: auto;
     right: 25px;
   }

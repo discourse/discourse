@@ -24,6 +24,14 @@ describe Jobs::Tl3Promotions do
     run_job
   end
 
+  it "promotes a qualifying tl2 user who has a group_locked_trust_level" do
+    _group_locked_user = Fabricate(:user, trust_level: TrustLevel[2], group_locked_trust_level: TrustLevel[1])
+    create_qualifying_stats(_group_locked_user)
+    TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(true)
+    Promotion.any_instance.expects(:change_trust_level!).with(TrustLevel[3], anything).once
+    run_job
+  end
+
   it "doesn't promote tl1 and tl0 users who have met tl3 requirements" do
     _tl1_user = Fabricate(:user, trust_level: TrustLevel[1])
     _tl0_user = Fabricate(:user, trust_level: TrustLevel[0])
@@ -83,5 +91,27 @@ describe Jobs::Tl3Promotions do
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
 
+    it "demotes a user with a group_locked_trust_level of 2" do
+      user = nil
+      freeze_time(4.days.ago) do
+        user = Fabricate(:user, trust_level: TrustLevel[3], group_locked_trust_level: TrustLevel[2])
+      end
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
+      TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[2])
+
+    end
+
+    it "doesn't demote user if their group_locked_trust_level is 3" do
+      user = nil
+      freeze_time(4.days.ago) do
+        user = Fabricate(:user, trust_level: TrustLevel[3], group_locked_trust_level: TrustLevel[3])
+      end
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
+      TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
+    end
   end
 end

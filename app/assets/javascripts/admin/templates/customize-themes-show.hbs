@@ -22,31 +22,33 @@
 
 
   {{#if parentThemes}}
-  <h3>{{i18n "admin.customize.theme.component_of"}}</h3>
-  <ul>
-    {{#each parentThemes as |theme|}}
-    <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
-    {{/each}}
-  </ul>
-  {{else}}
-  <p>
-    {{inline-edit-checkbox action="applyDefault" labelKey="admin.customize.theme.is_default" checked=model.default}}
-    {{inline-edit-checkbox action="applyUserSelectable" labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
-  </p>
-
-  <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
-  <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
-  <p>{{combo-box content=colorSchemes
-                  filterable=true
-                  value=colorSchemeId
-                  icon="paint-brush"}}
-     {{#if colorSchemeChanged}}
-        {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
-        {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
-     {{/if}}
-  </p>
-  {{#link-to 'adminCustomize.colors' class="btn edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
+    <h3>{{i18n "admin.customize.theme.component_of"}}</h3>
+    <ul>
+      {{#each parentThemes as |theme|}}
+        <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
+      {{/each}}
+    </ul>
   {{/if}}
+
+  {{#unless model.component}}
+    <p>
+      {{inline-edit-checkbox action="applyDefault" labelKey="admin.customize.theme.is_default" checked=model.default}}
+      {{inline-edit-checkbox action="applyUserSelectable" labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
+    </p>
+
+    <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
+    <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
+    <p>{{combo-box content=colorSchemes
+                    filterable=true
+                    value=colorSchemeId
+                    icon="paint-brush"}}
+       {{#if colorSchemeChanged}}
+          {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
+          {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
+       {{/if}}
+    </p>
+    {{#link-to 'adminCustomize.colors' class="btn edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
+  {{/unless}}
 
   <h3>{{i18n "admin.customize.theme.css_html"}}</h3>
   {{#if hasEditedFields}}
@@ -61,15 +63,18 @@
       {{i18n "admin.customize.theme.edit_css_html_help"}}
     </p>
   {{/if}}
+
   <p>
     {{#if model.remote_theme}}
       {{#if model.remote_theme.commits_behind}}
-      {{#d-button action="updateToLatest" icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+        {{#d-button action="updateToLatest" icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
       {{else}}
-      {{#d-button action="checkForThemeUpdates" icon="refresh"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+        {{#d-button action="checkForThemeUpdates" icon="refresh"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
       {{/if}}
     {{/if}}
+
     {{#d-button action="editTheme" class="btn edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
+
     {{#if model.remote_theme}}
       <span class='status-message'>
         {{#if updatingRemote}}
@@ -77,6 +82,11 @@
         {{else}}
           {{#if model.remote_theme.commits_behind}}
             {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+            {{#if model.remote_theme.github_diff_link}}
+              <a href="{{model.remote_theme.github_diff_link}}">
+                {{i18n 'admin.customize.theme.compare_commits'}}
+              </a>
+            {{/if}}
           {{else}}
             {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
           {{/if}}
@@ -132,7 +142,7 @@
     {{/unless}}
     {{#if selectableChildThemes}}
       <p>
-        {{combo-box content=selectableChildThemes value=selectedChildThemeId}}
+        {{combo-box filterable=true content=selectableChildThemes value=selectedChildThemeId}}
         {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
       </p>
     {{/if}}
@@ -141,5 +151,6 @@
   <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
   <a class="btn export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
+  {{d-button action="switchType" label=switchKey icon="arrows-h" class="btn-danger"}}
   {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
 </div>

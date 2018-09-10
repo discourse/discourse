@@ -6,7 +6,7 @@
   }
   .category-name {
     display: inline-block;
-    max-width: 100%; 
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: text-top;
@@ -14,7 +14,8 @@
   }
 }
 
-.category-boxes, .category-boxes-with-topics {
+.category-boxes,
+.category-boxes-with-topics {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -153,12 +154,17 @@
       }
     }
     li:before {
-      content: '\f0f6';
-      font-family: 'FontAwesome';
+      content: "\f0f6";
+      font-family: "FontAwesome";
       float: left;
       margin-left: -1.5em;
     }
-    li.topic-pinned:before { content: '\f08d'; }
-    li.topic-closed:before, li.topic-archived:before { content: '\f023'; }
+    li.topic-pinned:before {
+      content: "\f08d";
+    }
+    li.topic-closed:before,
+    li.topic-archived:before {
+      content: "\f023";
+    }
   }
 }

@@ -23,8 +23,9 @@ class InlineOneboxer
 
   def self.lookup(url, opts = nil)
     opts ||= {}
+    opts = opts.with_indifferent_access
 
-    unless opts[:skip_cache]
+    unless opts[:skip_cache] || opts[:invalidate]
       cached = cache_lookup(url)
       return cached if cached.present?
     end
@@ -46,7 +47,7 @@ class InlineOneboxer
     if always_allow || domains
       uri = begin
         URI(url)
-      rescue URI::InvalidURIError
+      rescue URI::Error
       end
 
       if uri.present? &&
@@ -63,20 +64,20 @@ class InlineOneboxer
 
   private
 
-    def self.onebox_for(url, title, opts)
-      onebox = {
-        url: url,
-        title: title && Emoji.gsub_emoji_to_unicode(title)
-      }
-      unless opts[:skip_cache]
-        Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
-      end
-
-      onebox
+  def self.onebox_for(url, title, opts)
+    onebox = {
+      url: url,
+      title: title && Emoji.gsub_emoji_to_unicode(title)
+    }
+    unless opts[:skip_cache]
+      Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
     end
 
-    def self.cache_key(url)
-      "inline_onebox:#{url}"
-    end
+    onebox
+  end
+
+  def self.cache_key(url)
+    "inline_onebox:#{url}"
+  end
 
 end

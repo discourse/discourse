@@ -71,16 +71,30 @@ class TopicEmbed < ActiveRecord::Base
     else
       absolutize_urls(url, contents)
       post = embed.post
-      # Update the topic if it changed
-      if post && post.topic && content_sha1 != embed.content_sha1
-        post_revision_args = {
-          raw: absolutize_urls(url, contents),
-          user_id: user.id,
-          title: title,
-        }
 
-        post.revise(user, post_revision_args, skip_validations: true, bypass_rate_limiter: true)
-        embed.update_column(:content_sha1, content_sha1)
+      # Update the topic if it changed
+      if post&.topic
+        if post.user != user
+          PostOwnerChanger.new(
+            post_ids: [post.id],
+            topic_id: post.topic_id,
+            new_owner: user,
+            acting_user: Discourse.system_user
+          ).change_owner!
+
+          # make sure the post returned has the right author
+          post.reload
+        end
+
+        if content_sha1 != embed.content_sha1
+          post.revise(
+            user,
+            { raw: absolutize_urls(url, contents) },
+            skip_validations: true,
+            bypass_rate_limiter: true
+          )
+          embed.update!(content_sha1: content_sha1)
+        end
       end
     end
 
@@ -139,7 +153,7 @@ class TopicEmbed < ActiveRecord::Base
             uri.host = original_uri.host
             node[url_param] = uri.to_s
           end
-        rescue URI::InvalidURIError, URI::InvalidComponentError
+        rescue URI::Error
           # If there is a mistyped URL, just do nothing
         end
       end

@@ -161,7 +161,18 @@ describe TopicView do
     end
 
     it "provides an absolute url" do
-      expect(topic_view.absolute_url).to be_present
+      expect(topic_view.absolute_url).to eq("http://test.localhost/t/#{topic.slug}/#{topic.id}")
+    end
+
+    context 'subfolder' do
+      before do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+      end
+
+      it "provides the correct absolute url" do
+        expect(topic_view.absolute_url).to eq("http://test.localhost/forum/t/#{topic.slug}/#{topic.id}")
+      end
     end
 
     it "provides a summary of the first post" do
@@ -328,7 +339,7 @@ describe TopicView do
     end
   end
 
-  context '.posts' do
+  context '#posts' do
 
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
@@ -393,6 +404,44 @@ describe TopicView do
       end
     end
 
+    describe '#filter_posts_by_post_number' do
+      def create_topic_view(post_number)
+        TopicView.new(
+          topic.id,
+          evil_trout,
+          filter_post_number: post_number,
+          asc: asc
+        )
+      end
+
+      describe 'ascending' do
+        let(:asc) { true }
+
+        it 'should return the right posts' do
+          topic_view = create_topic_view(p3.post_number)
+
+          expect(topic_view.posts).to eq([p5])
+
+          topic_view = create_topic_view(p6.post_number)
+          expect(topic_view.posts).to eq([])
+        end
+      end
+
+      describe 'descending' do
+        let(:asc) { false }
+
+        it 'should return the right posts' do
+          topic_view = create_topic_view(p7.post_number)
+
+          expect(topic_view.posts).to eq([p5, p3, p2])
+
+          topic_view = create_topic_view(p2.post_number)
+
+          expect(topic_view.posts).to eq([p1])
+        end
+      end
+    end
+
     describe "filter_posts_near" do
 
       def topic_view_near(post, show_deleted = false)
@@ -418,6 +467,18 @@ describe TopicView do
         expect(near_view.desired_post).to eq(p2)
         expect(near_view.posts).to eq([p1, p2, p3])
         expect(near_view.contains_gaps?).to eq(false)
+      end
+
+      describe 'when post_number is too large' do
+        it "snaps to the lower boundary" do
+          near_view = TopicView.new(topic.id, evil_trout,
+            post_number: 99999999,
+          )
+
+          expect(near_view.desired_post).to eq(p2)
+          expect(near_view.posts).to eq([p2, p3, p5])
+          expect(near_view.contains_gaps?).to eq(false)
+        end
       end
 
       it "gaps deleted posts to an admin" do
@@ -547,6 +608,65 @@ describe TopicView do
           it { should_not include(tag2.name) }
         end
       end
+    end
+  end
+
+  describe '#filtered_post_stream' do
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
+
+    it 'should return the right columns' do
+      expect(topic_view.filtered_post_stream).to eq([
+        [post.id, 0],
+        [post2.id, 0],
+        [post3.id, 0]
+      ])
+    end
+
+    describe 'for mega topics' do
+      it 'should return the right columns' do
+        begin
+          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
+
+          expect(topic_view.filtered_post_stream).to eq([
+            post.id,
+            post2.id,
+            post3.id
+          ])
+        ensure
+          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
+          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
+        end
+      end
+    end
+  end
+
+  describe '#filtered_post_id' do
+    it 'should return the right id' do
+      post = Fabricate(:post, topic: topic)
+
+      expect(topic_view.filtered_post_id(nil)).to eq(nil)
+      expect(topic_view.filtered_post_id(post.post_number)).to eq(post.id)
+    end
+  end
+
+  describe '#first_post_id and #last_post_id' do
+    let!(:p3) { Fabricate(:post, topic: topic) }
+    let!(:p2) { Fabricate(:post, topic: topic) }
+    let!(:p1) { Fabricate(:post, topic: topic) }
+
+    before do
+      [p1, p2, p3].each_with_index do |post, index|
+        post.update!(sort_order: index + 1)
+      end
+    end
+
+    it 'should return the right id' do
+      expect(topic_view.first_post_id).to eq(p1.id)
+      expect(topic_view.last_post_id).to eq(p3.id)
     end
   end
 end

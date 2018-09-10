@@ -1,4 +1,4 @@
-import renderTag from 'discourse/lib/render-tag';
+import renderTag from "discourse/lib/render-tag";
 
 let callbacks = null;
 let priorities = null;
@@ -9,19 +9,19 @@ export function addTagsHtmlCallback(callback, options) {
   const priority = (options && options.priority) || 0;
 
   let i = 0;
-  while(i < priorities.length && priorities[i] > priority) {
+  while (i < priorities.length && priorities[i] > priority) {
     i += 1;
   }
 
   priorities.splice(i, 0, priority);
   callbacks.splice(i, 0, callback);
-};
+}
 
-export default function(topic, params){
+export default function(topic, params) {
   let tags = topic.tags;
   let buffer = "";
   let tagsForUser = null;
-  const isPrivateMessage = topic.get('isPrivateMessage');
+  const isPrivateMessage = topic.get("isPrivateMessage");
 
   if (params) {
     if (params.mode === "list") {
@@ -34,7 +34,7 @@ export default function(topic, params){
 
   let customHtml = null;
   if (callbacks) {
-    callbacks.forEach((c) => {
+    callbacks.forEach(c => {
       const html = c(topic, params);
       if (html) {
         if (customHtml) {
@@ -49,8 +49,8 @@ export default function(topic, params){
   if (customHtml || (tags && tags.length > 0)) {
     buffer = "<div class='discourse-tags'>";
     if (tags) {
-      for(let i=0; i<tags.length; i++){
-        buffer += renderTag(tags[i], { isPrivateMessage, tagsForUser }) + ' ';
+      for (let i = 0; i < tags.length; i++) {
+        buffer += renderTag(tags[i], { isPrivateMessage, tagsForUser }) + " ";
       }
     }
 
@@ -61,4 +61,4 @@ export default function(topic, params){
     buffer += "</div>";
   }
   return buffer;
-};
+}

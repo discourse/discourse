@@ -9,6 +9,8 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
+    attr_reader :s3_helper
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
     end
@@ -48,6 +50,11 @@ module FileStore
       return unless has_been_uploaded?(url)
       # copy the removed file to tombstone
       @s3_helper.remove(path, true)
+    end
+
+    def copy_file(url, source, destination)
+      return unless has_been_uploaded?(url)
+      @s3_helper.copy(source, destination)
     end
 
     def has_been_uploaded?(url)

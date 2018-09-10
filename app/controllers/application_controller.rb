@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
 
-  attr_reader :theme_key
+  attr_reader :theme_ids
 
   serialization_scope :guardian
 
@@ -59,11 +59,11 @@ class ApplicationController < ActionController::Base
   layout :set_layout
 
   if Rails.env == "development"
-    after_action :remember_theme_key
+    after_action :remember_theme_id
 
-    def remember_theme_key
-      if @theme_key
-        Stylesheet::Watcher.theme_key = @theme_key if defined? Stylesheet::Watcher
+    def remember_theme_id
+      if @theme_ids.present?
+        Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
       end
     end
   end
@@ -96,7 +96,8 @@ class ApplicationController < ActionController::Base
 
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
-      response.headers["Cache-Control"] = "no-store, must-revalidate, no-cache, private"
+      response.cache_control[:no_cache] = true
+      response.cache_control[:extras] = ["no-store"]
     end
   end
 
@@ -128,6 +129,14 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    if request.format && request.format.json?
+      render_json_error e, type: :record_invalid, status: 422
+    else
+      raise e
+    end
+  end
+
   # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
     render_rate_limit_error(e)
@@ -144,6 +153,14 @@ class ApplicationController < ActionController::Base
       rescue_discourse_actions(:not_logged_in, 403, include_ember: true)
     else
       rescue_discourse_actions(:not_found, 404)
+    end
+  end
+
+  rescue_from ArgumentError do |e|
+    if e.message == "string contains null byte"
+      raise Discourse::InvalidParameters, e.message
+    else
+      raise e
     end
   end
 
@@ -172,7 +189,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
+  rescue_from Discourse::NotFound do |e|
+    rescue_discourse_actions(
+      :not_found,
+      e.status,
+      check_permalinks: e.check_permalinks,
+      original_path: e.original_path
+    )
+  end
+
+  rescue_from PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -193,11 +219,33 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
+  def redirect_with_client_support(url, options)
+    if request.xhr?
+      response.headers['Discourse-Xhr-Redirect'] = 'true'
+      render plain: url
+    else
+      redirect_to url, options
+    end
+  end
+
   def rescue_discourse_actions(type, status_code, opts = nil)
     opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
+
+    if type == :not_found && opts[:check_permalinks]
+      url = opts[:original_path] || request.fullpath
+      permalink = Permalink.find_by_url(url)
+
+      # there are some cases where we have a permalink but no url
+      # cause category / topic was deleted
+      if permalink.present? && permalink.target_url
+        # permalink present, redirect to that URL
+        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        return
+      end
+    end
 
     message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
 
@@ -256,7 +304,9 @@ class ApplicationController < ActionController::Base
         Notification.read(current_user, notification_ids)
         current_user.reload
         current_user.publish_notifications_state
-        cookies.delete('cn')
+        cookie_args = {}
+        cookie_args[:path] = Discourse.base_uri if Discourse.base_uri.present?
+        cookies.delete('cn', cookie_args)
       end
     end
   end
@@ -322,34 +372,39 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_theme
-
     return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = request[:preview_theme_key]
+    theme_ids = []
+
+    if preview_theme_id = request[:preview_theme_id]&.to_i
+      ids = [preview_theme_id]
+      theme_ids = ids if guardian.allow_themes?(ids, include_preview: true)
+    end
 
     user_option = current_user&.user_option
 
-    unless theme_key
-      key, seq = cookies[:theme_key]&.split(",")
-      if key && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_key = key
+    if theme_ids.blank?
+      ids, seq = cookies[:theme_ids]&.split("|")
+      ids = ids&.split(",")&.map(&:to_i)
+      if ids.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_ids = ids if guardian.allow_themes?(ids)
       end
     end
 
-    theme_key ||= user_option&.theme_key
-
-    if theme_key && !guardian.allow_theme?(theme_key)
-      theme_key = nil
+    if theme_ids.blank?
+      ids = user_option&.theme_ids || []
+      theme_ids = ids if guardian.allow_themes?(ids)
     end
 
-    theme_key ||= SiteSetting.default_theme_key
-    theme_key = nil if theme_key.blank?
+    if theme_ids.blank? && SiteSetting.default_theme_id != -1
+      theme_ids << SiteSetting.default_theme_id
+    end
 
-    @theme_key = request.env[:resolved_theme_key] = theme_key
+    @theme_ids = request.env[:resolved_theme_ids] = theme_ids
   end
 
   def guardian
@@ -436,280 +491,260 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
-  def permalink_redirect_or_not_found
-    url = request.fullpath
-    permalink = Permalink.find_by_url(url)
-
-    if permalink.present?
-      # permalink present, redirect to that URL
-      if permalink.external_url
-        redirect_to permalink.external_url, status: :moved_permanently
-      elsif permalink.target_url
-        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
-      else
-        raise Discourse::NotFound
-      end
-    else
-      # redirect to 404
-      raise Discourse::NotFound
-    end
-  end
-
   def secure_session
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
 
   private
 
-    def check_readonly_mode
-      @readonly_mode = Discourse.readonly_mode?
+  def check_readonly_mode
+    @readonly_mode = Discourse.readonly_mode?
+  end
+
+  def locale_from_header
+    begin
+      # Rails I18n uses underscores between the locale and the region; the request
+      # headers use hyphens.
+      require 'http_accept_language' unless defined? HttpAcceptLanguage
+      available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
+      parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
+      parser.language_region_compatible_from(available_locales).tr('-', '_')
+    rescue
+      # If Accept-Language headers are not set.
+      I18n.default_locale
     end
+  end
 
-    def locale_from_header
-      begin
-        # Rails I18n uses underscores between the locale and the region; the request
-        # headers use hyphens.
-        require 'http_accept_language' unless defined? HttpAcceptLanguage
-        available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
-        parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
-        parser.language_region_compatible_from(available_locales).tr('-', '_')
-      rescue
-        # If Accept-Language headers are not set.
-        I18n.default_locale
-      end
-    end
+  def preload_anonymous_data
+    store_preloaded("site", Site.json_for(guardian))
+    store_preloaded("siteSettings", SiteSetting.client_settings_json)
+    store_preloaded("customHTML", custom_html_json)
+    store_preloaded("banner", banner_json)
+    store_preloaded("customEmoji", custom_emoji)
+    store_preloaded("translationOverrides", I18n.client_overrides_json(I18n.locale))
+  end
 
-    def preload_anonymous_data
-      store_preloaded("site", Site.json_for(guardian))
-      store_preloaded("siteSettings", SiteSetting.client_settings_json)
-      store_preloaded("themeSettings", Theme.settings_for_client(@theme_key))
-      store_preloaded("customHTML", custom_html_json)
-      store_preloaded("banner", banner_json)
-      store_preloaded("customEmoji", custom_emoji)
-      store_preloaded("translationOverrides", I18n.client_overrides_json(I18n.locale))
-    end
+  def preload_current_user_data
+    store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
+    report = TopicTrackingState.report(current_user)
+    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+    store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+  end
 
-    def preload_current_user_data
-      store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
-      report = TopicTrackingState.report(current_user)
-      serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
-      store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
-    end
+  def custom_html_json
+    target = view_context.mobile_view? ? :mobile : :desktop
 
-    def custom_html_json
-      target = view_context.mobile_view? ? :mobile : :desktop
-
-      data =
-        if @theme_key
-          {
-           top: Theme.lookup_field(@theme_key, target, "after_header"),
-           footer: Theme.lookup_field(@theme_key, target, "footer")
-          }
-        else
-          {}
-        end
-
-      if DiscoursePluginRegistry.custom_html
-        data.merge! DiscoursePluginRegistry.custom_html
-      end
-
-      DiscoursePluginRegistry.html_builders.each do |name, _|
-        if name.start_with?("client:")
-          data[name.sub(/^client:/, '')] = DiscoursePluginRegistry.build_html(name, self)
-        end
-      end
-
-      MultiJson.dump(data)
-    end
-
-    def self.banner_json_cache
-      @banner_json_cache ||= DistributedCache.new("banner_json")
-    end
-
-    def banner_json
-      json = ApplicationController.banner_json_cache["json"]
-
-      unless json
-        topic = Topic.where(archetype: Archetype.banner).first
-        banner = topic.present? ? topic.banner : {}
-        ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
-      end
-
-      json
-    end
-
-    def custom_emoji
-      serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
-      MultiJson.dump(serializer)
-    end
-
-    # Render action for a JSON error.
-    #
-    # obj       - a translated string, an ActiveRecord model, or an array of translated strings
-    # opts:
-    #   type    - a machine-readable description of the error
-    #   status  - HTTP status code to return
-    #   headers - extra headers for the response
-    def render_json_error(obj, opts = {})
-      opts = { status: opts } if opts.is_a?(Integer)
-      opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
-
-      render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
-    end
-
-    def success_json
-      { success: 'OK' }
-    end
-
-    def failed_json
-      { failed: 'FAILED' }
-    end
-
-    def json_result(obj, opts = {})
-      if yield(obj)
-        json = success_json
-
-        # If we were given a serializer, add the class to the json that comes back
-        if opts[:serializer].present?
-          json[obj.class.name.underscore] = opts[:serializer].new(obj, scope: guardian).serializable_hash
-        end
-
-        render json: MultiJson.dump(json)
+    data =
+      if @theme_ids.present?
+        {
+         top: Theme.lookup_field(@theme_ids, target, "after_header"),
+         footer: Theme.lookup_field(@theme_ids, target, "footer")
+        }
       else
-        error_obj = nil
-        if opts[:additional_errors]
-          error_target = opts[:additional_errors].find do |o|
-            target = obj.send(o)
-            target && target.errors.present?
-          end
-          error_obj = obj.send(error_target) if error_target
+        {}
+      end
+
+    if DiscoursePluginRegistry.custom_html
+      data.merge! DiscoursePluginRegistry.custom_html
+    end
+
+    DiscoursePluginRegistry.html_builders.each do |name, _|
+      if name.start_with?("client:")
+        data[name.sub(/^client:/, '')] = DiscoursePluginRegistry.build_html(name, self)
+      end
+    end
+
+    MultiJson.dump(data)
+  end
+
+  def self.banner_json_cache
+    @banner_json_cache ||= DistributedCache.new("banner_json")
+  end
+
+  def banner_json
+    json = ApplicationController.banner_json_cache["json"]
+
+    unless json
+      topic = Topic.where(archetype: Archetype.banner).first
+      banner = topic.present? ? topic.banner : {}
+      ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
+    end
+
+    json
+  end
+
+  def custom_emoji
+    serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
+    MultiJson.dump(serializer)
+  end
+
+  # Render action for a JSON error.
+  #
+  # obj       - a translated string, an ActiveRecord model, or an array of translated strings
+  # opts:
+  #   type    - a machine-readable description of the error
+  #   status  - HTTP status code to return
+  #   headers - extra headers for the response
+  def render_json_error(obj, opts = {})
+    opts = { status: opts } if opts.is_a?(Integer)
+    opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
+
+    render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
+  end
+
+  def success_json
+    { success: 'OK' }
+  end
+
+  def failed_json
+    { failed: 'FAILED' }
+  end
+
+  def json_result(obj, opts = {})
+    if yield(obj)
+      json = success_json
+
+      # If we were given a serializer, add the class to the json that comes back
+      if opts[:serializer].present?
+        json[obj.class.name.underscore] = opts[:serializer].new(obj, scope: guardian).serializable_hash
+      end
+
+      render json: MultiJson.dump(json)
+    else
+      error_obj = nil
+      if opts[:additional_errors]
+        error_target = opts[:additional_errors].find do |o|
+          target = obj.send(o)
+          target && target.errors.present?
         end
-        render_json_error(error_obj || obj)
+        error_obj = obj.send(error_target) if error_target
       end
+      render_json_error(error_obj || obj)
     end
+  end
 
-    def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
-    end
+  def mini_profiler_enabled?
+    defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
+  end
 
-    def authorize_mini_profiler
-      return unless mini_profiler_enabled?
-      Rack::MiniProfiler.authorize_request
-    end
+  def authorize_mini_profiler
+    return unless mini_profiler_enabled?
+    Rack::MiniProfiler.authorize_request
+  end
 
-    def check_xhr
-      # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-      return if !request.get? && (is_api? || is_user_api?)
-      raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
-    end
+  def check_xhr
+    # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
+    return if !request.get? && (is_api? || is_user_api?)
+    raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+  end
 
-    def self.requires_login(arg = {})
-      @requires_login_arg = arg
-    end
+  def self.requires_login(arg = {})
+    @requires_login_arg = arg
+  end
 
-    def self.requires_login_arg
-      @requires_login_arg
-    end
+  def self.requires_login_arg
+    @requires_login_arg
+  end
 
-    def block_if_requires_login
-      if arg = self.class.requires_login_arg
-        check =
-          if except = arg[:except]
-            !except.include?(action_name.to_sym)
-          elsif only = arg[:only]
-            only.include?(action_name.to_sym)
-          else
-            true
-          end
-        ensure_logged_in if check
-      end
-    end
-
-    def ensure_logged_in
-      raise Discourse::NotLoggedIn.new unless current_user.present?
-    end
-
-    def ensure_staff
-      raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
-    end
-
-    def ensure_admin
-      raise Discourse::InvalidAccess.new unless current_user && current_user.admin?
-    end
-
-    def ensure_wizard_enabled
-      raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
-    end
-
-    def destination_url
-      request.original_url unless request.original_url =~ /uploads/
-    end
-
-    def redirect_to_login_if_required
-      return if current_user || (request.format.json? && is_api?)
-
-      if SiteSetting.login_required?
-        flash.keep
-
-        if SiteSetting.enable_sso?
-          # save original URL in a session so we can redirect after login
-          session[:destination_url] = destination_url
-          redirect_to path('/session/sso')
-        elsif params[:authComplete].present?
-          redirect_to path("/login?authComplete=true")
+  def block_if_requires_login
+    if arg = self.class.requires_login_arg
+      check =
+        if except = arg[:except]
+          !except.include?(action_name.to_sym)
+        elsif only = arg[:only]
+          only.include?(action_name.to_sym)
         else
-          # save original URL in a cookie (javascript redirects after login in this case)
-          cookies[:destination_url] = destination_url
-          redirect_to path("/login")
+          true
         end
+      ensure_logged_in if check
+    end
+  end
+
+  def ensure_logged_in
+    raise Discourse::NotLoggedIn.new unless current_user.present?
+  end
+
+  def ensure_staff
+    raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
+  end
+
+  def ensure_admin
+    raise Discourse::InvalidAccess.new unless current_user && current_user.admin?
+  end
+
+  def ensure_wizard_enabled
+    raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
+  end
+
+  def destination_url
+    request.original_url unless request.original_url =~ /uploads/
+  end
+
+  def redirect_to_login_if_required
+    return if current_user || (request.format.json? && is_api?)
+
+    if SiteSetting.login_required?
+      flash.keep
+
+      if SiteSetting.enable_sso?
+        # save original URL in a session so we can redirect after login
+        session[:destination_url] = destination_url
+        redirect_to path('/session/sso')
+      elsif params[:authComplete].present?
+        redirect_to path("/login?authComplete=true")
+      else
+        # save original URL in a cookie (javascript redirects after login in this case)
+        cookies[:destination_url] = destination_url
+        redirect_to path("/login")
       end
     end
+  end
 
-    def block_if_readonly_mode
-      return if request.fullpath.start_with?(path "/admin/backups")
-      raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
+  def block_if_readonly_mode
+    return if request.fullpath.start_with?(path "/admin/backups")
+    raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
+  end
+
+  def build_not_found_page(status = 404, layout = false)
+    if SiteSetting.bootstrap_error_pages?
+      preload_json
+      layout = 'application' if layout == 'no_ember'
     end
 
-    def build_not_found_page(status = 404, layout = false)
-      if SiteSetting.bootstrap_error_pages?
-        preload_json
-        layout = 'application' if layout == 'no_ember'
-      end
+    category_topic_ids = Category.pluck(:topic_id).compact
+    @container_class = "wrap not-found-container"
+    @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
+    @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
+    @slug =  params[:slug].class == String ? params[:slug] : ''
+    @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
+    @slug.tr!('-', ' ')
+    @hide_search = true if SiteSetting.login_required
+    render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
+  end
 
-      category_topic_ids = Category.pluck(:topic_id).compact
-      @container_class = "wrap not-found-container"
-      @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
-      @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-      @slug =  params[:slug].class == String ? params[:slug] : ''
-      @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
-      @slug.tr!('-', ' ')
-      @hide_google = true if SiteSetting.login_required
-      render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
-    end
-
-    def is_asset_path
-      request.env['DISCOURSE_IS_ASSET_PATH'] = 1
-    end
+  def is_asset_path
+    request.env['DISCOURSE_IS_ASSET_PATH'] = 1
+  end
 
   protected
 
-    def render_post_json(post, add_raw = true)
-      post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-      post_serializer.add_raw = add_raw
+  def render_post_json(post, add_raw = true)
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer.add_raw = add_raw
 
-      counts = PostAction.counts_for([post], current_user)
-      if counts && counts = counts[post.id]
-        post_serializer.post_actions = counts
-      end
-      render_json_dump(post_serializer)
+    counts = PostAction.counts_for([post], current_user)
+    if counts && counts = counts[post.id]
+      post_serializer.post_actions = counts
     end
+    render_json_dump(post_serializer)
+  end
 
-    # returns an array of integers given a param key
-    # returns nil if key is not found
-    def param_to_integer_list(key, delimiter = ',')
-      if params[key]
-        params[key].split(delimiter).map(&:to_i)
-      end
+  # returns an array of integers given a param key
+  # returns nil if key is not found
+  def param_to_integer_list(key, delimiter = ',')
+    if params[key]
+      params[key].split(delimiter).map(&:to_i)
     end
+  end
 
 end

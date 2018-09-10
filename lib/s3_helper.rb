@@ -30,18 +30,23 @@ class S3Helper
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
-    bucket = s3_bucket
-
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      bucket
-        .object(File.join(@tombstone_prefix, s3_filename))
-        .copy_from(copy_source: File.join(@s3_bucket_name, get_path_for_s3_upload(s3_filename)))
+      self.copy(
+        get_path_for_s3_upload(s3_filename),
+        File.join(@tombstone_prefix, s3_filename)
+      )
     end
 
     # delete the file
-    bucket.object(get_path_for_s3_upload(s3_filename)).delete
+    s3_bucket.object(get_path_for_s3_upload(s3_filename)).delete
   rescue Aws::S3::Errors::NoSuchKey
+  end
+
+  def copy(source, destination, options: {})
+    s3_bucket
+      .object(destination)
+      .copy_from(options.merge(copy_source: File.join(@s3_bucket_name, source)))
   end
 
   # make sure we have a cors config for assets
@@ -131,7 +136,11 @@ class S3Helper
   end
 
   def list(prefix = "")
-    s3_bucket.objects(prefix: "#{@s3_bucket_folder_path}/#{prefix}")
+    if @s3_bucket_folder_path.present?
+      prefix = File.join(@s3_bucket_folder_path, prefix)
+    end
+
+    s3_bucket.objects(prefix: prefix)
   end
 
   def tag_file(key, tags)
@@ -150,7 +159,9 @@ class S3Helper
   end
 
   def self.s3_options(obj)
-    opts = { region: obj.s3_region }
+    opts = { region: obj.s3_region,
+             endpoint: SiteSetting.s3_endpoint,
+             force_path_style: SiteSetting.s3_force_path_style }
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -184,9 +195,11 @@ class S3Helper
   end
 
   def s3_bucket
-    bucket = s3_resource.bucket(@s3_bucket_name)
-    bucket.create unless bucket.exists?
-    bucket
+    @s3_bucket ||= begin
+      bucket = s3_resource.bucket(@s3_bucket_name)
+      bucket.create unless bucket.exists?
+      bucket
+    end
   end
 
   def check_missing_site_options

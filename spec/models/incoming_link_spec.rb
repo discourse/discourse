@@ -49,6 +49,12 @@ describe IncomingLink do
       IncomingLink.add(req(opts))
     end
 
+    it "does not explode with bad username" do
+      add(
+        username: "test\0test"
+      )
+    end
+
     it "does not explode with bad referer" do
       add(
         referer: 'file:///Applications/Install/75067ABC-C9D1-47B7-8ACE-76AEDE3911B2/Install/',
@@ -69,7 +75,7 @@ describe IncomingLink do
     end
 
     it "does nothing if referer is same as host" do
-      add(post_id: 1, host: 'somesite.com', referer: 'http://somesite.com')
+      add(post_id: 1, host: 'example.com', referer: 'http://example.com')
       expect(IncomingLink.count).to eq 0
     end
 

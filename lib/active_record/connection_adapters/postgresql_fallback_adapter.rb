@@ -16,9 +16,11 @@ class PostgreSQLFallbackHandler
     @mutex = Mutex.new
     @initialized = false
 
-    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload|
-      RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
-        clear_connections
+    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload, pid|
+      if @initialized && pid != Process.pid
+        RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
+          clear_connections
+        end
       end
     end
   end
@@ -28,14 +30,11 @@ class PostgreSQLFallbackHandler
 
     @thread = Thread.new do
       while true do
-        begin
-          thread = Thread.new { initiate_fallback_to_master }
-          thread.join
-          break if synchronize { @masters_down.hash.empty? }
-          sleep 10
-        ensure
-          thread.kill
-        end
+        thread = Thread.new { initiate_fallback_to_master }
+        thread.abort_on_exception = true
+        thread.join
+        break if synchronize { @masters_down.hash.empty? }
+        sleep 5
       end
     end
 
@@ -50,7 +49,7 @@ class PostgreSQLFallbackHandler
     synchronize do
       @masters_down[namespace] = true
       Sidekiq.pause! if !Sidekiq.paused?
-      MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace)
+      MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace, pid: Process.pid)
     end
   end
 
@@ -59,28 +58,37 @@ class PostgreSQLFallbackHandler
   end
 
   def initiate_fallback_to_master
-    @masters_down.hash.keys.each do |key|
-      RailsMultisite::ConnectionManagement.with_connection(key) do
-        begin
-          logger.warn "#{log_prefix}: Checking master server..."
-          begin
-            connection = ActiveRecord::Base.postgresql_connection(config)
-            is_connection_active = connection.active?
-          ensure
-            connection.disconnect! if connection
-          end
+    begin
+      unless @initialized
+        @initialized = true
+        return
+      end
 
-          if is_connection_active
-            logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
-            clear_connections
-            self.master_up(key)
-            disable_readonly_mode
-            Sidekiq.unpause!
+      @masters_down.hash.keys.each do |key|
+        RailsMultisite::ConnectionManagement.with_connection(key) do
+          begin
+            logger.warn "#{log_prefix}: Checking master server..."
+            begin
+              connection = ActiveRecord::Base.postgresql_connection(config)
+              is_connection_active = connection.active?
+            ensure
+              connection.disconnect! if connection
+            end
+
+            if is_connection_active
+              logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
+              self.master_up(key)
+              disable_readonly_mode
+              Sidekiq.unpause!
+              clear_connections
+            end
+          rescue => e
+            logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
           end
-        rescue => e
-          logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
         end
       end
+    rescue => e
+      logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
     end
   end
 
@@ -91,8 +99,7 @@ class PostgreSQLFallbackHandler
   end
 
   def clear_connections
-    ActiveRecord::Base.clear_active_connections!
-    ActiveRecord::Base.clear_all_connections!
+    ActiveRecord::Base.connection_pool.disconnect!
   end
 
   private

@@ -1,8 +1,8 @@
 const PermissionType = Discourse.Model.extend({
-  description: function(){
+  description: function() {
     var key = "";
 
-    switch(this.get("id")){
+    switch (this.get("id")) {
       case 1:
         key = "full";
         break;

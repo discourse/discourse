@@ -1,9 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe TopicTimer, type: :model do
-  let(:topic_timer) { Fabricate(:topic_timer) }
+  let(:topic_timer) {
+    # we should not need to do this but somehow
+    # fabricator is failing here
+    TopicTimer.create!(
+      user_id: -1,
+      topic: Fabricate(:topic),
+      execute_at: 1.hour.from_now,
+      status_type: TopicTimer.types[:close]
+    )
+  }
   let(:topic) { Fabricate(:topic) }
   let(:admin) { Fabricate(:admin) }
+
+  before do
+    freeze_time Time.new(2018)
+  end
 
   context "validations" do
     describe '#status_type' do
@@ -260,12 +273,16 @@ RSpec.describe TopicTimer, type: :model do
         topic: Fabricate(:topic, closed: true)
       )
 
-      Fabricate(:topic_timer)
+      Fabricate(:topic_timer, execute_at: Time.zone.now + 1.hour)
 
       Fabricate(:topic_timer,
         execute_at: Time.zone.now - 1.hour,
         created_at: Time.zone.now - 2.hour
       ).topic.trash!
+
+      # creating topic timers already enqueues jobs
+      # let's delete them to test ensure_consistency!
+      Sidekiq::Worker.clear_all
 
       expect { described_class.ensure_consistency! }
         .to change { Jobs::ToggleTopicClosed.jobs.count }.by(2)
@@ -281,19 +298,22 @@ RSpec.describe TopicTimer, type: :model do
       expect(job_args["state"]).to eq(false)
     end
 
-    # intermittent failures
-    # it "should enqueue remind me jobs that have been missed" do
-    #   reminder = Fabricate(:topic_timer,
-    #     status_type: described_class.types[:reminder],
-    #     execute_at: Time.zone.now - 1.hour,
-    #     created_at: Time.zone.now - 2.hour
-    #   )
+    it "should enqueue remind me jobs that have been missed" do
+      reminder = Fabricate(:topic_timer,
+        status_type: described_class.types[:reminder],
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      )
 
-    #   expect { described_class.ensure_consistency! }
-    #     .to change { Jobs::TopicReminder.jobs.count }.by(1)
+      # creating topic timers already enqueues jobs
+      # let's delete them to test ensure_consistency!
+      Sidekiq::Worker.clear_all
 
-    #   job_args = Jobs::TopicReminder.jobs.first["args"].first
-    #   expect(job_args["topic_timer_id"]).to eq(reminder.id)
-    # end
+      expect { described_class.ensure_consistency! }
+        .to change { Jobs::TopicReminder.jobs.count }.by(1)
+
+      job_args = Jobs::TopicReminder.jobs.first["args"].first
+      expect(job_args["topic_timer_id"]).to eq(reminder.id)
+    end
   end
 end

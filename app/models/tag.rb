@@ -25,7 +25,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.update_topic_counts
-    Tag.exec_sql <<~SQL
+    DB.exec <<~SQL
       UPDATE tags t
          SET topic_count = x.topic_count
         FROM (
@@ -41,7 +41,7 @@ class Tag < ActiveRecord::Base
          AND x.topic_count <> t.topic_count
     SQL
 
-    Tag.exec_sql <<~SQL
+    DB.exec <<~SQL
       UPDATE tags t
          SET pm_topic_count = x.pm_topic_count
         FROM (
@@ -70,7 +70,7 @@ class Tag < ActiveRecord::Base
 
     filter_sql = guardian&.is_staff? ? '' : " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
 
-    tag_names_with_counts = Tag.exec_sql <<~SQL
+    tag_names_with_counts = DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
@@ -81,7 +81,7 @@ class Tag < ActiveRecord::Base
        LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| row['tag_name'] }
+    tag_names_with_counts.map { |row| row.tag_name }
   end
 
   def self.pm_tags(limit_arg: nil, guardian: nil, allowed_user: nil)
@@ -89,8 +89,8 @@ class Tag < ActiveRecord::Base
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
     user_id = allowed_user.id
 
-    tag_names_with_counts = Tag.exec_sql <<~SQL
-      SELECT tags.name, COUNT(topics.id) AS topic_count
+    DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
+      SELECT tags.name as id, tags.name as text, COUNT(topics.id) AS count
         FROM tags
         JOIN topic_tags ON tags.id = topic_tags.tag_id
         JOIN topics ON topics.id = topic_tags.topic_id
@@ -109,8 +109,6 @@ class Tag < ActiveRecord::Base
        GROUP BY tags.name
        LIMIT #{limit}
     SQL
-
-    tag_names_with_counts.map { |t| { id: t['name'], text: t['name'], count: t['topic_count'] } }
   end
 
   def self.include_tags?

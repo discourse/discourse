@@ -1,5 +1,5 @@
 require "sidekiq/web"
-require_dependency "scheduler/web"
+require "mini_scheduler/web"
 require_dependency "admin_constraint"
 require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
@@ -54,6 +54,7 @@ Discourse::Application.routes.draw do
 
   get "site/basic-info" => 'site#basic_info'
   get "site/statistics" => 'site#statistics'
+  get "site/selectable-avatars" => "site#selectable_avatars"
 
   get "srv/status" => "forums#status"
 
@@ -74,6 +75,8 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "reports" => "reports#index"
+    get "reports/bulk" => "reports#bulk"
     get "reports/:type" => "reports#show"
 
     resources :groups, constraints: AdminConstraint.new do
@@ -213,11 +216,13 @@ Discourse::Application.routes.draw do
       get 'themes/:id' => 'themes#index'
 
       # They have periods in their URLs often:
-      get 'site_texts'          => 'site_texts#index'
-      get 'site_texts/:id'      => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json' => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'      => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'   => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts'             => 'site_texts#index'
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
@@ -232,7 +237,10 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard-next" => "dashboard_next#index"
+    get "dashboard" => "dashboard_next#index"
+    get "dashboard/general" => "dashboard_next#general"
+    get "dashboard/moderation" => "dashboard_next#moderation"
+
     get "dashboard-old" => "dashboard#index"
 
     resources :dashboard, only: [:index] do
@@ -285,7 +293,6 @@ Discourse::Application.routes.draw do
 
     get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
     get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
-    get "dump_statement_cache" => "diagnostics#dump_statement_cache", constraints: AdminConstraint.new
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
@@ -322,6 +329,7 @@ Discourse::Application.routes.draw do
   get "password-reset" => "static#show", id: "password_reset", constraints: { format: /(json|html)/ }
   get "faq" => "static#show", id: "faq", constraints: { format: /(json|html)/ }
   get "guidelines" => "static#show", id: "guidelines", as: 'guidelines', constraints: { format: /(json|html)/ }
+  get "rules" => "static#show", id: "rules", as: 'rules', constraints: { format: /(json|html)/ }
   get "tos" => "static#show", id: "tos", as: 'tos', constraints: { format: /(json|html)/ }
   get "privacy" => "static#show", id: "privacy", as: 'privacy', constraints: { format: /(json|html)/ }
   get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
@@ -342,6 +350,8 @@ Discourse::Application.routes.draw do
 
     post "#{root_path}/second_factors" => "users#create_second_factor"
     put "#{root_path}/second_factor" => "users#update_second_factor"
+
+    put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
@@ -398,8 +408,12 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/preferences/avatar/select" => "users#select_avatar", constraints: { username: RouteFormat.username }
+    post "#{root_path}/:username/preferences/revoke-account" => "users#revoke_account", constraints: { username: RouteFormat.username }
+    post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
@@ -450,6 +464,7 @@ Discourse::Application.routes.draw do
   get "posts" => "posts#latest", id: "latest_posts"
   get "private-posts" => "posts#latest", id: "private_posts"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
+  get "posts/by-date/:topic_id/:date" => "posts#by_date"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:id/reply-ids"     => "posts#reply_ids"
   get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
@@ -469,6 +484,7 @@ Discourse::Application.routes.draw do
     get 'logs' => 'groups#histories'
 
     collection do
+      get "check-name" => 'groups#check_name'
       get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
       get "search" => "groups#search"
     end
@@ -614,6 +630,7 @@ Discourse::Application.routes.draw do
   put "t/:id/convert-topic/:type" => "topics#convert_topic"
   put "t/:id/publish" => "topics#publish"
   put "t/:id/shared-draft" => "topics#update_shared_draft"
+  put "t/:id/reset-bump-date" => "topics#reset_bump_date"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -675,6 +692,7 @@ Discourse::Application.routes.draw do
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: { topic_id: /\d+/, post_number: /\d+/ }
   get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: { topic_id: /\d+/ }
   get "t/:topic_id/posts" => "topics#posts", constraints: { topic_id: /\d+/ }, format: :json
+  get "t/:topic_id/post_ids" => "topics#post_ids", constraints: { topic_id: /\d+/ }, format: :json
   get "t/:topic_id/excerpts" => "topics#excerpts", constraints: { topic_id: /\d+/ }, format: :json
   post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
   post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
@@ -721,6 +739,7 @@ Discourse::Application.routes.draw do
 
   get "message-bus/poll" => "message_bus#poll"
 
+  resources :drafts, only: [:index]
   get "draft" => "draft#show"
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
@@ -745,7 +764,8 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
   get "robots-builder.json" => "robots_txt#builder"
   get "offline.html" => "offline#index"
-  get "manifest.json" => "metadata#manifest", as: :manifest
+  get "manifest.webmanifest" => "metadata#manifest", as: :manifest
+  get "manifest.json" => "metadata#manifest"
   get "opensearch" => "metadata#opensearch", format: :xml
 
   scope "/tags" do
@@ -797,7 +817,7 @@ Discourse::Application.routes.draw do
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-  get "/themes/assets/:key" => "themes#assets"
+  get "/themes/assets/:ids" => "themes#assets"
 
   if Rails.env == "test" || Rails.env == "development"
     get "/qunit" => "qunit#index"

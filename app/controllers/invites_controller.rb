@@ -165,20 +165,18 @@ class InvitesController < ApplicationController
     name = params[:name] || File.basename(file.original_filename, ".*")
     extension = File.extname(file.original_filename)
 
-    Scheduler::Defer.later("Upload CSV") do
-      begin
-        data = if extension.downcase == ".csv"
-          path = Invite.create_csv(file, name)
-          Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
-          { url: path }
-        else
-          failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
-        end
-      rescue
-        failed_json.merge(errors: [I18n.t("bulk_invite.error")])
+    begin
+      data = if extension.downcase == ".csv"
+        path = Invite.create_csv(file, name)
+        Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
+        { url: path }
+      else
+        failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
       end
-      MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
+    rescue
+      failed_json.merge(errors: [I18n.t("bulk_invite.error")])
     end
+    MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
 
     render json: success_json
   end
@@ -211,14 +209,14 @@ class InvitesController < ApplicationController
 
   private
 
-    def post_process_invite(user)
-      user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-      if user.has_password?
-        email_token = user.email_tokens.create(email: user.email)
-        Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
-      elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
-        Jobs.enqueue(:invite_password_instructions_email, username: user.username)
-      end
+  def post_process_invite(user)
+    user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+    if user.has_password?
+      email_token = user.email_tokens.create(email: user.email)
+      Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
+    elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+      Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
+  end
 
 end

@@ -8,6 +8,9 @@
 te:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -30,55 +33,60 @@ te:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} క్రితం"
       tiny:
         half_a_minute: "< 1ని"
         less_than_x_seconds:
-          one: < 1సె
-          other: < %{count}సె
+          one: "< 1సె"
+          other: "< %{count}సె"
         x_seconds:
-          one: 1సె
-          other: '%{count}సె'
+          one: "1సె"
+          other: "%{count}సె"
         x_minutes:
-          one: 1ని
-          other: '%{count}ని'
+          one: "1ని"
+          other: "%{count}ని"
         about_x_hours:
-          one: 1గ
-          other: '%{count}గం'
+          one: "1గ"
+          other: "%{count}గం"
         x_days:
-          one: 1రో
-          other: '%{count}రో'
+          one: "1రో"
+          other: "%{count}రో"
         about_x_years:
-          one: 1సం
-          other: '%{count}సం'
+          one: "1సం"
+          other: "%{count}సం"
         over_x_years:
-          one: '> 1సం'
-          other: '> %{count}సం'
+          one: "> 1సం"
+          other: "> %{count}సం"
         almost_x_years:
-          one: 1సం
-          other: '%{count}సం'
+          one: "1సం"
+          other: "%{count}సం"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: 1 నిమిషం
-          other: '%{count} నిమిషాలు'
+          one: "1 నిమిషం"
+          other: "%{count} నిమిషాలు"
         x_hours:
-          one: 1 గంట
-          other: '%{count} గంటలు'
+          one: "1 గంట"
+          other: "%{count} గంటలు"
         x_days:
-          one: 1 రోజు
-          other: '%{count} రోజులు'
+          one: "1 రోజు"
+          other: "%{count} రోజులు"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: 1 నిమిషం ముందు
-          other: '%{count} నిమిషాలు ముందు'
+          one: "1 నిమిషం ముందు"
+          other: "%{count} నిమిషాలు ముందు"
         x_hours:
-          one: 1 గంట క్రితం
-          other: '%{count} గంటల ముందు'
+          one: "1 గంట క్రితం"
+          other: "%{count} గంటల ముందు"
         x_days:
-          one: 1 రోజు ముందు
-          other: '%{count} రోజుల ముందు'
+          one: "1 రోజు ముందు"
+          other: "%{count} రోజుల ముందు"
+      later:
+        x_days:
+          one: "1 రోజు తర్వాత"
+          other: "%{count} రోజుల తర్వాత"
       previous_month: 'గత నెల'
       next_month: 'తరువాత నెల'
       placeholder: తేదీ
@@ -110,13 +118,13 @@ te:
     show_help: "ఐచ్చికాలు"
     links: "లంకెలు"
     links_lowercase:
-      one: లంకె
-      other: లంకెలు
+      one: "లంకె"
+      other: "లంకెలు"
     faq: "తవసం"
     guidelines: "మార్గదర్శకాలు"
     privacy_policy: "అంతరంగికతా విధానం"
     privacy: "అంతరంగికత"
-    terms_of_service: "సేవా నిబంధనలు "
+    tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
     you: "మీరు"
@@ -134,8 +142,8 @@ te:
     max_of_count: "{{count}} గరిష్టం"
     alternation: "లేదా"
     character_count:
-      one: '{{count}} అక్షరం'
-      other: '{{count}} అక్షరాలు'
+      one: "{{count}} అక్షరం"
+      other: "{{count}} అక్షరాలు"
     suggested_topics:
       title: "సూచించే విషయాలు"
     about:
@@ -146,9 +154,12 @@ te:
       our_moderators: "మా నిర్వాహకులు"
       stat:
         all_time: "ఆల్ టైమ్"
+        last_7_days: "చివరి 7"
+        last_30_days: "చివరి 30"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
+      user_count: "వాడుకరులు"
       active_user_count: "క్రియాశీల సభ్యులు"
       contact: "మమ్ము సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
@@ -185,7 +196,10 @@ te:
         search: "పేరు, యూఆర్ యల్, ఐడీ లను బట్టి విషయాన్ని వెతుకు."
         placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
     queue:
+      approve: 'అంగీకరించు'
+      reject: 'తిరస్కరించు'
       cancel: "రద్దుచేయి"
+      confirm: "మార్పులను భద్రపరచు"
       approval:
         ok: "సరే"
     user_action:
@@ -205,7 +219,27 @@ te:
     directory:
       title: "వాడుకరులు"
     groups:
+      manage:
+        name: 'పేరు'
+        full_name: 'పూర్తి పేరు'
+        logs:
+          details: "వివరాలు"
+      membership: "సభ్యత్వం"
+      name: "పేరు"
+      user_count: "వాడుకరులు"
+      index:
+        public: "బహిరంగం"
+        private: "అంతరంగికం"
+        is_group_user: "సభ్యుడు"
+        is_group_owner: "యజమాని"
+      activity: "కార్యకలాపం"
+      members:
+        filter_placeholder: "వాడుకరి పేరు"
+        owner: "యజమాని"
+      topics: "విషయాలు"
       posts: "టపాలు"
+      mentions: "ప్రస్తావనలు"
+      messages: "సందేశాలు"
       alias_levels:
         nobody: "ఎవరూకాదు"
         only_admins: "కేవలం అధికారులే"
@@ -226,6 +260,8 @@ te:
       all: "అన్ని వర్గాలు"
       no_subcategory: "ఏదీకాదు"
       category: "వర్గం"
+      reorder:
+        apply_all: "ఆపాదించు"
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
@@ -233,8 +269,8 @@ te:
       toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
       topic_stat_sentence:
-        one: '%{unit} కాలంలో %{count} ఒక కొత్త టపా.'
-        other: ' %{unit} గతంలో %{count} కొత్త విషయాలు.'
+        one: "%{unit} కాలంలో %{count} ఒక కొత్త టపా."
+        other: " %{unit} గతంలో %{count} కొత్త విషయాలు."
     ip_lookup:
       title: ఐపీ చిరునామా లుకప్
       hostname: అతిథిపేరు
@@ -263,6 +299,7 @@ te:
       invited_by: "ఆహ్వానిచినవారు"
       trust_level: "నమ్మకపు స్థాయి"
       notifications: "ప్రకటనలు"
+      statistics: "గణాంకాలు"
       dismiss_notifications_tooltip: "అన్ని చదవని ప్రకటనలూ చదివినట్టు గుర్తించు"
       disable_jump_reply: "నేను జవాబిచ్చాక నా టపాకు వెళ్లవద్దు"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
@@ -275,6 +312,7 @@ te:
       suspended_notice: "ఈ సభ్యుడు {{date}} వరకూ సస్పెండయ్యాడు"
       suspended_reason: "కారణం:"
       github_profile: "గిట్ హబ్"
+      tag_settings: "ట్యాగులు"
       watched_categories: "ఒకకన్నేసారు"
       tracked_categories: "గమనించారు"
       muted_categories: "నిశ్శబ్దం"
@@ -284,6 +322,7 @@ te:
       unread_message_count: "సందేశాలు"
       admin_delete: "తొలగించు"
       users: "వాడుకరులు"
+      theme: "అలంకారం"
       staff_counters:
         flags_given: "సహాయకారి కేతనాలు"
         flagged_posts: "కేతనించిన టపాలు"
@@ -292,6 +331,9 @@ te:
         warnings_received: "హెచ్చరికలు"
       messages:
         all: "అన్నీ"
+      preferences_nav:
+        account: "ఖాతా"
+        categories: "వర్గాలు"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
@@ -331,6 +373,8 @@ te:
         authenticated: "మీ ఈమెయిల్  {{provider}} చేత ద్రువీకరించబడింది"
       name:
         title: "పేరు"
+        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
+        instructions_required: "మీ పూర్తి పేరు"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
@@ -338,6 +382,7 @@ te:
         short_instructions: "జనాలు మిమ్మల్ని @{{username}} అని ప్రస్తావించవచ్చు"
         available: "మీ సభ్యనామం అందుబాటులో ఉంది."
         not_available: "అందుబాటులో లేదు. {{suggestion}} ప్రయత్నించండి?"
+        not_available_no_suggestion: "అందుబాటులో లేదు"
         too_short: "మీ సభ్యనామం మరీ చిన్నది"
         too_long: "మీ సభ్యనామం మరీ పొడుగు"
         checking: "సభ్యనామం అందుబాటు పరిశీలిస్తున్నాం..."
@@ -356,6 +401,10 @@ te:
       location: "ప్రాంతం"
       website: "వెబ్ సైటు"
       email_settings: "ఈమెయిల్"
+      like_notification_frequency:
+        always: "ఎల్లప్పుడూ"
+      email_previous_replies:
+        always: "ఎల్లప్పుడూ"
       email_digests:
         daily: "ప్రతీరోజు"
         every_three_days: "ప్రతి మూడు రోజులకీ"
@@ -370,6 +419,7 @@ te:
       auto_track_topics: "నేను రాసే విషయాలు ఆటోమేటిగ్గా గమనించు"
       auto_track_options:
         never: "ఎప్పటికీ వద్దు"
+        immediately: "వెంటనే"
       invited:
         search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
@@ -397,7 +447,9 @@ te:
         same_as_username: "మీ సంకేతపదం మీ వినియోగదారుపేరు ని పోలి ఉంది."
         same_as_email: "మీ సంకేతపదం మీ ఈమెయిల్ ను పోలి ఉంది."
         ok: "మీ సంకేతపదం బాగుంది."
-      associated_accounts: "లాగిన్లు"
+      summary:
+        title: "సారాంశం"
+        stats: "గణాంకాలు"
       ip_address:
         title: "చివరి ఐపీ చిరునామా"
       registration_ip_address:
@@ -456,8 +508,6 @@ te:
       disabled_description: "ఈ విషయంలోని తొలగించిన టపాలు చూపుతున్నాము."
       enable: "తొలగించిన టపాలు దాయు"
       disable: "తొలగించిన టపాలు చూపు"
-    private_message_info:
-      invite: "ఇతరులను ఆహ్వానించు"
     email: 'ఈమెయిల్'
     username: 'వాడుకరి పేరు'
     last_seen: 'చూసిన'
@@ -478,6 +528,8 @@ te:
       complete_email_found: "మేము ఈ ఈమెయిల్ <b>%{email}</b> తో సరిపోయే ఒక ఖాతా కనుగొన్నాము, మీకు అతి త్వరలో సంకేతపదం రీసెట్ చేసే సూచనలతో కూడిన ఈమెయిల్ వస్తుంది."
       complete_username_not_found: "మీ సభ్యనామం <b>%{username}</b> తో ఏ ఖాతా సరిపోవడంలేదు."
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
+      button_ok: "సరే"
+      button_help: "సహాయం"
     login:
       title: "లాగిన్"
       username: "వాడుకరి"
@@ -497,9 +549,6 @@ te:
       admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
       resend_activation_email: "చేతన ఈమెయిల్ మరలా పంపడానికి ఇక్కడ నొక్కండి."
       sent_activation_email_again: "మీకు <b>{{currentEmail}}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
-      google:
-        title: "గూగుల్ తో"
-        message: "గూగుల్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
       google_oauth2:
         title: "గూగుల్ తో"
         message: "గూగుల్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
@@ -515,7 +564,21 @@ te:
       github:
         title: "గిట్ హబ్ తో"
         message: "గిట్ హబ్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+    invites:
+      accept_title: "ఆహ్వానం"
+      name_label: "పేరు"
+      optional_description: "(ఐచ్ఛికం)"
+    emoji_set:
+      google: "గూగుల్"
+      twitter: "ట్విట్టర్"
+    category_page_style:
+      categories_only: "వర్గాలు మాత్రమే"
+    emoji_picker:
+      people: ప్రజలు
+      nature: ప్రకృతి
+      food: ఆహారం
     composer:
+      options: "ఎంపికలు"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
       saved_draft_tip: "భద్రం"
@@ -564,6 +627,8 @@ te:
       ulist_title: "చుక్కల జాబితా"
       list_item: "జాబితా అంశం"
       help: "మార్క్ డైన్ సవరణ సహాయం"
+      modal_ok: "సరే"
+      modal_cancel: "రద్దుచేయి"
       admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
@@ -583,6 +648,7 @@ te:
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       searching: "వెతుకుతున్నామ్..."
       post_format: "{{username}} నుండి #{{post_number}}"
+      search_google_button: "గూగుల్"
       context:
         user: "@{{username}} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
@@ -600,8 +666,8 @@ te:
         archive_topics: "విషయాలు కట్టకట్టు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
-          one: మీరు <b>1</b>  విషయం ఎంచుకున్నారు.
-          other: ' మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు.'
+          one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."
+          other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
         new: "మీకు కొత్త విషయాలు లేవు"
@@ -629,10 +695,10 @@ te:
       new: 'కొత్త విషయం'
       unread: 'చదవని'
       new_topics:
-        one: 1 కొత్త విషయం
+        one: '1 కొత్త విషయం'
         other: '{{count}} కొత్త విషయాలు'
       unread_topics:
-        one: 1 చదవని విషయం
+        one: '1 చదవని విషయం'
         other: '{{count}} చదవని విషయాలు'
       title: 'విషయం'
       invalid_access:
@@ -646,17 +712,17 @@ te:
         title: "విషయం కనిపించలేదు"
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
       total_unread_posts:
-        one: మీకు ఈ విషయంలో 1 చదవని టపా ఉంది
-        other: మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి
+        one: "మీకు ఈ విషయంలో 1 చదవని టపా ఉంది"
+        other: "మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి"
       unread_posts:
-        one: మీకు ఈ విషయంలో 1 చదవని పాత టపా ఉంది
-        other: మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి
+        one: "మీకు ఈ విషయంలో 1 చదవని పాత టపా ఉంది"
+        other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
       new_posts:
-        one: మీరు చివరసారి చదివాక ఈ విషయంలో  1 కొత్త టపా వచ్చింది
-        other: మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి
+        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  1 కొత్త టపా వచ్చింది"
+        other: "మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి"
       likes:
-        one: ఈ విషయానికి 1 ఇష్టం ఉంది
-        other: ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి
+        one: "ఈ విషయానికి 1 ఇష్టం ఉంది"
+        other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
@@ -669,7 +735,18 @@ te:
       jump_reply_up: పాత జవాబుకు వెళ్లు
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
+      auto_update_input:
+        tomorrow: "రేపు"
+        this_weekend: "ఈ వారాంతం"
+        next_week: "వచ్చే వారం"
+        two_weeks: "రెండు వారాలు"
+        next_month: "వచ్చే నెల"
+        three_months: "మూడు నెలలు"
+        six_months: "ఆరు నెలలు"
       auto_close_title: 'స్వీయ ముగింపు అమరికలు'
+      timeline:
+        back: "వెనుకకు"
+        replies_short: "%{current} / %{total}"
       progress:
         title: విషయపు పురోగతి
         go_top: "అగ్ర"
@@ -735,8 +812,8 @@ te:
       login_reply: 'జవాబివ్వడానికి లాగిన్ అవ్వండి'
       filters:
         n_posts:
-          one: 1 టపా
-          other: '{{count}} టపాలు'
+          one: "1 టపా"
+          other: "{{count}} టపాలు"
         cancel: "జల్లెడ తొలగించు"
       split_topic:
         title: "కొత్త విషయానికి జరుపు"
@@ -744,15 +821,15 @@ te:
         topic_name: "కొత్త విషయపు పేరు"
         error: "టపాలను కొత్త విషయానికి జరిపేటప్పుడు దోషం తలెత్తింది"
         instructions:
-          one: మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ  టపాతో నింపబోతున్నారు.
-          other: మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b>  టపాలతో నింపబోతున్నారు.
+          one: "మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ  టపాతో నింపబోతున్నారు."
+          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b>  టపాలతో నింపబోతున్నారు."
       merge_topic:
         title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         action: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
         error: " ఆ విషయంలోకి టపాలను జరపడంలో దోషం."
         instructions:
-          one: ఈ  టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి.
-          other: ఈ  <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి.
+          one: "ఈ  టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+          other: "ఈ  <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
       change_owner:
         title: "టపాల యజమానిని మార్చండి"
         action: "యజమానిని మార్చు"
@@ -760,8 +837,8 @@ te:
         label: "టపాల కొత్త యజమాని"
         placeholder: "కొత్త యజమాని సభ్యనామం"
         instructions:
-          one: <b>{{old_user}}</b> యొక్క టపాకు కొత్త యజమానిని ఎంచుకోండి.
-          other: <b>{{old_user}}</b> యొక్క {{count}} టపాల కొత్త యజమానిని ఎంచుకోండి.
+          one: "<b>{{old_user}}</b> యొక్క టపాకు కొత్త యజమానిని ఎంచుకోండి."
+          other: "<b>{{old_user}}</b> యొక్క {{count}} టపాల కొత్త యజమానిని ఎంచుకోండి."
       multi_select:
         select: 'ఎంచుకో'
         selected: 'ఎంచుకున్నవి  ({{count}})'
@@ -771,7 +848,7 @@ te:
         deselect_all: అన్నీ వియెంచుకో
         description:
           one: మీరు <b>1</b> టపా ఎంచుకున్నారు
-          other: మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు
+          other: "మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు"
     post:
       edit_reason: "కారణం:"
       post_number: "టపా {{number}}"
@@ -782,8 +859,8 @@ te:
       show_full: "పూర్తి టపా చూపు"
       show_hidden: 'దాగిన విషయం చూపు'
       deleted_by_author:
-        one: ' (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)'
-        other: (టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)
+        one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
+        other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
       expand_collapse: "పెంచు/తుంచు"
       unread: "టపా చదవనిది"
       errors:
@@ -828,7 +905,6 @@ te:
           inappropriate: "కేతనం రద్దు"
           bookmark: "పేజీక రద్దు"
           like: "ఇష్టం రద్దు"
-          vote: "ఓటు రద్దు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
           spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
@@ -836,51 +912,44 @@ te:
           notify_moderators: "మీరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
           bookmark: "మీరు దీనికి పేజీక ఉంచారు"
           like: "మీరు దీన్ని ఇష్టపడ్డారు"
-          vote: "మీరు ఈ టపాకు ఓటు వేశారు"
         by_you_and_others:
           off_topic:
-            one: 'మీరు మరియు ఇంకొకరు దీన్ని విషయాంతరంగా కేతనించారు. '
-            other: 'మీరు మరియు [[count]] ఇతర జనులు దీన్ని విషయాంతరంగా కేతనించారు. '
+            one: "మీరు మరియు ఇంకొకరు దీన్ని విషయాంతరంగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని విషయాంతరంగా కేతనించారు. "
           spam:
-            one: 'మీరు మరియు ఇంకొకరు దీన్ని స్పాముగా కేతనించారు. '
-            other: 'మీరు మరియు [[count]] ఇతర జనులు దీన్ని స్పాముగా కేతనించారు. '
+            one: "మీరు మరియు ఇంకొకరు దీన్ని స్పాముగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని స్పాముగా కేతనించారు. "
           inappropriate:
-            one: 'మీరు మరియు ఇంకొకరు దీన్ని అసమంజసమైనదిగా కేతనించారు. '
-            other: 'మీరు మరియు [[count]] ఇతర జనులు దీన్ని అసమంజసమైనదిగా కేతనించారు. '
+            one: "మీరు మరియు ఇంకొకరు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
           notify_moderators:
-            one: మీరు మరియు ఇంకొకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు.
-            other: మీరు మరియు [[count]] ఇతర జనులు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు.
+            one: "మీరు మరియు ఇంకొకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
           bookmark:
-            one: మీరు మరియు ఇంకొకరు దీనికి పేజీక ఉంచారు.
-            other: మీరు మరియు {{count}} ఇతరులు దీనికి పేజీక ఉంచారు.
+            one: "మీరు మరియు ఇంకొకరు దీనికి పేజీక ఉంచారు."
+            other: "మీరు మరియు {{count}} ఇతరులు దీనికి పేజీక ఉంచారు."
           like:
-            one: మీరు మరొకరు దీన్ని ఇష్టపడ్డారు
-            other: మీరు మరియు {{count}} గురు దీన్ని ఇష్టపడ్డారు
-          vote:
-            one: మీరు మరియొకరు ఈ టపాకు వోటు వేసారు
-            other: మీరు మరియు {{count}} గురు ఈ టపాకు ఓటు వేసారు.
+            one: "మీరు మరొకరు దీన్ని ఇష్టపడ్డారు"
+            other: "మీరు మరియు {{count}} గురు దీన్ని ఇష్టపడ్డారు"
         by_others:
           off_topic:
-            one: ఒకరు దీన్ని విషయాంతరంగా కేతనించారు
-            other: '{{count}} గురు దీన్ని విషయాంతరంగా కేతనించారు'
+            one: "ఒకరు దీన్ని విషయాంతరంగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని విషయాంతరంగా కేతనించారు"
           spam:
-            one: ఒకరు దీన్ని స్పాముగా కేతనించారు
-            other: '{{count}} గురు దీన్ని స్పాముగా కేతనించారు'
+            one: "ఒకరు దీన్ని స్పాముగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని స్పాముగా కేతనించారు"
           inappropriate:
-            one: ఒకరు దీన్ని అసమంజసంగా కేతనించారు
-            other: '{{count}} గురు దీన్ని అసమంజసంగా కేతనించారు'
+            one: "ఒకరు దీన్ని అసమంజసంగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని అసమంజసంగా కేతనించారు"
           notify_moderators:
-            one: ఒకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు
-            other: '{{count}} గురు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు'
+            one: "ఒకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
+            other: "{{count}} గురు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
           bookmark:
-            one: ఒకరు ఈ టపాకు పేజీక ఉంచారు
-            other: '{{count}} గురు ఈ విషయానికి పేజీక ఉంచారు'
+            one: "ఒకరు ఈ టపాకు పేజీక ఉంచారు"
+            other: "{{count}} గురు ఈ విషయానికి పేజీక ఉంచారు"
           like:
-            one: ఒకరు దీన్ని ఇష్టపడ్డారు
-            other: '{{count}} గురు దీన్నిఇష్టపడ్డారు.'
-          vote:
-            one: ఒకరు దీనికి ఓటు వేశారు
-            other: '{{count}} గురు దీనికి ఓటు వేసారు'
+            one: "ఒకరు దీన్ని ఇష్టపడ్డారు"
+            other: "{{count}} గురు దీన్నిఇష్టపడ్డారు."
       revisions:
         controls:
           first: "తొలి దిద్దుబాటు"
@@ -899,7 +968,6 @@ te:
     category:
       can: 'can&hellip;'
       none: '(ఏ వర్గం లేదు)'
-      choose: 'వర్గం ఎంచుకో&hellip;'
       edit: 'సవరించు'
       edit_long: "సవరించు"
       view: 'ఈ వర్గంలోని విషయాలు చూడు'
@@ -938,7 +1006,6 @@ te:
       edit_permissions: "అనుమతులు సవరించు"
       add_permission: "అనుమతి కలుపు"
       this_year: "ఈ సంవత్సరం"
-      position: "స్థానం"
       default_position: "అప్రమేయ స్థానం"
       position_disabled: "వర్గాలు కలాపం వరుసలో చూపబడతాయి. జాబితాల్లో వర్గాల వరుసను నియంత్రించడానికి,"
       position_disabled_click: '"స్థిర వర్గ స్థాయిలు" అమరికను చేతనం చేయండి'
@@ -973,8 +1040,8 @@ te:
     topic_map:
       title: "విషయ సారం"
       clicks:
-        one: ఒక నొక్కు
-        other: '%{count} నొక్కులు'
+        one: "ఒక నొక్కు"
+        other: "%{count} నొక్కులు"
     topic_statuses:
       warning:
         help: "ఇది అధికారిక హెచ్చరిక"
@@ -1003,6 +1070,9 @@ te:
     likes: "ఇష్టాలు"
     likes_long: "ఈ విషయానికి  {{number}}  ఇష్టాలు ఉన్నాయి"
     users: "సభ్యులు"
+    users_lowercase:
+      one: "వాడుకరి"
+      other: "వాడుకరులు"
     category_title: "వర్గం"
     history: "చరిత్ర"
     changed_by: " {{author}} రాసిన"
@@ -1046,6 +1116,11 @@ te:
       full: "సృష్టించి / జవాబివ్వు / చూడు"
       create_post: "జవాబివ్వు / చూడు"
       readonly: "చూడు"
+    keyboard_shortcuts_help:
+      jump_to:
+        home: '<b>g</b>, <b>h</b> ముంగిలి'
+      actions:
+        title: 'చర్యలు'
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:
@@ -1283,7 +1358,6 @@ te:
             address_placeholder: "name@example.com"
             type_placeholder: "డైజెస్ట్, సైనప్..."
             reply_key_placeholder: "జవాబు కీ"
-            skipped_reason_placeholder: "కారణం"
       logs:
         title: "లాగులు"
         action: "చర్య"
@@ -1378,11 +1452,11 @@ te:
           suspect: 'అనుమానించు'
         approved: "అంగీకరించు"
         approved_selected:
-          one: సభ్యుడిని అంగీకరించు
-          other: ({{count}}) సభ్యులను అంగీకరించు
+          one: "సభ్యుడిని అంగీకరించు"
+          other: "({{count}}) సభ్యులను అంగీకరించు"
         reject_selected:
-          one: సభ్యుడిని నిరాకరించు
-          other: ({{count}}) సభ్యులను నిరాకరించు
+          one: "సభ్యుడిని నిరాకరించు"
+          other: "({{count}}) సభ్యులను నిరాకరించు"
         titles:
           active: 'క్రియాశీల సభ్యులు'
           new: 'కొత్త సభ్యులు'
@@ -1395,8 +1469,8 @@ te:
           suspended: 'సస్పెండయిన సభ్యులు'
           suspect: 'అనుమానిత సభ్యులు'
         reject_successful:
-          one: 'వినియోగదారులు విజయవంతంగా '
-          other: వినియోగదారులు విజయవంతంగా %{count} తిరస్కరింపబడ్డారు..
+          one: "వినియోగదారులు విజయవంతంగా "
+          other: "వినియోగదారులు విజయవంతంగా %{count} తిరస్కరింపబడ్డారు.."
         not_verified: "ద్రువీకరించలేదు"
         check_email:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపు"
@@ -1614,3 +1688,9 @@ te:
         name: "పేరు"
         image: "బొమ్మ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
+  wizard_js:
+    wizard:
+      done: "పూర్తయింది"
+      back: "వెనుకకు"
+      next: "తదుపరి"
+      upload: "ఎక్కించు"

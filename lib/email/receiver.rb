@@ -31,6 +31,7 @@ module Email
     class TopicNotFoundError           < ProcessingError; end
     class TopicClosedError             < ProcessingError; end
     class InvalidPost                  < ProcessingError; end
+    class TooShortPost                 < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
     class UnsubscribeNotAllowed        < ProcessingError; end
     class EmailNotAllowed              < ProcessingError; end
@@ -111,6 +112,8 @@ module Email
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
+      hidden_reason_id = is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
+
       user = find_user(@from_email)
 
       if user.present?
@@ -149,6 +152,7 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: user.staged?)
@@ -157,7 +161,7 @@ module Email
 
         destinations.each do |destination|
           begin
-            process_destination(destination, user, body, elided)
+            process_destination(destination, user, body, elided, hidden_reason_id)
           rescue => e
             first_exception ||= e
           else
@@ -167,8 +171,12 @@ module Email
 
         raise first_exception if first_exception
 
-        if post = find_related_post(force: true)
-          if Guardian.new(user).can_see_post?(post) && post.created_at < 90.days.ago
+        post = find_related_post(force: true)
+
+        if post && Guardian.new(user).can_see_post?(post)
+          num_of_days = SiteSetting.disallow_reply_by_email_after_days
+
+          if num_of_days > 0 && post.created_at < num_of_days.days.ago
             raise OldDestinationError.new("#{Discourse.base_url}/p/#{post.id}")
           end
         end
@@ -228,9 +236,12 @@ module Email
           reason = I18n.t("user.deactivated", email: user.email)
           StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
         elsif range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails, nothing to do here other than log it happened.
+          # NOTE: we check bounce_score before sending emails
+          # So log we revoked the email...
           reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
           StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+          # ... and PM the user
+          SystemMessage.create_from_system_user(user, :email_revoked)
         end
       end
     end
@@ -241,6 +252,17 @@ module Email
       @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
       @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
+    end
+
+    def is_spam?
+      case SiteSetting.email_in_spam_header
+      when 'X-Spam-Flag'
+        @mail[:x_spam_flag].to_s[/YES/i]
+      when 'X-Spam-Status'
+        @mail[:x_spam_status].to_s[/^Yes, /i]
+      else
+        false
+      end
     end
 
     def select_body
@@ -301,7 +323,7 @@ module Email
     end
 
     HTML_EXTRACTERS ||= [
-      [:gmail, /class="gmail_(?!default)/],
+      [:gmail, /class="gmail_(signature|extra)/],
       [:outlook, /id="(divRplyFwdMsg|Signature)"/],
       [:word, /class="WordSection1"/],
       [:exchange, /name="message(Body|Reply)Section"/],
@@ -313,9 +335,8 @@ module Email
     ]
 
     def extract_from_gmail(doc)
-      # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
-      # Just elide them all except for 'gmail_default'
-      elided = doc.css("*[class^='gmail_']:not([class*='gmail_default'])").remove
+      # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote, gmail_default...
+      elided = doc.css(".gmail_signature, .gmail_extra").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -510,14 +531,16 @@ module Email
     end
 
     def sent_to_mailinglist_mirror?
-      destinations.each do |destination|
-        next unless destination[:type] == :category
+      @sent_to_mailinglist_mirror ||= begin
+        destinations.each do |destination|
+          next unless destination[:type] == :category
 
-        category = destination[:obj]
-        return true if category.mailinglist_mirror?
+          category = destination[:obj]
+          return true if category.mailinglist_mirror?
+        end
+
+        false
       end
-
-      false
     end
 
     def self.check_address(address)
@@ -535,14 +558,14 @@ module Email
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
-          email_log = EmailLog.for(c)
-          return { type: :reply, obj: email_log } if email_log
+          post_reply_key = PostReplyKey.find_by(reply_key: c)
+          return { type: :reply, obj: post_reply_key } if post_reply_key
         end
       end
       nil
     end
 
-    def process_destination(destination, user, body, elided)
+    def process_destination(destination, user, body, elided, hidden_reason_id)
       return if SiteSetting.enable_forwarded_emails &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
@@ -550,7 +573,7 @@ module Email
       case destination[:type]
       when :group
         group = destination[:obj]
-        create_group_post(group, user, body, elided)
+        create_group_post(group, user, body, elided, hidden_reason_id)
 
       when :category
         category = destination[:obj]
@@ -561,27 +584,31 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
 
       when :reply
-        email_log = destination[:obj]
+        post_reply_key = destination[:obj]
 
-        if email_log.user_id != user.id && !forwarded_reply_key?(email_log, user)
-          raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
+          raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
+
+        post = Post.with_deleted.find(post_reply_key.post_id)
 
         create_reply(user: user,
                      raw: body,
                      elided: elided,
-                     post: email_log.post,
-                     topic: email_log.post.topic,
+                     hidden_reason_id: hidden_reason_id,
+                     post: post,
+                     topic: post&.topic,
                      skip_validations: user.staged?)
       end
     end
 
-    def create_group_post(group, user, body, elided)
+    def create_group_post(group, user, body, elided, hidden_reason_id)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -599,6 +626,7 @@ module Email
         create_reply(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      post: post,
                      topic: post.topic,
                      skip_validations: true)
@@ -606,6 +634,7 @@ module Email
         create_topic(user: user,
                      raw: body,
                      elided: elided,
+                     hidden_reason_id: hidden_reason_id,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
@@ -614,11 +643,11 @@ module Email
       end
     end
 
-    def forwarded_reply_key?(email_log, user)
+    def forwarded_reply_key?(post_reply_key, user)
       incoming_emails = IncomingEmail
         .joins(:post)
-        .where('posts.topic_id = ?', email_log.topic_id)
-        .addressed_to(email_log.reply_key)
+        .where('posts.topic_id = ?', post_reply_key.post.topic_id)
+        .addressed_to(post_reply_key.reply_key)
         .addressed_to_user(user)
         .pluck(:to_addresses, :cc_addresses)
 
@@ -626,8 +655,8 @@ module Email
         next unless contains_email_address_of_user?(to_addresses, user) ||
           contains_email_address_of_user?(cc_addresses, user)
 
-        return true if contains_reply_by_email_address(to_addresses, email_log.reply_key) ||
-          contains_reply_by_email_address(cc_addresses, email_log.reply_key)
+        return true if contains_reply_by_email_address(to_addresses, post_reply_key.reply_key) ||
+          contains_reply_by_email_address(cc_addresses, post_reply_key.reply_key)
       end
 
       false
@@ -807,13 +836,14 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:post] = nil if options[:post]&.trashed?
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
       else
         raise TopicClosedError if options[:topic].closed?
-        options[:topic_id] = options[:post].try(:topic_id)
-        options[:reply_to_post_number] = options[:post].try(:post_number)
+        options[:topic_id] = options[:topic].id
+        options[:reply_to_post_number] = options[:post]&.post_number
         options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
@@ -915,7 +945,14 @@ module Email
       user = options.delete(:user)
       result = NewPostManager.new(user, options).perform
 
-      raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
+      errors = result.errors.full_messages
+      if errors.any? do |message|
+           message.include?(I18n.t("activerecord.attributes.post.raw").strip) &&
+           message.include?(I18n.t("errors.messages.too_short", count: SiteSetting.min_post_length).strip)
+         end
+        raise TooShortPost
+      end
+      raise InvalidPost, errors.join("\n") if result.errors.any?
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)

@@ -53,7 +53,7 @@ describe Promotion do
       end
     end
 
-    context "that has done the requisite things" do
+    context "that has not done the requisite things" do
       it "does not promote the user" do
         user.created_at = 1.minute.ago
         stat = user.user_stat
@@ -63,6 +63,29 @@ describe Promotion do
         @result = promotion.review
         expect(@result).to eq(false)
         expect(user.trust_level).to eq(TrustLevel[0])
+      end
+    end
+
+    context "may send tl1 promotion messages" do
+      before do
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
+      end
+      it "sends promotion message by default" do
+        SiteSetting.send_tl1_welcome_message = true
+        @result = promotion.review
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
+        job = Jobs::SendSystemMessage.jobs[0]
+        expect(job["args"][0]["user_id"]).to eq(user.id)
+        expect(job["args"][0]["message_type"]).to eq("welcome_tl1_user")
+      end
+
+      it "can be turned off" do
+        SiteSetting.send_tl1_welcome_message = false
+        @result = promotion.review
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
       end
     end
 

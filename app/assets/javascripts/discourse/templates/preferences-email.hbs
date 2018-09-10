@@ -1,4 +1,4 @@
-<section class='user-right user-preferences'>
+<section class='user-preferences'>
   <form class="form-horizontal">
 
     <div class="control-group">
@@ -9,20 +9,22 @@
 
     {{#if success}}
       <div class="control-group">
-        <div class="instructions">
-          <p>
-            {{#if currentUser.staff}}
-              {{i18n 'user.change_email.success_staff'}}
-            {{else}}
-              {{i18n 'user.change_email.success'}}
-            {{/if}}
-          </p>
+        <div class="controls">
+          <div class="instructions">
+            <p>
+              {{#if model.staff}}
+                {{i18n 'user.change_email.success_staff'}}
+              {{else}}
+                {{i18n 'user.change_email.success'}}
+              {{/if}}
+            </p>
+          </div>
         </div>
       </div>
     {{else}}
       {{#if error}}
         <div class="control-group">
-          <div class="instructions">
+          <div class="controls">
             <div class='alert alert-error'>{{errorMessage}}</div>
           </div>
         </div>
@@ -34,12 +36,14 @@
           {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
           {{input-tip validation=emailValidation}}
         </div>
-        <div class='instructions'>
-          {{#if taken}}
-            {{i18n 'user.change_email.taken'}}
-          {{else}}
-            {{i18n 'user.email.instructions'}}
-          {{/if}}
+        <div class="controls">
+          <div class='instructions'>
+            {{#if taken}}
+              {{i18n 'user.change_email.taken'}}
+            {{else}}
+              {{i18n 'user.email.instructions'}}
+            {{/if}}
+          </div>
         </div>
       </div>
 

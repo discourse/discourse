@@ -7,7 +7,6 @@
 
 pt_BR:
   site_settings:
-    discourse_narrative_bot_enabled: 'Habilitar o Robô de Narrativas do Discourse'
     disable_discourse_narrative_bot_welcome_post: "Desabilitar a mensagem de boas vindas do Robô de Narrativas do Discourse"
     discourse_narrative_bot_ignored_usernames: "Nomes de Usuário que o Robô de Narrativas do Discourse deve ignorar"
     discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Robô de Narrativas do Discourse"
@@ -56,7 +55,7 @@ pt_BR:
         quote: "A liberdade não vale a pena se não conota liberdade para errar."
         author: "Mahatma Gandhi"
       '3':
-        quote: "Não chore por que acabou, sorria por que aconteceu."
+        quote: "Não chore por que acabou, sorria porque aconteceu."
         author: "Dr Seuss"
       '4':
         quote: "Se você quer que algo seja feito corretamente, faça você mesmo."
@@ -68,7 +67,7 @@ pt_BR:
         quote: "A vida é como uma caixa de chocolates. Você nunca sabe o que vai conseguir."
         author: "Mãe do Forrest Gump"
       '7':
-        quote: "Um pequeno passo para um homem, uma grande salto para a humanidade."
+        quote: "Um pequeno passo para um homem, um grande salto para a humanidade."
         author: "Neil Armstrong"
       '8':
         quote: "Faça uma coisa por dia que te assuste."
@@ -94,8 +93,10 @@ pt_BR:
         '8': "Boa perspectiva"
         '9': "Sim"
         '10': "Sinais apontam que sim"
+        '11': "Responder hazy  tente novamente"
         '12': "Pergunte novamente depois"
         '13': "Melhor não falar pra você agora"
+        '14': "não pode prever agora"
         '15': "Concentre-se e pergunte novamente"
         '16': "Não conte com isso"
         '17': "Minha resposta é não"
@@ -116,6 +117,15 @@ pt_BR:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
           >Comece com uma das seguintes narrativas: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Realize um ato aleatório de bondade, sem expectativa de recompensa, seguro sabendo que um dia alguém poderá fazer o mesmo por você_ & mdash; princesa Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Você pode contar com ele
       do_not_understand:
         first_response: |-
           Oi, obrigado pela resposta!
@@ -142,11 +152,277 @@ pt_BR:
 
           - Nós acreditamos em um {comunidade com comportamento civilizado](/guidelines) em todos os momentos.
       onebox:
+        instructions: |-
+          Em seguida, você pode compartilhar um desses links comigo? Responda com ** um link em uma linha sozinho ** e ele será expandido automaticamente para incluir um resumo interessante.
+
+          Para copiar um link, toque e segure no celular ou clique com o botão direito do mouse:
+
+          - https://en.wikipedia.org/wiki/Inherently_funny_word
+          - https://en.wikipedia.org/wiki/Death_by_coconut
+          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Legal! isto vai funcionar para a maioria dos links. Lembre-se, deve estar na linha _all by itself_, com nada na frente ou atrás.
+        not_found: |-
+          Desculpe, não consegui encontrar o link na sua resposta! :choro:
+
+          Você pode tentar adicionar o seguinte link, em sua própria linha, na sua próxima resposta?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
+        instructions: |-
+          Aqui está uma foto de um unicórnio:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Se você gostou (e quem não gostaria!) Vá em frente e aperte o botão like: heart: abaixo deste post para me avisar.
+
+          Você pode ** responder com uma foto? ** Qualquer imagem vai fazer! Arraste e solte, pressione o botão de upload ou copie e cole.
+        reply: |-
+          Imagem bacana - eu apertei o botão like: heart: para que você saiba o quanto eu gostei: heart_eyes:
         like_not_found: |-
           Você esqueceu de curtir :heart: meu [post?](%{url})
+        not_found: |-
+          Parece que você não fez o upload de uma imagem, por isso escolhi uma foto que certamente você irá gostar.
+
+          `%{image_url}`
+
+          Tente fazer o upload da próxima ou colá-la em uma linha!
       formatting:
+        instructions: |-
+          Você pode fazer algumas palavras ** negrito ** ou _italic_ na sua resposta?
+
+          - digite `** negrito **` ou `_itálico_`
+
+          - ou, empurre o <kbd><b>B</b></kbd> or <kbd><i>I</i></kbd> botões no editor
         reply: |-
           Ótimo! HTML e BBCode também servem para formatação - para saber mais, [veja este tutorial](http://commonmark.org/help) :nerd:
+        not_found: |-
+          Não encontrei nenhuma formatação na sua resposta. : pencil2:
+
+          Você pode tentar de novo? Use o<kbd><b>B</b></kbd> negrito ou <kbd><i>I</i></kbd> itálico  no editor se você ficar preso.
+      quoting:
+        instructions: |-
+          Você pode tentar me citar quando responder, então eu sei exatamente a qual parte você está respondendo?
+
+          > Se isso é café, por favor, me traga um pouco de chá; mas se isso é chá, por favor, me traga um pouco de café.
+          >
+          > Uma vantagem de falar consigo mesmo é que você sabe que pelo menos alguém está ouvindo.
+          >
+          > Algumas pessoas têm jeito com as palavras e outras pessoas ... ah, não tem jeito.
+
+          Selecione o texto de qualquer & uarr; Cite sua preferência e, em seguida, pressione o botão ** Citar ** que aparece sobre sua seleção - ou o botão ** Responder ** na parte inferior desta postagem.
+
+          Abaixo da citação, digite uma palavra ou duas sobre por que você escolheu essa, porque estou curioso: pensando:
+        reply: |-
+          Bom trabalho, você escolheu minha citação favorita! : left_speech_bubble:
+        not_found: |-
+          Hmm, parece que você não me citou na sua resposta?
+
+          Selecionar qualquer texto na minha postagem trará o botão<kbd>**Citação**</kbd>. E pressionar ** Responder ** com qualquer texto selecionado também funcionará! Você pode tentar de novo?
+      bookmark:
+        instructions: |-
+          Se você quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **favoritar esta mensagem pessoal **. Se você fizer isso, pode haver um: presente: no seu futuro!
+        reply: |-
+          Excelente! Agora você pode encontrar facilmente o caminho de volta à nossa conversa particular a qualquer momento, diretamente da [guia de favoritos do seu perfil] (%{profile_page_url}/activity/bookmarks). Basta selecionar sua foto de perfil no canto superior direito &#8599;
+        not_found: |-
+          Uh, não vejo nenhum favorito neste tópico. Você encontrou o marcador em cada postagem? Use o mostrar mais<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
+      emoji:
+        instructions: |-
+          Você pode ter me visto usando pequenas imagens em minhas respostas: blue_car :: dash: são chamadas de [emoji] (https://en.wikipedia.org/wiki/Emoji). Você pode ** adicionar um emoticon ** à sua resposta? Qualquer um desses funcionará:
+
+          - Tipo`:) ;) :D :P :O`
+
+          - Digite dois pontos <kbd>:</kbd> então complete o nome do emoji `: tada:`
+
+          -Pressione o botão de emoticon <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> no editor ou no teclado do seu celular
+        reply: |-
+          Isso é: brilhos: _emojitastic! _: Brilhos:
+        not_found: |-
+          Oops, não vejo nenhum Emoji na sua resposta? Ah não! :soluço:
+
+          Tente digitar dois pontos <kbd>:</kbd> para abrir o seletor de emoji, digite as primeiras letras do que você deseja, como `: bird:`
+
+          Ou pressione o botão de emoticon  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> no editor.
+
+          (Se você estiver em um dispositivo móvel, também poderá inserir o Emoji diretamente do teclado.)
+      mention:
+        instructions: |-
+          Às vezes, você pode querer chamar a atenção de uma pessoa, mesmo que não esteja respondendo diretamente a ela. Digite `@` e preencha seu nome de usuário para mencioná-los.
+
+          Você pode mencionar ** `@%{discobot_username}`** na sua resposta?
+        reply: |-
+          Alguém disse meu nome? _: Raised_hand: Eu acredito que você fez! : wave: Bem, aqui estou eu! Obrigado por me mencionar. : ok_hand:
+        not_found: |-
+          Eu não vejo meu nome em nenhum lugar: franzindo a testa: você pode tentar me mencionar como `@%{discobot_username}` de novo?
+
+          (E sim, meu nome de usuário é soletrado _disco_, como na mania de dança dos anos 70. Eu amo a vida noturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          Nós gostamos de nossas discussões amigáveis, e precisamos da sua ajuda para [manter as coisas civilizadas](%{guidelines_url}). Se você encontrar algum problema, sinalize para permitir em particular ao autor ou [nossa equipe](%{about_url}), saber sobre isso.
+
+          >  :imp: Eu escrevi algo desagradável aqui
+
+          Eu acho que você sabe o que fazer. Vá em frente e ** marque esta postagem ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropriado!
+        reply: |-
+          [Nossa equipe] (/ grupos / equipe) será notificada em particular sobre sua bandeira. Se um número suficiente de membros da comunidade sinalizar uma postagem, ela também será ocultada automaticamente como precaução. (Como eu realmente não escrevi uma postagem desagradável: angel :, eu fui em frente e removi a bandeira por enquanto.)
+        not_found: |-
+          Ah, não, minha postagem desagradável ainda não foi sinalizada. : preocupado: você pode sinalizá-lo como impróprio usando o ** flag ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão Mostrar mais<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
+      search:
+        instructions: |-
+          _psst_… escondi uma surpresa neste tópico. Se você está pronto para o desafio, ** selecione o ícone de pesquisa **<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior direito &#8599; to search for it.
+
+          Tente pesquisar pelo termo "capy & # 8203; bara" neste tópico
+        hidden_message: |-
+          Como você perdeu esta capivara? :piscadela:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Você percebeu que agora está de volta ao começo? Alimente esta pobre capivara faminta ** respondendo com o `: herb:` emoji ** e você será levado automaticamente para o final.
+        reply: |-
+          Você encontrou: tada:
+
+          - Para pesquisas mais detalhadas, vá para a [página de pesquisa completa](%{search_url}).
+
+          -Para pular em qualquer lugar em uma longa discussão, experimente os controles do cronograma do tópico à direita (e em baixo, no celular).
+
+          - Se você tiver um : teclado físico :, pressione<kbd>?</kbd> para ver nossos atalhos de teclado úteis.
+        not_found: |-
+          Hmm… parece que você pode estar com problemas. Me desculpe por isso. Você pesquisou <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> pelo termo **capy&#8203;bara**?
+      end:
+        message: |-
+          Obrigado por ficar comigo @%{username}! Eu fiz isso para você, acho que você ganhou:
+
+          %{certificate}
+
+          É tudo por agora! Confira [** nossos tópicos de discussão mais recentes **] (/ mais recentes) ou [** categorias de discussão **] (/ categorias). :oculos de sol:
+
+          (Se você quiser falar comigo novamente para saber mais, apenas envie uma mensagem ou mencione `@%{discobot_username}` a qualquer hora!)
+      certificate:
+        alt: 'Certificado de conclusão'
+    advanced_user_narrative:
+      reset_trigger: 'usuário avançado'
+      cert_title: "Em reconhecimento da conclusão bem-sucedida do tutorial do usuário avançado"
+      title: ': arrow_up: recursos avançados do usuário'
+      start_message: |-
+        Como usuário _advanced_, você já visitou [sua página de preferências] (/ my / preferences) ainda @%{username}? Existem muitas maneiras de personalizar sua experiência, como selecionar um tema claro ou escuro.
+
+        Mas eu discordo, vamos começar!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} é, de longe, o bot mais legal que conheço: wink:"
+        instructions: |-
+          Todo mundo comete erros. Mas não se preocupe, você sempre pode editar suas postagens para corrigi-las.
+
+          Você pode começar ** editando ** o post que acabei de criar em seu nome?
+        not_found: |-
+          Parece que você ainda não editou a [postagem](%{url}) Eu criei para você. Você pode tentar de novo?
+
+          Use o <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">ícone para trazer o editor.
+        reply: |-
+          Ótimo trabalho!
+
+          Observe que as edições feitas após 5 minutos aparecerão como revisões de edição pública e um pequeno ícone de lápis aparecerá no canto superior direito com a contagem de revisão.
+      delete:
+        instructions: |-
+          Se você quiser retirar uma postagem, pode excluí-la.
+
+          Vá em frente e ** delete ** qualquer uma das suas postagens acima usando a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">ação ** delete **. Não exclua a primeira postagem!
+        not_found: |-
+          Ainda não vejo nenhuma postagem excluída? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> delete.
+        reply: |-
+          Whoa! :boom:
+
+          Para preservar a continuidade das discussões, as exclusões não são imediatas, portanto, a postagem será removida depois de algum tempo.
+      recover:
+        deleted_post_raw: 'Por que @ %{discobot_username} excluiu minha postagem? angustiado:'
+        instructions: |-
+          Ah não! Parece que eu acidentalmente excluí um novo post que acabei de criar para você.
+
+          Você pode me fazer um favor e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **desfazer** isso?
+        not_found: |-
+          Tem problemas? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelerá<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> desfazer isso.
+        reply: |-
+          Ufa, esse foi um dos próximos! Obrigado por corrigir isso: wink:
+
+          Observe que você só tem 24 horas para recuperar uma postagem.
+      category_hashtag:
+        instructions: |-
+          Você sabia que pode se referir a categorias e tags em sua postagem? Por exemplo, você viu a %{category} categoria?
+
+          Digite `#` no meio de uma sentença e selecione qualquer categoria ou tag.
+        not_found: |-
+          Hmm, eu não vejo uma categoria lá em nenhum lugar. Note que `#` não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
+          ```texto
+          Eu posso criar um link de categoria via #
+          ```
+        reply: |-
+          Excelente! Lembre-se de que isso funciona para as tags _and_ de categorias, se as tags estiverem ativadas.
+      change_topic_notification_level:
+        instructions: |-
+          Todo tópico tem um nível de notificação. Começa em "normal", o que significa que você normalmente só será notificado quando alguém estiver falando diretamente com você.
+
+          Por padrão, o nível de notificação de uma mensagem particular é definido como o nível mais alto de "observação", o que significa que você será notificado sobre cada nova resposta. Mas você pode substituir o nível de notificação de _qualquer_ tópico para "assistir", "acompanhar" ou "silenciado".
+
+          Vamos tentar alterar o nível de notificação para este tópico. Na parte inferior do tópico, você encontrará um botão que mostra que ** está assistindo ** este tópico. Você pode alterar o nível de notificação para ** rastreamento **?
+        not_found: |-
+          Parece que você ainda está assistindo: eyes: this topic! Se você estiver com dificuldades para encontrá-lo, o botão do nível de notificação está localizado na parte inferior do tópico.
+        reply: |-
+          Ótimo trabalho! Espero que você não tenha ignorado este tópico, já que às vezes posso ser um pouco falador: sorriso.
+
+          Observe que, quando você responde a um tópico ou lê um tópico por mais de alguns minutos, ele é automaticamente definido para um nível de notificação de 'rastreamento'. Você pode alterar isso em [suas preferências de usuário] (/ my / preferences).
+      poll:
+        instructions: |-
+          Você sabia que pode adicionar uma enquete a qualquer postagem?  Tente usar<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a engrenagem no editor para ** construir uma enquete **
+        not_found: |-
+          Ops! Não houve qualquer pesquisa na sua resposta.
+
+          Use o <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ícone de roda dentada no editor ou copie e cole essa pesquisa na sua próxima resposta:
+
+          ```texto
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          Ei, boa enquete! Como eu faço para ensinar você?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          Às vezes, você pode ** ocultar detalhes ** em suas respostas:
+
+          -Quando você está discutindo pontos de trama de um filme ou programa de TV que seria considerado um spoiler.
+
+          - Quando sua postagem precisar de muitos detalhes opcionais que podem ser impressionantes quando lidos de uma só vez.
+
+          [detalhes = Selecione para ver como funciona!]
+          1. Selecione a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor.
+          2. Selecione "Ocultar detalhes".
+          3. Edite o resumo de detalhes e adicione seu conteúdo.
+          [/ detalhes]
+
+          Você pode usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para adicionar uma seção de detalhes para sua próxima resposta?
+        not_found: |-
+          Está com problemas para criar um widget de detalhes? Tente incluir o seguinte na sua próxima resposta:
+
+          ```texto
+          [details=Selecione-me para detalhes]
+          Aqui estão os detalhes
+          [/detalhes]
+          ```
+        reply: |-
+          Ótimo trabalho - sua atenção para _detalhes_ é admirável!
+      end:
+        message: |-
+          Você brilhou através disso como um usuário avançado - de fato: arco:
+
+          %{certificate}
+
+          É tudo que tenho para você.
+
+          Adeus por agora! Se você quiser falar comigo novamente, envie-me uma mensagem a qualquer momento: óculos de sol:
+      certificate:
+        alt: 'Certificado Avançado de Conquista da Trilha do Usuário'

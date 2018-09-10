@@ -33,7 +33,8 @@ class TopicsController < ApplicationController
     :move_to_inbox,
     :convert_topic,
     :bookmark,
-    :publish
+    :publish,
+    :reset_bump_date
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -135,8 +136,12 @@ class TopicsController < ApplicationController
     end
 
     if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
-      rescue_discourse_actions(:not_found, 410)
-      return
+      raise Discourse::NotFound.new(
+        "topic was deleted",
+        status: 410,
+        check_permalinks: true,
+        original_path: ex.obj.relative_url
+      )
     end
 
     raise ex
@@ -175,12 +180,40 @@ class TopicsController < ApplicationController
     render_json_dump(wordpress_serializer)
   end
 
+  def post_ids
+    params.require(:topic_id)
+    params.permit(:post_number, :username_filters, :filter)
+
+    options = {
+      filter_post_number: params[:post_number],
+      filter: params[:filter],
+      skip_limit: true,
+      asc: true,
+      skip_custom_fields: true
+    }
+
+    fetch_topic_view(options)
+    render_json_dump(post_ids: @topic_view.posts.pluck(:id))
+  end
+
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids)
+    params.permit(:post_ids, :post_number, :username_filters, :filter)
 
-    @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
+    options = {
+      filter_post_number: params[:post_number],
+      post_ids: params[:post_ids],
+      asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
+      filter: params[:filter]
+    }
+
+    fetch_topic_view(options)
+
+    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
+      scope: guardian,
+      root: false,
+      include_raw: !!params[:include_raw]
+    ))
   end
 
   def excerpts
@@ -243,7 +276,7 @@ class TopicsController < ApplicationController
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       category = Category.find_by(id: params[:category_id])
       if category || (params[:category_id].to_i == 0)
-        guardian.ensure_can_create_topic_on_category!(category)
+        guardian.ensure_can_move_topic_to_category!(category)
       else
         return render_json_error(I18n.t('category.errors.not_found'))
       end
@@ -490,6 +523,12 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: params[:topic_id])
 
+    unless pm_has_slots?(topic)
+      return render_json_error(I18n.t("pm_reached_recipients_limit",
+        recipients_limit: SiteSetting.max_allowed_message_recipients
+      ))
+    end
+
     if topic.private_message?
       guardian.ensure_can_invite_group_to_private_message!(group, topic)
       topic.invite_group(current_user, group)
@@ -509,6 +548,12 @@ class TopicsController < ApplicationController
       group_ids: params[:group_ids],
       group_names: params[:group_names]
     )
+
+    unless pm_has_slots?(topic)
+      return render_json_error(I18n.t("pm_reached_recipients_limit",
+        recipients_limit: SiteSetting.max_allowed_message_recipients
+      ))
+    end
 
     guardian.ensure_can_invite_to!(topic, groups)
     group_ids = groups.map(&:id)
@@ -550,6 +595,7 @@ class TopicsController < ApplicationController
     post_ids = params.require(:post_ids)
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
+    params.permit(:tags)
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -687,6 +733,17 @@ class TopicsController < ApplicationController
     render_json_error(ex)
   end
 
+  def reset_bump_date
+    params.require(:id)
+    guardian.ensure_can_update_bumped_at!
+
+    topic = Topic.find_by(id: params[:id])
+    raise Discourse::NotFound.new unless topic
+
+    topic.reset_bumped_at
+    render body: nil
+  end
+
   private
 
   def topic_params
@@ -695,6 +752,14 @@ class TopicsController < ApplicationController
       :topic_time,
       timings: {}
     )
+  end
+
+  def fetch_topic_view(options)
+    if (username_filters = params[:username_filters]).present?
+      options[:username_filters] = username_filters.split(',')
+    end
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, options)
   end
 
   def toggle_mute
@@ -730,8 +795,8 @@ class TopicsController < ApplicationController
     user_id = (current_user.id if current_user)
     track_visit = should_track_visit_to_topic?
 
-    Scheduler::Defer.later "Track Link" do
-      IncomingLink.add(
+    if !request.format.json?
+      hash = {
         referer: request.referer || flash[:referer],
         host: request.host,
         current_user: current_user,
@@ -739,14 +804,26 @@ class TopicsController < ApplicationController
         post_number: params[:post_number],
         username: request['u'],
         ip_address: request.remote_ip
-      )
-    end unless request.format.json?
+      }
+      # defer this way so we do not capture the whole controller
+      # in the closure
+      TopicsController.defer_add_incoming_link(hash)
+    end
 
+    TopicsController.defer_track_visit(topic_id, ip, user_id, track_visit)
+  end
+
+  def self.defer_track_visit(topic_id, ip, user_id, track_visit)
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
       TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
+  end
 
+  def self.defer_add_incoming_link(hash)
+    Scheduler::Defer.later "Track Link" do
+      IncomingLink.add(hash)
+    end
   end
 
   def should_track_visit_to_topic?
@@ -792,6 +869,7 @@ class TopicsController < ApplicationController
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
     args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    args[:tags] = params[:tags] if params[:tags].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end
@@ -814,4 +892,7 @@ class TopicsController < ApplicationController
     params[:email]
   end
 
+  def pm_has_slots?(pm)
+    guardian.is_staff? || !pm.reached_recipients_limit?
+  end
 end

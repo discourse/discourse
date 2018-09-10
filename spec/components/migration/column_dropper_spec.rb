@@ -4,7 +4,7 @@ require_dependency 'migration/column_dropper'
 RSpec.describe Migration::ColumnDropper do
 
   def has_column?(table, column)
-    ActiveRecord::Base.exec_sql(<<~SQL, table: table, column: column).to_a.length == 1
+    DB.exec(<<~SQL, table: table, column: column) == 1
       SELECT 1
       FROM INFORMATION_SCHEMA.COLUMNS
       WHERE
@@ -15,7 +15,7 @@ RSpec.describe Migration::ColumnDropper do
   end
 
   def update_first_migration_date(created_at)
-    ActiveRecord::Base.exec_sql(<<~SQL, created_at: created_at)
+    DB.exec(<<~SQL, created_at: created_at)
         UPDATE schema_migration_details
         SET created_at = :created_at
         WHERE id = (SELECT MIN(id)
@@ -25,15 +25,13 @@ RSpec.describe Migration::ColumnDropper do
 
   describe ".drop" do
     let(:migration_name) do
-      ActiveRecord::Base
-        .exec_sql("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1")
-        .getvalue(0, 0)
+      DB.query_single("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1").first
     end
 
     before do
-      Topic.exec_sql "ALTER TABLE topics ADD COLUMN junk int"
+      DB.exec "ALTER TABLE topics ADD COLUMN junk int"
 
-      ActiveRecord::Base.exec_sql(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
+      DB.exec(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
         UPDATE schema_migration_details
         SET created_at = :created_at
         WHERE name = :name
@@ -42,6 +40,7 @@ RSpec.describe Migration::ColumnDropper do
 
     it "can correctly drop columns after correct delay" do
       dropped_proc_called = false
+      after_dropped_proc_called = false
       update_first_migration_date(2.years.ago)
 
       Migration::ColumnDropper.drop(
@@ -49,35 +48,42 @@ RSpec.describe Migration::ColumnDropper do
         after_migration: migration_name,
         columns: ['junk'],
         delay: 20.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       expect(has_column?('topics', 'junk')).to eq(true)
       expect(dropped_proc_called).to eq(false)
+      expect(dropped_proc_called).to eq(false)
 
       Migration::ColumnDropper.drop(
         table: 'topics',
         after_migration: migration_name,
         columns: ['junk'],
         delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       expect(has_column?('topics', 'junk')).to eq(false)
       expect(dropped_proc_called).to eq(true)
+      expect(after_dropped_proc_called).to eq(true)
 
       dropped_proc_called = false
+      after_dropped_proc_called = false
 
       Migration::ColumnDropper.drop(
         table: 'topics',
         after_migration: migration_name,
         columns: ['junk'],
         delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
+        on_drop: ->() { dropped_proc_called = true },
+        after_drop: ->() { after_dropped_proc_called = true }
       )
 
       # it should call "on_drop" only when there are columns to drop
       expect(dropped_proc_called).to eq(false)
+      expect(after_dropped_proc_called).to eq(false)
     end
 
     it "drops the columns immediately if the first migration was less than 10 minutes ago" do
@@ -114,7 +120,7 @@ RSpec.describe Migration::ColumnDropper do
     let(:table_name) { "table_with_readonly_column" }
 
     before do
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
       CREATE TABLE #{table_name} (topic_id INTEGER, email TEXT);
 
       INSERT INTO #{table_name} (topic_id, email)
@@ -127,16 +133,14 @@ RSpec.describe Migration::ColumnDropper do
     after do
       ActiveRecord::Base.connection.reset!
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
       DROP TABLE IF EXISTS #{table_name};
       DROP TRIGGER IF EXISTS #{table_name}_email_readonly ON #{table_name};
       SQL
     end
 
     it 'should be droppable' do
-      name = Topic
-        .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
-        .getvalue(0, 0)
+      name = DB.query_single("SELECT name FROM schema_migration_details LIMIT 1").first
 
       dropped_proc_called = false
       Migration::ColumnDropper.drop(
@@ -148,23 +152,27 @@ RSpec.describe Migration::ColumnDropper do
       )
 
       expect(dropped_proc_called).to eq(true)
-
     end
+
     it 'should prevent updates to the readonly column' do
-      expect do
-        ActiveRecord::Base.connection.raw_connection.exec <<~SQL
+      begin
+        DB.exec <<~SQL
         UPDATE #{table_name}
         SET email = 'testing@email.com'
         WHERE topic_id = 1;
         SQL
-      end.to raise_error(
-        PG::RaiseException,
-        /Discourse: email in #{table_name} is readonly/
-      )
+      rescue PG::RaiseException => e
+        [
+          "Discourse: email in #{table_name} is readonly",
+          'discourse_functions.raise_table_with_readonly_column_email_readonly()'
+        ].each do |message|
+          expect(e.message).to include(message)
+        end
+      end
     end
 
     it 'should allow updates to the other columns' do
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
       UPDATE #{table_name}
       SET topic_id = 2
       WHERE topic_id = 1
@@ -188,14 +196,14 @@ RSpec.describe Migration::ColumnDropper do
     end
 
     it 'should allow insertions to the other columns' do
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
       INSERT INTO #{table_name} (topic_id)
       VALUES (2);
       SQL
 
       expect(
-        ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name} WHERE topic_id = 2;").values
-      ).to include([2, nil])
+        DB.query_single("SELECT topic_id FROM #{table_name} WHERE topic_id = 2")
+      ).to eq([2])
     end
   end
 end

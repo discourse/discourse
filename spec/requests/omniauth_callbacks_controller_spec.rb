@@ -37,14 +37,27 @@ RSpec.describe Users::OmniauthCallbacksController do
     context "with a plugin-contributed auth provider" do
 
       let :provider do
-        provider = Plugin::AuthProvider.new
-        provider.authenticator = Auth::OpenIdAuthenticator.new('ubuntu', 'https://login.ubuntu.com', trusted: true)
+        provider = Auth::AuthProvider.new
+        provider.authenticator = Class.new(Auth::Authenticator) do
+          def name
+            'ubuntu'
+          end
+
+          def enabled?
+            SiteSetting.ubuntu_login_enabled
+          end
+        end.new
+
         provider.enabled_setting = "ubuntu_login_enabled"
         provider
       end
 
       before do
-        Discourse.stubs(:auth_providers).returns [provider]
+        DiscoursePluginRegistry.register_auth_provider(provider)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
       end
 
       it "finds an authenticator when enabled" do
@@ -60,14 +73,6 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect { Users::OmniauthCallbacksController.find_authenticator("ubuntu") }
           .to raise_error(Discourse::InvalidAccess)
       end
-
-      it "succeeds if an authenticator does not have a site setting" do
-        provider.enabled_setting = nil
-        SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
-
-        expect(Users::OmniauthCallbacksController.find_authenticator("ubuntu"))
-          .to be(provider.authenticator)
-      end
     end
   end
 
@@ -80,6 +85,61 @@ RSpec.describe Users::OmniauthCallbacksController do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
         expect(response.code).to eq("404")
+      end
+    end
+
+    describe 'when user not found' do
+      let(:email) { "somename@gmail.com" }
+      before do
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+          provider: 'google_oauth2',
+          uid: '123545',
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: email,
+            name: 'Some name'
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: email,
+              family_name: 'Huh',
+              given_name: "Some name",
+              gender: 'male',
+              name: "Some name Huh",
+            )
+          },
+        )
+
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      it 'should return the right response' do
+        destination_url = 'http://thisisasite.com/somepath'
+        Rails.application.env_config["omniauth.origin"] = destination_url
+
+        get "/auth/google_oauth2/callback.json"
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body["email"]).to eq(email)
+        expect(response_body["username"]).to eq("Some_name")
+        expect(response_body["auth_provider"]).to eq("Google_oauth2")
+        expect(response_body["email_valid"]).to eq(true)
+        expect(response_body["omit_username"]).to eq(false)
+        expect(response_body["name"]).to eq("Some Name")
+        expect(response_body["destination_url"]).to eq(destination_url)
+      end
+
+      it 'should include destination url in response' do
+        destination_url = 'http://thisisasite.com/somepath'
+        cookies[:destination_url] = destination_url
+
+        get "/auth/google_oauth2/callback.json"
+
+        response_body = JSON.parse(response.body)
+        expect(response_body["destination_url"]).to eq(destination_url)
       end
     end
 
@@ -116,7 +176,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         response_body = JSON.parse(response.body)
 
@@ -142,7 +202,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
@@ -161,7 +221,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.staged).to eq(false)
@@ -221,7 +281,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           response_body = JSON.parse(response.body)
 
@@ -284,6 +344,8 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email).to eq(old_email)
+
+        delete "/session/#{user.username}" # log out
 
         response = login(new_identity)
         expect(response['authenticated']).to eq(nil)

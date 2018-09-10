@@ -101,7 +101,8 @@ class AdminDashboardData
                       :github_config_check, :s3_config_check, :image_magick_check,
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration, :email_polling_errored_recently
+                      :pop3_polling_configuration, :email_polling_errored_recently,
+                      :out_of_date_themes
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -203,10 +204,13 @@ class AdminDashboardData
   end
 
   def s3_config_check
-    bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
+    # if set via global setting it is validated during the `use_s3?` call
+    if !GlobalSetting.use_s3?
+      bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
 
-    return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
-    return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+      return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
+      return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+    end
     nil
   end
 
@@ -244,4 +248,16 @@ class AdminDashboardData
     I18n.t('dashboard.force_https_warning') unless SiteSetting.force_https
   end
 
+  def out_of_date_themes
+    old_themes = RemoteTheme.out_of_date_themes
+    return unless old_themes.present?
+
+    html = old_themes.map do |name, id|
+      "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+    end.join("\n")
+
+    message = I18n.t("dashboard.out_of_date_themes")
+    message += "<ul>#{html}</ul>"
+    message
+  end
 end

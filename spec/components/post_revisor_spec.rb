@@ -62,6 +62,23 @@ describe PostRevisor do
       expect(post.topic.category_id).to eq(category.id)
     end
 
+    it 'does not revise category when the destination category requires topic approval' do
+      new_category = Fabricate(:category)
+      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      new_category.save!
+
+      post = create_post
+      old_category_id = post.topic.category_id
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(old_category_id)
+
+      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      new_category.save!
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
   end
 
   context 'revise wiki' do
@@ -86,7 +103,7 @@ describe PostRevisor do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
-    subject { described_class.new(post) }
+    subject { PostRevisor.new(post) }
 
     describe 'with the same body' do
       it "doesn't change version" do
@@ -402,7 +419,7 @@ describe PostRevisor do
 
     describe "topic excerpt" do
       it "topic excerpt is updated only if first post is revised" do
-        revisor = described_class.new(post)
+        revisor = PostRevisor.new(post)
         first_post = topic.posts.by_post_number.first
         expect {
           revisor.revise!(first_post.user, { raw: 'Edit the first post' }, revised_at: first_post.updated_at + 10.seconds)
@@ -410,7 +427,7 @@ describe PostRevisor do
         }.to change { topic.excerpt }
         second_post = Fabricate(:post, post_args.merge(post_number: 2, topic_id: topic.id))
         expect {
-          described_class.new(second_post).revise!(second_post.user, raw: 'Edit the 2nd post')
+          PostRevisor.new(second_post).revise!(second_post.user, raw: 'Edit the 2nd post')
           topic.reload
         }.to_not change { topic.excerpt }
       end
@@ -423,10 +440,10 @@ describe PostRevisor do
     end
 
     context "#publish_changes" do
-      let!(:post) { Fabricate(:post, topic_id: topic.id) }
+      let!(:post) { Fabricate(:post, topic: topic) }
 
       it "should publish topic changes to clients" do
-        revisor = described_class.new(topic.ordered_posts.first, topic)
+        revisor = PostRevisor.new(topic.ordered_posts.first, topic)
 
         message = MessageBus.track_publish("/topic/#{topic.id}") do
           revisor.revise!(newuser, title: 'this is a test topic')

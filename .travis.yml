@@ -29,6 +29,9 @@ addons:
 
 matrix:
   fast_finish: true
+  exclude:
+  - rvm: 2.4.4
+    env: "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 rvm:
   - 2.5.1
@@ -58,6 +61,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
   - git clone --depth=1 https://github.com/discourse/discourse-patreon.git plugins/discourse-patreon
   - git clone --depth=1 https://github.com/discourse/discourse-staff-notes.git plugins/discourse-staff-notes
+  - git clone --depth=1 https://github.com/discourse/discourse-group-tracker
   - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
@@ -71,6 +75,7 @@ script:
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
+        bundle exec danger && \
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \

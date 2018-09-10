@@ -3,22 +3,15 @@
 
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
-        <div id="credentials">
+        <div id="credentials" class={{credentialsClass}}>
           <table>
             <tr>
               <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
-              <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}</td>
-              <td>
-                {{#if showLoginWithEmailLink}}
-                  <a class="login-with-email-link" {{action "emailLogin"}}>
-                    {{i18n 'email_login.link_label'}}
-                  </a>
-                {{/if}}
-              </td>
+              <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=showSecondFactor}}</td>
             </tr>
             <tr>
               <td><label for='login-account-password'>{{i18n 'login.password'}}</label></td>
-              <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}}</td>
+              <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=showSecondFactor}}</td>
               <td><a id="forgot-password-link" {{action "forgotPassword"}}>{{i18n 'forgot_password.action'}}</a></td>
             </tr>
             <tr>
@@ -28,15 +21,14 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor'}}
+        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled class=secondFactorClass}}
+          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
         {{/second-factor-form}}
       </form>
     {{/if}}
- 
     {{#if showLoginButtons}}
       {{login-buttons
-        canLoginLocalWithEmail=canLoginLocalWithEmail
+        showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
         emailLogin='emailLogin'
         externalLogin='externalLogin'}}

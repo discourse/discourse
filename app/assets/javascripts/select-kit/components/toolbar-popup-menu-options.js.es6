@@ -18,30 +18,20 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   computeContent(content) {
-    return content.map(contentItem => {
-      if (contentItem.condition) {
-        return {
-          icon: contentItem.icon,
-          name: I18n.t(contentItem.label),
-          id: contentItem.action
-        };
-      }
-    }).filter(contentItem => contentItem);
+    return content
+      .map(contentItem => {
+        if (contentItem.condition) {
+          return {
+            icon: contentItem.icon,
+            name: I18n.t(contentItem.label),
+            id: contentItem.action
+          };
+        }
+      })
+      .filter(contentItem => contentItem);
   },
 
-  didInsertElement() {
-    this._super();
-
-    $("#reply-control").on("touchstart.toolbar-popup-menu-options", (event) => {
-      if (this.get("isExpanded") && !this.element.contains(event.target)) {
-        this.close(event);
-      }
-    });
-  },
-
-  willDestroyElement() {
-    this._super();
-
-    $("#reply-control").off("touchstart.toolbar-popup-menu-options");
-  }
+  // composer is triggering a focus on textarea, we avoid instantly closing
+  // popup menu by tweaking the focus out behavior
+  onFilterInputFocusout() {}
 });

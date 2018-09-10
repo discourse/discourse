@@ -1,0 +1,3 @@
+app/assets/stylesheets/vendor/
+plugins/**/assets/stylesheets/vendor/
+package.json

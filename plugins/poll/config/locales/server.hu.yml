@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  site_settings:
+    poll_enabled: "Engedélyezve vannak a szavazások?"
+    poll_maximum_options: "Maximum megszavazható tétel a szavazásokban."
+    poll_edit_window_mins: "Percek száma miután még lehet szerkeszteni a bejegyzést."
+    poll_minimum_trust_level_to_create: "Legkisebb szükséges bizalmi szint meghatározása szavazások létrehozásához."
+  poll:
+    default_poll_must_have_at_least_2_options: "Legalább 2 választható tételt kell tartalmaznia a szavazásnak."
+    default_poll_must_have_less_options:
+      one: "Szavazásnak kevesebb, mint 1 lehetőséget kell tartalmaznia."
+      other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
+    default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
+    named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."
+    requires_at_least_1_valid_option: "Ki kell választanod legalább 1 érvényes lehetőséget."
+    topic_must_be_open_to_vote: "A témának nyítottnak kell hogy legyen hogy szavazni lehessen."
+    poll_must_be_open_to_vote: "A szavazásnak engedélyezve kell lennie ahhoz, hogy a felhasználok tudjanak szavazni."
+    topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie hogy bekapcsolni lehessen a státuszt."
+    only_staff_or_op_can_toggle_status: "Csak egy staff tag vagy az eredeti posztoló tudja bekapcsolni a szavazás státuszát."
+    insufficient_rights_to_create: "Nem tudsz szavazást létrehozni."
+    email:
+      link_to_poll: "Klikk, hogy megnézd ezt a szavazást."

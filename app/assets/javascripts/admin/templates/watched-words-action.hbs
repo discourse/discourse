@@ -2,6 +2,7 @@
 
 <p class="about">{{actionDescription}}</p>
 
+<div class="watched-word-controls">
 {{watched-word-form
   actionKey=actionNameKey
   action="recordAdded"
@@ -9,8 +10,7 @@
   regularExpressions=adminWatchedWords.regularExpressions}}
 
 {{watched-word-uploader uploading=uploading actionKey=actionNameKey done="uploadComplete"}}
-
-<div class='clearfix'></div>
+</div>
 <div>
   <label class="show-words-checkbox">
     {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}

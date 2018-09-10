@@ -43,7 +43,7 @@ describe UserAction do
       end
 
       def stats_for_user(viewer = nil)
-        UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r["action_type"].to_i }.sort
+        UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r.action_type.to_i }.sort
       end
 
       def stream(viewer = nil)

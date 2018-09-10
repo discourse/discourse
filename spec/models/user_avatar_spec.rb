@@ -4,16 +4,66 @@ describe UserAvatar do
   let(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }
 
-  it 'can update gravatars' do
-    temp = Tempfile.new('test')
-    temp.binmode
-    # tiny valid png
-    temp.write(Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw=="))
-    temp.rewind
-    FileHelper.expects(:download).returns(temp)
-    avatar.update_gravatar!
-    temp.unlink
-    expect(avatar.gravatar_upload).not_to eq(nil)
+  describe '#update_gravatar!' do
+    let(:temp) { Tempfile.new('test') }
+    let(:upload) { Fabricate(:upload, user: user) }
+
+    before do
+      temp.binmode
+      # tiny valid png
+      temp.write(Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw=="))
+      temp.rewind
+      FileHelper.expects(:download).returns(temp)
+    end
+
+    after do
+      temp.unlink
+    end
+
+    it 'can update gravatars' do
+      expect do
+        avatar.update_gravatar!
+      end.to change { Upload.count }.by(1)
+
+      upload = Upload.last
+
+      expect(avatar.gravatar_upload).to eq(upload)
+      expect(user.reload.uploaded_avatar).to eq(nil)
+    end
+
+    describe 'when user has an existing custom upload' do
+      it "should not change the user's uploaded avatar" do
+        user.update!(uploaded_avatar: upload)
+
+        avatar.update!(
+          custom_upload: upload,
+          gravatar_upload: Fabricate(:upload, user: user)
+        )
+
+        avatar.update_gravatar!
+
+        expect(upload.reload).to eq(upload)
+        expect(user.reload.uploaded_avatar).to eq(upload)
+        expect(avatar.reload.custom_upload).to eq(upload)
+        expect(avatar.gravatar_upload).to eq(Upload.last)
+      end
+    end
+
+    describe 'when user has an existing gravatar' do
+      it "should update the user's uploaded avatar correctly" do
+        user.update!(uploaded_avatar: upload)
+        avatar.update!(gravatar_upload: upload)
+
+        avatar.update_gravatar!
+
+        expect(Upload.find_by(id: upload.id)).to eq(nil)
+
+        new_upload = Upload.last
+
+        expect(user.reload.uploaded_avatar).to eq(new_upload)
+        expect(avatar.reload.gravatar_upload).to eq(new_upload)
+      end
+    end
   end
 
   context '.import_url_for_user' do
@@ -36,8 +86,14 @@ describe UserAvatar do
       user = Fabricate(:user, uploaded_avatar_id: 1)
       user.user_avatar.update_columns(gravatar_upload_id: 1)
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
-      UserAvatar.import_url_for_user("logo.png", user, override_gravatar: false)
+      stub_request(:get, "http://thisfakesomething.something.com/")
+        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
+
+      url = "http://thisfakesomething.something.com/"
+
+      expect do
+        UserAvatar.import_url_for_user(url, user, override_gravatar: false)
+      end.to change { Upload.count }.by(1)
 
       user.reload
       expect(user.uploaded_avatar_id).to eq(1)
@@ -51,7 +107,9 @@ describe UserAvatar do
 
         url = "http://thisfakesomething.something.com/"
 
-        UserAvatar.import_url_for_user(url, user)
+        expect do
+          UserAvatar.import_url_for_user(url, user)
+        end.to_not change { Upload.count }
 
         user.reload
 
@@ -59,5 +117,39 @@ describe UserAvatar do
         expect(user.user_avatar.custom_upload_id).to eq(nil)
       end
     end
+  end
+
+  describe "ensure_consistency!" do
+
+    it "will clean up dangling avatars" do
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      user_avatar = Fabricate(:user).user_avatar
+
+      user_avatar.update_columns(
+        gravatar_upload_id: upload1.id,
+        custom_upload_id: upload2.id
+      )
+
+      upload1.destroy!
+      upload2.destroy!
+
+      user_avatar.reload
+      expect(user_avatar.gravatar_upload_id).to eq(nil)
+      expect(user_avatar.custom_upload_id).to eq(nil)
+
+      user_avatar.update_columns(
+        gravatar_upload_id: upload1.id,
+        custom_upload_id: upload2.id
+      )
+
+      UserAvatar.ensure_consistency!
+
+      user_avatar.reload
+      expect(user_avatar.gravatar_upload_id).to eq(nil)
+      expect(user_avatar.custom_upload_id).to eq(nil)
+    end
+
   end
 end

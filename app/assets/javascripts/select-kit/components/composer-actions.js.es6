@@ -34,13 +34,21 @@ export default DropdownSelectBoxComponent.extend({
     this._super();
 
     // if we change topic we want to change both snapshots
-    if (this.get("composerModel.topic") && (!_topicSnapshot || this.get("composerModel.topic.id") !== _topicSnapshot.get("id"))) {
+    if (
+      this.get("composerModel.topic") &&
+      (!_topicSnapshot ||
+        this.get("composerModel.topic.id") !== _topicSnapshot.get("id"))
+    ) {
       _topicSnapshot = this.get("composerModel.topic");
       _postSnapshot = this.get("composerModel.post");
     }
 
     // if we hit reply on a different post we want to change postSnapshot
-    if (this.get("composerModel.post") && (!_postSnapshot || this.get("composerModel.post.id") !== _postSnapshot.get("id"))) {
+    if (
+      this.get("composerModel.post") &&
+      (!_postSnapshot ||
+        this.get("composerModel.post.id") !== _postSnapshot.get("id"))
+    ) {
       _postSnapshot = this.get("composerModel.post");
     }
   },
@@ -53,14 +61,17 @@ export default DropdownSelectBoxComponent.extend({
       case CREATE_TOPIC:
       case REPLY:
         content.icon = "mail-forward";
+        content.title = I18n.t("composer.composer_actions.reply");
         break;
       case EDIT:
         content.icon = "pencil";
+        content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
-        content.icon = 'clipboard';
+        content.icon = "clipboard";
+        content.title = I18n.t("composer.composer_actions.draft");
         break;
-    };
+    }
 
     return content;
   },
@@ -69,16 +80,27 @@ export default DropdownSelectBoxComponent.extend({
   content(options, canWhisper, action) {
     let items = [];
 
-    if (action !== CREATE_TOPIC && action !== CREATE_SHARED_DRAFT && _topicSnapshot) {
+    if (
+      action !== CREATE_TOPIC &&
+      action !== CREATE_SHARED_DRAFT &&
+      _topicSnapshot
+    ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_as_new_topic.label"),
-        description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
+        description: I18n.t(
+          "composer.composer_actions.reply_as_new_topic.desc"
+        ),
         icon: "plus",
         id: "reply_as_new_topic"
       });
     }
 
-    if ((action !== REPLY && _postSnapshot) || (action === REPLY && _postSnapshot && !(options.userAvatar && options.userLink))) {
+    if (
+      (action !== REPLY && _postSnapshot) ||
+      (action === REPLY &&
+        _postSnapshot &&
+        !(options.userAvatar && options.userLink))
+    ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_post.label", {
           postNumber: _postSnapshot.get("post_number"),
@@ -90,16 +112,28 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    if (this.siteSettings.enable_personal_messages && action !== PRIVATE_MESSAGE) {
+    if (
+      this.siteSettings.enable_personal_messages &&
+      action !== PRIVATE_MESSAGE
+    ) {
       items.push({
-        name: I18n.t("composer.composer_actions.reply_as_private_message.label"),
-        description: I18n.t("composer.composer_actions.reply_as_private_message.desc"),
+        name: I18n.t(
+          "composer.composer_actions.reply_as_private_message.label"
+        ),
+        description: I18n.t(
+          "composer.composer_actions.reply_as_private_message.desc"
+        ),
         icon: "envelope",
         id: "reply_as_private_message"
       });
     }
 
-    if ((action !== REPLY && _topicSnapshot) || (action === REPLY && _topicSnapshot && (options.userAvatar && options.userLink && options.topicLink))) {
+    if (
+      (action !== REPLY && _topicSnapshot) ||
+      (action === REPLY &&
+        _topicSnapshot &&
+        (options.userAvatar && options.userLink && options.topicLink))
+    ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
         description: I18n.t("composer.composer_actions.reply_to_topic.desc"),
@@ -109,7 +143,12 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     // if answered post is a whisper, we can only answer with a whisper so no need for toggle
-    if (canWhisper && (!_postSnapshot || _postSnapshot && _postSnapshot.post_type !== this.site.post_types.whisper)) {
+    if (
+      canWhisper &&
+      (!_postSnapshot ||
+        (_postSnapshot &&
+          _postSnapshot.post_type !== this.site.post_types.whisper))
+    ) {
       items.push({
         name: I18n.t("composer.composer_actions.toggle_whisper.label"),
         description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
@@ -145,9 +184,22 @@ export default DropdownSelectBoxComponent.extend({
     if (showCreateTopic) {
       items.push({
         name: I18n.t("composer.composer_actions.create_topic.label"),
-        description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
+        description: I18n.t(
+          "composer.composer_actions.reply_as_new_topic.desc"
+        ),
         icon: "mail-forward",
         id: "create_topic"
+      });
+    }
+
+    const currentUser = Discourse.User.current();
+
+    if (action === REPLY && currentUser && currentUser.get("staff")) {
+      items.push({
+        name: I18n.t("composer.composer_actions.toggle_topic_bump.label"),
+        description: I18n.t("composer.composer_actions.toggle_topic_bump.desc"),
+        icon: "anchor",
+        id: "toggle_topic_bump"
       });
     }
 
@@ -165,19 +217,23 @@ export default DropdownSelectBoxComponent.extend({
     if (topic) topicTitle = topic.get("title");
 
     this.get("composerController").close();
-    this.get("composerController").open(options).then(() => {
-      if (!url || ! topicTitle) return;
+    this.get("composerController")
+      .open(options)
+      .then(() => {
+        if (!url || !topicTitle) return;
 
-      url = `${location.protocol}//${location.host}${url}`;
-      const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
-      const continueDiscussion = I18n.t("post.continue_discussion", { postLink: link });
+        url = `${location.protocol}//${location.host}${url}`;
+        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
+        const continueDiscussion = I18n.t("post.continue_discussion", {
+          postLink: link
+        });
 
-      if (!reply.includes(continueDiscussion)) {
-        this.get("composerController")
+        if (!reply.includes(continueDiscussion)) {
+          this.get("composerController")
             .get("model")
-            .prependText(continueDiscussion, {new_line: true});
-      }
-    });
+            .prependText(continueDiscussion, { new_line: true });
+        }
+      });
   },
 
   _openComposer(options) {
@@ -186,7 +242,11 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   toggleWhisperSelected(options, model) {
-    model.toggleProperty('whisper');
+    model.toggleProperty("whisper");
+  },
+
+  toggleTopicBumpSelected(options, model) {
+    model.toggleProperty("noBump");
   },
 
   replyToTopicSelected(options) {
@@ -215,6 +275,15 @@ export default DropdownSelectBoxComponent.extend({
       if (postUsername) {
         usernames = postUsername;
       }
+    } else if (this.get("composerModel.topic")) {
+      const stream = this.get("composerModel.topic.postStream");
+
+      if (stream.get("firstPostPresent")) {
+        const post = stream.get("posts.firstObject");
+        if (post && !post.get("yours") && post.get("username")) {
+          usernames = post.get("username");
+        }
+      }
     }
 
     options.action = PRIVATE_MESSAGE;
@@ -228,7 +297,7 @@ export default DropdownSelectBoxComponent.extend({
   _switchCreate(options, action) {
     options.action = action;
     options.categoryId = this.get("composerModel.categoryId");
-    options.topicTitle = this.get('composerModel.title');
+    options.topicTitle = this.get("composerModel.title");
     this._openComposer(options);
   },
 
@@ -244,9 +313,9 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(value) {
       let action = `${Ember.String.camelize(value)}Selected`;
       if (this[action]) {
-        let model = this.get('composerModel');
+        let model = this.get("composerModel");
         this[action](
-          model.getProperties('draftKey', 'draftSequence', 'reply'),
+          model.getProperties("draftKey", "draftSequence", "reply"),
           model
         );
       } else {

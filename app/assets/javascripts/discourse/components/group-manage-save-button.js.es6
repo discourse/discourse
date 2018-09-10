@@ -1,10 +1,10 @@
-import { popupAjaxError } from 'discourse/lib/ajax-error';
-import computed from 'ember-addons/ember-computed-decorators';
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   saving: null,
 
-  @computed('saving')
+  @computed("saving")
   savingText(saving) {
     if (saving) return I18n.t("saving");
     return saving ? I18n.t("saving") : I18n.t("save");
@@ -12,14 +12,15 @@ export default Ember.Component.extend({
 
   actions: {
     save() {
-      this.set('saving', true);
+      this.set("saving", true);
 
-      return this.get('model').save()
+      return this.get("model")
+        .save()
         .then(() => {
           this.set("saved", true);
         })
         .catch(popupAjaxError)
-        .finally(() => this.set('saving', false));
+        .finally(() => this.set("saving", false));
     }
-  },
+  }
 });

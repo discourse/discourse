@@ -36,13 +36,14 @@ describe PostAlerter do
   context "private message" do
     it "notifies for pms correctly" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id)
+      op = Fabricate(:post, user: pm.user)
       pm.allowed_users << pm.user
       PostAlerter.post_created(op)
-      reply = Fabricate(:post, user_id: pm.user_id, topic_id: pm.id, reply_to_post_number: 1)
+
+      reply = Fabricate(:post, user: pm.user, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply)
 
-      reply2 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply2 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
@@ -52,7 +53,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply3 = Fabricate(:post, topic_id: pm.id)
+      reply3 = Fabricate(:post, topic: pm)
       PostAlerter.post_created(reply3)
 
       # no notification cause we are tracking
@@ -60,7 +61,7 @@ describe PostAlerter do
 
       Notification.destroy_all
 
-      reply4 = Fabricate(:post, topic_id: pm.id, reply_to_post_number: 1)
+      reply4 = Fabricate(:post, topic: pm, reply_to_post_number: 1)
       PostAlerter.post_created(reply4)
 
       # yes notification cause we were replied to
@@ -70,7 +71,7 @@ describe PostAlerter do
 
     it "triggers :before_create_notifications_for_users" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user_id: pm.user_id, topic: pm)
+      op = Fabricate(:post, user: pm.user, topic: pm)
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
       group = Fabricate(:group, users: [user2])
@@ -889,18 +890,37 @@ describe PostAlerter do
     end
   end
 
-  context "watching" do
-    it "triggers :before_create_notifications_for_users" do
-      user = Fabricate(:user)
-      category = Fabricate(:category)
-      topic = Fabricate(:topic, category: category)
-      post = Fabricate(:post, topic: topic)
-      level = CategoryUser.notification_levels[:watching]
-      CategoryUser.set_notification_level_for_category(user, level, category.id)
-      events = DiscourseEvent.track_events do
-        PostAlerter.post_created(post)
+  context "category" do
+    context "watching" do
+      it "triggers :before_create_notifications_for_users" do
+        user = Fabricate(:user)
+        category = Fabricate(:category)
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(user, level, category.id)
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(post)
+        end
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
       end
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+
+      it "notifies staff about whispered post" do
+        category = Fabricate(:category)
+        topic = Fabricate(:topic, category: category)
+        admin = Fabricate(:admin)
+        user = Fabricate(:user)
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(admin, level, category.id)
+        CategoryUser.set_notification_level_for_category(user, level, category.id)
+        whispered_post = Fabricate(:post, user: Fabricate(:admin), topic: topic, post_type: Post.types[:whisper])
+        expect {
+          PostAlerter.post_created(whispered_post)
+        }.to add_notification(admin, :posted)
+        expect {
+          PostAlerter.post_created(whispered_post)
+        }.not_to add_notification(user, :posted)
+      end
     end
   end
 

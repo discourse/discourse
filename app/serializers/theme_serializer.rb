@@ -33,10 +33,10 @@ class ThemeFieldSerializer < ApplicationSerializer
 end
 
 class ChildThemeSerializer < ApplicationSerializer
-  attributes :id, :name, :key, :created_at, :updated_at, :default
+  attributes :id, :name, :created_at, :updated_at, :default, :component
 
   def include_default?
-    object.key == SiteSetting.default_theme_key
+    object.id == SiteSetting.default_theme_id
   end
 
   def default
@@ -46,12 +46,17 @@ end
 
 class RemoteThemeSerializer < ApplicationSerializer
   attributes :id, :remote_url, :remote_version, :local_version, :about_url,
-             :license_url, :commits_behind, :remote_updated_at, :updated_at
+             :license_url, :commits_behind, :remote_updated_at, :updated_at,
+             :github_diff_link
 
   # wow, AMS has some pretty nutty logic where it tries to find the path here
   # from action dispatch, tell it not to
   def about_url
     object.about_url
+  end
+
+  def include_github_diff_link?
+    github_diff_link.present?
   end
 end
 
@@ -70,6 +75,10 @@ class ThemeSerializer < ChildThemeSerializer
 
   def settings
     object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+  end
+
+  def include_child_themes?
+    !object.component?
   end
 end
 

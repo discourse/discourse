@@ -33,7 +33,7 @@ RSpec.describe Admin::EmailTemplatesController do
       sign_in(admin)
       get '/admin/customize/email_templates.json'
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json['email_templates']).to be_present
@@ -66,7 +66,7 @@ RSpec.describe Admin::EmailTemplatesController do
           email_template: { subject: 'Foo', body: 'Bar' }
         }, headers: headers
 
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
 
         json = ::JSON.parse(response.body)
         expect(json['error_type']).to eq('not_found')
@@ -169,7 +169,7 @@ RSpec.describe Admin::EmailTemplatesController do
             email_template: { subject: email_subject, body: email_body }
           }, headers: headers
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           json = ::JSON.parse(response.body)
           expect(json).to be_present
@@ -237,7 +237,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
       it "returns 'not found' when an unknown email template id is used" do
         delete '/admin/customize/email_templates/non_existent_template', headers: headers
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
 
         json = ::JSON.parse(response.body)
         expect(json['error_type']).to eq('not_found')
@@ -265,7 +265,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
         it "returns the restored email template" do
           delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           json = ::JSON.parse(response.body)
           expect(json).to be_present
@@ -303,4 +303,9 @@ RSpec.describe Admin::EmailTemplatesController do
 
   end
 
+  it "uses only existing email templates" do
+    Admin::EmailTemplatesController.email_keys.each do |key|
+      expect(I18n.t(key)).to_not include('translation missing')
+    end
+  end
 end

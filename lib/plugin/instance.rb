@@ -1,7 +1,7 @@
 require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
-require_dependency 'plugin/auth_provider'
+require_dependency 'auth'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -93,6 +93,13 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def add_report(name, &block)
+    reloadable_patch do |plugin|
+      Report.add_report(name, &block)
+    end
+  end
+
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags
     settings = ::FlagSettings.new
     yield settings
@@ -102,9 +109,21 @@ class Plugin::Instance
     end
   end
 
+  def whitelist_flag_post_custom_field(field)
+    reloadable_patch do |plugin|
+      ::FlagQuery.register_plugin_post_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
+  def register_editable_user_custom_field(field)
+    reloadable_patch do |plugin|
+      ::User.register_plugin_editable_user_custom_field(field, plugin) # plugin.enabled? is checked at runtime
     end
   end
 
@@ -386,38 +405,6 @@ class Plugin::Instance
     css = styles.join("\n")
     js = javascripts.join("\n")
 
-    auth_providers.each do |auth|
-
-      auth_json = auth.to_json
-      hash = Digest::SHA1.hexdigest(auth_json)
-      js << <<JS
-define("discourse/initializers/login-method-#{hash}",
-  ["discourse/models/login-method", "exports"],
-  function(module, __exports__) {
-    "use strict";
-    __exports__["default"] = {
-      name: "login-method-#{hash}",
-      after: "inject-objects",
-      initialize: function(container) {
-        if (Ember.testing) { return; }
-
-        var authOpts = #{auth_json};
-        authOpts.siteSettings = container.lookup('site-settings:main');
-        module.register(authOpts);
-      }
-    };
-  });
-JS
-
-      if auth.glyph
-        css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
-      end
-
-      if auth.background_color
-        css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
-      end
-    end
-
     # Generate an IIFE for the JS
     js = "(function(){#{js}})();" if js.present?
 
@@ -455,6 +442,7 @@ JS
     register_assets! unless assets.blank?
     register_locales!
     register_service_workers!
+    register_auth_providers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -487,11 +475,25 @@ JS
   end
 
   def auth_provider(opts)
-    provider = Plugin::AuthProvider.new
+    provider = Auth::AuthProvider.new
 
-    Plugin::AuthProvider.auth_attributes.each do |sym|
+    Auth::AuthProvider.auth_attributes.each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
+
+    after_initialize do
+      begin
+        provider.authenticator.enabled?
+      rescue NotImplementedError
+        provider.authenticator.define_singleton_method(:enabled?) do
+          Rails.logger.warn("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          Rails.logger.warn("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          true
+        end
+      end
+    end
+
     auth_providers << provider
   end
 
@@ -571,6 +573,12 @@ JS
     end
   end
 
+  def register_auth_providers!
+    auth_providers.each do |auth_provider|
+      DiscoursePluginRegistry.register_auth_provider(auth_provider)
+    end
+  end
+
   def register_locales!
     root_path = File.dirname(@path)
 
@@ -595,7 +603,13 @@ JS
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
-        Rails.logger.error "Invalid locale! #{opts.inspect}"
+        msg = "Invalid locale! #{opts.inspect}"
+        # The logger isn't always present during boot / parsing locales from plugins
+        if Rails.logger.present?
+          Rails.logger.error(msg)
+        else
+          puts msg
+        end
       end
     end
   end

@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.index.title');
+    return I18n.t("groups.index.title");
   },
 
   queryParams: {
@@ -8,7 +8,7 @@ export default Discourse.Route.extend({
     asc: { refreshModel: true, replace: true },
     filter: { refreshModel: true },
     type: { refreshModel: true, replace: true },
-    username: { refreshModel: true },
+    username: { refreshModel: true }
   },
 
   refreshQueryWithoutTransition: true,
@@ -23,5 +23,5 @@ export default Discourse.Route.extend({
       model,
       filterInput: this._params.filter
     });
-  },
+  }
 });

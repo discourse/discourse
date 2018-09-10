@@ -2,23 +2,27 @@ require_dependency 'migration/base_dropper'
 
 module Migration
   class Migration::TableDropper < BaseDropper
-    def self.delayed_drop(table_name:, after_migration:, delay: nil, on_drop: nil)
+    def self.delayed_drop(table_name:, after_migration:, delay: nil, on_drop: nil, after_drop: nil)
       validate_table_name(table_name)
 
-      TableDropper.new(table_name, nil, after_migration, delay, on_drop).delayed_drop
+      TableDropper.new(
+        table_name, nil, after_migration, delay, on_drop, after_drop
+      ).delayed_drop
     end
 
-    def self.delayed_rename(old_name:, new_name:, after_migration:, delay: nil, on_drop: nil)
+    def self.delayed_rename(old_name:, new_name:, after_migration:, delay: nil, on_drop: nil, after_drop: nil)
       validate_table_name(old_name)
       validate_table_name(new_name)
 
-      TableDropper.new(old_name, new_name, after_migration, delay, on_drop).delayed_drop
+      TableDropper.new(
+        old_name, new_name, after_migration, delay, on_drop, after_drop
+      ).delayed_drop
     end
 
     def self.read_only_table(table_name)
       create_readonly_function(table_name)
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         CREATE TRIGGER #{readonly_trigger_name(table_name)}
         BEFORE INSERT OR UPDATE OR DELETE OR TRUNCATE
         ON #{table_name}
@@ -29,15 +33,15 @@ module Migration
 
     private
 
-    def initialize(old_name, new_name, after_migration, delay, on_drop)
-      super(after_migration, delay, on_drop)
+    def initialize(old_name, new_name, after_migration, delay, on_drop, after_drop)
+      super(after_migration, delay, on_drop, after_drop)
 
       @old_name = old_name
       @new_name = new_name
     end
 
     def droppable?
-      builder = SqlBuilder.new(<<~SQL)
+      builder = DB.build(<<~SQL)
         SELECT 1
         FROM INFORMATION_SCHEMA.TABLES
         /*where*/
@@ -52,7 +56,7 @@ module Migration
         .exec(old_name: @old_name,
               new_name: @new_name,
               delay: "#{@delay} seconds",
-              after_migration: @after_migration).to_a.length > 0
+              after_migration: @after_migration) > 0
     end
 
     def table_exists(table_name_placeholder)
@@ -67,9 +71,9 @@ module Migration
     end
 
     def execute_drop!
-      ActiveRecord::Base.exec_sql("DROP TABLE IF EXISTS #{@old_name}")
+      DB.exec("DROP TABLE IF EXISTS #{@old_name}")
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(@old_name)} CASCADE;
       SQL
     end

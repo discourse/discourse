@@ -8,6 +8,7 @@ class Stylesheet::Manager
   CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
+  THEME_REGEX ||= /_theme$/
 
   @lock = Mutex.new
 
@@ -19,51 +20,79 @@ class Stylesheet::Manager
     cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
   end
 
-  def self.stylesheet_href(target = :desktop, theme_key = :missing)
-    href = stylesheet_link_tag(target, 'all', theme_key)
-    if href
-      href.split(/["']/)[1]
-    end
+  def self.stylesheet_data(target = :desktop, theme_ids = :missing)
+    stylesheet_details(target, "all", theme_ids)
   end
 
-  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_key = :missing)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_ids = :missing)
+    stylesheets = stylesheet_details(target, media, theme_ids)
+    stylesheets.map do |stylesheet|
+      href = stylesheet[:new_href]
+      theme_id = stylesheet[:theme_id]
+      data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
+      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
+    end.join("\n").html_safe
+  end
+
+  def self.stylesheet_details(target = :desktop, media = 'all', theme_ids = :missing)
+    if theme_ids == :missing
+      theme_ids = [SiteSetting.default_theme_id]
+    end
 
     target = target.to_sym
 
-    if theme_key == :missing
-      theme_key = SiteSetting.default_theme_key
-    end
+    theme_ids = [theme_ids] unless Array === theme_ids
+    theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
+    theme_ids = Theme.transform_ids(theme_ids, extend: false)
 
     current_hostname = Discourse.current_hostname
-    cache_key = "#{target}_#{theme_key}_#{current_hostname}"
-    tag = cache[cache_key]
 
-    return tag.dup.html_safe if tag
+    array_cache_key = "array_themes_#{theme_ids.join(",")}_#{target}_#{current_hostname}"
+    stylesheets = cache[array_cache_key]
+    return stylesheets if stylesheets.present?
 
     @lock.synchronize do
-      builder = self.new(target, theme_key)
-      if builder.is_theme? && !builder.theme
-        tag = ""
-      else
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        tag = %[<link href="#{builder.stylesheet_path(current_hostname)}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
-      end
+      stylesheets = []
+      theme_ids.each do |theme_id|
+        data = { target: target }
+        cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
+        href = cache[cache_key]
 
-      cache[cache_key] = tag
-      tag.dup.html_safe
+        unless href
+          builder = self.new(target, theme_id)
+          is_theme = builder.is_theme?
+          has_theme = builder.theme.present?
+
+          if is_theme && !has_theme
+            next
+          else
+            data[:theme_id] = builder.theme.id if has_theme && is_theme
+            builder.compile unless File.exists?(builder.stylesheet_fullpath)
+            href = builder.stylesheet_path(current_hostname)
+          end
+          cache[cache_key] = href
+        end
+
+        data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
+        data[:new_href] = href
+        stylesheets << data
+      end
+      cache[array_cache_key] = stylesheets.freeze
+      stylesheets
     end
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR key = ?', SiteSetting.default_theme_key).pluck(:key, :name)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
     themes << nil
-    themes.each do |key, name|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
-        theme_key = key || SiteSetting.default_theme_key
-        cache_key = "#{target}_#{theme_key}"
+    themes.each do |id, name|
+      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
+        theme_id = id || SiteSetting.default_theme_id
+        next if target =~ THEME_REGEX && theme_id == -1
+        cache_key = "#{target}_#{theme_id}"
 
         STDERR.puts "precompile target: #{target} #{name}"
-        builder = self.new(target, theme_key)
+        builder = self.new(target, theme_id)
         builder.compile(force: true)
         cache[cache_key] = nil
       end
@@ -100,9 +129,13 @@ class Stylesheet::Manager
     end.compact.max.to_i
   end
 
-  def initialize(target = :desktop, theme_key)
+  def self.cache_fullpath
+    "#{Rails.root}/#{CACHE_PATH}"
+  end
+
+  def initialize(target = :desktop, theme_id)
     @target = target
-    @theme_key = theme_key
+    @theme_id = theme_id
   end
 
   def compile(opts = {})
@@ -133,7 +166,10 @@ class Stylesheet::Manager
          source_map_file: source_map_filename
       )
     rescue SassC::SyntaxError => e
-      Rails.logger.error "Failed to compile #{@target} stylesheet: #{e.message}"
+
+      # we do not need this reported as we will report it in the UI anyway
+      Rails.logger.info "Failed to compile #{@target} stylesheet: #{e.message}"
+
       if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
@@ -160,10 +196,6 @@ class Stylesheet::Manager
       Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
     end
     css
-  end
-
-  def self.cache_fullpath
-    "#{Rails.root}/#{CACHE_PATH}"
   end
 
   def cache_fullpath
@@ -225,7 +257,7 @@ class Stylesheet::Manager
   end
 
   def is_theme?
-    !!(@target.to_s =~ /_theme$/)
+    !!(@target.to_s =~ THEME_REGEX)
   end
 
   # digest encodes the things that trigger a recompile
@@ -240,7 +272,7 @@ class Stylesheet::Manager
   end
 
   def theme
-    @theme ||= (Theme.find_by(key: @theme_key) || :nil)
+    @theme ||= Theme.find_by(id: @theme_id) || :nil
     @theme == :nil ? nil : @theme
   end
 
@@ -256,7 +288,7 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest)
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -271,7 +303,23 @@ class Stylesheet::Manager
   end
 
   def settings_digest
-    Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
+    theme_ids = Theme.components_for(@theme_id).dup
+    theme_ids << @theme_id
+
+    fields = ThemeField.where(
+      name: "yaml",
+      type_id: ThemeField.types[:yaml],
+      theme_id: theme_ids
+    ).pluck(:updated_at)
+
+    settings = ThemeSetting.where(theme_id: theme_ids).pluck(:updated_at)
+    timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
+
+    Digest::SHA1.hexdigest(timestamps)
+  end
+
+  def uploads_digest
+    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
   end
 
   def color_scheme_digest

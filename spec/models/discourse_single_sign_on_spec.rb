@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe DiscourseSingleSignOn do
   before do
-    @sso_url = "http://somesite.com/discourse_sso"
+    @sso_url = "http://example.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
     SiteSetting.sso_url = @sso_url
@@ -30,6 +30,7 @@ describe DiscourseSingleSignOn do
     sso.title = "user title"
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
+    sso.website = "https://www.discourse.org/"
     sso
   end
 
@@ -49,6 +50,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.title).to eq sso.title
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
+    expect(parsed.website).to eq sso.website
   end
 
   it "can do round trip parsing correctly" do
@@ -323,6 +325,36 @@ describe DiscourseSingleSignOn do
 
     sso = DiscourseSingleSignOn.parse(payload)
     expect(sso.nonce).to_not be_nil
+  end
+
+  context 'user locale' do
+    it 'sets default user locale if specified' do
+      SiteSetting.allow_user_locale = true
+
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@test.com"
+      sso.external_id = "123"
+      sso.locale = "es"
+
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.locale).to eq("es")
+
+      user.update_column(:locale, "he")
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("he")
+
+      sso.locale_force_update = true
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("es")
+
+      sso.locale = "fake"
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to eq("es")
+    end
   end
 
   context 'trusting emails' do

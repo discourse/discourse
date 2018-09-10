@@ -1,9 +1,9 @@
 module Jobs
   class CleanUpExports < Jobs::Scheduled
-    every 2.day
+    every 1.day
 
     def execute(args)
-      UserExport.remove_old_exports # delete exported CSV files older than 2 days
+      UserExport.remove_old_exports
     end
   end
 end

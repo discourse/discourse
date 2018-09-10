@@ -10,5 +10,5 @@ zh_CN:
     details:
       title: 隐藏详情
     composer:
-      details_title: 总结
+      details_title: 概要
       details_text: "本文本将被隐藏"

@@ -8,151 +8,168 @@
 
 #reply-control {
   z-index: z("mobile-composer");
-    .reply-area {
-      padding: 0 10px;
-      @media screen and (max-width: 374px) {
-        padding: 0 5px;
-      }
-      flex-grow: 1;
+  .reply-area {
+    padding: 0 10px;
+    @media screen and (max-width: 374px) {
+      padding: 0 5px;
     }
+    flex-grow: 1;
+  }
 
-    &.open {
-      height: 250px;
-      &.edit-title {
-        height: 100%;
-      }
-    }
-
-    .reply-to {
-      margin: 5px 0;
-    }
-
-    .toggler {
-      margin-left: -5px;
-      .d-icon-chevron-down {
-        vertical-align: text-top;
-      }
-    }
-
-    &.draft {
-      .toggle-toolbar,
-      .toggler {
-        top: 8px;
-      }
-      .draft-text {
-        width: calc(100% - 40px);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    #reply-title {
-      width: calc(100% - 20px);
-    }
-
-    .category-input {
-      margin-bottom: 5px;
-      .category-chooser {
-        width: 100% !important;
-      }
-    }
-
-    .submit-panel {
-      margin-bottom: 5px;
-      align-items: baseline;
-      .save-or-cancel {
-        flex: 1 1 auto;
-        #draft-status,
-        #file-uploading {
-          margin-left: 15px;
-        }
-        .cancel {
-          font-size: 1.6em;
-          color: $primary-low-mid;
-          margin-left: .6em;  
-          padding: 0 5px;        
-        }
-      }
-      .composer-bottom-right {
-        margin-left: auto;
-        flex: 1 1 auto;
-      }
-    }
-
-    .d-editor-textarea-wrapper {
-      width: 100%;
-    }
-
-    &.show-preview {
-      .d-editor-preview-wrapper {
-        position: fixed;
-        z-index: z("base") + 1;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: $secondary;
-        max-width: 100%;
-        margin: 0;
-        padding: 10px;
-        overflow: auto;        
-        .d-editor-preview {
-          margin-bottom: 40px;
-        }
-      }
-      .btn.hide-preview {
-        position: fixed;
-        right: 5px;
-        bottom: 5px;
-        z-index: z("base") + 2;
-      }
-    }
-
-    &.hide-preview {
-      .d-editor-preview-wrapper {
-        display: none;
-      }
-    }
-
-    .d-editor-button-bar {
-      display: none;
-    }
-
-    .toolbar-visible .d-editor-button-bar {
-      display: flex;
-    }
-
-    .d-editor-button-bar .btn {
-      @media all and ( max-width: 350px) {
-        padding: 2px 4px;
-      }
-      &.preview {
-        margin: 0;
-      }
-    }
-
-    #mobile-uploader {
-      display: none;
-    }
-
-    .title-and-category,
-    .user-selector {
-      margin: 0;
-      .users-input {
-        margin-bottom: 5px;
-      }
-    }
-
-    .title-input,
-    .category-input,
-    .users-input,
-    .add-warning {
-      width: 100%;
-    }
-
-    .add-warning {
-      margin: 0 0 5px 5px;
+  &.open {
+    height: 250px;
+    &.edit-title {
+      height: 100%;
     }
   }
 
+  .reply-to {
+    margin: 5px 0;
+  }
+
+  .toggler {
+    margin-left: -5px;
+    .d-icon-chevron-down {
+      vertical-align: text-top;
+    }
+  }
+
+  &.draft {
+    .toggle-toolbar,
+    .toggler {
+      top: 8px;
+    }
+    .draft-text {
+      width: calc(100% - 40px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  #reply-title {
+    width: calc(100% - 20px);
+  }
+
+  .category-input {
+    margin-bottom: 5px;
+    .category-chooser {
+      width: 100% !important;
+    }
+  }
+
+  .submit-panel {
+    margin-bottom: 5px;
+    align-items: baseline;
+    .save-or-cancel {
+      flex: 1 1 auto;
+      #draft-status,
+      #file-uploading {
+        margin-left: 15px;
+      }
+      .cancel {
+        font-size: 1.6em;
+        color: $primary-low-mid;
+        margin-left: 0.6em;
+        padding: 0 5px;
+      }
+    }
+    .composer-bottom-right {
+      margin-left: auto;
+      flex: 1 1 auto;
+    }
+  }
+
+  .d-editor-textarea-wrapper {
+    width: 100%;
+  }
+
+  &.show-preview {
+    .d-editor-preview-wrapper {
+      position: fixed;
+      z-index: z("base") + 1;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: $secondary;
+      max-width: 100%;
+      margin: 0;
+      padding: 10px;
+      overflow: auto;
+      .d-editor-preview {
+        margin-bottom: 40px;
+      }
+    }
+    .btn.hide-preview {
+      position: fixed;
+      right: 5px;
+      bottom: 5px;
+      z-index: z("base") + 2;
+    }
+  }
+
+  &.hide-preview {
+    .d-editor-preview-wrapper {
+      display: none;
+    }
+  }
+
+  .d-editor-button-bar {
+    display: none;
+  }
+
+  .toolbar-visible .d-editor-button-bar {
+    display: flex;
+  }
+
+  .d-editor-button-bar .btn {
+    @media all and (max-width: 350px) {
+      padding: 2px 4px;
+    }
+    &.preview {
+      margin: 0;
+    }
+  }
+
+  #mobile-uploader {
+    display: none;
+  }
+
+  .title-and-category,
+  .user-selector {
+    margin: 0;
+    .users-input {
+      margin-bottom: 5px;
+    }
+  }
+
+  .with-tags {
+    .category-input {
+      flex-basis: auto;
+      flex: 1;
+      margin: 0;
+      width: 45%;
+      margin-bottom: 5px;
+    }
+
+    .mini-tag-chooser {
+      width: 50%;
+      flex: 1;
+      margin-left: 5px;
+      margin-bottom: 5px;
+      z-index: z("base");
+    }
+  }
+
+  .title-input,
+  .category-input,
+  .users-input,
+  .add-warning {
+    width: 100%;
+  }
+
+  .add-warning {
+    margin: 0 0 5px 5px;
+  }
+}

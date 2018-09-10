@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 
-    <%= discourse_stylesheet_link_tag 'embed', theme_key: nil %>
+    <%= discourse_stylesheet_link_tag 'embed', theme_ids: nil %>
     <%- unless customization_disabled? %>
       <%= discourse_stylesheet_link_tag  :embedded_theme %>
     <%- end %>
@@ -38,8 +38,15 @@
         }
 
         window.onload = function() {
-          // Send a post message with our loaded height
-          postUp({type: 'discourse-resize', height: document['body'].offsetHeight});
+          // get state info from data attribute
+          var header = document.querySelector('header');
+          var state = 'unknown';
+          if (header) {
+            state = header.getAttribute('data-embed-state');
+          }
+	  
+          // Send a post message with our loaded height and state
+          postUp({type: 'discourse-resize', height: document['body'].offsetHeight, state: state});
 
           var postLinks = document.querySelectorAll("a[data-link-to-post]"),
               i;

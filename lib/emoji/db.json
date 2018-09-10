@@ -6023,6 +6023,314 @@
     {
       "code": "1f1fa-1f1f3",
       "name": "united_nations"
+    },
+    {
+      "code": "1f970",
+      "name": "smiling_face_with_three_hearts"
+    },
+    {
+      "code": "1f975",
+      "name": "hot_face"
+    },
+    {
+      "code": "1f976",
+      "name": "cold_face"
+    },
+    {
+      "code": "1f973",
+      "name": "partying_face"
+    },
+    {
+      "code": "1f974",
+      "name": "woozy_face"
+    },
+    {
+      "code": "1f97a",
+      "name": "pleading_face"
+    },
+    {
+      "code": "1f468-200d-1f9b0",
+      "name": "man_red_haired"
+    },
+    {
+      "code": "1f468-200d-1f9b1",
+      "name": "man_curly_haired"
+    },
+    {
+      "code": "1f468-200d-1f9b3",
+      "name": "man_white_haired"
+    },
+    {
+      "code": "1f468-200d-1f9b2",
+      "name": "man_bald"
+    },
+    {
+      "code": "1f469-200d-1f9b0",
+      "name": "woman_red_haired"
+    },
+    {
+      "code": "1f469-200d-1f9b1",
+      "name": "woman_curly_haired"
+    },
+    {
+      "code": "1f469-200d-1f9b3",
+      "name": "woman_white_haired"
+    },
+    {
+      "code": "1f469-200d-1f9b2",
+      "name": "woman_bald"
+    },
+    {
+      "code": "1f9b8",
+      "name": "superhero"
+    },
+    {
+      "code": "1f9b8-200d-2642",
+      "name": "man_superhero"
+    },
+    {
+      "code": "1f9b8-200d-2640",
+      "name": "woman_superhero"
+    },
+    {
+      "code": "1f9b9",
+      "name": "supervillain"
+    },
+    {
+      "code": "1f9b9-200d-2640",
+      "name": "woman_supervillain"
+    },
+    {
+      "code": "1f9b9-200d-2642",
+      "name": "man_supervillain"
+    },
+    {
+      "code": "1f9b5",
+      "name": "leg"
+    },
+    {
+      "code": "1f9b6",
+      "name": "foot"
+    },
+    {
+      "code": "1f9b4",
+      "name": "bone"
+    },
+    {
+      "code": "1f9b7",
+      "name": "tooth"
+    },
+    {
+      "code": "1f97d",
+      "name": "goggles"
+    },
+    {
+      "code": "1f97c",
+      "name": "lab_coat"
+    },
+    {
+      "code": "1f97e",
+      "name": "hiking_boot"
+    },
+    {
+      "code": "1f97f",
+      "name": "flat_shoe"
+    },
+    {
+      "code": "1f99d",
+      "name": "raccoon"
+    },
+    {
+      "code": "1f999",
+      "name": "llama"
+    },
+    {
+      "code": "1f99b",
+      "name": "hippopotamus"
+    },
+    {
+      "code": "1f998",
+      "name": "kangaroo"
+    },
+    {
+      "code": "1f9a1",
+      "name": "badger"
+    },
+    {
+      "code": "1f9a2",
+      "name": "swan"
+    },
+    {
+      "code": "1f99a",
+      "name": "peacock"
+    },
+    {
+      "code": "1f99c",
+      "name": "parrot"
+    },
+    {
+      "code": "1f99e",
+      "name": "lobster"
+    },
+    {
+      "code": "1f99f",
+      "name": "mosquito"
+    },
+    {
+      "code": "1f9a0",
+      "name": "microbe"
+    },
+    {
+      "code": "1f96d",
+      "name": "mango"
+    },
+    {
+      "code": "1f96c",
+      "name": "leafy_green"
+    },
+    {
+      "code": "1f96f",
+      "name": "bagel"
+    },
+    {
+      "code": "1f9c2",
+      "name": "salt"
+    },
+    {
+      "code": "1f96e",
+      "name": "moon_cake"
+    },
+    {
+      "code": "1f9c1",
+      "name": "cupcake"
+    },
+    {
+      "code": "1f9ed",
+      "name": "compass"
+    },
+    {
+      "code": "1f9f1",
+      "name": "brick"
+    },
+    {
+      "code": "1f6f9",
+      "name": "skateboard"
+    },
+    {
+      "code": "1f9f3",
+      "name": "luggage"
+    },
+    {
+      "code": "1f9e8",
+      "name": "firecracker"
+    },
+    {
+      "code": "1f9e7",
+      "name": "red_gift_envelope"
+    },
+    {
+      "code": "1f94e",
+      "name": "softball"
+    },
+    {
+      "code": "1f94f",
+      "name": "flying_disc"
+    },
+    {
+      "code": "1f94d",
+      "name": "lacrosse"
+    },
+    {
+      "code": "1f9ff",
+      "name": "nazar_amulet"
+    },
+    {
+      "code": "1f9e9",
+      "name": "jigsaw"
+    },
+    {
+      "code": "1f9f8",
+      "name": "teddy_bear"
+    },
+    {
+      "code": "265f",
+      "name": "chess_pawn"
+    },
+    {
+      "code": "1f9f5",
+      "name": "thread"
+    },
+    {
+      "code": "1f9f6",
+      "name": "yarn"
+    },
+    {
+      "code": "1f9ee",
+      "name": "abacus"
+    },
+    {
+      "code": "1f9fe",
+      "name": "receipt"
+    },
+    {
+      "code": "1f9f0",
+      "name": "toolbox"
+    },
+    {
+      "code": "1f9f2",
+      "name": "magnet"
+    },
+    {
+      "code": "1f9ea",
+      "name": "test_tube"
+    },
+    {
+      "code": "1f9eb",
+      "name": "petri_dish"
+    },
+    {
+      "code": "1f9ec",
+      "name": "dna"
+    },
+    {
+      "code": "1f9f4",
+      "name": "lotion_bottle"
+    },
+    {
+      "code": "1f9f7",
+      "name": "safety_pin"
+    },
+    {
+      "code": "1f9f9",
+      "name": "broom"
+    },
+    {
+      "code": "1f9fa",
+      "name": "basket"
+    },
+    {
+      "code": "1f9fb",
+      "name": "roll_of_toilet_paper"
+    },
+    {
+      "code": "1f9fc",
+      "name": "soap"
+    },
+    {
+      "code": "1f9fd",
+      "name": "sponge"
+    },
+    {
+      "code": "1f9ef",
+      "name": "fire_extinguisher"
+    },
+    {
+      "code": "267e",
+      "name": "infinity"
+    },
+    {
+      "code": "1f3f4-200d-2620",
+      "name": "pirate_flag"
     }
   ],
   "tonableEmojis": [

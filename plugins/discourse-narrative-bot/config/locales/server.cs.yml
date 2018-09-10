@@ -7,7 +7,6 @@
 
 cs:
   site_settings:
-    discourse_narrative_bot_enabled: 'Zapnout Discourse robota průvodce'
     disable_discourse_narrative_bot_welcome_post: "Vypnout uvítací příspěvek od Discourse robota průvodce"
     discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse robot průvodce ignorovat"
     discourse_narrative_bot_disable_public_replies: "Vypnout veřejné odpovědi Discourse robota průvodce"

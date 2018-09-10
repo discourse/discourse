@@ -21,6 +21,11 @@ describe Migration::SafeMigrate do
     $stdout = old_stdout
   end
 
+  def migrate_up(path)
+    migrations = ActiveRecord::MigrationContext.new(path).migrations
+    ActiveRecord::Migrator.new(:up, migrations, migrations.first.version).run
+  end
+
   it "bans all table removal" do
     Migration::SafeMigrate.enable!
 
@@ -28,7 +33,7 @@ describe Migration::SafeMigrate do
 
     output = capture_stdout do
       expect(lambda do
-        ActiveRecord::Migrator.up([path])
+        migrate_up(path)
       end).to raise_error(StandardError)
     end
 
@@ -45,14 +50,14 @@ describe Migration::SafeMigrate do
 
     output = capture_stdout do
       expect(lambda do
-        ActiveRecord::Migrator.up([path])
+        migrate_up(path)
       end).to raise_error(StandardError)
     end
 
-    expect(output).to include("TableDropper")
-
     expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
+
+    expect(output).to include("TableDropper")
   end
 
   it "bans all column removal" do
@@ -62,7 +67,7 @@ describe Migration::SafeMigrate do
 
     output = capture_stdout do
       expect(lambda do
-        ActiveRecord::Migrator.up([path])
+        migrate_up(path)
       end).to raise_error(StandardError)
     end
 
@@ -79,7 +84,7 @@ describe Migration::SafeMigrate do
 
     output = capture_stdout do
       expect(lambda do
-        ActiveRecord::Migrator.up([path])
+        migrate_up(path)
       end).to raise_error(StandardError)
     end
 
@@ -96,7 +101,7 @@ describe Migration::SafeMigrate do
     path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/drop_table"
 
     output = capture_stdout do
-      ActiveRecord::Migrator.up([path])
+      migrate_up(path)
     end
 
     expect(output).to include("drop_table(:users)")

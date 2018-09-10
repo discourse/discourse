@@ -156,6 +156,39 @@ describe Auth::DefaultCurrentUserProvider do
           ).should_update_last_seen?).to eq(false)
   end
 
+  it "should not update last seen for suspended users" do
+    user = Fabricate(:user)
+    provider = provider('/')
+    cookies = {}
+    provider.log_on_user(user, {}, cookies)
+    unhashed_token = cookies["_t"][:value]
+
+    freeze_time
+    Sidekiq::Testing.inline! do
+      # Need to clear this key from redis, otherwise
+      # this test could fail if run twice in 1 minute
+      $redis.del("user:#{user.id}:#{Time.now.to_date}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      u = provider2.current_user
+      u.reload
+      expect(u.last_seen_at).to eq(Time.now)
+
+      freeze_time 20.minutes.from_now
+
+      u.last_seen_at = nil
+      u.suspended_till = 1.year.from_now
+      u.save!
+
+      $redis.del("user:#{user.id}:#{Time.now.to_date}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      expect(provider2.current_user).to eq(nil)
+
+      u.reload
+      expect(u.last_seen_at).to eq(nil)
+    end
+
+  end
+
   it "should update ajax reqs with discourse visible" do
     expect(provider("/topic/anything/goes",
                     :method => "POST",
@@ -333,6 +366,26 @@ describe Auth::DefaultCurrentUserProvider do
         key: SecureRandom.hex,
         user_id: user.id
       )
+    end
+
+    it "can clear old duplicate keys correctly" do
+      dupe = UserApiKey.create!(
+        application_name: 'my app',
+        client_id: '12345',
+        scopes: ['read'],
+        key: SecureRandom.hex,
+        user_id: user.id
+      )
+
+      params = {
+        "REQUEST_METHOD" => "GET",
+        "HTTP_USER_API_KEY" => api_key.key,
+        "HTTP_USER_API_CLIENT_ID" => dupe.client_id,
+      }
+
+      good_provider = provider("/", params)
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(UserApiKey.find_by(id: dupe.id)).to eq(nil)
     end
 
     it "allows user API access correctly" do

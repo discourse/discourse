@@ -336,4 +336,19 @@ describe AdminDashboardData do
     end
   end
 
+  describe '#out_of_date_themes' do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
+
+    it "outputs correctly formatted html" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      dashboard_data = described_class.new
+      expect(dashboard_data.out_of_date_themes).to eq(
+        I18n.t("dashboard.out_of_date_themes") + "<ul><li><a href=\"/admin/customize/themes/#{theme.id}\">Test&lt; Theme</a></li></ul>"
+      )
+
+      remote.update!(local_version: "new version", commits_behind: 0)
+      expect(dashboard_data.out_of_date_themes).to eq(nil)
+    end
+  end
 end

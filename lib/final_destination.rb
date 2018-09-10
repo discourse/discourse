@@ -26,7 +26,7 @@ class FinalDestination
     "HTTPS_DOMAIN_#{domain}"
   end
 
-  attr_reader :status, :cookie, :status_code
+  attr_reader :status, :cookie, :status_code, :ignored
 
   def initialize(url, opts = nil)
     @url = url
@@ -36,7 +36,22 @@ class FinalDestination
     @force_get_hosts = @opts[:force_get_hosts] || []
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
-    @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
+
+    @ignored = @opts[:ignore_hostnames] || []
+
+    ignore_redirects = [Discourse.base_url_no_prefix]
+
+    if @opts[:ignore_redirects]
+      ignore_redirects.concat(@opts[:ignore_redirects])
+    end
+
+    ignore_redirects.each do |ignore_redirect|
+      ignore_redirect = uri(ignore_redirect)
+      if ignore_redirect.present? && ignore_redirect.hostname
+        @ignored << ignore_redirect.hostname
+      end
+    end
+
     @limit = @opts[:max_redirects]
     @status = :ready
     @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
@@ -131,16 +146,16 @@ class FinalDestination
       return nil
     end
 
-    @ignored.each do |host|
-      if hostname_matches?(host)
-        @status = :resolved
-        return @uri
-      end
-    end
-
     unless validate_uri
       log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}") if @verbose
       return nil
+    end
+
+    @ignored.each do |host|
+      if @uri&.hostname&.match?(host)
+        @status = :resolved
+        return @uri
+      end
     end
 
     headers = request_headers
@@ -383,8 +398,8 @@ class FinalDestination
 
   def uri(location)
     begin
-      URI(location)
-    rescue URI::InvalidURIError, ArgumentError
+      URI.parse(location)
+    rescue URI::Error
     end
   end
 

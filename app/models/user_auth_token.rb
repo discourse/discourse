@@ -11,7 +11,18 @@ class UserAuthToken < ActiveRecord::Base
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 
+  USER_ACTIONS = ['generate']
+
   attr_accessor :unhashed_auth_token
+
+  before_destroy do
+    UserAuthToken.log(action: 'destroy',
+                      user_auth_token_id: self.id,
+                      user_id: self.user_id,
+                      user_agent: self.user_agent,
+                      client_ip: self.client_ip,
+                      auth_token: self.auth_token)
+  end
 
   def self.log(info)
     if SiteSetting.verbose_auth_token_logging
@@ -131,7 +142,7 @@ class UserAuthToken < ActiveRecord::Base
 
     token = SecureRandom.hex(16)
 
-    result = UserAuthToken.exec_sql("
+    result = DB.exec("
   UPDATE user_auth_tokens
   SET
     auth_token_seen = false,
@@ -150,7 +161,7 @@ class UserAuthToken < ActiveRecord::Base
    safeguard_time: 30.seconds.ago
   )
 
-    if result.cmdtuples > 0
+    if result > 0
       reload
       self.unhashed_auth_token = token
 

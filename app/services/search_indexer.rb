@@ -61,7 +61,7 @@ class SearchIndexer
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
-    rows = Post.exec_sql_row_count(<<~SQL, params)
+    rows = DB.exec(<<~SQL, params)
        UPDATE #{table_name}
        SET
           raw_data = :raw_data,
@@ -72,7 +72,7 @@ class SearchIndexer
     SQL
 
     if rows == 0
-      Post.exec_sql(<<~SQL, params)
+      DB.exec(<<~SQL, params)
         INSERT INTO #{table_name}
         (#{foreign_key}, search_data, locale, raw_data, version)
         VALUES (:id, #{ranked_index}, :locale, :raw_data, :version)
@@ -111,7 +111,7 @@ class SearchIndexer
   def self.queue_post_reindex(topic_id)
     return if @disabled
 
-    ActiveRecord::Base.exec_sql(<<~SQL, topic_id: topic_id)
+    DB.exec(<<~SQL, topic_id: topic_id)
       UPDATE post_search_data
       SET version = 0
       WHERE post_id IN (SELECT id FROM posts WHERE topic_id = :topic_id)
@@ -121,7 +121,8 @@ class SearchIndexer
   def self.index(obj, force: false)
     return if @disabled
 
-    category_name, tag_names = nil
+    category_name = nil
+    tag_names = nil
     topic = nil
 
     if Topic === obj
@@ -148,8 +149,7 @@ class SearchIndexer
 
     if Topic === obj && (obj.saved_change_to_title? || force)
       if obj.posts
-        post = obj.posts.find_by(post_number: 1)
-        if post
+        if post = obj.posts.find_by(post_number: 1)
           SearchIndexer.update_posts_index(post.id, obj.title, category_name, tag_names, post.cooked)
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
         end
@@ -166,47 +166,45 @@ class SearchIndexer
   end
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
-    attr_reader :scrubbed
 
-    def initialize
-      @scrubbed = +""
+    def self.strip_diacritics(str)
+      s = str.unicode_normalize(:nfkd)
+      s.gsub!(DIACRITICS, "")
+      s.strip!
+      s
     end
 
-    def self.scrub(html)
-      me = new
-      parser = Nokogiri::HTML::SAX::Parser.new(me)
-      begin
-        copy = +"<div>"
-        copy << html unless html.nil?
-        copy << "</div>"
-        parser.parse(html) unless html.nil?
-      end
+    attr_reader :scrubbed
+
+    def initialize(strip_diacritics: false)
+      @scrubbed = +""
+      # for now we are disabling this per: https://meta.discourse.org/t/discourse-should-ignore-if-a-character-is-accented-when-doing-a-search/90198/16?u=sam
+      @strip_diacritics = strip_diacritics
+    end
+
+    def self.scrub(html, strip_diacritics: false)
+      return +"" if html.blank?
+
+      me = new(strip_diacritics: strip_diacritics)
+      Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
       me.scrubbed
     end
 
-    def start_element(name, attributes = [])
+    ATTRIBUTES ||= %w{alt title href data-youtube-title}
+
+    def start_element(_, attributes = [])
       attributes = Hash[*attributes.flatten]
-      if attributes["alt"]
-        scrubbed << " "
-        scrubbed << attributes["alt"]
-        scrubbed << " "
-      end
-      if attributes["title"]
-        scrubbed << " "
-        scrubbed << attributes["title"]
-        scrubbed << " "
-      end
-      if attributes["data-youtube-title"]
-        scrubbed << " "
-        scrubbed << attributes["data-youtube-title"]
-        scrubbed << " "
+
+      ATTRIBUTES.each do |name|
+        characters(attributes[name]) if attributes[name].present?
       end
     end
 
-    def characters(string)
-      scrubbed << " "
-      scrubbed << string
-      scrubbed << " "
+    DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+
+    def characters(str)
+      str = HtmlScrubber.strip_diacritics(str) if @strip_diacritics
+      scrubbed << " #{str} "
     end
   end
 end

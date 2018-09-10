@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  js:
+    discourse_local_dates:
+      title: Andika tarehe
+      create:
+        modal_title: Andika tarehe
+        modal_subtitle: "Tutabadilisha moja kwa moja muda na tarehe kuendana na mahali pa mtumiaji"
+        form:
+          insert: Weka
+          advanced_mode: Hali-tumizi ya juu
+          simple_mode: Hali-tumizi rahisi
+          format_description: "Muundo uliotumika kuonesha tarehe kwa mtumiaji. Tumia \"\\T\\Z\" kuonesha muda halisi wa mahali pa mtumiaji kwa maneno (Ulaya/Paris)"
+          timezones_title: Majira za saa za kuonyeshwa
+          timezones_description: Majina ya saa yatatumika kuonyesha tarehe kwenye kihakiki na marejesho ya mfumo.
+          recurring_title: Kurudiarudia
+          recurring_description: "Eleza kujirudia kwa matukio.Unaweza kuandika mwenyewe chaguzo la kujirudia kwa tukio kwa:miaka,robo mwaka,miezi,majuma,siku,masaa,dakika,sekunde,milisekunde."
+          recurring_none: Hakuna kurudia
+          invalid_date: Tarehe batili, hakikisha tarehe na mda viko sawa
+          date_title: Tarehe
+          time_title: Muda
+          format_title: Muundo wa tarehe

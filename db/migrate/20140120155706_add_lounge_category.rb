@@ -3,25 +3,25 @@ class AddLoungeCategory < ActiveRecord::Migration[4.2]
     return if Rails.env.test?
 
     I18n.overrides_disabled do
-      result = Category.exec_sql "SELECT 1 FROM site_settings where name = 'lounge_category_id'"
-      if result.count == 0
+      result = DB.exec "SELECT 1 FROM site_settings where name = 'lounge_category_id'"
+      if result == 0
         description = I18n.t('vip_category_description')
 
         default_name = I18n.t('vip_category_name')
-        name = if Category.exec_sql("SELECT 1 FROM categories where name = '#{default_name}'").count == 0
+        name = if DB.exec("SELECT 1 FROM categories where name = '#{default_name}'") == 0
           default_name
         else
           "CHANGE_ME"
         end
 
-        result = Category.exec_sql "INSERT INTO categories
+        result = DB.query_single "INSERT INTO categories
                         (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
-                 VALUES (:name, 'EEEEEE', '652D90', now(), now(), -1, '', :description, true, 3)
+                 VALUES (:name, 'A461EF', '652D90', now(), now(), -1, '', :description, true, 3)
                  RETURNING id", name: name, description: description
 
-        category_id = result[0]["id"].to_i
+        category_id = result.first.to_i
 
-        Category.exec_sql "UPDATE categories SET slug = :slug
+        DB.exec "UPDATE categories SET slug = :slug
                           WHERE id = :category_id",
                           slug: Slug.for(name, "#{category_id}-category"), category_id: category_id
 

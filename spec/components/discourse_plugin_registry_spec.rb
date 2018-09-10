@@ -29,6 +29,13 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '#auth_providers' do
+    it 'defaults to an empty Set' do
+      registry.auth_providers = nil
+      expect(registry.auth_providers).to eq(Set.new)
+    end
+  end
+
   context '#admin_javascripts' do
     it 'defaults to an empty Set' do
       registry.admin_javascripts = nil
@@ -90,6 +97,28 @@ describe DiscoursePluginRegistry do
     it "won't add the same file twice" do
       expect { registry_instance.register_js('hello.js') }.not_to change(registry.javascripts, :size)
     end
+  end
+
+  context '.register_auth_provider' do
+    let(:registry) { DiscoursePluginRegistry }
+    let(:auth_provider) do
+      provider = Auth::AuthProvider.new
+      provider.authenticator = Auth::Authenticator.new
+      provider
+    end
+
+    before do
+      registry.register_auth_provider(auth_provider)
+    end
+
+    after do
+      registry.reset!
+    end
+
+    it 'is returned by DiscoursePluginRegistry.auth_providers' do
+      expect(registry.auth_providers.include?(auth_provider)).to eq(true)
+    end
+
   end
 
   context '.register_service_worker' do

@@ -1,5 +1,3 @@
-require 'scheduler/scheduler'
-
 module Jobs
 
   def self.queued
@@ -131,6 +129,11 @@ module Jobs
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
+                logster_env = {}
+                Logster.add_to_env(logster_env, :job, self.class.to_s)
+                Logster.add_to_env(logster_env, :db, db)
+                Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
+
                 execute(opts)
               rescue => e
                 exception[:ex] = e
@@ -148,6 +151,8 @@ module Jobs
           exceptions << exception unless exception.empty?
         end
       end
+
+      Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
@@ -173,11 +178,12 @@ module Jobs
   end
 
   class Scheduled < Base
-    extend Scheduler::Schedule
+    extend MiniScheduler::Schedule
 
     def perform(*args)
-      return if Discourse.readonly_mode?
-      super
+      if (Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+        super
+      end
     end
   end
 

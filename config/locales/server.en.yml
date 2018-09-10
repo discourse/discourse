@@ -60,6 +60,11 @@ en:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
     error_importing: "Error cloning git repository, access is denied or repository is not found"
+    errors:
+      component_no_user_selectable: "Theme components can't be user-selectable"
+      component_no_default: "Theme components can't be default theme"
+      component_no_color_scheme: "Theme components can't have color scheme"
+      no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
@@ -197,6 +202,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  authenticator_not_found: "Authentication method does not exist, or has been disabled."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -258,6 +264,7 @@ en:
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
   max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
+  pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -533,7 +540,7 @@ en:
 
       (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
 
   category:
@@ -553,7 +560,7 @@ en:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -602,6 +609,7 @@ en:
     seconds:
       one: "1 second"
       other: "%{count} seconds"
+    short_time: "a few seconds"
 
   datetime:
     distance_in_words:
@@ -690,6 +698,18 @@ en:
     invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
     title: "Email login"
 
+  user_auth_tokens:
+    devices:
+      android: 'Android Device'
+      linux: 'Linux Computer'
+      windows: 'Windows Computer'
+      mac: 'Mac'
+      iphone: 'iPhone'
+      ipad: 'iPad'
+      ipod: 'iPod'
+      mobile: 'Mobile Device'
+      unknown: 'Unknown device'
+
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -699,6 +719,9 @@ en:
     authorizing_old:
       title: "Thanks for confirming your current email address"
       description: "We're now emailing your new address for confirmation."
+
+  associated_accounts:
+    revoke_failed: "Failed to revoke your account with %{provider_name}."
 
   activation:
     action: "Click here to activate your account"
@@ -757,18 +780,13 @@ en:
       description: 'Like this post'
       short_description: 'Like this post'
       long_form: 'liked this'
-    vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      short_description: 'Vote for this post'
-      long_form: 'voted for this post'
 
   user_activity:
     no_default:
       self: "You have no activity yet."
       others: "No activity."
     no_bookmarks:
-      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -776,6 +794,9 @@ en:
     no_replies:
       self: "You have not replied to any posts."
       others: "No replies."
+    no_drafts:
+      self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
+      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
@@ -844,6 +865,41 @@ en:
       write: "Write all"
 
   reports:
+    default:
+      labels:
+        count: Count
+        percent: Percent
+        day: Day
+    post_edits:
+      title: "Post edits"
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
+    moderators_activity:
+      title: "Moderators activity"
+      labels:
+        moderator: Moderator
+        flag_count: Flags reviewed
+        time_read: Time reading
+        topic_count: Topics created
+        post_count: Posts created
+        pm_count: PMs created
+        revision_count: Revisions
+    flags_status:
+      title: "Flags status"
+      values:
+        agreed: Agreed
+        disagreed: Disagreed
+        deferred: Deferred
+        no_action: No action
+      labels:
+        flag: Type
+        assigned: Assigned
+        poster: Poster
+        flagger: Flagger
+        time_to_resolution: Resolution time
     visits:
       title: "User Visits"
       xaxis: "Day"
@@ -902,10 +958,14 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+      labels:
+        level: Level
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
       yaxis: "Number of Users"
+      labels:
+        type: Type
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -956,10 +1016,15 @@ en:
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Topics
     top_referred_topics:
       title: "Top Referred Topics"
-      xaxis: "Topic"
-      num_clicks: "Clicks"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
@@ -1017,13 +1082,14 @@ en:
       xaxis: "Day"
       yaxis: "Total"
     mobile_visits:
-      title: "User Visits"
+      title: "User Visits (mobile)"
       xaxis: "Day"
       yaxis: "Number of visits"
     web_crawlers:
       title: "Web Crawler Requests"
-      xaxis: "User Agent"
-      yaxis: "Pageviews"
+      labels:
+        user_agent: "User Agent"
+        page_views: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1049,6 +1115,7 @@ en:
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
+    out_of_date_themes: "Updates are available for the following themes:"
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1073,6 +1140,7 @@ en:
     search_recent_posts_size: "How many recent posts to keep in the index"
     log_search_queries: "Log search queries performed by users"
     search_query_log_max_size: "Maximum amount of search queries to keep"
+    search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1130,8 +1198,6 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_personal_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send personal email messages. Note that staff can always send messages no matter what."
-
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
@@ -1183,9 +1249,9 @@ en:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
+    send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
@@ -1252,8 +1318,8 @@ en:
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    google_oauth2_prompt: "A space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
-    google_oauth2_hd: "Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
+    google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
+    google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
@@ -1279,6 +1345,8 @@ en:
     backup_frequency: "The number of days between backups."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
+    s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -1311,6 +1379,9 @@ en:
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
 
+    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
+    max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
+
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
@@ -1336,8 +1407,11 @@ en:
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
 
-    default_opengraph_image_url: "URL of the default opengraph image."
-    twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
+    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars: "List of avatars users can choose from."
+
+    default_opengraph_image_url: "Default opengraph image, used when the page has no other suitable image or site logo."
+    twitter_summary_large_image_url: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
@@ -1346,6 +1420,8 @@ en:
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
     strip_image_metadata: "Strip image metadata."
+
+    min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -1390,12 +1466,11 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
-
-    min_trust_to_send_email_messages: "The minimum trust level required to send new personal messages via email (to staged users)."
-
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
+
+    whitelisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1490,7 +1565,7 @@ en:
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
 
-    disable_emails: "Prevent Discourse from sending any kind of emails"
+    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
 
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
@@ -1500,6 +1575,7 @@ en:
     unsubscribe_via_email_footer: "Attach an unsubscribe via email mailto: link to the footer of sent emails"
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
+    disallow_reply_by_email_after_days: "Disallow reply by email after (N) days. 0 to keep indefinitely"
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
@@ -1530,9 +1606,11 @@ en:
     pop3_polling_host: "The host to poll for email via POP3."
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
+    pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to http://yoursitename.com/logs"
     email_in: "Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_in_spam_header: "The email header to detect spam."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 
@@ -1545,7 +1623,7 @@ en:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
-    logout_redirect: "Location to redirect browser to after logout (eg: http://somesite.com/logout)"
+    logout_redirect: "Location to redirect browser to after logout (eg: http://example.com/logout)"
 
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
@@ -1598,6 +1676,8 @@ en:
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
+    header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."
+
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -1648,6 +1728,7 @@ en:
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
+    emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -1692,6 +1773,7 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
@@ -1699,6 +1781,7 @@ en:
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
+    expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -1797,8 +1880,7 @@ en:
       other: "%{count} posts were merged into an existing topic: %{topic_link}"
 
   change_owner:
-    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
-    deleted_user: "a deleted user"
+    post_revision_text: "Ownership transferred"
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
@@ -1887,10 +1969,20 @@ en:
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
     second_factor_title: "Two Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
-    invalid_second_factor_code: "Invalid authentication code"
+    second_factor_backup_description: "Please enter one of your backup codes:"
+    second_factor_backup_title: "Two Factor Backup Code"
+    invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
+    second_factor_toggle:
+      totp: "Use an authenticator app instead"
+      backup_code: "Use a backup code instead"
+
+  admin:
+    email:
+      sent_test: "sent!"
+      sent_test_disabled: "cannot send because emails are disabled"
+      sent_test_disabled_for_non_staff: "cannot send because emails are disabled for non-staff"
 
   user:
-    no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     activated_by_staff: "Activated by staff"
@@ -2178,11 +2270,27 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    flags_agreed_and_post_deleted:
+      title: "Flagged post removed by staff"
+      subject_template: "Flagged post removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was removed.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        This post was flagged by the community and a staff member opted to remove it.
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
+
     usage_tips:
       text_body_template: |
         For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
+        As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) that include special abilities to help us manage our community together.
 
     welcome_user:
       title: "Welcome User"
@@ -2195,6 +2303,14 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
+
+    welcome_tl1_user:
+      title: "Welcome TL1 User"
+      subject_template: "Thanks for spending time with us"
+      text_body_template: |
+        Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+
+        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](/my/preferences/profile), or feel free to [start a new topic](/categories).
 
     welcome_invite:
       title: "Welcome Invite"
@@ -2416,6 +2532,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_post_too_short:
+      title: "Email Reject Post Too Short"
+      subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        To promote more in depth conversations, very short replies are not allowed. Can you please reply with at least %{count} characters? Alternatively, you can like a post via email by replying with "+1".
+
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
@@ -2447,7 +2571,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        For security reasons we only accept replies to original notifications for 90 days. Please [visit the topic](%{short_url}) to continue the conversation.
+        We only accept replies to original notifications for %{number_of_days} days. Please [visit the topic](%{short_url}) to continue the conversation.
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
@@ -2490,6 +2614,15 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
+
+    email_revoked:
+      title: "Email Revoked"
+      subject_template: "Is your email address correct?"
+      text_body_template: |
+        We’re sorry, but we’re having trouble reaching you via email. Our last few emails to you have all bounced back as undeliverable.
+
+        Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability.
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
@@ -2498,7 +2631,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2629,14 +2762,15 @@ en:
 
     header_instructions: ''
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
-    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond."
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
     only_reply_by_email: "Reply to this email to respond."
+    only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
-    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond."
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
-    pm_participants: "Participants:"
+    pm_participants: "Participants: %{participants}"
 
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
@@ -3048,7 +3182,7 @@ en:
     recent_topics: "Recent"
     see_more: "More"
     search_title: "Search this site"
-    search_google: "Google"
+    search_button: "Search"
 
   offline:
     title: "Cannot load app"
@@ -3091,33 +3225,46 @@ en:
     sockpuppet: "A new user created a topic, and another new user at the same IP address (%{ip_address}) replied. See the <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> site setting."
     spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
-  email_log:
-    post_user_deleted: "User of the post has been deleted."
-    no_user: "Can't find user with id %{user_id}"
-    anonymous_user: "User is anonymous"
-    suspended_not_pm: "User is suspended, not a message"
-    seen_recently: "User was seen recently"
-    post_not_found: "Can't find a post with id %{post_id}"
-    notification_already_read: "The notification this email is about has already been read"
-    topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
-    user_suspended: "user was suspended"
-    already_read: "user has already read this post"
+  skipped_email_log:
     exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
     exceeded_bounces_limit: "Exceeded bounce_score_threshold"
-    message_blank: "message is blank"
-    message_to_blank: "message.to is blank"
-    text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
-    no_echo_mailing_list_mode: "Mailing list notifications disabled for user's own posts"
+    mailing_list_no_echo_mode: "Mailing list notifications disabled for user's own posts"
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_anonymous_user: "User is anonymous"
+    user_email_user_suspended_not_pm: "User is suspended, not a message"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_user_deleted: "User of the post has been deleted."
+    user_email_post_deleted: "post was deleted by the author"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_body_blank: "body is blank"
+    sender_post_deleted: "post has been deleted"
 
   color_schemes:
     base_theme_name: "Base"
-    default: "Light Scheme"
+    light: "Light Scheme"
     dark: "Dark Scheme"
-    default_theme_name: "Default"
-    dark_theme_name: "Dark"
+    neutral: "Neutral Scheme"
+    grey_amber: "Grey Amber Scheme"
+    shades_of_blue: "Shades of Blue Scheme"
+    latte: "Latte Scheme"
+    summer: "Summer Scheme"
+    dark_rose: "Dark Rose Scheme"
+    default_theme_name: "Light"
     light_theme_name: "Light"
+    dark_theme_name: "Dark"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Grey Amber"
+    shades_of_blue_theme_name: "Shades of Blue"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Summer"
+    dark_rose_theme_name: "Dark Rose"
 
   about: "About"
   guidelines: "Guidelines"
@@ -3464,72 +3611,72 @@ en:
       name: Editor
       description: First post edit
       long_description: |
-        This badge is granted the first time you edit one of your posts. While you won't be able to edit your posts forever, editing is always a good idea — you can improve your posts, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
+        This badge is granted the first time you edit one of your posts. While you won’t be able to edit your posts forever, editing is encouraged — you can improve the formatting, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
     basic_user:
       name: Basic
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> all essential community functions
       long_description: |
-        This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted; you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post multiple images and links.
+        This badge is granted when you reach trust level 1. Thanks for sticking around and reading a few topics to learn what our community is about. New user restrictions have been lifted; you’ve been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post multiple images and links.
     member:
       name: Member
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations, group messaging, more likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> invitations, group messaging, more likes
       long_description: |
-        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to truly join our community. You can now send invitations from your user page or individual topics, create group personal messages, and have a few more likes per day.
+        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to truly join our community. You can now send invitations from your user page or individual topics, create group personal messages, and have more likes per day.
     regular:
       name: Regular
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links, wiki, more likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes
       long_description: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You're now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you'll also get lots more likes per day.
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you’ll also get lots more likes per day.
     leader:
       name: Leader
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge, more likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> global edit, pin, close, archive, split and merge, more likes
       long_description: |
-        This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and you set a positive example for the rest of the community in your actions and words here. You have the ability to edit all posts, take common topic moderator actions such as pin, close, unlist, archive, split, and merge, and you have tons of likes per day.
+        This badge is granted when you reach trust level 4. You’re a leader in this community as selected by staff, and you set a positive example for the rest of the community in your actions and words here. You have the ability to edit all posts, take common topic moderator actions such as pin, close, unlist, archive, split, and merge.
     welcome:
       name: Welcome
       description: Received a like
       long_description: |
-        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
+        This badge is granted when you receive your first like on a post. Congratulations, you’ve posted something that your fellow community members found interesting, cool, or useful!
     autobiographer:
       name: Autobiographer
       description: Filled out <a href="%{base_uri}/my/preferences/profile">profile</a> information
       long_description: |
-        This badge is granted for filling out <a href="%{base_uri}/my/preferences/profile">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
+        This badge is granted for filling out <a href="%{base_uri}/my/preferences/profile">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you’re interested in makes for a better, more connected community. Join us!
     anniversary:
       name: Anniversary
       description: Active member for a year, posted at least once
       long_description: |
-        This badge is granted when you've been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn't do it without you.
+        This badge is granted when you’ve been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn’t do it without you.
     nice_post:
       name: Nice Reply
       description: Received 10 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 10 likes. Your reply really made an impression on the community and helped move the conversation forward!
+        This badge is granted when your reply gets 10 likes. Your reply made an impression on the community and helped move the conversation forward.
     good_post:
       name: Good Reply
       description: Received 25 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation a whole lot better for everyone!
+        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation much more interesting.
     great_post:
       name: Great Reply
       description: Received 50 likes on a reply
       long_description: |
-        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it.
+        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it!
     nice_topic:
       name: Nice Topic
       description: Received 10 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 10 likes. Hey, you started an interesting conversation that the community enjoyed!
+        This badge is granted when your topic gets 10 likes. You started an interesting conversation that the community enjoyed.
     good_topic:
       name: Good Topic
       description: Received 25 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around and loved!
+        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around.
     great_topic:
       name: Great Topic
       description: Received 50 likes on a topic
       long_description: |
-        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community enjoyed the dynamic discussion that resulted!
+        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community loved the lively discussion that resulted!
     nice_share:
       name: Nice Share
       description: Shared a post with 25 unique visitors
@@ -3539,12 +3686,12 @@ en:
       name: Good Share
       description: Shared a post with 300 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You've shown off a great discussion to a bunch of new people and helped this community grow.
+        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
     great_share:
       name: Great Share
       description: Shared a post with 1000 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
     first_like:
       name: First Like
       description: Liked a post
@@ -3554,7 +3701,7 @@ en:
       name: First Flag
       description: Flagged a post
       long_description: |
-        This badge is granted the first time you flag a post. Flagging is how we all help keep this a clean, well lit place for everyone. If you notice any posts that require moderator attention for any reason please don't hesitate to flag. You can also flag to send <b>personal messages</b> to fellow users if you see an issue with their post. If you see a problem, :flag_black: flag it!
+        This badge is granted the first time you flag a post. Flagging is how we all help keep this a nice place for everyone. If you notice any posts that require moderator attention for any reason please don’t hesitate to flag. If you see a problem, :flag_black: flag it!
     promoter:
       name: Promoter
       description: Invited a user
@@ -3564,12 +3711,12 @@ en:
       name: Campaigner
       description: Invited 3 basic users
       long_description: |
-        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversations.
+        This badge is granted when you’ve invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversations.
     champion:
       name: Champion
       description: Invited 5 members
       long_description: |
-        This badge is granted when you've invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
+        This badge is granted when you’ve invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
     first_share:
       name: First Share
       description: Shared a post
@@ -3584,12 +3731,12 @@ en:
       name: First Quote
       description: Quoted a post
       long_description: |
-        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
+        This badge is granted the first time you quote a post in your reply. Quoting relevant parts of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
     read_guidelines:
       name: Read Guidelines
       description: Read the <a href="%{base_uri}/guidelines">community guidelines</a>
       long_description: |
-        This badge is granted for <a href="%{base_uri}/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
+        This badge is granted for <a href="%{base_uri}/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there’s another human being, one very much like yourself, on the other side of that screen. Be nice!
     reader:
       name: Reader
       description: Read every reply in a topic with more than 100 replies
@@ -3639,22 +3786,22 @@ en:
       name: Crazy in Love
       description: Used 50 likes in a day 20 times
       long_description: |
-        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You're a model of regularly encouraging your fellow community members!
+        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You’re a role model for encouraging your fellow community members!
     thank_you:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
       long_description: |
-            This badge is granted when you have 20 liked posts and give 10 or more likes in return. When someone likes your posts, you find the time to like what others are posting, too.
+        This badge is granted when you have 20 liked posts and give 10 or more likes in return. When someone likes your posts, you find the time to like what others are posting, too.
     gives_back:
       name: Gives Back
       description: Has 100 liked posts and gave 100 likes
       long_description: |
-            This badge is granted when you have 100 liked posts and give 100 or more likes in return. Thanks for paying it forward!
+        This badge is granted when you have 100 liked posts and give 100 or more likes in return. Thanks for paying it forward!
     empathetic:
       name: Empathetic
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
-            This badge is granted when you have 500 liked posts and give 1000 or more likes in return. Wow! You're a model of generosity and mutual appreciation :two_hearts:.
+        This badge is granted when you have 500 liked posts and give 1000 or more likes in return. Wow! You’re a model of generosity and mutual appreciation :two_hearts:.
     first_emoji:
       name: First Emoji
       description: Used an Emoji in a Post
@@ -3663,11 +3810,13 @@ en:
     first_mention:
       name: First Mention
       description: Mentioned a user in a post
-      long_description: This badge is granted the first time you mention someone's @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it's a convenient way to bring something to their attention.
+      long_description: |
+        This badge is granted the first time you mention someone’s @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it’s a convenient way to bring something to their attention.
     first_onebox:
       name: First Onebox
       description: Posted a link that was oneboxed
-      long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
+      long_description: |
+        This badge is granted the first time you post a link on a line by itself, which automatically expanded into a onebox with a summary, title, and (when available) picture.
     first_reply_by_email:
       name: First Reply By Email
       description: Replied to a post via email
@@ -3681,15 +3830,18 @@ en:
     enthusiast:
       name: Enthusiast
       description:  Visited 10 days
-      long_description: This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
+      long_description: |
+        This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
     aficionado:
       name: Aficionado
       description: Visited 100 days
-      long_description: This badge is granted for visiting 100 consecutive days. That's more than three months!
+      long_description: |
+        This badge is granted for visiting 100 consecutive days. That’s more than three months!
     devotee:
       name: Devotee
       description: Visited 365 days
-      long_description: This badge is granted for visiting 365 consecutive days. Wow, an entire year!
+      long_description: |
+        This badge is granted for visiting 365 consecutive days. Wow, an entire year!
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
@@ -3717,7 +3869,7 @@ en:
       button: "Register"
       title: "Register Admin Account"
       help: "register a new account to get started"
-      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>may be difficult</a>."
+      no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
       message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, ensure you have set up email correctly for your Discourse and check your spam folder.</p>"
@@ -3840,10 +3992,10 @@ en:
         fields:
           favicon_url:
             label: "Small Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px."
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px. Recommended image extensions are PNG or JPG."
           apple_touch_icon_url:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."
 
       homepage:
         description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
@@ -3854,8 +4006,14 @@ en:
             choices:
               latest:
                 label: "Latest Topics"
-              categories:
-                label: "Categories"
+              categories_only:
+                label: "Categories Only"
+              categories_with_featured_topics:
+                label: "Categories with Featured Topics"
+              categories_and_latest_topics:
+                label: "Categories and Latest Topics"
+              categories_and_top_topics:
+                label: "Categories and Top Topics"
 
       emoji:
         title: "Emoji"
@@ -3887,3 +4045,9 @@ en:
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       confirm_title: 'Notifications enabled - %{site_title}'
       confirm_body: 'Success! Notifications have been enabled.'
+
+  staff_action_logs:
+    not_found: "not found"
+    unknown: "unknown"
+    user_merged: "%{username} was merged into this account"
+    user_delete_self: "Deleted by self from %{url}"

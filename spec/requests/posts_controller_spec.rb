@@ -14,7 +14,7 @@ shared_examples 'finding and showing post' do
 
   it 'succeeds' do
     get url
-    expect(response).to be_success
+    expect(response.status).to eq(200)
   end
 
   context "deleted post" do
@@ -36,13 +36,13 @@ shared_examples 'finding and showing post' do
     it "can find posts as a moderator" do
       sign_in(Fabricate(:moderator))
       get url
-      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
 
     it "can find posts as a admin" do
       sign_in(Fabricate(:admin))
       get url
-      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
   end
 end
@@ -62,7 +62,7 @@ describe PostsController do
   let(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
 
   let(:private_topic) do
-    Fabricate(:topic, archetype: Archetype.private_message, category: nil)
+    Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
   end
 
   let(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
@@ -89,6 +89,30 @@ describe PostsController do
   describe '#by_number' do
     include_examples 'finding and showing post' do
       let(:url) { "/posts/by_number/#{post.topic_id}/#{post.post_number}.json" }
+    end
+  end
+
+  describe '#by_date' do
+    include_examples 'finding and showing post' do
+      let(:url) { "/posts/by-date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
+    end
+
+    it 'returns the expected post' do
+      first_post = Fabricate(:post, created_at: 10.days.ago)
+      second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
+      third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
+
+      get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
+      json = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(json["id"]).to eq(second_post.id)
+    end
+
+    it 'returns no post if date is > at last created post' do
+      get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
+      json = JSON.parse(response.body)
+      expect(response.status).to eq(404)
     end
   end
 
@@ -124,18 +148,6 @@ describe PostsController do
       let(:user) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
 
-      it 'does not allow to destroy when edit time limit expired' do
-        SiteSetting.post_edit_time_limit = 5
-
-        post = Fabricate(:post, topic_id: topic.id, created_at: 10.minutes.ago, user_id: user.id, post_number: 3)
-        sign_in(user)
-
-        delete "/posts/#{post.id}.json"
-
-        expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
-      end
-
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
         post = Fabricate(:post, topic: pm, post_number: 3)
@@ -165,7 +177,7 @@ describe PostsController do
     describe 'when logged in' do
       let(:poster) { Fabricate(:moderator) }
       let(:post1) { Fabricate(:post, user: poster, post_number: 2) }
-      let(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
+      let(:post2) { Fabricate(:post, topic: post1.topic, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
         sign_in(poster)
@@ -277,7 +289,7 @@ describe PostsController do
 
       it 'passes the edit reason through' do
         put "/posts/#{post.id}.json", params: update_params
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         post.reload
         expect(post.edit_reason).to eq("typo")
         expect(post.raw).to eq("edited body")
@@ -307,7 +319,7 @@ describe PostsController do
 
         put "/posts/#{post.id}.json", params: param
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(TopicLink.count).to eq(1)
       end
 
@@ -316,7 +328,7 @@ describe PostsController do
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{first_post.id}.json", params: update_params
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
 
@@ -330,7 +342,7 @@ describe PostsController do
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{first_post.id}.json", params: update_params
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         post.reload
         expect(post.raw).to eq('edited body')
@@ -352,18 +364,32 @@ describe PostsController do
       expect(response.status).not_to eq(200)
       expect(post.topic.category_id).not_to eq(category.id)
     end
+
+    it 'can not move to a category that requires topic approval' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+
+      put "/posts/#{post.id}.json", params: { post: { category_id: category.id, raw: "this is a test edit to post" } }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
   end
 
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
+    let(:post) { Fabricate(:post, user: user) }
+    let(:user) { Fabricate(:user) }
 
     describe 'when logged in' do
       before do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
       let(:private_message) { Fabricate(:private_message_post) }
 
       it "raises an error if the user doesn't have permission to see the post" do
@@ -373,7 +399,7 @@ describe PostsController do
 
       it 'creates a bookmark' do
         put "/posts/#{post.id}/bookmark.json", params: { bookmarked: "true" }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         post_action = PostAction.find_by(user: user, post: post)
         expect(post_action.post_action_type_id).to eq(PostActionType.types[:bookmark])
@@ -421,6 +447,71 @@ describe PostsController do
             expect(PostAction.find_by(id: post_action.id)).to eq(nil)
           end
         end
+      end
+    end
+
+    context "api" do
+      let(:api_key) { user.generate_api_key(user) }
+      let(:master_key) { ApiKey.create_master_key }
+
+      # choosing an arbitrarily easy to mock trusted activity
+      it 'allows users with api key to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: api_key.key
+        }
+
+        expect(response.status).to eq(200)
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
+      end
+
+      it 'raises an error with a user key that does not match an optionally specified username' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: api_key.key,
+          api_username: 'made_up'
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'allows users with a master api key to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: master_key.key,
+          api_username: user.username
+        }
+
+        expect(response.status).to eq(200)
+        expect(PostAction.where(
+          post: post,
+          user: user,
+          post_action_type_id: PostActionType.types[:bookmark]
+        ).count).to eq(1)
+      end
+
+      it 'disallows phonies to bookmark posts' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: SecureRandom.hex(32),
+          api_username: user.username
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'disallows blank api' do
+        put "/posts/#{post.id}/bookmark.json", params: {
+          bookmarked: "true",
+          api_key: "",
+          api_username: user.username
+        }
+
+        expect(response.status).to eq(403)
       end
     end
   end
@@ -522,7 +613,7 @@ describe PostsController do
       it "can rebake the post" do
         sign_in(Fabricate(:moderator))
         put "/posts/#{post.id}/rebake.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -552,7 +643,7 @@ describe PostsController do
           wpid: 1
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         original = response.body
 
         post "/posts.json", params: {
@@ -563,7 +654,7 @@ describe PostsController do
           wpid: 2
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(response.body).to eq(original)
       end
 
@@ -582,7 +673,7 @@ describe PostsController do
           reply_to_post_number: 1
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
         post_1.topic.user.notifications.destroy_all
 
@@ -595,7 +686,7 @@ describe PostsController do
           import_mode: true
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(0)
 
         post "/posts.json", params: {
@@ -607,7 +698,7 @@ describe PostsController do
           import_mode: false
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
     end
@@ -629,7 +720,7 @@ describe PostsController do
             title: 'this is the test title for the topic'
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           parsed = ::JSON.parse(response.body)
 
           expect(parsed["action"]).to eq("enqueued")
@@ -655,7 +746,7 @@ describe PostsController do
             topic_id: topic.id
           }
 
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           parsed = ::JSON.parse(response.body)
           expect(parsed["action"]).not_to eq("enqueued")
         end
@@ -668,7 +759,7 @@ describe PostsController do
             title: 'this is the test title for the topic'
           }
 
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           parsed = ::JSON.parse(response.body)
           expect(parsed["action"]).not_to eq("enqueued")
         end
@@ -682,7 +773,7 @@ describe PostsController do
           title: 'when I eat s3 sometimes when not looking'
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         parsed = ::JSON.parse(response.body)
 
         expect(parsed["action"]).to eq("enqueued")
@@ -703,7 +794,7 @@ describe PostsController do
           archetype: Archetype.private_message
         }
 
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
 
         # allow pm to this group
         group.update_columns(messageable_level: Group::ALIAS_LEVELS[:everyone])
@@ -715,7 +806,7 @@ describe PostsController do
           archetype: Archetype.private_message
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         parsed = ::JSON.parse(response.body)
         post = Post.find(parsed['id'])
@@ -731,7 +822,7 @@ describe PostsController do
           nested_post: true
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         parsed = ::JSON.parse(response.body)
         expect(parsed['post']).to be_present
         expect(parsed['post']['cooked']).to be_present
@@ -742,10 +833,10 @@ describe PostsController do
         title = "this is a title #{SecureRandom.hash}"
 
         post "/posts.json", params: { raw: raw, title: title, wpid: 1 }
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         post "/posts.json", params: { raw: raw, title: title, wpid: 2 }
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
 
       it 'can not create a post in a disallowed category' do
@@ -770,7 +861,7 @@ describe PostsController do
           meta_data: { xyz: 'abc' }
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         new_post = Post.last
         topic = new_post.topic
@@ -793,7 +884,7 @@ describe PostsController do
           image_sizes: { width: '100', height: '200' }
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         new_post = Post.last
         topic = new_post.topic
@@ -818,7 +909,7 @@ describe PostsController do
           target_usernames: "#{user_2.username},#{user_3.username}"
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         new_post = Post.last
         new_topic = Topic.last
@@ -831,7 +922,7 @@ describe PostsController do
       context "errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           expect(response.status).to eq(422)
         end
 
@@ -860,7 +951,7 @@ describe PostsController do
           category: destination_category.id,
           shared_draft: 'true'
         }
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
 
       describe "as a staff user" do
@@ -875,7 +966,7 @@ describe PostsController do
             category: destination_category.id,
             shared_draft: 'true'
           }
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
         end
 
         context "with a shared category" do
@@ -891,7 +982,7 @@ describe PostsController do
               category: destination_category.id,
               shared_draft: 'true'
             }
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             result = JSON.parse(response.body)
             topic = Topic.find(result['topic_id'])
             expect(topic.category_id).to eq(shared_category.id)
@@ -918,7 +1009,7 @@ describe PostsController do
             is_warning: true
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           new_topic = Topic.last
 
@@ -935,7 +1026,7 @@ describe PostsController do
             is_warning: false
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           new_topic = Topic.last
 
@@ -955,7 +1046,7 @@ describe PostsController do
             is_warning: true
           }
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           new_topic = Topic.last
 
@@ -964,6 +1055,67 @@ describe PostsController do
         end
       end
     end
+
+    context "topic bump" do
+      shared_examples "it works" do
+        let(:original_bumped_at) { 1.day.ago }
+        let!(:topic) { Fabricate(:topic, bumped_at: original_bumped_at) }
+
+        it "should be able to skip topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id,
+            no_bump: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to be_within_one_second_of(original_bumped_at)
+        end
+
+        it "should be able to post with topic bumping" do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to eq(topic.posts.last.created_at)
+        end
+      end
+
+      context "admins" do
+        before do
+          sign_in(Fabricate(:admin))
+        end
+
+        include_examples "it works"
+      end
+
+      context "moderators" do
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        include_examples "it works"
+      end
+
+      context "users" do
+        let(:topic) { Fabricate(:topic) }
+
+        [:user, :trust_level_4].each do |user|
+          it "will raise an error for #{user}" do
+            sign_in(Fabricate(user))
+            post "/posts.json", params: {
+              raw: 'this is the test content',
+              topic_id: topic.id,
+              no_bump: true
+            }
+            expect(response.status).to eq(400)
+          end
+        end
+      end
+    end
+
   end
 
   describe '#revisions' do
@@ -993,7 +1145,7 @@ describe PostsController do
       it "ensures staff can see the revisions" do
         sign_in(Fabricate(:admin))
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "ensures poster can see the revisions" do
@@ -1004,13 +1156,13 @@ describe PostsController do
         pr = Fabricate(:post_revision, user: user, post: post)
 
         get "/posts/#{pr.post_id}/revisions/#{pr.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "ensures trust level 4 can see the revisions" do
         sign_in(Fabricate(:user, trust_level: 4))
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1020,7 +1172,7 @@ describe PostsController do
 
       it "ensures anyone can see the revisions" do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1034,7 +1186,7 @@ describe PostsController do
       it "also work on deleted post" do
         sign_in(admin)
         get "/posts/#{deleted_post_revision.post_id}/revisions/#{deleted_post_revision.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1049,7 +1201,7 @@ describe PostsController do
       it "also work on deleted topic" do
         sign_in(admin)
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -1070,7 +1222,7 @@ describe PostsController do
       it "does not work" do
         sign_in(Fabricate(:user))
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
       end
     end
 
@@ -1086,12 +1238,12 @@ describe PostsController do
 
       it "fails when post_revision record is not found" do
         put "/posts/#{post_id}/revisions/#{revision_id + 1}/revert.json"
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
       end
 
       it "fails when post record is not found" do
         put "/posts/#{post_id + 1}/revisions/#{revision_id}/revert.json"
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
       end
 
       it "fails when revision is blank" do
@@ -1108,7 +1260,7 @@ describe PostsController do
 
       it "works!" do
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "supports reverting posts in deleted topics" do
@@ -1116,7 +1268,7 @@ describe PostsController do
         PostDestroyer.new(moderator, first_post).destroy
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -1131,13 +1283,13 @@ describe PostsController do
     it "raises an error when you can't see the post" do
       post = Fabricate(:private_message_post)
       get "/posts/#{post.id}/expand-embed.json"
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     it "retrieves the body when you can see the post" do
       TopicEmbed.expects(:expanded_for).with(post).returns("full content")
       get "/posts/#{post.id}/expand-embed.json"
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(::JSON.parse(response.body)['cooked']).to eq("full content")
     end
   end
@@ -1155,7 +1307,7 @@ describe PostsController do
       it "can see the flagged posts when authorized" do
         sign_in(Fabricate(:moderator))
         get "/posts/system/flagged.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "only shows agreed and deferred flags" do
@@ -1176,7 +1328,7 @@ describe PostsController do
 
         sign_in(Fabricate(:moderator))
         get "/posts/#{user.username}/flagged.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         expect(JSON.parse(response.body).length).to eq(2)
       end
@@ -1196,7 +1348,7 @@ describe PostsController do
       it "can see the deleted posts when authorized" do
         sign_in(Fabricate(:moderator))
         get "/posts/system/deleted.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
       end
 
       it "doesn't return secured categories for moderators if they don't have access" do
@@ -1213,7 +1365,7 @@ describe PostsController do
 
         sign_in(Fabricate(:moderator))
         get "/posts/#{user.username}/deleted.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         data = JSON.parse(response.body)
         expect(data.length).to eq(0)
@@ -1229,7 +1381,7 @@ describe PostsController do
 
         sign_in(Fabricate(:moderator))
         get "/posts/#{user.username}/deleted.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         data = JSON.parse(response.body)
         expect(data.length).to eq(0)
@@ -1248,7 +1400,7 @@ describe PostsController do
 
         sign_in(Fabricate(:admin))
         get "/posts/#{user.username}/deleted.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         data = JSON.parse(response.body)
         expect(data.length).to eq(1)
@@ -1262,7 +1414,7 @@ describe PostsController do
     it "can be viewed by anonymous" do
       post = Fabricate(:post, raw: "123456789")
       get "/posts/#{post.id}/raw.json"
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
   end
@@ -1273,7 +1425,7 @@ describe PostsController do
       post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
       post.save
       get "/raw/#{topic.id}/1.json"
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
   end
@@ -1301,7 +1453,7 @@ describe PostsController do
 
       get "/u/#{user.username}/activity.rss"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       body = response.body
 
@@ -1319,7 +1471,7 @@ describe PostsController do
         private_post
         get "/private-posts.rss"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         body = response.body
 
@@ -1333,7 +1485,7 @@ describe PostsController do
         public_post
         private_post
         get "/private-posts.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         post_ids = json['private_posts'].map { |p| p['id'] }
@@ -1350,7 +1502,7 @@ describe PostsController do
 
         get "/posts.rss"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         body = response.body
 
@@ -1366,7 +1518,7 @@ describe PostsController do
         topicless_post
 
         get "/posts.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         post_ids = json['latest_posts'].map { |p| p['id'] }
@@ -1383,7 +1535,7 @@ describe PostsController do
       post = Fabricate(:post, cooked: "WAt")
       get "/posts/#{post.id}/cooked.json"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
 
       expect(json).to be_present
@@ -1408,7 +1560,7 @@ describe PostsController do
         sign_in(Fabricate(:moderator))
 
         get "/posts/#{post.id}/raw-email.json"
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         json = ::JSON.parse(response.body)
         expect(json['raw_email']).to eq('email_content')
@@ -1423,15 +1575,14 @@ describe PostsController do
 
     it 'can lock and unlock the post' do
       put "/posts/#{public_post.id}/locked.json", params: { locked: "true" }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).to be_locked
 
       put "/posts/#{public_post.id}/locked.json", params: { locked: "false" }
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).not_to be_locked
     end
   end
-
 end

@@ -12,7 +12,7 @@
           {{d-button class="no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
           {{d-button class="no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
           {{#if cat.hasBufferedChanges}}
-            {{d-button class="no-text" action="commit" icon="check"}}
+            {{d-button class="no-text ok" action="commit" icon="check"}}
           {{/if}}
         </td>
         <td>{{category-badge cat allowUncategorized="true"}}</td>
@@ -23,9 +23,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{#if showFixIndices}}
-    {{d-button action="fixIndices" icon="random" label="categories.reorder.fix_order" title="categories.reorder.fix_order_tooltip"}}
-  {{/if}}
   {{#if showApplyAll}}
     {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
   {{/if}}

@@ -1,6 +1,7 @@
 module Email
 
   class Processor
+    attr_reader :receiver
 
     def initialize(mail, retry_on_rate_limit = true)
       @mail = mail
@@ -52,6 +53,7 @@ module Email
                          when Email::Receiver::TopicNotFoundError          then :email_reject_topic_not_found
                          when Email::Receiver::TopicClosedError            then :email_reject_topic_closed
                          when Email::Receiver::InvalidPost                 then :email_reject_invalid_post
+                         when Email::Receiver::TooShortPost                then :email_reject_post_too_short
                          when Email::Receiver::UnsubscribeNotAllowed       then :email_reject_invalid_post
                          when ActiveRecord::Rollback                       then :email_reject_invalid_post
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
@@ -69,6 +71,10 @@ module Email
         template_args[:post_error] = e.message
       end
 
+      if message_template == :email_reject_post_too_short
+        template_args[:count] = SiteSetting.min_post_length
+      end
+
       if message_template == :email_reject_unrecognized_error
         msg  = "Unrecognized error type (#{e.class}: #{e.message}) when processing incoming email"
         msg += "\n\nBacktrace:\n#{e.backtrace.map { |l| "  #{l}" }.join("\n")}"
@@ -79,6 +85,7 @@ module Email
 
       if message_template == :email_reject_old_destination
         template_args[:short_url] = e.message
+        template_args[:number_of_days] = SiteSetting.disallow_reply_by_email_after_days
       end
 
       if message_template

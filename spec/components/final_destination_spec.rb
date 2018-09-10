@@ -47,6 +47,14 @@ describe FinalDestination do
     FinalDestination.new(url, opts)
   end
 
+  it 'correctly parses ignored hostnames' do
+    fd = FinalDestination.new('https://meta.discourse.org',
+      ignore_redirects: ['http://google.com', 'youtube.com', 'https://meta.discourse.org', '://bing.com']
+    )
+
+    expect(fd.ignored).to eq(['test.localhost', 'google.com', 'meta.discourse.org'])
+  end
+
   describe '.resolve' do
 
     it "has a ready status code before anything happens" do

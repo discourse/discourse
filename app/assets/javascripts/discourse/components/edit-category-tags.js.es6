@@ -1,4 +1,3 @@
-import { buildCategoryPanel } from 'discourse/components/edit-category-panel';
+import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 
-export default buildCategoryPanel('tags', {
-});
+export default buildCategoryPanel("tags", {});

@@ -4,7 +4,35 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     "google_oauth2"
   end
 
-  def after_authenticate(auth_hash)
+  def enabled?
+    SiteSetting.enable_google_oauth2_logins
+  end
+
+  def description_for_user(user)
+    info = GoogleUserInfo.find_by(user_id: user.id)
+    info&.email || info&.name || ""
+  end
+
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = GoogleUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+
+    # We get a temporary token from google upon login but do not need it, and do not store it.
+    # Therefore we do not have any way to revoke the token automatically on google's end
+
+    info.destroy!
+    true
+  end
+
+  def can_connect_existing_user?
+    true
+  end
+
+  def after_authenticate(auth_hash, existing_account: nil)
     session_info = parse_hash(auth_hash)
     google_hash = session_info[:google]
 
@@ -16,7 +44,14 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     result.extra_data = google_hash
 
     user_info = ::GoogleUserInfo.find_by(google_user_id: google_hash[:google_user_id])
-    result.user = user_info.try(:user)
+
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      result.user = existing_account
+      user_info = GoogleUserInfo.create!({ user_id: result.user.id }.merge(google_hash))
+    else
+      result.user = user_info&.user
+    end
 
     if !result.user && !result.email.blank? && result.email_valid
       result.user = User.find_by_email(result.email)

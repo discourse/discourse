@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'site_settings/deprecated_settings'
 require_dependency 'site_settings/type_supervisor'
 require_dependency 'site_settings/defaults_provider'
@@ -5,12 +7,54 @@ require_dependency 'site_settings/db_provider'
 
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
-  extend Forwardable
 
-  def_delegator :defaults, :site_locale, :default_locale
-  def_delegator :defaults, :site_locale=, :default_locale=
-  def_delegator :defaults, :has_setting?
-  def_delegators 'SiteSettings::TypeSupervisor', :types, :supported_types
+  # support default_locale being set via global settings
+  # this also adds support for testing the extension and global settings
+  # for site locale
+  def self.extended(klass)
+    if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+      klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
+    end
+  end
+
+  # we need a default here to support defaults per locale
+  def default_locale=(val)
+    val = val.to_s
+    raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
+    if val != self.default_locale
+      add_override!(:default_locale, val)
+      refresh!
+      Discourse.request_refresh!
+    end
+  end
+
+  def default_locale?
+    true
+  end
+
+  # set up some sort of default so we can look stuff up
+  def default_locale
+    # note optimised cause this is called a lot so avoiding .presence which
+    # adds 2 method calls
+    locale = current[:default_locale]
+    if locale && !locale.blank?
+      locale
+    else
+      SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    end
+  end
+
+  def has_setting?(v)
+    defaults.has_setting?(v)
+  end
+
+  def supported_types
+    SiteSettings::TypeSupervisor.supported_types
+  end
+
+  def types
+    SiteSettings::TypeSupervisor.types
+  end
 
   def listen_for_changes=(val)
     @listen_for_changes = val
@@ -55,19 +99,27 @@ module SiteSettingExtension
   end
 
   def refresh_settings
-    @refresh_settings ||= []
+    @refresh_settings ||= [:default_locale]
   end
 
   def client_settings
-    @client_settings ||= []
+    @client_settings ||= [:default_locale]
   end
 
   def previews
     @previews ||= {}
   end
 
+  def secret_settings
+    @secret_settings ||= []
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
+
+    if name == :default_locale
+      raise Discourse::InvalidParameters.new("Other settings depend on default locale, you can not configure it like this")
+    end
 
     shadowed_val = nil
 
@@ -75,7 +127,7 @@ module SiteSettingExtension
       defaults.load_setting(
         name,
         default,
-        opts.extract!(*SiteSettings::DefaultsProvider::CONSUMED_OPTS)
+        opts.delete(:locale_default)
       )
 
       categories[name] = opts[:category] || :uncategorized
@@ -106,6 +158,10 @@ module SiteSettingExtension
         previews[name] = opts[:preview]
       end
 
+      if opts[:secret]
+        secret_settings << name
+      end
+
       type_supervisor.load_setting(
         name,
         opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS)
@@ -121,7 +177,7 @@ module SiteSettingExtension
 
   def settings_hash
     result = {}
-    defaults.each_key do |s|
+    defaults.all.keys.each do |s|
       result[s] = send(s).to_s
     end
     result
@@ -139,21 +195,36 @@ module SiteSettingExtension
 
   # Retrieve all settings
   def all_settings(include_hidden = false)
-    defaults
+
+    locale_setting_hash =
+    {
+      setting: 'default_locale',
+      default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
+      category: 'required',
+      description: description('default_locale'),
+      type: SiteSetting.types[SiteSetting.types[:enum]],
+      preview: nil,
+      value: self.default_locale,
+      valid_values: LocaleSiteSetting.values,
+      translate_names: LocaleSiteSetting.translate_names?
+    }
+
+    defaults.all(default_locale)
       .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
       value = send(s)
       opts = {
         setting: s,
         description: description(s),
-        default: defaults[s].to_s,
+        default: defaults.get(s, default_locale).to_s,
         value: value.to_s,
         category: categories[s],
-        preview: previews[s]
+        preview: previews[s],
+        secret: secret_settings.include?(s)
       }.merge(type_supervisor.type_hash(s))
 
       opts
-    end.unshift(defaults.locale_setting_hash)
+    end.unshift(locale_setting_hash)
   end
 
   def description(setting)
@@ -176,7 +247,7 @@ module SiteSettingExtension
         [s.name.to_sym, type_supervisor.to_rb_value(s.name, s.value, s.data_type)]
       }.to_a.flatten)]
 
-      defaults_view = defaults.all
+      defaults_view = defaults.all(new_hash[:default_locale])
 
       # add locale default and defaults based on default_locale, cause they are cached
       new_hash = defaults_view.merge!(new_hash)
@@ -233,7 +304,7 @@ module SiteSettingExtension
 
   def remove_override!(name)
     provider.destroy(name)
-    current[name] = defaults[name]
+    current[name] = defaults.get(name, default_locale)
     clear_cache!
   end
 
@@ -276,7 +347,7 @@ module SiteSettingExtension
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
-      raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
+      raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
   end
 
@@ -284,7 +355,7 @@ module SiteSettingExtension
     prev_value = send(name)
     set(name, value)
     if has_setting?(name)
-      value = prev_value = "[FILTERED]" if name.to_s =~ /_secret/
+      value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     end
   end
@@ -355,13 +426,13 @@ module SiteSettingExtension
 
     host = begin
       URI.parse(url)&.host
-    rescue URI::InvalidURIError
+    rescue URI::Error
       nil
     end
 
     host ||= begin
       URI.parse("http://#{url}")&.host
-    rescue URI::InvalidURIError
+    rescue URI::Error
       nil
     end
 

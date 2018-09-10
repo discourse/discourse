@@ -70,6 +70,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     import_groups
     import_categories
     import_users
+    import_user_visits
     import_topics
     import_posts
     import_likes
@@ -103,6 +104,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     user_count = mysql_query("SELECT COUNT(*) count FROM users").first["count"]
     avatar_files = Dir.entries(AVATAR_DIR)
+    duplicate_emails = mysql_query("SELECT email_lower FROM users GROUP BY email_lower HAVING COUNT(email_lower) > 1").map { |e| [e["email_lower"], 0] }.to_h
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
@@ -129,17 +131,25 @@ class ImportScripts::Lithium < ImportScripts::Base
       SQL
 
       create_users(users, total: user_count, offset: offset) do |user|
-        profile = profiles.select { |p|  p["user_id"] == user["id"] }
+        user_id = user["id"]
+        profile = profiles.select { |p|  p["user_id"] == user_id }
         result = profile.select { |p|  p["param"] == "profile.location" }
         location = result.count > 0 ? result.first["nvalue"] : nil
         username = user["login_canon"]
         username = USERNAME_MAPPINGS[username] if USERNAME_MAPPINGS[username].present?
 
+        email = user["email"].presence || fake_email
+        email_lower = email.downcase
+        if duplicate_emails.key?(email_lower)
+          duplicate_emails[email_lower] += 1
+          email.sub!("@", "+#{duplicate_emails[email_lower]}@") if duplicate_emails[email_lower] > 1
+        end
+
         {
-          id: user["id"],
+          id: user_id,
           name: user["nlogin"],
           username: username,
-          email: user["email"].presence || fake_email,
+          email: email,
           location: location,
           custom_fields: user_custom_fields(user, profile),
           # website: user["homepage"].strip,
@@ -172,6 +182,35 @@ class ImportScripts::Lithium < ImportScripts::Base
             end
           end
         }
+      end
+    end
+  end
+
+  def import_user_visits
+    puts "", "importing user visits"
+
+    batches(BATCH_SIZE) do |offset|
+      visits = mysql_query <<-SQL
+          SELECT user_id, login_time
+            FROM user_log
+        ORDER BY user_id
+           LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+
+      break if visits.size < 1
+
+      user_ids = visits.uniq { |v| v["user_id"] }
+
+      user_ids.each do |user_id|
+        user = UserCustomField.find_by(name: "import_id", value: user_id).try(:user)
+        raise "User not found for id #{user_id}" if user.blank?
+
+        user_visits = visits.select { |v| v["user_id"] == user_id }
+        user_visits.each do |v|
+          date = unix_time(v["login_time"])
+          user.update_visit_record!(date)
+        end
       end
     end
   end
@@ -496,7 +535,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
 
     puts "loading data into temp table"
-    PostAction.exec_sql("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
+    DB.exec("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
     PostAction.transaction do
       results.each do |result|
 
@@ -505,17 +544,17 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         next unless result["user_id"] && result["post_id"]
 
-        PostAction.exec_sql("INSERT INTO like_data VALUES (:user_id,:post_id,:created_at)",
-                              user_id: result["user_id"],
-                              post_id: result["post_id"],
-                              created_at: result["created_at"]
-                           )
+        DB.exec("INSERT INTO like_data VALUES (:user_id,:post_id,:created_at)",
+          user_id: result["user_id"],
+          post_id: result["post_id"],
+          created_at: result["created_at"]
+        )
 
       end
     end
 
     puts "creating missing post actions"
-    PostAction.exec_sql <<-SQL
+    DB.exec <<~SQL
 
     INSERT INTO post_actions (post_id, user_id, post_action_type_id, created_at, updated_at)
              SELECT l.post_id, l.user_id, 2, l.created_at, l.created_at FROM like_data l
@@ -524,7 +563,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     SQL
 
     puts "creating missing user actions"
-    UserAction.exec_sql <<-SQL
+    DB.exec <<~SQL
     INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
              SELECT pa.user_id, 1, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
              FROM post_actions pa
@@ -535,7 +574,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     SQL
 
     # reverse action
-    UserAction.exec_sql <<-SQL
+    DB.exec <<~SQL
     INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
              SELECT p.user_id, 2, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
              FROM post_actions pa
@@ -547,7 +586,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     SQL
     puts "updating like counts on posts"
 
-    Post.exec_sql <<-SQL
+    DB.exec <<~SQL
         UPDATE posts SET like_count = coalesce(cnt,0)
                   FROM (
         SELECT post_id, count(*) cnt
@@ -561,7 +600,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     puts "updating like counts on topics"
 
-    Post.exec_sql <<-SQL
+    DB.exec <<-SQL
       UPDATE topics SET like_count = coalesce(cnt,0)
       FROM (
         SELECT topic_id, sum(like_count) cnt
@@ -588,7 +627,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
 
     puts "loading data into temp table"
-    PostAction.exec_sql("create temp table accepted_data(post_id int primary key)")
+    DB.exec("create temp table accepted_data(post_id int primary key)")
     PostAction.transaction do
       results.each do |result|
 
@@ -596,7 +635,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         next unless result["post_id"]
 
-        PostAction.exec_sql("INSERT INTO accepted_data VALUES (:post_id)",
+        DB.exec("INSERT INTO accepted_data VALUES (:post_id)",
                               post_id: result["post_id"]
                            )
 
@@ -604,7 +643,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
 
     puts "deleting dupe answers"
-    PostAction.exec_sql <<-SQL
+    DB.exec <<~SQL
     DELETE FROM accepted_data WHERE post_id NOT IN (
       SELECT post_id FROM
       (
@@ -617,7 +656,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     SQL
 
     puts "importing accepted answers"
-    PostAction.exec_sql <<-SQL
+    DB.exec <<~SQL
       INSERT into post_custom_fields (name, value, post_id, created_at, updated_at)
       SELECT 'is_accepted_answer', 'true', a.post_id, current_timestamp, current_timestamp
       FROM accepted_data a
@@ -626,7 +665,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     SQL
 
     puts "marking accepted topics"
-    PostAction.exec_sql <<-SQL
+    DB.exec <<~SQL
       INSERT into topic_custom_fields (name, value, topic_id, created_at, updated_at)
       SELECT 'accepted_answer_post_id', a.post_id::varchar, p.topic_id, current_timestamp, current_timestamp
       FROM accepted_data a
@@ -758,10 +797,10 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     results.map { |r| r["post_id"] }.each_slice(500) do |ids|
       mapped = ids.map { |id| existing_map[id] }.compact
-      Topic.exec_sql("
-                     UPDATE topics SET closed = true
-                     WHERE id IN (SELECT topic_id FROM posts where id in (:ids))
-                     ", ids: mapped) if mapped.present?
+      DB.exec(<<~SQL, ids: mapped) if mapped.present?
+         UPDATE topics SET closed = true
+         WHERE id IN (SELECT topic_id FROM posts where id in (:ids))
+      SQL
     end
 
   end
@@ -780,8 +819,8 @@ class ImportScripts::Lithium < ImportScripts::Base
     WHERE pm.id IS NULL AND f.name = 'import_unique_id'
 SQL
 
-    r = Permalink.exec_sql sql
-    puts "#{r.cmd_tuples} permalinks to topics added!"
+    r = DB.exec sql
+    puts "#{r} permalinks to topics added!"
 
     sql = <<-SQL
     INSERT INTO permalinks (url, post_id, created_at, updated_at)
@@ -792,13 +831,14 @@ SQL
     WHERE pm.id IS NULL AND f.name = 'import_unique_id'
 SQL
 
-    r = Permalink.exec_sql sql
-    puts "#{r.cmd_tuples} permalinks to posts added!"
+    r = DB.exec sql
+    puts "#{r} permalinks to posts added!"
 
   end
 
   def find_upload(user_id, attachment_id, real_filename)
-    filename = File.join(ATTACHMENT_DIR, "#{attachment_id.to_s.rjust(4, "0")}.dat")
+    filename = attachment_id.to_s.rjust(4, "0")
+    filename = File.join(ATTACHMENT_DIR, "000#{filename[0]}/#{filename}.dat")
 
     unless File.exists?(filename)
       puts "Attachment file doesn't exist: #{filename}"
@@ -846,7 +886,7 @@ SQL
           post.raw = new_raw
           post.cooked = post.cook(new_raw)
           cpp = CookedPostProcessor.new(post)
-          cpp.keep_reverse_index_up_to_date
+          cpp.link_post_uploads
           post.custom_fields["import_post_process"] = true
           post.save
         end
@@ -863,6 +903,13 @@ SQL
   end
 
   def postprocess_post_raw(raw, user_id)
+    matches = raw.match(/<messagetemplate.*<\/messagetemplate>/m) || []
+    matches.each do |match|
+      hash = Hash.from_xml(match)
+      template = hash["messagetemplate"]["zone"]["item"]
+      content = (template[0] || template)["content"] || ""
+      raw.sub!(match, content)
+    end
 
     doc = Nokogiri::HTML.fragment(raw)
 
@@ -952,7 +999,7 @@ SQL
         user = UserCustomField.find_by(name: 'import_id', value: uid).try(:user)
         if user.present?
           username = user.username
-          span = doc.create_element "span"
+          span = l.document.create_element "span"
           span.inner_html = "@#{username}"
           l.replace span
         end

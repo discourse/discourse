@@ -175,12 +175,6 @@ class Middleware::RequestTracker
       return result
     end
 
-    if block_crawler(request)
-      log_request = false
-      result = [403, { 'Content-Type' => 'text/plain' }, ['Crawler is not allowed']]
-      return result
-    end
-
     env["discourse.request_tracker"] = self
     MethodProfiler.start
     result = @app.call(env)
@@ -264,7 +258,7 @@ class Middleware::RequestTracker
 
       if !limiter_assets10.can_perform?
         if warn
-          Rails.logger.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit, uri: #{request.env["REQUEST_URI"]}")
+          Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
         end
 
         return !(GlobalSetting.max_reqs_per_ip_mode == "warn")
@@ -278,20 +272,13 @@ class Middleware::RequestTracker
         false
       rescue RateLimiter::LimitExceeded
         if warn
-          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{request.env["REQUEST_URI"]}")
+          Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
           !(GlobalSetting.max_reqs_per_ip_mode == "warn")
         else
           true
         end
       end
     end
-  end
-
-  def block_crawler(request)
-    request.get? &&
-      !request.xhr? &&
-      !request.path.ends_with?('robots.txt') &&
-      CrawlerDetection.is_blocked_crawler?(request.env['HTTP_USER_AGENT'])
   end
 
   def log_later(data, host)

@@ -6,24 +6,16 @@ acceptance("Login Required", {
   }
 });
 
-QUnit.test("redirect", assert => {
-  visit('/latest');
-  andThen(() => {
-    assert.equal(currentPath(), "login", "it redirects them to login");
-  });
+QUnit.test("redirect", async assert => {
+  await visit("/latest");
+  assert.equal(currentPath(), "login", "it redirects them to login");
 
-  click('#site-logo');
-  andThen(() => {
-    assert.equal(currentPath(), "login", "clicking the logo keeps them on login");
-  });
+  await click("#site-logo");
+  assert.equal(currentPath(), "login", "clicking the logo keeps them on login");
 
-  click('header .login-button');
-  andThen(() => {
-    assert.ok(exists('.login-modal'), "they can still access the login modal");
-  });
+  await click("header .login-button");
+  assert.ok(exists(".login-modal"), "they can still access the login modal");
 
-  click('.modal-header .close');
-  andThen(() => {
-    assert.ok(invisible('.login-modal'), "it closes the login modal");
-  });
+  await click(".modal-header .close");
+  assert.ok(invisible(".login-modal"), "it closes the login modal");
 });

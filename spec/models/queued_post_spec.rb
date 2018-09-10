@@ -86,6 +86,11 @@ describe QueuedPost do
       # It removes the pending action
       expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
 
+      # Logs staff action for rejected post
+      post_rejected_logs = UserHistory.where(action: UserHistory.actions[:post_rejected])
+      expect(post_rejected_logs.count).to eq(1)
+      expect(post_rejected_logs.first.details).to include(qp.raw)
+
       # We can't reject twice
       expect(-> { qp.reject!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
     end
@@ -157,6 +162,39 @@ describe QueuedPost do
       expect(qp).to be_visible
       expect(QueuedPost.visible).to include(qp)
       expect(QueuedPost.new_count).to eq(1)
+    end
+  end
+
+  describe 'create' do
+    subject { Fabricate.build(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.first
+
+      expect(event[:event_name]).to eq(:queued_post_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'approve' do
+    subject { Fabricate(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.approve!(Discourse.system_user) }.last
+
+      expect(event[:event_name]).to eq(:approved_post)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'reject' do
+    subject { Fabricate(:queued_post) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.reject!(Discourse.system_user) }.last
+
+      expect(event[:event_name]).to eq(:rejected_post)
+      expect(event[:params].first).to eq(subject)
     end
   end
 

@@ -41,14 +41,20 @@
             {{{pinMessage}}}
           </p>
           <p class="with-validation">
-            {{date-picker-future value=model.pinnedInCategoryUntil}}
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              input=model.pinnedInCategoryUntil}}
             {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
           </p>
         {{else}}
           <p class="with-validation">
             {{{pinMessage}}}
             {{d-icon "clock-o"}}
-            {{date-picker-future value=model.pinnedInCategoryUntil}}
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              input=model.pinnedInCategoryUntil}}
             {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
           </p>
         {{/if}}
@@ -77,14 +83,20 @@
             {{i18n "topic.feature_topic.pin_globally"}}
           </p>
           <p class="with-validation">
-            {{date-picker-future value=model.pinnedGloballyUntil}}
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              input=model.pinnedGloballyUntil}}
             {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
           </p>
         {{else}}
           <p class="with-validation">
             {{i18n "topic.feature_topic.pin_globally"}}
             {{d-icon "clock-o"}}
-            {{date-picker-future value=model.pinnedGloballyUntil}}
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              input=model.pinnedGloballyUntil}}
             {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
           </p>
         {{/if}}

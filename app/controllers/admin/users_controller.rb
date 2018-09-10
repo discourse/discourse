@@ -77,7 +77,7 @@ class Admin::UsersController < Admin::AdminController
         )
     SQL
 
-    UserHistory.exec_sql(
+    DB.exec(
       sql,
       UserHistory.actions.slice(
         :silence_user,
@@ -350,7 +350,7 @@ class Admin::UsersController < Admin::AdminController
         silenced: true,
         silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
-        suspended_at: @user.silenced_at,
+        silenced_at: @user.silenced_at,
         silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
@@ -365,7 +365,7 @@ class Admin::UsersController < Admin::AdminController
         silenced: false,
         silence_reason: nil,
         silenced_till: nil,
-        suspended_at: nil
+        silenced_at: nil
       }
     )
   end
@@ -386,10 +386,10 @@ class Admin::UsersController < Admin::AdminController
 
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
-    user_second_factor = @user.user_second_factor
-    raise Discourse::InvalidParameters unless user_second_factor
+    user_second_factor = @user.user_second_factors
+    raise Discourse::InvalidParameters unless !user_second_factor.empty?
 
-    user_second_factor.destroy!
+    user_second_factor.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(
@@ -544,34 +544,34 @@ class Admin::UsersController < Admin::AdminController
 
   private
 
-    def perform_post_action
-      return unless params[:post_id].present? &&
-        params[:post_action].present?
+  def perform_post_action
+    return unless params[:post_id].present? &&
+      params[:post_action].present?
 
-      if post = Post.where(id: params[:post_id]).first
-        case params[:post_action]
-        when 'delete'
-          PostDestroyer.new(current_user, post).destroy
-        when 'edit'
-          revisor = PostRevisor.new(post)
+    if post = Post.where(id: params[:post_id]).first
+      case params[:post_action]
+      when 'delete'
+        PostDestroyer.new(current_user, post).destroy
+      when 'edit'
+        revisor = PostRevisor.new(post)
 
-          # Take what the moderator edited in as gospel
-          revisor.revise!(
-            current_user,
-            { raw:  params[:post_edit] },
-            skip_validations: true,
-            skip_revision: true
-          )
-        end
+        # Take what the moderator edited in as gospel
+        revisor.revise!(
+          current_user,
+          { raw:  params[:post_edit] },
+          skip_validations: true,
+          skip_revision: true
+        )
       end
     end
+  end
 
-    def fetch_user
-      @user = User.find_by(id: params[:user_id])
-    end
+  def fetch_user
+    @user = User.find_by(id: params[:user_id])
+  end
 
-    def refresh_browser(user)
-      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
-    end
+  def refresh_browser(user)
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+  end
 
 end

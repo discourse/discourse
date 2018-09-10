@@ -1,3 +1,3 @@
 export default Ember.Component.extend({
-  classNames: ['flagged-post-response']
+  classNames: ["flagged-post-response"]
 });

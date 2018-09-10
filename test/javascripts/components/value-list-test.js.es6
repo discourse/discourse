@@ -1,67 +1,111 @@
-import componentTest from 'helpers/component-test';
-moduleForComponent('value-list', {integration: true});
+import componentTest from "helpers/component-test";
+moduleForComponent("value-list", { integration: true });
 
-componentTest('functionality', {
-  template: '{{value-list values=values inputType="array"}}',
-  test(assert) {
-    assert.ok(this.$('.values .value').length === 0, 'it has no values');
-    assert.ok(this.$('input').length, 'it renders the input');
-    assert.ok(this.$('.btn-primary[disabled]').length, 'it is disabled with no value');
+componentTest("adding a value", {
+  template: "{{value-list values=values}}",
 
-    fillIn('input', 'eviltrout');
-    andThen(() => {
-      assert.ok(!this.$('.btn-primary[disabled]').length, "it isn't disabled anymore");
-    });
+  async test(assert) {
+    this.set("values", "vinkas\nosama");
 
-    click('.btn-primary');
-    andThen(() => {
-      assert.equal(this.$('.values .value').length, 1, 'it adds the value');
-      assert.equal(this.$('input').val(), '', 'it clears the input');
-      assert.ok(this.$('.btn-primary[disabled]').length, "it is disabled again");
-      assert.equal(this.get('values'), 'eviltrout', 'it appends the value');
-    });
+    await selectKit().expand();
+    await selectKit().fillInFilter("eviltrout");
+    await selectKit().keyboard("enter");
 
-    click('.value .btn-small');
-    andThen(() => {
-      assert.ok(this.$('.values .value').length === 0, 'it removes the value');
-    });
+    assert.ok(
+      find(".values .value").length === 3,
+      "it adds the value to the list of values"
+    );
+
+    assert.deepEqual(
+      this.get("values"),
+      "vinkas\nosama\neviltrout",
+      "it adds the value to the list of values"
+    );
   }
 });
 
-componentTest('with string delimited values', {
-  template: '{{value-list values=valueString}}',
-  beforeEach() {
-    this.set('valueString', "hello\nworld");
-  },
+componentTest("removing a value", {
+  template: "{{value-list values=values}}",
 
-  test(assert) {
-    assert.equal(this.$('.values .value').length, 2);
+  async test(assert) {
+    this.set("values", "vinkas\nosama");
 
-    fillIn('input', 'eviltrout');
-    click('.btn-primary');
+    await click(".values .value[data-index='0'] .remove-value-btn");
 
-    andThen(() => {
-      assert.equal(this.$('.values .value').length, 3);
-      assert.equal(this.get('valueString'), "hello\nworld\neviltrout");
-    });
+    assert.ok(
+      find(".values .value").length === 1,
+      "it removes the value from the list of values"
+    );
+
+    assert.equal(this.get("values"), "osama", "it removes the expected value");
   }
 });
 
-componentTest('with array values', {
-  template: '{{value-list values=valueArray inputType="array"}}',
-  beforeEach() {
-    this.set('valueArray', ['abc', 'def']);
-  },
+componentTest("selecting a value", {
+  template: "{{value-list values=values choices=choices}}",
 
-  test(assert) {
-    assert.equal(this.$('.values .value').length, 2);
+  async test(assert) {
+    this.set("values", "vinkas\nosama");
+    this.set("choices", ["maja", "michael"]);
 
-    fillIn('input', 'eviltrout');
-    click('.btn-primary');
+    await selectKit().expand();
+    await selectKit().selectRowByValue("maja");
 
-    andThen(() => {
-      assert.equal(this.$('.values .value').length, 3);
-      assert.deepEqual(this.get('valueArray'), ['abc', 'def', 'eviltrout']);
-    });
+    assert.ok(
+      find(".values .value").length === 3,
+      "it adds the value to the list of values"
+    );
+
+    assert.deepEqual(
+      this.get("values"),
+      "vinkas\nosama\nmaja",
+      "it adds the value to the list of values"
+    );
+  }
+});
+
+componentTest("array support", {
+  template: "{{value-list values=values inputType='array'}}",
+
+  async test(assert) {
+    this.set("values", ["vinkas", "osama"]);
+
+    await selectKit().expand();
+    await selectKit().fillInFilter("eviltrout");
+    await selectKit().keyboard("enter");
+
+    assert.ok(
+      find(".values .value").length === 3,
+      "it adds the value to the list of values"
+    );
+
+    assert.deepEqual(
+      this.get("values"),
+      ["vinkas", "osama", "eviltrout"],
+      "it adds the value to the list of values"
+    );
+  }
+});
+
+componentTest("delimiter support", {
+  template: "{{value-list values=values inputDelimiter='|'}}",
+
+  async test(assert) {
+    this.set("values", "vinkas|osama");
+
+    await selectKit().expand();
+    await selectKit().fillInFilter("eviltrout");
+    await selectKit().keyboard("enter");
+
+    assert.ok(
+      find(".values .value").length === 3,
+      "it adds the value to the list of values"
+    );
+
+    assert.deepEqual(
+      this.get("values"),
+      "vinkas|osama|eviltrout",
+      "it adds the value to the list of values"
+    );
   }
 });

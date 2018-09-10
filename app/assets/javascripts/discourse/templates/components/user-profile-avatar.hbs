@@ -1,0 +1,11 @@
+<div class='user-profile-avatar'>
+  {{bound-avatar user "huge"}}
+  {{#if user.primary_group_name}}
+    {{avatar-flair
+      flairURL=user.primary_group_flair_url
+      flairBgColor=user.primary_group_flair_bg_color
+      flairColor=user.primary_group_flair_color
+      groupName=user.primary_group_name}}
+  {{/if}}
+  {{plugin-outlet name="user-profile-avatar-flair" args=(hash model=user) tagName='div'}}
+</div>

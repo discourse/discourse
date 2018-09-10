@@ -1,9 +1,12 @@
 import ViewingActionType from "discourse/mixins/viewing-action-type";
-import UserBadge from 'discourse/models/user-badge';
+import UserBadge from "discourse/models/user-badge";
 
 export default Discourse.Route.extend(ViewingActionType, {
   model() {
-    return UserBadge.findByUsername(this.modelFor("user").get("username_lower"), { grouped: true });
+    return UserBadge.findByUsername(
+      this.modelFor("user").get("username_lower"),
+      { grouped: true }
+    );
   },
 
   setupController(controller, model) {
@@ -12,7 +15,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   renderTemplate() {
-    this.render("user/badges", {into: "user"});
+    this.render("user/badges", { into: "user" });
   },
 
   actions: {

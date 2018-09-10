@@ -2,53 +2,45 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("User Anonymous");
 
 function hasStream(assert) {
-  andThen(() => {
-    assert.ok(exists('.user-main .about'), 'it has the about section');
-    assert.ok(count('.user-stream .item') > 0, 'it has stream items');
-  });
+  assert.ok(exists(".user-main .about"), "it has the about section");
+  assert.ok(count(".user-stream .item") > 0, "it has stream items");
 }
 
 function hasTopicList(assert) {
-  andThen(() => {
-    assert.equal(count('.user-stream .item'), 0, "has no stream displayed");
-    assert.ok(count('.topic-list tr') > 0, 'it has a topic list');
-  });
+  assert.equal(count(".user-stream .item"), 0, "has no stream displayed");
+  assert.ok(count(".topic-list tr") > 0, "it has a topic list");
 }
 
-QUnit.test("Root URL", assert => {
-  visit("/u/eviltrout");
-  andThen(() => {
-    assert.ok($('body.user-summary-page').length, "has the body class");
-    assert.equal(currentPath(), 'user.summary', "it defaults to summary");
-  });
+QUnit.test("Root URL", async assert => {
+  await visit("/u/eviltrout");
+  assert.ok($("body.user-summary-page").length, "has the body class");
+  assert.equal(currentPath(), "user.summary", "it defaults to summary");
 });
 
-QUnit.test("Filters", assert => {
-  visit("/u/eviltrout/activity");
-  andThen(() => {
-    assert.ok($('body.user-activity-page').length, "has the body class");
-  });
+QUnit.test("Filters", async assert => {
+  await visit("/u/eviltrout/activity");
+  assert.ok($("body.user-activity-page").length, "has the body class");
   hasStream(assert);
 
-  visit("/u/eviltrout/activity/topics");
-  hasTopicList(assert);
+  await visit("/u/eviltrout/activity/topics");
+  await hasTopicList(assert);
 
-  visit("/u/eviltrout/activity/replies");
+  await visit("/u/eviltrout/activity/replies");
   hasStream(assert);
 });
 
-QUnit.test("Badges", assert => {
-  visit("/u/eviltrout/badges");
-  andThen(() => {
-    assert.ok($('body.user-badges-page').length, "has the body class");
-    assert.ok(exists(".user-badges-list .badge-card"), "shows a badge");
-  });
+QUnit.test("Badges", async assert => {
+  await visit("/u/eviltrout/badges");
+  assert.ok($("body.user-badges-page").length, "has the body class");
+  assert.ok(exists(".user-badges-list .badge-card"), "shows a badge");
 });
 
-QUnit.test("Restricted Routes", assert => {
-  visit("/u/eviltrout/preferences");
+QUnit.test("Restricted Routes", async assert => {
+  await visit("/u/eviltrout/preferences");
 
-  andThen(() => {
-    assert.equal(currentURL(), '/u/eviltrout/activity', "it redirects from preferences");
-  });
+  assert.equal(
+    currentURL(),
+    "/u/eviltrout/activity",
+    "it redirects from preferences"
+  );
 });

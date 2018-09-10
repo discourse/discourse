@@ -11,7 +11,7 @@
 //= require ember-qunit
 //= require fake_xml_http_request
 //= require route-recognizer
-//= require pretender
+//= require pretender/pretender
 //= require discourse-loader
 //= require preload-store
 
@@ -33,6 +33,7 @@
 
 //= require helpers/assertions
 //= require helpers/select-kit-helper
+//= require helpers/d-editor-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
@@ -51,12 +52,16 @@ window.MessageBus.stop();
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<script src="/javascripts/ace/ace.js"></script>');
-d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
-d.write('<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>');
+d.write(
+  '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
+);
+d.write(
+  "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
+);
 
 Ember.Test.adapter = window.QUnitAdapter.create();
 
-Discourse.rootElement = '#ember-testing';
+Discourse.rootElement = "#ember-testing";
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
 Discourse.start();
@@ -69,21 +74,23 @@ if (window.Logster) {
 }
 
 var origDebounce = Ember.run.debounce,
-    pretender = require('helpers/create-pretender', null, null, false),
-    fixtures = require('fixtures/site-fixtures', null, null, false).default,
-    flushMap = require('discourse/models/store', null, null, false).flushMap,
-    ScrollingDOMMethods = require('discourse/mixins/scrolling', null, null, false).ScrollingDOMMethods,
-    _DiscourseURL = require('discourse/lib/url', null, null, false).default,
-    applyPretender = require('helpers/qunit-helpers', null, null, false).applyPretender,
-    server;
+  pretender = require("helpers/create-pretender", null, null, false),
+  fixtures = require("fixtures/site-fixtures", null, null, false).default,
+  flushMap = require("discourse/models/store", null, null, false).flushMap,
+  ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
+    .ScrollingDOMMethods,
+  _DiscourseURL = require("discourse/lib/url", null, null, false).default,
+  applyPretender = require("helpers/qunit-helpers", null, null, false)
+    .applyPretender,
+  server;
 
 function dup(obj) {
   return jQuery.extend(true, {}, obj);
 }
 
 function resetSite(siteSettings, extras) {
-  var createStore = require('helpers/create-store').default;
-  var siteAttrs = $.extend({}, fixtures['site.json'].site, extras || {});
+  var createStore = require("helpers/create-store").default;
+  var siteAttrs = $.extend({}, fixtures["site.json"].site, extras || {});
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
   Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
@@ -113,7 +120,7 @@ QUnit.testStart(function(ctx) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  var ps = require('preload-store').default;
+  var ps = require("preload-store").default;
   ps.reset();
 
   window.sandbox = sinon.sandbox.create();
@@ -122,10 +129,10 @@ QUnit.testStart(function(ctx) {
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
   // Unless we ever need to test this, let's leave it off.
-  $.fn.autocomplete = function() { };
+  $.fn.autocomplete = function() {};
 
   // Don't debounce in test unless we're testing debouncing
-  if (ctx.module.indexOf('debounce') === -1) {
+  if (ctx.module.indexOf("debounce") === -1) {
     Ember.run.debounce = Ember.run;
   }
 });
@@ -135,7 +142,7 @@ QUnit.testDone(function() {
   window.sandbox.restore();
 
   // Destroy any modals
-  $('.modal-backdrop').remove();
+  $(".modal-backdrop").remove();
   flushMap();
 
   server.shutdown();
@@ -150,18 +157,22 @@ window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
 
 function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  var results = regex.exec(location.search);
+  return results === null
+    ? ""
+    : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
-var skipCore = (getUrlParameter('qunit_skip_core') == '1');
-var pluginPath = getUrlParameter('qunit_single_plugin') ? "\/"+getUrlParameter('qunit_single_plugin')+"\/" : "\/plugins\/";
+var skipCore = getUrlParameter("qunit_skip_core") == "1";
+var pluginPath = getUrlParameter("qunit_single_plugin")
+  ? "/" + getUrlParameter("qunit_single_plugin") + "/"
+  : "/plugins/";
 
 Object.keys(requirejs.entries).forEach(function(entry) {
-  var isTest = (/\-test/).test(entry);
-  var regex =  new RegExp(pluginPath)
+  var isTest = /\-test/.test(entry);
+  var regex = new RegExp(pluginPath);
   var isPlugin = regex.test(entry);
 
   if (isTest && (!skipCore || isPlugin)) {

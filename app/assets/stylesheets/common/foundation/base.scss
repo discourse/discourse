@@ -54,12 +54,14 @@ dd {
   padding: 0;
 }
 
-
-.cooked ul, .cooked ol, .cooked dd {
+.cooked ul,
+.cooked ol,
+.cooked dd {
   clear: both;
 }
 
-.cooked ul, .d-editor-preview ul {
+.cooked ul,
+.d-editor-preview ul {
   margin: 0;
   padding-left: 40px;
 }
@@ -93,12 +95,14 @@ pre code {
 }
 
 // TODO figure out a clean place to put stuff like this
-.row:before, .row:after {
+.row:before,
+.row:after {
   display: table;
   content: "";
 }
-.row:after {clear: both;}
-
+.row:after {
+  clear: both;
+}
 
 #offscreen-content {
   display: none;
@@ -115,5 +119,10 @@ tr {
   border-bottom: 1px solid $primary-low;
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
-  }  
+  }
+}
+
+// https://en.wikipedia.org/wiki/Ruby_character
+ruby > rt {
+  font-size: 72%; // ~10px with 14px base
 }

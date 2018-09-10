@@ -63,12 +63,12 @@ describe Email::Receiver do
 
   it "doesn't raise an InactiveUserError when the sender is staged" do
     user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+    post = Fabricate(:post)
 
-    email_log = Fabricate(:email_log,
-      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
-      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    post_reply_key = Fabricate(:post_reply_key,
       user: user,
-      post: Fabricate(:post)
+      post: post,
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     )
 
     expect { process(:staged_sender) }.not_to raise_error
@@ -79,10 +79,28 @@ describe Email::Receiver do
   end
 
   it "raises an OldDestinationError when notification is too old" do
-    topic = Fabricate(:topic, id: 424242)
-    post  = Fabricate(:post, topic: topic, id: 123456, created_at: 1.year.ago)
+    SiteSetting.disallow_reply_by_email_after_days = 2
 
-    expect { process(:old_destination) }.to raise_error(Email::Receiver::OldDestinationError)
+    topic = Fabricate(:topic, id: 424242)
+    post  = Fabricate(:post, topic: topic, id: 123456)
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::BadDestinationAddress
+    )
+
+    IncomingEmail.destroy_all
+    post.update!(created_at: 3.days.ago)
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::OldDestinationError
+    )
+
+    SiteSetting.disallow_reply_by_email_after_days = 0
+    IncomingEmail.destroy_all
+
+    expect { process(:old_destination) }.to raise_error(
+      Email::Receiver::BadDestinationAddress
+    )
   end
 
   it "raises a BouncerEmailError when email is a bounced email" do
@@ -129,6 +147,17 @@ describe Email::Receiver do
       expect(email_log_2.bounced).to eq(true)
     end
 
+    it "sends a system message once they reach the 'bounce_score_threshold'" do
+      expect(user.active).to eq(true)
+
+      user.user_stat.bounce_score = SiteSetting.bounce_score_threshold - 1
+      user.user_stat.save!
+
+      SystemMessage.expects(:create_from_system_user).with(user, :email_revoked)
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+    end
+
     it "automatically deactive users once they reach the 'bounce_score_threshold_deactivate' threshold" do
       expect(user.active).to eq(true)
 
@@ -153,7 +182,14 @@ describe Email::Receiver do
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
     let(:topic) { create_topic(category: category, user: user) }
     let(:post) { create_post(topic: topic, user: user) }
-    let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+    let!(:post_reply_key) do
+      Fabricate(:post_reply_key,
+        reply_key: reply_key,
+        user: user,
+        post: post
+      )
+    end
 
     it "uses MD5 of 'mail_string' there is no message_id" do
       mail_string = email(:missing_message_id)
@@ -167,6 +203,21 @@ describe Email::Receiver do
 
     it "raises a FromReplyByAddressError when the email is from the reply by email address" do
       expect { process(:from_reply_by_email_address) }.to raise_error(Email::Receiver::FromReplyByAddressError)
+    end
+
+    it "accepts reply from secondary email address" do
+      Fabricate(:secondary_email, email: "someone_else@bar.com", user: user)
+
+      expect { process(:reply_user_not_matching) }
+        .to change { topic.posts.count }
+
+      post = Post.last
+
+      expect(post.raw).to eq(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      )
+
+      expect(post.user).to eq(user)
     end
 
     it "raises a TopicNotFoundError when the topic was deleted" do
@@ -185,7 +236,7 @@ describe Email::Receiver do
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do
-      expect { process(:too_small) }.to raise_error(Email::Receiver::InvalidPost)
+      expect { process(:too_small) }.to raise_error(Email::Receiver::TooShortPost)
     end
 
     it "raises an InvalidPost when there are too may mentions" do
@@ -298,6 +349,12 @@ describe Email::Receiver do
       category.save
 
       expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
+    end
+
+    it "posts a reply to the topic when the post was deleted" do
+      post.update_columns(deleted_at: 1.day.ago)
+      expect { process(:reply_user_matching) }.to change { topic.posts.count }
+      expect(topic.ordered_posts.last.reply_to_post_number).to be_nil
     end
 
     describe 'Unsubscribing via email' do
@@ -490,32 +547,60 @@ describe Email::Receiver do
       expect(topic.topic_users.count).to eq(3)
     end
 
+    it "invites users with a secondary email in the chain" do
+      user1 = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "discourse@bar.com"),
+          Fabricate.build(:secondary_email, email: "someone@else.com"),
+        ]
+      )
+
+      user2 = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "team@bar.com"),
+          Fabricate.build(:secondary_email, email: "wat@bar.com"),
+        ]
+      )
+
+      expect { process(:cc) }.to change(Topic, :count)
+      expect(Topic.last.allowed_users).to contain_exactly(user1, user2)
+    end
+
     it "cap the number of staged users created per email" do
       SiteSetting.maximum_staged_users_per_email = 1
       expect { process(:cc) }.to change(Topic, :count)
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
-    it "associates email replies using both 'In-Reply-To' and 'References' headers when 'find_related_post_with_key' is disabled" do
-      SiteSetting.find_related_post_with_key = false
+    describe "when 'find_related_post_with_key' is disabled" do
+      before do
+        SiteSetting.find_related_post_with_key = false
+      end
 
-      expect { process(:email_reply_1) }.to change(Topic, :count)
+      it "associates email replies using both 'In-Reply-To' and 'References' headers" do
+        expect { process(:email_reply_1) }
+          .to change(Topic, :count).by(1) & change(Post, :count).by(3)
 
-      topic = Topic.last
+        topic = Topic.last
+        ordered_posts = topic.ordered_posts
 
-      expect { process(:email_reply_2) }.to change { topic.posts.count }
-      expect { process(:email_reply_3) }.to change { topic.posts.count }
+        expect(ordered_posts.first.raw).to eq('This is email reply **1**.')
 
-      # Why 5 when we only processed 3 emails?
-      #   - 3 of them are indeed "regular" posts generated from the emails
-      #   - The 2 others are "small action" posts automatically added because
-      #     we invited 2 users (two@foo.com and three@foo.com)
-      expect(topic.posts.count).to eq(5)
+        ordered_posts[1..-1].each do |post|
+          expect(post.action_code).to eq('invited_user')
+          expect(post.user.email).to eq('one@foo.com')
 
-      # trash all but the 1st post
-      topic.ordered_posts[1..-1].each(&:trash!)
+          expect(%w{two three}.include?(post.custom_fields["action_code_who"]))
+            .to eq(true)
+        end
 
-      expect { process(:email_reply_4) }.to change { topic.posts.count }
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1)
+        expect { process(:email_reply_3) }.to change { topic.posts.count }.by(1)
+        ordered_posts[1..-1].each(&:trash!)
+        expect { process(:email_reply_4) }.to change { topic.posts.count }.by(1)
+      end
     end
 
     it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
@@ -568,7 +653,6 @@ describe Email::Receiver do
 
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
       let!(:topic) do
-        SiteSetting.find_related_post_with_key = true
         process(:email_reply_1)
         Topic.last
       end
@@ -622,6 +706,51 @@ describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "creates visible topic for ham" do
+      SiteSetting.email_in_spam_header = 'none'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(true)
+
+      post = Post.last
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_at).to eq(nil)
+      expect(post.hidden_reason_id).to eq(nil)
+    end
+
+    it "creates hidden topic for X-Spam-Flag" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Flag'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_flag) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
+    it "creates hidden topic for X-Spam-Status" do
+      SiteSetting.email_in_spam_header = 'X-Spam-Status'
+
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:spam_x_spam_status) }.to change { Topic.count }.by(1) # Topic created
+
+      topic = Topic.last
+      expect(topic.visible).to eq(false)
+
+      post = Post.last
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).not_to eq(nil)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:email_spam_header_found])
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
@@ -650,6 +779,24 @@ describe Email::Receiver do
     it "ignores by case-insensitive title" do
       SiteSetting.ignore_by_title = "foo"
       expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+    it "associates email from a secondary address with user" do
+      user = Fabricate(:user,
+        trust_level: SiteSetting.email_in_min_trust,
+        user_emails: [
+          Fabricate.build(:secondary_email, email: "existing@bar.com")
+        ]
+      )
+
+      expect { process(:existing_user) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+
+      expect(topic.posts.last.raw)
+        .to eq("Hey, this is a topic from an existing user ;)")
+
+      expect(topic.user).to eq(user)
     end
   end
 
@@ -715,12 +862,15 @@ describe Email::Receiver do
 
     context "with a valid reply" do
       it "returns the destination when the key is valid" do
-        Fabricate(:email_log, reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8')
+        post_reply_key = Fabricate(:post_reply_key,
+          reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8'
+        )
 
         dest = Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')
+
         expect(dest).to be_present
         expect(dest[:type]).to eq(:reply)
-        expect(dest[:obj]).to be_present
+        expect(dest[:obj]).to eq(post_reply_key)
       end
     end
   end
@@ -826,7 +976,10 @@ describe Email::Receiver do
       let(:user) { Fabricate(:user, email: "discourse@bar.com") }
       let(:topic) { create_topic(category: category, user: user) }
       let(:post) { create_post(topic: topic, user: user) }
-      let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
+
+      let!(:post_reply_key) do
+        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
 
       context "when the email address isn't matching the one we sent the notification to" do
         include_examples "no staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
@@ -878,7 +1031,6 @@ describe Email::Receiver do
 
     before do
       SiteSetting.block_auto_generated_emails = true
-      SiteSetting.find_related_post_with_key = true
     end
 
     it "should allow creating topic even when email is autogenerated" do

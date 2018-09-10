@@ -8,12 +8,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
-  z-index: z("modal","overlay");
+  z-index: z("modal", "overlay");
 }
 
 .d-editor-modals {
   position: absolute;
-  z-index: z("modal","content");
+  z-index: z("modal", "content");
 }
 
 .d-editor {
@@ -75,7 +75,6 @@
 .d-editor-button-bar {
   display: flex;
   align-items: center;
-  border-bottom: none;
   min-height: 30px;
   padding-left: 3px;
   border-bottom: 1px solid $primary-low;

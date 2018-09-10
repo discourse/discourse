@@ -1,0 +1,186 @@
+.admin-report {
+  .conditional-loading-section {
+    &.is-loading {
+      margin: 0;
+    }
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  .header .breadcrumb {
+    margin: 0;
+    list-style: none;
+
+    .item {
+      display: inline;
+      font-size: $font-up-1;
+    }
+
+    .all-reports .report-url {
+      font-weight: 700;
+    }
+
+    .report {
+      font-weight: 700;
+
+      .report-url {
+        color: $primary;
+      }
+
+      .info {
+        cursor: pointer;
+        margin-left: 0.25em;
+        color: $primary-low-mid;
+
+        &:hover {
+          color: $primary-medium;
+        }
+      }
+    }
+  }
+
+  .header .trend {
+    margin-left: auto;
+    margin-right: 8px;
+
+    &.trending-down,
+    &.high-trending-down {
+      color: $danger;
+    }
+
+    &.trending-up,
+    &.high-trending-up {
+      color: $success;
+    }
+
+    &.no-change {
+      color: $primary-medium;
+      i {
+        display: none;
+      }
+    }
+
+    .value {
+      font-size: $font-up-1;
+    }
+
+    .icon {
+      font-size: $font-up-1;
+      font-weight: 700;
+    }
+  }
+
+  .body {
+    display: flex;
+  }
+
+  .main {
+    flex: 1;
+  }
+
+  .main .report-alert {
+    margin: 0;
+    text-align: center;
+    padding: 3em;
+    border: 1px solid transparent;
+
+    a {
+      color: $primary-medium;
+    }
+
+    .d-icon {
+      color: currentColor;
+      margin-bottom: 0.25em;
+      font-size: $font-up-5;
+      display: block;
+    }
+
+    &.no-data,
+    &.rate-limited {
+      background: $secondary;
+      border-color: $primary-low;
+      color: $primary-low-mid;
+    }
+
+    &.rate-limited .d-icon {
+      color: $danger;
+    }
+
+    &.timeout,
+    &.exception {
+      border-color: $danger-low;
+      color: $danger;
+    }
+  }
+
+  .filters {
+    display: flex;
+    margin-left: 1em;
+    flex-direction: column;
+    width: 220px;
+
+    .modes {
+      margin: 0 0 1em 0;
+      padding: 0;
+      list-style: none;
+
+      .mode {
+        display: inline-flex;
+        flex: 1;
+
+        .mode-btn.is-current {
+          color: $tertiary;
+        }
+      }
+    }
+
+    .control {
+      margin-bottom: 1em;
+    }
+
+    .control .label {
+      font-weight: 700;
+      width: 100%;
+    }
+
+    .control .input,
+    .control .select-kit {
+      width: 100%;
+
+      .export-csv-btn {
+        width: 100%;
+      }
+
+      .refresh-report-btn {
+        width: 100%;
+      }
+
+      .date-picker-wrapper {
+        width: 100%;
+        .date-picker {
+          box-sizing: border-box;
+          width: 100%;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.rtl .admin-report {
+  .filters {
+    margin-left: 0;
+    margin-right: 1em;
+  }
+
+  .trend {
+    margin-left: unset;
+    margin-right: auto;
+  }
+}

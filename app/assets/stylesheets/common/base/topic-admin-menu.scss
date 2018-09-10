@@ -35,7 +35,6 @@
 }
 
 .modal-body.feature-topic {
-  overflow: visible;
   padding: 5px;
   max-height: 500px;
   input.date-picker {
@@ -66,11 +65,62 @@
   }
 }
 
+.desktop-view .feature-topic-modal {
+  .feature-topic {
+    overflow: visible;
+  }
+
+  .modal-inner-container {
+    min-width: 700px;
+  }
+
+  .pin-until {
+    position: relative;
+    display: inline-block;
+  }
+}
+
 .mobile-view .feature-topic .feature-section {
   .desc {
     display: block;
     clear: both;
     max-width: 90%;
     margin: 0 10px;
+  }
+}
+
+// Select posts
+
+.selected-posts {
+  border: 1px solid $tertiary-medium;
+  background-color: $tertiary-low;
+  .btn {
+    border: none;
+    color: $secondary;
+    font-weight: normal;
+    margin-bottom: 10px;
+    &:not(.btn-danger) {
+      background: $tertiary;
+      border-color: $tertiary;
+      &[href] {
+        color: $secondary;
+      }
+      &:hover {
+        color: $secondary;
+        background: $tertiary-high;
+      }
+      &:active {
+        @include linear-gradient(
+          darken($tertiary, 18%),
+          darken($tertiary, 12%)
+        );
+        color: $secondary;
+      }
+    }
+    &[disabled] {
+      text-shadow: 0 1px 0 rgba($primary, 0.2);
+      @include linear-gradient($tertiary, darken($tertiary, 20%));
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.33);
+    }
   }
 }

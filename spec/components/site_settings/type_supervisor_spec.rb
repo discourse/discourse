@@ -73,6 +73,12 @@ describe SiteSettings::TypeSupervisor do
       it "'username' should be at 15th position" do
         expect(SiteSettings::TypeSupervisor.types[:username]).to eq(15)
       end
+      it "'category' should be at 16th position" do
+        expect(SiteSettings::TypeSupervisor.types[:category]).to eq(16)
+      end
+      it "'uploaded_image_list' should be at 17th position" do
+        expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
+      end
     end
   end
 
@@ -269,6 +275,12 @@ describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_rb_value(:type_custom, 2)).to eq 2
         expect(settings.type_supervisor.to_rb_value(:type_custom, '2|3')).to eq '2|3'
       end
+
+      it 'should not modify the types of settings' do
+        types = SiteSettings::TypeSupervisor.types
+        settings.type_supervisor.to_rb_value(:default_locale, 'fr', types[:enum])
+        expect(settings.type_supervisor.to_db_value(:default_locale, 'en')).to eq(['en', types[:string]])
+      end
     end
   end
 
@@ -294,7 +306,7 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_url_list, 'string', type: 'url_list')
       settings.setting(:type_enum_choices, '2', type: 'enum', choices: ['1', '2'])
       settings.setting(:type_enum_class, 'a', enum: 'TestEnumClass2')
-      settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'])
+      settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'], list_type: 'compact')
       settings.refresh!
     end
 
@@ -322,6 +334,10 @@ describe SiteSettings::TypeSupervisor do
 
     it 'returns list choices' do
       expect(settings.type_supervisor.type_hash(:type_list)[:choices]).to eq ['a', 'b']
+    end
+
+    it 'returns list list_type' do
+      expect(settings.type_supervisor.type_hash(:type_list)[:list_type]).to eq 'compact'
     end
 
     it 'returns enum choices' do

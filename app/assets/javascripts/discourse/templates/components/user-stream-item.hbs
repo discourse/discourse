@@ -1,12 +1,20 @@
 <div class='clearfix info'>
   <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
   <span class='time'>{{format-date item.created_at}}</span>
-  {{expand-post item=item}}
+  {{#if item.draftType}}
+    <span class='draft-type'>{{{item.draftType}}}</span>
+  {{else}}
+    {{expand-post item=item}}
+  {{/if}}
   <div class='stream-topic-details'>
     <div class='stream-topic-title'>
       {{topic-status topic=item disableActions=true}}
       <span class="title">
-        <a href={{item.postUrl}}>{{{item.title}}}</a>
+        {{#if item.postUrl}}
+          <a href={{item.postUrl}}>{{{item.title}}}</a>
+        {{else}}
+          {{{item.title}}}
+        {{/if}}
       </span>
     </div>
     <div class="category">{{category-link item.category}}</div>
@@ -50,3 +58,10 @@
     {{/each}}
   </div>
 {{/each}}
+
+{{#if item.editableDraft}}
+  <div class='user-stream-item-draft-actions'>
+    {{d-button action=resumeDraft actionParam=item icon="pencil" label='drafts.resume' class="resume-draft"}}
+    {{d-button action=removeDraft actionParam=item icon="times" label='drafts.remove' class="remove-draft"}}
+  </div>
+{{/if}}

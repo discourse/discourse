@@ -7,19 +7,19 @@ describe Site do
     json = Site.json_for(guardian)
     parsed = JSON.parse(json)
 
-    expected = Theme.where('key = :default OR user_selectable',
-                    default: SiteSetting.default_theme_key)
+    expected = Theme.where('id = :default OR user_selectable',
+                    default: SiteSetting.default_theme_id)
       .order(:name)
-      .pluck(:key, :name)
-      .map { |k, n| { "theme_key" => k, "name" => n, "default" => k == SiteSetting.default_theme_key } }
+      .pluck(:id, :name)
+      .map { |id, n| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id } }
 
     expect(parsed["user_themes"]).to eq(expected)
   end
 
   it "includes user themes and expires them as needed" do
-    default_theme = Theme.create!(user_id: -1, name: 'default')
-    SiteSetting.default_theme_key = default_theme.key
-    user_theme = Theme.create!(user_id: -1, name: 'user theme', user_selectable: true)
+    default_theme = Fabricate(:theme)
+    SiteSetting.default_theme_id = default_theme.id
+    user_theme = Fabricate(:theme, user_selectable: true)
 
     anon_guardian = Guardian.new
     user_guardian = Guardian.new(Fabricate(:user))
@@ -64,6 +64,21 @@ describe Site do
 
     sub_category = Fabricate(:category, parent_category_id: category.id)
     expect(Site.new(guardian).categories).not_to include(sub_category)
+  end
+
+  it "includes all enabled authentication providers" do
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.enable_facebook_logins = true
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+  end
+
+  it "includes all enabled authentication providers for anon when login_required" do
+    SiteSetting.login_required = true
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.enable_facebook_logins = true
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
   end
 
 end

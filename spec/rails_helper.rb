@@ -131,6 +131,11 @@ RSpec.configure do |config|
         x.exception.cause = ex
       end
     end
+
+    unfreeze_time
+    ActionMailer::Base.deliveries.clear
+
+    raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
   end
 
   config.before :each do |x|
@@ -153,14 +158,9 @@ RSpec.configure do |config|
     SiteSetting.provider.all.each do |setting|
       SiteSetting.remove_override!(setting.name)
     end
-    SiteSetting.defaults.site_locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
-
-    # Running jobs are expensive and most of our tests are not concern with
-    # code that runs inside jobs
-    SiteSetting.queue_jobs = true
 
     Discourse.clear_readonly!
     Sidekiq::Worker.clear_all

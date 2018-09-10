@@ -9,7 +9,7 @@
   display: inline-block;
   font-weight: normal;
   white-space: nowrap;
-  @include border-radius-all(10px);
+  border-radius: 10px;
 }
 
 // Category badges
@@ -22,22 +22,22 @@
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  
+
   .badge-category {
-      display: inline-flex;
-      align-items: baseline;
-      .category-name {
-        text-overflow: ellipsis;
-        overflow: hidden;
+    display: inline-flex;
+    align-items: baseline;
+    .category-name {
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     .d-icon {
       margin-right: 3px;
     }
   }
 
-  // ----- Bullet 
+  // ----- Bullet
 
-  &.bullet { 
+  &.bullet {
     margin-right: 12px;
     span.badge-category {
       color: $primary;
@@ -47,31 +47,34 @@
         color: $header-primary;
       }
     }
-   .badge-category-parent-bg, .badge-category-bg {
-    width: 9px;
-    height: 9px;
-    margin-right: 5px;
-    display: inline-block;
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      width: 9px;
+      height: 9px;
+      margin-right: 5px;
+      display: inline-block;
     }
-    .badge-category-parent-bg { // Subcategories
+    .badge-category-parent-bg {
+      // Subcategories
       width: 5px;
       margin-right: 0;
-      +.badge-category-bg {
+      + .badge-category-bg {
         width: 5px;
       }
     }
   }
 
-  // ----- Box 
+  // ----- Box
 
-  &.box {  
+  &.box {
     margin-right: 5px;
     padding: 2px 4px 2px 4px;
     display: inline-flex;
     span {
       overflow: hidden;
       text-overflow: ellipsis;
-      &.badge-category-bg, &.badge-category-parent-bg {
+      &.badge-category-bg,
+      &.badge-category-parent-bg {
         position: absolute;
         top: 0;
         right: 0;
@@ -79,7 +82,8 @@
         left: 0;
       }
 
-      &.badge-category-parent-bg { // Subcategories 
+      &.badge-category-parent-bg {
+        // Subcategories
         width: calc(100% - 5px);
         & + .badge-category-bg {
           left: 5px;
@@ -95,13 +99,13 @@
       }
     }
     + .topic-header-extra {
-      padding: 2px 4px 2px 4px;      
+      padding: 2px 4px 2px 4px;
     }
   }
 
-  // ----- Bar 
+  // ----- Bar
 
-  &.bar { 
+  &.bar {
     margin-right: 5px;
 
     span.badge-category {
@@ -115,7 +119,9 @@
       }
     }
 
-    .badge-category-parent-bg, .badge-category-bg { // Subcategories
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      // Subcategories
       display: inline-block;
       padding: 0 1px;
 
@@ -125,15 +131,13 @@
     }
   }
 
-  // ----- No category style 
+  // ----- No category style
 
-  &.none { 
+  &.none {
     color: $primary;
     margin-right: 5px;
   }
-
 }
-
 
 // Category badge dropdown
 // --------------------------------------------------
@@ -171,7 +175,8 @@
 
   // New posts
 
-  &.new-posts, &.unread-posts {
+  &.new-posts,
+  &.unread-posts {
     background-color: dark-light-choose($tertiary-medium, $tertiary);
     color: dark-light-choose($secondary, $secondary);
     font-weight: dark-light-choose(normal, bold);

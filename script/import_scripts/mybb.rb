@@ -37,7 +37,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   end
 
   def execute
-    SiteSetting.disable_emails = true
+    SiteSetting.disable_emails = "non-staff"
     import_users
     import_categories
     import_posts

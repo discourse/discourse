@@ -1,5 +1,8 @@
-import debounce from 'discourse/lib/debounce';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import debounce from "discourse/lib/debounce";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
@@ -34,7 +37,7 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      this.get('model').loadMore();
+      this.get("model").loadMore();
     },
 
     new() {

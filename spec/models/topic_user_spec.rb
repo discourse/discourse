@@ -311,8 +311,10 @@ describe TopicUser do
       it 'should update tracking state when you reply' do
         new_user.user_option.update_column(:notification_level_when_replying, 3)
         post_creator.create
-        TopicUser.exec_sql("UPDATE topic_users set notification_level=2
-                       WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+        DB.exec("UPDATE topic_users set notification_level=2
+                 WHERE topic_id = :topic_id AND user_id = :user_id",
+          topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+
         TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:watching])
 
         tu = TopicUser.find_by(user_id: topic_new_user.user_id, topic_id: topic_new_user.topic_id)
@@ -322,7 +324,7 @@ describe TopicUser do
       it 'should not update tracking state when you reply' do
         new_user.user_option.update_column(:notification_level_when_replying, 3)
         post_creator.create
-        TopicUser.exec_sql("UPDATE topic_users set notification_level=3
+        DB.exec("UPDATE topic_users set notification_level=3
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
         TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
 
@@ -333,7 +335,7 @@ describe TopicUser do
       it 'should not update tracking state when state manually set to normal you reply' do
         new_user.user_option.update_column(:notification_level_when_replying, 3)
         post_creator.create
-        TopicUser.exec_sql("UPDATE topic_users set notification_level=1
+        DB.exec("UPDATE topic_users set notification_level=1
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
         TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
 
@@ -344,7 +346,7 @@ describe TopicUser do
       it 'should not update tracking state when state manually set to muted you reply' do
         new_user.user_option.update_column(:notification_level_when_replying, 3)
         post_creator.create
-        TopicUser.exec_sql("UPDATE topic_users set notification_level=0
+        DB.exec("UPDATE topic_users set notification_level=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
         TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
 
@@ -369,6 +371,18 @@ describe TopicUser do
         TopicUser.change(new_user, topic, notification_level: TopicUser.notification_levels[:regular])
         TopicUser.update_last_read(new_user, topic, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
+      end
+
+      it 'should not automatically track PMs' do
+        new_user.user_option.update!(auto_track_topics_after_msecs: 0)
+
+        another_user = Fabricate(:user)
+        pm = Fabricate(:private_message_topic, user: another_user)
+        pm.invite(another_user, new_user.username)
+
+        TopicUser.track_visit!(pm.id, new_user.id)
+        TopicUser.update_last_read(new_user, pm.id, 2, 2, 1000)
+        expect(TopicUser.get(pm, new_user).notification_level).to eq(TopicUser.notification_levels[:watching])
       end
     end
   end
@@ -417,7 +431,7 @@ describe TopicUser do
     p2 = Fabricate(:post, user: p1.user, topic: p1.topic, post_number: 2)
     p1.topic.notifier.watch_topic!(p1.user_id)
 
-    TopicUser.exec_sql("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
+    DB.exec("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
 
     [p1, p2].each do |p|

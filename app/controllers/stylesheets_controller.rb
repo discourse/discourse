@@ -29,12 +29,12 @@ class StylesheetsController < ApplicationController
       # we hold of re-compilation till someone asks for asset
       if target.include?("theme")
         split_target, theme_id = target.split(/_(-?[0-9]+)/)
-        theme = Theme.find(theme_id) if theme_id
+        theme = Theme.find_by(id: theme_id) if theme_id.present?
       else
         split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find_by(color_scheme_id: color_scheme_id)
       end
-      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.key)
+      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
     end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
@@ -98,11 +98,11 @@ class StylesheetsController < ApplicationController
 
   private
 
-    def read_file(location)
-      begin
-        File.read(location)
-      rescue Errno::ENOENT
-      end
+  def read_file(location)
+    begin
+      File.read(location)
+    rescue Errno::ENOENT
     end
+  end
 
 end

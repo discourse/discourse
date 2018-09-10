@@ -12,7 +12,9 @@ class StaticController < ApplicationController
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
-    return redirect_to path('/login') if SiteSetting.login_required? && current_user.nil? && (params[:id] == 'faq' || params[:id] == 'guidelines')
+    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines', 'rules'].include?(params[:id])
+      return redirect_to path('/login')
+    end
 
     map = {
       "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
@@ -29,7 +31,7 @@ class StaticController < ApplicationController
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
-    @page = 'faq' if @page == 'guidelines'
+    @page = 'faq' if @page == 'guidelines' || @page == 'rules'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
     @page.gsub!(/[^a-z0-9\_\-]/, '')
@@ -86,7 +88,7 @@ class StaticController < ApplicationController
           destination = uri.path
           destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
         end
-      rescue URI::InvalidURIError
+      rescue URI::Error
         # Do nothing if the URI is invalid
       end
     end
@@ -163,8 +165,10 @@ class StaticController < ApplicationController
         # However, ensure that these may be cached and served for longer on servers.
         immutable_for 1.year
 
-        path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
-        response.headers["Last-Modified"] = File.ctime(path).httpdate
+        if Rails.application.assets_manifest.assets['service-worker.js']
+          path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
+          response.headers["Last-Modified"] = File.ctime(path).httpdate
+        end
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
           content_type: 'application/javascript'

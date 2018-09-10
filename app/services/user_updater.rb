@@ -34,7 +34,7 @@ class UserUpdater
     :email_in_reply_to,
     :like_notification_frequency,
     :include_tl0_in_digests,
-    :theme_key,
+    :theme_ids,
     :allow_private_messages,
     :homepage_id,
   ]
@@ -85,9 +85,16 @@ class UserUpdater
 
     save_options = false
 
-    # special handling for theme_key cause we need to bump a sequence number
-    if attributes.key?(:theme_key) && user.user_option.theme_key != attributes[:theme_key]
-      user.user_option.theme_key_seq += 1
+    # special handling for theme_id cause we need to bump a sequence number
+    if attributes.key?(:theme_ids)
+      user_guardian = Guardian.new(user)
+      attributes[:theme_ids].reject!(&:blank?)
+      attributes[:theme_ids].map!(&:to_i)
+      if user_guardian.allow_themes?(attributes[:theme_ids])
+        user.user_option.theme_key_seq += 1 if user.user_option.theme_ids != attributes[:theme_ids]
+      else
+        attributes.delete(:theme_ids)
+      end
     end
 
     OPTION_ATTR.each do |attribute|
@@ -143,17 +150,18 @@ class UserUpdater
       MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
-      MutedUser.exec_sql("INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
-                          SELECT :user_id, id, :now, :now
-                          FROM users
-                          WHERE
-                            id in (:desired_ids) AND
-                            id NOT IN (
-                              SELECT muted_user_id
-                              FROM muted_users
-                              WHERE user_id = :user_id
-                            )",
-                          now: Time.now, user_id: user.id, desired_ids: desired_ids)
+      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+        INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
+        SELECT :user_id, id, :now, :now
+        FROM users
+        WHERE
+          id in (:desired_ids) AND
+          id NOT IN (
+            SELECT muted_user_id
+            FROM muted_users
+            WHERE user_id = :user_id
+          )
+      SQL
     end
   end
 

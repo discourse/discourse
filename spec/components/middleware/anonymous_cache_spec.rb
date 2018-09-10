@@ -32,14 +32,14 @@ describe Middleware::AnonymousCache::Helper do
 
   context "per theme cache" do
     it "handles theme keys" do
-      theme = Theme.create(name: "test", user_id: -1, user_selectable: true)
+      theme = Fabricate(:theme, user_selectable: true)
 
-      with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_key=abc").cache_key
+      with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
       with_no_theme_key = new_helper().cache_key
 
       expect(with_bad_theme_key).to eq(with_no_theme_key)
 
-      with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_key=#{theme.key}").cache_key
+      with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=#{theme.id}").cache_key
 
       expect(with_good_theme_key).not_to eq(with_no_theme_key)
     end
@@ -149,6 +149,103 @@ describe Middleware::AnonymousCache::Helper do
       expect(crawler.cached).to eq(nil)
       crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
       expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
+    end
+  end
+
+  context "crawler blocking" do
+    let :non_crawler do
+      {
+        "HTTP_USER_AGENT" =>
+        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+      }
+    end
+
+    def get(path, options)
+      middleware = Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] })
+      @env = env({
+        "REQUEST_URI" => path,
+        "PATH_INFO" => path,
+        "REQUEST_PATH" => path
+      }.merge(options[:headers]))
+      @status = middleware.call(@env).first
+    end
+
+    it "applies whitelisted_crawler_user_agents correctly" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+
+      get '/', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+
+      get '/', headers: {
+        'HTTP_USER_AGENT' => 'Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
+
+      get '/', headers: non_crawler
+      expect(@status).to eq(200)
+    end
+
+    it "applies blacklisted_crawler_user_agents correctly" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/', headers: non_crawler
+      expect(@status).to eq(200)
+
+      get '/', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
+
+      get '/', headers: {
+        'HTTP_USER_AGENT' => 'Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "should never block robots.txt" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/robots.txt', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "should never block srv/status" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(200)
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@env["discourse.request_tracker.skip"]).to eq(true)
+    end
+
+    it "blocks json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+
+      get '/srv/status.json', headers: {
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
+      }
+
+      expect(@status).to eq(403)
     end
   end
 

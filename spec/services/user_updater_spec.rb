@@ -82,7 +82,7 @@ describe UserUpdater do
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
 
-      theme = Theme.create!(user_id: -1, name: "test", user_selectable: true)
+      theme = Fabricate(:theme, user_selectable: true)
 
       seq = user.user_option.theme_key_seq
 
@@ -95,7 +95,7 @@ describe UserUpdater do
                            notification_level_when_replying: 3,
                            email_in_reply_to: false,
                            date_of_birth: date_of_birth,
-                           theme_key: theme.key,
+                           theme_ids: [theme.id],
                            allow_private_messages: false)
 
       expect(val).to be_truthy
@@ -110,7 +110,7 @@ describe UserUpdater do
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
       expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
-      expect(user.user_option.theme_key).to eq theme.key
+      expect(user.user_option.theme_ids.first).to eq theme.id
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
       expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
@@ -127,6 +127,29 @@ describe UserUpdater do
 
       expect(user.user_option.email_digests).to eq false
       expect(user.user_option.mailing_list_mode).to eq true
+    end
+
+    it "filters theme_ids blank values before updating perferences" do
+      user = Fabricate(:user)
+      user.user_option.update!(theme_ids: [1])
+      updater = UserUpdater.new(acting_user, user)
+
+      updater.update(theme_ids: [""])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([])
+
+      updater.update(theme_ids: [nil])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([])
+
+      theme = Fabricate(:theme)
+      child = Fabricate(:theme, component: true)
+      theme.add_child_theme!(child)
+      theme.set_default!
+
+      updater.update(theme_ids: [theme.id.to_s, child.id.to_s, "", nil])
+      user.reload
+      expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
     context 'when sso overrides bio' do

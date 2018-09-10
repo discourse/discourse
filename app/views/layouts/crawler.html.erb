@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>">
+<html lang="<%= html_lang %>">
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
     <%- if rtl? %>
-        <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
     <%- else %>
-        <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+    <%- end %>
+    <%- if theme_ids.present? %>
+      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
     <%- end %>
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>

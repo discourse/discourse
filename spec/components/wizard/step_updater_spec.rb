@@ -151,12 +151,12 @@ describe Wizard::StepUpdater do
       let!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
       it "updates the scheme" do
-        updater = wizard.create_updater('colors', base_scheme_id: 'dark')
+        updater = wizard.create_updater('colors', theme_previews: 'Dark')
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
-        theme = Theme.find_by(key: SiteSetting.default_theme_key)
-        expect(theme.color_scheme.base_scheme_id).to eq('dark')
+        theme = Theme.find_by(id: SiteSetting.default_theme_id)
+        expect(theme.color_scheme.base_scheme_id).to eq('Dark')
       end
     end
 
@@ -167,14 +167,14 @@ describe Wizard::StepUpdater do
 
       context 'dark theme' do
         it "creates the theme" do
-          updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
+          updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
 
           expect { updater.update }.to change { Theme.count }.by(1)
 
           theme = Theme.last
 
           expect(theme.user_id).to eq(wizard.user.id)
-          expect(theme.color_scheme.base_scheme_id).to eq('dark')
+          expect(theme.color_scheme.base_scheme_id).to eq('Dark')
         end
       end
 
@@ -187,14 +187,15 @@ describe Wizard::StepUpdater do
           theme = Theme.last
 
           expect(theme.user_id).to eq(wizard.user.id)
-          expect(theme.color_scheme).to eq(nil)
+          expect(theme.color_scheme).to eq(ColorScheme.find_by(name: 'Light'))
         end
       end
     end
 
     context "without an existing scheme" do
       it "creates the scheme" do
-        updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
+        ColorScheme.destroy_all
+        updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
@@ -203,7 +204,7 @@ describe Wizard::StepUpdater do
         expect(color_scheme).to be_present
         expect(color_scheme.colors).to be_present
 
-        theme = Theme.find_by(key: SiteSetting.default_theme_key)
+        theme = Theme.find_by(id: SiteSetting.default_theme_id)
         expect(theme.color_scheme_id).to eq(color_scheme.id)
 
         expect(Theme.where(user_selectable: true).count).to eq(2)
@@ -237,6 +238,15 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
       expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
     end
+
+    it "updates large_icon_url if the uploaded icon size is greater than 180x180" do
+      upload = Fabricate(:upload, width: 512, height: 512)
+      updater = wizard.create_updater('icons', apple_touch_icon_url: upload.url)
+      updater.update
+
+      expect(updater).to be_success
+      expect(SiteSetting.large_icon_url).to eq(upload.url)
+    end
   end
 
   context "emoji step" do
@@ -252,12 +262,13 @@ describe Wizard::StepUpdater do
 
   context "homepage step" do
     it "updates the fields correctly" do
-      updater = wizard.create_updater('homepage', homepage_style: "categories")
+      updater = wizard.create_updater('homepage', homepage_style: "categories_and_top_topics")
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('homepage')).to eq(true)
       expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+      expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
       updater = wizard.create_updater('homepage', homepage_style: "latest")
       updater.update

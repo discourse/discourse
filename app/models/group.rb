@@ -296,7 +296,7 @@ class Group < ActiveRecord::Base
         "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
       end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       DELETE FROM group_users
             USING (#{remove_subquery}) X
             WHERE group_id = #{group.id}
@@ -318,7 +318,7 @@ class Group < ActiveRecord::Base
         "SELECT id FROM users WHERE id > 0"
       end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       INSERT INTO group_users (group_id, user_id, created_at, updated_at)
            SELECT #{group.id}, X.id, now(), now()
              FROM group_users
@@ -341,7 +341,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.reset_all_counters!
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       WITH X AS (
           SELECT group_id
                , COUNT(user_id) users
@@ -362,7 +362,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.refresh_has_messages!
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       UPDATE groups g SET has_messages = false
       WHERE NOT EXISTS (SELECT tg.id
                           FROM topic_allowed_groups tg
@@ -534,7 +534,7 @@ class Group < ActiveRecord::Base
       )
       SQL
 
-      Group.exec_sql(sql, group_id: self.id, user_ids: user_ids)
+      DB.exec(sql, group_id: self.id, user_ids: user_ids)
 
       user_attributes = {}
 
@@ -551,7 +551,7 @@ class Group < ActiveRecord::Base
       end
 
       # update group user count
-      Group.exec_sql <<-SQL.squish
+      DB.exec <<~SQL
         UPDATE groups g
         SET user_count =
           (SELECT COUNT(gu.user_id)
@@ -598,130 +598,140 @@ class Group < ActiveRecord::Base
 
   protected
 
-    def name_format_validator
-      self.name.strip!
+  def name_format_validator
 
-      UsernameValidator.perform_validation(self, 'name') || begin
-        name_lower = self.name.downcase
+    return if !name_changed?
 
-        if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
-          existing = Group.exec_sql(
-            User::USERNAME_EXISTS_SQL, username: name_lower
-          ).values.present?
+    # avoid strip! here, it works now
+    # but may not continue to work long term, especially
+    # once we start returning frozen strings
+    if self.name != (stripped = self.name.strip)
+      self.name = stripped
+    end
 
-          if existing
-            errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
-          end
+    UsernameValidator.perform_validation(self, 'name') || begin
+      name_lower = self.name.downcase
+
+      if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
+
+        existing = DB.exec(
+          User::USERNAME_EXISTS_SQL, username: name_lower
+        ) > 0
+
+        if existing
+          errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
         end
       end
     end
+  end
 
-    def automatic_membership_email_domains_format_validator
-      return if self.automatic_membership_email_domains.blank?
+  def automatic_membership_email_domains_format_validator
+    return if self.automatic_membership_email_domains.blank?
 
-      domains = self.automatic_membership_email_domains.split("|")
-      domains.each do |domain|
-        domain.sub!(/^https?:\/\//, '')
-        domain.sub!(/\/.*$/, '')
-        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
-      end
-      self.automatic_membership_email_domains = domains.join("|")
+    domains = self.automatic_membership_email_domains.split("|")
+    domains.each do |domain|
+      domain.sub!(/^https?:\/\//, '')
+      domain.sub!(/\/.*$/, '')
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
     end
+    self.automatic_membership_email_domains = domains.join("|")
+  end
 
-    # hack around AR
-    def destroy_deletions
-      if @deletions
-        @deletions.each do |gu|
-          gu.destroy
-          User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
-        end
-      end
-      @deletions = nil
-    end
-
-    def automatic_group_membership
-      if self.automatic_membership_retroactive
-        Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+  # hack around AR
+  def destroy_deletions
+    if @deletions
+      @deletions.each do |gu|
+        gu.destroy
+        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
       end
     end
+    @deletions = nil
+  end
 
-    def update_title
-      return if new_record? && !self.title.present?
-
-      if self.saved_change_to_title?
-        sql = <<-SQL.squish
-          UPDATE users
-             SET title = :title
-           WHERE (title = :title_was OR title = '' OR title IS NULL)
-             AND COALESCE(title,'') <> COALESCE(:title,'')
-             AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
-        SQL
-
-        self.class.exec_sql(sql, title: title, title_was: title_before_last_save, id: id)
-      end
+  def automatic_group_membership
+    if self.automatic_membership_retroactive
+      Jobs.enqueue(:automatic_group_membership, group_id: self.id)
     end
+  end
 
-    def update_primary_group
-      return if new_record? && !self.primary_group?
+  def update_title
+    return if new_record? && !self.title.present?
 
-      if self.saved_change_to_primary_group?
-        sql = <<~SQL
-          UPDATE users
-          /*set*/
-          /*where*/
-        SQL
+    if self.saved_change_to_title?
+      sql = <<~SQL
+        UPDATE users
+           SET title = :title
+         WHERE (title = :title_was OR title = '' OR title IS NULL)
+           AND COALESCE(title,'') <> COALESCE(:title,'')
+           AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
+      SQL
 
-        builder = SqlBuilder.new(sql)
-        builder.where("
-              id IN (
-                SELECT user_id
-                FROM group_users
-                WHERE group_id = :id
-              )", id: id)
-
-        if primary_group
-          builder.set("primary_group_id = :id")
-        else
-          builder.set("primary_group_id = NULL")
-          builder.where("primary_group_id = :id")
-        end
-
-        builder.exec
-      end
+      DB.exec(sql, title: title, title_was: title_before_last_save, id: id)
     end
+  end
+
+  def update_primary_group
+    return if new_record? && !self.primary_group?
+
+    if self.saved_change_to_primary_group?
+      sql = <<~SQL
+        UPDATE users
+        /*set*/
+        /*where*/
+      SQL
+
+      builder = DB.build(sql)
+      builder.where(<<~SQL, id: id)
+        id IN (
+          SELECT user_id
+          FROM group_users
+          WHERE group_id = :id
+        )
+      SQL
+
+      if primary_group
+        builder.set("primary_group_id = :id")
+      else
+        builder.set("primary_group_id = NULL")
+        builder.where("primary_group_id = :id")
+      end
+
+      builder.exec
+    end
+  end
 
   private
 
-    def validate_grant_trust_level
-      unless TrustLevel.valid?(self.grant_trust_level)
-        self.errors.add(:base, I18n.t(
-          'groups.errors.grant_trust_level_not_valid',
-          trust_level: self.grant_trust_level
-        ))
+  def validate_grant_trust_level
+    unless TrustLevel.valid?(self.grant_trust_level)
+      self.errors.add(:base, I18n.t(
+        'groups.errors.grant_trust_level_not_valid',
+        trust_level: self.grant_trust_level
+      ))
+    end
+  end
+
+  def can_allow_membership_requests
+    valid = true
+
+    valid =
+      if self.persisted?
+        self.group_users.where(owner: true).exists?
+      else
+        self.group_users.any?(&:owner)
       end
+
+    if !valid
+      self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
     end
+  end
 
-    def can_allow_membership_requests
-      valid = true
-
-      valid =
-        if self.persisted?
-          self.group_users.where(owner: true).exists?
-        else
-          self.group_users.any?(&:owner)
-        end
-
-      if !valid
-        self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
-      end
-    end
-
-    def enqueue_update_mentions_job
-      Jobs.enqueue(:update_group_mentions,
-        previous_name: self.name_before_last_save,
-        group_id: self.id
-      )
-    end
+  def enqueue_update_mentions_job
+    Jobs.enqueue(:update_group_mentions,
+      previous_name: self.name_before_last_save,
+      group_id: self.id
+    )
+  end
 end
 
 # == Schema Information

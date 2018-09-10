@@ -20,7 +20,6 @@ class ScoreCalculator
     update_posts_score(opts)
     update_posts_rank(opts)
     update_topics_rank(opts)
-    update_topics_percent_rank(opts)
   end
 
   private
@@ -32,7 +31,7 @@ class ScoreCalculator
     @weightings.each_key { |k| components << "COALESCE(posts.#{k}, 0) * :#{k}" }
     components = components.join(" + ")
 
-    builder = SqlBuilder.new <<SQL
+    builder = DB.build <<SQL
        UPDATE posts p
         SET score = x.score
        FROM (
@@ -48,81 +47,72 @@ SQL
 
     filter_topics(builder, opts)
 
-    while builder.exec.cmd_tuples == limit
+    while builder.exec == limit
     end
   end
 
   def update_posts_rank(opts)
     limit = 20000
 
-    builder = SqlBuilder.new <<SQL
-UPDATE posts
-SET percent_rank = X.percent_rank
-FROM (
-  SELECT posts.id, Y.percent_rank
-  FROM posts
-  JOIN (
-    SELECT id, percent_rank()
-                 OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
-    FROM posts
-   ) Y ON Y.id = posts.id
-   JOIN topics ON posts.topic_id = topics.id
-  /*where*/
-  LIMIT #{limit}
-) AS X
-WHERE posts.id = X.id
-SQL
+    builder = DB.build <<~SQL
+      UPDATE posts
+      SET percent_rank = X.percent_rank
+      FROM (
+        SELECT posts.id, Y.percent_rank
+        FROM posts
+        JOIN (
+          SELECT id, percent_rank()
+                       OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
+          FROM posts
+         ) Y ON Y.id = posts.id
+         JOIN topics ON posts.topic_id = topics.id
+        /*where*/
+        LIMIT #{limit}
+      ) AS X
+      WHERE posts.id = X.id
+    SQL
 
     builder.where("posts.percent_rank IS NULL OR Y.percent_rank <> posts.percent_rank")
 
     filter_topics(builder, opts)
 
-    while builder.exec.cmd_tuples == limit
+    while builder.exec == limit
     end
 
   end
 
   def update_topics_rank(opts)
-    builder = SqlBuilder.new("UPDATE topics AS topics
-              SET has_summary = (topics.like_count >= :likes_required AND
-                                 topics.posts_count >= :posts_required AND
-                                 x.max_score >= :score_required),
-                  score = x.avg_score
-              FROM (SELECT p.topic_id,
-                           MAX(p.score) AS max_score,
-                           AVG(p.score) AS avg_score
-                    FROM posts AS p
-                    GROUP BY p.topic_id) AS x
-                    /*where*/")
+    builder = DB.build <<~SQL
+      UPDATE topics AS topics
+      SET has_summary = (topics.like_count >= :likes_required AND
+                         topics.posts_count >= :posts_required AND
+                         x.max_score >= :score_required),
+          score = x.avg_score
+      FROM (SELECT p.topic_id,
+                   MAX(p.score) AS max_score,
+                   AVG(p.score) AS avg_score
+            FROM posts AS p
+            GROUP BY p.topic_id) AS x
+            /*where*/
+    SQL
 
-    builder.where("x.topic_id = topics.id AND
-                        (
-                          (topics.score <> x.avg_score OR topics.score IS NULL) OR
-                          (topics.has_summary IS NULL OR topics.has_summary <> (
-                            topics.like_count >= :likes_required AND
-                            topics.posts_count >= :posts_required AND
-                            x.max_score >= :score_required
-                          ))
-                        )
-  ",
-              likes_required: SiteSetting.summary_likes_required,
-              posts_required: SiteSetting.summary_posts_required,
-              score_required: SiteSetting.summary_score_threshold)
+    defaults = {
+      likes_required: SiteSetting.summary_likes_required,
+      posts_required: SiteSetting.summary_posts_required,
+      score_required: SiteSetting.summary_score_threshold
+    }
 
-    filter_topics(builder, opts)
-
-    builder.exec
-  end
-
-  def update_topics_percent_rank(opts)
-
-    builder = SqlBuilder.new("UPDATE topics SET percent_rank = x.percent_rank
-          FROM (SELECT id, percent_rank()
-                OVER (ORDER BY SCORE DESC) as percent_rank
-                FROM topics) AS x
-                /*where*/")
-
-    builder.where("x.id = topics.id AND (topics.percent_rank <> x.percent_rank OR topics.percent_rank IS NULL)")
+    builder.where(<<~SQL, defaults)
+      x.topic_id = topics.id AND
+      (
+        (topics.score <> x.avg_score OR topics.score IS NULL) OR
+        (topics.has_summary IS NULL OR topics.has_summary <> (
+          topics.like_count >= :likes_required AND
+          topics.posts_count >= :posts_required AND
+          x.max_score >= :score_required
+        ))
+      )
+    SQL
 
     filter_topics(builder, opts)
 

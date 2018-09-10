@@ -36,6 +36,7 @@ class PostCreator
   #                             wrap `PostCreator` in a transaction, as the sidekiq jobs could
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
+  #   hidden_reason_id        - Reason for hiding the post (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -62,6 +63,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
     @guardian = opts[:guardian] if opts[:guardian]
 
     @spam = false
@@ -171,6 +173,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
+        link_post_uploads
 
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -205,7 +208,7 @@ class PostCreator
     create
 
     if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new("Failed to create post: #{self.errors.full_messages}")
+      raise ActiveRecord::RecordNotSaved.new(self.errors.full_messages.to_sentence)
     end
 
     @post
@@ -323,13 +326,17 @@ class PostCreator
   end
 
   def transaction(&blk)
-    Post.transaction do
-      if new_topic?
+    if new_topic?
+      Post.transaction do
         blk.call
-      else
-        # we need to ensure post_number is monotonically increasing with no gaps
-        # so we serialize creation to avoid needing rollbacks
-        DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
+      end
+    else
+      # we need to ensure post_number is monotonically increasing with no gaps
+      # so we serialize creation to avoid needing rollbacks
+      DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}") do
+        Post.transaction do
+          blk.call
+        end
       end
     end
   end
@@ -341,6 +348,10 @@ class PostCreator
     return unless @opts[:embed_url].present?
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
+  end
+
+  def link_post_uploads
+    @post.link_post_uploads
   end
 
   def handle_spam
@@ -411,7 +422,7 @@ class PostCreator
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      attrs[:updated_at] = 'now()'
+      attrs[:updated_at] = Time.now
       @topic.update_columns(attrs)
     end
   end
@@ -452,6 +463,12 @@ class PostCreator
 
     if fields = @opts[:custom_fields]
       post.custom_fields = fields
+    end
+
+    if @opts[:hidden_reason_id].present?
+      post.hidden = true
+      post.hidden_at = Time.zone.now
+      post.hidden_reason_id = @opts[:hidden_reason_id]
     end
 
     @post = post
@@ -523,6 +540,7 @@ class PostCreator
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
     else
+      return if @topic.private_message?
       notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end

@@ -183,7 +183,7 @@ class TopicCreator
       rollback_with!(topic, :no_user_selected)
     end
 
-    if @opts[:target_emails].present? && !@guardian.cand_send_private_messages_to_email? then
+    if @opts[:target_emails].present? && !@guardian.can_send_private_messages_to_email? then
       rollback_with!(topic, :reply_by_email_disabled)
     end
 

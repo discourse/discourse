@@ -60,10 +60,7 @@ class DiscourseSingleSignOn < SingleSignOn
     user.unstage
     user.save
 
-    # if the user isn't new or it's attached to the SSO record we might be overriding username or email
-    unless user.new_record?
-      change_external_attributes_and_override(sso_record, user)
-    end
+    change_external_attributes_and_override(sso_record, user)
 
     if sso_record && (user = sso_record.user) && !user.active && !require_activation
       user.active = true
@@ -89,6 +86,11 @@ class DiscourseSingleSignOn < SingleSignOn
 
     if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
       user.user_profile.bio_raw = bio
+      user.user_profile.save!
+    end
+
+    if website
+      user.user_profile.website = website
       user.user_profile.save!
     end
 
@@ -172,6 +174,10 @@ class DiscourseSingleSignOn < SingleSignOn
           ip_address: ip_address
         }
 
+        if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+          user_params[:locale] = locale
+        end
+
         user = User.create!(user_params)
 
         if SiteSetting.verbose_sso_logging
@@ -241,6 +247,10 @@ class DiscourseSingleSignOn < SingleSignOn
 
     if SiteSetting.sso_overrides_name && user.name != name && name.present?
       user.name = name || User.suggest_name(username.blank? ? email : username)
+    end
+
+    if locale_force_update && SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+      user.locale = locale
     end
 
     avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)

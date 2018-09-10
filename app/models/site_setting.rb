@@ -77,7 +77,7 @@ class SiteSetting < ActiveRecord::Base
 
     host = URI.parse(src).host
     return !(setting.split('|').include?(host))
-  rescue URI::InvalidURIError
+  rescue URI::Error
     return true
   end
 
@@ -128,20 +128,38 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
     end
 
+    def self.s3_endpoint
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
+    end
+
+    def self.s3_force_path_style
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_force_path_style : GlobalSetting.s3_force_path_style
+    end
+
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
 
+    def self.s3_base_url
+      path = self.s3_upload_bucket.split("/", 2)[1]
+      "#{self.absolute_base_url}#{path ? '/' + path : ''}"
+    end
+
     def self.absolute_base_url
+      url_basename = SiteSetting.s3_endpoint.split('/')[-1]
       bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      if SiteSetting.Upload.s3_region == "us-east-1"
-        "//#{bucket}.s3.amazonaws.com"
-      elsif SiteSetting.Upload.s3_region == 'cn-north-1'
-        "//#{bucket}.s3.cn-north-1.amazonaws.com.cn"
+      if SiteSetting.s3_endpoint == "https://s3.amazonaws.com"
+        if SiteSetting.Upload.s3_region == 'cn-north-1' || SiteSetting.Upload.s3_region == 'cn-northwest-1'
+          "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
+        else
+          "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
+        end
+      elsif SiteSetting.s3_force_path_style
+        "//#{url_basename}/#{bucket}"
       else
-        "//#{bucket}.s3-#{SiteSetting.Upload.s3_region}.amazonaws.com"
+        "//#{bucket}.#{url_basename}"
       end
     end
   end

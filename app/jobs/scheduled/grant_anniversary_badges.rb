@@ -13,7 +13,7 @@ module Jobs
       fmt_end_date = end_date.iso8601(6)
       fmt_start_date = start_date.iso8601(6)
 
-      results = User.exec_sql <<~SQL
+      user_ids = DB.query_single <<~SQL
         SELECT u.id AS user_id
         FROM users AS u
         INNER JOIN posts AS p ON p.user_id = u.id
@@ -32,8 +32,6 @@ module Jobs
         GROUP BY u.id
         HAVING COUNT(p.id) > 0 AND COUNT(ub.id) = 0
       SQL
-
-      user_ids = results.map { |r| r['user_id'].to_i }
 
       User.where(id: user_ids).find_each do |user|
         BadgeGranter.grant(badge, user, created_at: end_date)

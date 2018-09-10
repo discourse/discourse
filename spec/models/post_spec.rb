@@ -141,7 +141,7 @@ describe Post do
     let(:user) { Fabricate(:coding_horror) }
     let(:admin) { Fabricate(:admin) }
 
-    it 'isFlagged is accurate' do
+    it 'is_flagged? is accurate' do
       PostAction.act(user, post, PostActionType.types[:off_topic])
       post.reload
       expect(post.is_flagged?).to eq(true)
@@ -151,12 +151,33 @@ describe Post do
       expect(post.is_flagged?).to eq(false)
     end
 
-    it 'has_active_flag is accurate' do
+    it 'is_flagged? is true if flag was deferred' do
+      PostAction.act(user, post, PostActionType.types[:off_topic])
+      PostAction.defer_flags!(post.reload, admin)
+      post.reload
+      expect(post.is_flagged?).to eq(true)
+    end
+
+    it 'is_flagged? is true if flag was cleared' do
+      PostAction.act(user, post, PostActionType.types[:off_topic])
+      PostAction.clear_flags!(post.reload, admin)
+      post.reload
+      expect(post.is_flagged?).to eq(true)
+    end
+
+    it 'has_active_flag? is false for deferred flags' do
       PostAction.act(user, post, PostActionType.types[:spam])
       post.reload
       expect(post.has_active_flag?).to eq(true)
 
       PostAction.defer_flags!(post, admin)
+      post.reload
+      expect(post.has_active_flag?).to eq(false)
+    end
+
+    it 'has_active_flag? is false for cleared flags' do
+      PostAction.act(user, post, PostActionType.types[:spam])
+      PostAction.clear_flags!(post.reload, admin)
       post.reload
       expect(post.has_active_flag?).to eq(false)
     end
@@ -452,6 +473,13 @@ describe Post do
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).not_to be_valid
         end
+
+        it "will skip the check for whitelisted domains" do
+          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).to be_valid
+        end
       end
 
     end
@@ -737,6 +765,12 @@ describe Post do
         expect(reply.quoted_post_numbers).to be_blank
       end
 
+      it "doesn't find the quote in the same post" do
+        reply = Fabricate.build(:post, post_args.merge(post_number: 646))
+        reply.raw = "[quote=\"EvilTrout, post:#{reply.post_number}, topic:#{post.topic_id}\"]hello[/quote]"
+        reply.extract_quoted_post_numbers
+        expect(reply.quoted_post_numbers).to be_blank
+      end
     end
 
     describe 'a new reply' do
@@ -798,12 +832,13 @@ describe Post do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+    let!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.summary_percent_filter = 66
-      expect(Post.summary.order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(topic.id).order(:post_number)).to eq([p1, p2])
+      expect(Post.summary(p4.topic.id)).to eq([p4])
     end
-
   end
 
   context 'sort_order' do
@@ -935,12 +970,12 @@ describe Post do
   end
 
   describe "has_host_spam" do
-    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
+    let(:raw) { "hello from my site http://www.example.net http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: raw)
 
-      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
+      expect(post.total_hosts_usage).to eq("www.example.net" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -949,13 +984,33 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 
     it "doesn't punish staged users" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, staged: true, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "punishes previously staged users that were created within 1 day" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.hour.ago
+      user.unstage
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(true)
+    end
+
+    it "doesn't punish previously staged users over 1 day old" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.newuser_max_links = 3
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      user.created_at = 1.day.ago
+      user.unstage
       post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
@@ -987,7 +1042,7 @@ describe Post do
       first_baked = post.baked_at
       first_cooked = post.cooked
 
-      Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
       post.reload
 
       post.expects(:publish_change_to_clients!).with(:rebaked)
@@ -1022,16 +1077,12 @@ describe Post do
 
     it "uses default locale for edit reason" do
       I18n.locale = 'de'
-      old_username = post.user.username_lower
 
       post.set_owner(coding_horror, Discourse.system_user)
       post.reload
 
       expected_reason = I18n.with_locale(SiteSetting.default_locale) do
-        I18n.t('change_owner.post_revision_text',
-               old_user: old_username,
-               new_user: coding_horror.username_lower
-        )
+        I18n.t('change_owner.post_revision_text')
       end
 
       expect(post.edit_reason).to eq(expected_reason)
@@ -1100,6 +1151,76 @@ describe Post do
     post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
     post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
     expect(post.revisions.pluck(:number)).to eq([1, 2])
+  end
+
+  describe '#link_post_uploads' do
+    let(:video_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.mp4'
+      )
+    end
+
+    let(:image_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
+      )
+    end
+
+    let(:audio_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.ogg'
+      )
+    end
+
+    let(:attachment_upload) do
+      Fabricate(:upload,
+        url: '/uploads/default/original/1X/1/1234567890123456.csv'
+      )
+    end
+
+    let(:raw) do
+      <<~RAW
+      <a href="#{attachment_upload.url}">Link</a>
+      <img src="#{image_upload.url}">
+
+      <video width="100%" height="100%" controls>
+        <source src="http://myforum.com#{video_upload.url}">
+        <a href="http://myforum.com#{video_upload.url}">http://myforum.com#{video_upload.url}</a>
+      </video>
+
+      <audio controls>
+        <source src="http://myforum.com#{audio_upload.url}">
+        <a href="http://myforum.com#{audio_upload.url}">http://myforum.com#{audio_upload.url}</a>
+      </audio>
+      RAW
+    end
+
+    let(:post) { Fabricate(:post, raw: raw) }
+
+    it "finds all the uploads in the post" do
+      post.custom_fields[Post::DOWNLOADED_IMAGES] = {
+        "/uploads/default/original/1X/1/1234567890123456.csv": attachment_upload.id
+      }
+
+      post.save_custom_fields
+      post.link_post_uploads
+
+      expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
+        video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id
+      )
+    end
+
+    it "cleans the reverse index up for the current post" do
+      post.link_post_uploads
+
+      post_uploads_ids = post.post_uploads.pluck(:id)
+
+      post.link_post_uploads
+
+      expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
+        post_uploads_ids
+      )
+    end
   end
 
 end

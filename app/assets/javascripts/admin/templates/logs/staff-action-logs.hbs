@@ -32,58 +32,67 @@
   {{else}}
     {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions value=filterActionId none="admin.logs.staff_actions.all"}}
   {{/if}}
-
-  <div class="pull-right">
-    {{d-button action="exportStaffActionLogs" label="admin.export_csv.button_text" icon="download"}}
-  </div>
+  
+  {{d-button action="exportStaffActionLogs" label="admin.export_csv.button_text" icon="download"}}
 </div>
 <div class="clearfix"></div>
 
 {{#staff-actions}}
-  <div class="heading-container">
-    <div class="col heading first staff_user">{{i18n 'admin.logs.staff_actions.staff_user'}}</div>
-    <div class="col heading action">{{i18n 'admin.logs.action'}}</div>
-    <div class="col heading subject">{{i18n 'admin.logs.staff_actions.subject'}}</div>
-    <div class="col heading created_at">{{i18n 'admin.logs.staff_actions.when'}}</div>
-    <div class="col heading details">{{i18n 'admin.logs.staff_actions.details'}}</div>
-    <div class="col heading context">{{i18n 'admin.logs.staff_actions.context'}}</div>
-    <div class="clearfix"></div>
-  </div>
-
   {{#conditional-loading-spinner condition=loading}}
+
+<table class='table staff-logs grid'>
+
+  <thead>
+    <th>{{i18n 'admin.logs.staff_actions.staff_user'}}</th>
+    <th>{{i18n 'admin.logs.action'}}</th>
+    <th>{{i18n 'admin.logs.staff_actions.subject'}}</th>
+    <th>{{i18n 'admin.logs.staff_actions.when'}}</th>
+    <th>{{i18n 'admin.logs.staff_actions.details'}}</th>
+    <th>{{i18n 'admin.logs.staff_actions.context'}}</th>
+  </thead>
+
+  <tbody>
+
     {{#each model as |item|}}
-      <div class='admin-list-item'>
-        <div class="col value first staff_user">
+      <tr class='admin-list-item'>
+        <td class="staff-users">
+          <div class="staff-user">
           {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
-          <a {{action "filterByStaffUser" item.acting_user}} class="btn btn-small">{{item.acting_user.username}}</a>
-        </div>
-        <div class="col value action">
-          <a {{action "filterByAction" item}} class="btn btn-small">{{item.actionName}}</a>
-        </div>
-        <div class="col value subject">
+          <a {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
+          </div>
+        </td>
+        <td class="col value action">
+          <a {{action "filterByAction" item}}>{{item.actionName}}</a>
+        </td>
+        <td class="col value subject">
+          <div class="subject">
+
           {{#if item.target_user}}
             {{#link-to 'adminUser' item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
-            <a {{action "filterByTargetUser" item.target_user}} class="btn btn-small">{{item.target_user.username}}</a>
+            <a {{action "filterByTargetUser" item.target_user}}>{{item.target_user.username}}</a>
           {{/if}}
           {{#if item.subject}}
-            <a {{action "filterBySubject" item.subject}} title={{item.subject}}  class="btn btn-small">{{item.subject}}</a>
+            <a {{action "filterBySubject" item.subject}} title={{item.subject}}>{{item.subject}}</a>
           {{/if}}
-        </div>
-        <div class="col value created_at">{{age-with-tooltip item.created_at}}</div>
-        <div class="col value details">
+          </div>
+        </td>
+        <td class="col value created-at">{{age-with-tooltip item.created_at}}</td>
+        <td class="col value details">
           {{{item.formattedDetails}}}
           {{#if item.useCustomModalForDetails}}
-            <a {{action "showCustomDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+            <a {{action "showCustomDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
           {{/if}}
           {{#if item.useModalForDetails}}
-            <a {{action "showDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+            <a {{action "showDetailsModal" item}}>{{d-icon "info-circle"}} {{i18n 'admin.logs.staff_actions.show'}}</a>
           {{/if}}
-        </div>
-        <div class="col value context">{{item.context}}</div>
-        <div class="clearfix"></div>
-      </div>
+        </td>
+        <td class="col value context">{{item.context}}</td>
+      </tr>
     {{else}}
       {{i18n 'search.no_results'}}
     {{/each}}
+  </tbody>
+</table>
   {{/conditional-loading-spinner}}
+
 {{/staff-actions}}

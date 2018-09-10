@@ -40,7 +40,7 @@ class AddThemes < ActiveRecord::Migration[4.2]
       RETURNING *
 SQL
 
-      sql = ActiveRecord::Base.sql_fragment(sql, now: Time.zone.now, key: theme_key)
+      sql = DB.sql_fragment(sql, now: Time.zone.now, key: theme_key)
       theme_id = execute(sql).to_a[0]["id"].to_i
     end
 
@@ -62,7 +62,7 @@ SQL
       INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
       VALUES('default_theme_key', 1, :key, :now, :now)
 SQL
-      sql = ActiveRecord::Base.sql_fragment(sql, now: Time.zone.now, key: theme_key)
+      sql = DB.sql_fragment(sql, now: Time.zone.now, key: theme_key)
       execute(sql)
     end
 

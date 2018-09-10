@@ -72,7 +72,7 @@ module DiscourseNarrativeBot
           </linearGradient>
         </defs>
         <title>
-          test_cert
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.title')}
         </title>
         <g id="Layer_1" data-name="Layer 1">
           <path fill="url(#GradientFill_1)" d="M0 0h538.583v384.97H0z"/>
@@ -563,49 +563,49 @@ module DiscourseNarrativeBot
 
     private
 
-      def name
-        @user.username.titleize
-      end
+    def name
+      @user.username.titleize
+    end
 
-      def logo_group(size, width, height)
-        return unless SiteSetting.logo_small_url.present?
+    def logo_group(size, width, height)
+      return unless SiteSetting.logo_small_url.present?
 
-        begin
-          uri = URI(SiteSetting.logo_small_url)
+      begin
+        uri = URI(SiteSetting.logo_small_url)
 
-          logo_uri =
-            if uri.host.blank? || uri.scheme.blank?
-              URI("#{Discourse.base_url}/#{uri.path}")
-            else
-              uri
-            end
+        logo_uri =
+          if uri.host.blank? || uri.scheme.blank?
+            URI("#{Discourse.base_url}/#{uri.path}")
+          else
+            uri
+          end
 
-          <<~URL
+        <<~URL
           <g transform="translate(#{width / 2 - (size / 2)} #{height})">
             <image height="#{size}px" width="#{size}px" #{base64_image_link(logo_uri)}/>
           </g>
           URL
-        rescue URI::InvalidURIError
-          ''
-        end
+      rescue URI::InvalidURIError
+        ''
       end
+    end
 
-      def base64_image_link(url)
-        if image = fetch_image(url)
-          "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(image)}\""
-        else
-          ""
-        end
+    def base64_image_link(url)
+      if image = fetch_image(url)
+        "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(image)}\""
+      else
+        ""
       end
+    end
 
-      def fetch_image(url)
-        URI(url).open('rb', redirect: true, allow_redirections: :all).read
-      rescue OpenURI::HTTPError
-        # Ignore if fetching image returns a non 200 response
-      end
+    def fetch_image(url)
+      URI(url).open('rb', redirect: true, allow_redirections: :all).read
+    rescue OpenURI::HTTPError
+      # Ignore if fetching image returns a non 200 response
+    end
 
-      def avatar_url
-        UrlHelper.absolute(Discourse.base_uri + @user.avatar_template.gsub('{size}', '250'))
-      end
+    def avatar_url
+      UrlHelper.absolute(Discourse.base_uri + @user.avatar_template.gsub('{size}', '250'))
+    end
   end
 end

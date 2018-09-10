@@ -4,16 +4,23 @@ describe DestroyTask do
 
   describe 'destroy topics' do
     let!(:c) { Fabricate(:category) }
-    let!(:t) { Fabricate(:topic, category_id: c.id) }
-    let!(:p) { Fabricate(:post, topic_id: t.id) }
+    let!(:t) { Fabricate(:topic, category: c) }
+    let!(:p) { Fabricate(:post, topic: t) }
     let!(:c2) { Fabricate(:category) }
-    let!(:t2) { Fabricate(:topic, category_id: c2.id) }
-    let!(:p2) { Fabricate(:post, topic_id: t2.id) }
+    let!(:t2) { Fabricate(:topic, category: c2) }
+    let!(:p2) { Fabricate(:post, topic: t2) }
+    let!(:sc) { Fabricate(:category, parent_category: c) }
+    let!(:t3) { Fabricate(:topic, category: sc) }
+    let!(:p3) { Fabricate(:post, topic: t3) }
 
     it 'destroys all topics in a category' do
-      before_count = Topic.where(category_id: c.id).count
-      DestroyTask.destroy_topics(c.slug)
-      expect(Topic.where(category_id: c.id).count).to eq before_count - 1
+      expect { DestroyTask.destroy_topics(c.slug) }
+        .to change { Topic.where(category_id: c.id).count }.by (-1)
+    end
+
+    it 'destroys all topics in a sub category' do
+      expect { DestroyTask.destroy_topics(sc.slug, c.slug) }
+        .to change { Topic.where(category_id: sc.id).count }.by(-1)
     end
 
     it "doesn't destroy system topics" do
@@ -23,7 +30,7 @@ describe DestroyTask do
 
     it 'destroys topics in all categories' do
       DestroyTask.destroy_topics_all_categories
-      expect(Post.where(topic_id: [t.id, t2.id]).count).to eq 0
+      expect(Post.where(topic_id: [t.id, t2.id, t3.id]).count).to eq 0
     end
   end
 

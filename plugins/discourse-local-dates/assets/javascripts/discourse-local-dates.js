@@ -11,7 +11,10 @@
         clearTimeout(this.timeout);
       }
 
-      var relativeTime = moment.utc(options.date + " " + options.time, "YYYY-MM-DD HH:mm");
+      var relativeTime = moment.utc(
+        options.date + " " + options.time,
+        "YYYY-MM-DD HH:mm:ss"
+      );
 
       if (options.recurring && relativeTime < moment().utc()) {
         var parts = options.recurring.split(".");
@@ -24,7 +27,10 @@
       }
 
       var previews = options.timezones.split("|").map(function(timezone) {
-        var dateTime = relativeTime.tz(timezone).format(options.format);
+        var dateTime = relativeTime
+          .tz(timezone)
+          .format(options.format || "LLL");
+
         var timezoneParts = _formatTimezone(timezone);
 
         if (dateTime.match(/TZ/)) {
@@ -39,11 +45,22 @@
         }
       });
 
-      relativeTime = relativeTime.tz(moment.tz.guess()).format(options.format);
+      var relativeTime = relativeTime.tz(moment.tz.guess());
+      if (
+        options.format !== "YYYY-MM-DD HH:mm:ss" &&
+        relativeTime.isBetween(
+          moment().subtract(1, "day"),
+          moment().add(2, "day")
+        )
+      ) {
+        relativeTime = relativeTime.calendar();
+      } else {
+        relativeTime = relativeTime.format(options.format);
+      }
 
       var html = "<span>";
       html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";
-      html += relativeTime.replace("TZ", _formatTimezone(moment.tz.guess()).join(": "));
+      html += "<span class='relative-time'></span>";
       html += "</span>";
 
       var joinedPreviews = previews.join("\n");
@@ -52,7 +69,14 @@
         .html(html)
         .attr("title", joinedPreviews)
         .attr("data-tooltip", joinedPreviews)
-        .addClass("cooked");
+        .addClass("cooked")
+        .find(".relative-time")
+        .text(
+          relativeTime.replace(
+            "TZ",
+            _formatTimezone(moment.tz.guess()).join(": ")
+          )
+        );
 
       if (repeat) {
         this.timeout = setTimeout(function() {

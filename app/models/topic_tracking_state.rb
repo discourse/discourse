@@ -174,8 +174,12 @@ class TopicTrackingState
     sql << "\nUNION ALL\n\n"
     sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?)
 
-    SqlBuilder.new(sql)
-      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id, min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime)
+    DB.query(
+      sql,
+        user_id: user.id,
+        topic_id: topic_id,
+        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+    )
   end
 
   def self.report_raw_sql(opts = nil)
@@ -288,11 +292,11 @@ SQL
       topic_id: topic.id
     }
 
-    channels.each do |channel, user_ids|
+    channels.each do |channel, ids|
       MessageBus.publish(
         channel,
         message.as_json,
-        user_ids: user_ids
+        user_ids: ids
       )
     end
   end

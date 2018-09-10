@@ -5,6 +5,6 @@ export default Ember.Mixin.create({
 
   @computed("model.isSaving")
   saveButtonText(isSaving) {
-    return isSaving ? I18n.t('saving') : I18n.t('save');
+    return isSaving ? I18n.t("saving") : I18n.t("save");
   }
 });

@@ -35,12 +35,12 @@ class CookedPostProcessor
       post_process_oneboxes
       post_process_images
       post_process_quotes
-      keep_reverse_index_up_to_date
       optimize_urls
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
       grant_badges
+      @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end
@@ -56,26 +56,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
-  end
-
-  def keep_reverse_index_up_to_date
-    upload_ids = []
-
-    @doc.css("a/@href", "img/@src").each do |media|
-      if upload = Upload.get_from_url(media.value)
-        upload_ids << upload.id
-      end
-    end
-
-    upload_ids |= downloaded_images.values.select { |id| Upload.exists?(id) }
-
-    values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
-    PostUpload.transaction do
-      PostUpload.where(post_id: @post.id).delete_all
-      if upload_ids.size > 0
-        PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
-      end
-    end
   end
 
   def post_process_images
@@ -159,15 +139,25 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||= JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
+    @large_images ||=
+      begin
+        JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
+      rescue JSON::ParserError
+        []
+      end
   end
 
   def broken_images
-    @broken_images ||= JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
+    @broken_images ||=
+      begin
+        JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
+      rescue JSON::ParserError
+        []
+      end
   end
 
   def downloaded_images
-    @downloaded_images ||= JSON.parse(@post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
+    @downloaded_images ||= @post.downloaded_images
   end
 
   def extract_images
@@ -193,7 +183,7 @@ class CookedPostProcessor
   end
 
   def oneboxed_images
-    @doc.css(".onebox-body img, .onebox img")
+    @doc.css(".onebox-body img, .onebox img, img.onebox")
   end
 
   def limit_size!(img)
@@ -257,23 +247,19 @@ class CookedPostProcessor
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
     @size_cache[url] = FastImage.size(absolute_url)
-  rescue Zlib::BufError, URI::InvalidURIError, URI::InvalidComponentError, OpenSSL::SSL::SSLError
+  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
   end
 
   def is_valid_image_url?(url)
     uri = URI.parse(url)
     %w(http https).include? uri.scheme
-  rescue URI::InvalidURIError
+  rescue URI::Error
   end
-
-  # only crop when the image is taller than 18:9
-  # we only use 90% of that to allow for a small margin
-  MIN_RATIO_TO_CROP ||= (9.0 / 18.0) * 0.9
 
   def convert_to_link!(img)
     src = img["src"]
-    return if src.blank? || is_a_hyperlink?(img)
+    return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
 
     width, height = img["width"].to_i, img["height"].to_i
     # TODO: store original dimentions in db
@@ -288,7 +274,10 @@ class CookedPostProcessor
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
-    if crop = (original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP)
+    crop   = SiteSetting.min_ratio_to_crop > 0
+    crop &&= original_width.to_f / original_height.to_f < SiteSetting.min_ratio_to_crop
+
+    if crop
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
       img["height"] = height
@@ -328,7 +317,17 @@ class CookedPostProcessor
 
     # replace the image by its thumbnail
     w, h = img["width"].to_i, img["height"].to_i
-    img["src"] = upload.thumbnail(w, h).url if upload && upload.has_thumbnail?(w, h)
+
+    if upload
+      thumbnail = upload.thumbnail(w, h)
+
+      img["src"] =
+        if thumbnail && thumbnail.filesize.to_i < upload.filesize
+          upload.thumbnail(w, h).url
+        else
+          upload.url
+        end
+    end
 
     # then, some overlay informations
     meta = create_node("div", "meta")
@@ -461,28 +460,14 @@ class CookedPostProcessor
   end
 
   def optimize_urls
-    # attachments can't be on the CDN when either setting is enabled
-    if SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
-      @doc.css("a.attachment[href]").each do |a|
-        href = a["href"].to_s
-        a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
-      end
-    end
-
-    use_s3_cdn = SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
-
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
-        href = a[selector].to_s
-        a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
-        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
+        a[selector] = UrlHelper.cook_url(a[selector].to_s)
       end
     end
 
     @doc.css("img[src]").each do |img|
-      src = img["src"].to_s
-      img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
-      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
+      img["src"] = UrlHelper.cook_url(img["src"].to_s)
     end
   end
 
@@ -537,6 +522,19 @@ class CookedPostProcessor
 
   def html
     @doc.try(:to_html)
+  end
+
+  private
+
+  def is_svg?(img)
+    path =
+      begin
+        URI(img["src"]).path
+      rescue URI::Error
+        nil
+      end
+
+    File.extname(path) == '.svg' if path
   end
 
 end

@@ -1,5 +1,5 @@
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Mixin.create(ModalFunctionality, {
   reason: null,
@@ -17,21 +17,21 @@ export default Ember.Mixin.create(ModalFunctionality, {
       loadingUser: true,
       post: null,
       postEdit: null,
-      postAction: 'delete',
+      postAction: "delete",
       before: null,
       successCallback: null
     });
   },
 
   penalize(cb) {
-    let before = this.get('before');
+    let before = this.get("before");
     let promise = before ? before() : Ember.RSVP.resolve();
 
     return promise
       .then(() => cb())
       .then(result => {
-        this.send('closeModal');
-        let callback = this.get('successCallback');
+        this.send("closeModal");
+        let callback = this.get("successCallback");
         if (callback) {
           callback(result);
         }

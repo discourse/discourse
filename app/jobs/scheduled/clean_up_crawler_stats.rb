@@ -7,7 +7,7 @@ module Jobs
       WebCrawlerRequest.where('date < ?', WebCrawlerRequest.max_record_age.ago).delete_all
 
       # keep count of only the top user agents
-      WebCrawlerRequest.exec_sql <<~SQL
+      DB.exec <<~SQL
         WITH ranked_requests AS (
           SELECT row_number() OVER (ORDER BY count DESC) as row_number, id
             FROM web_crawler_requests

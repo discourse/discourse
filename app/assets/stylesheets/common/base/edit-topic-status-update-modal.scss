@@ -1,56 +1,65 @@
 .edit-topic-timer-modal {
   .modal-body {
     max-height: none;
+    overflow: visible !important; /* inline JS styles */
   }
+  .control-group {
+    display: flex;
+    align-items: center;
 
+    > .d-icon {
+      margin-right: 5px;
+    }
+  }
   .select-kit {
     width: 50%;
   }
-
-  input.date-picker, input[type="time"] {
+  input.date-picker,
+  input[type="time"] {
     width: 150px;
     text-align: left;
   }
-
   .radios {
     margin-bottom: 10px;
   }
-
   label {
     vertical-align: middle;
     display: inline-block;
     padding-right: 5px;
-
     input {
       vertical-align: middle;
     }
   }
-
   .btn.pull-right {
     margin-right: 10px;
   }
-
   .future-date-input {
     input {
       margin: 0;
     }
-
     .alert-info {
       margin: 0 -15px -15px -15px;
     }
-
-    .pika-single {
-      position: relative !important;
+    .btn-clear {
+      display: none;
     }
-
     .topic-status-info {
       border: none;
       padding: 0;
-
       h3 {
         font-weight: normal;
         font-size: $font-up-1;
       }
     }
+  }
+  .pika-single {
+    position: absolute !important; /* inline JS styles */
+  }
+}
+
+// mobile styles
+.mobile-view .edit-topic-timer-modal {
+  .select-kit.combo-box {
+    flex: 1;
   }
 }

@@ -124,7 +124,7 @@ class UserAvatarsController < ApplicationController
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exists?(optimized_path)
       else
-        return proxy_avatar(Discourse.store.cdn_url(optimized.url))
+        return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
       end
     end
 
@@ -141,7 +141,7 @@ class UserAvatarsController < ApplicationController
   end
 
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
-  def proxy_avatar(url)
+  def proxy_avatar(url, last_modified)
 
     if url[0..1] == "//"
       url = (SiteSetting.force_https ? "https:" : "http:") + url
@@ -163,8 +163,7 @@ class UserAvatarsController < ApplicationController
       FileUtils.mv tmp.path, path
     end
 
-    # putting a bogus date cause download is not retaining the data
-    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Last-Modified"] = last_modified.httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     immutable_for(1.year)
     send_file path, disposition: nil
@@ -174,19 +173,20 @@ class UserAvatarsController < ApplicationController
   def render_blank
     path = Rails.root + "public/images/avatar.png"
     expires_in 10.minutes, public: true
-    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Last-Modified"] = Time.new('1990-01-01').httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     send_file path, disposition: nil
   end
 
+  protected
+
+  # consider removal of hacks some time in 2019
+
   def get_optimized_image(upload, size)
-    OptimizedImage.create_for(
-      upload,
-      size,
-      size,
-      filename: upload.original_filename,
-      allow_animation: SiteSetting.allow_animated_avatars,
-    )
+    return if !upload
+
+    upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
+    # TODO decide if we want to detach here
   end
 
 end

@@ -32,6 +32,7 @@ class ImportScripts::Base
     @old_site_settings = {}
     @start_times = { import: Time.now }
     @skip_updates = false
+    @next_category_color_index = {}
   end
 
   def preload_i18n
@@ -75,7 +76,7 @@ class ImportScripts::Base
       min_personal_message_post_length: 1,
       min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      disable_emails: true,
+      disable_emails: 'yes',
       max_attachment_size_kb: 102400,
       max_image_size_kb: 102400,
       authorized_extensions: '*'
@@ -83,6 +84,12 @@ class ImportScripts::Base
   end
 
   def change_site_settings
+    if SiteSetting.bootstrap_mode_enabled
+      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level == TrustLevel[1]
+      SiteSetting.default_email_digest_frequency = 10080 if SiteSetting.default_email_digest_frequency == 1440
+      SiteSetting.bootstrap_mode_enabled = false
+    end
+
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
@@ -445,7 +452,7 @@ class ImportScripts::Base
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       parent_category_id: opts[:parent_category_id],
-      color: opts[:color] || category_color,
+      color: opts[:color] || category_color(opts[:parent_category_id]),
       text_color: opts[:text_color] || "FFF",
       read_restricted: opts[:read_restricted] || false,
     )
@@ -466,11 +473,11 @@ class ImportScripts::Base
     new_category
   end
 
-  def category_color
+  def category_color(parent_category_id)
     @category_colors ||= SiteSetting.category_colors.split('|')
 
-    index = @next_category_color_index.presence || 0
-    @next_category_color_index = index + 1 >= @category_colors.count ? 0 : index + 1
+    index = @next_category_color_index[parent_category_id].presence || 0
+    @next_category_color_index[parent_category_id] = index + 1 >= @category_colors.count ? 0 : index + 1
 
     @category_colors[index]
   end
@@ -626,7 +633,7 @@ class ImportScripts::Base
   def update_topic_status
     puts "", "Updating topic status"
 
-    Topic.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topics AS t
       SET closed = TRUE
       WHERE EXISTS(
@@ -636,7 +643,7 @@ class ImportScripts::Base
       )
     SQL
 
-    Topic.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topics AS t
       SET archived = TRUE
       WHERE EXISTS(
@@ -646,7 +653,7 @@ class ImportScripts::Base
       )
     SQL
 
-    TopicCustomField.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       DELETE FROM topic_custom_fields
       WHERE name IN ('import_closed', 'import_archived')
     SQL
@@ -654,7 +661,7 @@ class ImportScripts::Base
 
   def update_bumped_at
     puts "", "Updating bumped_at on topics"
-    Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
+    DB.exec("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
   end
 
   def update_last_posted_at
@@ -674,7 +681,7 @@ class ImportScripts::Base
         AND users.last_posted_at <> lpa.last_posted_at
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
   end
 
   def update_user_stats
@@ -707,7 +714,7 @@ class ImportScripts::Base
         AND user_stats.first_post_created_at <> sub.first_post_created_at
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
 
     puts "", "Updating user post_count..."
 
@@ -725,7 +732,7 @@ class ImportScripts::Base
         AND user_stats.post_count <> sub.post_count
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
 
     puts "", "Updating user topic_count..."
 
@@ -743,15 +750,15 @@ class ImportScripts::Base
         AND user_stats.topic_count <> sub.topic_count
     SQL
 
-    User.exec_sql(sql)
+    DB.exec(sql)
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method
   def update_last_seen_at
     puts "", "Updating last seen at on users"
 
-    User.exec_sql("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
-    User.exec_sql("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
+    DB.exec("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
+    DB.exec("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
   end
 
   def update_feature_topic_users
@@ -866,7 +873,7 @@ class ImportScripts::Base
     @start_times.fetch(key) { |k| @start_times[k] = Time.now }
   end
 
-  def batches(batch_size)
+  def batches(batch_size = 1000)
     offset = 0
     loop do
       yield offset

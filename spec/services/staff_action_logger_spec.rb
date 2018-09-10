@@ -154,7 +154,7 @@ describe StaffActionLogger do
     end
 
     let :theme do
-      Theme.new(name: 'bob', user_id: -1)
+      Fabricate(:theme)
     end
 
     it "logs new site customizations" do
@@ -188,7 +188,7 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      theme = Theme.new(name: 'Banana')
+      theme = Fabricate(:theme)
       theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
       log_record = logger.log_theme_destroy(theme)
@@ -486,6 +486,27 @@ describe StaffActionLogger do
 
     it 'creates a new UserHistory record' do
       expect { log_post_approved }.to change { UserHistory.count }.by(1)
+    end
+  end
+
+  describe 'log_post_rejected' do
+    let(:rejected_post) { Fabricate(:queued_post) }
+
+    subject(:log_post_rejected) { described_class.new(admin).log_post_rejected(rejected_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_rejected(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a QueuedPosts' do
+      expect { logger.log_post_rejected(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_rejected }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
+      expect(user_history.details).to include(rejected_post.raw)
     end
   end
 end

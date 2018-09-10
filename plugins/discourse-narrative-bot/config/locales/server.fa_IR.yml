@@ -7,7 +7,6 @@
 
 fa_IR:
   site_settings:
-    discourse_narrative_bot_enabled: 'ربات سخنگوی دیسکورس را فعال کنید'
     disable_discourse_narrative_bot_welcome_post: "پیغام خوشامدگویی ربات دیسکورس را از کار بیاندازید"
     discourse_narrative_bot_ignored_usernames: "نام‌های کاربری که بایستی توسط ربات دیسکورس چشمپوشی شوند"
     discourse_narrative_bot_disable_public_replies: "از کار انداختن پاسخ‌های خصوصی توسط ربات دیسکورس"

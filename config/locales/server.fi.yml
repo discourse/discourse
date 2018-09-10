@@ -29,24 +29,51 @@ fi:
   loading: "Lataa"
   powered_by_html: 'Voimanlähteenä <a href="https://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
   log_in: "Kirjaudu"
+  submit: "Lähetä"
   purge_reason: "Hylätty, aktivoimaton tili poistettiin automaattisesti"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   anonymous: "Anonyymejä"
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
+  redirect_warning: "Emme pystyneet varmistamaan että klikkaamasi linkki on oikeasti lähetetty palstalle. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   themes:
     bad_color_scheme: "Teemaa ei voitu päivittää, värimalli ei kelpaa"
     other_error: "Jotakin meni vikaan, kun teemaa päivitettiin"
+    error_importing: "Virhe kloonatessa Git-tietovarastoa: ei käyttöoikeutta tai tietovarastoa ei löytynyt"
+    errors:
+      component_no_user_selectable: "Teeman osia ei voi valita käyttäjätasolla"
+      component_no_default: "Teeman osat eivät voi olla oletusteema"
+      component_no_color_scheme: "Teeman osalla ei voi olla värimallia"
+      no_multilevels_components: "Teemat joilla on tytärteemoja eivät voi olla tytärteemoja itse"
+    settings_errors:
+      invalid_yaml: "Annettu YAML ei kelpaa"
+      data_type_not_a_number: "Ei voi asettaa tietotyypiksi %{name}.  Tuettuja tyyppejä ovat integer, blool, list ja enum."
+      name_too_long: "Jollain asetuksella on liian pitkä nimi.  Enimmäispituus on 255."
+      default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
+      default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
+      default_out_range: "Asetuksen \"%{name}\" oletusarvo ei ole sallituissa rajoissa."
+      enum_value_not_valid: "Valittu arvo ei ole enum-arvojen listalla."
+      number_value_not_valid: "Uusi arvo ei ole sallituissa rajoissa."
+      number_value_not_valid_min_max: "Sen täytyy olla vähintään %{min}ja enintään %{max}."
+      number_value_not_valid_min: "Sen täytyy olla suurempi tai yhtä suuri kuin %{min}."
+      number_value_not_valid_max: "Sen täytyy olla pienempi tai yhtä suuri kuin %{max}."
+      string_value_not_valid: "Uuden arvon pituus ei ole sallituissa rajoissa."
+      string_value_not_valid_min_max: "Sen täytyy olla vähintään %{min} ja enintään %{max}merkkiä pitkä."
+      string_value_not_valid_min: "Sen täytyy olla vähintään %{min}merkkiä pitkä."
+      string_value_not_valid_max: "Sen täytyy olla enintään %{max}merkkiä pitkä"
   emails:
     incoming:
       default_subject: "Tämä ketju tarvitsee otsikon"
       show_trimmed_content: "Näytä piilotettu sisältö"
       maximum_staged_user_per_email_reached: "Saavutti maksimimäärän automaattisesti luotuja esikäyttäjiä per sähköpostiosoite."
+      no_subject: "(ei aihetta)"
+      no_body: "(ei leipätekstiä)"
       errors:
         empty_email_error: "Näin käy, kun saapuneessa sähköpostissa ei lue mitään."
         no_message_id_error: "Näin käy, kun viestin otsikkotiedoista puuttuu ID-tunniste (engl. message-ID)."
         auto_generated_email_error: "Näin käy, kun viestin kiireellisyysluokitus (engl. precedence header) on joku seuraavista: list, junk, bulk tai auto_reply, tai kun joku muu otsikkotiedoista sisältää jonkun seuraavista: auto-submitted, auto-replied tai auto-generated."
         no_body_detected_error: "Näin käy, kun leipätekstin poiminta epäonnistuu eikä liitteitä ole."
         no_sender_detected_error: "Näin käy, kun emme tunnista käypää sähköpostiosoitetta viestin From-otsikkotiedosta."
+        from_reply_by_address_error: "Näin käy, kun lähettäjän osoite (From) on sama kuin vastausten sähköpostiosoite."
         inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
         silenced_user_error: "Näin käy, kun lähettäjä on hiljennetty."
         bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
@@ -88,6 +115,8 @@ fi:
       not_an_integer: täytyy olla kokonaisluku
       odd: täytyy olla pariton
       record_invalid: 'Validointi epäonnistui: %{errors}'
+      max_emojis: "ei voi olla yli %{max_emojis_count}emojia"
+      ip_address_already_screened: "sisältyy jo olemassa olevaan sääntöön"
       restrict_dependent_destroy:
         one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
         many: "Tietueita ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa."
@@ -109,17 +138,27 @@ fi:
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
     site_settings:
+      invalid_choice:
+        one: 'Määrittämäsi valinta ei kelpaa %{name}'
+        other: 'Määrittämäsi valinnat eivät kelpaa %{name}'
       min_username_length_exists: "Käyttäjänimen vähimmäispituutta ei voi asettaa lyhyintä käyttäjänimeä pidemmäksi."
       min_username_length_range: "Et voi asettaa minimi korkeammaksi kuin maksimi"
       max_username_length_exists: "Et voi asettaa käyttäjänimen enimmäispituutta alle pisimmän käyttäjänimen."
       max_username_length_range: "Et voi asettaa maksimia minimin alle."
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
+    conflicting_google_user_id: 'Tämän käyttäjätilin Google Account ID on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä sivuston ylläpitäjään."
+    not_found_template: |
+      <p>Kutsusi sivustolle<a href="%{base_url}">%{site_name}</a>  on jo käytetty.</p>
+
+      <p>Jos muistat salasanasi voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
+
+      <p>Muussa tapauksessa <a href="%{base_url}/password-reset">uusi salasanasi</a>.</p>
     user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='/u/%{username}/summary'>on jo tunnus!</a>"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
@@ -131,16 +170,20 @@ fi:
     backup_file_should_be_tar_gz: "Varmuuskopion tulisi olla .tar.gz-pakattu tiedosto."
     not_enough_space_on_disk: "Ei tarpeeksi levytilaa."
     invalid_filename: "Varmuuskopion nimi sisältää ei-sallittuja merkkejä. Sallittuja ovat a-z 0-9 . - _."
+  invalid_params: "Vastasit pyyntöön parametreilla, jotka eivät kelpaa: %{message}"
   not_logged_in: "Sinun täytyy kirjautua sisään ensin."
   not_found: "Pyydettyä osoitetta tai resurssia ei löytynyt."
   invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
+  authenticator_not_found: "Autentikointimenetelmää ei ole olemassa tai se on poistettu käytöstä."
   invalid_api_credentials: "Et voi katsella pyytämääsi resurssia. Rajapinnan käyttäjänimi tai avain ei kelpaa."
+  provider_not_enabled: "Et saa katsella pyydettyä resurssia. Autentikoinnintarjoajaa ei ole otettu käyttöön."
+  provider_not_found: "Et saa katsella pyydettyä resurssia. Autentikoinnintarjoajaa ei ole olemassa."
   read_only_mode_enabled: "Sivusto on vain luku-tilassa. Vuorovaikutteiset toiminnot ovat poissa käytöstä."
   reading_time: "Lukuaika"
   likes: "Tykkäykset"
   too_many_replies:
-    one: Pahoittelut, uudet käyttäjät voivat kirjoittaa yhden vastauksen samaan ketjuun.
-    other: Pahoittelut, uudet käyttäjät voivat kirjoittaa %{count} vastausta samaan ketjuun.
+    one: "Pahoittelut, uudet käyttäjät voivat kirjoittaa yhden vastauksen samaan ketjuun."
+    other: "Pahoittelut, uudet käyttäjät voivat kirjoittaa %{count} vastausta samaan ketjuun."
   embed:
     start_discussion: "Lisää kommentti"
     continue: "Siirry keskusteluun"
@@ -150,40 +193,44 @@ fi:
     no_hosts: "Isäntiä ei ole määritetty upotusta varten."
     configure: "Määritä upottaminen"
     more_replies:
-      one: 1 muu kommentti
-      other: '%{count} muuta kommenttia'
+      one: "1 muu kommentti"
+      other: "%{count} muuta kommenttia"
     loading: "Haetaan kommentteja..."
     permalink: "Ikilinkki"
     imported_from: "Tämä on kommenttiketju artikkelille %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: 1 kommentti
-      other: '%{count} kommenttia'
+      one: "1 kommentti"
+      other: "%{count} kommenttia"
   no_mentions_allowed: "Pahoittelut, et voi mainita muita käyttäjiä."
   too_many_mentions:
-    one: Pahoittelut, voit mainita viestissä vain yhden käyttäjän.
-    other: Pahoittelut, voit mainita viestissä vain %{count} käyttäjää.
+    one: "Pahoittelut, voit mainita viestissä vain yhden käyttäjän."
+    other: "Pahoittelut, voit mainita viestissä vain %{count} käyttäjää."
   no_mentions_allowed_newuser: "Pahoittelut, uusi käyttäjä ei voi mainita muita käyttäjiä."
   too_many_mentions_newuser:
-    one: Pahoittelut, uusi käyttäjä voi mainita viestissä vain yhden käyttäjän.
-    other: Pahoittelut, uusi käyttäjä voi mainita viestissä vain %{count} käyttäjää.
+    one: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain yhden käyttäjän."
+    other: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain %{count} käyttäjää."
+  no_images_allowed_trust: "Pahoittelut, et voi laittaa kuvia viesteihin"
   no_images_allowed: "Pahoittelut, uusi käyttäjä ei voi liittää kuvia viestiin."
   too_many_images:
-    one: Pahoittelut, uusi käyttäjä voi liittää vain yhden kuvan viestiin.
-    other: Pahoittelut, uusi käyttäjä voi liittää vain %{count} kuvaa viestiin.
+    one: "Pahoittelut, uusi käyttäjä voi liittää vain yhden kuvan viestiin."
+    other: "Pahoittelut, uusi käyttäjä voi liittää vain %{count} kuvaa viestiin."
   no_attachments_allowed: "Pahoittelut, uusi käyttäjä ei voi liittää liitteitä viesteihin."
   too_many_attachments:
-    one: Pahoittelut, uusi käyttäjä voi liittää vain yhden liitteen viestiin.
-    other: Pahoittelut, uusi käyttäjä voi liittää vain %{count} liittettä viestiin.
+    one: "Pahoittelut, uusi käyttäjä voi liittää vain yhden liitteen viestiin."
+    other: "Pahoittelut, uusi käyttäjä voi liittää vain %{count} liittettä viestiin."
   no_links_allowed: "Pahoittelut, uusi käyttäjä ei voi laittaa linkkiä viestiin."
+  links_require_trust: "Pahoittelut, et voi laittaa linkkejä viesteihin"
   too_many_links:
-    one: Pahoittelut, uudet käyttäjät voivat laittaa vain yhden linkin viestiin.
-    other: Pahoittelut, uusi käyttäjä voi laittaa vain %{count} linkkiä viestiin.
+    one: "Pahoittelut, uudet käyttäjät voivat laittaa vain yhden linkin viestiin."
+    other: "Pahoittelut, uusi käyttäjä voi laittaa vain %{count} linkkiä viestiin."
+  contains_blocked_words: "Viestissäsi on sana joka ei ole sallittu: %{word}"
   spamming_host: "Pahoittelut, linkit tuolle sivulle eivät ole sallittuja."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
   not_accepting_pms: "Pahoittelut, %{username} ei ota vastaan yksityisviestejä tällä hetkellä."
   max_pm_recepients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
+  pm_reached_recipients_limit: "Pahoittelut, yksityisviestillä ei voi olla yli %{recipients_limit} vastaanottajaa."
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
   invalid_characters: "sisältää epäkelpoja merkkejä"
   is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
@@ -210,6 +257,7 @@ fi:
     top_weekly: "Viikon parhaat ketjut"
     top_daily: "Päivän parhaat ketjut"
     posts: "Uusimmat viestit"
+    private_posts: "Tuoreimmat yksityisviestit"
     group_posts: "Uusimmat viestit ryhmässä %{group_name}"
     group_mentions: "Uusimmat maininnat ryhmässä %{group_name}"
     user_posts: "Viimeisimmät viestit käyttäjältä @%{username}"
@@ -223,8 +271,16 @@ fi:
     delete_reason: "Poistettu moderointijonon kautta"
     not_found: "Viestiä ei löytynyt tai se päivittyi jo."
   groups:
+    success:
+      bulk_add:
+        one: "%{count} käyttäjä lisättiin ryhmään."
+        other: "%{count} käyttäjää lisättiin ryhmään."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' ei kelpaa luottamustasoksi."
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
+      member_already_exist:
+        one: "'%{username}' on jo ryhmän jäsen."
+        other: "Nämä käyttäjät ovat jo ryhmän jäseniä: %{username}"
       invalid_domain: "'%{domain}' ei ole käypä verkkotunnus."
       invalid_incoming_email: "'%{email}' ei ole käypä sähköpostiosoite."
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
@@ -244,8 +300,8 @@ fi:
       title: "Jäsenhakemus ryhmään @%{group_name}"
   education:
     until_posts:
-      one: ensimmäisen viestisi
-      other: '%{count} ensimmäistä viestiäsi'
+      one: "ensimmäisen viestisi"
+      other: "%{count} ensimmäistä viestiäsi"
     'new-topic': |
       Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
 
@@ -303,6 +359,12 @@ fi:
       Olemme pahoillamme, mutta uusien käyttäjien viestien määrä on rajoitettu %{newuser_max_replies_per_topic} vastaukseen samassa ketjussa.
 
       Harkitse edellisten viestiesi muokkaamista uuden viestin kirjoittamisen sijaan tai vieraile muissa ketjuissa.
+    reviving_old_topic: |
+      ### Elvytä ketju?
+
+      Viimeisimmästä vastauksesta ketjuun on jo **%{time_ago}**. Vastauksesi nostaa ketjun listausten kärkeen ja siitä lähtee ilmoitus aiemmin keskusteluun osallistuneille.
+
+      Oletko varma, että haluat jatkaa tätä vanhaa keskustelua?
   activerecord:
     attributes:
       category:
@@ -320,9 +382,12 @@ fi:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Voit liittää varoituksia vain yksityisviesteihin."
               too_many_users: "Voit lähettää varoituksia vain yhdelle käyttäjälle kerrallaan."
+              cant_send_pm: "Pahoittelut, et voi lähettää yksityisviestiä tällä käyttäjälle."
               no_user_selected: "Sinun täytyy valita kelpaava käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
+              target_user_not_found: "Ei löydetty yhtä niistä käyttäjistä, joille lähetät viestiä."
             featured_link:
               invalid: "ei ole käypä. URL:in tulisi sisältää http:// tai https://."
               invalid_category: "ei voi muokata tällä alueella."
@@ -336,6 +401,10 @@ fi:
               unique_characters: "on liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
             ip_address:
               signup_not_allowed: "Liittyminen ei ole sallittu tälle tilille."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Ensisijaista sähköpostia ei voi siirtää toiselle käyttäjälle."
         color_scheme_color:
           attributes:
             hex:
@@ -394,30 +463,31 @@ fi:
     title: "Tervetuloa Loungeen"
     body: |2
 
-        Onnittelut! :confetti_ball:
+      Onnittelut! :confetti_ball:
 
-        Jos näet tämän ketjun, sinut on juuri ylennetty **Mestariksi** (luottamustaso 3).
+      Jos näet tämän ketjun, sinut on juuri ylennetty **Mestariksi** (luottamustaso 3).
 
-        Voit nyt&hellip;
+      Voit nyt&hellip;
 
-        * Muokata minkä hyvänsä ketjun otsikkoa
-        * Siirtää minkä tahansa ketjun toiselle alueelle
-        * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
-        * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-        * Piilottaa roskapostiviestin yhdellä liputuksella
+      * Muokata minkä hyvänsä ketjun otsikkoa
+      * Siirtää minkä tahansa ketjun toiselle alueelle
+      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
+      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
+      * Piilottaa roskapostiviestin yhdellä liputuksella
 
-        Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
+      Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
 
-        Kiitos, että olet tämän yhteisön arvokas jäsen!
+      Kiitos, että olet tämän yhteisön arvokas jäsen!
 
-        (Lisää tietoa luottamustasoista saat [tästä englanninkielisestä ketjusta][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
+      (Lisää tietoa luottamustasoista saat [tästä englanninkielisestä ketjusta][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
 
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Alueesta %{category}"
     replace_paragraph: "(Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisena. **Aluetta ei näytetä Keskustelualueet-sivulla ennen kuin olet muokannut tätä tekstiä tai aloittanut viestiketjuja.**)"
     post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen tai selvittääksesi alueen säännöt ja ohjeet:\n\n- Miksi käyttäjät valitsisivat tämän alueen? Mitä varten se on?\n\n- Kuinka se tarkkaan ottaen eroaa muista olemassa olevista alueista?\n\n- Minkälaista sisältöä alueen ketjuissa tulisi yleensä olla?\n\n- Tarvitaanko tätä aluetta? Voisiko sen yhdistää toiseen alueeseen tai siirtää toisen alueen alle?\n"
     errors:
+      not_found: "Aluetta ei löytynyt!"
       uncategorized_parent: "Alueettomilla ei voi olla emoaluetta"
       self_parent: "Alue ei voi olla itsensä emoalue"
       depth: "Alue ei voi olla tytäralueen tytäralue"
@@ -429,8 +499,8 @@ fi:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on tytäralueita."
       topic_exists:
-        one: Aluetta ei voi poistaa, koska siellä on 1 ketju. Linkki ketjuun %{topic_link}.
-        other: Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}.
+        one: "Aluetta ei voi poistaa, koska siellä on 1 ketju. Vanhin ketju on %{topic_link}."
+        other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
       topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
     uncategorized_description: "Ketjut, jotka eivät tarvitse aluetta tai eivät sovi muihin alueisiin."
   trust_levels:
@@ -449,86 +519,104 @@ fi:
     image_placeholder:
       broken: "Tämä kuva ei toimi"
   rate_limiter:
+    slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
+    too_many_requests: "Olet suorittanut toiminnon liian monta kertaa. Odota %{time_left} ennen kuin yrität uudelleen."
+    by_type:
+      first_day_replies_per_day: "Olet jo lähettänyt niin monta viestiä kuin uusi käyttäjä ensimmäisenä päivänään voi. Odota %{time_left} ennen kuin yrität uudelleen."
+      first_day_topics_per_day: "Olet jo aloittanut niin monta ketjua kuin uusi käyttäjä ensimmäisenä päivänään voi. Odota %{time_left} ennen kuin yrität uudelleen."
+      create_topic: "Aloitat ketjuja liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
+      create_post: "Lähetät vastauksia liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
+      delete_post: "Poistat viestejä liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
+      public_group_membership: "Liityt tai poistut ryhmistä liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
+      topics_per_day: "Olet aloittanut enimmäismäärän uusia ketjuja. Odota %{time_left} ennen kuin yrität uudelleen."
+      pms_per_day: "Olet lähettänyt enimmäismäärän yksityisviestejä. Odota %{time_left} ennen kuin yrität uudelleen."
+      create_like: "Olet jakanut enimmäismäärän tykkäyksiä. Odota %{time_left} ennen kuin yrität uudelleen."
+      create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä. Odota %{time_left} ennen kuin yrität uudelleen. "
+      edit_post: "Olet tehnyt enimmäismäärän muokkauksia. Odota %{time_left} ennen kuin yrität uudelleen."
+      live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
+      unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
+      topic_invitations_per_day: "Olet kutsunut enimmäismäärän käyttäjiä ketjuihin. Odota %{time_left} ja yritä sitten uudelleen."
     hours:
-      one: 1 tunti
-      other: '%{count} tuntia'
+      one: "1 tunti"
+      other: "%{count} tuntia"
     minutes:
-      one: 1 minuutti
-      other: '%{count} minuuttia'
+      one: "1 minuutti"
+      other: "%{count} minuuttia"
     seconds:
-      one: 1 sekunti
-      other: '%{count} sekuntia'
+      one: "1 sekunti"
+      other: "%{count} sekuntia"
+    short_time: "muutama sekunti"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 min"
       less_than_x_seconds:
-        one: < 1 s
-        other: < %{count} s
+        one: "< 1 s"
+        other: "< %{count} s"
       x_seconds:
-        one: 1 s
-        other: '%{count} s'
+        one: "1 s"
+        other: "%{count} s"
       less_than_x_minutes:
-        one: < 1 min
-        other: < %{count} min
+        one: "< 1 min"
+        other: "< %{count} min"
       x_minutes:
-        one: 1 min
-        other: '%{count} min'
+        one: "1 min"
+        other: "%{count} min"
       about_x_hours:
-        one: 1 t
-        other: '%{count} t'
+        one: "1 t"
+        other: "%{count} t"
       x_days:
-        one: 1 pv
-        other: '%{count} pv'
+        one: "1 pv"
+        other: "%{count} pv"
       about_x_months:
-        one: 1 kk
-        other: '%{count} kk'
+        one: "1 kk"
+        other: "%{count} kk"
       x_months:
-        one: 1 kk
-        other: '%{count} kk'
+        one: "1 kk"
+        other: "%{count} kk"
       about_x_years:
-        one: 1 v
-        other: '%{count} v'
+        one: "1 v"
+        other: "%{count} v"
       over_x_years:
-        one: '> 1 v'
-        other: '> %{count} v'
+        one: "> 1 v"
+        other: "> %{count} v"
       almost_x_years:
-        one: 1 v
-        other: '%{count} v'
+        one: "1 v"
+        other: "%{count} v"
     distance_in_words_verbose:
       half_a_minute: "hetki sitten"
       less_than_x_seconds:
-        one: hetki sitten
-        other: hetki sitten
+        one: "hetki sitten"
+        other: "hetki sitten"
       x_seconds:
-        one: 1 sekunti sitten
-        other: '%{count} sekuntia sitten'
+        one: "1 sekunti sitten"
+        other: "%{count} sekuntia sitten"
       less_than_x_minutes:
-        one: alle minuutti sitten
-        other: alle %{count} minuuttia sitten
+        one: "alle minuutti sitten"
+        other: "alle %{count} minuuttia sitten"
       x_minutes:
-        one: minuutti sitten
-        other: '%{count} minuuttia sitten'
+        one: "minuutti sitten"
+        other: "%{count} minuuttia sitten"
       about_x_hours:
-        one: tunti sitten
-        other: '%{count} tuntia sitten'
+        one: "tunti sitten"
+        other: "%{count} tuntia sitten"
       x_days:
-        one: 1 päivä sitten
-        other: '%{count} päivää sitten'
+        one: "1 päivä sitten"
+        other: "%{count} päivää sitten"
       about_x_months:
-        one: noin kuukausi sitten
-        other: noin %{count} kuukautta sitten
+        one: "noin kuukausi sitten"
+        other: "noin %{count} kuukautta sitten"
       x_months:
-        one: kuukausi sitten
-        other: '%{count} kuukautta sitten'
+        one: "kuukausi sitten"
+        other: "%{count} kuukautta sitten"
       about_x_years:
-        one: noin vuosi sitten
-        other: noin %{count} vuotta sitten
+        one: "noin vuosi sitten"
+        other: "noin %{count} vuotta sitten"
       over_x_years:
-        one: yli vuosi sitten
-        other: yli %{count} vuotta sitten
+        one: "yli vuosi sitten"
+        other: "yli %{count} vuotta sitten"
       almost_x_years:
-        one: lähes vuosi sitten
-        other: lähes %{count} vuotta sitten
+        one: "lähes vuosi sitten"
+        other: "lähes %{count} vuotta sitten"
   password_reset:
     no_token: "Pahoittelut, tämä salasanan uusimisen linkki on liian vanha. Paina 'Kirjaudu sisään' nappia ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
     choose_new: "Valitse uusi salasana"
@@ -538,6 +626,9 @@ fi:
     title: 'Uusi salasana'
     success: "Salasanan vaihto onnistui ja olet nyt kirjautuneena sisään."
     success_unapproved: "Salasana vaihdettu onnistuneesti."
+  email_login:
+    invalid_token: "Pahoittelut, tämä sisäänkirjautumislinkki on liian vanha. Paina 'Kirjaudu sisään' nappia ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
+    title: "Sähköpostikirjautuminen"
   change_email:
     confirmed: "Sähköpostiosoite päivitetty."
     please_continue: "Jatka sivustolle %{site_name}"
@@ -547,6 +638,8 @@ fi:
     authorizing_old:
       title: "Kiitos sähköpostiosoitteesi varmentamisesta"
       description: "Lähetämme sinulle sähköpostin varmennusta varten."
+  associated_accounts:
+    revoke_failed: "Tunnustasi palveluntarjoajalla %{provider_name} ei onnistuttu perumaan."
   activation:
     action: "Aktivoi tilisi klikkaamalla tästä"
     already_done: "Pahoittelut, tämän tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
@@ -582,6 +675,8 @@ fi:
       long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
+      description: 'Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti.'
+      short_description: 'Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti.'
       long_form: 'lähetä käyttäjälle viesti'
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -602,17 +697,12 @@ fi:
       description: 'Tykkää viestistä'
       short_description: 'Tykkää viestistä'
       long_form: 'tykkäsi tästä'
-    vote:
-      title: 'Äänestä'
-      description: 'Äänestä viestiä'
-      short_description: 'Äänestä viestiä'
-      long_form: 'viestiä äänestetty'
   user_activity:
     no_default:
       self: "Et ole vielä tehnyt mitään mainittavaa."
       others: "Ei ole tehnyt mitään mainittavaa."
     no_bookmarks:
-      self: "Kirjanmerkeissäsi ei ole viestejä. Kirjanmerkit auttavat löytämään viestejä helposti myöhemmin."
+      self: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
       others: "Ei kirjanmerkkejä."
     no_likes_given:
       self: "Et ole tykännyt yhdestäkään viestistä."
@@ -620,19 +710,25 @@ fi:
     no_replies:
       self: "Et ole vastannut yhteenkään viestiin."
       others: "Ei vastauksia."
+    no_drafts:
+      self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan viestiä mihin tahansa ketjuun niin se tallentuu automaattiseksi uudeksi luonnokseksi."
+      others: "Et voi nähdä tämän käyttäjän luonnoksia."
   topic_flag_types:
     spam:
       title: 'Roskaposti'
       description: 'Tämä ketju on mainos. Se ei ole hyödyllinen tai relevantti tällä sivustolla, vaan on luonteeltaan mainostamista.'
       long_form: 'liputti tämän roskapostiksi'
+      short_description: 'Tämä on mainos'
     inappropriate:
       title: 'Sopimaton'
       description: 'Ketjussa on loukkaavaa, herjaavaa tai <a href="/guidelines">palstan sääntöjen</a> kanssa ristiriitaista sisältöä.'
       long_form: 'liputti tämän sopimattomaksi'
+      short_description: '<a href="/guidelines">Palstan sääntöjen</a> vastainen'
     notify_moderators:
       title: "Jotain muuta"
       description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
+      short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -650,6 +746,7 @@ fi:
     title: "Tilaus peruttu!"
     description: "Tilaus osoitteeseen <b>%{email}</b> on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
+    private_topic_description: "Voit tilata ketjun uudelleen sen alla tai oikealla puolella sijaitsevan ilmoitusvalikon kautta."
   unsubscribe:
     title: "Peru tilaus"
     stop_watching_topic: "Lopeta ketjun tarkkailu, %{link}"
@@ -677,12 +774,65 @@ fi:
       read: "Kaikkien luku"
       write: "Kaikkiin kirjaittaminen"
   reports:
+    default:
+      labels:
+        count: Lukumäärä
+        percent: Prosenttia
+        day: Päivä
+    post_edits:
+      title: "Viestin muokkauksia"
+      labels:
+        post: Viesti
+        editor: Muokkaaja
+        author: Kirjoittaja
+        edit_reason: Syy
+    moderators_activity:
+      title: "Valvojien toiminta"
+      labels:
+        moderator: Valvoja
+        flag_count: Arvioituja lippuja
+        time_read: Lukuaika
+        topic_count: Aloitetut ketjut
+        post_count: Kirjoitetut viestit
+        pm_count: Kirjoitetut yksityisviestit
+        revision_count: Revisiot
+    flags_status:
+      title: "Lippujen tilanne"
+      values:
+        agreed: Samaa mieltä
+        disagreed: Eri mieltä
+        deferred: Lykätty
+        no_action: Ei toimintaa
+      labels:
+        flag: Tyyppi
+        assigned: Osoitettu
+        poster: Kirjoittaja
+        flagger: Liputtaja
+        time_to_resolution: Selvitysaika
     visits:
       title: "Vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
     signups:
+      title: "Liittymiset"
       xaxis: "Päivä"
+      yaxis: "Liittymisten lukumäärä"
+      description: "Uusien tunnusten luonnit tänä aikana"
+    new_contributors:
+      title: "Uusia kirjoittajia"
+      xaxis: "Päivä"
+      yaxis: "Uusien kirjoittajien lukumäärä"
+      description: "Kuinka moni käyttäjä kirjoitti ensimmäisen viestinsä tänä aikana"
+    dau_by_mau:
+      title: "DAU/MAU"
+      xaxis: "Päivä"
+      yaxis: "Päivittäin aktiivisten käyttäjien osuus kuukausittain aktiivisista"
+      description: "Viimeisenä päivänä kirjautuneiden käyttäjien lukumäärän suhde viimeisen kuukauden aikana kirjautuneisiin. Tämä prosenttiluku mittaa yhteisön pysyvyyttä. Sopiva tavoite: >30%."
+    daily_engaged_users:
+      title: "Sitoutuneet päivittäiskäyttäjät"
+      xaxis: "Päivä"
+      yaxis: "Sitoutuneet käyttäjät"
+      description: "Viimeisen päivän aikana tykänneiden tai kirjoittaneiden käyttäjien lukumäärä"
     profile_views:
       title: "Käyttäjäprofiilin katselut"
       xaxis: "Päivä"
@@ -691,10 +841,12 @@ fi:
       title: "Ketjut"
       xaxis: "Päivä"
       yaxis: "Uusien ketjujen lukumäärä"
+      description: "Tänä aikana aloitettujen ketjujen määrä"
     posts:
       title: "Viestit"
       xaxis: "Päivä"
       yaxis: "Uusien viestien lukumäärä"
+      description: "Tänä aikana kirjoitettujen viestien määrä"
     likes:
       title: "Tykkäyksiä"
       xaxis: "Päivä"
@@ -715,13 +867,37 @@ fi:
       title: "Käyttäjiä luottamustasoilla"
       xaxis: "Luottamustaso"
       yaxis: "Käyttäjien lukumäärä"
+      labels:
+        level: Taso
+    users_by_type:
+      title: "Käyttäjät tyypeittäin"
+      xaxis: "Tyyppi"
+      yaxis: "Käyttäjien lukumäärä"
+      labels:
+        type: Tyyppi
+      xaxis_labels:
+        admin: Ylläpitäjä
+        moderator: Valvoja
+        suspended: Hyllytetty
+        silenced: Hiljennetty
+    trending_search:
+      title: Kuumat haut
+      labels:
+        term: Hakusana
+        searches: Hakuja
+        click_through: KS
     emails:
       title: "Lähetettyjä sähköposteja"
       xaxis: "Päivä"
       yaxis: "Sähköpostien lukumäärä"
     user_to_user_private_messages:
+      title: "Käyttäjältä käyttäjälle (pl. vastaukset)"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+    user_to_user_private_messages_with_replies:
+      title: "Käyttäjältä käyttäjälle (ml. vastaukset)"
+      xaxis: "Päivä"
+      yaxis: "Viestien määrä"
     system_private_messages:
       title: "Järjestelmä"
       xaxis: "Päivä"
@@ -749,10 +925,15 @@ fi:
       num_clicks: "Klikkausta"
       num_topics: "Ketjut"
       num_users: "Käyttäjät"
+      labels:
+        domain: Verkkotunnus
+        num_clicks: Klikkaukset
+        num_topics: Ketjut
     top_referred_topics:
       title: "Parhaat viitatut ketjut"
-      xaxis: "Ketju"
-      num_clicks: "Klikkausta"
+      labels:
+        num_clicks: "Klikkaukset"
+        topic: "Ketju"
     page_view_anon_reqs:
       title: "Anonyymejä"
       xaxis: "Päivä"
@@ -766,6 +947,7 @@ fi:
       xaxis: "Päivä"
       yaxis: "Hakurobottien sivunlataukset"
     page_view_total_reqs:
+      title: "Sivunkatselua"
       xaxis: "Päivä"
       yaxis: "Sivunlatauksia yhteensä"
     page_view_logged_in_mobile_reqs:
@@ -809,9 +991,14 @@ fi:
       xaxis: "Päivä"
       yaxis: "Yhteensä"
     mobile_visits:
-      title: "Vierailut"
+      title: "Käyttäjävierailut (mobiili)"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
+    web_crawlers:
+      title: "Hakurobottien pyynnöt"
+      labels:
+        user_agent: "Käyttäjäagentti"
+        page_views: "Sivunkatselut"
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
@@ -829,29 +1016,38 @@ fi:
     failing_emails_warning: 'Epäonnistuneiden sähköpostitehtävien määrä on %{num_failed_jobs}. Tarkista app.yml ja varmista, että palvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
-      one: Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja.
-      other: Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja.
+      one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+    missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
     bad_favicon_url: "Faviconin asettaminen epäonnistui. Tarkista favicon_url -asetus <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a>."
+    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
+    out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
+    default_locale: "Tämän Discourse-ympäristön oletuskieli"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     set_locale_from_accept_language_header: "Aseta sivuston kieli kirjautumattomille käyttäjille selaimen kielivalinnan perusteella. (KOKEELLINEN, ei toimi anonyymin välimuistin kanssa)"
+    support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin."
     min_post_length: "Viestin merkkien minimimäärä"
     min_first_post_length: "Ketjun aloitusviestin (leipätekstin) merkkien minimimäärä"
+    min_personal_message_post_length: "Yksityisviestin vähimmäismerkkimäärä"
     max_post_length: "Viestin merkkien minimimäärä"
     topic_featured_link_enabled: "Ota käyttöön ketjulinkit."
     show_topic_featured_link_in_digest: "Näytä ketjulinkki tiivistelmäsähköpostissa."
     min_topic_title_length: "Viestin otsikon merkkien minimimäärä"
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
+    min_personal_message_title_length: "Yksityisviestin otsikon vähimmäismerkkimäärä"
+    max_emojis_in_title: "Kuinka monta emojia enintään otsikossa"
     min_search_term_length: "Haun merkkien minimimäärä"
     search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
     log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
     search_query_log_max_size: "Kuinka monta hakukyselyä säilötään enintään"
+    search_query_log_max_retention_days: "Kuinka pitkään hakukyselyä enintään säilötään päivissä."
     allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun aloittaminen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
@@ -866,6 +1062,9 @@ fi:
     download_remote_images_max_days_old: "Älä lataa linkattuja kuvia viesteistä, jotka ovat yli n päivää vanhoja."
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu lista."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin lokiin."
+    editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
+    editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasosta 2 ylöspäin)."
+    staff_edit_locks_post: "Viesti lukitaan muokkauksilta, jos henkilökunnan jäsen muokkaa sitä"
     post_edit_time_limit: "Kirjoittaja voi muokata tai poistaa viestinsä (n) minuuttia lähettämisen jälkeen. Aseta 0 poistaaksesi rajoituksen kokonaan."
     edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus otetaan pois käytöstä, vain henkilökunta näkee versiot."
     delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
@@ -899,6 +1098,8 @@ fi:
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
+    enable_personal_messages: "Salli luottamustason 1  saavuttaneiden käyttäjien (\"min trust level to send messages\" on säädettävissä) lähettää yksityisviestejä ja vastata niihin. Huomioi, että henkilökunta voi aina lähettää yksityisviestejä."
+    enable_system_message_replies: "Sallii käyttäjien vastata systeemin yksityisviesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
     enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     long_polling_base_url: "Base URL, jota käytetään long pollingissa (kun CDN on käytössä, varmista että tähän on asetettu origin pull) esim: http://origin.site.com"
     long_polling_interval: "Kuinka kauan palvelimen pitäisi odottaa ennen vastaamista asiakkaalle, kun ei ole mitään dataa jota lähettää (vain kirjautuneille käyttäjille)"
@@ -919,6 +1120,8 @@ fi:
     notify_mods_when_user_silenced: "Jos käyttäjä hiljennetään automaattisesti, lähetä viesti kaikile valvojille."
     flag_sockpuppets: "Jos uuden käyttäjän aloittamaan ketjuun vastaa toinen uusi käyttäjä samasta IP-osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
     traditional_markdown_linebreaks: "Käytä perinteisiä rivinvaihtoja Markdownissa, joka vaatii kaksi perättäistä välilyöntiä rivin vaihtoon."
+    enable_markdown_linkify: "Tee linkin näköisestä tekstistä automaattisesti linkki: www.site.com ja http://site.com muutetaan automaattisesti linkeiksi"
+    markdown_linkify_tlds: "Luettelo ylätason verkkotunnuksista, jotka muutetaan esiintyessään linkeiksi automaattisesti"
     post_undo_action_window_mins: "Kuinka monta minuuttia käyttäjällä on aikaa perua viestiin kohdistuva toimi (tykkäys, liputus, etc)."
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
@@ -932,13 +1135,17 @@ fi:
     use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blacklist_ip_blocks: "Lista yksityisistä IP-blokeista, joita Discoursen ei tule käydä läpi"
     allowed_iframes: "Iframe src -verkkotunnukset, jotka Discourse voi turvallisesti sallia viesteissä"
+    whitelisted_crawler_user_agents: 'Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle.'
+    blacklisted_crawler_user_agents: 'Uniikki kirjainkoosta riippumaton sana käyttäjäagentin nimessä, josta tunnistaa sivustolle ei-tervetulleen hakurobotin. Ei vaikutusta, mikäli valkolista sallituista on määritelty.'
+    slow_down_crawler_user_agents: 'Hakurobottien käyttäjäagentit, joiden toiminnan nopeutta rajoitetaan hakuviivemääräyksen (Crawl-delay directive) mukaisesti'
+    slow_down_crawler_rate: 'Jos slow_down_crawler_user_agents on määritelty tämä nopeusrajoitus koskee kaikkia hakurobotteja (kuinka monta sekuntia pitää kulua pyyntöjen välillä)'
     top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
     share_links: "Mitkä painikkeet näytetään Jaa-valikossa ja missä järjestyksessä."
-    track_external_right_clicks: "Seuraa pois sivustolta vieviä linkkejä, jotka avataan hiiren oikealla näppäimellä (esim. avaa uudessa välilehdessä) oletuksena poistettu käytöstä, koska tämä kirjoittaa URL:n uudelleen"
     site_contact_username: "Henkilökuntaan kuuluvan käyttäjä, jonka nimissä kaikki automaattiset viestit lähetetään. Jos jätetään tyhjäksi, oletuksena on System-käyttäjä."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille tervetuliaisviesti, jossa on pikakäyttöopas"
+    send_tl1_welcome_message: "Lähetä luottamustason 1 saavuttaville käyttäjille yksityinen tervetuloviesti."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä, jos ainoa vastaus on seuraavassa viestissä."
     suppress_reply_directly_above: "Älä näytä vastauksena-painiketta viestin yläreunassa, jos viestissä on vastattu vain edelliseen viestiin."
     suppress_reply_when_quoting: "Älä näytä vastauksena-painiketta viestin yläreunassa, kun viestissä on lainaus."
@@ -982,6 +1189,8 @@ fi:
     sso_overrides_avatar: "Syrjäyttää käyttäjän avatarin ulkopuolisella kertakirjautumisen kautta haetulla avatarilla. Jos tämä otetaan käyttöön, suositellaan samalla allow_uploaded_avatars -asetuksen poistamista käytöstä."
     sso_not_approved_url: "Uudelleenohjaa hyväksymättömät SSO-tilit tähän osoitteeseen"
     sso_allows_all_return_paths: "Älä rajoita SSO:n antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
+    enable_local_logins: "Salli kirjautuminen paikallisesti käyttäjänimen ja salasanan avulla. Tämä tulee olla päällä, jotta kutsuminen voi toimia. VAROITUS: jos ei ole käytössä, voi sinun olla mahdotonta kirjautua sisään, jollet ole aiemmin määritellyt ainakin yhtä muuta kirjautumistapaa."
+    enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_signup_cta: "Näytä palaaville anonyymeille käyttäjille ilmoitus, jossa kehoitetaan heitä luomaan tili."
     enable_yahoo_logins: "Ota käyttöön Yahoo kirjautuminen"
@@ -1003,6 +1212,7 @@ fi:
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     automatic_backups_enabled: "Tee automaattinen varmuuskopiointi, kuten tiheysasetus on määritelty"
+    backup_frequency: "Kuinka monen päivän välein otetaan varmuuskopio."
     enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     s3_disable_cleanup: "Älä poista varmuuskopiota S3:sta, kun se poistetaan paikallisesti."
@@ -1015,6 +1225,7 @@ fi:
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
     rebake_old_posts_count: "Kuinka monta vanhaa viestiä rakennetaan uudelleen 15 minuutissa."
+    enable_safe_mode: "Salli käyttäjän mennä vikasietotilaan, jotta hän voi rajata pois ongelmanaiheuttajista lisäosat."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen aloittaa toisen ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
@@ -1024,10 +1235,13 @@ fi:
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Kuinka monta ketjua käyttäjä voi aloittaa päivässä."
+    max_personal_messages_per_day: "Kuinka monta yksityisviestiketjua käyttäjä voi aloittaa päivässä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
     max_logins_per_ip_per_minute: "Enimmäismäärä kirjautumisia IP-osoitetta kohden minuutissa"
+    max_post_deletions_per_minute: "Kuinka monta viestiä käyttäjä voi poistaa minuutissa."
+    max_post_deletions_per_day: "Kuinka monta viestiä käyttäjä voi poistaa päivässä."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     categories_topics: "Kuinka monta ketjua näytetään /keskustelualueet-sivulla"
@@ -1047,12 +1261,15 @@ fi:
     avatar_sizes: "Profiilikuvista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
+    selectable_avatars_enabled: "Pakota käyttäjä valitsemaan avatarinsa listalta."
+    selectable_avatars: "Avatarit, joista käyttäjä voi valita."
     default_opengraph_image_url: "Oletuksena käytettävän opengraph-kuvan URL."
     twitter_summary_large_image_url: "Oletuksena käytettävän Twitter-tiivistelmäkortin kuva (tulisi olla leveydeltään ainakin 280 px leveä ja 150 px korkea)."
     allow_all_attachments_for_group_messages: "Salli kaikki sähköpostiliitteet ryhmäviesteissä."
     png_to_jpg_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 99 on paras laatu, 100 ottaa pois käytöstä)."
     allow_staff_to_upload_any_file_in_pm: "Salli henkilökunnan ladata minkätyyppisiä liitteitä tahansa yksityisviesteihin."
     strip_image_metadata: "Poista metadata kuvista."
+    min_ratio_to_crop: "Suhde, jolla korkeat kuvat cropataan. Syötä tulos suhteena leveys / korkeus."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -1080,10 +1297,17 @@ fi:
     tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_links_no_follow: "Älä poista rel=nofollow -attribuuttia linkeistä luottamustason 3 käyttäjiltä."
+    trusted_users_can_edit_others: "Salli korkean luottamustason käyttäjän muokata toisten käyttäjien viestien sisältöjä"
     min_trust_to_create_topic: "Ketjun aloittamiseen vaadittava luottamustaso."
+    allow_flagging_staff: "Jos käytössä, käyttäjät voivat liputtaa henkilökunnan viestejä."
     min_trust_to_edit_wiki_post: "Wikiviestin muokkaamiseen vaadittava luottamustaso."
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
+    min_trust_to_send_messages: "Vähimmäisluottamustaso, jolla voi aloittaa yksityisviestiketjuja."
+    min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi liputtaa viestejä"
+    min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
+    min_trust_to_post_images: "Vähimmäisluottamustaso, jolla voi lisätä kuvia viesteihin"
+    whitelisted_link_domains: "Verkkotunnukset, joihin voi linkittää vaikkei olisikaan riittävällä luottamustasolla, jotta muuten voisi lisätä linkkejä viesteihin"
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
     newuser_max_images: "Kuinka monta kuvaa uusi käyttäjä voi lisätä viestiin."
     newuser_max_attachments: "Kuinka monta liitettä uusi käyttäjä voi lisätä viestiin."
@@ -1094,6 +1318,7 @@ fi:
     enable_mentions: "Salli käyttäjän mainita toinen käyttäjä."
     create_thumbnails: "Luo esikatselu- ja lightbox-kuvia, jotka ovat liian suuria mahtuakseen viestiin."
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
+    personal_email_time_window_seconds: "Odota (n) sekuntia ennen kuin lähetetään mitään yksityisiä sähköposti-ilmoituksia, jotta käyttäjillä on mahdollisuus muokata ja viimeistellä yksityisviestinsä."
     email_posts_context: "Kuinka monta edellistä vastausta liitetään kontekstiksi sähköposti-ilmoituksessa."
     flush_timings_secs: "Kuinka usein timing data päivitetään palvelimelle, sekunneissa."
     title_max_word_length: "Sanan enimmäispituus merkkeinä ketjun otsikossa"
@@ -1109,6 +1334,7 @@ fi:
     max_image_size_kb: "Liitetyn kuvan suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     authorized_extensions: "Liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
+    authorized_extensions_for_staff: "Luettelo tiedostopäätteistä, jotka ovat sallittuja henkilökunnan jäsenille niiden lisäksi, jotka on määritelty sivustoasetuksella \"authorized_extensions\". (salli asettamalla * kaikki tiedostotyypit)"
     theme_authorized_extensions: "Teemalatausten liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
     max_similar_results: "Kuinka monta samankaltaista ketjua näytetään viestikentän päällä uutta ketjua aloitettaessa. Vertailu perustuu sekä otsikkoon että leipätekstiin."
     max_image_megapixels: "Kuvan enimmäiskoko megapikseleinä."
@@ -1128,6 +1354,7 @@ fi:
     faq_url: "Jos haluat käyttää sivuston ulkopuolella ylläpidettyä UKK-listaa, syötä URL tähän."
     tos_url: "Jos haluat ylläpitää käyttöehtoja sivuston ulkopuolella, syötä URL tähän."
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
+    log_anonymizer_details: "Pidetäänkö käyttäjästä tietoa lokeissa anonymisoinnin jälkeen. Jos noudatat GDPR:ää sinun on kytkettävä tämä pois käytöstä."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viesteissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
     white_listed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     staff_like_weight: "Kuinka suuri ylimääräinen arvo on henkilökunnan tykkäyksillä."
@@ -1147,16 +1374,19 @@ fi:
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
     auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viesti viedään arvioitavaksi. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan 'hemmetti', 'aba' tai 'aca'. Koskee vain käyttäjän ensimmäistä viestiä."
     flags_default_topics: "Näytä liputetut ketjut oletuksena ylläpito-osiossa"
+    min_flags_staff_visibility: "Kuinka monesti viesti täytyy liputtaa, jotta henkilökunta näkee sen ylläpito-osiossa"
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
-    disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
+    incoming_email_prefer_html: "Käytä HTML:ää tekstin sijaan saapuvissa sähköposteissa."
+    disable_emails: "Estä Discoursea lähettämästä minkäänlaisia sähköposteja. Ota pois sähköpostit kaikilta käyttäjiltä valitsemalla \"yes\" . \"Non-staff\" poistaa sähköpostit vain muilta kuin henkilökunnalta."
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
     short_email_length: "Lyhyen sähköpostin pituus tavuissa"
     display_name_on_email_from: "Näytä sähköpostien lähettäjinä käyttäjien koko nimet"
     unsubscribe_via_email: "Salli käyttäjän lakkauttaa sähköposti-ilmoitukset lähettämällä sähköpostiviesti, jonka otsikossa tai leipätekstissä esiintyy sana \"unsubscribe\""
     unsubscribe_via_email_footer: "Liitä sähköpostiviestien alaosaan mailto: linkki, jonka avulla saaja voi lakkauttaa sähköposti-ilmoitukset"
     delete_email_logs_after_days: "Poista sähköpostilokit (N) päivän jälkeen. Aseta 0 säilyttääksesi ikuisesti."
+    disallow_reply_by_email_after_days: "Estä vastaaminen sähköpostitse (N) päivän jälkeen. 0 sallii vastaamisen aina."
     max_emails_per_day_per_user: "Käyttäjälle päivässä lähetettävien sähköpostien enimmäismäärä. Aseta 0, jos et halua rajoittaa."
     enable_staged_users: "Luo automaattisesti esikäyttäjiä, kun saapuvia sähköposteja käsitellään."
     maximum_staged_users_per_email: "Enimmäismäärä automaattisesti luotuja esikäyttäjiä, kun käsitellään saapuvaa sähköpostia."
@@ -1183,6 +1413,7 @@ fi:
     pop3_polling_host: "POP3 pollauksen host."
     pop3_polling_username: "POP3 käyttäjänimi"
     pop3_polling_password: "POP3 käyttäjätilin salasana."
+    pop3_polling_delete_from_server: "Poista sähköpostit palvelimelta. HUOM: Jos tämä on pois päältä sinun täytyy siivota saapuvien sähköpostien kansio manuaalisesti"
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin prosessoinnin virheet tänne http://sivustonnimi.com/logs"
     email_in: "Salli käyttäjien aloittaa uusia ketjuja sähköpostitse (vaatii manuaalisen tai pop3-pollauksen). Määritä osoitteet jokaiselle alueelle erikseen niiden Asetukset-välilehdiltä. "
     email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
@@ -1195,7 +1426,7 @@ fi:
     delete_all_posts_max: "Kerralla poistettavien viestien maksimimäärä Poista kaikki viestit-painikkeella. Jos käyttäjällä on enemmän viestejä, niitä ei voi poistaa kerralla eikä käyttäjää voi poistaa."
     username_change_period: "Kuinka monen päivän ajan voi vaihtaa käyttäjänimeään sen jälkeen, kun rekisteröityy (0 estää käyttäjänimen muuttamisen)."
     email_editable: "Salli käyttäjien vaihtaa sähköpostiosoitteensa tilin luomisen jälkeen."
-    logout_redirect: "Sivu, jonne selain ohjataan uloskirjautumisen jälkeen, esim: (http://somesite.com/logout)"
+    logout_redirect: "Minne selain ohjataan uloskirjautumisen jälkeen (esim: http://example.com/logout)"
     allow_uploaded_avatars: "Salli käyttäjien ladata oma profiilikuva."
     allow_animated_avatars: "Salli käyttäjien valita animoituja gif-profiilikuvia. VAROITUS: aja avatars:refresh rake task tämän asetuksen muuttamisen jälkeen."
     allow_animated_thumbnails: "Luo animoidut esikatselukuvat animoiduista gif-tiedostoista."
@@ -1364,68 +1595,65 @@ fi:
     not_seen_in_a_month: "Tervetuloa takaisin! Emme ole nähneet sinua vähään aikaan. Tässä ovat suosituimmat viestiketjut sitten viime näkemän."
   merge_posts:
     edit_reason:
-      one: '%{username} yhdisti viestin'
-      other: '%{username} yhdisti %{count} viestiä'
+      one: "%{username} yhdisti viestin"
+      other: "%{username} yhdisti %{count} viestiä"
     errors:
       different_topics: "Eri ketjuissa olevia viestejä ei voi yhdistää."
       different_users: "Eri käyttäjien viestejä ei voi yhdistää."
   move_posts:
     new_topic_moderator_post:
-      one: 'Yksi viesti siirrettiin uuteen ketjuun: %{topic_link}'
-      other: '%{count} viestiä siirrettiin uuteen ketjuun: %{topic_link}'
+      one: "Yksi viesti siirrettiin uuteen ketjuun: %{topic_link}"
+      other: "%{count} viestiä siirrettiin uuteen ketjuun: %{topic_link}"
     existing_topic_moderator_post:
-      one: 'Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}'
-      other: '%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}'
-  change_owner:
-    post_revision_text: "Omistus siirrettiin käyttäjältä %{old_user} käyttäjälle %{new_user}"
-    deleted_user: "poistettu käyttäjä"
+      one: "Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}"
+      other: "%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}"
   topic_statuses:
     archived_enabled: "Tämä ketju on arkistoitu. Se on jäädytetty eikä sitä voi muuttaa millään tavalla."
     archived_disabled: "Ketjun arkistointi on poistettu, se ei ole enää jäädytettynä ja sitä voi taas muuttaa."
     closed_enabled: "Tämä ketju on suljettu. Uusia vastauksia ei voi enää kirjoittaa."
     closed_disabled: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     autoclosed_message_max_posts:
-      one: Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1.
-      other: Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}.
+      one: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1."
+      other: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
     autoclosed_topic_max_posts:
-      one: Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1.
-      other: Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}.
+      one: "Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1."
+      other: "Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
     autoclosed_enabled_days:
-      one: Tämä ketju suljettiin automaattisesti 1 päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin ajastetusti %{count} päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin ajastetusti %{count} päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_hours:
-      one: Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin ajastetusti %{count} tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin ajastetusti %{count} tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_minutes:
-      one: Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin ajastetusti %{count} minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin ajastetusti %{count} minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_days:
-      one: Tämä ketju suljettiin automaattisesti 1 päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin automaattisesti %{count} päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin automaattisesti %{count} päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_hours:
-      one: Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin automaattisesti %{count} tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin automaattisesti %{count} tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_minutes:
-      one: Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
-      other: Ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa.
+      one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      other: "Ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_disabled_days:
-      one: Ketju avattiin ajastetusti 1 päivän kuluttua.
-      other: Ketju avattiin ajastetusti %{count} päivän kuluttua.
+      one: "Ketju avattiin ajastetusti 1 päivän kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} päivän kuluttua."
     autoclosed_disabled_hours:
-      one: Ketju avattiin ajastetusti 1 tunnin kuluttua.
-      other: Ketju avattiin ajastetusti %{count} tunnin kuluttua.
+      one: "Ketju avattiin ajastetusti 1 tunnin kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} tunnin kuluttua."
     autoclosed_disabled_minutes:
-      one: Ketju avattiin ajastetusti 1 minuutin kuluttua.
-      other: Ketju avattiin ajastetusti %{count} minuutin kuluttua.
+      one: "Ketju avattiin ajastetusti 1 minuutin kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} minuutin kuluttua."
     autoclosed_disabled_lastpost_days:
-      one: Ketju avattiin automaattisesti 1 päivän kuluttua viimeisimmästä viestistä.
-      other: Ketju avattiin automaattisesti %{count} päivän kuluttua viimeisimmästä viestistä.
+      one: "Ketju avattiin automaattisesti 1 päivän kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} päivän kuluttua viimeisimmästä viestistä."
     autoclosed_disabled_lastpost_hours:
-      one: Ketju avattiin automaattisesti 1 tunnin kuluttua viimeisimmästä viestistä.
-      other: Ketju avattiin automaattisesti %{count} tunnin kuluttua viimeisimmästä viestistä.
+      one: "Ketju avattiin automaattisesti 1 tunnin kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} tunnin kuluttua viimeisimmästä viestistä."
     autoclosed_disabled_lastpost_minutes:
-      one: Ketju avattiin automaattisesti 1 minuutin kuluttua viimeisimmästä viestistä.
-      other: Ketju avattiin automaattisesti %{count} minuutin kuluttua viimeisimmästä viestistä.
+      one: "Ketju avattiin automaattisesti 1 minuutin kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} minuutin kuluttua viimeisimmästä viestistä."
     autoclosed_disabled: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     pinned_enabled: "Tämä ketju on nyt kiinnitetty. Se näytetään alueensa ylimmäisenä. Kiinnityksen voi poistaa joko henkilökunnan jäsen kaikilta yhteisesti tai yksittäiset käyttäjät itseltään."
@@ -1461,7 +1689,6 @@ fi:
     click_to_continue: "Jatka klikkaamalla tästä."
     already_logged_in: "Hups, näyttää siltä, että yrität hyväksyä kutsun käyttäjänä, jolle sitä ei lähetetty. Jos et ole %{current_user}, kirjaudu ulos ja yritä uudestaan."
   user:
-    no_accounts_associated: "Ei liittyviä käyttäjätilejä"
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
     activated_by_staff: "Henkilökunta vahvisti"
@@ -1492,11 +1719,11 @@ fi:
       same_ip_address: "Sama IP-osoite (%{ip_address}) kuin muilla käyttäjillä"
   flags_reminder:
     flags_were_submitted:
-      one: Viestejä liputettiin yli tunti sitten. [Tarkastele niitä](/admin/flags).
-      other: Viestejä liputettiin yli %{count} tuntia sitten. [Tarkastele niitä](/admin/flags).
+      one: "Viestejä liputettiin yli tunti sitten. [Tarkastele niitä](/admin/flags)."
+      other: "Viestejä liputettiin yli %{count} tuntia sitten. [Tarkastele niitä](/admin/flags)."
     subject_template:
-      one: Yksi liputus odottaa käsittelyä
-      other: '%{count} liputusta odottaa käsittelyä'
+      one: "Yksi liputus odottaa käsittelyä"
+      other: "%{count} liputusta odottaa käsittelyä"
   unsubscribe_mailer:
     title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."
@@ -1650,8 +1877,8 @@ fi:
     deferred: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
     deferred_and_deleted: "Kiitos kun toit asian tietoomme. Poistimme kyseisen viestin."
   temporarily_closed_due_to_flags:
-    one: Ketju on suljettu väliaikaisesti 1 tunnin ajan suuren lippumäärän vuoksi.
-    other: Ketju on suljettu väliaikaisesti %{count} tunnin ajan suuren lippumäärän vuoksi.
+    one: "Ketju on suljettu väliaikaisesti 1 tunnin ajan suuren lippumäärän vuoksi."
+    other: "Ketju on suljettu väliaikaisesti %{count} tunnin ajan suuren lippumäärän vuoksi."
   system_messages:
     private_topic_title: "Ketju #%{id}"
     contents_hidden: "Käy lukemassa viesti, jotta näet sen sisällön."
@@ -1672,11 +1899,6 @@ fi:
         Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
-
-        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       title: "Tervetuloa käyttäjä"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
@@ -1946,14 +2168,6 @@ fi:
     too_many_spam_flags:
       title: "Liian monta roskapostiliputusta"
       subject_template: "Uusi tili on estetty"
-      text_body_template: |
-        Hei,
-
-        Lähetämme tämän automaattisen viestin sivustolta %{site_name} kertoaksemme, että viestejäsi on väliakaisesti piilotettu yhteisön liputusten perusteella.
-
-        Varotoimena uusi käyttäjätilisi on hiljennetty etkä voi vastata etkä aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen arvioi tilanteen. Pahoittelemme tästä aiheutuvaa vaivaa.
-
-        Saat lisätietoa [yhteisön ohjeista](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Liian monta lt3-lippua"
       subject_template: "Uusi tili on estetty"
@@ -2010,8 +2224,8 @@ fi:
     pending_users_reminder:
       title: "Käyttäjiä jonossa"
       subject_template:
-        one: 1 käyttäjä odottaa hyväksymistä
-        other: '%{count} käyttäjää odottaa hyväksymistä'
+        one: "1 käyttäjä odottaa hyväksymistä"
+        other: "%{count} käyttäjää odottaa hyväksymistä"
       text_body_template: |
         Uusia käyttäjiä odottaa hyväksymistä (tai hylkäämistä) ja pääsyä palstalle.
 
@@ -2039,8 +2253,8 @@ fi:
     queued_posts_reminder:
       title: "Muistutukset jonossa olevista viesteistä"
       subject_template:
-        one: Yksi viesti odottaa tarkastusta
-        other: '%{count} viestiä odottaa tarkastusta'
+        one: "Yksi viesti odottaa tarkastusta"
+        other: "%{count} viestiä odottaa tarkastusta"
       text_body_template: |
         Hei
 
@@ -2058,17 +2272,15 @@ fi:
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
     reached_limit:
-      one: Huom. Olemme lähettäneet jo yhden sähköpostin tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!
-      other: Huom. Olemme lähettäneet jo %{count} sähköpostia tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!
+      one: "Huom. Olemme lähettäneet jo yhden sähköpostin tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
+      other: "Huom. Olemme lähettäneet jo %{count} sähköpostia tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
     in_reply_to: "Vastauksena"
     unsubscribe:
       title: "Peru tilaus"
       description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
     reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
-    reply_by_email_pm: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
     only_reply_by_email: "Vastaa vastaamalla tähän sähköpostiin."
     visit_link_to_respond: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
-    visit_link_to_respond_pm: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
     posted_by: "Käyttäjältä %{username} %{post_date}"
     invited_group_to_private_message_body: |
       %{username} kutsui ryhmän @%{group_name} yksityiskeskusteluun
@@ -2373,7 +2585,6 @@ fi:
     recent_topics: "Tuoreimpia"
     see_more: "Lisää"
     search_title: "Etsi tältä sivustolta"
-    search_google: "Google"
   offline:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
@@ -2407,32 +2618,11 @@ fi:
   flag_reason:
     sockpuppet: "Uusi käyttäjä aloitti ketjun, johon toinen uusi käyttäjä samasta IP-osoitteesta (%{ip_address}) vastasi. Katso asetus <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, jotka sisälsivät linkkejä samaan verkkotunnukseen (%{domain}). Katso asetus <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
-  email_log:
-    post_user_deleted: "Viestin käyttäjä on poistettu"
-    no_user: "Käyttäjää id:llä %{user_id} ei löydy"
-    anonymous_user: "Käyttäjä on anonyymi"
-    suspended_not_pm: "Käyttäjä on hyllytetty, ei viesti"
-    seen_recently: "Käyttäjä nähtiin äskettäin"
-    post_not_found: "Viestiä id:llä %{post_id} ei löydy"
-    notification_already_read: "Ilmoitus, jota tämä sähköposti koskee, on jo luettu"
-    topic_nil: "post.topic on olematon"
-    post_deleted: "kirjoittaja poisti viestin"
-    user_suspended: "käyttäjä hyllytettiin"
-    already_read: "käyttäjä on jo lukenut tämän viestin"
-    exceeded_emails_limit: "Ylitti max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Ylitti bounce_score_threshold"
-    message_blank: "viesti on tyhjä"
-    message_to_blank: "message.to on tyhjä"
-    text_part_body_blank: "text_part.body on tyhjä"
-    body_blank: "body on tyhjä"
-    no_echo_mailing_list_mode: "Postitustilassa ei sähköposti-ilmoituksia käyttäjän omista viesteistä"
   color_schemes:
     base_theme_name: "Pohja"
-    default: "Vaalea värimalli"
     dark: "Tumma värimalli"
-    default_theme_name: "Oletus"
-    dark_theme_name: "Tumma"
     light_theme_name: "Vaalea"
+    dark_theme_name: "Tumma"
   about: "Tietoja"
   guidelines: "Ohjeet"
   privacy: "Tietosuoja"
@@ -2632,74 +2822,41 @@ fi:
     editor:
       name: Muokkaaja
       description: Ensimmäinen viestin muokkaus
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa muokkaat viestiäsi. Viestiä ei voi muokata kuin määrätyn ajan viestin lähettämisen jälkeen, mutta sinä aikana muokkaaminen on aina hyvä ajatus. Voit parannella viestiä, korjata pieniä virheitä tai lisätä jotakin, mikä pääsi unohtumaan viestin kirjoittamisen hetkellä. Muokkaa viesteistäsi entistäkin parempia!
     basic_user:
       name: Haastaja
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">Myönnetty</a> kaikki palstan välttämättömimmät toiminnot"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja lukenut muutamaa ketjua ottaaksesi selvää, mistä yhteisössä on kyse. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot kuten yksityisviestit, liputtamisen, wiki-viestien muokkaamisen ja oikeuden laittaa viestiin useampia kuvia ja linkkejä.
     member:
       name: Konkari
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">Myönnetty</a> kutsut, ryhmäviestit ja lisää tykkäyksiä"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, aloittaa ryhmäviestejä ja käytössäsi on muutama tykkäys enemmän päivää kohden.
     regular:
       name: Mestari
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleen nimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
     leader:
       name: Johtaja
-      description: "<a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille positiivista esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut, joilla voit hallita ketjuja kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen, ja käytössäsi on paljon enemmän tykkäyksiä päivää kohden.
     welcome:
       name: Tervetuloa
       description: Sai tykkäyksen
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
     autobiographer:
       name: Omaelämäkerta
       description: "Täytti <a href=\"%{base_uri}/my/preferences/profile\">käyttäjätiedot</a>"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun täytät <a href="%{base_uri}/my/preferences/profile">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
     anniversary:
       name: Vuosipäivä
       description: "Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin"
-      long_description: |
-        Tämä ansiomerkki myönnetään aina, kun olet jäsenenä vuoden ajan ja kirjoitat sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
     nice_post:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä todellisen vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon paremman!
     great_post:
       name: Loistava vastaus
       description: Vastaus sai 50 tykkäystä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä.
     nice_topic:
       name: Hyvä ketju
       description: Ketjunavaus sai 10 tykkäystä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti!
     good_topic:
       name: Erinomainen ketju
       description: Ketjunavaus sai 25 tykkäystä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 25 tykkäystä. Aloitit vilkkaan keskustelun, jota yhteisö rakasti!
     great_topic:
       name: Loistava ketju
       description: Ketjunavaus sai 50 tykkäystä
-      long_description: |+
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
-
     nice_share:
       name: Hyvä jako
       description: "Jakoi viestin, ja linkin kautta saapui 25 vierailijaa"
@@ -2709,13 +2866,9 @@ fi:
     good_share:
       name: Erinomainen jako
       description: "Jakoi viestin, ja linkin kautta saapui 300 vierailijaa"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
     great_share:
       name: Loistava jako
       description: "Jakoi viestin, ja linkin kautta saapui 1000 vierailijaa"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 1000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
     first_like:
       name: Ensimmäinen tykkäys
       description: Tykkäsi viestistä
@@ -2724,21 +2877,15 @@ fi:
     first_flag:
       name: Ensimmäinen liputus
       description: Liputti viestin
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa liputat viestin. Liputtaminen on keino, jolla yhdessä pidämme palstan siistinä ja selkeänä. Jos huomaat viestin joka valvojien tulisi huomioida syystä tai toisesta, älä epäröi liputtaa. Liputuskuvakkeen kautta voit myös lähettää yksityisviestin kirjoittajalle, jos näet viestissä jotakin huomautettavaa. Kun näet ongelman, :flag_black: liputa!
     promoter:
       name: Markkinoija
       description: Kutsui käyttäjän
     campaigner:
       name: Kampanjoija
       description: Kutsui kolme haastajaa (luottamustaso 1)
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun 3 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heidän luottamustasonsa nousee ja heistä tulee "haastajia". Elinvoimainen yhteisö tarvitsee säännöllisesti uusia jäseniä tuomaan tuoreita näkökulmia keskusteluihin.
     champion:
       name: Kampanjapäällikkö
       description: Kutsui viisi konkaria (luottamustaso 2)
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun 5 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heistä tulee yhteisön täysivaltaisia jäseniä. Vau! Kiitos, kun edistät yhteisömme monimuotoisuutta tuomalla uusia jäseniä!
     first_share:
       name: Ensimmäinen jako
       description: Jakoi viestin
@@ -2752,13 +2899,9 @@ fi:
     first_quote:
       name: Ensimmäinen lainaus
       description: Lainasi viestiä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastaa-painiketta. Lainaa runsaasti!
     read_guidelines:
       name: Luki ohjeet
       description: "Luki <a href=\"%{base_uri}/guidelines\">yhteisön säännöt</a>"
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun <a href="%{base_uri}/guidelines">luet yhteisön säännöt</a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole kohtelias!
     reader:
       name: Lukutoukka
       description: "Luki jokaisen viestin ketjusta, jossa on enemmän kuin 100 vastausta"
@@ -2807,8 +2950,6 @@ fi:
     crazy_in_love:
       name: Korviaan myöten rakastunut
       description: Käytti 50 päivittäistä tykkäystä 20 päivänä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki 50 päivittäistä tykkäystäsi 20 päivänä. Wow! Olet esimerkillinen kannustaessasi jatkuvasti muita käyttäjiä!
     thank_you:
       name: Kiitos
       description: 20 viestistä on tykätty ja on tykännyt 10 viestistä
@@ -2822,19 +2963,15 @@ fi:
     empathetic:
       name: Empaattinen
       description: 500 viestistä on tykätty ja on tykännyt 1000 viestistä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun sinulla on 500 tykättyä viestiä ja olet antanut vähintään 1000 tykkäystä takaisin. Wow! Olet esimerkki avokätisyydestä ja keskinäisestä arvostuksesta :two_hearts:.
     first_emoji:
       name: Ensimmäinen Emoji
       description: Käytti Emojia viestissä
     first_mention:
       name: Ensimmäinen maininta
       description: Mainitsi käyttäjän viestissä
-      long_description: "Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa mainitset jonkun @käyttäjänimen viestissäsi. Tämä käyttäjä saa ilmoituksen viestistäsi. Aloita vain kirjoittamaan @ (at-merkki) mainitaksesi käyttäjän tai, jos sallittua, ryhmän – se on helppo tapa tuoda jotain toisten huomioon."
     first_onebox:
       name: Ensimmäinen Onebox
       description: "Lähetti linkin, josta tehtiin onebox"
-      long_description: "Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa lisäät linkin omalle rivilleen, josta sitten automaattisesti tehdään onebox esikatselu otsikolla, lyhyellä kuvauksella ja (jos saatavilla) kuvalla."
     first_reply_by_email:
       name: Ensimmäinen vastaus sähköpostilla
       description: Vastasi sähköpostilla
@@ -2848,15 +2985,12 @@ fi:
     enthusiast:
       name: Intoilija
       description: Vieraili 10 päivänä
-      long_description: "Tämä ansiomerkki myönnetään, kun olet vieraillut 10 peräkkäisenä päivänä. Kiitos kun olet ollut kanssamme yli viikon ajan!"
     aficionado:
       name: Hullaantunut
       description: Vieraili 100 päivänä
-      long_description: "Tämä ansiomerkki myönnetään, kun olet vieraillut 100 peräkkäisenä päivänä. Sehän on yli kolme kuukautta!"
     devotee:
       name: Omistautunut
       description: Vieraili 365 päivänä
-      long_description: "Tämä ansiomerkki myönnetään, kun olet vieraillut 365 peräkkäisenä päivänä. Vau, kokonainen vuosi!"
     badge_title_metadata: "%{display_name} -ansiomerkki sivustolla %{site_title}"
   admin_login:
     success: "Sähköposti lähetetty"
@@ -2876,7 +3010,6 @@ fi:
       button: "Rekisteröidy"
       title: "Rekisteröi ylläpitäjätunnus"
       help: "aloita rekisteröimällä uusi tunnus"
-      no_emails: "Valitettavasti ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>voi olla vaikeaa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
       message: "<p>Lähetimme vahvistusviestin osoitteeseen <b>%{email}</b>. Ota tili käyttöön seuraamalla viestin ohjeita.</p><p>Jos viesti ei saavu, varmista että näppäilit sähköpostin oikein Discourseen ja tarkista roskapostikansiosi.</p>"
@@ -2979,10 +3112,8 @@ fi:
         fields:
           favicon_url:
             label: "Pieni ikoni"
-            description: "Ikoni, joka edustaa sivustoasi selaimissa ja joka näyttää hyvältä pienessäkin koossa kuten 32 px kertaa 32 px."
           apple_touch_icon_url:
             label: "Suuri ikoni"
-            description: "Ikoni, joka edustaa sivustoasi nykyaikaisemmilla laitteilla ja joka näyttää hyvältä isommassakin koossa. Suositeltu koko on vähintään 144 px kertaa 144 px."
       homepage:
         description: "Suosittelemme, että kotisivusi on Tuoreimmat-näkymä, mutta voit valita Keskustelualueet-näkymän (ketjut ryhmitelty aihepiirin mukaan) kotisivuksi, jos haluat."
         title: "Kotisivu"
@@ -2991,8 +3122,6 @@ fi:
             choices:
               latest:
                 label: "Tuoreimmat ketjut"
-              categories:
-                label: "Keskustelualueet"
       emoji:
         title: "Emojit"
         description: "Minkä emojityylin haluat yhteisöösi? Voit milloin vain lisätä mukautettuja emojeita navigoimalla Ylläpito --> Mukauta --> Emoji."

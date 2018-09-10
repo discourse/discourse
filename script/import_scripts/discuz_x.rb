@@ -393,12 +393,12 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         end
 
         if m['status'] & 1 == 1 || mapped[:raw].blank?
-          mapped[:post_create_action] = lambda do |post|
-            PostDestroyer.new(Discourse.system_user, post).perform_delete
+          mapped[:post_create_action] = lambda do |action_post|
+            PostDestroyer.new(Discourse.system_user, action_post).perform_delete
           end
         elsif (m['status'] & 2) >> 1 == 1 # waiting for approve
-          mapped[:post_create_action] = lambda do |post|
-            PostAction.act(Discourse.system_user, post, 6, take_action: false)
+          mapped[:post_create_action] = lambda do |action_post|
+            PostAction.act(Discourse.system_user, action_post, 6, take_action: false)
           end
         end
         skip ? nil : mapped

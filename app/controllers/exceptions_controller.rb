@@ -1,6 +1,6 @@
 class ExceptionsController < ApplicationController
   skip_before_action :check_xhr, :preload_json
-  before_action :hide_google
+  before_action :hide_search
 
   def not_found
     # centralize all rendering of 404 into app controller
@@ -14,8 +14,8 @@ class ExceptionsController < ApplicationController
 
   private
 
-    def hide_google
-      @hide_google = true if SiteSetting.login_required
-    end
+  def hide_search
+    @hide_search = true if SiteSetting.login_required
+  end
 
 end

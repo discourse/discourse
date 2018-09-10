@@ -74,6 +74,7 @@ end
 #  updated_at       :datetime         not null
 #  revoked_at       :datetime
 #  scopes           :text             default([]), not null, is an Array
+#  last_used_at     :datetime         not null
 #
 # Indexes
 #

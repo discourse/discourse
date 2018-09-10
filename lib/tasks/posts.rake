@@ -81,21 +81,24 @@ end
 def rebake_posts(opts = {})
   puts "Rebaking post markdown for '#{RailsMultisite::ConnectionManagement.current_db}'"
 
-  disable_edit_notifications = SiteSetting.disable_edit_notifications
-  SiteSetting.disable_edit_notifications = true
+  begin
+    disable_edit_notifications = SiteSetting.disable_edit_notifications
+    SiteSetting.disable_edit_notifications = true
 
-  total = Post.count
-  rebaked = 0
+    total = Post.count
+    rebaked = 0
+    batch = 1000
+    Post.update_all('baked_version = NULL')
 
-  # TODO: make this resumable because carrying around 20 million ids in memory is not a great idea long term
-  Post.order(id: :desc).pluck(:id).in_groups_of(1000, false).each do |batched_post_ids|
-    Post.order(created_at: :desc).where(id: batched_post_ids).each do |post|
-      rebake_post(post, opts)
-      print_status(rebaked += 1, total)
+    (0..(total - 1).abs).step(batch) do |i|
+      Post.order(id: :desc).offset(i).limit(batch).each do |post|
+        rebake_post(post, opts)
+        print_status(rebaked += 1, total)
+      end
     end
+  ensure
+    SiteSetting.disable_edit_notifications = disable_edit_notifications
   end
-
-  SiteSetting.disable_edit_notifications = disable_edit_notifications
 
   puts "", "#{rebaked} posts done!", "-" * 50
 end
@@ -130,15 +133,20 @@ task 'posts:normalize_code' => :environment do
   puts "#{i} posts normalized!"
 end
 
-def remap_posts(find, type, replace = "")
+def remap_posts(find, type, ignore_case, replace = "")
+  ignore_case = ignore_case == 'true'
   i = 0
 
   Post.raw_match(find, type).find_each do |p|
-    new_raw =
+    regex =
       case type
-      when 'string' then p.raw.gsub(/#{Regexp.escape(find)}/, replace)
-      when 'regex' then p.raw.gsub(/#{find}/, replace)
+      when 'string' then
+        Regexp.new(Regexp.escape(find), ignore_case)
+      when 'regex' then
+        Regexp.new(find, ignore_case)
       end
+
+    new_raw = p.raw.gsub(regex, replace)
 
     if new_raw != p.raw
       begin
@@ -155,13 +163,14 @@ def remap_posts(find, type, replace = "")
 end
 
 desc 'Remap all posts matching specific string'
-task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
+task 'posts:remap', [:find, :replace, :type, :ignore_case] => [:environment] do |_, args|
   require 'highline/import'
 
-  args.with_defaults(type: 'string')
+  args.with_defaults(type: 'string', ignore_case: 'false')
   find = args[:find]
   replace = args[:replace]
   type = args[:type]&.downcase
+  ignore_case = args[:ignore_case]&.downcase
 
   if !find
     puts "ERROR: Expecting rake posts:remap['find','replace']"
@@ -170,7 +179,10 @@ task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
     puts "ERROR: Expecting rake posts:remap['find','replace']. Want to delete a word/string instead? Try rake posts:delete_word['word-to-delete']"
     exit 1
   elsif type != 'string' && type != 'regex'
-    puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
+    puts "ERROR: Expecting rake posts:remap['find','replace',type] where type is string or regex"
+    exit 1
+  elsif ignore_case != 'true' && ignore_case != 'false'
+    puts "ERROR: Expecting rake posts:remap['find','replace',type,ignore_case] where ignore_case is true or false"
     exit 1
   else
     confirm_replace = ask("Are you sure you want to replace all #{type} occurrences of '#{find}' with '#{replace}'? (Y/n)")
@@ -178,17 +190,18 @@ task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
   end
 
   puts "Remapping"
-  total = remap_posts(find, type, replace)
+  total = remap_posts(find, type, ignore_case, replace)
   puts "", "#{total} posts remapped!", ""
 end
 
 desc 'Delete occurrence of a word/string'
-task 'posts:delete_word', [:find, :type] => [:environment] do |_, args|
+task 'posts:delete_word', [:find, :type, :ignore_case] => [:environment] do |_, args|
   require 'highline/import'
 
-  args.with_defaults(type: 'string')
+  args.with_defaults(type: 'string', ignore_case: 'false')
   find = args[:find]
   type = args[:type]&.downcase
+  ignore_case = args[:ignore_case]&.downcase
 
   if !find
     puts "ERROR: Expecting rake posts:delete_word['word-to-delete']"
@@ -196,13 +209,16 @@ task 'posts:delete_word', [:find, :type] => [:environment] do |_, args|
   elsif type != 'string' && type != 'regex'
     puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
     exit 1
+  elsif ignore_case != 'true' && ignore_case != 'false'
+    puts "ERROR: Expecting rake posts:delete_word[pattern, type,ignore_case] where ignore_case is true or false"
+    exit 1
   else
     confirm_delete = ask("Are you sure you want to remove all #{type} occurrences of '#{find}'? (Y/n)")
     exit 1 unless (confirm_delete == "" || confirm_delete.downcase == 'y')
   end
 
   puts "Processing"
-  total = remap_posts(find, type)
+  total = remap_posts(find, type, ignore_case)
   puts "", "#{total} posts updated!", ""
 end
 
@@ -283,7 +299,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   Post.transaction do
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
-    builder = SqlBuilder.new(<<~SQL)
+    builder = DB.build(<<~SQL)
       WITH ordered_posts AS (
           SELECT
             id,
@@ -304,7 +320,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
     builder.where("topic_id = :topic_id") if args[:topic_id]
     builder.exec(topic_id: args[:topic_id])
 
-    Notification.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE notifications AS x
       SET post_number = p.sort_order
       FROM posts AS p
@@ -313,7 +329,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0
     SQL
 
-    PostTiming.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE post_timings AS x
       SET post_number = x.post_number * -1
       FROM posts AS p
@@ -329,7 +345,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0;
     SQL
 
-    Post.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE posts AS x
       SET reply_to_post_number = p.sort_order
       FROM posts AS p
@@ -338,7 +354,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
             p.post_number < 0;
     SQL
 
-    TopicUser.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE topic_users AS x
         SET last_read_post_number = p.sort_order
       FROM posts AS p
@@ -362,7 +378,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
     SQL
 
     # finally update the post_number
-    Post.exec_sql(<<~SQL)
+    DB.exec(<<~SQL)
       UPDATE posts
       SET post_number = sort_order
       WHERE post_number < 0

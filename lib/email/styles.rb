@@ -84,9 +84,9 @@ module Email
     def format_notification
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
-      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#3b5998;text-decoration:none;font-weight:bold")
+      style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#{SiteSetting.email_link_color};text-decoration:none;font-weight:bold")
       style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #999;")
-      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #3b5998;font-weight:normal;")
+      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #{SiteSetting.email_link_color};font-weight:normal;")
       style('.post-wrapper', "margin-bottom:25px;")
       style('.user-avatar', 'vertical-align:top;width:55px;')
       style('.user-avatar img', nil, width: '45', height: '45')
@@ -98,6 +98,7 @@ module Email
       correct_first_body_margin
       correct_footer_style
       style('div.undecorated-link-footer a', "font-weight: normal;")
+      correct_footer_style_hilight_first
       reset_tables
       onebox_styles
       plugin_styles
@@ -152,7 +153,7 @@ module Email
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"
-        rescue URI::InvalidURIError
+        rescue URI::Error
           # If the URL is weird, remove the iframe
           i.remove
         end
@@ -214,7 +215,7 @@ module Email
       @fragment.css("a").each do |link|
         begin
           link["href"] = "#{site_uri}#{link['href']}" unless URI(link["href"].to_s).host.present?
-        rescue URI::InvalidURIError, URI::InvalidComponentError
+        rescue URI::Error
           # leave it
         end
       end
@@ -242,20 +243,27 @@ module Email
     end
 
     def correct_footer_style
-      footernum = 0
       @fragment.css('.footer').each do |element|
         element['style'] = "color:#666;"
+        element.css('a').each do |inner|
+          inner['style'] = "color:#666;"
+        end
+      end
+    end
+
+    def correct_footer_style_hilight_first
+      footernum = 0
+      @fragment.css('.footer.hilight').each do |element|
         linknum = 0
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == (0) && linknum == (0)
-            inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block;"
-          else
-            inner['style'] = "color:#666;"
+            bg_color = SiteSetting.email_accent_bg_color
+            inner['style'] = "background-color: #{bg_color}; color: #{SiteSetting.email_accent_fg_color}; border-top: 4px solid #{bg_color}; border-right: 6px solid #{bg_color}; border-bottom: 4px solid #{bg_color}; border-left: 6px solid #{bg_color}; display: inline-block; font-weight: bold;"
           end
-          linknum += 1
+          return
         end
-        footernum += 1
+        return
       end
     end
 

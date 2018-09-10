@@ -1,5 +1,5 @@
 .upload-selector {
-  input[type="text"]{
+  input[type="text"] {
     width: calc(100% - 20px);
   }
   input[type="file"] {
@@ -16,7 +16,8 @@
     &:first-of-type {
       margin-bottom: 1em;
     }
-    input, label {
+    input,
+    label {
       min-height: 20px;
       line-height: $line-height-medium;
       margin: 0;
@@ -25,11 +26,10 @@
       padding-left: 5px;
     }
     .inputs {
-      margin-top: 10px; 
+      margin-top: 10px;
       width: 100%;
     }
   }
-
 }
 
 .uploaded-image-preview {

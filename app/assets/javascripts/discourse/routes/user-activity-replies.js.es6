@@ -3,5 +3,12 @@ import UserAction from "discourse/models/user-action";
 
 export default UserActivityStreamRoute.extend({
   userActionType: UserAction.TYPES["posts"],
-  noContentHelpKey: 'user_activity.no_replies'
+  noContentHelpKey: "user_activity.no_replies",
+
+  actions: {
+    didTransition() {
+      this.controllerFor("application").set("showFooter", true);
+      return true;
+    }
+  }
 });

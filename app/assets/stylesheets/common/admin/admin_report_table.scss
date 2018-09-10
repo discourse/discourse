@@ -1,0 +1,193 @@
+.admin-report-table {
+  &.two-columns {
+    .table .admin-report-table-cell:first-child,
+    .table .admin-report-table-header:first-child {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: left;
+      width: 80%;
+    }
+
+    .table .admin-report-table-cell:last-child,
+    .table .admin-report-table-header:last-child {
+      display: inline-block;
+      width: 80%;
+      text-align: right;
+    }
+  }
+
+  .table {
+    margin: 0;
+    border: 1px solid $primary-low;
+    table-layout: fixed;
+
+    tbody {
+      border-top: 0;
+    }
+  }
+
+  .table .admin-report-table-header {
+    .sort-btn {
+      outline: none;
+      background: none;
+      padding: 3px 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &.is-current-sort {
+      .d-icon {
+        color: $tertiary;
+      }
+
+      .sort-btn:hover {
+        color: $primary-medium;
+        background: $primary-low;
+      }
+    }
+
+    &:not(.is-current-sort) .sort-btn {
+      background: none;
+
+      &:hover {
+        color: $primary-medium;
+        background: $primary-low;
+      }
+    }
+  }
+
+  .admin-report-table-cell {
+    &.user .username {
+      margin-left: 0.25em;
+    }
+  }
+
+  .total-row {
+    background: $primary-very-low;
+
+    td {
+      font-weight: 700;
+      text-align: left;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25em;
+
+    button {
+      margin-left: 0.5em;
+
+      &.is-current {
+        color: $tertiary;
+      }
+    }
+  }
+}
+
+.admin-report.top-referred-topics {
+  .admin-report-table-header.topic_title {
+    width: 80%;
+  }
+}
+
+.admin-report.trending-search {
+  .admin-report-table-header.ctr,
+  .admin-report-table-header.unique_searches,
+  .admin-report-table-cell.ctr,
+  .admin-report-table-cell.unique_searches {
+    text-align: center;
+    width: 20%;
+  }
+
+  .admin-report-table-cell.term {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.admin-report.moderators-activity {
+  .admin-report-table-header.seconds,
+  .admin-report-table-header.number,
+  .admin-report-table-cell.seconds,
+  .admin-report-table-cell.number {
+    text-align: center;
+  }
+
+  .admin-report-table-header.user {
+    width: 20%;
+  }
+}
+
+.admin-report.post-edits {
+  .admin-report-table-header.user {
+    width: 20%;
+  }
+
+  .admin-report-table-cell.post,
+  .admin-report-table-cell.edit_reason {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.admin-report.flags-status {
+  .admin-report-table-header.response_time,
+  .admin-report-table-cell.response_time {
+    text-align: center;
+  }
+}
+
+.rtl {
+  .admin-report-table {
+    &.two-columns {
+      .table .admin-report-table-cell:first-child,
+      .table .admin-report-table-header:first-child {
+        text-align: right;
+      }
+
+      .table .admin-report-table-cell:last-child,
+      .table .admin-report-table-header:last-child {
+        text-align: left;
+      }
+    }
+
+    .total-row {
+      td {
+        text-align: right;
+      }
+    }
+  }
+
+  .admin-report-table-cell {
+    &.user .username {
+      margin-left: 0;
+      margin-right: 0.25em;
+    }
+  }
+
+  .admin-report.trending-search {
+    .admin-report-table-header.term,
+    .admin-report-table-cell.term {
+      text-align: right;
+    }
+  }
+
+  .pagination {
+    button {
+      margin-left: 0;
+      margin-right: 0.5em;
+    }
+  }
+
+  .admin-report.moderators-activity {
+    .admin-report-table-header.user,
+    .admin-report-table-cell.user {
+      text-align: right;
+    }
+  }
+}

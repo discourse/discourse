@@ -7,28 +7,30 @@ export function buildGroupPage(type) {
     },
 
     model(params, transition) {
-      let categoryId = Ember.get(transition, 'queryParams.category_id');
+      let categoryId = Ember.get(transition, "queryParams.category_id");
       return this.modelFor("group").findPosts({ type, categoryId });
     },
 
     setupController(controller, model) {
       let loadedAll = model.length < 20;
-      this.controllerFor('group-activity-posts').setProperties({
+      this.controllerFor("group-activity-posts").setProperties({
         model,
         type,
-        canLoadMore: !loadedAll,
+        canLoadMore: !loadedAll
       });
-      this.controllerFor('application').set('showFooter', loadedAll);
+      this.controllerFor("application").set("showFooter", loadedAll);
     },
 
     renderTemplate() {
-      this.render('group-activity-posts');
+      this.render("group-activity-posts");
     },
 
     actions: {
-      didTransition() { return true; }
+      didTransition() {
+        return true;
+      }
     }
   });
 }
 
-export default buildGroupPage('posts');
+export default buildGroupPage("posts");

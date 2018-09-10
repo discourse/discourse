@@ -1,13 +1,15 @@
 import computed from "ember-addons/ember-computed-decorators";
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  timeFormat: "HH:mm",
+  timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
-  dateTimeFormat: "YYYY-MM-DD HH:mm",
+  dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
   config: null,
   date: null,
+  toDate: null,
   time: null,
+  toTime: null,
   format: null,
   formats: null,
   recurring: null,
@@ -17,10 +19,19 @@ export default Ember.Component.extend({
     this._super();
 
     this.set("date", moment().format(this.dateFormat));
-    this.set("time", moment().format(this.timeFormat));
     this.set("format", `LLL`);
-    this.set("timezones", (this.siteSettings.discourse_local_dates_default_timezones || "").split("|").filter(f => f));
-    this.set("formats", (this.siteSettings.discourse_local_dates_default_formats || "").split("|"));
+    this.set(
+      "timezones",
+      (this.siteSettings.discourse_local_dates_default_timezones || "")
+        .split("|")
+        .filter(f => f)
+    );
+    this.set(
+      "formats",
+      (this.siteSettings.discourse_local_dates_default_formats || "")
+        .split("|")
+        .filter(f => f)
+    );
   },
 
   didInsertElement() {
@@ -54,53 +65,151 @@ export default Ember.Component.extend({
       { name: "Every two months", id: "2.months" },
       { name: "Every three months", id: "3.months" },
       { name: "Every six months", id: "6.months" },
-      { name: "Every year", id: "1.years" },
+      { name: "Every year", id: "1.years" }
     ];
   },
 
   @computed()
   allTimezones() {
-    return _.map(moment.tz.names(), (z) => z);
+    return _.map(moment.tz.names(), z => z);
   },
 
-  @observes("date", "time", "recurring", "format", "timezones")
+  @observes(
+    "date",
+    "time",
+    "toDate",
+    "toTime",
+    "recurring",
+    "format",
+    "timezones"
+  )
   _setConfig() {
+    const toTime = this.get("toTime");
+
+    if (toTime && !this.get("toDate")) {
+      this.set("toDate", moment().format(this.dateFormat));
+    }
+
     const date = this.get("date");
+    const toDate = this.get("toDate");
     const time = this.get("time");
     const recurring = this.get("recurring");
     const format = this.get("format");
     const timezones = this.get("timezones");
-    const dateTime = moment(`${date} ${time}`, this.dateTimeFormat).utc();
+    const timeInferred = time ? false : true;
+    const toTimeInferred = toTime ? false : true;
 
-    this.set("config", {
+    let dateTime;
+    if (!timeInferred) {
+      dateTime = moment
+        .tz(`${date} ${time}`, this.get("currentUserTimezone"))
+        .utc();
+    } else {
+      dateTime = moment.tz(date, this.get("currentUserTimezone")).utc();
+    }
+
+    let toDateTime;
+    if (!toTimeInferred) {
+      toDateTime = moment
+        .tz(`${toDate} ${toTime}`, this.get("currentUserTimezone"))
+        .utc();
+    } else {
+      toDateTime = moment
+        .tz(toDate, this.get("currentUserTimezone"))
+        .endOf("day")
+        .utc();
+    }
+
+    let config = {
       date: dateTime.format(this.dateFormat),
-      time: dateTime.format(this.timeFormat),
       dateTime,
       recurring,
       format,
-      timezones,
-    });
+      timezones
+    };
+
+    config.time = dateTime.format(this.timeFormat);
+    config.toTime = toDateTime.format(this.timeFormat);
+
+    if (toDate) {
+      config.toDate = toDateTime.format(this.dateFormat);
+    }
+
+    if (
+      timeInferred &&
+      toTimeInferred &&
+      this.get("formats").includes(format)
+    ) {
+      config.format = "LL";
+    }
+
+    if (toDate) {
+      config.toDateTime = toDateTime;
+    }
+
+    if (
+      !timeInferred &&
+      !toTimeInferred &&
+      date === moment().format(this.dateFormat) &&
+      date === toDate &&
+      this.get("formats").includes(format)
+    ) {
+      config.format = "LT";
+    }
+
+    this.set("config", config);
   },
 
   getTextConfig(config) {
     let text = `[date=${config.date} `;
     if (config.recurring) text += `recurring=${config.recurring} `;
-    text += `time=${config.time} `;
+
+    if (config.time) {
+      text += `time=${config.time} `;
+    }
+
     text += `format="${config.format}" `;
     text += `timezones="${config.timezones.join("|")}"`;
     text += `]`;
+
+    if (config.toDate) {
+      text += ` → `;
+      text += `[date=${config.toDate} `;
+
+      if (config.toTime) {
+        text += `time=${config.toTime} `;
+      }
+
+      text += `format="${config.format}" `;
+      text += `timezones="${config.timezones.join("|")}"`;
+      text += `]`;
+    }
+
     return text;
   },
 
-  @computed("config.dateTime")
-  validDate(dateTime) {
+  @computed("config.dateTime", "config.toDateTime")
+  validDate(dateTime, toDateTime) {
     if (!dateTime) return false;
+
+    if (toDateTime) {
+      if (!toDateTime.isValid()) {
+        return false;
+      }
+
+      if (toDateTime.diff(dateTime) < 0) {
+        return false;
+      }
+    }
+
     return dateTime.isValid();
   },
 
   @computed("advancedMode")
   toggleModeBtnLabel(advancedMode) {
-    return advancedMode ? "discourse_local_dates.create.form.simple_mode" : "discourse_local_dates.create.form.advanced_mode";
+    return advancedMode
+      ? "discourse_local_dates.create.form.simple_mode"
+      : "discourse_local_dates.create.form.advanced_mode";
   },
 
   actions: {

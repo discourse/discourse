@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  site_settings:
+    discourse_local_dates_enabled: "Wezesha kipengele cha discourse-local-dates.Hii itasaidia kwa majira ya muda wa eneo kujua tarehe za machapisho kutumia kipengele cha tarehe"
+    discourse_local_dates_default_formats: "Miundo ya tarehe na muda itumikayo mara kwa mara, tazama: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>Muundo wa momentjs</a>"
+    discourse_local_dates_default_timezones: "Orodha  ya chaguo-msingi ya majira ya saa, lazima yawe sahihi <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

@@ -12,11 +12,11 @@ describe Positionable do
         include Positionable
       end
 
-      Topic.exec_sql("create temporary table test_items(id int primary key, position int)")
+      DB.exec("create temporary table test_items(id int primary key, position int)")
     end
 
     after do
-      Topic.exec_sql("drop table test_items")
+      DB.exec("drop table test_items")
 
       # import is making my life hard, we need to nuke this out of orbit
       des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
@@ -25,7 +25,7 @@ describe Positionable do
 
     it "can position stuff correctly" do
       5.times do |i|
-        Topic.exec_sql("insert into test_items(id,position) values(#{i}, #{i})")
+        DB.exec("insert into test_items(id,position) values(#{i}, #{i})")
       end
 
       expect(positions).to eq([0, 1, 2, 3, 4])

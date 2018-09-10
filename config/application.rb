@@ -49,12 +49,15 @@ module Discourse
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    require 'discourse'
-    require 'es6_module_transpiler/rails'
-    require 'js_locale_helper'
+    # this pattern is somewhat odd but the reloader gets very
+    # confused here if we load the deps without `lib` it thinks
+    # discourse.rb is under the discourse folder incorrectly
+    require_dependency 'lib/discourse'
+    require_dependency 'lib/es6_module_transpiler/rails'
+    require_dependency 'lib/js_locale_helper'
 
     # tiny file needed by site settings
-    require 'highlight_js/highlight_js'
+    require_dependency 'lib/highlight_js/highlight_js'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
     #  require, patched in source, on upgrade remove this
@@ -89,6 +92,7 @@ module Discourse
     if Rails.env == "development" || Rails.env == "test"
       config.assets.paths << "#{config.root}/test/javascripts"
       config.assets.paths << "#{config.root}/test/stylesheets"
+      config.assets.paths << "#{config.root}/node_modules"
     end
 
     # Allows us to skip minifincation on some files
@@ -116,8 +120,10 @@ module Discourse
     }
 
     # Precompile all available locales
-    Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
-      config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
+    unless GlobalSetting.try(:omit_base_locales)
+      Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
+        config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
+      end
     end
 
     # out of the box sprockets 3 grabs loose files that are hanging in assets,
@@ -270,13 +276,9 @@ module Discourse
       g.test_framework :rspec, fixture: false
     end
 
-  end
-end
+    # we have a monkey_patch we need to require early... prior to connection
+    # init
+    require 'freedom_patches/reaper'
 
-if defined?(PhusionPassenger)
-  PhusionPassenger.on_event(:starting_worker_process) do |forked|
-    if forked
-      Discourse.after_fork
-    end
   end
 end

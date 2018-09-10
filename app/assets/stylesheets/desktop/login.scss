@@ -53,6 +53,10 @@
       display: flex;
       flex-direction: column;
     }
+
+    &.hidden {
+      display: none;
+    }
   }
 }
 
@@ -133,12 +137,6 @@
     .two-col {
       margin-top: 30px;
     }
-    .col-image {
-      width: 200px;
-      img {
-        width: 200px;
-      }
-    }
     .col-form {
       margin-left: 200px;
       .inline-invite-img {
@@ -157,26 +155,6 @@
       .user-field .control-label:not(.checkbox-label) {
         margin-left: 20px;
       }
-    }
-  }
-
-  .password-reset,
-  .invites-show {
-    .col-form {
-      padding-left: 20px;
-    }
-    h2 {
-      margin-bottom: 12px;
-    }
-    .col-image img {
-      width: 200px;
-      height: 200px;
-    }
-  }
-
-  .password-reset {
-    .col-form {
-      padding-top: 40px;
     }
   }
 
@@ -200,5 +178,27 @@
       min-height: 1.75em;
       width: 240px;
     }
+  }
+}
+
+.password-reset,
+.invites-show {
+  .col-form {
+    padding-left: 20px;
+  }
+  .col-image {
+    width: 175px;
+    img {
+      width: 100%;
+    }
+  }
+  h2 {
+    margin-bottom: 12px;
+  }
+}
+
+.password-reset {
+  .col-form {
+    padding-top: 40px;
   }
 }

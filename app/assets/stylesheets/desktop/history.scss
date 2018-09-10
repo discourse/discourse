@@ -1,15 +1,16 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
-
   .modal-inner-container {
-    min-height: 500px;
     max-width: 960px;
+  }
+  .modal-body {
+    height: 70vh;
   }
   #revision-controls {
     .btn[disabled] {
       cursor: not-allowed;
-      background-color: $primary-low; 
+      background-color: $primary-low;
     }
     .btn-danger[disabled] {
       background-color: $danger-medium;
@@ -21,7 +22,7 @@
     float: right;
 
     .btn {
-      background-color:inherit;
+      background-color: inherit;
       color: blend-primary-secondary(50%);
     }
     .btn-primary {
@@ -57,7 +58,8 @@
       white-space: pre-wrap;
     }
   }
-  .revision-content, .markdown {
+  .revision-content,
+  .markdown {
     img {
       max-width: 100%;
       box-sizing: border-box;

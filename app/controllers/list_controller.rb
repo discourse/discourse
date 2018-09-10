@@ -64,7 +64,7 @@ class ListController < ApplicationController
         if filter == :latest
           list_opts[:no_definitions] = true
         end
-        if [:latest, :categories].include?(filter)
+        if [:latest, :categories].include?(filter) && list_opts[:exclude_category_ids].blank?
           list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
         end
       end
@@ -219,8 +219,8 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = "#{Discourse.base_url}#{@category.url}"
-    @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
+    @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
+    @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
     @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
 
@@ -264,7 +264,7 @@ class ListController < ApplicationController
       top_options.merge!(options) if options
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
 
-      if "top".freeze == current_homepage
+      if "top".freeze == current_homepage && top_options[:exclude_category_ids].blank?
         top_options[:exclude_category_ids] = get_excluded_category_ids(top_options[:category])
       end
 
@@ -344,7 +344,7 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      permalink_redirect_or_not_found && (return) if parent_category_id.blank? && !id
+      raise Discourse::NotFound.new("category not found", check_permalinks: true) if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
@@ -355,7 +355,7 @@ class ListController < ApplicationController
       (redirect_to category.url, status: 301) && return if category
     end
 
-    permalink_redirect_or_not_found && (return) if !@category
+    raise Discourse::NotFound.new("category not found", check_permalinks: true) if !@category
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
@@ -367,11 +367,15 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
-    params[:page] = params[:page].to_i rescue 1
     params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
-      options[key] = params[key]
+      if params.key?(key)
+        val = options[key] = params[key]
+        if !TopicQuery.validate?(key, val)
+          raise Discourse::InvalidParameters.new key
+        end
+      end
     end
 
     # hacky columns get special handling

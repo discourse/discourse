@@ -5,9 +5,6 @@ if ENV["LOGSTASH_UNICORN_URI"]
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
 
-# enable out of band gc out of the box, it is low risk and improves perf a lot
-ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
-
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
@@ -18,17 +15,26 @@ working_directory discourse_path
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
 listen (ENV["UNICORN_PORT"] || 3000).to_i
 
-# nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+if !File.exist?("#{discourse_path}/tmp/pids")
+  FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
+end
 
 # feel free to point this anywhere accessible on the filesystem
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-# By default, the Unicorn logger will write to stderr.
-# Additionally, some applications/frameworks log to stderr or stdout,
-# so prevent them from going to /dev/null when daemonized here:
-stderr_path "#{discourse_path}/log/unicorn.stderr.log"
-stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+if ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"]
+  logger Logger.new($stdout)
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
+else
+  # By default, the Unicorn logger will write to stderr.
+  # Additionally, some applications/frameworks log to stderr or stdout,
+  # so prevent them from going to /dev/null when daemonized here:
+  stderr_path "#{discourse_path}/log/unicorn.stderr.log"
+  stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+  # nuke workers after 30 seconds instead of 60 seconds (the default)
+  timeout 30
+end
 
 # important for Ruby 2.0
 preload_app true
@@ -118,16 +124,11 @@ before_fork do |server, worker|
       puts "Starting up #{sidekiqs} supervised sidekiqs"
 
       require 'demon/sidekiq'
-      if @stats_socket_dir
-        Demon::Sidekiq.after_fork do
-          start_stats_socket(server)
-          DiscourseEvent.trigger(:sidekiq_fork_started)
-        end
-      else
-        Demon::Sidekiq.after_fork do
-          DiscourseEvent.trigger(:sidekiq_fork_started)
-        end
+      Demon::Sidekiq.after_fork do
+        start_stats_socket(server) if @stats_socket_dir
+        DiscourseEvent.trigger(:sidekiq_fork_started)
       end
+
       Demon::Sidekiq.start(sidekiqs)
 
       Signal.trap("SIGTSTP") do
@@ -208,10 +209,6 @@ before_fork do |server, worker|
       end
     end
 
-  end
-
-  RailsMultisite::ConnectionManagement.each_connection do
-    ActiveRecord::Base.connection_pool.disconnect!
   end
 
   $redis._client.disconnect

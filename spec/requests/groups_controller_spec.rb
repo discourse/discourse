@@ -48,7 +48,14 @@ describe GroupsController do
         get "/groups.json", params: { filter: 'test' }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["groups"].first["id"]).to eq(other_group.id)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body["groups"].first["id"]).to eq(other_group.id)
+
+        expect(response_body["load_more_groups"]).to eq(
+          "/groups?filter=test&page=1"
+        )
       end
     end
 
@@ -72,8 +79,14 @@ describe GroupsController do
             group_ids = [moderator_group_id, group.id, other_group.id]
             group_ids.reverse! if !is_asc
 
-            expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+            response_body = JSON.parse(response.body)
+
+            expect(response_body["groups"].map { |group| group["id"] })
               .to eq(group_ids)
+
+            expect(response_body["load_more_groups"]).to eq(
+              "/groups?#{is_asc ? 'asc=true&' : '' }order=name&page=1"
+            )
           end
         end
       end
@@ -85,8 +98,14 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
 
-          expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+          response_body = JSON.parse(response.body)
+
+          expect(response_body["groups"].map { |group| group["id"] })
             .to eq([other_group.id, group.id, moderator_group_id])
+
+          expect(response_body["load_more_groups"]).to eq(
+            "/groups?order=name&page=1"
+          )
         end
       end
     end
@@ -152,7 +171,7 @@ describe GroupsController do
         staff_group
         get "/groups.json"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         response_body = JSON.parse(response.body)
 
@@ -192,7 +211,7 @@ describe GroupsController do
         describe 'owner groups' do
           it 'should return the right response' do
             group2 = Fabricate(:group)
-            group3 = Fabricate(:group)
+            _group3 = Fabricate(:group)
             group2.add_owner(admin)
 
             expect_type_to_return_right_groups('owner', [group.id, group2.id])
@@ -219,7 +238,7 @@ describe GroupsController do
         describe 'close groups' do
           it 'should return the right response' do
             group2 = Fabricate(:group, public_admission: false)
-            group3 = Fabricate(:group, public_admission: true)
+            _group3 = Fabricate(:group, public_admission: true)
 
             expect_type_to_return_right_groups('close', [group.id, group2.id])
           end
@@ -320,6 +339,17 @@ describe GroupsController do
   end
 
   describe "#members" do
+
+    it "returns correct error code with invalid params" do
+      sign_in(Fabricate(:user))
+
+      get "/groups/#{group.name}/members.json?limit=-1"
+      expect(response.status).to eq(400)
+
+      get "/groups/#{group.name}/members.json?offset=-1"
+      expect(response.status).to eq(400)
+    end
+
     it "ensures the group can be seen" do
       sign_in(Fabricate(:user))
       group.update!(visibility_level: Group.visibility_levels[:owners])
@@ -380,22 +410,46 @@ describe GroupsController do
   describe '#mentionable' do
     it "should return the right response" do
       sign_in(user)
-      group.update_attributes!(name: 'test')
 
-      get "/groups/test/mentionable.json", params: { name: group.name }
-
-      expect(response).to be_success
+      get "/groups/#{group.name}/mentionable.json"
+      expect(response.status).to eq(200)
 
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(false)
 
-      group.update_attributes!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      group.update_attributes!(
+        mentionable_level: Group::ALIAS_LEVELS[:everyone],
+        visibility_level: Group.visibility_levels[:staff]
+      )
 
-      get "/groups/test/mentionable.json", params: { name: group.name }
-      expect(response).to be_success
+      get "/groups/#{group.name}/mentionable.json"
+      expect(response.status).to eq(200)
 
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(true)
+    end
+  end
+
+  describe '#messageable' do
+    it "should return the right response" do
+      sign_in(user)
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+      expect(response_body["messageable"]).to eq(false)
+
+      group.update!(
+        messageable_level: Group::ALIAS_LEVELS[:everyone],
+        visibility_level: Group.visibility_levels[:staff]
+      )
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+      expect(response_body["messageable"]).to eq(true)
     end
   end
 
@@ -621,7 +675,7 @@ describe GroupsController do
         order: 'last_seen_at', desc: true
       }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       members = JSON.parse(response.body)["members"]
 
@@ -629,7 +683,7 @@ describe GroupsController do
 
       get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at' }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       members = JSON.parse(response.body)["members"]
 
@@ -639,7 +693,7 @@ describe GroupsController do
         order: 'last_posted_at', desc: true
       }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       members = JSON.parse(response.body)["members"]
 
@@ -649,7 +703,7 @@ describe GroupsController do
     it "should not allow members to be sorted by columns that are not allowed" do
       get "/groups/#{group.name}/members.json", params: { order: 'email' }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       members = JSON.parse(response.body)["members"]
 
@@ -784,7 +838,7 @@ describe GroupsController do
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
         end.to change { group.users.count }.by(1)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         group_history = GroupHistory.last
 
@@ -810,7 +864,7 @@ describe GroupsController do
               params: { usernames: [user1.username, user2.username].join(",") }
           end.to change { group.users.count }.by(2)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it "adds by id" do
@@ -819,7 +873,7 @@ describe GroupsController do
               params: { user_ids: [user1.id, user2.id].join(",") }
           end.to change { group.users.count }.by(2)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it "adds by email" do
@@ -828,7 +882,7 @@ describe GroupsController do
               params: { user_emails: [user1.email, user2.email].join(",") }
           end.to change { group.users.count }.by(2)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it 'fails when multiple member already exists' do
@@ -896,7 +950,7 @@ describe GroupsController do
                 params: { usernames: other_user.username }
             end.to change { group.users.count }.by(1)
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
 
             group_history = GroupHistory.last
 
@@ -914,7 +968,7 @@ describe GroupsController do
               params: { usernames: other_user.username }
           end.to change { group.users.count }.by(1)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it 'should not allow an underprivilege user to add another user to a group' do
@@ -947,7 +1001,7 @@ describe GroupsController do
             delete "/groups/#{group.id}/members.json", params: { user_id: user.id }
           end.to change { group.users.count }.by(-1)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it "removes by username" do
@@ -955,7 +1009,7 @@ describe GroupsController do
             delete "/groups/#{group.id}/members.json", params: { username: user.username }
           end.to change { group.users.count }.by(-1)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         it "removes user.primary_group_id when user is removed from group" do
@@ -972,7 +1026,7 @@ describe GroupsController do
               params: { user_email: user.email }
           end.to change { group.users.count }.by(-1)
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
         end
 
         context 'public group' do
@@ -986,7 +1040,7 @@ describe GroupsController do
                   params: { username: other_user.username }
               end.to change { group.users.count }.by(-1)
 
-              expect(response).to be_success
+              expect(response.status).to eq(200)
             end
           end
 
@@ -998,7 +1052,7 @@ describe GroupsController do
               params: { username: other_user.username }
             end.to change { group.users.count }.by(-1)
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
           end
 
           it 'should not allow a underprivilege user to leave a group for another user' do
@@ -1053,7 +1107,7 @@ describe GroupsController do
         it 'should allow group owner to view history' do
           get "/groups/#{group.name}/logs.json"
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
 
           result = JSON.parse(response.body)["logs"].last
 
@@ -1085,7 +1139,7 @@ describe GroupsController do
 
         get "/groups/#{group.name}/logs.json"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         result = JSON.parse(response.body)["logs"].first
 
@@ -1108,7 +1162,7 @@ describe GroupsController do
           filters: { "action" => "add_user_to_group" }
         }
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         logs = JSON.parse(response.body)["logs"]
 
@@ -1143,7 +1197,7 @@ describe GroupsController do
       post "/groups/#{group.name}/request_membership.json",
         params: { reason: 'Please add me in' }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       post = Post.last
       topic = post.topic
@@ -1193,7 +1247,7 @@ describe GroupsController do
 
         get '/groups/search.json'
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         groups = JSON.parse(response.body)
 
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
@@ -1205,7 +1259,7 @@ describe GroupsController do
         ['GO', 'nerys'].each do |term|
           get "/groups/search.json?term=#{term}"
 
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           groups = JSON.parse(response.body)
 
           expect(groups.length).to eq(1)
@@ -1214,7 +1268,7 @@ describe GroupsController do
 
         get "/groups/search.json?term=KingOfTheNorth"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         groups = JSON.parse(response.body)
 
         expect(groups).to eq([])
@@ -1231,7 +1285,7 @@ describe GroupsController do
 
         get "/groups/search.json?term=north"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         groups = JSON.parse(response.body)
 
         expect(groups.length).to eq(1)
@@ -1245,7 +1299,7 @@ describe GroupsController do
 
         get '/groups/search.json?ignore_automatic=true'
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         groups = JSON.parse(response.body)
 
         expect(groups.length).to eq(2)
@@ -1283,6 +1337,24 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe '#check_name' do
+    describe 'for an anon user' do
+      it 'should return the right response' do
+        get "/groups/check-name.json", params: { group_name: 'test' }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    it 'should return the right response' do
+      sign_in(Fabricate(:user))
+      SiteSetting.reserved_usernames = 'test|donkey'
+      get "/groups/check-name.json", params: { group_name: 'test' }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["available"]).to eq(true)
     end
   end
 end

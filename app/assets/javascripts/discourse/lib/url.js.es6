@@ -1,6 +1,6 @@
-import offsetCalculator from 'discourse/lib/offset-calculator';
-import LockOn from 'discourse/lib/lock-on';
-import { defaultHomepage } from 'discourse/lib/utilities';
+import offsetCalculator from "discourse/lib/offset-calculator";
+import LockOn from "discourse/lib/lock-on";
+import { defaultHomepage } from "discourse/lib/utilities";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -30,7 +30,7 @@ export function rewritePath(path) {
 
   let result = params[0];
   rewrites.forEach(rw => {
-    if (((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0))) {
+    if ((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0)) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -48,16 +48,18 @@ export function clearRewrites() {
 }
 
 export function userPath(subPath) {
-  return Discourse.getURL(subPath ? `/u/${subPath}` : '/u');
+  return Discourse.getURL(subPath ? `/u/${subPath}` : "/u");
 }
 
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
-  if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
+  if (_jumpScheduled || Ember.isEmpty(elementId)) {
+    return;
+  }
 
   const selector = `#${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
-  Ember.run.schedule('afterRender', function() {
+  Ember.run.schedule("afterRender", function() {
     const lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
@@ -70,7 +72,6 @@ export function jumpToElement(elementId) {
 let _transitioning = false;
 
 const DiscourseURL = Ember.Object.extend({
-
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   },
@@ -82,7 +83,7 @@ const DiscourseURL = Ember.Object.extend({
 
     _transitioning = postNumber > 1;
 
-    Ember.run.schedule('afterRender', () => {
+    Ember.run.schedule("afterRender", () => {
       let elementId;
       let holder;
 
@@ -114,7 +115,10 @@ const DiscourseURL = Ember.Object.extend({
         const windowHeight = $(window).height() - offsetCalculator();
         const height = holder.height();
 
-        if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
+        if (
+          elementTop > scrollTop &&
+          elementTop + height < scrollTop + windowHeight
+        ) {
           _transitioning = false;
           return;
         }
@@ -130,25 +134,31 @@ const DiscourseURL = Ember.Object.extend({
 
   // Browser aware replaceState. Will only be invoked if the browser supports it.
   replaceState(path) {
-    if (window.history &&
-        window.history.pushState &&
-        window.history.replaceState &&
-        (window.location.pathname !== path)) {
-
-        // Always use replaceState in the next runloop to prevent weird routes changing
-        // while URLs are loading. For example, while a topic loads it sets `currentPost`
-        // which triggers a replaceState even though the topic hasn't fully loaded yet!
-        Ember.run.next(() => {
-          const location = DiscourseURL.get('router.location');
-          if (location && location.replaceURL) {
-            location.replaceURL(path);
-          }
-        });
+    if (
+      window.history &&
+      window.history.pushState &&
+      window.history.replaceState &&
+      window.location.pathname !== path
+    ) {
+      // Always use replaceState in the next runloop to prevent weird routes changing
+      // while URLs are loading. For example, while a topic loads it sets `currentPost`
+      // which triggers a replaceState even though the topic hasn't fully loaded yet!
+      Ember.run.next(() => {
+        const location = DiscourseURL.get("router.location");
+        if (location && location.replaceURL) {
+          location.replaceURL(path);
+        }
+      });
     }
   },
 
   routeToTag(a) {
-    if (a && a.host !== document.location.host) {
+    // skip when we are provided nowhere to route to
+    if (!a || !a.href) {
+      return false;
+    }
+
+    if (a.host !== document.location.host) {
       document.location = a.href;
       return false;
     }
@@ -166,20 +176,24 @@ const DiscourseURL = Ember.Object.extend({
   routeTo(path, opts) {
     opts = opts || {};
 
-    if (Em.isEmpty(path)) { return; }
+    if (Em.isEmpty(path)) {
+      return;
+    }
 
-    if (Discourse.get('requiresRefresh')) {
+    if (Discourse.get("requiresRefresh")) {
       return redirectTo(Discourse.getURL(path));
     }
 
-    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, '');
+    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
     const baseUri = Discourse.BaseUri;
 
     // If we have a baseUri and an absolute URL, make sure the baseUri
     // is the same. Otherwise we could be switching forums.
-    if (baseUri &&
-      path.indexOf('http') === 0 &&
-      pathname.indexOf(baseUri) !== 0) {
+    if (
+      baseUri &&
+      path.indexOf("http") === 0 &&
+      pathname.indexOf(baseUri) !== 0
+    ) {
       return redirectTo(path);
     }
 
@@ -189,10 +203,12 @@ const DiscourseURL = Ember.Object.extend({
       }
     });
 
-    if (serverSide) { return; }
+    if (serverSide) {
+      return;
+    }
 
     // Protocol relative URLs
-    if (path.indexOf('//') === 0) {
+    if (path.indexOf("//") === 0) {
       return redirectTo(path);
     }
 
@@ -204,41 +220,55 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     const oldPath = window.location.pathname;
-    path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
+    path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
     let myPath = `${baseUri}/my/`;
     if (path.indexOf(myPath) === 0) {
       const currentUser = Discourse.User.current();
       if (currentUser) {
-        path = path.replace(myPath, userPath(currentUser.get('username_lower') + "/"));
+        path = path.replace(
+          myPath,
+          userPath(currentUser.get("username_lower") + "/")
+        );
       } else {
-        return redirectTo('/404');
+        return redirectTo("/404");
       }
     }
 
     // handle prefixes
     if (path.indexOf("/") === 0) {
-      const rootURL = (baseUri === undefined ? "/" : baseUri).replace(/\/$/, "");
+      const rootURL = (baseUri === undefined ? "/" : baseUri).replace(
+        /\/$/,
+        ""
+      );
       path = path.replace(rootURL, "");
     }
 
     path = rewritePath(path);
 
-    if (this.navigatedToPost(oldPath, path, opts)) { return; }
+    if (typeof opts.afterRouteComplete === "function") {
+      Ember.run.schedule("afterRender", opts.afterRouteComplete);
+    }
+
+    if (this.navigatedToPost(oldPath, path, opts)) {
+      return;
+    }
 
     if (oldPath === path) {
       // If navigating to the same path send an app event.
       // Views can watch it and tell their controllers to refresh
-      this.appEvents.trigger('url:refresh');
+      this.appEvents.trigger("url:refresh");
     }
 
     // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path, opts)) { return; }
+    if (this.navigatedToHome(oldPath, path, opts)) {
+      return;
+    }
 
     // Navigating to empty string is the same as root
-    if (path === '') {
-      path = '/';
+    if (path === "") {
+      path = "/";
     }
 
     return this.handleURL(path, opts);
@@ -257,15 +287,27 @@ const DiscourseURL = Ember.Object.extend({
    *
    * @method isInternal
    * @param {String} url
-  **/
+   **/
   isInternal(url) {
     if (url && url.length) {
-      if (url.indexOf('//') === 0) { url = "http:" + url; }
-      if (url.indexOf('#') === 0) { return true; }
-      if (url.indexOf('/') === 0) { return true; }
-      if (url.indexOf(this.origin()) === 0) { return true; }
-      if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
-      if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
+      if (url.indexOf("//") === 0) {
+        url = "http:" + url;
+      }
+      if (url.indexOf("#") === 0) {
+        return true;
+      }
+      if (url.indexOf("/") === 0) {
+        return true;
+      }
+      if (url.indexOf(this.origin()) === 0) {
+        return true;
+      }
+      if (url.replace(/^http/, "https").indexOf(this.origin()) === 0) {
+        return true;
+      }
+      if (url.replace(/^https/, "http").indexOf(this.origin()) === 0) {
+        return true;
+      }
     }
     return false;
   },
@@ -288,23 +330,27 @@ const DiscourseURL = Ember.Object.extend({
         DiscourseURL.replaceState(path);
 
         const container = Discourse.__container__;
-        const topicController = container.lookup('controller:topic');
+        const topicController = container.lookup("controller:topic");
         const opts = {};
-        const postStream = topicController.get('model.postStream');
+        const postStream = topicController.get("model.postStream");
 
-        if (newMatches[3]) { opts.nearPost = newMatches[3]; }
-        if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
+        if (newMatches[3]) {
+          opts.nearPost = newMatches[3];
+        }
+        if (path.match(/last$/)) {
+          opts.nearPost = topicController.get("model.highest_post_number");
+        }
 
         opts.cancelSummary = true;
 
         postStream.refresh(opts).then(() => {
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
-            'model.currentPost': closest,
+            "model.currentPost": closest,
             enteredAt: new Date().getTime().toString()
           });
 
-          this.appEvents.trigger('post:highlight', closest);
+          this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen
           };
@@ -336,11 +382,13 @@ const DiscourseURL = Ember.Object.extend({
   navigatedToHome(oldPath, path) {
     const homepage = defaultHomepage();
 
-    if (window.history &&
-        window.history.pushState &&
-        (path === "/" || path === "/" + homepage) &&
-        (oldPath === "/" || oldPath === "/" + homepage)) {
-      this.appEvents.trigger('url:refresh');
+    if (
+      window.history &&
+      window.history.pushState &&
+      (path === "/" || path === "/" + homepage) &&
+      (oldPath === "/" || oldPath === "/" + homepage)
+    ) {
+      this.appEvents.trigger("url:refresh");
       return true;
     }
 
@@ -349,7 +397,10 @@ const DiscourseURL = Ember.Object.extend({
 
   // This has been extracted so it can be tested.
   origin() {
-    return window.location.origin + (Discourse.BaseUri === "/" ? '' : Discourse.BaseUri);
+    return (
+      window.location.origin +
+      (Discourse.BaseUri === "/" ? "" : Discourse.BaseUri)
+    );
   },
 
   /**
@@ -361,13 +412,15 @@ const DiscourseURL = Ember.Object.extend({
     @property router
   **/
   router: function() {
-    return Discourse.__container__.lookup('router:main');
-  }.property().volatile(),
+    return Discourse.__container__.lookup("router:main");
+  }
+    .property()
+    .volatile(),
 
   // Get a controller. Note that currently it uses `__container__` which is not
   // advised but there is no other way to access the router.
   controllerFor(name) {
-    return Discourse.__container__.lookup('controller:' + name);
+    return Discourse.__container__.lookup("controller:" + name);
   },
 
   /**
@@ -377,12 +430,12 @@ const DiscourseURL = Ember.Object.extend({
   handleURL(path, opts) {
     opts = opts || {};
 
-    const router = this.get('router');
+    const router = this.get("router");
 
     if (opts.replaceURL) {
       this.replaceState(path);
     } else {
-      const discoveryTopics = this.controllerFor('discovery/topics');
+      const discoveryTopics = this.controllerFor("discovery/topics");
       if (discoveryTopics) {
         discoveryTopics.resetParams();
       }
@@ -390,7 +443,7 @@ const DiscourseURL = Ember.Object.extend({
       router._routerMicrolib.updateURL(path);
     }
 
-    const split = path.split('#');
+    const split = path.split("#");
     let elementId;
 
     if (split.length === 2) {

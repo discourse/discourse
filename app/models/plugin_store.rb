@@ -10,6 +10,10 @@ class PluginStore
     self.class.get(plugin_name, key)
   end
 
+  def get_all(keys)
+    self.class.get_all(plugin_name, keys)
+  end
+
   def set(key, value)
     self.class.set(plugin_name, key, value)
   end
@@ -22,6 +26,12 @@ class PluginStore
     if row = PluginStoreRow.find_by(plugin_name: plugin_name, key: key)
       cast_value(row.type_name, row.value)
     end
+  end
+
+  def self.get_all(plugin_name, keys)
+    rows = PluginStoreRow.where('plugin_name = ? AND key IN (?)', plugin_name, keys).to_a
+
+    Hash[rows.map { |row| [row.key, cast_value(row.type_name, row.value)] }]
   end
 
   def self.set(plugin_name, key, value)

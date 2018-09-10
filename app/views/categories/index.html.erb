@@ -1,11 +1,14 @@
 <div class='category-list' itemscope itemtype='http://schema.org/ItemList'>
   <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
-  <% @category_list.categories.each do |c| %>
+  <% @category_list.categories.each_with_index do |c, index| %>
     <div class='category' itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-      <meta itemprop='url' content='<%= c.url %>'>
-      <h2><a href='<%= c.url %>' itemprop='item'>
-        <span itemprop='name'><%= c.name %></span>
-      </a></h2>
+      <meta itemprop='position' content='<%= index %>'>
+      <meta itemprop='url' content='<%= "#{c.url}" %>'>
+      <h2>
+        <a href='<%= "#{c.url}" %>' itemprop='item'>
+          <span itemprop='name'><%= c.name %></span>
+        </a>
+      </h2>
       <span itemprop='description'><%= c.description&.html_safe %></span>
     </div>
   <% end %>

@@ -1,0 +1,71 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  js:
+    poll:
+      voters:
+        one: "szavazó"
+        other: "szavazók"
+      total_votes:
+        one: "összes szavazat"
+        other: "összes szavazat"
+      average_rating: "Átlagos értékelés:  <strong>%{average}</strong>."
+      public:
+        title: "A szavazatok nyilvánosak"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Válassz legalább <strong>1</strong> lehetőséget"
+            other: "Válasst legalább <strong>%{count}</strong> lehetőséget"
+          x_options:
+            one: "Válassz <strong>1</strong> lehetőséget"
+            other: "Válassz <strong>%{count}</strong> lehetőséget"
+      cast-votes:
+        title: "Szavazatod leadása"
+        label: "Szavazz!"
+      show-results:
+        title: "Eredmények megjelenítése"
+        label: "Eredmények mutatása"
+      hide-results:
+        title: "Vissza a szavazataidhoz"
+        label: "Eredmények elrejtése"
+      open:
+        title: "A szavazás megnyitása"
+        label: "Megnyitás"
+        confirm: "Biztosan megnyitod ezt a szavazást?"
+      close:
+        title: "A szavazás lezárása"
+        label: "Bezárás"
+        confirm: "Biztosan lezárod ezt a szavazást?"
+      automatic_close:
+        closes_in: "le lesz zárva <strong>%{timeLeft}</strong>"
+      error_while_toggling_status: "Elnézést, a szavazat állapotának vizsgálatakor hiba lépett fel."
+      error_while_casting_votes: "Sajnáljuk, hiba történt a szavazatod elküldésekor."
+      error_while_fetching_voters: "Elnézést, a szavazatok kiírásakor hiba lépett fel."
+      ui_builder:
+        title: Szavazás felépítése
+        insert: Szavazás beillesztése
+        help:
+          options_count: Legalább 2 opciót adj meg
+          invalid_values: A minimum értéknek alacsonyabbnak kell lennie a maximum értéknél.
+          min_step_value: A lépés minimális értéke 1
+        poll_type:
+          label: Típus
+          regular: Egyszerű választás
+          multiple: Többszörös Választás
+          number: Értékelés Számokkal
+        poll_config:
+          max: Max
+          min: Min
+          step: Lépés
+        poll_public:
+          label: Mutasd, ki szavazott
+        poll_options:
+          label: Soronként egy választási lehetőséget adj meg
+        automatic_close:
+          label: Szavazás automatikus lezárása

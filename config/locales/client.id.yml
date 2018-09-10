@@ -42,49 +42,49 @@ id:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          other: < %{count}s
+          other: "< %{count}s"
         x_seconds:
-          other: '%{count}s'
+          other: "%{count}s"
         less_than_x_minutes:
-          other: '%{count}juta'
+          other: "%{count}juta"
         x_minutes:
-          other: '%{count}m'
+          other: "%{count}m"
         about_x_hours:
-          other: '%{count}h'
+          other: "%{count}h"
         x_days:
-          other: '%{count}d'
+          other: "%{count}d"
         x_months:
-          other: '%{count}senin'
+          other: "%{count}senin"
         about_x_years:
-          other: '%{count}y'
+          other: "%{count}y"
         over_x_years:
-          other: '> %{count}y'
+          other: "> %{count}y"
         almost_x_years:
-          other: '%{count}y'
+          other: "%{count}y"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          other: '%{count} menit'
+          other: "%{count} menit"
         x_hours:
-          other: '%{count} jam'
+          other: "%{count} jam"
         x_days:
-          other: '%{count} hari'
+          other: "%{count} hari"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          other: '%{count} menit yang lalu'
+          other: "%{count} menit yang lalu"
         x_hours:
-          other: '%{count} jam yang lalu'
+          other: "%{count} jam yang lalu"
         x_days:
-          other: '%{count} hari yang lalu'
+          other: "%{count} hari yang lalu"
       later:
         x_days:
-          other: '%{count} hari kemudian'
+          other: "%{count} hari kemudian"
         x_months:
-          other: '%{count} bulan kemudian'
+          other: "%{count} bulan kemudian"
         x_years:
-          other: '%{count} bulan kemudian'
+          other: "%{count} bulan kemudian"
       previous_month: 'Bulan Lalu'
       next_month: 'Bulan Depan'
       placeholder: tanggal
@@ -160,12 +160,12 @@ id:
     show_help: "pilihan"
     links: "Tautan"
     links_lowercase:
-      other: tautan
+      other: "tautan"
     faq: "FAQ"
     guidelines: "Petunjuk"
     privacy_policy: "Kebijakan Privasi"
     privacy: "Privasi"
-    terms_of_service: "Ketentuan Layanan"
+    tos: "Ketentuan Layanan"
     mobile_view: "Tampilan Mobile"
     desktop_view: "Tampilan Desktop"
     you: "Anda"
@@ -184,7 +184,7 @@ id:
     max_of_count: "maksimal dari {{count}}"
     alternation: "atau"
     character_count:
-      other: '{{count}} karakter'
+      other: "{{count}} karakter"
     suggested_topics:
       title: "Topik Yang Disarankan"
       pm_title: "Pesan Yang  Disarankan"
@@ -253,14 +253,14 @@ id:
       cancel: "Batal"
       view_pending: "lihat postingan tertunda"
       has_pending_posts:
-        other: Bahasan ini <b>{{count}}</b> pesan menunggu persetujuan
+        other: "Bahasan ini <b>{{count}}</b> pesan menunggu persetujuan"
       confirm: "Simpan perubahan"
       delete_prompt: "Apakah anda yakin akan menghapus <b>%{username}</b> ? Ini akan menghapus semua pesan dan memblokir email dan alamat IP. "
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
         pending_posts:
-          other: Anda mempunyai <strong>{{count}}</strong> pesan tertunda.
+          other: "Anda mempunyai <strong>{{count}}</strong> pesan tertunda."
         ok: "Ya"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
@@ -293,7 +293,7 @@ id:
       days_visited_long: "Hari yang dikunjungi"
       posts_read: "baca"
       total_rows:
-        other: '%{count} pengguna'
+        other: "%{count} pengguna"
     group_histories:
       actions:
         add_user_to_group: "Tambahkan pengguna"
@@ -350,7 +350,7 @@ id:
         is_group_user: "Anggota"
         is_group_owner: "Pemilik"
       title:
-        other: Grup
+        other: "Grup"
       activity: "Aktifitas"
       members:
         title: "Anggota"
@@ -402,8 +402,6 @@ id:
       reorder:
         title: "memesan ulang kategori"
         title_long: "Mengatur ulang daftar kategori"
-        fix_order: "Posisi yang tepat"
-        fix_order_tooltip: "Tidak semua kategori mempunyai angka posisi yang unik, yang mana dapat menyebabkan hasil yang tidak diharapkan."
         save: "menyimpan pesanan"
         apply_all: "menerapkan"
         position: "Posisi"
@@ -414,9 +412,9 @@ id:
       toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
       topic_sentence:
-        other: '%{count} topik'
+        other: "%{count} topik"
       topic_stat_sentence:
-        other: '%{count} topik baru dalam %{unit} terakhir.'
+        other: "%{count} topik baru dalam %{unit} terakhir."
     ip_lookup:
       title: Pencarian Alamat IP
       hostname: nama host
@@ -558,7 +556,6 @@ id:
         upload_title: "Unggah gambar anda"
         upload_picture: "Unggah Gambar"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
-        cache_notice: "Anda telah sukses mengganti gambar profil, tetapi mungkin akan memerlukan waktu untuk tampil karena cache peramban"
       change_profile_background:
         title: "Latar Belakang Profil"
         instructions: "Latar belakang profil akan ditengahkan, dan mempunyai lebar standar 850px"
@@ -572,7 +569,7 @@ id:
         invalid: "Silahkan masukkan alamat email yang valid"
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
         frequency:
-          other: Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit.
+          other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
       name:
         title: "Name"
         instructions: "Nama lengkap anda (opsional)"
@@ -681,17 +678,17 @@ id:
         title: "Ringkasan"
         stats: "Statistik"
         topic_count:
-          other: topik dibuat
+          other: "topik dibuat"
         post_count:
-          other: tulisan dibuat
+          other: "tulisan dibuat"
         likes_given:
-          other: diberikan
+          other: "diberikan"
         likes_received:
-          other: diterima
+          other: "diterima"
         days_visited:
-          other: hari berkunjung
+          other: "hari berkunjung"
         topics_entered:
-          other: topik dilihat
+          other: "topik dilihat"
         top_replies: "Balasan Teratas"
         no_replies: "Belum ada balasan"
         more_replies: "Balasan lebih banyak"
@@ -702,7 +699,6 @@ id:
         no_links: "Belum ada tautan."
         most_liked_by: "Banyak Disukai Oleh"
         most_liked_users: "Paling Disukai"
-      associated_accounts: "Masuk"
       ip_address:
         title: "Alamat IP terakhir"
       registration_ip_address:
@@ -760,7 +756,6 @@ id:
       enable: "Sembunyikan Tulisan Terhapus"
     private_message_info:
       title: "Pesan"
-      invite: "Undang Lainnya..."
     email: 'Surel'
     username: 'Nama Pengguna'
     last_seen: 'Terlihat'
@@ -787,9 +782,6 @@ id:
       reset_password: 'Atur Ulang Kata Sandi'
       or: "atau"
       submit_new_email: "Perbarui Alamat Email"
-      google:
-        title: "dengan Google"
-        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
       google_oauth2:
         title: "dengan Google"
         message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
@@ -895,7 +887,7 @@ id:
       not_found:
         title: "Tidak ada topik"
       new_posts:
-        other: ada {{count}} posting baru di topik ini sejak terakhir Anda mengunjunginya
+        other: "ada {{count}} posting baru di topik ini sejak terakhir Anda mengunjunginya"
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
@@ -933,11 +925,11 @@ id:
     filters:
       new:
         lower_title_with_count:
-          other: '{{count}} baru'
+          other: "{{count}} baru"
         lower_title: "baru"
         title: "Baru"
         title_with_count:
-          other: Baru ({{count}})
+          other: "Baru ({{count}})"
       category:
         help: "topik terakhir di kategori {{categoryName}}"
       top:

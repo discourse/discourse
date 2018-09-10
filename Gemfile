@@ -13,13 +13,13 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'actionmailer', '~> 5.1'
-  gem 'actionpack', '~> 5.1'
-  gem 'actionview', '~> 5.1'
-  gem 'activemodel', '~> 5.1'
-  gem 'activerecord', '~> 5.1'
-  gem 'activesupport', '~> 5.1'
-  gem 'railties', '~> 5.1'
+  gem 'actionmailer', '5.2'
+  gem 'actionpack', '5.2'
+  gem 'actionview', '5.2'
+  gem 'activemodel', '5.2'
+  gem 'activerecord', '5.2'
+  gem 'activesupport', '5.2'
+  gem 'railties', '5.2'
   gem 'sprockets-rails'
   gem 'seed-fu'
 end
@@ -34,7 +34,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.48'
+gem 'onebox', '1.8.60'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -60,7 +60,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '~> 0.1'
 
-# Forked until https://github.com/toy/image_optim/pull/149 is merged
+# Forked until https://github.com/toy/image_optim/pull/162 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
@@ -78,7 +78,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
-gem 'pg', '~> 0.21.0'
+gem 'pg'
+gem 'mini_sql'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
@@ -87,13 +88,14 @@ gem 'thor', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
+gem 'mini_scheduler'
 
 # for sidekiq web
 gem 'tilt', require: false
 
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
 # Gems used only for assets and not required in production environments by default.
@@ -107,6 +109,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
+  gem 'danger'
 end
 
 group :test, :development do
@@ -178,12 +181,16 @@ gem 'rqrcode'
 
 gem 'sshkey', require: false
 
+gem 'rchardet', require: false
+
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
   gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
+  gem 'tiny_tds'
 end
 
 gem 'webpush', require: false
+gem 'colored2', require: false

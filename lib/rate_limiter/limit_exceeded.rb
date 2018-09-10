@@ -10,14 +10,16 @@ class RateLimiter
     end
 
     def description
-      time_left = ""
-      if @available_in < 1.minute.to_i
-        time_left = I18n.t("rate_limiter.seconds", count: @available_in)
-      elsif @available_in < 1.hour.to_i
-        time_left = I18n.t("rate_limiter.minutes", count: (@available_in / 1.minute.to_i))
-      else
-        time_left = I18n.t("rate_limiter.hours", count: (@available_in / 1.hour.to_i))
-      end
+      time_left =
+        if @available_in <= 3
+          I18n.t("rate_limiter.short_time")
+        elsif @available_in < 1.minute.to_i
+          I18n.t("rate_limiter.seconds", count: @available_in)
+        elsif @available_in < 1.hour.to_i
+          I18n.t("rate_limiter.minutes", count: (@available_in / 1.minute.to_i))
+        else
+          I18n.t("rate_limiter.hours", count: (@available_in / 1.hour.to_i))
+        end
 
       if @type.present?
         type_key = @type.tr("-", "_")

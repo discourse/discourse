@@ -3,6 +3,7 @@ class GroupsController < ApplicationController
     :set_notifications,
     :mentionable,
     :messageable,
+    :check_name,
     :update,
     :histories,
     :request_membership,
@@ -69,7 +70,11 @@ class GroupsController < ApplicationController
     end
 
     if type = params[:type]&.to_sym
-      groups = TYPE_FILTERS[type].call(groups, current_user)
+      callback = TYPE_FILTERS[type]
+      if !callback
+        raise Discourse::InvalidParameters.new(:type)
+      end
+      groups = callback.call(groups, current_user)
     end
 
     if current_user
@@ -93,7 +98,13 @@ class GroupsController < ApplicationController
         type_filters: type_filters
       },
       total_rows_groups: count,
-      load_more_groups: groups_path(page: page + 1, type: type),
+      load_more_groups: groups_path(
+        page: page + 1,
+        type: type,
+        order: order,
+        asc: params[:asc],
+        filter: filter
+      ),
     )
   end
 
@@ -191,6 +202,15 @@ class GroupsController < ApplicationController
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
+
+    if limit < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
+    if offset < 0
+      raise Discourse::InvalidParameters.new(:offset)
+    end
+
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
 
@@ -282,7 +302,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name)
+    group = find_group(:group_id, ensure_can_see: false)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -292,13 +312,19 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name)
+    group = find_group(:group_id, ensure_can_see: false)
 
     if group
       render json: { messageable: Group.messageable(current_user).where(id: group.id).present? }
     else
       raise Discourse::InvalidAccess.new
     end
+  end
+
+  def check_name
+    group_name = params.require(:group_name)
+    checker = UsernameCheckerService.new(allow_reserved_username: true)
+    render json: checker.check_username(group_name, nil)
   end
 
   def remove_member
@@ -468,12 +494,11 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*permitted_params)
   end
 
-  def find_group(param_name)
+  def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
     group = Group
     group = group.find_by("lower(name) = ?", name.downcase)
-    guardian.ensure_can_see!(group)
+    guardian.ensure_can_see!(group) if ensure_can_see
     group
   end
-
 end

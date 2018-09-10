@@ -1,8 +1,11 @@
 module Migration
   class BaseDropper
-    def initialize(after_migration, delay, on_drop)
+    FUNCTION_SCHEMA_NAME = "discourse_functions".freeze
+
+    def initialize(after_migration, delay, on_drop, after_drop)
       @after_migration = after_migration
       @on_drop = on_drop
+      @after_drop = after_drop
 
       # in production we need some extra delay to allow for slow migrations
       @delay = delay || (Rails.env.production? ? 3600 : 0)
@@ -12,6 +15,7 @@ module Migration
       if droppable?
         @on_drop&.call
         execute_drop!
+        @after_drop&.call
 
         Discourse.reset_active_record_cache
       end
@@ -44,11 +48,15 @@ module Migration
     end
 
     def self.create_readonly_function(table_name, column_name = nil)
+      DB.exec <<~SQL
+        CREATE SCHEMA IF NOT EXISTS #{FUNCTION_SCHEMA_NAME};
+      SQL
+
       message = column_name ?
                   "Discourse: #{column_name} in #{table_name} is readonly" :
                   "Discourse: #{table_name} is read only"
 
-      ActiveRecord::Base.exec_sql <<~SQL
+      DB.exec <<~SQL
         CREATE OR REPLACE FUNCTION #{readonly_function_name(table_name, column_name)} RETURNS trigger AS $rcr$
           BEGIN
             RAISE EXCEPTION '#{message}';
@@ -67,7 +75,14 @@ module Migration
     end
 
     def self.readonly_function_name(table_name, column_name = nil)
-      ["raise", table_name, column_name, "readonly()"].compact.join("_")
+      function_name = [
+        "raise",
+        table_name,
+        column_name,
+        "readonly()"
+      ].compact.join("_")
+
+      "#{FUNCTION_SCHEMA_NAME}.#{function_name}"
     end
 
     def self.readonly_trigger_name(table_name, column_name = nil)

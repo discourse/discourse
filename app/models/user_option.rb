@@ -1,4 +1,7 @@
 class UserOption < ActiveRecord::Base
+  # TODO: remove in 2019
+  self.ignored_columns = ["theme_key"]
+
   self.primary_key = :user_id
   belongs_to :user
   before_create :set_defaults
@@ -6,10 +9,14 @@ class UserOption < ActiveRecord::Base
   after_save :update_tracked_topics
 
   def self.ensure_consistency!
-    exec_sql("SELECT u.id FROM users u
-              LEFT JOIN user_options o ON o.user_id = u.id
-              WHERE o.user_id IS NULL").values.each do |id, _|
-      UserOption.create(user_id: id.to_i)
+    sql = <<~SQL
+      SELECT u.id FROM users u
+      LEFT JOIN user_options o ON o.user_id = u.id
+      WHERE o.user_id IS NULL
+    SQL
+
+    DB.query_single(sql).each do |id|
+      UserOption.create(user_id: id)
     end
   end
 
@@ -141,10 +148,10 @@ class UserOption < ActiveRecord::Base
 
   private
 
-    def update_tracked_topics
-      return unless saved_change_to_auto_track_topics_after_msecs?
-      TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
-    end
+  def update_tracked_topics
+    return unless saved_change_to_auto_track_topics_after_msecs?
+    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
+  end
 
 end
 
@@ -173,10 +180,10 @@ end
 #  mailing_list_mode_frequency      :integer          default(1), not null
 #  include_tl0_in_digests           :boolean          default(FALSE)
 #  notification_level_when_replying :integer
-#  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
 #  allow_private_messages           :boolean          default(TRUE), not null
 #  homepage_id                      :integer
+#  theme_ids                        :integer          default([]), not null, is an Array
 #
 # Indexes
 #

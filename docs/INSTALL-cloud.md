@@ -79,13 +79,11 @@ Answer the following questions when prompted:
     SMTP password? [pa$$word]: 
     Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
 
-This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will read your old values from the file) or edit `/containers/app.yml` with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
-
-**NOTE:** You should not attempt to enable Let's Encrypt unless the DNS record for hostname resolves to your server. You can run `./discourse-setup` again later to make any changes.
+This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
 
- Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
+ Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier.
 
 <img src="https://www.discourse.org/images/install/17/discourse-congrats.png" width="650">
 

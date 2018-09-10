@@ -50,11 +50,14 @@
   .badges-listing {
     display: block;
 
-    .info, .grant-count {
+    .info,
+    .grant-count {
       text-align: left;
     }
 
-    .row > div.info { display: none; }
+    .row > div.info {
+      display: none;
+    }
 
     .row {
       display: block;
@@ -124,8 +127,8 @@
   background-color: $primary-very-low;
   border: 1px solid $primary-low;
   margin-bottom: 2vh;
-  transition: box-shadow .25s;
-  
+  transition: box-shadow 0.25s;
+
   .check-display {
     position: absolute;
     left: 5px;
@@ -145,19 +148,19 @@
     display: flex;
     min-height: 128px;
     height: 100%;
-    
+
     .badge-link {
       display: flex;
       flex: 1 1 auto;
       padding: 0 10%;
-      @media screen and (max-width: 550px) {
+      @include breakpoint(mobile) {
         padding: 0 5%;
       }
     }
 
     .badge-icon {
       display: flex;
-      flex: 0 0 auto; 
+      flex: 0 0 auto;
       width: 1.23em;
       margin-right: 5%;
       align-items: center;
@@ -209,11 +212,11 @@
     &:nth-of-type(3n) {
       margin-right: 0;
     }
-    @include small-width {
+    @include breakpoint(medium) {
       flex: 0 0 49%;
       margin-right: 0;
     }
-    @media screen and (max-width: 550px) {
+    @include breakpoint(mobile) {
       flex: 0 0 100%;
     }
     &:hover {
@@ -222,7 +225,7 @@
     &:active {
       box-shadow: none;
     }
-    @media all and (max-width: 320px) {
+    @include breakpoint(mobile-small) {
       width: 100%;
     }
   }
@@ -231,7 +234,7 @@
     align-self: flex-start;
     @media screen and (min-width: 767px) {
       max-width: calc(#{$large-width} / 2);
-      margin-right: 1.5em;      
+      margin-right: 1.5em;
     }
     .badge-contents {
       .badge-link {
@@ -240,7 +243,7 @@
         h3 {
           font-size: $font-up-3;
         }
-      }      
+      }
     }
   }
 }
@@ -257,7 +260,7 @@
   margin: 20px 0;
   color: dark-light-choose($primary-medium, $secondary-medium);
   h3 {
-    margin-bottom: 1.0em;
+    margin-bottom: 1em;
   }
 }
 
@@ -271,8 +274,8 @@
   margin-bottom: 1.5em;
   display: flex;
   flex-wrap: wrap;
-  @include small-width {
-    justify-content: space-between;    
+  @include breakpoint(medium) {
+    justify-content: space-between;
   }
 
   .title {
@@ -305,7 +308,7 @@
   .badge-set-title {
     padding: 1.5em;
     border: 1px solid $primary-low;
-    
+
     .user-content {
       padding: 0;
       .control-group {

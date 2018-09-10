@@ -66,7 +66,7 @@ h4,
 h5,
 h6 {
   margin-top: 0;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 button {
@@ -107,7 +107,7 @@ img.avatar {
 //                                                      26,
 //                                                      '15
 span.relative-date {
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 label {
@@ -131,7 +131,10 @@ input {
   }
 
   &.invalid {
-    background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%));
+    background-color: dark-light-choose(
+      $danger-low,
+      scale-color($danger, $lightness: -60%)
+    );
   }
 
   .radio &[type="radio"],
@@ -188,7 +191,7 @@ input {
     display: inline-block;
     padding: $input-padding;
     margin-bottom: 9px;
-    font-size:  $font-0;
+    font-size: $font-0;
     line-height: $line-height-large;
     color: $primary;
     background-color: $secondary;
@@ -270,7 +273,7 @@ select {
 // numbers get dimmer as they get colder
 .coldmap {
   &-high {
-  color: dark-light-choose($primary-low-mid, $secondary-high) !important;
+    color: dark-light-choose($primary-low-mid, $secondary-high) !important;
   }
 
   &-med {
@@ -287,7 +290,7 @@ select {
 }
 
 .message {
-  @include border-radius-all(8px);
+  border-radius: 8px;
   background-color: $secondary;
   padding: 14px;
 
@@ -297,7 +300,7 @@ select {
 }
 
 .clear-transitions {
-  transition:none !important;
+  transition: none !important;
 }
 
 .tip {
@@ -340,7 +343,11 @@ select {
   height: 80px;
   top: -18px;
   right: -18px;
-  background-image: radial-gradient(40px at 50% 50% , transparent 95%, $primary 100%);
+  background-image: radial-gradient(
+    40px at 50% 50%,
+    transparent 95%,
+    $primary 100%
+  );
   opacity: 0.85;
 }
 
@@ -351,7 +358,7 @@ select {
   top: -18px !important;
   right: -18px !important;
   box-shadow: 0 0 0 9999px rgba($primary, 0.85);
-  z-index: z("modal","overlay");
+  z-index: z("modal", "overlay");
 }
 
 .ring-first-notification {
@@ -468,6 +475,16 @@ select {
 
   .control-group {
     @include clearfix;
+
+    .table {
+      width: 100%;
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+    }
   }
 
   .control-label {
@@ -536,4 +553,52 @@ select {
 
 .inline {
   display: inline;
+}
+
+.pref-auth-tokens {
+  .control-label {
+    display: inline-block;
+  }
+
+  .row {
+    margin: 5px 0px;
+  }
+
+  .muted {
+    color: $primary-medium;
+  }
+
+  .perf-auth-token {
+    background-color: $primary-very-low;
+    color: $primary;
+    display: block;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .auth-token-summary {
+    padding: 0px 10px;
+
+    .auth-token-label,
+    .auth-token-value {
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
+  }
+
+  .auth-token-details {
+    background: $secondary;
+    padding: 5px 10px;
+    margin: 10px 5px 5px 5px;
+
+    .auth-token-label {
+      color: $primary-medium;
+    }
+  }
+
+  .auth-token-label,
+  .auth-token-value {
+    float: left;
+    width: 50%;
+  }
 }

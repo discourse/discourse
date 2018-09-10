@@ -7,6 +7,8 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  SHA1_LENGTH = 40
+
   belongs_to :user
 
   has_many :post_uploads, dependent: :destroy
@@ -24,7 +26,13 @@ class Upload < ActiveRecord::Base
 
   validates_with ::Validators::UploadValidator
 
-  def thumbnail(width = self.width, height = self.height)
+  after_destroy do
+    User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
+    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
+    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+  end
+
+  def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
 
@@ -36,15 +44,55 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
 
     opts = {
-      filename: self.original_filename,
       allow_animation: SiteSetting.allow_animated_thumbnails,
       crop: crop
     }
 
-    if _thumbnail = OptimizedImage.create_for(self, width, height, opts)
-      self.width = width
-      self.height = height
+    if get_optimized_image(width, height, opts)
       save(validate: false)
+    end
+  end
+
+  # this method attempts to correct old incorrect extensions
+  def get_optimized_image(width, height, opts)
+    if (!extension || extension.length == 0)
+      fix_image_extension
+    end
+
+    opts = opts.merge(raise_on_error: true)
+    begin
+      OptimizedImage.create_for(self, width, height, opts)
+    rescue
+      opts = opts.merge(raise_on_error: false)
+      if fix_image_extension
+        OptimizedImage.create_for(self, width, height, opts)
+      else
+        nil
+      end
+    end
+  end
+
+  def fix_image_extension
+    return false if extension == "unknown"
+
+    begin
+      # this is relatively cheap once cached
+      original_path = Discourse.store.path_for(self)
+      if original_path.blank?
+        external_copy = Discourse.store.download(self) rescue nil
+        original_path = external_copy.try(:path)
+      end
+
+      image_info = FastImage.new(original_path) rescue nil
+      new_extension = image_info&.type&.to_s || "unknown"
+
+      if new_extension != self.extension
+        self.update_columns(extension: new_extension)
+        true
+      end
+    rescue
+      self.update_columns(extension: "unknown")
+      true
     end
   end
 
@@ -59,14 +107,59 @@ class Upload < ActiveRecord::Base
     "upload://#{Base62.encode(sha1.hex)}.#{extension}"
   end
 
+  def local?
+    !(url =~ /^(https?:)?\/\//)
+  end
+
+  def fix_dimensions!
+    return if !FileHelper.is_image?("image.#{extension}")
+
+    path =
+      if local?
+        Discourse.store.path_for(self)
+      else
+        Discourse.store.download(self).path
+      end
+
+    self.width, self.height = size = FastImage.new(path).size
+    self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+    nil
+  end
+
+  # on demand image size calculation, this allows us to null out image sizes
+  # and still handle as needed
+  def get_dimension(key)
+    if v = read_attribute(key)
+      return v
+    end
+    fix_dimensions!
+    read_attribute(key)
+  end
+
+  def width
+    get_dimension(:width)
+  end
+
+  def height
+    get_dimension(:height)
+  end
+
+  def thumbnail_width
+    get_dimension(:thumbnail_width)
+  end
+
+  def thumbnail_height
+    get_dimension(:thumbnail_height)
+  end
+
   def self.sha1_from_short_url(url)
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
       sha1 = Base62.decode($2).to_s(16)
 
-      if sha1.length > 40
+      if sha1.length > SHA1_LENGTH
         nil
       else
-        sha1.rjust(40, '0')
+        sha1.rjust(SHA1_LENGTH, '0')
       end
     end
   end
@@ -77,20 +170,19 @@ class Upload < ActiveRecord::Base
 
   def self.get_from_url(url)
     return if url.blank?
-    # we store relative urls, so we need to remove any host/cdn
-    url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present? && Discourse.asset_host != SiteSetting.Upload.s3_cdn_url
-    # when using s3, we need to replace with the absolute base url
-    url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
 
-    # always try to get the path
     uri = begin
       URI(URI.unescape(url))
-    rescue URI::InvalidURIError, URI::InvalidComponentError
+    rescue URI::Error
     end
 
-    url = uri.path if uri.try(:scheme)
-
-    Upload.find_by(url: url)
+    return if uri&.path.blank?
+    data = uri.path.match(/(\/original\/\dX\/[\/\.\w]+\/([a-zA-Z0-9]+)[\.\w]+)/)
+    return if data.blank?
+    sha1 = data[2]
+    upload = nil
+    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
+    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)

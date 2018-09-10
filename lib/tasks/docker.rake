@@ -39,14 +39,30 @@ task 'docker:test' do
   begin
     @good = true
     unless ENV['SKIP_LINT']
-      puts "Running linters"
+      puts "Running linters/prettyfiers"
+      puts "eslint #{`yarn eslint -v`}"
+      puts "prettier #{`yarn prettier -v`}"
+
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
-        @good &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+        @good &&= run_or_fail("yarn eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+
+        puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
+        @good &&= run_or_fail("yarn prettier --list-different 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss' 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6'")
       else
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+        @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+
+        unless ENV["SKIP_CORE"]
+          puts "Listing prettier offenses in core:"
+          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
+        end
+
+        unless ENV["SKIP_PLUGINS"]
+          puts "Listing prettier offenses in plugins:"
+          @good &&= run_or_fail('yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
+        end
       end
     end
 
@@ -70,12 +86,13 @@ task 'docker:test' do
 
       ENV["RAILS_ENV"] = "test"
 
-      @good &&= run_or_fail("bundle exec rake db:create db:migrate")
+      @good &&= run_or_fail("bundle exec rake db:create")
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
-        @good &&= run_or_fail("bundle exec rails r 'puts \"installing all gems\"'")
       end
+
+      @good &&= run_or_fail("bundle exec rake db:migrate")
 
       unless ENV["JS_ONLY"]
 

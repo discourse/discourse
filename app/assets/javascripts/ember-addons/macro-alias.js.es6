@@ -1,4 +1,4 @@
-import isDescriptor from './utils/is-descriptor';
+import isDescriptor from "./utils/is-descriptor";
 
 function handleDescriptor(target, property, desc, fn, params = []) {
   return {

@@ -1,0 +1,28 @@
+.admin-report-table {
+  .table {
+    font-size: $font-down-1;
+  }
+
+  .table .admin-report-table-header {
+    font-weight: 500;
+    border-right: 1px solid $primary-low;
+    padding: auto;
+
+    .title {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      text-align: right;
+      transform: rotate(180deg);
+    }
+
+    .sort-btn {
+      display: none;
+    }
+  }
+
+  .table tbody tr td {
+    &.user .username {
+      display: none;
+    }
+  }
+}

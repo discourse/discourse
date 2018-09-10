@@ -112,42 +112,42 @@ tr_TR:
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:
-    one: 'Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. '
-    other: 'Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. '
+    one: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
+    other: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
     referer: "Yönlendiren:"
     more_replies:
-      one: '%{count} cevap daha'
-      other: '%{count} cevap daha'
+      one: "%{count} cevap daha"
+      other: "%{count} cevap daha"
     loading: "Tartışma Yükleniyor..."
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: '%{count} cevap'
-      other: '%{count} cevap'
+      one: "%{count} cevap"
+      other: "%{count} cevap"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
-    one: Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz.
-    other: Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz.
+    one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
+    other: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
   no_mentions_allowed_newuser: "Üzgünüz, yeni kullanıcılar diğer kullanıcılardan bahsedemezler."
   too_many_mentions_newuser:
-    one: Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
   no_images_allowed: "Üzgünüz, yeni kullanıcılar gönderilere resim koyamazlar."
   too_many_images:
-    one: 'Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. '
-    other: 'Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. '
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bir şey ekleyemezler."
   too_many_attachments:
-    one: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
   no_links_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bağlantı ekleyemezler."
   too_many_links:
-    one: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler.
-    other: Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler.
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
+    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
@@ -205,8 +205,8 @@ tr_TR:
       trust_level_4: "güven_seviyesi_4"
   education:
     until_posts:
-      one: '%{count} gönderi'
-      other: '%{count} gönderi'
+      one: "%{count} gönderi"
+      other: "%{count} gönderi"
     'new-topic': |
       %{site_name} topluluğuna hoş geldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **
 
@@ -268,27 +268,6 @@ tr_TR:
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
   lounge_welcome:
     title: "Lobiye hoş geldiniz"
-    body: |2
-
-        Tebrikler! :confetti_ball:
-
-        Bu konuyu görebiliyorsanız, yakın süre önce **müdavim** (güven seviyesi 3) seviyesine terfi etmişsiniz demektir.
-
-        Artık &hellip;
-
-        * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
-        * Herhangi bir konunun kategorisini değiştirebilirsiniz
-        * Eklediğiniz linkler takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
-        * Sadece 3. güven seviyesi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
-        * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
-
-        [Şu anki müdavim seviyedeki kişilerin listesi](/badges/3/regular). Merhaba demeyi unutmayın.
-
-        Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
-
-        (Güven seviyeleriyle ilgili daha fazla bilgi için, [bu konuya bakın][trust]. Lütfen, sadece sürekli olarak kriterlere uyan üyelerin standart seviyede kalacağını unutmayın.)
-
-        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
     replace_paragraph: "(Bu paragrafın yerine yeni kategorinizin kısa bir açıklamasını girin. Buraya yazılanlar kategori seçim alanında görüneceği için, açıklamanızı 200 karakterin altında tutmaya çalışın.**Siz bu metni düzenleyene veya herhangi bir konu oluşturana kadar bu kategori, kategori sayfasında gözükmeyecek.**)"
@@ -303,9 +282,6 @@ tr_TR:
     cannot_delete:
       uncategorized: "Kategorisiz silinemez"
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
-      topic_exists:
-        one: 'Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}.'
-        other: 'Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}.'
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
     uncategorized_description: "Kategoriye ihtiyacı olmayan, ya da diğer kategorilere uymayan konular."
   trust_levels:
@@ -322,85 +298,85 @@ tr_TR:
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
   rate_limiter:
     hours:
-      one: '%{count} saat'
-      other: '%{count} saat'
+      one: "%{count} saat"
+      other: "%{count} saat"
     minutes:
-      one: '%{count} dakika'
-      other: '%{count} dakika'
+      one: "%{count} dakika"
+      other: "%{count} dakika"
     seconds:
-      one: '%{count} saniye'
-      other: '%{count} saniye'
+      one: "%{count} saniye"
+      other: "%{count} saniye"
   datetime:
     distance_in_words:
       half_a_minute: "< 1dk"
       less_than_x_seconds:
-        one: < %{count}sn
-        other: < %{count}sn
+        one: "< %{count}sn"
+        other: "< %{count}sn"
       x_seconds:
-        one: '%{count}sn'
-        other: '%{count}sn'
+        one: "%{count}sn"
+        other: "%{count}sn"
       less_than_x_minutes:
-        one: < %{count}dk
-        other: < %{count}dk
+        one: "< %{count}dk"
+        other: "< %{count}dk"
       x_minutes:
-        one: '%{count}dk'
-        other: '%{count}dk'
+        one: "%{count}dk"
+        other: "%{count}dk"
       about_x_hours:
-        one: '%{count}sa'
-        other: '%{count}sa'
+        one: "%{count}sa"
+        other: "%{count}sa"
       x_days:
-        one: '%{count}gün'
-        other: '%{count}gün'
+        one: "%{count}gün"
+        other: "%{count}gün"
       about_x_months:
-        one: '%{count}ay'
-        other: '%{count}ay'
+        one: "%{count}ay"
+        other: "%{count}ay"
       x_months:
-        one: '%{count}ay'
-        other: '%{count}ay'
+        one: "%{count}ay"
+        other: "%{count}ay"
       about_x_years:
-        one: '%{count}yıl'
-        other: '%{count}yıl'
+        one: "%{count}yıl"
+        other: "%{count}yıl"
       over_x_years:
-        one: '> %{count}yıl'
-        other: '> %{count}yıl'
+        one: "> %{count}yıl"
+        other: "> %{count}yıl"
       almost_x_years:
-        one: '%{count}yıl'
-        other: '%{count}yıl'
+        one: "%{count}yıl"
+        other: "%{count}yıl"
     distance_in_words_verbose:
       half_a_minute: "hemen şimdi"
       less_than_x_seconds:
-        one: hemen şimdi
-        other: hemen şimdi
+        one: "hemen şimdi"
+        other: "hemen şimdi"
       x_seconds:
-        one: '%{count} saniye önce'
-        other: '%{count} saniye önce'
+        one: "%{count} saniye önce"
+        other: "%{count} saniye önce"
       less_than_x_minutes:
-        one: son %{count} dakika içerisinde
-        other: son %{count} dakika içerisinde
+        one: "son %{count} dakika içerisinde"
+        other: "son %{count} dakika içerisinde"
       x_minutes:
-        one: '%{count} dakika önce'
-        other: '%{count} dakika önce'
+        one: "%{count} dakika önce"
+        other: "%{count} dakika önce"
       about_x_hours:
-        one: '%{count} saat önce'
-        other: '%{count} saat önce'
+        one: "%{count} saat önce"
+        other: "%{count} saat önce"
       x_days:
-        one: '%{count} gün önce'
-        other: '%{count} gün önce'
+        one: "%{count} gün önce"
+        other: "%{count} gün önce"
       about_x_months:
-        one: yaklaşık %{count} ay önce
-        other: yaklaşık %{count} ay önce
+        one: "yaklaşık %{count} ay önce"
+        other: "yaklaşık %{count} ay önce"
       x_months:
-        one: '%{count} ay önce'
-        other: '%{count} ay önce'
+        one: "%{count} ay önce"
+        other: "%{count} ay önce"
       about_x_years:
-        one: yaklaşık %{count} yıl önce
-        other: yaklaşık %{count} yıl önce
+        one: "yaklaşık %{count} yıl önce"
+        other: "yaklaşık %{count} yıl önce"
       over_x_years:
-        one: '%{count} yıldan daha fazla önce'
-        other: '%{count} yıldan daha fazla önce'
+        one: "%{count} yıldan daha fazla önce"
+        other: "%{count} yıldan daha fazla önce"
       almost_x_years:
-        one: neredeyse %{count} yıl önce
-        other: neredeyse %{count} yıl önce
+        one: "neredeyse %{count} yıl önce"
+        other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: "Üzgünüz, bu parola değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
     update: 'Parolayı Güncelle'
@@ -459,10 +435,6 @@ tr_TR:
       description: 'Bu gönderiyi beğen'
       short_description: 'Bu gönderiyi beğen'
       long_form: 'bu beğenildi'
-    vote:
-      title: 'Oyla'
-      description: 'Bu gönderiyi oyla'
-      long_form: 'bu gönderi oylandı'
   topic_flag_types:
     spam:
       title: 'İstenmeyen'
@@ -581,8 +553,6 @@ tr_TR:
       num_users: "Kullanıcılar"
     top_referred_topics:
       title: "En çok atıfta bulunulan konular"
-      xaxis: "Konu"
-      num_clicks: "Tıklamalar"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Gün"
@@ -638,7 +608,6 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Toplam"
     mobile_visits:
-      title: "Kullanıcı Ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
   dashboard:
@@ -738,7 +707,6 @@ tr_TR:
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
-    track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi öntanımlı ayarlarda devre dışı bırakılmıştır."
     site_contact_username: "Tüm otomatik iletiler için gönderen kişi olarak gözükecek geçerli bir görevli kullanıcı adı. Boş bırakılırsa öntanımlı Sistem hesabı kullanılacak."
     send_welcome_message: "Tüm yeni kullanıcılara bir hoş geldiniz iletisi ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."
@@ -911,7 +879,6 @@ tr_TR:
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
     strip_images_from_short_emails: "2800 Byte boyutundan küçük e-postalardan resimleri çıkar"
     short_email_length: "Kısa e-postanın uzunluğu, Byte olarak"
     unsubscribe_via_email: "Kullanıcıların konu veya içerik alanında 'unsubscribe' olan bir e-posta göndererek e-postalara abonelikten çıkmasına izin ver"
@@ -934,7 +901,6 @@ tr_TR:
     delete_user_max_post_age: "İlk gönderisi (x) günden eski olan kullanıcıların silinmesine izin verme."
     delete_all_posts_max: "Tüm Gönderileri Sil düğmesine basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
-    logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği adres (ör: http://bitanesite.com/cikis)"
     allow_uploaded_avatars: "Kullanıcıların özel profil resimleri yüklemelerine izin ver."
     allow_animated_avatars: "Kullanıcıların hareketli gif profil resimleri kullanmalarına izin ver. UYARI: Bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
@@ -1047,50 +1013,47 @@ tr_TR:
     not_seen_in_a_month: "Hoş geldiniz! Bir süredir yoktunuz. Bunlar sizin yokluğunuzda en gözde olan konular."
   merge_posts:
     edit_reason:
-      one: '%{count} gönderi %{username} tarafından birleştirildi'
-      other: '%{count} gönderi %{username} tarafından birleştirildi'
+      one: "%{count} gönderi %{username} tarafından birleştirildi"
+      other: "%{count} gönderi %{username} tarafından birleştirildi"
     errors:
       different_topics: "Farklı konulara ait gönderiler birleştirilemez."
       different_users: "Farklı kullanıcılara ait gönderiler birleştirilemez."
   move_posts:
     new_topic_moderator_post:
-      one: '%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}'
-      other: '%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}'
+      one: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
+      other: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
     existing_topic_moderator_post:
-      one: '%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}'
-      other: '%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}'
-  change_owner:
-    post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
-    deleted_user: "silinmiş kullanıcı"
+      one: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
+      other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
   topic_statuses:
     archived_enabled: "Konu şimdi arşivlendi. Donduruldu ve herhangi bir şekilde değişiklik yapılamaz."
     archived_disabled: "Konu şimdi arşivden çıkarıldı. Artık donmuş değil, değiştirilebilir."
     closed_enabled: "Konu şimdi kapatıldı. Artık yeni cevap yazılmasına izin yok. "
     closed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_message_max_posts:
-      one: Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
-      other: Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
+      one: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
+      other: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_topic_max_posts:
-      one: Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
-      other: Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı.
+      one: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
+      other: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_enabled_days:
-      one: Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_hours:
-      one: '%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
-      other: '%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
+      one: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_minutes:
-      one: '%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
-      other: '%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.'
+      one: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_days:
-      one: Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_hours:
-      one: Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_minutes:
-      one: Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
-      other: Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor.
+      one: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
+      other: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_disabled_lastpost: "Konu şimdi açıldı. Yeni cevaplara izin var."
     pinned_enabled: "Bu konu başa tutturuldu. Görevli tarafından herkes için ya da kullanıcı tarafından kendisi için baştan kaldırılmadığı sürede bulunduğu kategorinin en üstünde yer alacak."
@@ -1120,7 +1083,6 @@ tr_TR:
     reserved_username: "Bu kullanıcı adını kullanamazsın."
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
   user:
-    no_accounts_associated: "İlgili hesap yok"
     username:
       short: "en az %{min} karakter olmalı"
       long: "%{max} karakterden fazla olmamalı"
@@ -1138,8 +1100,8 @@ tr_TR:
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen sınır aşıldı.) Bir görevli ile iletişime geçin."
   flags_reminder:
     subject_template:
-      one: İlgilenilmesi gereken %{count} bildirim var
-      other: İlgilenilmesi gereken %{count} bildirim var
+      one: "İlgilenilmesi gereken %{count} bildirim var"
+      other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
   invite_password_instructions:
@@ -1227,8 +1189,8 @@ tr_TR:
       subject_template: "Yeni hesap askıda"
     pending_users_reminder:
       subject_template:
-        one: '%{count} kullanıcı onay bekliyor'
-        other: '%{count} kullanıcı onay bekliyor'
+        one: "%{count} kullanıcı onay bekliyor"
+        other: "%{count} kullanıcı onay bekliyor"
       text_body_template: |
         Bu foruma giriş yapabilmek için onayınızı (ya da reddinizi) bekleyen yeni kullanıcı kayıtları var.
 
@@ -1259,10 +1221,8 @@ tr_TR:
       title: "Aboneliği İptal Et"
       description: "Bu e-postalarla ilgilenmiyor musunuz? Sorun değil! Aşağıya tıklayarak aboneliğinizi hemen iptal edebilirsiniz:"
     reply_by_email: "Yanıtlamak için [konuyu ziyaret edin](%{base_url}%{url}) ya da bu e-postaya cevap verin."
-    reply_by_email_pm: "Yanıtlamak için [iletiyi ziyaret edin](%{base_url}%{url}) ya da bu e-postaya cevap verin."
     only_reply_by_email: "Cevap vermek için bu e-postayı cevaplayın."
     visit_link_to_respond: "Cevaplamak için [konuyu ziyaret edin](%{base_url}%{url})."
-    visit_link_to_respond_pm: "Cevaplamak için [iletiyi ziyaret edin](%{base_url}%{url})."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     user_invited_to_private_message_pm:
       text_body_template: |
@@ -1401,7 +1361,6 @@ tr_TR:
     recent_topics: "Yeni"
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
-    search_google: "Google"
   terms_of_service:
     title: "Üyelik Sözleşmesi"
     signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'
@@ -1419,24 +1378,6 @@ tr_TR:
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
   avatar:
     missing: "Üzgünüz, bu e-posta adresiyle ilişkilendirilmiş bir avatar bulamadık. Tekrar yüklemeyi deneyebilir misiniz?"
-  email_log:
-    post_user_deleted: "Konunun kullanıcısı silindi."
-    no_user: "%{user_id} id'sine sahip bir kullanıcı bulunamadı"
-    anonymous_user: "Kullanıcı anonim"
-    suspended_not_pm: "Kullanıcı uzaklaştırıldı, ileti değil"
-    seen_recently: "Kullanıcı kısa süre önce görüldü"
-    post_not_found: "%{post_id} id'sine sahip bir gönderi bulunamadı"
-    notification_already_read: "Bu e-postanın içerdiği bildiri önceden okundu"
-    topic_nil: "post.topic boş"
-    post_deleted: "gönderi sahibi tarafından silindi"
-    user_suspended: "kullanıcı uzaklaştırıldı"
-    already_read: "kullanıcı bu gönderiyi önceden okumuş"
-    exceeded_emails_limit: "max_emails_per_day_per_user aşıldı"
-    exceeded_bounces_limit: "bounce_score_threshold aşıldı"
-    message_blank: "ileti boş"
-    message_to_blank: "message.to boş"
-    text_part_body_blank: "text_part.body boş"
-    body_blank: "içerik boş"
   color_schemes:
     base_theme_name: "Baz"
   about: "Hakkında"
@@ -1458,70 +1399,40 @@ tr_TR:
     editor:
       name: Düzenleyici
       description: İlk gönderini düzenledin
-      long_description: |
-        Bu rozet gönderilerinizden birini düzenlediğinizde verilecektir. Gönderilerinizi düzenlemek her zaman için iyidir — gönderilerinizi geliştirebilir, küçük hataları düzeltebilir, ya da unuttuğunuz ayrıntıları ekleyebilirsiniz. Daha iyi gönderi oluşturabilmek için düzenleyin.
     basic_user:
       name: Acemi
-      description: "Bütün esas forum uygulamalarını kullanabilmeye <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4\">hak kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 1. güven seviyesine ulaştığın için verildi. Forumda neler olduğunu takip ettiğin için ve konuları okuduğun için teşekkürler. Artık yeni özelliklere sahipsin; özel iletiler, bildirme, düzenleme, ve çoklu resim ve bağlantı paylaşabilme gibi.
     member:
       name: Üye
-      description: "Davetler, grup iletileri, ve daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 2. güven seviyesine ulaştığın için verildi. Birkaç haftadır aramızda zaman geçirdiğin için teşekkürler. Artık kullanıcı sayfandan ya da konu sayfandan davetler gönderebilirsin, kişisel grup iletileri oluşturabilirsin ve günlük daha fazla beğeni yapabilirsin.
     regular:
       name: Müdavim
-      description: "Yeniden kategorize etme, yeniden isimlendirme, takip edilen bağlantılar, ve daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 3. güven seviyesine ulaştığın için verildi. Bir kaç aydır düzenli katılımcımız olduğun için teşekkür ederiz. Forumumuzun en etkin okuyucularından ve güvenilir katılımcılarından birisisin. Artık konuları tekrar kategorize edip, isimlendirebilirsin, bazı özel alanlara da girebilirsiniz ve günlük daha fazla beğeni yapabilirsin.
     leader:
       name: Lider
-      description: "Genel düzenleme, başa tutturma, kapama, arşivleme, ayırma ve birleştirme, daha fazla beğeni <a href=\"https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7\">hakkı kazanılmıştır</a>"
-      long_description: |
-        Bu rozet 4. güven seviyesine ulaştığın için verildi. Forumda yönetim tarafından seçilmiş bir lidersiniz ve yaptığınız paylaşımlarla diğer üyelere örnek oluyorsunuz. Bütün gönderileri düzenleme hakkına sahipsiniz. Moderatörlerin yapabileceği, başa tutturma, kapama, arşivleme, ayırma ve birleştirme gibi işlemleri yapabilirsiniz. Artık günlük çok daha fazla beğeni yapabilirsiniz.
     welcome:
       name: Hoş geldiniz
       description: İlk beğeni alma
-      long_description: |
-        Bu rozet gönderine ilk beğenini aldığın için verildi. Tebrikler forumda diğer üyelerin ilgisini çeken, yararlı bir paylaşımda bulundun!
     autobiographer:
       name: Güncel Profil
     anniversary:
       name: Yıldönümü
       description: "Bir sene içerisinde, en az bir kere gönderi yazmış etkin üye"
-      long_description: |
-        Bu rozet en az bir gönderi yazarak bir yıllık üyeliğinizi tamamladığınız için size verilmiştir. Forumda zaman geçirdiğiniz ve bizlere katkıda bulunduğunuz için teşekkür ederiz. Sizler olmasanız yapamazdık.
     nice_post:
       name: Hoş Cevap
       description: Cevaba 10 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 10 beğeniden dolayı verilmiştir. Cevabınız forumda etki yarattı ve sohbetin ilerlemesine yardımcı oldu.
     good_post:
       name: Çok İyi Cevap
       description: Cevaba 25 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 25 beğeniden dolayı verilmiştir. Cevabın çok iyiydi ve forumda herkes için faydalı oldu.
     great_post:
       name: Muhteşem Cevap
       description: Cevaba 50 beğeni alındı
-      long_description: |
-        Bu rozet cevabınıza aldığınız 50 beğeniden dolayı verilmiştir.Süper! Cevabın muhteşem, büyüleyici ve ilham verici. Forum üyeleri cevabına bayıldı!
     nice_topic:
       name: Hoş Konu
       description: Konu 10 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 10 beğeniden dolayı verilmiştir. Forum üyelerinin beğendiği ilginç bir konu başlattınız.
     good_topic:
       name: Çok İyi Konu
       description: Konu 25 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 25 beğeniden dolayı verilmiştir. Forum üyeleri tarafından çok beğenilen hareketli bir konu açtınız.
     great_topic:
       name: Muhteşem Konu
       description: Konu 50 beğeni topladı
-      long_description: |
-        Bu rozet açtığınız konuya yapılan 50 beğeniden dolayı size verilmiştir. Forum üyelerini harekete geçiren muhteşem bir konu başlattınız. Tebrikler!
     nice_share:
       name: Hoş Paylaşım
       description: Bir gönderiniz 25 tekil ziyaretci tarafından paylaşıldı
@@ -1530,13 +1441,9 @@ tr_TR:
     good_share:
       name: Çok İyi Paylaşım
       description: Bir gönderiniz 300 tekil ziyaretci tarafından paylaşıldı
-      long_description: |
-        Bu rozeti paylaştığınız bağlantı forum dışından 300 kişi tarafından tıklandığı için kazandınız. Çok iyi iş başardın! Paylaşımların daha fazla kişiye ulaşmasını ve forumun gelişmesini sağladın.
     great_share:
       name: "Muhteşem Paylaşım "
       description: Bir gönderiniz 1000 tekil ziyaretci tarafından paylaşıldı
-      long_description: |
-        Bu rozeti paylaştığınız bağlantı forum dışından 1000 kişi tarafından tıklandığı için kazandınız.Süper! Tartışmayı çok büyük kitlelere ulaştırdın ve forumun büyümesine muhteşem bir katkı yaptın.
     first_like:
       name: İlk Beğeni
       description: Bir gönderiyi beğendin
@@ -1545,21 +1452,15 @@ tr_TR:
     first_flag:
       name: İlk Bildirim
       description: Gönderiyi bildirdi
-      long_description: |
-        Bu rozet ilk kez bir gönderiyi bildirdiğiniz için verilmiştir. Bildirme daha huzurlu bir ortam oluşturmaya yardımcı olmak açısından oldukça önemlidir. Eğer herhangi bir gönderinin yönetici tarafından incelenmesini istiyorsanız, lütfen bildirmekten çekinmeyin. Eğer gönderileriyle ilgili bir sorun fark ederseniz, diğer üyelere de <b>kişisel iletiler</b> gönderebilirsiniz. Eğer bir problem fark ederseniz, :flag_black: şikayet edin!
     promoter:
       name: Destekçi
       description: Kullanıcı davet etme
     campaigner:
       name: Mücadeleci
       description: 3 Acemi kullanıcı davet edildi
-      long_description: |
-        Bu rozet davet ettiğiniz 3 kişi sitede vakit geçirerek acemi üye seviyesine ulaştığı için size verilmiştir. Hareketli bir forumun düzenli katkıda bulunan katılımcıları ve destekçileri olmalıdır.
     champion:
       name: Şampiyon
       description: 5 üye davet edildi
-      long_description: |
-        Bu rozet davet ettiğiniz 5 kişi sitede vakit geçirerek üye seviyesine ulaştığı için size verilmiştir. Süper! Yeni üyelerle tanışmamıza sebep olduğunuz için teşekkürler!
     first_share:
       name: İlk Paylaşım
       description: Bir gönderi paylaşma
@@ -1573,8 +1474,6 @@ tr_TR:
     first_quote:
       name: İlk Alıntı
       description: Bir gönderiyi alıntıladı
-      long_description: |
-        Bu rozet cevabınızda başkasından alıntı yaptığınız için verilmiştir. Başka konulardan ve gönderilerden alıntı yapmak mesajlar arasındaki bağlantıyı kuvvetlendirir. En kolay alıntı yapma yolu alıntı yapacağınız bölümü seçip cevap düğmesine basmaktır.
     read_guidelines:
       name: Yönergeleri Okuma
     reader:
@@ -1623,8 +1522,6 @@ tr_TR:
     crazy_in_love:
       name: Beğeni Delisi
       description: "20 gün boyunca, günde 50 beğeni hakkını kullanma "
-      long_description: |
-        Bu rozet 20 gün boyunca 50 beğeni hakkınızı kullandığınız için verilmiştir. Süper! Diğer üyelere tam bir örneksin. Tebrik ederiz!
     thank_you:
       name: Teşekkürler
       description: "20 beğeni sahibi olma ve 10 beğenme "
@@ -1638,14 +1535,11 @@ tr_TR:
     empathetic:
       name: Empatik
       description: 500 beğeni sahibi olma ve 1000 beğeni
-      long_description: |
-        Bu rozet 500 beğenilmiş gönderisahibi olduğunuz ve bunun karşılığında 1000 ya da daha fazla beğeni yaptığınızdan dolayı size verilmiştir. Süper! Cömetliğin ve takdirin örneğisin :two_hearts:.
     first_emoji:
       name: İlk Emoji
       description: "Bir gönderide emoji kullanma "
     first_mention:
       name: İlk Bahsetme
-      long_description: "Bu rozet ilk defa gönderinizde başka bir kullanıcıdan bahsettiğiniz için verilmiştir. Her bahsetme bahsi geçen kullanıcıya bildirim gitmesini sağlar, böylece bu kullanıcı sizin gönderinizden haberdar olur. Sadece bahsi geçen kullanıcı adına @ gerekir."
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi
@@ -1768,8 +1662,6 @@ tr_TR:
             choices:
               latest:
                 label: "Son Konular"
-              categories:
-                label: "Kategoriler"
       emoji:
         title: "Emoji"
       invites:

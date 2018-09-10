@@ -36,7 +36,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   border: 0;
 }
 
@@ -77,10 +77,9 @@
   cursor: pointer;
 }
 
-
 // Buttons
 // ---------------------------------------------------
 .disable-no-hover:hover {
-  background: dark-light-choose($primary-low, $secondary-medium);;
+  background: dark-light-choose($primary-low, $secondary-medium);
   color: $primary;
 }

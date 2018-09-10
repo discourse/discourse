@@ -98,7 +98,7 @@ describe StaticController do
       it "should return the right response" do
         get "/faq"
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
       end
     end
@@ -113,7 +113,7 @@ describe StaticController do
           it "renders the #{id} page" do
             get "/#{id}"
 
-            expect(response).to be_success
+            expect(response.status).to eq(200)
             expect(response.body).to include(text)
           end
         end
@@ -150,7 +150,7 @@ describe StaticController do
 
       get "/login"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       expect(response.body).to include(PrettyText.cook(I18n.t(
         'login_required.welcome_message', title: SiteSetting.title
@@ -162,32 +162,27 @@ describe StaticController do
         SiteSetting.login_required = true
       end
 
-      it 'faq page redirects to login page for anon' do
-        get '/faq'
-        expect(response).to redirect_to '/login'
+      ['faq', 'guidelines', 'rules'].each do |page_name|
+        it "#{page_name} page redirects to login page for anon" do
+          get "/#{page_name}"
+          expect(response).to redirect_to '/login'
+        end
+
+        it "#{page_name} page redirects to login page for anon" do
+          get "/#{page_name}"
+          expect(response).to redirect_to '/login'
+        end
       end
 
-      it 'guidelines page redirects to login page for anon' do
-        get '/guidelines'
-        expect(response).to redirect_to '/login'
-      end
+      ['faq', 'guidelines', 'rules'].each do |page_name|
+        it "#{page_name} page loads for logged in user" do
+          sign_in(Fabricate(:user))
 
-      it 'faq page loads for logged in user' do
-        sign_in(Fabricate(:user))
+          get "/#{page_name}"
 
-        get '/faq'
-
-        expect(response).to be_success
-        expect(response.body).to include(I18n.t('js.faq'))
-      end
-
-      it 'guidelines page loads for logged in user' do
-        sign_in(Fabricate(:user))
-
-        get '/guidelines'
-
-        expect(response).to be_success
-        expect(response.body).to include(I18n.t('guidelines'))
+          expect(response.status).to eq(200)
+          expect(response.body).to include(I18n.t('guidelines'))
+        end
       end
     end
   end

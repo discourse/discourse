@@ -46,6 +46,22 @@ describe Upload do
 
   end
 
+  it "can reconstruct dimensions on demand" do
+    upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
+
+    upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
+
+    upload = Upload.find(upload.id)
+
+    expect(upload.width).to eq(64250)
+    expect(upload.height).to eq(64250)
+
+    upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
+
+    expect(upload.thumbnail_width).to eq(500)
+    expect(upload.thumbnail_height).to eq(500)
+  end
+
   it "extracts file extension" do
     created_upload = UploadCreator.new(image, image_filename).create_for(user_id)
     expect(created_upload.extension).to eq("png")
@@ -53,14 +69,14 @@ describe Upload do
 
   it "should create an invalid upload when the filename is blank" do
     SiteSetting.authorized_extensions = "*"
-
-    created_upload = UploadCreator.new(image, nil).create_for(user_id)
+    created_upload = UploadCreator.new(attachment, nil).create_for(user_id)
     expect(created_upload.valid?).to eq(false)
   end
 
   context ".get_from_url" do
-    let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
-    let(:upload) { Fabricate(:upload, url: url) }
+    let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
+    let(:url) { "/uploads/default/original/3X/1/0/#{sha1}.png" }
+    let(:upload) { Fabricate(:upload, url: url, sha1: sha1) }
 
     it "works when the file has been uploaded" do
       expect(Upload.get_from_url(upload.url)).to eq(upload)
@@ -93,7 +109,7 @@ describe Upload do
 
     describe "s3 store" do
       let(:path) { "/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
-      let(:url) { "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}" }
+      let(:url) { "#{SiteSetting.Upload.absolute_base_url}#{path}" }
 
       before do
         SiteSetting.enable_s3_uploads = true
@@ -102,16 +118,35 @@ describe Upload do
         SiteSetting.s3_secret_access_key = "some secret key"
       end
 
-      after do
-        SiteSetting.enable_s3_uploads = false
+      it "should return the right upload when using base url (not CDN) for s3" do
+        upload
+        expect(Upload.get_from_url(url)).to eq(upload)
       end
 
-      it "should return the right upload when using a CDN for s3" do
-        upload
-        s3_cdn_url = 'https://mycdn.slowly.net'
-        SiteSetting.s3_cdn_url = s3_cdn_url
+      describe 'when using a cdn' do
+        let(:s3_cdn_url) { 'https://mycdn.slowly.net' }
 
-        expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+        before do
+          SiteSetting.s3_cdn_url = s3_cdn_url
+        end
+
+        it "should return the right upload" do
+          upload
+          expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+        end
+
+        describe 'when upload bucket contains subfolder' do
+          let(:url) { "#{SiteSetting.Upload.absolute_base_url}/path/path2#{path}" }
+
+          before do
+            SiteSetting.s3_upload_bucket = "s3-upload-bucket/path/path2"
+          end
+
+          it "should return the right upload" do
+            upload
+            expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+          end
+        end
       end
 
       it "should return the right upload when using one CDN for both s3 and assets" do
