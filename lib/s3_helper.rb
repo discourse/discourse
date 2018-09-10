@@ -43,10 +43,10 @@ class S3Helper
   rescue Aws::S3::Errors::NoSuchKey
   end
 
-  def copy(source, destination)
+  def copy(source, destination, options: {})
     s3_bucket
       .object(destination)
-      .copy_from(copy_source: File.join(@s3_bucket_name, source))
+      .copy_from(options.merge(copy_source: File.join(@s3_bucket_name, source)))
   end
 
   # make sure we have a cors config for assets

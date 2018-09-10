@@ -772,6 +772,16 @@ end
 def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
   object_keys.each do |key|
     if key =~ /#{sha1}/
+      tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
+
+      if key.starts_with?(tombstone_prefix)
+        Discourse.store.s3_helper.copy(
+          key,
+          key.sub(tombstone_prefix, ""),
+          options: { acl: "public-read" }
+        )
+      end
+
       url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
 
       begin
@@ -790,7 +800,7 @@ def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
           if upload.persisted?
             post.rebake!
           else
-            puts "#{post.full_url}\n#{upload.errors.full_messages.join("\n")}"
+            puts "#{post.full_url}: #{upload.errors.full_messages.join(", ")}"
           end
         end
       ensure
