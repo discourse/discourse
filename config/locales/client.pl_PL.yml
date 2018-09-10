@@ -2584,6 +2584,7 @@ pl_PL:
         page_views: "Wyświetlenia strony"
         page_views_short: "Wyświetlenia strony"
         show_traffic_report: "Pokaż szczegółowy raport ruchu"
+        activity_metrics: Metryka aktywności
         reports:
           today: "Dzisiaj"
           yesterday: "Wczoraj"
