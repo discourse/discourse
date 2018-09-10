@@ -275,6 +275,12 @@
     margin: 20px 0 10px 0;
   }
 
+  .category-selector,
+  .tag-chooser,
+  textarea {
+    width: 100%;
+  }
+
   input {
     &.user-selector {
       width: 100%;
