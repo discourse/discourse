@@ -7,6 +7,8 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  SHA1_LENGTH = 40
+
   belongs_to :user
 
   has_many :post_uploads, dependent: :destroy
@@ -154,10 +156,10 @@ class Upload < ActiveRecord::Base
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
       sha1 = Base62.decode($2).to_s(16)
 
-      if sha1.length > 40
+      if sha1.length > SHA1_LENGTH
         nil
       else
-        sha1.rjust(40, '0')
+        sha1.rjust(SHA1_LENGTH, '0')
       end
     end
   end
@@ -179,7 +181,7 @@ class Upload < ActiveRecord::Base
     return if data.blank?
     sha1 = data[2]
     upload = nil
-    upload = Upload.find_by(sha1: sha1) if sha1
+    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
     upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
