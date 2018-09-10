@@ -81,6 +81,7 @@ class RemoteTheme < ActiveRecord::Base
     else
       self.updated_at = Time.zone.now
       self.remote_version, self.commits_behind = importer.commits_since(local_version)
+      self.last_error_text = nil
     end
   end
 
@@ -96,6 +97,8 @@ class RemoteTheme < ActiveRecord::Base
       rescue ThemeStore::GitImporter::ImportFailed => err
         self.last_error_text = err.message
         return self
+      else
+        self.last_error_text = nil
       end
     end
 
