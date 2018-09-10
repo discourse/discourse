@@ -11,8 +11,8 @@ class FileHelper
     )
   end
 
-  def self.is_image?(filename)
-    filename =~ images_regexp
+  def self.is_supported_image?(filename)
+    filename =~ supported_images_regexp
   end
 
   class FakeIO
@@ -104,8 +104,8 @@ class FileHelper
     @@supported_images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
   end
 
-  def self.images_regexp
-    @@images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
+  def self.supported_images_regexp
+    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
   end
 
 end
