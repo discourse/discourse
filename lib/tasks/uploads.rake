@@ -787,7 +787,11 @@ def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
             File.basename(key)
           ).create_for(post.user_id)
 
-          post.rebake! if upload.persisted?
+          if upload.persisted?
+            post.rebake!
+          else
+            puts "#{post.full_url}\n#{upload.errors.full_messages.join("\n")}"
+          end
         end
       ensure
         tmp&.close
