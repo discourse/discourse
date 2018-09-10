@@ -377,6 +377,15 @@ describe DiscourseSingleSignOn do
       sso.require_activation = true
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(false)
+
+      user.activate
+
+      sso.external_id = "B"
+
+      expect do
+        sso.lookup_or_create_user(ip_address)
+      end.to raise_error(ActiveRecord::RecordInvalid)
+
     end
 
     it 'does not deactivate user if email provided is capitalized' do
