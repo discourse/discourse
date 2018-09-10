@@ -136,7 +136,11 @@ class S3Helper
   end
 
   def list(prefix = "")
-    s3_bucket.objects(prefix: "#{@s3_bucket_folder_path}/#{prefix}")
+    if @s3_bucket_folder_path.present?
+      prefix = File.join(@s3_bucket_folder_path, prefix)
+    end
+
+    s3_bucket.objects(prefix: prefix)
   end
 
   def tag_file(key, tags)
