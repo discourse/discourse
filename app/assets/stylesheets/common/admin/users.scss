@@ -83,9 +83,14 @@
   }
 }
 
-.admin-users .users-list {
-  .username .fa {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+.admin-users {
+  input {
+    margin-bottom: 0;
+  }
+  .users-list {
+    .username .fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
   }
 }
 
