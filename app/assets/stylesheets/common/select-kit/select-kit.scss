@@ -66,6 +66,8 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+    min-height: 30px;
+    line-height: $line-height-small;
 
     .selected-name {
       text-align: left;
