@@ -100,14 +100,12 @@ class FileHelper
     ).optimize_image!(filename)
   end
 
-  private
-
-  def self.images
-    @@images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
+  def self.supported_images
+    @@supported_images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
   end
 
   def self.images_regexp
-    @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
+    @@images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
   end
 
 end

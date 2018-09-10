@@ -74,11 +74,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def authorized_images(upload)
-    authorized_extensions(upload) & FileHelper.images
+    authorized_extensions(upload) & FileHelper.supported_images
   end
 
   def authorized_attachments(upload)
-    authorized_extensions(upload) - FileHelper.images
+    authorized_extensions(upload) - FileHelper.supported_images
   end
 
   def authorizes_all_extensions?(upload)
