@@ -222,7 +222,8 @@
   }
 
   .add-warning {
-    margin-left: 1em;
+    margin-left: .75em;
+    margin-bottom: 0;
     display: flex;
     input {
       margin-right: 5px;
@@ -399,8 +400,11 @@ div.ac-wrap {
   max-height: 150px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   background-color: $secondary;
   border: 1px solid $primary-medium;
+  min-height: 30px;
+  box-sizing: border-box;
   div.item {
     float: left;
     padding: 4px 10px;
