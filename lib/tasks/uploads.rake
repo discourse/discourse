@@ -718,10 +718,10 @@ end
 
 task "uploads:list_posts_with_broken_images" => :environment do
   if ENV["RAILS_DB"]
-    list_broken_posts(recover_from_s3: ENV["RECOVER_FROM_S3"])
+    list_broken_posts(recover_from_s3: !!ENV["RECOVER_FROM_S3"])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_broken_posts(recover_from_s3: ENV["RECOVER_FROM_S3"])
+      list_broken_posts(recover_from_s3: !!ENV["RECOVER_FROM_S3"])
     end
   end
 end
