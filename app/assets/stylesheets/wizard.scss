@@ -328,6 +328,11 @@ body.wizard {
     }
   }
 
+  .wizard-hidden-upload-field {
+    visibility: hidden;
+    position: absolute;
+  }
+
   .wizard-step-footer {
     display: flex;
     flex-direction: row;

@@ -1,5 +1,10 @@
      <div class="backup-options">
-        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title"}}
+        {{#if localBackupStorage}}
+          {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title"}}
+        {{else}}
+          {{backup-uploader done="remoteUploadSuccess"}}
+        {{/if}}
+
         {{#if site.isReadOnly}}
           {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
         {{else}}
@@ -10,7 +15,7 @@
   <thead>
     <th width="55%">{{i18n 'admin.backups.columns.filename'}}</th>
     <th width="10%">{{i18n 'admin.backups.columns.size'}}</th>
-    <th></th>    
+    <th></th>
   </thead>
   <tbody>
   {{#each model as |backup|}}

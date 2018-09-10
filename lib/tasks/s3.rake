@@ -84,6 +84,8 @@ end
 
 task 's3:upload_assets' => :environment do
   ensure_s3_configured!
+
+  puts "installing CORS rule"
   helper.ensure_cors!
 
   assets.each do |asset|
