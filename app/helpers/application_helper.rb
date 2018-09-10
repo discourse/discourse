@@ -31,7 +31,7 @@ module ApplicationHelper
     if SiteSetting.ga_universal_auto_link_domains.present?
       result[:allowLinker] = true
     end
-    result.to_json.html_safe
+    result.to_json
   end
 
   def ga_universal_json
