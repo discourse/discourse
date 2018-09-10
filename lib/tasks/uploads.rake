@@ -718,10 +718,10 @@ end
 
 task "uploads:list_posts_with_broken_images" => :environment do
   if ENV["RAILS_DB"]
-    list_broken_posts(recover_from_s3: ENV["RECOVER_MISSING"])
+    list_broken_posts(recover_from_s3: ENV["RECOVER_FROM_S3"])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_broken_posts(recover_from_s3: ENV["RECOVER_MISSING"])
+      list_broken_posts(recover_from_s3: ENV["RECOVER_FROM_S3"])
     end
   end
 end
@@ -781,12 +781,14 @@ def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
           tmp_file_name: "recover_from_s3"
         )
 
-        upload = UploadCreator.new(
-          tmp,
-          File.basename(key)
-        ).create_for(post.user_id)
+        if tmp
+          upload = UploadCreator.new(
+            tmp,
+            File.basename(key)
+          ).create_for(post.user_id)
 
-        post.rebake! if upload.persisted?
+          post.rebake! if upload.persisted?
+        end
       ensure
         tmp&.close
       end
