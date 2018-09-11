@@ -783,7 +783,9 @@ email:
   pop3_polling_host: ''
   pop3_polling_port: 995
   pop3_polling_username: ''
-  pop3_polling_password: ''
+  pop3_polling_password:
+    default: ''
+    secret: true
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
@@ -837,6 +839,7 @@ email:
   mailgun_api_key:
     default: ''
     regex: '^(key-\h{32}|\h{32}-\h{8}-\h{8})$'
+    secret: true
   bounce_score_threshold:
     client: true
     default: 4
@@ -933,7 +936,7 @@ files:
     default: false
     client: true
   s3_use_iam_profile: false
-  s3_access_key_id: 
+  s3_access_key_id:
     default: ''
     secret: true
     shadowed_by_global: true
