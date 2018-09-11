@@ -1,16 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe 'Multisite SiteSettings' do
+RSpec.describe 'Multisite SiteSettings', type: :multisite do
   let(:conn) { RailsMultisite::ConnectionManagement }
-
-  before do
-    conn.config_filename = "spec/fixtures/multisite/two_dbs.yml"
-  end
-
-  after do
-    conn.clear_settings!
-    ActiveRecord::Base.establish_connection
-  end
 
   def cache(name, namespace: true)
     DistributedCache.new(name, namespace: namespace)
