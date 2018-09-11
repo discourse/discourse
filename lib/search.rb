@@ -138,6 +138,8 @@ class Search
     term.gsub!(/[\u200B-\u200D\uFEFF]/, '')
     # Replace curly quotes to regular quotes
     term.gsub!(/[\u201c\u201d]/, '"')
+    # Removes any null bytes from search terms
+    term.gsub!("\u0000", '')
 
     @clean_term = term
 

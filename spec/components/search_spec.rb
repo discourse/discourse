@@ -71,6 +71,17 @@ describe Search do
     expect(search.clean_term).to eq('capybara')
   end
 
+  it 'strips null bytes (u0000) from search terms' do
+    term = "\u0063\u0061\u0070\u0079\u0000\u200c\u200d\ufeff\u0062\u0061\u0072\u0061".encode("UTF-8")
+
+    expect(term == 'capybara').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('capybara')
+    expect(search.clean_term).to eq('capybara')
+  end
+
   it 'replaces curly quotes to regular quotes in search terms' do
     term = '“discourse”'
 
