@@ -479,6 +479,7 @@ posting:
     min: 1
     default: 20
     locale_default:
+      ja: 8
       zh_CN: 8
       zh_TW: 8
   min_first_post_length:
@@ -486,6 +487,7 @@ posting:
     min: 1
     default: 20
     locale_default:
+      ja: 8
       zh_CN: 8
       zh_TW: 8
   min_personal_message_post_length:
@@ -493,6 +495,7 @@ posting:
     min: 1
     default: 10
     locale_default:
+      ja: 3
       zh_CN: 3
       zh_TW: 3
   max_post_length:
@@ -513,6 +516,7 @@ posting:
     default: 15
     min: 1
     locale_default:
+      ja: 6
       zh_CN: 6
       zh_TW: 6
   max_topic_title_length:
@@ -529,7 +533,7 @@ posting:
   allow_uppercase_posts:
     default: false
     locale_default:
-      ja: false
+      ja: true
   title_prettify:
     default: true
     locale_default:
@@ -551,6 +555,7 @@ posting:
     client: true
     default: 10
     locale_default:
+      ja: 4
       zh_CN: 4
       zh_TW: 4
   enable_personal_messages:
@@ -629,6 +634,7 @@ posting:
   post_excerpt_maxlength:
     default: 300
     locale_default:
+      ja: 120
       zh_CN: 120
       zh_TW: 120
   show_pinned_excerpt_mobile:
@@ -733,6 +739,7 @@ email:
   digest_min_excerpt_length:
     default: 100
     locale_default:
+      ja: 50
       zh_CN: 50
       zh_TW: 50
   digest_topics:
@@ -1160,6 +1167,7 @@ onebox:
   post_onebox_maxlength:
     default: 500
     locale_default:
+      ja: 200
       zh_CN: 200
       zh_TW: 200
   onebox_domains_blacklist:
@@ -1458,6 +1466,7 @@ uncategorized:
     default: 'ascii'
     enum: 'SlugSetting'
     locale_default:
+      ja: 'none'
       zh_CN: 'none'
       zh_TW: 'none'
 
@@ -1601,6 +1610,7 @@ uncategorized:
     default: 500
     client: true
     locale_default:
+      ja: 350
       zh_CN: 350
       zh_TW: 350
 
