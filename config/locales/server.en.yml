@@ -696,16 +696,30 @@ en:
     title: "Email login"
 
   user_auth_tokens:
-    devices:
-      android: 'Android Device'
-      linux: 'Linux Computer'
-      windows: 'Windows Computer'
-      mac: 'Mac'
-      iphone: 'iPhone'
-      ipad: 'iPad'
-      ipod: 'iPod'
-      mobile: 'Mobile Device'
-      unknown: 'Unknown device'
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      unknown: "unknown browser"
+    device:
+      android: "Android Device"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "Mobile Device"
+      mac: "Mac"
+      linux: "Linux Computer"
+      windows: "Windows Computer"
+      unknown: "unknown device"
+    os:
+      android: "Android"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "unknown operating system"
 
   change_email:
     confirmed: "Your email has been updated."

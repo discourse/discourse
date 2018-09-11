@@ -23,6 +23,8 @@ export default Ember.Controller.extend(
 
     passwordProgress: null,
 
+    showAllAuthTokens: false,
+
     cannotDeleteAccount: Em.computed.not("currentUser.can_delete_account"),
     deleteDisabled: Em.computed.or(
       "model.isSaving",
@@ -97,6 +99,15 @@ export default Ember.Controller.extend(
         findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
           .length > 0
       );
+    },
+
+    @computed("showAllAuthTokens", "model.user_auth_tokens")
+    authTokens(showAllAuthTokens, tokens) {
+      tokens.sort(
+        (a, b) => (a.is_active ? -1 : b.is_active ? 1 : a.seen_at < b.seen_at)
+      );
+
+      return showAllAuthTokens ? tokens : tokens.slice(0, 2);
     },
 
     actions: {
@@ -200,17 +211,24 @@ export default Ember.Controller.extend(
           });
       },
 
-      toggleToken(token) {
-        Ember.set(token, "visible", !token.visible);
+      toggleShowAllAuthTokens() {
+        this.set("showAllAuthTokens", !this.get("showAllAuthTokens"));
       },
 
-      revokeAuthToken() {
+      revokeAuthToken(token) {
         ajax(
           userPath(
             `${this.get("model.username_lower")}/preferences/revoke-auth-token`
           ),
-          { type: "POST" }
+          {
+            type: "POST",
+            data: token ? { token_id: token.id } : {}
+          }
         );
+      },
+
+      showToken(token) {
+        showModal("auth-token", { model: token });
       },
 
       connectAccount(method) {
