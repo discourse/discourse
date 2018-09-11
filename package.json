@@ -12,7 +12,7 @@
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
     "prettier": "^1.13",
-    "puppeteer": "^1.4",
+    "puppeteer": "1.4",
     "pretender": "^1.6"
   }
 }
