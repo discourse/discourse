@@ -7,57 +7,70 @@ describe Admin::ApiController do
   end
 
   let(:admin) { Fabricate(:admin) }
-  before do
-    sign_in(admin)
-  end
 
-  describe '#index' do
-    it "succeeds" do
-      get "/admin/api/keys.json"
-      expect(response.status).to eq(200)
-    end
-  end
-
-  describe '#regenerate_key' do
-    let(:api_key) { Fabricate(:api_key) }
-
-    it "returns 404 when there is no key" do
-      put "/admin/api/key.json", params: { id: 1234 }
-      expect(response.status).to eq(404)
+  context "as an admin" do
+    before do
+      sign_in(admin)
     end
 
-    it "delegates to the api key's `regenerate!` method" do
-      prev_value = api_key.key
-      put "/admin/api/key.json", params: { id: api_key.id }
-      expect(response.status).to eq(200)
-
-      api_key.reload
-      expect(api_key.key).not_to eq(prev_value)
-      expect(api_key.created_by.id).to eq(admin.id)
-    end
-  end
-
-  describe '#revoke_key' do
-    let(:api_key) { Fabricate(:api_key) }
-
-    it "returns 404 when there is no key" do
-      delete "/admin/api/key.json", params: { id: 1234 }
-      expect(response.status).to eq(404)
+    describe '#index' do
+      it "succeeds" do
+        get "/admin/api/keys.json"
+        expect(response.status).to eq(200)
+      end
     end
 
-    it "delegates to the api key's `regenerate!` method" do
-      delete "/admin/api/key.json", params: { id: api_key.id }
-      expect(response.status).to eq(200)
-      expect(ApiKey.where(key: api_key.key).count).to eq(0)
+    describe '#regenerate_key' do
+      let(:api_key) { Fabricate(:api_key) }
+
+      it "returns 404 when there is no key" do
+        put "/admin/api/key.json", params: { id: 1234 }
+        expect(response.status).to eq(404)
+      end
+
+      it "delegates to the api key's `regenerate!` method" do
+        prev_value = api_key.key
+        put "/admin/api/key.json", params: { id: api_key.id }
+        expect(response.status).to eq(200)
+
+        api_key.reload
+        expect(api_key.key).not_to eq(prev_value)
+        expect(api_key.created_by.id).to eq(admin.id)
+      end
+    end
+
+    describe '#revoke_key' do
+      let(:api_key) { Fabricate(:api_key) }
+
+      it "returns 404 when there is no key" do
+        delete "/admin/api/key.json", params: { id: 1234 }
+        expect(response.status).to eq(404)
+      end
+
+      it "delegates to the api key's `regenerate!` method" do
+        delete "/admin/api/key.json", params: { id: api_key.id }
+        expect(response.status).to eq(200)
+        expect(ApiKey.where(key: api_key.key).count).to eq(0)
+      end
     end
   end
 
   describe '#create_master_key' do
     it "creates a record" do
+      sign_in(admin)
       expect do
         post "/admin/api/key.json"
       end.to change(ApiKey, :count).by(1)
       expect(response.status).to eq(200)
     end
+
+    it "doesn't allow moderators to create master keys" do
+      sign_in(Fabricate(:moderator))
+      expect do
+        post "/admin/api/key.json"
+      end.to change(ApiKey, :count).by(0)
+      expect(response.status).to eq(404)
+    end
+
   end
 end
