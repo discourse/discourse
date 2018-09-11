@@ -13,6 +13,7 @@
     "eslint": "^4.19",
     "prettier": "^1.13",
     "puppeteer": "1.4",
-    "pretender": "^1.6"
+    "pretender": "^1.6",
+    "qunit": "2.6"
   }
 }

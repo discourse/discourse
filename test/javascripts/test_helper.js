@@ -8,6 +8,7 @@
 //= require ember.debug
 //= require ember-template-compiler
 //= require message-bus
+//= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
 //= require route-recognizer
