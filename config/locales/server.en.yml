@@ -864,6 +864,9 @@ en:
       read: "Read all"
       write: "Write all"
 
+  flags:
+    errors:
+      already_handled: "Flag was already handled"
   reports:
     default:
       labels:
