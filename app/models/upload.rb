@@ -177,7 +177,7 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]+)/)
+    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
     return if data.blank?
     sha1 = data[2]
     upload = nil
