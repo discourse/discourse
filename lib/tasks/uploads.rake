@@ -764,7 +764,7 @@ def list_broken_posts(recover_from_s3: false)
         end
       end
     rescue => e
-      puts "#{post.full_url} Error: #{e.message}"
+      puts "#{post.full_url} Error: #{e.class}: #{e.message}"
     end
   end
 end
