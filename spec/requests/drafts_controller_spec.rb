@@ -26,11 +26,11 @@ describe DraftsController do
   end
 
   it 'does not let userA see drafts by userB' do
-    userB = Fabricate(:user)
-    Draft.set(userB, 'xxx', 0, '{}')
+    user_b = Fabricate(:user)
+    Draft.set(user_b, 'xxx', 0, '{}')
 
-    userA = sign_in(Fabricate(:user))
-    get "/drafts.json", params: { username: userB.username }
+    sign_in(Fabricate(:user))
+    get "/drafts.json", params: { username: user_b.username }
     expect(response.status).to eq(200)
     parsed = JSON.parse(response.body)
     expect(parsed["drafts"].length).to eq(0)
