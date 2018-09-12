@@ -247,3 +247,73 @@ componentTest("with minimumLabel", {
     );
   }
 });
+
+componentTest("with forceEscape", {
+  template: "{{multi-select content=content forceEscape=true}}",
+
+  beforeEach() {
+    this.set("content", ["<div>sam</div>"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    const row = this.get("subject").rowByIndex(0);
+    assert.equal(
+      row
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "&lt;div&gt;sam&lt;/div&gt;"
+    );
+
+    await this.get("subject").fillInFilter("<div>jeff</div>");
+    await this.get("subject").keyboard("enter");
+
+    assert.equal(
+      this.get("subject")
+        .header()
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "&lt;div&gt;jeff&lt;/div&gt;"
+    );
+  }
+});
+
+componentTest("with forceEscape", {
+  template: "{{multi-select content=content forceEscape=false}}",
+
+  beforeEach() {
+    this.set("content", ["<div>sam</div>"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    const row = this.get("subject").rowByIndex(0);
+    assert.equal(
+      row
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "<div>sam</div>"
+    );
+
+    await this.get("subject").fillInFilter("<div>jeff</div>");
+    await this.get("subject").keyboard("enter");
+
+    assert.equal(
+      this.get("subject")
+        .header()
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "<div>jeff</div>"
+    );
+  }
+});
