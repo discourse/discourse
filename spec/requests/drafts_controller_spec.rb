@@ -25,7 +25,7 @@ describe DraftsController do
     expect(parsed["drafts"].length).to eq(0)
   end
 
-  it 'does not let userA see drafts by userB' do
+  it 'does not let a user see drafts stream of another user' do
     user_b = Fabricate(:user)
     Draft.set(user_b, 'xxx', 0, '{}')
 
