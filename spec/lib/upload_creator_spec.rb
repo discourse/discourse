@@ -43,6 +43,27 @@ RSpec.describe UploadCreator do
         expect(File.extname(upload.url)).to eq('.png')
         expect(upload.original_filename).to eq('png_as.png')
       end
+
+      describe 'for webp format' do
+        before do
+          SiteSetting.authorized_extensions = '.webp|.bin'
+        end
+
+        let(:filename) { "webp_as.bin" }
+        let(:file) { file_from_fixtures(filename) }
+
+        it 'should not correct the coerce filename' do
+          expect do
+            UploadCreator.new(file, filename).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('bin')
+          expect(File.extname(upload.url)).to eq('.bin')
+          expect(upload.original_filename).to eq('webp_as.bin')
+        end
+      end
     end
 
     describe 'converting to jpeg' do
