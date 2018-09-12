@@ -7,6 +7,18 @@ acceptance("Topic", {
     server.put("/posts/398/wiki", () => {
       return helper.response({});
     });
+
+    server.get("/topics/feature_stats.json", () => {
+      return helper.response({
+        pinned_in_category_count: 0,
+        pinned_globally_count: 0,
+        banner_count: 0
+      });
+    });
+
+    server.put("/t/280/make-banner", () => {
+      return helper.response({});
+    });
   }
 });
 
@@ -213,6 +225,23 @@ QUnit.test("remove featured link", async assert => {
   // await click('.title-wrapper .remove-featured-link');
   // await click('.title-wrapper .submit-edit');
   // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+});
+
+QUnit.test("Unpinning unlisted topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-pin .btn");
+  await click(".btn-primary:last");
+
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-visible .btn");
+
+  await click(".toggle-admin-menu");
+  assert.ok(
+    exists(".topic-admin-pin"),
+    "it should show the multi select menu"
+  );
 });
 
 QUnit.test("selecting posts", async assert => {
