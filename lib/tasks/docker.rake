@@ -39,6 +39,7 @@ task 'docker:test' do
   begin
     @good = true
     unless ENV['SKIP_LINT']
+      puts "travis_fold:start:lint" if ENV["TRAVIS"]
       puts "Running linters/prettyfiers"
       puts "eslint #{`yarn eslint -v`}"
       puts "prettier #{`yarn prettier -v`}"
@@ -64,9 +65,11 @@ task 'docker:test' do
           @good &&= run_or_fail('yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
         end
       end
+      puts "travis_fold:end:lint" if ENV["TRAVIS"]
     end
 
     unless ENV['SKIP_TESTS']
+      puts "travis_fold:start:prepare_tests" if ENV["TRAVIS"]
       puts "Cleaning up old test tmp data in tmp/test_data"
       `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
 
@@ -94,8 +97,10 @@ task 'docker:test' do
 
       @good &&= run_or_fail("bundle exec rake db:migrate")
 
-      unless ENV["JS_ONLY"]
+      puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
 
+      unless ENV["JS_ONLY"]
+        puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           params = []
           if ENV["BISECT"]
@@ -114,10 +119,11 @@ task 'docker:test' do
             @good &&= run_or_fail("bundle exec rake plugin:spec")
           end
         end
-
+        puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]
       end
 
       unless ENV["RUBY_ONLY"]
+        puts "travis_fold:start:js_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
           @good &&= run_or_fail("bundle exec rake qunit:test['600000','/wizard/qunit']")
@@ -130,7 +136,7 @@ task 'docker:test' do
             @good &&= run_or_fail("bundle exec rake plugin:qunit['*','600000']")
           end
         end
-
+        puts "travis_fold:end:js_tests" if ENV["TRAVIS"]
       end
     end
 
