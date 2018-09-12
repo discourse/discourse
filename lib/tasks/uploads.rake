@@ -716,96 +716,14 @@ task "uploads:fix_incorrect_extensions" => :environment do
   UploadFixer.fix_all_extensions
 end
 
-task "uploads:list_posts_with_broken_images" => :environment do
+task "uploads:recover" => :environment do
+  require_dependency "upload_recovery"
+
   if ENV["RAILS_DB"]
-    list_broken_posts(recover_from_s3: !!ENV["RECOVER_FROM_S3"])
+    UploadRecovery.new.recover
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_broken_posts(recover_from_s3: !!ENV["RECOVER_FROM_S3"])
-    end
-  end
-end
-
-def list_broken_posts(recover_from_s3: false)
-  object_keys = nil
-
-  Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
-    begin
-      begin
-        analyzer = PostAnalyzer.new(post.raw, post.topic_id)
-        cooked_stripped = analyzer.send(:cooked_stripped)
-      end
-
-      cooked_stripped.css("img").each do |img|
-        if dom_class = img["class"]
-          if (Post.white_listed_image_classes & dom_class.split).count > 0
-            next
-          end
-        end
-
-        if img["data-orig-src"]
-          puts "#{post.full_url} #{img["data-orig-src"]}"
-
-          if recover_from_s3 && Discourse.store.external?
-            object_keys ||= begin
-              s3_helper = Discourse.store.s3_helper
-
-              s3_helper.list("original").map(&:key).concat(
-                s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
-              )
-            end
-
-            recover_from_s3_by_sha1(
-              post: post,
-              sha1: Upload.sha1_from_short_url(img["data-orig-src"]),
-              object_keys: object_keys
-            )
-          end
-        end
-      end
-    rescue => e
-      puts "#{post.full_url} Error: #{e.class}: #{e.message}"
-    end
-  end
-end
-
-def recover_from_s3_by_sha1(post:, sha1:, object_keys: [])
-  object_keys.each do |key|
-    if key =~ /#{sha1}/
-      tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
-
-      if key.starts_with?(tombstone_prefix)
-        Discourse.store.s3_helper.copy(
-          key,
-          key.sub(tombstone_prefix, ""),
-          options: { acl: "public-read" }
-        )
-      end
-
-      url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
-
-      begin
-        tmp = FileHelper.download(
-          url,
-          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-          tmp_file_name: "recover_from_s3"
-        )
-
-        if tmp
-          upload = UploadCreator.new(
-            tmp,
-            File.basename(key)
-          ).create_for(post.user_id)
-
-          if upload.persisted?
-            post.rebake!
-          else
-            puts "#{post.full_url}: #{upload.errors.full_messages.join(", ")}"
-          end
-        end
-      ensure
-        tmp&.close
-      end
+      UploadRecovery.new.recover
     end
   end
 end
