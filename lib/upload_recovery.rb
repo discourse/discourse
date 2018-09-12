@@ -1,4 +1,8 @@
 class UploadRecovery
+  def initialize(dry_run: false)
+    @dry_run = dry_run
+  end
+
   def recover
     Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
       analyzer = PostAnalyzer.new(post.raw, post.topic_id)
@@ -12,7 +16,11 @@ class UploadRecovery
         end
 
         if img["data-orig-src"]
-          recover_post_upload(post, img["data-orig-src"])
+          if @dry_run
+            puts "#{post.full_url} #{img["data-orig-src"]}"
+          else
+            recover_post_upload(post, img["data-orig-src"])
+          end
         end
       end
     end
