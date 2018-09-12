@@ -141,6 +141,7 @@ task 'docker:test' do
     end
 
   ensure
+    puts "travis_fold:start:terminating" if ENV["TRAVIS"]
     puts "Terminating"
 
     if ENV['PAUSE_ON_TERMINATE']
@@ -152,6 +153,7 @@ task 'docker:test' do
     Process.kill("TERM", @pg_pid) if @pg_pid
     Process.wait @redis_pid if @redis_pid
     Process.wait @pg_pid if @pg_pid
+    puts "travis_fold:end:terminating" if ENV["TRAVIS"]
   end
 
   if !@good
