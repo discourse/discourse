@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'pp'
 
 describe DraftsController do
   it 'requires you to be logged in' do
