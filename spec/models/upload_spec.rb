@@ -82,6 +82,15 @@ describe Upload do
       expect(Upload.get_from_url(upload.url)).to eq(upload)
     end
 
+    describe 'for a url without a tree' do
+      let(:url) { "/uploads/default/original/1X/#{sha1}.png" }
+      let(:upload) { Fabricate(:upload, url: url, sha1: sha1) }
+
+      it 'should return the right upload' do
+        expect(Upload.get_from_url(upload.url)).to eq(upload)
+      end
+    end
+
     it "works when using a cdn" do
       begin
         original_asset_host = Rails.configuration.action_controller.asset_host
