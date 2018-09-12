@@ -1,6 +1,5 @@
 const { get, isNone, run, isEmpty, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
-import { escapeExpression } from "discourse/lib/utilities";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
 import EventsMixin from "select-kit/mixins/events";
