@@ -18,6 +18,7 @@ function addLocalDate(buffer, matches, state) {
 
   config.date = parsed.attrs.date;
   config.time = parsed.attrs.time;
+  config.forceTimezone = parsed.attrs.forceTimezone;
   config.recurring = parsed.attrs.recurring;
   config.format = parsed.attrs.format || config.format;
   config.timezones = parsed.attrs.timezones || config.timezones;
@@ -28,7 +29,8 @@ function addLocalDate(buffer, matches, state) {
     ["data-date", state.md.utils.escapeHtml(config.date)],
     ["data-time", state.md.utils.escapeHtml(config.time)],
     ["data-format", state.md.utils.escapeHtml(config.format)],
-    ["data-timezones", state.md.utils.escapeHtml(config.timezones)]
+    ["data-timezones", state.md.utils.escapeHtml(config.timezones)],
+    ["data-force-timezone", state.md.utils.escapeHtml(config.forceTimezone)]
   ];
 
   if (config.recurring) {
