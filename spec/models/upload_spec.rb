@@ -82,9 +82,16 @@ describe Upload do
       expect(Upload.get_from_url(upload.url)).to eq(upload)
     end
 
+    describe 'for an extensionless url' do
+      let(:url) { "/uploads/default/original/1X/#{sha1}" }
+
+      it 'should return the right upload' do
+        expect(Upload.get_from_url(upload.url)).to eq(upload)
+      end
+    end
+
     describe 'for a url without a tree' do
       let(:url) { "/uploads/default/original/1X/#{sha1}.png" }
-      let(:upload) { Fabricate(:upload, url: url, sha1: sha1) }
 
       it 'should return the right upload' do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
