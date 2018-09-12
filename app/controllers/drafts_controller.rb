@@ -16,8 +16,6 @@ class DraftsController < ApplicationController
       limit: params[:limit]
     }
 
-    help_key = "user_activity.no_drafts"
-
     if user == current_user
       stream = Draft.stream(opts)
       stream.each do |d|
@@ -31,15 +29,13 @@ class DraftsController < ApplicationController
           end
         end
       end
-
-      help_key += ".self"
     else
-      help_key += ".others"
+      raise Discourse::InvalidAccess
     end
 
     render json: {
       drafts: stream ? serialize_data(stream, DraftSerializer) : [],
-      no_results_help: I18n.t(help_key)
+      no_results_help: I18n.t("user_activity.no_drafts.self")
     }
 
   end
