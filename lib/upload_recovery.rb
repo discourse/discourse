@@ -106,7 +106,7 @@ class UploadRecovery
   end
 
   def create_upload(file, filename, post)
-    upload = UploadCreator.new(tmp, filename).create_for(post.user_id)
+    upload = UploadCreator.new(file, filename).create_for(post.user_id)
     post.rebake! if upload.persisted?
   end
 end
