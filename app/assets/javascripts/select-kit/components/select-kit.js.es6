@@ -81,13 +81,22 @@ export default Ember.Component.extend(
     minimum: null,
     minimumLabel: null,
     maximumLabel: null,
+    forceEscape: false,
 
     init() {
       this._super();
 
       this.noneValue = "__none__";
-      this.set("headerComponentOptions", Ember.Object.create());
-      this.set("rowComponentOptions", Ember.Object.create());
+      this.set(
+        "headerComponentOptions",
+        Ember.Object.create({ forceEscape: this.get("forceEscape") })
+      );
+      this.set(
+        "rowComponentOptions",
+        Ember.Object.create({
+          forceEscape: this.get("forceEscape")
+        })
+      );
       this.set("computedContent", []);
       this.set("highlightedSelection", []);
 
