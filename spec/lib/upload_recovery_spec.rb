@@ -15,7 +15,7 @@ RSpec.describe UploadRecovery do
     Fabricate(:post,
       raw: "![logo.png](#{upload.short_url})",
       user: user
-    ).link_post_uploads
+    ).tap(&:link_post_uploads)
   end
 
   before do
