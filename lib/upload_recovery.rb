@@ -47,6 +47,8 @@ class UploadRecovery
   end
 
   def recover_from_local(post:, sha1:)
+    return unless sha1.present?
+
     public_path = Rails.root.join("public")
 
     @paths ||= begin
