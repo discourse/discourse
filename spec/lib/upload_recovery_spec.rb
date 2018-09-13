@@ -46,6 +46,14 @@ RSpec.describe UploadRecovery do
       end
     end
 
+    it 'accepts a custom ActiveRecord relation' do
+      post.update!(updated_at: 2.days.ago)
+      upload.destroy!
+
+      upload_recovery.expects(:recover_from_local).never
+      upload_recovery.recover(Post.where("updated_at >= ?", 1.day.ago))
+    end
+
     it 'should recover the upload' do
       stub_request(:get, "http://test.localhost#{upload.url}")
         .to_return(status: 200)
