@@ -5,23 +5,28 @@ class UploadRecovery
 
   def recover
     Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
-      analyzer = PostAnalyzer.new(post.raw, post.topic_id)
-      cooked_stripped = analyzer.send(:cooked_stripped)
+      begin
+        analyzer = PostAnalyzer.new(post.raw, post.topic_id)
+        cooked_stripped = analyzer.send(:cooked_stripped)
 
-      cooked_stripped.css("img").each do |img|
-        if dom_class = img["class"]
-          if (Post.white_listed_image_classes & dom_class.split).count > 0
-            next
+        cooked_stripped.css("img").each do |img|
+          if dom_class = img["class"]
+            if (Post.white_listed_image_classes & dom_class.split).count > 0
+              next
+            end
+          end
+
+          if img["data-orig-src"]
+            if @dry_run
+              puts "#{post.full_url} #{img["data-orig-src"]}"
+            else
+              recover_post_upload(post, img["data-orig-src"])
+            end
           end
         end
-
-        if img["data-orig-src"]
-          if @dry_run
-            puts "#{post.full_url} #{img["data-orig-src"]}"
-          else
-            recover_post_upload(post, img["data-orig-src"])
-          end
-        end
+      rescue => e
+        raise e unless @dry_run
+        puts "#{post.full_url} #{e.class}: #{e.message}"
       end
     end
   end
