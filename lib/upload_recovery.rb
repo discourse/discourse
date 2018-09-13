@@ -7,9 +7,8 @@ class UploadRecovery
     posts.where("raw LIKE '%upload:\/\/%'").find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
-        cooked_stripped = analyzer.send(:cooked_stripped)
 
-        cooked_stripped.css("img").each do |img|
+        analyzer.cooked_stripped.css("img").each do |img|
           if dom_class = img["class"]
             if (Post.white_listed_image_classes & dom_class.split).count > 0
               next
