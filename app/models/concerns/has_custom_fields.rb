@@ -42,12 +42,19 @@ module HasCustomFields
         case type
         when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
         when :integer then value.to_i
-        when :json    then ::JSON.parse(value)
+        when :json    then parse_json_value(value, key)
         else
           value
         end
 
       array ? [result] : result
+    end
+
+    def self.parse_json_value(value, key)
+      ::JSON.parse(value)
+    rescue JSON::ParserError
+      Rails.logger.warn("Value '#{value}' for custom field '#{key}' is not json, it is being ignored.")
+      {}
     end
   end
 
@@ -83,6 +90,11 @@ module HasCustomFields
     def self.register_custom_field_type(name, type)
       @custom_field_types ||= {}
       @custom_field_types[name] = type
+    end
+
+    def self.get_custom_field_type(name)
+      @custom_field_types ||= {}
+      @custom_field_types[name]
     end
 
     def self.preload_custom_fields(objects, fields)
@@ -186,7 +198,7 @@ module HasCustomFields
       array_fields = {}
 
       _custom_fields.reload.each do |f|
-        if dup[f.name].is_a? Array
+        if dup[f.name].is_a?(Array)
           # we need to collect Arrays fully before we can compare them
           if !array_fields.has_key?(f.name)
             array_fields[f.name] = [f]
@@ -221,12 +233,14 @@ module HasCustomFields
       end
 
       dup.each do |k, v|
-        if v.is_a? Array
+        field_type = self.class.get_custom_field_type(k)
+
+        if v.is_a?(Array) && field_type != :json
           v.each { |subv| _custom_fields.create!(name: k, value: subv) }
         else
           _custom_fields.create!(
             name: k,
-            value: v.is_a?(Hash) ? v.to_json : v
+            value: v.is_a?(Hash) || field_type == :json ? v.to_json : v
           )
         end
       end
