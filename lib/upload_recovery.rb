@@ -3,8 +3,8 @@ class UploadRecovery
     @dry_run = dry_run
   end
 
-  def recover
-    Post.where("raw LIKE '%upload:\/\/%'").find_each do |post|
+  def recover(posts = Post)
+    posts.where("raw LIKE '%upload:\/\/%'").find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
         cooked_stripped = analyzer.send(:cooked_stripped)
