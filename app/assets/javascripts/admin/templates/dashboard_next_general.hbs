@@ -95,13 +95,11 @@
         {{#conditional-loading-section isLoading=isLoading}}
           {{admin-report
             forcedModes="inline-table"
-            report=usersByTypeReport
-            lastRefreshedAt=lastRefreshedAt}}
+            dataSourceName="users_by_type"}}
 
           {{admin-report
             forcedModes="inline-table"
-            report=usersByTrustLevelReport
-            lastRefreshedAt=lastRefreshedAt}}
+            dataSourceName="users_by_trust_level"}}
         {{/conditional-loading-section}}
       </div>
 
