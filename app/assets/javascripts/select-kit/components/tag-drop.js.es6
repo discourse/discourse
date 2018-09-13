@@ -1,9 +1,10 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
+import Tags from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
-const { isEmpty } = Ember;
+const { isEmpty, run } = Ember;
 
-export default ComboBoxComponent.extend({
+export default ComboBoxComponent.extend(Tags, {
   pluginApiIdentifiers: ["tag-drop"],
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
@@ -21,6 +22,8 @@ export default ComboBoxComponent.extend({
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
+  allowContentReplacement: true,
+  isAsync: true,
 
   @computed("tagId")
   noTagsSelected() {
@@ -42,7 +45,9 @@ export default ComboBoxComponent.extend({
     let content = this._super();
 
     if (!content.value) {
-      if (this.get("noTagsSelected")) {
+      if (this.get("tagId")) {
+        content.title = this.get("tagId");
+      } else if (this.get("noTagsSelected")) {
         content.title = this.get("noTagsLabel");
       } else {
         content.title = this.get("allTagsLabel");
@@ -89,7 +94,7 @@ export default ComboBoxComponent.extend({
       `;
     }
 
-    if (this.get("hasSelection") || this.get("tagId") === "none") {
+    if (this.get("tagId")) {
       content += `
         <a href="${allTagsUrl}" class="tag-filter">
           ${allTagsLabel}
@@ -119,6 +124,21 @@ export default ComboBoxComponent.extend({
     }
   },
 
+  _prepareSearch(query) {
+    const data = {
+      q: query,
+      limit: this.get("siteSettings.max_tag_search_results")
+    };
+
+    this.searchTags("/tags/filter/search", data, this._transformJson);
+  },
+
+  _transformJson(context, json) {
+    let results = json.results;
+    results = results.sort((a, b) => a.id > b.id);
+    return results;
+  },
+
   actions: {
     onSelect(tagId) {
       let url = "/tags";
@@ -127,6 +147,26 @@ export default ComboBoxComponent.extend({
       }
       url = `${url}/${tagId}`;
       DiscourseURL.routeTo(url);
+    },
+
+    onExpand() {
+      if (isEmpty(this.get("asyncContent"))) {
+        this.set("asyncContent", this.get("content"));
+      }
+    },
+
+    onFilter(filter) {
+      if (isEmpty(filter)) {
+        this.set("asyncContent", this.get("content"));
+        return;
+      }
+
+      this.startLoading();
+
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, filter, 350)
+      );
     }
   }
 });
