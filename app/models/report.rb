@@ -174,6 +174,13 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+      # ensures that if anything unexpected prevents us from
+      # creating a report object we fail elegantly and log an error
+      if !report
+        Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
+        return nil
+      end
+
       report.error = :exception
 
       # given reports can be added by plugins we don’t want dashboard failures
