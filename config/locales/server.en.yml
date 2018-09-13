@@ -796,7 +796,6 @@ en:
       others: "No replies."
     no_drafts:
       self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
-      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
