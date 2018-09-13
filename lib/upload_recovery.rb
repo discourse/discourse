@@ -89,9 +89,12 @@ class UploadRecovery
         tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
 
         if key.starts_with?(tombstone_prefix)
+          old_key = key
+          key = key.sub(tombstone_prefix, "")
+
           Discourse.store.s3_helper.copy(
+            old_key,
             key,
-            key.sub(tombstone_prefix, ""),
             options: { acl: "public-read" }
           )
         end
