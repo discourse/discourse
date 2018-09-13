@@ -167,6 +167,8 @@ class SearchIndexer
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
 
+    DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+
     def self.strip_diacritics(str)
       s = str.unicode_normalize(:nfkd)
       s.gsub!(DIACRITICS, "")
@@ -196,11 +198,11 @@ class SearchIndexer
       attributes = Hash[*attributes.flatten]
 
       ATTRIBUTES.each do |name|
-        characters(attributes[name]) if attributes[name].present?
+        if attributes[name].present?
+          characters(attributes[name]) unless name == "href" && UrlHelper.is_local(attributes[name])
+        end
       end
     end
-
-    DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
     def characters(str)
       str = HtmlScrubber.strip_diacritics(str) if @strip_diacritics
