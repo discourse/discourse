@@ -34,9 +34,12 @@ class UploadRecovery
   private
 
   def recover_post_upload(post, short_url)
+    sha1 = Upload.sha1_from_short_url(short_url)
+    return unless sha1.present?
+
     attributes = {
       post: post,
-      sha1: Upload.sha1_from_short_url(short_url)
+      sha1: sha1
     }
 
     if Discourse.store.external?
@@ -47,8 +50,6 @@ class UploadRecovery
   end
 
   def recover_from_local(post:, sha1:)
-    return unless sha1.present?
-
     public_path = Rails.root.join("public")
 
     @paths ||= begin
