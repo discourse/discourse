@@ -164,7 +164,7 @@ $.fn.caretPosition = function(options) {
   }
 
   pPos = p.offset();
-  let position = {
+  var position = {
     left: pos.left - pPos.left,
     top: pos.top - pPos.top - clone.scrollTop()
   };
