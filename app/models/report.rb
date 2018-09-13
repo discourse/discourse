@@ -29,8 +29,10 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
-    @primary_color = rgba_color(ColorScheme.hex_for_name('tertiary'))
-    @secondary_color = rgba_color(ColorScheme.hex_for_name('tertiary'), 0.1)
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    @primary_color = rgba_color(tertiary)
+    @secondary_color = rgba_color(tertiary, 0.1)
   end
 
   def self.cache_key(report)
