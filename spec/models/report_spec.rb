@@ -813,6 +813,22 @@ describe Report do
     end
   end
 
+  describe "unexpected error on report initialization" do
+    it "returns no report" do
+      class ReportInitError < StandardError; end
+
+      Report.stubs(:new).raises(ReportInitError.new("x"))
+
+      Rails.logger.expects(:error)
+        .with('Couldn’t create report `signups`: <ReportInitError x>')
+        .once
+
+      report = Report.find('signups')
+
+      expect(report).to be_nil
+    end
+  end
+
   describe 'posts' do
     let(:report) { Report.find('posts') }
 
