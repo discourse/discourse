@@ -95,7 +95,11 @@ task 'docker:test' do
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
-      @good &&= run_or_fail("bundle exec rake db:migrate")
+      if ENV["SKIP_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake db:migrate")
+      else
+        @good &&= run_or_fail("LOAD_PLUGINS=1 bundle exec rake db:migrate")
+      end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
 
