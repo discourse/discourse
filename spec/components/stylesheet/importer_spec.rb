@@ -30,7 +30,7 @@ describe Stylesheet::Importer do
     background = Fabricate(:upload_s3)
     category = Fabricate(:category, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/uploads")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
   end
 
 end
