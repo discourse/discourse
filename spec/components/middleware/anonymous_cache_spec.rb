@@ -167,7 +167,7 @@ describe Middleware::AnonymousCache::Helper do
         "PATH_INFO" => path,
         "REQUEST_PATH" => path
       }.merge(options[:headers]))
-      @status = middleware.call(@env).first
+      @status, @response_header, @response = middleware.call(@env)
     end
 
     it "applies whitelisted_crawler_user_agents correctly" do
@@ -184,6 +184,7 @@ describe Middleware::AnonymousCache::Helper do
       }
 
       expect(@status).to eq(403)
+      expect(@response).to be_an(Array)
 
       get '/', headers: non_crawler
       expect(@status).to eq(200)

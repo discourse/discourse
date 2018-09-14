@@ -201,7 +201,7 @@ module Middleware
 
       if helper.blocked_crawler?
         env["discourse.request_tracker.skip"] = true
-        return [403, {}, "Crawler is not allowed!"]
+        return [403, {}, ["Crawler is not allowed!"]]
       end
 
       if helper.should_force_anonymous?
