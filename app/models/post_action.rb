@@ -633,7 +633,7 @@ class PostAction < ActiveRecord::Base
 
   def self.post_action_type_for_post(post_id)
     post_action = PostAction.find_by(deferred_at: nil, post_id: post_id, post_action_type_id: PostActionType.notify_flag_types.values, deleted_at: nil)
-    PostActionType.types[post_action.post_action_type_id]
+    PostActionType.types[post_action.post_action_type_id] if post_action
   end
 
   def self.target_moderators

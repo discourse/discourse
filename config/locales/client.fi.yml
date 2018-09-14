@@ -162,6 +162,7 @@ fi:
         ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
         ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
         cn_north_1: "Kiina (Peking)"
+        cn_northwest_1: "Kiina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanti)"
         eu_west_2: "EU (Lontoo)"
@@ -196,6 +197,7 @@ fi:
     privacy_policy: "Tietosuojaseloste"
     privacy: "Tietosuoja"
     tos: "Käyttöehdot"
+    rules: "Säännöt"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
     you: "Sinä"
@@ -536,6 +538,7 @@ fi:
       post_count: "# viestiä"
       confirm_delete_other_accounts: "Oletko varma, että haluat poistaa nämä tunnukset?"
       powered_by: "voimanlähteenä <a href='https://ipinfo.io'>1ipinfo.io</a>"
+      copied: "kopioitu"
     user_fields:
       none: "(valitse vaihtoehto)"
     user:
@@ -639,6 +642,7 @@ fi:
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
+      api_last_used_at: "Viimeksi käytetty:"
       theme: "Teema"
       home: "Oletusnäkymä"
       staged: "Esikäyttäjä"
@@ -777,6 +781,18 @@ fi:
         any: "mikä tahansa"
       password_confirmation:
         title: "Salasana uudelleen"
+      auth_tokens:
+        title: "Viimeksi käytetyt laitteet"
+        title_logs: "Todennusloki"
+        ip_address: "IP-osoite"
+        created: "Luotu"
+        first_seen: "Ensimmäinen vierailu"
+        last_seen: "Viimeisin vierailu"
+        operating_system: "Käyttöjärjestelmä"
+        location: "Paikka"
+        action: "Toimi"
+        login: "Kirjaudu sisään"
+        logout: "Kirjaudu ulos kaikkialta"
       last_posted: "Viimeisin viesti"
       last_emailed: "Viimeksi lähetetty sähköpostitse"
       last_seen: "Nähty"
@@ -1008,6 +1024,8 @@ fi:
       hide_session: "Muistuta huomenna"
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysyn huomenna uudestaan. Voit aina myös käyttää 'Kirjaudu sisään' -linkkiä luodaksesi tilin."
+      intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
+      value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia - palstalla näkyviä ja sähköpostiisi saapuvia - kun joku vastaa sinulle. Ja voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Vastauksia on <b>{{replyCount}}</b> kpl."
@@ -1021,6 +1039,8 @@ fi:
       disable: "Näytä poistetut viestit"
     private_message_info:
       title: "Viesti"
+      invite: "Kutsu muita..."
+      edit: "Lisää tai poista..."
       leave_message: "Haluatko varmasti poistua yksityiskeskustelusta?"
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän {{name}} tästä keskustelusta?"
       remove_allowed_group: "Haluatko varmasti poistaa käyttäjän {{name}} tästä viestiketjusta?"
@@ -1156,6 +1176,7 @@ fi:
       default_header_text: Valitse...
       no_content: Ei osumia
       filter_placeholder: Hae...
+      filter_placeholder_with_any: Etsi tai luo...
       create: "Luo: '{{content}}'"
       max_content_reached:
         one: "Voit valita vain {{count}} kohteen."
@@ -1305,6 +1326,9 @@ fi:
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain henkilökunnalle"
+        toggle_topic_bump:
+          label: "Ketjun nosto päälle/pois"
+          desc: "Vastaa muuttamatta ketjun päiväysleimaa"
     notifications:
       tooltip:
         regular:
@@ -1609,7 +1633,7 @@ fi:
         auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
-        auto_delete: "Ketju poistetaan ajastetusti %{timeLeft} kuluttua."
+        auto_delete: "Ketju poistetaan ajastetusti %{timeLeft}."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_immediate:
@@ -1692,6 +1716,7 @@ fi:
         reset_read: "Poista tieto lukemisista"
         make_public: "Tee ketjusta julkinen"
         make_private: "Muuta yksityiskeskusteluksi"
+        reset_bump_date: "Palauta ketjun päiväysleima"
       feature:
         pin: "Kiinnitä ketju"
         unpin: "Poista ketjun kiinnitys"
@@ -2569,6 +2594,7 @@ fi:
         disabled: Pois käytöstä
         timeout_error: Kyselyssä kestää liian kauan. Valitse lyhyempi ajanjakso.
         exception_error: "Pahoittelut, kyselyä tehtäessä tapahtui virhe"
+        too_many_requests: Olet tehnyt näin liian monta kertaa. Odota ennen kuin yrität uudelleen.
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           today: "Tänään"
@@ -2935,9 +2961,16 @@ fi:
           revert: "Peru muutokset"
           revert_confirm: "Haluatko varmasti peruuttaa muutokset?"
         theme:
+          theme: "Teema"
+          component: "Osa"
+          components: "Osat"
           import_theme: "Tuo teema"
           customize_desc: "Mukauta:"
           title: "Teemat"
+          modal_title: "Luo teema"
+          create: "Luo"
+          create_type: "Tyyppi:"
+          create_name: "Nimi:"
           long_title: "Muuta sivustosi värejä, CSS:ää ja HTML-sisältöä"
           edit: "Muokkaa"
           edit_confirm: "Tämä on ulkoinen teema. Jos muokkaat CSS:ää tai HTML:ää, muutokset kumoutuvat kun päivität teeman."
@@ -2952,6 +2985,10 @@ fi:
           color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman osat"
+          switch_component: "Muuta teemaksi"
+          switch_component_alert: "Oletko varma että haluat muuttaa teeman osan teemaksi. Siitä tulee itsenäinen teema ja se ei ole enää tytärteema millekään teemalle."
+          switch_theme: "Muuta teeman osaksi"
+          switch_theme_alert: "Oletko varma, että haluat muuttaa teeman teeman osaksi? Tällöin se ei ole enää emoteema millekään teeman osalle."
           uploads: "Lataukset"
           no_uploads: "Voit ladata teemaasi liitteitä kuten fontteja ja kuvia"
           add_upload: "Lisää tiedosto"
@@ -2974,6 +3011,7 @@ fi:
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
           about_theme: "Tietoa teemasta"
           license: "Lisenssi"
+          component_of: "Teemojen osa:"
           update_to_latest: "Päivitä tuoreimpaan"
           check_for_updates: "Hae päivityksiä"
           updating: "Päivitetään..."
@@ -2981,9 +3019,11 @@ fi:
           add: "Lisää"
           theme_settings: "Teeman asetukset"
           no_settings: "Teemalla ei ole asetuksia."
+          empty: "Ei mitään"
           commits_behind:
             one: "Teema on yhden muutoksen perässä!"
             other: "Teema on {{count}} muutosta perässä!"
+          compare_commits: "(Näytä uudet muutokset)"
           scss:
             text: "CSS"
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"

@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe Theme do
-
-  before do
+  after do
     Theme.clear_cache!
   end
 

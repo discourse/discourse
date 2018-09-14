@@ -7,6 +7,7 @@
 //= require handlebars
 //= require ember.debug
 //= require ember-template-compiler
+//= require qunit/qunit/qunit
 //= require ember-qunit
 //= require ember-shim
 //= require wizard-application

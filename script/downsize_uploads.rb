@@ -11,7 +11,7 @@ Upload.where("lower(extension) in (?)", ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'ti
   count += 1
   print "\r%8d".freeze % count
   absolute_path = Discourse.store.path_for(upload)
-  if absolute_path && FileHelper.is_image?(upload.original_filename)
+  if absolute_path && FileHelper.is_supported_image?(upload.original_filename)
     file = File.new(absolute_path) rescue nil
     next unless file
 

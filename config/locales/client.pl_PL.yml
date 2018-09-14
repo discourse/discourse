@@ -1044,6 +1044,8 @@ pl_PL:
       hide_session: "Przypomnij mi jutro"
       hide_forever: "nie, dziękuję"
       hidden_for_session: "Ok, zapytamy jutro. Pamiętaj, że konto możesz w każdej chwili założyć klikając na 'Logowanie'."
+      intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
+      value_prop: "Jeśli założysz konto, będziemy pamiętać dokładnie to, co przeczytałeś, więc zawsze wrócisz tam, gdzie ostatnio opuściłeś temat. Otrzymasz również powiadomienia, tutaj i za pośrednictwem poczty email, gdy ktoś Ci odpowie. Możesz również polubić posty, aby dzielić się miłością. :heartpulse:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description: "Jest  <b>{{replyCount}}</b> odpowiedzi."

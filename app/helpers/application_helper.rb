@@ -362,6 +362,12 @@ module ApplicationHelper
     end
   end
 
+  def scheme_id
+    return if theme_ids.blank?
+    theme = Theme.find_by(id: theme_ids.first)
+    theme&.color_scheme_id
+  end
+
   def current_homepage
     current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end

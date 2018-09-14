@@ -31,12 +31,9 @@ export default SelectKitComponent.extend({
       this.set("values", []);
     }
 
-    this.set(
-      "headerComponentOptions",
-      Ember.Object.create({
-        selectedNameComponent: this.get("selectedNameComponent")
-      })
-    );
+    this.get("headerComponentOptions").setProperties({
+      selectedNameComponent: this.get("selectedNameComponent")
+    });
   },
 
   @on("didRender")

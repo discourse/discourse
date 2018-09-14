@@ -40,6 +40,7 @@
     <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
     <p>{{combo-box content=colorSchemes
                     filterable=true
+                    forceEscape=true
                     value=colorSchemeId
                     icon="paint-brush"}}
        {{#if colorSchemeChanged}}
@@ -142,7 +143,7 @@
     {{/unless}}
     {{#if selectableChildThemes}}
       <p>
-        {{combo-box filterable=true content=selectableChildThemes value=selectedChildThemeId}}
+        {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId}}
         {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
       </p>
     {{/if}}

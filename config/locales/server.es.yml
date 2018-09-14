@@ -722,7 +722,6 @@ es:
       others: "Sin respuestas."
     no_drafts:
       self: "No tienes ningún borrador; empieza a escribir una respuesta en cualquier tema y se guardará automáticamente como nuevo borrador."
-      others: "No tienes permisos para ver los borradores de este usuario."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1522,7 +1521,6 @@ es:
     enable_emoji: "Habilitar emoji"
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( serán convertidos a emojis"
     emoji_set: "¿De qué tipo os gustan los emoji?"
-    enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"

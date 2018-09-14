@@ -186,14 +186,16 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme
   end
 
-  def self.lookup_hex_for_name(name)
-    enabled_color_scheme = Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
+  def self.lookup_hex_for_name(name, scheme_id = nil)
+    enabled_color_scheme = find_by(id: scheme_id) if scheme_id
+    enabled_color_scheme ||= Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
     (enabled_color_scheme || base).colors.find { |c| c.name == name }.try(:hex) || "nil"
   end
 
-  def self.hex_for_name(name)
-    hex_cache[name] ||= lookup_hex_for_name(name)
-    hex_cache[name] == "nil" ? nil : hex_cache[name]
+  def self.hex_for_name(name, scheme_id = nil)
+    cache_key = scheme_id ? name + "_#{scheme_id}" : name
+    hex_cache[cache_key] ||= lookup_hex_for_name(name, scheme_id)
+    hex_cache[cache_key] == "nil" ? nil : hex_cache[cache_key]
   end
 
   def colors=(arr)

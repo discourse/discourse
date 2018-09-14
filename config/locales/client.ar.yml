@@ -543,7 +543,7 @@ ar:
     categories:
       all: "كل الأقسام"
       no_subcategory: "لا شيء"
-      category: "قسم"
+      category: "تصنيف"
       category_list: "أعرض قائمة الأقسام"
       reorder:
         title: "إعادة ترتيب الأقسام"
@@ -613,6 +613,7 @@ ar:
       notifications: "الإشعارات"
       statistics: "الأحصائيات"
       desktop_notifications:
+        label: "الإشعارات الحية"
         not_supported: "نأسف، لا يدعم المتصفّح الإشعارات."
         perm_default: "فعّل الإشعارات"
         perm_denied_btn: "رُفض التّصريح"
@@ -824,7 +825,7 @@ ar:
       email_private_messages: "أرسل إلي رسالة إلكترونية عندما يبعث أحدهم رسالة إلي"
       email_always: "أرسل إلي الاشعارات عبر البريد حتى ولو كنت متّصلًا"
       other_settings: "أخرى"
-      categories_settings: "الأقسام"
+      categories_settings: "التصنيفات"
       new_topic_duration:
         label: "اعتبر الموضوعات جديدة لو"
         not_viewed: "لم أطالعها بعد"
@@ -952,6 +953,7 @@ ar:
         most_liked_users: "أكثر من أعجبه"
         most_replied_to_users: "أكثر من رد عليه"
         no_likes: "لا يوجد إعجابات بعد."
+        top_categories: "أفضل التصنيفات"
       ip_address:
         title: "عنوان IP الأخير"
       registration_ip_address:
@@ -1733,7 +1735,7 @@ ar:
         title: 'دعوة'
         username_placeholder: "اسم المستخدم"
         action: 'أرسل دعوة'
-        help: 'ادعُ الغير إلى هذا الموضوع عبر البريد الإلكترونيّ أو الإشعارات'
+        help: 'دعوة الآخرين إلى هذا الموضوع عبر البريد الإلكتروني أو الإشعارات'
         to_forum: "سنُرسل بريد إلكترني يتيح لصديقك الانضمام مباشرةً بنقر رابط فيه، تسجيل الدخول غير مطلوب."
         sso_enabled: "أدخل اسم مَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخل اسم او عنوان بريد الشخص الذي تريد دعوته إلى هذا الموضوع."
@@ -1885,7 +1887,7 @@ ar:
         attachment_download_requires_login: "عذرا، عليك تسجيل الدخول لتحميل المرفقات."
       abandon:
         confirm: "أمتأكد من التخلي عن المنشور؟"
-        no_value: "لا، أبقها"
+        no_value: "لا، أبقه"
         yes_value: "نعم، لا أريده"
       via_email: "وصل هذا المنشور عبر البريد"
       via_auto_generated_email: "وصل هذا المنشور عبر بريد مولّد آلياً"
@@ -2087,7 +2089,7 @@ ar:
       all: 'كل الأقسام'
       edit: 'تعديل'
       edit_long: "تعديل"
-      view: 'أظهار الموضوعات في القسم'
+      view: 'أظهار المواضيع  في القسم'
       general: 'عام'
       settings: 'اعدادات'
       topic_template: "إطار الموضوع"
@@ -2097,9 +2099,9 @@ ar:
       tags_placeholder: "(اختياري) قائمة الأوسمة المسموح بها"
       tag_groups_placeholder: "(اختياريّ) قائمة مجموعات الأوسمة المسموح بها"
       topic_featured_link_allowed: "اسمح بالروابط المُميزة بهذا القسم."
-      delete: 'احذف القسم'
-      create: 'قسم جديد'
-      create_long: 'أنشئ قسم جديد'
+      delete: 'احذف التصنيف'
+      create: 'تصنيف جديد'
+      create_long: 'أنشئ تصنيف جديد'
       save: 'احفظ القسم'
       slug: 'عنوان القسم في الURL'
       slug_placeholder: '(اختياريّ) كلمات مفصولة-بشرطة للعنوان'
@@ -2115,8 +2117,8 @@ ar:
       foreground_color: "لون المقدمة"
       name_placeholder: "كلمة أو كلمتين على الأكثر"
       color_placeholder: "أيّ لون متوافق مع الانترنت"
-      delete_confirm: "هل تريد فعلاً حذف هذا القسم؟"
-      delete_error: "حدث خطأ في حذف القسم."
+      delete_confirm: "هل تريد فعلاً حذف هذا تصنيف؟"
+      delete_error: "حدث خطأ أثناء حذف هذا التصنيف"
       list: "عرض الأقسام"
       no_description: "من فضلك أضف وصفا لهذا القسم."
       change_in_category_topic: "عدّل الوصف"

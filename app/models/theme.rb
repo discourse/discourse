@@ -51,6 +51,7 @@ class Theme < ActiveRecord::Base
 
     remove_from_cache!
     clear_cached_settings!
+    ColorScheme.hex_cache.clear
   end
 
   after_destroy do
@@ -72,6 +73,7 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
+    ColorScheme.hex_cache.clear
   end
 
   after_commit ->(theme) do
