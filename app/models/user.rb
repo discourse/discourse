@@ -108,6 +108,7 @@ class User < ActiveRecord::Base
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
+  before_save :match_title_to_primary_group_changes
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -1270,6 +1271,14 @@ class User < ActiveRecord::Base
       rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
         # keep going
       end
+    end
+  end
+
+  def match_title_to_primary_group_changes
+    return unless primary_group_id_changed?
+
+    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+      self.title = primary_group&.title
     end
   end
 
