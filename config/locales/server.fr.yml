@@ -722,7 +722,6 @@ fr:
       others: "Aucune réponse."
     no_drafts:
       self: "Vous n'avez pas d'ébauche; commencez à répondre à un sujet et la réponse sera automatiquement sauvegardée comme nouvelle ébauche."
-      others: "Vous n'avez pas la permission de consulter les ébauches de cet utilisateur."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1523,7 +1522,6 @@ fr:
     enable_emoji: "Activer les emojis"
     enable_emoji_shortcuts: "Les textes de smiley courants :) :p :( seront convertis en emojis"
     emoji_set: "Comment aimeriez-vous vos emoji ?"
-    enforce_square_emoji: "Forcer tous les Emojis à être carrés."
     emoji_autocomplete_min_chars: "Nombre minimum de caractères nécessaires pour invoquer la fenêtre contextuelle d'emoji"
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
