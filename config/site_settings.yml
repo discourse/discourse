@@ -677,8 +677,6 @@ posting:
     default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
-  enforce_square_emoji:
-    default: true
   emoji_autocomplete_min_chars:
     client: true
     default: 0
