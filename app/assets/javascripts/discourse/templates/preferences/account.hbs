@@ -113,7 +113,7 @@
             <td>
               {{#if authProvider.method.can_revoke}}
                 {{#conditional-loading-spinner condition=revoking size='small'}}
-                  {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="times-circle" }}
+                  {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="trash" }}
                 {{/conditional-loading-spinner}}
               {{/if}}
             </td>
