@@ -26,6 +26,8 @@ module Middleware
         !@request.xhr? &&
         !@request.path.ends_with?('robots.txt') &&
         !@request.path.ends_with?('srv/status') &&
+        @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+        @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
         CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
       end
 

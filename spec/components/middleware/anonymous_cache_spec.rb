@@ -189,6 +189,16 @@ describe Middleware::AnonymousCache::Helper do
       expect(@status).to eq(200)
     end
 
+    it "doesn't block api requests" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      api_key = Fabricate(:api_key)
+
+      get "/latest?api_key=#{api_key.key}&api_username=system", headers: {
+        "QUERY_STRING" => "api_key=#{api_key.key}&api_username=system"
+      }
+      expect(@status).to eq(200)
+    end
+
     it "applies blacklisted_crawler_user_agents correctly" do
       SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
 
