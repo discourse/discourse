@@ -194,70 +194,34 @@ describe Group do
     Group[:staff].user_ids.reject { |id| id < 0 }
   end
 
-  it "Correctly handles primary groups" do
-    group = Fabricate(:group, primary_group: true)
-    user = Fabricate(:user)
+  describe '#primary_group=' do
+    it "updates all members' primary_group" do
+      group.add(user)
 
-    group.add(user)
-
-    user.reload
-    expect(user.primary_group_id).to eq group.id
-
-    group.remove(user)
-
-    user.reload
-    expect(user.primary_group_id).to eq nil
-
-    group.add(user)
-    group.primary_group = false
-    group.save
-
-    user.reload
-    expect(user.primary_group_id).to eq nil
-
+      expect { group.update(primary_group: true) }.to change { user.reload.primary_group }.from(nil).to(group)
+      expect { group.update(primary_group: false) }.to change { user.reload.primary_group }.from(group).to(nil)
+    end
   end
 
-  it "Correctly handles title" do
+  describe '#title=' do
+    before do
+      group.update(title: 'Awesome')
+      group.add(user)
+    end
 
-    group = Fabricate(:group, title: 'Super Awesome')
-    user = Fabricate(:user)
+    it "updates the member's title if exact match" do
+      expect { group.update(title: 'Super') }.to change { user.reload.title }.from('Awesome').to('Super')
+    end
 
-    expect(user.title).to eq nil
+    it "update the member's title if not exact match" do
+      user.update(title: 'Differently Awesome')
+      expect { group.update(title: 'Super') }.to_not change { user.reload.title }
+    end
 
-    group.add(user)
-    user.reload
-
-    expect(user.title).to eq 'Super Awesome'
-
-    group.title = 'BOOM'
-    group.save
-
-    user.reload
-    expect(user.title).to eq 'BOOM'
-
-    group.title = nil
-    group.save
-
-    user.reload
-    expect(user.title).to eq nil
-
-    group.title = "BOB"
-    group.save
-
-    user.reload
-    expect(user.title).to eq "BOB"
-
-    group.remove(user)
-
-    user.reload
-    expect(user.title).to eq nil
-
-    group.add(user)
-    group.destroy
-
-    user.reload
-    expect(user.title).to eq nil
-
+    it "doesn't update non-member's title even if exact match" do
+      non_member = Fabricate(:user, title: group.title)
+      expect { group.update(title: 'Super') }.to_not change { non_member.reload.title }
+    end
   end
 
   describe '.refresh_automatic_group!' do
@@ -689,7 +653,60 @@ describe Group do
 
   end
 
+  describe '#remove' do
+    before { group.add(user) }
+
+    context 'when group has a title' do
+      before { group.update(title: 'Awesome') }
+
+      it "does not strip user's title if not exact match" do
+        user.update_columns(title: 'Different')
+        expect { group.remove(user) }.to_not change { user.reload.title }
+      end
+
+      it "strips user's title if exact match" do
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
+      end
+    end
+
+    context "when it is the user's primary group" do
+      before { user.update(primary_group: group) }
+
+      it "unsets the user's primary group" do
+        expect { group.remove(user) }.to change { user.reload.primary_group }.from(group).to(nil)
+      end
+    end
+  end
+
   describe '#add' do
+    context 'when group has a title' do
+      before { group.update(title: 'Awesome') }
+
+      it 'grants the title if the new member has a blank title' do
+        expect { group.add(user) }.to change { user.reload.title }.from(nil).to('Awesome')
+      end
+
+      it 'does not grant the title if the new member already has a title' do
+        user.update(title: 'Already Awesome')
+        expect { group.add(user) }.not_to change { user.reload.title }
+      end
+    end
+
+    context 'when group is a primary group' do
+      before { group.update(primary_group: true) }
+
+      it "sets user's primary group if user does not have a primary group" do
+        expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
+      end
+
+      it "sets user's primary group if user has a primary group" do
+        current_primary_group = Fabricate(:group, primary_group: true)
+        current_primary_group.add(user)
+
+        expect { group.add(user) }.to change { user.reload.primary_group }.from(current_primary_group).to(group)
+      end
+    end
+
     context 'when adding a user into a public group' do
       let(:category) { Fabricate(:category) }
 

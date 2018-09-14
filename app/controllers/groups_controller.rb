@@ -355,8 +355,6 @@ class GroupsController < ApplicationController
       end
     end
 
-    user.primary_group_id = nil if user.primary_group_id == group.id
-
     group.remove(user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
 
