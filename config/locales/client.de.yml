@@ -162,6 +162,7 @@ de:
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
         cn_north_1: "China (Peking)"
+        cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
@@ -520,7 +521,7 @@ de:
       topic_stat_sentence:
         one: "%{count} neues Thema seit 1 %{unit}."
         other: "%{count} neue Themen seit 1 %{unit}."
-      more: "(%{count}mehr) …"
+      more: " (%{count} weitere) …"
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname

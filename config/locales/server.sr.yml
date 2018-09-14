@@ -166,7 +166,6 @@ sr:
     show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
     delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
     enable_emoji: "Omogući emotikone"
-    enforce_square_emoji: "Forsiraj kvadratni oblik za sve emotikone."
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori  (0 da se isključi)"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
