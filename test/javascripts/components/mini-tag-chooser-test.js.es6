@@ -11,6 +11,7 @@ componentTest("default", {
   template: "{{mini-tag-chooser allowAny=true filterable=true tags=tags}}",
 
   beforeEach() {
+    this.site.set("can_create_tag", true);
     this.set("tags", ["jeff", "neil", "arpit"]);
 
     const response = object => {
@@ -19,7 +20,7 @@ componentTest("default", {
 
     // prettier-ignore
     server.get("/tags/filter/search", (params) => { //eslint-disable-line
-      if (params.queryParams.q === "rég") {
+      if (params.queryParams.q === "régis") {
         return response({
           results: [{ text: "régis", count: 5 }]
         });
@@ -54,7 +55,7 @@ componentTest("default", {
       "it has the correct tag"
     );
 
-    await this.get("subject").fillInFilter("rég");
+    await this.get("subject").fillInFilter("régis");
     await this.get("subject").keyboard("enter");
     assert.deepEqual(
       this.get("tags"),
@@ -67,7 +68,7 @@ componentTest("default", {
     await this.get("subject").keyboard("enter");
     assert.deepEqual(
       this.get("tags"),
-      ["jeff", "neil", "arpit", "régis"],
+      ["jeff", "neil", "arpit", "régis", "joffrey"],
       "it creates the tag"
     );
 
@@ -79,7 +80,7 @@ componentTest("default", {
     );
     assert.deepEqual(
       this.get("tags"),
-      ["jeff", "neil", "arpit"],
+      ["jeff", "neil", "arpit", "régis"],
       "it removes the tag"
     );
   }
