@@ -11,6 +11,7 @@ module BackupRestore
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
+      @filename_override = opts[:filename]
 
       ensure_no_operation_is_running
       ensure_we_have_a_user
@@ -54,7 +55,7 @@ module BackupRestore
       @success = false
     else
       @success = true
-      File.join(@archive_directory, @backup_filename)
+      @backup_filename
     ensure
       delete_old
       clean_up
@@ -83,7 +84,8 @@ module BackupRestore
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(@current_db)
-      @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
+      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
       @backup_filename =
         if @with_uploads
