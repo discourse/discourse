@@ -1,12 +1,15 @@
 require_dependency "backup_restore/backup_store"
+require_dependency "s3_helper"
 
 module BackupRestore
   class S3BackupStore < BackupStore
     DOWNLOAD_URL_EXPIRES_AFTER_SECONDS = 15
     UPLOAD_URL_EXPIRES_AFTER_SECONDS = 21600 # 6 hours
 
-    def initialize
-      @s3_helper ||= S3Helper.new(SiteSetting.s3_backup_bucket, '', S3Helper.s3_options(SiteSetting))
+    def initialize(opts = {})
+      s3_options = S3Helper.s3_options(SiteSetting)
+      s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
+      @s3_helper = S3Helper.new(SiteSetting.s3_backup_bucket, '', s3_options)
     end
 
     def remote?
@@ -43,13 +46,14 @@ module BackupRestore
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     end
 
-    protected
+    private
 
     def unsorted_files
-      @s3_helper.list.map { |obj| create_file_from_object(obj) }
+      @s3_helper
+        .list
+        .select { |obj| obj.key.match?(/\.t?gz$/i) }
+        .map { |obj| create_file_from_object(obj) }
     end
-
-    private
 
     def create_file_from_object(obj, include_download_source = false)
       BackupFile.new(
@@ -62,6 +66,10 @@ module BackupRestore
 
     def presigned_url(obj, method, expires_in_seconds)
       obj.presigned_url(method, expires_in: expires_in_seconds)
+    end
+
+    def cleanup_allowed?
+      !SiteSetting.s3_disable_cleanup
     end
   end
 end

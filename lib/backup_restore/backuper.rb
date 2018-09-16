@@ -266,6 +266,8 @@ module BackupRestore
     end
 
     def delete_old
+      return if Rails.env.development?
+
       log "Deleting old backups..."
       @store.delete_old
     rescue => ex

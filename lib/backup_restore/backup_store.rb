@@ -4,14 +4,14 @@ module BackupRestore
     class BackupFileExists < RuntimeError; end
 
     # @return [BackupStore]
-    def self.create
+    def self.create(opts = {})
       case SiteSetting.backup_location
       when 'local'
         require_dependency "backup_restore/local_backup_store"
-        BackupRestore::LocalBackupStore.new
+        BackupRestore::LocalBackupStore.new(opts)
       when 's3'
         require_dependency "backup_restore/s3_backup_store"
-        BackupRestore::S3BackupStore.new
+        BackupRestore::S3BackupStore.new(opts)
       end
     end
 
@@ -28,13 +28,11 @@ module BackupRestore
     end
 
     def delete_old
-      return if Rails.env.development?
-
-      backup_files = files
-      return if backup_files.size <= SiteSetting.maximum_backups
+      return unless cleanup_allowed?
+      return if (backup_files = files).size <= SiteSetting.maximum_backups
 
       backup_files[SiteSetting.maximum_backups..-1].each do |file|
-        delete(file)
+        delete_file(file.filename)
       end
     end
 
@@ -51,7 +49,7 @@ module BackupRestore
       fail NotImplementedError
     end
 
-    def copy_file(filename, destination, failure_message = nil)
+    def download_file(filename, destination, failure_message = nil)
       fail NotImplementedError
     end
 
@@ -63,11 +61,15 @@ module BackupRestore
       fail NotImplementedError
     end
 
-    protected
+    private
 
     # @return [Array<BackupFile>]
     def unsorted_files
       fail NotImplementedError
+    end
+
+    def cleanup_allowed?
+      true
     end
   end
 end

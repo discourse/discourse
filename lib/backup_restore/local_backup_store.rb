@@ -14,6 +14,10 @@ module BackupRestore
       File.join(LocalBackupStore.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
     end
 
+    def initialize(opts = {})
+      @base_directory = opts[:base_directory] || LocalBackupStore.base_directory
+    end
+
     def remote?
       false
     end
@@ -34,17 +38,15 @@ module BackupRestore
       Discourse::Utils.execute_command('cp', path, destination, failure_message: failure_message)
     end
 
-    protected
+    private
 
     def unsorted_files
-      Dir.glob(File.join(LocalBackupStore.base_directory, "*.{gz,tgz}"))
+      Dir.glob(File.join(@base_directory, "*.{gz,tgz}"))
         .map { |filename| create_file_from_path(filename) }
     end
 
-    private
-
     def path_from_filename(filename)
-      File.join(LocalBackupStore.base_directory, filename)
+      File.join(@base_directory, filename)
     end
 
     def create_file_from_path(path, include_download_source = false)
