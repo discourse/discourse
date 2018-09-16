@@ -55,7 +55,7 @@ describe BackupRestore::S3BackupStore do
   end
 
   before do
-    SiteSetting.backup_location = "s3"
+    SiteSetting.backup_location = BackupLocationSiteSetting::S3
     SiteSetting.s3_backup_bucket = "s3-backup-bucket"
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"

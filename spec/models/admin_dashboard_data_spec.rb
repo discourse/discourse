@@ -210,9 +210,8 @@ describe AdminDashboardData do
       end
 
       context 'when setting is enabled' do
-        let(:setting_enabled) { true }
         before do
-          SiteSetting.public_send("#{setting_key}=", setting_enabled)
+          SiteSetting.public_send("#{setting[:key]}=", setting[:enabled_value])
           SiteSetting.public_send("#{bucket_key}=", bucket_value)
         end
 
@@ -260,7 +259,7 @@ describe AdminDashboardData do
 
       context 'when setting is not enabled' do
         before do
-          SiteSetting.public_send("#{setting_key}=", false)
+          SiteSetting.public_send("#{setting[:key]}=", setting[:disabled_value])
         end
 
         it "always returns nil" do
@@ -272,13 +271,25 @@ describe AdminDashboardData do
     end
 
     describe 'uploads' do
-      let(:setting_key) { :enable_s3_uploads }
+      let(:setting) do
+        {
+          key: :enable_s3_uploads,
+          enabled_value: true,
+          disabled_value: false
+        }
+      end
       let(:bucket_key) { :s3_upload_bucket }
       include_examples 'problem detection for s3-dependent setting'
     end
 
     describe 'backups' do
-      let(:setting_key) { :enable_s3_backups }
+      let(:setting) do
+        {
+          key: :backup_location,
+          enabled_value: BackupLocationSiteSetting::S3,
+          disabled_value: BackupLocationSiteSetting::LOCAL
+        }
+      end
       let(:bucket_key) { :s3_backup_bucket }
       include_examples 'problem detection for s3-dependent setting'
     end

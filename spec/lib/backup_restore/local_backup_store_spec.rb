@@ -13,7 +13,7 @@ describe BackupRestore::LocalBackupStore do
   end
 
   before do
-    SiteSetting.backup_location = "local"
+    SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
   end
 
   subject(:store) { BackupRestore::BackupStore.create(base_directory: @base_directory) }

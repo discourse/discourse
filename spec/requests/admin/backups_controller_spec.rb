@@ -30,7 +30,7 @@ RSpec.describe Admin::BackupsController do
 
   before do
     sign_in(admin)
-    SiteSetting.backup_location = "local"
+    SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
   end
 
   after do

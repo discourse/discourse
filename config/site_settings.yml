@@ -1422,9 +1422,6 @@ backups:
     max: 30
     default: 7
     shadowed_by_global: true
-  enable_s3_backups:
-    default: false
-    shadowed_by_global: true
   s3_backup_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
