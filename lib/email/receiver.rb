@@ -879,6 +879,7 @@ module Email
     end
 
     def add_attachments(raw, user_id, options = {})
+      rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
@@ -900,13 +901,32 @@ module Email
             else
               raw << "\n\n#{attachment_markdown(upload)}\n\n"
             end
+          else
+            rejected_attachments << upload.original_filename
+            raw << "\n\n#{I18n.t('emails.incoming.missing_attachment', filename: upload.original_filename)}\n\n"
           end
         ensure
           tmp&.close!
         end
       end
+      notify_about_rejected_attachment(rejected_attachments) if rejected_attachments.present?
 
       raw
+    end
+
+    def notify_about_rejected_attachment(attachments)
+      template_args = {}
+
+      message = Mail::Message.new(@mail)
+      template_args = {
+        former_title: message.subject,
+        destination: message.to,
+        site_name: SiteSetting.title,
+        rejected_attachments: attachments.join(", ")
+      }
+
+      client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
+      Email::Sender.new(client_message, :email_reject_attachment).send
     end
 
     def attachment_markdown(upload)

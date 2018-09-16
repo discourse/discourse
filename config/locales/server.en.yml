@@ -88,6 +88,7 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
+      missing_attachment: '(Attachment %{filename} is missing)'
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -2604,6 +2605,16 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         There was an unrecognized error while processing your email and it wasn't posted. You should try again, or [contact a staff member](%{base_url}/about).
+
+    email_reject_attachment:
+      title: "Email Attachment Rejected"
+      subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      text_body_template:  |
+        We're sorry, but the following attachments in your email message to %{destination} (titled %{former_title}) were rejected: %{rejected_attachments}
+
+        This can be caused by the attached file being too large or by an unauthorised file extension.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_error_notification:
       title: "Email Error Notification"
