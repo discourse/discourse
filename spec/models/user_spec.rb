@@ -1815,28 +1815,15 @@ describe User do
   end
 
   describe '#match_title_to_primary_group_changes' do
-    let(:previous_primary_group) { Fabricate(:group, title: 'Previous', users: [user]) }
-    let(:new_primary_group) { Fabricate(:group, title: 'New', users: [user]) }
+    let(:primary_group_a) { Fabricate(:group, title: 'A', users: [user]) }
+    let(:primary_group_b) { Fabricate(:group, title: 'B', users: [user]) }
 
-    before { user.update(primary_group: previous_primary_group) }
+    it "updates user's title only when it is blank or matches the previous primary group" do
+      expect { user.update(primary_group: primary_group_a) }.to change { user.reload.title }.from(nil).to('A')
+      expect { user.update(primary_group: primary_group_b) }.to change { user.reload.title }.from('A').to('B')
 
-    def change_primary_group
-      user.update(primary_group: new_primary_group)
-    end
-
-    it "updates user's title when it matches the previous primary group" do
-      user.update(title: 'Previous')
-      expect { change_primary_group }.to change { user.reload.title }.from('Previous').to('New')
-    end
-
-    it "doesn't update user's title when it does not match the previous primary group" do
       user.update(title: 'Different')
-      expect { change_primary_group }.to_not change { user.reload.title }
-    end
-
-    it "update user's title when the user has a blank title" do
-      user.update(title: nil)
-      expect { change_primary_group }.to change { user.reload.title }.from(nil).to('New')
+      expect { user.update(primary_group: primary_group_a) }.to_not change { user.reload.title }
     end
   end
 end
