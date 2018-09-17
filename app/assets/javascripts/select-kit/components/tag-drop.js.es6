@@ -1,10 +1,10 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import Tags from "select-kit/mixins/tags";
+import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 const { isEmpty, run } = Ember;
 
-export default ComboBoxComponent.extend(Tags, {
+export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
