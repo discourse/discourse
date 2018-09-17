@@ -69,6 +69,7 @@ class PostDestroyer
     topic.recover! if @post.is_first_post?
     topic.update_statistics
     recover_user_actions
+    recover_public_post_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
@@ -194,6 +195,19 @@ class PostDestroyer
 
     f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
     Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+  end
+
+  def recover_public_post_actions
+    public_post_actions = PostAction.publics
+      .where(post_id: @post.id)
+      .with_deleted
+      .where("deleted_at IS NOT NULL")
+      .where(deleted_by_id: @user.id)
+
+    public_post_actions.each { |pa|
+      pa.recover!
+      pa.save
+    }
   end
 
   def agree_with_flags
