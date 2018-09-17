@@ -253,17 +253,11 @@ class Post < ActiveRecord::Base
 
     options = opts.dup
     options[:cook_method] = cook_method
+    options[:user_id] = self.user.id if self.user
+    # At trust level 3, we don't apply nofollow to links
+    options[:omit_nofollow] = true   if omit_nofollow?
 
-    post_user = self.user
-    options[:user_id] = post_user.id if post_user
-
-    if add_nofollow?
-      cooked = post_analyzer.cook(raw, options)
-    else
-      # At trust level 3, we don't apply nofollow to links
-      options[:omit_nofollow] = true
-      cooked = post_analyzer.cook(raw, options)
-    end
+    cooked = post_analyzer.cook(raw, options)
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
