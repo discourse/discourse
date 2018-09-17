@@ -66,6 +66,5 @@ componentTest("default", {
       "jeff",
       "it returns top tags for an empty search"
     );
-
   }
 });
