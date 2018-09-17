@@ -296,10 +296,17 @@ describe Topic do
       expect(topic_image.fancy_title).to eq("Topic with &lt;img src=&lsquo;something&rsquo;&gt; image in its title")
     end
 
+    it "always escapes title" do
+      topic_script.title = topic_script.title + "x" * Topic.max_fancy_title_length
+      expect(topic_script.fancy_title).to eq(ERB::Util.html_escape(topic_script.title))
+      # not really needed, but just in case
+      expect(topic_script.fancy_title).not_to include("<script>")
+    end
+
   end
 
   context 'fancy title' do
-    let(:topic) { Fabricate.build(:topic, title: "\"this topic\" -- has ``fancy stuff''") }
+    let(:topic) { Fabricate.build(:topic, title: %{"this topic" -- has ``fancy stuff''}) }
 
     context 'title_fancy_entities disabled' do
       before do
@@ -319,7 +326,6 @@ describe Topic do
       it "converts the title to have fancy entities and updates" do
         expect(topic.fancy_title).to eq("&ldquo;this topic&rdquo; &ndash; has &ldquo;fancy stuff&rdquo;")
         topic.title = "this is my test hello world... yay"
-        topic.user.save!
         topic.save!
         topic.reload
         expect(topic.fancy_title).to eq("This is my test hello world&hellip; yay")
@@ -336,7 +342,7 @@ describe Topic do
       end
 
       it "works with long title that results in lots of entities" do
-        long_title = "NEW STOCK PICK: PRCT - LAST PICK UP 233%, NNCO.................................................................................................................................................................. ofoum"
+        long_title = "NEW STOCK PICK: PRCT - LAST PICK UP 233%, NNCO#{"." * 150} ofoum"
         topic.title = long_title
 
         expect { topic.save! }.to_not raise_error
