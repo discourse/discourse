@@ -29,13 +29,14 @@ function addLocalDate(buffer, matches, state) {
     ["data-date", state.md.utils.escapeHtml(config.date)],
     ["data-time", state.md.utils.escapeHtml(config.time)],
     ["data-format", state.md.utils.escapeHtml(config.format)],
-    ["data-timezones", state.md.utils.escapeHtml(config.timezones)],
+    ["data-timezones", state.md.utils.escapeHtml(config.timezones)]
   ];
 
   if (config.forceTimezone) {
-    token.attrs.push(
-      ["data-force-timezone", state.md.utils.escapeHtml(config.forceTimezone)]
-    );
+    token.attrs.push([
+      "data-force-timezone",
+      state.md.utils.escapeHtml(config.forceTimezone)
+    ]);
   }
 
   if (config.recurring) {
