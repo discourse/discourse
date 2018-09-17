@@ -793,7 +793,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :tag_groups, except: [:new, :edit] do
+  resources :tag_groups, constraints: StaffConstraint.new, except: [:new, :edit] do
     collection do
       get '/filter/search' => 'tag_groups#search'
     end
