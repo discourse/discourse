@@ -290,9 +290,6 @@ Discourse::Application.routes.draw do
         post "preview" => "badges#preview"
       end
     end
-
-    get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
-    get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
