@@ -1144,6 +1144,7 @@ en:
     log_search_queries: "Log search queries performed by users"
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
+    ignore_accents: "Ignore accents when searching for text."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
