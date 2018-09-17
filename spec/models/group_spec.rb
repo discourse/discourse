@@ -195,7 +195,7 @@ describe Group do
   end
 
   describe '#primary_group=' do
-    it "updates all members' primary_group" do
+    it "updates all members' #primary_group" do
       group.add(user)
 
       expect { group.update(primary_group: true) }.to change { user.reload.primary_group }.from(nil).to(group)
@@ -204,23 +204,19 @@ describe Group do
   end
 
   describe '#title=' do
-    before do
-      group.update(title: 'Awesome')
+    it "updates the member's title only if it was blank or exact match" do
       group.add(user)
-    end
 
-    it "updates the member's title if exact match" do
+      expect { group.update(title: 'Awesome') }.to change { user.reload.title }.from(nil).to('Awesome')
       expect { group.update(title: 'Super') }.to change { user.reload.title }.from('Awesome').to('Super')
-    end
 
-    it "update the member's title if not exact match" do
       user.update(title: 'Differently Awesome')
-      expect { group.update(title: 'Super') }.to_not change { user.reload.title }
+      expect { group.update(title: 'Awesome') }.to_not change { user.reload.title }
     end
 
-    it "doesn't update non-member's title even if exact match" do
-      non_member = Fabricate(:user, title: group.title)
-      expect { group.update(title: 'Super') }.to_not change { non_member.reload.title }
+    it "doesn't update non-member's title" do
+      user.update(title: group.title)
+      expect { group.update(title: 'Super') }.to_not change { user.reload.title }
     end
   end
 
@@ -659,13 +655,12 @@ describe Group do
     context 'when group has a title' do
       before { group.update(title: 'Awesome') }
 
-      it "does not strip user's title if not exact match" do
+      it "only strips user's title if exact match" do
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
+
+        group.add(user)
         user.update_columns(title: 'Different')
         expect { group.remove(user) }.to_not change { user.reload.title }
-      end
-
-      it "strips user's title if exact match" do
-        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
       end
     end
 
@@ -679,32 +674,21 @@ describe Group do
   end
 
   describe '#add' do
-    context 'when group has a title' do
-      before { group.update(title: 'Awesome') }
+    it 'grants the title only if the new member does not have title' do
+      group.update(title: 'Awesome')
+      expect { group.add(user) }.to change { user.reload.title }.from(nil).to('Awesome')
 
-      it 'grants the title if the new member has a blank title' do
-        expect { group.add(user) }.to change { user.reload.title }.from(nil).to('Awesome')
-      end
-
-      it 'does not grant the title if the new member already has a title' do
-        user.update(title: 'Already Awesome')
-        expect { group.add(user) }.not_to change { user.reload.title }
-      end
+      group.remove(user)
+      user.update(title: 'Already Awesome')
+      expect { group.add(user) }.not_to change { user.reload.title }
     end
 
-    context 'when group is a primary group' do
-      before { group.update(primary_group: true) }
+    it "always sets user's primary group" do
+      group.update(primary_group: true)
+      expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
 
-      it "sets user's primary group if user does not have a primary group" do
-        expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
-      end
-
-      it "sets user's primary group if user has a primary group" do
-        current_primary_group = Fabricate(:group, primary_group: true)
-        current_primary_group.add(user)
-
-        expect { group.add(user) }.to change { user.reload.primary_group }.from(current_primary_group).to(group)
-      end
+      new_group = Fabricate(:group, primary_group: true)
+      expect { new_group.add(user) }.to change { user.reload.primary_group }.from(group).to(new_group)
     end
 
     context 'when adding a user into a public group' do
