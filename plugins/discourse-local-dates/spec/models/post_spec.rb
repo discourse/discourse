@@ -13,7 +13,9 @@ describe Post do
       SQL
       CookedPostProcessor.new(post).post_process
 
-      expect(post.local_dates).to eq([{"date"=>"2018-09-17", "time"=>"01:39:00"}])
+      expect(post.local_dates.count).to eq(1)
+      expect(post.local_dates[0]["date"]).to eq("2018-09-17")
+      expect(post.local_dates[0]["time"]).to eq("01:39:00")
 
       post.raw = "Text removed"
       post.save
