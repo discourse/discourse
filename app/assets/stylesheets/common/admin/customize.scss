@@ -63,7 +63,6 @@
     border-bottom: 1px solid $primary-low;
     padding-bottom: 8px;
     display: flex;
-    align-items: center;
 
     .title {
       color: $primary-medium;
@@ -134,10 +133,7 @@
     }
   }
   .show-current-style {
-    padding-left: 10px;
-    padding-top: 10px;
     display: inline-block;
-    width: 70%;
     vertical-align: top;
 
     .url {
@@ -205,7 +201,6 @@
     border-right: 1px solid $primary-low;
     border-bottom: 1px solid $primary-low;
     display: inline-block;
-    width: 28%;
     overflow: hidden;
   }
 
