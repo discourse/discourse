@@ -2610,9 +2610,10 @@ en:
       title: "Email Attachment Rejected"
       subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
       text_body_template:  |
-        We're sorry, but the following attachments in your email message to %{destination} (titled %{former_title}) were rejected: %{rejected_attachments}
+        Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
 
-        This can be caused by the attached file being too large or by an unauthorised file extension.
+        Details:
+        %{rejected_errors}
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 

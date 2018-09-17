@@ -902,7 +902,7 @@ module Email
               raw << "\n\n#{attachment_markdown(upload)}\n\n"
             end
           else
-            rejected_attachments << upload.original_filename
+            rejected_attachments << upload
             raw << "\n\n#{I18n.t('emails.incoming.missing_attachment', filename: upload.original_filename)}\n\n"
           end
         ensure
@@ -915,14 +915,19 @@ module Email
     end
 
     def notify_about_rejected_attachment(attachments)
-      template_args = {}
+      errors = []
+
+      attachments.each do |a|
+        error = a.errors.messages.values[0][0]
+        errors << "#{a.original_filename}: #{error}"
+      end
 
       message = Mail::Message.new(@mail)
       template_args = {
         former_title: message.subject,
         destination: message.to,
         site_name: SiteSetting.title,
-        rejected_attachments: attachments.join(", ")
+        rejected_errors: errors.join("\n")
       }
 
       client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
