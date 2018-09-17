@@ -454,6 +454,29 @@ describe Group do
       expect(event[:event_name]).to eq(:group_destroyed)
       expect(event[:params].first).to eq(group)
     end
+
+    it "strips the user's title and unsets the user's primary group when exact match" do
+      group.update(title: 'Awesome')
+      user.update(primary_group: group)
+
+      group.destroy!
+
+      user.reload
+      expect(user.title).to eq(nil)
+      expect(user.primary_group).to eq(nil)
+    end
+
+    it "does not strip title or unset primary group when not exact match" do
+      primary_group = Fabricate(:group, primary_group: true, title: 'Different')
+      primary_group.add(user)
+      group.update(title: 'Awesome')
+
+      group.destroy!
+
+      user.reload
+      expect(user.title).to eq('Different')
+      expect(user.primary_group).to eq(primary_group)
+    end
   end
 
   it "has custom fields" do
@@ -652,24 +675,18 @@ describe Group do
   describe '#remove' do
     before { group.add(user) }
 
-    context 'when group has a title' do
-      before { group.update(title: 'Awesome') }
+    it "only strips user's title if exact match" do
+      group.update(title: 'Awesome')
+      expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
 
-      it "only strips user's title if exact match" do
-        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
-
-        group.add(user)
-        user.update_columns(title: 'Different')
-        expect { group.remove(user) }.to_not change { user.reload.title }
-      end
+      group.add(user)
+      user.update_columns(title: 'Different')
+      expect { group.remove(user) }.to_not change { user.reload.title }
     end
 
-    context "when it is the user's primary group" do
-      before { user.update(primary_group: group) }
-
-      it "unsets the user's primary group" do
-        expect { group.remove(user) }.to change { user.reload.primary_group }.from(group).to(nil)
-      end
+    it "unsets the user's primary group" do
+      user.update(primary_group: group)
+      expect { group.remove(user) }.to change { user.reload.primary_group }.from(group).to(nil)
     end
   end
 
