@@ -75,6 +75,9 @@ module Migration
 
       DB.exec <<~SQL
         DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(@old_name)} CASCADE;
+        -- Backward compatibility for old functions created in the public
+        -- schema
+        DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(@old_name)} CASCADE;
       SQL
     end
   end
