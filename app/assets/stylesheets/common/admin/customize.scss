@@ -64,13 +64,8 @@
     padding-bottom: 8px;
     display: flex;
     align-items: center;
-
-    .title {
-      color: $primary-medium;
-      flex-grow: 1;
-      h3 {
-        margin-bottom: 0;
-      }
+    .create-actions {
+      margin-left: auto;
     }
   }
   .admin-container {
