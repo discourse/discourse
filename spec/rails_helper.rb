@@ -279,3 +279,11 @@ def file_from_fixtures(filename, directory = "images")
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
   File.new("#{Rails.root}/tmp/spec/#{filename}")
 end
+
+def has_trigger?(trigger_name)
+  DB.exec(<<~SQL) != 0
+    SELECT 1
+    FROM INFORMATION_SCHEMA.TRIGGERS
+    WHERE trigger_name = '#{trigger_name}'
+  SQL
+end
