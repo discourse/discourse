@@ -238,10 +238,7 @@ QUnit.test("Unpinning unlisted topic", async assert => {
   await click(".topic-admin-visible .btn");
 
   await click(".toggle-admin-menu");
-  assert.ok(
-    exists(".topic-admin-pin"),
-    "it should show the multi select menu"
-  );
+  assert.ok(exists(".topic-admin-pin"), "it should show the multi select menu");
 });
 
 QUnit.test("selecting posts", async assert => {
