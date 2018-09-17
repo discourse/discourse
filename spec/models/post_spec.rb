@@ -940,6 +940,16 @@ describe Post do
   describe "cooking" do
     let(:post) { Fabricate.build(:post, post_args.merge(raw: "please read my blog http://blog.example.com")) }
 
+    it "should unconditionally follow links for staff" do
+
+      SiteSetting.tl3_links_no_follow = true
+      post.user.trust_level = 1
+      post.user.moderator = true
+      post.save
+
+      expect(post.cooked).not_to match(/nofollow/)
+    end
+
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
