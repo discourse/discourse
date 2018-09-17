@@ -7,6 +7,10 @@ describe Stylesheet::Importer do
     Stylesheet::Compiler.compile_asset(name)[0]
   end
 
+  def compile(stylesheet)
+    Stylesheet::Compiler.compile(stylesheet, "test.scss", force: true)[0]
+  end
+
   it "applies CDN to background category images" do
     expect(compile_css("category_backgrounds")).to_not include("background-image")
 
@@ -33,4 +37,22 @@ describe Stylesheet::Importer do
     expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
   end
 
+  it "imports from other themes" do
+    theme = Theme.new(
+      name: 'importer',
+      user_id: -1
+    )
+
+    theme.set_field(target: :common, name: "scss", value: ".common{.scss{color: red;}}")
+    theme.set_field(target: :desktop, name: "scss", value: ".desktop{.scss{color: red;}}")
+    theme.set_field(target: :mobile, name: "scss", value: ".mobile{.scss{color: red;}}")
+    theme.set_field(target: :common, name: "embedded_scss", value: ".embedded{.scss{color: red;}}")
+
+    theme.save!
+
+    expect(compile("@import \"themes/#{theme.id}/common\"; .child_common {color:red;}")).to include('.common')
+    expect(compile("@import \"themes/#{theme.id}/desktop\"; .child_desktop {color:red;}")).to include('.desktop')
+    expect(compile("@import \"themes/#{theme.id}/mobile\"; .child_mobile {color:red;}")).to include('.mobile')
+    expect(compile("@import \"themes/#{theme.id}/common_embedded\"; .child_embedded {color:red;}")).to include('.embedded')
+  end
 end

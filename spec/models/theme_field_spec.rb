@@ -69,6 +69,27 @@ HTML
     expect(field.error).to eq(nil)
   end
 
+  it "correctly generates errors for transpiled css with parent themes" do
+    theme = Theme.new(
+      name: 'importer',
+      user_id: -1
+    )
+    theme.set_field(target: :common, name: "scss", value: "$A: red; .scss{color: white;}")
+    theme.save!
+
+    child_theme = Theme.new(
+      name: 'importee',
+      user_id: -1
+    )
+
+    child_theme.set_field(target: :common, name: "scss", value: ".scss{color: $A;}")
+    child_theme.save!
+
+    theme.add_child_theme!(child_theme)
+    expect(child_theme.theme_fields.reduce(false) { |boolean, field| boolean || field.error }).to eq(false)
+    expect(child_theme.list_baked_fields(:common, :scss).value).to include("color: red;")
+  end
+
   def create_upload_theme_field!(name)
     ThemeField.create!(
       theme_id: 1,

@@ -106,7 +106,8 @@ module Stylesheet
       end
     end
 
-    def theme_import(target, attr)
+    def theme_import(target, attr, options = {})
+      theme = theme_by_id(options[:theme_id]) if options[:theme_id].present?
       fields = theme.list_baked_fields(target, attr)
 
       fields.map do |field|
@@ -127,9 +128,13 @@ COMMENT
 
     def theme
       unless @theme
-        @theme = (@theme_id && Theme.find(@theme_id)) || :nil
+        @theme = theme_by_id(@theme_id)
       end
       @theme == :nil ? nil : @theme
+    end
+
+    def theme_by_id(theme_id)
+      (theme_id && Theme.find(theme_id)) || :nil
     end
 
     def category_css(category)
@@ -149,6 +154,14 @@ COMMENT
         end
       elsif callback = Importer.special_imports[asset]
         instance_eval(&callback)
+      elsif asset.start_with?("themes/")
+        groups = asset.match(/^themes\/(?<id>\d+)\/(?<platform>(common)|(desktop)|(mobile))(?<embed>_embedded)?$/)
+        if groups.present?
+          theme_id = groups[:id]
+          platform = groups[:platform].to_sym
+          attr = if groups[:embed].present? then :embedded_scss else :scss end
+          theme_import(platform, attr, theme_id: theme_id.to_int)
+        end
       else
         Import.new(asset + ".scss")
       end
