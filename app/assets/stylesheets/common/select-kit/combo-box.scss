@@ -23,6 +23,10 @@
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
+      .spinner {
+        flex: 0 0 auto;
+      }
+
       .filter-input,
       .filter-input:focus,
       .filter-input:active {
