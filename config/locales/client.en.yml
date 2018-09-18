@@ -2003,12 +2003,10 @@ en:
         title: "Change Owner of Posts"
         action: "change ownership"
         error: "There was an error changing the ownership of the posts."
-        label: "New Owner of Posts"
         placeholder: "username of new owner"
         instructions:
-          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
-          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively."
+          one: "Please choose a new owner for the post by <b>@{{old_user}}</b>"
+          other: "Please choose a new owner for the {{count}} posts by <b>@{{old_user}}</b>"
 
       change_timestamp:
         title: "Change Timestamp..."
