@@ -2000,7 +2000,7 @@ en:
         error: "There was an error merging the selected posts."
 
       change_owner:
-        title: "Change Owner of Posts"
+        title: "Change Owner"
         action: "change ownership"
         error: "There was an error changing the ownership of the posts."
         placeholder: "username of new owner"
