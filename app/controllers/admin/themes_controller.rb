@@ -77,7 +77,7 @@ class Admin::ThemesController < Admin::AdminController
     elsif params[:remote]
       begin
         branch = params[:branch] ? params[:branch] : 'master'
-        @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key], branch)
+        @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
       rescue RuntimeError => e
         Discourse.warn_exception(e, message: "Error importing theme")
