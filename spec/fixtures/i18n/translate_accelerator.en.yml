@@ -1,0 +1,20 @@
+en:
+  got: "winter"
+  foo: 'Foo in :en'
+  bar: 'Bar in :en'
+  wat: "Hello %{count}"
+  world: "Hello %{world}"
+  items:
+    one: "one item"
+    other: "%{count} items"
+  keys:
+    magic:
+      one: "one magic key"
+      other: "%{count} magic keys"
+  throne: "%{title} is the new king"
+  fish: "original fish"
+
+  js:
+    foo: "foo"
+  admin_js:
+    beep: "beep"
