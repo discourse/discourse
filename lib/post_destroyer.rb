@@ -60,7 +60,6 @@ class PostDestroyer
   end
 
   def recover
-    post_deleted_at = @post.deleted_at
     if @user.staff? && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
@@ -70,7 +69,6 @@ class PostDestroyer
     topic.recover! if @post.is_first_post?
     topic.update_statistics
     recover_user_actions
-    recover_public_post_actions(post_deleted_at)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
@@ -79,7 +77,9 @@ class PostDestroyer
   end
 
   def staff_recovered
+    post_deleted_at = @post.deleted_at
     @post.recover!
+    recover_public_post_actions(post_deleted_at)
 
     if @post.topic && !@post.topic.private_message?
       if author = @post.user
