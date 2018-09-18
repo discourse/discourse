@@ -4,7 +4,7 @@ import Category from "discourse/models/category";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName:
-  "select-kit/templates/components/category-drop/category-drop-header",
+    "select-kit/templates/components/category-drop/category-drop-header",
   classNames: "category-drop-header",
 
   classNameBindings: ["categoryStyleClass"],
