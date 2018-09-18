@@ -29,8 +29,10 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
-    @primary_color = rgba_color(ColorScheme.hex_for_name('tertiary'))
-    @secondary_color = rgba_color(ColorScheme.hex_for_name('tertiary'), 0.1)
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    @primary_color = rgba_color(tertiary)
+    @secondary_color = rgba_color(tertiary, 0.1)
   end
 
   def self.cache_key(report)
@@ -174,6 +176,13 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+      # ensures that if anything unexpected prevents us from
+      # creating a report object we fail elegantly and log an error
+      if !report
+        Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
+        return nil
+      end
+
       report.error = :exception
 
       # given reports can be added by plugins we don’t want dashboard failures
@@ -692,21 +701,10 @@ class Report
 
     report.modes = [:table]
 
-    select_sql = <<~SQL
-      lower(term) term,
-      COUNT(*) AS searches,
-      SUM(CASE
-               WHEN search_result_id IS NOT NULL THEN 1
-               ELSE 0
-           END) AS click_through,
-      COUNT(DISTINCT ip_address) AS unique_searches
-    SQL
-
-    trends = SearchLog.select(select_sql)
-      .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
-      .group('lower(term)')
-      .order('unique_searches DESC, click_through ASC, term ASC')
-      .limit(report.limit || 20).to_a
+    trends = SearchLog.trending_from(report.start_date,
+      end_date: report.end_date,
+      limit: report.limit
+    )
 
     trends.each do |trend|
       ctr =

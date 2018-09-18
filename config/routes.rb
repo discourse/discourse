@@ -290,9 +290,6 @@ Discourse::Application.routes.draw do
         post "preview" => "badges#preview"
       end
     end
-
-    get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
-    get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
@@ -793,7 +790,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :tag_groups, except: [:new, :edit] do
+  resources :tag_groups, constraints: StaffConstraint.new, except: [:new, :edit] do
     collection do
       get '/filter/search' => 'tag_groups#search'
     end

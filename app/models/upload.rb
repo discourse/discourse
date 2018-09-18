@@ -112,7 +112,7 @@ class Upload < ActiveRecord::Base
   end
 
   def fix_dimensions!
-    return if !FileHelper.is_image?("image.#{extension}")
+    return if !FileHelper.is_supported_image?("image.#{extension}")
 
     path =
       if local?
@@ -177,7 +177,7 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-    data = uri.path.match(/(\/original\/\dX\/[\/\.\w]+\/([a-zA-Z0-9]+)[\.\w]+)/)
+    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
     return if data.blank?
     sha1 = data[2]
     upload = nil
@@ -219,7 +219,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
+          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)

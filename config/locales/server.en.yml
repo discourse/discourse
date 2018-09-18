@@ -796,7 +796,6 @@ en:
       others: "No replies."
     no_drafts:
       self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
-      others: "You do not have permission to see drafts for this user."
 
   topic_flag_types:
     spam:
@@ -864,6 +863,9 @@ en:
       read: "Read all"
       write: "Write all"
 
+  flags:
+    errors:
+      already_handled: "Flag was already handled"
   reports:
     default:
       labels:
@@ -1116,6 +1118,7 @@ en:
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
+    unreachable_themes: "We were unable to check for updates on the following themes:"
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1141,6 +1144,7 @@ en:
     log_search_queries: "Log search queries performed by users"
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
+    search_ignore_accents: "Ignore accents when searching for text."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1347,6 +1351,7 @@ en:
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
     s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
+    s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -1726,7 +1731,6 @@ en:
     enable_emoji: "Enable emoji"
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
-    enforce_square_emoji: "Force a square aspect ratio to all emojis."
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"

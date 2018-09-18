@@ -14,6 +14,8 @@ export default SelectKitHeaderComponent.extend({
     "select-kit/templates/components/multi-select/multi-select-header",
   selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
 
+  forceEscape: Ember.computed.alias("options.forceEscape"),
+
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title", "names"),
 
   title: Ember.computed.or("computedContent.title", "names"),

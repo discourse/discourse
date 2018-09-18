@@ -239,6 +239,7 @@ class Post < ActiveRecord::Base
   end
 
   def add_nofollow?
+    return false if user&.staff?
     user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
   end
 
@@ -256,14 +257,9 @@ class Post < ActiveRecord::Base
 
     post_user = self.user
     options[:user_id] = post_user.id if post_user
+    options[:omit_nofollow] = true if omit_nofollow?
 
-    if add_nofollow?
-      cooked = post_analyzer.cook(raw, options)
-    else
-      # At trust level 3, we don't apply nofollow to links
-      options[:omit_nofollow] = true
-      cooked = post_analyzer.cook(raw, options)
-    end
+    cooked = post_analyzer.cook(raw, options)
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 

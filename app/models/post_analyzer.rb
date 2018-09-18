@@ -127,8 +127,6 @@ class PostAnalyzer
     raw_links.size
   end
 
-  private
-
   def cooked_stripped
     @cooked_stripped ||= begin
       doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
@@ -136,6 +134,8 @@ class PostAnalyzer
       doc
     end
   end
+
+  private
 
   def link_is_a_mention?(l)
     html_class = l['class']

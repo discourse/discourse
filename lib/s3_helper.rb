@@ -131,6 +131,7 @@ class S3Helper
   end
 
   def update_tombstone_lifecycle(grace_period)
+    return if !SiteSetting.s3_configure_tombstone_policy
     return if @tombstone_prefix.blank?
     update_lifecycle("purge_tombstone", grace_period, prefix: @tombstone_prefix)
   end

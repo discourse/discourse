@@ -204,7 +204,7 @@ RSpec.describe SearchLog, type: :model do
       top_trending = SearchLog.trending.first
       expect(top_trending.term).to eq("ruby")
       expect(top_trending.searches).to eq(3)
-      expect(top_trending.unique).to eq(2)
+      expect(top_trending.unique_searches).to eq(2)
       expect(top_trending.click_through).to eq(0)
 
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(search_result_id: 12)

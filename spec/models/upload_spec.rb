@@ -75,11 +75,38 @@ describe Upload do
 
   context ".get_from_url" do
     let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
-    let(:url) { "/uploads/default/original/3X/1/0/#{sha1}.png" }
-    let(:upload) { Fabricate(:upload, url: url, sha1: sha1) }
+    let(:upload) { Fabricate(:upload, sha1: sha1) }
 
     it "works when the file has been uploaded" do
       expect(Upload.get_from_url(upload.url)).to eq(upload)
+    end
+
+    describe 'for an extensionless url' do
+      before do
+        upload.update!(url: upload.url.sub('.png', ''))
+        upload.reload
+      end
+
+      it 'should return the right upload' do
+        expect(Upload.get_from_url(upload.url)).to eq(upload)
+      end
+    end
+
+    describe 'for a url a tree' do
+      before do
+        upload.update!(url:
+          Discourse.store.get_path_for(
+            "original",
+            16001,
+            upload.sha1,
+            ".#{upload.extension}"
+          )
+        )
+      end
+
+      it 'should return the right upload' do
+        expect(Upload.get_from_url(upload.url)).to eq(upload)
+      end
     end
 
     it "works when using a cdn" do
@@ -108,8 +135,8 @@ describe Upload do
     end
 
     describe "s3 store" do
-      let(:path) { "/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
-      let(:url) { "#{SiteSetting.Upload.absolute_base_url}#{path}" }
+      let(:upload) { Fabricate(:upload_s3) }
+      let(:path) { upload.url.sub(SiteSetting.Upload.s3_base_url, '') }
 
       before do
         SiteSetting.enable_s3_uploads = true
@@ -120,7 +147,7 @@ describe Upload do
 
       it "should return the right upload when using base url (not CDN) for s3" do
         upload
-        expect(Upload.get_from_url(url)).to eq(upload)
+        expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
 
       describe 'when using a cdn' do

@@ -117,6 +117,9 @@ module Discourse
       plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
+      google-tag-manager.js
+      google-universal-analytics.js
+      preload-application-data.js
     }
 
     # Precompile all available locales

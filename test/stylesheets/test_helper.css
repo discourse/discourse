@@ -1,4 +1,5 @@
 @import '/stylesheets/desktop.css';
+@import 'qunit/qunit/qunit.css';
 
 .modal-backdrop {
   display: none;
