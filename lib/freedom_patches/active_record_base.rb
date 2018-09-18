@@ -15,7 +15,7 @@ class ActiveRecord::Base
   def self.find_or_create_by_safe!(hash)
     begin
       find_or_create_by!(hash)
-    rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
+    rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
       # try again cause another transaction could have passed by now
       find_or_create_by!(hash)
     end

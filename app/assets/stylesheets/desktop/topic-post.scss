@@ -870,11 +870,11 @@ span.highlighted {
 }
 
 .read-state {
-  color: $tertiary-medium;
-  // We use absolute positioning here because we want it to display in the padding
   position: absolute;
+  // We use absolute positioning here because we want it to display in the padding
+  align-self: center;
+  color: $tertiary-medium;
   right: 0;
-  top: 2em;
   font-size: 0.571em;
 }
 

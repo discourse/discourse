@@ -565,11 +565,13 @@ select {
   }
 
   .muted {
-    color: #888;
+    color: $primary-medium;
   }
 
   .perf-auth-token {
-    background: #f9f9f9;
+    background-color: $primary-very-low;
+    color: $primary;
+    display: block;
     padding: 5px;
     margin-bottom: 10px;
   }
@@ -585,12 +587,12 @@ select {
   }
 
   .auth-token-details {
-    background: #fff;
+    background: $secondary;
     padding: 5px 10px;
     margin: 10px 5px 5px 5px;
 
     .auth-token-label {
-      color: #888;
+      color: $primary-medium;
     }
   }
 

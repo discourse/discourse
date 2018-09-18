@@ -2,7 +2,11 @@
 
 <div class="body">
   <span class="name">
-    {{{label}}}
+    {{#if forceEscape}}
+      {{label}}
+    {{else}}
+      {{{label}}}
+    {{/if}}
   </span>
 </div>
 

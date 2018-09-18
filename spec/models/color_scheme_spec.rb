@@ -65,6 +65,13 @@ describe ColorScheme do
         expect(ColorScheme.hex_for_name('undefined')).to eq nil
       end
 
+      it "returns the base color for an attribute of a specified scheme" do
+        scheme = ColorScheme.create_from_base(name: "test scheme")
+        ColorSchemeRevisor.revise(scheme, colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }])
+        scheme.reload
+        expect(ColorScheme.hex_for_name("header_background", scheme.id)).to eq("9dc927")
+      end
+
       it "returns the base color for an attribute" do
         expect(ColorScheme.hex_for_name('second_one')).to eq base_colors[:second_one]
       end

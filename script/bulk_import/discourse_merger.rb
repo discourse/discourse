@@ -173,7 +173,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     columns = Category.columns.map(&:name)
     imported_ids = []
-    last_id = Category.unscoped.maximum(:id)
+    last_id = Category.unscoped.maximum(:id) || 1
 
     sql = "COPY categories (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -249,7 +249,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     columns = Tag.columns.map(&:name)
     imported_ids = []
-    last_id = Tag.unscoped.maximum(:id)
+    last_id = Tag.unscoped.maximum(:id) || 1
 
     sql = "COPY tags (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -366,7 +366,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts "merging badges..."
     columns = Badge.columns.map(&:name)
     imported_ids = []
-    last_id = Badge.unscoped.maximum(:id)
+    last_id = Badge.unscoped.maximum(:id) || 1
 
     sql = "COPY badges (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do

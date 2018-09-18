@@ -37,8 +37,8 @@ class UploadCreator
       # test for image regardless of input
       @image_info = FastImage.new(@file) rescue nil
 
-      is_image = FileHelper.is_image?(@filename)
-      is_image ||= @image_info && FileHelper.is_image?("test.#{@image_info.type}")
+      is_image = FileHelper.is_supported_image?(@filename)
+      is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
 
       if is_image
         extract_image_info!

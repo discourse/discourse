@@ -92,6 +92,7 @@ RSpec.describe ApplicationController do
   describe "#handle_theme" do
     let(:theme) { Fabricate(:theme, user_selectable: true) }
     let(:theme2) { Fabricate(:theme, user_selectable: true) }
+    let(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -148,6 +149,15 @@ RSpec.describe ApplicationController do
       get "/", params: { preview_theme_id: theme2.id }
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
+
+      get "/", params: { preview_theme_id: non_selectable_theme.id }
+      expect(controller.theme_ids).to eq([non_selectable_theme.id])
+    end
+
+    it "does not allow non privileged user to preview themes" do
+      sign_in(user)
+      get "/", params: { preview_theme_id: non_selectable_theme.id }
+      expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
     end
 
     it "cookie can fail back to user if out of sync" do

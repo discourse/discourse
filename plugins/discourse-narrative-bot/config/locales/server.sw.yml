@@ -7,6 +7,7 @@
 
 sw:
   site_settings:
+    discourse_narrative_bot_enabled: 'Ruhusu roboti wa maelezo ya Discourse (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Sitisha Roboti wa Discourse kukaribisha watu na taarifa"
     discourse_narrative_bot_ignored_usernames: "Majina ya watumiaji ambayo Roboti wa Discourse aya dharau"
     discourse_narrative_bot_disable_public_replies: "Sitisha majibu ya umma ya roboti wa Discourse"

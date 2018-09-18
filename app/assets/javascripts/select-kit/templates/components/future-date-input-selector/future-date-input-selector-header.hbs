@@ -5,7 +5,11 @@
 {{/if}}
 
 <span class="selected-name" title={{title}}>
-  {{{label}}}
+  {{#if forceEscape}}
+    {{label}}
+  {{else}}
+    {{{label}}}
+  {{/if}}
 </span>
 
 {{#if computedContent.datetime}}

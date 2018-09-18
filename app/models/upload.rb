@@ -7,6 +7,8 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  SHA1_LENGTH = 40
+
   belongs_to :user
 
   has_many :post_uploads, dependent: :destroy
@@ -110,7 +112,7 @@ class Upload < ActiveRecord::Base
   end
 
   def fix_dimensions!
-    return if !FileHelper.is_image?("image.#{extension}")
+    return if !FileHelper.is_supported_image?("image.#{extension}")
 
     path =
       if local?
@@ -154,10 +156,10 @@ class Upload < ActiveRecord::Base
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
       sha1 = Base62.decode($2).to_s(16)
 
-      if sha1.length > 40
+      if sha1.length > SHA1_LENGTH
         nil
       else
-        sha1.rjust(40, '0')
+        sha1.rjust(SHA1_LENGTH, '0')
       end
     end
   end
@@ -175,12 +177,12 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-
-    path = uri.path[/(\/original\/\dX\/[\/\.\w]+)/, 1]
-
-    return if path.blank?
-
-    Upload.find_by("url LIKE ?", "%#{path}")
+    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+    return if data.blank?
+    sha1 = data[2]
+    upload = nil
+    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
+    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
   def self.migrate_to_new_scheme(limit = nil)
@@ -217,7 +219,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
+          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)

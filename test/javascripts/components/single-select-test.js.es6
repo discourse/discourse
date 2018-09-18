@@ -501,6 +501,32 @@ componentTest("support modifying on select behavior through plugin api", {
   }
 });
 
+componentTest("support modifying on select none behavior through plugin api", {
+  template:
+    '<span class="on-select-none-test"></span>{{single-select none="none" content=content}}',
+
+  beforeEach() {
+    withPluginApi("0.8.25", api => {
+      api.modifySelectKit("select-kit").onSelectNone(() => {
+        find(".on-select-none-test").html("NONE");
+      });
+    });
+
+    this.set("content", [{ id: "1", name: "robin" }]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(1);
+    await this.get("subject").expand();
+    await this.get("subject").selectNoneRow();
+
+    assert.equal(find(".on-select-none-test").html(), "NONE");
+
+    clearCallbacks();
+  }
+});
+
 componentTest("with nameChanges", {
   template: "{{single-select content=content nameChanges=true}}",
 
@@ -743,5 +769,121 @@ componentTest("with no content and allowAny", {
 
     assert.ok($filter.hasClass("is-focused"));
     assert.ok(!$filter.hasClass("is-hidden"));
+  }
+});
+
+componentTest("with forceEscape", {
+  template: "{{single-select content=content forceEscape=true}}",
+
+  beforeEach() {
+    this.set("content", ["<div>sam</div>"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    const row = this.get("subject").rowByIndex(0);
+    assert.equal(
+      row
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "&lt;div&gt;sam&lt;/div&gt;"
+    );
+
+    assert.equal(
+      this.get("subject")
+        .header()
+        .el()
+        .find(".selected-name")
+        .html()
+        .trim(),
+      "&lt;div&gt;sam&lt;/div&gt;"
+    );
+  }
+});
+
+componentTest("without forceEscape", {
+  template: "{{single-select content=content forceEscape=false}}",
+
+  beforeEach() {
+    this.set("content", ["<div>sam</div>"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    const row = this.get("subject").rowByIndex(0);
+    assert.equal(
+      row
+        .el()
+        .find(".name")
+        .html()
+        .trim(),
+      "<div>sam</div>"
+    );
+
+    assert.equal(
+      this.get("subject")
+        .header()
+        .el()
+        .find(".selected-name")
+        .html()
+        .trim(),
+      "<div>sam</div>"
+    );
+  }
+});
+
+componentTest("onSelect", {
+  template:
+    "<div class='test-external-action'></div>{{single-select content=content onSelect=(action externalAction)}}",
+
+  beforeEach() {
+    this.set("externalAction", actual => {
+      find(".test-external-action").text(actual);
+    });
+
+    this.set("content", ["red", "blue"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("red");
+
+    assert.equal(
+      find(".test-external-action")
+        .text()
+        .trim(),
+      "red"
+    );
+  }
+});
+
+componentTest("onDeselect", {
+  template:
+    "<div class='test-external-action'></div>{{single-select content=content onDeselect=(action externalAction)}}",
+
+  beforeEach() {
+    this.set("externalAction", actual => {
+      find(".test-external-action").text(actual);
+    });
+
+    this.set("content", ["red", "blue"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("red");
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("blue");
+
+    assert.equal(
+      find(".test-external-action")
+        .text()
+        .trim(),
+      "red"
+    );
   }
 });

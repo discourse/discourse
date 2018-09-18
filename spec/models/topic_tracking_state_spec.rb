@@ -114,16 +114,16 @@ describe TopicTrackingState do
           "/private-messages/group/#{group2.name}"
         )
 
-        message = messages.find do |message|
-          message.channel == '/private-messages/inbox'
+        message = messages.find do |m|
+          m.channel == '/private-messages/inbox'
         end
 
         expect(message.data["topic_id"]).to eq(private_message_topic.id)
         expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
         [group1, group2].each do |group|
-          message = messages.find do |message|
-            message.channel == "/private-messages/group/#{group.name}"
+          message = messages.find do |m|
+            m.channel == "/private-messages/group/#{group.name}"
           end
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
@@ -148,9 +148,7 @@ describe TopicTrackingState do
             "/private-messages/group/#{group2.name}/archive",
           )
 
-          message = messages.find do |message|
-            message.channel == '/private-messages/inbox'
-          end
+          message = messages.find { |m| m.channel == '/private-messages/inbox' }
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
@@ -162,10 +160,7 @@ describe TopicTrackingState do
               group_channel,
               "#{group_channel}/archive"
             ].each do |channel|
-              message = messages.find do |message|
-                message.channel == channel
-              end
-
+              message = messages.find { |m| m.channel == channel }
               expect(message.data["topic_id"]).to eq(private_message_topic.id)
               expect(message.user_ids).to eq(group.users.map(&:id))
             end
@@ -211,9 +206,7 @@ describe TopicTrackingState do
           [user.id],
           [group.users.first.id]
         ]).each do |channel, user_ids|
-          message = messages.find do |message|
-            message.channel == channel
-          end
+          message = messages.find { |m| m.channel == channel }
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(user_ids)
@@ -239,10 +232,7 @@ describe TopicTrackingState do
         expect(messages.map(&:channel)).to eq(expected_channels)
 
         expected_channels.each do |channel|
-          message = messages.find do |message|
-            message.channel = channel
-          end
-
+          message = messages.find { |m| m.channel = channel }
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
           expect(message.user_ids).to eq([private_message_post.user_id])
         end

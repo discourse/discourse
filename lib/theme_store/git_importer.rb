@@ -2,6 +2,7 @@ module ThemeStore; end
 
 class ThemeStore::GitImporter
 
+  class ImportFailed < StandardError; end
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: 'master')
@@ -66,7 +67,11 @@ class ThemeStore::GitImporter
   protected
 
   def import_public!
-    Discourse::Utils.execute_command("git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+    begin
+      Discourse::Utils.execute_command("git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+    rescue => err
+      raise ImportFailed.new(err.message)
+    end
   end
 
   def import_private!
@@ -78,9 +83,13 @@ class ThemeStore::GitImporter
       FileUtils.chmod(0600, 'id_rsa')
     end
 
-    Discourse::Utils.execute_command({
-      'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
-    }, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+    begin
+      Discourse::Utils.execute_command({
+        'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
+      }, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+    rescue => err
+      raise ImportFailed.new(err.message)
+    end
   ensure
     FileUtils.rm_rf ssh_folder
   end

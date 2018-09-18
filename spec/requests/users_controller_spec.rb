@@ -190,7 +190,10 @@ describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+        expect(response.body).to have_tag("meta#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+        end
 
         expect(session["password-#{token}"]).to be_blank
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
@@ -255,7 +258,10 @@ describe UsersController do
 
           get "/u/password-reset/#{token}"
 
-          expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+          expect(response.body).to have_tag("meta#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+          end
 
           put "/u/password-reset/#{token}", params: {
             password: 'hg9ow8yHG32O',
@@ -1517,12 +1523,43 @@ describe UsersController do
           end
 
           context "custom_field" do
-            it "does not update the custom field" do
-              put "/u/#{user.username}.json", params: { custom_fields: { test: :it } }
+            before do
+              plugin = Plugin::Instance.new
+              plugin.register_editable_user_custom_field :test2
+            end
+
+            after do
+              User.plugin_editable_user_custom_fields.clear
+            end
+
+            it "only updates allowed user fields" do
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
 
               expect(response.status).to eq(200)
-              expect(user.custom_fields["test"]).to be_blank
+              expect(user.custom_fields["test1"]).to be_blank
+              expect(user.custom_fields["test2"]).to eq("hello2")
             end
+
+            it "works alongside a user field" do
+              user_field = Fabricate(:user_field, editable: true)
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 }, user_fields: { user_field.id.to_s => 'happy' } }
+              expect(response.status).to eq(200)
+              expect(user.custom_fields["test1"]).to be_blank
+              expect(user.custom_fields["test2"]).to eq("hello2")
+              expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+            end
+
+            it "is secure when there are no registered editable fields" do
+              User.plugin_editable_user_custom_fields.clear
+              put "/u/#{user.username}.json", params: { custom_fields: { test1: :hello1, test2: :hello2 } }
+              expect(response.status).to eq(200)
+              expect(user.custom_fields["test1"]).to be_blank
+              expect(user.custom_fields["test2"]).to be_blank
+
+              put "/u/#{user.username}.json", params: { custom_fields: ["arrayitem1", "arrayitem2"] }
+              expect(response.status).to eq(200)
+            end
+
           end
         end
 
@@ -2540,6 +2577,18 @@ describe UsersController do
       expect(response).to redirect_to("/")
     end
 
+    context 'when cookies contains a destination URL' do
+      it 'should redirect to the URL' do
+        sign_in(Fabricate(:user))
+        destination_url = 'http://thisisasite.com/somepath'
+        cookies[:destination_url] = destination_url
+
+        get "/u/account-created"
+
+        expect(response).to redirect_to(destination_url)
+      end
+    end
+
     context "when the user account is created" do
       include ApplicationHelper
 
@@ -2549,9 +2598,12 @@ describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to include(
-          "{\"message\":\"#{I18n.t("login.activate_email", email: user.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user.username}\",\"email\":\"#{user.email}\"}"
-        )
+        expect(response.body).to have_tag("meta#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['accountCreated']).to include(
+            "{\"message\":\"#{I18n.t("login.activate_email", email: user.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user.username}\",\"email\":\"#{user.email}\"}"
+          )
+        end
       end
     end
   end
@@ -3162,6 +3214,26 @@ describe UsersController do
           }
           expect(response.status).to eq(200)
         end
+      end
+
+    end
+
+  end
+
+  describe '#revoke_auth_token' do
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      it 'logs user out' do
+        expect(user.user_auth_tokens.count).to eq(1)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json"
+
+        expect(response.status).to eq(200)
+        expect(user.user_auth_tokens.count).to eq(0)
       end
 
     end

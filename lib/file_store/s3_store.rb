@@ -9,6 +9,8 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
+    attr_reader :s3_helper
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
     end
@@ -37,7 +39,7 @@ module FileStore
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
-      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_image?(filename)
+      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
       # if this fails, it will throw an exception
       path = @s3_helper.upload(file, path, options)
       # return the upload url

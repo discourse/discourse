@@ -107,4 +107,21 @@ describe Oneboxer do
     end
   end
 
+  it "does not crawl blacklisted URLs" do
+    SiteSetting.onebox_domains_blacklist = "git.*.com|bitbucket.com"
+    url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
+    stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
+
+    expect(Oneboxer.external_onebox(url)[:onebox]).to be_empty
+    expect(Oneboxer.external_onebox('https://discourse.org/')[:onebox]).to be_empty
+  end
+
+  it "does not consider ignore_redirects domains as blacklisted" do
+    url = 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/'
+    stub_request(:head, url).to_return(status: 200, body: "", headers: {})
+    stub_request(:get, url).to_return(status: 200, body: "", headers: {})
+
+    expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
+  end
+
 end

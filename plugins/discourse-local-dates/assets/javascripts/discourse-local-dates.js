@@ -27,7 +27,10 @@
       }
 
       var previews = options.timezones.split("|").map(function(timezone) {
-        var dateTime = relativeTime.tz(timezone).format("LLL");
+        var dateTime = relativeTime
+          .tz(timezone)
+          .format(options.format || "LLL");
+
         var timezoneParts = _formatTimezone(timezone);
 
         if (dateTime.match(/TZ/)) {
@@ -42,7 +45,10 @@
         }
       });
 
-      var relativeTime = relativeTime.tz(moment.tz.guess());
+      var relativeTime = relativeTime.tz(
+        options.forceTimezone || moment.tz.guess()
+      );
+
       if (
         options.format !== "YYYY-MM-DD HH:mm:ss" &&
         relativeTime.isBetween(
@@ -60,7 +66,12 @@
       html += "<span class='relative-time'></span>";
       html += "</span>";
 
-      var joinedPreviews = previews.join(" – ");
+      var joinedPreviews = previews.join("\n");
+
+      var displayedTime = relativeTime.replace(
+        "TZ",
+        _formatTimezone(options.forceTimezone || moment.tz.guess()).join(": ")
+      );
 
       $element
         .html(html)
@@ -68,12 +79,7 @@
         .attr("data-tooltip", joinedPreviews)
         .addClass("cooked")
         .find(".relative-time")
-        .text(
-          relativeTime.replace(
-            "TZ",
-            _formatTimezone(moment.tz.guess()).join(": ")
-          )
-        );
+        .text(displayedTime);
 
       if (repeat) {
         this.timeout = setTimeout(function() {
@@ -91,6 +97,7 @@
       options.time = $this.attr("data-time");
       options.recurring = $this.attr("data-recurring");
       options.timezones = $this.attr("data-timezones") || "Etc/UTC";
+      options.forceTimezone = $this.attr("data-force-timezone");
 
       processElement($this, options);
     });

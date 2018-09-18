@@ -63,13 +63,18 @@ module PrettyText
       end
 
       if map.length > 0
-        reverse_map = map.invert
+        reverse_map = {}
+
+        map.each do |key, value|
+          reverse_map[value] ||= []
+          reverse_map[value] << key
+        end
 
         Upload.where(sha1: map.values).pluck(:sha1, :url).each do |row|
           sha1, url = row
 
-          if short_url = reverse_map[sha1]
-            result[short_url] = url
+          if short_urls = reverse_map[sha1]
+            short_urls.each { |short_url| result[short_url] = url }
           end
         end
       end
@@ -77,8 +82,8 @@ module PrettyText
       result
     end
 
-    def lookup_inline_onebox(url)
-      InlineOneboxer.lookup(url)
+    def lookup_inline_onebox(url, opts = {})
+      InlineOneboxer.lookup(url, opts)
     end
 
     def get_topic_info(topic_id)

@@ -1,10 +1,10 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
-import Tags from "select-kit/mixins/tags";
+import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
 import computed from "ember-addons/ember-computed-decorators";
 const { get, isEmpty, run, makeArray } = Ember;
 
-export default MultiSelectComponent.extend(Tags, {
+export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-group-chooser"],
   classNames: ["tag-group-chooser", "tag-chooser"],
   isAsync: true,

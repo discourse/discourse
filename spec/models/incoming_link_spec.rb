@@ -49,6 +49,12 @@ describe IncomingLink do
       IncomingLink.add(req(opts))
     end
 
+    it "does not explode with bad username" do
+      add(
+        username: "test\0test"
+      )
+    end
+
     it "does not explode with bad referer" do
       add(
         referer: 'file:///Applications/Install/75067ABC-C9D1-47B7-8ACE-76AEDE3911B2/Install/',

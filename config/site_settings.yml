@@ -333,7 +333,7 @@ login:
   verbose_sso_logging: false
   verbose_auth_token_logging:
     hidden: true
-    default: true
+    default: false
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -479,6 +479,7 @@ posting:
     min: 1
     default: 20
     locale_default:
+      ja: 8
       zh_CN: 8
       zh_TW: 8
   min_first_post_length:
@@ -486,6 +487,7 @@ posting:
     min: 1
     default: 20
     locale_default:
+      ja: 8
       zh_CN: 8
       zh_TW: 8
   min_personal_message_post_length:
@@ -493,6 +495,7 @@ posting:
     min: 1
     default: 10
     locale_default:
+      ja: 3
       zh_CN: 3
       zh_TW: 3
   max_post_length:
@@ -513,6 +516,7 @@ posting:
     default: 15
     min: 1
     locale_default:
+      ja: 6
       zh_CN: 6
       zh_TW: 6
   max_topic_title_length:
@@ -529,7 +533,7 @@ posting:
   allow_uppercase_posts:
     default: false
     locale_default:
-      ja: false
+      ja: true
   title_prettify:
     default: true
     locale_default:
@@ -551,6 +555,7 @@ posting:
     client: true
     default: 10
     locale_default:
+      ja: 4
       zh_CN: 4
       zh_TW: 4
   enable_personal_messages:
@@ -629,6 +634,7 @@ posting:
   post_excerpt_maxlength:
     default: 300
     locale_default:
+      ja: 120
       zh_CN: 120
       zh_TW: 120
   show_pinned_excerpt_mobile:
@@ -671,8 +677,6 @@ posting:
     default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
-  enforce_square_emoji:
-    default: true
   emoji_autocomplete_min_chars:
     client: true
     default: 0
@@ -733,6 +737,7 @@ email:
   digest_min_excerpt_length:
     default: 100
     locale_default:
+      ja: 50
       zh_CN: 50
       zh_TW: 50
   digest_topics:
@@ -783,7 +788,9 @@ email:
   pop3_polling_host: ''
   pop3_polling_port: 995
   pop3_polling_username: ''
-  pop3_polling_password: ''
+  pop3_polling_password:
+    default: ''
+    secret: true
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
@@ -837,6 +844,7 @@ email:
   mailgun_api_key:
     default: ''
     regex: '^(key-\h{32}|\h{32}-\h{8}-\h{8})$'
+    secret: true
   bounce_score_threshold:
     client: true
     default: 4
@@ -933,7 +941,7 @@ files:
     default: false
     client: true
   s3_use_iam_profile: false
-  s3_access_key_id: 
+  s3_access_key_id:
     default: ''
     secret: true
     shadowed_by_global: true
@@ -956,6 +964,9 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_force_path_style:
     default: false
+  s3_configure_tombstone_policy:
+    default: true
+    shadowed_by_global: true
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1157,6 +1168,7 @@ onebox:
   post_onebox_maxlength:
     default: 500
     locale_default:
+      ja: 200
       zh_CN: 200
       zh_TW: 200
   onebox_domains_blacklist:
@@ -1247,10 +1259,10 @@ rate_limits:
     default: 6
   max_post_deletions_per_minute:
     min: 1
-    default: 3
+    default: 2
   max_post_deletions_per_day:
     min: 1
-    default: 20
+    default: 10
 
 developer:
   force_hostname:
@@ -1419,7 +1431,6 @@ search:
       zh_TW: 2
       ko: 2
       ja: 2
-
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:
@@ -1434,6 +1445,22 @@ search:
   search_query_log_max_retention_days:
     default: 365 # 1 year
     max: 1825 # 5 years
+  search_ignore_accents:
+    default: false
+    locale_default:
+      ar: true
+      ca: true
+      cs: true
+      el: true
+      es: true
+      fa_IR: true
+      fr: true
+      hu: true
+      pt: true
+      pt_BR: true
+      ro: true
+      sk: true
+      tr_TR: true
 
 uncategorized:
   version_checks:
@@ -1455,6 +1482,7 @@ uncategorized:
     default: 'ascii'
     enum: 'SlugSetting'
     locale_default:
+      ja: 'none'
       zh_CN: 'none'
       zh_TW: 'none'
 
@@ -1598,6 +1626,7 @@ uncategorized:
     default: 500
     client: true
     locale_default:
+      ja: 350
       zh_CN: 350
       zh_TW: 350
 

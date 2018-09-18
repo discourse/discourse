@@ -759,7 +759,6 @@ sq:
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
-    enforce_square_emoji: "Force a square aspect ratio to all emojis."
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"

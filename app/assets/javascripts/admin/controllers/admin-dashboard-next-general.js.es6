@@ -24,11 +24,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   shouldDisplayDurability: Ember.computed.and("diskSpace"),
 
   @computed
-  topReferredTopicsTopions() {
-    return { table: { total: false, limit: 8 } };
-  },
-
-  @computed
   activityMetrics() {
     return [
       "page_view_total_reqs",
@@ -49,8 +44,37 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   },
 
   @computed
+  topReferredTopicsOptions() {
+    return {
+      table: { total: false, limit: 8 }
+    };
+  },
+
+  @computed
+  topReferredTopicsFilters() {
+    return {
+      startDate: moment()
+        .subtract(6, "days")
+        .startOf("day"),
+      endDate: this.get("today")
+    };
+  },
+
+  @computed
+  trendingSearchFilters() {
+    return {
+      startDate: moment()
+        .subtract(6, "days")
+        .startOf("day"),
+      endDate: this.get("today")
+    };
+  },
+
+  @computed
   trendingSearchOptions() {
-    return { table: { total: false, limit: 8 } };
+    return {
+      table: { total: false, limit: 8 }
+    };
   },
 
   usersByTypeReport: staticReport("users_by_type"),

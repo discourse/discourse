@@ -27,8 +27,8 @@ class MetadataController < ApplicationController
       display: display,
       orientation: 'any',
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
-      background_color: "##{ColorScheme.hex_for_name('secondary')}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background')}",
+      background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
       icons: [
         {
           src: logo,

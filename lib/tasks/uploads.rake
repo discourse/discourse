@@ -715,3 +715,17 @@ task "uploads:fix_incorrect_extensions" => :environment do
   require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
 end
+
+task "uploads:recover" => :environment do
+  require_dependency "upload_recovery"
+
+  dry_run = ENV["DRY_RUN"].present?
+
+  if ENV["RAILS_DB"]
+    UploadRecovery.new(dry_run: dry_run).recover
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      UploadRecovery.new(dry_run: dry_run).recover
+    end
+  end
+end

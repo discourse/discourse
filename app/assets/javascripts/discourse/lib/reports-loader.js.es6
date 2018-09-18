@@ -5,7 +5,7 @@ let _queue = [];
 let _processing = 0;
 
 // max number of reports which will be requested in one bulk request
-const MAX_JOB_SIZE = 5;
+const MAX_JOB_SIZE = 4;
 
 // max number of concurrent bulk requests
 const MAX_CONCURRENCY = 3;

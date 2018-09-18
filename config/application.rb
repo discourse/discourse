@@ -92,6 +92,7 @@ module Discourse
     if Rails.env == "development" || Rails.env == "test"
       config.assets.paths << "#{config.root}/test/javascripts"
       config.assets.paths << "#{config.root}/test/stylesheets"
+      config.assets.paths << "#{config.root}/node_modules"
     end
 
     # Allows us to skip minifincation on some files
@@ -116,6 +117,9 @@ module Discourse
       plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
+      google-tag-manager.js
+      google-universal-analytics.js
+      preload-application-data.js
     }
 
     # Precompile all available locales

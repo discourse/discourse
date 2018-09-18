@@ -10,6 +10,9 @@ class RemoteTheme < ActiveRecord::Base
   GITHUB_SSH_REGEXP = /^git@github\.com:/
 
   has_one :theme
+  scope :joined_remotes, -> {
+    joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(remote_url: "")
+  }
 
   def self.update_tgz_theme(filename, user: Discourse.system_user)
     importer = ThemeStore::TgzImporter.new(filename)
@@ -62,17 +65,25 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.out_of_date_themes
-    self.joins("JOIN themes ON themes.remote_theme_id = remote_themes.id")
-      .where.not(remote_url: "")
-      .where("commits_behind > 0 OR remote_version <> local_version")
+    self.joined_remotes.where("commits_behind > 0 OR remote_version <> local_version")
       .pluck("themes.name", "themes.id")
+  end
+
+  def self.unreachable_themes
+    self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
   end
 
   def update_remote_version
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
-    importer.import!
-    self.updated_at = Time.zone.now
-    self.remote_version, self.commits_behind = importer.commits_since(local_version)
+    begin
+      importer.import!
+    rescue ThemeStore::GitImporter::ImportFailed => err
+      self.last_error_text = err.message
+    else
+      self.updated_at = Time.zone.now
+      self.remote_version, self.commits_behind = importer.commits_since(local_version)
+      self.last_error_text = nil
+    end
   end
 
   def update_from_remote(importer = nil, skip_update: false)
@@ -82,7 +93,14 @@ class RemoteTheme < ActiveRecord::Base
     unless importer
       cleanup = true
       importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
-      importer.import!
+      begin
+        importer.import!
+      rescue ThemeStore::GitImporter::ImportFailed => err
+        self.last_error_text = err.message
+        return self
+      else
+        self.last_error_text = nil
+      end
     end
 
     theme_info = JSON.parse(importer["about.json"])
@@ -227,4 +245,5 @@ end
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  private_key       :text
+#  last_error_text   :text
 #

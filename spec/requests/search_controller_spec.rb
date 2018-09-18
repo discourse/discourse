@@ -16,6 +16,16 @@ describe SearchController do
       $redis.flushall
     end
 
+    it "returns a 400 error if you search for null bytes" do
+      term = "hello\0hello"
+
+      get "/search/query.json", params: {
+        term: term, include_blurb: true
+      }
+
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       my_post = Fabricate(:post, raw: 'this is my really awesome post')
 

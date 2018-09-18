@@ -108,6 +108,7 @@ class User < ActiveRecord::Base
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
+  before_save :match_title_to_primary_group_changes
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -220,6 +221,24 @@ class User < ActiveRecord::Base
     SiteSetting.reserved_usernames.split("|").any? do |reserved|
       !!lower.match("^#{Regexp.escape(reserved).gsub('\*', '.*')}$")
     end
+  end
+
+  def self.plugin_editable_user_custom_fields
+    @plugin_editable_user_custom_fields ||= {}
+  end
+
+  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin)
+    plugin_editable_user_custom_fields[custom_field_name] = plugin
+  end
+
+  def self.editable_user_custom_fields
+    fields = []
+
+    plugin_editable_user_custom_fields.each do |k, v|
+      fields << k if v.enabled?
+    end
+
+    fields.uniq
   end
 
   def self.plugin_staff_user_custom_fields
@@ -966,13 +985,15 @@ class User < ActiveRecord::Base
     result
   end
 
+  USER_FIELD_PREFIX ||= "user_field_"
+
   def user_fields
     return @user_fields if @user_fields
     user_field_ids = UserField.pluck(:id)
     if user_field_ids.present?
       @user_fields = {}
       user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["user_field_#{fid}"]
+        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
     @user_fields
@@ -1250,6 +1271,14 @@ class User < ActiveRecord::Base
       rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
         # keep going
       end
+    end
+  end
+
+  def match_title_to_primary_group_changes
+    return unless primary_group_id_changed?
+
+    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+      self.title = primary_group&.title
     end
   end
 
