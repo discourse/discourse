@@ -17,11 +17,6 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
-    <script>
-      window.EmberENV = window.EmberENV || {};
-      window.EmberENV['FORCE_JQUERY'] = true;
-    </script>
-
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script "ember_jquery" %>
     <%= preload_script "preload-store" %>
@@ -58,6 +53,8 @@
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
+
+    <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
   </head>
 
   <body class="<%= body_classes %>">
