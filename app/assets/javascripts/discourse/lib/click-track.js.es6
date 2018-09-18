@@ -128,16 +128,18 @@ export default {
     const isInternal = DiscourseURL.isInternal(href);
 
     // If we're on the same site, use the router and track via AJAX
-    if (tracking && isInternal && !$link.hasClass("attachment")) {
-      ajax("/clicks/track", {
-        data: {
-          url: href,
-          post_id: postId,
-          topic_id: topicId,
-          redirect: false
-        },
-        dataType: "html"
-      });
+    if (isInternal && !$link.hasClass("attachment")) {
+      if (tracking) {
+        ajax("/clicks/track", {
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId,
+            redirect: false
+          },
+          dataType: "html"
+        });
+      }
       DiscourseURL.routeTo(href);
       return false;
     }
