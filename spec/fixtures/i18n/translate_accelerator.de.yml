@@ -1,0 +1,4 @@
+en:
+  foo: 'Foo in :de'
+  bar: 'Bar in :de'
+  wat: "Hello %{count}"
