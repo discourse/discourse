@@ -30,6 +30,15 @@ describe ExportCsvController do
         expect(response).to be_forbidden
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
+
+      it "correctly logs the entity export" do
+        post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+
+        log_entry = UserHistory.last
+        expect(log_entry.action).to eq(UserHistory.actions[:entity_export])
+        expect(log_entry.acting_user_id).to eq(user.id)
+        expect(log_entry.subject).to eq("user_archive")
+      end
     end
   end
 
@@ -57,6 +66,15 @@ describe ExportCsvController do
         job_data = Jobs::ExportCsvFile.jobs.first["args"].first
         expect(job_data["entity"]).to eq("staff_action")
         expect(job_data["user_id"]).to eq(admin.id)
+      end
+
+      it "correctly logs the entity export" do
+        post "/export_csv/export_entity.json", params: { entity: "user_list" }
+
+        log_entry = UserHistory.last
+        expect(log_entry.action).to eq(UserHistory.actions[:entity_export])
+        expect(log_entry.acting_user_id).to eq(admin.id)
+        expect(log_entry.subject).to eq("user_list")
       end
     end
   end
