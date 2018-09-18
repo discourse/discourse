@@ -3520,6 +3520,7 @@ en:
             change_badge: "change badge"
             delete_badge: "delete badge"
             merge_user: "merge user"
+            entity_export: "export entity"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
