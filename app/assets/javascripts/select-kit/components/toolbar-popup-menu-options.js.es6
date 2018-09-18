@@ -12,10 +12,7 @@ export default DropdownSelectBoxComponent.extend({
     return `<h3>${title}</h3>`;
   },
 
-  mutateValue(value) {
-    this.sendAction("onPopupMenuAction", value);
-    this.setProperties({ value: null, highlighted: null });
-  },
+  autoHighlight() {},
 
   computeContent(content) {
     return content
