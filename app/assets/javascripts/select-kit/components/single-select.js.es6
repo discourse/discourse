@@ -210,6 +210,10 @@ export default SelectKitComponent.extend({
   },
 
   select(computedContentItem) {
+    if (this.get("hasSelection")) {
+      this.deselect(this.get("selection.value"));
+    }
+
     if (
       !computedContentItem ||
       computedContentItem.__sk_row_type === "noneRow"
