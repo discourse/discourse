@@ -217,6 +217,32 @@ describe PostDestroyer do
     end
   end
 
+  describe "recovery and public post actions" do
+    let(:codinghorror) { Fabricate(:coding_horror) }
+    let!(:like) { PostAction.act(codinghorror, post, PostActionType.types[:like]) }
+    let!(:another_like) { PostAction.act(moderator, post, PostActionType.types[:like]) }
+
+    it "restores public post actions" do
+      PostDestroyer.new(moderator, post).destroy
+      expect(PostAction.find_by(id: like.id)).not_to be_present
+
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.find_by(id: like.id)).to be_present
+    end
+
+    it "does not recover previously-deleted actions" do
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      expect(PostAction.find_by(id: like.id)).not_to be_present
+
+      PostDestroyer.new(moderator, post).destroy
+      expect(PostAction.find_by(post_id: post.id)).to eq(nil)
+
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.find_by(id: like.id)).not_to be_present
+      expect(PostAction.find_by(id: another_like.id)).to be_present
+    end
+  end
+
   describe 'basic destroying' do
     it "as the creator of the post, doesn't delete the post" do
       begin

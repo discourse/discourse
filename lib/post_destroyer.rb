@@ -60,6 +60,7 @@ class PostDestroyer
   end
 
   def recover
+    post_deleted_at = @post.deleted_at
     if @user.staff? && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
@@ -69,7 +70,7 @@ class PostDestroyer
     topic.recover! if @post.is_first_post?
     topic.update_statistics
     recover_user_actions
-    recover_public_post_actions
+    recover_public_post_actions(post_deleted_at)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
@@ -197,17 +198,15 @@ class PostDestroyer
     Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
   end
 
-  def recover_public_post_actions
-    public_post_actions = PostAction.publics
+  def recover_public_post_actions(post_deleted_at)
+    PostAction.publics
       .where(post_id: @post.id)
       .with_deleted
-      .where("deleted_at IS NOT NULL")
-      .where(deleted_by_id: @user.id)
-
-    public_post_actions.each { |pa|
-      pa.recover!
-      pa.save
-    }
+      .where(deleted_at: post_deleted_at..(post_deleted_at + 5.seconds))
+      .find_each do |post_action|
+      post_action.recover!
+      post_action.save
+    end
   end
 
   def agree_with_flags
