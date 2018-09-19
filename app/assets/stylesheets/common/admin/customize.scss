@@ -570,8 +570,16 @@
   }
 }
 
-.permalink-form .select-kit {
-  width: 150px;
+.permalink-form {
+  display: flex;
+  align-items: center;
+
+  .select-kit {
+    width: 150px;
+  }
+  input {
+    margin: 0 5px;
+  }
 }
 
 .permalink-title {

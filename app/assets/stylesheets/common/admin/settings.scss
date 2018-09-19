@@ -39,8 +39,6 @@
     }
     .input-setting-string,
     .input-setting-textarea {
-      box-sizing: border-box;
-      height: 30px;
       width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
