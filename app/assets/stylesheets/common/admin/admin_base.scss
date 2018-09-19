@@ -555,6 +555,7 @@ $mobile-breakpoint: 700px;
     }
     input {
       margin-right: 5px;
+      margin-bottom: 0;
       @include breakpoint(tablet) {
         max-width: 150px;
       }
@@ -624,9 +625,6 @@ $mobile-breakpoint: 700px;
   label {
     display: inline-block;
     margin-right: 5px;
-  }
-  #last-seen input[type="text"] {
-    margin-bottom: 0;
   }
   .pull-right {
     padding-right: 10px;
