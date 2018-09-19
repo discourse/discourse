@@ -1,7 +1,7 @@
 require_dependency "upload_recovery"
 
 module Jobs
-  class RecoverPostUploads < Jobs::Onceoff
+  class PostUploadsRecovery < Jobs::Onceoff
     MIN_PERIOD = 30
     MAX_PERIOD = 120
 
