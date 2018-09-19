@@ -22,7 +22,6 @@ RSpec.describe UploadRecovery do
     Fabricate(:post,
       raw: <<~SQL,
       ![logo.png](#{upload.short_url})
-      <a class="attachment" href="#{upload2.url}">some.pdf</a>
       SQL
       user: user
     ).tap(&:link_post_uploads)
@@ -67,18 +66,39 @@ RSpec.describe UploadRecovery do
       upload_recovery.recover(Post.where("updated_at >= ?", 1.day.ago))
     end
 
+    describe 'for a missing attachment' do
+      let(:post) do
+        Fabricate(:post,
+          raw: <<~SQL,
+          <a class="attachment" href="#{upload2.url}">some.pdf</a>
+          <a>blank</a>
+          SQL
+          user: user
+        ).tap(&:link_post_uploads)
+      end
+
+      it 'should recover the attachment' do
+        expect do
+          upload2.destroy!
+        end.to change { post.reload.uploads.count }.from(1).to(0)
+
+        expect do
+          upload_recovery.recover
+        end.to change { post.reload.uploads.count }.from(0).to(1)
+      end
+    end
+
     it 'should recover uploads and attachments' do
       stub_request(:get, "http://test.localhost#{upload.url}")
         .to_return(status: 200)
 
       expect do
         upload.destroy!
-        upload2.destroy!
-      end.to change { post.reload.uploads.count }.from(2).to(0)
+      end.to change { post.reload.uploads.count }.from(1).to(0)
 
       expect do
         upload_recovery.recover
-      end.to change { post.reload.uploads.count }.from(0).to(2)
+      end.to change { post.reload.uploads.count }.from(0).to(1)
     end
   end
 end

@@ -4,7 +4,7 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("raw LIKE '%upload:\/\/%'").find_each do |post|
+    posts.where("raw LIKE '%upload:\/\/%' OR raw LIKE '%href=%'").find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
@@ -28,7 +28,7 @@ class UploadRecovery
           elsif media.name == "a"
             href = media["href"]
 
-            if data = Upload.extract_upload_url(href)
+            if href && data = Upload.extract_upload_url(href)
               sha1 = data[2]
 
               unless upload = Upload.get_from_url(href)
