@@ -38,18 +38,23 @@ class OptimizedImage < ActiveRecord::Base
       end
     end
 
+    # prefer to look up the thumbnail without grabbing any locks
+    thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+
+    # correct bad thumbnail if needed
+    if thumbnail && thumbnail.url.blank?
+      thumbnail.destroy
+      thumbnail = nil
+    end
+
+    return thumbnail if thumbnail
+
     lock(upload.id, width, height) do
-      # do we already have that thumbnail?
+      # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
-      # make sure we have an url
-      if thumbnail && thumbnail.url.blank?
-        thumbnail.destroy
-        thumbnail = nil
-      end
-
       # return the previous thumbnail if any
-      return thumbnail unless thumbnail.nil?
+      return thumbnail if thumbnail
 
       # create the thumbnail otherwise
       original_path = Discourse.store.path_for(upload)
