@@ -43,7 +43,7 @@ class OptimizedImage < ActiveRecord::Base
 
     # correct bad thumbnail if needed
     if thumbnail && thumbnail.url.blank?
-      thumbnail.destroy
+      thumbnail.destroy!
       thumbnail = nil
     end
 
