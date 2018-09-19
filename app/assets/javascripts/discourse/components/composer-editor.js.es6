@@ -226,10 +226,26 @@ export default Ember.Component.extend({
   _setUploadPlaceholderSend(data) {
     const filename = this._filenamePlaceholder(data);
     this.set("uploadFilenamePlaceholder", filename);
-    // adds size in bytes to the placeholder if multiple files have the same name
-    if (this.get("composer.reply").includes(this.get("uploadPlaceholder"))) {
-      const filenameWithSize = `${filename} (${data.total})`;
-      this.set("uploadFilenamePlaceholder", filenameWithSize);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png...]
+    // and add order nr to the next one: [Uplodading: test.png(1)...]
+    const regexString = `\\[${I18n.t("uploading_filename", {
+      filename: filename + "(?:\\()?([0-9])?(?:\\))?"
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)[1]
+        ? parseInt(regex.exec(lastMatch)[1]) + 1
+        : 1;
+      data.orderNr = orderNr;
+      const filenameWithOrderNr = `${filename}(${orderNr})`;
+      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
     }
   },
 
@@ -238,7 +254,10 @@ export default Ember.Component.extend({
     const filenameWithSize = `${filename} (${data.total})`;
     this.set("uploadFilenamePlaceholder", filenameWithSize);
 
-    if (!this.get("composer.reply").includes(this.get("uploadPlaceholder"))) {
+    if (data.orderNr) {
+      const filenameWithOrderNr = `${filename}(${data.orderNr})`;
+      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
+    } else {
       this.set("uploadFilenamePlaceholder", filename);
     }
   },

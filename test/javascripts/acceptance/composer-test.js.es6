@@ -97,7 +97,6 @@ QUnit.test("Composer upload placeholder", async assert => {
   file1.name = "test.png";
   const data1 = {
     files: [file1],
-    total: 3,
     result: {
       original_filename: "test.png",
       thumbnail_width: 200,
@@ -110,7 +109,6 @@ QUnit.test("Composer upload placeholder", async assert => {
   file2.name = "test.png";
   const data2 = {
     files: [file2],
-    total: 2,
     result: {
       original_filename: "test.png",
       thumbnail_width: 100,
@@ -123,7 +121,6 @@ QUnit.test("Composer upload placeholder", async assert => {
   file3.name = "image.png";
   const data3 = {
     files: [file3],
-    total: 4,
     result: {
       original_filename: "image.png",
       thumbnail_width: 300,
@@ -138,13 +135,13 @@ QUnit.test("Composer upload placeholder", async assert => {
   await find(".wmd-controls").trigger("fileuploadsend", data2);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() [Uploading: test.png (2)...]() "
+    "[Uploading: test.png...]() [Uploading: test.png(1)...]() "
   );
 
   await find(".wmd-controls").trigger("fileuploadsend", data3);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() [Uploading: test.png (2)...]() [Uploading: image.png...]() "
+    "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: image.png...]() "
   );
 
   await find(".wmd-controls").trigger("fileuploaddone", data2);
