@@ -5,7 +5,7 @@ class UploadCreator
 
   TYPES_CONVERTED_TO_JPEG ||= %i{bmp png}
 
-  TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
+  TYPES_TO_CROP ||= %w{avatar gravatar card_background custom_emoji profile_background}.each(&:freeze)
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse g line linearGradient path polygon polyline
@@ -73,8 +73,15 @@ class UploadCreator
         @upload = nil
       end
 
-      # return the previous upload if any
-      return @upload unless @upload.nil?
+      upload_type = @opts && @opts[:type]
+
+      if @upload
+        if is_image && (upload_type == "avatar" || upload_type == "gravatar")
+          ensure_avatar!(user_id, upload_type, @upload)
+        end
+
+        return @upload
+      end
 
       fixed_original_filename = nil
       if is_image
@@ -128,14 +135,38 @@ class UploadCreator
         end
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+      if @upload.errors.empty? && is_image
+        if upload_type == "avatar" || upload_type == "gravatar"
+          Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+
+          ensure_avatar!(user_id, upload_type, @upload)
+        end
       end
 
       @upload
     end
   ensure
     @file&.close
+  end
+
+  def ensure_avatar!(user_id, type, upload)
+    avatar = UserAvatar.find_or_create_by(user_id: user_id)
+
+    old_selected_upload_id = avatar.user.uploaded_avatar_id
+
+    if type == "avatar"
+      old_upload_id = avatar.custom_upload_id
+      avatar.custom_upload_id = upload.id
+    elsif type == "gravatar"
+      old_upload_id = avatar.gravatar_upload_id
+      avatar.gravatar_upload_id = upload.id
+    end
+
+    if old_selected_upload_id && old_selected_upload_id == old_upload_id
+      avatar.user.update_columns(uploaded_avatar_id: upload.id)
+    end
+
+    avatar.save!
   end
 
   def extract_image_info!
@@ -273,7 +304,7 @@ class UploadCreator
     filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]
-    when "avatar"
+    when "avatar", "gravatar"
       width = height = Discourse.avatar_sizes.max
       OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext, allow_animation: allow_animation)
     when "profile_background"
@@ -326,7 +357,7 @@ class UploadCreator
   end
 
   def allow_animation
-    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
+    @allow_animation ||= @opts[:type][/avatar/] ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
   def svg_whitelist_xpath

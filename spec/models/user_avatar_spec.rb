@@ -86,10 +86,10 @@ describe UserAvatar do
       user = Fabricate(:user, uploaded_avatar_id: 1)
       user.user_avatar.update_columns(gravatar_upload_id: 1)
 
-      stub_request(:get, "http://thisfakesomething.something.com/")
-        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
-
       url = "http://thisfakesomething.something.com/"
+
+      stub_request(:get, url)
+        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
 
       expect do
         UserAvatar.import_url_for_user(url, user, override_gravatar: false)
@@ -98,6 +98,43 @@ describe UserAvatar do
       user.reload
       expect(user.uploaded_avatar_id).to eq(1)
       expect(user.user_avatar.custom_upload_id).to eq(Upload.last.id)
+
+      # now it gets super tricky cause we are going to use the same avatar for a diff user
+      # we have to let this through cause SSO may be setting it, or social auth
+      # plus end user may have changed mind, upload url1 / url2 / url1
+
+      user2 = Fabricate(:user, uploaded_avatar_id: 1)
+      user2.user_avatar.update_columns(gravatar_upload_id: 1)
+
+      expect do
+        UserAvatar.import_url_for_user(url, user2, override_gravatar: false)
+      end.to change { Upload.count }.by(0)
+
+      user2.reload
+      expect(user2.uploaded_avatar_id).to eq(1)
+      expect(user2.user_avatar.custom_upload_id).to eq(Upload.last.id)
+    end
+
+    it 'can correctly change custom avatar' do
+
+      upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+      user.user_avatar.update_columns(custom_upload_id: upload.id)
+
+      url = "http://somewhere.over.rainbow.com/unicorn.png"
+
+      stub_request(:get, url)
+        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
+
+      expect do
+        UserAvatar.import_url_for_user(url, user, override_gravatar: false)
+      end.to change { Upload.count }.by(1)
+
+      user.reload
+      upload_id = Upload.last.id
+      expect(user.user_avatar.custom_upload_id).to eq(upload_id)
+      expect(user.uploaded_avatar_id).to eq(upload_id)
+
     end
 
     describe 'when avatar url returns an invalid status code' do

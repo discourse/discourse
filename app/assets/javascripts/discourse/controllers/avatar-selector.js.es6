@@ -7,23 +7,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Ember.Controller.extend(ModalFunctionality, {
   @computed(
     "selected",
-    "user.system_avatar_upload_id",
-    "user.gravatar_avatar_upload_id",
-    "user.custom_avatar_upload_id"
-  )
-  selectedUploadId(selected, system, gravatar, custom) {
-    switch (selected) {
-      case "system":
-        return system;
-      case "gravatar":
-        return gravatar;
-      default:
-        return custom;
-    }
-  },
-
-  @computed(
-    "selected",
     "user.system_avatar_template",
     "user.gravatar_avatar_template",
     "user.custom_avatar_template"
@@ -79,11 +62,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     saveAvatarSelection() {
-      const selectedUploadId = this.get("selectedUploadId");
-      const type = this.get("selected");
-
       this.get("user")
-        .pickAvatar(selectedUploadId, type)
+        .pickAvatar(this.get("selected"))
         .then(() => window.location.reload())
         .catch(popupAjaxError);
     }
