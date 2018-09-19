@@ -61,9 +61,7 @@ export default Ember.Component.extend({
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
-    return `[${I18n.t("uploading_filename", {
-      filename: filename
-    })}]() `;
+    return `[${I18n.t("uploading_filename", { filename })}]() `;
   },
 
   @computed("composer.requiredCategoryMissing")
@@ -577,24 +575,26 @@ export default Ember.Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    if (this._validUploads > 0) {
-      this._validUploads--;
-    }
-    if (this._validUploads === 0) {
-      this.setProperties({
-        uploadProgress: 0,
-        isUploading: false,
-        isCancellable: false
-      });
-    }
-    if (removePlaceholder) {
-      this.appEvents.trigger(
-        "composer:replace-text",
-        this.get("uploadPlaceholder"),
-        ""
-      );
-    }
-    this._resetUploadFilenamePlaceholder();
+    Ember.run.next(() => {
+      if (this._validUploads > 0) {
+        this._validUploads--;
+      }
+      if (this._validUploads === 0) {
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading: false,
+          isCancellable: false
+        });
+      }
+      if (removePlaceholder) {
+        this.appEvents.trigger(
+          "composer:replace-text",
+          this.get("uploadPlaceholder"),
+          ""
+        );
+      }
+      this._resetUploadFilenamePlaceholder();
+    });
   },
 
   _bindUploadTarget() {
