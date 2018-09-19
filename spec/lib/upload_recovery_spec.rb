@@ -85,6 +85,9 @@ RSpec.describe UploadRecovery do
         expect do
           upload_recovery.recover
         end.to change { post.reload.uploads.count }.from(0).to(1)
+
+        expect(File.read(Discourse.store.path_for(post.uploads.first)))
+          .to eq(File.read(file_from_fixtures("small.pdf", "pdf")))
       end
     end
 
@@ -99,6 +102,9 @@ RSpec.describe UploadRecovery do
       expect do
         upload_recovery.recover
       end.to change { post.reload.uploads.count }.from(0).to(1)
+
+      expect(File.read(Discourse.store.path_for(post.uploads.first)))
+        .to eq(File.read(file_from_fixtures("smallest.png")))
     end
   end
 end
