@@ -18,8 +18,7 @@
     }
 
     .select-kit-filter {
-      line-height: $line-height-medium;
-      padding: $input-padding;
+      padding: 0 10px;
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
