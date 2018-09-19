@@ -203,10 +203,9 @@ class PostDestroyer
       .where(post_id: @post.id)
       .with_deleted
       .where(deleted_at: post_deleted_at..(post_deleted_at + 5.seconds))
-      .find_each do |post_action|
-      post_action.recover!
-      post_action.save
-    end
+      .update_all(deleted_at: nil, deleted_by_id: nil)
+
+    @post.post_actions.each(&:update_counters)
   end
 
   def agree_with_flags
