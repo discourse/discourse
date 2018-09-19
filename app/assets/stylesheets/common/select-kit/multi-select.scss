@@ -74,7 +74,6 @@
       .choice {
         display: inline-flex;
         box-sizing: border-box;
-        padding: 0 5px;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
@@ -157,7 +156,6 @@
         .body {
           background: $primary-low;
           padding: 2px 4px;
-          margin-right: 2px;
         }
 
         .name {
