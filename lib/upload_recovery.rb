@@ -90,10 +90,12 @@ class UploadRecovery
     @paths.each do |path|
       if path =~ /#{sha1}/
         begin
-          file = File.open(path, "r")
-          create_upload(file, File.basename(path), post)
+          tmp = Tempfile.new
+          tmp.write(File.read(path))
+          tmp.rewind
+          create_upload(tmp, File.basename(path), post)
         ensure
-          file&.close
+          tmp&.close
         end
       end
     end
