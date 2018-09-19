@@ -268,6 +268,7 @@ GEM
     openid-redis-store (0.0.2)
       redis
       ruby-openid
+    optimist (3.0.0)
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
@@ -317,10 +318,10 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    rbtrace (0.4.10)
+    rbtrace (0.4.11)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
-      trollop (>= 1.16.2)
+      optimist (>= 3.0.0)
     rchardet (1.8.0)
     redis (4.0.1)
     redis-namespace (1.6.0)
@@ -417,7 +418,6 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.8)
-    trollop (2.1.2)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.11)
