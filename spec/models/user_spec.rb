@@ -1826,4 +1826,64 @@ describe User do
       expect { user.update(primary_group: primary_group_a) }.to_not change { user.reload.title }
     end
   end
+
+  describe '#title=' do
+    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
+
+    it 'sets badge_granted_title correctly' do
+      BadgeGranter.grant(badge, user)
+
+      user.update(title: 'Badge')
+      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+
+      user.update(title: 'Custom')
+      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+
+      badge.update(allow_title: true)
+      user.update(title: 'Badge')
+      expect(user.user_profile.reload.badge_granted_title).to eq(true)
+
+      user.update(title: nil)
+      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+    end
+  end
+
+  describe '#available_titles' do
+    let(:group_a) { Fabricate(:group, title: 'Group A') }
+    let(:group_b) { Fabricate(:group, title: 'Group B') }
+    let(:group_c) { Fabricate(:group, title: 'Group C') }
+    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
+
+    it 'only includes groups with title and badges that allow to be set as title' do
+      group_a.add(user)
+      BadgeGranter.grant(badge, user)
+
+      available_titles = user.available_titles
+      expect(available_titles).to include('Group A')
+      expect(available_titles).to include('Badge')
+
+      group_a.update(title: nil)
+      badge.update(allow_title: false)
+
+      expect(user.available_titles).to be_empty
+    end
+
+    it "sorts the group title in the order: user's primary group, primary group, and others" do
+      group_a.add(user)
+      group_b.add(user)
+      group_c.add(user)
+
+      group_a.update(primary_group: true)
+      group_b.update(primary_group: true)
+      user.update(primary_group_id: group_a.id)
+
+      expect(user.available_titles).to eq(['Group A', 'Group B', 'Group C'])
+
+      user.update(primary_group_id: group_b.id)
+      group_a.update(primary_group: false)
+      group_c.update(primary_group: true)
+
+      expect(user.available_titles).to eq(['Group B', 'Group C', 'Group A'])
+    end
+  end
 end

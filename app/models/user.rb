@@ -109,6 +109,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   before_save :match_title_to_primary_group_changes
+  before_save :check_if_title_is_badged_granted
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -999,13 +1000,6 @@ class User < ActiveRecord::Base
     @user_fields
   end
 
-  def title=(val)
-    write_attribute(:title, val)
-    if !new_record? && user_profile
-      user_profile.update_column(:badge_granted_title, false)
-    end
-  end
-
   def number_of_deleted_posts
     Post.with_deleted
       .where(user_id: self.id)
@@ -1120,6 +1114,18 @@ class User < ActiveRecord::Base
 
   def mature_staged?
     from_staged? && self.created_at && self.created_at < 1.day.ago
+  end
+
+  def available_titles
+    group_titles_query = groups
+    group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
+    group_titles_query = group_titles_query.order("groups.primary_group DESC")
+
+    group_titles = group_titles_query.pluck(:title).reject(&:blank?)
+    badge_titles = badges.where(allow_title: true).pluck(:name)
+      .map { |name| Badge.display_name(name) }
+
+    group_titles + badge_titles
   end
 
   protected
@@ -1283,6 +1289,13 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def check_if_title_is_badged_granted
+    if title_changed? && !new_record? && user_profile
+      badge_granted_title = title.present? && badges.where(allow_title: true, name: title).exists?
+      user_profile.update_column(:badge_granted_title, badge_granted_title)
+    end
+  end
 
   def previous_visit_at_update_required?(timestamp)
     seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
