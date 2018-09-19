@@ -168,6 +168,10 @@ class Upload < ActiveRecord::Base
     Digest::SHA1.file(path).hexdigest
   end
 
+  def self.extract_upload_url(url)
+    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+  end
+
   def self.get_from_url(url)
     return if url.blank?
 
@@ -177,7 +181,7 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+    data = extract_upload_url(uri.path)
     return if data.blank?
     sha1 = data[2]
     upload = nil
