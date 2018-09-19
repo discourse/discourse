@@ -2,7 +2,9 @@ module Onebox
   class Preview
     attr_reader :cache
 
-    WEB_EXCEPTIONS ||= [Net::HTTPServerException, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
+    # see https://bugs.ruby-lang.org/issues/14688
+    client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
+    WEB_EXCEPTIONS ||= [client_exception, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
 
     def initialize(link, parameters = Onebox.options)
       @url = link
