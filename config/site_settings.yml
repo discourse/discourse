@@ -934,6 +934,7 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
+    shadowed_by_global: true
   prevent_anons_from_downloading_files:
     default: false
     client: true
