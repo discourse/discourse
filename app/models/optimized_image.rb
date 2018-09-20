@@ -399,6 +399,7 @@ end
 #  height    :integer          not null
 #  upload_id :integer          not null
 #  url       :string           not null
+#  filesize  :integer
 #
 # Indexes
 #
