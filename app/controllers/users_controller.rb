@@ -865,15 +865,18 @@ class UsersController < ApplicationController
       end
     end
 
-    user.uploaded_avatar_id = upload_id
+    upload = Upload.find_by(id: upload_id)
+
+    # old safeguard
+    user.create_user_avatar unless user.user_avatar
+
+    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
 
     if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-      # make sure the upload exists
-      unless Upload.where(id: upload_id).exists?
+
+      if !upload
         return render_json_error I18n.t("avatar.missing")
       end
-
-      user.create_user_avatar unless user.user_avatar
 
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
@@ -882,6 +885,7 @@ class UsersController < ApplicationController
       end
     end
 
+    user.uploaded_avatar_id = upload_id
     user.save!
     user.user_avatar.save!
 
