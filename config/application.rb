@@ -119,6 +119,7 @@ module Discourse
       service-worker.js
       google-tag-manager.js
       google-universal-analytics.js
+      preload-application-data.js
     }
 
     # Precompile all available locales

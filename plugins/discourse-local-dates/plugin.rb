@@ -37,7 +37,7 @@ after_initialize do
     end
 
     if dates.present?
-      post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] = dates.to_json
+      post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] = dates
       post.save_custom_fields
     elsif !post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD].nil?
       post.custom_fields.delete(DiscourseLocalDates::POST_CUSTOM_FIELD)

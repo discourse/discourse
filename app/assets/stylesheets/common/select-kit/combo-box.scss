@@ -18,10 +18,13 @@
     }
 
     .select-kit-filter {
-      line-height: $line-height-medium;
       padding: $input-padding;
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+      .spinner {
+        flex: 0 0 auto;
+      }
 
       .filter-input,
       .filter-input:focus,
@@ -41,8 +44,6 @@
       padding: $input-padding;
       font-weight: 500;
       font-size: $font-0;
-      line-height: $line-height-large;
-      min-height: 2em; // when no content is available
 
       &.is-focused {
         border: 1px solid $tertiary;
