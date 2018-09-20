@@ -459,19 +459,29 @@
       <div class='display-row'>
         <div class='field'>{{i18n 'admin.groups.custom'}}</div>
         <div class='value'>
-          {{admin-group-selector selected=model.customGroups available=availableGroups}}
+          {{admin-group-selector selected=model.customGroups available=availableGroups buffer=customGroupIdsBuffer}}
         </div>
-        <div class='controls'>
-          {{#if model.customGroups}}
-            {{i18n 'admin.groups.primary'}}
-            {{combo-box content=model.customGroups value=model.primary_group_id none="admin.groups.no_primary"}}
-          {{/if}}
-          {{#if primaryGroupDirty}}
-            {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
-            {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
-          {{/if}}
-        </div>
+        {{#if customGroupsDirty}}
+          <div class='controls'>
+            {{d-button icon="check" class="ok" action="saveCustomGroups"}}
+            {{d-button icon="times" class="cancel" action="resetCustomGroups"}}
+          </div>
+        {{/if}}
       </div>
+      {{#if model.customGroups}}
+        <div class='display-row'>
+          <div class='field'>{{i18n 'admin.groups.primary'}}</div>
+          <div class='value'>
+            {{combo-box content=model.customGroups value=model.primary_group_id none="admin.groups.no_primary"}}
+          </div>
+          {{#if primaryGroupDirty}}
+            <div class='controls'>
+              {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
+              {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
   </section>
 {{/if}}
 

@@ -1,4 +1,5 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
+import computed from "ember-addons/ember-computed-decorators";
 const { makeArray } = Ember;
 
 export default MultiSelectComponent.extend({
@@ -7,11 +8,13 @@ export default MultiSelectComponent.extend({
   selected: null,
   available: null,
   allowAny: false,
+  buffer: null,
 
-  computeValues() {
-    return makeArray(this.get("selected")).map(s =>
-      this.valueForContentItem(s)
-    );
+  @computed("buffer")
+  values(buffer) {
+    return buffer === null
+      ? makeArray(this.get("selected")).map(s => this.valueForContentItem(s))
+      : buffer;
   },
 
   computeContent() {
@@ -25,33 +28,6 @@ export default MultiSelectComponent.extend({
   },
 
   mutateValues(values) {
-    if (values.length > this.get("selected").length) {
-      const newValues = values.filter(
-        v =>
-          !this.get("selected")
-            .map(s => this.valueForContentItem(s))
-            .includes(v)
-      );
-
-      newValues.forEach(value => {
-        const actionContext = this.get("available").findBy(
-          this.get("valueAttribute"),
-          parseInt(value, 10)
-        );
-
-        this.triggerAction({ action: "groupAdded", actionContext });
-      });
-    } else if (values.length < this.get("selected").length) {
-      const selected = this.get("selected").filter(
-        s => !values.includes(this.valueForContentItem(s))
-      );
-
-      selected.forEach(s => {
-        this.triggerAction({
-          action: "groupRemoved",
-          actionContext: this.valueForContentItem(s)
-        });
-      });
-    }
+    this.set("buffer", values);
   }
 });
