@@ -1806,7 +1806,7 @@ bs_BA:
         action: "spoji izabrane postove"
         error: "Desila se greška prilikom spajanja označenih objava."
       change_owner:
-        title: "Change Owner of Posts"
+        title: "Change Owner"
         action: "change ownership"
         error: "There was an error changing the ownership of the posts."
         label: "New Owner of Posts"

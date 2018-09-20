@@ -15,9 +15,9 @@
   clear: both;
   margin-bottom: 5px;
   .combo-box .combo-box-header {
-    background: $primary-low;
+    background: $secondary;
     color: $primary;
-    border: 1px solid transparent;
+    border: 1px solid $primary-medium;
     padding: 5px 6px 5px 10px;
     font-size: $font-0;
     transition: none;

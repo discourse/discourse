@@ -4,22 +4,40 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("raw LIKE '%upload:\/\/%'").find_each do |post|
+    posts.where("raw LIKE '%upload:\/\/%' OR raw LIKE '%href=%'").find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-        analyzer.cooked_stripped.css("img").each do |img|
-          if dom_class = img["class"]
-            if (Post.white_listed_image_classes & dom_class.split).count > 0
-              next
+        analyzer.cooked_stripped.css("img", "a").each do |media|
+          if media.name == "img"
+            if dom_class = media["class"]
+              if (Post.white_listed_image_classes & dom_class.split).count > 0
+                next
+              end
             end
-          end
 
-          if img["data-orig-src"]
-            if @dry_run
-              puts "#{post.full_url} #{img["data-orig-src"]}"
-            else
-              recover_post_upload(post, img["data-orig-src"])
+            orig_src = media["data-orig-src"]
+
+            if orig_src
+              if @dry_run
+                puts "#{post.full_url} #{orig_src}"
+              else
+                recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
+              end
+            end
+          elsif media.name == "a"
+            href = media["href"]
+
+            if href && data = Upload.extract_upload_url(href)
+              sha1 = data[2]
+
+              unless upload = Upload.get_from_url(href)
+                if @dry_run
+                  puts "#{post.full_url} #{href}"
+                else
+                  recover_post_upload(post, sha1)
+                end
+              end
             end
           end
         end
@@ -32,9 +50,8 @@ class UploadRecovery
 
   private
 
-  def recover_post_upload(post, short_url)
-    sha1 = Upload.sha1_from_short_url(short_url)
-    return unless sha1.present?
+  def recover_post_upload(post, sha1)
+    return unless sha1.present? && sha1.length == Upload::SHA1_LENGTH
 
     attributes = {
       post: post,
@@ -73,10 +90,12 @@ class UploadRecovery
     @paths.each do |path|
       if path =~ /#{sha1}/
         begin
-          file = File.open(path, "r")
-          create_upload(file, File.basename(path), post)
+          tmp = Tempfile.new
+          tmp.write(File.read(path))
+          tmp.rewind
+          create_upload(tmp, File.basename(path), post)
         ensure
-          file&.close
+          tmp&.close
         end
       end
     end
