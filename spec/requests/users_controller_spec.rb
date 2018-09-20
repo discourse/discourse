@@ -2285,7 +2285,7 @@ describe UsersController do
       end
 
       it "raises an error when logged in" do
-        _moderator = sign_in(Fabricate(:moderator))
+        sign_in(Fabricate(:moderator))
         post_user
 
         put "/u/update-activation-email.json", params: {
@@ -2297,7 +2297,7 @@ describe UsersController do
 
       it "raises an error when the new email is taken" do
         active_user = Fabricate(:user)
-        _user = post_user
+        post_user
 
         put "/u/update-activation-email.json", params: {
           email: active_user.email
@@ -2307,7 +2307,7 @@ describe UsersController do
       end
 
       it "raises an error when the email is blacklisted" do
-        _user = post_user
+        post_user
         SiteSetting.email_domains_blacklist = 'example.com'
         put "/u/update-activation-email.json", params: { email: 'test@example.com' }
         expect(response.status).to eq(422)
