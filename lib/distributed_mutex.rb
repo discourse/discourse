@@ -23,7 +23,7 @@ class DistributedMutex
     while !try_to_get_lock
       sleep 0.001
       # in readonly we will never be able to get a lock
-      if @using_global_redis
+      if @using_global_redis && Discourse.recently_readonly?
         attempts += 1
         if attempts > CHECK_READONLY_ATTEMPT
           raise Discourse::ReadOnly
