@@ -12,12 +12,10 @@ module UserGuardian
     return true if user_avatar.contains_upload?(upload.id)
     return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
 
-    found_upload = UserUpload
-      .where(upload_id: upload.id)
-      .where("user_id in (?)", [upload.user_id, user.id])
-      .exists?
-
-    found_upload
+    UserUpload.exists?(
+      upload_id: upload.id,
+      user_id: [upload.user_id, user.id]
+    )
   end
 
   def can_edit_user?(user)
