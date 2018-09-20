@@ -521,10 +521,10 @@ const User = RestModel.extend({
     );
   },
 
-  pickAvatar(upload_id, type) {
+  pickAvatar(type) {
     return ajax(
       userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      { type: "PUT", data: { upload_id, type } }
+      { type: "PUT", data: { type } }
     );
   },
 

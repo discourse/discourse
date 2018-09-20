@@ -1765,67 +1765,51 @@ describe UsersController do
 
   describe '#pick_avatar' do
     it 'raises an error when not logged in' do
-      put "/u/asdf/preferences/avatar/pick.json", params: { avatar_id: 1, type: "custom" }
+      put "/u/asdf/preferences/avatar/pick.json", params: { type: "uploaded" }
       expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
 
       let!(:user) { sign_in(Fabricate(:user)) }
-      let(:upload) { Fabricate(:upload) }
+      let(:file) { file_from_fixtures("logo.png") }
 
       it "raises an error when you don't have permission to toggle the avatar" do
         another_user = Fabricate(:user)
-        put "/u/#{another_user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
-
+        put "/u/#{another_user.username}/preferences/avatar/pick.json", params: { type: "uploaded" }
         expect(response).to be_forbidden
       end
 
       it "raises an error when sso_overrides_avatar is disabled" do
         SiteSetting.sso_overrides_avatar = true
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
-
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: { type: "uploaded" }
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
+      it "raises an error when selecting the uploaded avatar and allow_uploaded_avatars is disabled" do
         SiteSetting.allow_uploaded_avatars = false
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
-
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: { type: "uploaded" }
         expect(response.status).to eq(422)
       end
 
-      it 'can successfully pick the system avatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json"
-
+      it 'picks the system avatar' do
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: { type: "system" }
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(nil)
       end
 
-      it 'can successfully pick a gravatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "gravatar"
-        }
-
+      it 'picks the gravatar' do
+        upload = UploadCreator.new(file, "gravatar.png", type: "gravatar").create_for(user.id)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: { type: "gravatar" }
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
-        expect(user.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
       end
 
-      it 'can successfully pick a custom avatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
-
+      it 'picks the uploaded avatar' do
+        upload = UploadCreator.new(file, "avatar.png", type: "avatar").create_for(user.id)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: { type: "uploaded" }
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
-        expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
       end
     end
   end
@@ -1845,7 +1829,7 @@ describe UsersController do
 
       it 'raises an error when url is blank' do
         put "/u/#{user.username}/preferences/avatar/select.json", params: { url: "" }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
       end
 
       it 'raises an error when selectable avatars is disabled' do

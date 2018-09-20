@@ -30,8 +30,12 @@ describe UploadsController do
       it 'is successful with an image' do
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)["id"]).to be_present
+
+        json = JSON.parse(response.body)
+
+        expect(json["id"]).to be_present
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
+        expect(user.reload.user_avatar.custom_upload_id).to eq(json["id"])
       end
 
       it 'is successful with an attachment' do
@@ -162,6 +166,27 @@ describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = JSON.parse(response.body)["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
+      end
+
+      it 'allows staff to upload an avatar for another user' do
+        sign_in(Fabricate(:admin))
+
+        post "/uploads.json", params: { file: logo, type: "avatar", user_id: user.id }
+
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(user.reload.user_avatar.custom_upload_id).to eq(json["id"])
+      end
+
+      it 'prevents an user from uploading an avatar to another user' do
+        another = Fabricate(:user)
+
+        post "/uploads.json", params: { file: logo, type: "avatar", user_id: another.id }
+
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(user.reload.user_avatar.custom_upload_id).to eq(json["id"])
+        expect(another.reload.user_avatar.custom_upload_id).to eq(nil)
       end
     end
   end

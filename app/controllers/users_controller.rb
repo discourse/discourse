@@ -846,57 +846,39 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  AVATAR_TYPES_WITH_UPLOAD ||= %w{uploaded custom gravatar}
-
   def pick_avatar
+    type = params.require(:type)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-
-    type = params[:type]
-    upload_id = params[:upload_id]
 
     if SiteSetting.sso_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    if !SiteSetting.allow_uploaded_avatars && type == "uploaded"
+      return render json: failed_json, status: 422
     end
 
-    user.uploaded_avatar_id = upload_id
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-      # make sure the upload exists
-      unless Upload.where(id: upload_id).exists?
-        return render_json_error I18n.t("avatar.missing")
-      end
-
-      user.create_user_avatar unless user.user_avatar
-
-      if type == "gravatar"
-        user.user_avatar.gravatar_upload_id = upload_id
-      else
-        user.user_avatar.custom_upload_id = upload_id
-      end
+    case type
+    when "system"
+      user.uploaded_avatar_id = nil
+    when "gravatar"
+      user.uploaded_avatar_id = user.user_avatar.gravatar_upload_id
+    when "uploaded"
+      user.uploaded_avatar_id = user.user_avatar.custom_upload_id
+    else
+      return render json: failed_json, status: 422
     end
 
     user.save!
-    user.user_avatar.save!
 
     render json: success_json
   end
 
   def select_avatar
+    url = params.require(:url)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-
-    url = params[:url]
-
-    if url.blank?
-      return render json: failed_json, status: 422
-    end
 
     unless SiteSetting.selectable_avatars_enabled
       return render json: failed_json, status: 422

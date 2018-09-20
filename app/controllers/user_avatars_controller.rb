@@ -10,7 +10,7 @@ class UserAvatarsController < ApplicationController
 
     if user
       hijack do
-        user.create_user_avatar(user_id: user.id) unless user.user_avatar
+        user.create_user_avatar unless user.user_avatar
         user.user_avatar.update_gravatar!
 
         gravatar = if user.user_avatar.gravatar_upload_id

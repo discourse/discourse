@@ -4,6 +4,35 @@ RSpec.describe UploadCreator do
   let(:user) { Fabricate(:user) }
 
   describe '#create_for' do
+    describe 'avatars & gravatars' do
+      let(:user) { Fabricate(:user) }
+      let(:file) { file_from_fixtures("logo.png") }
+
+      it 'sets the user_avatar.custom_upload_id when type is "avatar"' do
+        expect {
+          UploadCreator.new(file, "avatar.png", type: "avatar").create_for(user.id)
+        }.to change { Upload.count }.by(1)
+
+        expect(user.reload.user_avatar.custom_upload_id).to eq(Upload.last.id)
+        expect(user.reload.user_avatar.gravatar_upload_id).to eq(nil)
+      end
+
+      it 'sets the user_avatar.gravatar_upload_id when type is "gravatar"' do
+        expect {
+          UploadCreator.new(file, "gravatar.png", type: "gravatar").create_for(user.id)
+        }.to change { Upload.count }.by(1)
+
+        expect(user.reload.user_avatar.gravatar_upload_id).to eq(Upload.last.id)
+        expect(user.reload.user_avatar.custom_upload_id).to eq(nil)
+      end
+    end
+
+    describe 'when type is "gravatar"' do
+      it 'sets the user_avatar' do
+
+      end
+    end
+
     describe 'when upload is not an image' do
       before do
         SiteSetting.authorized_extensions = 'txt'

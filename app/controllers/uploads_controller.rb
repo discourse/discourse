@@ -17,12 +17,13 @@ class UploadsController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    url    = params[:url]
-    file   = params[:file] || params[:files]&.first
+    url = params[:url]
+    file = params[:file] || params[:files]&.first
     pasted = params[:pasted] == "true"
     for_private_message = params[:for_private_message] == "true"
     is_api = is_api?
     retain_hours = params[:retain_hours].to_i
+    user_id = params[:user_id]
 
     # note, atm hijack is processed in its own context and has not access to controller
     # longer term we may change this
@@ -36,7 +37,8 @@ class UploadsController < ApplicationController
           for_private_message: for_private_message,
           pasted: pasted,
           is_api: is_api,
-          retain_hours: retain_hours
+          retain_hours: retain_hours,
+          user_id: user_id
         )
       rescue => e
         render json: failed_json.merge(message: e.message&.split("\n")&.first), status: 422
@@ -93,7 +95,7 @@ class UploadsController < ApplicationController
     serialized ||= (data || {}).as_json
   end
 
-  def self.create_upload(current_user:, file:, url:, type:, for_private_message:, pasted:, is_api:, retain_hours:)
+  def self.create_upload(current_user:, file:, url:, type:, for_private_message:, pasted:, is_api:, retain_hours:, user_id:)
     if file.nil?
       if url.present? && is_api
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
@@ -117,7 +119,11 @@ class UploadsController < ApplicationController
       pasted: pasted,
     }
 
-    upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
+    # only staff can upload an image as another user
+    user_id ||= current_user.id
+    user_id = current_user.id if user_id != current_user.id && !current_user.staff?
+
+    upload = UploadCreator.new(tempfile, filename, opts).create_for(user_id)
 
     if upload.errors.empty? && current_user.admin?
       upload.update_columns(retain_hours: retain_hours) if retain_hours > 0

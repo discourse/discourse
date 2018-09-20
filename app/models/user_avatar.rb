@@ -39,7 +39,7 @@ class UserAvatar < ActiveRecord::Base
             tempfile,
             "gravatar#{ext}",
             origin: gravatar_url,
-            type: "avatar"
+            type: "gravatar"
           ).create_for(user_id)
 
           upload_id = upload.id
@@ -92,31 +92,21 @@ class UserAvatar < ActiveRecord::Base
     tempfile = FileHelper.download(
       avatar_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-      tmp_file_name: "sso-avatar",
+      tmp_file_name: "imported-avatar",
       follow_redirect: true
     )
 
-    return unless tempfile
+    return if !tempfile
 
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind
 
     upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
+    override_gravatar = !options || options[:override_gravatar]
 
-    user.create_user_avatar! unless user.user_avatar
-
-    if !user.user_avatar.contains_upload?(upload.id)
-      user.user_avatar.update!(custom_upload_id: upload.id)
-      override_gravatar = !options || options[:override_gravatar]
-
-      if user.uploaded_avatar_id.nil? ||
-          !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
-          override_gravatar
-
-        user.update!(uploaded_avatar_id: upload.id)
-      end
+    if user.uploaded_avatar_id.nil? || override_gravatar
+      user.update!(uploaded_avatar_id: upload.id)
     end
-
   rescue Net::ReadTimeout, OpenURI::HTTPError
     # skip saving, we are not connected to the net
   ensure
