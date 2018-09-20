@@ -39,7 +39,7 @@ export default SelectKitComponent.extend({
   @on("didRender")
   _setChoicesMaxWidth() {
     const width = this.$body().outerWidth(false);
-    this.$(".choices").css({ maxWidth: width, width });
+    this.$(".choices").css({ maxWidth: width });
   },
 
   @on("didReceiveAttrs")
