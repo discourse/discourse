@@ -402,6 +402,7 @@ end
 #  hidden           :boolean          default(FALSE), not null
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
+#  component        :boolean          default(FALSE), not null
 #
 # Indexes
 #
