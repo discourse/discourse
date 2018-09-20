@@ -55,6 +55,12 @@ RSpec.describe UploadRecovery do
         )
 
         upload_recovery.recover
+
+        post.update!(
+          raw: "<a href=#{"/uploads/test/original/3X/a/6%0A/#{upload.sha1}.png"}>test</a>"
+        )
+
+        upload_recovery.recover
       end
     end
 
