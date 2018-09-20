@@ -1833,57 +1833,68 @@ describe User do
     it 'sets badge_granted_title correctly' do
       BadgeGranter.grant(badge, user)
 
-      user.update(title: 'Badge')
+      user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
 
-      user.update(title: 'Custom')
+      user.update!(title: 'Custom')
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
 
-      badge.update(allow_title: true)
-      user.update(title: 'Badge')
+      badge.update!(allow_title: true)
+      user.update!(title: badge.name)
       expect(user.user_profile.reload.badge_granted_title).to eq(true)
 
-      user.update(title: nil)
+      user.update!(title: nil)
       expect(user.user_profile.reload.badge_granted_title).to eq(false)
     end
   end
 
-  describe '#available_titles' do
+  describe '#next_best_title' do
     let(:group_a) { Fabricate(:group, title: 'Group A') }
     let(:group_b) { Fabricate(:group, title: 'Group B') }
     let(:group_c) { Fabricate(:group, title: 'Group C') }
     let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
 
-    it 'only includes groups with title and badges that allow to be set as title' do
+    it 'only includes groups with title' do
       group_a.add(user)
-      BadgeGranter.grant(badge, user)
+      expect(user.next_best_title).to eq('Group A')
 
-      available_titles = user.available_titles
-      expect(available_titles).to include('Group A')
-      expect(available_titles).to include('Badge')
-
-      group_a.update(title: nil)
-      badge.update(allow_title: false)
-
-      expect(user.available_titles).to be_empty
+      group_a.update!(title: nil)
+      expect(user.next_best_title).to eq(nil)
     end
 
-    it "sorts the group title in the order: user's primary group, primary group, and others" do
+    it 'only includes badges that allow to be set as title' do
+      BadgeGranter.grant(badge, user)
+      expect(user.next_best_title).to eq('Badge')
+
+      badge.update!(allow_title: false)
+      expect(user.next_best_title).to eq(nil)
+    end
+
+    it "picks the next best title in the order: user's primary group, primary group, groups, and badges" do
       group_a.add(user)
       group_b.add(user)
       group_c.add(user)
+      BadgeGranter.grant(badge, user)
 
-      group_a.update(primary_group: true)
-      group_b.update(primary_group: true)
-      user.update(primary_group_id: group_a.id)
+      group_a.update!(primary_group: true)
+      group_b.update!(primary_group: true)
+      user.update!(primary_group_id: group_a.id)
+      expect(user.next_best_title).to eq('Group A')
 
-      expect(user.available_titles).to eq(['Group A', 'Group B', 'Group C'])
+      user.update!(primary_group_id: group_b.id)
+      expect(user.next_best_title).to eq('Group B')
 
-      user.update(primary_group_id: group_b.id)
-      group_a.update(primary_group: false)
-      group_c.update(primary_group: true)
+      group_b.remove(user)
+      expect(user.next_best_title).to eq('Group A')
 
-      expect(user.available_titles).to eq(['Group B', 'Group C', 'Group A'])
+      group_a.remove(user)
+      expect(user.next_best_title).to eq('Group C')
+
+      group_c.remove(user)
+      expect(user.next_best_title).to eq('Badge')
+
+      BadgeGranter.revoke(UserBadge.find_by(user_id: user.id, badge_id: badge.id))
+      expect(user.next_best_title).to eq(nil)
     end
   end
 end

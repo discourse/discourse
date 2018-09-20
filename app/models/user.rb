@@ -1116,16 +1116,17 @@ class User < ActiveRecord::Base
     from_staged? && self.created_at && self.created_at < 1.day.ago
   end
 
-  def available_titles
-    group_titles_query = groups
+  def next_best_title
+    group_titles_query = groups.where("groups.title <> ''")
     group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
-    group_titles_query = group_titles_query.order("groups.primary_group DESC")
+    group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    group_titles = group_titles_query.pluck(:title).reject(&:blank?)
-    badge_titles = badges.where(allow_title: true).pluck(:name)
-      .map { |name| Badge.display_name(name) }
+    if next_best_group_title = group_titles_query.pluck(:title).first
+      return next_best_group_title
+    end
 
-    group_titles + badge_titles
+    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
   protected

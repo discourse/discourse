@@ -677,7 +677,7 @@ describe Group do
 
     context 'when stripping title' do
       it "only strips user's title if exact match" do
-        group.update(title: 'Awesome')
+        group.update!(title: 'Awesome')
         expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
 
         group.add(user)
@@ -686,7 +686,7 @@ describe Group do
       end
 
       it "grants another title when the user has other available titles" do
-        group.update(title: 'Awesome')
+        group.update!(title: 'Awesome')
         Fabricate(:group, title: 'Super').add(user)
 
         expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to('Super')

@@ -45,7 +45,7 @@ class GroupUser < ActiveRecord::Base
 
   def grant_other_available_title
     if group.title.present? && group.title == user.title
-      user.update(title: user.available_titles.first)
+      user.update!(title: user.next_best_title)
     end
   end
 
@@ -81,7 +81,6 @@ class GroupUser < ActiveRecord::Base
     user.update!(group_locked_trust_level: highest_level)
     Promotion.recalculate(user)
   end
-
 end
 
 # == Schema Information
