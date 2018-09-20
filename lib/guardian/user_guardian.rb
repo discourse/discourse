@@ -1,6 +1,25 @@
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
 
+  def can_pick_avatar?(user_avatar, upload)
+    return false unless self.user
+
+    return true if is_admin?
+
+    # can always pick blank avatar
+    return true if !upload
+
+    return true if user_avatar.contains_upload?(upload.id)
+    return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
+
+    found_upload = UserUpload
+      .where(upload_id: upload.id)
+      .where("user_id in (?)", [upload.user_id, user.id])
+      .exists?
+
+    found_upload
+  end
+
   def can_edit_user?(user)
     is_me?(user) || is_staff?
   end
