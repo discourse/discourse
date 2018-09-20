@@ -51,7 +51,7 @@ class UploadRecovery
   private
 
   def recover_post_upload(post, sha1)
-    return unless sha1.present?
+    return unless sha1.present? && sha1.length == Upload::SHA1_LENGTH
 
     attributes = {
       post: post,
