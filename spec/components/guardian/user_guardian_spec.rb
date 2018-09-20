@@ -42,6 +42,14 @@ describe UserGuardian do
       Guardian.new(user)
     end
 
+    context 'anon user' do
+      let(:guardian) { Guardian.new }
+
+      it "should return the right value" do
+        expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(false)
+      end
+    end
+
     context 'current user' do
       it "can not set uploads not owned by current user" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
@@ -53,6 +61,11 @@ describe UserGuardian do
       it "can handle uploads that are associated but not directly owned" do
         yes_my_upload = not_my_upload
         UserUpload.create!(upload_id: yes_my_upload.id, user_id: user_avatar.user_id)
+        expect(guardian.can_pick_avatar?(user_avatar, yes_my_upload)).to eq(true)
+
+        UserUpload.destroy_all
+
+        UserUpload.create!(upload_id: yes_my_upload.id, user_id: yes_my_upload.user_id)
         expect(guardian.can_pick_avatar?(user_avatar, yes_my_upload)).to eq(true)
       end
     end
