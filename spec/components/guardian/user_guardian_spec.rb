@@ -43,7 +43,7 @@ describe UserGuardian do
     end
 
     context 'current user' do
-      it "can not set to uploads not by current user" do
+      it "can not set uploads not owned by current user" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, already_uploaded)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, not_my_upload)).to eq(false)
