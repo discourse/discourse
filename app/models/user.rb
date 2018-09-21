@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
+  has_many :user_uploads, dependent: :destroy
   has_many :user_emails, dependent: :destroy
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
@@ -108,6 +109,8 @@ class User < ActiveRecord::Base
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
+  before_save :match_title_to_primary_group_changes
+  before_save :check_if_title_is_badged_granted
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -984,23 +987,18 @@ class User < ActiveRecord::Base
     result
   end
 
+  USER_FIELD_PREFIX ||= "user_field_"
+
   def user_fields
     return @user_fields if @user_fields
     user_field_ids = UserField.pluck(:id)
     if user_field_ids.present?
       @user_fields = {}
       user_field_ids.each do |fid|
-        @user_fields[fid.to_s] = custom_fields["user_field_#{fid}"]
+        @user_fields[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
       end
     end
     @user_fields
-  end
-
-  def title=(val)
-    write_attribute(:title, val)
-    if !new_record? && user_profile
-      user_profile.update_column(:badge_granted_title, false)
-    end
   end
 
   def number_of_deleted_posts
@@ -1117,6 +1115,19 @@ class User < ActiveRecord::Base
 
   def mature_staged?
     from_staged? && self.created_at && self.created_at < 1.day.ago
+  end
+
+  def next_best_title
+    group_titles_query = groups.where("groups.title <> ''")
+    group_titles_query = group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
+    group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
+
+    if next_best_group_title = group_titles_query.pluck(:title).first
+      return next_best_group_title
+    end
+
+    next_best_badge_title = badges.where(allow_title: true).limit(1).pluck(:name).first
+    next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
   protected
@@ -1271,7 +1282,22 @@ class User < ActiveRecord::Base
     end
   end
 
+  def match_title_to_primary_group_changes
+    return unless primary_group_id_changed?
+
+    if title == Group.where(id: primary_group_id_was).pluck(:title).first
+      self.title = primary_group&.title
+    end
+  end
+
   private
+
+  def check_if_title_is_badged_granted
+    if title_changed? && !new_record? && user_profile
+      badge_granted_title = title.present? && badges.where(allow_title: true, name: title).exists?
+      user_profile.update_column(:badge_granted_title, badge_granted_title)
+    end
+  end
 
   def previous_visit_at_update_required?(timestamp)
     seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))

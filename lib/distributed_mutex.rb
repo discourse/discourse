@@ -7,15 +7,28 @@ class DistributedMutex
 
   def initialize(key, redis = nil)
     @key = key
+    @using_global_redis = true if !redis
     @redis = redis || $redis
     @mutex = Mutex.new
   end
 
+  CHECK_READONLY_ATTEMPT ||= 10
+
   # NOTE wrapped in mutex to maintain its semantics
   def synchronize
+
     @mutex.lock
+    attempts = 0
+
     while !try_to_get_lock
       sleep 0.001
+      # in readonly we will never be able to get a lock
+      if @using_global_redis && Discourse.recently_readonly?
+        attempts += 1
+        if attempts > CHECK_READONLY_ATTEMPT
+          raise Discourse::ReadOnly
+        end
+      end
     end
 
     yield

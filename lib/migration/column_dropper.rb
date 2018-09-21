@@ -57,6 +57,9 @@ module Migration
         DB.exec <<~SQL
           DROP TRIGGER IF EXISTS #{BaseDropper.readonly_trigger_name(@table, column)} ON #{@table};
           DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(@table, column)} CASCADE;
+          -- Backward compatibility for old functions created in the public
+          -- schema
+          DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(@table, column)} CASCADE;
         SQL
 
         # safe cause it is protected on method entry, can not be passed in params

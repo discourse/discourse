@@ -162,6 +162,7 @@ de:
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
         cn_north_1: "China (Peking)"
+        cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
@@ -196,6 +197,7 @@ de:
     privacy_policy: "Datenschutzrichtlinie"
     privacy: "Datenschutz"
     tos: "Nutzungsbedingungen"
+    rules: "Regeln"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop Ansicht"
     you: "Du"
@@ -252,6 +254,9 @@ de:
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
+      new_topic: "Neues Thema Entwurf"
+      new_private_message: "Neuer privater Nachrichten Entwurf"
+      topic_reply: "Antwort Entwurf"
     topic_count_latest:
       one: "Zeige {{count}} neues oder aktualisiertes Thema"
       other: "Zeige {{count}} neue oder aktualisierte Themen"
@@ -491,6 +496,7 @@ de:
       "12": "Gesendete Objekte"
       "13": "Posteingang"
       "14": "Ausstehend"
+      "15": "Entwürfe"
     categories:
       all: "Alle Kategorien"
       all_subcategories: "alle"
@@ -513,9 +519,9 @@ de:
         one: "1 Thema"
         other: "%{count} Themen"
       topic_stat_sentence:
-        one: "1 neues Thema seit 1 %{unit}."
+        one: "%{count} neues Thema seit 1 %{unit}."
         other: "%{count} neue Themen seit 1 %{unit}."
-      more: "(%{count}mehr) …"
+      more: " (%{count} weitere) …"
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -532,6 +538,7 @@ de:
       post_count: "# Beiträge"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
       powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "kopiert"
     user_fields:
       none: "(wähle eine Option aus)"
     user:
@@ -634,6 +641,7 @@ de:
       revoke_access: "Entziehe Zugriffsrecht"
       undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
       api_approved: "Genehmigt:"
+      api_last_used_at: "Zuletzt benutzt am:"
       theme: "Design"
       home: "Standard-Startseite"
       staged: "Vorbereitet"
@@ -673,6 +681,7 @@ de:
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
       second_factor_backup:
+        title: "Zwei-Faktor-Wiederherstellungs-Codes"
         regenerate: "Erneuern"
         disable: "Deaktivieren"
         enable: "Aktivieren"
@@ -681,6 +690,9 @@ de:
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
+        codes:
+          title: "Wiederherstellungscodes generiert"
+          description: "Jeder dieser Wiederherstellungscodes kann nur einmal benutzt werden. Bewahre diese an einem sicheren aber verfügbaren Ort auf."
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         disable: "Zwei-Faktor-Authentifizierung deaktivieren"
@@ -768,6 +780,18 @@ de:
         any: "(keine Einschränkung)"
       password_confirmation:
         title: "Wiederholung des Passworts"
+      auth_tokens:
+        title: "Kürzlich benutzte Geräte"
+        title_logs: "Authentifizierungs-Logs"
+        ip_address: "IP Adresse"
+        created: "Erzeugt"
+        first_seen: "Erstmalig gesehen"
+        last_seen: "Zuletzt gesehen"
+        operating_system: "Betriebssystem"
+        location: "Ort"
+        action: "Aktion"
+        login: "Einloggen"
+        logout: "Überall ausloggen"
       last_posted: "Letzter Beitrag"
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
@@ -999,6 +1023,7 @@ de:
       hide_session: "Erinnere mich morgen"
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
+      intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber Du hast bislang noch kein Konto angelegt."
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
@@ -1013,6 +1038,8 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
+      invite: "Lade andere ein"
+      edit: "Hinzufügen oder Entfernen"
       leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
@@ -1148,6 +1175,7 @@ de:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…
+      filter_placeholder_with_any: Suchen oder erzeugen
       create: "Erstelle: '{{content}}'"
       max_content_reached:
         one: "Du kannst nur einen Eintrag auswählen."
@@ -1297,6 +1325,9 @@ de:
         shared_draft:
           label: "Gemeinsame Vorlage"
           desc: "Entwerfe ein Thema, das nur für das Team sichtbar ist."
+        toggle_topic_bump:
+          label: "Bump des Themas umschalten"
+          desc: "Antworten ohne das Bump-Datum des Themas zu ändern."
     notifications:
       tooltip:
         regular:
@@ -1684,6 +1715,7 @@ de:
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Umwandeln in öffentliches Thema"
         make_private: "in Nachricht umwandeln"
+        reset_bump_date: "Bump-Datum zurücksetzen"
       feature:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
@@ -2556,6 +2588,8 @@ de:
         moderation_tab: "Moderation"
         disabled: Deaktiviert
         timeout_error: "Entschuldige bitte, die Warteschlange ist zu lang, bitte wähle ein kürzeres Intervall"
+        exception_error: "Entschuldige, ein Fehler während der Ausführung des Query ist aufgetreten"
+        too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte bevor Du es erneut probierst.
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
@@ -2922,9 +2956,16 @@ de:
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
         theme:
+          theme: "Theme"
+          component: "Komponente"
+          components: "Komponenten"
           import_theme: "Design importieren"
           customize_desc: "Anpassen:"
           title: "Designs"
+          modal_title: "Erstelle Theme"
+          create: "Erstelle"
+          create_type: "Typ:"
+          create_name: "Name:"
           long_title: "Farben, CSS und HTML-Inhalte deiner Seite erweitern"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
@@ -2939,6 +2980,10 @@ de:
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
+          switch_component: "Erzeuge Theme"
+          switch_component_alert: "Bist Du  sicher, dass Du diese Komponente in ein Theme konvertieren möchtest? Dies wird es zu einem unabhängigen Theme machen und es wird als Kind von allen Themes entfernt werden."
+          switch_theme: "Komponente erzeugen"
+          switch_theme_alert: "Bist Du sicher, dass Du dieses Theme zu einer Komponente konvertieren möchtest? Es will als Elternteil von all Komponenten entfernt werden."
           uploads: "Uploads"
           no_uploads: "Du kannst Medieninhalte hochladen, die zu deinem Theme gehören, wie etwa Schriftarten und Bilder."
           add_upload: "Upload hinzufügen"
@@ -2961,6 +3006,7 @@ de:
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
           about_theme: "Über das Theme"
           license: "Lizenz"
+          component_of: "Komponente von:"
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
           updating: "Wird aktualisiert..."
@@ -2968,9 +3014,11 @@ de:
           add: "Hinzufügen"
           theme_settings: "Theme-Einstellungen"
           no_settings: "Dieses Theme hat keine Einstellungen."
+          empty: "Keine Teile"
           commits_behind:
             one: "Theme liegt 1 Commit zurück!"
             other: "Theme liegt {{count}} Commits zurück!"
+          compare_commits: "(Siehe neue Beiträge)"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"

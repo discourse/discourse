@@ -7,6 +7,7 @@
 
 es:
   site_settings:
+    discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Deshabilitar el post de bienvenida por Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el Discourse Narrative Bot debe ignorar"
     discourse_narrative_bot_disable_public_replies: "Deshabilitar respuestas públicas del Discourse Narrative Bot"
@@ -138,6 +139,7 @@ es:
           Mientras tanto, me quedaré fuera de tu camino.
     new_user_narrative:
       reset_trigger: "usuario nuevo"
+      title: "Certificado de completación para el nuevo usuario"
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario nuevo"
       hello:
         title: ":robot: Saludos!"

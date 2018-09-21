@@ -44,20 +44,20 @@ GEM
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.1)
-    aws-partitions (1.92.0)
-    aws-sdk-core (3.21.2)
+    aws-partitions (1.104.0)
+    aws-sdk-core (3.27.0)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.5.0)
-      aws-sdk-core (~> 3)
+    aws-sdk-kms (1.9.0)
+      aws-sdk-core (~> 3, >= 3.26.0)
       aws-sigv4 (~> 1.0)
-    aws-sdk-s3 (1.14.0)
-      aws-sdk-core (~> 3, >= 3.21.2)
+    aws-sdk-s3 (1.19.0)
+      aws-sdk-core (~> 3, >= 3.26.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.0)
-    aws-sigv4 (1.0.2)
+    aws-sigv4 (1.0.3)
     barber (0.12.0)
       ember-source (>= 1.0, < 3.1)
       execjs (>= 1.2, < 3)
@@ -257,7 +257,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.60)
+    onebox (1.8.61)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -271,7 +271,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
-    pg (1.1.0)
+    pg (1.1.3)
     powerpack (0.1.2)
     progress (3.4.0)
     pry (0.10.4)
@@ -458,6 +458,7 @@ DEPENDENCIES
   bullet
   byebug
   certified
+  colored2
   cppjieba_rb
   danger
   discourse_image_optim
@@ -509,7 +510,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.60)
+  onebox (= 1.8.61)
   openid-redis-store
   pg
   pry-nav

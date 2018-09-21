@@ -701,8 +701,6 @@ pt_BR:
     no_replies:
       self: "Você não respondeu a nenhuma postagem."
       others: "Sem Respostas."
-    no_drafts:
-      others: "Você não tem permissão para ver rascunhos desse usuário."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1264,8 +1262,6 @@ pt_BR:
     external_system_avatars_url: "URL do sistema externo do serviço de avatares. Substituições permitidas são {username} {first_letter} {color} {size}"
     selectable_avatars_enabled: "Force os usuários a escolher um avatar da lista."
     selectable_avatars: "Lista de usuários avatares podem escolher."
-    default_opengraph_image_url: "URL da imagem opengraph padrão."
-    twitter_summary_large_image_url: "URL da imagem do cartão de resumo padrão do Twitter (deve ter pelo menos 280px de largura e pelo menos 150px de altura)."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
     png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 a desabilitar)."
     allow_staff_to_upload_any_file_in_pm: "Permitir que membros da equipe façam upload de arquivos no PM."
@@ -1499,7 +1495,6 @@ pt_BR:
     enable_emoji: "Habilitar emoji"
     enable_emoji_shortcuts: "Texto em smiley comum como :): p :( será convertido em emojis"
     emoji_set: "Como você gostaria do seu emoji?"
-    enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necessários para acionar o pop-up de emoji de preenchimento automático"
     approve_post_count: "A quantidade de postagens de um usuário novo ou básico que deve ser aprovado"
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"

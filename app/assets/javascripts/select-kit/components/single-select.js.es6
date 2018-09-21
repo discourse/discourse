@@ -5,7 +5,10 @@ import {
 } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, isPresent, run, makeArray } = Ember;
 
-import { applyOnSelectPluginApiCallbacks } from "select-kit/mixins/plugin-api";
+import {
+  applyOnSelectPluginApiCallbacks,
+  applyOnSelectNonePluginApiCallbacks
+} from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],
@@ -207,10 +210,19 @@ export default SelectKitComponent.extend({
   },
 
   select(computedContentItem) {
+    if (this.get("hasSelection")) {
+      this.deselect(this.get("selection.value"));
+    }
+
     if (
       !computedContentItem ||
       computedContentItem.__sk_row_type === "noneRow"
     ) {
+      applyOnSelectNonePluginApiCallbacks(
+        this.get("pluginApiIdentifiers"),
+        this
+      );
+      this._boundaryActionHandler("onSelectNone");
       this.clearSelection();
       return;
     }

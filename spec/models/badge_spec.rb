@@ -80,4 +80,21 @@ describe Badge do
       it { is_expected.to be true }
     end
   end
+
+  describe '.i18n_name' do
+    it 'transforms to lower case letters, and replaces spaces with underscores' do
+      expect(Badge.i18n_name('Basic User')).to eq('basic_user')
+    end
+  end
+
+  describe '.display_name' do
+    it 'fetches from translations when i18n_name key exists' do
+      expect(Badge.display_name('basic_user')).to eq('Basic')
+      expect(Badge.display_name('Basic User')).to eq('Basic')
+    end
+
+    it 'fallbacks to argument value when translation does not exist' do
+      expect(Badge.display_name('Not In Translations')).to eq('Not In Translations')
+    end
+  end
 end

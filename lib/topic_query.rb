@@ -35,7 +35,7 @@ class TopicQuery
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
-        page: one_up_to_max_int,
+        page: zero_up_to_max_int,
         exclude_category_ids: array_int_or_int
       }
     end

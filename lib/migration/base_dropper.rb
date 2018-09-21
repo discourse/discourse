@@ -82,7 +82,22 @@ module Migration
         "readonly()"
       ].compact.join("_")
 
-      "#{FUNCTION_SCHEMA_NAME}.#{function_name}"
+      if DB.exec(<<~SQL).to_s == '1'
+         SELECT schema_name
+         FROM information_schema.schemata
+         WHERE schema_name = '#{FUNCTION_SCHEMA_NAME}'
+         SQL
+
+        "#{FUNCTION_SCHEMA_NAME}.#{function_name}"
+      else
+        function_name
+      end
+    end
+
+    def self.old_readonly_function_name(table_name, column_name = nil)
+      readonly_function_name(table_name, column_name).sub(
+        "#{FUNCTION_SCHEMA_NAME}.", ''
+      )
     end
 
     def self.readonly_trigger_name(table_name, column_name = nil)

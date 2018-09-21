@@ -66,10 +66,13 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+    min-height: 30px;
+    line-height: $line-height-small;
 
     .selected-name {
       text-align: left;
       flex: 1 1 auto;
+      padding: 1px 0;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

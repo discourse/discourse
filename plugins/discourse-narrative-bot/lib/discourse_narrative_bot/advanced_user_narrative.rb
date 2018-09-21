@@ -132,13 +132,15 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(@user,         raw: I18n.t(
+      post = PostCreator.create!(@user,
+        raw: I18n.t(
           "#{I18N_KEY}.recover.deleted_post_raw",
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
-                                                topic_id: data[:topic_id],
-                                                skip_bot: true,
-                                                skip_validations: true)
+        topic_id: data[:topic_id],
+        skip_bot: true,
+        skip_validations: true
+      )
 
       set_state_data(:post_id, post.id)
 

@@ -1228,6 +1228,8 @@ HTML
 
       - test
           - ![upload](#{upload.short_url})
+
+      ![upload](#{upload.short_url.gsub!(".png", "")})
       RAW
 
       cooked = <<~HTML
@@ -1243,6 +1245,7 @@ HTML
         </ul>
         </li>
         </ul>
+        <p><img src="#{upload.url}" alt="upload"></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

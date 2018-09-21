@@ -221,8 +221,9 @@ class Topic < ActiveRecord::Base
     unless skip_callbacks
       ensure_topic_has_a_category
     end
+
     if title_changed?
-      write_attribute :fancy_title, Topic.fancy_title(title)
+      write_attribute(:fancy_title, Topic.fancy_title(title))
     end
 
     if category_id_changed? || new_record?
@@ -346,10 +347,9 @@ class Topic < ActiveRecord::Base
   end
 
   def self.fancy_title(title)
-    escaped = ERB::Util.html_escape(title)
-    return unless escaped
+    return unless escaped = ERB::Util.html_escape(title)
     fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
-    fancy_title.length > Topic.max_fancy_title_length ? title : fancy_title
+    fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
   end
 
   def fancy_title

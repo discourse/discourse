@@ -117,7 +117,7 @@ class UsersController < ApplicationController
         val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        attributes[:custom_fields]["user_field_#{f.id}"] = val
+        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{f.id}"] = val
       end
     end
 
@@ -352,7 +352,7 @@ class UsersController < ApplicationController
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
-          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
+          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length]
         end
       end
 
@@ -675,6 +675,8 @@ class UsersController < ApplicationController
     if current_user.present?
       if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
+      elsif destination_url = cookies.delete(:destination_url)
+        return redirect_to(destination_url)
       else
         return redirect_to(path('/'))
       end
@@ -863,15 +865,18 @@ class UsersController < ApplicationController
       end
     end
 
-    user.uploaded_avatar_id = upload_id
+    upload = Upload.find_by(id: upload_id)
+
+    # old safeguard
+    user.create_user_avatar unless user.user_avatar
+
+    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
 
     if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-      # make sure the upload exists
-      unless Upload.where(id: upload_id).exists?
+
+      if !upload
         return render_json_error I18n.t("avatar.missing")
       end
-
-      user.create_user_avatar unless user.user_avatar
 
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
@@ -880,6 +885,7 @@ class UsersController < ApplicationController
       end
     end
 
+    user.uploaded_avatar_id = upload_id
     user.save!
     user.user_avatar.save!
 

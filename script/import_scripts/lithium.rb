@@ -886,7 +886,7 @@ SQL
           post.raw = new_raw
           post.cooked = post.cook(new_raw)
           cpp = CookedPostProcessor.new(post)
-          cpp.keep_reverse_index_up_to_date
+          cpp.link_post_uploads
           post.custom_fields["import_post_process"] = true
           post.save
         end

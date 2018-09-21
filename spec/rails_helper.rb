@@ -175,6 +175,17 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each, type: :multisite) do
+    RailsMultisite::ConnectionManagement.config_filename =
+      "spec/fixtures/multisite/two_dbs.yml"
+  end
+
+  config.after(:each, type: :multisite) do
+    RailsMultisite::ConnectionManagement.clear_settings!
+    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.establish_connection
+  end
+
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies)
       session[:current_user_id] = user.id
