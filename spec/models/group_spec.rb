@@ -675,13 +675,22 @@ describe Group do
   describe '#remove' do
     before { group.add(user) }
 
-    it "only strips user's title if exact match" do
-      group.update(title: 'Awesome')
-      expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
+    context 'when stripping title' do
+      it "only strips user's title if exact match" do
+        group.update!(title: 'Awesome')
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
 
-      group.add(user)
-      user.update_columns(title: 'Different')
-      expect { group.remove(user) }.to_not change { user.reload.title }
+        group.add(user)
+        user.update_columns(title: 'Different')
+        expect { group.remove(user) }.to_not change { user.reload.title }
+      end
+
+      it "grants another title when the user has other available titles" do
+        group.update!(title: 'Awesome')
+        Fabricate(:group, title: 'Super').add(user)
+
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to('Super')
+      end
     end
 
     it "unsets the user's primary group" do
