@@ -39,4 +39,26 @@
     Discourse.S3CDN = setupData.s3Cdn;
     Discourse.S3BaseUrl = setupData.s3BaseUrl;
   }
+
+  Ember.RSVP.configure("onerror", function(e) {
+    // Ignore TransitionAborted exceptions that bubble up
+    if (e && e.message === "TransitionAborted") {
+      return;
+    }
+
+    if (Discourse.Environment === "development") {
+      if (e) {
+        if (e.message || e.stack) {
+          console.log(e.message);
+          console.log(e.stack);
+        } else {
+          console.log("Uncaught promise: ", e);
+        }
+      } else {
+        console.log("A promise failed but was not caught.");
+      }
+    }
+
+    window.onerror(e && e.message, null, null, null, e);
+  });
 })();
