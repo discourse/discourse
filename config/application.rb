@@ -120,6 +120,7 @@ module Discourse
       google-tag-manager.js
       google-universal-analytics.js
       preload-application-data.js
+      authentication-complete.js
     }
 
     # Precompile all available locales

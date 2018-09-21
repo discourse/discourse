@@ -19,20 +19,3 @@
   });
 </script>
 
-<script>
-  <%- if !current_user && flash[:authentication_data] %>
-    Discourse.showingSignup = true
-    require('discourse/routes/application').default.reopen({
-      actions: {
-        didTransition: function() {
-          Em.run.next(function(){
-            Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
-          });
-          return this._super();
-        }
-      }
-    });
-  <%- end %>
-</script>
-
-<%= preload_script 'browser-update' %>
