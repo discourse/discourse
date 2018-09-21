@@ -217,30 +217,43 @@ describe PostDestroyer do
     end
   end
 
-  describe "recovery and public post actions" do
+  describe "recovery and post actions" do
     let(:codinghorror) { Fabricate(:coding_horror) }
     let!(:like) { PostAction.act(codinghorror, post, PostActionType.types[:like]) }
     let!(:another_like) { PostAction.act(moderator, post, PostActionType.types[:like]) }
 
     it "restores public post actions" do
       PostDestroyer.new(moderator, post).destroy
-      expect(PostAction.find_by(id: like.id)).not_to be_present
+      expect(PostAction.exists?(id: like.id)).to eq(false)
 
       PostDestroyer.new(moderator, post).recover
-      expect(PostAction.find_by(id: like.id)).to be_present
+      expect(PostAction.exists?(id: like.id)).to eq(true)
     end
 
     it "does not recover previously-deleted actions" do
       PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-      expect(PostAction.find_by(id: like.id)).not_to be_present
+      expect(PostAction.exists?(id: like.id)).to eq(false)
 
       PostDestroyer.new(moderator, post).destroy
-      expect(PostAction.find_by(post_id: post.id)).to eq(nil)
-
       PostDestroyer.new(moderator, post).recover
-      expect(PostAction.find_by(id: like.id)).not_to be_present
-      expect(PostAction.find_by(id: another_like.id)).to be_present
+      expect(PostAction.exists?(id: another_like.id)).to eq(true)
+      expect(PostAction.exists?(id: like.id)).to eq(false)
     end
+
+    it "updates post like count" do
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      post.reload
+      expect(post.like_count).to eq(2)
+    end
+
+    it "cleans up deleted_public_actions custom field after recovery" do
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      post.reload
+      expect(post.custom_fields["deleted_public_actions"]).to be_nil
+    end
+
   end
 
   describe 'basic destroying' do
@@ -647,6 +660,11 @@ describe PostDestroyer do
       expect(
         Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
       ).to eq(false)
+    end
+
+    it "should set the deleted_public_actions custom field" do
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(second_post.custom_fields["deleted_public_actions"]).to eq("#{bookmark.id}")
     end
   end
 
