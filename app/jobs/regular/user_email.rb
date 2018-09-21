@@ -9,9 +9,19 @@ module Jobs
 
     sidekiq_options queue: 'low'
 
+    # Can be overridden by subclass, for example critical email
+    # should always consider being sent
+    def quit_email_early?
+      SiteSetting.disable_emails == 'yes'
+    end
+
     def execute(args)
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       raise Discourse::InvalidParameters.new(:type)    unless args[:type].present?
+
+      # This is for performance. Quit out fast without doing a bunch
+      # of extra work when emails are disabled.
+      return if quit_email_early?
 
       post = nil
       notification = nil
