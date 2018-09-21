@@ -162,7 +162,8 @@ class PostDestroyer
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
-    @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
+    last_revision = @post.revisions.last
+    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
   end
 
   private
