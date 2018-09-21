@@ -16,7 +16,9 @@
     {{#unless siteSettings.enable_sso}}
       {{d-button action="sendInvites" title="admin.invite.button_title" icon="user-plus" label="admin.invite.button_text"}}
     {{/unless}}
-    {{d-button action="exportUsers" title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
+    {{#if currentUser.admin}}
+      {{d-button action="exportUsers" title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
+    {{/if}}
   </div>
     </ul>
   </nav>

@@ -2576,6 +2576,24 @@ describe Guardian do
     end
   end
 
+  describe '#can_export_entity?' do
+    let(:user_guardian) { Guardian.new(user) }
+    let(:moderator_guardian) { Guardian.new(moderator) }
+    let(:admin_guardian) { Guardian.new(admin) }
+
+    it 'only allows admins to export user_list' do
+      expect(user_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(admin_guardian.can_export_entity?('user_list')).to be_truthy
+    end
+
+    it 'allow moderators to export other admin entities' do
+      expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
+      expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+  end
+
   describe "#allow_themes?" do
     let(:theme) { Fabricate(:theme) }
     let(:theme2) { Fabricate(:theme) }
