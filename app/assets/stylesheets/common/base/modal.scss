@@ -370,7 +370,8 @@
 
 .edit-category-modal {
   input[type="number"] {
-    width: 50px;
+    min-width: 8em;
+    margin-bottom: 0;
   }
 
   .subcategory-list-style-field {
@@ -468,7 +469,7 @@
 .change-timestamp,
 .poll-ui-builder {
   .date-picker {
-    width: 9em;
+    min-width: 8em;
   }
 
   #date-container {
@@ -480,7 +481,7 @@
   }
 
   input[type="time"] {
-    width: 6em;
+    width: 7em;
     text-align: center;
   }
 

@@ -219,8 +219,8 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = "#{Discourse.base_url}#{@category.url}"
-    @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
+    @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
+    @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
     @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
 

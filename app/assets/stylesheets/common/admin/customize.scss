@@ -52,6 +52,44 @@
       display: inline-block;
     }
   }
+
+  .error {
+    color: $danger;
+  }
+}
+
+.admin-customize.admin-customize-themes {
+  .customize-themes-header {
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: 8px;
+    display: flex;
+
+    .title {
+      color: $primary-medium;
+      flex-grow: 1;
+      h3 {
+        margin-bottom: 0;
+      }
+    }
+
+    .create-actions {
+      margin-left: auto;
+    }
+  }
+  .admin-container {
+    padding: 0;
+  }
+  .error-message {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    .fa {
+      color: $danger;
+    }
+  }
+  .raw-error {
+    background-color: $primary-very-low;
+    padding: 5px;
+  }
 }
 
 .admin-customize {
@@ -99,70 +137,207 @@
     }
   }
   .show-current-style {
-    margin-left: 20px;
-    float: left;
-    width: 70%;
-    h2 {
-      margin-bottom: 15px;
-    }
-    h3 {
+    display: inline-block;
+    vertical-align: top;
+
+    .url {
       margin-bottom: 10px;
-      margin-top: 30px;
+    }
+
+    .title {
+      font-size: $font-up-4;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .about-url,
+    license-url {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .mini-title {
+      font-size: $font-up-1;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+    .control-unit {
+      margin-bottom: 25px;
+      margin-top: 15px;
+    }
+    .control {
+      margin-bottom: 10px;
+    }
+    .description {
+      margin-bottom: 12px;
     }
   }
-
-  .create-actions {
-    margin-bottom: 10px;
+  .add-component-button {
+    vertical-align: middle;
   }
+  .themes-intro {
+    display: inline-block;
+    width: 51%;
+    vertical-align: top;
+    margin-left: 20%;
+    margin-top: 60px;
 
+    img {
+      display: inline-block;
+      margin-right: 10px;
+      width: 10%;
+      vertical-align: top;
+      margin-top: 5px;
+    }
+    .content-wrapper {
+      display: inline-block;
+      vertical-align: top;
+      width: 65%;
+      h1 {
+        display: inline-block;
+      }
+    }
+    .external-link {
+      display: inline-block;
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
   .themes-list {
-    margin-bottom: 20px;
+    border-right: 1px solid $primary-low;
+    border-bottom: 1px solid $primary-low;
+    display: inline-block;
+    overflow: hidden;
   }
 
   .themes-list-header {
-    font-size: $font-up-1;
-    padding: 10px;
-    background-color: $primary-low;
+    width: 100%;
+    border-bottom: 1px solid $primary-low;
+
+    .tab {
+      display: inline-block;
+      padding: 10px;
+      width: 50%;
+      box-sizing: border-box;
+      text-align: center;
+      border-left: 1px solid $primary-low;
+
+      &.active {
+        font-weight: bold;
+        color: $tertiary;
+      }
+
+      &:not(.active) {
+        cursor: pointer;
+
+        &:hover {
+          background-color: $primary-very-low;
+        }
+      }
+    }
   }
 
   .themes-list-container {
-    max-height: 280px;
     overflow-y: scroll;
+    box-sizing: content-box;
+    max-height: 700px;
+    width: 100%; /* overridden in javascript to hide scrollbar */
 
-    &::-webkit-scrollbar-track {
-      border-radius: 10px;
-      background-color: $secondary;
+    .themes-list-item:last-child {
+      border-bottom: none;
     }
-
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      background-color: $primary-low-mid;
-    }
-
     .themes-list-item {
       color: $primary;
       border-bottom: 1px solid $primary-low;
       display: flex;
+      border-left: 1px solid $primary-low;
 
-      &:hover {
-        background-color: $tertiary-low;
-      }
-
-      &.active {
-        color: $secondary;
+      &.inactive-indicator {
+        border-right: 0;
+        border-left: 0;
         font-weight: bold;
-        background-color: $tertiary;
+        color: $primary-medium;
+
+        span.empty {
+          padding-left: 5px;
+          padding-top: 15px;
+        }
+      }
+      &:not(.inactive-indicator):not(.selected):hover {
+        background-color: $primary-very-low;
+        .component {
+          border-color: $primary-low-mid;
+        }
       }
 
-      a,
+      &.selected {
+        color: $secondary;
+        background-color: $tertiary;
+        .fa {
+          color: inherit;
+        }
+      }
+      &:not(.selected) {
+        .broken-indicator {
+          color: $danger;
+        }
+        .fa {
+          opacity: 0.7;
+        }
+        .default-indicator {
+          color: $success;
+        }
+      }
+
+      .light-grey-icon {
+        color: $primary-medium;
+      }
+
+      .info {
+        overflow: hidden;
+        font-weight: bold;
+        font-size: $font-up-1;
+
+        .name {
+          float: left;
+        }
+
+        .icons {
+          float: right;
+        }
+      }
+
+      .components-list {
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: $font-down-1;
+        align-items: baseline;
+
+        .others-count:hover {
+          text-decoration: underline;
+        }
+        .component {
+          display: flex;
+          padding: 3px 5px 3px 5px;
+          border-radius: 2px;
+          border: 1px solid $primary-low;
+          margin-right: 5px;
+          margin-bottom: 5px;
+        }
+      }
+
+      .inner-wrapper {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      span.empty {
+        padding: 3px 10px 3px 10px;
+      }
+
+      .inner-wrapper,
       span.empty {
         color: inherit;
         width: 100%;
-        padding: 10px;
       }
     }
   }
@@ -170,7 +345,7 @@
   .theme.settings {
     .theme-setting {
       padding-bottom: 0;
-      padding-top: 18px;
+      margin-top: 18px;
       min-height: 35px;
     }
     .setting-label {
@@ -399,8 +574,16 @@
   }
 }
 
-.permalink-form .select-kit {
-  width: 150px;
+.permalink-form {
+  display: flex;
+  align-items: center;
+
+  .select-kit {
+    width: 150px;
+  }
+  input {
+    margin: 0 5px;
+  }
 }
 
 .permalink-title {

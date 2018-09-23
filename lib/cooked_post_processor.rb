@@ -35,12 +35,12 @@ class CookedPostProcessor
       post_process_oneboxes
       post_process_images
       post_process_quotes
-      keep_reverse_index_up_to_date
       optimize_urls
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
       grant_badges
+      @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end
@@ -56,26 +56,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
-  end
-
-  def keep_reverse_index_up_to_date
-    upload_ids = []
-
-    @doc.css("a/@href", "img/@src").each do |media|
-      if upload = Upload.get_from_url(media.value)
-        upload_ids << upload.id
-      end
-    end
-
-    upload_ids |= downloaded_images.values.select { |id| Upload.exists?(id) }
-
-    values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
-    PostUpload.transaction do
-      PostUpload.where(post_id: @post.id).delete_all
-      if upload_ids.size > 0
-        DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
-      end
-    end
   end
 
   def post_process_images
@@ -159,15 +139,25 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||= JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
+    @large_images ||=
+      begin
+        JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
+      rescue JSON::ParserError
+        []
+      end
   end
 
   def broken_images
-    @broken_images ||= JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
+    @broken_images ||=
+      begin
+        JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
+      rescue JSON::ParserError
+        []
+      end
   end
 
   def downloaded_images
-    @downloaded_images ||= JSON.parse(@post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
+    @downloaded_images ||= @post.downloaded_images
   end
 
   def extract_images

@@ -31,7 +31,7 @@ module ApplicationHelper
     if SiteSetting.ga_universal_auto_link_domains.present?
       result[:allowLinker] = true
     end
-    result.to_json.html_safe
+    result.to_json
   end
 
   def ga_universal_json
@@ -129,7 +129,7 @@ module ApplicationHelper
       javascript = javascript.scrub
       javascript.gsub!(/\342\200\250/u, '&#x2028;')
       javascript.gsub!(/(<\/)/u, '\u003C/')
-      javascript.html_safe
+      javascript
     else
       ''
     end
@@ -362,6 +362,12 @@ module ApplicationHelper
     end
   end
 
+  def scheme_id
+    return if theme_ids.blank?
+    theme = Theme.find_by(id: theme_ids.first)
+    theme&.color_scheme_id
+  end
+
   def current_homepage
     current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
@@ -394,5 +400,10 @@ module ApplicationHelper
     end
 
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
+  end
+
+  def preloaded_json
+    return '{}' if @preloaded.blank?
+    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
   end
 end

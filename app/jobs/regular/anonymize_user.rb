@@ -23,6 +23,8 @@ module Jobs
         .where(user_id: @user_id)
         .where.not(raw_email: nil)
         .update_all(raw_email: nil)
+
+      anonymize_user_fields
     end
 
     def ip_where(column = 'user_id')
@@ -46,5 +48,15 @@ module Jobs
       ).update_all(ip_address: new_ip)
     end
 
+    def anonymize_user_fields
+      user_field_ids = UserField.pluck(:id)
+      user = User.find(@user_id)
+      return if user_field_ids.blank? || user.blank?
+
+      user_field_ids.each do |field_id|
+        user.custom_fields.delete("#{User::USER_FIELD_PREFIX}#{field_id}")
+      end
+      user.save!
+    end
   end
 end

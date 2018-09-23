@@ -48,6 +48,9 @@ pt:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -57,6 +60,9 @@ pt:
         x_days:
           one: "1d"
           other: "%{count}d"
+        x_months:
+          one: "1 mês"
+          other: "%{count}meses"
         about_x_years:
           one: "1a"
           other: "%{count}a"
@@ -119,6 +125,7 @@ pt:
       user_left: "%{who} removeram-se desta mensagem %{when}"
       removed_user: "removeu %{who} %{when}"
       removed_group: "removeu %{who} %{when}"
+      autobumped: "automaticamente colidido %{when}"
       autoclosed:
         enabled: 'fechado %{when}'
         disabled: 'aberto %{when}'
@@ -143,6 +150,8 @@ pt:
     topic_admin_menu: "Ações administrativas dos Tópicos"
     wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    bootstrap_mode_enabled: "Para que o inicio do teu Site seja o mais simples possivél, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{min_users}utilizadores se tiverem juntado ao fórum."
+    bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
     themes:
       default_description: "Predefinição"
     s3:

@@ -256,14 +256,14 @@ pt_BR:
       new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Resposta preliminar"
     topic_count_latest:
-      one: "Veja {{conta}} tópicos novos ou atualizados"
-      other: "Veja {{conta}} tópicos novos ou atualizados"
+      one: "Veja {{count}} tópicos novos ou atualizados"
+      other: "Veja {{count}} tópicos novos ou atualizados"
     topic_count_unread:
-      one: "Veja {{conta}} tópicos não lidos."
-      other: "Veja {{conta}} tópicos não lidos."
+      one: "Veja {{count}} tópicos não lidos."
+      other: "Veja {{count}} tópicos não lidos."
     topic_count_new:
-      one: "Veja {{conta}} novos tópicos."
-      other: "Veja {{conta}} novos tópicos."
+      one: "Veja {{count}} novos tópicos."
+      other: "Veja {{count}} novos tópicos."
     preview: "pré-visualização"
     cancel: "cancelar"
     save: "Salvar mudanças"

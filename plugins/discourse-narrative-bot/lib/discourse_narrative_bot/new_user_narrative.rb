@@ -95,6 +95,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_flag: {
+        prerequisite: Proc.new { SiteSetting.allow_flagging_staff },
         next_state: :tutorial_search,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_uri) },
         flag: {

@@ -49,6 +49,7 @@ class PluginTxUpdater
             system_cmd('bundle exec bin/pull_translations.rb')
             system_cmd('git add config/locales/*')
             system_cmd('git add Gemfile.lock') rescue true # might be gitignored
+            system_cmd('git add .tx/config') rescue true
             system_cmd('git commit -m "Update translations"')
             system_cmd('git push origin master') if @push
           rescue => e

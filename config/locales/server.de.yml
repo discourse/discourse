@@ -702,7 +702,6 @@ de:
       others: "Keine Antworten."
     no_drafts:
       self: "Du hast keine Entwürfe; beginne eine Antwort in einem beliebigen Thema und es wird automatisch als neuer Entwurf gespeichert."
-      others: "Du hast keine Berechtigung die Entwürfe dieses Benutzers zu sehen."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -763,6 +762,9 @@ de:
       session_info: "Informationen zur Benutzersitzung lesen"
       read: "Alles lesen"
       write: "Alles schreiben"
+  flags:
+    errors:
+      already_handled: "Die Meldung wurde bereits bearbeitet"
   reports:
     default:
       labels:
@@ -1267,8 +1269,8 @@ de:
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
     selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste von Avataren, aus der Benutzer wählen können."
-    default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
-    twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
+    default_opengraph_image_url: "Standard-OpenGraph-Bild, das verwendet wird, wenn die Seite kein anderes passendes Bild oder Seitenlogo hat."
+    twitter_summary_large_image_url: "Standard-Bild für die Twitter-Zusammenfassungskarte (sollte mindestens 280px breit und 150px hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
     allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in Nachrichten alle Dateien hochzuladen."
@@ -1503,7 +1505,6 @@ de:
     enable_emoji: "Aktiviere emoji"
     enable_emoji_shortcuts: "Geläufige Text-Smileys wie :) :p :( werden in Emojis umgewandelt"
     emoji_set: "Welche Emoji sollen es sein?"
-    enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
     emoji_autocomplete_min_chars: "Erforderliche Minimalanzahl von Zeichen, um das Popup zur Emoji-Autovervollständigung zu öffnen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"

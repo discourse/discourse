@@ -1,11 +1,11 @@
 import ComboBox from "select-kit/components/combo-box";
-import Tags from "select-kit/mixins/tags";
+import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
 const { get, isEmpty, run, makeArray } = Ember;
 
-export default ComboBox.extend(Tags, {
+export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
   headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],

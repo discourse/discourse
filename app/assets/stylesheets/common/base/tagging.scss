@@ -53,11 +53,11 @@
 .topic-category {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
 
   .topic-header-extra {
-    display: inline-block;
-    vertical-align: baseline;
+    display: inline-flex;
+    align-items: center;
   }
 
   .badge-wrapper {

@@ -285,11 +285,10 @@ export default function(options) {
       hOffset = 0;
     } else {
       pos = me.caretPosition({
-        pos: completeStart,
-        key: options.key
+        pos: completeStart + 1
       });
 
-      hOffset = 27;
+      hOffset = 10;
       if (options.treatAsTextarea) vOffset = -32;
     }
 
