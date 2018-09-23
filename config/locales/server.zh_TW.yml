@@ -894,8 +894,6 @@ zh_TW:
     avatar_sizes: "自動生成的頭像大小列表。"
     external_system_avatars_enabled: "使用外部系統頭像服務。"
     external_system_avatars_url: "外部系統頭像服務的 URL 地址。可選參數是 {username} {first_letter} {color} {size}"
-    default_opengraph_image_url: "opengraph圖像的預設URL。"
-    twitter_summary_large_image_url: "預設 Twitter summary 卡片的 URL（需要至少寬 280px 和高 150px）。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
     enable_flash_video_onebox: "在連結預覽中啟用 swf 和 flv (Adobe Flash) 嵌入。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
@@ -1086,7 +1084,6 @@ zh_TW:
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
     emoji_set: "你喜歡怎麼樣的表情符號？"
-    enforce_square_emoji: "強制所有表情符號成為正方形比例。"
     approve_post_count: "新用戶或基礎用戶需要被審核的帖子數量"
     approve_unless_trust_level: "該信任等級之下的用戶的帖子必須被審核"
     approve_new_topics_unless_trust_level: "低於該信任等級的用戶的新帖子需要被審核"
@@ -1188,9 +1185,6 @@ zh_TW:
       other: "%{count} 個帖子被分離到了新主題：%{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} 個帖子被合併到現存主題：%{topic_link}"
-  change_owner:
-    post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
-    deleted_user: "已經刪除的用戶"
   topic_statuses:
     archived_enabled: "此討論話題已封存，即已經凍結，無法修改。"
     archived_disabled: "此討論話題已被解除封存，即不再凍結，可以修改。"
@@ -1799,7 +1793,6 @@ zh_TW:
     recent_topics: "最近"
     see_more: "更多"
     search_title: "搜尋該網頁"
-    search_google: "Google"
   login_required:
     welcome_message: |
       ## [歡迎來到 %{title}](#welcome)

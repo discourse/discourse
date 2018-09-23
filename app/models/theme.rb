@@ -51,6 +51,7 @@ class Theme < ActiveRecord::Base
 
     remove_from_cache!
     clear_cached_settings!
+    ColorScheme.hex_cache.clear
   end
 
   after_destroy do
@@ -72,6 +73,7 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
+    ColorScheme.hex_cache.clear
   end
 
   after_commit ->(theme) do
@@ -400,6 +402,7 @@ end
 #  hidden           :boolean          default(FALSE), not null
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
+#  component        :boolean          default(FALSE), not null
 #
 # Indexes
 #

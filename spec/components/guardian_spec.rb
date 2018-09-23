@@ -2576,13 +2576,34 @@ describe Guardian do
     end
   end
 
+  describe '#can_export_entity?' do
+    let(:user_guardian) { Guardian.new(user) }
+    let(:moderator_guardian) { Guardian.new(moderator) }
+    let(:admin_guardian) { Guardian.new(admin) }
+
+    it 'only allows admins to export user_list' do
+      expect(user_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(admin_guardian.can_export_entity?('user_list')).to be_truthy
+    end
+
+    it 'allow moderators to export other admin entities' do
+      expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
+      expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+  end
+
   describe "#allow_themes?" do
     let(:theme) { Fabricate(:theme) }
     let(:theme2) { Fabricate(:theme) }
 
     it "allows staff to use any themes" do
-      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(true)
-      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(true)
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
     end
 
     it "only allows normal users to use user-selectable themes or default theme" do

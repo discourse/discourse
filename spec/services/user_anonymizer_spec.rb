@@ -256,6 +256,21 @@ describe UserAnonymizer do
         UserProfileView.add(user.id, '127.0.0.1', another_user.id, Time.now, true)
         expect { make_anonymous }.to_not change { UserProfileView.count }
       end
+
+      it "removes user field values" do
+        field1 = Fabricate(:user_field)
+        field2 = Fabricate(:user_field)
+
+        user.custom_fields = {
+          "some_field": "123",
+          "user_field_#{field1.id}": "foo",
+          "user_field_#{field2.id}": "bar",
+          "another_field": "456"
+        }
+
+        expect { make_anonymous }.to change { user.custom_fields }
+        expect(user.reload.custom_fields).to eq("some_field" => "123", "another_field" => "456")
+      end
     end
   end
 

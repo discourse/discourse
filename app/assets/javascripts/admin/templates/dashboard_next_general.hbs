@@ -95,13 +95,11 @@
         {{#conditional-loading-section isLoading=isLoading}}
           {{admin-report
             forcedModes="inline-table"
-            report=usersByTypeReport
-            lastRefreshedAt=lastRefreshedAt}}
+            dataSourceName="users_by_type"}}
 
           {{admin-report
             forcedModes="inline-table"
-            report=usersByTrustLevelReport
-            lastRefreshedAt=lastRefreshedAt}}
+            dataSourceName="users_by_trust_level"}}
         {{/conditional-loading-section}}
       </div>
 
@@ -154,12 +152,14 @@
 
     <div class="section-column">
       {{admin-report
+        filters=topReferredTopicsFilters
         dataSourceName="top_referred_topics"
-        reportOptions=topReferredTopicsTopions}}
+        reportOptions=topReferredTopicsOptions}}
 
       {{admin-report
         dataSourceName="trending_search"
         reportOptions=trendingSearchOptions
+        filters=trendingSearchFilters
         isEnabled=logSearchQueriesEnabled
         disabledLabel="admin.dashboard.reports.trending_search.disabled"}}
       {{{i18n "admin.dashboard.reports.trending_search.more"}}}

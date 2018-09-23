@@ -37,8 +37,8 @@ class UploadCreator
       # test for image regardless of input
       @image_info = FastImage.new(@file) rescue nil
 
-      is_image = FileHelper.is_image?(@filename)
-      is_image ||= @image_info && FileHelper.is_image?("test.#{@image_info.type}")
+      is_image = FileHelper.is_supported_image?(@filename)
+      is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
 
       if is_image
         extract_image_info!
@@ -74,7 +74,10 @@ class UploadCreator
       end
 
       # return the previous upload if any
-      return @upload unless @upload.nil?
+      if @upload
+        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+        return @upload
+      end
 
       fixed_original_filename = nil
       if is_image
@@ -130,6 +133,10 @@ class UploadCreator
 
       if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+      end
+
+      if @upload.errors.empty?
+        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
       end
 
       @upload

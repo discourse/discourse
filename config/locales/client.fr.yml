@@ -196,6 +196,7 @@ fr:
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
+    rules: "Règles"
     mobile_view: "Vue mobile"
     desktop_view: "Vue bureau"
     you: "Vous"
@@ -536,6 +537,7 @@ fr:
       post_count: "# messages"
       confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
       powered_by: "propulsé par <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "copié"
     user_fields:
       none: "(choisir une option)"
     user:
@@ -638,6 +640,7 @@ fr:
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
+      api_last_used_at: "Dernièrement utilisé le :"
       theme: "Thème"
       home: "Page d'accueil par défaut"
       staged: "Distant"
@@ -777,6 +780,18 @@ fr:
         any: "tous"
       password_confirmation:
         title: "Confirmation du mot de passe"
+      auth_tokens:
+        title: "Appareils utilisés récemment"
+        title_logs: "Journaux d'authentification"
+        ip_address: "Adresse IP"
+        created: "Créé"
+        first_seen: "Première utilisation"
+        last_seen: "Dernière utilisation"
+        operating_system: "Système d'exploitation"
+        location: "Localisation"
+        action: "Action"
+        login: "Connecter"
+        logout: "Déconnecter tout"
       last_posted: "Dernier message"
       last_emailed: "Dernier courriel"
       last_seen: "Vu"
@@ -1009,6 +1024,7 @@ fr:
       hide_forever: "non merci"
       hidden_for_session: "Très bien, je vous demanderai demain. Vous pouvez toujours cliquer sur « Se connecter » pour créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
+      value_prop: "Quand vous créez votre compte, nous stockons ce que vous avez lu pour qu'à votre retour vous puissiez continuer là on vous vous êtes arrêtés. Vous recevez aussi des notifications, ici et par courriel, dès que quelqu'un vous répond. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartpulse:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description: "Il y a <b>{{replyCount}}</b> réponses."
@@ -1022,6 +1038,8 @@ fr:
       disable: "Afficher les messages supprimés"
     private_message_info:
       title: "Message direct"
+      invite: "Inviter d'autres utilisateurs…"
+      edit: "Ajouter ou supprimer…"
       leave_message: "Êtes-vous sûr de vouloir quitter cette conversation ?"
       remove_allowed_user: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
       remove_allowed_group: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message direct ?"
@@ -1157,6 +1175,7 @@ fr:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
+      filter_placeholder_with_any: Rechercher ou créer…
       create: "Créer : '{{content}}'"
       max_content_reached:
         one: "Vous ne pouvez séléctionner que {{count}} élément."
@@ -1306,6 +1325,9 @@ fr:
         shared_draft:
           label: "Ebauche partagée"
           desc: "Créer ébauche d'un sujet qui ne sera visible qu'aux responsables"
+        toggle_topic_bump:
+          label: "Basculer l'actualisation des sujets"
+          desc: "Répondre sans modifier la date d'actualisation du sujet"
     notifications:
       tooltip:
         regular:
@@ -1693,6 +1715,7 @@ fr:
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
         make_private: "Transformer en message direct"
+        reset_bump_date: "Réinitialiser la date d'actualisation"
       feature:
         pin: "Épingler le sujet"
         unpin: "Désépingler le sujet"
@@ -2570,6 +2593,7 @@ fr:
         disabled: Désactivé
         timeout_error: "Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court"
         exception_error: "Désolé, une erreur s'est produite à l'exécution de la requête"
+        too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de ressayer.
         reports:
           trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
@@ -2936,9 +2960,16 @@ fr:
           revert: "Annuler les changements"
           revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
         theme:
+          theme: "Thème"
+          component: "Composant"
+          components: "Composants"
           import_theme: "Importer un thème"
           customize_desc: "Personaliser :"
           title: "Thèmes"
+          modal_title: "Créer un thème"
+          create: "Créer"
+          create_type: "Type :"
+          create_name: "Nom :"
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
           edit: "Modifier"
           edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
@@ -2953,6 +2984,10 @@ fr:
           color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
+          switch_component: "Convertir en thème"
+          switch_component_alert: "Êtes-vous sûr de vouloir convertir ce composant en thème ? Cela va en faire un thème indépendant et sera supprimé des tous les thèmes l'utilisant."
+          switch_theme: "Convertir en composant"
+          switch_theme_alert: "Êtes-vous sûr de vouloir convertir ce thème en composant ? Il sera supprimé comme thème parent des composants utilisés."
           uploads: "Uploads"
           no_uploads: "Vous pouvez envoyer des ressources associées à votre thème comme des polices ou des images"
           add_upload: "Ajouter un fichier"
@@ -2975,6 +3010,7 @@ fr:
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
           about_theme: "À propos du thème"
           license: "Licence"
+          component_of: "Composant de :"
           update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
@@ -2982,9 +3018,11 @@ fr:
           add: "Ajouter"
           theme_settings: "Paramètres thème"
           no_settings: "Ce thème n'a pas de paramètres."
+          empty: "Aucun élément"
           commits_behind:
             one: "Le thème est en retard de 1 commit !"
             other: "Le thème est en retard de {{count}} commits !"
+          compare_commits: "(Voir les nouveaux changements)"
           scss:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."

@@ -139,10 +139,11 @@
     }
 
     form {
+      width: 95%;
       margin-top: 20px;
       #split-topic-name,
       #choose-topic-title {
-        width: 520px;
+        width: 100%;
       }
     }
   }

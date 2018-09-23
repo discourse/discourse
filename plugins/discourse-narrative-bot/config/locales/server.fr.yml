@@ -7,6 +7,7 @@
 
 fr:
   site_settings:
+    discourse_narrative_bot_enabled: 'Activer le rotbot de narration Discourse (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Désactiver le message de bienvenue de l'assistant Discourse"
     discourse_narrative_bot_ignored_usernames: "Noms d'utilisateurs que l'assistant Discourse doit ignorer"
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"

@@ -36,6 +36,9 @@ const bindings = {
   "command+up": { handler: "goToFirstPost", anonymous: true },
   j: { handler: "selectDown", anonymous: true },
   k: { handler: "selectUp", anonymous: true },
+  // we use this odd routing here vs a postAction: cause like
+  // has an animation so the widget handles that
+  // TODO: teach controller how to trigger the widget animation
   l: { click: ".topic-post.selected button.toggle-like" },
   "m m": { handler: "setTrackingToMuted" }, // mark topic as muted
   "m r": { handler: "setTrackingToRegular" }, // mark topic as regular
@@ -301,10 +304,6 @@ export default {
       $(".topic-post.selected article.boxed").data("post-id"),
       10
     );
-    if (!selectedPostId) {
-      // If no post was selected, automatically select the hovered post.
-      selectedPostId = parseInt($("article.boxed:hover").data("post-id"), 10);
-    }
     if (selectedPostId) {
       const topicController = container.lookup("controller:topic");
       const post = topicController

@@ -73,6 +73,14 @@ class Admin::FlagsController < Admin::AdminController
 
     post_action_type = PostAction.post_action_type_for_post(post.id)
 
+    if !post_action_type
+      render_json_error(
+        I18n.t("flags.errors.already_handled"),
+        status: 409
+      )
+      return
+    end
+
     keep_post = ['silenced', 'suspended', 'keep'].include?(params[:action_on_post])
     delete_post = params[:action_on_post] == "delete"
     restore_post = params[:action_on_post] == "restore"

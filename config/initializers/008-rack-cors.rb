@@ -44,10 +44,11 @@ class Discourse::Cors
           end
 		end
       end
-
+	  
       headers['Access-Control-Allow-Origin'] = origin || cors_origins[0]
-      headers['Access-Control-Allow-Headers'] = 'Content-Type, X-Requested-With, X-CSRF-Token, Discourse-Visible, User-Api-Key, User-Api-Client-Id'
+      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-CSRF-Token, Discourse-Visible, User-Api-Key, User-Api-Client-Id, Content-Type'
       headers['Access-Control-Allow-Credentials'] = 'true'
+      headers['Access-Control-Allow-Methods'] = 'POST, PUT, GET, OPTIONS, DELETE'
     end
 
     headers

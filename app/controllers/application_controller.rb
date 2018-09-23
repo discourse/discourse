@@ -381,7 +381,8 @@ class ApplicationController < ActionController::Base
     theme_ids = []
 
     if preview_theme_id = request[:preview_theme_id]&.to_i
-      theme_ids << preview_theme_id
+      ids = [preview_theme_id]
+      theme_ids = ids if guardian.allow_themes?(ids, include_preview: true)
     end
 
     user_option = current_user&.user_option
@@ -394,10 +395,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    theme_ids = user_option&.theme_ids || [] if theme_ids.blank?
-
-    unless guardian.allow_themes?(theme_ids)
-      theme_ids = []
+    if theme_ids.blank?
+      ids = user_option&.theme_ids || []
+      theme_ids = ids if guardian.allow_themes?(ids)
     end
 
     if theme_ids.blank? && SiteSetting.default_theme_id != -1

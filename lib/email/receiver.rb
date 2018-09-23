@@ -910,7 +910,7 @@ module Email
     end
 
     def attachment_markdown(upload)
-      if FileHelper.is_image?(upload.original_filename)
+      if FileHelper.is_supported_image?(upload.original_filename)
         "<img src='#{upload.url}' width='#{upload.width}' height='#{upload.height}'>"
       else
         "<a class='attachment' href='#{upload.url}'>#{upload.original_filename}</a> (#{number_to_human_size(upload.filesize)})"

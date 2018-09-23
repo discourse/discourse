@@ -22,6 +22,18 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('txt')
         expect(File.extname(upload.url)).to eq('.txt')
         expect(upload.original_filename).to eq('utf-8.txt')
+        expect(user.user_uploads.count).to eq(1)
+        expect(upload.user_uploads.count).to eq(1)
+
+        user2 = Fabricate(:user)
+
+        expect do
+          UploadCreator.new(file, "utf-8\n.txt").create_for(user2.id)
+        end.to change { Upload.count }.by(0)
+
+        expect(user.user_uploads.count).to eq(1)
+        expect(user2.user_uploads.count).to eq(1)
+        expect(upload.user_uploads.count).to eq(2)
       end
     end
 
@@ -42,6 +54,27 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('png')
         expect(File.extname(upload.url)).to eq('.png')
         expect(upload.original_filename).to eq('png_as.png')
+      end
+
+      describe 'for webp format' do
+        before do
+          SiteSetting.authorized_extensions = '.webp|.bin'
+        end
+
+        let(:filename) { "webp_as.bin" }
+        let(:file) { file_from_fixtures(filename) }
+
+        it 'should not correct the coerce filename' do
+          expect do
+            UploadCreator.new(file, filename).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('bin')
+          expect(File.extname(upload.url)).to eq('.bin')
+          expect(upload.original_filename).to eq('webp_as.bin')
+        end
       end
     end
 

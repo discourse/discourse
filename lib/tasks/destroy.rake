@@ -2,10 +2,12 @@
 #   content and users from your site, but keeping your site settings,
 #   theme, and category structure.
 desc "Remove all topics in a category"
-task "destroy:topics", [:category] => :environment do |t, args|
+task "destroy:topics", [:category, :parent_category] => :environment do |t, args|
   category = args[:category]
-  puts "Going to delete all topics in the #{category} category"
-  puts log = DestroyTask.destroy_topics(category)
+  parent_category = args[:parent_category]
+  descriptive_slug = parent_category ? "#{parent_category}/#{category}" : category
+  puts "Going to delete all topics in the #{descriptive_slug} category"
+  puts log = DestroyTask.destroy_topics(category, parent_category)
 end
 
 desc "Remove all topics in all categories"
