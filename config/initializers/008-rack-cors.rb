@@ -36,17 +36,17 @@ class Discourse::Cors
     if cors_origins
       if http_origin = env['HTTP_ORIGIN']
         cors_origins.each do |cors_origin|
-		  cors_origin_regex_str = Regexp.escape(cors_origin).gsub('\*','.*?')
-		  cors_origin_regex = Regexp.new "^#{cors_origin_regex_str}$", Regexp::IGNORECASE
-          if !!(http_origin =~ cors_origin_regex)
+          cors_origin_regex_str = Regexp.escape(cors_origin).gsub('\*', '.*?')
+          cors_origin_regex = Regexp.new "^#{cors_origin_regex_str}$", Regexp::IGNORECASE
+          if cors_origin_regex.match?(http_origin)
             origin = http_origin
             break
           end
-		end
+        end
       end
-	  
+
       headers['Access-Control-Allow-Origin'] = origin || cors_origins[0]
-      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-CSRF-Token, Discourse-Visible, User-Api-Key, User-Api-Client-Id, Content-Type'
+      headers['Access-Control-Allow-Headers'] = 'Content-Type, X-Requested-With, X-CSRF-Token, Discourse-Visible, User-Api-Key, User-Api-Client-Id'
       headers['Access-Control-Allow-Credentials'] = 'true'
       headers['Access-Control-Allow-Methods'] = 'POST, PUT, GET, OPTIONS, DELETE'
     end
