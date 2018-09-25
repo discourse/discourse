@@ -162,7 +162,7 @@ export default Ember.Component.extend({
     const windowHeight = $(window).height();
     const composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
-    const bottom = $("#main").height() - maximumOffset;
+    const bottom = $("body").height() - maximumOffset;
 
     if (composerHeight > 0) {
       $wrapper.css("bottom", isDocked ? bottom : composerHeight);
