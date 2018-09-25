@@ -27,7 +27,31 @@ describe ThemeField do
     end
   end
 
-  it "correctly generates errors for transpiled js" do
+  it 'does not insert a script tag when there are no inline script' do
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: '<div>new div</div>')
+    expect(theme_field.value_baked).to_not include('<script')
+  end
+
+  it 'only extracts inline javascript to an external file' do
+    html = <<HTML
+<script type="text/discourse-plugin" version="0.8">
+  var a = "inline discourse plugin";
+</script>
+<script>
+  var b = "inline raw script";
+</script>
+<script src="/external-script.js"></script>
+HTML
+
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+
+    expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
+    expect(theme_field.value_baked).to include("external-script.js")
+    expect(theme_field.javascript_cache.content).to include('inline discourse plugin')
+    expect(theme_field.javascript_cache.content).to include('inline raw script')
+  end
+
+  it "correctly extracts and generates errors for transpiled js" do
     html = <<HTML
 <script type="text/discourse-plugin" version="0.8">
    badJavaScript(;
@@ -36,6 +60,8 @@ HTML
 
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     expect(field.error).not_to eq(nil)
+    expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\"></script>")
+    expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
 
     field.update!(value: '')
     expect(field.error).to eq(nil)
@@ -49,12 +75,14 @@ HTML
 HTML
 
     ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"")
-    baked_value = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html).value_baked
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html)
+    javascript_cache = theme_field.javascript_cache
 
-    expect(baked_value).to include("testing-div")
-    expect(baked_value).to include("theme-setting-injector")
-    expect(baked_value).to include("string_setting")
-    expect(baked_value).to include("test text \\\\\\\\u0022 123!")
+    expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
+    expect(javascript_cache.content).to include("testing-div")
+    expect(javascript_cache.content).to include("theme-setting-injector")
+    expect(javascript_cache.content).to include("string_setting")
+    expect(javascript_cache.content).to include("test text \\\\\\\\u0022 123!")
   end
 
   it "correctly generates errors for transpiled css" do
