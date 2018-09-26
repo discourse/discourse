@@ -50,6 +50,8 @@ class Category < ActiveRecord::Base
 
   validate :ensure_slug
 
+  validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
+
   after_create :create_category_definition
 
   before_save :apply_permissions
