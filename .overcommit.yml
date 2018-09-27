@@ -23,3 +23,23 @@ PreCommit:
     install_command: 'yarn install'
     command: ['yarn', 'eslint', '--ext', '.es6', '-f', 'compact']
     include: '**/*.es6'
+  YamlSyntax:
+    enabled: true
+
+PostCheckout:
+  BundleInstall:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PostMerge:
+  BundleInstall:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PostRewrite:
+  BundleInstall:
+    enabled: true
+  YarnInstall:
+    enabled: true
