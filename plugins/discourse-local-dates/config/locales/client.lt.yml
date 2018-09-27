@@ -1,0 +1,25 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+lt:
+  js:
+    discourse_local_dates:
+      title: Įterpti datą
+      create:
+        modal_title: Įterpti datą
+        modal_subtitle: "Mes automatiškai konvertuosime datą ir laiką į žiūrovo vietinę laiko juostą."
+        form:
+          insert: Įterpti
+          advanced_mode: Išplėstinis režimas
+          simple_mode: Paprastas režimas
+          timezones_title: Rodyti laiko zonas
+          recurring_title: Pasikartojimas
+          recurring_none: Nėra pasikartojimo
+          invalid_date: Netinkama data, įsitikinkite, kad data ir laikas yra teisingi
+          date_title: Data
+          time_title: Laikas
+          format_title: Datos formatas

@@ -1,0 +1,978 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+lt:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [~, Sausis, Vasaris, Kovas, Balandis, Gegužis, Birželis, Liepa, Rugpjūtis, Rugsėjis, Spalis, Lapkritis, Gruodis]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+    am: "ryte"
+    pm: "vakare"
+  title: "Discourse"
+  topics: "Temos"
+  posts: "žinutės"
+  loading: "Kraunama"
+  powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  log_in: "Prisijungti"
+  submit: "Pateikti"
+  purge_reason: "Automatinis ištrynimas kaip atsisakyta, deaktyvuota sąskaita"
+  disable_remote_images_download_reason: "Atsisiuntimas nuotoliniu būdu buvo išjungtas, nes nebuvo pakankamai vietos diske."
+  anonymous: "Anonimas"
+  remove_posts_deleted_by_author: "Pašalinta autoriaus"
+  redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
+  themes:
+    bad_color_scheme: "Nepavyko atnaujinti temos, netinkamos spalvų schemos"
+    other_error: "Įvyko klaida atnaujinant temą"
+    error_importing: "Klaida git kapinyno klonavimui, prieiga atmetama arba saugykla nerasta"
+    errors:
+      component_no_user_selectable: "Tematikos komponentai negali būti pasirinktini vartotojui"
+      component_no_default: "Tema komponentai negali būti numatytoji tema"
+      component_no_color_scheme: "Tematikos komponentai negali turėti spalvų schemos"
+      no_multilevels_components: "Temos su vaikų temomis negali būti patys vaikų temos"
+    settings_errors:
+      invalid_yaml: "Nurodytas YAML negalimas."
+      name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
+      enum_value_not_valid: "Pasirinkta vertė nėra viena iš enum pasirinkimų."
+      number_value_not_valid: "Nauja vertė neatitinka leidžiamo diapazono."
+      string_value_not_valid: "Naujos vertės ilgis neatitinka leidžiamo intervalo."
+  emails:
+    incoming:
+      default_subject: "Šiai temai reikia antraštės"
+      show_trimmed_content: "Rodyti padailintą turinį"
+      maximum_staged_user_per_email_reached: "Pasiektas maksimalus kiekvieno el. Pašto adreso sukurtų statistinių naudotojų skaičius."
+      no_subject: "(nėra temos)"
+      no_body: "(nėra turinio)"
+      errors:
+        empty_email_error: "Taip atsitinka, kai gaunamas neapdorotas paštas yra tuščias."
+        no_message_id_error: "Taip atsitinka, kai laiške nėra antraštės \"Message-Id\"."
+      unrecognized_error: "Nenustatyta klaida"
+  errors: &errors
+    format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>:%{message}'
+    messages:
+      taken: "jau užimtas"
+      accepted: privalo buti patvirtintas
+      blank: negali būti tuščia
+      present: privalo būti tuščia
+      empty: negali būti tuščia
+      equal_to: "privalo buti lygus %{count}"
+      exclusion: yra rezervuotas
+      greater_than: "turi būti didesnis nei %{count}"
+      greater_than_or_equal_to: "turi būti didesnis arba lygus %{count}"
+      has_already_been_used: "jau yra naudojamas"
+      inclusion: yra neitrauktas i sąrasą
+      invalid: netinkamas
+      not_a_number: nera skaičius
+      not_an_integer: privalo buti integruotas
+      record_invalid: 'Patvirtinimas nepavyko: %{errors}'
+      max_emojis: "negali turėti daugiau nei %{max_emojis_count}emoji"
+    embed:
+      load_from_remote: "Klaida ikeliant įrašą"
+  activemodel:
+    errors:
+      <<: *errors
+  backup:
+    not_enough_space_on_disk: "Diske neužtenka vietos įkelti šiai atsarginei kopijai."
+  not_logged_in: "Norint tęsti, jums reikia būti prisijungusiam."
+  reading_time: "Skaitymo laikas"
+  likes: "Patikimai"
+  embed:
+    start_discussion: "Pradėti diskusiją"
+    continue: "Tęsti diskusiją"
+    error: "Klaida įterpiant"
+    referer: "Referreris:"
+    configure: "Konfiguruoti įterpimą"
+    more_replies:
+      one: "dar %{count} atsakymas"
+      few: "dar %{count} atsakymai"
+      many: "dar %{count} atsakymų"
+      other: "dar %{count} atsakymų"
+    loading: "Kraunama diskusija..."
+    permalink: "Nuoroda"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} atsakymas"
+      few: "%{count} atsakymai"
+      many: "%{count} atsakymų"
+      other: "%{count} atsakymų"
+  no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
+  too_many_mentions:
+    one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
+    few: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
+    many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
+    other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
+  no_images_allowed_trust: "Atsiprašome, jūs negalite lkelti nuotraukų į šį įrašą"
+  user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
+  just_posted_that: "labai panašu į tai, ką parašėte prieš tai"
+  invalid_characters: "turi neleistinų simbolių"
+  next_page: "kitas puslapis →"
+  prev_page: "← praeitas puslapis"
+  page_num: "%{num} Puslapis "
+  home_title: "Pradinis"
+  topics_in_category: "Temos kategorijoje '%{category}'"
+  rss_posts_in_topic: "RSS iš '%{topic}'"
+  author_wrote: "%{author} parašė:"
+  num_posts: "Pranešimai:"
+  num_participants: "Dalyviai:"
+  read_full_topic: "Skaityti pilną temą"
+  private_message_abbrev: "Žinutė"
+  rss_description:
+    latest: "Naujausios temos"
+    hot: "Karštos temos"
+    top: "Top temos"
+    top_all: "Visų laikų Top temos"
+    top_yearly: "Metų Top temos"
+    top_quarterly: "Ketvirčio Top temos"
+    top_monthly: "Mėnesio Top temos"
+    top_weekly: "Savaitės Top temos"
+    top_daily: "Dienos Top temos"
+    posts: "Naujausi įrašai"
+    private_posts: "Naujausios asmeninės žinutės"
+    group_posts: "Naujausi įrašai iš %{group_name}"
+    group_mentions: "Naujausi minėjimai iš %{group_name}"
+    user_posts: "Naujausi įrašai nario@%{username}"
+    user_topics: "Naujausios temos nario @%{username}"
+    tag: "Prisegtos temos"
+    badge: "%{display_name} ženklelis puslapyje %{site_title}"
+  too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
+  excerpt_image: "paveikslėlis"
+  queue:
+    not_found: "Puslapis nerastas arba atnaujintas."
+  groups:
+    success:
+      bulk_add:
+        one: "%{count} narys buvo pridėtas prie grupės"
+        few: "%{count}nariai buvo pridėti prie grupės"
+        many: "%{count}narių buvo pridėta prie grupės"
+        other: "%{count}nariai buvo pridėti prie grupės"
+    default_names:
+      everyone: "visi"
+      admins: "administratoriai"
+      moderators: "moderatoriai"
+      staff: "personalas"
+      trust_level_0: "pasitikėjimo_lygis_0"
+      trust_level_1: "pasitikėjimo_lygis_1"
+      trust_level_2: "pasitikėjimo_lygis_2"
+      trust_level_3: "pasitikėjimo_lygis_3"
+      trust_level_4: "pasitikėjimo_lygis_4"
+  education:
+    until_posts:
+      one: "%{count} pranešimas"
+      few: "%{count} pranešimai"
+      many: "%{count} pranešimų"
+      other: "%{count} pranešimų"
+  activerecord:
+    attributes:
+      category:
+        name: "Kategorijos pavadinimas"
+      topic:
+        title: 'Antraštė'
+        featured_link: 'Išskirtinė nuoroda'
+      post:
+        raw: "Tekstas"
+      user_profile:
+        bio_raw: "Apie mane"
+    errors:
+      <<: *errors
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "Jūsų galite prisegti įspėjimus tik asmeninėse žinutėse."
+              too_many_users: "Vienu metu jūs galite siųsti įspėjimus tik vienam vartotojui."
+              cant_send_pm: "Atsiprašome, jūs negalite siųsti žinutės šiam nariui."
+              no_user_selected: "Privalote pasiringti esamą narį."
+        user:
+          attributes:
+            password:
+              common: "yra vienas iš 10000 populiariausių slaptažodžių. Prašome pasirinkti saugesnį slaptažodį."
+            ip_address:
+              signup_not_allowed: "Registracijos nėra galimos iš šios paskyros."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "netinkama spalva"
+  vip_category_name: "Šaukykla"
+  vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
+  meta_category_name: "Puslapio atsiliepimai"
+  meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
+  staff_category_name: "Personalas"
+  staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
+  assets_topic_title: "Svetainės dizaino turinys"
+  discourse_welcome_topic:
+    title: "Sveiki atvykę į Discourse"
+  lounge_welcome:
+    title: "Sveiki atvykę į Šaukyklą"
+  category:
+    topic_prefix: "Viskas apie %{category} kategoriją"
+    errors:
+      not_found: "Kategorijos nėra!"
+      uncategorized_parent: "(Be kategorijos) kategorija negali turėti subkategorijų"
+    cannot_delete:
+      uncategorized: "Negalima pašalinti kategorijos (be kategorijos)"
+      has_subcategories: "Negalima pašalinti kategorijos, nes ji turi subkategorijų."
+  trust_levels:
+    newuser:
+      title: "naujas vartotojas"
+    basic:
+      title: "pagrindinis vartotojas"
+    member:
+      title: "narys"
+    regular:
+      title: "reguliarus"
+    leader:
+      title: "lyderis"
+  post:
+    image_placeholder:
+      broken: "Šis paveikslėlis yra sugadintas"
+  rate_limiter:
+    hours:
+      one: "%{count} valanda"
+      few: "%{count} valandos"
+      many: "%{count} valandų"
+      other: "%{count} valandų"
+    minutes:
+      one: "%{count} minutė"
+      few: "%{count} minutės"
+      many: "%{count} minučių"
+      other: "%{count} minučių"
+    seconds:
+      one: "%{count} sekundė"
+      few: "%{count} sekundės"
+      many: "%{count} sekundžių"
+      other: "%{count} sekundžių"
+    short_time: "kelios sekundės"
+  datetime:
+    distance_in_words:
+      half_a_minute: "pusė minutės"
+      less_than_x_seconds:
+        one: "mažiau nei %{count} sekundė"
+        few: "mažiau nei %{count} sekundės"
+        many: "mažiau nei %{count} sekundžių"
+        other: "mažiau nei %{count} sekundžių"
+      x_seconds:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
+      less_than_x_minutes:
+        one: "mažiau nei %{count} minutė"
+        few: "mažiau nei %{count} minutės"
+        many: "mažiau nei %{count} minučių"
+        other: "mažiau nei %{count} minučių"
+      x_minutes:
+        one: "%{count} minutė"
+        few: "%{count} minutės"
+        many: "%{count} minučių"
+        other: "%{count} minučių"
+      about_x_hours:
+        one: "%{count} valanda"
+        few: "%{count} valandos"
+        many: "%{count} valandų"
+        other: "%{count} valandų"
+      x_days:
+        one: "%{count} diena"
+        few: "%{count} dienos"
+        many: "%{count} dienų"
+        other: "%{count} dienų"
+      about_x_months:
+        one: "apie %{count} mėnesį"
+        few: "apie %{count} mėnesius"
+        many: "apie %{count} mėnesių"
+        other: "apie %{count} mėnesių"
+      x_months:
+        one: "%{count} mėnesis"
+        few: "%{count} mėnesiai"
+        many: "%{count} mėnesių"
+        other: "%{count} mėnesių"
+      about_x_years:
+        one: "apie %{count} metus"
+        few: "apie %{count} metus"
+        many: "apie %{count} metų"
+        other: "apie %{count} metų"
+      over_x_years:
+        one: "virš %{count} metų"
+        few: "virš %{count} metų"
+        many: "virš %{count} metų"
+        other: "virš %{count} metų"
+      almost_x_years:
+        one: "beveik %{count} metai"
+        few: "beveik %{count} metai"
+        many: "beveik %{count} metų"
+        other: "beveik %{count} metų"
+    distance_in_words_verbose:
+      half_a_minute: "ką tik"
+      less_than_x_seconds:
+        one: "ką tik"
+        few: "ką tik"
+        many: "ką tik"
+        other: "ką tik"
+      x_seconds:
+        one: "prieš %{count} sekundę"
+        few: "prieš %{count} sekundes"
+        many: "prieš %{count} sekundžių"
+        other: "prieš %{count} sekundžių"
+      less_than_x_minutes:
+        one: "mažiau nei prieš %{count} minutę"
+        few: "mažiau nei prieš %{count} minutes"
+        many: "mažiau nei prieš %{count} minučių"
+        other: "mažiau nei prieš %{count} minučių"
+      x_minutes:
+        one: "prieš %{count} minutę"
+        few: "prieš %{count} minutes"
+        many: "prieš %{count} minučių"
+        other: "prieš %{count} minučių"
+      about_x_hours:
+        one: "prieš %{count} valandą"
+        few: "prieš %{count} valandas"
+        many: "prieš %{count} valandų"
+        other: "prieš %{count} valandų"
+      x_days:
+        one: "prieš %{count} dieną"
+        few: "prieš %{count} dienas"
+        many: "prieš %{count} dienų"
+        other: "prieš %{count} dienų"
+      about_x_months:
+        one: "apie prieš %{count} mėnesį"
+        few: "apie prieš %{count} mėnesius"
+        many: "apie prieš %{count} mėnesių"
+        other: "apie prieš %{count} mėnesių"
+      x_months:
+        one: "prieš %{count} mėnesį"
+        few: "prieš %{count} mėnesius"
+        many: "prieš %{count} mėnesių"
+        other: "prieš %{count} mėnesių"
+      about_x_years:
+        one: "apie prieš %{count} metus"
+        few: "apie prieš %{count} metus"
+        many: "apie prieš %{count} metų"
+        other: "apie prieš %{count} metų"
+      over_x_years:
+        one: "prieš daugiau nei %{count} metus"
+        few: "prieš daugiau nei %{count} metus"
+        many: "prieš daugiau nei %{count} metų"
+        other: "prieš daugiau nei %{count} metų"
+      almost_x_years:
+        one: "beveik prieš %{count} metus"
+        few: "beveik prieš %{count} metus"
+        many: "beveik prieš %{count} metų"
+        other: "beveik prieš %{count} metų"
+  password_reset:
+    choose_new: "Pasirinkite naują slaptažodį"
+    choose: "Pasirinkite slaptažodį"
+    update: 'Atnaujinti slaptažodį'
+    save: 'Nustatykite slaptažodį'
+    title: 'Keisti slaptažodį'
+    success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
+    success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
+  email_login:
+    title: "Prisijungimas e-paštu"
+  change_email:
+    confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
+    please_continue: "Tęsti į %{site_name}"
+  activation:
+    continue_button: "Tęsti į %{site_name}"
+    welcome_to: "Sveiki atvykę į %{site_name}!"
+    admin_confirm:
+      title: "Patvirtinkite administratoriaus paskyrą"
+      grant: "Svetainės valdytojo priėjimas"
+      complete: "<b>%{target_username}</b>dabar administratorius."
+      back_to: "Grįžti į %{title}"
+  post_action_types:
+    off_topic:
+      title: 'Ne į temą'
+    spam:
+      title: 'Šlamštas'
+      long_form: 'pažymėtas kaip šlamštas'
+      email_title: '"%{title}" pažymėta kaip šlamštas'
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: 'Nederamas'
+    notify_user:
+      title: 'Siųsti @{{username}} žinutę'
+      long_form: 'išsiuntėte nariui'
+      email_title: 'Jūsų įrašas temote "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: "Kažkas kito"
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: 'Žymės'
+      description: 'Išsaugoti šį įrašą'
+      short_description: 'Išsaugoti šį įrašą'
+      long_form: 'išsaugojote šį įrašą'
+    like:
+      title: 'Patinka'
+      description: 'Mėgti šį įrašą'
+      short_description: 'Mėgti šį įrašą'
+      long_form: 'mėgstate'
+  user_activity:
+    no_default:
+      self: "Jūsų dar neturite jokios veklos"
+      others: "Jokios veiklos."
+    no_bookmarks:
+      others: "Nieko neišsaugota"
+    no_replies:
+      others: "Jokių atsakymų."
+  topic_flag_types:
+    spam:
+      title: 'Šlamštas'
+      long_form: 'pažymėtas kaip šlamštas'
+    notify_moderators:
+      email_body: "%{link}\n\n%{message}"
+  archetypes:
+    regular:
+      title: "Įprastinė tema"
+    banner:
+      title: "Paryškinta Tema"
+  unsubscribe:
+    stop_watching_topic: "Nebestebėti šios temos, %{link}"
+    log_out: "Atsijungti"
+  user_api_key:
+    read: "skaityti"
+    scopes:
+      message_bus: "Tiesioginiai atnaujinimai"
+      read: "Skaityti viską"
+  reports:
+    default:
+      labels:
+        day: Diena
+    post_edits:
+      title: "Įrašo redagavimai"
+      labels:
+        editor: Redaktorius
+        author: Autorius
+        edit_reason: Priežastis
+    flags_status:
+      values:
+        agreed: Sutiko
+        disagreed: Nesutiko
+        no_action: Jokių veiksmų
+      labels:
+        flag: Tipas
+        assigned: Priskirta
+        poster: Publikuotojas
+        flagger: Pranešėjas
+    visits:
+      title: "Nario aplankymai"
+      xaxis: "Diena"
+      yaxis: "Apsilankymai"
+    signups:
+      title: "Registracijos"
+      xaxis: "Diena"
+    new_contributors:
+      xaxis: "Diena"
+    dau_by_mau:
+      xaxis: "Diena"
+    daily_engaged_users:
+      xaxis: "Diena"
+    profile_views:
+      title: "Nario profilio peržiūros"
+      xaxis: "Diena"
+    topics:
+      title: "Temos"
+      xaxis: "Diena"
+    posts:
+      title: "Pranešimai"
+      xaxis: "Diena"
+      yaxis: "Nauji pranešimai"
+    likes:
+      title: "Patikimai"
+      xaxis: "Diena"
+    flags:
+      title: "Pažymėk!"
+      xaxis: "Diena"
+    bookmarks:
+      title: "Žymės"
+      xaxis: "Diena"
+    starred:
+      title: "Pažymėta žvaigždute"
+      xaxis: "Diena"
+    users_by_trust_level:
+      xaxis: "Patikimumo lygis"
+      labels:
+        level: Lygis
+    users_by_type:
+      xaxis: "Tipas"
+      labels:
+        type: Tipas
+      xaxis_labels:
+        admin: Administratorius
+        moderator: Moderatorius
+        suspended: Suspenduotas
+    emails:
+      xaxis: "Diena"
+    user_to_user_private_messages:
+      xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
+    user_to_user_private_messages_with_replies:
+      xaxis: "Diena"
+    system_private_messages:
+      title: "Sistema"
+      xaxis: "Diena"
+    moderator_warning_private_messages:
+      xaxis: "Diena"
+    notify_moderators_private_messages:
+      xaxis: "Diena"
+    notify_user_private_messages:
+      xaxis: "Diena"
+    top_referrers:
+      xaxis: "Narys"
+      num_clicks: "Spustelėjimai"
+      num_topics: "Temos"
+    top_traffic_sources:
+      xaxis: "Domenas"
+      num_clicks: "Paspaudimai"
+      num_topics: "Temos"
+      num_users: "Vartotojai"
+      labels:
+        domain: Domenas
+        num_clicks: Spustelėjimai
+        num_topics: Temos
+    top_referred_topics:
+      labels:
+        num_clicks: "Spustelėjimai"
+        topic: "Tema"
+    page_view_anon_reqs:
+      title: "Anonimas"
+      xaxis: "Diena"
+    page_view_logged_in_reqs:
+      title: "Prisijungęs"
+      xaxis: "Diena"
+    page_view_crawler_reqs:
+      title: "Interneto skaitytuvai"
+      xaxis: "Diena"
+    page_view_total_reqs:
+      xaxis: "Diena"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Diena"
+    page_view_anon_mobile_reqs:
+      xaxis: "Diena"
+    http_background_reqs:
+      xaxis: "Diena"
+    http_2xx_reqs:
+      xaxis: "Diena"
+    http_3xx_reqs:
+      xaxis: "Diena"
+    http_4xx_reqs:
+      xaxis: "Diena"
+    http_5xx_reqs:
+      xaxis: "Diena"
+    http_total_reqs:
+      title: "Viso"
+      xaxis: "Diena"
+      yaxis: "Visos užklausos"
+    time_to_first_response:
+      xaxis: "Diena"
+    topics_with_no_response:
+      xaxis: "Diena"
+      yaxis: "Viso"
+    mobile_visits:
+      xaxis: "Diena"
+  site_settings:
+    enable_emoji: "Įgalinti Emoji"
+  search:
+    types:
+      category: 'Kategorijos'
+      topic: 'Rezultatai'
+      user: 'Vartotojai'
+  login:
+    admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
+    errors: "%{errors}"
+  user:
+    username:
+      unique: "privalo buti unikalus"
+    email:
+      blocked: "negalimas."
+  admin_confirmation_mailer:
+    title: "Admino patvirtinimas"
+    subject_template: "[%{email_prefix}] Patvirtinti naują administratorių"
+  test_mailer:
+    title: "Testuoti Siuntimą"
+    subject_template: "[%{email_prefix}]Pasto veikimo testas"
+  new_version_mailer:
+    subject_template: "[%{email_prefix}] Išleista Nauja Discourse versija"
+  new_version_mailer_with_notes:
+    subject_template: "[%{email_prefix}] Galimas atnaujinimas"
+  system_messages:
+    private_topic_title: "Tema #%{id}"
+    post_hidden:
+      title: "Įrašas paslėptas"
+    welcome_user:
+      title: "Sveikas narį"
+      subject_template: "Sveiki atvykę į %{site_name}!"
+    welcome_tl1_user:
+      title: "Sveikas TL1 Narį"
+      subject_template: "Dėkojeme jog praleidžiate laika su mumis"
+    welcome_invite:
+      subject_template: "Sveiki atvykę į %{site_name}!"
+    backup_succeeded:
+      title: "Atsarginė kopija sukurta"
+      subject_template: "Atsarginė kopija sėkmingai užbaigta."
+    backup_failed:
+      title: "Atsarginė kopija Nepavyko"
+      subject_template: "Atsarginė kopija Nepavyko"
+    restore_succeeded:
+      title: "Atkūrimas pavyko"
+      subject_template: "Atkūrimas sėkmingai užbaigtas"
+    restore_failed:
+      title: "Atkūrimas Nepavyko"
+      subject_template: "Atkūrimas Nepavyko"
+    too_many_spam_flags:
+      subject_template: "Laukianti Nauja paskyra"
+    too_many_tl3_flags:
+      subject_template: "Laukianti Nauja paskyra"
+    silenced_by_staff:
+      title: "Nutildė moderatorius"
+      subject_template: "Paskyrą laikinai sustabdyta"
+    unsilenced:
+      title: "Nebenutildytas"
+  subject_re: "Dar kartą:"
+  subject_pm: "[AŽ]"
+  user_notifications:
+    previous_discussion: "Ankstesni atsakymai"
+    unsubscribe:
+      title: "Nebeprenumeruoti"
+    user_invited_to_private_message_pm_staged:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_quoted:
+      title: "Narys citavo"
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+    digest:
+      new_topics: "Naujos temos"
+      new_posts: "Nauji 5ra6ai"
+      new_users: "Nauji nariai"
+      popular_topics: "Populiarios temos"
+      follow_topic: "Sekti šią temą"
+      join_the_discussion: "Skaityti daugiau"
+      popular_posts: "Populiarūs įrašai"
+      more_new: "Jūs dar neskaitėte"
+      click_here: "spustelti čia"
+    forgot_password:
+      title: "Pamiršote slaptažodį"
+      subject_template: "[%{email_prefix}]Atkurti slaptažodį"
+    email_login:
+      title: "Prisijungti per nuorodą"
+      subject_template: "[%{email_prefix}] Prisijunk per nuorodą"
+    set_password:
+      title: "Nustatyti slaptažodį"
+      subject_template: "[%{email_prefix}] Nustatyti slaptažodį"
+    admin_login:
+      title: "Administratoriaus prisijungimas"
+      subject_template: "[%{email_prefix}] Prisijungti"
+    confirm_new_email:
+      title: "Patvirtinti naują e-paštą"
+    signup:
+      title: "Registruotis"
+  page_not_found:
+    popular_topics: "Populiaros"
+    recent_topics: "Naujausios"
+    see_more: "Daugiau"
+    search_title: "Ieškoti svetainėje"
+    search_button: "Paieška"
+  terms_of_service:
+    title: "Paslaugų teikimo sąlygos"
+  deleted: 'ištrintas'
+  image: "paveikslėlis"
+  upload:
+    edit_reason: "atsiųsti mano pranešimų archyvą"
+  skipped_email_log:
+    user_email_anonymous_user: "Narys yra anonimas"
+    sender_message_blank: "žinutė yra tuščia"
+  color_schemes:
+    default_theme_name: "Šviesi"
+    light_theme_name: "Šviesi"
+    dark_theme_name: "Tamsi"
+  about: "Apie"
+  guidelines: "Instrukcijos"
+  privacy: "Privatumas"
+  edit_this_page: "Redaguoti šį puslapį"
+  csv_export:
+    boolean_yes: "Taip"
+    boolean_no: "Ne"
+  static_topic_first_reply: |
+    Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
+  guidelines_topic:
+    title: "DUK/Gairės"
+  tos_topic:
+    title: "Paslaugų teikimo sąlygos"
+  privacy_topic:
+    title: "Privatumo politika"
+  badges:
+    editor:
+      name: Redaguotojas
+      description: Pirmasis pranešimo redagavimas
+    member:
+      name: Narys
+    leader:
+      name: Lyderis
+    welcome:
+      name: Sveiki
+      description: Gavote patikimą
+    autobiographer:
+      name: Autobiografas
+      description: "Užpildėte <a href=\"%{base_uri}/my/preferences/profile\">profilio</a> informaciją"
+    anniversary:
+      name: Jubiliejus
+      description: "Aktyvus narys metus laiko, skelbė pranešimą bent vieną kartą"
+    nice_post:
+      name: Gražus atsakymas
+    good_post:
+      name: Geras atsakymas
+    great_post:
+      name: Puikus atsakymas
+    nice_topic:
+      name: Graži tema
+    good_topic:
+      name: Gera tema
+    great_topic:
+      name: Puiki tema
+    nice_share:
+      name: Gražus pasidalinimas
+    good_share:
+      name: Geras pasidalinimas
+    great_share:
+      name: Puikus pasidalinimas
+    first_like:
+      name: Pirmasis įvertinimas
+      description: Mėgstate įrašą
+    first_flag:
+      name: Pirmasis pranešimas
+      description: Pranešei apie įrašą
+    promoter:
+      description: Pakvietei narį
+    champion:
+      name: Čempionas
+      description: Pakvietė 5 narius
+    first_share:
+      name: Pirmasis pasidalinimas
+      description: Pasidalinai įrašą
+    first_link:
+      name: Pirmoji nuoroda
+      description: Pridėjai nuorodą prie įrašo
+    first_quote:
+      name: Pirmoji citata
+      description: Citavai įrašą
+    read_guidelines:
+      name: Susipažinęs su gairėmis
+      description: "Skaitė <a href=\"%{base_uri}/guidelines\">bendruomenės taisykles ir instrukcijas</a>"
+    reader:
+      name: Skaitytojas
+    popular_link:
+      name: Populiari nuoroda
+      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 50 kartų"
+    hot_link:
+      name: Karšta Nuoroda
+      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 300 kartų"
+    famous_link:
+      name: Įžymi Nuoroda
+      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 1000 kartų"
+    respected:
+      name: Gerbiamas
+    out_of_love:
+      name: Nebeliko meilės
+      description: Pamėgai 50 įrašų per dieną
+    crazy_in_love:
+      name: Įsimylėjas
+    first_emoji:
+      name: Pirmasis Emoji
+    first_mention:
+      name: Pirmasis paminėjimas
+    first_onebox:
+      name: Pirmasis įterpimas
+    first_reply_by_email:
+      name: Pirmasis atsakymas per e-paštą
+  admin_login:
+    success: "El. paštas išsiųstas"
+    errors:
+      unknown_email_address: "Nežinomas e-pašto adresas"
+    submit_button: "Siųsti e-paštą"
+  tags:
+    title: "Žymos"
+  finish_installation:
+    register:
+      button: "Registruokis"
+    confirm_email:
+      title: "Patvirtink savo e-paštą"
+    resend_email:
+      title: "Persiųsti patvirtinimo laišką"
+  wizard:
+    step:
+      forum_title:
+        title: "Vardas"
+        fields:
+          title:
+            label: "Jūsų bendruomenės pavadinimas"
+      introduction:
+        title: "Prisistatymas"
+        fields:
+          welcome:
+            label: "Pirmoji tema"
+      privacy:
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Vieša"
+              restricted:
+                label: "Privatu"
+      contact:
+        fields:
+          contact_email:
+            label: "Paštas"
+            placeholder: "vardas@example.com"
+          contact_url:
+            label: "Interneto svetainė"
+      corporate:
+        title: "Organizacija"
+        fields:
+          company_short_name:
+            label: "Įmonės pavadinimas (trumpas)"
+            placeholder: "Imonė"
+          company_full_name:
+            label: "Įmonės pavadinimas (pilnas)"
+            placeholder: "UAB \"įmonė\""
+          company_domain:
+            label: "Įmonės domenas"
+            placeholder: "imone.lt"
+      colors:
+        title: "Tema"
+      logos:
+        title: "Logotipas"
+        fields:
+          logo_url:
+            label: "Pirminis logotipas"
+          logo_small_url:
+            label: "Įmonės logotipas"
+      homepage:
+        title: "Pagrindinis puslapis"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Naujausios temos"
+              categories_only:
+                label: "Tik kategrijos"
+              categories_with_featured_topics:
+                label: "Kategorijos su Išskirtinėmis temomis"
+              categories_and_latest_topics:
+                label: "Kategorijos su Naujausiomis temomis"
+              categories_and_top_topics:
+                label: "Kategorijos su Top temomis"
+      emoji:
+        title: "Emoji"
+      invites:
+        title: "Pakviesti valdytojus"
+      finished:
+        title: "Jūsų Discourse paruoštas!"
+  search_logs:
+    graph_title: "Ieškoti kontakto"
+  joined: "Prisijungė"
+  discourse_push_notifications:
+    popup:
+      confirm_title: 'Pranešimai įgalinti - %{site_title} svetainėje'
+      confirm_body: 'Pavyko! Pranešimai buvo įgalinti.'
+  staff_action_logs:
+    not_found: "nerastas"
+    unknown: "nežinoma"
