@@ -1805,7 +1805,7 @@ en:
     company_full_name: "Company Name (full)"
     company_domain: "Company Domain"
 
-    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
+    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
