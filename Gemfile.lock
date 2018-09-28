@@ -198,7 +198,7 @@ GEM
     method_source (0.8.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    mini_racer (0.2.2)
+    mini_racer (0.2.3)
       libv8 (>= 6.3)
     mini_scheduler (0.8.1)
     mini_sql (0.1.10)
