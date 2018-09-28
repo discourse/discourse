@@ -190,7 +190,7 @@ describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag("meta#data-preloaded") do |element|
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
           expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
         end
@@ -258,7 +258,7 @@ describe UsersController do
 
           get "/u/password-reset/#{token}"
 
-          expect(response.body).to have_tag("meta#data-preloaded") do |element|
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
             expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
           end
@@ -2615,7 +2615,7 @@ describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("meta#data-preloaded") do |element|
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
           expect(json['accountCreated']).to include(
             "{\"message\":\"#{I18n.t("login.activate_email", email: user.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user.username}\",\"email\":\"#{user.email}\"}"
