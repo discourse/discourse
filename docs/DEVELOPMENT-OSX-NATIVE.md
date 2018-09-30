@@ -96,9 +96,9 @@ You should now be able to check out a clone of Discourse.
 
 Atlassian has a free Git client for OS X called [SourceTree](http://www.sourcetreeapp.com/download/) which can be extremely useful for keeping visual track of what's going on in Git-land. While it's arguably not a full substitute for command-line git (especially if you know the command line well), it's extremely powerful for a GUI version-control client.
 
-## Postgres 9.3
+## Postgres 10
 
-OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.app](http://postgresapp.com).
+OS X might ship with Postgres 9.x, but you're better off going with Postgres 10+ from Homebrew or [Postgres.app](http://postgresapp.com).
 
 ### Using Postgres.app
 
