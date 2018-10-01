@@ -370,8 +370,11 @@
 
 .edit-category-modal {
   input[type="number"] {
-    min-width: 8em;
+    min-width: 15em;
     margin-bottom: 0;
+    position: relative;
+    left: 2%;
+    margin-right: 4%;
   }
 
   .subcategory-list-style-field {
@@ -413,6 +416,10 @@
     input[type="number"] {
       width: 50px;
     }
+  }
+
+  .add-permission {
+    margin-top: 12px;
   }
 }
 
