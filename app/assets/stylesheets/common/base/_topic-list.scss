@@ -20,7 +20,7 @@
     border: 1px solid $primary-medium;
     font-size: $font-0;
     transition: none;
-    height: 10px // IE11 needs any height here for vertical centering, overriden elsewhere by min-height
+    height: 10px; // IE11 needs any height here for vertical centering, overriden elsewhere by min-height
   }
   .select-kit {
     align-self: center;
