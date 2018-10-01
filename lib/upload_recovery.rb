@@ -165,7 +165,7 @@ class UploadRecovery
       if key =~ /#{sha1}/
         tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
 
-        if key.starts_with?(tombstone_prefix)
+        if key.include?(tombstone_prefix)
           old_key = key
           key = key.sub(tombstone_prefix, "")
 
