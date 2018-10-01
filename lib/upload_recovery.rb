@@ -48,10 +48,46 @@ class UploadRecovery
     end
   end
 
+  def recover_user_profile_backgrounds
+    UserProfile
+      .where("profile_background IS NOT NULL OR card_background IS NOT NULL")
+      .find_each do |user_profile|
+
+      %i{card_background profile_background}.each do |column|
+        background = user_profile.public_send(column)
+
+        if background.present? && !Upload.exists?(url: background)
+          data = Upload.extract_upload_url(background)
+          sha1 = data[2]
+
+          if @dry_run
+            puts "#{background}"
+          else
+            recover_user_profile_background(sha1, user_profile.user_id) do |upload|
+              user_profile.update!("#{column}" => upload.url)
+            end
+          end
+        end
+      end
+    end
+  end
+
   private
 
+  def recover_user_profile_background(sha1, user_id, &block)
+    return unless valid_sha1?(sha1)
+
+    attributes = { sha1: sha1, user_id: user_id }
+
+    if Discourse.store.external?
+      recover_from_s3(attributes, &block)
+    else
+      recover_from_local(attributes, &block)
+    end
+  end
+
   def recover_post_upload(post, sha1)
-    return unless sha1.present? && sha1.length == Upload::SHA1_LENGTH
+    return unless valid_sha1?(sha1)
 
     attributes = {
       post: post,
@@ -59,13 +95,25 @@ class UploadRecovery
     }
 
     if Discourse.store.external?
-      recover_from_s3(attributes)
+      recover_post_upload_from_s3(attributes)
     else
-      recover_from_local(attributes)
+      recover_post_upload_from_local(attributes)
     end
   end
 
-  def recover_from_local(post:, sha1:)
+  def recover_post_upload_from_local(post:, sha1:)
+    recover_from_local(sha1: sha1, user_id: post.user_id) do |upload|
+      post.rebake! if upload.persisted?
+    end
+  end
+
+  def recover_post_upload_from_s3(post:, sha1:)
+    recover_from_s3(sha1: sha1, user_id: post.user_id) do |upload|
+      post.rebake! if upload.persisted?
+    end
+  end
+
+  def recover_from_local(sha1:, user_id:)
     public_path = Rails.root.join("public")
 
     @paths ||= begin
@@ -93,7 +141,9 @@ class UploadRecovery
           tmp = Tempfile.new
           tmp.write(File.read(path))
           tmp.rewind
-          create_upload(tmp, File.basename(path), post)
+
+          upload = create_upload(tmp, File.basename(path), user_id)
+          yield upload if block_given?
         ensure
           tmp&.close
         end
@@ -101,7 +151,7 @@ class UploadRecovery
     end
   end
 
-  def recover_from_s3(post:, sha1:)
+  def recover_from_s3(sha1:, user_id:)
     @object_keys ||= begin
       s3_helper = Discourse.store.s3_helper
 
@@ -134,7 +184,10 @@ class UploadRecovery
             tmp_file_name: "recover_from_s3"
           )
 
-          create_upload(tmp, File.basename(key), post) if tmp
+          if tmp
+            upload = create_upload(tmp, File.basename(key), user_id)
+            yield upload if block_given?
+          end
         ensure
           tmp&.close
         end
@@ -142,8 +195,11 @@ class UploadRecovery
     end
   end
 
-  def create_upload(file, filename, post)
-    upload = UploadCreator.new(file, filename).create_for(post.user_id)
-    post.rebake! if upload.persisted?
+  def create_upload(file, filename, user_id)
+    UploadCreator.new(file, filename).create_for(user_id)
+  end
+
+  def valid_sha1?(sha1)
+    sha1.present? && sha1.length == Upload::SHA1_LENGTH
   end
 end
