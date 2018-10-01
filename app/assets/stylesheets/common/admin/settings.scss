@@ -20,6 +20,9 @@
       float: left;
       width: 53%;
       padding-right: 20px;
+      input {
+        flex: 0 0 auto;
+      }
       .category-selector {
         width: 95%;
       }
