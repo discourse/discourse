@@ -55,7 +55,11 @@ class CategoryUser < ActiveRecord::Base
       record.notification_level = level
       record.save!
     else
-      CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+      begin
+        CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+      rescue ActiveRecord::RecordNotUnique
+        # does not matter
+      end
     end
 
     auto_watch(user_id: user.id)
