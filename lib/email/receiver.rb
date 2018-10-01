@@ -573,7 +573,6 @@ module Email
       case destination[:type]
       when :group
         group = destination[:obj]
-
         create_group_post(group, user, body, elided, hidden_reason_id)
 
       when :category
