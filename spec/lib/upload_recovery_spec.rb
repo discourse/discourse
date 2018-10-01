@@ -36,6 +36,7 @@ RSpec.describe UploadRecovery do
 
   after do
     [upload, upload2].each do |u|
+      next if u
       public_path = "#{Discourse.store.public_dir}#{u.url}"
 
       [
@@ -139,6 +140,32 @@ RSpec.describe UploadRecovery do
 
       expect(user_profile.profile_background).to eq(upload.url)
       expect(user_profile.card_background).to eq(upload.url)
+    end
+
+    describe 'for a bad upload' do
+      it 'should not update the urls' do
+        user_profile = user.user_profile
+        upload.destroy!
+
+        profile_background = user_profile.profile_background.sub("default", "X")
+        card_background = user_profile.card_background.sub("default", "X")
+
+        user_profile.update_columns(
+          profile_background: profile_background,
+          card_background: card_background
+        )
+
+        SiteSetting.authorized_extensions = ''
+
+        expect do
+          upload_recovery.recover_user_profile_backgrounds
+        end.to_not change { Upload.count }
+
+        user_profile.reload
+
+        expect(user_profile.profile_background).to eq(profile_background)
+        expect(user_profile.card_background).to eq(card_background)
+      end
     end
   end
 end
