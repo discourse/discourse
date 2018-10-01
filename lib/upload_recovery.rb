@@ -58,6 +58,7 @@ class UploadRecovery
 
         if background.present? && !Upload.exists?(url: background)
           data = Upload.extract_upload_url(background)
+          next unless data
           sha1 = data[2]
 
           if @dry_run
