@@ -90,8 +90,8 @@
     }
     > li {
       margin-right: 0;
-      background: $primary-low;
       font-size: $font-down-1;
+      border: 1px solid $primary-medium;
     }
     > li > a {
       line-height: $line-height-large;
