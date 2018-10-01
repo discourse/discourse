@@ -1,5 +1,5 @@
 module Jobs
-  class RecoverUserProfileBackgrounds < Onceoff
+  class RecoverUserProfileBackgrounds < Jobs::Onceoff
     def execute_onceoff(_)
       base_url = Discourse.store.absolute_base_url
       return if !base_url.match?(/s3\.dualstack/)
