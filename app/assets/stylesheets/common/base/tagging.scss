@@ -62,18 +62,6 @@
 
   .badge-wrapper {
     margin-top: 0;
-
-    &.bullet .badge-category {
-    }
-
-    &.box,
-    &.bullet {
-    }
-
-    &.box + .topic-header-extra,
-    &.bullet + .topic-header-extra,
-    &.bar + .topic-header-extra {
-    }
   }
 }
 
