@@ -104,7 +104,7 @@
       </form>
     <% end %>
 
-    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>">
+    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
     <%= preload_script "preload-application-data" %>
 
     <%= yield :data %>
