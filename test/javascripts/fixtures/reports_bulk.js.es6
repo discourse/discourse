@@ -97,6 +97,8 @@ const endDate = moment()
   .utc()
   .endOf("day");
 
+const daysInQueryPeriod = endDate.diff(startDate, "days", false) + 1;
+
 const data = [
   851,
   3805,
@@ -130,7 +132,7 @@ const data = [
   4048,
   2523,
   1062
-];
+].slice(-daysInQueryPeriod);
 
 const page_view_total_reqs = {
   type: "page_view_total_reqs",
