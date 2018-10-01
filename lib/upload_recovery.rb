@@ -64,7 +64,7 @@ class UploadRecovery
             puts "#{background}"
           else
             recover_user_profile_background(sha1, user_profile.user_id) do |upload|
-              user_profile.update!("#{column}" => upload.url)
+              user_profile.update!("#{column}" => upload.url) if upload.persisted?
             end
           end
         end
