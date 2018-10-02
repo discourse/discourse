@@ -18,6 +18,18 @@ module Jobs
       seconds = time_of_day.hour.hours + time_of_day.min.minutes + rand(10.minutes)
 
       Jobs.enqueue_in(seconds, :create_backup)
+    rescue => e
+      notify_user(e)
+      raise
+    end
+
+    def notify_user(ex)
+      post = SystemMessage.create_from_system_user(
+        Discourse.system_user,
+        :backup_failed,
+        logs: "#{ex}\n" + ex.backtrace.join("\n")
+      )
+      post.topic.invite_group(Discourse.system_user, Group[:admins])
     end
   end
 end
