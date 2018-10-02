@@ -16,7 +16,7 @@ const rawOpts = {
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com"
   },
-  censoredWords: "shucks|whiz|whizzer|a**le|badword*",
+  censoredWords: "shucks|whiz|whizzer|a**le|badword*|shuck$",
   getURL: url => url
 };
 
@@ -959,6 +959,13 @@ QUnit.test("censoring", assert => {
     "<p>I have a pen, I have an ■■■■■</p>",
     "it escapes regexp chars"
   );
+
+  assert.cooked(
+    "Aw shuck$, I can't fix the problem with money",
+    "<p>Aw ■■■■■■, I can't fix the problem with money</p>",
+    "it works for words ending in dollar signs"
+  );
+
   assert.cooked(
     "No badword or apple here plz.",
     "<p>No ■■■■■■■ or ■■■■■ here plz.</p>",

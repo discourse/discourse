@@ -2,6 +2,19 @@ function escapeRegexp(text) {
   return text.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&").replace(/\*/g, "S*");
 }
 
+function createCensorRegexp(patterns) {
+  // prettier-ignore
+  return new RegExp(
+    "(\\b" +                           // A word boundary
+    "(?:" + patterns.join("|") + ")" + // Followed by one of the censored words
+    "(?:" +                            // Followed by one of
+    "(?<!\\$)\\b" + "|" +              //  - A word boundary without a literal $ before it
+    "(?<=\\$)(?!\\w)" + "))" +         //  - After dollar, and next character is not a word
+    "(?![^\\(]*\\))",                  // NOT immediately followed by the beginning of a string, OR an open parenthesis
+    "ig"                               // Case insensive, global match
+  );
+}
+
 export function censorFn(
   censoredWords,
   replacementLetter,
@@ -28,10 +41,8 @@ export function censorFn(
           "ig"
         );
       } else {
-        censorRegexp = new RegExp(
-          "(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))",
-          "ig"
-        );
+        censorRegexp = createCensorRegexp(patterns);
+        console.log(censorRegexp);
       }
 
       if (censorRegexp) {
@@ -53,10 +64,7 @@ export function censorFn(
                   replacementLetter
                 );
                 text = text.replace(
-                  new RegExp(
-                    `(\\b${escapeRegexp(m[0])}\\b)(?![^\\(]*\\))`,
-                    "ig"
-                  ),
+                  createCensorRegexp([escapeRegexp(m[0])]),
                   replacement
                 );
               }
