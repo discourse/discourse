@@ -17,8 +17,6 @@
 }
 
 .progress-back-container {
-  position: fixed;
-  bottom: 40px;
   z-index: z("dropdown");
   margin-right: 0;
   animation-duration: 0.5s;
@@ -32,9 +30,9 @@
 
 #topic-progress-wrapper {
   .topic-admin-menu-button-container {
-    position: relative;
-    right: 38px;
-    top: 35px;
+    position: absolute;
+    bottom: 0px;
+    left: -38px;
     .widget-button {
       height: 35px;
       border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
@@ -43,6 +41,7 @@
   .topic-admin-popup-menu.right-side {
     position: relative;
     right: 50px;
+    left: auto;
   }
 }
 
