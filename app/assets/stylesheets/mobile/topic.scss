@@ -61,6 +61,12 @@
   bottom: 0;
   z-index: z("timeline");
   margin-right: 148px;
+  .topic-admin-menu-button-container {
+    top: 43px;
+    .toggle-admin-menu {
+      height: 43px;
+    }
+  }
 }
 
 #topic-progress-expanded {
@@ -104,6 +110,10 @@
   }
 }
 
+.progress-back-container {
+  bottom: 43px;
+}
+
 #topic-progress {
   position: relative;
   &.hidden {
@@ -114,14 +124,14 @@
   border: 1px solid $tertiary-low;
   border-bottom: none;
   width: 145px;
-  height: 46px;
+  height: 42px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
 
   .nums {
     position: relative;
-    top: 13px;
+    top: 12px;
     width: 100%;
     text-align: center;
     z-index: z("base");
