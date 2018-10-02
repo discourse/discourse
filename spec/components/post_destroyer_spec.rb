@@ -245,15 +245,8 @@ describe PostDestroyer do
       PostDestroyer.new(moderator, post).recover
       post.reload
       expect(post.like_count).to eq(2)
-    end
-
-    it "cleans up deleted_public_actions custom field after recovery" do
-      PostDestroyer.new(moderator, post).destroy
-      PostDestroyer.new(moderator, post).recover
-      post.reload
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
-
   end
 
   describe 'basic destroying' do

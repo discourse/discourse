@@ -78,7 +78,6 @@ class PostDestroyer
 
   def staff_recovered
     @post.recover!
-    recover_public_post_actions
 
     if @post.topic && !@post.topic.private_message?
       if author = @post.user
@@ -200,19 +199,6 @@ class PostDestroyer
       f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
       Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
     end
-  end
-
-  def recover_public_post_actions
-    PostAction.publics
-      .with_deleted
-      .where(post_id: @post.id, id: @post.custom_fields["deleted_public_actions"])
-      .find_each do |post_action|
-        post_action.recover!
-        post_action.save
-      end
-
-    @post.custom_fields.delete("deleted_public_actions")
-    @post.save_custom_fields
   end
 
   def agree_with_flags
