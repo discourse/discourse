@@ -217,6 +217,38 @@ describe PostDestroyer do
     end
   end
 
+  describe "recovery and post actions" do
+    let(:codinghorror) { Fabricate(:coding_horror) }
+    let!(:like) { PostAction.act(codinghorror, post, PostActionType.types[:like]) }
+    let!(:another_like) { PostAction.act(moderator, post, PostActionType.types[:like]) }
+
+    it "restores public post actions" do
+      PostDestroyer.new(moderator, post).destroy
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.exists?(id: like.id)).to eq(true)
+    end
+
+    it "does not recover previously-deleted actions" do
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.exists?(id: another_like.id)).to eq(true)
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+    end
+
+    it "updates post like count" do
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      post.reload
+      expect(post.like_count).to eq(2)
+      expect(post.custom_fields["deleted_public_actions"]).to be_nil
+    end
+  end
+
   describe 'basic destroying' do
     it "as the creator of the post, doesn't delete the post" do
       begin
@@ -621,6 +653,11 @@ describe PostDestroyer do
       expect(
         Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
       ).to eq(false)
+    end
+
+    it "should set the deleted_public_actions custom field" do
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(second_post.custom_fields["deleted_public_actions"]).to eq("#{bookmark.id}")
     end
   end
 
