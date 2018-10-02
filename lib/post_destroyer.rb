@@ -189,8 +189,7 @@ class PostDestroyer
   end
 
   def trash_public_post_actions
-    public_post_actions = PostAction.publics.where(post_id: @post.id)
-    if public_post_actions
+    if public_post_actions = PostAction.publics.where(post_id: @post.id)
       public_post_actions.each { |pa| pa.trash!(@user) }
 
       @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
