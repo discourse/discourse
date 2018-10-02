@@ -114,14 +114,14 @@
   border: 1px solid $tertiary-low;
   border-bottom: none;
   width: 145px;
-  height: 34px;
+  height: 46px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
 
   .nums {
     position: relative;
-    top: 9px;
+    top: 13px;
     width: 100%;
     text-align: center;
     z-index: z("base");
