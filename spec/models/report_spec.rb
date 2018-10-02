@@ -890,4 +890,40 @@ describe Report do
       end
     end
   end
+
+  describe 'likes' do
+    let(:report) { Report.find('likes') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        topic = Fabricate(:topic, category_id: 2)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+
+        topic = Fabricate(:topic, category_id: 4)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like]).tap do |pa|
+          pa.created_at = 45.days.ago
+        end.save!
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('likes', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('likes', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
+    end
+  end
 end
