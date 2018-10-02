@@ -45,7 +45,9 @@
     position: relative;
     right: 50px;
     left: auto;
-    transform: translateZ(0); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
+    transform: translateZ(
+      0
+    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
   }
 }
 
