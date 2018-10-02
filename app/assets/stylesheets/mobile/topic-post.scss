@@ -425,21 +425,25 @@ span.highlighted {
     line-height: $line-height-medium;
     display: flex;
     flex-wrap: wrap;
+
     .full-name {
       font-weight: bold;
+    }
+
+    .first {
       order: 1;
+      flex-basis: 100%;
     }
-    .staff-notes-icon {
-      order: 2;
-      margin-left: 4px;
-    }
+
     .poster-icon {
       order: 2;
     }
-    .username {
+
+    .second {
       order: 3;
       flex-basis: 100%;
     }
+
     .user-title {
       order: 4;
       flex-basis: 100%;
