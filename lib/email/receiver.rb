@@ -609,6 +609,13 @@ module Email
     end
 
     def create_group_post(group, user, body, elided, hidden_reason_id)
+      # ensure user PM emails are enabled (since user is posting via email)
+      if !user.staged && !user.user_option.email_private_messages
+        user_option = user.user_option
+        user_option.email_private_messages = true
+        user_option.save!
+      end
+
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
