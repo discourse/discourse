@@ -211,6 +211,7 @@ describe AdminDashboardData do
 
       context 'when setting is enabled' do
         before do
+          all_setting_keys.each { |key| SiteSetting.public_send("#{key}=", 'foo') }
           SiteSetting.public_send("#{setting[:key]}=", setting[:enabled_value])
           SiteSetting.public_send("#{bucket_key}=", bucket_value)
         end
@@ -228,7 +229,7 @@ describe AdminDashboardData do
         context 'when bucket is filled in' do
           let(:bucket_value) { 'a' }
           before do
-            SiteSetting.public_send("s3_use_iam_profile=", use_iam_profile)
+            SiteSetting.s3_use_iam_profile = use_iam_profile
           end
 
           context 'when using iam profile' do
