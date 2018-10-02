@@ -11,7 +11,6 @@ class Admin::BackupsController < Admin::AdminController
 
     respond_to do |format|
       format.html do
-        store_preloaded("backups", MultiJson.dump(serialize_data(store.files, BackupFileSerializer)))
         store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
         store_preloaded("logs", MultiJson.dump(BackupRestore.logs))
         render "default/empty"

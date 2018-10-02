@@ -49,17 +49,10 @@ RSpec.describe Admin::BackupsController do
 
     context "html format" do
       it "preloads important data" do
-        create_backup_files(backup_filename, backup_filename2)
-
         get "/admin/backups.html"
         expect(response.status).to eq(200)
 
         preloaded = map_preloaded
-
-        filenames = preloaded["backups"].map { |backup| backup["filename"] }
-        expect(filenames).to include(backup_filename)
-        expect(filenames).to include(backup_filename2)
-
         expect(preloaded["operations_status"].symbolize_keys).to eq(BackupRestore.operations_status)
         expect(preloaded["logs"].size).to eq(BackupRestore.logs.size)
       end
