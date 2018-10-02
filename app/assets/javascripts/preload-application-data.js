@@ -35,7 +35,7 @@
 
   Discourse.HighlightJSPath = setupData.highlightJsPath;
 
-  if (setupData.S3BaseUrl) {
+  if (setupData.s3BaseUrl) {
     Discourse.S3CDN = setupData.s3Cdn;
     Discourse.S3BaseUrl = setupData.s3BaseUrl;
   }
