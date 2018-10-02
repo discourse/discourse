@@ -1,9 +1,15 @@
 @keyframes button-jump-up {
   0% {
-    margin-bottom: -100px;
+    margin-bottom: -60px;
+  }
+  50% {
+    margin-bottom: 10px;
+  }
+  65% {
+    margin-bottom: 0px;
   }
   77% {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   100% {
     margin-bottom: 0px;
