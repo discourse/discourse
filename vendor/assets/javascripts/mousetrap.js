@@ -17,7 +17,7 @@
  * Mousetrap is a simple keyboard shortcut library for Javascript with
  * no external dependencies
  *
- * @version 1.6.1
+ * @version 1.6.2
  * @url craig.is/killing/mice
  */
 (function(window, document, undefined) {
@@ -575,8 +575,8 @@
                 //
                 // chrome will not fire a keypress if meta or control is down
                 // safari will fire a keypress if meta or meta+shift is down
-                // firefox will fire a keypress if meta or control is down
-                if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
+                // firefox will fire a keypress if meta, alt or control is down
+                if ((action == 'keypress' && !e.metaKey && !e.altKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
 
                     // when you bind a combination or sequence a second time it
                     // should overwrite the first one.  if a sequenceName or

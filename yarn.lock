@@ -1473,9 +1473,9 @@ moment@2.x, moment@^2.10.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
-mousetrap@1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/mousetrap/-/mousetrap-1.6.1.tgz#2a085f5c751294c75e7e81f6ec2545b29cbf42d9"
+"mousetrap@https://github.com/discourse/mousetrap#firefox-alt-key":
+  version "1.6.2"
+  resolved "https://github.com/discourse/mousetrap#51613787a7cb8be79435f039ba2ba3a43efe797d"
 
 ms@2.0.0:
   version "2.0.0"
