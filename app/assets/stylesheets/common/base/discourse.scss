@@ -119,8 +119,8 @@ label {
 input {
   &[type="radio"],
   &[type="checkbox"] {
-    margin-top: 3px;
-    margin-right: 3px;
+    margin-top: 0.17em;
+    margin-right: 0.43em;
     line-height: $line-height-small;
     cursor: pointer;
   }
