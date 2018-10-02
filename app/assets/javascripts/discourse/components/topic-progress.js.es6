@@ -181,7 +181,7 @@ export default Ember.Component.extend({
   },
 
   click(e) {
-    if ($(e.target).parents("#topic-progress").length) {
+    if ($(e.target).closest("#topic-progress").length) {
       this.send("toggleExpansion");
     }
   },
