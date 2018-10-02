@@ -910,7 +910,7 @@ describe Report do
         PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
         PostAction.act(Fabricate(:user), post, PostActionType.types[:like]).tap do |pa|
           pa.created_at = 45.days.ago
-        end.save
+        end.save!
       end
 
       context "with category filtering" do
