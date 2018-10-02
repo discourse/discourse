@@ -163,6 +163,9 @@
     a:first-of-type {
       margin-right: 0.25em;
     }
+    .deleted-user {
+      font-size: $font-up-2;
+    }
   }
   .created_at {
     text-align: center;
