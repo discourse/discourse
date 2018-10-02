@@ -2,13 +2,10 @@ require "backup_restore/backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
-
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
   def index
-    store = BackupRestore::BackupStore.create
-
     respond_to do |format|
       format.html do
         store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
@@ -16,7 +13,12 @@ class Admin::BackupsController < Admin::AdminController
         render "default/empty"
       end
       format.json do
-        render_serialized(store.files, BackupFileSerializer)
+        begin
+          store = BackupRestore::BackupStore.create
+          render_serialized(store.files, BackupFileSerializer)
+        rescue BackupRestore::BackupStore::StorageError => e
+          render_json_error(e)
+        end
       end
     end
   end

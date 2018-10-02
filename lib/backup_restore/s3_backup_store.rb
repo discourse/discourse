@@ -53,6 +53,9 @@ module BackupRestore
         .list
         .select { |obj| obj.key.match?(/\.t?gz$/i) }
         .map { |obj| create_file_from_object(obj) }
+    rescue Aws::Errors::ServiceError => e
+      Rails.logger.warn("Failed to list backups from S3: #{e.message}")
+      raise StorageError
     end
 
     def create_file_from_object(obj, include_download_source = false)

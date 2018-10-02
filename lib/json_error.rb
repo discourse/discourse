@@ -24,6 +24,11 @@ module JsonError
     # If we're passed an array, it's an array of error messages
     return { errors: obj.map(&:to_s) } if obj.is_a?(Array) && obj.present?
 
+    if obj.is_a?(Exception)
+      message = obj.cause&.message || obj.message
+      return { errors: [message] } if message
+    end
+
     # Log a warning (unless obj is nil)
     Rails.logger.warn("create_errors_json called with unrecognized type: #{obj.inspect}") if obj
 
