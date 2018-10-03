@@ -231,7 +231,7 @@ basic:
     client: true
     default: false
   push_notifications_prompt:
-    default: false
+    default: true
     client: true
   push_notifications_icon_url:
     default: ''
