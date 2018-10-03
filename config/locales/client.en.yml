@@ -582,7 +582,7 @@ en:
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
-      more: " (%{count} more) ..."
+      n_more: "Categories (%{count} more) ..."
 
     ip_lookup:
       title: IP Address Lookup
