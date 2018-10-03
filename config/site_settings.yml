@@ -914,6 +914,9 @@ files:
     default: 'gz'
     type: list
     list_type: compact
+  responsive_post_image_sizes:
+    default: "1|1.5|2"
+    hidden: true
   crawl_images:
     default: true
   max_image_width:
