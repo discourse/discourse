@@ -151,9 +151,11 @@ def compress(from, to)
 end
 
 def concurrent?
+  executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
+
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
-    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute { block.call } })
+    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call } })
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })
