@@ -263,7 +263,7 @@ login:
     default: true
   enable_local_logins_via_email:
     client: true
-    default: false
+    default: true
     validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
