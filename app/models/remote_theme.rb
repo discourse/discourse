@@ -38,7 +38,7 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: 'master')
+  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
     importer = ThemeStore::GitImporter.new(url, private_key: private_key, branch: branch)
     importer.import!
 

@@ -20,7 +20,7 @@ describe ThemeStore::GitImporter do
     end
 
     it "should import from http url" do
-      Discourse::Utils.expects(:execute_command).with("git", "clone", "--single-branch", "-b", "master", url, @temp_folder)
+      Discourse::Utils.expects(:execute_command).with("git", "clone", url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(url)
       importer.import!
@@ -29,7 +29,7 @@ describe ThemeStore::GitImporter do
     it "should import from ssh url" do
       Discourse::Utils.expects(:execute_command).with({
         'GIT_SSH_COMMAND' => "ssh -i #{@ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
-      }, "git", "clone", "--single-branch", "-b", "master", ssh_url, @temp_folder)
+      }, "git", "clone", ssh_url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(ssh_url, private_key: "private_key")
       importer.import!
