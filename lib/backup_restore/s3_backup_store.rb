@@ -17,30 +17,30 @@ module BackupRestore
     end
 
     def file(filename, include_download_source: false)
-      obj = @s3_helper.s3_bucket.object(filename)
+      obj = @s3_helper.object(filename)
       create_file_from_object(obj, include_download_source) if obj.exists?
     end
 
     def delete_file(filename)
-      obj = @s3_helper.s3_bucket.object(filename)
+      obj = @s3_helper.object(filename)
       obj.delete if obj.exists?
     end
 
     def download_file(filename, destination_path, failure_message = nil)
-      unless @s3_helper.s3_bucket.object(filename).download_file(destination_path)
+      unless @s3_helper.object(filename).download_file(destination_path)
         raise failure_message.presence&.to_s || "Failed to download file"
       end
     end
 
     def upload_file(filename, source_path, content_type)
-      obj = @s3_helper.s3_bucket.object(filename)
+      obj = @s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
       obj.upload_file(source_path, content_type: content_type)
     end
 
     def generate_upload_url(filename)
-      obj = @s3_helper.s3_bucket.object(filename)
+      obj = @s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
@@ -60,7 +60,7 @@ module BackupRestore
 
     def create_file_from_object(obj, include_download_source = false)
       BackupFile.new(
-        filename: obj.key,
+        filename: File.basename(obj.key),
         size: obj.size,
         last_modified: obj.last_modified,
         source: include_download_source ? presigned_url(obj, :get, DOWNLOAD_URL_EXPIRES_AFTER_SECONDS) : nil

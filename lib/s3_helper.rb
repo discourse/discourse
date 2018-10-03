@@ -137,10 +137,7 @@ class S3Helper
   end
 
   def list(prefix = "")
-    if @s3_bucket_folder_path.present?
-      prefix = File.join(@s3_bucket_folder_path, prefix)
-    end
-
+    prefix = get_path_for_s3_upload(prefix)
     s3_bucket.objects(prefix: prefix)
   end
 
@@ -159,6 +156,11 @@ class S3Helper
     )
   end
 
+  def object(path)
+    path = get_path_for_s3_upload(path)
+    s3_bucket.object(path)
+  end
+
   def self.s3_options(obj)
     opts = { region: obj.s3_region,
              endpoint: SiteSetting.s3_endpoint,
@@ -170,14 +172,6 @@ class S3Helper
     end
 
     opts
-  end
-
-  def s3_bucket
-    @s3_bucket ||= begin
-      bucket = s3_resource.bucket(@s3_bucket_name)
-      bucket.create unless bucket.exists?
-      bucket
-    end
   end
 
   private
@@ -201,6 +195,14 @@ class S3Helper
 
   def s3_resource
     Aws::S3::Resource.new(@s3_options)
+  end
+
+  def s3_bucket
+    @s3_bucket ||= begin
+      bucket = s3_resource.bucket(@s3_bucket_name)
+      bucket.create unless bucket.exists?
+      bucket
+    end
   end
 
   def check_missing_site_options
