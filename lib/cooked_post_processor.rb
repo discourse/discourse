@@ -231,6 +231,10 @@ class CookedPostProcessor
     end
   end
 
+  def add_to_size_cache(url, w, h)
+    @size_cache[url] = [w, h]
+  end
+
   def get_size(url)
     return @size_cache[url] if @size_cache.has_key?(url)
 
@@ -285,6 +289,15 @@ class CookedPostProcessor
 
     if upload = Upload.get_from_url(src)
       upload.create_thumbnail!(width, height, crop)
+
+      each_responsive_ratio do |ratio|
+        resized_w = (width * ratio).to_i
+        resized_h = (height * ratio).to_i
+
+        if upload.width && resized_w <= upload.width
+          upload.create_thumbnail!(resized_w, resized_h, crop)
+        end
+      end
     end
 
     add_lightbox!(img, original_width, original_height, upload)
@@ -297,6 +310,15 @@ class CookedPostProcessor
       parent = parent.parent if parent.respond_to?(:parent)
     end
     false
+  end
+
+  def each_responsive_ratio
+    SiteSetting
+      .responsive_post_image_sizes
+      .split('|')
+      .map(&:to_f)
+      .sort
+      .each { |r| yield r if r > 1 }
   end
 
   def add_lightbox!(img, original_width, original_height, upload = nil)
@@ -320,13 +342,31 @@ class CookedPostProcessor
 
     if upload
       thumbnail = upload.thumbnail(w, h)
+      if thumbnail && thumbnail.filesize.to_i < upload.filesize
+        img["src"] = upload.thumbnail(w, h).url
 
-      img["src"] =
-        if thumbnail && thumbnail.filesize.to_i < upload.filesize
-          upload.thumbnail(w, h).url
-        else
-          upload.url
+        srcset = +""
+
+        each_responsive_ratio do |ratio|
+          resized_w = (w * ratio).to_i
+          resized_h = (h * ratio).to_i
+
+          if upload.width && resized_w > upload.width
+            cooked_url = UrlHelper.cook_url(upload.url)
+            srcset << ", #{cooked_url} #{ratio}x"
+          else
+            if t = upload.thumbnail(resized_w, resized_h)
+              cooked_url = UrlHelper.cook_url(t.url)
+              srcset << ", #{cooked_url} #{ratio}x"
+            end
+          end
         end
+
+        img["srcset"] = "#{img["src"]}#{srcset}" if srcset.length > 0
+
+      else
+        img["src"] = upload.url
+      end
     end
 
     # then, some overlay informations
