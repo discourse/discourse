@@ -51,7 +51,7 @@ class S3Helper
 
   # make sure we have a cors config for assets
   # otherwise we will have no fonts
-  def ensure_cors!
+  def ensure_cors!(rules = nil)
     rule = nil
 
     begin
@@ -63,17 +63,17 @@ class S3Helper
     end
 
     unless rule
-      puts "installing CORS rule"
+      rules = [{
+                 allowed_headers: ["Authorization"],
+                 allowed_methods: ["GET", "HEAD"],
+                 allowed_origins: ["*"],
+                 max_age_seconds: 3000
+               }] if rules.nil?
 
       s3_resource.client.put_bucket_cors(
         bucket: @s3_bucket_name,
         cors_configuration: {
-          cors_rules: [{
-            allowed_headers: ["Authorization"],
-            allowed_methods: ["GET", "HEAD"],
-            allowed_origins: ["*"],
-            max_age_seconds: 3000
-          }]
+          cors_rules: rules
         }
       )
     end

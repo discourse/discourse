@@ -68,7 +68,19 @@ module BackupRestore
     end
 
     def presigned_url(obj, method, expires_in_seconds)
+      ensure_cors!
       obj.presigned_url(method, expires_in: expires_in_seconds)
+    end
+
+    def ensure_cors!
+      @s3_helper.ensure_cors!(
+        [{
+           allowed_headers: ["*"],
+           allowed_methods: ["PUT"],
+           allowed_origins: [Discourse.base_url_no_prefix],
+           max_age_seconds: 3000
+         }]
+      )
     end
 
     def cleanup_allowed?
