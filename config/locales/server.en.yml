@@ -1885,6 +1885,9 @@ en:
   change_owner:
     post_revision_text: "Ownership transferred"
 
+  replace_github_link:
+    edit_reason: "Github link was replaced with a permanent link"
+
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
