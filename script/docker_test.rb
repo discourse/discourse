@@ -16,6 +16,7 @@ end
 
 unless ENV['NO_UPDATE']
   puts "travis_fold:start:pulling_latest_discourse" if ENV["TRAVIS"]
+  run_or_fail("git reset --hard")
   run_or_fail("git pull")
 
   checkout = ENV['COMMIT_HASH'] || "HEAD"
