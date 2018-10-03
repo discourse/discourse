@@ -163,10 +163,6 @@ en:
       invalid_choice:
         one: 'You specified the invalid choice %{name}'
         other: 'You specified the invalid choices %{name}'
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1162,11 +1158,12 @@ en:
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
-    post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
+    post_edit_time_limit: "The author can edit their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
+    responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -1805,7 +1802,7 @@ en:
     company_full_name: "Company Name (full)"
     company_domain: "Company Domain"
 
-    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
+    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
@@ -1839,6 +1836,10 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
+      min_username_length_range: "You cannot set the minimum above the maximum."
+      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
+      max_username_length_range: "You cannot set the maximum below the minimum."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2313,7 +2314,7 @@ en:
       text_body_template: |
         Hey there. We see you’ve been busy reading, which is fantastic, so we’ve promoted you up a [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](/my/preferences/profile), or feel free to [start a new topic](/categories).
+        We’re really glad you’re spending time with us and we’d love to know more about you. Take a moment to [fill out your profile](%{base_url}/my/preferences/profile), or feel free to [start a new topic](%{base_url}/categories).
 
     welcome_invite:
       title: "Welcome Invite"

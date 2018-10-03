@@ -162,7 +162,8 @@ class PostDestroyer
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
-    @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
+    last_revision = @post.revisions.last
+    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
   end
 
   private
@@ -189,11 +190,15 @@ class PostDestroyer
   end
 
   def trash_public_post_actions
-    public_post_actions = PostAction.publics.where(post_id: @post.id)
-    public_post_actions.each { |pa| pa.trash!(@user) }
+    if public_post_actions = PostAction.publics.where(post_id: @post.id)
+      public_post_actions.each { |pa| pa.trash!(@user) }
 
-    f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
-    Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+      @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
+      @post.save_custom_fields
+
+      f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
+      Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+    end
   end
 
   def agree_with_flags

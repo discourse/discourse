@@ -162,7 +162,7 @@ export default Ember.Component.extend({
     const windowHeight = $(window).height();
     const composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
-    const bottom = $("#main").height() - maximumOffset;
+    const bottom = $("body").height() - maximumOffset;
 
     if (composerHeight > 0) {
       $wrapper.css("bottom", isDocked ? bottom : composerHeight);
@@ -181,7 +181,7 @@ export default Ember.Component.extend({
   },
 
   click(e) {
-    if ($(e.target).parents("#topic-progress").length) {
+    if ($(e.target).closest("#topic-progress").length) {
       this.send("toggleExpansion");
     }
   },

@@ -198,7 +198,7 @@ GEM
     method_source (0.8.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    mini_racer (0.2.0)
+    mini_racer (0.2.3)
       libv8 (>= 6.3)
     mini_scheduler (0.8.1)
     mini_sql (0.1.10)
@@ -257,7 +257,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.60)
+    onebox (1.8.61)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -510,7 +510,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.60)
+  onebox (= 1.8.61)
   openid-redis-store
   pg
   pry-nav
@@ -555,4 +555,4 @@ DEPENDENCIES
   webpush
 
 BUNDLED WITH
-   1.16.4
+   1.16.5

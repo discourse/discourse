@@ -894,6 +894,22 @@ describe Search do
         expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts)
           .to contain_exactly(post1, post2)
       end
+
+      it 'orders posts correctly when combining tags with categories or terms' do
+        cat1 = Fabricate(:category, name: 'food')
+        topic6 = Fabricate(:topic, tags: [tag1, tag2], category: cat1)
+        topic7 = Fabricate(:topic, tags: [tag1, tag2, tag3], category: cat1)
+        post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5)
+        post8 = Fabricate(:post, topic: topic7, raw: "Bakey, bakey, eggs to makey.", like_count: 2)
+
+        expect(Search.execute('bakey tags:lunch order:latest').posts.map(&:id))
+          .to eq([post8.id, post7.id])
+        expect(Search.execute('#food tags:lunch order:latest').posts.map(&:id))
+          .to eq([post8.id, post7.id])
+        expect(Search.execute('#food tags:lunch order:likes').posts.map(&:id))
+          .to eq([post7.id, post8.id])
+      end
+
     end
 
     it "can find posts which contains filetypes" do

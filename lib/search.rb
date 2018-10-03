@@ -508,7 +508,7 @@ class Search
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
         HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
-      )", tags.join('&')).order("id")
+      )", tags.join('&'))
     else
       tags = match.split(",")
 
@@ -516,7 +516,7 @@ class Search
         SELECT DISTINCT(tt.topic_id)
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id AND tags.name IN (?)
-      )", tags).order("id")
+      )", tags)
     end
   end
 

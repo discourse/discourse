@@ -5,7 +5,7 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   after_save :update_title
-  after_destroy :remove_title
+  after_destroy :grant_other_available_title
 
   after_save :set_primary_group
   after_destroy :remove_primary_group, :recalculate_trust_level
@@ -43,13 +43,9 @@ class GroupUser < ActiveRecord::Base
     )
   end
 
-  def remove_title
-    if group.title.present?
-      DB.exec("
-        UPDATE users SET title = NULL
-        WHERE title = :title AND id = :id",
-        id: user_id, title: group.title
-      )
+  def grant_other_available_title
+    if group.title.present? && group.title == user.title
+      user.update!(title: user.next_best_title)
     end
   end
 
@@ -85,7 +81,6 @@ class GroupUser < ActiveRecord::Base
     user.update!(group_locked_trust_level: highest_level)
     Promotion.recalculate(user)
   end
-
 end
 
 # == Schema Information

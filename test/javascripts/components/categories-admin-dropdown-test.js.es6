@@ -8,7 +8,6 @@ componentTest("default", {
     const subject = selectKit();
 
     assert.equal(subject.el().find(".d-icon-bars").length, 1);
-    assert.equal(subject.el().find(".d-icon-caret-down").length, 1);
 
     await subject.expand();
 

@@ -609,6 +609,14 @@ describe Email::Receiver do
       expect(Post.last.raw).to match(/discourse\.rb/)
     end
 
+    it "enables user's email_private_messages option when user emails group" do
+      user = Fabricate(:user, email: "existing@bar.com")
+      user.user_option.update_columns(email_private_messages: false)
+      expect { process(:group_existing_user) }.to change(Topic, :count)
+      user.reload
+      expect(user.user_option.email_private_messages).to eq(true)
+    end
+
     context "with forwarded emails enabled" do
       before { SiteSetting.enable_forwarded_emails = true }
 

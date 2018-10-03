@@ -52,7 +52,6 @@ window.MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
-d.write('<script src="/javascripts/ace/ace.js"></script>');
 d.write(
   '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
 );

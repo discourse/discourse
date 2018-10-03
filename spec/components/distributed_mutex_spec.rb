@@ -45,4 +45,29 @@ describe DistributedMutex do
     }.to raise_error(ThreadError)
   end
 
+  context "readonly redis" do
+    before do
+      $redis.slaveof "127.0.0.1", "99991"
+    end
+
+    after do
+      $redis.slaveof "no", "one"
+    end
+
+    it "works even if redis is in readonly" do
+      m = DistributedMutex.new("test_readonly")
+      start = Time.now
+      done = false
+
+      expect {
+        m.synchronize do
+          done = true
+        end
+      }.to raise_error(Discourse::ReadOnly)
+
+      expect(done).to eq(false)
+      expect(Time.now - start).to be < (1.second)
+    end
+  end
+
 end

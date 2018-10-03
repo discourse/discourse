@@ -26,4 +26,6 @@ end
 #  show_on_profile   :boolean          default(FALSE), not null
 #  position          :integer          default(0)
 #  show_on_user_card :boolean          default(FALSE), not null
+#  external_name     :string
+#  external_type     :string
 #

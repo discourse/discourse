@@ -103,12 +103,9 @@ module BackupRestore
     else
       @success = true
     ensure
-      begin
-        notify_user
-        clean_up
-      rescue => ex
-        Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
-      end
+      clean_up
+      notify_user
+      log "Finished!"
 
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -459,6 +456,8 @@ module BackupRestore
       else
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
+    rescue => ex
+      log "Something went wrong while notifying user.", ex
     end
 
     def clean_up
@@ -467,32 +466,35 @@ module BackupRestore
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_restore_as_not_running
-      log "Finished!"
     end
 
     def remove_tmp_directory
       log "Removing tmp '#{@tmp_directory}' directory..."
       FileUtils.rm_rf(@tmp_directory) if Dir[@tmp_directory].present?
-    rescue
-      log "Something went wrong while removing the following tmp directory: #{@tmp_directory}"
+    rescue => ex
+      log "Something went wrong while removing the following tmp directory: #{@tmp_directory}", ex
     end
 
     def unpause_sidekiq
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
-    rescue
-      log "Something went wrong while unpausing Sidekiq."
+    rescue => ex
+      log "Something went wrong while unpausing Sidekiq.", ex
     end
 
     def disable_readonly_mode
       return if @readonly_mode_was_enabled
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
+    rescue => ex
+      log "Something went wrong while disabling readonly mode.", ex
     end
 
     def mark_restore_as_not_running
       log "Marking restore as finished..."
       BackupRestore.mark_as_not_running!
+    rescue => ex
+      log "Something went wrong while marking restore as finished.", ex
     end
 
     def ensure_directory_exists(directory)
@@ -500,11 +502,12 @@ module BackupRestore
       FileUtils.mkdir_p(directory)
     end
 
-    def log(message)
+    def log(message, ex = nil)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       puts(message)
       publish_log(message, timestamp)
       save_log(message, timestamp)
+      Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
     end
 
     def publish_log(message, timestamp)

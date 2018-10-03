@@ -189,6 +189,7 @@ class Post < ActiveRecord::Base
   def recover!
     super
     update_flagged_posts_count
+    recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
     if topic && topic.category_id && topic.category
@@ -373,6 +374,19 @@ class Post < ActiveRecord::Base
 
   def update_flagged_posts_count
     PostAction.update_flagged_posts_count
+  end
+
+  def recover_public_post_actions
+    PostAction.publics
+      .with_deleted
+      .where(post_id: self.id, id: self.custom_fields["deleted_public_actions"])
+      .find_each do |post_action|
+        post_action.recover!
+        post_action.save!
+      end
+
+    self.custom_fields.delete("deleted_public_actions")
+    self.save_custom_fields
   end
 
   def filter_quotes(parent_post = nil)

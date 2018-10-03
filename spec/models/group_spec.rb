@@ -675,13 +675,22 @@ describe Group do
   describe '#remove' do
     before { group.add(user) }
 
-    it "only strips user's title if exact match" do
-      group.update(title: 'Awesome')
-      expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
+    context 'when stripping title' do
+      it "only strips user's title if exact match" do
+        group.update!(title: 'Awesome')
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
 
-      group.add(user)
-      user.update_columns(title: 'Different')
-      expect { group.remove(user) }.to_not change { user.reload.title }
+        group.add(user)
+        user.update_columns(title: 'Different')
+        expect { group.remove(user) }.to_not change { user.reload.title }
+      end
+
+      it "grants another title when the user has other available titles" do
+        group.update!(title: 'Awesome')
+        Fabricate(:group, title: 'Super').add(user)
+
+        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to('Super')
+      end
     end
 
     it "unsets the user's primary group" do
@@ -785,5 +794,30 @@ describe Group do
     Group.refresh_has_messages!
     group.reload
     expect(group.has_messages?).to eq true
+  end
+
+  describe '#automatic_group_membership' do
+    describe 'for a automatic_membership_retroactive group' do
+      let(:group) { Fabricate(:group, automatic_membership_retroactive: true) }
+
+      it "should be triggered on create and update" do
+        expect { group }
+          .to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+
+        job = Jobs::AutomaticGroupMembership.jobs.last
+
+        expect(job["args"].first["group_id"]).to eq(group.id)
+
+        Jobs::AutomaticGroupMembership.jobs.clear
+
+        expect do
+          group.update!(name: 'asdiaksjdias')
+        end.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+
+        job = Jobs::AutomaticGroupMembership.jobs.last
+
+        expect(job["args"].first["group_id"]).to eq(group.id)
+      end
+    end
   end
 end

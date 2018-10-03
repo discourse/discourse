@@ -191,6 +191,7 @@ basic:
   enable_mobile_theme:
     client: true
     default: true
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true
@@ -262,7 +263,7 @@ login:
     default: true
   enable_local_logins_via_email:
     client: true
-    default: false
+    default: true
     validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
@@ -374,11 +375,13 @@ users:
     default: 3
     min: 1
     max: 60
+    validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
     min: 8
     max: 60
+    validator: "MaxUsernameLengthValidator"
   reserved_usernames:
     type: list
     list_type: compact
@@ -911,6 +914,10 @@ files:
     default: 'gz'
     type: list
     list_type: compact
+  responsive_post_image_sizes:
+    default: "1|1.5|2"
+    type: list
+    list_type: compact
   crawl_images:
     default: true
   max_image_width:
@@ -934,6 +941,7 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
+    shadowed_by_global: true
   prevent_anons_from_downloading_files:
     default: false
     client: true

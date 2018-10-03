@@ -15,12 +15,12 @@
   clear: both;
   margin-bottom: 5px;
   .combo-box .combo-box-header {
-    background: $primary-low;
+    background: $secondary;
     color: $primary;
-    border: 1px solid transparent;
-    padding: 5px 6px 5px 10px;
+    border: 1px solid $primary-medium;
     font-size: $font-0;
     transition: none;
+    height: 10px; // IE11 needs any height here for vertical centering, overriden elsewhere by min-height
   }
   .select-kit {
     align-self: center;

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Jobs::RecoverPostUploads do
+RSpec.describe Jobs::PostUploadsRecovery do
   describe '#grace_period' do
     it 'should restrict the grace period to the right range' do
       SiteSetting.purge_deleted_uploads_grace_period_days =

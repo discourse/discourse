@@ -317,7 +317,8 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
-    uploading_filename: "Uploading {{filename}}..."
+    uploading_filename: "Uploading: {{filename}}..."
+    clipboard: "clipboard"
     uploaded: "Uploaded!"
 
     pasting: "Pasting..."
@@ -475,7 +476,7 @@ en:
         all: "All Groups"
         empty: "There are no visible groups."
         filter: "Filter by group type"
-        owner_groups: "Groups I am an owner of"
+        owner_groups: "Groups I own"
         close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"
         automatic: "Automatic"
@@ -2000,15 +2001,13 @@ en:
         error: "There was an error merging the selected posts."
 
       change_owner:
-        title: "Change Owner of Posts"
+        title: "Change Owner"
         action: "change ownership"
         error: "There was an error changing the ownership of the posts."
-        label: "New Owner of Posts"
         placeholder: "username of new owner"
         instructions:
-          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
-          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively."
+          one: "Please choose a new owner for the post by <b>@{{old_user}}</b>"
+          other: "Please choose a new owner for the {{count}} posts by <b>@{{old_user}}</b>"
 
       change_timestamp:
         title: "Change Timestamp..."
@@ -3523,6 +3522,7 @@ en:
             change_badge: "change badge"
             delete_badge: "delete badge"
             merge_user: "merge user"
+            entity_export: "export entity"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
