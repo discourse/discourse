@@ -157,6 +157,8 @@ module Onebox
           result[:description] = og[:description] || (summary && summary.inner_text)
         end
 
+        result[:price] = nil if result[:price] == "$0" || result[:price] == 0
+
         result
       end
     end
