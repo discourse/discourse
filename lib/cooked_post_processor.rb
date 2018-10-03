@@ -362,7 +362,7 @@ class CookedPostProcessor
           end
         end
 
-        img["srcset"] = "#{img["src"]}#{srcset}" if srcset.length > 0
+        img["srcset"] = "#{UrlHelper.cook_url(img["src"])}#{srcset}" if srcset.length > 0
 
       else
         img["src"] = upload.url
