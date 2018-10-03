@@ -65,8 +65,6 @@ end
 %i(
   category_created
   category_updated
-  category_before_destroy
-  category_destroyed
 ).each do |event|
   DiscourseEvent.on(event) do |category|
     WebHook.enqueue_object_hooks(:category, category, event)

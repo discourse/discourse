@@ -117,6 +117,15 @@ class WebHook < ActiveRecord::Base
     end
   end
 
+  def self.generate_payload(type, object, serializer = nil)
+    serializer ||= "WebHook#{type.capitalize}Serializer".constantize
+
+    serializer.new(object,
+      scope: self.guardian,
+      root: false
+    ).to_json
+  end
+
   private
 
   def self.guardian
