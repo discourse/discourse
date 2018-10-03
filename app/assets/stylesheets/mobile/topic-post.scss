@@ -301,9 +301,9 @@ span.post-count {
   overflow: inherit;
 }
 
-// instead, for mobile we set overflow hidden on the cooked part of post body
+// instead, for mobile we set overflow hidden on the post's #main-outlet
 // this prevents image overflow on deeply nested blockquotes, lists, etc
-.cooked {
+[class*="archetype-"] #main-outlet {
   overflow: hidden;
 }
 
