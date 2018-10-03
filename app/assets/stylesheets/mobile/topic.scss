@@ -61,11 +61,8 @@
   bottom: 0;
   z-index: z("timeline");
   margin-right: 148px;
-  .topic-admin-menu-button-container {
-    top: 43px;
-    .toggle-admin-menu {
-      height: 43px;
-    }
+  .topic-admin-menu-button-container .toggle-admin-menu {
+    height: 43px;
   }
 }
 
@@ -108,10 +105,6 @@
     margin-top: 5px;
     margin-bottom: 0;
   }
-}
-
-.progress-back-container {
-  bottom: 43px;
 }
 
 #topic-progress {

@@ -1,30 +1,30 @@
 @keyframes button-jump-up {
   0% {
-    bottom: 0;
+    margin-bottom: -60px;
   }
   50% {
-    bottom: 45px;
+    margin-bottom: 10px;
   }
   65% {
-    bottom: 40px;
+    margin-bottom: 0px;
   }
   77% {
-    bottom: 43px;
+    margin-bottom: 5px;
   }
   100% {
-    bottom: 40px;
+    margin-bottom: 0px;
   }
 }
 
 .progress-back-container {
-  position: fixed;
-  bottom: 40px;
   z-index: z("dropdown");
   margin-right: 0;
   animation-duration: 0.5s;
   animation-name: button-jump-up;
   width: 145px;
   text-align: center;
+  position: relative;
+  margin-bottom: 0px;
   .btn {
     margin: 0;
   }
@@ -32,9 +32,10 @@
 
 #topic-progress-wrapper {
   .topic-admin-menu-button-container {
-    position: relative;
-    right: 38px;
-    top: 35px;
+    position: absolute;
+    bottom: 0px;
+    left: -38px;
+    width: 0px;
     .widget-button {
       height: 35px;
       border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
@@ -43,18 +44,16 @@
   .topic-admin-popup-menu.right-side {
     position: relative;
     right: 50px;
+    left: auto;
+    transform: translateZ(
+      0
+    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
   }
 }
 
 #topic-progress-wrapper.docked {
   .topic-admin-popup-menu.right-side {
-    right: 50px;
     bottom: -150px; // Prevents menu from being too high when a topic is very short
-    transform: translate3d(
-      0,
-      0,
-      0
-    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
   }
 }
 
