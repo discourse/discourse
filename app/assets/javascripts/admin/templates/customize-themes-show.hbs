@@ -9,6 +9,13 @@
     {{/if}}
   </div>
 
+  {{#each model.errors as |error|}}
+    <div class="alert alert-error">
+      <button class="close" data-dismiss="alert">×</button>
+      {{error}}
+    </div>
+  {{/each}}
+
   {{#if model.remote_theme}}
     <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
     {{#if model.remote_theme.license_url}}

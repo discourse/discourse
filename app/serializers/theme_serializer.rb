@@ -61,7 +61,7 @@ class RemoteThemeSerializer < ApplicationSerializer
 end
 
 class ThemeSerializer < ChildThemeSerializer
-  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings
+  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings, :errors
 
   has_one :user, serializer: UserNameSerializer, embed: :object
 
@@ -69,16 +69,32 @@ class ThemeSerializer < ChildThemeSerializer
   has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
 
+  def initialize(theme, options = {})
+    super
+    @errors = []
+  end
+
   def child_themes
     object.child_themes.order(:name)
   end
 
   def settings
     object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+  rescue ThemeSettingsParser::InvalidYaml => e
+    @errors << e.message
+    nil
   end
 
   def include_child_themes?
     !object.component?
+  end
+
+  def errors
+    @errors
+  end
+
+  def include_errors?
+    @errors.present?
   end
 end
 
