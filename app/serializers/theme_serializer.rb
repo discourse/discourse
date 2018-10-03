@@ -82,6 +82,7 @@ class ThemeSerializer < ChildThemeSerializer
     object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
   rescue ThemeSettingsParser::InvalidYaml => e
     @errors << e.message
+    nil
   end
 
   def include_child_themes?
