@@ -317,7 +317,8 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
-    uploading_filename: "Uploading {{filename}}..."
+    uploading_filename: "Uploading: {{filename}}..."
+    clipboard: "clipboard"
     uploaded: "Uploaded!"
 
     pasting: "Pasting..."
