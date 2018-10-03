@@ -69,7 +69,7 @@ class ThemeSerializer < ChildThemeSerializer
   has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
 
-  def initialize(theme)
+  def initialize(theme, options = {})
     super
     @errors = []
   end
