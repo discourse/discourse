@@ -11,7 +11,7 @@ class ComposerMessagesFinder
   end
 
   def find
-    return nil if editing_post?
+    return if editing_post?
     self.class.check_methods.each do |m|
       msg = send(m)
       return msg if msg.present?
