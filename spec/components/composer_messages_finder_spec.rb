@@ -467,4 +467,20 @@ describe ComposerMessagesFinder do
     end
   end
 
+  context 'when editing a post' do
+    let(:user) { Fabricate.build(:user) }
+    let(:new_post_finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
+    let(:edit_post_finder) { ComposerMessagesFinder.new(user, composer_action: 'edit') }
+
+    before do
+      SiteSetting.educate_until_posts = 10
+    end
+
+    it "returns nothing even if it normally would" do
+      user.expects(:post_count).returns(9)
+      expect(edit_post_finder.find).to be_blank
+      expect(new_post_finder.find).to be_present
+    end
+  end
+
 end
