@@ -9,7 +9,7 @@ module HasWebHooks
     type = self.class.name.underscore.to_sym
     payload = WebHook.generate_payload(type, self)
     yield
-    WebHook.enqueue_hooks(type, "#{self.class.name.underscore}_destroyed".to_sym,
+    WebHook.enqueue_hooks(type, "#{type}_destroyed".to_sym,
       id: id,
       payload: payload
     )
