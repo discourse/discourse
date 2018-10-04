@@ -54,10 +54,13 @@
     color: $primary;
     min-height: unset; // ovverides button defaults
   }
-  &:hover,
-  &.btn-hover {
-    background: $primary-medium;
-    color: $secondary;
+  .discourse-no-touch & {
+    // only allow hover on no-touch devices
+    &:hover,
+    &.btn-hover {
+      background: $primary-medium;
+      color: $secondary;
+    }
   }
   &[disabled],
   &.disabled {
@@ -89,12 +92,15 @@
   &[href] {
     color: $secondary;
   }
-  &:hover,
-  &.btn-hover {
-    background: dark-light-choose(
-      scale-color($tertiary, $lightness: -20%),
-      scale-color($tertiary, $lightness: 20%)
-    );
+  .discourse-no-touch & {
+    // only allow hover on no-touch devices
+    &:hover,
+    &.btn-hover {
+      background: dark-light-choose(
+        scale-color($tertiary, $lightness: -20%),
+        scale-color($tertiary, $lightness: 20%)
+      );
+    }
   }
   &:active,
   &.btn-active {
@@ -119,12 +125,15 @@
   &[href] {
     color: $secondary;
   }
-  &:hover,
-  &.btn-hover {
-    background: dark-light-choose(
-      scale-color($danger, $lightness: -20%),
-      scale-color($danger, $lightness: 20%)
-    );
+  .discourse-no-touch & {
+    // only allow hover on no-touch devices
+    &:hover,
+    &.btn-hover {
+      background: dark-light-choose(
+        scale-color($danger, $lightness: -20%),
+        scale-color($danger, $lightness: 20%)
+      );
+    }
   }
   &:active,
   &.btn-active {
