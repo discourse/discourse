@@ -22,6 +22,11 @@
   td {
     padding-right: 5px;
   }
+  #credentials {
+    tr:first-of-type {
+      margin-bottom: 0.75em;
+    }
+  }
 }
 
 #new-account-link {
