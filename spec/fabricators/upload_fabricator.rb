@@ -5,6 +5,8 @@ Fabricator(:upload) do
   filesize 1234
   width 100
   height 200
+  thumbnail_width 30
+  thumbnail_height 60
 
   url do |attrs|
     sequence(:url) do |n|
