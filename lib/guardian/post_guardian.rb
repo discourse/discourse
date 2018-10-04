@@ -134,7 +134,7 @@ module PostGuardian
       )
     )
 
-    if post.topic.archived? || post.user_deleted || post.deleted_at
+    if post.topic&.archived? || post.user_deleted || post.deleted_at
       return false
     end
 
