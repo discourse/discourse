@@ -42,7 +42,6 @@
   }
 
   table {
-    width: 100%;
     padding: 10px;
   }
 
@@ -168,6 +167,9 @@
     }
     .controls {
       margin-left: 0;
+      label {
+        line-height: $line-height-medium;
+      }
     }
   }
 }
