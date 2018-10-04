@@ -251,6 +251,52 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
+      context 'when sso_payload cookie exist' do
+        before do
+          SiteSetting.enable_sso_provider = true
+          SiteSetting.sso_secret = "topsecret"
+
+          @sso = SingleSignOn.new
+          @sso.nonce = "mynonce"
+          @sso.sso_secret = SiteSetting.sso_secret
+          @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+          cookies[:sso_payload] = @sso.payload
+
+          GoogleUserInfo.create!(google_user_id: '12345', user: user)
+
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              email: 'someother_email@test.com',
+              name: 'Some name'
+            ),
+            extra: {
+              raw_info: OmniAuth::AuthHash.new(
+                email_verified: true,
+                email: 'someother_email@test.com',
+                family_name: 'Huh',
+                given_name: user.name,
+                gender: 'male',
+                name: "#{user.name} Huh",
+              )
+            },
+          )
+
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        end
+
+        it 'should return the right response' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body["destination_url"]).to match(/\/session\/sso_provider\?sso\=.*\&sig\=.*/)
+        end
+      end
+
       context 'when user has not verified his email' do
         before do
           GoogleUserInfo.create!(google_user_id: '12345', user: user)
