@@ -909,7 +909,7 @@ module Email
           tmp&.close!
         end
       end
-      notify_about_rejected_attachment(rejected_attachments) if rejected_attachments.present?
+      notify_about_rejected_attachment(rejected_attachments) if rejected_attachments.present? && !User.find(user_id).staged?
 
       raw
     end

@@ -473,12 +473,16 @@ describe Email::Receiver do
         expect(EmailLog.last.email_type).to eq("email_reject_attachment")
       end
 
+      it "doesn't send out the warning email if sender is staged user" do
+        user.update_columns(staged: true)
+        expect { process(:attached_txt_file) }.not_to change { EmailLog.count }
+      end
+
       it "creates the post with attachment missing message" do
         missing_attachment_regex = Regexp.escape(I18n.t('emails.incoming.missing_attachment', filename: "text.txt"))
         expect { process(:attached_txt_file) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to match(/#{missing_attachment_regex}/)
       end
-
     end
 
     it "supports emails with just an attachment" do
