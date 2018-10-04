@@ -1,6 +1,7 @@
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import ComposerEditor from "discourse/components/composer-editor";
+import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { addToolbarCallback } from "discourse/components/d-editor";
@@ -175,6 +176,7 @@ class PluginApi {
 
     if (!opts.onlyStream) {
       decorate(ComposerEditor, "previewRefreshed", callback);
+      decorate(DiscourseBanner, "didInsertElement", callback);
       decorate(
         this.container.factoryFor("component:user-stream").class,
         "didInsertElement",
