@@ -1069,7 +1069,7 @@ class User < ActiveRecord::Base
 
   def email
     # https://github.com/discourse/discourse/blob/af061efcf5c89a33655c52c0ae36292c2eacf225/spec/jobs/fix_primary_emails_for_staged_users_spec.rb#L21
-    # as per above spec primary email can be nil for staged users
+    # as per above spec primary email can be nil
     return primary_email&.email if staged? && !active
 
     primary_email.email

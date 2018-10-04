@@ -18,7 +18,6 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
-  include HasWebHooks
 
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
