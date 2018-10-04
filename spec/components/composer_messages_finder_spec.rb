@@ -472,7 +472,7 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:post).topic }
 
     let!(:post) do
-      post = PostCreator.create!(
+      PostCreator.create!(
         user,
         topic_id: topic.id,
         post_number: 1,
