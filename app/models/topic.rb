@@ -23,6 +23,7 @@ class Topic < ActiveRecord::Base
   include Trashable
   include Searchable
   include LimitedEdit
+  include HasWebHooks
   extend Forwardable
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
@@ -1394,6 +1395,17 @@ class Topic < ActiveRecord::Base
     ).last
 
     update!(bumped_at: post.created_at)
+  end
+
+  def enqueue_web_hook
+    topic_view = TopicView.new(self, Discourse.system_user)
+    payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+    yield
+    WebHook.enqueue_hooks(:topic, "topic_destroyed".to_sym,
+      id: id,
+      category_id: category_id,
+      payload: payload
+    )
   end
 
   private
