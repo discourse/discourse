@@ -64,22 +64,22 @@ QUnit.test("list the tags in groups", async assert => {
     4,
     "shows separate lists for the 3 groups and the ungrouped tags"
   );
-  assert.ok(
-    _.isEqual(
-      _.map($(".tag-list h3"), i => {
+  assert.deepEqual(
+    $(".tag-list h3")
+      .toArray()
+      .map(i => {
         return $(i).text();
       }),
-      ["Ford Cars", "Honda Cars", "Makes", "Other Tags"]
-    ),
+    ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
     "shown in given order and with tags that are not in a group"
   );
-  assert.ok(
-    _.isEqual(
-      _.map($(".tag-list:first .discourse-tag"), i => {
+  assert.deepEqual(
+    $(".tag-list:first .discourse-tag")
+      .toArray()
+      .map(i => {
         return $(i).text();
       }),
-      ["focus", "escort"]
-    ),
+    ["focus", "escort"],
     "shows the tags in default sort (by count)"
   );
 });
