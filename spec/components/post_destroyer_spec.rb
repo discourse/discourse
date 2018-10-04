@@ -394,19 +394,13 @@ describe PostDestroyer do
     end
 
     it 'triggers the extensibility events' do
-      events = DiscourseEvent.track_events { PostDestroyer.new(admin, first_post).destroy }.last(4)
+      events = DiscourseEvent.track_events { PostDestroyer.new(admin, first_post).destroy }.last(2)
 
-      expect(events[0][:event_name]).to eq(:post_before_destroy)
+      expect(events[0][:event_name]).to eq(:post_destroyed)
       expect(events[0][:params].first).to eq(first_post)
 
-      expect(events[1][:event_name]).to eq(:topic_before_destroy)
+      expect(events[1][:event_name]).to eq(:topic_destroyed)
       expect(events[1][:params].first).to eq(first_post.topic)
-
-      expect(events[2][:event_name]).to eq(:post_destroyed)
-      expect(events[2][:params].first).to eq(first_post)
-
-      expect(events[3][:event_name]).to eq(:topic_destroyed)
-      expect(events[3][:params].first).to eq(first_post.topic)
     end
   end
 
@@ -487,14 +481,11 @@ describe PostDestroyer do
         expect { subject }.to change { UserHistory.count }.by(1)
       end
 
-      it 'triggers the extensibility events' do
+      it 'triggers a extensibility event' do
         events = DiscourseEvent.track_events { subject }
 
-        expect(events[0][:event_name]).to eq(:post_before_destroy)
+        expect(events[0][:event_name]).to eq(:post_destroyed)
         expect(events[0][:params].first).to eq(post)
-
-        expect(events[1][:event_name]).to eq(:post_destroyed)
-        expect(events[1][:params].first).to eq(post)
       end
     end
   end

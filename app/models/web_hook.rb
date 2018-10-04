@@ -42,37 +42,16 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_hooks(type, event, opts = {})
-    event_name = event.to_s
-
-    if opts[:id].present?
-      key = "#{type}_webhook_opts_#{opts[:id]}"
-
-      case event_name
-      when /_before_destroy$/
-        $redis.setex(key, 5.minutes, opts)
-        return
-      when /_destroyed$/
-        opts = eval($redis.get(key)) || opts
-      end
-    end
-
     active_web_hooks(type).each do |web_hook|
       Jobs.enqueue(:emit_web_hook_event, opts.merge(
-        web_hook_id: web_hook.id, event_name: event_name, event_type: type.to_s
+        web_hook_id: web_hook.id, event_name: event.to_s, event_type: type.to_s
       ))
     end
   end
 
   def self.enqueue_object_hooks(type, object, event, serializer = nil)
     if active_web_hooks(type).exists?
-      serializer ||= "WebHook#{type.capitalize}Serializer".constantize
-
-      unless event.to_s.end_with? "_destroyed"
-        payload = serializer.new(object,
-          scope: self.guardian,
-          root: false
-        ).to_json
-      end
+      payload = WebHook.generate_payload(type, object, serializer)
 
       WebHook.enqueue_hooks(type, event,
         id: object.id,
@@ -84,13 +63,7 @@ class WebHook < ActiveRecord::Base
   def self.enqueue_topic_hooks(event, topic)
     if active_web_hooks('topic').exists?
       topic_view = TopicView.new(topic.id, Discourse.system_user)
-
-      unless event == :topic_destroyed
-        payload = WebHookTopicViewSerializer.new(topic_view,
-          scope: self.guardian,
-          root: false
-        ).to_json
-      end
+      payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
 
       WebHook.enqueue_hooks(:topic, event,
         id: topic.id,
@@ -102,12 +75,7 @@ class WebHook < ActiveRecord::Base
 
   def self.enqueue_post_hooks(event, post)
     if active_web_hooks('post').exists?
-      unless event == :post_destroyed
-        payload = WebHookPostSerializer.new(post,
-          scope: self.guardian,
-          root: false
-        ).to_json
-      end
+      payload = WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(:post, event,
         id: post.id,

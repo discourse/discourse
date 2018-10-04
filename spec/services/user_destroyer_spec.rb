@@ -57,12 +57,10 @@ describe UserDestroyer do
       end
 
       it 'triggers a extensibility event' do
-        events = DiscourseEvent.track_events { destroy }.last(2)
+        event = DiscourseEvent.track_events { destroy }.last
 
-        expect(events[0][:event_name]).to eq(:user_before_destroy)
-        expect(events[0][:params].first).to eq(@user)
-        expect(events[1][:event_name]).to eq(:user_destroyed)
-        expect(events[1][:params].first).to eq(@user)
+        expect(event[:event_name]).to eq(:user_destroyed)
+        expect(event[:params].first).to eq(@user)
       end
     end
 

@@ -5,6 +5,7 @@ require_dependency 'enum'
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
+  include HasWebHooks
 
   cattr_accessor :preloaded_custom_field_names
   self.preloaded_custom_field_names = Set.new
@@ -38,8 +39,6 @@ class Group < ActiveRecord::Base
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
-
-  before_destroy :trigger_group_before_destroy_event, prepend: true
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
@@ -590,7 +589,6 @@ class Group < ActiveRecord::Base
   %i{
     group_created
     group_updated
-    group_before_destroy
     group_destroyed
   }.each do |event|
     define_method("trigger_#{event}_event") do

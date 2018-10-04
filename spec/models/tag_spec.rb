@@ -32,13 +32,11 @@ describe Tag do
   describe 'destroy' do
     subject { Fabricate(:tag) }
 
-    it 'triggers the extensibility events' do
-      events = DiscourseEvent.track_events { subject.destroy! }.last(2)
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.destroy! }.last
 
-      expect(events[0][:event_name]).to eq(:tag_before_destroy)
-      expect(events[0][:params].first).to eq(subject)
-      expect(events[1][:event_name]).to eq(:tag_destroyed)
-      expect(events[1][:params].first).to eq(subject)
+      expect(event[:event_name]).to eq(:tag_destroyed)
+      expect(event[:params].first).to eq(subject)
     end
   end
 
