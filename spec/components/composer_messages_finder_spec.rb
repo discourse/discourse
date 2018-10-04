@@ -479,7 +479,7 @@ describe ComposerMessagesFinder do
     it "returns nothing even if it normally would" do
       user.expects(:post_count).returns(9)
       expect(edit_post_finder.find).to be_blank
-      expect(new_post_finder.find).to be_present
+      expect(new_post_finder.find).to be_instance_of Hash
     end
   end
 
