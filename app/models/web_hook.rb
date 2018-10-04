@@ -86,6 +86,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.generate_payload(type, object, serializer = nil)
+    serializer ||= TagSerializer if type == :tag
     serializer ||= "WebHook#{type.capitalize}Serializer".constantize
 
     serializer.new(object,
