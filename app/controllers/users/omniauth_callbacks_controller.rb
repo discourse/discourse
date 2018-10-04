@@ -33,7 +33,9 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     origin = request.env['omniauth.origin']
 
-    if cookies[:destination_url].present?
+    if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+      origin = session_sso_provider_url + "?" + payload
+    elsif cookies[:destination_url].present?
       origin = cookies[:destination_url]
       cookies.delete(:destination_url)
     end
