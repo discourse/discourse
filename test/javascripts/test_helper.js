@@ -11,7 +11,7 @@
 //= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
-//= require route-recognizer
+//= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
 //= require discourse-loader
 //= require preload-store
@@ -29,8 +29,7 @@
 //= require htmlparser.js
 //= require admin
 
-//= require sinon-1.7.1
-//= require sinon-qunit-1.0.0
+//= require sinon/pkg/sinon
 
 //= require helpers/assertions
 //= require helpers/select-kit-helper
@@ -44,6 +43,14 @@
 //= require_self
 //
 //= require jquery.magnific-popup.min.js
+
+sinon.config = {
+  injectIntoThis: false,
+  injectInto: null,
+  properties: ["spy", "stub", "mock", "clock", "sandbox"],
+  useFakeTimers: true,
+  useFakeServer: false
+};
 
 window.inTestEnv = true;
 
@@ -123,7 +130,7 @@ QUnit.testStart(function(ctx) {
   var ps = require("preload-store").default;
   ps.reset();
 
-  window.sandbox = sinon.sandbox.create();
+  window.sandbox = sinon;
   window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
   window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
