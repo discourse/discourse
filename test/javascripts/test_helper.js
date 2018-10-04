@@ -1,7 +1,6 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-//= require probes
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
