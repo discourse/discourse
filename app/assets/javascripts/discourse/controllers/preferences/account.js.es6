@@ -9,6 +9,9 @@ import { findAll } from "discourse/models/login-method";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 
+// Number of tokens shown by default.
+const DEFAULT_AUTH_TOKENS_COUNT = 2;
+
 export default Ember.Controller.extend(
   CanCheckEmails,
   PreferencesTabController,
@@ -107,7 +110,12 @@ export default Ember.Controller.extend(
         (a, b) => (a.is_active ? -1 : b.is_active ? 1 : a.seen_at < b.seen_at)
       );
 
-      return showAllAuthTokens ? tokens : tokens.slice(0, 2);
+      return showAllAuthTokens ? tokens : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
+    },
+
+    @computed("model.user_auth_tokens")
+    canShowAllAuthTokens(tokens) {
+      return tokens.length > DEFAULT_AUTH_TOKENS_COUNT;
     },
 
     actions: {

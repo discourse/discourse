@@ -79,13 +79,16 @@
       </div>
     {{/each}}
 
-    <a {{action "toggleShowAllAuthTokens"}}>
-      {{#if showAllAuthTokens}}
-        {{d-icon "caret-up"}} {{i18n 'user.auth_tokens.show_few'}}
-      {{else}}
-        {{d-icon "caret-down"}} {{i18n 'user.auth_tokens.show_all' count=model.user_auth_tokens.length}}
-      {{/if}}
-    </a>
+    {{#if canShowAllAuthTokens}}
+      <a {{action "toggleShowAllAuthTokens"}}>
+        {{#if showAllAuthTokens}}
+          {{d-icon "caret-up"}} {{i18n 'user.auth_tokens.show_few'}}
+        {{else}}
+          {{d-icon "caret-down"}} {{i18n 'user.auth_tokens.show_all' count=model.user_auth_tokens.length}}
+        {{/if}}
+      </a>
+    {{/if}}
+
     <a {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
   </div>
 {{/if}}
