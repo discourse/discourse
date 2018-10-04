@@ -211,6 +211,52 @@ input {
   }
 }
 
+.input {
+  &-prepend,
+  &-append {
+    margin-bottom: 5px;
+    input[class*="span"] {
+      display: inline-block;
+    }
+    input,
+    select {
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: middle;
+      border-radius: 0;
+      &:focus {
+        z-index: z("base") + 1;
+      }
+    }
+    .add-on {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      padding: 0 0.5em;
+      height: 28px;
+      background-color: $primary-low;
+      border: 1px solid $primary-medium;
+    }
+    .add-on,
+    .btn {
+      &:first-child {
+        margin-right: -1px;
+      }
+      &:last-child {
+        margin-left: -1px;
+        border-radius: 0 3px 3px 0;
+      }
+    }
+  }
+
+  &-prepend {
+    .add-on,
+    .btn {
+      margin-right: -1px;
+    }
+  }
+}
+
 textarea {
   height: auto;
   background-color: $secondary;

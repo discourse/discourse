@@ -44,15 +44,19 @@
 
         <div class='input-prepend input-append' style="margin-top: 10px;">
           <span class='color-title'>{{i18n 'category.background_color'}}:</span>
-          <span class='add-on'>#</span>{{text-field value=category.color placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=category.color}}
+          <div class="colorpicker-wrapper">
+            <span class='add-on'>#</span>{{text-field value=category.color placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=category.color}}
+          </div>
         </div>
 
         <div class='input-prepend input-append'>
           <span class='color-title'>{{i18n 'category.foreground_color'}}:</span>
-          <span class='add-on'>#</span>{{text-field value=category.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{color-picker colors=foregroundColors value=category.text_color id='edit-text-color'}}
-        </div>
+          <div class="colorpicker-wrapper">
+            <span class='add-on'>#</span>{{text-field value=category.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{color-picker colors=foregroundColors value=category.text_color id='edit-text-color'}}
+          </div>
+        </div>        
       </div>
     </section>
   {{/unless}}
