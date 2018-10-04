@@ -878,12 +878,13 @@ module Email
 
     def create_post_with_attachments(options = {})
       # deal with attachments
-      options[:raw] = add_attachments(options[:raw], options[:user].id, options)
+      options[:raw] = add_attachments(options[:raw], options[:user], options)
 
       create_post(options)
     end
 
-    def add_attachments(raw, user_id, options = {})
+    def add_attachments(raw, user, options = {})
+      rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
@@ -891,7 +892,7 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
-          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user_id)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
           if upload&.valid?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
@@ -905,13 +906,37 @@ module Email
             else
               raw << "\n\n#{attachment_markdown(upload)}\n\n"
             end
+          else
+            rejected_attachments << upload
+            raw << "\n\n#{I18n.t('emails.incoming.missing_attachment', filename: upload.original_filename)}\n\n"
           end
         ensure
           tmp&.close!
         end
       end
+      notify_about_rejected_attachment(rejected_attachments) if rejected_attachments.present? && !user.staged?
 
       raw
+    end
+
+    def notify_about_rejected_attachment(attachments)
+      errors = []
+
+      attachments.each do |a|
+        error = a.errors.messages.values[0][0]
+        errors << "#{a.original_filename}: #{error}"
+      end
+
+      message = Mail::Message.new(@mail)
+      template_args = {
+        former_title: message.subject,
+        destination: message.to,
+        site_name: SiteSetting.title,
+        rejected_errors: errors.join("\n")
+      }
+
+      client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
+      Email::Sender.new(client_message, :email_reject_attachment).send
     end
 
     def attachment_markdown(upload)
