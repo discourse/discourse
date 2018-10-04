@@ -121,8 +121,10 @@ input {
   &[type="checkbox"] {
     margin-top: 0.17em;
     margin-right: 0.43em;
+    margin-left: 0.1em;
     line-height: $line-height-small;
     cursor: pointer;
+    flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
   &[type="submit"],
   &[type="reset"],
