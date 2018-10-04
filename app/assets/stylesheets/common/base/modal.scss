@@ -103,6 +103,7 @@
   background-color: $secondary;
   background-clip: padding-box;
   box-shadow: shadow("modal");
+  padding: 1px;
 
   @media screen and (min-width: 475px) {
     min-width: 475px;
