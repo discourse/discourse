@@ -42,7 +42,7 @@
   }
 
   table {
-    // width: 100%;
+    width: 100%;
     padding: 10px;
   }
 
@@ -144,9 +144,10 @@
     }
   }
 
-  #login-buttons + .login-form {
-    border-top: 1px solid $primary-low;
+  #login-buttons {
+    border-bottom: 1px solid $primary-low;
   }
+
   .login-form {
     margin-bottom: 0.75em;
   }
@@ -154,34 +155,19 @@
 
 .create-account {
   .user-fields {
-    margin-top: 10px;
-    padding-top: 15px;
-    border-top: 1px solid $primary-low;
     display: flex;
     flex-direction: column;
-  }
-
-  .user-field.confirm {
-    margin-top: 10px;
   }
 
   .user-field {
     display: flex;
     flex-direction: column;
 
-    .required {
-      display: none; // needs more work
-    }
     > label {
       width: auto;
-      font-weight: bold;
     }
     .controls {
       margin-left: 0;
-
-      .instructions {
-        margin-top: 5px;
-      }
     }
   }
 }
