@@ -52,12 +52,16 @@ export default Ember.Mixin.create({
       return false;
     }
 
+    const toLowerCaseOrUndefined = string => {
+      return string === undefined ? undefined : string.toLowerCase();
+    };
+
     const inCollection = this.get("collectionComputedContent")
-      .map(c => get(c, "id"))
+      .map(c => toLowerCaseOrUndefined(get(c, "id")))
       .includes(term);
 
     const inSelection = this.get("selection")
-      .map(s => get(s, "value").toLowerCase())
+      .map(s => toLowerCaseOrUndefined(get(s, "value")))
       .includes(term);
     if (inCollection || inSelection) {
       return false;

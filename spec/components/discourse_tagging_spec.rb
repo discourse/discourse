@@ -13,7 +13,7 @@ describe DiscourseTagging do
 
   let!(:tag1) { Fabricate(:tag, name: "fun") }
   let!(:tag2) { Fabricate(:tag, name: "fun2") }
-  let!(:tag3) { Fabricate(:tag, name: "fun3") }
+  let!(:tag3) { Fabricate(:tag, name: "Fun3") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -186,7 +186,8 @@ describe DiscourseTagging do
 
       it "returns only existing tag names" do
         Fabricate(:tag, name: 'oldtag')
-        expect(described_class.tags_for_saving(['newtag', 'oldtag'], guardian).try(:sort)).to eq(['oldtag'])
+        Fabricate(:tag, name: 'oldTag2')
+        expect(described_class.tags_for_saving(['newtag', 'oldtag', 'oldtag2'], guardian)).to contain_exactly('oldtag', 'oldTag2')
       end
     end
 
@@ -203,6 +204,14 @@ describe DiscourseTagging do
       it "only sanitizes new tags" do # for backwards compat
         Tag.new(name: 'math=fun').save(validate: false)
         expect(described_class.tags_for_saving(['math=fun', 'fun*2@gmail.com'], guardian).try(:sort)).to eq(['math=fun', 'fun2gmailcom'].sort)
+      end
+    end
+
+    describe "clean_tag" do
+      it "downcases new tags if setting enabled" do
+        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
+        SiteSetting.force_lowercase_tags = false
+        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
       end
     end
   end

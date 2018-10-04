@@ -145,7 +145,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
       if (this.get("currentCategory")) {
         url += this.get("currentCategory.url");
       }
-      url = `${url}/${tagId}`;
+      url = `${url}/${tagId.toLowerCase()}`;
       DiscourseURL.routeTo(url);
     },
 

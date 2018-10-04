@@ -407,6 +407,7 @@ describe Search do
     end
 
     let!(:tag) { Fabricate(:tag) }
+    let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
     let(:tag_group) { Fabricate(:tag_group) }
     let(:category) { Fabricate(:category) }
 
@@ -415,13 +416,16 @@ describe Search do
         SiteSetting.tagging_enabled = true
 
         post = Fabricate(:post, raw: 'I am special post')
-        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name])
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
         post.topic.save
 
         # we got to make this index (it is deferred)
         Jobs::ReindexSearch.new.rebuild_problem_posts
 
         result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(1)
+
+        result = Search.execute("hElLo")
         expect(result.posts.length).to eq(1)
 
         SiteSetting.tagging_enabled = false
@@ -822,9 +826,10 @@ describe Search do
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
 
       # tags
-      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет')]
+      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет'), Fabricate(:tag, name: 'HeLlO')]
       expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #привет').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #hElLo').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 

@@ -225,7 +225,6 @@ export default ComboBox.extend(TagsMixin, {
       case "string":
         // See lib/discourse_tagging#clean_tag.
         return content
-          .toLowerCase()
           .trim()
           .replace(/\s+/, "-")
           .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/, "")

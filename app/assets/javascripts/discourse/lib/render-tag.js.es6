@@ -1,6 +1,7 @@
 export default function renderTag(tag, params) {
   params = params || {};
-  tag = Handlebars.Utils.escapeExpression(tag);
+  const visibleName = Handlebars.Utils.escapeExpression(tag);
+  tag = visibleName.toLowerCase();
   const classes = ["discourse-tag"];
   const tagName = params.tagName || "a";
   let path;
@@ -29,7 +30,7 @@ export default function renderTag(tag, params) {
     " class='" +
     classes.join(" ") +
     "'>" +
-    tag +
+    visibleName +
     "</" +
     tagName +
     ">";
