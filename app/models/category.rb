@@ -8,7 +8,7 @@ class Category < ActiveRecord::Base
   include HasCustomFields
   include CategoryHashtag
   include AnonCacheInvalidator
-  include HasWebHooks
+  include HasDestroyedWebHook
 
   REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
   REQUIRE_REPLY_APPROVAL = 'require_reply_approval'

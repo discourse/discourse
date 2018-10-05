@@ -1,11 +1,11 @@
-module HasWebHooks
+module HasDestroyedWebHook
   extend ActiveSupport::Concern
 
   included do
-    around_destroy :enqueue_web_hook
+    around_destroy :enqueue_destroyed_web_hook
   end
 
-  def enqueue_web_hook
+  def enqueue_destroyed_web_hook
     type = self.class.name.underscore.to_sym
     payload = WebHook.generate_payload(type, self)
     yield

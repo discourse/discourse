@@ -1,6 +1,6 @@
 class Tag < ActiveRecord::Base
   include Searchable
-  include HasWebHooks
+  include HasDestroyedWebHook
 
   validates :name, presence: true, uniqueness: true
 
