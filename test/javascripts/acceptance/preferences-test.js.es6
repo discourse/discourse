@@ -275,8 +275,8 @@ QUnit.test("recently connected devices", async assert => {
     "it should display three tokens"
   );
 
-  await click(".auth-token-dropdown");
-  await click("li[data-id='notYou']");
+  await click(".auth-token-dropdown:first button");
+  await click("li[data-value='notYou']");
 
   assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
 
