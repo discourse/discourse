@@ -1798,6 +1798,7 @@ en:
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_short_name: "Company Name (short)"
     company_full_name: "Company Name (full)"

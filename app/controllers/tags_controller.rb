@@ -89,7 +89,7 @@ class TagsController < ::ApplicationController
       path_name = url_method(params.slice(:category, :parent_category))
       canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values.map { |t| t.force_encoding("UTF-8") }))}"
 
-      if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
+      if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where_name(@tag_id).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
       else
         respond_with_list(@list)
@@ -162,7 +162,7 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    if Tag.where(name: params[:q]).exists? && !tags.find { |h| h[:id] == params[:q] }
+    if Tag.where_name(params[:q]).exists? && !tags.find { |h| h[:id] == params[:q] }
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
     end
@@ -171,7 +171,7 @@ class TagsController < ::ApplicationController
   end
 
   def notifications
-    tag = Tag.find_by_name(params[:tag_id])
+    tag = Tag.where_name(params[:tag_id]).first
     raise Discourse::NotFound unless tag
     level = tag.tag_users.where(user: current_user).first.try(:notification_level) || TagUser.notification_levels[:regular]
     render json: { tag_notification: { id: tag.name, notification_level: level.to_i } }
@@ -186,9 +186,7 @@ class TagsController < ::ApplicationController
   end
 
   def check_hashtag
-    tag_values = params[:tag_values].each(&:downcase!)
-
-    valid_tags = Tag.where(name: tag_values).map do |tag|
+    valid_tags = Tag.where_name(params[:tag_values]).map do |tag|
       { value: tag.name, url: tag.full_url }
     end.compact
 

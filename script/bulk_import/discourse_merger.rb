@@ -271,7 +271,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @raw_connection.copy_data(sql, @encoder) do
       source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM tags").each do |row|
 
-        if existing = Tag.where(name: row['name']).first
+        if existing = Tag.where_name(row['name']).first
           @tags[row['id']] = existing.id
           next
         end

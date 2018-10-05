@@ -28,7 +28,7 @@ componentTest("default", {
         });
       }
 
-      if (params.queryParams.q === "joffrey" || params.queryParams.q === "invalid'tag" || params.queryParams.q === "01234567890123456789012345") {
+      if (params.queryParams.q.toLowerCase() === "joffrey" || params.queryParams.q === "invalid'tag" || params.queryParams.q === "01234567890123456789012345") {
         return response({results: []});
       }
 
@@ -72,6 +72,16 @@ componentTest("default", {
       this.get("tags"),
       ["jeff", "neil", "arpit", "régis", "joffrey"],
       "it creates the tag"
+    );
+
+    await this.get("subject").expand();
+    await this.get("subject").fillInFilter("Joffrey");
+    await this.get("subject").keyboard("enter");
+    await this.get("subject").collapse();
+    assert.deepEqual(
+      this.get("tags"),
+      ["jeff", "neil", "arpit", "régis", "joffrey"],
+      "it does not allow case insensitive duplicate tags"
     );
 
     await this.get("subject").expand();

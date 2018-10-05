@@ -105,7 +105,7 @@ class SearchIndexer
   end
 
   def self.update_tags_index(tag_id, name)
-    update_index(table: 'tag', id: tag_id, raw_data: [name])
+    update_index(table: 'tag', id: tag_id, raw_data: [name.downcase])
   end
 
   def self.queue_post_reindex(topic_id)
