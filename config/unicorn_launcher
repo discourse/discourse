@@ -31,7 +31,7 @@ function on_reload()
   done
 
   count=0
-  while [ "$count" -lt 30 -a -z $(ps -f --ppid $NEW_UNICORN_PID | grep worker | head -1 | awk '{ print $2 }') ]; do
+  while [ "$count" -lt 30 -a -z "$(ps -f --ppid $NEW_UNICORN_PID | grep worker | head -1 | awk '{ print $2 }')" ]; do
     log "Waiting for new unicorn workers under $NEW_UNICORN_PID to start up..."
     count=$((count+1))
     sleep 1
