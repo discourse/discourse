@@ -18,18 +18,22 @@ function on_exit()
 
 function on_reload()
 {
-  log "Reloading unicorn"
+  log "Reloading unicorn ($UNICORN_PID)"
   kill -s USR2 $UNICORN_PID
   unset NEW_UNICORN_PID
 
-  while [ -z "$NEW_UNICORN_PID" ]; do
+  count=0
+  while [ "$count" -lt 30 -a -z "$NEW_UNICORN_PID" ]; do
     NEW_UNICORN_PID=`ps -f --ppid $UNICORN_PID | grep 'unicorn master' | grep -v old | grep -v worker | awk '{ print $2 }'`
     log "Waiting for new unicorn master pid... $NEW_UNICORN_PID"
+    count=$((count+1))
     sleep 1
   done
 
-  while [ -z `ps -f --ppid $NEW_UNICORN_PID | grep worker | head -1 | awk '{ print $2 }'` ]; do
+  count=0
+  while [ "$count" -lt 30 -a -z `ps -f --ppid $NEW_UNICORN_PID | grep worker | head -1 | awk '{ print $2 }'` ]; do
     log "Waiting for new unicorn workers under $NEW_UNICORN_PID to start up..."
+    count=$((count+1))
     sleep 1
   done
 
