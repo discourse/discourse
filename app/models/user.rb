@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
   include SecondFactorManager
+  include HasDestroyedWebHook
 
   has_many :posts
   has_many :notifications, dependent: :destroy

@@ -5,6 +5,7 @@ require_dependency 'enum'
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
+  include HasDestroyedWebHook
 
   cattr_accessor :preloaded_custom_field_names
   self.preloaded_custom_field_names = Set.new
