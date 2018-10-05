@@ -94,7 +94,7 @@
     border: none;
 
     td {
-      border-bottom: 1px solid $danger-low;
+      border-bottom: 1px solid $danger-medium;
       line-height: 0.1em;
       padding: 0;
       text-align: center;
@@ -102,7 +102,7 @@
 
     td span {
       background-color: $secondary;
-      color: $danger-low;
+      color: $danger-medium;
       padding: 0 8px;
       font-size: $font-down-1;
     }
