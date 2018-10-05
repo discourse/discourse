@@ -407,7 +407,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where(name: slug[0]).pluck(:id).first
+      tag_id = Tag.where_name(slug[0]).pluck(:id).first
       if (tag_id)
         posts.where("topics.id IN (
           SELECT DISTINCT(tt.topic_id)
@@ -496,7 +496,7 @@ class Search
 
   def search_tags(posts, match, positive:)
     return if match.nil?
-
+    match.downcase!
     modifier = positive ? "" : "NOT"
 
     if match.include?('+')
@@ -507,7 +507,7 @@ class Search
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
-        HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
+        HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(lower(tags.name)), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
       )", tags.join('&'))
     else
       tags = match.split(",")
@@ -515,7 +515,7 @@ class Search
       posts.where("topics.id #{modifier} IN (
         SELECT DISTINCT(tt.topic_id)
         FROM topic_tags tt, tags
-        WHERE tt.tag_id = tags.id AND tags.name IN (?)
+        WHERE tt.tag_id = tags.id AND lower(tags.name) IN (?)
       )", tags)
     end
   end
