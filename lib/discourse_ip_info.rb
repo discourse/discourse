@@ -7,17 +7,24 @@ class DiscourseIpInfo
     begin
       @mmdb_filename = File.join(Rails.root, 'vendor', 'data', 'GeoLite2-City.mmdb')
       @mmdb = MaxMindDB.new(@mmdb_filename, MaxMindDB::LOW_MEMORY_FILE_READER)
+      @cache = LruRedux::ThreadSafeCache.new(1000)
+    rescue Errno::ENOENT => e
+      Rails.logger.warn("MaxMindDB could not be found: #{e}")
     rescue
+      Rails.logger.warn("MaxMindDB could not be loaded.")
     end
-
-    @cache = LruRedux::ThreadSafeCache.new(1000)
   end
 
   def lookup(ip)
     return {} unless @mmdb
 
-    result = @mmdb.lookup(ip)
-    return {} unless result.found?
+    begin
+      result = @mmdb.lookup(ip)
+    rescue
+      Rails.logger.error("IP #{ip} could not be looked up in MaxMindDB.")
+    end
+
+    return {} if !result || !result.found?
 
     {
       country: result.country.name,
@@ -30,7 +37,7 @@ class DiscourseIpInfo
   def get(ip)
     return {} unless @mmdb
 
-    @cache[ip] || @cache[ip] = lookup(ip)
+    @cache[ip] ||= lookup(ip)
   end
 
   def self.get(ip)
