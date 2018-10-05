@@ -27,6 +27,6 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   mutateValue(id) {
-    this.sendAction("actionNames." + id);
+    this.sendAction(`actionNames.${id}`);
   }
 });
