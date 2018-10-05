@@ -216,7 +216,7 @@ GEM
     mustache (1.0.5)
     nap (1.1.0)
     no_proxy_fix (0.1.2)
-    nokogiri (1.8.3)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     nokogumbo (1.5.0)
       nokogiri
