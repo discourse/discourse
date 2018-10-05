@@ -81,7 +81,7 @@ export default createWidget("post-small-action", {
       contents.push(
         this.attach("button", {
           className: "small-action-delete",
-          icon: "times",
+          icon: "trash",
           action: "deletePost",
           title: "post.controls.delete"
         })
