@@ -616,10 +616,11 @@ select {
 .pref-auth-tokens {
   .row {
     border-bottom: 1px solid #ddd;
-    margin: 10px 0px;
+    margin: 5px 0px;
+    padding-bottom: 5px;
 
     &:last-child {
-      border-bottom: none;
+      border-bottom: 0;
     }
   }
 
@@ -652,7 +653,10 @@ select {
     .btn,
     .btn:hover {
       background: transparent;
-      color: $primary;
+
+      .d-icon {
+        color: $primary;
+      }
     }
   }
 

@@ -1,40 +1,40 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
-import DropdownButton from "discourse/components/dropdown-button";
-import computed from "ember-addons/ember-computed-decorators";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
-export default DropdownButton.extend({
-  buttonExtraClasses: "no-text",
-  title: "",
-  text: iconHTML("wrench"),
+export default DropdownSelectBoxComponent.extend({
   classNames: ["auth-token-dropdown"],
+  headerIcon: "wrench",
+  allowInitialValueMutation: false,
+  showFullTitle: false,
 
-  dropDownContent() {
-    const items = [
+  computeContent() {
+    const content = [
       {
         id: "notYou",
-        title: I18n.t("user.auth_tokens.not_you"),
-        description: "",
-        icon: "user-times"
+        icon: "user-times",
+        name: I18n.t("user.auth_tokens.not_you"),
+        description: ""
       },
       {
         id: "logOut",
-        title: I18n.t("user.log_out"),
-        description: "",
-        icon: "sign-out"
+        icon: "sign-out",
+        name: I18n.t("user.log_out"),
+        description: ""
       }
     ];
 
-    return items;
+    return content;
   },
 
-  clicked(id) {
-    switch (id) {
-      case "notYou":
-        this.sendAction("showToken", this.get("token"));
-        break;
-      case "logOut":
-        this.sendAction("revokeAuthToken", this.get("token"));
-        break;
+  actions: {
+    onSelect(id) {
+      switch (id) {
+        case "notYou":
+          this.sendAction("showToken", this.get("token"));
+          break;
+        case "logOut":
+          this.sendAction("revokeAuthToken", this.get("token"));
+          break;
+      }
     }
   }
 });

@@ -55,29 +55,31 @@
   <div class="control-group pref-auth-tokens">
     <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
 
-    {{#each authTokens as |token|}}
-      <div class="row auth-token">
-        <div class="auth-token-icon">{{d-icon token.icon}}</div>
-        {{#unless token.is_active}}
-          <div class="auth-token-button">
-            {{auth-token-dropdown token=token
-                                  revokeAuthToken="revokeAuthToken"
-                                  showToken="showToken"}}
+    <div class="auth-tokens">
+      {{#each authTokens as |token|}}
+        <div class="row auth-token">
+          <div class="auth-token-icon">{{d-icon token.icon}}</div>
+          {{#unless token.is_active}}
+            <div class="auth-token-button">
+              {{auth-token-dropdown token=token
+                                    revokeAuthToken=(action "revokeAuthToken")
+                                    showToken=(action "showToken")}}
+            </div>
+          {{/unless}}
+          <div class="auth-token-first">
+            <span class="auth-token-device">{{token.device}}</span> &ndash; <span title="{{i18n "user.auth_tokens.ip"}}: {{token.client_ip}}">{{token.location}}</span>
           </div>
-        {{/unless}}
-        <div class="auth-token-first">
-          <span class="auth-token-device">{{token.device}}</span> &ndash; <span title="{{i18n "user.auth_tokens.ip"}}: {{token.client_ip}}">{{token.location}}</span>
+          <div class="auth-token-second">
+            {{token.browser}} |
+            {{#if token.is_active}}
+              <span class="active">{{i18n 'user.auth_tokens.active'}}</span>
+            {{else}}
+              {{format-date token.seen_at}}
+            {{/if}}
+          </div>
         </div>
-        <div class="auth-token-second">
-          {{token.browser}} |
-          {{#if token.is_active}}
-            <span class="active">{{i18n 'user.auth_tokens.active'}}</span>
-          {{else}}
-            {{format-date token.seen_at}}
-          {{/if}}
-        </div>
-      </div>
-    {{/each}}
+      {{/each}}
+    </div>
 
     {{#if canShowAllAuthTokens}}
       <a {{action "toggleShowAllAuthTokens"}}>

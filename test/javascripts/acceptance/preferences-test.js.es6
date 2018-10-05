@@ -257,15 +257,23 @@ QUnit.test("recently connected devices", async assert => {
   await visit("/u/eviltrout/preferences");
 
   assert.equal(
-    find(".pref-auth-tokens > a:first").text().trim(),
+    find(".pref-auth-tokens > a:first")
+      .text()
+      .trim(),
     I18n.t("user.auth_tokens.show_all", { count: 3 }),
     "it should display two tokens"
   );
-  assert.ok(find(".pref-auth-tokens .auth-token").length === 2, "it should display two tokens");
+  assert.ok(
+    find(".pref-auth-tokens .auth-token").length === 2,
+    "it should display two tokens"
+  );
 
   await click(".pref-auth-tokens > a:first");
 
-  assert.ok(find(".pref-auth-tokens .auth-token").length === 3, "it should display three tokens");
+  assert.ok(
+    find(".pref-auth-tokens .auth-token").length === 3,
+    "it should display three tokens"
+  );
 
   await click(".auth-token-dropdown");
   await click("li[data-id='notYou']");
@@ -274,5 +282,8 @@ QUnit.test("recently connected devices", async assert => {
 
   await click(".modal-footer .btn-primary");
 
-  assert.ok(find(".pref-password.highlighted").length === 1, "it should highlight password preferences")
+  assert.ok(
+    find(".pref-password.highlighted").length === 1,
+    "it should highlight password preferences"
+  );
 });

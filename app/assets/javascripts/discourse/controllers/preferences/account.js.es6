@@ -110,7 +110,9 @@ export default Ember.Controller.extend(
         (a, b) => (a.is_active ? -1 : b.is_active ? 1 : a.seen_at < b.seen_at)
       );
 
-      return showAllAuthTokens ? tokens : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
+      return showAllAuthTokens
+        ? tokens
+        : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
     },
 
     @computed("model.user_auth_tokens")
