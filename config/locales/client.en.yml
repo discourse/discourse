@@ -1458,7 +1458,7 @@ en:
           desc: "Draft a topic that will only be visible to staff"
         toggle_topic_bump:
           label: "Toggle topic bump"
-          desc: "Reply without changing the topic's bump date"
+          desc: "Reply without changing latest reply date"
 
     notifications:
       tooltip:
