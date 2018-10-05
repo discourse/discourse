@@ -16,6 +16,10 @@ module Middleware
       exception = env["action_dispatch.exception"]
       response = ActionDispatch::Response.new
 
+      # Special handling for invalid params, in this case we can not re-dispatch
+      # the Request object has a "broken" .params which can not be accessed
+      exception = nil if Rack::QueryParser::InvalidParameterError === exception
+
       if exception
         begin
           fake_controller = ApplicationController.new
