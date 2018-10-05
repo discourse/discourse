@@ -496,7 +496,9 @@ aside.quote {
   // this is necessary for ANYTHING that extends past the right edge of
   // the post body, such as an image in a deeply nested list, image in
   // a deeply nested blockquote, and so on.. you get the idea.
-  overflow: hidden;
+  .cooked {
+    overflow: hidden;
+  }
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }

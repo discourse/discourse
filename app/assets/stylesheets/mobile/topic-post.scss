@@ -298,7 +298,10 @@ span.post-count {
 
 // mobile has no fixed width on topic-body so overflow: hidden causes problems
 .topic-body {
-  overflow: inherit;
+  overflow: visible;
+  .cooked {
+    overflow: visible;
+  }
 }
 
 // instead, for mobile we set overflow hidden on the post's #main-outlet
