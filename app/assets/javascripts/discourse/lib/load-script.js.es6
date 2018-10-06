@@ -44,7 +44,7 @@ export default function loadScript(url, opts) {
   $("script").each((i, tag) => {
     const src = tag.getAttribute("src");
 
-    if (src && (opts.scriptTag || src !== url)) {
+    if (src && src !== url) {
       _loaded[tag.getAttribute("src")] = true;
     }
   });
@@ -86,22 +86,15 @@ export default function loadScript(url, opts) {
       cdnUrl = Discourse.CDN.replace(/\/$/, "") + url;
     }
 
-    // Some javascript depends on the path of where it is loaded (ace editor)
-    // to dynamically load more JS. In that case, add the `scriptTag: true`
-    // option.
-    if (opts.scriptTag) {
-      if (Ember.testing) {
-        throw new Error(
-          `In test mode scripts cannot be loaded async ${cdnUrl}`
-        );
-      }
-      loadWithTag(cdnUrl, cb);
-    } else {
+    if (opts.css) {
       ajax({
         url: cdnUrl,
-        dataType: opts.css ? "text" : "script",
+        dataType: "text",
         cache: true
       }).then(cb);
+    } else {
+      // Always load JavaScript with script tag to avoid Content Security Policy inline violations
+      loadWithTag(cdnUrl, cb);
     }
   });
 }

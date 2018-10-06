@@ -32,7 +32,7 @@ describe CategoriesController do
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
 
-      expect(response.body).to have_tag("meta#data-preloaded") do |element|
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
         expect(json['topic_list_latest']).to include(%{"more_topics_url":"/latest"})
       end

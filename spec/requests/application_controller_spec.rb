@@ -15,6 +15,33 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'invalid request params' do
+    before do
+      @old_logger = Rails.logger
+      @logs = StringIO.new
+      Rails.logger = Logger.new(@logs)
+    end
+
+    after do
+      Rails.logger = @old_logger
+    end
+
+    it 'should not raise a 500 (nor should it log a warning) for bad params' do
+      bad_str = "d\xDE".force_encoding('utf-8')
+      expect(bad_str.valid_encoding?).to eq(false)
+
+      get "/latest.json", params: { test: bad_str }
+
+      expect(response.status).to eq(400)
+      expect(@logs.string).not_to include('exception app middleware')
+
+      expect(JSON.parse(response.body)).to eq(
+        "status" => 400,
+        "error" => "Bad Request"
+      )
+    end
+  end
+
   describe 'build_not_found_page' do
     describe 'topic not found' do
 

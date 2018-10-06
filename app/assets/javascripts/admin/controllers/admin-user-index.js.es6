@@ -11,6 +11,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   editingName: false,
   editingTitle: false,
   originalPrimaryGroupId: null,
+  customGroupIdsBuffer: null,
   availableGroups: null,
   userTitleValue: null,
 
@@ -29,6 +30,20 @@ export default Ember.Controller.extend(CanCheckEmails, {
     "model.second_factor_enabled",
     "model.can_disable_second_factor"
   ),
+
+  @computed("model.customGroups")
+  customGroupIds(customGroups) {
+    return customGroups.mapBy("id");
+  },
+
+  @computed("customGroupIdsBuffer", "customGroupIds")
+  customGroupsDirty(buffer, original) {
+    if (buffer === null) return false;
+
+    return buffer.length === original.length
+      ? buffer.any(id => !original.includes(id))
+      : true;
+  },
 
   @computed("model.automaticGroups")
   automaticGroups(automaticGroups) {
@@ -103,6 +118,27 @@ export default Ember.Controller.extend(CanCheckEmails, {
         count: this.siteSettings.delete_user_max_post_age
       });
     }
+  },
+
+  groupAdded(added) {
+    this.get("model")
+      .groupAdded(added)
+      .catch(function() {
+        bootbox.alert(I18n.t("generic_error"));
+      });
+  },
+
+  groupRemoved(groupId) {
+    this.get("model")
+      .groupRemoved(groupId)
+      .then(() => {
+        if (groupId === this.get("originalPrimaryGroupId")) {
+          this.set("originalPrimaryGroupId", null);
+        }
+      })
+      .catch(function() {
+        bootbox.alert(I18n.t("generic_error"));
+      });
   },
 
   actions: {
@@ -278,20 +314,22 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.get("model").generateApiKey();
     },
 
-    groupAdded(added) {
-      this.get("model")
-        .groupAdded(added)
-        .catch(function() {
-          bootbox.alert(I18n.t("generic_error"));
-        });
+    saveCustomGroups() {
+      const currentIds = this.get("customGroupIds");
+      const bufferedIds = this.get("customGroupIdsBuffer");
+      const availableGroups = this.get("availableGroups");
+
+      bufferedIds.filter(id => !currentIds.includes(id)).forEach(id => {
+        this.groupAdded(availableGroups.findBy("id", id));
+      });
+
+      currentIds
+        .filter(id => !bufferedIds.includes(id))
+        .forEach(id => this.groupRemoved(id));
     },
 
-    groupRemoved(groupId) {
-      this.get("model")
-        .groupRemoved(groupId)
-        .catch(function() {
-          bootbox.alert(I18n.t("generic_error"));
-        });
+    resetCustomGroups() {
+      this.set("customGroupIdsBuffer", null);
     },
 
     savePrimaryGroup() {

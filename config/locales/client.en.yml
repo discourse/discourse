@@ -317,7 +317,8 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
-    uploading_filename: "Uploading {{filename}}..."
+    uploading_filename: "Uploading: {{filename}}..."
+    clipboard: "clipboard"
     uploaded: "Uploaded!"
 
     pasting: "Pasting..."
@@ -475,7 +476,7 @@ en:
         all: "All Groups"
         empty: "There are no visible groups."
         filter: "Filter by group type"
-        owner_groups: "Groups I am an owner of"
+        owner_groups: "Groups I own"
         close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"
         automatic: "Automatic"
@@ -581,7 +582,7 @@ en:
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
-      more: " (%{count} more) ..."
+      n_more: "Categories (%{count} more) ..."
 
     ip_lookup:
       title: IP Address Lookup
@@ -1457,7 +1458,7 @@ en:
           desc: "Draft a topic that will only be visible to staff"
         toggle_topic_bump:
           label: "Toggle topic bump"
-          desc: "Reply without changing the topic's bump date"
+          desc: "Reply without changing latest reply date"
 
     notifications:
       tooltip:

@@ -30,7 +30,7 @@ PreloadStore.store("site", {
     { id: 21, name: "test" }
   ],
   filters: ["latest", "unread", "new", "starred", "read", "posted"],
-  periods: ["yearly", "monthly", "weekly", "daily"],
+  periods: ["all", "yearly", "monthly", "weekly", "daily"],
   top_menu_items: [
     "latest",
     "unread",

@@ -145,7 +145,7 @@ en:
 
     new_user_narrative:
       reset_trigger: "new user"
-      title: "New user narrative completetion certificate"
+      title: "New user narrative completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:

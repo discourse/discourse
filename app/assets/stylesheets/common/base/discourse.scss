@@ -119,10 +119,12 @@ label {
 input {
   &[type="radio"],
   &[type="checkbox"] {
-    margin-top: 3px;
-    margin-right: 3px;
+    margin-top: 0.17em;
+    margin-right: 0.43em;
+    margin-left: 0.1em;
     line-height: $line-height-small;
     cursor: pointer;
+    flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
   &[type="submit"],
   &[type="reset"],
@@ -205,6 +207,52 @@ input {
       border-color: $tertiary;
       box-shadow: shadow("focus");
       outline: 0;
+    }
+  }
+}
+
+.input {
+  &-prepend,
+  &-append {
+    margin-bottom: 5px;
+    input[class*="span"] {
+      display: inline-block;
+    }
+    input,
+    select {
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: middle;
+      border-radius: 0;
+      &:focus {
+        z-index: z("base") + 1;
+      }
+    }
+    .add-on {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      padding: 0 0.5em;
+      height: 28px;
+      background-color: $primary-low;
+      border: 1px solid $primary-medium;
+    }
+    .add-on,
+    .btn {
+      &:first-child {
+        margin-right: -1px;
+      }
+      &:last-child {
+        margin-left: -1px;
+        border-radius: 0 3px 3px 0;
+      }
+    }
+  }
+
+  &-prepend {
+    .add-on,
+    .btn {
+      margin-right: -1px;
     }
   }
 }
@@ -475,6 +523,7 @@ select {
   .input-append {
     display: inline-block;
     margin-bottom: 0;
+    flex: 0 0 auto;
   }
 
   .control-group {

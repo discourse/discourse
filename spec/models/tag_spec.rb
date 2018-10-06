@@ -27,6 +27,12 @@ describe Tag do
       expect(event[:event_name]).to eq(:tag_created)
       expect(event[:params].first).to eq(subject)
     end
+
+    it 'prevents case-insensitive duplicates' do
+      Fabricate.build(:tag, name: "hello").save!
+      expect { Fabricate.build(:tag, name: "hElLo").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
   end
 
   describe 'destroy' do

@@ -1,19 +1,22 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
-import DropdownButton from "discourse/components/dropdown-button";
 import computed from "ember-addons/ember-computed-decorators";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
-export default DropdownButton.extend({
-  buttonExtraClasses: "no-text",
-  title: "",
-  text: iconHTML("wrench"),
-  classNames: ["group-member-dropdown"],
+export default DropdownSelectBoxComponent.extend({
+  pluginApiIdentifiers: ["group-member-dropdown"],
+  classNames: "group-member-dropdown",
+  showFullTitle: false,
+  allowInitialValueMutation: false,
+  allowAutoSelectFirst: false,
+  headerIcon: ["wrench"],
+
+  autoHighlight() {},
 
   @computed("member.owner")
-  dropDownContent(isOwner) {
+  content(isOwner) {
     const items = [
       {
         id: "removeMember",
-        title: I18n.t("groups.members.remove_member"),
+        name: I18n.t("groups.members.remove_member"),
         description: I18n.t("groups.members.remove_member_description", {
           username: this.get("member.username")
         }),
@@ -25,7 +28,7 @@ export default DropdownButton.extend({
       if (isOwner) {
         items.push({
           id: "removeOwner",
-          title: I18n.t("groups.members.remove_owner"),
+          name: I18n.t("groups.members.remove_owner"),
           description: I18n.t("groups.members.remove_owner_description", {
             username: this.get("member.username")
           }),
@@ -34,7 +37,7 @@ export default DropdownButton.extend({
       } else {
         items.push({
           id: "makeOwner",
-          title: I18n.t("groups.members.make_owner"),
+          name: I18n.t("groups.members.make_owner"),
           description: I18n.t("groups.members.make_owner_description", {
             username: this.get("member.username")
           }),
@@ -46,7 +49,7 @@ export default DropdownButton.extend({
     return items;
   },
 
-  clicked(id) {
+  mutateValue(id) {
     switch (id) {
       case "removeMember":
         this.sendAction("removeMember", this.get("member"));

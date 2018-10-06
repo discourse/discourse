@@ -19,7 +19,7 @@ class TagUser < ActiveRecord::Base
     records = TagUser.where(user: user, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
-    tag_ids = tags.empty? ? [] : Tag.where('name in (?)', tags).pluck(:id)
+    tag_ids = tags.empty? ? [] : Tag.where_name(tags).pluck(:id)
 
     remove = (old_ids - tag_ids)
     if remove.present?

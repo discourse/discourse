@@ -191,6 +191,7 @@ basic:
   enable_mobile_theme:
     client: true
     default: true
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true
@@ -230,7 +231,7 @@ basic:
     client: true
     default: false
   push_notifications_prompt:
-    default: false
+    default: true
     client: true
   push_notifications_icon_url:
     default: ''
@@ -262,7 +263,7 @@ login:
     default: true
   enable_local_logins_via_email:
     client: true
-    default: false
+    default: true
     validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
@@ -374,11 +375,13 @@ users:
     default: 3
     min: 1
     max: 60
+    validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
     min: 8
     max: 60
+    validator: "MaxUsernameLengthValidator"
   reserved_usernames:
     type: list
     list_type: compact
@@ -909,6 +912,10 @@ files:
   export_authorized_extensions:
     hidden: true
     default: 'gz'
+    type: list
+    list_type: compact
+  responsive_post_image_sizes:
+    default: "1|1.5|2"
     type: list
     list_type: compact
   crawl_images:
@@ -1781,3 +1788,5 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
+  force_lowercase_tags:
+    default: true

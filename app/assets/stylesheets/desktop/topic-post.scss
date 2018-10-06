@@ -641,12 +641,16 @@ $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 .topic-body {
-  width: $topic-body-width;
+  width: calc(#{$topic-body-width} + calc(#{$topic-body-width-padding} * 2));
   float: left;
   position: relative;
   z-index: z("base");
   border-top: 1px solid $primary-low;
-  padding: 12px $topic-body-width-padding 0 $topic-body-width-padding;
+  padding: 12px 0 0 0;
+  .topic-meta-data,
+  .cooked {
+    padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+  }
 }
 
 .topic-avatar {
@@ -902,7 +906,6 @@ span.highlighted {
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
-    padding-left: 2%;
   }
   .embedded-posts {
     // top means "in reply to expansion" above a post

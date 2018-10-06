@@ -11,10 +11,13 @@ class ComposerMessagesFinder
   end
 
   def find
+    return if editing_post?
+
     self.class.check_methods.each do |m|
       msg = send(m)
       return msg if msg.present?
     end
+
     nil
   end
 
@@ -208,6 +211,10 @@ class ComposerMessagesFinder
 
   def replying?
     @details[:composer_action] == "reply"
+  end
+
+  def editing_post?
+    @details[:composer_action] == "edit"
   end
 
 end

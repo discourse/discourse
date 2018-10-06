@@ -53,6 +53,51 @@ describe CookedPostProcessor do
 
   context ".post_process_images" do
 
+    before do
+      SiteSetting.responsive_post_image_sizes = ""
+    end
+
+    context "responsive images" do
+      it "includes responsive images on demand" do
+
+        SiteSetting.responsive_post_image_sizes = "1|1.5|3"
+
+        upload = Fabricate(:upload, width: 2000, height: 1500, filesize: 10000)
+        post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
+
+        # fake some optimized images
+        OptimizedImage.create!(
+          url: 'http://a.b.c/666x500.jpg',
+          width: 666,
+          height: 500,
+          upload_id: upload.id,
+          sha1: SecureRandom.hex,
+          extension: '.jpg',
+          filesize: 500
+        )
+
+        # fake 3x optimized image, we lose 2 pixels here over original due to rounding on downsize
+        OptimizedImage.create!(
+          url: 'http://a.b.c/1998x1500.jpg',
+          width: 1998,
+          height: 1500,
+          upload_id: upload.id,
+          sha1: SecureRandom.hex,
+          extension: '.jpg',
+          filesize: 800
+        )
+
+        cpp = CookedPostProcessor.new(post)
+
+        cpp.add_to_size_cache(upload.url, 2000, 1500)
+        cpp.post_process_images
+
+        # 1.5x is skipped cause we have a missing thumb
+        expect(cpp.html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3.0x"')
+
+      end
+    end
+
     shared_examples "leave dimensions alone" do
       it "doesn't use them" do
         expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="" height=""/)

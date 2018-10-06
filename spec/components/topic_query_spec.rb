@@ -160,6 +160,7 @@ describe TopicQuery do
   context 'tag filter' do
     let(:tag)       { Fabricate(:tag) }
     let(:other_tag) { Fabricate(:tag) }
+    let(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
     before do
       SiteSetting.tagging_enabled = true
@@ -169,6 +170,7 @@ describe TopicQuery do
       let!(:tagged_topic1) { Fabricate(:topic, tags: [tag]) }
       let!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       let!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
+      let!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
       let!(:no_tags_topic) { Fabricate(:topic) }
 
       it "returns topics with the tag when filtered to it" do
@@ -186,6 +188,9 @@ describe TopicQuery do
 
         expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics)
           .to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+
+        expect(TopicQuery.new(moderator, tags: ["hElLo"]).list_latest.topics)
+          .to contain_exactly(tagged_topic4)
       end
 
       it "can return topics with all specified tags" do

@@ -88,6 +88,7 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
+      missing_attachment: '(Attachment %{filename} is missing)'
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -163,10 +164,6 @@ en:
       invalid_choice:
         one: 'You specified the invalid choice %{name}'
         other: 'You specified the invalid choices %{name}'
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1162,11 +1159,12 @@ en:
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
-    post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
+    post_edit_time_limit: "The author can edit their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
+    responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -1800,12 +1798,13 @@ en:
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_short_name: "Company Name (short)"
     company_full_name: "Company Name (full)"
     company_domain: "Company Domain"
 
-    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
+    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
@@ -1839,6 +1838,10 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
+      min_username_length_range: "You cannot set the minimum above the maximum."
+      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
+      max_username_length_range: "You cannot set the maximum below the minimum."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2607,6 +2610,17 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         There was an unrecognized error while processing your email and it wasn't posted. You should try again, or [contact a staff member](%{base_url}/about).
+
+    email_reject_attachment:
+      title: "Email Attachment Rejected"
+      subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      text_body_template:  |
+        Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
+
+        Details:
+        %{rejected_errors}
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_error_notification:
       title: "Email Error Notification"
