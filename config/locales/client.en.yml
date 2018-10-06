@@ -3451,7 +3451,7 @@ en:
           filter: "Filter:"
           title: "Staff Actions"
           clear_filters: "Show Everything"
-          staff_user: "Staff User"
+          staff_user: "User"
           target_user: "Target User"
           subject: "Subject"
           when: "When"
