@@ -531,6 +531,24 @@ describe CookedPostProcessor do
 
       expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
     end
+
+    it "replaces large image placeholder" do
+      url = 'https://image.com/my-avatar'
+      image_url = 'https://image.com/avatar.png'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+      post = Fabricate(:post, raw: url)
+
+      post.custom_fields[Post::LARGE_IMAGES] = "[\"//image.com/avatar.png\"]"
+      post.save_custom_fields
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process_oneboxes
+      cpp.post_process_images
+
+      expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
+    end
   end
 
   context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
