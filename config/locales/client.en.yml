@@ -284,10 +284,10 @@ en:
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
       created: "you've bookmarked this post"
-      not_bookmarked: "you've read this post; click to bookmark it"
+      not_bookmarked: "bookmark this post"
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
-      confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
+      confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
 
     drafts:
       resume: "Resume"
