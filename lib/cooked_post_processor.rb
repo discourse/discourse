@@ -167,8 +167,6 @@ class CookedPostProcessor
     @doc.css("img[src^='data']") -
     # minus emojis
     @doc.css("img.emoji") -
-    # minus oneboxed images
-    oneboxed_images -
     # minus images inside quotes
     @doc.css(".quote img")
   end
@@ -440,9 +438,12 @@ class CookedPostProcessor
       next if img["src"].blank?
 
       src = img["src"].sub(/^https?:/i, "")
+      parent = img.parent
+      img_classes = (img["class"] || "").split(" ")
+      link_classes = ((parent&.name == "a" && parent["class"]) || "").split(" ")
 
       if large_images.include?(src) || broken_images.include?(src)
-        img.remove
+        img.remove unless img_classes.include?("onebox") || link_classes.include?("onebox")
         next
       end
 
@@ -456,7 +457,7 @@ class CookedPostProcessor
 
       next if img["class"]&.include?('onebox-avatar')
 
-      parent_class = img.parent && img.parent["class"]
+      parent_class = parent && parent["class"]
       width = img["width"].to_i
       height = img["height"].to_i
 
