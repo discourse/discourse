@@ -174,7 +174,7 @@ describe TopicQuery do
       let!(:no_tags_topic) { Fabricate(:topic) }
 
       it "returns topics with the tag when filtered to it" do
-        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics)
+        expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
           .to contain_exactly(tagged_topic1, tagged_topic3)
 
         expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics)

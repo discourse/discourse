@@ -634,6 +634,7 @@ class TopicQuery
       result = result.preload(:tags)
 
       if @options[:tags] && @options[:tags].size > 0
+        @options[:tags] = @options[:tags].split unless @options[:tags].respond_to?('each')
         @options[:tags].each { |t| t.downcase! if t.is_a? String }
 
         if @options[:match_all_tags]
