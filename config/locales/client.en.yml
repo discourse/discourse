@@ -2757,8 +2757,7 @@ en:
           search: "There are no more search results."
 
     invite:
-      custom_message: "Make your invite a little bit more personal by writing a"
-      custom_message_link: "custom message"
+      custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."
       custom_message_placeholder: "Enter your custom message"
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
