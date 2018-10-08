@@ -11,6 +11,7 @@ describe SiteController do
       SiteSetting.logo_small_url = "http://boom.com/uploads/logo_small.png"
       SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
       SiteSetting.mobile_logo_url = "https://a.a/a.png"
+      Theme.clear_default!
 
       get "/site/basic-info.json"
       json = JSON.parse(response.body)
