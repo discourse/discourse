@@ -144,7 +144,7 @@ module Email
       # Lets create a staged user if there isn't one yet. We will try to
       # delete staged users in process!() if something bad happens.
       if user.nil?
-        user = find_or_create_user(@from_email, @from_display_name)
+        user = find_or_create_user!(@from_email, @from_display_name)
         log_and_validate_user(user)
       end
 
@@ -489,7 +489,7 @@ module Email
       User.find_by_email(email)
     end
 
-    def find_or_create_user(email, display_name)
+    def find_or_create_user(email, display_name, raise_on_failed_create: false)
       user = nil
 
       User.transaction do
@@ -498,8 +498,8 @@ module Email
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
 
+          username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
-            username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
             user = User.create!(
               email: email,
               username: UserNameSuggester.suggest(username.presence || email),
@@ -507,13 +507,18 @@ module Email
               staged: true
             )
             @staged_users << user
-          rescue
+          rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+            raise if raise_on_failed_create
             user = nil
           end
         end
       end
 
       user
+    end
+
+    def find_or_create_user!(email, display_name)
+      find_or_create_user(email, display_name, raise_on_failed_create: true)
     end
 
     def all_destinations
