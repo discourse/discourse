@@ -33,6 +33,8 @@
     "pretender": "^1.6",
     "prettier": "^1.13",
     "puppeteer": "1.4",
-    "qunit": "2.6"
+    "qunit": "2.6",
+    "route-recognizer": "^0.3.3",
+    "sinon": "^6.3.5"
   }
 }

@@ -134,7 +134,7 @@ QUnit.test("selectUp calls _moveSelection with -1", assert => {
 
 QUnit.test("goBack calls history.back", assert => {
   var called = false;
-  sandbox.stub(history, "back", function() {
+  sandbox.stub(history, "back").callsFake(function() {
     called = true;
   });
 

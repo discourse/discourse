@@ -13,6 +13,7 @@ if Rails.env.development?
 end
 
 module Discourse
+  DB_POST_MIGRATE_PATH ||= "db/post_migrate"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler

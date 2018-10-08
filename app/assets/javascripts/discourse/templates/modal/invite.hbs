@@ -33,7 +33,7 @@
     {{/if}}
 
     {{#if showCustomMessage}}
-      <label><span class='optional'>{{i18n 'invite.custom_message'}}</span> <a {{action "showCustomMessageBox"}}>{{i18n 'invite.custom_message_link'}}</a>.</label>
+      <label>{{discourse-linked-text class="optional" action="showCustomMessageBox" text="invite.custom_message"}}</label>
       {{#if hasCustomMessage}}{{textarea value=customMessage placeholder=customMessagePlaceholder}}{{/if}}
     {{/if}}
 

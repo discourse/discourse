@@ -8,8 +8,10 @@ describe SiteSettingsTask do
 
   describe 'export' do
     it 'creates a hash of all site settings' do
+      SiteSetting.sso_url = "https://somewhere.over.com"
+      SiteSetting.enable_sso = true
       h = SiteSettingsTask.export_to_hash
-      expect(h.count).to be > 0
+      expect(h.count).to eq(2)
     end
   end
 
