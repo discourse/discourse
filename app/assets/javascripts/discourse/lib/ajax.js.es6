@@ -14,7 +14,14 @@ export function viewTrackingRequired() {
 }
 
 export function handleLogoff(xhr) {
-  if (xhr.getResponseHeader("Discourse-Logged-Out") && !_showingLogout) {
+  const sessionExpired =
+    xhr.getResponseHeader("X-Request-Id") &&
+    Discourse.__container__.lookup("current-user:main") &&
+    !xhr.getResponseHeader("X-Discourse-Username");
+  const loggedOut =
+    xhr.getResponseHeader("Discourse-Logged-Out") || sessionExpired;
+
+  if (loggedOut && !_showingLogout) {
     _showingLogout = true;
     const messageBus = Discourse.__container__.lookup("message-bus:main");
     messageBus.stop();
