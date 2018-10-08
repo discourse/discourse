@@ -12,7 +12,7 @@ class TextCleaner
     {
       deduplicate_exclamation_marks: SiteSetting.title_prettify,
       deduplicate_question_marks: SiteSetting.title_prettify,
-      replace_all_upper_case: SiteSetting.title_prettify,
+      replace_all_upper_case: SiteSetting.title_prettify && !SiteSetting.allow_uppercase_posts,
       capitalize_first_letter: SiteSetting.title_prettify,
       remove_all_periods_from_the_end: SiteSetting.title_prettify,
       remove_extraneous_space: SiteSetting.title_prettify && SiteSetting.default_locale == "en",
