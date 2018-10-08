@@ -797,6 +797,10 @@ describe PrettyText do
       expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
       expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
     end
+
+    it "correctly strips VARIATION SELECTOR-16 character (ufe0f) from some emojis" do
+      expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
+    end
   end
 
   describe "custom emoji" do
