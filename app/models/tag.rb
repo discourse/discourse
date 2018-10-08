@@ -158,5 +158,6 @@ end
 #
 # Indexes
 #
-#  index_tags_on_name  (name) UNIQUE
+#  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
+#  index_tags_on_name        (name) UNIQUE
 #
