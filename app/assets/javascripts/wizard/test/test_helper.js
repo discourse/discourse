@@ -19,7 +19,7 @@
 //= require_tree ./components
 //= require locales/en
 //= require fake_xml_http_request
-//= require route-recognizer
+//= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
 //= require ./wizard-pretender
 
