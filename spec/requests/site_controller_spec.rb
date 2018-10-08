@@ -21,6 +21,8 @@ describe SiteController do
       expect(json["apple_touch_icon_url"]).to eq("https://boom.com/apple/logo.png")
       expect(json["logo_small_url"]).to eq("http://boom.com/uploads/logo_small.png")
       expect(json["mobile_logo_url"]).to eq("https://a.a/a.png")
+      expect(json["header_primary_color"]).to eq("333333")
+      expect(json["header_background_color"]).to eq("ffffff")
     end
   end
 

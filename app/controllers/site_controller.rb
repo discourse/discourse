@@ -42,7 +42,9 @@ class SiteController < ApplicationController
       apple_touch_icon_url: UrlHelper.absolute(SiteSetting.apple_touch_icon_url),
       favicon_url:  UrlHelper.absolute(SiteSetting.favicon_url),
       title: SiteSetting.title,
-      description: SiteSetting.site_description
+      description: SiteSetting.site_description,
+      header_primary_color: ColorScheme.hex_for_name('header_primary') || '333333',
+      header_background_color: ColorScheme.hex_for_name('header_background') || 'ffffff'
     }
     results[:mobile_logo_url] = SiteSetting.mobile_logo_url.presence
 
