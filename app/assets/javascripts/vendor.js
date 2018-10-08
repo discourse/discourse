@@ -1,6 +1,5 @@
 //= require logster
 //= require ./discourse-objects
-//= require probes.js
 
 //= require template_include.js
 //= require i18n-patches
