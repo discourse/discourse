@@ -112,6 +112,33 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .subcategories {
+    margin-left: 1em;
+    display: flex;
+    flex-flow: wrap;
+    .subcategory {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 1em;
+      margin-bottom: 0.6em;
+      .subcategory-image-placeholder {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 0.6em;
+      }
+      .logo {
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        margin: 0;
+      }
+    }
+  }
 }
 
 .category-boxes-with-topics {
