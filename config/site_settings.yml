@@ -1179,6 +1179,15 @@ security:
     default: 'bingbot'
     list_type: compact
   slow_down_crawler_rate: 60
+  content_security_policy:
+    default: false
+  content_security_policy_report_only:
+    default: false
+  content_security_policy_collect_reports:
+    default: true
+  content_security_policy_script_src:
+    type: list
+    default: ''
 
 onebox:
   enable_flash_video_onebox: false

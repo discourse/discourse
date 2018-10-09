@@ -196,4 +196,38 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme.id])
     end
   end
+
+  describe '#set_content_security_policy_header' do
+    it 'is enabled by SiteSettings' do
+      SiteSetting.content_security_policy = false
+      SiteSetting.content_security_policy_report_only = false
+      get '/'
+      expect(response.headers).to_not include('Content-Security-Policy')
+      expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
+      get '/'
+      expect(response.headers).to include('Content-Security-Policy')
+      expect(response.headers).to include('Content-Security-Policy-Report-Only')
+    end
+
+    it 'can be customized with SiteSetting' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_script_src = 'example.com'
+
+      get '/'
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src).to include('example.com')
+      expect(script_src).to include("'self'")
+      expect(script_src).to include("'unsafe-eval'")
+    end
+
+    def parse(csp_string)
+      csp_string.split(';').map do |policy|
+        directive, *sources = policy.split
+        [directive, sources]
+      end.to_h
+    end
+  end
 end

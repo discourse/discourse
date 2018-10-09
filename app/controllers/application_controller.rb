@@ -14,6 +14,7 @@ require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
 require_dependency 'hijack'
+require_dependency 'content_security_policy'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -52,6 +53,7 @@ class ApplicationController < ActionController::Base
   before_action :block_if_requires_login
   before_action :preload_json
   before_action :check_xhr
+  before_action :set_content_security_policy_header
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
@@ -98,6 +100,16 @@ class ApplicationController < ActionController::Base
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.cache_control[:no_cache] = true
       response.cache_control[:extras] = ["no-store"]
+    end
+  end
+
+  def set_content_security_policy_header
+    if SiteSetting.content_security_policy
+      response.headers['Content-Security-Policy'] = content_security_policy
+    end
+
+    if SiteSetting.content_security_policy_report_only
+      response.headers['Content-Security-Policy-Report-Only'] = content_security_policy
     end
   end
 
@@ -500,6 +512,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def content_security_policy
+    @content_security_policy ||= ContentSecurityPolicy.new.build
+  end
 
   def check_readonly_mode
     @readonly_mode = Discourse.readonly_mode?
