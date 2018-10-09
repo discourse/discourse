@@ -236,7 +236,45 @@ export default {
         badge_grouping_id: 8,
         system: false,
         badge_type_id: 3
-      }
+      },
+      user_auth_tokens: [
+        {
+          id: 2,
+          client_ip: "188.192.99.49",
+          location: "Augsburg, Bavaria, Germany",
+          browser: "Google Chrome",
+          device: "Linux Computer",
+          os: "Linux",
+          icon: "linux",
+          created_at: "2018-09-08T21:22:56.225Z",
+          seen_at: "2018-09-08T21:22:56.512Z",
+          is_active: false
+        },
+        {
+          id: 3,
+          client_ip: "188.120.223.89",
+          location: "České Budějovice, České Budějovice District, Czechia",
+          browser: "Google Chrome",
+          device: "Linux Computer",
+          os: "Linux",
+          icon: "linux",
+          created_at: "2018-09-08T21:33:41.616Z",
+          seen_at: "2018-09-08T21:33:42.209Z",
+          is_active: true
+        },
+        {
+          id: 6,
+          client_ip: "188.233.223.89",
+          location: "Tula, Tul'skaya Oblast, Russia",
+          browser: "Internet Explorer",
+          device: "Windows Computer",
+          os: "Windows",
+          icon: "windows",
+          created_at: "2018-09-07T21:44:41.616Z",
+          seen_at: "2018-09-08T21:44:42.209Z",
+          is_active: false
+        }
+      ]
     }
   },
   "/user_actions.json": {

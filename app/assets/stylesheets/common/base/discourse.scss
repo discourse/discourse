@@ -538,6 +538,11 @@ select {
         text-align: center;
       }
     }
+
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+      background-color: dark-light-choose($highlight-low, $highlight);
+    }
   }
 
   .control-label {
@@ -609,49 +614,57 @@ select {
 }
 
 .pref-auth-tokens {
-  .control-label {
-    display: inline-block;
-  }
-
   .row {
+    border-bottom: 1px solid #ddd;
     margin: 5px 0px;
-  }
+    padding-bottom: 5px;
 
-  .muted {
-    color: $primary-medium;
-  }
-
-  .perf-auth-token {
-    background-color: $primary-very-low;
-    color: $primary;
-    display: block;
-    padding: 5px;
-    margin-bottom: 10px;
-  }
-
-  .auth-token-summary {
-    padding: 0px 10px;
-
-    .auth-token-label,
-    .auth-token-value {
-      font-size: 1.2em;
-      margin-top: 5px;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 
-  .auth-token-details {
-    background: $secondary;
-    padding: 5px 10px;
-    margin: 10px 5px 5px 5px;
-
-    .auth-token-label {
-      color: $primary-medium;
-    }
-  }
-
-  .auth-token-label,
-  .auth-token-value {
+  .auth-token-icon {
+    font-size: 2.25em;
     float: left;
-    width: 50%;
+    margin-right: 10px;
+  }
+
+  .auth-token-first {
+    font-size: 1.1em;
+
+    .auth-token-device {
+      font-weight: bold;
+    }
+  }
+
+  .auth-token-second {
+    color: $primary-medium;
+
+    .active {
+      color: $success;
+      font-weight: bold;
+    }
+  }
+
+  .auth-token-dropdown {
+    float: right;
+
+    .btn,
+    .btn:hover {
+      background: transparent;
+
+      .d-icon {
+        color: $primary;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: 120px;
+
+    & .icon {
+      margin-top: auto;
+    }
   }
 }

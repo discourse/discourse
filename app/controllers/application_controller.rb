@@ -412,7 +412,7 @@ class ApplicationController < ActionController::Base
   end
 
   def guardian
-    @guardian ||= Guardian.new(current_user)
+    @guardian ||= Guardian.new(current_user, request)
   end
 
   def current_homepage

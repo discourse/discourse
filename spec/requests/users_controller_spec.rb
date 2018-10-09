@@ -3242,10 +3242,36 @@ describe UsersController do
     context 'while logged in' do
       before do
         sign_in(user)
+        sign_in(user)
       end
 
       it 'logs user out' do
+        SiteSetting.log_out_strict = false
+        expect(user.user_auth_tokens.count).to eq(2)
+
+        ids = user.user_auth_tokens.map { |token| token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+
+        expect(response.status).to eq(200)
+
+        user.user_auth_tokens.reload
         expect(user.user_auth_tokens.count).to eq(1)
+        expect(user.user_auth_tokens.first.id).to eq(ids[1])
+      end
+
+      it 'logs user out from everywhere if log_out_strict is enabled' do
+        SiteSetting.log_out_strict = true
+        expect(user.user_auth_tokens.count).to eq(2)
+
+        ids = user.user_auth_tokens.map { |token| token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+
+        expect(response.status).to eq(200)
+        expect(user.user_auth_tokens.count).to eq(0)
+      end
+
+      it 'logs user out from everywhere if token_id is not present' do
+        expect(user.user_auth_tokens.count).to eq(2)
 
         post "/u/#{user.username}/preferences/revoke-auth-token.json"
 
