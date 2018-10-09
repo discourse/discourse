@@ -178,7 +178,7 @@ JS
 
       js_source = ::JSON.generate(source, quirks_mode: true)
 
-      if opts[:module_name]
+      if opts[:module_name] && transpile_into_module?
         filename = opts[:filename] || 'unknown'
         "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
       else
@@ -187,6 +187,10 @@ JS
     end
 
     private
+
+    def transpile_into_module?
+      file.nil? || file.exclude?('.no-module')
+    end
 
     def module_name(root_path, logical_path)
       path = nil
