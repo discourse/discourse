@@ -55,6 +55,11 @@
     <%= build_plugin_html 'server:before-head-close' %>
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+
+    <%- if !current_user && flash[:authentication_data] %>
+      <meta id="data-authentication" data-authentiation-data="<%= flash[:authentication_data] %>">
+      <%= preload_script "authentication-complete" %>
+    <%- end %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -106,7 +111,7 @@
 
     <%= yield :data %>
 
-    <%= render :partial => "common/discourse_javascript" %>
+    <%= preload_script 'browser-update' %>
 
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
