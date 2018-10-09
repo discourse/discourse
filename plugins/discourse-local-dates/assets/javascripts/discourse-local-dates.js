@@ -77,7 +77,7 @@
         .html(html)
         .attr("title", joinedPreviews)
         .attr("data-tooltip", joinedPreviews)
-        .addClass("cooked")
+        .addClass("cooked-date")
         .find(".relative-time")
         .text(displayedTime);
 
