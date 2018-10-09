@@ -98,26 +98,20 @@ export default Ember.Component.extend({
     const timezones = this.get("timezones");
     const timeInferred = time ? false : true;
     const toTimeInferred = toTime ? false : true;
+    const timezone = this.get("currentUserTimezone");
 
     let dateTime;
     if (!timeInferred) {
-      dateTime = moment
-        .tz(`${date} ${time}`, this.get("currentUserTimezone"))
-        .utc();
+      dateTime = moment.tz(`${date} ${time}`, timezone);
     } else {
-      dateTime = moment.tz(date, this.get("currentUserTimezone")).utc();
+      dateTime = moment.tz(date, timezone);
     }
 
     let toDateTime;
     if (!toTimeInferred) {
-      toDateTime = moment
-        .tz(`${toDate} ${toTime}`, this.get("currentUserTimezone"))
-        .utc();
+      toDateTime = moment.tz(`${toDate} ${toTime}`, timezone);
     } else {
-      toDateTime = moment
-        .tz(toDate, this.get("currentUserTimezone"))
-        .endOf("day")
-        .utc();
+      toDateTime = moment.tz(toDate, timezone).endOf("day");
     }
 
     let config = {
@@ -125,7 +119,8 @@ export default Ember.Component.extend({
       dateTime,
       recurring,
       format,
-      timezones
+      timezones,
+      timezone
     };
 
     config.time = dateTime.format(this.timeFormat);
@@ -168,6 +163,7 @@ export default Ember.Component.extend({
       text += `time=${config.time} `;
     }
 
+    text += `timezone="${config.timezone}" `;
     text += `format="${config.format}" `;
     text += `timezones="${config.timezones.join("|")}"`;
     text += `]`;
@@ -180,6 +176,7 @@ export default Ember.Component.extend({
         text += `time=${config.toTime} `;
       }
 
+      text += `timezone="${config.timezone}" `;
       text += `format="${config.format}" `;
       text += `timezones="${config.timezones.join("|")}"`;
       text += `]`;

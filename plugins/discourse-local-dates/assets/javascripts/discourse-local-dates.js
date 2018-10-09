@@ -11,19 +11,27 @@
         clearTimeout(this.timeout);
       }
 
-      var relativeTime = moment.utc(
-        options.date + " " + options.time,
-        "YYYY-MM-DD HH:mm:ss"
-      );
+      var relativeTime;
+      if (options.forceTimezone) {
+        relativeTime = moment
+          .tz(options.date + " " + options.time, options.forceTimezone)
+          .utc();
+      } else {
+        relativeTime = moment.utc(options.date + " " + options.time);
+      }
 
-      if (options.recurring && relativeTime < moment().utc()) {
-        var parts = options.recurring.split(".");
-        var count = parseInt(parts[0], 10);
-        var type = parts[1];
-        var diff = moment().diff(relativeTime, type);
-        var add = Math.ceil(diff + count);
+      if (relativeTime < moment().utc()) {
+        if (options.recurring) {
+          var parts = options.recurring.split(".");
+          var count = parseInt(parts[0], 10);
+          var type = parts[1];
+          var diff = moment().diff(relativeTime, type);
+          var add = Math.ceil(diff + count);
 
-        relativeTime = relativeTime.add(add, type);
+          relativeTime = relativeTime.add(add, type);
+        } else {
+          $element.addClass("past");
+        }
       }
 
       var previews = options.timezones.split("|").map(function(timezone) {

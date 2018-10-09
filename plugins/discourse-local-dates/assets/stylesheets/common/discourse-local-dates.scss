@@ -19,6 +19,10 @@
     &:hover .d-icon-globe {
       color: $primary-high;
     }
+
+    &.past {
+      font-weight: normal;
+    }
   }
 }
 
