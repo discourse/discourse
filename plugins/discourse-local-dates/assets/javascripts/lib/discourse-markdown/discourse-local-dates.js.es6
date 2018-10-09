@@ -66,7 +66,7 @@ function addLocalDate(buffer, matches, state) {
   token.attrs.push(["data-email-preview", emailPreview]);
 
   token = new state.Token("text", "", 0);
-  token.content = dateTime.utc().format(config.format);;
+  token.content = dateTime.utc().format(config.format);
   buffer.push(token);
 
   token = new state.Token("span_close", "span", -1);
