@@ -21,8 +21,7 @@ RSpec.describe "Local Dates" do
       'data-timezones="Europe/Paris|America/Los_Angeles"'
     )
 
-    expect(cooked).to include('05/08/2018 3:00:00 PM (America: Los Angeles)')
-    expect(cooked).to include('05/09/2018 12:00:00 AM (Europe: Paris)')
+    expect(cooked).to include('05/08/2018 10:00:00 PM')
   end
 
   it "should work with timezone" do
@@ -33,8 +32,7 @@ RSpec.describe "Local Dates" do
     cooked = post.cooked
 
     expect(cooked).to include('data-force-timezone="Asia/Calcutta"')
-    expect(cooked).to include('05/08/2018 9:30:00 AM (America: Los Angeles)')
-    expect(cooked).to include('05/08/2018 6:30:00 PM (Europe: Paris)')
+    expect(cooked).to include('05/08/2018 4:30:00 PM')
   end
 
   it 'requires the right attributes to convert to a local date' do
