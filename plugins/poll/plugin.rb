@@ -245,6 +245,7 @@ after_initialize do
 
       post = Post.find_by(id: post_id)
       raise Discourse::InvalidParameters.new("post_id is invalid") if !post
+      raise Discourse::InvalidParameters.new("no poll exists for this post_id") unless post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
       poll = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD][poll_name]
       raise Discourse::InvalidParameters.new("poll_name is invalid") if !poll
