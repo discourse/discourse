@@ -6,14 +6,10 @@ export default Em.Component.extend(UploadMixin, {
   tagName: "span",
 
   @computed("uploading", "uploadProgress")
-  uploadButtonText(uploading) {
-    if (uploading) {
-      return I18n.t("admin.backups.upload.uploading_progress", {
-        progress: this.get("uploadProgress")
-      });
-    }
-
-    return I18n.t("admin.backups.upload.label");
+  uploadButtonText(uploading, progress) {
+    return uploading
+      ? I18n.t("admin.backups.upload.uploading_progress", { progress })
+      : I18n.t("admin.backups.upload.label");
   },
 
   validateUploadedFilesOptions() {

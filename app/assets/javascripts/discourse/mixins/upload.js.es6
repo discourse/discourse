@@ -2,6 +2,7 @@ import {
   displayErrorForUpload,
   validateUploadedFiles
 } from "discourse/lib/utilities";
+import getUrl from "discourse-common/lib/get-url";
 
 export default Em.Mixin.create({
   uploading: false,
@@ -17,7 +18,7 @@ export default Em.Mixin.create({
 
   calculateUploadUrl() {
     return (
-      Discourse.getURL(this.getWithDefault("uploadUrl", "/uploads")) +
+      getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
       this.messageBus.clientId +
       "&authenticity_token=" +

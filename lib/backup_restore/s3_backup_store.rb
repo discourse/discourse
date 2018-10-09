@@ -3,8 +3,8 @@ require_dependency "s3_helper"
 
 module BackupRestore
   class S3BackupStore < BackupStore
-    DOWNLOAD_URL_EXPIRES_AFTER_SECONDS = 15
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS = 21600 # 6 hours
+    DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
+    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21600 # 6 hours
 
     def initialize(opts = {})
       s3_options = S3Helper.s3_options(SiteSetting)
