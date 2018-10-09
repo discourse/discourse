@@ -17,5 +17,16 @@ RSpec.describe JavascriptCache, type: :model do
         javascript_cache.save!
       end.to change { javascript_cache.reload.digest }
     end
+
+    it 'allows content to be empty, but not nil' do
+      javascript_cache = JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+
+      javascript_cache.content = ''
+      expect(javascript_cache.valid?).to eq(true)
+
+      javascript_cache.content = nil
+      expect(javascript_cache.valid?).to eq(false)
+      expect(javascript_cache.errors.details[:content]).to include(error: :empty)
+    end
   end
 end

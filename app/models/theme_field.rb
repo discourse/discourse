@@ -3,7 +3,7 @@ require_dependency 'theme_settings_parser'
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
-  has_one :javascript_cache
+  has_one :javascript_cache, dependent: :destroy
 
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?

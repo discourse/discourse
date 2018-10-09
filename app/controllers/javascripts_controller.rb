@@ -22,6 +22,7 @@ class JavascriptsController < ApplicationController
 
     unless File.exist?(cache_file)
       content = query.pluck(:content).first
+      raise Discourse::NotFound if content.nil?
 
       FileUtils.mkdir_p(DISK_CACHE_PATH)
       File.write(cache_file, content)

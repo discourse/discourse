@@ -2,6 +2,8 @@
 class JavascriptCache < ActiveRecord::Base
   belongs_to :theme_field
 
+  validate :content_cannot_be_nil
+
   before_save :update_digest
 
   def url
@@ -12,6 +14,10 @@ class JavascriptCache < ActiveRecord::Base
 
   def update_digest
     self.digest = Digest::SHA1.hexdigest(content) if content_changed?
+  end
+
+  def content_cannot_be_nil
+    errors.add(:content, :empty) if content.nil?
   end
 end
 
