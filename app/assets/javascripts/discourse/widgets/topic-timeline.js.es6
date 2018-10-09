@@ -337,7 +337,7 @@ createWidget("timeline-footer-controls", {
       if (topic.get("details.can_create_post")) {
         controls.push(
           this.attach("button", {
-            className: "create",
+            className: "btn-default create",
             icon: "reply",
             title: "topic.reply.help",
             action: "replyToPost"
