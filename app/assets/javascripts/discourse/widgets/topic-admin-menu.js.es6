@@ -42,7 +42,8 @@ createWidget("topic-admin-menu-button", {
       result.push(
         this.attach("button", {
           className:
-            "toggle-admin-menu" + (attrs.fixed ? " show-topic-admin" : ""),
+            "btn-default toggle-admin-menu" +
+            (attrs.fixed ? " show-topic-admin" : ""),
           title: "topic_admin_menu",
           icon: "wrench",
           action: "showAdminMenu",

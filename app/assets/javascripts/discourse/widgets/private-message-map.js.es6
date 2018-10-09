@@ -157,7 +157,7 @@ export default createWidget("private-message-map", {
       this.attach("button", {
         action: "toggleEditing",
         label: "private_message_info.edit",
-        className: "btn add-remove-participant-btn"
+        className: "btn btn-default add-remove-participant-btn"
       })
     ];
 
