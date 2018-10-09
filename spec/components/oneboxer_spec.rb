@@ -35,10 +35,11 @@ describe Oneboxer do
 
       replier = Fabricate(:user)
 
-      public_post   = Fabricate(:post, raw: "This post has an emoji :+1:")
-      public_topic  = public_post.topic
-      public_reply  = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
-      public_hidden = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
+      public_post             = Fabricate(:post, raw: "This post has an emoji :+1:")
+      public_topic            = public_post.topic
+      public_reply            = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
+      public_hidden           = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
+      public_moderator_action = Fabricate(:post, topic: public_topic, post_number: 4, user: staff, post_type: Post.types[:moderator_action])
 
       user = public_post.user
       public_category = public_topic.category
@@ -56,6 +57,11 @@ describe Oneboxer do
       expect(onebox).to include(public_reply.excerpt)
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
+
+      onebox = preview(public_moderator_action.url, user, public_category)
+      expect(onebox).to include(public_moderator_action.excerpt)
+      expect(onebox).to include(%{data-post="4"})
+      expect(onebox).to include(PrettyText.avatar_img(staff.avatar_template, "tiny"))
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
       expect(onebox).not_to include(public_topic.title)

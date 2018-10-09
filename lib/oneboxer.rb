@@ -26,6 +26,10 @@ module Oneboxer
     @force_get_hosts ||= ['http://us.battle.net']
   end
 
+  def self.allowed_post_types
+    @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
+  end
+
   def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
@@ -197,7 +201,7 @@ module Oneboxer
       topic.posts.where(post_number: post_number).first :
       topic.ordered_posts.first
 
-    return if !post || post.hidden || post.post_type != Post.types[:regular]
+    return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
     if post_number > 1 && current_topic&.id == topic.id
       excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
