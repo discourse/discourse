@@ -52,25 +52,21 @@ function addLocalDate(buffer, matches, state) {
   }
   buffer.push(token);
 
-  const previews = config.timezones
-    .split("|")
-    .filter(t => t)
-    .map(timezone => {
-      const formattedDateTime = dateTime.tz(timezone).format(config.format);
+  let emailPreview;
+  const emailTimezone = config.timezones.split("|")[0];
+  const formattedDateTime = dateTime.tz(emailTimezone).format(config.format);
+  const formattedTimezone = emailTimezone.replace("/", ": ").replace("_", " ");
 
-      const formattedTimezone = timezone.replace("/", ": ").replace("_", " ");
+  if (formattedDateTime.match(/TZ/)) {
+    emailPreview = formattedDateTime.replace("TZ", formattedTimezone);
+  } else {
+    emailPreview = `${formattedDateTime} (${formattedTimezone})`;
+  }
 
-      if (formattedDateTime.match(/TZ/)) {
-        return formattedDateTime.replace("TZ", formattedTimezone);
-      } else {
-        return `${formattedDateTime} (${formattedTimezone})`;
-      }
-    });
-
-  token.attrs.push(["data-email-preview", previews[0]]);
+  token.attrs.push(["data-email-preview", emailPreview]);
 
   token = new state.Token("text", "", 0);
-  token.content = previews.join(", ");
+  token.content = dateTime.utc().format(config.format);;
   buffer.push(token);
 
   token = new state.Token("span_close", "span", -1);
