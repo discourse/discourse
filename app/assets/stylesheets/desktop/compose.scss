@@ -165,9 +165,14 @@
     padding: 0;
   }
   .search-link {
-    .fa,
     .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
+    }
+    .topic-title,
+    .blurb {
+      .fa {
+        color: dark-light-choose($primary-high, $secondary-medium);
+      }
     }
     span.topic {
       display: flex;
