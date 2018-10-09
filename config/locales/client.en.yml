@@ -3270,6 +3270,7 @@ en:
           import_web_tip: "Repository containing theme"
           import_file_tip: ".dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
+          remote_branch: "Branch"
           public_key: "Grant the following public key access to the repo:"
           about_theme: "About Theme"
           license: "License"
