@@ -75,4 +75,25 @@ describe DiscourseHub do
       end
     end
   end
+
+  describe '.collection_action' do
+
+    it 'should log a warning if status is not 200' do
+      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api")).
+        to_return(status: 500, body: "", headers: {})
+
+      Rails.logger.expects(:warn)
+
+      DiscourseHub.collection_action(:get, "")
+    end
+
+    it 'should log an error if response is invalid JSON' do
+      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api")).
+        to_return(status: 200, body: "this is not valid JSON", headers: {})
+
+      Rails.logger.expects(:error)
+
+      DiscourseHub.collection_action(:get, "")
+    end
+  end
 end
