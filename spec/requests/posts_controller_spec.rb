@@ -1460,6 +1460,20 @@ describe PostsController do
       expect(body).to_not include(private_post.url)
       expect(body).to include(public_post.url)
     end
+
+    it 'returns public posts as JSON' do
+      public_post
+      private_post
+
+      get "/u/#{user.username}/activity.json"
+
+      expect(response.status).to eq(200)
+
+      body = response.body
+
+      expect(body).to_not include(private_post.topic.slug)
+      expect(body).to include(public_post.topic.slug)
+    end
   end
 
   describe '#latest' do

@@ -9,7 +9,8 @@ class PostSerializer < BasicPostSerializer
     :single_post_link_counts,
     :draft_sequence,
     :post_actions,
-    :all_post_actions
+    :all_post_actions,
+    :add_excerpt
   ]
 
   INSTANCE_VARS.each do |v|
@@ -70,7 +71,8 @@ class PostSerializer < BasicPostSerializer
              :action_code,
              :action_code_who,
              :last_wiki_edit,
-             :locked
+             :locked,
+             :excerpt
 
   def initialize(object, opts)
     super(object, opts)
@@ -95,6 +97,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_category_id?
     @add_title
+  end
+
+  def include_excerpt?
+    @add_excerpt
   end
 
   def topic_title

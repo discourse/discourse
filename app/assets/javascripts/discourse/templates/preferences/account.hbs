@@ -51,6 +51,48 @@
   </div>
 {{/if}}
 
+{{#if canCheckEmails}}
+  <div class="control-group pref-auth-tokens">
+    <label class="control-label">{{i18n 'user.auth_tokens.title'}}</label>
+
+    <div class="auth-tokens">
+      {{#each authTokens as |token|}}
+        <div class="row auth-token">
+          <div class="auth-token-icon">{{d-icon token.icon}}</div>
+          {{#unless token.is_active}}
+            {{auth-token-dropdown token=token
+                                  revokeAuthToken=(action "revokeAuthToken")
+                                  showToken=(action "showToken")}}
+          {{/unless}}
+          <div class="auth-token-first">
+            <span class="auth-token-device">{{token.device}}</span> &ndash; <span title="{{i18n "user.auth_tokens.ip"}}: {{token.client_ip}}">{{token.location}}</span>
+          </div>
+          <div class="auth-token-second">
+            {{token.browser}} |
+            {{#if token.is_active}}
+              <span class="active">{{i18n 'user.auth_tokens.active'}}</span>
+            {{else}}
+              {{format-date token.seen_at}}
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    {{#if canShowAllAuthTokens}}
+      <a {{action "toggleShowAllAuthTokens"}}>
+        {{#if showAllAuthTokens}}
+          {{d-icon "caret-up"}} {{i18n 'user.auth_tokens.show_few'}}
+        {{else}}
+          {{d-icon "caret-down"}} {{i18n 'user.auth_tokens.show_all' count=model.user_auth_tokens.length}}
+        {{/if}}
+      </a>
+    {{/if}}
+
+    <a {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
+  </div>
+{{/if}}
+
 {{#if canChangePassword}}
 <div class="control-group pref-password">
   <label class="control-label">{{i18n 'user.password.title'}}</label>
