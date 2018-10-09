@@ -649,4 +649,8 @@ module Discourse
     ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
   end
 
+  def self.skip_post_deployment_migrations?
+    ['1', 'true'].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
+  end
+
 end
