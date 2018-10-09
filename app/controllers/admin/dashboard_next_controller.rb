@@ -29,5 +29,7 @@ class Admin::DashboardNextController < Admin::AdminController
   def last_backup_taken_at
     store = BackupRestore::BackupStore.create
     store.latest_file&.last_modified
+  rescue BackupRestore::BackupStore::StorageError
+    nil
   end
 end

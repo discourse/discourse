@@ -54,7 +54,7 @@ module BackupRestore
         .select { |obj| obj.key.match?(/\.t?gz$/i) }
         .map { |obj| create_file_from_object(obj) }
     rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn("Failed to list backups from S3: #{e.message}")
+      Rails.logger.warn("Failed to list backups from S3: #{e.message.presence || e.class.name}")
       raise StorageError
     end
 

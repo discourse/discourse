@@ -25,8 +25,9 @@ module JsonError
     return { errors: obj.map(&:to_s) } if obj.is_a?(Array) && obj.present?
 
     if obj.is_a?(Exception)
-      message = obj.cause&.message || obj.message
-      return { errors: [message] } if message
+      message = obj.cause.message.presence || obj.cause.class.name if obj.cause
+      message = obj.message.presence || obj.class.name if message.blank?
+      return { errors: [message] } if message.present?
     end
 
     # Log a warning (unless obj is nil)
