@@ -31,8 +31,11 @@ class ImportScripts::Base
     @site_settings_during_import = {}
     @old_site_settings = {}
     @start_times = { import: Time.now }
+<<<<<<< HEAD
+=======
     @skip_updates = false
     @next_category_color_index = {}
+>>>>>>> f4d77037d071b14242769bf8179666979f06eb96
   end
 
   def preload_i18n
@@ -337,12 +340,8 @@ class ImportScripts::Base
       User.transaction do
         u.save!
         if bio_raw.present? || website.present? || location.present?
-          if website.present?
-            u.user_profile.website = website
-            u.user_profile.website = nil unless u.user_profile.valid?
-          end
-
           u.user_profile.bio_raw = bio_raw[0..2999] if bio_raw.present?
+          u.user_profile.website = website unless website.blank? || website !~ UserProfile::WEBSITE_REGEXP
           u.user_profile.location = location if location.present?
           u.user_profile.save!
         end
@@ -441,6 +440,11 @@ class ImportScripts::Base
     [created, skipped]
   end
 
+  def random_category_color
+    colors = SiteSetting.category_colors.split('|')
+    colors[rand(colors.count)]
+  end
+
   def create_category(opts, import_id)
     existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
     return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
@@ -452,8 +456,17 @@ class ImportScripts::Base
       user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       parent_category_id: opts[:parent_category_id],
+<<<<<<< HEAD
+<<<<<<< HEAD
+      color: opts[:color] || category_color,
+=======
       color: opts[:color] || category_color(opts[:parent_category_id]),
+>>>>>>> f4d77037d071b14242769bf8179666979f06eb96
       text_color: opts[:text_color] || "FFF",
+=======
+      color: opts[:color] || "AB9364",
+      text_color: opts[:text_color] || random_category_color
+>>>>>>> answerhub-auth0
       read_restricted: opts[:read_restricted] || false,
     )
 
