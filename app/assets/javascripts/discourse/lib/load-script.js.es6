@@ -41,6 +41,9 @@ export default function loadScript(url, opts) {
   }
 
   opts = opts || {};
+
+  // Scripts should always load from CDN
+  // CSS is type text, to accept it from a CDN we would need to handle CORS
   url = opts.css ? Discourse.getURL(url) : Discourse.getURLWithCDN(url);
 
   $("script").each((i, tag) => {
