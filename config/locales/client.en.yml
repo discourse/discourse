@@ -37,31 +37,31 @@ en:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "h:mm a"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year: "MMM D h:mm a"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_no_year_no_time: "MMM D"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_no_year_no_time: "MMMM Do"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_with_year: "MMM D, YYYY h:mm a"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_with_year_no_time: "MMM D, YYYY"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_with_year: "MMM D, 'YY LT"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_with_year_without_time: "MMM D, 'YY"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
 
       wrap_ago: "%{date} ago"
@@ -1086,9 +1086,9 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
-    too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
-    too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
+    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
+    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
+    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> reached site setting limit of %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> exceeds site setting limit of %{siteSettingRate}."
@@ -1409,7 +1409,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
-      link_url_placeholder: "http://example.com"
+      link_url_placeholder: "https://example.com"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -2564,7 +2564,7 @@ en:
         today: "Today"
         other_periods: "see top"
 
-    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a>.'
 
     permission_types:
       full: "Create / Reply / See"
