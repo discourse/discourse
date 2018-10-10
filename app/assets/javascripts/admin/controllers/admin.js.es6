@@ -4,6 +4,11 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
 
   @computed
+  showGroups() {
+    return !this.siteSettings.enable_group_directory;
+  },
+
+  @computed
   showBadges() {
     return this.currentUser.get("admin") && this.siteSettings.enable_badges;
   },
