@@ -11,24 +11,17 @@ export default Discourse.Route.extend({
         category = Category.findById(category_id);
       } else if (transition.queryParams.category) {
         const splitCategory = transition.queryParams.category.split("/");
-
-        if (!splitCategory[1]) {
-          category = this.site
-            .get("categories")
-            .findBy("nameLower", splitCategory[0].toLowerCase());
-        } else {
-          const categories = this.site.get("categories");
-          const mainCategory = categories.findBy(
-            "nameLower",
-            splitCategory[0].toLowerCase()
+        category = this._getCategory(
+          splitCategory[0],
+          splitCategory[1],
+          "nameLower"
+        );
+        if (!category) {
+          category = this._getCategory(
+            splitCategory[0],
+            splitCategory[1],
+            "slug"
           );
-          category = categories.find(function(item) {
-            return (
-              item &&
-              item.get("nameLower") === splitCategory[1].toLowerCase() &&
-              item.get("parent_category_id") === mainCategory.id
-            );
-          });
         }
 
         if (category) {
@@ -86,5 +79,27 @@ export default Discourse.Route.extend({
         self.replaceWith("login");
       }
     }
+  },
+
+  _getCategory(mainCategory, subCategory, type) {
+    let category;
+    if (!subCategory) {
+      category = this.site
+        .get("categories")
+        .findBy(type, mainCategory.toLowerCase());
+    } else {
+      const categories = this.site.get("categories");
+      const main = categories.findBy(type, mainCategory.toLowerCase());
+      if (main) {
+        category = categories.find(function(item) {
+          return (
+            item &&
+            item.get(type) === subCategory.toLowerCase() &&
+            item.get("parent_category_id") === main.id
+          );
+        });
+      }
+    }
+    return category;
   }
 });
