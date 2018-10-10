@@ -2,7 +2,8 @@ require 'rubygems/package'
 require 'zlib'
 
 desc "downloads MaxMind's GeoLite2-City database"
-task "maxminddb:get" => :environment do
+task "maxminddb:get" do
+  puts "Downloading maxmind db"
   uri = URI("http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz")
   tar_gz_archive = Net::HTTP.get(uri)
 
@@ -13,6 +14,7 @@ task "maxminddb:get" => :environment do
     next unless entry.full_name.ends_with?(".mmdb")
 
     filename = File.join(Rails.root, 'vendor', 'data', 'GeoLite2-City.mmdb')
+    puts "Writing #{filename}"
     File.open(filename, "wb") do |f|
       f.write(entry.read)
     end
