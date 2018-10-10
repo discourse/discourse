@@ -21,7 +21,7 @@ module Onebox
       def data
         result = raw.clone
         result['link'] = link
-        result['created_at'] = Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
+        result['created_at'] = Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y %Z")
         ulink = URI(link)
         result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
         result

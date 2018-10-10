@@ -40,7 +40,7 @@ module Onebox
         result = raw['items'][0]
         if result
           result['creation_date'] =
-              Time.at(result['creation_date'].to_i).strftime("%I:%M%p - %d %b %y")
+              Time.at(result['creation_date'].to_i).strftime("%I:%M%p - %d %b %y %Z")
 
           result['tags'] = result['tags'].take(4).join(', ')
           result['is_answer'] = result.key?('answer_id')
