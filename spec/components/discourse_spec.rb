@@ -275,15 +275,6 @@ describe Discourse do
   end
 
   context '#deprecate' do
-
-    class FakeLogger
-      attr_reader :warnings
-      def warn(m)
-        @warnings ||= []
-        @warnings << m
-      end
-    end
-
     def old_method(m)
       Discourse.deprecate(m)
     end
@@ -307,7 +298,7 @@ describe Discourse do
       expect(old_method_caller(k)).to include("discourse_spec")
       expect(old_method_caller(k)).to include(k)
 
-      expect(@fake_logger.warnings).to eq([old_method_caller(k)])
+      expect(Rails.logger.warnings).to eq([old_method_caller(k)])
     end
   end
 
