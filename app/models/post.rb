@@ -117,7 +117,8 @@ class Post < ActiveRecord::Base
                                  flag_threshold_reached_again: 2,
                                  new_user_spam_threshold_reached: 3,
                                  flagged_by_tl3_user: 4,
-                                 email_spam_header_found: 5)
+                                 email_spam_header_found: 5,
+                                 flagged_by_tl4_user: 6)
   end
 
   def self.types
