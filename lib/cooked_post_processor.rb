@@ -60,12 +60,7 @@ class CookedPostProcessor
 
   def post_process_images
     extract_images.each do |img|
-      src = img["src"].sub(/^https?:/i, "")
-      if large_images.include?(src)
-        add_large_image_placeholder!(img)
-      elsif broken_images.include?(src)
-        add_broken_image_placeholder!(img)
-      else
+      unless add_image_placeholder!(img)
         limit_size!(img)
         convert_to_link!(img)
       end
@@ -88,6 +83,18 @@ class CookedPostProcessor
         end
       end
     end
+  end
+
+  def add_image_placeholder!(img)
+    src = img["src"].sub(/^https?:/i, "")
+
+    if large_images.include?(src)
+      return add_large_image_placeholder!(img)
+    elsif broken_images.include?(src)
+      return add_broken_image_placeholder!(img)
+    end
+
+    false
   end
 
   def add_large_image_placeholder!(img)
@@ -127,6 +134,7 @@ class CookedPostProcessor
     end
 
     img.remove
+    true
   end
 
   def add_broken_image_placeholder!(img)
@@ -136,6 +144,7 @@ class CookedPostProcessor
     img.remove_attribute("src")
     img.remove_attribute("width")
     img.remove_attribute("height")
+    true
   end
 
   def large_images
@@ -167,6 +176,8 @@ class CookedPostProcessor
     @doc.css("img[src^='data']") -
     # minus emojis
     @doc.css("img.emoji") -
+    # minus oneboxed images
+    oneboxed_images -
     # minus images inside quotes
     @doc.css(".quote img")
   end
@@ -442,8 +453,10 @@ class CookedPostProcessor
       img_classes = (img["class"] || "").split(" ")
       link_classes = ((parent&.name == "a" && parent["class"]) || "").split(" ")
 
-      if large_images.include?(src) || broken_images.include?(src)
-        img.remove unless img_classes.include?("onebox") || link_classes.include?("onebox")
+      if img_classes.include?("onebox") || link_classes.include?("onebox")
+        next if add_image_placeholder!(img)
+      elsif large_images.include?(src) || broken_images.include?(src)
+        img.remove
         next
       end
 
