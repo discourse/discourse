@@ -86,7 +86,12 @@ class Auth::GithubAuthenticator < Auth::Authenticator
         if !!candidate[:verified] && (user = User.find_by_email(candidate[:email]))
           result.email = candidate[:email]
           result.email_valid = !!candidate[:verified]
-          GithubUserInfo.create(
+
+          GithubUserInfo
+            .where('user_id = ? OR github_user_id = ?', user.id, github_user_id)
+            .destroy_all
+
+          GithubUserInfo.create!(
               user_id: user.id,
               screen_name: screen_name,
               github_user_id: github_user_id
