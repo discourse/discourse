@@ -102,7 +102,9 @@ export default Discourse.Route.extend({
       params,
       {}
     ).then(list => {
-      tag.set("id", list.topic_list.tags[0].name); // Update name of tag (case might be different)
+      if (list.topic_list.tags) {
+        tag.set("id", list.topic_list.tags[0].name); // Update name of tag (case might be different)
+      }
       controller.setProperties({
         list: list,
         canCreateTopic: list.get("can_create_topic"),
