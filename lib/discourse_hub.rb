@@ -62,15 +62,23 @@ module DiscourseHub
       }.merge(connect_opts)
     )
 
-    if response.status != 200
-      Rails.logger.warn("Discourse Hub (#{hub_base_url}#{rel_url}) returned a bad status #{response.status}.")
+    if (status = response.status) != 200
+      Rails.logger.warn(response_status_log_message(rel_url, status))
     end
 
     begin
       JSON.parse(response.body)
     rescue JSON::ParserError
-      Rails.logger.error("Discourse Hub returned a bad response body: " + response.body)
+      Rails.logger.error(response_body_log_message(response.body))
     end
+  end
+
+  def self.response_status_log_message(rel_url, status)
+    "Discourse Hub (#{hub_base_url}#{rel_url}) returned a bad status #{status}."
+  end
+
+  def self.response_body_log_message(body)
+    "Discourse Hub returned a bad response body: #{body}"
   end
 
   def self.connect_opts(params = {})
