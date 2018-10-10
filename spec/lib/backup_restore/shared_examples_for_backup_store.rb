@@ -37,10 +37,7 @@ shared_examples "backup store" do
       it "returns only *.gz and *.tgz files" do
         files = store.files
         expect(files).to_not be_empty
-
-        files.each do |file|
-          expect(file.filename).to match(/\.t?gz$/)
-        end
+        expect(files.map(&:filename)).to contain_exactly(backup1.filename, backup2.filename, backup3.filename)
       end
     end
 
@@ -88,7 +85,10 @@ shared_examples "backup store" do
 
     describe "#delete_file" do
       it "deletes file when the file exists" do
-        expect { store.delete_file(backup1.filename) }.to change { store.files }
+        expect(store.files).to include(backup1)
+        store.delete_file(backup1.filename)
+        expect(store.files).to_not include(backup1)
+
         expect(store.file(backup1.filename)).to be_nil
       end
 
@@ -132,20 +132,23 @@ shared_examples "remote backup store" do
       it "uploads file into store" do
         freeze_time
 
-        filename = "foo.tar.gz"
-        filesize = 33
+        backup = BackupFile.new(
+          filename: "foo.tar.gz",
+          size: 33,
+          last_modified: Time.zone.now
+        )
 
-        Tempfile.create(filename) do |file|
-          file.write("A" * filesize)
+        expect(store.files).to_not include(backup)
+
+        Tempfile.create(backup.filename) do |file|
+          file.write("A" * backup.size)
           file.close
 
-          expect { store.upload_file(filename, file.path, "application/gzip") }.to change { store.files }
+          store.upload_file(backup.filename, file.path, "application/gzip")
         end
 
-        file = store.file(filename)
-        expect(file.filename).to eq(filename)
-        expect(file.size).to eq(filesize)
-        expect(file.last_modified).to be_within_one_second_of(Time.zone.now)
+        expect(store.files).to include(backup)
+        expect(store.file(backup.filename)).to eq(backup)
       end
 
       it "raises an exception when a file with same filename exists" do

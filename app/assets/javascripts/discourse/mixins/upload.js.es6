@@ -31,9 +31,10 @@ export default Em.Mixin.create({
   },
 
   _initialize: function() {
-    const $upload = this.$(),
-      reset = () => this.setProperties({ uploading: false, uploadProgress: 0 }),
-      maxFiles = this.getWithDefault("maxFiles", 10);
+    const $upload = this.$();
+    const reset = () =>
+      this.setProperties({ uploading: false, uploadProgress: 0 });
+    const maxFiles = this.getWithDefault("maxFiles", 10);
 
     $upload.on("fileuploaddone", (e, data) => {
       let upload = data.result;
@@ -70,7 +71,7 @@ export default Em.Mixin.create({
       );
       const isValid = validateUploadedFiles(data.files, opts);
       const type = this.get("type");
-      let form = type ? { type: this.get("type") } : {};
+      let form = type ? { type } : {};
       if (this.get("data")) {
         form = $.extend(form, this.get("data"));
       }

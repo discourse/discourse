@@ -53,9 +53,10 @@ class Admin::BackupsController < Admin::AdminController
     store = BackupRestore::BackupStore.create
 
     if store.file(params.fetch(:id)).present?
-      Jobs.enqueue(:download_backup_email,
-                   user_id: current_user.id,
-                   backup_file_path: url_for(controller: 'backups', action: 'show')
+      Jobs.enqueue(
+        :download_backup_email,
+        user_id: current_user.id,
+        backup_file_path: url_for(controller: 'backups', action: 'show')
       )
 
       render body: nil
@@ -67,11 +68,12 @@ class Admin::BackupsController < Admin::AdminController
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
       @error = I18n.t('download_backup_mailer.no_token')
+      return render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
     end
 
     store = BackupRestore::BackupStore.create
 
-    if !@error && backup = store.file(params.fetch(:id), include_download_source: true)
+    if backup = store.file(params.fetch(:id), include_download_source: true)
       EmailBackupToken.del(current_user.id)
       StaffActionLogger.new(current_user).log_backup_download(backup)
 
@@ -81,8 +83,6 @@ class Admin::BackupsController < Admin::AdminController
         headers['Content-Length'] = File.size(backup.source).to_s
         send_file backup.source
       end
-    elsif @error
-      render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
     else
       render body: nil, status: 404
     end

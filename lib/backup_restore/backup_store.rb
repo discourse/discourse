@@ -7,10 +7,10 @@ module BackupRestore
     # @return [BackupStore]
     def self.create(opts = {})
       case SiteSetting.backup_location
-      when 'local'
+      when BackupLocationSiteSetting::LOCAL
         require_dependency "backup_restore/local_backup_store"
         BackupRestore::LocalBackupStore.new(opts)
-      when 's3'
+      when BackupLocationSiteSetting::S3
         require_dependency "backup_restore/s3_backup_store"
         BackupRestore::S3BackupStore.new(opts)
       end
@@ -18,9 +18,7 @@ module BackupRestore
 
     # @return [Array<BackupFile>]
     def files
-      unsorted_files
-        .sort_by { |file| file.last_modified }
-        .reverse
+      unsorted_files.sort_by { |file| -file.last_modified.to_i }
     end
 
     # @return [BackupFile]

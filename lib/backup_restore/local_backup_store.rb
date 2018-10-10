@@ -29,8 +29,11 @@ module BackupRestore
 
     def delete_file(filename)
       path = path_from_filename(filename)
-      FileUtils.remove_file(path, force: true) if File.exists?(path)
-      DiskSpace.reset_cached_stats
+
+      if File.exists?(path)
+        FileUtils.remove_file(path, force: true)
+        DiskSpace.reset_cached_stats
+      end
     end
 
     def download_file(filename, destination, failure_message = "")
@@ -41,8 +44,9 @@ module BackupRestore
     private
 
     def unsorted_files
-      Dir.glob(File.join(@base_directory, "*.{gz,tgz}"))
-        .map { |filename| create_file_from_path(filename) }
+      files = Dir.glob(File.join(@base_directory, "*.{gz,tgz}"))
+      files.map! { |filename| create_file_from_path(filename) }
+      files
     end
 
     def path_from_filename(filename)

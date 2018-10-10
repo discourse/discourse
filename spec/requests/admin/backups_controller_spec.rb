@@ -98,7 +98,6 @@ RSpec.describe Admin::BackupsController do
     it "uses send_file to transmit the backup" do
       begin
         token = EmailBackupToken.set(admin.id)
-        path = backup_path(backup_filename)
         create_backup_files(backup_filename)
 
         expect do
@@ -271,13 +270,13 @@ RSpec.describe Admin::BackupsController do
     it "enqueues email job" do
       create_backup_files(backup_filename)
 
-      Jobs.expects(:enqueue).with(
-        :download_backup_email,
-        user_id: admin.id,
-        backup_file_path: "http://www.example.com/admin/backups/#{backup_filename}"
-      )
+      expect {
+        put "/admin/backups/#{backup_filename}.json"
+      }.to change { Jobs::DownloadBackupEmail.jobs.size }.by(1)
 
-      put "/admin/backups/#{backup_filename}.json"
+      job_args = Jobs::DownloadBackupEmail.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(admin.id)
+      expect(job_args["backup_file_path"]).to eq("http://www.example.com/admin/backups/#{backup_filename}")
 
       expect(response.status).to eq(200)
     end

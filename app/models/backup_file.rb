@@ -1,10 +1,10 @@
 class BackupFile
   include ActiveModel::SerializerSupport
 
-  attr_accessor :filename,
-                :size,
-                :last_modified,
-                :source
+  attr_reader :filename,
+              :size,
+              :last_modified,
+              :source
 
   def initialize(filename:, size:, last_modified:, source: nil)
     @filename = filename

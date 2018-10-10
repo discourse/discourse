@@ -4,7 +4,7 @@ require_dependency "s3_helper"
 module BackupRestore
   class S3BackupStore < BackupStore
     DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21600 # 6 hours
+    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21_600 # 6 hours
 
     def initialize(opts = {})
       s3_options = S3Helper.s3_options(SiteSetting)
@@ -28,7 +28,7 @@ module BackupRestore
 
     def download_file(filename, destination_path, failure_message = nil)
       unless @s3_helper.object(filename).download_file(destination_path)
-        raise failure_message.presence&.to_s || "Failed to download file"
+        raise failure_message&.to_s || "Failed to download file"
       end
     end
 
@@ -73,14 +73,14 @@ module BackupRestore
     end
 
     def ensure_cors!
-      @s3_helper.ensure_cors!(
-        [{
-           allowed_headers: ["*"],
-           allowed_methods: ["PUT"],
-           allowed_origins: [Discourse.base_url_no_prefix],
-           max_age_seconds: 3000
-         }]
-      )
+      rule = {
+        allowed_headers: ["*"],
+        allowed_methods: ["PUT"],
+        allowed_origins: [Discourse.base_url_no_prefix],
+        max_age_seconds: 3000
+      }
+
+      @s3_helper.ensure_cors!([rule])
     end
 
     def cleanup_allowed?
