@@ -93,4 +93,15 @@ module UserGuardian
     user && can_administer_user?(user)
   end
 
+  def can_see_profile?(user)
+    return false if user.blank?
+
+    # If a user has hidden their profile, restrict it to them and staff
+    if user.user_option.try(:hide_profile_and_presence?)
+      return is_me?(user) || is_staff?
+    end
+
+    true
+  end
+
 end

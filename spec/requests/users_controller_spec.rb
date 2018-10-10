@@ -2171,6 +2171,14 @@ describe UsersController do
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
+
+    it "returns 404 for a hidden profile" do
+      user = Fabricate(:user)
+      user.user_option.update_column(:hide_profile_and_presence, true)
+
+      get "/u/#{user.username_lower}/summary.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#confirm_admin' do
@@ -2417,7 +2425,23 @@ describe UsersController do
       it "returns success" do
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["user"]["username"]).to eq(user.username)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed['username']).to eq(user.username)
+        expect(parsed["profile_hidden"]).to be_blank
+        expect(parsed["trust_level"]).to be_present
+      end
+
+      it "returns a hidden profile" do
+        user.user_option.update_column(:hide_profile_and_presence, true)
+
+        get "/u/#{user.username}.json"
+        expect(response.status).to eq(200)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed["username"]).to eq(user.username)
+        expect(parsed["profile_hidden"]).to eq(true)
+        expect(parsed["trust_level"]).to be_blank
       end
 
       it "should redirect to login page for anonymous user when profiles are hidden" do

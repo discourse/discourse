@@ -53,14 +53,18 @@ class UsersController < ApplicationController
       include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts)
     )
 
-    user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    user_serializer = nil
+    if guardian.can_see_profile?(@user)
+      user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+      # TODO remove this options from serializer
+      user_serializer.omit_stats = true
 
-    # TODO remove this options from serializer
-    user_serializer.omit_stats = true
-
-    topic_id = params[:include_post_count_for].to_i
-    if topic_id != 0
-      user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
+      topic_id = params[:include_post_count_for].to_i
+      if topic_id != 0
+        user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
+      end
+    else
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: 'user')
     end
 
     if !params[:skip_track_visit] && (@user != current_user)
@@ -204,8 +208,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def profile_hidden
+    render nothing: true
+  end
+
   def summary
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
     render_json_dump(serializer)
