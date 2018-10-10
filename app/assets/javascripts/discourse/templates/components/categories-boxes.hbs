@@ -18,8 +18,8 @@
         {{{text-overflow class="overflow" text=c.description_excerpt}}}
       </div>
 
-      <div class='subcategories'>
-        {{#if c.subcategories}}
+      {{#if c.subcategories}}
+        <div class='subcategories'>
           {{#each c.subcategories as |sc|}}
             <a class="subcategory" href={{sc.url}}>
               <span class="subcategory-image-placeholder">
@@ -28,8 +28,8 @@
               <span class="subcategory-link">{{sc.name}}</span>
             </a>
           {{/each}}
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </div>
 {{/each}}
