@@ -618,6 +618,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
@@ -887,6 +888,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
+      hide_profile_and_presence: "Hide my public profile and presence features"
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"

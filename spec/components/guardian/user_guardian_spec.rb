@@ -95,6 +95,41 @@ describe UserGuardian do
         expect(guardian.can_pick_avatar?(user_avatar, nil)).to eq(true)
       end
     end
+  end
 
+  describe "#can_see_profile?" do
+
+    it "is false for no user" do
+      expect(Guardian.new.can_see_profile?(nil)).to eq(false)
+    end
+
+    it "is true for a user whose profile is public" do
+      expect(Guardian.new.can_see_profile?(user)).to eq(true)
+    end
+
+    context "hidden profile" do
+      let(:hidden_user) do
+        result = Fabricate(:user)
+        result.user_option.update_column(:hide_profile_and_presence, true)
+        result
+      end
+
+      it "is false for another user" do
+        expect(Guardian.new(user).can_see_profile?(hidden_user)).to eq(false)
+      end
+
+      it "is false for an anonymous user" do
+        expect(Guardian.new.can_see_profile?(hidden_user)).to eq(false)
+      end
+
+      it "is true for the user themselves" do
+        expect(Guardian.new(hidden_user).can_see_profile?(hidden_user)).to eq(true)
+      end
+
+      it "is true for a staff user" do
+        expect(Guardian.new(admin).can_see_profile?(hidden_user)).to eq(true)
+      end
+
+    end
   end
 end
