@@ -2186,20 +2186,20 @@ en:
 
       Good luck,
 
-      Your friends at [Discourse](http://www.discourse.org)
+      Your friends at [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
+      [4]: https://whatismyipaddress.com/blacklist-check
       [7]: https://www.mail-tester.com/spf-dkim-check
       [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
+      [sg]: https://sendgrid.com/
       [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
 
   new_version_mailer:
     title: "New Version Mailer"
