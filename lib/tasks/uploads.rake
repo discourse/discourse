@@ -257,7 +257,10 @@ def migrate_to_s3
     end
 
     # remap the URL
+    DbHelper.remap(UrlHelper.absolute(from), Discourse.store.cdn_url(to))
+    DbHelper.remap(UrlHelper.absolute_without_cdn(from), Discourse.store.cdn_url(to))
     DbHelper.remap(from, to)
+    upload.optimized_images.destroy_all
 
     putc "."
   end
