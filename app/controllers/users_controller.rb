@@ -1109,10 +1109,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:token_id]
-      cookie = guardian.request.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
       token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
       # The user should not be able to revoke the auth token of current session.
-      raise Discourse::NotFound if UserAuthToken.hash_token(cookie) == token.auth_token
+      raise Discourse::NotFound if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)
