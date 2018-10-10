@@ -1068,7 +1068,6 @@ module Email
       if !user.staged && !user.user_option.email_private_messages
         user.user_option.update!(email_private_messages: true)
       end
-
     end
   end
 
