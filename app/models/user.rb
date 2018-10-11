@@ -947,6 +947,8 @@ class User < ActiveRecord::Base
   end
 
   def on_tl3_grace_period?
+    return true if SiteSetting.tl3_promotion_min_duration.to_i.days.ago.year < 2013
+
     UserHistory.for(self, :auto_trust_level_change)
       .where('created_at >= ?', SiteSetting.tl3_promotion_min_duration.to_i.days.ago)
       .where(previous_value: TrustLevel[2].to_s)

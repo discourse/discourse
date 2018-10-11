@@ -113,5 +113,18 @@ describe Jobs::Tl3Promotions do
       run_job
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
+
+    it "doesn't demote with very high tl3_promotion_min_duration value" do
+      SiteSetting.stubs(:tl3_promotion_min_duration).returns(2000000000)
+      user = nil
+      freeze_time(500.days.ago) do
+        user = create_leader_user
+      end
+      expect(user).to be_on_tl3_grace_period
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
+      TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
+    end
   end
 end
