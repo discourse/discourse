@@ -1404,12 +1404,6 @@ backups:
   allow_restore:
     default: false
     shadowed_by_global: true
-  backup_location:
-    default: 'local'
-    type: enum
-    enum: 'BackupLocationSiteSetting'
-    shadowed_by_global: true
-    client: true
   maximum_backups:
     client: true
     default: 5
@@ -1421,6 +1415,9 @@ backups:
     min: 1
     max: 30
     default: 7
+    shadowed_by_global: true
+  enable_s3_backups:
+    default: false
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''

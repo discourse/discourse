@@ -1,8 +1,8 @@
 module SiteSettings; end
 
 module SiteSettings::Validations
-  def validate_error(key, opts = {})
-    raise Discourse::InvalidParameters.new(I18n.t("errors.site_settings.#{key}", opts))
+  def validate_error(key)
+    raise Discourse::InvalidParameters.new(I18n.t("errors.site_settings.#{key}"))
   end
 
   def validate_default_categories(new_val, default_categories_selected)
@@ -53,13 +53,4 @@ module SiteSettings::Validations
     validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
   end
 
-  def validate_backup_location(new_val)
-    return unless new_val == BackupLocationSiteSetting::S3
-    validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_backup_bucket") if SiteSetting.s3_backup_bucket.blank?
-
-    unless SiteSetting.s3_use_iam_profile
-      validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_access_key_id") if SiteSetting.s3_access_key_id.blank?
-      validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
-    end
-  end
 end

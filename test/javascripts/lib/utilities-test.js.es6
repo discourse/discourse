@@ -109,14 +109,6 @@ QUnit.test("ensures an authorized upload", assert => {
   );
 });
 
-QUnit.test("skipping validation works", assert => {
-  const files = [{ name: "backup.tar.gz" }];
-  sandbox.stub(bootbox, "alert");
-
-  assert.not(validUpload(files, { skipValidation: false }));
-  assert.ok(validUpload(files, { skipValidation: true }));
-});
-
 QUnit.test("staff can upload anything in PM", assert => {
   const files = [{ name: "some.docx" }];
   Discourse.SiteSettings.authorized_extensions = "jpeg";

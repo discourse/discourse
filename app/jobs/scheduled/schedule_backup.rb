@@ -7,9 +7,8 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
 
-      store = BackupRestore::BackupStore.create
-      if latest_backup = store.latest_file
-        date = latest_backup.last_modified.to_date
+      if latest_backup = Backup.all[0]
+        date = File.ctime(latest_backup.path).getutc.to_date
         return if (date + SiteSetting.backup_frequency.days) > Time.now.utc.to_date
       end
 

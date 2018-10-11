@@ -2,7 +2,7 @@
   <div class="image-upload-controls">
     <label class="btn pad-left no-text {{if uploading 'disabled'}}">
       {{d-icon "picture-o"}}
-      <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
+      <input disabled={{uploading}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
     </label>
     {{#if backgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "trash-o"}}</button>
