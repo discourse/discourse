@@ -382,10 +382,9 @@ class Guardian
   end
 
   def auth_token
-    return nil if !request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
-
-    cookie = request.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
-    UserAuthToken.hash_token(cookie)
+    if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
+      UserAuthToken.hash_token(cookie)
+    end
   end
 
   private

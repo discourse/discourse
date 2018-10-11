@@ -1122,7 +1122,7 @@ class UsersController < ApplicationController
     if params[:token_id]
       token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
       # The user should not be able to revoke the auth token of current session.
-      raise Discourse::NotFound if guardian.auth_token == token.auth_token
+      raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)
