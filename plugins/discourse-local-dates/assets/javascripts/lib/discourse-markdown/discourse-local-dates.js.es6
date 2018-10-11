@@ -8,7 +8,7 @@ function addLocalDate(buffer, matches, state) {
     time: null,
     forceTimezone: null,
     format: "YYYY-MM-DD HH:mm:ss",
-    timezones: ""
+    timezones: "Etc/UTC"
   };
 
   let parsed = parseBBCodeTag(
@@ -28,10 +28,16 @@ function addLocalDate(buffer, matches, state) {
   token.attrs = [
     ["class", "discourse-local-date"],
     ["data-date", state.md.utils.escapeHtml(config.date)],
-    ["data-time", state.md.utils.escapeHtml(config.time)],
     ["data-format", state.md.utils.escapeHtml(config.format)],
     ["data-timezones", state.md.utils.escapeHtml(config.timezones)]
   ];
+
+  if (config.time) {
+    token.attrs.push([
+      "data-time",
+      state.md.utils.escapeHtml(config.time)
+    ]);
+  }
 
   let dateTime;
   if (config.forceTimezone) {
