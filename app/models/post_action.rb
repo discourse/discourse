@@ -583,13 +583,19 @@ class PostAction < ActiveRecord::Base
 
       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 
-    elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
-          SiteSetting.flags_required_to_hide_post > 0
+    elsif PostActionType.auto_action_flag_types.include?(post_action_type)
 
-      _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+      if acting_user.has_trust_level?(TrustLevel[4]) &&
+         post.user&.trust_level != TrustLevel[4]
 
-      if new_flags >= SiteSetting.flags_required_to_hide_post
-        hide_post!(post, post_action_type, guess_hide_reason(post))
+        hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl4_user])
+      elsif SiteSetting.flags_required_to_hide_post > 0
+
+        _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+
+        if new_flags >= SiteSetting.flags_required_to_hide_post
+          hide_post!(post, post_action_type, guess_hide_reason(post))
+        end
       end
     end
   end
