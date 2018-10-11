@@ -992,7 +992,7 @@ describe GroupsController do
 
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(400)
       end
 
       context "is able to remove a member" do
@@ -1062,6 +1062,49 @@ describe GroupsController do
               params: { username: other_user.username }
 
             expect(response).to be_forbidden
+          end
+        end
+      end
+
+      context '#remove_members' do
+        context "is able to remove several members from a group" do
+          let(:user1) { Fabricate(:user) }
+          let(:user2) { Fabricate(:user) }
+          let(:group1) { Fabricate(:group, users: [user1, user2]) }
+
+          it "removes by username" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { usernames: [user1.username, user2.username].join(",") }
+            end.to change { group1.users.count }.by(-2)
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by id" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { user_ids: [user1.id, user2.id].join(",") }
+            end.to change { group1.users.count }.by(-2)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by email" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { user_emails: [user1.email, user2.email].join(",") }
+            end.to change { group1.users.count }.by(-2)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "only removes users in that group" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { usernames: [user.username, user2.username].join(",") }
+            end.to change { group1.users.count }.by(-1)
+
+            expect(response.status).to eq(200)
           end
         end
       end
