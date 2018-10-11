@@ -1119,7 +1119,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    if !SiteSetting.log_out_strict && params[:token_id]
+    if params[:token_id]
+      token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
+      # The user should not be able to revoke the auth token of current session.
+      raise Discourse::NotFound if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)

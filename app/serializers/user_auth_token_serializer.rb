@@ -9,9 +9,7 @@ class UserAuthTokenSerializer < ApplicationSerializer
   end
 
   def is_active
-    cookie = scope.request.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
-
-    UserAuthToken.hash_token(cookie) == object.auth_token
+    scope.auth_token == object.auth_token
   end
 
   def seen_at

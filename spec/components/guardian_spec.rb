@@ -2963,4 +2963,14 @@ describe Guardian do
       end
     end
   end
+
+  describe '#auth_token' do
+    it 'returns the correct auth token' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+
+      guardian = Guardian.new(user, Rack::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
+    end
+  end
 end

@@ -3270,9 +3270,6 @@ describe UsersController do
       end
 
       it 'logs user out' do
-        SiteSetting.log_out_strict = false
-        expect(user.user_auth_tokens.count).to eq(2)
-
         ids = user.user_auth_tokens.map { |token| token.id }
         post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
 
@@ -3283,20 +3280,17 @@ describe UsersController do
         expect(user.user_auth_tokens.first.id).to eq(ids[1])
       end
 
-      it 'logs user out from everywhere if log_out_strict is enabled' do
-        SiteSetting.log_out_strict = true
-        expect(user.user_auth_tokens.count).to eq(2)
+      it 'does not let user log out of current session' do
+        token = UserAuthToken.generate!(user_id: user.id)
+        env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
 
-        ids = user.user_auth_tokens.map { |token| token.id }
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
 
-        expect(response.status).to eq(200)
-        expect(user.user_auth_tokens.count).to eq(0)
+        expect(response.status).to eq(404)
       end
 
       it 'logs user out from everywhere if token_id is not present' do
-        expect(user.user_auth_tokens.count).to eq(2)
-
         post "/u/#{user.username}/preferences/revoke-auth-token.json"
 
         expect(response.status).to eq(200)
