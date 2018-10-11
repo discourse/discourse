@@ -577,7 +577,7 @@ module Email
 
       case destination[:type]
       when :group
-        enable_email_PM_setting(user)
+        enable_email_pm_setting(user)
         group = destination[:obj]
         create_group_post(group, user, body, elided, hidden_reason_id)
 
@@ -602,7 +602,7 @@ module Email
           raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
-        enable_email_PM_setting(user)
+        enable_email_pm_setting(user)
 
         post = Post.with_deleted.find(post_reply_key.post_id)
 
@@ -1063,7 +1063,7 @@ module Email
       end
     end
 
-    def enable_email_PM_setting(user)
+    def enable_email_pm_setting(user)
       # ensure user PM emails are enabled (since user is posting via email)
       if !user.staged && !user.user_option.email_private_messages
         user.user_option.update!(email_private_messages: true)

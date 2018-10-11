@@ -525,6 +525,14 @@ describe Email::Receiver do
 
       expect { process(:reply_user_not_matching_but_known) }.to change { topic.posts.count }
     end
+
+    it "re-enables user's email_private_messages setting when user replies" do
+      user.user_option.update_columns(email_private_messages: false)
+      expect { process(:reply_user_matching) }.to change { topic.posts.count }
+      user.reload
+      expect(user.user_option.email_private_messages).to eq(true)
+    end
+
   end
 
   context "new message to a group" do
@@ -623,7 +631,7 @@ describe Email::Receiver do
       expect(Post.last.raw).to match(/discourse\.rb/)
     end
 
-    it "enables user's email_private_messages option when user emails group" do
+    it "enables user's email_private_messages setting when user emails group" do
       user = Fabricate(:user, email: "existing@bar.com")
       user.user_option.update_columns(email_private_messages: false)
       expect { process(:group_existing_user) }.to change(Topic, :count)
