@@ -1,8 +1,7 @@
 module Jobs
   class RebakeCustomEmojiPosts < Jobs::Base
     def execute(args)
-      name = args[:name]
-      Post.where("raw LIKE '%:#{name}:%'").find_each { |post| post.rebake! }
+      Post.where("raw LIKE ?", "%:#{args[:name]}:%").find_each(&:rebake!)
     end
   end
 end
