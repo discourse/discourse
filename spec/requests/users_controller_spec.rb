@@ -3287,7 +3287,7 @@ describe UsersController do
 
         post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(400)
       end
 
       it 'logs user out from everywhere if token_id is not present' do
