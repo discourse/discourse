@@ -117,6 +117,12 @@ describe Email::Receiver do
     expect(IncomingEmail.last.error).to eq("RuntimeError")
   end
 
+  it "strips null bytes from the subject" do
+    expect do
+      process(:null_byte_in_subject)
+    end.to raise_error(Email::Receiver::BadDestinationAddress)
+  end
+
   context "bounces to VERP" do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }

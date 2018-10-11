@@ -52,10 +52,12 @@ module Email
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
       @raw_email = mail_string
+
       COMMON_ENCODINGS.each do |encoding|
         fixed = try_to_encode(mail_string, encoding)
         break @raw_email = fixed if fixed.present?
       end
+
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
@@ -482,7 +484,10 @@ module Email
     end
 
     def subject
-      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
+      @subject ||= begin
+        mail_subject = @mail.subject.delete("\u0000")
+        mail_subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
+      end
     end
 
     def find_user(email)
