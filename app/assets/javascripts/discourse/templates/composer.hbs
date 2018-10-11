@@ -9,73 +9,77 @@
       {{composer-messages composer=model
                           messageCount=messageCount
                           addLinkLookup="addLinkLookup"}}
-      {{#if model.viewOpen}}
+      {{#if model.viewOpenOrFullscreen}}
         <div class="reply-area {{if canEditTags 'with-tags'}}">
           <div class='composer-fields'>
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
             <div class='reply-to'>
-              <div class="reply-details">
-                {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
+              {{#unless model.viewFullscreen}}
+                <div class="reply-details">
+                  {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
 
-                {{#unless site.mobileView}}
-                  {{#if whisperOrUnlistTopicText}}
-                    <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
-                  {{/if}}
-                  {{#if model.noBump}}
-                    <span class="no-bump">{{d-icon "anchor"}}</span>
-                  {{/if}}
-                {{/unless}}
+                  {{#unless site.mobileView}}
+                    {{#if whisperOrUnlistTopicText}}
+                      <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
+                    {{/if}}
+                    {{#if model.noBump}}
+                      <span class="no-bump">{{d-icon "anchor"}}</span>
+                    {{/if}}
+                  {{/unless}}
 
-                {{#if canEdit}}
-                  {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason key="composer.show_edit_reason" class="display-edit-reason"}}
-                    {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
-                  {{/link-to-input}}
-                {{/if}}
-              </div>
+                  {{#if canEdit}}
+                    {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason key="composer.show_edit_reason" class="display-edit-reason"}}
+                      {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                    {{/link-to-input}}
+                  {{/if}}
+                </div>
+              {{/unless}}
               {{composer-toggles composeState=model.composeState
                         toggleComposer=(action "toggle")
-                        toggleToolbar=(action "toggleToolbar")}}
+                        toggleToolbar=(action "toggleToolbar")
+                        toggleFullscreen=(action "fullscreenComposer")}}
             </div>
+            {{#unless model.viewFullscreen}}
+              {{#if model.canEditTitle}}
+                {{#if model.creatingPrivateMessage}}
+                  <div class='user-selector'>
+                    {{composer-user-selector topicId=topicModel.id
+                                             usernames=model.targetUsernames
+                                             hasGroups=model.hasTargetGroups
+                                             focusTarget=focusTarget
+                                             class="users-input"}}
+                    {{#if showWarning}}
+                      <label class='add-warning'>
+                        {{input type="checkbox" checked=model.isWarning tabindex="3"}}
+                        {{i18n "composer.add_warning"}}
+                      </label>
+                    {{/if}}
+                  </div>
+                {{/if}}
 
-            {{#if model.canEditTitle}}
-              {{#if model.creatingPrivateMessage}}
-                <div class='user-selector'>
-                  {{composer-user-selector topicId=topicModel.id
-                                           usernames=model.targetUsernames
-                                           hasGroups=model.hasTargetGroups
-                                           focusTarget=focusTarget
-                                           class="users-input"}}
-                  {{#if showWarning}}
-                    <label class='add-warning'>
-                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
-                      {{i18n "composer.add_warning"}}
-                    </label>
+                <div class="title-and-category {{if showPreview 'with-preview'}}">
+
+                  {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
+
+                  {{#if model.showCategoryChooser}}
+                    <div class="category-input">
+                      {{category-chooser
+                        fullWidthOnMobile=true
+                        value=model.categoryId
+                        scopedCategoryId=scopedCategoryId
+                        tabindex="3"}}
+                      {{popup-input-tip validation=categoryValidation}}
+                    </div>
+                  {{/if}}
+                  {{#if canEditTags}}
+                    {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
+                    {{popup-input-tip validation=tagValidation}}
                   {{/if}}
                 </div>
               {{/if}}
 
-              <div class="title-and-category {{if showPreview 'with-preview'}}">
-
-                {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
-
-                {{#if model.showCategoryChooser}}
-                  <div class="category-input">
-                    {{category-chooser
-                      fullWidthOnMobile=true
-                      value=model.categoryId
-                      scopedCategoryId=scopedCategoryId
-                      tabindex="3"}}
-                    {{popup-input-tip validation=categoryValidation}}
-                  </div>
-                {{/if}}
-                {{#if canEditTags}}
-                  {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
-                  {{popup-input-tip validation=tagValidation}}
-                {{/if}}
-              </div>
-            {{/if}}
-
-            {{plugin-outlet name="composer-fields" args=(hash model=model)}}
+              {{plugin-outlet name="composer-fields" args=(hash model=model)}}
+            {{/unless}}
 
           </div>
 
@@ -104,21 +108,24 @@
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
 
             <div class='save-or-cancel'>
-              {{composer-save-button action=(action "save")
-                                     icon=model.saveIcon
-                                     label=model.saveLabel
-                                     disableSubmit=disableSubmit}}
-            {{#if site.mobileView}}
-              <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">
-                {{#if canEdit}}
-                  {{d-icon "times"}}
-                {{else}}
-                  {{d-icon "trash-o"}}
-                {{/if}}
-              </a>
-            {{else}}
-              <a href {{action "cancel"}} class='cancel' tabindex="6" >{{i18n 'cancel'}}</a>
-            {{/if}}
+              {{#unless model.viewFullscreen}}
+                {{composer-save-button action=(action "save")
+                                       icon=model.saveIcon
+                                       label=model.saveLabel
+                                       disableSubmit=disableSubmit}}
+
+              {{#if site.mobileView}}
+                <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">
+                  {{#if canEdit}}
+                    {{d-icon "times"}}
+                  {{else}}
+                    {{d-icon "trash-o"}}
+                  {{/if}}
+                </a>
+              {{else}}
+                <a href {{action "cancel"}} class='cancel' tabindex="6" >{{i18n 'cancel'}}</a>
+              {{/if}}
+            {{/unless}}
 
 
               {{#if site.mobileView}}
@@ -165,7 +172,7 @@
           </div>
         </div>
 
-      {{else}}
+        {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
             {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
@@ -183,6 +190,7 @@
         </div>
 
         {{composer-toggles composeState=model.composeState
+          toggleFullscreen=(action "fullscreenComposer")
           toggleComposer=(action "toggle")
           toggleToolbar=(action "toggleToolbar")}}
 

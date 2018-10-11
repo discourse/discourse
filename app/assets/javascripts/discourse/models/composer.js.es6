@@ -26,6 +26,7 @@ const CLOSED = "closed",
   SAVING = "saving",
   OPEN = "open",
   DRAFT = "draft",
+  FULLSCREEN = "fullscreen",
   // When creating, these fields are moved into the post model from the composer model
   _create_serializer = {
     raw: "reply",
@@ -78,8 +79,7 @@ const Composer = RestModel.extend({
     return this.site.get("archetypes");
   }.property(),
 
-  @computed("action")
-  sharedDraft: action => action === CREATE_SHARED_DRAFT,
+  @computed("action") sharedDraft: action => action === CREATE_SHARED_DRAFT,
 
   @computed
   categoryId: {
@@ -137,16 +137,24 @@ const Composer = RestModel.extend({
 
   topicFirstPost: Em.computed.or("creatingTopic", "editingFirstPost"),
 
-  @computed("action")
-  editingPost: isEdit,
+  @computed("action") editingPost: isEdit,
 
   replyingToTopic: Em.computed.equal("action", REPLY),
 
   viewOpen: Em.computed.equal("composeState", OPEN),
   viewDraft: Em.computed.equal("composeState", DRAFT),
+  viewFullscreen: Em.computed.equal("composeState", FULLSCREEN),
+  viewOpenOrFullscreen: Em.computed.or("viewOpen", "viewFullscreen"),
 
   composeStateChanged: function() {
-    var oldOpen = this.get("composerOpened");
+    var oldOpen = this.get("composerOpened"),
+      elem = $("html");
+
+    if (this.get("composeState") === FULLSCREEN) {
+      elem.addClass("fullscreen-composer");
+    } else {
+      elem.removeClass("fullscreen-composer");
+    }
 
     if (this.get("composeState") === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
@@ -1041,6 +1049,7 @@ Composer.reopenClass({
   SAVING,
   OPEN,
   DRAFT,
+  FULLSCREEN,
 
   // The actions the composer can take
   CREATE_TOPIC,

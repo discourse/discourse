@@ -231,7 +231,7 @@ export default Ember.Controller.extend({
 
   @computed("model.composeState", "model.creatingTopic")
   popupMenuOptions(composeState) {
-    if (composeState === "open") {
+    if (composeState === "open" || composeState === "fullscreen") {
       let options = [];
 
       options.push(
@@ -293,8 +293,7 @@ export default Ember.Controller.extend({
     return authorizesOneOrMoreExtensions();
   },
 
-  @computed()
-  uploadIcon: () => uploadIcon(),
+  @computed() uploadIcon: () => uploadIcon(),
 
   actions: {
     cancelUpload() {
@@ -386,13 +385,21 @@ export default Ember.Controller.extend({
       ) {
         this.close();
       } else {
-        if (this.get("model.composeState") === Composer.OPEN) {
+        if (
+          this.get("model.composeState") === Composer.OPEN ||
+          this.get("model.composeState") === Composer.FULLSCREEN
+        ) {
           this.shrink();
         } else {
           this.cancelComposer();
         }
       }
 
+      return false;
+    },
+
+    fullscreenComposer() {
+      this.toggleFullscreen();
       return false;
     },
 
@@ -457,7 +464,7 @@ export default Ember.Controller.extend({
         return;
       }
 
-      if (this.get("model.viewOpen")) {
+      if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
         this.shrink();
       }
     },
@@ -881,6 +888,10 @@ export default Ember.Controller.extend({
           }
         ]);
       } else {
+        // in case the composer is
+        // cancelled while in fullscreen
+        $("html").removeClass("fullscreen-composer");
+
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft();
         this.get("model").clearState();
@@ -945,6 +956,15 @@ export default Ember.Controller.extend({
   collapse() {
     this._saveDraft();
     this.set("model.composeState", Composer.DRAFT);
+  },
+
+  toggleFullscreen() {
+    this._saveDraft();
+    if (this.get("model.composeState") === Composer.FULLSCREEN) {
+      this.set("model.composeState", Composer.OPEN);
+    } else {
+      this.set("model.composeState", Composer.FULLSCREEN);
+    }
   },
 
   close() {
