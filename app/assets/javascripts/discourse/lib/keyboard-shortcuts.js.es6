@@ -65,6 +65,7 @@ const bindings = {
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
   "shift+u": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
+  "shift+f11": { handler: "fullscreenComposer" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -201,6 +202,10 @@ export default {
         draftKey: Composer.CREATE_TOPIC
       });
     }
+  },
+
+  fullscreenComposer() {
+    this.container.lookup("controller:composer").toggleFullscreen();
   },
 
   focusComposer() {
