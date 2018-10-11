@@ -280,6 +280,7 @@ Discourse::Application.routes.draw do
         put "readonly" => "backups#readonly"
         get "upload" => "backups#check_backup_chunk"
         post "upload" => "backups#upload_backup_chunk"
+        get "upload_url" => "backups#create_upload_url"
       end
     end
 
