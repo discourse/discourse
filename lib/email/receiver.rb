@@ -484,10 +484,12 @@ module Email
     end
 
     def subject
-      @subject ||= begin
-        mail_subject = @mail.subject.delete("\u0000")
-        mail_subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
-      end
+      @subject ||=
+        if mail_subject = @mail.subject
+          mail_subject.delete("\u0000")
+        else
+          I18n.t("emails.incoming.default_subject", email: @from_email)
+        end
     end
 
     def find_user(email)
