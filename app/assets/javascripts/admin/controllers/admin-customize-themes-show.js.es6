@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
   downloadUrl: url("model.id", "/admin/themes/%@"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: Em.computed.empty("selectedChildThemeId"),
+  editRouteName: "adminCustomizeThemes.edit",
 
   @computed("model", "allThemes", "model.component")
   parentThemes(model, allThemes) {
@@ -147,7 +148,7 @@ export default Ember.Controller.extend({
   },
   transitionToEditRoute() {
     this.transitionToRoute(
-      "adminCustomizeThemes.edit",
+      this.get("editRouteName"),
       this.get("model.id"),
       "common",
       "scss"
