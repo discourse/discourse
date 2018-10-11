@@ -20,6 +20,63 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe '#redirect_to_second_factor_if_required' do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    before do
+      admin # to skip welcome wizard at home page `/`
+    end
+
+    it "should redirect admins when enforce_second_factor is 'all'" do
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(admin)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+    end
+
+    it "should redirect users when enforce_second_factor is 'all'" do
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(user)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should redirect admins when enforce_second_factor is 'staff'" do
+      SiteSetting.enforce_second_factor = "staff"
+      sign_in(admin)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+    end
+
+    it "should not redirect users when enforce_second_factor is 'staff'" do
+      SiteSetting.enforce_second_factor = "staff"
+      sign_in(user)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
+    it "should not redirect admins when turned off" do
+      SiteSetting.enforce_second_factor = "no"
+      sign_in(admin)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
+    it "should not redirect users when turned off" do
+      SiteSetting.enforce_second_factor = "no"
+      sign_in(user)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe 'invalid request params' do
     before do
       @old_logger = Rails.logger
