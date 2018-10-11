@@ -350,6 +350,10 @@ export default function() {
       return response(200, fixturesByUrl["/groups.json"]);
     });
 
+    this.get("/groups.json", () => {
+      return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
+    });
+
     this.get("groups/search.json", () => {
       return response(200, []);
     });
