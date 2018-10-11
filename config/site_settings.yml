@@ -1101,6 +1101,7 @@ trust:
     default: 5
   tl3_promotion_min_duration:
     default: 14
+    max: 10000
   tl3_requires_likes_given:
     default: 30
   tl3_requires_likes_received:
