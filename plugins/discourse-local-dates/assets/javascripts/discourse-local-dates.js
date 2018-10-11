@@ -103,7 +103,7 @@
       options.date = $this.attr("data-date");
       options.time = $this.attr("data-time");
       options.recurring = $this.attr("data-recurring");
-      options.timezones = $this.attr("data-timezones") || "Etc/UTC";
+      options.timezones = $this.attr("data-timezones");
       options.forceTimezone = $this.attr("data-force-timezone");
 
       processElement($this, options);
