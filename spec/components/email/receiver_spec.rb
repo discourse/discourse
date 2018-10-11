@@ -1103,6 +1103,13 @@ describe Email::Receiver do
         expect { process(:mailinglist_reply) }.to change { topic.posts.count }
       end
     end
+
+    it "ignores unsubscribe email" do
+      SiteSetting.unsubscribe_via_email = true
+      Fabricate(:user, email: "alice@foo.com")
+
+      expect { process("mailinglist_unsubscribe") }.to_not change { ActionMailer::Base.deliveries.count }
+    end
   end
 
   it "tries to fix unparsable email addresses in To and CC headers" do

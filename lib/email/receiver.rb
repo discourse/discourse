@@ -838,6 +838,8 @@ module Email
 
     def subscription_action_for(body, subject)
       return unless SiteSetting.unsubscribe_via_email
+      return if sent_to_mailinglist_mirror?
+
       if ([subject, body].compact.map(&:to_s).map(&:downcase) & ['unsubscribe']).any?
         :confirm_unsubscribe
       end
