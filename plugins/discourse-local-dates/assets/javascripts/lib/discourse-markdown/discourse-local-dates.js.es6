@@ -33,10 +33,7 @@ function addLocalDate(buffer, matches, state) {
   ];
 
   if (config.time) {
-    token.attrs.push([
-      "data-time",
-      state.md.utils.escapeHtml(config.time)
-    ]);
+    token.attrs.push(["data-time", state.md.utils.escapeHtml(config.time)]);
   }
 
   let dateTime;
