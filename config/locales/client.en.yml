@@ -3133,7 +3133,6 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
-          uploading_progress: "Uploading... {{progress}}%"
           success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
@@ -3164,9 +3163,6 @@ en:
             label: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
-        location:
-          local: "Local"
-          s3: "Amazon S3"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."

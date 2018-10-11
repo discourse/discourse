@@ -133,12 +133,12 @@ module BackupRestore
 
     def initialize_state
       @success = false
-      @store = BackupRestore::BackupStore.create
       @db_was_changed = false
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @current_version = BackupRestore.current_version
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "restores", @current_db, @timestamp)
+      @source_filename = File.join(Backup.base_directory, @filename)
       @archive_filename = File.join(@tmp_directory, @filename)
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
@@ -195,15 +195,8 @@ module BackupRestore
     end
 
     def copy_archive_to_tmp_directory
-      if @store.remote?
-        log "Downloading archive to tmp directory..."
-        failure_message = "Failed to download archive to tmp directory."
-      else
-        log "Copying archive to tmp directory..."
-        failure_message = "Failed to copy archive to tmp directory."
-      end
-
-      @store.download_file(@filename, @archive_filename, failure_message)
+      log "Copying archive to tmp directory..."
+      Discourse::Utils.execute_command('cp', @source_filename, @archive_filename, failure_message: "Failed to copy archive to tmp directory.")
     end
 
     def unzip_archive

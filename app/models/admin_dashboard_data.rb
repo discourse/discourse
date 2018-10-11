@@ -209,7 +209,7 @@ class AdminDashboardData
       bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
 
       return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
-      return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.backup_location == BackupLocationSiteSetting::S3 && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+      return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
     end
     nil
   end

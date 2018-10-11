@@ -2,5 +2,5 @@
 <label class="btn btn-primary {{if addDisabled 'disabled'}}">
   {{d-icon "plus"}}
   {{i18n 'admin.emoji.add'}}
-  <input class="hidden-upload-field" disabled={{addDisabled}} type="file" accept=".png,.gif" />
+  <input disabled={{addDisabled}} type="file" accept=".png,.gif" style="visibility: hidden; position: absolute;" />
 </label>

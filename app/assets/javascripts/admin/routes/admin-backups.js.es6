@@ -151,15 +151,6 @@ export default Discourse.Route.extend({
           message: message
         })
       );
-    },
-
-    remoteUploadSuccess() {
-      Backup.find().then(backups => {
-        this.controllerFor("adminBackupsIndex").set(
-          "model",
-          backups.map(backup => Backup.create(backup))
-        );
-      });
     }
   }
 });

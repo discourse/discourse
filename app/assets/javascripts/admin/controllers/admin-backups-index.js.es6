@@ -1,14 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   adminBackups: Ember.inject.controller(),
   status: Ember.computed.alias("adminBackups.model"),
-
-  @computed
-  localBackupStorage() {
-    return this.siteSettings.backup_location === "local";
-  },
 
   uploadLabel: function() {
     return I18n.t("admin.backups.upload.label");

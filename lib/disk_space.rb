@@ -2,8 +2,8 @@ class DiskSpace
 
   extend ActionView::Helpers::NumberHelper
 
-  DISK_SPACE_STATS_CACHE_KEY ||= 'disk_space_stats'.freeze
-  DISK_SPACE_STATS_UPDATED_CACHE_KEY ||= 'disk_space_stats_updated'.freeze
+  DISK_SPACE_STATS_CACHE_KEY = 'disk_space_stats'.freeze
+  DISK_SPACE_STATS_UPDATED_CACHE_KEY = 'disk_space_stats_updated'.freeze
 
   def self.uploads_used_bytes
     # used(uploads_path)
@@ -24,7 +24,7 @@ class DiskSpace
   end
 
   def self.backups_path
-    BackupRestore::LocalBackupStore.base_directory
+    Backup.base_directory
   end
 
   def self.uploads_path
