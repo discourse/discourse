@@ -53,9 +53,8 @@
         }
       });
 
-      var relativeTime = relativeTime.tz(
-        options.forceTimezone || moment.tz.guess()
-      );
+      var displayTimezone = moment.tz.guess();
+      var relativeTime = relativeTime.tz(displayTimezone);
 
       if (
         options.format !== "YYYY-MM-DD HH:mm:ss" &&
@@ -78,7 +77,7 @@
 
       var displayedTime = relativeTime.replace(
         "TZ",
-        _formatTimezone(options.forceTimezone || moment.tz.guess()).join(": ")
+        _formatTimezone(displayTimezone).join(": ")
       );
 
       $element
