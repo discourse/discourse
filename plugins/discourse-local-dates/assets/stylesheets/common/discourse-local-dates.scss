@@ -7,6 +7,10 @@
     font-weight: bold;
     cursor: pointer;
 
+    .relative-time {
+      border-bottom: 1px dashed $primary-low;
+    }
+
     .d-icon-globe {
       margin-right: 0.25em;
       color: $primary-medium;
