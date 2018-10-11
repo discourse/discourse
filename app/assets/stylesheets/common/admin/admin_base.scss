@@ -865,6 +865,17 @@ table#user-badges {
   }
 }
 
+@mixin value-btn {
+  width: 29px;
+  border: 1px solid $primary-low;
+  outline: none;
+  padding: 0;
+
+  &:focus {
+    border-color: $tertiary;
+  }
+}
+
 .value-list {
   .value {
     padding: 0.125em 0;
@@ -891,19 +902,46 @@ table#user-badges {
     }
 
     .remove-value-btn {
+      @include value-btn;
       margin-right: 0.25em;
-      width: 29px;
-      border: 1px solid $primary-low;
-      outline: none;
-      padding: 0;
-
-      &:focus {
-        border-color: $tertiary;
-      }
     }
   }
   .values {
     margin-bottom: 0.5em;
+  }
+}
+
+.secret-value-list {
+  .value {
+    flex-flow: row wrap;
+    margin-left: -0.25em;
+    margin-top: -0.125em;
+    .new-value-input {
+      flex: 1;
+    }
+    .value-input,
+    .new-value-input {
+      margin-top: 0.125em;
+      &:last-of-type {
+        margin-left: 0.25em;
+      }
+    }
+    .remove-value-btn {
+      margin-left: 0.25em;
+      margin-top: 0.125em;
+    }
+    .add-value-btn {
+      @include value-btn;
+      margin-left: 0.25em;
+      margin-top: 0.125em;
+    }
+    &:last-of-type {
+      .new-value-input {
+        &:first-of-type {
+          margin-left: 0.25em;
+        }
+      }
+    }
   }
 }
 
