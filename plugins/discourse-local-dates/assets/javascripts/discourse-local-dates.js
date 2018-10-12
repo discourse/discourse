@@ -101,7 +101,7 @@
       var options = {};
       options.format = $this.attr("data-format");
       options.date = $this.attr("data-date");
-      options.time = $this.attr("data-time");
+      options.time = $this.attr("data-time") || "00:00:00";
       options.recurring = $this.attr("data-recurring");
       options.timezones = $this.attr("data-timezones");
       options.forceTimezone = $this.attr("data-force-timezone");
