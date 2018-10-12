@@ -9,15 +9,11 @@
 
     .d-icon-globe {
       margin-right: 0.25em;
-      color: $primary-medium;
+      color: $primary;
     }
 
     &.past {
       border-bottom-color: $primary-low-mid;
-
-      .d-icon-globe {
-        color: $primary-low-mid;
-      }
     }
   }
 }
