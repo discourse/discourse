@@ -20,6 +20,16 @@ test("local dates bbcode", async assert => {
 
   assert.ok(
     exists(".d-editor-preview .discourse-local-date.past.cooked-date"),
-    "it should contain the cooked date output"
+    "it should contain the cooked output for date & time inputs"
+  );
+
+  await fillIn(
+    ".d-editor-input",
+    '[date=2017-10-23 format="LL" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
+  );
+
+  assert.ok(
+    exists(".d-editor-preview .discourse-local-date.past.cooked-date"),
+    "it should contain the cooked output for date only input"
   );
 });
