@@ -311,6 +311,7 @@ class CategoriesController < ApplicationController
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
       style == "categories_with_featured_topics".freeze ||
+      style == "categories_boxes_with_topics".freeze ||
       style == "categories_with_top_topics".freeze
   end
 end

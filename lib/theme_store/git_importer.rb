@@ -2,15 +2,17 @@ module ThemeStore; end
 
 class ThemeStore::GitImporter
 
+  class ImportFailed < StandardError; end
   attr_reader :url
 
-  def initialize(url, private_key: nil)
+  def initialize(url, private_key: nil, branch: nil)
     @url = url
     if @url.start_with?("https://github.com") && !@url.end_with?(".git")
       @url += ".git"
     end
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
+    @branch = branch
   end
 
   def import!
@@ -65,7 +67,15 @@ class ThemeStore::GitImporter
   protected
 
   def import_public!
-    Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
+    begin
+      if @branch.present?
+        Discourse::Utils.execute_command("git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+      else
+        Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
+      end
+    rescue => err
+      raise ImportFailed.new(err.message)
+    end
   end
 
   def import_private!
@@ -77,9 +87,16 @@ class ThemeStore::GitImporter
       FileUtils.chmod(0600, 'id_rsa')
     end
 
-    Discourse::Utils.execute_command({
-      'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no"
-    }, "git", "clone", @url, @temp_folder)
+    begin
+      git_ssh_command = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
+      if @branch.present?
+        Discourse::Utils.execute_command(git_ssh_command, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
+      else
+        Discourse::Utils.execute_command(git_ssh_command, "git", "clone", @url, @temp_folder)
+      end
+    rescue => err
+      raise ImportFailed.new(err.message)
+    end
   ensure
     FileUtils.rm_rf ssh_folder
   end

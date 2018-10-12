@@ -29,8 +29,8 @@ QUnit.test("can list themes correctly", function(assert) {
 
   assert.deepEqual(
     controller.get("fullThemes").map(t => t.get("name")),
-    [defaultTheme, userTheme, strayTheme1, strayTheme2].map(t => t.get("name")),
-    "sorts themes correctly"
+    [strayTheme2, strayTheme1, userTheme, defaultTheme].map(t => t.get("name")),
+    "returns a list of themes without components"
   );
 
   assert.deepEqual(

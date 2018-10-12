@@ -43,7 +43,7 @@ class OptimizedImage < ActiveRecord::Base
 
     # correct bad thumbnail if needed
     if thumbnail && thumbnail.url.blank?
-      thumbnail.destroy
+      thumbnail.destroy!
       thumbnail = nil
     end
 
@@ -399,6 +399,7 @@ end
 #  height    :integer          not null
 #  upload_id :integer          not null
 #  url       :string           not null
+#  filesize  :integer
 #
 # Indexes
 #

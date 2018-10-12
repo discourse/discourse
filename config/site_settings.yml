@@ -191,6 +191,7 @@ basic:
   enable_mobile_theme:
     client: true
     default: true
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true
@@ -230,7 +231,7 @@ basic:
     client: true
     default: false
   push_notifications_prompt:
-    default: false
+    default: true
     client: true
   push_notifications_icon_url:
     default: ''
@@ -262,7 +263,7 @@ login:
     default: true
   enable_local_logins_via_email:
     client: true
-    default: false
+    default: true
     validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
@@ -374,11 +375,13 @@ users:
     default: 3
     min: 1
     max: 60
+    validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
     min: 8
     max: 60
+    validator: "MaxUsernameLengthValidator"
   reserved_usernames:
     type: list
     list_type: compact
@@ -911,6 +914,10 @@ files:
     default: 'gz'
     type: list
     list_type: compact
+  responsive_post_image_sizes:
+    default: "1|1.5|2"
+    type: list
+    list_type: compact
   crawl_images:
     default: true
   max_image_width:
@@ -934,6 +941,7 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
+    shadowed_by_global: true
   prevent_anons_from_downloading_files:
     default: false
     client: true
@@ -964,6 +972,9 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_force_path_style:
     default: false
+  s3_configure_tombstone_policy:
+    default: true
+    shadowed_by_global: true
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1090,6 +1101,7 @@ trust:
     default: 5
   tl3_promotion_min_duration:
     default: 14
+    max: 10000
   tl3_requires_likes_given:
     default: 30
   tl3_requires_likes_received:
@@ -1428,7 +1440,6 @@ search:
       zh_TW: 2
       ko: 2
       ja: 2
-
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:
@@ -1443,6 +1454,22 @@ search:
   search_query_log_max_retention_days:
     default: 365 # 1 year
     max: 1825 # 5 years
+  search_ignore_accents:
+    default: false
+    locale_default:
+      ar: true
+      ca: true
+      cs: true
+      el: true
+      es: true
+      fa_IR: true
+      fr: true
+      hu: true
+      pt: true
+      pt_BR: true
+      ro: true
+      sk: true
+      tr_TR: true
 
 uncategorized:
   version_checks:
@@ -1762,3 +1789,5 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
+  force_lowercase_tags:
+    default: true

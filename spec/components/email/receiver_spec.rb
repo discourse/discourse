@@ -117,6 +117,12 @@ describe Email::Receiver do
     expect(IncomingEmail.last.error).to eq("RuntimeError")
   end
 
+  it "strips null bytes from the subject" do
+    expect do
+      process(:null_byte_in_subject)
+    end.to raise_error(Email::Receiver::BadDestinationAddress)
+  end
+
   context "bounces to VERP" do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
@@ -465,10 +471,24 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "txt"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/text\.txt/)
+    end
 
-      SiteSetting.authorized_extensions = "csv"
-      expect { process(:attached_txt_file_2) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to_not match(/text\.txt/)
+    context "when attachment is rejected" do
+      it "sends out the warning email" do
+        expect { process(:attached_txt_file) }.to change { EmailLog.count }.by(1)
+        expect(EmailLog.last.email_type).to eq("email_reject_attachment")
+      end
+
+      it "doesn't send out the warning email if sender is staged user" do
+        user.update_columns(staged: true)
+        expect { process(:attached_txt_file) }.not_to change { EmailLog.count }
+      end
+
+      it "creates the post with attachment missing message" do
+        missing_attachment_regex = Regexp.escape(I18n.t('emails.incoming.missing_attachment', filename: "text.txt"))
+        expect { process(:attached_txt_file) }.to change { topic.posts.count }
+        expect(topic.posts.last.raw).to match(/#{missing_attachment_regex}/)
+      end
     end
 
     it "supports emails with just an attachment" do
@@ -607,6 +627,14 @@ describe Email::Receiver do
       SiteSetting.allow_all_attachments_for_group_messages = true
       expect { process(:attached_rb_file) }.to change(Topic, :count)
       expect(Post.last.raw).to match(/discourse\.rb/)
+    end
+
+    it "enables user's email_private_messages option when user emails group" do
+      user = Fabricate(:user, email: "existing@bar.com")
+      user.user_option.update_columns(email_private_messages: false)
+      expect { process(:group_existing_user) }.to change(Topic, :count)
+      user.reload
+      expect(user.user_option.email_private_messages).to eq(true)
     end
 
     context "with forwarded emails enabled" do
@@ -1074,6 +1102,13 @@ describe Email::Receiver do
 
         expect { process(:mailinglist_reply) }.to change { topic.posts.count }
       end
+    end
+
+    it "ignores unsubscribe email" do
+      SiteSetting.unsubscribe_via_email = true
+      Fabricate(:user, email: "alice@foo.com")
+
+      expect { process("mailinglist_unsubscribe") }.to_not change { ActionMailer::Base.deliveries.count }
     end
   end
 

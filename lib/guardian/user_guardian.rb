@@ -1,6 +1,23 @@
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
 
+  def can_pick_avatar?(user_avatar, upload)
+    return false unless self.user
+
+    return true if is_admin?
+
+    # can always pick blank avatar
+    return true if !upload
+
+    return true if user_avatar.contains_upload?(upload.id)
+    return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
+
+    UserUpload.exists?(
+      upload_id: upload.id,
+      user_id: [upload.user_id, user.id]
+    )
+  end
+
   def can_edit_user?(user)
     is_me?(user) || is_staff?
   end
@@ -74,6 +91,17 @@ module UserGuardian
 
   def can_disable_second_factor?(user)
     user && can_administer_user?(user)
+  end
+
+  def can_see_profile?(user)
+    return false if user.blank?
+
+    # If a user has hidden their profile, restrict it to them and staff
+    if user.user_option.try(:hide_profile_and_presence?)
+      return is_me?(user) || is_staff?
+    end
+
+    true
   end
 
 end

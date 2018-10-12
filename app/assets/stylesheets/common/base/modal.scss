@@ -103,6 +103,7 @@
   background-color: $secondary;
   background-clip: padding-box;
   box-shadow: shadow("modal");
+  padding: 1px;
 
   @media screen and (min-width: 475px) {
     min-width: 475px;
@@ -370,7 +371,11 @@
 
 .edit-category-modal {
   input[type="number"] {
-    width: 50px;
+    min-width: 15em;
+    margin-bottom: 0;
+    position: relative;
+    left: 2%;
+    margin-right: 4%;
   }
 
   .subcategory-list-style-field {
@@ -412,6 +417,10 @@
     input[type="number"] {
       width: 50px;
     }
+  }
+
+  .add-permission {
+    margin-top: 12px;
   }
 }
 
@@ -468,7 +477,7 @@
 .change-timestamp,
 .poll-ui-builder {
   .date-picker {
-    width: 9em;
+    min-width: 8em;
   }
 
   #date-container {
@@ -480,7 +489,7 @@
   }
 
   input[type="time"] {
-    width: 6em;
+    width: 7em;
     text-align: center;
   }
 
@@ -492,6 +501,7 @@
 .flag-modal {
   max-height: 450px;
   .flag-action-type-details {
+    width: 100%;
     line-height: $line-height-large;
   }
 }

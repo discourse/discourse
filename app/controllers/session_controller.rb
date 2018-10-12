@@ -108,6 +108,9 @@ class SessionController < ApplicationController
   def sso_login
     raise Discourse::NotFound.new unless SiteSetting.enable_sso
 
+    params.require(:sso)
+    params.require(:sig)
+
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
       if SiteSetting.verbose_sso_logging

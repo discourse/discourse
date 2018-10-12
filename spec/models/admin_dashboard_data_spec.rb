@@ -351,4 +351,19 @@ describe AdminDashboardData do
       expect(dashboard_data.out_of_date_themes).to eq(nil)
     end
   end
+
+  describe '#unreachable_themes' do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme", last_error_text: "can't reach repo :'(") }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
+
+    it "outputs correctly formatted html" do
+      dashboard_data = described_class.new
+      expect(dashboard_data.unreachable_themes).to eq(
+        I18n.t("dashboard.unreachable_themes") + "<ul><li><a href=\"/admin/customize/themes/#{theme.id}\">Test&lt; Theme</a></li></ul>"
+      )
+
+      remote.update!(last_error_text: nil)
+      expect(dashboard_data.out_of_date_themes).to eq(nil)
+    end
+  end
 end

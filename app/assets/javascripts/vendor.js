@@ -1,6 +1,5 @@
 //= require logster
 //= require ./discourse-objects
-//= require probes.js
 
 //= require template_include.js
 //= require i18n-patches
@@ -9,11 +8,7 @@
 //= require jquery.ui.widget.js
 //= require Markdown.Converter.js
 //= require bootbox.js
-//= require bootstrap-alert.js
-//= require bootstrap-button.js
-//= require bootstrap-dropdown.js
 //= require bootstrap-modal.js
-//= require bootstrap-transition.js
 //= require div_resizer
 //= require caret_position
 //= require favcount.js

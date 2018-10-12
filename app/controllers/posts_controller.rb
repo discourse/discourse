@@ -123,11 +123,24 @@ class PostsController < ApplicationController
 
     posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
 
-    @posts = posts
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
-    @link = "#{Discourse.base_url}/u/#{user.username}/activity"
-    @description = I18n.t("rss_description.user_posts", username: user.username)
-    render 'posts/latest', formats: [:rss]
+    respond_to do |format|
+      format.rss do
+        @posts = posts
+        @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
+        @link = "#{Discourse.base_url}/u/#{user.username}/activity"
+        @description = I18n.t("rss_description.user_posts", username: user.username)
+        render 'posts/latest', formats: [:rss]
+      end
+
+      format.json do
+        render_json_dump(serialize_data(posts,
+                                        PostSerializer,
+                                        scope: guardian,
+                                        add_excerpt: true)
+                                      )
+      end
+    end
+
   end
 
   def cooked

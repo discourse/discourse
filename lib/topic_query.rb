@@ -634,11 +634,13 @@ class TopicQuery
       result = result.preload(:tags)
 
       if @options[:tags] && @options[:tags].size > 0
+        @options[:tags] = @options[:tags].split unless @options[:tags].respond_to?('each')
+        @options[:tags].each { |t| t.downcase! if t.is_a? String }
 
         if @options[:match_all_tags]
           # ALL of the given tags:
           tags_count = @options[:tags].length
-          @options[:tags] = Tag.where(name: @options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
+          @options[:tags] = Tag.where_name(@options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
 
           if tags_count == @options[:tags].length
             @options[:tags].each_with_index do |tag, index|
@@ -654,7 +656,7 @@ class TopicQuery
           if @options[:tags][0].is_a?(Integer)
             result = result.where("tags.id in (?)", @options[:tags])
           else
-            result = result.where("tags.name in (?)", @options[:tags])
+            result = result.where("lower(tags.name) in (?)", @options[:tags])
           end
         end
       elsif @options[:no_tags]

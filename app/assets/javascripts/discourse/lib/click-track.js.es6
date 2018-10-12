@@ -127,32 +127,39 @@ export default {
 
     const isInternal = DiscourseURL.isInternal(href);
 
-    // If we're on the same site, use the router and track via AJAX
-    if (tracking && isInternal && !$link.hasClass("attachment")) {
-      ajax("/clicks/track", {
-        data: {
-          url: href,
-          post_id: postId,
-          topic_id: topicId,
-          redirect: false
-        },
-        dataType: "html"
-      });
-      DiscourseURL.routeTo(href);
-      return false;
-    }
-
     const modifierLeftClicked = (e.ctrlKey || e.metaKey) && e.which === 1;
     const middleClicked = e.which === 2;
     const openExternalInNewTab = Discourse.User.currentProp(
       "external_links_in_new_tab"
     );
 
-    if (
+    const openWindow =
       modifierLeftClicked ||
       middleClicked ||
-      (!isInternal && openExternalInNewTab)
-    ) {
+      (!isInternal && openExternalInNewTab);
+
+    // If we're on the same site, use the router and track via AJAX
+    if (isInternal && !$link.hasClass("attachment")) {
+      if (tracking) {
+        ajax("/clicks/track", {
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId,
+            redirect: false
+          },
+          dataType: "html"
+        });
+      }
+      if (openWindow) {
+        window.open(destUrl, "_blank").focus();
+      } else {
+        DiscourseURL.routeTo(href);
+      }
+      return false;
+    }
+
+    if (openWindow) {
       window.open(destUrl, "_blank").focus();
     } else {
       DiscourseURL.redirectTo(destUrl);

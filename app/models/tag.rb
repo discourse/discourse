@@ -1,7 +1,13 @@
 class Tag < ActiveRecord::Base
   include Searchable
+  include HasDestroyedWebHook
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  scope :where_name, ->(name) do
+    name = Array(name).map(&:downcase)
+    where("lower(name) IN (?)", name)
+  end
 
   has_many :tag_users # notification settings
 
@@ -56,6 +62,10 @@ class Tag < ActiveRecord::Base
        WHERE x.tag_id = t.id
          AND x.pm_topic_count <> t.pm_topic_count
     SQL
+  end
+
+  def self.find_by_name(name)
+    self.find_by('lower(name) = ?', name.downcase)
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
@@ -148,5 +158,6 @@ end
 #
 # Indexes
 #
-#  index_tags_on_name  (name) UNIQUE
+#  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
+#  index_tags_on_name        (name) UNIQUE
 #

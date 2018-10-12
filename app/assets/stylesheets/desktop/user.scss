@@ -41,6 +41,10 @@
   }
 }
 
+.user-profile-hidden {
+  font-size: 1.5em;
+  text-align: center;
+}
 .user-navigation {
   display: table-cell;
   vertical-align: top;
@@ -265,28 +269,34 @@
   padding-top: 10px;
   padding-left: 30px;
 
+  .form-vertical {
+    width: 400px;
+    max-width: 100%;
+  }
+
   h3 {
     color: $primary;
     margin: 20px 0 10px 0;
   }
 
-  textarea {
-    width: 530px;
-  }
-
   .category-selector,
-  .tag-chooser {
-    width: 530px;
+  .tag-chooser,
+  textarea {
+    width: 100%;
   }
 
   input {
     &.user-selector {
-      width: 530px;
+      width: 100%;
     }
+  }
 
-    &[type="text"] {
-      @include breakpoint(medium) {
-        width: 450px;
+  .tag-controls,
+  .category-controls {
+    label {
+      align-items: center;
+      .d-icon {
+        margin-right: 3px;
       }
     }
   }
@@ -313,5 +323,13 @@
 
   .user-main & .user-field.text {
     padding-top: 0;
+  }
+
+  .image-upload-controls {
+    display: flex;
+    align-items: center;
+    .btn {
+      margin-right: 5px;
+    }
   }
 }

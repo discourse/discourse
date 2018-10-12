@@ -197,8 +197,9 @@ class UserSerializer < BasicUserSerializer
 
   def user_auth_tokens
     ActiveModel::ArraySerializer.new(
-      object.user_auth_tokens.order(:seen_at).reverse_order,
-      each_serializer: UserAuthTokenSerializer
+      object.user_auth_tokens,
+      each_serializer: UserAuthTokenSerializer,
+      scope: scope
     )
   end
 

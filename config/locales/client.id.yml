@@ -210,12 +210,8 @@ id:
         bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
     bookmarks:
-      not_logged_in: "Maaf, anda harus masuk untuk menandai post"
       created: "Anda telah menandai post ini"
-      not_bookmarked: "Anda telah membaca post ini; klik untuk menandainya"
-      last_read: "Ini adalah post terakhir yang anda baca; klik untuk menandainya"
       remove: "Hilangkan penandaan"
-      confirm_clear: "Apakah anda yakin ingin membersihkan semua penandaan dari topik ini?"
     preview: "pratinjau"
     cancel: "batal"
     save: "Simpan Perubahan"
@@ -223,7 +219,6 @@ id:
     saved: "Tersimpan!"
     upload: "Unggah"
     uploading: "Mengunggah..."
-    uploading_filename: "Sedang Mengunggah {{filename}}..."
     uploaded: "Sudah Diunggah!"
     pasting: "Menempelkan..."
     enable: "Aktifkan"
@@ -901,7 +896,6 @@ id:
         topic_name: "Nama Topik Baru"
         error: "Ada kesalahan dalam memindahkan posting sebagai topik baru"
       change_owner:
-        label: "Pemilik Posting Yang Baru"
         placeholder: "username pemilik yang baru"
     post:
       errors:

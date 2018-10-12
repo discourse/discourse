@@ -118,11 +118,11 @@ de:
       email: 'diesen Link per E-Mail senden'
     action_codes:
       public_topic: "hat das Thema öffentlich gemacht, %{when}"
-      private_topic: "hat dieses Thema in eine Nachricht umgewandelt %{when}"
+      private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
-      user_left: "%{who} hat sich selbst von dieser Nachricht entfernt %{when}"
+      user_left: "%{who} hat sich selbst von dieser Nachricht entfernt, %{when}"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
@@ -145,8 +145,8 @@ de:
         enabled: 'sichtbar gemacht, %{when}'
         disabled: 'unsichtbar gemacht, %{when}'
       banner:
-        enabled: 'hat dieses Banner erstellt %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird.'
-        disabled: 'hat dieses Banner entfernt %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt.'
+        enabled: 'hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird.'
+        disabled: 'hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt.'
     topic_admin_menu: "Thema administrieren"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
@@ -245,12 +245,10 @@ de:
         bookmark: "Klicke hier, um ein Lesezeichen auf den ersten Beitrag in diesem Thema zu setzen."
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
     bookmarks:
-      not_logged_in: "Entschuldige, du musst angemeldet sein, um ein Lesezeichen setzen zu können."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
-      not_bookmarked: "Du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen."
-      last_read: "Das ist der letzte Beitrag, den du gelesen hast. Klicke, um ein Lesezeichen zu setzen."
+      not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
       remove: "Lesezeichen entfernen"
-      confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest?"
+      confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
@@ -273,7 +271,8 @@ de:
     saved: "Gespeichert!"
     upload: "Hochladen"
     uploading: "Wird hochgeladen…"
-    uploading_filename: "{{filename}} wird hochgeladen…"
+    uploading_filename: "wird hochgeladen: {{filename}}..."
+    clipboard: "Zwischenablage"
     uploaded: "Hochgeladen!"
     pasting: "Einfügen..."
     enable: "Aktivieren"
@@ -521,7 +520,7 @@ de:
       topic_stat_sentence:
         one: "%{count} neues Thema seit 1 %{unit}."
         other: "%{count} neue Themen seit 1 %{unit}."
-      more: " (%{count} weitere) …"
+      n_more: "Kategorien (%{count} weitere) ..."
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -782,16 +781,17 @@ de:
         title: "Wiederholung des Passworts"
       auth_tokens:
         title: "Kürzlich benutzte Geräte"
-        title_logs: "Authentifizierungs-Logs"
-        ip_address: "IP Adresse"
-        created: "Erzeugt"
-        first_seen: "Erstmalig gesehen"
-        last_seen: "Zuletzt gesehen"
-        operating_system: "Betriebssystem"
-        location: "Ort"
-        action: "Aktion"
-        login: "Einloggen"
-        logout: "Überall ausloggen"
+        ip: "IP"
+        details: "Details"
+        log_out_all: "Überall abmelden"
+        active: "gerade aktiv"
+        not_you: "Das bist nicht du?"
+        show_all: "Alle anzeigen ({{count}})"
+        show_few: "Weniger anzeigen"
+        was_this_you: "Warst das du?"
+        browser_and_device: "{{browser}} auf {{device}}"
+        secure_account: "Mein Konto absichern"
+        latest_post: "Dein letzter Beitrag..."
       last_posted: "Letzter Beitrag"
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
@@ -987,9 +987,6 @@ de:
       enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
-    too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
-    too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
-    too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} erreicht."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} überschritten."
@@ -1165,6 +1162,7 @@ de:
       categories_with_featured_topics: "Kategorien mit empfohlenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
       categories_and_top_topics: "Kategorien und angesagte Themen"
+      categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
     shortcut_modifier_key:
       shift: 'Umschalt'
       ctrl: 'Strg'
@@ -1279,7 +1277,6 @@ de:
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
-      link_url_placeholder: "http://example.com"
       quote_title: "Zitat"
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
@@ -1327,7 +1324,7 @@ de:
           desc: "Entwerfe ein Thema, das nur für das Team sichtbar ist."
         toggle_topic_bump:
           label: "Bump des Themas umschalten"
-          desc: "Antworten ohne das Bump-Datum des Themas zu ändern."
+          desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"
     notifications:
       tooltip:
         regular:
@@ -1818,15 +1815,13 @@ de:
         action: "ausgewählte Beiträge zusammenführen"
         error: "Es gab einen Fehler beim Zusammenführen der ausgewählten Beiträge."
       change_owner:
-        title: "Eigentümer der Beiträge ändern"
+        title: "Eigentümer ändern"
         action: "Eigentümer ändern"
         error: "Beim Ändern des Eigentümers der Beiträge ist ein Fehler aufgetreten."
-        label: "Neuer Eigentümer der Beiträge"
         placeholder: "Benutzername des neuen Eigentümers"
         instructions:
-          one: "Bitte wähle den neuen Eigentümer für den Beitrag von <b>{{old_user}}</b>."
-          other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
-        instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden."
+          one: "Bitte wähle einen neuen Eigentümer für den Beitrag von <b>@{{old_user}}</b>"
+          other: "Bitte wähle einen neuen Eigentümer für {{count}} Beiträge von <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Zeitstempel ändern…"
         action: "Erstelldatum ändern"
@@ -2346,7 +2341,6 @@ de:
         this_week: "Woche"
         today: "Heute"
         other_periods: "zeige angesagte Themen:"
-    browser_update: '<a href="http://www.discourse.org/faq/#browser">Dein Webbrowser ist leider zu alt, um dieses Forum zu besuchen</a>. Bitte <a href="http://browsehappy.com">installiere einen neueren Browser</a>.'
     permission_types:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
@@ -2529,8 +2523,7 @@ de:
           bookmarks: "Das waren alle Themen mit Lesezeichen."
           search: "Es gibt keine weiteren Suchergebnisse."
     invite:
-      custom_message: "Mache deine Einladung ein bisschen mehr persönlich, indem du etwas schreibst:"
-      custom_message_link: "persönliche Nachricht"
+      custom_message: "Gestalte deine Einladung etwas mehr persönlicher, in dem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
@@ -2939,7 +2932,6 @@ de:
         import: "Importieren"
         delete: "Löschen"
         delete_confirm: "Dieses Theme löschen?"
-        about: "Ändere die Stylesheets (CSS) und den HTML-Header auf der Website. Füge eine Anpassung hinzu, um zu starten."
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
@@ -2959,13 +2951,19 @@ de:
           theme: "Theme"
           component: "Komponente"
           components: "Komponenten"
+          theme_name: "Theme-Name"
+          component_name: "Komponenten-Name"
+          themes_intro: "Wähle ein bestehendes Theme oder erstelle ein neues, um loszulegen"
+          beginners_guide_title: "Leitfaden für Einstieger zur Verwendung von Discourse-Themes"
+          developers_guide_title: "Leitfaden für Entwickler zur Verwendung von Discourse-Themes"
+          browse_themes: "Community-Themes durchsuchen"
           import_theme: "Design importieren"
           customize_desc: "Anpassen:"
           title: "Designs"
-          modal_title: "Erstelle Theme"
           create: "Erstelle"
           create_type: "Typ:"
           create_name: "Name:"
+          name_too_short: "Der Name muss mindestens 4 Zeichen lang sein."
           long_title: "Farben, CSS und HTML-Inhalte deiner Seite erweitern"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
@@ -2980,10 +2978,17 @@ de:
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
-          switch_component: "Erzeuge Theme"
-          switch_component_alert: "Bist Du  sicher, dass Du diese Komponente in ein Theme konvertieren möchtest? Dies wird es zu einem unabhängigen Theme machen und es wird als Kind von allen Themes entfernt werden."
-          switch_theme: "Komponente erzeugen"
-          switch_theme_alert: "Bist Du sicher, dass Du dieses Theme zu einer Komponente konvertieren möchtest? Es will als Elternteil von all Komponenten entfernt werden."
+          convert: "Umwandeln"
+          convert_component_alert: "Bist Du sicher, dass du diese Komponente in ein Theme umwandeln möchtest? Sie wird als Komponente entfernt von %{relatives}."
+          convert_component_tooltip: "Wandle diese Komponente in ein Theme um"
+          convert_theme_alert: "Bist Du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest? Sie wird als übergeordnetes Element entfernt von %{relatives}."
+          convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
+          inactive_themes: "Inaktive Themes:"
+          broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
+          default_theme_tooltip: "Dieses Theme ist das Standardtheme der Seite."
+          updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
+          and_x_more: "und {{count}} mehr."
+          collapse: Zuklappen
           uploads: "Uploads"
           no_uploads: "Du kannst Medieninhalte hochladen, die zu deinem Theme gehören, wie etwa Schriftarten und Bilder."
           add_upload: "Upload hinzufügen"
@@ -2995,7 +3000,10 @@ de:
             no_overwrite: "Ungültiger Variablenname. Darf keine existierende Variable überschreiben."
             must_be_unique: "Ungültiger Variablenname. Muss eindeutig sein."
           upload: "Hochladen"
-          child_themes_check: "Theme beinhaltet andere Kinder-Themes"
+          select_component: "Komponente auswählen..."
+          unsaved_changes_alert: "Du hast deine Änderungen noch nicht gespeichert, möchtest du sie verwerfen und weitermachen?"
+          discard: "Verwerfen"
+          stay: "Bleiben"
           css_html: "Benutzerdefiniertes CSS/HTML"
           edit_css_html: "Bearbeite CSS/HTML"
           edit_css_html_help: "Du hast kein CSS oder HTML bearbeitet"
@@ -3003,6 +3011,7 @@ de:
           import_web_tip: "Repository mit dem Theme"
           import_file_tip: ".dcstyle.json Datei mit dem Theme"
           is_private: "Theme ist in einem privaten Git-Repository"
+          remote_branch: "Branch-Name (optional)"
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
           about_theme: "Über das Theme"
           license: "Lizenz"
@@ -3019,6 +3028,7 @@ de:
             one: "Theme liegt 1 Commit zurück!"
             other: "Theme liegt {{count}} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
+          repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
@@ -3180,7 +3190,7 @@ de:
           filter: "Filter:"
           title: "Team-Aktionen"
           clear_filters: "Alles anzeigen"
-          staff_user: "Team-Mitglied"
+          staff_user: "Benutzer"
           target_user: "Betroffener Benutzer"
           subject: "Objekt"
           when: "Wann"
@@ -3250,6 +3260,7 @@ de:
             change_badge: "Abzeichen ändern"
             delete_badge: "Abzeichen löschen"
             merge_user: "Benutzer zusammenführen"
+            entity_export: "Entität exportieren"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

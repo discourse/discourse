@@ -10,6 +10,7 @@ export default Discourse.Route.extend({
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, log => {
       if (log.message === "[STARTED]") {
+        Discourse.User.currentProp("hideReadOnlyAlert", true);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           true
@@ -62,15 +63,14 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    startBackup() {
+    showStartBackupModal() {
       showModal("admin-start-backup", { admin: true });
       this.controllerFor("modal").set("modalClass", "start-backup-modal");
     },
 
-    backupStarted() {
-      this.controllerFor("adminBackups").set("isOperationRunning", true);
+    startBackup(withUploads) {
       this.transitionTo("admin.backups.logs");
-      this.send("closeModal");
+      Backup.start(withUploads);
     },
 
     destroyBackup(backup) {
@@ -100,17 +100,8 @@ export default Discourse.Route.extend({
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
-            Discourse.User.currentProp("hideReadOnlyAlert", true);
-            backup.restore().then(function() {
-              self
-                .controllerFor("adminBackupsLogs")
-                .get("logs")
-                .clear();
-              self
-                .controllerFor("adminBackups")
-                .set("model.isOperationRunning", true);
-              self.transitionTo("admin.backups.logs");
-            });
+            self.transitionTo("admin.backups.logs");
+            backup.restore();
           }
         }
       );

@@ -52,14 +52,33 @@ module DiscourseHub
 
   def self.collection_action(action, rel_url, params = {})
     connect_opts = connect_opts(params)
-    JSON.parse(Excon.send(action,
+
+    response = Excon.send(action,
       "#{hub_base_url}#{rel_url}",
       {
         body: JSON[params],
         headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/json" },
         omit_default_port: true
       }.merge(connect_opts)
-    ).body)
+    )
+
+    if (status = response.status) != 200
+      Rails.logger.warn(response_status_log_message(rel_url, status))
+    end
+
+    begin
+      JSON.parse(response.body)
+    rescue JSON::ParserError
+      Rails.logger.error(response_body_log_message(response.body))
+    end
+  end
+
+  def self.response_status_log_message(rel_url, status)
+    "Discourse Hub (#{hub_base_url}#{rel_url}) returned a bad status #{status}."
+  end
+
+  def self.response_body_log_message(body)
+    "Discourse Hub returned a bad response body: #{body}"
   end
 
   def self.connect_opts(params = {})

@@ -297,7 +297,6 @@
         width: auto;
         text-align: left;
         font-weight: normal;
-        float: auto;
       }
 
       .instructions {
@@ -313,10 +312,10 @@
 
 .user-field {
   .required {
-    text-align: top;
+    vertical-align: top;
     color: $danger;
     font-weight: bold;
-    font-size: $font-up-2;
+    margin-left: 0.25em;
   }
 }
 

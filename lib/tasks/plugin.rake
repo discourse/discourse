@@ -11,9 +11,8 @@ task 'plugin:install_all_official' do
 
   map = {
     'Canned Replies' => 'https://github.com/discourse/discourse-canned-replies',
-    'Spoiler Alert!' => 'https://github.com/discourse/discourse-spoiler-alert',
-    'staff-notes' => 'https://github.com/discourse/discourse-staff-notes',
-    'GitHub badges' => 'https://github.com/discourse/github_badges',
+    'discourse-logster-rate-limit-checker' => 'https://github.com/discourse/logster-rate-limit-checker',
+    'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api',
   }
 
   #require 'plugin/metadata'

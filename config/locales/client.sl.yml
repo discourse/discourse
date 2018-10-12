@@ -264,12 +264,8 @@ sl:
         bookmark: "Klikni, da ustvariš zaznamek prve objave v tej temi"
         unbookmark: "Klikni za odstranitev vseh zaznamkov v tej temi"
     bookmarks:
-      not_logged_in: "oprosti, moraš biti prijavljen za ustvarjanje zaznamkov"
       created: "ustvarili ste zaznamek te objave"
-      not_bookmarked: "prebrali ste to objavo; klinite, da ustvarite zaznamek"
-      last_read: "to je zadnja objava katero ste prebrali; kliknite, da ustvarite zaznamek"
       remove: "Odstrani Zaznamek"
-      confirm_clear: "Ste prepričani, da želite počistiti vse zaznamke s te teme?"
     preview: "predogled"
     cancel: "prekliči"
     save: "Shrani Spremembe"
@@ -277,7 +273,6 @@ sl:
     saved: "Shranjeno!"
     upload: "Naloži"
     uploading: "Nalagam..."
-    uploading_filename: "Nalagam {{filename}}..."
     uploaded: "Naloženo!"
     pasting: "Prilepljam..."
     enable: "Omogoči"
@@ -418,7 +413,7 @@ sl:
           description: "Obveščeni boste samo ob prvi objavi v vsaki novi temi v tej skupini."
         tracking:
           title: "Sledi"
-          description: "Obveščeni boste, če nekdo omeni vaše @ime ali odgovori vam in seštevek novih odgovorov bo prikazan."
+          description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori. Prikazano bo tudi število novih odgovorov."
         regular:
           title: "Normalno"
           description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
@@ -557,6 +552,8 @@ sl:
       watched_topics_link: "Pokaži opazovane teme"
       tracked_topics_link: "Pokaži sledene teme"
       automatically_unpin_topics: "Samodejno odpni temo ko dosežem dno teme."
+      apps: "Aplikacije"
+      api_approved: "Odobreno"
       staff_counters:
         flags_given: "oznake v pomoč"
         flagged_posts: "označene objave"
@@ -587,6 +584,10 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
+      second_factor:
+        enable: "Omogoči <a href>preverjanje v dveh korakih</a> za večjo varnost uporabniškega računa."
+        extended_description: |
+          Preverjanje v dveh korakih poveča varnost vašega uporabniškega računa tako, da zahteva enkratno kodo poleg vašega gesla. KEnkratno kodo lahko ustvarite na <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> in <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> napravah.
       change_about:
         title: "Spremeni O meni"
       change_username:
@@ -616,6 +617,9 @@ sl:
         title: "Email"
         instructions: "nikoli ne pokaži javno"
         invalid: "Prosim vnesite veljaven email naslov"
+      associated_accounts:
+        title: "Povezani računi"
+        connect: "Poveži"
       name:
         title: "Ime"
         instructions: "vaše polno ime (neobvezno)"
@@ -634,7 +638,7 @@ sl:
         prefilled: "Email ustreza uporabniškemu imenu"
       locale:
         title: "Jezik vmesnika"
-        instructions: "Jezik uporabniškega vmesnika. Zamenjal se bo ko boste osvežili stran."
+        instructions: "Jezik uporabniškega vmesnika. Zamenjal se bo, ko boste osvežili stran."
         default: "(privzeto)"
         any: "katerokoli"
       password_confirmation:
@@ -690,6 +694,8 @@ sl:
         title: "Povabila"
         user: "Povabljen uporabnik"
         sent: "Poslano"
+        none: "Ni povabil za prikaz."
+        pending: "Čakajoča vabila"
         posts_read_count: "Prebranih objav"
         rescind: "Odstrani"
         rescinded: "Vabilo odstranjeno"
@@ -737,6 +743,8 @@ sl:
         more_topics: "Več tem"
         top_badges: "Najboljše značke"
         top_links: "Najboljše povezave"
+        most_liked_by: "Največ všečkov od"
+        most_liked_users: "Največkrat všečkal/a"
       stream:
         posted_by: "Objavil"
         the_topic: "tema"
@@ -751,9 +759,6 @@ sl:
         back: "Nazaj"
     close: "Zapri"
     logout: "Bili ste odjavljeni."
-    too_few_topics_and_posts_notice: "Začnimo z  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>diskusijo!</a> Trenutno imamo <strong>%{currentTopics} / %{requiredTopics}</strong> tem in <strong>%{currentPosts} / %{requiredPosts}</strong>  objav. Novi obiskovalci potrebujejo vsebine, ki jih lahko preberejo in se nanje odzovejo."
-    too_few_topics_notice: "Začnimo z <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>diskusijo!</a> Trenutno imamo <strong>%{currentTopics} / %{requiredTopics}</strong> tem. Novi obiskovalci  potrebujejo vsebine, ki jih lahko preberejo in se nanje odzovejo."
-    too_few_posts_notice: "Začnimo z <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>diskusijo!</a> Trenutno imamo <strong>%{currentPosts} / %{requiredPosts}</strong> objav. Novi obiskovalci potrebujejo vsebine, ki jih lahko preberejo in se nanje odzovejo."
     all_time_desc: 'skupaj ustvarjenih tem'
     year: 'leto'
     year_desc: 'teme, ustvarjene v preteklih 365 dneh'
@@ -797,6 +802,7 @@ sl:
       provide_new_email: "Vpišite nov naslov in ponovno vam bomo poslali potrditveno sporočilo."
       to_continue: "Prosimo če se prijavite"
       preferences: "Za spremembo nastavitev morate biti prijavljeni."
+      not_approved: "Vaš uporabniški račun še ni bil potrjen. Obveščeni boste preko emaila, ko bo pripravljen za prijavo."
       google_oauth2:
         message: "Overjanje z Googlom (pazi, da pojavno okno ne bo preprečeno)"
       twitter:
@@ -1018,19 +1024,27 @@ sl:
           "2_4": 'Videli boste število novih odgovorov, ker ste objavili odgovor na to temo.'
           "2_2": 'Videli boste število novih odgovorov, ker sledite tej temi.'
           "2": 'Videli boste število novih odgovorov, ker ste . <a href="/u/{{username}}/preferences">prebrali to temo</a>.'
+          "1_2": 'Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori.'
+          "1": 'Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori.'
           "0_7": 'Ignorirate vsa obvestila za to kategorijo.'
         watching_pm:
           title: "Opazujem"
+          description: "Obveščeni boste o vsakem novem odgovoru v tem sporočilu. Prikazano bo tudi število novih odgovorov."
         watching:
           title: "Opazujem"
+          description: "Obveščeni boste o vsakem novem odgovoru v tej temi. Prikazano bo tudi število novih odgovorov."
         tracking_pm:
           title: "Sledim"
+          description: "Število novih odgovorov bo prikazano za to sporočilo. Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         tracking:
           title: "Sledim"
+          description: "Število novih odgovorov bo prikazano za to sporočilo. Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         regular:
           title: "Normalno"
+          description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         regular_pm:
           title: "Normalno"
+          description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         muted_pm:
           title: "Utišano"
         muted:
@@ -1051,7 +1065,7 @@ sl:
         pin_globally: "Pripni temo globalno"
       reply:
         title: 'Odgovori'
-        help: 'začni sestavljati odgovor na to temo'
+        help: 'sestavi odgovor na to temo'
       clear_pin:
         title: "Odpni temo"
       share:
@@ -1061,7 +1075,7 @@ sl:
         title: 'Natisni'
         help: 'Odpri tiskalniku prilagojeno verzijo te teme'
       flag_topic:
-        title: 'Zastavica'
+        title: 'Prijavi'
         success_message: 'Uspešno ste označili to temo.'
       feature_topic:
         pin: "Naj se ta tema prikaže na vrhu kategorije {{categoryLink}} do"
@@ -1088,7 +1102,7 @@ sl:
         email_or_username: "Email ali uporabniško ime vabljenega"
         email_or_username_placeholder: "email ali uporabniško ime "
         action: "Povabi"
-        success: "Povabili smo uporabnico/ka, da sodeluje v tem pogovoru."
+        success: "Povabili smo uporabnika/co, da sodeluje v tem pogovoru."
         success_group: "Povabili smo skupino, da sodeluje v tem pogovoru."
         error: "Prišlo je do napake ob vabilu uporabnika."
         group_name: "ime skupine"
@@ -1109,12 +1123,14 @@ sl:
         no_value: "Ne, ohrani"
         yes_value: "Ja, zavrži"
       controls:
+        reply: "sestavi odgovor na to objavo"
         edit: "uredi objavo"
         edit_action: "Uredi"
         delete: "izbriši objavo"
+        share: "deli povezavo do te objave"
         more: "Več"
       actions:
-        flag: 'Zastavica'
+        flag: 'Prijavi'
       revisions:
         controls:
           edit_wiki: "Uredi wiki"
@@ -1172,8 +1188,11 @@ sl:
       position_disabled_click: 'omogoči nastavitev "fiksnih položajev kategorij"'
       parent: "Nadrejena kategorija"
       notifications:
+        tracking:
+          description: "Avtomatično boste sledili vsem temam v teh kategorijah. Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori. Prikazano bo tudi število novih odgovorov."
         regular:
           title: "Normalno"
+          description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         muted:
           title: "Utišan"
           description: "O novih temah v teh kategorijah ne boste obveščeni in ne bodo se pojavile med najnovejšimi."
@@ -1320,13 +1339,18 @@ sl:
       jump_to:
         top: 'Na vrh'
       actions:
-        flag: '<b>!</b> Zastavica na objavo'
+        flag: '<b>!</b> Prijavi objavo'
     badges:
       title: Značke
     tagging:
+      all_tags: "Vse oznake"
+      selector_all_tags: "vse oznake"
       filters:
         with_category: "%{filter} %{tag} tem v %{category}"
         untagged_with_category: "%{filter} neoznačenih tem v %{category}"
+      notifications:
+        regular:
+          description: "Obveščeni boste, če nekdo omeni vaše @ime ali odgovori na vašo objavo."
       groups:
         new: "Nova skupina"
         parent_tag_placeholder: "Poljubno"
@@ -1347,7 +1371,6 @@ sl:
           top: "Ni več najboljših tem."
           bookmarks: "Ni več tem z zaznamki."
     invite:
-      custom_message_link: "sporočilo po meri"
       custom_message_placeholder: "Vnesi sporočilo po meri"
   admin_js:
     admin:
@@ -1498,7 +1521,6 @@ sl:
           color_scheme: "Barvna shema"
           uploads: "Prenosi"
           upload: "Prenesi"
-          child_themes_check: "Tema vključuje ostale pod-teme"
           css_html: "CSS/HTML po meri"
           edit_css_html: "Uredi CSS/HTML"
           edit_css_html_help: "Niste uredili še nobenega CSS ali HTML."
@@ -1601,6 +1623,7 @@ sl:
             post_locked: "objava zaklenjena"
             post_unlocked: "objava odklenjena"
             check_personal_message: "preveri osebno sporočilo"
+            post_approved: "objava odobrena"
         screened_emails:
           email: "Email naslov"
           actions:

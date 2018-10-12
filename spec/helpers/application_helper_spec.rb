@@ -165,4 +165,15 @@ describe ApplicationHelper do
     end
   end
 
+  describe 'preloaded_json' do
+    it 'returns empty JSON if preloaded is empty' do
+      @preloaded = nil
+      expect(helper.preloaded_json).to eq('{}')
+    end
+
+    it 'escapes and strips invalid unicode and strips in json body' do
+      @preloaded = { test: %{["< \x80"]} }
+      expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+    end
+  end
 end

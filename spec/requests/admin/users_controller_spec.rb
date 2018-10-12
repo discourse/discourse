@@ -381,6 +381,7 @@ RSpec.describe Admin::UsersController do
   describe '#primary_group' do
     let(:group) { Fabricate(:group) }
     let(:another_user) { Fabricate(:coding_horror) }
+    let(:another_group) { Fabricate(:group, title: 'New') }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -426,6 +427,41 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       another_user.reload
       expect(another_user.primary_group_id).to eq(nil)
+    end
+
+    it "updates user's title when it matches the previous primary group title" do
+      group.update_columns(primary_group: true, title: 'Previous')
+      group.add(another_user)
+      another_group.add(another_user)
+
+      expect(another_user.reload.title).to eq('Previous')
+
+      put "/admin/users/#{another_user.id}/primary_group.json", params: {
+        primary_group_id: another_group.id
+      }
+
+      another_user.reload
+      expect(response.status).to eq(200)
+      expect(another_user.primary_group_id).to eq(another_group.id)
+      expect(another_user.title).to eq('New')
+    end
+
+    it "doesn't update user's title when it does not match the previous primary group title" do
+      another_user.update_columns(title: 'Different')
+      group.update_columns(primary_group: true, title: 'Previous')
+      another_group.add(another_user)
+      group.add(another_user)
+
+      expect(another_user.reload.title).to eq('Different')
+
+      put "/admin/users/#{another_user.id}/primary_group.json", params: {
+        primary_group_id: another_group.id
+      }
+
+      another_user.reload
+      expect(response.status).to eq(200)
+      expect(another_user.primary_group_id).to eq(another_group.id)
+      expect(another_user.title).to eq('Different')
     end
   end
 

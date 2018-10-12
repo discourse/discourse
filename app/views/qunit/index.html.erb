@@ -5,6 +5,7 @@
     <%= stylesheet_link_tag "test_helper" %>
     <%= javascript_include_tag "test_helper" %>
     <%= csrf_meta_tags %>
+    <script src="<%= ExtraLocalesController.url('admin') %>"></script>
   </head>
   <body>
     <div id="qunit"></div>

@@ -20,6 +20,10 @@
       float: left;
       width: 53%;
       padding-right: 20px;
+      input[type="checkbox"],
+      input[type="radio"] {
+        flex: 0 0 auto;
+      }
       .category-selector {
         width: 95%;
       }
@@ -39,8 +43,6 @@
     }
     .input-setting-string,
     .input-setting-textarea {
-      box-sizing: border-box;
-      height: 30px;
       width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;

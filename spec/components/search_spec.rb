@@ -407,6 +407,7 @@ describe Search do
     end
 
     let!(:tag) { Fabricate(:tag) }
+    let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
     let(:tag_group) { Fabricate(:tag_group) }
     let(:category) { Fabricate(:category) }
 
@@ -415,13 +416,16 @@ describe Search do
         SiteSetting.tagging_enabled = true
 
         post = Fabricate(:post, raw: 'I am special post')
-        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name])
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
         post.topic.save
 
         # we got to make this index (it is deferred)
         Jobs::ReindexSearch.new.rebuild_problem_posts
 
         result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(1)
+
+        result = Search.execute("hElLo")
         expect(result.posts.length).to eq(1)
 
         SiteSetting.tagging_enabled = false
@@ -822,9 +826,10 @@ describe Search do
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
 
       # tags
-      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет')]
+      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет'), Fabricate(:tag, name: 'HeLlO')]
       expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #привет').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #hElLo').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
@@ -894,6 +899,22 @@ describe Search do
         expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts)
           .to contain_exactly(post1, post2)
       end
+
+      it 'orders posts correctly when combining tags with categories or terms' do
+        cat1 = Fabricate(:category, name: 'food')
+        topic6 = Fabricate(:topic, tags: [tag1, tag2], category: cat1)
+        topic7 = Fabricate(:topic, tags: [tag1, tag2, tag3], category: cat1)
+        post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5)
+        post8 = Fabricate(:post, topic: topic7, raw: "Bakey, bakey, eggs to makey.", like_count: 2)
+
+        expect(Search.execute('bakey tags:lunch order:latest').posts.map(&:id))
+          .to eq([post8.id, post7.id])
+        expect(Search.execute('#food tags:lunch order:latest').posts.map(&:id))
+          .to eq([post8.id, post7.id])
+        expect(Search.execute('#food tags:lunch order:likes').posts.map(&:id))
+          .to eq([post7.id, post8.id])
+      end
+
     end
 
     it "can find posts which contains filetypes" do

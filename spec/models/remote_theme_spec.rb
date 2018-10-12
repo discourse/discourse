@@ -187,6 +187,20 @@ describe RemoteTheme do
     end
   end
 
+  context ".joined_remotes" do
+    it "finds records that are associated with themes" do
+      github_repo
+      gitlab_repo
+      expect(RemoteTheme.joined_remotes).to eq([])
+
+      Fabricate(:theme, remote_theme: github_repo)
+      expect(RemoteTheme.joined_remotes).to eq([github_repo])
+
+      Fabricate(:theme, remote_theme: gitlab_repo)
+      expect(RemoteTheme.joined_remotes).to contain_exactly(github_repo, gitlab_repo)
+    end
+  end
+
   context ".out_of_date_themes" do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
     let!(:theme) { Fabricate(:theme, remote_theme: remote) }
@@ -197,6 +211,18 @@ describe RemoteTheme do
 
       remote.update!(local_version: "new version", commits_behind: 0)
       expect(described_class.out_of_date_themes).to eq([])
+    end
+  end
+
+  context ".unreachable_themes" do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme", last_error_text: "can't contact this repo :(") }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote) }
+
+    it "finds out of date themes" do
+      expect(described_class.unreachable_themes).to eq([[theme.name, theme.id]])
+
+      remote.update!(last_error_text: nil)
+      expect(described_class.unreachable_themes).to eq([])
     end
   end
 end

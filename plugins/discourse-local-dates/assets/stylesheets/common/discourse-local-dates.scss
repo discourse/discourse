@@ -2,22 +2,18 @@
   display: inline-block;
   vertical-align: top;
 
-  &.cooked {
+  &.cooked-date {
     color: $primary;
-    font-weight: bold;
     cursor: pointer;
+    border-bottom: 1px dashed $primary-medium;
 
     .d-icon-globe {
       margin-right: 0.25em;
-      color: $primary-medium;
-
-      &:hover {
-        color: $primary-high;
-      }
+      color: $primary;
     }
 
-    &:hover .d-icon-globe {
-      color: $primary-high;
+    &.past {
+      border-bottom-color: $primary-low-mid;
     }
   }
 }

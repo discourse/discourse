@@ -143,7 +143,7 @@ class PostAction < ActiveRecord::Base
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(post: :topic).merge(Topic.in_category_and_categories(opts[:category_id])) if opts[:category_id]
+    result = result.joins(post: :topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
       .count
@@ -583,13 +583,19 @@ class PostAction < ActiveRecord::Base
 
       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 
-    elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
-          SiteSetting.flags_required_to_hide_post > 0
+    elsif PostActionType.auto_action_flag_types.include?(post_action_type)
 
-      _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+      if acting_user.has_trust_level?(TrustLevel[4]) &&
+         post.user&.trust_level != TrustLevel[4]
 
-      if new_flags >= SiteSetting.flags_required_to_hide_post
-        hide_post!(post, post_action_type, guess_hide_reason(post))
+        hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl4_user])
+      elsif SiteSetting.flags_required_to_hide_post > 0
+
+        _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+
+        if new_flags >= SiteSetting.flags_required_to_hide_post
+          hide_post!(post, post_action_type, guess_hide_reason(post))
+        end
       end
     end
   end

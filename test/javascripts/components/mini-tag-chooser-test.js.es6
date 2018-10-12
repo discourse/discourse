@@ -11,6 +11,8 @@ componentTest("default", {
   template: "{{mini-tag-chooser allowAny=true filterable=true tags=tags}}",
 
   beforeEach() {
+    this.siteSettings.max_tag_length = 24;
+
     this.site.set("can_create_tag", true);
     this.set("tags", ["jeff", "neil", "arpit"]);
 
@@ -26,7 +28,7 @@ componentTest("default", {
         });
       }
 
-      if (params.queryParams.q === "joffrey") {
+      if (params.queryParams.q.toLowerCase() === "joffrey" || params.queryParams.q === "invalid'tag" || params.queryParams.q === "01234567890123456789012345") {
         return response({results: []});
       }
 
@@ -72,6 +74,34 @@ componentTest("default", {
       "it creates the tag"
     );
 
+    await this.get("subject").expand();
+    await this.get("subject").fillInFilter("Joffrey");
+    await this.get("subject").keyboard("enter");
+    await this.get("subject").collapse();
+    assert.deepEqual(
+      this.get("tags"),
+      ["jeff", "neil", "arpit", "régis", "joffrey"],
+      "it does not allow case insensitive duplicate tags"
+    );
+
+    await this.get("subject").expand();
+    await this.get("subject").fillInFilter("invalid'tag");
+    await this.get("subject").keyboard("enter");
+    assert.deepEqual(
+      this.get("tags"),
+      ["jeff", "neil", "arpit", "régis", "joffrey", "invalidtag"],
+      "it strips invalid characters in tag"
+    );
+
+    await this.get("subject").expand();
+    await this.get("subject").fillInFilter("01234567890123456789012345");
+    await this.get("subject").keyboard("enter");
+    assert.deepEqual(
+      this.get("tags"),
+      ["jeff", "neil", "arpit", "régis", "joffrey", "invalidtag"],
+      "it does not allow creating long tags"
+    );
+
     await click(
       this.get("subject")
         .el()
@@ -80,7 +110,7 @@ componentTest("default", {
     );
     assert.deepEqual(
       this.get("tags"),
-      ["jeff", "neil", "arpit", "régis"],
+      ["jeff", "neil", "arpit", "régis", "joffrey"],
       "it removes the tag"
     );
   }

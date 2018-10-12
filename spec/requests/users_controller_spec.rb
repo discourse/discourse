@@ -190,7 +190,10 @@ describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+        end
 
         expect(session["password-#{token}"]).to be_blank
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
@@ -255,7 +258,10 @@ describe UsersController do
 
           get "/u/password-reset/#{token}"
 
-          expect(response.body).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+          end
 
           put "/u/password-reset/#{token}", params: {
             password: 'hg9ow8yHG32O',
@@ -1764,9 +1770,13 @@ describe UsersController do
     end
 
     context 'while logged in' do
+      before do
+        sign_in(user)
+      end
 
-      let!(:user) { sign_in(Fabricate(:user)) }
-      let(:upload) { Fabricate(:upload) }
+      let(:upload) do
+        Fabricate(:upload, user: user)
+      end
 
       it "raises an error when you don't have permission to toggle the avatar" do
         another_user = Fabricate(:user)
@@ -1803,6 +1813,9 @@ describe UsersController do
       end
 
       it 'can successfully pick a gravatar' do
+
+        user.user_avatar.update_columns(gravatar_upload_id: upload.id)
+
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "gravatar"
         }
@@ -1810,6 +1823,16 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
+      end
+
+      it 'can not pick uploads that were not created by user' do
+        upload2 = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload2.id, type: "custom"
+        }
+
+        expect(response.status).to eq(403)
       end
 
       it 'can successfully pick a custom avatar' do
@@ -2148,6 +2171,14 @@ describe UsersController do
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
+
+    it "returns 404 for a hidden profile" do
+      user = Fabricate(:user)
+      user.user_option.update_column(:hide_profile_and_presence, true)
+
+      get "/u/#{user.username_lower}/summary.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#confirm_admin' do
@@ -2262,7 +2293,7 @@ describe UsersController do
       end
 
       it "raises an error when logged in" do
-        moderator = sign_in(Fabricate(:moderator))
+        sign_in(Fabricate(:moderator))
         post_user
 
         put "/u/update-activation-email.json", params: {
@@ -2274,7 +2305,7 @@ describe UsersController do
 
       it "raises an error when the new email is taken" do
         active_user = Fabricate(:user)
-        user = post_user
+        post_user
 
         put "/u/update-activation-email.json", params: {
           email: active_user.email
@@ -2284,7 +2315,7 @@ describe UsersController do
       end
 
       it "raises an error when the email is blacklisted" do
-        user = post_user
+        post_user
         SiteSetting.email_domains_blacklist = 'example.com'
         put "/u/update-activation-email.json", params: { email: 'test@example.com' }
         expect(response.status).to eq(422)
@@ -2394,7 +2425,23 @@ describe UsersController do
       it "returns success" do
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["user"]["username"]).to eq(user.username)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed['username']).to eq(user.username)
+        expect(parsed["profile_hidden"]).to be_blank
+        expect(parsed["trust_level"]).to be_present
+      end
+
+      it "returns a hidden profile" do
+        user.user_option.update_column(:hide_profile_and_presence, true)
+
+        get "/u/#{user.username}.json"
+        expect(response.status).to eq(200)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed["username"]).to eq(user.username)
+        expect(parsed["profile_hidden"]).to eq(true)
+        expect(parsed["trust_level"]).to be_blank
       end
 
       it "should redirect to login page for anonymous user when profiles are hidden" do
@@ -2592,9 +2639,12 @@ describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to include(
-          "{\"message\":\"#{I18n.t("login.activate_email", email: user.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user.username}\",\"email\":\"#{user.email}\"}"
-        )
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['accountCreated']).to include(
+            "{\"message\":\"#{I18n.t("login.activate_email", email: user.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user.username}\",\"email\":\"#{user.email}\"}"
+          )
+        end
       end
     end
   end
@@ -3216,11 +3266,31 @@ describe UsersController do
     context 'while logged in' do
       before do
         sign_in(user)
+        sign_in(user)
       end
 
       it 'logs user out' do
-        expect(user.user_auth_tokens.count).to eq(1)
+        ids = user.user_auth_tokens.map { |token| token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
 
+        expect(response.status).to eq(200)
+
+        user.user_auth_tokens.reload
+        expect(user.user_auth_tokens.count).to eq(1)
+        expect(user.user_auth_tokens.first.id).to eq(ids[1])
+      end
+
+      it 'does not let user log out of current session' do
+        token = UserAuthToken.generate!(user_id: user.id)
+        env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'logs user out from everywhere if token_id is not present' do
         post "/u/#{user.username}/preferences/revoke-auth-token.json"
 
         expect(response.status).to eq(200)

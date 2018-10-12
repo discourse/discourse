@@ -2,7 +2,7 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "group-members-dropdown",
-  headerIcon: ["bars", "caret-down"],
+  headerIcon: ["bars"],
   showFullTitle: false,
   allowInitialValueMutation: false,
   autoHighlight() {},

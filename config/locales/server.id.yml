@@ -76,10 +76,6 @@ id:
     embed:
       load_from_remote: "Ada kesalahan dalam memuat posting itu."
     site_settings:
-      min_username_length_exists: "Anda tidak boleh menentukan jumlah karakter minimum username lebih dari username yang terpendek"
-      min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
-      max_username_length_exists: "Anda tidak boleh menentukan jumlah karakter maksimum username dibawah username terpendek. "
-      max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
   activemodel:
     errors:
@@ -419,7 +415,6 @@ id:
   site_settings:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
-    contact_url: "URL kontak untuk situs ini. Digunakan dalam formulir kontak pada /about untuk hal penting."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     errors:

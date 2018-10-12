@@ -52,10 +52,12 @@ module Email
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
       @raw_email = mail_string
+
       COMMON_ENCODINGS.each do |encoding|
         fixed = try_to_encode(mail_string, encoding)
         break @raw_email = fixed if fixed.present?
       end
+
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
@@ -144,7 +146,7 @@ module Email
       # Lets create a staged user if there isn't one yet. We will try to
       # delete staged users in process!() if something bad happens.
       if user.nil?
-        user = find_or_create_user(@from_email, @from_display_name)
+        user = find_or_create_user!(@from_email, @from_display_name)
         log_and_validate_user(user)
       end
 
@@ -482,14 +484,19 @@ module Email
     end
 
     def subject
-      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
+      @subject ||=
+        if mail_subject = @mail.subject
+          mail_subject.delete("\u0000")
+        else
+          I18n.t("emails.incoming.default_subject", email: @from_email)
+        end
     end
 
     def find_user(email)
       User.find_by_email(email)
     end
 
-    def find_or_create_user(email, display_name)
+    def find_or_create_user(email, display_name, raise_on_failed_create: false)
       user = nil
 
       User.transaction do
@@ -498,8 +505,8 @@ module Email
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
 
+          username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
-            username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
             user = User.create!(
               email: email,
               username: UserNameSuggester.suggest(username.presence || email),
@@ -507,13 +514,18 @@ module Email
               staged: true
             )
             @staged_users << user
-          rescue
+          rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+            raise if raise_on_failed_create
             user = nil
           end
         end
       end
 
       user
+    end
+
+    def find_or_create_user!(email, display_name)
+      find_or_create_user(email, display_name, raise_on_failed_create: true)
     end
 
     def all_destinations
@@ -609,6 +621,11 @@ module Email
     end
 
     def create_group_post(group, user, body, elided, hidden_reason_id)
+      # ensure user PM emails are enabled (since user is posting via email)
+      if !user.staged && !user.user_option.email_private_messages
+        user.user_option.update!(email_private_messages: true)
+      end
+
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -821,6 +838,8 @@ module Email
 
     def subscription_action_for(body, subject)
       return unless SiteSetting.unsubscribe_via_email
+      return if sent_to_mailinglist_mirror?
+
       if ([subject, body].compact.map(&:to_s).map(&:downcase) & ['unsubscribe']).any?
         :confirm_unsubscribe
       end
@@ -873,12 +892,13 @@ module Email
 
     def create_post_with_attachments(options = {})
       # deal with attachments
-      options[:raw] = add_attachments(options[:raw], options[:user].id, options)
+      options[:raw] = add_attachments(options[:raw], options[:user], options)
 
       create_post(options)
     end
 
-    def add_attachments(raw, user_id, options = {})
+    def add_attachments(raw, user, options = {})
+      rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
@@ -886,7 +906,7 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
-          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user_id)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
           if upload&.valid?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
@@ -900,13 +920,37 @@ module Email
             else
               raw << "\n\n#{attachment_markdown(upload)}\n\n"
             end
+          else
+            rejected_attachments << upload
+            raw << "\n\n#{I18n.t('emails.incoming.missing_attachment', filename: upload.original_filename)}\n\n"
           end
         ensure
           tmp&.close!
         end
       end
+      notify_about_rejected_attachment(rejected_attachments) if rejected_attachments.present? && !user.staged?
 
       raw
+    end
+
+    def notify_about_rejected_attachment(attachments)
+      errors = []
+
+      attachments.each do |a|
+        error = a.errors.messages.values[0][0]
+        errors << "#{a.original_filename}: #{error}"
+      end
+
+      message = Mail::Message.new(@mail)
+      template_args = {
+        former_title: message.subject,
+        destination: message.to,
+        site_name: SiteSetting.title,
+        rejected_errors: errors.join("\n")
+      }
+
+      client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
+      Email::Sender.new(client_message, :email_reject_attachment).send
     end
 
     def attachment_markdown(upload)

@@ -252,7 +252,11 @@ class ApplicationController < ActionController::Base
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
-        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
+        return render(
+          status: status_code,
+          layout: false,
+          plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
+        )
       end
 
       render_json_error message, type: type, status: status_code
@@ -408,7 +412,7 @@ class ApplicationController < ActionController::Base
   end
 
   def guardian
-    @guardian ||= Guardian.new(current_user)
+    @guardian ||= Guardian.new(current_user, request)
   end
 
   def current_homepage

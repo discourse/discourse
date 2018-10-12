@@ -51,7 +51,7 @@ export default {
         "posted",
         "search"
       ],
-      periods: ["yearly", "quarterly", "monthly", "weekly", "daily"],
+      periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",
         "unread",

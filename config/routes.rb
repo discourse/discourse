@@ -420,6 +420,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/summary" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity.rss" => "posts#user_posts_feed", format: :rss, constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/activity.json" => "posts#user_posts_feed", format: :json, constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
@@ -431,6 +432,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
   end
 
   get "user-badges/:username.json" => "user_badges#username", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -790,7 +792,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  resources :tag_groups, except: [:new, :edit] do
+  resources :tag_groups, constraints: StaffConstraint.new, except: [:new, :edit] do
     collection do
       get '/filter/search' => 'tag_groups#search'
     end

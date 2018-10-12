@@ -102,7 +102,7 @@ class AdminDashboardData
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :pop3_polling_configuration, :email_polling_errored_recently,
-                      :out_of_date_themes
+                      :out_of_date_themes, :unreachable_themes
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -252,11 +252,24 @@ class AdminDashboardData
     old_themes = RemoteTheme.out_of_date_themes
     return unless old_themes.present?
 
-    html = old_themes.map do |name, id|
+    themes_html_format(old_themes, "dashboard.out_of_date_themes")
+  end
+
+  def unreachable_themes
+    themes = RemoteTheme.unreachable_themes
+    return unless themes.present?
+
+    themes_html_format(themes, "dashboard.unreachable_themes")
+  end
+
+  private
+
+  def themes_html_format(themes, i18n_key)
+    html = themes.map do |name, id|
       "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
     end.join("\n")
 
-    message = I18n.t("dashboard.out_of_date_themes")
+    message = I18n.t(i18n_key)
     message += "<ul>#{html}</ul>"
     message
   end

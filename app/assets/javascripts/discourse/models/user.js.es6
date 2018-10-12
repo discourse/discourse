@@ -284,7 +284,8 @@ const User = RestModel.extend({
       "include_tl0_in_digests",
       "theme_ids",
       "allow_private_messages",
-      "homepage_id"
+      "homepage_id",
+      "hide_profile_and_presence"
     ];
 
     if (fields) {

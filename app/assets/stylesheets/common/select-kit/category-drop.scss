@@ -15,16 +15,16 @@
       }
 
       &.bar.has-selection .category-drop-header {
-        border: none;
+        padding: 0 5px 0 10px;
       }
 
       &.box.has-selection .category-drop-header {
-        padding: 3px 5px 3px 10px;
+        .badge-wrapper.box {
+          padding: 0;
+        }
       }
 
       .category-drop-header {
-        padding: 5px 5px 5px 10px;
-
         &.is-none .selected-name {
           color: inherit;
         }

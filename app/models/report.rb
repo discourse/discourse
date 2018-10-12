@@ -188,7 +188,7 @@ class Report
       # given reports can be added by plugins we don’t want dashboard failures
       # on report computation, however we do want to log which report is provoking
       # an error
-      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}")
+      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}")
     end
 
     report
@@ -701,21 +701,10 @@ class Report
 
     report.modes = [:table]
 
-    select_sql = <<~SQL
-      lower(term) term,
-      COUNT(*) AS searches,
-      SUM(CASE
-               WHEN search_result_id IS NOT NULL THEN 1
-               ELSE 0
-           END) AS click_through,
-      COUNT(DISTINCT ip_address) AS unique_searches
-    SQL
-
-    trends = SearchLog.select(select_sql)
-      .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
-      .group('lower(term)')
-      .order('unique_searches DESC, click_through ASC, term ASC')
-      .limit(report.limit || 20).to_a
+    trends = SearchLog.trending_from(report.start_date,
+      end_date: report.end_date,
+      limit: report.limit
+    )
 
     trends.each do |trend|
       ctr =

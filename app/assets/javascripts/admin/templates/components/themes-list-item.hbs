@@ -1,0 +1,44 @@
+<div class="inner-wrapper">
+  {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
+
+  <div class="info">
+    <span class="name">
+      {{theme.name}}
+    </span>
+
+    <span class="icons">
+      {{#unless theme.selected}}
+        {{#if theme.default}}
+          {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
+        {{/if}}
+        {{#if theme.isPendingUpdates}}
+          {{d-icon "refresh" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
+        {{/if}}
+        {{#if theme.isBroken}}
+          {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
+        {{/if}}
+      {{else}}
+        {{d-icon "caret-right"}}
+      {{/unless}}
+    </span>
+  </div>
+
+  {{#if displayComponents}}
+    <div class="components-list">
+      {{#each children as |child|}}
+        <span class="component">
+          {{child}}
+        </span>
+      {{/each}}
+      {{#if displayHasMore}}
+        <span {{action "toggleChildrenExpanded"}} class="others-count">
+          {{#if childrenExpanded}}
+            {{I18n "admin.customize.theme.collapse"}}
+          {{else}}
+            {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
+          {{/if}}
+        </span>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

@@ -14,26 +14,31 @@
     <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
     {{#if remote}}
       <div class="inputs">
-        {{input value=uploadUrl placeholder="https://github.com/discourse/discourse/sample_theme"}}
+        <div class='repo'>
+        {{input value=uploadUrl placeholder="https://github.com/discourse/sample_theme"}}
         <span class="description">{{i18n 'admin.customize.theme.import_web_tip'}}</span>
+        </div>
+        <div class='branch'>
+        {{input value=branch placeholder="beta"}}
+        <span class="description">{{i18n 'admin.customize.theme.remote_branch'}}</span>
+        </div>
+        <div class='check-private'>
+        <label>
+          {{input type="checkbox" checked=privateChecked}}
+          {{i18n 'admin.customize.theme.is_private'}}
+        </label>
+        </div>
         {{#if checkPrivate}}
-          <div class='check-private'>
-          <label>
-            {{input type="checkbox" checked=privateChecked}}
-            {{i18n 'admin.customize.theme.is_private'}}
-          </label>
           {{#if privateChecked}}
           {{#if publicKey}}
           <div class='public-key'>
             {{i18n 'admin.customize.theme.public_key'}}
-            {{textarea disabled=true value=publicKey}}
+            {{textarea readonly=true value=publicKey}}
           </div>
           {{/if}}
           {{/if}}
-          </div>
         {{/if}}
       </div>
-
     {{/if}}
   </div>
 {{/d-modal-body}}

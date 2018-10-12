@@ -2,6 +2,11 @@ require 'rails_helper'
 
 describe IncomingLinksReport do
 
+  before do
+    # we do not want this to fail if you run it at 11:59:59PM
+    freeze_time Time.zone.now
+  end
+
   describe 'integration' do
     it 'runs correctly' do
       p1 = create_post

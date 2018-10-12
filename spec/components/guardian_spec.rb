@@ -2576,6 +2576,24 @@ describe Guardian do
     end
   end
 
+  describe '#can_export_entity?' do
+    let(:user_guardian) { Guardian.new(user) }
+    let(:moderator_guardian) { Guardian.new(moderator) }
+    let(:admin_guardian) { Guardian.new(admin) }
+
+    it 'only allows admins to export user_list' do
+      expect(user_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(admin_guardian.can_export_entity?('user_list')).to be_truthy
+    end
+
+    it 'allow moderators to export other admin entities' do
+      expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
+      expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+  end
+
   describe "#allow_themes?" do
     let(:theme) { Fabricate(:theme) }
     let(:theme2) { Fabricate(:theme) }
@@ -2943,6 +2961,16 @@ describe Guardian do
             .to eq(false)
         end
       end
+    end
+  end
+
+  describe '#auth_token' do
+    it 'returns the correct auth token' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+
+      guardian = Guardian.new(user, Rack::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
     end
   end
 end

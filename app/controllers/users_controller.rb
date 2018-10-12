@@ -53,14 +53,18 @@ class UsersController < ApplicationController
       include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts)
     )
 
-    user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    user_serializer = nil
+    if guardian.can_see_profile?(@user)
+      user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+      # TODO remove this options from serializer
+      user_serializer.omit_stats = true
 
-    # TODO remove this options from serializer
-    user_serializer.omit_stats = true
-
-    topic_id = params[:include_post_count_for].to_i
-    if topic_id != 0
-      user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
+      topic_id = params[:include_post_count_for].to_i
+      if topic_id != 0
+        user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
+      end
+    else
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: 'user')
     end
 
     if !params[:skip_track_visit] && (@user != current_user)
@@ -204,8 +208,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def profile_hidden
+    render nothing: true
+  end
+
   def summary
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
     render_json_dump(serializer)
@@ -865,15 +876,18 @@ class UsersController < ApplicationController
       end
     end
 
-    user.uploaded_avatar_id = upload_id
+    upload = Upload.find_by(id: upload_id)
+
+    # old safeguard
+    user.create_user_avatar unless user.user_avatar
+
+    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
 
     if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-      # make sure the upload exists
-      unless Upload.where(id: upload_id).exists?
+
+      if !upload
         return render_json_error I18n.t("avatar.missing")
       end
-
-      user.create_user_avatar unless user.user_avatar
 
       if type == "gravatar"
         user.user_avatar.gravatar_upload_id = upload_id
@@ -882,6 +896,7 @@ class UsersController < ApplicationController
       end
     end
 
+    user.uploaded_avatar_id = upload_id
     user.save!
     user.user_avatar.save!
 
@@ -1104,7 +1119,14 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    UserAuthToken.where(user_id: user.id).each(&:destroy!)
+    if params[:token_id]
+      token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
+      # The user should not be able to revoke the auth token of current session.
+      raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
+      UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+    else
+      UserAuthToken.where(user_id: user.id).each(&:destroy!)
+    end
 
     MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 

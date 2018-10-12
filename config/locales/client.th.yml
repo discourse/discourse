@@ -207,12 +207,8 @@ th:
         bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊คมาร์คทั้งหมดในกระทู้นี้"
     bookmarks:
-      not_logged_in: "เสียใจด้วย, คุณต้องเข้าระบบก่อนถึงจะทำบุ๊คม๊าคโพสได้"
       created: "คุณได้ทำบุ๊คม๊าคโพสแล้ว"
-      not_bookmarked: "คุณได้อ่านโพสนี้แล้ว; คลิกเพื่อทำบุ๊คม๊าค"
-      last_read: "นี่เป็นโพสสุดท้ายที่คุณอ่าน คลิกเพื่อทำบุ๊คม๊าค"
       remove: "ลบบุ๊คม๊าค"
-      confirm_clear: "คุณแน่ใจไหม ที่จะลบบุ๊คมาร์กในกระทู้นี้ทั้งหมด"
     topic_count_latest:
       other: "เห็น {{count}} กระทู้ใหม่ หรือที่ถูกอัพเดต"
     preview: "แสดงตัวอย่าง"
@@ -222,7 +218,6 @@ th:
     saved: "บันทึกแล้ว!"
     upload: "อัปโหลด"
     uploading: "กำลังอัปโหลด..."
-    uploading_filename: "กำลังอัพโหลด {{filename}}..."
     uploaded: "อัปโหลดเสร็จสมบูรณ์"
     enable: "เปิดใช้งาน"
     disable: "ปิดใช้งาน"
@@ -887,7 +882,6 @@ th:
       link_description: "กรอกรายละเอียดลิงค์ที่นี่"
       link_dialog_title: "เพิ่มลิงค์"
       link_optional_text: "ชื่อเรื่องเพิ่มเติม"
-      link_url_placeholder: "http://example.com"
       quote_title: "ส่วนอ้างถึง"
       quote_text: "ส่วนอ้างถึง"
       code_title: "ข้อความก่อนจัดรูปแบบ"
@@ -1110,10 +1104,8 @@ th:
         title: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
         action: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
       change_owner:
-        title: "เลือกเจ้าของโพส"
         action: "เปลี่ยนความเป็นเจ้าของ"
         error: "มีความผิดพลาดขณะเปลี่ยนความเป็นเจ้าของโพส"
-        label: "เจ้าของใหม่ของโพส"
         placeholder: "ชื่อผู้ใช้ของเจ้าของใหม่"
       change_timestamp:
         action: "เปลี่ยนแปลงเวลา"
@@ -1296,7 +1288,6 @@ th:
         this_week: "อาทิตย์"
         today: "วันนี้"
         other_periods: "ดูสูงสุด"
-    browser_update: 'ไม่เสียดาย, <a href="http://www.discourse.org/faq/#browser">บาวเซอร์ของคุณเก่าเกินไป</a>. โปรด <a href="http://browsehappy.com">เปลี่ยนบาวเซอร์ของคุณ</a>.'
     permission_types:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"

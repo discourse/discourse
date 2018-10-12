@@ -45,6 +45,14 @@ class PostDestroyer
   end
 
   def destroy
+    payload = WebHook.generate_payload(:post, @post)
+    topic = @post.topic
+
+    if @post.is_first_post? && topic
+      topic_view = TopicView.new(topic.id, Discourse.system_user)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+    end
+
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
     if @user.staff? || delete_removed_posts_after < 1
@@ -53,9 +61,19 @@ class PostDestroyer
       mark_for_deletion(delete_removed_posts_after)
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+    WebHook.enqueue_hooks(:post, :post_destroyed,
+      id: @post.id,
+      category_id: @post&.topic&.category_id,
+      payload: payload
+    )
 
     if @post.is_first_post? && @post.topic
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
+      WebHook.enqueue_hooks(:topic, :topic_destroyed,
+        id: topic.id,
+        category_id: topic&.category_id,
+        payload: topic_payload
+      )
     end
   end
 
@@ -162,7 +180,8 @@ class PostDestroyer
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
-    @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
+    last_revision = @post.revisions.last
+    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
   end
 
   private
@@ -189,11 +208,15 @@ class PostDestroyer
   end
 
   def trash_public_post_actions
-    public_post_actions = PostAction.publics.where(post_id: @post.id)
-    public_post_actions.each { |pa| pa.trash!(@user) }
+    if public_post_actions = PostAction.publics.where(post_id: @post.id)
+      public_post_actions.each { |pa| pa.trash!(@user) }
 
-    f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
-    Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+      @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
+      @post.save_custom_fields
+
+      f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
+      Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+    end
   end
 
   def agree_with_flags

@@ -37,7 +37,7 @@ after_initialize do
     end
 
     if dates.present?
-      post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] = dates.to_json
+      post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD] = dates
       post.save_custom_fields
     elsif !post.custom_fields[DiscourseLocalDates::POST_CUSTOM_FIELD].nil?
       post.custom_fields.delete(DiscourseLocalDates::POST_CUSTOM_FIELD)
@@ -50,11 +50,12 @@ after_initialize do
   end
 
   on(:reduce_cooked) do |fragment|
-    container = fragment.css(".discourse-local-date").first
+    fragment.css(".discourse-local-date").each do |container|
 
-    if container && container.attributes["data-email-preview"]
-      preview = container.attributes["data-email-preview"].value
-      container.content = preview
+      if container.attributes["data-email-preview"]
+        preview = container.attributes["data-email-preview"].value
+        container.content = preview
+      end
     end
   end
 end

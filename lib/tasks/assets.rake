@@ -151,9 +151,11 @@ def compress(from, to)
 end
 
 def concurrent?
+  executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
+
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
-    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute { block.call } })
+    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call } })
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })
@@ -180,7 +182,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
             STDERR.puts "Skipping: #{file} already compressed"
           else
             proc.call do
-              start = Time.now
+              start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               STDERR.puts "#{start} Compressing: #{file}"
 
               # We can specify some files to never minify
@@ -194,7 +196,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               gzip(path)
               brotli(path)
 
-              STDERR.puts "Done compressing #{file} : #{(Time.now - start).round(2)} secs"
+              STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
               STDERR.puts
             end
           end

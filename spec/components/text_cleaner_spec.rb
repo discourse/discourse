@@ -180,6 +180,11 @@ describe TextCleaner do
         expect(TextCleaner.clean_title("HELLO THERE")).to eq("Hello there")
       end
 
+      it "doesn't replace all upper case text when uppercase posts are allowed" do
+        SiteSetting.allow_uppercase_posts = true
+        expect(TextCleaner.clean_title("HELLO THERE")).to eq("HELLO THERE")
+      end
+
       it "capitalizes first letter" do
         expect(TextCleaner.clean_title("hello there")).to eq("Hello there")
       end

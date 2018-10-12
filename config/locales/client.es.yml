@@ -244,12 +244,8 @@ es:
         bookmark: "Haz clic para guardar en marcadores el primer post de este tema"
         unbookmark: "Haz clic para quitar todos los marcadores de este tema"
     bookmarks:
-      not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has guardado este post en marcadores"
-      not_bookmarked: "has leído este post, haz clic para guardarlo en marcadores"
-      last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
-      confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
     drafts:
       resume: "Resúmen"
       remove: "Eliminar"
@@ -272,7 +268,6 @@ es:
     saved: "¡Guardado!"
     upload: "Subir"
     uploading: "Subiendo..."
-    uploading_filename: "Subiendo {{filename}}..."
     uploaded: "¡Subido!"
     pasting: "Pegando..."
     enable: "Activar"
@@ -416,7 +411,6 @@ es:
         all: "Todos los Grupos"
         empty: "No hay grupos visibles."
         filter: "Filtrar por tipo de grupo"
-        owner_groups: "Grupos en los que soy propietario"
         close_groups: "Grupos Cerrados"
         automatic_groups: "Grupos Automáticos"
         automatic: "Automáticos"
@@ -520,7 +514,6 @@ es:
       topic_stat_sentence:
         one: "%{count} tema nuevo en los últimos %{unit}."
         other: "%{count} temas nuevos en los últimos %{unit}."
-      more: "(%{count} más) ..."
     ip_lookup:
       title: Búsqueda de Direcciones IP
       hostname: Nombre del host
@@ -781,16 +774,6 @@ es:
         title: "Introduce de nuevo la contraseña"
       auth_tokens:
         title: "Dispositivos utilizados recientemente"
-        title_logs: "Logs de Autenticación"
-        ip_address: "Dirección IP"
-        created: "Creado"
-        first_seen: "Primera vez"
-        last_seen: "Última vez"
-        operating_system: "Sistema operativo"
-        location: "Ubicación"
-        action: "Acción"
-        login: "Inicio de sesión"
-        logout: "Cierre de sesión en todos los dispositivos"
       last_posted: "Último post"
       last_emailed: "Último Enviado por email"
       last_seen: "Visto por última vez"
@@ -986,9 +969,6 @@ es:
       enabled: "Este sitio está en modo solo-lectura. Puedes continuar navegando pero algunas acciones como responder o dar \"me gusta\" no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de sólo lectura."
-    too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
@@ -1278,7 +1258,6 @@ es:
       link_description: "introduzca descripción del enlace aquí"
       link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
-      link_url_placeholder: "http://ejemplo.com"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -1326,7 +1305,6 @@ es:
           desc: "Haz borrador al tema que será visible únicamente por el staff"
         toggle_topic_bump:
           label: "Alternar BUMP del tema"
-          desc: "Responder sin alterar la fecha dump del tema"
     notifications:
       tooltip:
         regular:
@@ -1817,15 +1795,9 @@ es:
         action: "unir posts seleccionados"
         error: "Hubo un error al unir los posts seleccionados."
       change_owner:
-        title: "Cambiar dueño de los posts"
         action: "cambiar dueño"
         error: "Hubo un error cambiando la autoría de los posts."
-        label: "Nuevo dueño de los posts"
         placeholder: "nombre de usuario del nuevo dueño"
-        instructions:
-          one: "Por favor escoge el nuevo dueño del {{count}} post de <b>{{old_user}}</b>."
-          other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>."
-        instructions_warn: "Tenga en cuenta que cualquier notificación sobre esta publicación no se transferirá al nuevo usuario de forma retroactiva."
       change_timestamp:
         title: "Cambiar Timestamp..."
         action: "cambiar timestamp"
@@ -2349,7 +2321,6 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver temas top"
-    browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="http://browsehappy.com">actualízalo</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2532,8 +2503,6 @@ es:
           bookmarks: "No hay más temas guardados en marcadores."
           search: "No hay más resultados de búsqueda."
     invite:
-      custom_message: "Darle a tu invitación un toque personal escribiendo un"
-      custom_message_link: "mensaje personalizado"
       custom_message_placeholder: "Introducir un mensaje personalizado"
       custom_message_template_forum: "Hey, ¡quizá deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, he pensado que este tema te va a encantar!"
@@ -2942,7 +2911,6 @@ es:
         import: "Importar"
         delete: "Eliminar"
         delete_confirm: "¿Eliminar este theme?"
-        about: "Modifica hojas de estilo CSS y cabeceras HTML en el sitio. Añade una personalización para empezar."
         color: "Color"
         opacity: "Opacidad"
         copy: "Copiar"
@@ -2965,7 +2933,6 @@ es:
           import_theme: "Importar Theme"
           customize_desc: "Personalizar:"
           title: "Themes"
-          modal_title: "Crear tema"
           create: "Crear"
           create_type: "Tipo:"
           create_name: "Nombre:"
@@ -2983,10 +2950,6 @@ es:
           color_scheme_select: "Selecciona colores para ser usados en el theme"
           custom_sections: "Personalizaciones:"
           theme_components: "Componentes del Theme"
-          switch_component: "Convertir a tema"
-          switch_component_alert: "¿Seguro que quieres convertir este componente en theme? Esto lo convertirá en un theme independiente y se eliminará como un secundario de todos los themes."
-          switch_theme: "Hacer componente"
-          switch_theme_alert: "¿Seguro que quieres convertir este theme en componente? Se eliminará como principal de todos los componentes."
           uploads: "Subidos"
           no_uploads: "Puedes subir archivos asociados con tu theme como fuentes e imágenes "
           add_upload: "Agregar Subido"
@@ -2998,7 +2961,6 @@ es:
             no_overwrite: "Nombre de variable inválido. No debe sobrescribir una variable existente. "
             must_be_unique: "Nombre de variable inválido. Debe ser único."
           upload: "Subir"
-          child_themes_check: "Theme incluye otros themes hijos"
           css_html: "Personalizar CSS/HTML"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No has editado ningún CSS o HTML"
@@ -3183,7 +3145,6 @@ es:
           filter: "Filtrar:"
           title: "Acciones del staff"
           clear_filters: "Mostrar todo"
-          staff_user: "Usuario administrador"
           target_user: "Usuario enfocado"
           subject: "Sujeto"
           when: "Cuándo"

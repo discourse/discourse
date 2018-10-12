@@ -814,18 +814,27 @@ describe Report do
   end
 
   describe "unexpected error on report initialization" do
+    before do
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
+    end
+
     it "returns no report" do
       class ReportInitError < StandardError; end
 
       Report.stubs(:new).raises(ReportInitError.new("x"))
 
-      Rails.logger.expects(:error)
-        .with('Couldn’t create report `signups`: <ReportInitError x>')
-        .once
-
       report = Report.find('signups')
 
       expect(report).to be_nil
+
+      expect(Rails.logger.errors).to eq([
+        'Couldn’t create report `signups`: <ReportInitError x>'
+      ])
     end
   end
 
@@ -884,6 +893,42 @@ describe Report do
 
         context "on subcategories" do
           let(:report) { Report.find('topics_with_no_response', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
+    end
+  end
+
+  describe 'likes' do
+    let(:report) { Report.find('likes') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        topic = Fabricate(:topic, category_id: 2)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+
+        topic = Fabricate(:topic, category_id: 4)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like]).tap do |pa|
+          pa.created_at = 45.days.ago
+        end.save!
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('likes', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('likes', category_id: 3) }
 
           include_examples 'category filtering on subcategories'
         end

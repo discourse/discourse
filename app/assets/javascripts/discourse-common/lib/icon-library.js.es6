@@ -93,7 +93,7 @@ registerIconRenderer({
     let tagName = params.tagName || "i";
     let html = `<${tagName} class='${faClasses(icon, params)}'`;
     if (params.title) {
-      html += ` title='${I18n.t(params.title)}'`;
+      html += ` title='${I18n.t(params.title).replace(/'/g, "&#39;")}'`;
     }
     if (params.label) {
       html += " aria-hidden='true'";

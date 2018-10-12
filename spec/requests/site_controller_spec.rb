@@ -11,6 +11,7 @@ describe SiteController do
       SiteSetting.logo_small_url = "http://boom.com/uploads/logo_small.png"
       SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
       SiteSetting.mobile_logo_url = "https://a.a/a.png"
+      Theme.clear_default!
 
       get "/site/basic-info.json"
       json = JSON.parse(response.body)
@@ -21,6 +22,8 @@ describe SiteController do
       expect(json["apple_touch_icon_url"]).to eq("https://boom.com/apple/logo.png")
       expect(json["logo_small_url"]).to eq("http://boom.com/uploads/logo_small.png")
       expect(json["mobile_logo_url"]).to eq("https://a.a/a.png")
+      expect(json["header_primary_color"]).to eq("333333")
+      expect(json["header_background_color"]).to eq("ffffff")
     end
   end
 

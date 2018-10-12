@@ -17,11 +17,6 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
-    <script>
-      window.EmberENV = window.EmberENV || {};
-      window.EmberENV['FORCE_JQUERY'] = true;
-    </script>
-
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script "ember_jquery" %>
     <%= preload_script "preload-store" %>
@@ -58,6 +53,13 @@
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
+
+    <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+
+    <%- if !current_user && flash[:authentication_data] %>
+      <meta id="data-authentication" data-authentication-data="<%= flash[:authentication_data] %>">
+      <%= preload_script "authentication-complete" %>
+    <%- end %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -104,20 +106,12 @@
       </form>
     <% end %>
 
-    <%- if @preloaded.present? %>
-      <script>
-      (function() {
-        var ps = require('preload-store').default;
-        <%- @preloaded.each do |key, json| %>
-          ps.store("<%= key %>", <%= escape_unicode(json) %>);
-        <% end %>
-      })();
-      </script>
-    <%- end %>
+    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+    <%= preload_script "preload-application-data" %>
 
     <%= yield :data %>
 
-    <%= render :partial => "common/discourse_javascript" %>
+    <%= preload_script 'browser-update' %>
 
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>

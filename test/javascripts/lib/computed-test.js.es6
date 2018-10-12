@@ -9,7 +9,7 @@ import {
 
 QUnit.module("lib:computed", {
   beforeEach() {
-    sandbox.stub(I18n, "t", function(scope) {
+    sandbox.stub(I18n, "t").callsFake(function(scope) {
       return "%@ translated: " + scope;
     });
   },

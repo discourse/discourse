@@ -81,7 +81,8 @@ class UserHistory < ActiveRecord::Base
       removed_unsilence_user: 62,
       removed_unsuspend_user: 63,
       post_rejected: 64,
-      merge_user: 65
+      merge_user: 65,
+      entity_export: 66
     )
   end
 
@@ -141,7 +142,8 @@ class UserHistory < ActiveRecord::Base
       :change_badge,
       :delete_badge,
       :post_rejected,
-      :merge_user
+      :merge_user,
+      :entity_export
     ]
   end
 

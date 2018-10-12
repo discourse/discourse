@@ -31,6 +31,7 @@
       overflow: hidden;
     }
     .d-icon {
+      padding-left: 1px; // prevents lock icon from being cut off on the left
       margin-right: 3px;
     }
   }

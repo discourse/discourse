@@ -117,7 +117,8 @@ class Post < ActiveRecord::Base
                                  flag_threshold_reached_again: 2,
                                  new_user_spam_threshold_reached: 3,
                                  flagged_by_tl3_user: 4,
-                                 email_spam_header_found: 5)
+                                 email_spam_header_found: 5,
+                                 flagged_by_tl4_user: 6)
   end
 
   def self.types
@@ -189,6 +190,7 @@ class Post < ActiveRecord::Base
   def recover!
     super
     update_flagged_posts_count
+    recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
     if topic && topic.category_id && topic.category
@@ -239,6 +241,7 @@ class Post < ActiveRecord::Base
   end
 
   def add_nofollow?
+    return false if user&.staff?
     user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
   end
 
@@ -256,14 +259,9 @@ class Post < ActiveRecord::Base
 
     post_user = self.user
     options[:user_id] = post_user.id if post_user
+    options[:omit_nofollow] = true if omit_nofollow?
 
-    if add_nofollow?
-      cooked = post_analyzer.cook(raw, options)
-    else
-      # At trust level 3, we don't apply nofollow to links
-      options[:omit_nofollow] = true
-      cooked = post_analyzer.cook(raw, options)
-    end
+    cooked = post_analyzer.cook(raw, options)
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
@@ -377,6 +375,19 @@ class Post < ActiveRecord::Base
 
   def update_flagged_posts_count
     PostAction.update_flagged_posts_count
+  end
+
+  def recover_public_post_actions
+    PostAction.publics
+      .with_deleted
+      .where(post_id: self.id, id: self.custom_fields["deleted_public_actions"])
+      .find_each do |post_action|
+        post_action.recover!
+        post_action.save!
+      end
+
+    self.custom_fields.delete("deleted_public_actions")
+    self.save_custom_fields
   end
 
   def filter_quotes(parent_post = nil)

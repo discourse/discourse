@@ -17,6 +17,7 @@ module FileStore
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       FileUtils.move(source, destination, force: true)
+      FileUtils.touch(destination)
     end
 
     def has_been_uploaded?(url)

@@ -235,12 +235,8 @@ sv:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet "
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
     bookmarks:
-      not_logged_in: "tyvärr, du måste vara inloggad för att kunna bokmärka inlägg"
       created: "du har bokmärkt detta inlägg"
-      not_bookmarked: "du har läst detta inlägg, klicka för att bokmärka det"
-      last_read: "detta är det senaste inlägg som du läst, klicka för att bokmärka"
       remove: "Ta bort bokmärke"
-      confirm_clear: "Är du säker på att du vill radera alla bokmärken från ämnet?"
     topic_count_latest:
       one: "Visa {{count}} nytt eller uppdaterat ämne"
       other: "Visa {{count}} nya eller uppdaterade ämnen"
@@ -251,7 +247,6 @@ sv:
     saved: "Sparat!"
     upload: "Ladda upp"
     uploading: "Laddar upp..."
-    uploading_filename: "Laddar upp {{filename}}..."
     uploaded: "Uppladdad!"
     pasting: "Klistrar in..."
     enable: "Aktivera"
@@ -808,9 +803,6 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverade för tillfället."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge. "
-    too_few_topics_and_posts_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentTopics} / %{requiredTopics}</strong> ämnen och <strong>%{currentPosts} / %{requiredPosts}</strong> inlägg. Nya användare behöver några konversationer att läsa och svara på."
-    too_few_topics_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentTopics} / %{requiredTopics}</strong> ämnen. Nya användare behöver några konversationer att läsa och svara på."
-    too_few_posts_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentPosts} / %{requiredPosts}</strong> inlägg. Nya användare behöver några konversationer att läsa och svara på."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har uppnått webbplatsinställningarnas gräns på %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har överträffat webbplatsinställningarnas gräns på %{siteSettingRate}."
@@ -1010,7 +1002,6 @@ sv:
       link_description: "skriv en länkbeskrivning här"
       link_dialog_title: "Infoga Hyperlänk"
       link_optional_text: "valfri rubrik"
-      link_url_placeholder: "http://exempel.se"
       quote_title: "Citat"
       quote_text: "Citat"
       code_title: "Förformatterad text"
@@ -1419,14 +1410,9 @@ sv:
         action: "sammanfoga markerade inlägg"
         error: "Det uppstod ett fel vid sammanfogningen av de markerade inläggen."
       change_owner:
-        title: "Ändra ägare av inlägg"
         action: "ändra ägare"
         error: "Ett fel uppstod vid ändringen av ämnets ägarskap."
-        label: "Ny ägare av inlägg"
         placeholder: "användarnamn på den nya ägaren"
-        instructions:
-          one: "Vänligen välj ny ägare till inlägget av <b>{{old_user}}</b>."
-          other: "Vänligen välj ny ägare till de {{count}} inläggen av <b>{{old_user}}</b>."
       change_timestamp:
         action: "ändra tidsstämpeln"
         invalid_timestamp: "Tidsstämpeln kan inte sättas till ett framtida datum."
@@ -1884,7 +1870,6 @@ sv:
         this_week: "Vecka"
         today: "Idag"
         other_periods: "se toppen"
-    browser_update: 'Tyvärr, <a href="http://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen<a href="http://browsehappy.com">uppgradera din webbläsare</a>.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -2045,8 +2030,6 @@ sv:
           bookmarks: "Det finns inga fler bokmärkta ämnen."
           search: "Det finns inga fler sökresultat."
     invite:
-      custom_message: "Gör din inbjudan lite mer personlig genom att skriva ett "
-      custom_message_link: "personligt meddelande"
       custom_message_placeholder: "Skriv ditt personliga meddelande"
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
@@ -2322,7 +2305,6 @@ sv:
         new_style: "Ny stil"
         import: "Importera"
         delete: "Radera"
-        about: "Modifiera CSS stilmallar och HTML sidhuvuden på sidan. Lägg till en anpassning för att börja."
         color: "Färg"
         opacity: "Opacitet"
         copy: "Kopiera"
@@ -2455,7 +2437,6 @@ sv:
         staff_actions:
           title: "Personalåtgärder"
           clear_filters: "Visa allt"
-          staff_user: "Personalmedlem"
           target_user: "Målanvändare"
           subject: "Ämne"
           when: "När"

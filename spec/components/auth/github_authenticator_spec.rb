@@ -84,6 +84,35 @@ describe Auth::GithubAuthenticator do
       expect(result.email).to eq("john@example.com")
     end
 
+    it 'should not error out if user already has a different old github account attached' do
+
+      # There is a rare case where an end user had
+      # 2 different github accounts and moved emails between the 2
+
+      GithubUserInfo.create!(user_id: user.id, screen_name: 'bob', github_user_id: 100)
+
+      hash = {
+        extra: {
+          all_emails: [{
+            email: user.email,
+            primary: false,
+            verified: true,
+          }]
+        },
+        info: {
+          email: "john@example.com",
+          nickname: "john",
+          name: "John Bob",
+        },
+        uid: "1001"
+      }
+
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.user.id).to eq(user.id)
+      expect(GithubUserInfo.where(user_id: user.id).pluck(:github_user_id)).to eq([1001])
+    end
+
     it 'will not authenticate for already existing users with an unverified email' do
       hash = {
         extra: {

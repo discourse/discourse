@@ -31,7 +31,7 @@ module ApplicationHelper
     if SiteSetting.ga_universal_auto_link_domains.present?
       result[:allowLinker] = true
     end
-    result.to_json.html_safe
+    result.to_json
   end
 
   def ga_universal_json
@@ -129,7 +129,7 @@ module ApplicationHelper
       javascript = javascript.scrub
       javascript.gsub!(/\342\200\250/u, '&#x2028;')
       javascript.gsub!(/(<\/)/u, '\u003C/')
-      javascript.html_safe
+      javascript
     else
       ''
     end
@@ -307,13 +307,13 @@ module ApplicationHelper
   end
 
   def normalized_safe_mode
-    safe_mode = nil
-    (safe_mode ||= []) << ApplicationController::NO_CUSTOM if customization_disabled?
-    (safe_mode ||= []) << ApplicationController::NO_PLUGINS if !allow_plugins?
-    (safe_mode ||= []) << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
-    if safe_mode
-      safe_mode.join(",").html_safe
-    end
+    safe_mode = []
+
+    safe_mode << ApplicationController::NO_CUSTOM if customization_disabled?
+    safe_mode << ApplicationController::NO_PLUGINS if !allow_plugins?
+    safe_mode << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
+
+    safe_mode.join(",")
   end
 
   def loading_admin?
@@ -400,5 +400,40 @@ module ApplicationHelper
     end
 
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
+  end
+
+  def preloaded_json
+    return '{}' if @preloaded.blank?
+    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
+  end
+
+  def client_side_setup_data
+    service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
+    current_hostname_without_port = RailsMultisite::ConnectionManagement.current_hostname.sub(/:[\d]*$/, '')
+
+    setup_data = {
+      cdn: Rails.configuration.action_controller.asset_host,
+      base_url: current_hostname_without_port,
+      base_uri: Discourse::base_uri,
+      environment: Rails.env,
+      letter_avatar_version: LetterAvatar.version,
+      markdown_it_url: asset_url('markdown-it-bundle.js'),
+      service_worker_url: service_worker_url,
+      default_locale: SiteSetting.default_locale,
+      asset_version: Discourse.assets_digest,
+      disable_custom_css: loading_admin?,
+      highlight_js_path: HighlightJs.path,
+    }
+
+    if guardian.can_enable_safe_mode? && params["safe_mode"]
+      setup_data[:safe_mode] = normalized_safe_mode
+    end
+
+    if SiteSetting.Upload.enable_s3_uploads
+      setup_data[:s3_cdn] = SiteSetting.Upload.s3_cdn_url.presence
+      setup_data[:s3_base_url] = SiteSetting.Upload.s3_base_url
+    end
+
+    setup_data
   end
 end

@@ -19,8 +19,6 @@
     var self = this,
         img  = document.createElement('img');
 
-    if (Ember.testing) { return; }
-
     if (self.canvas.getContext) {
       img.crossOrigin = "anonymous";
 
@@ -48,10 +46,9 @@
 
   function drawCanvas(canvas, opacity, font, img, count) {
     var head = document.getElementsByTagName('head')[0],
-        favicon = document.createElement('link'),
+        favicon = document.querySelector('link[rel=icon]'),
+        newFavicon = document.createElement('link'),
         multiplier, fontSize, context, xOffset, yOffset, border, shadow;
-
-    favicon.rel = 'icon';
 
     // Scale canvas elements based on favicon size
     multiplier = img.width / 16;
@@ -91,12 +88,15 @@
     );
 
     // Replace favicon with new favicon
-    favicon.href = canvas.toDataURL('image/png');
-    head.removeChild(document.querySelector('link[rel=icon]'));
-    head.appendChild(favicon);
+    newFavicon.rel = 'icon';
+    newFavicon.href = canvas.toDataURL('image/png');
+    if (favicon) { head.removeChild(favicon); }
+    head.appendChild(newFavicon);
   }
 
-  Favcount.VERSION = '1.5.0';
   this.Favcount = Favcount;
 }).call(this);
 
+(function(){
+  Favcount.VERSION = '1.5.1';
+}).call(this);

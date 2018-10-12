@@ -231,12 +231,8 @@ et:
         bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
-      not_logged_in: "vabandust, postitusele järjehoidjate lisamiseks pead olema sisse logitud"
       created: "lisasid sellele postitusele järjehoidja"
-      not_bookmarked: "oled seda postitust lugenud; kliki järjehoidja lisamiseks"
-      last_read: "see on viimane Sinu loetud postitus; kliki järjehoidja lisamiseks"
       remove: "Eemalda järjehoidja"
-      confirm_clear: "Oled kindel, et soovid selle teema kõik järjehoidjad eemaldada?"
     preview: "eelvaade"
     cancel: "tühista"
     save: "Salvesta muudatused"
@@ -244,7 +240,6 @@ et:
     saved: "Salvestatud!"
     upload: "Lae üles"
     uploading: "Laen üles..."
-    uploading_filename: "Laen üles {{filename}}..."
     uploaded: "Üles laetud!"
     pasting: "Asetamine..."
     enable: "Võimalda"
@@ -819,9 +814,6 @@ et:
       enabled: "See sait on kirjutuskaitstud režiimis. Sirvimist saab jätkata, kuid vastamine, meeldimine ja teised toimingud on hetkel blokeeritud."
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
-    too_few_topics_and_posts_notice: "Tõmbame <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>selle vestluse käima!</a> Hetkel on tehtud <strong>%{currentTopics} / %{requiredTopics}</strong> teemat ja <strong>%{currentPosts} / %{requiredPosts}</strong> postitust. Uued külastajad vajavad vestlusi, milles osaleda."
-    too_few_topics_notice: "Tõmbame <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>selle vestluse käima!</a> Hetkel on tehtud <strong>%{currentTopics} / %{requiredTopics}</strong> teemat. Uued külastajad vajavad vestlusi, milles osaleda."
-    too_few_posts_notice: "Tõmbame <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>selle vestluse käima!</a> Hetkel on tehtud <strong>%{currentPosts} / %{requiredPosts}</strong> postitust. Uued külastajad vajavad vestlusi, milles osaleda."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> on saavutanud saidi sätetes kehtestatud limiidi %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ületab saidi sätetes kehtestatud limiiti %{siteSettingRate}."
@@ -1049,7 +1041,6 @@ et:
       link_description: "sisesta viite kirjeldus siia"
       link_dialog_title: "Lisa hüperlink"
       link_optional_text: "valikuline pealkiri"
-      link_url_placeholder: "http://example.com"
       quote_title: "Plokktsitaat"
       quote_text: "Plokktsitaat"
       code_title: "Eelvormindatud tekst"
@@ -1497,14 +1488,9 @@ et:
         action: "ühenda valitud postitused"
         error: "Valitud postituste ühendamisel tekkis viga."
       change_owner:
-        title: "Muuda postituste omanikku"
         action: "muuda omanikku"
         error: "Postituste omanikuvahetusel tekkis viga."
-        label: "Postituste uus omanik"
         placeholder: "uue omaniku kasutajanimi"
-        instructions:
-          one: "Palun vali <b>{{old_user}}</b> postitusele uus omanik."
-          other: "Palun vali <b>{{old_user}}</b> {{count}} postitusele uus omanik."
       change_timestamp:
         action: "muuda ajatemplit"
         invalid_timestamp: "Ajatempel ei saa olla tulevikus."
@@ -1959,7 +1945,6 @@ et:
         this_week: "Nädal"
         today: "Täna"
         other_periods: "vaata juhtivaid"
-    browser_update: 'Kahjuks on <a href="http://www.discourse.org/faq/#browser">Sinu brauser selle saidi kasutamiseks liiga vana</a>. Palun <a href="http://browsehappy.com">värskenda oma brauserit</a>.'
     permission_types:
       full: "Loo / Vasta / Vaata"
       create_post: "Vasta / Vaata"
@@ -2124,8 +2109,6 @@ et:
           bookmarks: "Rohkem järjehoidjaga teemasid pole."
           search: "Rohkem otsingutulemusi pole."
     invite:
-      custom_message: "Muuda oma kutse veidi personaalsemaks kirjutades"
-      custom_message_link: "individuaalne sõnum"
       custom_message_placeholder: "Sisesta oma individuaalne sõnum"
       custom_message_template_forum: "Kuule, Sa peaksid selle foorumiga liituma!"
       custom_message_template_topic: "Kuule, arvan et see teema meeldiks Sulle!"
@@ -2416,7 +2399,6 @@ et:
         import: "Impordi"
         delete: "Kustuta"
         delete_confirm: "Kustutan selle teema?"
-        about: "Muuda saidi CSS laadilehed ja HTML päised. Alustamiseks lisa kohandus."
         color: "Värv"
         opacity: "Läbipaistvus"
         copy: "Kopeeri"
@@ -2591,7 +2573,6 @@ et:
           filter: "Filter:"
           title: "Tiimi tegevused"
           clear_filters: "Näita kõike"
-          staff_user: "Meeskonnaliige"
           target_user: "Sihtkasutaja"
           subject: "Teema"
           when: "Millal"

@@ -15,7 +15,7 @@
         {{#each group.buttons as |b|}}
           {{#if b.popupMenu}}
             {{toolbar-popup-menu-options
-              onPopupMenuAction=onPopupMenuAction
+              onSelect=onPopupMenuAction
               onExpand=(action b.action b)
               title=b.title
               headerIcon=b.icon

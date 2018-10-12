@@ -1,11 +1,11 @@
 import ComboBox from "select-kit/components/combo-box";
-import Tags from "select-kit/mixins/tags";
+import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
 const { get, isEmpty, run, makeArray } = Ember;
 
-export default ComboBox.extend(Tags, {
+export default ComboBox.extend(TagsMixin, {
   allowContentReplacement: true,
   headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],
@@ -218,6 +218,28 @@ export default ComboBox.extend(Tags, {
 
   didDeselect(tags) {
     this.destroyTags(tags);
+  },
+
+  _sanitizeContent(content, property) {
+    switch (typeof content) {
+      case "string":
+        // See lib/discourse_tagging#clean_tag.
+        return content
+          .trim()
+          .replace(/\s+/, "-")
+          .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/, "")
+          .substring(0, this.siteSettings.max_tag_length);
+      default:
+        return get(content, this.get(property));
+    }
+  },
+
+  valueForContentItem(content) {
+    return this._sanitizeContent(content, "valueAttribute");
+  },
+
+  _nameForContent(content) {
+    return this._sanitizeContent(content, "nameProperty");
   },
 
   actions: {
