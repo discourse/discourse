@@ -7,6 +7,7 @@
 
 pl_PL:
   site_settings:
+    discourse_narrative_bot_enabled: 'Włącz bota Discourse Narrative'
     disable_discourse_narrative_bot_welcome_post: "Dezaktywuj wpis powitalny Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nazwy użytkownika, które bot Discourse Narrative powinien zignorować"
     discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
@@ -142,14 +143,6 @@ pl_PL:
       cert_title: "W podziękowaniu za skończony samouczek"
       hello:
         title: ":robot: Witaj!"
-        message: |-
-          Witaj na portalu %{title}!
-
-          - Jestem tylko robotem, ale nasza [załoga](/about) jest zawsze do dyspozycji jeżeli potrzebujesz się skontaktować z prawdziwą osobą.
-
-          - Ze względów bezpieczeństwa uprawnienia nowych użytkowników są mniejsze. Z czasem uzyskasz dostęp do większej ilości opcji (i [odznak](/badges)).
-
-          - Wierzymy w [cywlizowaną dyskusję](/guidelines) w każdej sytuacji.
       onebox:
         instructions: |-
           Następnie, czy możesz udostępnić mi jeden z poniższych linków? Odpowiedz przy użyciu **link**, a automatycznie zostanie dodane dobre podsumowanie.
@@ -227,9 +220,6 @@ pl_PL:
 
           (Tak, moja nazwa użytkownika pisana jest _disco_, tak jak w popularna w latach 90 muzyka. Naprawdę [kocham życie nocne!]
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
-      flag:
-        reply: |-
-          [Nasz personel](/grupy/personel) zostanie prywatnie poinformowany o twoim oflagowaniu. W przypadku gdy wystarczająca liczba członków społeczności oflaguje ten post, zostanie on automatycznie ukryty ze względów ostrożności. (Jako, że tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem oznaczenie posta.)
       search:
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
@@ -239,26 +229,12 @@ pl_PL:
           Aby przejść gdziekolwiek w dłuższej dyskusji, spróbuj użyć kontrolek linii czasu tematu po prawej stronie (na dole w przypadku telefonów komórkowych).
 
           - Jeśli posiadasz klawiaturę  :keyboard:, naciśnij <kbd>?</kbd> , aby wyświetlić nasze wygodne skróty klawiszowe.
-      end:
-        message: |-
-          Dziękuję, że ze mną jesteś @%{username}! Zrobiłem to specjalnie dla ciebie, myślę, że na to zasłużyłeś:
-
-          %{certificate}
-
-          To wszystko na teraz! Sprawdź [**ostatnie tematy dyskusji**] (/ostatnie) lub [**kategorie dyskusji**](/kategorie).
-          :sunglasses:
-
-          (Jeśli będziesz chciał ponownie porozmawiać, aby dowiedzieć się więcej po prostu użyj wiadomości lub wspomnij '@%{discobot_username}w dowolnym momencie!)
       certificate:
         alt: 'Certyfikat osiągnięcia'
     advanced_user_narrative:
       reset_trigger: 'zaawansowany użytkownik'
       cert_title: "W uznaniu za pomyślne ukończenie tutorialu zaawansowanego użytkownika."
       title: ':arrow_up: Zaawansowane opcje użytkownika'
-      start_message: |-
-        Jako _zaawansowany_ użytkownik, czy odwiedziłeś już [stronę swoich ustawień)(/moje/ustawienia) @%{username}? Istnieje wiele możliwości dostosowania ustawień, jak na przykład wybranie ciemnego lub jasnego motywu.
-
-        Ale nie zbaczajmy z tematu, czas zacząć!
       edit:
         bot_created_post_raw: "@%{discobot_username} jest z pewnością najfajniejszym botem, jakiego znam :wink:"
         instructions: |-
@@ -298,10 +274,6 @@ pl_PL:
       change_topic_notification_level:
         not_found: |-
           Wygląda na to, że ciągle obserwujesz :eyes: ten temat! Jeśli masz problem w znalezieniu, przycisk poziomu notyfikacji znajduję się na dole tego tematu.
-        reply: |-
-          Wspaniała robota! Mam nadzieję, że nie wyciszyłeś tego tematu, jako że jestem dość rozmowny  :grin:.
-
-          Pamiętaj, że gdy odpowiadasz w danym temacie lub czytasz go więcej niż kilka minut, poziom notyfikacji automatycznie zmieni się na 'śledzenie'. Możesz to zmienić w [twoich ustawieniach użytkownika](/moje/ustawienia).
       poll:
         reply: |-
           Hej, niezła ankieta! Jak mi idzie nauczanie?

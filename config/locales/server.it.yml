@@ -140,10 +140,6 @@ it:
       invalid_choice:
         one: 'Hai specificato la scelta non valida %{name}'
         other: 'Hai specificato le scelte non valide %{name}'
-      min_username_length_exists: "C'è almeno un utente con il nome più corto della lunghezza minima che stai cercando di impostare."
-      min_username_length_range: "Non puoi impostare il minimo più grande del massimo."
-      max_username_length_exists: "C'è almeno un utente con il nome più lungo della lunghezza massima che stai cercando di impostare."
-      max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
     conflicting_google_user_id: 'Il Google Account ID per questo account è cambiato; l''intervento dello staff è richiesto per motivi di sicurezza. Si prega di contattare staff e puntarli a  <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -461,27 +457,6 @@ it:
       Potresti voler chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Salotto"
-    body: |2
-
-      Congratulazioni! :confetti_ball:
-
-      Se vedi questo messaggio, significa che sei stato promosso ad **Assiduo** (Livello Esperienza 3).
-
-      Da ora sarai in grado di: &hellip;
-
-      * Cambiare il titolo a qualsiasi Argomento
-      * Cambiare la Categoria di qualsiasi Argomento
-      * I tuoi collegamenti saranno seguibili ([il nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
-      * Accedere alla categoria privata Lounge visibile ai soli utenti che hanno raggiunto il Livello Esperienza 3 o superiore
-      * Nascondere messaggi spam con una sola segnalazione
-
-      Ecco la [lista degli attuali utenti con Livello Esperienza 3](/badges/3/regular). Lascia loro un saluto.
-
-      Grazie per essere un importante membro della nostra community!
-
-      (Per ulteriori informazioni sui Livelli Esperienza dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti resteranno Assidui nel tempo.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -945,7 +920,6 @@ it:
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
-    gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
@@ -953,9 +927,6 @@ it:
     facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
     twitter_config_warning: 'Il server è configurato per accettare iscrizioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
     github_config_warning: 'Il server è configurato per accettare iscrizioni e login con GitHub (enable_github_logins), tuttavia i parametri client id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
-    s3_config_warning: 'Il server è configurato per caricare file su s3, ma almeno una delle seguenti impostazioni non è configurata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_upload_bucket. Vai alle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi "How to set up image uploads to S3?" per saperne di più</a>.'
-    s3_backup_config_warning: 'Il server è configurato per caricare file su s3, ma almeno una delle seguenti impostazioni non è configurata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket.  Vai alle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi "How to set up image uploads to S3?" per saperne di più</a>.'
-    image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
     email_polling_errored_recently:
@@ -989,15 +960,12 @@ it:
     educate_until_posts: "Per i primi (n) messaggi di un utente, mostra la finestra pop-up con il pannello di istruzioni per nuovi utenti."
     title: "Il nome di questo sito, da usare nell'attributo title."
     site_description: "Descrivi questo sito in una frase, da usare nell'attributo meta description."
-    contact_email: "Indirizzo email del contatto chiave responsabile per questo sito. Utilizzato per notifiche critiche, nonché sul modulo di contatto /about per questioni urgenti."
-    contact_url: "URL di contatto per questo sito. Usato sul modulo di contatto /about per questioni urgenti."
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
     download_remote_images_threshold: "Minimo spazio disco necessario per scaricare le immagini remote in locale (in percentuale)"
     download_remote_images_max_days_old: "Non scaricare immagini remote per messaggi che sono più vecchi di n giorni."
     disabled_image_download_domains: "Le immagini non verranno mai scaricate dai seguenti domini. Elenco delimitato dal carattere pipe |"
     editing_grace_period: "Per (n) secondi dopo la creazione del messaggio, le modifiche non saranno tracciate nella cronologia."
-    post_edit_time_limit: "L'autore può modificare o cancellare il proprio messaggio per (n) minuti dopo averlo inserito. Metti 0 per sempre."
     edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un messaggio modificato. Se disabilitato solo i membri dello staff possono vederle."
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
@@ -1014,16 +982,10 @@ it:
     inline_onebox_domains_whitelist: "Una lista di domini che saranno oneboxed in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignira l'impostazione del sito inline_onebox_domain_whitelist e consenti onebox in linea in tutti i domini."
     max_oneboxes_per_post: "Numero massimo di oneboxe in un messaggio."
-    logo_url: "L'immagine nel logo in alto a sinistra del sito, dovrebbe essere larga e di forma rettangolare. Se non impostata, verrà usato il testo del titolo del sito."
     digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Dovrebbe essere a forma di un ampio rettangolo. Non dovrebbe essere un'immagine SVG. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. "
-    logo_small_url: "Il piccolo logo in alto a sinistra del tuo sito, dovrebbe essere a forma di quadrato. Se non impostato, verrà mostrata l'icona di una casa."
-    favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon, per funzionare correttamente su una CDN deve essere una png"
-    mobile_logo_url: "Url del logo personalizzato usato nella versione mobile del tuo sito. Se non impostato verrà usato `logo_url`. Es: http://esempio.com/uploads/default/logo.png "
-    large_icon_url: "Immagine usata come logo/splash su Android. La dimensione consigliata è di 512px per 512px."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
-    email_subject: "Formato personalizzabile dell'oggetto per le email standard. Vedi https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti i social login, ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
     same_site_cookies: "Utilizza gli stessi cookie del sito, si eliminano tutti i vettori Cross Site Request Forgery nei browser supportati (Lax o Strict). Avviso: Strict lavorerà solo su siti che forzano l'accesso e utilizzano SSO."
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
@@ -1055,11 +1017,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
-    ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
-    ga_universal_auto_link_domains: "Attiva Il monitoraggio interdominio di Google Universal Analytics (analytics.js). Ai collegamenti in uscita a questi domini verrà aggiunto l'id del client. Vedi la guida di Google Cross-domain Tracking."
     gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
-    enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
@@ -1091,7 +1049,6 @@ it:
     email_domains_whitelist: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
     hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
-    version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere esplicitamente invitati dallo staff."
@@ -1104,7 +1061,6 @@ it:
     password_unique_characters: "Numero minimo di caratteri unici che una password deve avere."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
     enable_sso: "Abilita il single sign on da sito esterno (ATTENZIONE: L'INDIRIZZO EMAIL DEGLI UTENTI *DEVE* ESSERE VALIDATO DAL SITO ESTERNO!)"
-    verbose_sso_logging: "Log verboso per diagnostica relativa SSO in /logs"
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
     sso_url: "URL per l'endpoint del single sign on (deve includere http:// o https://)"
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
@@ -1118,19 +1074,11 @@ it:
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_signup_cta: "Mostra una notifica agli utenti anonimi che ritornano chiedendo loro di registrare un account."
     enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
-    enable_google_oauth2_logins: "Abilita l'autenticazione con Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede una chiave e un secret."
     google_oauth2_client_id: "Client ID della tua applicazione Google."
     google_oauth2_client_secret: "Client secret della tua applicazione Google."
-    enable_twitter_logins: "Abilita l'autenticazione con Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
     enable_instagram_logins: "Abilita l'autenticazione con Instagram, richiede la instagram_consumer_key e la instagram_consumer_secret"
     instagram_consumer_key: "La consumer key per autenticazione Instagram"
     instagram_consumer_secret: "La consumer secret per l'autenticazione Instagram"
-    enable_facebook_logins: "Abilita l'autenticazione via Facebook, richiede facebook_app_id e facebook_app_secret"
-    facebook_app_id: "App id per autenticazione Facebook, come registrata su  https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret per autenticazione Facebook, come registrata su https://developers.facebook.com/apps"
-    enable_github_logins: "Abilita l'autenticazione via Github, richiede github_client_id e github_client_secret"
-    github_client_id: "Client id per autenticazione Github, come registrata su https://github.com/settings/applications"
-    github_client_secret: "Client secret per autenticazione Github, come registrata su  https://github.com/settings/applications"
     readonly_mode_during_backup: "Abilita la modalità sola lettura mentre è in esecuzione un backup"
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
@@ -1232,7 +1180,6 @@ it:
     title_min_entropy: "Minima entropia (caratteri unici) richiesti come titolo di un argomento."
     body_min_entropy: "Minima entropia (caratteri unici) richiesti come corpo di un messaggio."
     allow_uppercase_posts: "Permetti l'uso di tutti caratteri maiuscoli nel titolo di argomento o nel corpo di un messaggio. "
-    title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli dell'argomento, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     desktop_category_page_style: "Stile visuale per la pagina /categorie."
@@ -1316,7 +1263,6 @@ it:
     pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
     pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
     pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
-    log_mail_processing_failures: "Traccia tutti i fallimenti di lavorazione delle email all'indirizzo http://tuosito.com/logs "
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti via email (richiede il polling manuale o pop3). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria. "
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
@@ -1379,7 +1325,6 @@ it:
     default_code_lang: "Ai blocchi di codice GitHub viene applicata l'evidenziazione della sintassi del linguaggio di programmazione di default (lang-auto, ruby, python ecc.)"
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
-    highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Avviso: includere troppe lingue può influire sulle prestazioni) vedi: https://highlightjs.org/static/demo/ per una dimostrazione"
     embed_truncate: "Tronca i messaggi incorporati."
     allowed_href_schemes: "Schemi consentiti nei collegamenti in aggiunta a http e https."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
@@ -1800,14 +1745,6 @@ it:
         ```
     csv_export_succeeded:
       title: "Esportazione CSV Riuscita"
-      text_body_template: |
-        L'esportazione dei tuoi dati è avvenuta con successo! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Il collegamento per il download qui sopra sarà valido per 48 ore.
-
-        I dati vengono compressi come archivio gzip. Se l'archivio non si auto-estrae quando lo si apre, utilizzare gli strumenti consigliati qui: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Esportazione CSV Fallita"
       subject_template: "Esportazione dati fallita"
@@ -2064,7 +2001,7 @@ it:
   unsubscribe_link_and_mail: |
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Stai ricevendo questa email perchè hai abilitato la modalità mailing list.
+    Stai ricevendo questa email perché hai abilitato la modalità mailing list.
 
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
@@ -2626,28 +2563,28 @@ it:
       name: Redattore
       description: Prima modifica ad un messaggio
       long_description: |
-        Questo Distintivo è assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i messaggi per sempre, eventuali aggiornamenti sono incoraggiati: puoi migliorare la punteggiatura, sistemare errori di battitura, o aggiungere dettagli omessi nel primo invio. Modifica pure, e rendi i tuoi messaggi ancora migliori!
+        Questo distintivo è assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i tuoi messaggi indefinitamente, la modifica è sempre una buona idea — puoi migliorare i tuoi messaggi, correggere piccoli errori o aggiungere qualcosa che avevi tralasciato nel momento della prima stesura. Effettua modifiche per migliorare i tuoi messaggi!
     basic_user:
       name: Base
       long_description: |
-        Questo Distintivo è assegnato quando si raggiunge il Livello Esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
+        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
       long_description: |
-        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 2. Grazie per aver essere stato partecipe per varie settimane, diventando veramente parte della comunità. Ora puoi mandare inviti dalla tua pagina utente, creare messaggi personali di gruppo, e lasciare più "Mi Piace" per giorno.
+        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, a mettere un numero maggiore di "Mi piace" al giorno.
     regular:
       name: Assiduo
       long_description: |
-        Questo Distintivo viene assegnato al raggiungimento del Livello Esperienza 3. Grazie per aver partecipato in modo assiduo alla nostra comunità per vari mesi. Ora sei uno dei nostri lettori più attivi, un contributore affidabile che rende la comunità sempre migliore. Ora puoi cambiare la categoria degli argomenti, trarre vantaggio da segnalazioni di spam più potenti, hai accesso all'esclusiva area Lounge, e potrai avere molti più "Mi piace" al giorno.
+        Questo distintivo viene assegnato quando raggiungi il livello di esperienza 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi ricategorizzare e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata, e puoi mettere un numero maggiore di "Mi piace" al giorno.
     leader:
       name: Veterano
       long_description: |
-        Questo Distintivo viene assegnato quando si raggiunge il Livello Esperienza 4. Sei ormai un leader di questa comunità scelto dallo Staff, e rappresenti un esempio positivo per il resto del gruppo per come agisci e come ti esprimi. Hai ora la capacità di modificare tutti i messaggi e di compiere azioni di moderazione quali mettere in evidenza, chiudere, archiviare, dividere e unire messaggi.
+        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali puntare, chiudere, rendere invisibile, archiviare, dividere e unire, e hai tonnellate di mi piace al giorno.
     welcome:
       name: Benvenuto
       description: Ha ricevuto un "Mi piace"
       long_description: |
-        Questo Distintivo viene assegnato quando ricevi il tuo primo "Mi piace". Congratulazioni, hai pubblicato qualcosa che gli altri membri della comunità hanno trovato interessante, utile o semplicemente cool!
+        Questo distintivo è assegnato quando ricevi il tuo primo "Mi piace". Congratulazioni, hai pubblicato qualcosa che gli altri membri della comunità hanno trovato interessante, utile o eccezionale!
     autobiographer:
       name: Autobiografo
       description: "Ha compilato le informazioni del <a href=\"%{base_uri}/my/preferences/profile\">profilo</a>"
@@ -2657,37 +2594,37 @@ it:
       name: Compleanno
       description: "Membro attivo per un anno, ha scritto almeno una volta"
       long_description: |
-        Questo Distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non esisterebbe senza persone come te.
+        Questo distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non potremmo farcela senza di te.
     nice_post:
       name: Risposta Piacevole
       description: Ha ricevuto 10 mi piace su una risposta
       long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 10 "Mi piace". Il tuo messaggio ha colpito la comunità e aiutato a portare avanti la discussione.
+        Questo distintivo è assegnato quando una tua risposta riceve 10 "Mi piace". La tua risposta ha colpito la comunità e aiutato a portare avanti la discussione.
     good_post:
       name: Buona Risposta
       description: Ha ricevuto 25 mi piace su una risposta
       long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 25 "Mi piace". Il tuo messaggio è stato eccezionale e ha reso la conversazione molto più interessante.
+        Questo distintivo è assegnato quando una tua risposta ottiene 25 "Mi piace". Il tuo messaggio è stato eccezionale e ha reso la conversazione molto più interessante.
     great_post:
       name: Grande Risposta
       description: Ha ricevuto 50 mi piace su una risposta
       long_description: |
-        Questo Distintivo viene assegnato quando una tua risposta ottiene 50 "Mi piace". Il tuo messaggio si è rivelato affascinante, simpatico, ha dato ispirazione e particolarmente sul punto, e la comunità lo ha davvero gradito!
+        Questo distintivo è assegnato quando una tua risposta ottiene 50 "Mi piace". La tua risposta è stata ispiratrice, affascinante, divertente, o penetrante e la comunità l'ha amata!
     nice_topic:
       name: Argomento Piacevole
       description: Ha ricevuto 10 mi piace su un argomento
       long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 10 "Mi piace". Hai iniziato una conversazione interessante che la comunità ha gradito.
+        Questo distintivo è assegnato quando un tuo argomento ha ricevuto 10 "Mi piace". Hai iniziato una conversazione interessante che la comunità ha gradito.
     good_topic:
       name: Buon Argomento
       description: Ha ricevuto 25 mi piace su un argomento
       long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 25 "Mi piace". Hai iniziato una conversazione interessante che ha attratto molto interesse nella comunità.
+        Questo distintivo è assegnato quando un tuo argomento riceve 25 "Mi piace". Hai iniziato una conversazione interessante che ha attratto molto interesse nella comunità.
     great_topic:
       name: Grande Argomento
       description: Ha ricevuto 50 "Mi piace" in un argomento
       long_description: |
-        Questo Distintivo viene assegnato quando un tuo Argomento ha ricevuto 50 "Mi piace". Hai iniziato una conversazione affascinante e la comunità è stata entusiasta dell'animata conversazione che ne è scaturita.
+        Questo distintivo è assegnato quando un tuo argomento ha ricevuto 50 "Mi piace". Hai iniziato una conversazione affascinante e la comunità è stata entusiasta dell'animata conversazione che ne è scaturita.
     nice_share:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori unici
@@ -2707,7 +2644,7 @@ it:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
       long_description: |
-        Questo distintivo è assegnato la prima volta che metti mi piace ad un messaggio usando il pulsante :heart:. Mettere mi piace a dei messaggi è un ottimo modo per far sapere a tutti i membri della tua comunità che ciò che hanno pubblicato è stato interessante, utile, forte o divertente. Condividi l'amore!
+        Questo distintivo è assegnato la prima volta che metti "Mi piace" ad un messaggio usando il pulsante :heart:. Mettere mi piace a dei messaggi è un ottimo modo per far sapere a tutti i membri della tua comunità che ciò che hanno pubblicato è stato interessante, utile, forte o divertente. Condividi l'amore!
     first_flag:
       name: Prima Segnalazione
       description: Segnalato un messaggio
@@ -2734,12 +2671,12 @@ it:
       name: Prima Citazione
       description: Ha citato un messaggio
       long_description: |
-        Questo Distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
+        Questo distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
     read_guidelines:
       name: Linee Guida
       description: "Ha letto le <a href=\"%{base_uri}/guidelines\">linee guida della comunità</a>"
       long_description: |
-        Questo Distintivo è assegnato a chi <a href="%{base_uri}/guidelines">legge le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità che sia sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
+        Questo distintivo è assegnato per <a href="%{base_uri}/guidelines">aver letto le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
     reader:
       name: Lettore
       description: Ha letto ogni risposta in un argomento con più di 100 risposte
@@ -2749,7 +2686,7 @@ it:
       name: Collegamento Di Successo
       description: Ha pubblicato un collegamento esterno con 50 click
       long_description: |
-        Questo distintivo è assegnato quando un collegamento che hai condiviso riceve 50 click. Grazie per aver pubblicato un collegamento utile che ha aggiunto un contesto interessante alla conversazione!
+        Questo distintivo è assegnato quando un collegamento che hai condiviso riceve 50 clic. Grazie per aver pubblicato un collegamento utile che ha aggiunto un contesto interessante alla conversazione!
     hot_link:
       name: Collegamento Caldo
       description: Ha pubblicato un collegamento esterno con 300 click
@@ -2759,12 +2696,12 @@ it:
       name: Collegamento Famoso
       description: Ha pubblicato un collegamento esterno con 1000 click
       long_description: |
-        Questo distintivo è assegnato quando un collegamento condiviso riceve 1000 click. Wow! Hai inserito un link che ha migliorato significativamente la conversazione aggiungendo dettagli, contesto e informazioni essenziali. Ottimo lavoro!
+        Questo distintivo è assegnato quando un collegamento condiviso riceve 1000 clic. Wow! Hai inserito un collegamento che ha migliorato significativamente la conversazione aggiungendo dettagli, contesto e informazioni essenziali. Ottimo lavoro!
     appreciated:
       name: Apprezzato
       description: Ha ricevuto 1 "Mi piace" su 20 messaggi
       long_description: |
-        Questo distintivo è assegnato quando ricevi almeno un mi piace su 20 messaggi differenti. La comunità si sta godendo i tuoi contributi alle conversazioni!
+        Questo distintivo è assegnato quando ricevi almeno un "Mi piace" su 20 messaggi differenti. La comunità si sta godendo i tuoi contributi alle conversazioni!
     respected:
       name: Rispettato
       description: Ha ricevuto 2 "Mi piace" su 100 messaggi
@@ -2774,12 +2711,12 @@ it:
       name: Ammirato
       description: Ha ricevuto 5 "Mi piace" su 300 messaggi
       long_description: |
-        Questo distintivo è assegnato quando ricevi almeno 5 mi piace su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
+        Questo distintivo è assegnato quando ricevi almeno 5 "Mi piace" su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
     out_of_love:
       name: Amato
       description: Ha messo 50 mi piace in un giorno
       long_description: |
-        Questo distintivo è assegnato quando usi tutti i 50 mi piace che hai a disposizione giornalmente. Ricordando di prenderti un momento per mettere mi piace ai messaggi che ti piacciono e apprezzi, incoraggi i membri della tua comunità a creare discussioni ancora più grandi in futuro.
+        Questo distintivo è assegnato quando usi tutti i 50 "Mi piace" che hai a disposizione giornalmente. Ricorda di prenderti un momento per mettere "Mi piace" ai messaggi che ti piacciono e che apprezzi, così incoraggerai i membri della comunità a creare discussioni ancora migliori in futuro.
     higher_love:
       name: Pieno d'Amore
       description: Ha messo 50 mi piace al giorno per 5 volte
@@ -2799,7 +2736,7 @@ it:
       name: Ricambiato
       description: Ha ricevuto 100 mi piace sui messaggi e dato 100 mi piace
       long_description: |
-        Questo distintivo è assegnato quando hai ricevuto 100 mi piace sui messaggi e hai dato 100 o più mi piace in cambio. Grazie per aver ricambiato!
+        Questo distintivo è assegnato quando hai ricevuto 100 "Mi piace" sui messaggi e hai dato 100 o più "Mi piace" in cambio. Grazie per aver ricambiato!
     empathetic:
       name: Empatico
       description: Ha ricevuto 500 mi piace sui messaggi e dato 1000 mi piace
@@ -2810,12 +2747,12 @@ it:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio
       long_description: |
-        Questo Distintivo viene assegnato la prima volta che menzioni lo @username di un altro utente in un tuo messaggio. Ogni menzione genera una notifica a quella persona, così che siano informati del tuo messaggio. Inizia col digitare il simbolo @ (il simbolo "at") per menzionare un altro utente o, se consentito, un gruppo. Si tratta di un modo semplice di portare qualcosa alla loro attenzione.
+        Questo distintivo è assegnato la prima volta che menzioni un altro @utente in un tuo messaggio. Ogni menzione genera una notifica a quella persona, così verrà a conoscenza del tuo messaggio. Inizia col digitare il simbolo @ (la chiocciola) per menzionare un altro utente o, se consentito, un gruppo. Si tratta di un modo semplice di portare qualcosa alla loro attenzione.
     first_onebox:
       name: Prima Onebox
       description: ha inserito un collegamento che ha generato una onebox
       long_description: |
-        Questo Distintivo viene assegnato la prima volta che pubblichi un collegamento scrivendolo su una riga a sé stante, in modo che venga incorporato dalla funzione onebox insieme ad un sommario, un titolo e, se disponibile, ad un'immagine.
+        Questo distintivo viene assegnato la prima volta che pubblichi un collegamento scrivendolo su una riga a sé stante, in modo che venga incorporato dalla funzione onebox insieme ad un sommario, un titolo e, se disponibile, ad un'immagine.
     first_reply_by_email:
       name: Prima Risposta Da Email
       description: Ha risposto ad un messaggio tramite email
@@ -2830,17 +2767,17 @@ it:
       name: Appassionato
       description: 10 giorni di frequenza
       long_description: |
-        Questo Distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
+        Questo distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
     aficionado:
       name: Amatoriale
       description: 100 giorni di frequenza
       long_description: |
-        Questo Distintivo viene assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
+        Questo distintivo è assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
     devotee:
       name: Devoto
       description: 365 giorni di frequenza
       long_description: |
-        Questo Distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
+        Questo distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"
@@ -2924,7 +2861,6 @@ it:
             description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche quali segnalazioni non gestite, aggiornamenti sulla protezione e sulla tua pagina <a href='/about' target='_blank'>informazioni</a> per un contatto urgente."
           contact_url:
             label: "Sito Web"
-            placeholder: "http://www.example.com/contact-us"
             description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='/about' target='_blank'>informazioni</a>."
           site_contact:
             label: "Messaggi Automatici"

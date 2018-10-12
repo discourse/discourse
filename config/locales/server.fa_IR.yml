@@ -104,10 +104,6 @@ fa_IR:
     embed:
       load_from_remote: "خطایی در بارگذاری آن نوشته رخ داده است."
     site_settings:
-      min_username_length_exists: "شما نمی‌توانید حداقل طول نام‌کاربری را بیشتر از کوتاه‌ترین نام کاربری بگذارید."
-      min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
-      max_username_length_exists: "شما نمی‌توانید حداکثر طول نام‌کاربری را کمتر از بلند‌ترین نام‌کاربری قرار دهید."
-      max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
   activemodel:
@@ -762,7 +758,6 @@ fa_IR:
   dashboard:
     rails_env_warning: "سرور شما در حالت  %{env} در حال اجراست"
     host_names_warning: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
-    gc_warning: 'سرور شما از پیش فرض پارامترهای جمع آوری ruby garbage استفاده می کند٬ که به شما بهترین عملکرد را نمی دهد. این موضوع برای تنظیم عملکرد بخوانید: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank"> تنظیم Ruby و Rails برای دیسکورس </a>.'
     sidekiq_warning: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند.  <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq  بیشتر بدانید.</a>'
     queue_size_warning: 'تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq  بیشتری اضافه کنید.'
     memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است، برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کند.'
@@ -770,9 +765,6 @@ fa_IR:
     facebook_config_warning: 'سرور تنظیم شده تا اجازه ثبت نام و وارد شدن یا فیس بوک را بدهد. (enable_facebook_logins)، ولی app id و app secret تنظیم نشده است. به <a href="/admin/site_settings"> بروید و </a> و تنظیمات سایت را تغییر دهید.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">اطلاعات بیشتر</a>.'
     twitter_config_warning: 'سرور تنظیم شده تا اجازه ثبت نام و وارد شدن با توییتر را بدهد (enable_twitter_logins), مقدار key و secret تنظیم نشده است. به <a href="/admin/site_settings"> تنظیمات سایت </a>  رفته و مقادیر را بروز کنید. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">اطلاعات بیشتر</a>.'
     github_config_warning: 'سرور تنظیم شده تا اجازه ثبت نام و وارد شدن با GitHub را بدهد (enable_github_logins), ولی مقادیر client id و secret وارد نشده اند. به <a href="/admin/site_settings"> تنظیمات سایت </a> رفته و مقادیر را تنظیم کنید.  <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">توضیحات بیشتر</a>.'
-    s3_config_warning: 'سرور تنظیم شده که فایل ها را در s3 بارگذاری کند، ولی حداقل یکی از مقدار‌های زیر تنظیم نشده است: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, یا s3_upload_bucket. به <a href="/admin/site_settings">the Site Settings</a> تنظیمات سایت <a بروید و این مقدار‌ها را به روز کنید. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">آموزش انجام این کار</a>.'
-    s3_backup_config_warning: 'سرور برای بارگذاری نسخه پشتیبان  به  s3 تنظیم شده، ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است : s3_access_key_id, s3_secret_access_key or s3_backup_bucket. برو به <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی و تنظیمات  <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> این را ببینید برای "تنظیم بارگذاری عکس ها به S3؟" اطلاعات بیشتر</a>.'
-    image_magick_warning: 'سرور برای ساخت تصویر بندانگشتی از عکس‌های بزرگ تنظیم شده. ولی  ImageMagick نصب نشده است. ImageMagick را با استفاده از بسته مدیریت یا <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">صورت دستی</a> نصب کنید. '
     failing_emails_warning: '%{num_failed_jobs} ایمیل زمانبندی شده نا‌موفق وجود دارد. فایل app.yml  را بررسی کنید و مطمئن شوید که تنظیمات سرور ایمیل درست است.  <a href="/sidekiq/retries" target="_blank"> نمایش زمابندی‌های ناموفق Sidekiq </a>.'
     subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
     email_polling_errored_recently:
@@ -805,14 +797,12 @@ fa_IR:
     educate_until_posts: "وقتی کاربر شروع کرد به نوشتن اولین (n)  نوشته‌ی جدید، آموزش‌ها را برای کاربران جدید بصورت بالابر در قسمت نویسنده نشان بده."
     title: "نام این وب سایت، استفاده شده در تگ title"
     site_description: "سایت را در یک جمله توصیف کنید،‌ همانطور که در تگ meta توضیح داده شده بود"
-    contact_url: "با URL برای این سایت تماس بگیر. برای تماس در صفحه‌ی درباره‌ما برای موارد ضروری استفاده می‌شود."
     crawl_images: "بازیابی تصاویر از URL‌های خارجی برای وارد کردن طول و عرض صحیح. "
     download_remote_images_to_local: "تبدیل عکس‌های خارجی به عکس های محلی با دانلود کردن آنها، این مانع از شکستن عکس‌ها می شود."
     download_remote_images_threshold: "حداقل فضای دیسک مورد نیاز برای دانلود عکس‌های خارجی به هاست (به درصد)"
     download_remote_images_max_days_old: "تصاویر خارجی را برای پست‌های قدیمی‌تر از n روز دانلود نکن."
     disabled_image_download_domains: "عکس‌های خارجی هرگز از این دامنه‌ها دانلود نخواهند شد. لیست Pipe-delimited"
     editing_grace_period: "تا (n) ثانیه بعد از ارسال نوشته، ویرایش نوشته نسخه جدیدی در تاریخچه ایجاد نمی‌کند."
-    post_edit_time_limit: " نویسنده می‌تواند نوشته را بعد از  (n) ساعت پست کردن آن، ویرایش یا حذف کند. تنظیم به 0 برای همیشه."
     edit_history_visible_to_public: "به همه اجازه بده تا نسخه قبلی نوشته ویرایش شده را ببینند. وقتی غیر‌فعال است٬ فقی اعضای همکار می‌توانند ببینند."
     delete_removed_posts_after: "نوشته های حذف شده توسط نویسنده به‌طور خودکار پاک می شوند بعد از  (n) ساعت. اگر به 0 تنظیم شود همان موقع پاک خواهند شد. "
     max_image_width: "حداکثر عرض تصاویر بند‌انگشتی در نوشته."
@@ -826,14 +816,10 @@ fa_IR:
     post_onebox_maxlength: "حداکثر طول متن پیشنمایش لینک به نویسه."
     onebox_domains_blacklist: "لیست دامنه‌هایی که نباید پیش‌نمایش داشته باشند."
     max_oneboxes_per_post: "حداکثر تعداد پیش نمایش پیوند در یک نوشته"
-    logo_url: "لوگوی عکس در قسمت بالا سمت چپ سایتتان؛ اگر خالی باشد٬‌  عنوان وب سایت شما نشان داده می شود. "
     digest_logo_url: "موقعیت لوگوی تصویر ثابت در بالای خلاصه ایمیل استفاده  شده است. باید به شکل یک مستطیل عریض باشد. نباید تصویر SVG باشد. اگر این قسمت را وارد نکنید مقدار  `logo_url` استفاده می‌شود."
-    logo_small_url: "لوگو کوچک در قسمت بالا چپ سایت نمایش داده می‌شود. باید شکل مربعی داشته باشد، وقتی که کاربر اسکرول می‌کند نمایش داده می‌شود. اگر خالی باشد آیکن home glyph نمایش داده می‌شود."
-    favicon_url: "فاویکون سایت، برای استفاده صحیح از CDN لینک زیر را ببینید، فرمت باید png باشد\nhttp://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "آیکن استفاده شده برای دستگاه های لمسی اپل. اندازه پیشنهادی 144px by 144px."
     notification_email: "از: ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "فهرست pipe-delimited از سربرگ‌های ایمیل سفارشی "
-    email_subject: "قالب موضوع قابل تنظیم برای ایمیل های استاندارد. این را ببینید https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
     same_site_cookies: "استفاده از همان کوکی ها، آن‌ها از تمام درخواست های vector cross site جلوگیری می‌کنند(Lax یا Strict). توجه: این کار سختگیرانه فقط در سایت‌هایی که ورود اجباری دارند و از SSO استفاده می‌کنند قابل استفاده است."
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این موضوع\" شود"
@@ -860,10 +846,7 @@ fa_IR:
     must_approve_users: "همکاران باید تمامی حساب‌های کاربری را قبل از اجازه دسترسی به سایت تایید کنند. اخطار: فعال‌سازی این گزینه ممکن است باعث جلوگیری از دسترسی کاربرانی که قبلا عضو شده‌اند نیز بشود!"
     pending_users_reminder_delay: "اگر کاربر‌ها بیشتر از این مقدار ساعت منتظر تایید بودند به مدیران اعلام کن. مقدار -1 برای غیرفعال‌سازی."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
-    ga_universal_tracking_code: "کد آمارگیر گوگل  (analytics.js) UA-12345678-9؛ اینجا را ببینید http://google.com/analytics"
-    ga_universal_domain_name: "کد آمارگیر گوگل (analytics.js) اسم دامنه٬‌ مثلا: mysite.com؛ اینجا را ببینید  http://google.com/analytics"
     gtm_container_id: "مدیریت برچسب گوگل شامل شناسه است برای مثال: GTM-ABCDEF"
-    enable_escaped_fragments: "بازگشت به حالت AJAX-Crawling گوگل درصورتی که خزنده وب تشخیص داده شد. اینجا را ببینید https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "به مدیران اجازه ایجاد دسته‌بندی جدید را بده"
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS  env برای تنظیم به کارگیری CORS  باید متغیر باشد."
     use_admin_ip_whitelist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
@@ -890,7 +873,6 @@ fa_IR:
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
-    version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
     invite_only: "ثبت‌نام عمومی غیر‌فعال است، تمام کاربران جدید باید توسط کارمندان دعوت شوند."
@@ -903,7 +885,6 @@ fa_IR:
     password_unique_characters: "حداقل تعداد نویسه یکتا برای یک رمز‌عبور"
     block_common_passwords: "رمز عبوری که جزء 10,000 رمز عبور رایج است را قبول نکنید. "
     enable_sso: "اجازه single sign on از طریق سایت‌های دیگر داده شود (هشدار: آدرس ایمیل کاربر *باید* توسط سایت دیگر معتبر تشخیص داده شود!)"
-    verbose_sso_logging: "گزارش  SSO مرتبط با تشخیص در /logs"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider، به تنظیم sso_secret نیاز دارد"
     sso_url: "لینک ورود یکپارچه (باید شامل http:// یا https://) باشد"
     sso_secret: "مطمئن شوید که secret string استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ 10 نویسه یا بیشتر است."
@@ -917,19 +898,11 @@ fa_IR:
     allow_new_registrations: "به کاربر جدید اجازه ثبت‌نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب‌کاربری جدید. "
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "
-    enable_google_oauth2_logins: "احراز هویت Google Oauth2 را فعال کن. این روش احراز هویت است که گوگل در حال حاضر ساپورت می کند. به راز و کلید نیاز دارد ."
     google_oauth2_client_id: "Client ID  برای نرم افزار گوگل شما. "
     google_oauth2_client_secret: "Client secret برای بر نرم افزار گوگل شما. "
-    enable_twitter_logins: "احراز هویت تیوتر را فعال کن، به twitter_consumer_key و  twitter_consumer_secret‌ نیاز است "
     enable_instagram_logins: "فعالسازی ورود با اینستاگرام، نیازمند \ninstagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key اینستاگرام"
     instagram_consumer_secret: "Consumer secret اینستاگرام"
-    enable_facebook_logins: "فعال کردن احراز هویت فیس‌بوک به facebook_app_id و facebook_app_secret  نیار دارد"
-    facebook_app_id: "App ID برای احراز هویت فیس بوک٬ که در  https://developers.facebook.com/apps ایجاد شده"
-    facebook_app_secret: "App secret برای احراز هویت فیس بوک، که در https://developers.facebook.com/apps ثبت شده"
-    enable_github_logins: "احراز هویت در Github را فعال کن، نیاز به github_client_id  و github_client_secret"
-    github_client_id: "Client ID برای احراز هویت در Github ٬ که در https://github.com/settings/applications ایجاد شده"
-    github_client_secret: "Client secret را برای احراز هویت Github@که در https://github.com/settings/applications ایجاد شده"
     readonly_mode_during_backup: "فعالسازی حالت فقط خواندنی برای گرفتن نسخه پشتیبان"
     allow_restore: "اجازه بازیابی بده، که می‌تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
@@ -984,7 +957,7 @@ fa_IR:
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
-    tl1_requires_topics_entered: "یک کاربر جدید چه تعداد موضوعاتی باید ایجاد کنید تا به سطح اعتماد 1 ارتقا پیدا کند."
+    tl1_requires_topics_entered: "یک کاربر جدید چه تعداد موضوع بایستی بخواند تا به سطح اعتماد ۱ ارتقا پیدا کند."
     tl1_requires_read_posts: "یک کاربر جدید چه تعداد نوشته باید ایجاد کنید تا به سطح اعتماد 1 ارتقا پیدا کند."
     tl1_requires_time_spent_mins: "یک کاربر جدید چه مدت باید نوشته را بخواند تا به سطح اعتماد 1 ارتقا پیدا کند."
     tl2_requires_topics_entered: "تعداد موضوعی که کاربر باید وارد آن شود تا به سطح اعتماد 2 برسد."
@@ -1027,7 +1000,6 @@ fa_IR:
     title_min_entropy: "حداقل آنتروپی مورد نیاز عنوان موضوع (نویسه‌های خاص٬ تعداد غیر انگلیسی برای بیشتر)"
     body_min_entropy: "حداقل آنتروپی مورد نیاز متن نوشته(نویسه‌های خاص، تعداد غیر انگلیسی برای ادامه )"
     allow_uppercase_posts: "اجازه‌ی استفاده از حروف بزرگ در متن نوشته."
-    title_fancy_entities: "کاراکترهای ASCII  رایج را به HTML های فانتزی در عنوان موضوع تبدیل کن٬  مثلا http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "حداقل طول عنوان قبل از اینکه برای موضوعات مشابه بررسی شود."
     min_body_similar_length: "حداقل طول بدنه یک نوشته قبل از اینکه  برای موضوعات مشابه بررسی شود.  "
     desktop_category_page_style: "سبک بصری برای صفحه‌ی دسته‌بندی"
@@ -1105,7 +1077,6 @@ fa_IR:
     pop3_polling_host: "میزبان برای نظرسنجی با ایمیل از طریق POP3. "
     pop3_polling_username: "نام کاربری برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
     pop3_polling_password: "رمز عبور برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
-    log_mail_processing_failures: "گزارش تمام ایمیل ها را در http://yoursitename.com/logs قرار بده"
     email_in_min_trust: "حداقل میزان سطح اعتماد برای کاربران تا بتوانند نوشته را از طریق ایمیل ارسال کنند. "
     email_prefix: "این [برچسب]  در موضوع ایمیل استفاده شده. اگر تنظيم نشود عنوان به 'عنوان' تبدیل می‌شود."
     email_site_title: "عنوان این سایت به فرستنده ایمیل‌ها در سایت استفاده شده. اگر مقداری عنوان شامل نویسه‌های غیر مجاز باشد، به 'عنوان' تبدیل خواهد شد."
@@ -1163,7 +1134,6 @@ fa_IR:
     default_code_lang: " پیش فرض برنامه نویسی زبان سینتکس برجسته شده به بلوک های  کد GitHub  اعمال بشه.  (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به موضوعی که آخرین پاسخ برمی گردد به  خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
     autohighlight_all_code: "اعمال زور برای  برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
-    highlighted_languages: "شامل برجسته کردن دستورات (syntax highlighting) است. (اخطار: اضافه کردن زبان‌های زیاد باعث کاهش کارایی می‌شود) دمو: https://highlightjs.org/static/demo/ "
     embed_truncate: "کوتاه کردن نوشته‌های جاسازی شده "
     allowed_href_schemes: "طرح‌ها در لینک‌های http و https مجازند"
     embed_post_limit: "حداکثر تعداد نوشته‌هایی که می‌توانید جا‌سازی کنید. "
@@ -1560,14 +1530,6 @@ fa_IR:
         ```
     csv_export_succeeded:
       title: "خروجی CSV موفق"
-      text_body_template: |
-        خروجی اطلاعات موفقیت آمیز بود! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        لینک بالا تا 48 ساعت معتبر است.
-
-        اطلاعات به صورت gzip آرشیو شده. اگر آرشیو به صورت خودکار باز نشد باید خودتان آن‌را باز کنید، با ابزاری مثل : http://www.gzip.org/#faq4
     csv_export_failed:
       title: "خروجی CSV نامفق"
       subject_template: "خروج اطلاعات ناموفق بود"
@@ -2274,7 +2236,6 @@ fa_IR:
             description: "ایمیل شخص یا گروه پاسخگوی انجمن. برای اطلاعات مهمی مانند پرچم‌های کنترل نشده، به‌روز‌رسانی‌های امنیتی و تماس‌های فوری در <a href='/about' target='_blank'>صفحه دباره‌ما</a> "
           contact_url:
             label: "صفحه وب"
-            placeholder: "http://www.example.com/contact-us"
             description: "صفحه تماس عمومی شما در <a href='/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
           site_contact:
             label: "پیام‌های خودکار"

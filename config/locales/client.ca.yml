@@ -235,12 +235,8 @@ ca:
         bookmark: "Clica per marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Clica per eliminar tots els preferits d'aquest tema"
     bookmarks:
-      not_logged_in: "disculpa, ha d'identificar-te per marcar publicacions com a preferits"
       created: "has marcat aquesta publicació com a preferit"
-      not_bookmarked: "has llegit aquesta publicació; cilca per marcar-la com a preferit"
-      last_read: "aquesta és la darrera publicació que has llegit; clica per marcar-la com a preferit"
       remove: "Elimina Preferit"
-      confirm_clear: "Segur que vols eliminar tots els preferits d'aquest tema?"
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"
@@ -248,7 +244,6 @@ ca:
     saved: "Desat!"
     upload: "Actualitza"
     uploading: "Actualitzant..."
-    uploading_filename: "Actualitzant {{filename}}..."
     uploaded: "Actualitzat!"
     pasting: "Enganxant..."
     enable: "Activa"
@@ -812,9 +807,6 @@ ca:
       enabled: "El lloc web es troba en mode només de lectura. Si us plau, continua navegant però per ara estan desactivades respondre i altres accions."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc es trobi en mode només de lectura."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comencem aquesta discussió!</a> Actualment hi ha <strong>%{currentTopics} / %{requiredTopics}</strong> temes i <strong>%{currentPosts} / %{requiredPosts}</strong> entrades. Les noves visites necessiten algunes converses per llegir i respondre."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comencem aquesta discussió!</a> Actualment hi ha <strong>%{currentTopics} / %{requiredTopics}</strong> temes. Les noves visites necessiten algunes converses per llegir i respondre."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comencem aquesta discussió!</a> Actualment hi ha <strong>%{currentPosts} / %{requiredPosts}</strong> entrades. Les noves visites necessiten algunes converses per llegir i respondre."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha arribat al límit de configuració de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha superat el límit de configuració de %{siteSettingRate}."
@@ -1016,7 +1008,6 @@ ca:
       link_description: "introdueix una descripció de l'enllaç"
       link_dialog_title: "Insereix un enllaç"
       link_optional_text: "títol opcional"
-      link_url_placeholder: "http://exemple.com"
       quote_title: "Cita en bloc"
       quote_text: "Cita en bloc"
       code_title: "Text preformatat"
@@ -1422,14 +1413,9 @@ ca:
         action: "uneix les publicacions seleccionades"
         error: "Hi ha hagut una errada en unir les publicacions seleccionades."
       change_owner:
-        title: "Canvia la persona propietària de les publicacions"
         action: "canvia la propietat"
         error: "Hi ha hagut una errada en canviar la propietat de les publicacions."
-        label: "Nova persona propietària de les publicacions"
         placeholder: "identitat de la nova persona propietària"
-        instructions:
-          one: "Si us plau, selecciona la nova persona propietària de la publicació per <b>{{old_user}}</b>."
-          other: "Si us plau, selecciona la nova persona propietària de les {{count}} publicacions per <b>{{old_user}}</b>."
       change_timestamp:
         action: "canvia la marca de temps"
         invalid_timestamp: "La hi haurà marca en el futur."
@@ -1876,7 +1862,6 @@ ca:
         this_week: "Setmana"
         today: "D'avui"
         other_periods: "mira amunt"
-    browser_update: 'Malauradament, <a href="http://www.discourse.org/faq/#browser">el teu navegador és massa vell per treballar amb aquest lloc web</a>. Si us plau <a href="http://browsehappy.com">actualitza el teu navegador</a>.'
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
@@ -2037,8 +2022,6 @@ ca:
           bookmarks: "No hi ha més temes marcats com a preferits."
           search: "No hi ha més resultats de la cerca."
     invite:
-      custom_message: "Personalitza una mica més la teva invitació tot escrivint "
-      custom_message_link: "un missatge personalitzat"
       custom_message_placeholder: "Introdueix el teu missatge personalizat"
       custom_message_template_forum: "Ep! Hauries d'unir-te a aquest fòrum!"
       custom_message_template_topic: "Ep! Crec que gaudiràs d'aquest tema!"
@@ -2311,7 +2294,6 @@ ca:
         new_style: "Nou estil"
         import: "Importa"
         delete: "Esborra"
-        about: "Modifica les fulles d'estil CSS i els encapçalaments HTML a aquest lloc web. Afegeix una personalització per començar."
         color: "Color"
         opacity: "Opacitat"
         copy: "Còpia"
@@ -2463,7 +2445,6 @@ ca:
           filter: "Filtre:"
           title: "Accions d'equip"
           clear_filters: "Mostra-ho tot"
-          staff_user: "Persona de l'equip"
           target_user: "Identitat objectiu"
           subject: "Tema"
           when: "Quan"

@@ -241,12 +241,8 @@ hu:
         bookmark: "Kattints, hogy a témakör első bejegyzését betedd a könyvjelzők közé"
         unbookmark: "Kattints a témakör valamennyi könyvjelzőjének törléséhez"
     bookmarks:
-      not_logged_in: "sajnáljuk, de a bejegyzések könyvjelzővel való ellátásához be kell jelentkezned"
       created: "ezt a bejegyzést könyvjelzővel láttad el"
-      not_bookmarked: "elolvastad ezt a bejegyzést, kattints ide a könyvjelzővel való ellátásához"
-      last_read: "ez az utolsó bejegyzés, amit elolvastál, kattints ide a könyvjelzővel való ellátásához"
       remove: "Könyvjelző eltávolítása"
-      confirm_clear: "Biztosan törölni szeretnéd a könyvjelzőket ebből a témakörből?"
     drafts:
       resume: "Folytatás"
       remove: "Eltávolítás"
@@ -269,7 +265,6 @@ hu:
     saved: "Mentve!"
     upload: "Feltöltés"
     uploading: "Feltöltés..."
-    uploading_filename: "{{filename}} feltöltése..."
     uploaded: "Feltöltve!"
     pasting: "Beillesztés..."
     enable: "Engedélyezés"
@@ -413,7 +408,6 @@ hu:
         all: "Minden csoport"
         empty: "Nincsenek látható csoportok."
         filter: "Szűrés csoportnév alapján"
-        owner_groups: "Ezeknek a csoportoknak vagyok a tulajdonosa: "
         close_groups: "Zárt csoportok"
         automatic_groups: "Automatikus csoportok"
         automatic: "Automatikus"
@@ -517,7 +511,6 @@ hu:
       topic_stat_sentence:
         one: "%{count} új témakör az elmúlt %{unit} során."
         other: "%{count} új témakör az elmúlt %{unit} során."
-      more: "(még %{count}) ..."
     ip_lookup:
       title: IP-cím keresése
       hostname: Gépnév
@@ -949,9 +942,6 @@ hu:
       enabled: "Az oldal \"csak olvasható\" módban van. Kérlek, folytasd tovább a böngészést, de a válaszolás, kedvelések és más tevékenységek egyelőre le vannak tiltva."
       login_disabled: "A belépés le van tiltva, amíg az oldal \"csak olvasható\" módban van."
       logout_disabled: "A kilépés le van tiltva, amíg az oldal \"csak olvasható\" módban van."
-    too_few_topics_and_posts_notice: "Kezdjük el a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>beszélgetést!</a> Jelenleg <strong>%{currentTopics}/%{requiredTopics}</strong> téma és <strong>%{currentPosts}/%{requiredPosts}</strong> hozzászólás van. Az új látogatóknak kell valami, amihez hozzászólhatnak."
-    too_few_topics_notice: "Kezdjük el a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>beszélgetést!</a> Jelenleg <strong>%{currentTopics}/%{requiredTopics}</strong> téma van. Az új látogatóknak kell valami, amihez hozzászólhatnak."
-    too_few_posts_notice: "Kezdjük el a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>beszélgetést!</a> Jelenleg <strong>%{currentPosts}/%{requiredPosts}</strong> hozzászólás van. Az új látogatóknak kell valami, amihez hozzászólhatnak."
     learn_more: "tovább..."
     all_time: 'Összes'
     all_time_desc: 'összes létrehozott téma'
@@ -1208,7 +1198,6 @@ hu:
       link_description: "itt add meg a link leírását"
       link_dialog_title: "Hiperhivatkozás beszúrása"
       link_optional_text: "alternatív cím"
-      link_url_placeholder: "http://example.com"
       quote_title: "Idézet"
       quote_text: "Idézet"
       code_title: "Előformázott szöveg"
@@ -1604,10 +1593,8 @@ hu:
         action: "áthelyezés létező témába"
         error: "Hiba történt a bejegyzések áthelyezésekor ebben a témába."
       change_owner:
-        title: "A bejegyzések átruházása"
         action: "tulajdonjog módosítása"
         error: "Hiba történt a bejegyzések átruházásakor."
-        label: "A bejegyzések új tulajdonosa"
         placeholder: "az új tulajdonos felhasználóneve"
       multi_select:
         select: 'kiválasztás'
@@ -1968,7 +1955,6 @@ hu:
         this_week: "hét"
         today: "Ma"
         other_periods: "Lásd felül"
-    browser_update: 'Sajnos a <a href="http://www.discourse.org/faq/#browser">böngésződ túl régi, hogy működjön ezzel az oldallal</a>. Kérünk <a href="http://browsehappy.com">frissítsd azt</a>!'
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -2103,7 +2089,6 @@ hu:
           bookmarks: "Nincs több témakör a könyvjelzőben"
           search: "Nincsen több keresési találat"
     invite:
-      custom_message_link: "Privát üzenet"
       custom_message_placeholder: "Add meg az egyéni üzenetedet"
       custom_message_template_forum: "Hej, csatlakoznód kéne ehez a fórumhoz"
       custom_message_template_topic: "Hej, úgygondoltam talán élveznéd ezt a témát"
@@ -2466,7 +2451,6 @@ hu:
           add_upload: "Feltöltés hozzáadása"
           variable_name: "SCSS var name:"
           upload: "Feltöltés"
-          child_themes_check: "A téma más témákat is tartalmaz"
           css_html: "Egyedi CSS/HTML"
           edit_css_html: "CSS/HTML szerkesztése"
           edit_css_html_help: "Nem szerkesztettél semmilyen CSS vagy HTML formátumot"
@@ -2608,7 +2592,6 @@ hu:
           filter: "Szűrő:"
           title: "Szervezői műveletek"
           clear_filters: "Mind mutatása"
-          staff_user: "Szervező felhasználó"
           target_user: "Célzott felhasználó"
           subject: "Téma"
           when: "Mikor"

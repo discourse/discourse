@@ -224,12 +224,8 @@ sq:
         bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
-      not_logged_in: "ju duhet të jeni të identifikuar për të ruajtur temën."
       created: "ju ruajtët këtë temë tek të preferuarat tuaja"
-      not_bookmarked: "e keni lexuar këtë temë; klikoni për ta ruajtur tek të preferuarat"
-      last_read: "ky është postimi i fundit që keni lexuar; klikoni për t'a shtuar tek të preferuarat"
       remove: "Hiqeni nga të prefereruarat"
-      confirm_clear: "Jeni të sigurtë se doni të fshini të gjitha të preferuarat nga kjo temë?"
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
@@ -237,7 +233,6 @@ sq:
     saved: "U ruajtën!"
     upload: "Ngarko"
     uploading: "Duke ngarkuar..."
-    uploading_filename: "Duke ngarkuar {{filename}}..."
     uploaded: "U ngarkua!"
     enable: "Aktivizo"
     disable: "Çaktivizo"
@@ -762,9 +757,6 @@ sq:
       enabled: "Faqja lejon vetëm leximet per momentin. Mund të vazhdoni të shfletoni, por përgjigjet, pëlqimet dhe veprime të tjera janë të çaktivizuara përkohësisht."
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
       logout_disabled: "Nuk mund të shkëputeni nga faqja sepse faqja është përkohësisht në formatin vetëm-lexim."
-    too_few_topics_and_posts_notice: "Hajt ta nisim <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>mbarë diskutimin!</a> Keni krijuar <strong>%{currentTopics} / %{requiredTopics}</strong> tema dhe <strong>%{currentPosts} / %{requiredPosts}</strong> postime në faqe. Vizitorët e rinj të faqes kanë nevojë për diskutime në faqe. "
-    too_few_topics_notice: "Hajt ta nisim <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>mbarë diskutimin!</a> Keni krijuar <strong>%{currentTopics} / %{requiredTopics}</strong> tema. Vizitorët e rinj të faqes kanë nevojë për diskutime në faqe. "
-    too_few_posts_notice: "Hajt ta nisim <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>mbarë diskutimin!</a> Keni krijuar <strong>%{currentPosts} / %{requiredPosts}</strong> postime në faqe. Vizitorët e rinj të faqes kanë nevojë për diskutime në faqe. "
     logs_error_rate_notice:
       rate:
         one: "1 gabim/%{duration}"
@@ -958,7 +950,6 @@ sq:
       link_description: "shkruaj përshkrimin e lidhjes këtu"
       link_dialog_title: "Vendosni një lidhje"
       link_optional_text: "titull fakultativ"
-      link_url_placeholder: "http://shembull.com"
       quote_title: "Citim"
       quote_text: "Citim"
       code_title: "Tekst i paraformatuar"
@@ -1304,10 +1295,8 @@ sq:
         action: "bashkoni postimet e përzgjedhura"
         error: "Ndodhi një gabim ndërsa po bashkoheshin postimet e përzgjedhura."
       change_owner:
-        title: "Ndrysho autorin e postimeve"
         action: "ndrysho zotëruesin"
         error: "Pati një gabim gjatë ndryshimit të autorit të postimeve."
-        label: "Autori i ri i postimeve"
         placeholder: "emri i përdoruesit të autorit"
       change_timestamp:
         action: "ndrysho datën"
@@ -1721,7 +1710,6 @@ sq:
         this_week: "Këtë javë"
         today: "Sot"
         other_periods: "shiko më  populloret"
-    browser_update: 'Fatkeqësisht, <a href="http://www.discourse.org/faq/#browser">shfletuesi juaj është shumë i vjetër për këtë faqe</a>. Ju lutemi, <a href="http://browsehappy.com">azhornoni shfletuesin</a>.'
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
@@ -1881,8 +1869,6 @@ sq:
           bookmarks: "Nuk ka më tema të preferuara."
           search: "Kërkimi nuk ka më rezultate."
     invite:
-      custom_message: "Personalizojeni ftesën paksa duke shkruar një"
-      custom_message_link: "mesazh të veçantë"
       custom_message_placeholder: "Vendosni mesazhin"
       custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"
       custom_message_template_topic: "Hej, besoj se do të të pelqejë kjo temë!"
@@ -2059,7 +2045,6 @@ sq:
         new_style: "Veshje e Re"
         import: "Importo"
         delete: "Fshij"
-        about: "Modifiko faqet e stilit CSS dhe HTML në këtë faqe. Shto një personalizim për të filluar. "
         color: "Ngjyra"
         opacity: "Opaciteti"
         copy: "Kopjo"
@@ -2170,7 +2155,6 @@ sq:
         staff_actions:
           title: "Veprime Stafi"
           clear_filters: "Trego gjithshka"
-          staff_user: "Anëtari i stafit"
           target_user: "Anëtari i prekur"
           subject: "Subjekti"
           when: "Kur"

@@ -287,12 +287,8 @@ lt:
         bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
     bookmarks:
-      not_logged_in: "atsiprašome, jūs turite būti prisijungęs, kad galėtumete žymėti įrašus"
       created: "jūs pažymėjot šį įrašą"
-      not_bookmarked: "jūs perskaitėte šį įrašą, spauskite, kad jį pažymėtumete"
-      last_read: "tai yra paskutinis perskaitytas įrašas; spausk, kad uždėtumėt jam žymą"
       remove: "Pašalinti Žymę"
-      confirm_clear: "Ar tikrai norite ištrinti visas žymes iš šios temos?"
     drafts:
       resume: "Grįžti"
       remove: "Pašalinti"
@@ -311,7 +307,6 @@ lt:
     saved: "Išsaugota!"
     upload: "Įkelti"
     uploading: "Įkeliama..."
-    uploading_filename: "Įkeliama {{filename}}..."
     uploaded: "Įkelta!"
     pasting: "Skelbiama..."
     enable: "Įjungti"
@@ -559,7 +554,6 @@ lt:
         few: "%{count} naujų temų per paskutines %{unit}."
         many: "%{count} naujų temų per paskutines %{unit}."
         other: "%{count} naujų temų per paskutines %{unit}."
-      more: "(%{count} daugiau) ..."
     ip_lookup:
       title: IP adreso peržiųra
       hostname: Adresas
@@ -965,9 +959,6 @@ lt:
       enabled: "Puslapis veikia skaitymo (read only) režimu. Gali ieškoti, atsakinėti ar spausti \"patinka\", tačiau kitos funkcijos šiuo metu yra negalimos."
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
       logout_disabled: "Atsijungimas yra laikinai išjunktas kuomet puslapis yra žiūrimas skaitymo režimu"
-    too_few_topics_and_posts_notice: "Pradėkime <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>šią diskusiją!</a> Šiuo metu yra <strong>%{currentTopics} / %{requiredTopics}</strong> temų ir <strong>%{currentPosts} / %{requiredPosts}</strong> įrašų. Naujiems vartotojams reikia temų, kurias galėtų perskaityti ir atsakyti."
-    too_few_topics_notice: "Pradėkime <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>šią diskusiją!</a> Šiuo metu yra <strong>%{currentTopics} / %{requiredTopics}</strong> temų. Naujiems vartotojams reikia temų, kurias galėtų skaityti ir atsakyti."
-    too_few_posts_notice: "Pradėkime <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>šią diskusiją!</a>Šiuo metu yra <strong>%{currentPosts} / %{requiredPosts}</strong> įrašų. Naujiems vartotojams reikia temų, kurias galėtų skaityti ir atsakyti."
     learn_more: "sužinoti daugiau..."
     all_time: 'iš viso'
     all_time_desc: 'temų sukurta'
@@ -1194,7 +1185,6 @@ lt:
       link_description: "įveskite čia nuorodos aprašymą"
       link_dialog_title: "Įkelti nuorodą"
       link_optional_text: "papildoma antraštė"
-      link_url_placeholder: "https://pavyzdys.lt"
       quote_title: "Blokuoti citatą"
       quote_text: "Blokuoti citatą"
       code_title: "Tekstas kodui"
@@ -2214,7 +2204,6 @@ lt:
         this_week: "Per savaitę"
         today: "Šandien"
         other_periods: "skaityk TOP"
-    browser_update: 'Deja, <a href="http://www.discourse.org/faq/#browser">jūsų naršyklė yra per sena, kad veiktų ši svetainė</a>. Prašome <a href="http://browsehappy.com">atnaujinti savo naršyklę</a>.'
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -2299,7 +2288,6 @@ lt:
         bottom:
           latest: "Daugiau nėra jokių naujausių temų."
     invite:
-      custom_message_link: "pasirinktinė žinutė"
       custom_message_placeholder: "Įveskite savo pasirinktinę žinutę"
       custom_message_template_forum: "Labas, užsiregistruok ir tu!\nČia bus vienas geriausių forumų..."
   admin_js:
@@ -2744,7 +2732,6 @@ lt:
           filter: "Filtruoti:"
           title: "Komandos veiksmai"
           clear_filters: "Rodyti viską"
-          staff_user: "Komandos Narys"
           target_user: "Tiksliniai vartotojai/auditorija"
           subject: "Tema"
           when: "Kada"

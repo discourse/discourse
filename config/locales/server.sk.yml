@@ -113,10 +113,6 @@ sk:
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
-      min_username_length_exists: "Nemôžete nastaviť minimálnu dĺžku používateľského mena viac ako najkratšie používateľské meno."
-      min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
-      max_username_length_exists: "Nemôžete nastaviť maximálnu dĺžku používateľského mena kratšiu ako najdlhšie používateľské meno."
-      max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
   activemodel:
@@ -716,7 +712,6 @@ sk:
   dashboard:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
-    gc_warning: 'Váš server používa východzie nastavenia ruby garbage collectora, ktorý neposktytuje najlepší výkon. Prečítajte si tento príspevok ohľadom ladenia výkonu <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ladenie Ruby and Rails pre Discourse</a>.'
     sidekiq_warning: 'Sidekiq neni spustený. Množstvo úloh, ako napríklad posielanie emailov, je vykonávaných asynchrónne prostrednictvom sidekiq. Prosim zabezpečte aby bol spustený aspoň jeden proces sidekiq <a href="https://github.com/mperham/sidekiq" target="_blank">Viac o Sidekiq</a>.'
     queue_size_warning: 'Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov.'
     memory_warning: 'Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. '
@@ -724,7 +719,6 @@ sk:
     facebook_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Facebooku (enable_facebook_logins), ale údaje "app Id" a tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
     twitter_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Twitteru (enable_twitter_logins), ale kľúč a tajné hodnoty nie sú nastavené. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
     github_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou GitHub (enable_github_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené.. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    image_magick_warning: 'Server je nakonfigurovaný na vytváranie náhľadov z veľkých obrázkov, ale ImageMagick  nie je nainštalovaný. Nainštalujte ImageMagick pomocou Vášho správcu balíčkov, alebo <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">Stiahnite najnovšiu verziu</a>.'
     failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
@@ -744,13 +738,11 @@ sk:
     educate_until_posts: "Ked používateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
     title: "Meno stránok, tak ako je použité v značke title."
     site_description: "Popíšte stránky v jednej vete, tak ako sa popisujú v tagu meta."
-    contact_url: "Kontaktná URL adresa pre túto stránku. Použitá tiež pri kontaktnom formulári pre dôležité prípady."
     crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
     download_remote_images_to_local: "Stiahnuť obrázky zo vzdialených zdrojov na lokálne. Zabráni poškodeniu obrázkov. "
     download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
     disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
     editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
-    post_edit_time_limit: "Autor môže upravovať alebo mazať svoje príspevky do (n) minút po ich odoslaní. Nastavte 0 pre nekonečno"
     edit_history_visible_to_public: "Povoliť všetkým zobrazenie predchádzajúcich verzií upraveného príspevku. Pokiaľ je to vypnuté, verzie vidí iba obslužný personál"
     delete_removed_posts_after: "Príspevky zmazané autorom budú automaticky zmazané po (n) hodinách. Pokiaľ je nastavená 0, príspevky budú zmazané okamžite."
     max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
@@ -760,13 +752,9 @@ sk:
     add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
     post_excerpt_maxlength: "Maximálna dĺžka príspevku okrem zhrnutia."
     post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
-    logo_url: "Obrázok loga na ľavej hornej časti stránky, mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, zobrazí sa nadpis stránok."
-    logo_small_url: "Malý obrázok loga na ľavej hornej strane stránok, mal by mať tvar štvorca a bude zobrazený pri skrolovaní nadol. Ak nebude uvedený, zobrazí sa piktogram domu."
-    favicon_url: "Favicon pre Vaše stránky, pozrite http://en.wikipedia.org/wiki/Favicon. Aby fungoval správne s CDN, musí byť vo formáte png"
     apple_touch_icon_url: "Ikona použitá na zariadeniach Apple touch. Doporučovaná veľkosť je 144px na 144px."
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
-    email_subject: "Voliteľný formát predmetu emailu pre štandardné emaily. Pozrite https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
@@ -787,8 +775,6 @@ sk:
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) sledovací kód, napr: UA-12345678-9; pozri http://google.com/analytics"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) názov domény, napr: mysite.com; pozri http://google.com/analytics"
     allow_moderators_to_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
@@ -813,7 +799,6 @@ sk:
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
-    version_checks: "Zisťovať aktualizácie na Discourse Hub a zobrazovať správy o novej verzii na stránke admina"
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
     login_required: "Požadovať prihlásenie pre čítanie obshau tejto stránky, zakáž anonymný prístup. "
@@ -831,16 +816,8 @@ sk:
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     enable_yahoo_logins: "Povoliť autentifikáciu pomocou Yahoo."
-    enable_google_oauth2_logins: "Povoliť Google Oauth2 autentifikáciu. Táto métoda je podporovaná Googlom. Vyžaduje kľúč a šifru."
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    enable_twitter_logins: "Povoliť autentifikáciu cez Twitter, vyžaduje twitter_consmer_key a twiiter_consumer_secret"
-    enable_facebook_logins: "Povoliť autentifikáciu pomocou Facebook, vyžaduje facebook_app_id a facebook_app_secret."
-    facebook_app_id: "App id pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
-    enable_github_logins: "Povoliť autentifikáciu cez Github, vyžaduje github_client_id a github_client_secret"
-    github_client_id: "Client id pre Github autentifikáciu, registrované na https://github.com/settings/applications"
-    github_client_secret: "Client secret pre Github autentifikáciu, registrované na https://github.com/settings/applications"
     readonly_mode_during_backup: "Zapnúť režim len na čítanie počas vytvárania zálohy"
     allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
@@ -914,7 +891,6 @@ sk:
     title_min_entropy: "Minimálna entropia (unikátne znaky, znaky s diakritikou sa počítajú za dva) vyžadovaná na nadpis témy."
     body_min_entropy: "Minimálna entropia (unikátne znaky, znaky s diakritikou sa počítajú za dva) vyžadovaná pre telo príspevku."
     allow_uppercase_posts: "Povoliť kapitálky v názve témy, alebo tele príspevku."
-    title_fancy_entities: "Zameniť v nadpisoch tém bežné ASCII znaky za zábavné HTML znaky, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     min_body_similar_length: "Minimálna dĺžka tela príspevku na spustenie kontoly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
@@ -966,7 +942,6 @@ sk:
     pop3_polling_host: "Adresa na ktorej kontrolovať POP3 účet."
     pop3_polling_username: "Používateľské meno na kontrolu emailového POP3 účtu."
     pop3_polling_password: "Heslo na kontrolu emailového POP3 účtu."
-    log_mail_processing_failures: "Zaznamenávať všetky chyby pri spracovaní emailov do http://yoursitename.com/logs"
     email_in_min_trust: "MInimálna úroveň dôveru použivateľa, ktorý môže posielať nové príspevky pomocou emailu."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."
@@ -1401,140 +1376,6 @@ sk:
       Áno, právne záležitosti sú nudné, no my musíme chrániť seba a následne aj vás a vaše údaje proti „tým zlým“. Máme [Podmienky používania](/tos), ktoré opisujú vaše (a naše) správanie a práva súvisiace s obsahom, súkromím a právnymi predpismi. Aby ste mohli túto službu využívať, musíte súhlasiť s našimi [Podmienkami používania](/tos).
   tos_topic:
     title: "Podmienky používania"
-    body: |
-      Nasledujúce pravidlá a podmienky platia pre akékoľvek používanie webovej lokality %{company_domain} a jej obsahu, služieb a produktov, ktoré sú sprístupnené na tejto webovej lokalite vrátane (ale nie výhradne) softvéru fór %{company_domain}, podporných fór %{company_domain} a služieb hostingu %{company_domain} (ďalej ako „hosting“, všetky menované spolu ako „webová lokalita“). Majiteľom a prevádzkovateľom webovej lokality je %{company_full_name} ("%{company_name}"). Webovú lokalitu môžete používať len za predpokladu bezvýhradného súhlasu so všetkými pravidlami a podmienkami, ktoré sú tu obsiahnuté, a so všetkými ostatnými pravidlami prevádzkovania (vrátane [pravidiel o ochrane súkromia](/privacy) a [pravidiel komunity webovej lokality](/faq) %{company_domain}) a procesmi, ktoré môžu byť uverejnené na webovej lokalite (spolu ako „dohoda” ).
-
-      Prosíme vás, aby ste si poriadne prečítali túto dohodu predtým, ako webovú lokalitu navštívite alebo ju začnete používať. Navštívením alebo používaním akejkoľvek časti webovej lokality súhlasíte s dodržiavaním všetkých jej ustanovení. V prípade, že nesúhlasíte so všetkými pravidlami a podmienkami používania webovej lokality, nemôžete ju navštevovať alebo využívať jej služby. Ak sa tieto pravidlá a podmienky používania považujú za ponuku %{company_name}, jej prijatie je obmedzené na tieto podmienky. Webovú lokalitu majú dovolené navštevovať iba osoby staršie ako 13 rokov.
-
-      <a name="1"></a>
-
-      ## [1. Vaše konto na %{company_domain}](#1)
-
-      Ak si na tejto webovej lokalite vytvoríte konto, preberáte zodpovednosť za zachovanie jeho bezpečnosti a máte plnú zodpovednosť za činnosti, ktoré sa pod týmto kontom realizujú. %{company_name} musíte okamžite informovať o akomkoľvek neoprávnenom použití vášho konta alebo iných narušeniach bezpečnosti. %{company_name} nebude niesť zodpovednosť za konanie ani opomenutie z vašej strany, teda ani za akékoľvek škody vzniknuté následkom takéhoto konania či opomenutia.
-
-      <a name="2"></a>
-
-      ## [2. Zodpovednosť prispievateľov](#2)
-
-      Ak na tejto webovej lokalite prispievate materiálmi, uverejňujete na nej prepojenia alebo ju iným spôsobom využívate (alebo umožňujete tretej strane ju využívať) na zverejňovanie materiálov (akýchkoľvek materiálov, teda „obsahu“), nesiete plnú zodpovednosť za takýto obsah a škody ním spôsobené. Toto ustanovenie platí nezávisle od toho, či ide o textový obsah, grafický obsah, zvukový súbor alebo počítačový softvér. Zverejnením obsahu poskytujete záruku, že:
-
-      sťahovanie, kopírovanie a používanie obsahu neporušuje vlastnícke práva, vrátane, nie však výlučne, autorských práv, patentov, obchodných značiek alebo obchodných tajomstiev akejkoľvek tretej strany;
-      ak je váš zamestnávateľ držiteľom práva na vaše duševné vlastníctvo, buď (i) ste od svojho zamestnávateľa získali povolenie zverejniť tento obsah, vrátane, nie však výlučne, akéhokoľvek softvéru, alebo (ii) sa váš zamestnávateľ vzdal všetkých práv na tento obsah;
-      zabezpečili ste plný súlad s akýmikoľvek licenciami tretích strán, ktoré sa týkajú tohto obsahu, a vykonali ste všetky kroky potrebné na to, aby ste koncovým používateľom oznámili všetky požiadavky;
-      tento obsah neobsahuje ani neinštaluje žiadne vírusy, červy, malvér, trójske kone alebo iný škodlivý obsah;
-      obsah nie je spam, nie je generovaný náhodne alebo strojom a neobsahuje neetický alebo nevyžiadaný komerčný obsah navrhnutý tak, aby hromadne smeroval návštevníkov na externé webové lokality alebo zlepšil postavenie externých webových lokalít vo vyhľadávačoch, prípadne aby vykonával ďalšie nezákonné činnosti (napríklad prostredníctvom phishingu) alebo zavádzal príjemcov o zdroji materiálov (napríklad prostredníctvom spoofingu);
-      obsah nie je pornografickej povahy, neobsahuje vyhrážky, nepodnecuje k násiliu a nenarúša súkromie ani práva na ochranu osobnosti žiadnej tretej strany;
-      váš obsah nepropagujú nevyžiadané elektronické správy, buď v podobe spamových prepojení v diskusných skupinách, poštových zoznamoch, blogoch či webových lokalitách, prípadne rozosielané inými spôsobmi nevyžiadanej propagácie;
-      váš obsah nenesie názov, ktorý by navádzal vašich čitateľov k tomu, aby vás považovali za inú osobu či spoločnosť; a
-      v prípade obsahu, ktorý zahŕňa aj počítačový kód, ste presne zatriedili a/alebo opísali druh, povahu, použitie a dôsledky použitia materiálov, či už vás o to %{company_name} požiadala alebo nie.
-
-      <a name="3"></a>
-
-      ## [3. Licencia na obsah od používateľov](#3)
-
-      Príspevky používateľov sa uverejňujú pod licenciou [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Bez toho, aby došlo k obmedzeniu vyhlásení alebo záruk vychádzajúcich z tejto licencie, %{company_name} má právo (no nie povinnosť) (i) na základe vlastného uváženia odmietnuť alebo odstrániť akýkoľvek obsah, ktorý podľa %{company_name} porušuje zásady %{company_name} alebo je akýmkoľvek spôsobom škodlivý či nežiaduci, alebo (ii) na základe vlastného uváženia zrušiť alebo zamietnuť jednotlivcovi alebo subjektu prístup k webovej lokalite. %{company_name} nie je povinná vrátiť žiadne uhradené čiastky.
-
-      <a name="4"></a>
-
-      ## [4. Platba a obnovenie](#4)
-
-      ### Všeobecné podmienky
-
-      Na webovej lokalite môžu byť dostupné voliteľné platené služby alebo inovácie. Pri využívaní voliteľných platených služieb alebo inovácií súhlasíte s tým, že %{company_name} uhradíte uvedené mesačné alebo ročné poplatky. Poplatky sa uhrádzajú vopred na nasledujúce obdobie v deň, keď začnete využívať službu alebo inováciu, a zabezpečujú používanie služby alebo inovácie na mesiac alebo rok podľa uvedených podmienok. Nie je možné požiadať o vrátenie týchto poplatkov.
-
-      ### Automatické obnovenie
-
-      Pokiaľ %{company_name} pred skončením predplateného obdobia neoznámite, že chcete službu alebo inováciu zrušiť, vaše predplatné sa automaticky obnoví a udeľujete svoj súhlas s uhradením poplatku za ročné alebo mesačné predplatné (vrátane príslušných daní) prostredníctvom kreditnej karty alebo akéhokoľvek iného platobného mechanizmu, ktorý máme vo vašom prípade zaznačený. Predplatné môžete kedykoľvek zrušiť.
-
-      <a name="5"></a>
-
-      ## [5. Služby](#5)
-
-      ### Hostingové služby a služby podpory
-
-      %{company_name} môže poskytnúť aj voliteľné služby webhostingu a podpory na základe podmienok používania každej takejto služby. Registrovaním konta na služby podpory alebo služby hostingu/podpory súhlasíte, že sa týmito podmienkami používania budete riadiť.
-
-      <a name="6"></a>
-
-      ## [6. Zodpovednosť návštevníkov webovej lokality](#6)
-
-      %{company_name} nekontroluje a ani nemá možnosť kontrolovať všetok materiál, vrátane počítačového softvéru, ktorý sa na webovej lokalite uverejní, a teda nemôže byť zodpovedná za obsah, použitie a dôsledky používania takýchto materiálov. Prevádzkovaním webovej lokality %{company_name} nevyjadruje podporu pre materiál, ktorý je na nej uverejnený, ani to, že by tento materiál považovala za presný, užitočný či bezpečný. Je vašou zodpovednosťou podniknúť potrebné kroky na to, aby ste seba a svoje počítačové systémy ochránili pred vírusmi, červmi, trójskymi koňmi a iným nebezpečným či škodlivým obsahom. Na webovej lokalite sa môže nachádzať urážlivý, vulgárny či inak nevhodný obsah, ale aj obsah s technickými nepresnosťami a typografickými či inými chybami. Webová lokalita môže obsahovať aj materiál, ktorý narúša súkromie a právo na ochranu osobnosti, poškodzuje autorské práva a iné vlastnícke práva tretích strán, prípadne sa na jeho sťahovanie, kopírovanie a používanie vzťahujú dodatočné podmienky používania, či už explicitne uvedené alebo nie. %{company_name} sa vzdáva akejkoľvek zodpovednosti za škody, ktoré návštevníkom webovej lokality vzniknú jej používaním alebo sťahovaním obsahu na nej uverejneného.
-
-      <a name="7"></a>
-
-      ## [7. Obsah uverejnený na iných webových lokalitách](#7)
-
-      Nekontrolujeme a ani nemáme možnosť kontrolovať všetok materiál, vrátane počítačového softvéru, ktorý sa uverejní na webovej lokalite a webových lokalitách, na ktoré %{company_domain} odkazuje a ktoré odkazujú na %{company_domain}. Nad týmito webovými lokalitami a webovými stránkami, ktoré nie sú zverejnené na doméne %{company_domain}, %{company_name} nemá kontrolu a nie je zodpovedná za ich obsah ani použitie. Odkazovaním na webovú lokalitu alebo webovú stránku mimo domény %{company_domain} %{company_name} nevyjadruje podporu pre takúto webovú lokalitu alebo webovú stránku. Je vašou zodpovednosťou podniknúť potrebné kroky na to, aby ste seba a svoje počítačové systémy ochránili pred vírusmi, červmi, trójskymi koňmi a iným nebezpečným či škodlivým obsahom. %{company_name} sa vzdáva akejkoľvek zodpovednosti za škody, ktoré vám vzniknú používaním webových lokalít a webových stránok mimo domény %{company_domain}.
-
-      <a name="8"></a>
-
-      ## [8.Porušenie autorských práv a politika DMCA](#8)
-
-      %{company_name} žiada ostatných, aby rešpektovali jej právo duševného vlastníctva, a preto aj ona rešpektuje právo duševného vlastníctva ostatných. Ak si myslíte, že materiály, ktoré sú uverejnené na webovej lokalite %{company_domain} alebo na ktoré webová lokalita odkazuje, porušujú vaše autorské práva a ak má táto webová lokalita sídlo v USA, neváhajte to oznámiť %{company_name} v súlade s jej pravidlami súvisiacimi s americkým autorským zákonom [Digital Millenium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) („DMCA“). %{company_name} bude na všetky takéto oznámenia reagovať a zároveň, ak to bude potrebné alebo vhodné, odstráni materiál porušujúci autorské práva alebo znefunkční všetky prepojenia naň. %{company_name} ukončí prístup návštevníka a jeho používanie webovej lokality, ak za určitých okolností opakovane porušuje autorské práva alebo iné práva duševného vlastníctva %{company_name} alebo ostatných. V prípade takéhoto ukončenia prístupu nebude %{company_name} povinná návštevníkovi vrátiť poplatky, ktoré jej pred tým uhradil.
-
-      <a name="9"></a>
-
-      ## [9. Duševné vlastníctvo](#9)
-
-      Táto dohoda na vás z %{company_name} nepresúva žiadne jej duševné vlastníctvo a ani duševné vlastníctvo tretích strán. Všetky práva, právne nároky a právny záujem, ktoré sa na toto duševné vlastníctvo viažu, zostávajú (pokiaľ ide o zúčastnené strany) %{company_name}. %{company_name}, %{company_domain}, logo %{company_domain} a všetky ostatné ochranné známky, servisné značky, grafika a logá použité v súvislosti s %{company_domain}, alebo webovou lokalitou sú ochrannými známkami alebo registrovanými ochrannými známkami %{company_name} alebo jej poskytovateľov licencie. Iné ochranné známky, servisné značky, grafika a logá použité v súvislosti s webovou lokalitou môžu byť ochrannými známkami tretích strán. Vaše využívanie webovej lokality vám nedáva právo ani licenciu na rozširovanie alebo iné používanie akýchkoľvek ochranných známok %{company_name} alebo tretích strán.
-
-      <a name="10"></a>
-
-      ## [10. Reklama](#10)
-
-      %{company_name} si vyhradzuje právo zobrazovať reklamné informácie v rámci vášho obsahu s výnimkou situácií, keď ste si zakúpili službu odstránenia reklamy (Ad-Free Upgrade) alebo konto služieb (Services).
-
-      <a name="11"></a>
-
-      ## [11. Autorstvo](#11)
-
-      %{company_name} si vyhradzuje právo zobrazovať informácie o autorstve a prepojenia ako napríklad „Poháňa %{company_domain}“, meno autora témy či písiem v päte alebo paneli nástrojov v rámci vášho obsahu. Informácie o autorstve a panel nástrojov %{company_domain} nemožno odstrániť bez ohľadu na zakúpené služby.
-
-      <a name="12"></a>
-
-      ## [12. Úpravy](#12)
-
-      %{company_name} si vyhradzuje právo podľa vlastného uváženia upravovať alebo nahrádzať akékoľvek časti tejto dohody. Je na vás, aby ste pravidelne kontrolovali prípadné zmeny tejto dohody. Používaním tejto webovej lokality a prístupom k nej po zverejnení akýchkoľvek úprav tejto dohody vyjadrujete súhlas s danými úpravami. %{company_name} môže v budúcnosti ponúkať nové služby alebo funkcie prostredníctvom webovej lokality (vrátane zverejnenia nových nástrojov a prostriedkov). Na nové funkcie alebo služby sa vzťahujú ustanovenia tejto dohody.
-
-      <a name="13"></a>
-
-      ## [13. Zánik prístupu, odstúpenie](#13)
-
-      %{company_name} má právo s okamžitou platnosťou, bez uvedenia dôvodu a bez predchádzajúceho upozornenia vám kedykoľvek odobrať možnosť prístupu k celej webovej lokalite, prípadne jej časti. Ak si želáte odstúpiť od tejto dohody alebo zrušiť konto %{company_domain} (ak takýto účet máte), stačí len, aby ste prestali využívať webovú lokalitu. Všetky ustanovenia tejto dohody, ktoré majú zostať v platnosti aj po zániku resp. odstúpení od tejto dohody ostanú v platnosti, vrátane ustanovení vo veci vlastníctva, odopretia záruky, nároku na odškodné a obmedzenie zodpovednosti.
-
-      <a name="14"></a>
-
-      ## [14. Odopretie záruky](#14)
-
-      Webová lokalita sa poskytuje „tak, ako je,“ a jej dodávatelia a poskytovatelia licencií týmto odopierajú akýkoľvek druh záruky, či už výslovnej, alebo vyplývajúcej, vrátane (nie však výlučne) záruk obchodovateľnosti, vhodnosti použitia na konkrétny účel a neporušovania práv. %{company_name} a ani jeho dodávatelia či poskytovatelia licencií nezaručujú, že obsah webovej lokality je bezchybný a že prístup k nemu bude nepretržitý. Ak tento text naozaj čítate, tu je pre vás malá [pozornosť](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Majte na pamäti, že obsah alebo služby sťahujete či inak získavate z webovej lokality podľa vlastného uváženia a na vlastné riziko.
-
-      <a name="15"></a>
-
-      ## [15. Obmedzenie zodpovednosti](#15)
-
-      %{company_name}, jeho dodávatelia ani poskytovatelia licencií vo veci predmetu tejto dohody a vo vzťahu k akejkoľvek zmluve, nedbanlivosti, objektívnej zodpovednosti alebo inej právnej teórii v žiadnom prípade nepreberajú zodpovednosť za: (i) žiadne špeciálne či neúmyselné škody alebo škody v dôsledku použitia poskytovaných služieb a obsahu; (ii) obstaranie náhradných výrobkov a služieb a s tým spojené náklady; (iii) za prerušenie prevádzky alebo poškodenie údajov; ani (iv) za akékoľvek výdavky presahujúce sumy poplatkov, ktoré ste zaplatili %{company_name} počas obdobia dvanástich (12) mesiacov od vzniku pohľadávky. %{company_name} nemá žiadnu zodpovednosť za akékoľvek zlyhanie alebo zdržanie spôsobené faktormi, na ktoré nemá relevantný vplyv. Platnosť vyššie uvedeného je obmedzená v súlade s príslušnou právnou úpravou.
-
-      <a name="16"></a>
-
-      ## [16. Výslovný súhlas](#16)
-
-      Týmto vyjadrujete výslovný súhlas s tým, že (i) webovú lokalitu budete používať len v súlade s [pravidlami o ochrane súkromia](/privacy) %{company_name}, [pravidlami komunity](/guidelines), touto dohodou a všetkými súvisiacimi právnymi predpismi (vrátane, nie však výlučne, akýchkoľvek zákonov a právnych predpisov vo vašej krajine, štáte, meste či inej správnej jednotke súvisiacich so zásadami správania v online komunikácii a prijateľným obsahom, vrátane právnych predpisov vzťahujúcich sa na prenos údajov z krajiny, v ktorej je umiestnené sídlo tejto webovej lokality alebo krajiny vášho bydliska) a zároveň (ii) používaním webovej lokality neporušíte autorské práva alebo neodcudzíte duševné vlastníctvo akejkoľvek tretej strany.
-
-      <a name="17"></a>
-
-      ## [17. Náhrada škody](#17)
-
-      Týmto vyjadrujete súhlas s poskytnutím náhrady škody a ochranou pred stratou vo vzťahu k %{company_name}, jej dodávateľom a poskytovateľom licencií a príslušným riaditeľom, pracovníkom, zamestnancom a zástupcom vo veci pohľadávok a nákladov, vrátane platieb za služby advokátskej kancelárie, vzniknutých pri používaní webovej lokality najmä (nie však výlučne) takým spôsobom, ktorý porušuje ustanovenia tejto dohody.
-
-      <a name="18"></a>
-
-      ## [18. Záverečné ustanovenia](#18)
-
-      Táto dohoda predstavuje v celosti dohodu medzi %{company_name} a vami vo veci predmetu uvedeného v tejto dohode. Podmienky tejto dohody možno upraviť len prostredníctvom písomného dodatku podpísaného povereným výkonným pracovníkom %{company_name}, alebo uverejnením revidovanej verzie tejto dohody %{company_name}. Ak príslušné právne predpisy (ak také existujú) neustanovujú inak, táto dohoda, akýkoľvek prístup k webovej lokalite podlieha zákonom štátu Kalifornia, Spojené štáty americké, s výnimkou ustanovení v rozpore s právnou úpravou, a akékoľvek vzniknuté spory vo veci uvedeného podliehajú jurisdikcii štátnych a federálnych súdov, ktoré sa nachádzajú v kraji San Francisco County štátu Kalifornia. S výnimkou vznesenia nároku na spravodlivé zaobchádzanie a prikázané úľavy alebo nárokov na duševné vlastníctvo (ktoré môžu byť vznesené na akomkoľvek súde s touto kompetenciou bez zloženia zábezpeky), akékoľvek spory, ktoré vzniknú v súvislosti s touto dohodou budú s konečnou platnosťou prebiehať a rozhodnutia o nich sa uskutočnia v súlade s dokumentom Comprehensive Arbitration Rules of the Judical Arbitration and Mediation Service, Inc. („JAMS“) a rozhodovať bude komisia troch rozhodcov pridelených v súlade s týmto dokumentom. Rozhodcovské konanie sa uskutoční v meste San Francisco v štáte Kalifornia a bude prebiehať v anglickom jazyku, pričom rozhodnutie z tohto konania možno uplatňovať na akomkoľvek súde. Úspešná strana pri akomkoľvek konaní alebo procese súvisiacom s uplatnením tejto dohody má nárok na náhradu nákladov a súdnych trov. Ak sa akákoľvek časť tejto dohody považuje za neplatnú alebo neuplatniteľnú, daná časť sa vykladá v súlade s pôvodným zámerom zúčastnených strán, pričom platnosť a účinnosť zvyšných častí zostáva zachovaná.  Deklarácia o oslobodení ktorejkoľvek zo strán od akéhokoľvek ustanovenia tejto dohody alebo akéhokoľvek porušenia neoslobodzuje od danej podmienky či jej porušenia. Svoje práva v rámci tejto dohody môžete prenechať akejkoľvek strane, ktorá súhlasí s týmto úkonom a prijíma záväzky z toho vyplývajúce, pričom %{company_name} môže svoje práva v súvislosti s touto dohodou prenechať inej strane bez podmienok. Táto dohoda zaväzuje a platí pre zúčastnené strany, ich nástupnícke subjekty a osoby či subjekty, ktorým zúčastnené strany prenechali svoje práva.
-
-      Tento dokument je zverejnený s licenciou CC-BY-SA. Posledná úprava bola vykonaná dňa 31. mája 2013.
-
-      Tento dokument vychádza z [Podmienok používania služby WordPress]((http://en.wordpress.com/tos/)).
   privacy_topic:
     title: "Ochrana súkromia"
     body: "<a name=\"collect\"></a>\n\n## [Aký druh údajov získavame?](#collect)\n\nPo tom, ako sa zaregistrujete na tejto webovej lokalite, získavame vaše údaje, keď sa zúčastňujete fóra čítaním, prispievaním, písaním a hodnotením zdieľaného obsahu. \nPri registrácií na našej webovej lokalite vás môžeme požiadať o zadanie vášho mena a e-mailovej adresy. Našu webovú lokalitu je možné navštevovať aj bez registrácie. Vaša e-mailová adresa bude overená potvrdzovacím e-mailom, ktorý bude obsahovať jednorazový odkaz. Kliknutím naň potvrdíte, že ste používateľom zadanej e-mailovej adresy. \nPri registrácií a uverejňovaní príspevkov zaznamenávame IP adresu, z ktorej bol príspevok odoslaný. Rovnako môžeme uchovať údaje zo serverov, ktoré obsahujú IP adresu pre každú žiadosť odoslanú na náš server.\n\n<a name=\"use\"></a>\n\n## [Na čo tieto údaje využívame?](#use)\n\nAkékoľvek údaje, ktoré o vás získame, môžu byť využité nasledovne:\n\n* Na personalizáciu obsahu – údaje o vás nám pomáhajú lepšie reagovať na vaše individuálne potreby\n* Na vylepšenie webovej lokality – neustále pracujeme na zlepšovaní ponuky našej webovej lokality na základe vašich údajov a spätnej väzby\n* Na zlepšenie zákazníckych služieb – vaše údaje nám pomáhajú efektívnejšie reagovať na používateľské požiadavky a prípadnú zákaznícku podporu\n* Na odosielanie pravidelných e-mailov – vami uvedená e-mailová adresa môže byť použitá na rozposielanie informácií, vami zvolených upozornení na zmeny v obsahu jednotlivých tém, prípadne na správy smerujúce na vaše používateľské konto, odpovede na vaše otázky alebo požiadavky. \n\n<a name=\"protect\"></a>\n\n## [Ako u nás funguje ochrana údajov?](#protect)\n\nVyužívame rôzne ochranné opatrenia, aby sme zaručili ochranu vašich osobných údajov po tom, ako ich uvediete alebo si k nim vyžiadate prístup.\n\n<a name=\"data-retention\"></a>\n\n## [Ako osobné údaje uchovávame?](#data-retention)\n\nBudeme sa snažiť: \nUchovať údaje zo servera, ktoré obsahujú IP adresu všetkých žiadostí na tento server, maximálne po dobu 90 dní.\nUchovať IP adresy spojené s registrovanými používateľmi a ich príspevkami maximálne po dobu 5 rokov. \n\n<a name=\"cookies\"></a>\n\n## [Používame cookies?](#cookies)\n\nÁno. Cookies sú malé súbory, ktoré webová lokalita alebo jej poskytovateľ služieb uloží na harddisk vášho počítača pomocou internetového prehliadača (pokiaľ to povolíte). Cookies umožňujú webovej lokalite rozpoznať váš prehliadač a pokiaľ máte založený účet, tak ho s ním prepoja. \nPoužívame cookies by sme mohli identifikovať a uložiť vaše preferencie pre budúce návštevy webovej lokality a zhromaždiť súbor údajov o návštevnosti a interakciách webovej lokality, aby sme v budúcnosti mohli zabezpečiť lepšiu používateľskú skúsenosť a nástroje. Môžeme tiež kontaktovať poskytovateľa služieb, ktorý nám ako tretia strana pomôže lepšie porozumieť preferenciám návštevníkom našej webovej lokality. Takýto poskytovateľ služieb má dovolené v našom mene narábať s nami získanými údajmi výhradne za účelom zlepšenia našich služieb. \n\n<a name=\"disclose\"></a>\n\n## [Sprístupňujeme informácie tretím stranám?](#disclose)\n\nNeobchodujeme, nevymieňame a žiadnym iným spôsobom neposúvame tretím stranám informácie, ktoré je možné priradiť k vašej osobe. Výnimkou sú dôverné tretie strany, ktoré nám pomáhajú s prevádzkovaním našej webovej aktivity, našimi aktivitami alebo s poskytovaním služieb používateľom a ktoré sa zaviazali, že s týmito údajmi budú zaobchádzať dôverne. Informácie môžeme uverejniť v prípadoch, keď je to v súlade so zákonom, vymáhaním pravidiel našich stránok, s ochranou našich práv alebo práv iných, ako aj s ochranou majetku a bezpečnosti. Údaje, ktoré nemožno spojiť s konkrétnou osobou môžu byť poskytnuté tretím stranám na marketingové, reklamné alebo iné účely. \n\n<a name=\"third-party\"></a>\n\n## [Prepojenia tretích strán](#third-party)\n\nPríležitostne a podľa nášho uváženia môžeme na našej webovej lokalite uverejňovať produkty a služby tretích strán. Tieto tretie strany majú svoje vlastné, nezávislé podmienky o ochrane údajov a preto nenesieme žiadnu zodpovednosť za obsah a aktivity týchto strán. V každom prípade nám však ide o ochranu integrity našej webovej lokality a preto uvítame akúkoľvek spätnú väzbu týkajúcu sa týchto strán. \n\n<a name=\"coppa\"></a>\n\n## [Rešpektovanie zákona o ochrane súkromia detí v rámci online režimov](#coppa)\n\nVšetky produkty a služby na našej webovej lokalite sú určené osobám vo veku minimálne 13 rokov. Pokiaľ je tento server v USA a vy máte menej ako 13 rokov, vzhľadom na [Zákon o ochrane súkromia detí v rámci online režimov](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act) nesmiete používať túto webovú lokalitu. \n\n<a name=\"online\"></a>\n\n## [Súkromie je chránené len online](#online)\n\nTieto pravidlá ochrany súkromia online platia iba pre informácie, ktoré zozbierala naša webová lokalita a nevzťahuje sa na informácie zozbierané v offline režime.\n\n<a name=\"consent\"></a>\n\n## [Váš súhlas](#consent)\n\nPoužívaním našich stránok súhlasíte s našimi pravidlami o ochrane súkromia. \n\n<a name=\"changes\"></a>\n\n## [Zmeny pravidiel o ochrane súkromia](#changes)\n\nAk sa rozhodneme zaviesť akékoľvek zmeny v oblasti ochrany súkromia, uverejníme túto informáciu na našej webovej lokalite. \nTento dokument je zverejnený s licenciou CC-BY-SA. Posledná úprava bola vykonaná dňa 31. mája 2013.\n"

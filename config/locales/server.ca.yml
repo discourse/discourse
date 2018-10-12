@@ -108,10 +108,6 @@ ca:
     embed:
       load_from_remote: "Hi ha hagut una errada en carregar aquest escrit."
     site_settings:
-      min_username_length_exists: "No pots establir la mida mínima de nom usuari per sobre del nom usuari més curt."
-      min_username_length_range: "No pots establir el mínim per sobre del màxim."
-      max_username_length_exists: "No pots establir la mida màxima de nom usuari per sota del nom usuari més llarg."
-      max_username_length_range: "No pots establir el màxim per sota del mínim."
       default_categories_already_selected: "No pots triar una categoria emprada a una altra llista."
       s3_upload_bucket_is_required: "No pots activar càrregues a S3 si no has tingut 's3_upload_bucket'."
   activemodel:
@@ -718,7 +714,6 @@ ca:
   dashboard:
     rails_env_warning: "El teu servidor s'executa en mode %{env}."
     host_names_warning: "El teu fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitza-ho per tal de fer servir el nom del teu lloc."
-    gc_warning: 'El teu servidor fa servir una col·lecció de paràmetres de brossa per defecte de ruby que no et donarà el millor rendiment. Llegeix aquest tema l''ajust del rendiment: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ajustant Ruby and Rails per a Discourse</a>.'
     sidekiq_warning: 'No s''està executant <i>Sidekiq</i>. Hi ha moltes tasques asincrònicament en execució per <i>Sidekiq</i>, com ara enviament de correus. Si us plau, assegura''t que com a mínim hi ha un procés <i>Sidekiq</i> en marxa.  <a href="https://github.com/mperham/sidekiq" target="_blank">Aprèn més aquí sobre <i>Sidekiq</i></a>.'
     queue_size_warning: 'La quantitat de tasques en cua és de %{queue_size}, que és elevada. Això podria indicar un problema amb un o més procesos o potser et cal afegir-hi més treballadors de <i>Sidekiq</i>.'
     memory_warning: 'El teu servidor s''està executant amb menys d''1 GB de memòria total. Se''n recomana com a mínim un 1 GB de memòria.'
@@ -726,9 +721,6 @@ ca:
     facebook_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb Facebook (enable_facebook_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Mira aquesta guia per saber-ne més</a>.'
     twitter_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb Twitter (enable_twitter_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Mira aquesta guia per saber-ne més</a>.'
     github_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb GitHub (enable_github_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Mira aquesta guia per aprendre''n més</a>.'
-    s3_config_warning: 'El servidor està configurat per carregar còpies de seguretat a s3, però almenys una de les següents configuracions no estan activades:  s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_upload_bucket. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Mira "Com configurar les càrregues d''imatges a S3?" per saber-ne més</a>.'
-    s3_backup_config_warning: 'El servidor està configurat per carregar còpies de seguretat a s3, però almenys una de les següents configuracions no estan activades:  s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Mira "Com configurar les càrregues d''imatges a S3?" per saber-ne més</a>.'
-    image_magick_warning: 'El servidor està configurat per crear miniatures d''imatges grans, però no està instal·lat l''<i>ImageMagick</i>. Instal·la <i>ImageMagick</i> fent servir el teu gestor de paquets preferit o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descarrega''t la darrera versió</a>.'
     failing_emails_warning: 'Hi ha %{num_failed_jobs} tasques de correu fallides. Revisa el teu app.yml i assegura''t que la configuració del servidor de correu és correcta. <a href="/sidekiq/retries" target="_blank">Mira les tasques fallides a <i>Sidekiq</i></a>.'
     subfolder_ends_in_slash: "La teva configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
     email_polling_errored_recently:
@@ -759,14 +751,12 @@ ca:
     educate_until_posts: "Quan es comencen a escriure les primeres (n) publicacions, mostra la guia d'ús amb menú emergent a l'editor."
     title: "El nom d'aquest lloc, tal i com es fa servir a l'etiqueta del títol."
     site_description: "Descriu aquest lloc amb una frase, tal i com es fa servir a la meta-etiqueta de descripció."
-    contact_url: "URL de contacte per a aquest lloc. Emprat al formulari de contacte per a qüestions urgents."
     crawl_images: "Recupera imatges d'adreces URL remotes per inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les: això prevé les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari al disc per descarregar imatges remotes en local (percentatge)"
     download_remote_images_max_days_old: "No descarreguis imatges remotes per a publicacions que tenen més d'N dies."
     disabled_image_download_domains: "Les imatges remotes mai no es descarregaran des d'aquests dominis. Llista delimitada amb barra vertical."
     editing_grace_period: "Per a (n) segons després de publicar, l'edició no crearà una nova versió a l'historial de publicacions."
-    post_edit_time_limit: "L'autoria pot editar o esborrar les pròpies publicacions durant els (n) minuts posteriors a publicar. Estableix 0 per a sempre."
     edit_history_visible_to_public: "Permet que qualsevol miri les versions prèvies d'una publicació editada. Si està desactivat, només és visible per a integrants de l'equip."
     delete_removed_posts_after: "Les publicacions eliminades per l'autoria s'esborraran automàticament després d'(n) hores. Si s'estableix a 0, s'esborraran immediatament."
     max_image_width: "Amplada màxima de les miniatures d'imatges a una publicació"
@@ -780,14 +770,10 @@ ca:
     post_onebox_maxlength: "Mida màxima en caràcters d'una publicació encaixada de Discourse."
     onebox_domains_blacklist: "Un llistat de dominis que mai no seran encaixats"
     max_oneboxes_per_post: "Quantitat màxima d'encaixos a una publicació"
-    logo_url: "La imatge de logo a la part superior esquerra del teu lloc, hauria de tenir una forma rectangular allargada. Si es deixa en blanc, es mostrarà el títol del lloc."
     digest_logo_url: "La imatge de logo alternativa emprada a la part superior del resum de correus del teu lloc. Hauria de tenir una forma rectangular allargada. No hauria de tenir format SVG. Si es deixa en blanc, s'emprarà `logo_url`."
-    logo_small_url: "La imatge de logo petita a la part superior esquerra del teu lloc, hauria de ser tenir una forma quadrada, mostrada en desplaçar-se cap abaix. Si es deixa en blanc, es mostrarà un glif."
-    favicon_url: "La icona de web del teu lloc, mira https://ca.wikipedia.org/wiki/Icona_de_web. Ha de ser de format png per treballar correctament a una xarxa de lliurament de continguts"
     apple_touch_icon_url: "La icona emprada per a dispositius tàctils d'Apple. La mida recomanada és de 144x144 píxels."
     notification_email: "L'adreça de correu electrònic emprada al \"de:\" en enviar tots els correus electrònics essencials del sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, establerts correctament per tal que arribi el correu electrònic."
     email_custom_headers: "Una llista d'encapçalaments personalitzats de correu, delimitada amb barra vertical "
-    email_subject: "Format de tema personalitzable per a correus estàndards. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Força el teu lloc a fer servir només HTTPS. ATENCIÓ: NO activis això fins que no verifiquis que HTTPS està totalment configurat i treballant a tot arreu. Has comprovat la teva xarxa de lliurament de continguts, totes les connexions socials i els logos i dependències externs per assegurar-te també que tots són compatibles amb HTTPS?"
     summary_score_threshold: "La puntuació mínima requerida per a una publicació per ser inclosa a 'Resumeix aquest tema'"
     summary_posts_required: "Publicacions mínimes a un tema abans d'activar 'Resumeix aquest tema'"
@@ -813,10 +799,7 @@ ca:
     must_approve_users: "L'equip ha d'aprovar tots els nous comptes abans de permetre que accedeixin el lloc. ATENCIÓ: si actives això a un lloc en funcionament, es revocarà l'accés a les persones usuàries que no pertanyen a l'equip!"
     pending_users_reminder_delay: "Comunica a l'equip moderador si hi ha noves persones esperant l'aprovació més enllà d'aquest grapat d'hores. Configura-ho a -1 per desactivar les alertes."
     maximum_session_age: "La persona romandrà connectada durant n hores des de la darrera visita"
-    ga_universal_tracking_code: "Codi de rastreig de Google Universal Analytics (analytics.js), per exemple: UA-12345678-9; mira http://google.com/analytics"
-    ga_universal_domain_name: "Nom de domini de Google Universal Analytics (analytics.js), per exemple: mysite.com; mira http://google.com/analytics"
     gtm_container_id: "Contenidor d'id de Google Tag Manager, per exemple: GTM-ABCDEF"
-    enable_escaped_fragments: "Torna a Google's Ajax-Crawling API si no es detecta cap restrejador de web. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permet que l'equip moderador creï noves categories"
     cors_origins: "Orígens permesos per a peticions d'origen creuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha d'establir-se en \"true\" per tal d'habilitar CORS."
     use_admin_ip_whitelist: "Les persones administradores només poden connectar-se si són a una adreça IP definida a la llista d'IP Cobertes (Administració > Connexions > IP Cobertes)."
@@ -843,7 +826,6 @@ ca:
     email_domains_blacklist: "Una llista de dominis de correus delimitada amb barra vertical amb els quals les persones no poden registrar-hi comptes. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una llista de dominis de correus delimitada amb barra vertical amb els quals les persones HAN de registrar-hi comptes. ATENCIÓ: Les persones amb altres dominis de correu diferents als llistats no estaran autoritzades!"
     log_out_strict: "En desconnectar-se, desconnecta TOTES les sessions per a la persona a tots els dispositius"
-    version_checks: "Clava l'activitat de Discourse per a actualitzacions de versió i mostra els missatges de la nova versió al tauler /admin"
     new_version_emails: "Envia un correu al contact_email address quan hi hagi una nova versió del Discourse disponible."
     invite_expiry_days: "Quant és vàlida la clau d'invitació a una persona, en dies"
     login_required: "Exigeix l'autenticació per llegir el contingut del lloc, impedeix-ne l'accés anònim."
@@ -854,7 +836,6 @@ ca:
     password_unique_characters: "Quantitat mínima de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que es trobin entre les 10000 més comuns."
     enable_sso: "Activa l'autenticació única des d'un lloc extern (ATENCIÓ: LES ADRECES DE CORREU *HAN* DE SER VALIDADES PER UN LLOC EXTERN!)"
-    verbose_sso_logging: "Carrega els diagnòstics relacionats amb l'autenticació única a /logs"
     enable_sso_provider: "Implementa el protocol de proveïdor de l'autenticació única del Discourse a /session/sso_provider endpoint, necessita sso_secret per ser activada"
     sso_url: "Adreça URL d'autenticació única a un punt final (ha dincloure http:// o https://)"
     sso_secret: "Cadena secreta emprada per autenticar criptogràficament la informació d'autenticació única, assegura't que té 10 caràcters o més"
@@ -868,19 +849,11 @@ ca:
     allow_new_registrations: "Permet registres de noves persones. Inhabilita-ho per tal d'evitar que qualsevol pugui crear un nou compte."
     enable_signup_cta: "Mostra un avís a les persones anònimes que tornin, convidant-les a registrar-s'hi amb un compte."
     enable_yahoo_logins: "Activa l'autenticació amb Yahoo"
-    enable_google_oauth2_logins: "Activa l'autenticació amb Google Oauth2. Aquest és el mètode d'autenticació que Google accepta hores d'ara. Necessita clau i secret."
     google_oauth2_client_id: "ID de client a la teva aplicació Google."
     google_oauth2_client_secret: "Client secret a la teva aplicació Google."
-    enable_twitter_logins: "Activar l'autenticació de Twitter, necessita twitter_consumer_key i twitter_consumer_secret"
     enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
     instagram_consumer_key: "Clau de consum per a l'autenticació amb Instagram"
     instagram_consumer_secret: "Secret de consum per a l'autenticació amb Instagram"
-    enable_facebook_logins: "Activa l'autenticació amb Facebook, necessita facebook_app_id i facebook_app_secret"
-    facebook_app_id: "Id d'app per a l'autenticació amb Facebook, registrada a https://developers.facebook.com/apps"
-    facebook_app_secret: "Secret d'app per a l'autenticació amb Facebook, registrat a https://developers.facebook.com/apps"
-    enable_github_logins: "Activar l'autenticació de GitHub, necessita  github_client_id i github_client_secret"
-    github_client_id: "Id client per a l'autenticació amb Github, registrada a https://github.com/settings/applications"
-    github_client_secret: "Secret de client per a l'autenticació amb GitHub, registrat a https://github.com/settings/applications"
     readonly_mode_during_backup: "Activa el mode només de lectura mentre es fa la còpia de seguretat"
     allow_restore: "Permet restablir, que pot reemplaçar TOTES les dades del lloc! Deixa-ho com a \"false\" si no pretens restablir una còpia de seguretat"
     maximum_backups: "Quantitat màxima de còpies de seguretat per mantenir al disc. Les còpies més antigues seran esborrades automàticament"
@@ -973,7 +946,6 @@ ca:
     title_min_entropy: "L'entropia mínima (caràcters únics, recompte no anglès per a més) necessari per al títol d'un tema."
     body_min_entropy: "L'entropia mínima (caràcters únics, recompte no anglès per a més) necessari per al cos d'un tema."
     allow_uppercase_posts: "Permet tot en majúscula al títol o al cos d'una publicació."
-    title_fancy_entities: "Converteix els caràcters ordinaris d'ASCII en entitats HTML sofisticades als títols de temes, a l'estil de SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Mida mínima d'un títol abans de ser consultat per a temes semblants."
     min_body_similar_length: "Mida mínima del cos d'una publicació abans de ser consultada per a temes semblants."
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
@@ -1048,7 +1020,6 @@ ca:
     pop3_polling_host: "L'amfitrió per a enquestes amb POP3."
     pop3_polling_username: "El nom de persona usuària per al compte POP3 per a enquestes amb correu."
     pop3_polling_password: "La contrasenya per al compte POP3 per a enquestes amb correu."
-    log_mail_processing_failures: "Registra tots els errors de processar correu a http://yoursitename.com/logs"
     email_in_min_trust: "El nivell de confiança mínim que una persona necessita per tal de tenir permís per publicar nous temes des del correu."
     email_prefix: "[label] fet servir al tema dels correus. Per defecte serà 'títol' si no es configura."
     email_site_title: "El títol del lloc fet servir com a remitent de correus des del lloc. Per defecte serà 'títol' si no es configura. Si el teu 'títol' conté caràcters no permesos, fes servir la configuració."
@@ -1105,7 +1076,6 @@ ca:
     default_code_lang: "Ressaltat de sintaxi del llenguatge de programació per defecte, aplicat a blocs de codi de GitHub (lang-auto, ruby, python, etcètera)."
     warn_reviving_old_topic_age: "Es mostra un avís quan qualsevol comença una resposta a un tema on la darrera resposta té més dies que els assenyalats. Per inhabilitar-ho, deixa-ho a 0."
     autohighlight_all_code: "Obliga l'ús de codi ressaltat per a tots els blocs de codi preformatat, fins i tot quan no n'hagin especificat el llenguatge."
-    highlighted_languages: "Regles incloses de ressaltat de sintaxi (atenció: incloure-hi massa llenguatges pot afectar el rendiment). Mira: https://highlightjs.org/static/demo/ per a una demostració."
     embed_truncate: "Separa les publicacions incrustades."
     allowed_href_schemes: "Esquemes permesos a enllaços a més de http i https."
     embed_post_limit: "Quantitat màxima de publicacions per incrustar."
@@ -1400,14 +1370,6 @@ ca:
       subject_template: "Invitació personal massiva amb errors"
     csv_export_succeeded:
       title: "Exportació de CSV reeixida"
-      text_body_template: |
-        La teva exportació de dades ha estat reeixida! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        L'enllaç anterior funcionarà durant 48 hores.
-
-        Les dades estan comprimides en format gzip. Si el fitxer no s'extreu sol en obrir-lo, fes servir les eines recomanades aquí: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Ha fallat l'exportació de CSV "
       subject_template: "Ha fallat l'exportació de dades"
@@ -1975,7 +1937,6 @@ ca:
             description: "L'adreça de correu per a la persona o grup responsable d'aquesta comunitat. Fet servir per a notificacions importants com ara banderes sense manipular, actualitzacions de seguretat ia <a href='/about' target='_blank'>pàgina sobre tu</a> per a un contacte urgent de la comunitat."
           contact_url:
             label: "Pàgina web"
-            placeholder: "http://www.example.com/contact-us"
             description: "Pàgina web de contacte general per a tu o la teva organització. Es mostrarà a <a href='/about' target='_blank'>la teva pàgina sobre tu</a>."
           site_contact:
             label: "Missatges automàtics"

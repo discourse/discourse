@@ -62,8 +62,6 @@ gl:
       body: 'Producíronse problemas cos seguintes campos:'
     embed:
       load_from_remote: "Produciuse un erro cargando esta publicación."
-    site_settings:
-      min_username_length_range: "O mínimo non pode ser maior que o máximo."
   activemodel:
     errors:
       <<: *errors

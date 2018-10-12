@@ -162,6 +162,7 @@ fr:
         ap_southeast_1: "Asie-Pacifique (Singapour)"
         ap_southeast_2: "Asie-Pacifique (Sydney)"
         cn_north_1: "Chine (Pékin)"
+        cn_northwest_1: "Chine (Ningxia)"
         eu_central_1: "UE (Francfort)"
         eu_west_1: "UE (Irlande)"
         eu_west_2: "UE (Londres)"
@@ -244,10 +245,8 @@ fr:
         bookmark: "Cliquer pour mettre un signet sur le premier message de ce sujet"
         unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
     bookmarks:
-      not_logged_in: "désolé, vous devez être connecté pour mettre un signet aux messages"
       created: "vous avez mis un signet à ce message"
-      not_bookmarked: "vous avez lu ce message ; cliquez pour y mettre un signet"
-      last_read: "ceci est le dernier message que vous avez lu ; cliquez pour y mettre un signet"
+      not_bookmarked: "mettre un signet à ce message"
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
     drafts:
@@ -272,7 +271,8 @@ fr:
     saved: "Sauvegardé !"
     upload: "Joindre un fichier"
     uploading: "Envoi en cours…"
-    uploading_filename: "Envoi de {{filename}}…"
+    uploading_filename: "En cours de transfert : {{filename}}..."
+    clipboard: "presse-papiers"
     uploaded: "Envoyé !"
     pasting: "Coller..."
     enable: "Activer"
@@ -416,7 +416,7 @@ fr:
         all: "Tous les groupes"
         empty: "Il n'y a aucun groupe visible."
         filter: "Filtrer par type de groupe"
-        owner_groups: "Groupes dont je suis propriétaire"
+        owner_groups: "Mes groupes"
         close_groups: "Groupes fermés"
         automatic_groups: "Groupes automatiques"
         automatic: "Automatique"
@@ -520,7 +520,7 @@ fr:
       topic_stat_sentence:
         one: "%{count} nouveau sujet par %{unit}."
         other: "%{count} nouveaux sujets par %{unit}."
-      more: "(%{count} de plus)…"
+      n_more: "Catégories (%{count}additionnelles) ..."
     ip_lookup:
       title: Rechercher l'adresse IP
       hostname: Nom de l'hôte
@@ -701,7 +701,7 @@ fr:
         enable_description: |
           Scanner ce code QR dans une app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) et saisir votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification de votre app"
-        show_key_description: "Saisi manuel"
+        show_key_description: "Saisir manuellement"
         extended_description: |
           L'authentification à deux étapes ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en
           plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, et <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
@@ -734,10 +734,10 @@ fr:
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
       change_profile_background:
         title: "Arrière-plan du profil"
-        instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
+        instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 850 pixels."
       change_card_background:
         title: "Arrière-plan de la carte de l'utilisateur"
-        instructions: "Les images d'arrière-plan seront centrées avec une taille par défaut de 590 pixels."
+        instructions: "Les images d'arrière-plan seront centrées avec une largeur par défaut de 590 pixels."
       email:
         title: "Courriel"
         primary: "Adresse courriel principale"
@@ -782,16 +782,6 @@ fr:
         title: "Confirmation du mot de passe"
       auth_tokens:
         title: "Appareils utilisés récemment"
-        title_logs: "Journaux d'authentification"
-        ip_address: "Adresse IP"
-        created: "Créé"
-        first_seen: "Première utilisation"
-        last_seen: "Dernière utilisation"
-        operating_system: "Système d'exploitation"
-        location: "Localisation"
-        action: "Action"
-        login: "Connecter"
-        logout: "Déconnecter tout"
       last_posted: "Dernier message"
       last_emailed: "Dernier courriel"
       last_seen: "Vu"
@@ -985,11 +975,8 @@ fr:
     refresh: "Rafraîchir"
     read_only_mode:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
-      login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
+      login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite de %{siteSettingRate} définie dans les paramètres du site."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a dépassé la limite de %{siteSettingRate} définie dans les paramètres du site."
@@ -1176,7 +1163,7 @@ fr:
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
       filter_placeholder_with_any: Rechercher ou créer…
-      create: "Créer : '{{content}}'"
+      create: "Créer : « {{content}} »"
       max_content_reached:
         one: "Vous ne pouvez séléctionner que {{count}} élément."
         other: "Vous ne pouvez séléctionner que {{count}} éléments."
@@ -1222,7 +1209,7 @@ fr:
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
-      drafts_offline: "sauvegardé hors ligne"
+      drafts_offline: "brouillons hors ligne"
       group_mentioned_limit: "<b>Attention !</b> Vous avez mentionné <a href='{{group_link}}'>{{group}}</a>, cependant ce groupe a plus de membres que le nombre de mentions limite de {{max}} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
@@ -1279,7 +1266,6 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérer le lien"
       link_optional_text: "titre optionnel"
-      link_url_placeholder: "http://example.com"
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -1327,7 +1313,7 @@ fr:
           desc: "Créer ébauche d'un sujet qui ne sera visible qu'aux responsables"
         toggle_topic_bump:
           label: "Basculer l'actualisation des sujets"
-          desc: "Répondre sans modifier la date d'actualisation du sujet"
+          desc: "Répondre sans changer la date de dernière réponse"
     notifications:
       tooltip:
         regular:
@@ -1818,15 +1804,13 @@ fr:
         action: "fusionner les messages sélectionnés"
         error: "Il y a eu une erreur lors de la fusion des messages sélectionnés."
       change_owner:
-        title: "Modifier l'auteur des messages"
+        title: "Changer de propriétaire"
         action: "modifier l'auteur"
         error: "Il y a eu une erreur lors du changement de l'auteur des messages."
-        label: "Nouvel auteur des messages"
         placeholder: "pseudo du nouvel auteur"
         instructions:
-          one: "Veuillez choisir un nouvel auteur pour le message de <b>{{old_user}}</b>."
-          other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
-        instructions_warn: "Notez que les notifications au sujet de ce message ne seront pas transferrés au nouvel utilisateur de façon rétroactive."
+          one: "Merci d'indiquer un nouvel auteur pour le message de <b>@{{old_user}}</b>"
+          other: "Merci d'indiquer un nouvel auteur pour {{count}} messages par <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Modifier la date/heure…"
         action: "modifier la date/heure"
@@ -2204,7 +2188,7 @@ fr:
           other: "{{count}} restants"
     flagging_topic:
       title: "Merci de nous aider à garder notre communauté civilisé !"
-      action: "Signaler Sujet"
+      action: "Signaler le sujet"
       notify_action: "Message"
     topic_map:
       title: "Résumé du sujet"
@@ -2350,7 +2334,6 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top"
-    browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
       create_post: "Répondre / Voir"
@@ -2533,8 +2516,6 @@ fr:
           bookmarks: "Il n'y a plus de sujets avec des signets."
           search: "Il n'y a plus de résultats de recherche."
     invite:
-      custom_message: "Rendez votre invitation plus personnelle en écrivant un"
-      custom_message_link: "message personnalisé"
       custom_message_placeholder: "Entrez votre message personnalisé"
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
@@ -2943,7 +2924,6 @@ fr:
         import: "Importer"
         delete: "Supprimer"
         delete_confirm: "Supprimer ce thème ?"
-        about: "Modification des feuilles de styles et en-têtes de votre site. Ajouter un style personnalisé pour commencer."
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
@@ -2963,13 +2943,19 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
+          theme_name: "Nom du thème"
+          component_name: "Nom du composant"
+          themes_intro: "Choisir un thème existant ou en créer un nouveau pour commencer"
+          beginners_guide_title: "Guide d'utilisation des thèmes de Discourse pour débutants"
+          developers_guide_title: "Guide de développement de thèmes pour Discourse"
+          browse_themes: "Parcourir les thèmes de la communauté"
           import_theme: "Importer un thème"
           customize_desc: "Personaliser :"
           title: "Thèmes"
-          modal_title: "Créer un thème"
           create: "Créer"
           create_type: "Type :"
           create_name: "Nom :"
+          name_too_short: "Le nom doit comporter au-moins 4 caractères."
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
           edit: "Modifier"
           edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
@@ -2984,10 +2970,17 @@ fr:
           color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
-          switch_component: "Convertir en thème"
-          switch_component_alert: "Êtes-vous sûr de vouloir convertir ce composant en thème ? Cela va en faire un thème indépendant et sera supprimé des tous les thèmes l'utilisant."
-          switch_theme: "Convertir en composant"
-          switch_theme_alert: "Êtes-vous sûr de vouloir convertir ce thème en composant ? Il sera supprimé comme thème parent des composants utilisés."
+          convert: "Convertir"
+          convert_component_alert: "Êtes-vous sûr·e de vouloir convertir ce composant en thème ? Il sera éliminé comme composant de %{relatives}."
+          convert_component_tooltip: "Convertir ce composant en thème"
+          convert_theme_alert: "Êtes-vous sûr·e de vouloir convertir ce thème en composant ? Il sera éliminé comme parent de %{relatives}."
+          convert_theme_tooltip: "Convertir ce thème en composant"
+          inactive_themes: "Thèmes inactifs : "
+          broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
+          default_theme_tooltip: "Ce thème est celui par défaut du site"
+          updates_available_tooltip: "Des mises à jour sont disponibles pour ce thème"
+          and_x_more: "et {{count}} en plus."
+          collapse: Réduire
           uploads: "Uploads"
           no_uploads: "Vous pouvez envoyer des ressources associées à votre thème comme des polices ou des images"
           add_upload: "Ajouter un fichier"
@@ -2999,7 +2992,10 @@ fr:
             no_overwrite: "Nom de variable invalide. Ne doit pas écraser une variable existante."
             must_be_unique: "Nom de variable invalide. Doit être unique."
           upload: "Upload"
-          child_themes_check: "Thème incluant d'autres thèmes"
+          select_component: "Sélectionner un composant..."
+          unsaved_changes_alert: "Vous n'avez pas encore sauvegardé vos modifications, voulez-vous les abandonner et continuer ?"
+          discard: "Abandonner"
+          stay: "Rester"
           css_html: "CSS/HTML personnalisé"
           edit_css_html: "Modifier le CSS/HTML"
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
@@ -3023,6 +3019,7 @@ fr:
             one: "Le thème est en retard de 1 commit !"
             other: "Le thème est en retard de {{count}} commits !"
           compare_commits: "(Voir les nouveaux changements)"
+          repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur :  "
           scss:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
@@ -3112,7 +3109,7 @@ fr:
         to_address: "À l'adresse"
         test_email_address: "adresse de courriel à tester"
         send_test: "Envoyer un courriel de test"
-        sent_test: "Envoyé !"
+        sent_test: "envoyé !"
         delivery_method: "Méthode d'envoi"
         preview_digest_desc: "Prévisualiser le contenu des résumés par courriel envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
@@ -3122,10 +3119,10 @@ fr:
         format: "Format"
         html: "html"
         text: "texte"
-        last_seen_user: "Dernièr utilisateur vu :"
+        last_seen_user: "Dernier utilisateur vu :"
         no_result: "Aucun résultat trouvé pour le résumé."
-        reply_key: "Répondre"
-        skipped_reason: "Passer Raison"
+        reply_key: "Clé de réponse"
+        skipped_reason: "Ignorer la raison"
         incoming_emails:
           from_address: "De"
           to_addresses: "À"
@@ -3184,7 +3181,7 @@ fr:
           filter: "Filtre :"
           title: "Actions des responsables"
           clear_filters: "Tout afficher"
-          staff_user: "Responsable"
+          staff_user: "Utilisateur"
           target_user: "Utilisateur cible"
           subject: "Sujet"
           when: "Quand"
@@ -3254,6 +3251,7 @@ fr:
             change_badge: "modifier un badge"
             delete_badge: "supprimer un badge"
             merge_user: "fusionne utilisateur"
+            entity_export: "exporter l'entité"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
