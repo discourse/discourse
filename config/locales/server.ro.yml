@@ -102,10 +102,6 @@ ro:
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
     site_settings:
-      min_username_length_exists: "Nu poți seta numărul minim de caractere din nume utilizator la o valoare mai mare decât cea a celui mai scurt nume utilizator."
-      min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
-      max_username_length_exists: "Nu poți seta numărul maxim de caractere pentru nume utilizator la o valoare mai mică decât a celui mai lung nume utilizator."
-      max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
   activemodel:
@@ -575,6 +571,9 @@ ro:
       read: "Citește tot"
       write: "Scrie tot"
   reports:
+    moderators_activity:
+      labels:
+        topic_count: Discuții create
     visits:
       title: "Vizite ale utilizatorilor"
       xaxis: "Zi"
@@ -589,6 +588,7 @@ ro:
       title: "Subiecte"
       xaxis: "Zi"
       yaxis: "Număr de subiecte noi"
+      description: "Discuții noi create în această perioadă"
     posts:
       title: "Postări"
       xaxis: "Zi"
@@ -647,8 +647,12 @@ ro:
       num_clicks: "Click-uri"
       num_topics: "Subiecte"
       num_users: "Utilizatori"
+      labels:
+        num_topics: Discuții
     top_referred_topics:
       title: "Top subiecte la care se face referire"
+      labels:
+        topic: "Discuție"
     page_view_anon_reqs:
       title: "Anonimi"
       xaxis: "Zi"
@@ -710,7 +714,6 @@ ro:
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
-    gc_warning: 'Serverul tău funcționează în modul „garbage collection” (eliberarea memoriei) al ruby, ceea ce nu oferă cea mai bună performanță. Citește această discuție despre setările performanței: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Modificarea Ruby și Rails pentru Discourse</a>.'
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate asincron de către sidekiq. Asigură-te că măcar un proces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Citește despre Sidekiq aici</a>.'
     queue_size_warning: 'Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi  Sidekiq workers.'
     memory_warning: 'Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie.'
@@ -718,7 +721,6 @@ ro:
     facebook_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Facebook (enable_facebook_logins), dar app id și valoarea app secret nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setările. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
     twitter_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Twitter (enable_twitter_logins),dar cheia și valoarea secretă nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
     github_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu GitHub (enable_github_logins), dar id-ul de client și valorile secrete nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    image_magick_warning: 'Serverul este configurat să creeze thumbnail-uri din imagini mari, dar ImageMagick nu e instalat. Instalează ImageMagick <a href="http://www.imagemagick.org/script/binary-releases.php" ținta="_blank">descarcă ultima versiune</a>.'
     failing_emails_warning: 'Există %{num_failed_jobs} (de) sarcini email care au eșuat. Verifică app.yml și asigură-te că setările serverului de mail sunt corecte. <a href="/sidekiq/retries" target="_blank">Vizualizează sarcini eșuate în Sidekiq</a>.'
     subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
     email_polling_errored_recently:
@@ -750,14 +752,12 @@ ro:
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
     title: "Titlul scurt al site-ului, folosit în tag-ul title."
     site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
-    contact_url: "URL-ul de contact pentru acest site. Folosit pentru chestiuni urgente trimise prin formularul de contact din /despre"
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     download_remote_images_max_days_old: "Nu descărca imaginile de la distanță pentru postări care sunt mai vechi de n zile."
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
-    post_edit_time_limit: "Autorul poate edita sau șterge postarea până la (n) minute după postare. Setează 0 pentru permanent."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
     max_image_width: "Maximul lățimii unui thumbnail într-o postare"
@@ -771,14 +771,10 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     onebox_domains_blacklist: "O listă cu domenii care nu vor putea fi utilizate cu onebox."
     max_oneboxes_per_post: "Numărul maxim de utilizări onebox per post."
-    logo_url: "Imaginea logo din partea din dreapta sus a site-ului tău trebuie să aibă o formă dreptunghiulară. Dacă este lăsată goală, va fi afișat în locul ei un titlu al site-ului în formă text."
     digest_logo_url: "Imaginea logo alternativă folosită în partea de sus a emailurilor-rezumat de pe site-ul tău. Trebuie să aibă o forma de dreptunghi lat. Nu trebuie să  fie o imagine SVG. Dacă e lăsată goală, va fi folosit în locul ei - `logo_url` ."
-    logo_small_url: "Imaginea logo mică din partea de sus-stânga a site-ului tău va trebui să aibă o formă dreptunghiulară, vizibilă când se derulează pagina. Dacă e lăsată goală, va fi afișat un pictograf."
-    favicon_url: "Un favicon pentru site-ul tău trebuie să fie în format png pentru a funcționa corect peste un CDN  vedeți http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Iconiță folosită pentru dispozitivele touch Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
-    email_subject: "Format de subiecte ce se poate personaliza pentru emailurile standard. Vedeți https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_posts_required: "Minimul de postări într-un subiect înainte de a se activa 'Rezumă acest subiect'."
@@ -804,10 +800,7 @@ ro:
     must_approve_users: "Membrii echipei trebuie să aprobe toate conturile noilor utilizatori înainte ca aceștia să poată accesa site-ul. ATENȚIE: activarea acestei opțiuni pentru un site în producție va revoca accesul tuturor utilizatorilor care nu sunt membri ai echipei!"
     pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    ga_universal_tracking_code: "Codul de urmărire Google Universal Analytics (analytics.js), ex: UA-12345678-9; vezi http://google.com/analytics"
-    ga_universal_domain_name: "Numele de domeniu Google Universal Analytics (analytics.js), ex: mysite.com; vezi http://google.com/analytics"
     gtm_container_id: "ID-ul containerului Google Tag Manager. De ex: GTM-ABCDEF"
-    enable_escaped_fragments: "Întoarce-te la Google's Ajax-Crawling API dacă nu e detectat webcrawler-ul. Vezi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permite moderatorilor să creeze noi categorii"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_whitelist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
@@ -834,7 +827,6 @@ ro:
     email_domains_blacklist: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     email_domains_whitelist: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
-    version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată notificările de versiuni noi pe spațiul de lucru /admin ."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
@@ -842,7 +834,6 @@ ro:
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     enable_sso: "Activează opțiunea single sign on via site extern (ATENȚIE: ADRESELE DE EMAIL ALE UTILIZATORILOR *TREBUIE* VALIDATE DE SITE-UL EXTERN!)"
-    verbose_sso_logging: "Raportează diagnosticele legate de SSO în /logs"
     enable_sso_provider: "Implementează protocolul furnizorului SSO Discourse la punctul final /session/sso_provider, sso_secret trebuie să fie setat."
     sso_url: "URL pentru autentificare unică la punct final (trebuie să includă http:// or https://)"
     sso_secret: "șir secret folosit pentru autentificarea criptografică a SSO, asigură-te că este de minim 10 caractere"
@@ -856,19 +847,11 @@ ro:
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"
-    enable_google_oauth2_logins: "Activează autentificarea cu Google Oauth2 . Aceasta e metoda de autentificare pe care o suportă Google. Necesită cheie și secret."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    enable_twitter_logins: "Activează autentificarea cu Twitter, necesită twitter_consumer_key and twitter_consumer_secret"
     enable_instagram_logins: "Activează autentificarea prin Instagram, necesită instagram_consumer_key și instagram_consumer_secret"
     instagram_consumer_key: "Cheie consumator pentru autentificarea Instagram"
     instagram_consumer_secret: "Autentificare Instagram pe bază de secret consumator"
-    enable_facebook_logins: "Activează autentificarea cu Facebook, necesită facebook_app_id și facebook_app_secret"
-    facebook_app_id: "ID-ul aplicației pentru autentificarea cu Facebook, înregistrată la https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret pentru autentificarea cu Facebook, înregistrat la https://developers.facebook.com/apps"
-    enable_github_logins: "Activează autentificarea cu Github, requires github_client_id and github_client_secret"
-    github_client_id: "ID client pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
-    github_client_secret: "Secretul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
     readonly_mode_during_backup: "Activează modul exclusiv-citire în timpul operațiunii de backup"
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
@@ -961,7 +944,6 @@ ro:
     title_min_entropy: "Minimul de entropie (exprimată în număr de caractere unice, cele non-englezești contând ca mai multe caractere) necesar pentru un titlu de subiect."
     body_min_entropy: "Entropia minimă (caractere unice, cele ne-englezești contează mai mult) necesară în conținutul unei postări."
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
-    title_fancy_entities: "Convertește caracterele ASCII cunoscute în entități HTML în titluri de subiect, ex SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
     min_body_similar_length: "Lungimea minimă a conținutului unei postări până să fie verificată pentru subiecte similare."
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
@@ -1035,7 +1017,6 @@ ro:
     pop3_polling_host: "Gazda pentru retragerea emailurilor prin POP3."
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
-    log_mail_processing_failures: "Înregistrează toate erorile de procesare la http://yoursitename.com/logs"
     email_in_min_trust: "Nivelul minim de încredere de care are nevoie un utilizator pentru a i se permite să posteze noi subiecte prin email."
     email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
     email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
@@ -1068,6 +1049,7 @@ ro:
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     sequential_replies_threshold: "Numărul de postări succesive pe care un utilizator trebuie sa le facă într-un subiect înainte să i se reamintească că a postat un număr excesiv de postări succesive."
+    get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
     dominating_topic_minimum_percent: "Ce procent din postările unui subiect trebuie să scrie un utilizator înainte de i se aminti că domină excesiv subiectul."
     disable_avatar_education_message: "Dezactivează mesajul educațional pentru schimbarea avatarului."
@@ -1087,7 +1069,6 @@ ro:
     default_code_lang: "Evidențierea de sintaxa de limbaj de programare aplicată implicit blocurilor de cod GitHub (lang-auto, Ruby, Python etc.)"
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Forțează aplicarea de punere în evidență cod pe toate blocurile de cod preformatate, chiar și atunci când nu le este explicit specificată limba."
-    highlighted_languages: "Regulile e evidențiere sintactică. (Atenție: includerea de prea multe limbaje va avea un impact asupra performanței) vezi: https://highlightjs.org/static/demo/ pentru un demo"
     embed_truncate: "Retează postările încorporate."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
@@ -1312,6 +1293,7 @@ ro:
     deferred: "Îți mulțumim că ne-ai informat. O să aruncăm o privire."
     deferred_and_deleted: "Îți mulțumim că ne-ai informat. Am șters postarea."
   system_messages:
+    private_topic_title: "Discuția #%{id}"
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
       text_body_template: |
@@ -1330,6 +1312,11 @@ ro:
         Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
+    welcome_tl1_user:
+      text_body_template: |
+        Salutare. Am obsevat că ai citit mult pe forum, ceea ce ne bucură, așa că te-am promovat cu un [nivel de încredere!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) suplimentar.
+
+        Ne place mult că petreci timp în comunitate și am vrea să te cunoaștem mai bine. Acordă-ne câteva minute și [completează-ți profilul](%{base_url}/my/preferences/profile), sau [pornește o discuție nouă](%{base_url}/categories) dacă vrei.
     welcome_invite:
       subject_template: "Bine ai venit pe %{site_name}!"
     backup_succeeded:
@@ -1381,6 +1368,11 @@ ro:
       subject_template: "Invitația multiplă a fost procesată cu erori"
     csv_export_failed:
       subject_template: "Exportul datelor a eșuat"
+    email_reject_insufficient_trust_level:
+      text_body_template: |
+        Ne pare rău, dar mesajul tău e-mail către %{destination} (intitulat %{former_title}) nu a funcționat.
+
+        Contul tău nu are nivelul de încredere necesar pentru a permite postarea de discuții noi la această adresă de e-mail. Dacă aceasta este o eroare, [contactează un membru al personalului](%{base_url}/about).
     email_reject_inactive_user:
       text_body_template: |
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
@@ -1417,6 +1409,13 @@ ro:
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
 
         Acțiunea de postare nu a fost recunoscută. Te rugăm să încerci din nou, sau să postezi pe website dacă eroarea persistă.
+    email_reject_old_destination:
+      text_body_template: |
+        Ne pare rău, dar mesajul tău e-mail către %{destination} (intitulat %{former_title}) nu a funcționat.
+
+        Acceptăm răspunsuri pentru notificările originale timp de cel mult %{number_of_days} zile. Te rugăm să [vizitezi discuția](%{short_url}) pentru a continua conversația.
+    email_reject_topic_closed:
+      subject_template: "[%{email_prefix}] Problemă e-mail -- Discuție închisă"
     email_error_notification:
       text_body_template: |
         Din păcate,s-a produs o eroare de autentificare la retragerea emailurilor de pe serverul POP
@@ -1506,6 +1505,7 @@ ro:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      subject_template: "[%{email_prefix}] %{username} te-a invitat la o discuție prin mesaje - '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1564,6 +1564,8 @@ ro:
         %{context}
 
         %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
     user_group_mentioned:
       text_body_template: |
         %{header_instructions}
@@ -1656,6 +1658,8 @@ ro:
   flag_reason:
     sockpuppet: "Un utilizator nou a creat un subiect, și un alt utilizator nou de la aceeași adresă de IP (%{ip_address}) a răspuns. Vezi <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> la setările site-ului."
     spam_hosts: "Acest nou utilizator a încrecat să creeze postări multiple cu link-uri către acelasi domeniu (%{domain}). Vezi <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> la setările site-ului."
+  skipped_email_log:
+    user_email_notification_topic_nil: "post.topic este nil"
   color_schemes:
     base_theme_name: "Bază"
   about: "Despre"
@@ -1833,6 +1837,8 @@ ro:
     first_quote:
       name: Prima citare
       description: Ai citat o postare
+      long_description: |
+        Acest ecuson este oferit prima dată când citezi o postare într-un răspuns propriu. Citarea părților relevante din postările anterioare în răspunsul tău ajută la menținerea discuțiilor și la păstrarea subiectului lor inițial. Cea mai ușoară cale de a cita este să selectezi o porțiune dintr-o postare și să apeși pe butonul pentru răspuns. Citează frecvent!
     read_guidelines:
       name: Ghid Citit
     reader:
@@ -1982,7 +1988,6 @@ ro:
             description: "Adresa de email a persoanei sau grupului responsabil de aceasta comunitate. Folosită pentru notificări critice cum ar fi marcaje de avertizare negestionate, actualizări de securitate și afișată pe pagina <a href='/about' target='_blank'>Despre noi</a> pentru contactarea de urgență a comunității."
           contact_url:
             label: "Pagină web"
-            placeholder: "http://www.exemplu.com/contact"
             description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='/about' target='_blank'>pagina despre noi</a>. "
           site_contact:
             label: "Mesaje automate"
@@ -2030,12 +2035,28 @@ ro:
             choices:
               latest:
                 label: "Subiecte recente"
+              categories_with_featured_topics:
+                label: "Categorii cu discuții promovate"
+              categories_and_latest_topics:
+                label: "Categorii și cele mai noi discuții"
+              categories_and_top_topics:
+                label: "Categorii și discuții de top"
       emoji:
         title: "Emoji"
       invites:
         title: "Invită membrii echipei"
+        description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
         description: |
           <p>Dacă vei dori vreodată să schimbi aceste setări, vizitează <a href='/admin' target='_blank'>secțiunea admin</a>; care se găsește lângă iconița cu cheia franceză din meniul site-ului.</p>
           <p>Distracție plăcută și mult succes<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>la construcția noii comunități!</a></p>
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'
+      quoted: '%{username} te-a citat în discuția "%{topic}" - %{site_title}'
+      replied: '%{username} ți-a răspuns în discuția "%{topic}" - %{site_title}'
+      posted: '%{username} a postat în discuția "%{topic}" - %{site_title}'
+      private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
+      linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'

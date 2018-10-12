@@ -140,14 +140,6 @@ sw:
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
       hello:
         title: ":robot: Habari!"
-        message: |-
-          Asante kwa kujiunga na %{title}, na karibu!
-
-          - Mimi ni roboti, lakini [wasaidizi wetu](/kuhusu) nao wapo kwa ajili yako kama unahitaji kuongea na mtu/binadamu.
-
-          - Kwa ajili ya ulinzi na usalama, kuna vitu hautaweza kufanya kama mtumiaji mpya. Utapata uwezo (na [nembo](/nembo)) jinsi tutakavyozidi kukujua wewe.
-
-          - Tunaamini na kuheshimu [mwenendo mzuri wa kijamii](/miongozo) mda wote.
       onebox:
         instructions: |-
           Baada ya hapo, je unaweza kunipa hivi viungo na mimi? Jibu na **kila kiungo kwenye mstari wake**, na itaongezeka kuonyesha muhtasari kuhusiana na hicho kiungo.
@@ -261,8 +253,6 @@ sw:
           > :imp: Nimeandika kitu ambacho hakifai
 
           Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
-        reply: |-
-          [Wasaidizi](/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi siandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
         not_found: |-
           Jamani, taarifa yangu chafu nilioandika bado haijapewa bendera. :worried: Unaweza ukamjulisha mtu kuwa ni chafu kwa kutumia **flag**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Usisahau kutumia kitufe za zaidi<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuonyesha vitendo zaidi kwa ajili ya kila taarifa.
       search:
@@ -286,24 +276,12 @@ sw:
           -Kama una kibodi halisi :keyboard:, bonyeza <kbd>?</kbd>kuona njia za mkato za kibodi.
         not_found: |-
           Hmm...inaonekana kama kuna tatizo. Samahani Sana. Je ulikuwa unatafuta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> kuhusiana na **capy&#8203;bara**?
-      end:
-        message: |-
-          Asante kwa kubaki na mimi @ %{username}! amekutengenezea hiki, Nadhani unastahili:
-
-          %{certificate}
-
-          Ni hilo tu kwa sasa! Tembelea [**mada za majadiliano zilizoongelewa hivi karibuni**](/karibuni) au [**vikundi vya majadiliano**](/majadiliano). : sunglasses:
-          (Ukipenda kujifunza zaidi, nitumie ujumbe mfupi au andika `@%{discobot_username}` mda wowote!)
       certificate:
         alt: 'Shahada ya Mafanikio'
     advanced_user_narrative:
       reset_trigger: 'mtumiaji wa hali ya juu'
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya wa hali ya juu"
       title: ':arrow_up: Vipengele vya mtumiaji wa hali ya juu'
-      start_message: |-
-        Kama mtumiaji_wa_hali_ya_juu, umetembela [ukurasa wa mapendekezo](/my/mapendekezo) @%{username}? Kuna njia nyingi za kugeuza kukufaa, kama kuchagua mandhari nyeupe au nyeusi.
-
-        Anza kama upo tayari.
       edit:
         bot_created_post_raw: "@%{discobot_username} ni, kwa kirefu, roboti mjanja ninayemjua :wink:"
         instructions: |-
@@ -363,10 +341,6 @@ sw:
           Tujaribu kubadilisha kiwango cha ujulishaji kwa ajili ya mada hii. Chini ya mada, utaona kitufe kinachosema una **angalia** mada hii. Unaweza kubadilisha kiwango cha ujulishaji kuwa **inafuatiliwa**?
         not_found: |-
           Inaonekana kuwa bado unaangalia :eyes: mada hii! Kama umeshindwa kuiona, kitufe cha kiwango cha kujulisha kinapatikana chini ya mada.
-        reply: |-
-          Kazi nzuri! Natumaini haujanyamazisha mada hii! kwa vile napenda kuongea sana saa zingine :grin:.
-
-          Ukijibu mada, au ukisoma zaidi ya dakika chache, itawekwa kwenye orodha ya mada 'zinazofuatiliwa'. Unaweza kubadilisha hii kwenye [mipangilio yako ya mtumiaji](/my/preferences).
       poll:
         instructions: |-
           Unajua unaweza kuongeza uchaguzi kwenye chapisho lolote? Jaribu kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kwenye uhariri ku **tengeneza uchaguzi**

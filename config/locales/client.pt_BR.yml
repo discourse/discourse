@@ -243,12 +243,8 @@ pt_BR:
         bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
-      not_logged_in: "desculpe, você precisa estar logado para favoritar mensagens"
       created: "você favoritou essa resposta"
-      not_bookmarked: "você já leu esta mensagem; clique para favoritar."
-      last_read: "este é a última resposta que você leu; clique para favoritar."
       remove: "Remover favorito"
-      confirm_clear: "Tem certeza que deseja apagar todos os atalhos deste tópico?"
     drafts:
       resume: "Resuma"
       remove: "Remova"
@@ -271,7 +267,6 @@ pt_BR:
     saved: "Salvo!"
     upload: "Enviar"
     uploading: "Enviando..."
-    uploading_filename: "Enviando {{filename}}"
     uploaded: "Enviado!"
     pasting: "Colando..."
     enable: "Habilitar"
@@ -415,7 +410,6 @@ pt_BR:
         all: "Todos os grupos"
         empty: "Não há grupos visíveis."
         filter: "Filtrar por tipo de grupo"
-        owner_groups: "Grupos em que sou administrador"
         close_groups: "Grupos fechados"
         automatic_groups: "Grupos Automáticos"
         automatic: "Automático"
@@ -519,7 +513,6 @@ pt_BR:
       topic_stat_sentence:
         one: "%{count} novo tópico nos últimos %{unit}."
         other: "%{count} novos tópicos nos últimos %{unit}."
-      more: " (%{count} mais) ..."
     ip_lookup:
       title: Pesquisa do endereço de IP
       hostname: Nome do host
@@ -971,9 +964,6 @@ pt_BR:
       enabled: "Este site está em modo de leitura apenas. Por favor continue a navegar, no entanto, respostas, curtidas e outras ações estão desativadas por enquanto."
       login_disabled: "O login é desativado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversas para ler e responder."
-    too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversas para ler e responder."
-    too_few_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversas para ler e responder."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcançou a configuração limite do site de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedeu a configuração limite do site de %{siteSettingRate}."
@@ -1258,7 +1248,6 @@ pt_BR:
       link_description: "digite a descrição do link aqui"
       link_dialog_title: "Inserir link"
       link_optional_text: "título opcional"
-      link_url_placeholder: "http://exemplo.com"
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
@@ -1793,15 +1782,9 @@ pt_BR:
         action: "unificar as mensagens selecionadas"
         error: "Houve um erro ao unificar as mensagens selecionadas."
       change_owner:
-        title: "Trocar Autor das Mensagens"
         action: "trocar autor"
         error: "Houve um erro ao alterar o autor dessas mensagens."
-        label: "Novo Autor das Mensagens"
         placeholder: "novo autor"
-        instructions:
-          one: "Por favor, escolha o novo dono do post por  <b>{{old_user}}</b>."
-          other: "Por favor, escolha o novo autor dessas {{count}} mensagens que eram de <b>{{old_user}}</b>."
-        instructions_warn: "Observe que quaisquer notificações sobre essa postagem não serão transferidas para o novo usuário retroativamente."
       change_timestamp:
         title: "Alterar o timestamp ..."
         action: "alterar horário"
@@ -2325,7 +2308,6 @@ pt_BR:
         this_week: "Semana"
         today: "Hoje"
         other_periods: "Veja o topo"
-    browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">seu navegador é muito antigo para ser utilizado neste site</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2508,8 +2490,6 @@ pt_BR:
           bookmarks: "Não há mais tópicos nos favoritos."
           search: "Não existem mais resultados."
     invite:
-      custom_message: "Faça seu convite um pouco mais pessoal escrevendo um"
-      custom_message_link: "mensagem personalizada"
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Ei, você devia entrar neste fórum!"
       custom_message_template_topic: "Ei, eu acho que você vai gostar deste tópico!"
@@ -2917,7 +2897,6 @@ pt_BR:
         import: "Importar"
         delete: "Apagar"
         delete_confirm: "Apagar este tema?"
-        about: "Modificar o CSS e HTML do cabeçalho do site. Adicione uma customização para começar."
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
@@ -2962,7 +2941,6 @@ pt_BR:
             no_overwrite: "Nome da variável inválido. Não deve sobrescrever uma variável existente."
             must_be_unique: "Nome da variável inválido. Deve ser único."
           upload: "Upload"
-          child_themes_check: "O tema inclui outros temas infantis"
           css_html: "CSS / HTML personalizado"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "Você não editou nenhum CSS ou HTML"
@@ -3144,7 +3122,6 @@ pt_BR:
           filter: "Filtro:"
           title: "Ações do Staff"
           clear_filters: "Mostrar Tudo"
-          staff_user: "Usuário do Staff"
           target_user: "Usuário Destino"
           subject: "Assunto"
           when: "Quando"

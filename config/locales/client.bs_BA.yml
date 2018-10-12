@@ -184,6 +184,7 @@ bs_BA:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irska)"
         eu_west_2: "EU (London)"
+        eu_west_3: "EU (Pariz)"
         sa_east_1: "Južna Amerika (Sao Paulo)"
         us_east_1: "SAD Istok (Sjeverna Virdžinija)"
         us_east_2: "SAD Istok (Ohio)"
@@ -215,6 +216,7 @@ bs_BA:
     privacy_policy: "Izjava o privatnosti"
     privacy: "Privatnost"
     tos: "Uslovi korištenja"
+    rules: "Pravila"
     mobile_view: "Mobilni zaslon"
     desktop_view: "Standardni zaslon"
     you: "Vi"
@@ -263,12 +265,8 @@ bs_BA:
         bookmark: "Klikni kako bi dodao zabilješku na prvu objavu u temi"
         unbookmark: "Klikni da ukloniš sve zabilješke iz ove teme"
     bookmarks:
-      not_logged_in: "nažalost, morate biti ulogovani kako bi ste dodali oznaku zabilješke"
       created: "zabilježili ste ovu stranicu"
-      not_bookmarked: "pročitali ste objavu; kliknite kako bi ste je zabilježili"
-      last_read: "ovo je zadnja objava koju ste pročitali; kliknite kako bi ste je zabilježili"
       remove: "Ukloni zabilješku"
-      confirm_clear: "Jeste li sigurni da želite očistiti sve zabilješke iz ove kategorije?"
     topic_count_latest:
       one: "Pogledaj {{count}} novu ili ažuriranu temu"
       few: "Pogledaj {{count}} nove ili ažurirane teme"
@@ -288,7 +286,6 @@ bs_BA:
     saved: "Spremljeno!"
     upload: "Učitaj"
     uploading: "Učitava se..."
-    uploading_filename: "Učitavam {{filename}}..."
     uploaded: "Učitano!"
     pasting: "Lijepim..."
     enable: "Omogući"
@@ -435,7 +432,6 @@ bs_BA:
         all: "Sve grupe"
         empty: "Vidljive grupe još ne postoje."
         filter: "Filtriraj prema tipu grupe"
-        owner_groups: "Grupe koje sam ja vlasnik"
         close_groups: "Zatvorene grupe"
         automatic_groups: "Automatske grupe"
         automatic: "Automatsko"
@@ -556,6 +552,7 @@ bs_BA:
       post_count: "# postova"
       confirm_delete_other_accounts: "Jeste sigurni da želite da izbrišete ove račune?"
       powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "koprian"
     user_fields:
       none: "(odaberi opciju)"
     user:
@@ -976,9 +973,6 @@ bs_BA:
       enabled: "Ovaj sajt je u read only mod-u: Dozvoljeno je čitati. Možete nastaviti sa pregledom, ali odgovaranje na objave, lajkanje i ostale akcije su isključene za sada."
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
-    too_few_topics_and_posts_notice: "Odpočnimo <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>sa diskusijom!</a> Trenutno postoje <strong>%{currentTopics} / %{requiredTopics}</strong> teme i <strong>%{currentPosts} / %{requiredPosts}</strong> objave. Novi posjetioci trebaju par novih diskusija za čitanje i shodne reakcije."
-    too_few_topics_notice: "Odpočnimo <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>sa diskusijom!</a> Trenutno postoje <strong>%{currentTopics} / %{requiredTopics}</strong> teme. Novi posjetioci trebaju par novih diskusija za čitanje i shodne reakcije."
-    too_few_posts_notice: "Odpočnimo <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>sa diskusijom!</a> Trenutno postoje <strong>%{currentPosts} / %{requiredPosts}</strong> objave. Novi posjetioci trebaju par novih diskusija za čitanje i shodne reakcije."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosegnut postavljeni limit sajta od %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> prelazi postavljeni limit sajta od %{siteSettingRate}."
@@ -1257,7 +1251,6 @@ bs_BA:
       link_description: "ubaci opis linka"
       link_dialog_title: "Unesi Link"
       link_optional_text: "naslov neobavezan"
-      link_url_placeholder: "http://example.com"
       quote_title: "Blok Citat"
       quote_text: "Citat u bloku"
       code_title: "Formatiran Tekst"
@@ -1806,16 +1799,9 @@ bs_BA:
         action: "spoji izabrane postove"
         error: "Desila se greška prilikom spajanja označenih objava."
       change_owner:
-        title: "Change Owner"
         action: "change ownership"
         error: "There was an error changing the ownership of the posts."
-        label: "New Owner of Posts"
         placeholder: "username of new owner"
-        instructions:
-          one: "Molimo da odaberete novog vlasnika objave od starog korisnika <b>{{old_user}}</b>."
-          few: "Molimo da odaberete novog vlasnika za {{count}} objave od starog korisnika <b>{{old_user}}</b>."
-          other: "Molimo da odaberete novog vlasnika za {{count}} objava od starog korisnika <b>{{old_user}}</b>."
-        instructions_warn: "Imajte na umu da bilo koje obavijesti o ovoj objavi neće biti proslijeđene novom korisniku retroaktivno (naknadno). "
       change_timestamp:
         title: "Promijeni vremensku zabilješku..."
         action: "izmijeni vrijeme"
@@ -2152,6 +2138,7 @@ bs_BA:
         title_in: "Kategorija - {{categoryName}}"
         help: "sve teme grupisane po kategoriji"
       unread:
+        title: "Nepročitanih"
         help: "teme koje trenutno pratite i motrite sa nepročitanim postovima"
       new:
         lower_title_with_count:
@@ -2185,7 +2172,6 @@ bs_BA:
           title: "Popularne Dnevno"
         all_time: "Sve vrijeme"
         today: "Danas"
-    browser_update: 'Nažalost, vaš internet browser je prestar za ovaj korišćenje ovog foruma</a>. Idite na i <a href="http://browsehappy.com">obnovite vaš browser</a>.'
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -2367,7 +2353,6 @@ bs_BA:
         new: "New"
         new_style: "New Style"
         delete: "Delete"
-        about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
@@ -2487,7 +2472,6 @@ bs_BA:
         staff_actions:
           title: "Staff Actions"
           clear_filters: "Show Everything"
-          staff_user: "Staff User"
           target_user: "Target User"
           subject: "Subject"
           when: "When"

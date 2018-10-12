@@ -232,12 +232,8 @@ da:
         bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
     bookmarks:
-      not_logged_in: "Beklager, du skal været logget ind for at bogmærke indlæg"
       created: "Du har bogmærket dette indlæg."
-      not_bookmarked: "Du har læst dette indlæg; klik for at bogmærke det"
-      last_read: "Dette er det seneste indlæg, du har læst; klik for at bogmærke det"
       remove: "Fjern bogmærke"
-      confirm_clear: "Er du sikker på du vil slette alle bogmærker fra dette emne?"
     preview: "forhåndsvising"
     cancel: "annullér"
     save: "Gem ændringer"
@@ -245,7 +241,6 @@ da:
     saved: "Gemt!"
     upload: "Upload"
     uploading: "Uploader…"
-    uploading_filename: "Overfører {{filename}}..."
     uploaded: "Uploadet!"
     enable: "Aktiver"
     disable: "Deaktiver"
@@ -831,9 +826,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktivere mens websitet kun kan læses."
-    too_few_topics_and_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion!</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
-    too_few_topics_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøgende har brug for samtaler at læse og svare på."
-    too_few_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nåede grænse for konfiguration af sitet på %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overskred grænse for konfiguration af sitet på %{siteSettingRate}."
@@ -1048,7 +1040,6 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
-      link_url_placeholder: "http://example.com"
       quote_title: "Citatblok"
       quote_text: "Citatblok"
       code_title: "Præformateret tekst"
@@ -1487,14 +1478,9 @@ da:
         action: "flet valgte indlæg"
         error: "Der opstod en fejl med at flette de valgte indlæg."
       change_owner:
-        title: "Skift hvem der ejer emnet"
         action: "skift ejerskab"
         error: "Der opstod en fejl da ejerskabet skulle skiftes."
-        label: "Ny ejer af emner"
         placeholder: "brugernavn på ny ejer"
-        instructions:
-          one: "Vælg den nye ejer af indlægget, oprindeligt skrevet af <b>{{old_user}}</b>."
-          other: "Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>."
       change_timestamp:
         title: "Tilpas tidsstempel..."
         action: "ret tidsstempel"
@@ -1961,7 +1947,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top"
-    browser_update: 'Desværre, <a href="http://www.discourse.org/faq/#browser">din browser er for gammel til at kunne virke med dette forum</a>. <a href="http://browsehappy.com">Opgradér venligst din browser</a>.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -2123,8 +2108,6 @@ da:
           bookmarks: "Der er ikke flere bogmærkede emner."
           search: "Der er ikke flere søgeresultater."
     invite:
-      custom_message: "Gør din invitation lidt mere personlig ved at skrive en "
-      custom_message_link: "personlig besked"
       custom_message_placeholder: "Skriv en personlig besked"
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"
       custom_message_template_topic: "Hej, jeg tænkte du måske ville synes om dette emne!"
@@ -2412,7 +2395,6 @@ da:
         import: "Importer"
         delete: "Slet"
         delete_confirm: "Slet dette tema?"
-        about: "Modificer CSS stylesheets og HTML headere på sitet. Tilføj en tilpasning for at starte."
         color: "Farve"
         opacity: "Gennemsigtighed"
         copy: "Kopier"
@@ -2447,7 +2429,6 @@ da:
           custom_sections: "Tilpassede sektioner:"
           theme_components: "Temakomponenter"
           variable_name: "SCSS var navn:"
-          child_themes_check: "Tema inkluderer andre underordnede temaer"
           css_html: "Tilpasset CSS/HTML"
           edit_css_html: "Redigér CSS/HTML"
           edit_css_html_help: "Du har ikke redigeret i hverken CSS eller HTML"
@@ -2607,7 +2588,6 @@ da:
         staff_actions:
           title: "Handlinger"
           clear_filters: "Vis alt"
-          staff_user: "Bruger"
           target_user: "Bruger"
           subject: "Subjekt"
           when: "Hvorår"

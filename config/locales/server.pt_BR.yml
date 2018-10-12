@@ -136,10 +136,6 @@ pt_BR:
       invalid_choice:
         one: 'Você especificou a escolha inválida %{name}'
         other: 'Você especificou a escolha inválida  %{name}'
-      min_username_length_exists: "Você não pode definir o comprimento mínimo de nome de usuário como maior do que o nome de usuário mais curto."
-      min_username_length_range: "Você não pode colocar o mínimo acima do máximo."
-      max_username_length_exists: "Você não pode definir o comprimento máximo de nome de usuário como abaixo do nome de usuário mais longo."
-      max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
     conflicting_google_user_id: 'O ID da Conta do Google para esta conta foi alterado. A intervenção do pessoal é necessária por razões de segurança. Por favor contate a equipe e aponte-os para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -453,27 +449,6 @@ pt_BR:
         Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
   lounge_welcome:
     title: "Bem-vindo ao Salão"
-    body: |2
-
-      Parabéns! : confetti_ball:
-
-      Se você puder ver este tópico, você foi promovido recentemente para ** regular ** (nível de confiança 3).
-
-      Você pode agora & hellip;
-
-      * Edite o título de qualquer tópico
-      * Mude a categoria de qualquer tópico
-      * Tenha todos os seus links seguidos ([nofollow automático] (http://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Acessar uma categoria de salão privado visível apenas para usuários no nível de confiança 3 e superior
-      *Ocultar spam com um único sinalizador
-
-      Aqui está a [lista atual de companheiros regulares] (/ badges / 3 / regular). Não deixe de dizer oi.
-
-      Obrigado por ser uma parte importante desta comunidade!
-
-      (Para mais informações sobre os níveis de confiança, [veja este tópico] [confiança]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "(Substitua este primeiro parágrafo por uma curta descrição da sua nova categoria. Este guia vai aparecer na área de seleção de categoria, então tente usar menos que 200 caracteres. **Até você editar essa descrição ou criar tópicos, esta categoria não aparece na página de categorias.**)"
@@ -990,7 +965,6 @@ pt_BR:
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname padrão localhost. Modifique para usar o hostname do seu site."
-    gc_warning: 'Seu servidor está rodando a coleta de lixo do ruby com os parâmetros padrão (default ruby garbage collection parameters), os quais não irão propiciar a melhor performance. Leia este tópico sobre ajuste de performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: 'O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
@@ -998,9 +972,6 @@ pt_BR:
     facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
     github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
-    s3_config_warning: "O servidor está configurado para fazer upload de arquivos para s3, mas pelo menos uma das seguintes configurações não está configurada: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vamos para <a href=\"/admin/site_settings\">the Site Settings</a> \ne atualize as configurações.Consulte \"Como configurar uploads de imagens para o S3?\" aprender mais</a>."
-    s3_backup_config_warning: 'O servidor está configurado para fazer upload de backups para s3, mas pelo menos uma das seguintes configurações não está configurada: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Vá para as configurações do site</a> e atualize as configurações. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar uploads de imagens para o S3?" aprender mais</a>.'
-    image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes preferido ou acesse <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para fazer download da última versão</a>.'
     failing_emails_warning: 'Existem %{num_failed_jobs} tarefas de email que falharam. Verifique seu app.yml e se assegure que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
     email_polling_errored_recently:
@@ -1041,8 +1012,6 @@ pt_BR:
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
     title: "O nome deste site, como usado na tag de título."
     site_description: "Descreva este site com uma frase, como usado na tag de meta description."
-    contact_email: "Endereço de e-mail do contato principal responsável por este site. Usado para notificações críticas, bem como no formulário de contato para assuntos urgentes."
-    contact_url: "URL de contato para este site. Usada no formulário de contato /about para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
@@ -1052,7 +1021,6 @@ pt_BR:
     editing_grace_period_max_diff: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de publicação (nível de confiança 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de postagem (nível de confiança 2 e superior)"
     staff_edit_locks_post: "As postagens não serão editadas se forem editadas por membros da equipe"
-    post_edit_time_limit: "O autor pode editar ou apagar o seu post para (n) minutos após a postagem. Defina como 0 para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam as versões anteriores de uma postagem editada. Quando desativado, somente membros da equipe podem ver o histórico de alterações."
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
     max_image_width: "Largura máxima para imagens em um post"
@@ -1069,16 +1037,10 @@ pt_BR:
     inline_onebox_domains_whitelist: "Uma lista de domínios que serão colocados em miniatura se vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração de site inline_onebox_domain_whitelist e permita onebox in-line em todos os domínios."
     max_oneboxes_per_post: "Número máximos de oneboxes em uma publicação."
-    logo_url: "O logotipo ao lado superior esquerdo de seu site deve ser um retângulo largo. Se for deixado em branco, o que aparecerá será o nome do site. "
     digest_logo_url: "A imagem de logo alternativa usada no topo do email de resumo do seu site. Ela deve ter um formato retangular alongado e não deve ser uma imagem SVG. Se deixado em branco, `logo_url` será usado."
-    logo_small_url: "A pequena imagem de logo no topo à esquerda do seu site, vista quando rolando a página abaixo. Se deixado em branco, um símbolo de casa será mostrado."
-    favicon_url: "Um favicon para seu site, veja http://en.wikipedia.org/wiki/Favicon. Para funcionar corretamente por um CDN, ele deve ser um png"
-    mobile_logo_url: "URL de logotipo personalizado usado na versão para celular do seu site. Se deixado em branco, o `logo_url` será usado. por exemplo: http://example.com/uploads/default/logo.png"
-    large_icon_url: "Imagem usada como logotipo / imagem inicial no Android. O tamanho recomendado é de 512 px por 512 px."
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    email_subject: "Customizar o formato do assunto dos emails padrões. \nRef https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
     same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos os vetores Cross Site Request Forgery nos navegadores suportados (Lax ou Strict). Aviso: o Strict funcionará apenas em sites que forçam o login e usem o SSO."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
@@ -1109,17 +1071,12 @@ pt_BR:
     flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     enable_markdown_typographer: "Use as regras de tipografia para melhorar a legibilidade do texto: substitua as aspas normais por \"aspas curvas\", (c) (tm) pelos símbolos, - pelo emdash -, etc."
-    enable_markdown_linkify: "Tratar automaticamente o texto que se parece com um link como um link: www.site.com e http://site.com serão vinculados automaticamente"
     markdown_linkify_tlds: "Lista de domínios de nível superior que são tratados automaticamente como links"
     post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
     must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
     pending_users_reminder_delay: "Notifique os moderadores se novos usuários estiverem aguardando aprovação por mais tempo que muitas horas. Defina como -1 para desativar as notificações."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
-    ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
-    ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: meusite.com; veja http://google.com/analytics"
-    ga_universal_auto_link_domains: "Habilitar o acompanhamento de vários domínios do Google Universal Analytics (analytics.js). Os links de saída para esses domínios terão o ID do cliente adicionado a eles. Veja o Guia de acompanhamento de vários domínios do Google."
     gtm_container_id: "ID do container do Gerenciador de Tags do Google. eg: GTM-ABCDEF"
-    enable_escaped_fragments: "Voltar à API de Ajax-Crawling do Google se nenhum webcrawler for detectado. Veja https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     use_admin_ip_whitelist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
@@ -1156,7 +1113,6 @@ pt_BR:
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
     hide_email_address_taken: "Não informe os usuários de que existe uma conta com um determinado endereço de e-mail durante a inscrição e o formulário de senha esquecida."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
-    version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
     invite_only: "O registro público está desativado, todos os novos usuários devem ser convidados explicitamente pela equipe."
@@ -1169,7 +1125,6 @@ pt_BR:
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
     enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
-    verbose_sso_logging: "Logar diagnósticos verbosos relacionado ao SSO nos /logs"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL do ponto final do logon único (SSO) (deve incluir http:// ou https://)"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
@@ -1188,21 +1143,11 @@ pt_BR:
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
-    enable_google_oauth2_logins: "Ativar autentincação Google Oauth2. Esse é o método de autenticação que o Google atualmente suporta. Necessita de uma chave e chave secreta."
     google_oauth2_client_id: "Client ID da sua aplicação Google."
     google_oauth2_client_secret: "Client secret da sua aplicação Google."
-    enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "Chave do consumidor para autenticação do Twitter, registrada em https://apps.twitter.com/"
-    twitter_consumer_secret: "Segredo do consumidor para autenticação do Twitter, registrado em https://apps.twitter.com/"
     enable_instagram_logins: "Habilitar autenticação via Instagram. Requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para autenticação via Instagram"
-    enable_facebook_logins: "Ativar autenticação pelo Facebook, requer facebook_app_id e facebook_app_secret"
-    facebook_app_id: "app id, registrado em https://developers.facebook.com/apps (used for facebook auth)"
-    facebook_app_secret: "app secret, registrado em https://developers.facebook.com/apps (used for facebook auth)"
-    enable_github_logins: "Ativar autenticação via Github, requer github_client_id e github_client_secret"
-    github_client_id: "Client id para autenticação via Github, registrado em https://github.com/settings/applications"
-    github_client_secret: "Client secret para autenticação via Github, registrado em https://github.com/settings/applications"
     readonly_mode_during_backup: "Habilitar modo de apenas leitura quando estiver realizando um backup"
     enable_backups: "Permitir que administradores criem backups do fórum"
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
@@ -1322,7 +1267,6 @@ pt_BR:
     title_min_entropy: "A entropia mínima (caracteres únicos, não inglês contam mais) necessária para um título de tópico."
     body_min_entropy: "A entropia mínima (caracteres únicos, não inglês contam mais) necessária para o corpo de uma mensagem."
     allow_uppercase_posts: "Permitir todas as maiúsculas em um título de tópico ou em um corpo de postagem."
-    title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
     min_body_similar_length: "O tamanho mínimo do corpo de conteúdo de um post antes que ele seja checado por tópicos semelhantes."
     desktop_category_page_style: "Estilo visual para a página / categorias."
@@ -1410,7 +1354,6 @@ pt_BR:
     pop3_polling_username: "O nome de usuário para a conta POP3 na qual pegar emails."
     pop3_polling_password: "A senha para a conta POP3 na qual pegar emails."
     pop3_polling_delete_from_server: "Apagar e-mails do servidor. NOTA: Se você desabilitar isso, você deve limpar manualmente sua caixa de entrada"
-    log_mail_processing_failures: "Registre todas as falhas de processamento de e-mail em http://yoursitename.com/logs"
     email_in: "Permitir que os usuários postem novos tópicos por e-mail (requer pesquisa manual ou POP3). Configure os endereços na guia \"Configurações\" de cada categoria."
     email_in_min_trust: "O nível de confiança mínimo que um usuário necessita ter para ser permitido a postar novos tópicos via email."
     email_in_spam_header: "O cabeçalho do email para detectar spam."
@@ -1423,7 +1366,6 @@ pt_BR:
     delete_all_posts_max: "Número máximo de postagens que podem ser apagadas de uma vez com o botão Remover Todos Postagens. Se um usuário tiver mais postagens do que este número, as postagens não poderão ser todas removidas de uma vez e o usuário não poderá ser removido."
     username_change_period: "O número máximo de dias após o registro que as contas podem alterar seu nome de usuário (0 para não permitir a mudança de nome de usuário)."
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
-    logout_redirect: "Local para redirecionar o navegador para depois do logout (por exemplo: http://example.com/logout)"
     allow_uploaded_avatars: "Permitir aos usuários carregar fotos em seu perfil personalizado."
     allow_animated_avatars: "Permitir que os usuários usem GIF animados na foto do perfil. ATENÇÃO: executar os avatares: atualizar tarefa rake após alterar essa configuração."
     allow_animated_thumbnails: "Gera thumbnails animados a partir de gifs animados."
@@ -1445,7 +1387,6 @@ pt_BR:
     staff_user_custom_fields: "Um conjunto de campos personalizados para um usuário que pode ser mostrado para membros da equipe."
     enable_user_directory: "Fornece um diretório de usuários para navegar"
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
-    group_in_subject: "Definir %{optional_pm}no assunto do e-mail ao nome do primeiro grupo no MP, veja:https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     allow_anonymous_posting: "Permitir usuários trocar para modo anônimo"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessária para habilitar mensagens anônimas"
     anonymous_account_duration_minutes: "Para proteger anonimidade cria uma conta anônima a cada N minutos para cada usuário. Exemplo: se configurado para 600, assim que passar 600 minutos da última mensagem E o usuário trocar para anônimo, uma nova conta anônima será criada."
@@ -1480,7 +1421,6 @@ pt_BR:
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
-    highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) veja: https://highlightjs.org/static/demo/ para uma demonstração"
     embed_truncate: "Cortar os posts embutidos."
     embed_support_markdown: "Suporte Markdown formatação para posts incorporados."
     allowed_href_schemes: "Esquemas permitidos em links, além de http e https."
@@ -1545,7 +1485,6 @@ pt_BR:
     show_filter_by_tag: "Mostrar uma lista suspensa para filtrar uma lista de tópicos por tag."
     max_tags_in_filter_list: "Número máximo de tags para mostrar no menu suspenso do filtro. As tags mais usadas serão mostradas."
     tags_sort_alphabetically: "Mostrar as tags em ordem alfabética. O padrão é mostrar em ordem de popularidade."
-    tags_listed_by_group: "Listar tags por grupo de tags na página Tags (/ tags)."
     tag_style: "Estilo visual para crachás."
     allow_staff_to_tag_pms: "Permitir que os membros da equipe marquem qualquer mensagem pessoal"
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para marcar tópicos"
@@ -1554,7 +1493,6 @@ pt_BR:
     company_short_name: "Nome da empresa (curto)"
     company_full_name: "Nome da empresa (completo)"
     company_domain: "Domínio da empresa"
-    shared_drafts_category: "Ative o recurso Rascunhos Compartilhados, designando uma categoria para rascunhos de tópicos."
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
     push_notifications_icon_url: "O ícone do emblema que aparece no canto de notificação. O tamanho recomendado é 96 px por 96 px."
     errors:
@@ -1859,79 +1797,12 @@ pt_BR:
   test_mailer:
     title: "Teste de remetente"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
-    text_body_template: |
-      Este é um e-mail teste de:
-
-      [**%{base_url}**][0]
-
-      A entrega de emails é complicada. Aqui estão algumas coisas importantes que você deve verificar primeiro:
-
-      - Tenha * * certeza de definir o `e-mail de notificação` de: address corretamente nas configurações do seu site. ** O domínio especificado no endereço "de" dos e-mails que você envia é o domínio em que seu e-mail será validado**.
-
-      - Saiba como visualizar a origem bruta do email em seu cliente de email, para que você possa examinar os cabeçalhos de email em busca de dicas importantes. No Gmail, é a opção "mostrar original" no menu suspenso no canto superior direito de cada e-mail.
-
-      - ** IMPORTANTE: ** Seu ISP possui um registro DNS reverso inserido para associar os nomes de domínio e os endereços IP dos quais você envia e-mails? [Teste seu registro PTR reverso] [2] aqui. Se o seu ISP não inserir o registro de ponteiro DNS reverso adequado, é muito improvável que qualquer um de seus e-mails seja entregue.
-
-      - O [registro SPF] do seu domínio [8] está correto? [Teste seu registro SPF] [1] aqui. Observe que o TXT é o tipo de registro oficial correto para o SPF.
-
-      - O registro [DKIM] do seu domínio [3] está correto? Isso aumentará significativamente a capacidade de entrega de e-mail. [Teste seu registro DKIM] [7] aqui.
-
-      - Se você executar seu próprio servidor de e-mail, verifique se os IPs do seu servidor de e-mail não estão em listas negras de e-mail [4]. Também verifique se ele está enviando definitivamente um nome de host totalmente qualificado que resolve no DNS em sua mensagem HELO. Caso contrário, isso fará com que seu email seja rejeitado por muitos serviços de e-mail.
-
-      - É altamente recomendável que você ** envie um e-mail de teste para [mail-tester.com] [mt] ** para verificar se todos os itens acima estão funcionando corretamente.
-
-      (A maneira * easy * é criar uma conta gratuita no [SendGrid] [sg], [SparkPost] [sp], [Mailgun] [mg] ou [Mailjet] [mj], que têm planos generosos de correspondência gratuita e que estarão bem para pequenas comunidades. Você ainda precisará configurar os registros SPF e DKIM no seu DNS, embora!
-
-      Esperamos que você tenha recebido este teste de entrega de e-mail OK!
-
-      Boa sorte,
-
-      Seus amigos em [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versão do remetente"
     subject_template: "[%{email_prefix}] Nova versão do discurso, atualização disponível"
-    text_body_template: |
-      Hooray, uma nova versão do [Discourse] (http://www.discourse.org) está disponível!
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize usando nosso fácil ** [upgrade de navegador com um clique](%{base_url}/admin/upgrade)**
-
-      - Veja o que há de novo nas [notas de lançamento] (https://meta.discourse.org/tags/release-notes) ou veja o [changelog bruto do GitHub] (https://github.com/discourse/discourse/commits/master )
-
-      - Visite [meta.discurso.org] (https://meta.discourse.org) para notícias, discussão e apoio ao Discurso.
   new_version_mailer_with_notes:
     title: "Nova versão do remetente com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
-    text_body_template: |
-      Hooray, uma nova versão do [Discourse] (http://www.discourse.org) está disponível!
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize usando nosso fácil ** [upgrade de navegador com um clique](/admin/upgrade)**
-
-      - Veja o que há de novo nas [notas de lançamento] (https://meta.discourse.org/tags/release-notes) ou veja o [changelog bruto do GitHub] (https://github.com/discourse/discourse/commits/master )
-
-      -Visite [meta.discurso.org] (https://meta.discourse.org) para notícias, discussão e apoio ao Discourse
-
-      ### Notas de lançamento
-
-      %{notes}
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](/guidelines)."
@@ -2015,10 +1886,6 @@ pt_BR:
     welcome_tl1_user:
       title: "Bem vindo Usuário TL1"
       subject_template: "Obrigado por passar tempo conosco"
-      text_body_template: |
-        Olá. Vimos que você tem lido muito, o que é fantástico, por isso, promovemos um [nível de confiança!] (Https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
-
-        Estamos muito felizes por você estar passando tempo conosco e adoraríamos saber mais sobre você. Tire um momento para [preencher seu perfil] (/ my / preferences / profile) ou sinta-se à vontade para [iniciar um novo tópico] (/ categories).
     welcome_invite:
       title: "Convite de boas-vindas"
       subject_template: "Bem-vindo ao %{site_name}!"
@@ -2100,14 +1967,6 @@ pt_BR:
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
-      text_body_template: |
-        Sua exportação de dados foi bem sucedida! :DVD:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        O link de download acima será válido por 48 horas.
-
-        Os dados são compactados como um arquivo gzip. Se o arquivo não se extrair quando você o abrir, use as ferramentas recomendadas aqui: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Falha na exportação de CSV"
       subject_template: "A exportação de dados falhou"
@@ -2819,142 +2678,6 @@ pt_BR:
     body: "<a name=\"civilized\"></a>\n\n## [Este é um lugar civilizado para discussão pública] (#civilizado)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que você faria com um parque público. Nós também somos um recurso da comunidade compartilhada & mdash; um lugar para compartilhar habilidades, conhecimento e interesses por meio de conversas contínuas.\n\nEssas não são regras rígidas e rápidas, meras diretrizes para ajudar o julgamento humano de nossa comunidade e manter esse lugar limpo e bem iluminado para o discurso público civilizado.\n\n<a name=\"improve\"></a>\n\n## [Melhore a discussão] (#melhorar) \n\nAjude-nos a fazer deste um ótimo lugar para discussão, sempre trabalhando para melhorar a discussão de alguma forma, por menor que seja. Se você não tiver certeza de que sua postagem será adicionada à conversa, pense no que deseja dizer e tente novamente mais tarde.\n\nOs tópicos discutidos aqui são importantes para nós e queremos que você aja como se eles também fossem importantes para você. Seja respeitoso com os tópicos e as pessoas que os discutem, mesmo que você discorde de algo do que está sendo dito.\n\nUma maneira de melhorar a discussão é descobrindo aquelas que já estão acontecendo. Passe algum tempo navegando pelos tópicos aqui antes de responder ou iniciar o seu, e você terá mais chances de conhecer outras pessoas que compartilham seus interesses.\n\n<a name=\"agreeable\"></a>\n\n## [Seja agradável, mesmo quando você discordar] (#agradável)\n\nVocê pode querer responder a algo discordando dele. Isso é bom. Mas lembre-se de _criticizar idéias, não pessoas_. Por favor, evite:\n\n*   Xingamento\n*   Ataques ad hominem\n*   Respondendo ao tom de uma postagem em vez de seu conteúdo real\n*   Contradição do joelho-empurrão\n\nEm vez disso, forneça contra-argumentos fundamentados que melhorem a conversa.\n\n<a name=\"participate\"></a>\n\n## [Sua participação conta](#participe)\n\nAs conversas que temos aqui dão o tom para cada nova chegada. Ajude-nos a influenciar o futuro desta comunidade escolhendo participar de discussões que tornem este fórum um lugar interessante para ser & mdash; e evitando aqueles que não o fazem.\n\nO discurso fornece ferramentas que permitem à comunidade identificar coletivamente as melhores (e piores) contribuições: favoritos, marcações, sinalizações, respostas, edições e assim por diante. Use essas ferramentas para melhorar sua própria experiência e a das outras pessoas também.\n\nVamos deixar nossa comunidade melhor do que a encontramos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se você ver um problema, sinalize-o] (#SinalizçãoDeProblemas)\n\nModeradores têm autoridade especial; eles são responsáveis ​​por este fórum. Mas você também. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou policiais.\n\nQuando você vir um mau comportamento, não responda. Ele encoraja o mau comportamento reconhecendo-o, consome sua energia e desperdiça o tempo de todos. _Apenas sinalize_ Se houver sinalizadores suficientes, ações serão tomadas, automaticamente ou por intervenção do moderador.\n\nPara manter nossa comunidade, os moderadores reservam-se o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo a qualquer momento. Os moderadores não visualizam novas postagens; os moderadores e os operadores do site não se responsabilizam por nenhum conteúdo postado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civil] (#seja civil)\n\nNada sabota uma conversa saudável como grosseria:\n\n*   Seja civilizado. Não poste nada que uma pessoa razoável consideraria ofensiva, abusiva ou de incitação ao ódio.\n*   Mantenha-se limpo. Não publique nada de obsceno ou sexualmente explícito.\n*   Respeitar-se mutuamente. Não assedie nem lamente ninguém, personifique pessoas ou exponha suas informações pessoais.\n*   Respeite o nosso fórum. Não publique spam nem ofusque o fórum.\n\nEstes não são termos concretos com definições precisas & mdash; evite até mesmo a aparência de qualquer uma dessas coisas. Se você não tiver certeza, pergunte-se como se sentiria se sua publicação fosse publicada na primeira página do New York Times..\n\nEste é um fórum público e os mecanismos de pesquisa indexam essas discussões. Mantenha o idioma, links e imagens seguros para familiares e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o arrumado] (#manter-arrumado)\n\nFaça o esforço para colocar as coisas no lugar certo, para que possamos passar mais tempo discutindo e menos limpando, assim:\n\n*   Não comece um tópico na categoria errada.\n*   Não publique a mesma coisa em vários tópicos.\n*   Não publique respostas sem conteúdo.\n*   Não desvie um tópico alterando-o no meio do caminho.\n*   Não assine suas postagens & mdash; cada post tem suas informações de perfil anexadas.\n\nEm vez de postar \"+1\" ou \"Concordo\", use o botão Curtir. Em vez de usar um tópico existente em uma direção radicalmente diferente, use Responder como um tópico vinculado.\n\n<a name=\"stealing\"></a>\n\n## [Post apenas seu próprio material] (#roubar)\n\nVocê não pode postar nada digital que pertença a outra pessoa sem permissão. Você não pode postar descrições, links ou métodos para roubar propriedade intelectual de alguém (software, vídeo, áudio, imagens) ou violar qualquer outra lei.\n\n<a name=\"power\"></a>\n\n## [Empoderado por você] (#poder)\n\nEste site é operado por sua [equipe local amigável] (/ sobre) e * você *, a comunidade. Se você tiver outras dúvidas sobre como as coisas devem funcionar aqui, abra um novo tópico na [categoria de feedback do site] (/ c / feedback do site) e vamos discutir! Se houver um problema crítico ou urgente que não possa ser tratado por um meta tópico ou sinalizador, entre em contato conosco através da [página pessoal] (/ about).\n\n<a name=\"tos\"></a>\n\n## [Termos de Serviço] (#tds)\n\nSim, legalês é chato, mas devemos nos proteger & ndash; e por extensão, você e seus dados & ndash; contra pessoas hostis. Temos um [Termos de Serviço] (/ tos) descrevendo seu (e nosso) comportamento e direitos relacionados a conteúdo, privacidade e leis. Para usar este serviço, você deve concordar em cumprir nossos [TOS] (/ tos).\n"
   tos_topic:
     title: "Termos de Serviço"
-    body: |
-      Os seguintes termos e condições regem todo o uso do %{company_domain} site e todo o conteúdo, serviços e produtos disponíveis no site ou através dele, incluindo, mas não se limitando a, %{company_domain} Software do Fórum, %{company_domain} Fóruns de Suporte e o %{company_domain}Serviço de hospedagem ("Hospedagem"), (em conjunto, o site). O site é de propriedade e operado por %{company_full_name} ("%{company_name}"). O Site é oferecido sujeito a sua aceitação sem modificação de todos os termos e condições aqui contidos e todas as outras regras operacionais, políticas (incluindo, sem limitação, %{company_domain} [Política de Privacidade] (/ privacidade) e [Diretrizes da Comunidade] (/ faq) e procedimentos que podem ser publicados de tempos em tempos neste Site por %{company_name} (coletivamente, o "Acordo").
-
-      Por favor, leia este Acordo cuidadosamente antes de acessar ou usar o Site. Ao acessar ou usar qualquer parte do site, você concorda em ficar vinculado aos termos e condições deste contrato. Se você não concordar com todos os termos e condições deste contrato, você não poderá acessar o site ou usar quaisquer serviços. Se estes termos e condições forem considerados uma oferta por %{company_name}, aceitação é expressamente limitada a estes termos. O site está disponível apenas para indivíduos com pelo menos 13 anos de idade.
-      <a name="1"></a>
-
-      ## [1. Sua %{company_domain} Conta](#1)
-
-      Se você criar uma conta no site, será responsável por manter a segurança da sua conta e será totalmente responsável por todas as atividades que ocorram na conta. Você deve notificar imediatamente %{company_name} de qualquer uso não autorizado de sua conta ou qualquer outra violação de segurança. %{company_name} não será responsável por quaisquer atos ou omissões por você, incluindo quaisquer danos de qualquer natureza incorridos como resultado de tais atos ou omissões.
-
-      <a name="2"></a>
-
-      ## [2. Responsabilidade dos Colaboradores](#2)
-
-      Se você postar material no site, postar links no site, ou de outra forma fazer (ou permitir que qualquer terceiro faça) material disponível por meio do site (qualquer material, "conteúdo"), você é inteiramente responsável pelo conteúdo e qualquer dano resultante desse Conteúdo. Esse é o caso, independentemente de o Conteúdo em questão constituir texto, gráficos, arquivo de áudio ou software de computador. Ao disponibilizar o Conteúdo, você representa e garante que:
-
-      *   o download, a cópia e o uso do Conteúdo não infringirão os direitos de propriedade, incluindo, mas não se limitando aos direitos autorais, patente, marca registrada ou direitos de segredo comercial, de qualquer terceiro;
-      *   se o seu empregador tiver direitos de propriedade intelectual que você criou, você (i) recebeu permissão do seu empregador para publicar ou disponibilizar o Conteúdo, incluindo, mas não se limitando a, qualquer software, ou (ii) garantiu ao seu empregador uma isenção de todos os direitos no ou para o Conteúdo;
-      *   você cumpriu integralmente quaisquer licenças de terceiros relacionadas ao Conteúdo e fez todos os esforços necessários para transmitir aos usuários finais todos os termos necessários;
-      *   o Conteúdo não contém ou instala vírus, worms, malware, cavalos de Tróia ou outro conteúdo nocivo ou destrutivo;
-      *   o Conteúdo não é spam, não é gerado por computador ou aleatoriamente e não contém conteúdo comercial indesejado ou antiético destinado a direcionar tráfego para sites de terceiros ou aumentar a classificação dos mecanismos de pesquisa de sites de terceiros ou a outros atos ilícitos (como como phishing) ou enganar os destinatários quanto à origem do material (como spoofing);
-      *   o Conteúdo não é pornográfico, não contém ameaças ou incita a violência e não viola os direitos de privacidade ou publicidade de terceiros;
-      *  seu conteúdo não está sendo anunciado por meio de mensagens eletrônicas indesejadas, como links de spam em grupos de notícias, listas de e-mail, blogs e sites da Web, e métodos promocionais não solicitados semelhantes;
-      *   seu conteúdo não é nomeado de uma maneira que induza seus leitores a pensar que você é outra pessoa ou empresa; e
-      *   você tem, no caso de Conteúdo que inclui código de computador, categorizou com precisão e / ou descreveu o tipo, natureza, usos e efeitos dos materiais, se solicitado a fazê-lo por%{company_name} ou de outra maneira.
-
-      <a name="3"></a>
-
-      ## [3. Licenças de Conteúdo do Usuárioe](#3)
-
-      Contribuições do usuário são licenciadas sob uma [Licença Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported] (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem limitar nenhuma dessas representações ou garantias, %{company_name} tem o direito (embora não a obrigação) de, em descrição de %{company_name} (i) recusar ou remover qualquer conteúdo que, em opinião razoável de%{company_name}, viola %{company_name} de qualquer forma prejudicial ou censurável, ou (ii) encerrar ou negar acesso e uso do Site a qualquer indivíduo ou entidade por qualquer motivo,  em critério exclusivo de %{company_name}. %{company_name} Não terá obrigação de fornecer um reembolso de quaisquer valores pagos anteriormente.
-
-
-      <a name="4"></a>
-
-      ## [4. Pagamento e Renovação](#4)
-
-      ### Termos Geral
-
-      Serviços pagos opcionais ou upgrades podem estar disponíveis no site. Ao utilizar um serviço pago ou upgrade opcional, você concorda em pagar %{company_name} as taxas de assinatura mensais ou anuais indicadas. Os pagamentos serão cobrados em uma base pré-paga no dia em que você começar a utilizar o serviço ou upgrade e cobrirá o uso desse serviço ou upgrade por um período de assinatura mensal ou anual, conforme indicado. Estas taxas não são reembolsáveis.
-
-      ### Renovação automática
-
-      A menos que você notifique %{company_name} antes do final do período de assinatura aplicável que você deseja cancelar um serviço ou atualização, sua assinatura será renovada automaticamente e você nos autoriza a cobrar a taxa de assinatura anual ou mensal aplicável (assim como todos os impostos) usando qualquer cartão de crédito ou outro mecanismo de pagamento que temos registrado para você. As assinaturas podem ser canceladas a qualquer momento.
-
-      <a name="5"></a>
-
-      ## [5. Serviços](#5)
-
-      ### Hospedagem, Serviços de Suporte
-
-      Os serviços opcionais de hospedagem e suporte podem ser fornecidos por %{company_name} nos termos e condições de cada serviço. Ao se inscrever para uma conta de serviços de hospedagem / suporte ou suporte, você concorda em obedecer a esses termos e condições.
-
-      ### HTTPS
-
-      Oferecemos HTTPS como um complemento pago. Ao inscrever-se e usar um domínio personalizado em %{company_domain}, você nos autoriza a agir em nome do registrante do nome de domínio (solicitando os certificados necessários, por exemplo) com o único propósito de fornecer HTTPS em seu site.
-
-      ### Empresa
-
-      Os serviços de hospedagem empresarial são fornecidos por %{company_name} nos termos e condições de cada serviço, que são determinados por um contrato específico do cliente. Ao inscrever-se em uma conta de hospedagem corporativa, você concorda em obedecer a esses termos e condições.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilidade dos visitantes do site](#6)
-
-      %{company_name} não analisou e não pode revisar todo o material, incluindo software de computador, publicado no site e, portanto, não pode ser responsável pelo conteúdo, uso ou efeitos do material. Ao operar o site, %{company_name} não representa ou implica que endossa o material ali publicado, ou que acredita que esse material seja preciso, útil ou não prejudicial. Você é responsável por tomar as precauções necessárias para proteger a si e aos seus sistemas de computador contra vírus, worms, cavalos de Tróia e outros conteúdos prejudiciais ou destrutivos. O site pode conter conteúdo ofensivo, indecente ou censurável, bem como conteúdo que contenha imprecisões técnicas, erros tipográficos e outros erros. O Site também pode conter material que viola os direitos de privacidade ou publicidade, ou infringe a propriedade intelectual e outros direitos de propriedade de terceiros, ou o download, cópia ou uso dos mesmos está sujeito a termos e condições adicionais, declarados ou não declarados. %{company_name} se exime de qualquer responsabilidade por qualquer dano resultante do uso pelos visitantes do site, ou de qualquer download por aqueles visitantes de conteúdo lá publicado.
-
-      <a name="7"></a>
-
-      ## [7. Conteúdo publicado em outros sites](#7)
-
-      Não revisamos e não podemos revisar todo o material, incluindo software de computador, disponibilizado através dos sites e páginas da Web para os quais %{company_domain} links, e esse link para %{company_domain}. %{company_name} não tem nenhum controle sobre esses não-%{company_domain} sites e páginas da Web, e não é responsável por seu conteúdo ou seu uso. Ligando a um não-%{company_domain} website ou páginas da web, %{company_name} não representa ou implica que endossa tal site ou página da web. Você é responsável por tomar as precauções necessárias para proteger a si e seus sistemas de computador contra vírus, worms, cavalos de Tróia e outros conteúdos prejudiciais ou destrutivos. %{company_name} se exime de qualquer responsabilidade por qualquer dano resultante do uso de-%{company_domain} sites e páginas da web.
-
-      <a name="8"></a>
-
-      ## [8. Violação de direitos autorais e política de DMCA](#8)
-
-      Como %{company_name} pede aos outros que respeitem os seus direitos de propriedade intelectual, respeita os direitos de propriedade intelectual de terceiros. Se você acredita que o material localizado ou vinculado por %{company_domain} viola os seus direitos de autor e, se este website residir nos EUA, deverá notificar %{company_name} em concordância com a  Lei [Digital Millennium Copyright Act] (http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") de %{company_name} . %{company_name} responderá a todos esses avisos, inclusive conforme necessário ou apropriado, removendo o material infrator ou desativando todos os links para o material infrator. %{company_name} terminará o acesso de um visitante e o uso do Website se, em circunstâncias apropriadas, o visitante estiver determinado a ser um infrator reincidente dos direitos autorais ou outros direitos de propriedade intelectual de %{company_name} ou outros. No caso de tal rescisão, %{company_name} não terá obrigação de fornecer um reembolso de quaisquer valores pagos anteriormente %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Propriedade intelectual](#9)
-
-      Este Contrato não transfere de %{company_name} para você qualquer %{company_name} ou propriedade intelectual de terceiros, e todos os direitos, títulos e interesses relativos a essa propriedade permanecerão (entre as partes) unicamente com %{company_name}. %{company_name}, %{company_domain}, o %{company_domain} logotipo, e todas as outras marcas registradas, marcas de serviço, gráficos e logotipos usados ​​em conexão com %{company_domain}, ou o site são marcas comerciais ou marcas registradas da%{company_name} ou os licenciadores de%{company_name}. Outras marcas comerciais, marcas de serviço, gráficos e logotipos utilizados em conexão com o site podem ser marcas registradas de terceiros. Seu uso do site não lhe concede nenhum direito ou licença para reproduzir ou usar qualquer %{company_name} ou marcas registradas de terceiros.
-
-      <a name="10"></a>
-
-      ## [10. Atribuição](#10)
-
-      %{company_name} reserva-se o direito de exibir links de atribuição como "Distribuído por%{company_domain},’ Autor do tema e atribuição de fonte em seu rodapé de conteúdo.
-
-      <a name="11"></a>
-
-      ## [11. Alterar](#11)
-
-      %{company_name} se reserva o direito, a seu exclusivo critério, de modificar ou substituir qualquer parte deste Contrato. É de sua responsabilidade verificar este Contrato periodicamente quanto a mudanças. Seu uso continuado ou acesso ao site após a publicação de quaisquer alterações a este Contrato constitui aceitação dessas alterações. %{company_name} poderá também, no futuro, oferecer novos serviços e / ou recursos através do Site (incluindo o lançamento de novas ferramentas e recursos). Tais novos recursos e / ou serviços estarão sujeitos aos termos e condições deste Contrato.
-
-      <a name="12"></a>
-
-      ## [12. Terminação](#12)
-
-      %{company_name} pode rescindir o seu acesso a toda ou qualquer parte do site a qualquer momento, com ou sem motivo, com ou sem aviso prévio, com efeito imediato. Se você deseja rescindir este Acordo ou sua %{company_domain} conta (se você tiver uma), você pode simplesmente interromper o uso do site. Todas as disposições deste Contrato, que por sua natureza devem sobreviver ao término, sobreviverão à rescisão, incluindo, sem limitação, disposições de propriedade, isenções de garantia, indenização e limitações de responsabilidade..
-
-      <a name="13"></a>
-
-      ## [13. Isenção de Garantias](#13)
-
-      O site é fornecido "como está". %{company_name} e seus fornecedores e licenciantes renunciam todas as garantias de qualquer tipo, expressas ou implícitas, incluindo, sem limitação, as garantias de comercialização, adequação a uma finalidade específica e não violação. Nem %{company_name} nem seus fornecedores e licenciadores, faz qualquer garantia de que o site estará livre de erros ou que o acesso a ele será contínuo ou ininterrupto. Se você está realmente lendo isso, aqui está [um prazer] (http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html) . Você entende que você faz o download ou obtém conteúdo ou serviços através do Site por sua própria conta e risco.
-
-      <a name="14"></a>
-
-      ## [14. Limitação de responsabilidade](#14)
-
-      Em nenhum caso %{company_name}, ou seus fornecedores ou licenciadores, devem ser responsáveis ​​com relação a qualquer assunto deste contrato sob qualquer contrato, negligência, responsabilidade estrita ou outra teoria legal ou eqüitativa para: (i) quaisquer danos especiais, incidentais ou consequências; (ii) o custo de aquisição de produtos ou serviços substitutos; (iii) por interrupção de uso ou perda ou corrupção de dados; ou (iv) por quaisquer valores que excedam as taxas pagas por você para %{company_name} sob este contrato durante o período de 12 (doze) meses antes da causa da ação. %{company_name} não terá nenhuma responsabilidade por qualquer falha ou atraso devido a questões além de seu controle razoável. O acima exposto não se aplica na medida proibida pela lei aplicável.
-
-      <a name="15"></a>
-
-      ## [15. General Representation and Warranty](#15)
-
-      Você declara e garante que (i) seu uso do Website estará em estrita conformidade com o %{company_name} [Política de Privacidade] (/ privacidade), [Diretrizes da comunidade] (/ diretrizes), com este Contrato e com todas as leis e regulamentações aplicáveis ​​(incluindo, sem limitação, quaisquer leis ou regulamentos locais em seu país, estado, cidade ou outra área governamental, em relação à conduta on-line e conteúdo aceitável, e incluindo todas as leis aplicáveis ​​relativas à transmissão de dados técnicos exportados do país em que este site reside ou do país em que você reside) e (ii) seu uso do Site não infringirá ou utilizará indevidamente direitos de propriedade intelectual de terceiros.
-
-      <a name="16"></a>
-
-      ## [16. Indemnification](#16)
-
-      Você concorda em indenizar e inocentar %{company_name}, seus contratados e seus licenciadores e seus respectivos diretores, executivos, funcionários e agentes de e contra todas e quaisquer reivindicações e despesas, incluindo honorários advocatícios, decorrentes do uso do Website, incluindo, mas não se limitando à sua violação deste Acordo.
-
-      <a name="17"></a>
-
-      ## [17. Diversos](#17)
-
-      Este Contrato constitui o acordo integral entre %{company_name} e você sobre o assunto em questão, e eles só podem ser modificados por uma emenda escrita assinada por um executivo autorizado da %{company_name}, ou pela postagem por %{company_name} de uma versão revisada. Exceto na medida em que a lei aplicável, caso exista, em contrário, este Contrato, qualquer acesso ou uso do Site será regido pelas leis do estado da Califórnia, EUA, excluindo o conflito de provisões legais e o local adequado para quaisquer disputas decorrentes de ou relacionadas a qualquer um dos mesmos serão os tribunais estaduais e federais localizados no Condado de San Francisco, Califórnia. Exceto por reivindicações por medidas cautelares ou equitativas ou reclamações referentes a direitos de propriedade intelectual (que podem ser trazidas em qualquer tribunal competente sem a publicação de uma fiança), qualquer disputa que surja sob este Acordo será finalmente resolvida de acordo com as Regras de Arbitragem Abrangentes da Arbitragem Judicial e Serviço de Mediação, Inc. (“JAMS”) por três árbitros indicados de acordo com tais Regras. A arbitragem será realizada em São Francisco, Califórnia, no idioma inglês, e a decisão arbitral poderá ser executada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para fazer cumprir este Contrato terá direito a custos e honorários advocatícios. Se qualquer parte deste Contrato for considerada inválida ou inexequível, essa parte será interpretada de forma a refletir a intenção original das partes e as partes restantes permanecerão em pleno vigor e efeito. Uma renúncia por qualquer das partes de qualquer termo ou condição deste Contrato ou qualquer violação do mesmo, em qualquer instância, não renunciará a tal termo ou condição ou qualquer violação subseqüente do mesmo. Você pode ceder seus direitos sob este Contrato a qualquer parte que consente e concorda em ficar vinculada aos seus termos e condições.; %{company_name} pode ceder seus direitos sob este Contrato sem condição. Este Contrato será vinculativo e terá efeito em benefício das partes, seus sucessores e cessionários permitidos.
-
-      Este documento é CC-BY-SA. Última atualização: 1 de janeiro de 2018.
-
-      Originalmente adaptado dos [Termos de Serviço do WordPress] (http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Política de Privacidade"
     body: |
@@ -3359,7 +3082,6 @@ pt_BR:
             description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='/about' target='_blank'>sua sobre a página para contato urgente da comunidade."
           contact_url:
             label: "Página da Web"
-            placeholder: "http://www.example.com/contact-us"
             description: "Página de contato geral para você ou sua organização. Será exibido no <a href='/about' target='_blank'>sua sobre a página</a>."
           site_contact:
             label: "Mensagens Automatizadas"

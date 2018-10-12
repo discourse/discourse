@@ -108,10 +108,6 @@ ko:
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
     site_settings:
-      min_username_length_exists: "아이디 길이 최소값은 현재 사용자의 가장 짧은 아이디 길이보다는 작아야 합니다."
-      min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
-      max_username_length_exists: "아이디 최대값은 현재 사용자의 가장 긴 아이디 길이보다는 커야 합니다."
-      max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
       default_categories_already_selected: "다른 목록에서 사용중인 카테고리는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'이 설정되지 않으면 S3로 업로드하기를 활성화할 수 없습니다."
   activemodel:
@@ -742,7 +738,6 @@ ko:
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     host_names_warning: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
-    gc_warning: '당신의 서버는 최상의 성능을 내지 못하는 기본 ruby garbage collection parameter를 사용하고 있습니다. 성능 튜닝에 대해 읽어보세요. : <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Discourse를 위한 루비와 레일즈 튜닝</a>.'
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: '큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
@@ -750,9 +745,6 @@ ko:
     facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
     twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
     github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
-    s3_config_warning: '서버가 s3로 파일을 업로드하도록 설정되어 있습니다. 하지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_upload_bucket 중 하나 이상이 설정되어 있지 않습니다. <a href="/admin/site_settings">사이트 설정</a> 에 가서 설정을 업데이트하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">더 알아보고 싶으시면 "어떻게 S3로 이미지를 올리도록 설정하나요?"를  보세요</a>.'
-    s3_backup_config_warning: '서버가 백업파일을 s3로 업로드 하도록 설정되어 있습니다. 하지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_backup_bucket 중 하나 이상이 설정되어 있지 않습니다. <a href="/admin/site_settings">사이트 설정</a>에 가서 설정을 업데이트하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">더 알아보고 싶으시면 "어떻게 S3로 이미지를 올리도록 설정하나요?"를 보세요</a>.'
-    image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
     failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
@@ -784,14 +776,12 @@ ko:
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
     site_description: "이 사이트를 한 문장으로 설명해 주세요. 설명 메타태그에 사용됩니다."
-    contact_url: "이 사이트의 문의 URL.  /about 문의양식에 사용됩니다."
     crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경. 이미지가 깨지는 것을 막을 수 있습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     download_remote_images_max_days_old: "n일이 지난 후에는 포스트에 원격 이미지를 다운로드하지 않도록 설정"
     disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
     editing_grace_period: "글 작성 후, 편집해도 히스토리에 남기지 않는 시간 (단위: 초)"
-    post_edit_time_limit: "글 작성자가 해당 글을 편집하거나 삭제할 수 있도록 허용되는 시간(분). 0으로 설정하면 언제든지 편집이나 삭제가 허용됨."
     edit_history_visible_to_public: "모든 사용자가 글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
@@ -805,14 +795,10 @@ ko:
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
     onebox_domains_blacklist: "박스 링크 적용하지 않을 도메인의 목록"
     max_oneboxes_per_post: "포스트 당 최대 박스링크(Onebox)의 수"
-    logo_url: "좌측 상단의 로고이미지는 직사각형 모양이어야 합니다. 설정하지 않을 경우 사이트 이름이 출력됩니다."
     digest_logo_url: "대체 로고 이미지는 사이트 요약 메일의 상단에 위치하게 됩니다. 옆으로 넓은 사각형 모양이어야 하며, SVG이미지는 사용할 수 없습니다. 빈칸으로 두시면 `logo_url`이 사용됩니다."
-    logo_small_url: "사이트의 좌측 상단에 위치할 작은 로고입니다. 정사각형이어야 하며, 스크롤을 내릴때 보이게 됩니다. 비워두시면 홈 글리프가 보이게 됩니다."
-    favicon_url: "사이트의 파비콘 입니다. http://en.wikipedia.org/wiki/Favicon를 확인하세요. CDN을 통해 설정하려면 png 파일을 설정해야 합니다."
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
-    email_subject: "일반 메일을 위한 제목 커스터마이징. 이곳을 참고 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
     same_site_cookies: "동일 사이트 쿠키를 사용합니다. 지원되는 브라우저에서 사이트 간 요청 위조의 가능성이 있는 모든 매개체를 (관대 또는 엄격하게) 제거합니다. 경고: 엄격한 통제는 로그인을 강제하거나 SSO를 사용하는 경우에만 적용됩니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
@@ -839,10 +825,7 @@ ko:
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 컨테이너 id. 예: GTM-ABCDEF"
-    enable_escaped_fragments: "만약 웹크롤러가 감지되지 않으면 Google's Ajax-Crawling API으로 되돌립니다. https://developers.google.com/webmasters/ajax-crawling/docs/learn-more 을 참고하세요."
     allow_moderators_to_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다.  DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_whitelist: "관리자는 보호IP 목록에 있는 IP에서만 로그인할 수 있게 하기(관리 > 로그 > 보호 IP)."
@@ -871,7 +854,6 @@ ko:
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
-    version_checks: "Dicousre Hub에 ping을 날려 버전 업데이트와 새 버전 알림을 /admin 대시보드에 보이게 합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
     invite_expiry_days: "사용자 초대키 유효 기간, 일"
     invite_only: "가입 비공개화, 운영진에 의한 초대로만 신규 사용자 가입."
@@ -884,7 +866,6 @@ ko:
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
-    verbose_sso_logging: "verbose SSO와 관련된 진단을 /logs 에 로깅하기"
     enable_sso_provider: "/session/sso_provider 를 엔드포인트로 사용해서 Discourse SSO 제공 프로토콜 구현하기, sso_secret 체크 필요"
     sso_url: " 싱글 사인 온(SSO)엔드포인트의 URL (http:// 또는 https:// 포함 필수)"
     sso_secret: "SSO 정보 암호화 인증에 사용 될 암호 문자열, 10글자 이상이어야 합니다."
@@ -898,19 +879,11 @@ ko:
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_signup_cta: "재방문한 익명 사용자에게 가입 권유 공지 표시"
     enable_yahoo_logins: "야후 인증 활성화"
-    enable_google_oauth2_logins: "Google Oauth2 인증을 활성화합니다. 이 인증 수단은 현재 Google에서 제공하고 있으며, key와 secret 필요."
     google_oauth2_client_id: "Google Application의 Client ID"
     google_oauth2_client_secret: "Google Application의 Client Secret"
-    enable_twitter_logins: "Twitter 인증을 활성화합니다. twitter_consumer_key와 twitter_consumer_secret 필요."
     enable_instagram_logins: "인스타그램 인증 켜기, instagram_consumer_key 와 instagram_consumer_secret 필요"
     instagram_consumer_key: "인스타그램 인증을 위한 Consumer key "
     instagram_consumer_secret: "인스타그램 인증을 위한 Consumer secret"
-    enable_facebook_logins: "Facebook 인증을 활성화합니다. facebook_app_id와 facebook_app_secret 필요."
-    facebook_app_id: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App id"
-    facebook_app_secret: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App secret"
-    enable_github_logins: "Github 인증을 활성화한다. github_client_id와 github_client_secret 필요."
-    github_client_id: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client id"
-    github_client_secret: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client secret"
     readonly_mode_during_backup: "백업 받을 때, 읽기 전용 모드 켜기"
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
@@ -1007,7 +980,6 @@ ko:
     title_min_entropy: "글타래 제목에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     body_min_entropy: "글 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     allow_uppercase_posts: "제목과 내용을 모두 대문자로 작성하는 것을 허용하기"
-    title_fancy_entities: "글타래 제목에 일반 ASCII 문자로 만든 기호들을 보기 좋은 HTML로 변환시켜준다. 참고: SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "유사 글타래에 대한 체크가 있기 전, 최소 제목 글자 수"
     min_body_similar_length: "유사 글타래에 대한 체크가 있기 전, 글의 최소 본문 글자 수"
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일"
@@ -1085,7 +1057,6 @@ ko:
     pop3_polling_host: "이메일 설문조사를 위한 POP3 호스트"
     pop3_polling_username: "이메일 설문조사를 위한 POP3 사용자 계정 이름"
     pop3_polling_password: "이메일 설문조사를 위한 POP3 사용자 비밀번호"
-    log_mail_processing_failures: "이메일 처리 실패 로그를 http://yoursitename.com/logs 에 남기기"
     email_in_min_trust: "이메일을 통해 새 글타래를 포스팅 할 수 있는 최소 사용자 회원등급"
     email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
     email_site_title: "사이트에서 전송되는 이메일의 보내는 이를 사이트 이름으로 설정. 설정하지 않으면 'title(필수 설정의)'이 된다. 만약 'title'에 보내는 이에 허용되지 않는 글자가 포함되어 있으면 이 설정이 사용된다."
@@ -1667,7 +1638,6 @@ ko:
             description: "이 커뮤니티를 대표하는 개인 또는 그룹 이메일 주소를 입력하세요. 처리되지 않은 신고, 보안 업데이트와 같은 중요한 알림을 받게되며 긴급한 커뮤니티 연락을 받도록<a href='/about' target='_blank'>about 페이지</a> 에도 표시됩니다."
           contact_url:
             label: "웹 페이지"
-            placeholder: "http://www.example.com/contact-us"
             description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
           site_contact:
             label: "자동화된 메시지"

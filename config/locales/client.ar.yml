@@ -311,12 +311,8 @@ ar:
         bookmark: "انقر لوضع علامة مرجعية علي أوّل منشور في هذا الموضوع"
         unbookmark: "انقر لإزالة كلّ العلامات المرجعية في هذا الموضوع"
     bookmarks:
-      not_logged_in: "عذرا، عليك تسجيل الدخول لتضع علامات مرجعية علي المنشورات"
       created: "لقد وضعت علامة مرجعية علي هذا المنشور"
-      not_bookmarked: "لقد قرأت هذا المنشور، انقر لوضع علامة مرجعية علية"
-      last_read: "هذا آخر منشور قرأته، انقر لوضع علامة مرجعية علية"
       remove: "أزل العلامة المرجعية"
-      confirm_clear: "أمتأكد من إزالة كل العلامات لمرجعية من هذا الموضوع؟"
     preview: "معاينة"
     cancel: "ألغِ"
     save: "احفظ التعديلات"
@@ -324,7 +320,6 @@ ar:
     saved: "حُفظت!"
     upload: "ارفع"
     uploading: "يرفع..."
-    uploading_filename: "يرفع {{filename}}..."
     uploaded: "رُفع!"
     pasting: "جاري النسخ"
     enable: "فعّل"
@@ -621,6 +616,7 @@ ar:
         disable: "عطّل الإشعارات"
         enable: "فعّل الإشعارات"
         each_browser_note: "ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه."
+        consent_prompt: "هل تريد إشعارات مباشرة عندما يرد الأشخاص على مشاركاتك؟"
       dismiss: 'تجاهل'
       dismiss_notifications: "تجاهل الكل"
       dismiss_notifications_tooltip: "اجعل كل الإشعارات مقروءة"
@@ -721,6 +717,9 @@ ar:
         set_password: " إعادة تعين كلمة المرور"
         choose_new: "اختر كلمة المرور الجديدة"
         choose: "اختر كلمة المرور"
+      second_factor_backup:
+        disable: "عطل"
+        enable: "فعل"
       second_factor:
         label: "كود"
         show_key_description: "أضف يدويا"
@@ -998,9 +997,6 @@ ar:
       enabled: "هذا الموقع في وضع القراءة فقط. نأمل أن تتابع تصفحه، ولكن الرد، والإعجاب وغيرها من الصلاحيات معطلة حاليا."
       login_disabled: "تسجيل الدخول معطل في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "تسجيل الخروج معطّل في حال كان الموقع في وضع القراءة فقط."
-    too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>نبدأ هذه المناقشة!</a> يوجد حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> موضوع و <strong>%{currentPosts} / %{requiredPosts}</strong> منشور. الزوار الجدد بحاجة لبعض المحادثات لقرأتها و الرد عليها."
-    too_few_topics_notice: "هيا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>لنبدء هذه المناقشة</a> هناك حالياً<strong>%{currentTopics} \\ %{requiredTopics}</strong> موضوع. الزوار الجدد بحاجة لبعض المحادثات لقرأتها و الرد عليها."
-    too_few_posts_notice: "هيا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>لنبدء هذه المناقشة</a> هناك حالياً <strong>%{currentPosts} \\ %{requiredPosts}</strong> منشور. الزوار الجدد بحاجة لبعض المحادثات لقرأتها و الرد عليها."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> وصل الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> يتجاوز الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
@@ -1161,6 +1157,7 @@ ar:
       default_header_text: اختر...
       no_content: لا يوجد نتائج مطابقة
       filter_placeholder: بحث...
+      filter_placeholder_with_any: ابحث أو أنشئً ...
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
       people: الاشخاص
@@ -1247,7 +1244,6 @@ ar:
       link_description: "ادخل وصف الرابط هنا "
       link_dialog_title: "اضف الرابط"
       link_optional_text: "عنوان اختياري"
-      link_url_placeholder: "http://example.com"
       quote_title: "اقتباس فقرة"
       quote_text: "اقتباس فقرة"
       code_title: "المحافظة على التنسيق"
@@ -1785,18 +1781,9 @@ ar:
         action: "ادمج المنشورات المحددة"
         error: "حدث عطل أثناء دمج المنشورات المحدّدة."
       change_owner:
-        title: "تغيير كاتب المنشور"
         action: "تغيير الكاتب"
         error: "حدث عطل أثناء تغيير كاتب هذة المنشورات."
-        label: "الكاتب الجديد للمنشورات"
         placeholder: "اسم مستخدم الكاتب الجديد"
-        instructions:
-          zero: "لم يتم تحديد أي منشورات!"
-          one: "الرجاء اختيار المالك الجديد لمنشور نُشر بواسطة <b>{{old_user}}</b>."
-          two: "الرجاء اختيار المالك الجديد لمنشورين نُشروا بواسطة <b>{{old_user}}</b>."
-          few: "الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
-          many: "الرجاء اختيار المالك الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
-          other: "الرجاء اختيار الكاتب الجديد لـ {{count}} منشور نُشر بواسطة <b>{{old_user}}</b>."
       change_timestamp:
         title: "غير تاريخ النشر..."
         action: "غير تاريخ النشر..."
@@ -2417,7 +2404,6 @@ ar:
         this_week: "أسبوع"
         today: "يوم"
         other_periods: "اعرض الاكثر مشاهدة"
-    browser_update: 'للأسف، <a href="http://www.discourse.org/faq/#browser">متصفّحك قديم جدًّا ليعمل عليه هذا الموقع</a>. من فضلك <a href="http://browsehappy.com">حدث المتصفح خاصتك</a>.'
     permission_types:
       full: "انشاء / رد / مشاهدة"
       create_post: "رد / مشاهدة"
@@ -2536,6 +2522,7 @@ ar:
       selector_no_tags: "لا أوسمة"
       changed: "الأوسمة المعدلة:"
       tags: "الأوسمة"
+      choose_for_topic: "الأوسمة الإختيارية"
       delete_tag: "احذف الوسم"
       delete_confirm:
         zero: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
@@ -2604,8 +2591,6 @@ ar:
           bookmarks: "لا يوجد المزيد من الموضوعات التي عليها علامة مرجعية."
           search: "لا نتائج بحث أخرى."
     invite:
-      custom_message: "اجعل دعوتك شخصيّة أكثر بكتابة"
-      custom_message_link: "رسالة مخصصة"
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المجتمع!"
       custom_message_template_topic: "مرحبا. أظن أن هذا الموضوع سيسعدك!"
@@ -2936,7 +2921,6 @@ ar:
           upload_file_tip: "اختر ملف للرفع ( png او woff2... إلخ )"
           variable_name: "SCSS var name:"
           upload: "ارفع"
-          child_themes_check: "تشمل الواجهة واجهات فرعية اخري"
           css_html: "CSS/HTML مخصص"
           edit_css_html: "تعدل CSS/HTML"
           edit_css_html_help: "انت لم تقم بتعديل اي CSS او HTML"
@@ -3097,7 +3081,6 @@ ar:
           filter: "رشح:"
           title: "عمليات المشرفين"
           clear_filters: "إظهار كل شيء"
-          staff_user: "عضو  إداري"
           target_user: "عضو مستهدف"
           subject: "الموضوع"
           when: "متى"

@@ -104,10 +104,6 @@ nl:
     embed:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
     site_settings:
-      min_username_length_exists: "U kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam."
-      min_username_length_range: "U kunt het minimum niet hoger instellen dan het maximum."
-      max_username_length_exists: "U kunt de maximale gebruikersnaamlengte niet lager instellen dan de langste gebruikersnaam."
-      max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       default_categories_already_selected: "U kunt geen categorie selecteren die in een andere lijst wordt gebruikt."
       s3_upload_bucket_is_required: "U kunt geen uploads naar S3 toestaan voordat u de 's3_upload_bucket' hebt opgegeven."
   activemodel:
@@ -760,7 +756,6 @@ nl:
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
-    gc_warning: 'Uw server gebruikt standaardparameters voor Ruby garbage collection, waardoor niet de beste prestaties worden verkregen. Lees dit topic over het verbeteren van prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg ervoor dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
     queue_size_warning: 'Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit zou op een probleem met Sidekiq-processen kunnen duiden, of mogelijk dient u meer Sidekiq-workers toe te voegen.'
     memory_warning: 'Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen.'
@@ -768,9 +763,6 @@ nl:
     facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    s3_config_warning: 'De server is geconfigureerd om bestanden naar s3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_upload_bucket. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zie ''How to set up image uploads to S3?'' voor meer info</a>.'
-    s3_backup_config_warning: 'De server is geconfigureerd om back-ups naar s3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_backup_bucket. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zie ''How to set up image uploads to S3?'' voor meer info</a>.'
-    image_magick_warning: 'De server is geconfigureerd om miniaturen van grote afbeeldingen te maken, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met uw favoriete pakketbeheerder, of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de nieuwste versie</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer uw bestand app.yml en zorg ervoor dat de mailserverinstellingen juist zijn. <a href="/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
     subfolder_ends_in_slash: "Uw submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
     email_polling_errored_recently:
@@ -802,15 +794,12 @@ nl:
     educate_until_posts: "Laat de popup voor nieuwe gebruikers zien als een gebruiker start met het typen van hun eerste (n) nieuwe berichten in de berichtopsteller."
     title: "De naam van deze site, wordt gebruikt in de titeltag"
     site_description: "Omschrijf de site in één zin. Deze wordt getoond in de meta-omschrijvingstag."
-    contact_email: "e-mailadres van de hoofdpersoon verandwoordelijk voor deze website. Wordt gebruikt voor kritische meldingen, als ook voor het /about contact formulier voor dringende vragen."
-    contact_url: "Contact URL voor deze site. Wordt gebruikt op het /about contactformulier voor dringende zaken."
     crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     download_remote_images_max_days_old: "Geen externe afbeeldingen downloaden voor berichten die meer dan n dagen oud zijn."
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit gedownload worden van deze domeinen. Pipe-gescheiden lijst."
     editing_grace_period: "De eerste (n) seconden na het plaatsen van een bericht leidt het wijzigen ervan niet tot een nieuwe versie in de geschiedenis van het bericht."
-    post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
     edit_history_visible_to_public: "Sta toe dat iedereen vorige versies van een gewijzigd bericht kan zien. Als dit uit staat kunnen alleen stafleden dit zien."
     delete_removed_posts_after: "Berichten verwijderd door de auteur zullen automatisch verwijderd worden na (n) uur. Als dit ingesteld is op 0 zullen berichten direct verwijderd worden."
     max_image_width: "Maximale breedte van een thumbnail van afbeeldingen in een bericht"
@@ -823,13 +812,9 @@ nl:
     show_pinned_excerpt_desktop: "Laat een fragment bij vastgemaakte topics zien op desktop."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     max_oneboxes_per_post: "Maximale aantal Oneboxes in een bericht."
-    logo_url: "De logoafbeelding links bovenaan op uw website moet de vorm van een brede rechthoek hebben. Wanneer leeg gelaten, wordt de titeltekst van de website getoond."
-    logo_small_url: "De kleine logoafbeelding linksboven op uw website dient een vierkante vorm te hebben en wordt getoond als omlaag wordt gescrold. Bij leeg laten wordt een startpaginasymbool getoond."
-    favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
     apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
-    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
     summary_posts_required: "Minimale aantal berichten in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld"
     summary_likes_required: "Minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld"
@@ -851,8 +836,6 @@ nl:
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de site mogen bezoeken. OPGELET: als dit wordt aangezet voor een actieve site wordt alle toegang voor bestaande niet stafleden ingetrokken."
     pending_users_reminder_delay: "Moderators informeren als nieuwe gebruikers al langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) trackingcode, bijv. UA-12345678-9; zie http://google.com/analytics"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor ´cross-origin requests´ (CORS). Elk domein moet http:// of https:// bevatten. De DISCOURSE_ENABLE_CORS omgevingsvariabele moet staan ingesteld op ´WAAR´ om CORS te kunnen gebruiken."
     use_admin_ip_whitelist: "Beheerders kunnen zich alleen aanmelden vanaf een IP-adres dat in de lijst Gecontroleerde IP-nummers is gedefinieerd (Beheer > Logboeken > Gecontroleerde IP-adressen)."
@@ -877,7 +860,6 @@ nl:
     email_domains_blacklist: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers geen accounts mogen registreren. Voorbeeld: mailingen.com|trashmail.net"
     email_domains_whitelist: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
-    version_checks: "Ping de Discourse-Hub voor updates en laat meldingen van nieuwe versies zien op het dashboard van de beheerder."
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
     invite_only: "Openbare registratie is uitgeschakeld; alle nieuwe gebruikers moeten expliciet worden uitgenodigd door stafleden."
@@ -887,7 +869,6 @@ nl:
     password_unique_characters: "Minimum aantal unieke karakters dat een wachtwoord nodig heeft."
     block_common_passwords: "Accepteer geen wachtwoorden die voorkomen in de 10.000 meest voorkomende wachtwoorden."
     enable_sso: "Schakel single sign on in via een externe site (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS '* MOETEN * DOOR DE EXTERNE SITE WORDEN GEVALIDEERD)"
-    verbose_sso_logging: "Uitgebreide SSO gegevens opslaan in /logs"
     enable_sso_provider: "Pas  Discourse SSO provider protocol toe op het /session/sso_provider eindpunt, vereist dat sso_secret is ingesteld"
     sso_secret: "Geheime tekenreeks voor het cryptografisch valideren van SSO informatie, zorg er voor dat het 10 tekens of langer is"
     sso_overrides_bio: "Overschrijft de biografie in het gebruikersprofiel en voorkomt dat de gebruiker het kan wijzigen"
@@ -899,17 +880,9 @@ nl:
     allow_new_registrations: "Nieuwe gebruikers registreren toestaan. Uitschakelen om te voorkomen dat iedereen een nieuw account kan maken."
     enable_signup_cta: "Een melding tonen voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
     enable_yahoo_logins: "Yahoo-authenticatie inschakelen"
-    enable_google_oauth2_logins: "Google Oauth2 authenticatie toestaan. Dit is de authenticatiemethode die momenteel door Google wordt ondersteund. Vereist key en secret."
     google_oauth2_client_id: "Client-ID van uw Google-toepassing."
     google_oauth2_client_secret: "Client-geheim van uw Google-toepassing."
-    enable_twitter_logins: "Twitter-authenticatie inschakelen; vereist twitter_consumer_key en twitter_consumer_secret."
     enable_instagram_logins: "Instagram-authenticatie inschakelen; vereist instagram_consumer_key en instagram_consumer_secret."
-    enable_facebook_logins: "Facebook-authenticatie inschakelen; vereist facebook_app_id en facebook_app_secret."
-    facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
-    facebook_app_secret: "app_secret (registreer op https://developers.facebook.com/apps)"
-    enable_github_logins: "Github-authenticatie inschakelen; vereist github_client_id en github_client_secret."
-    github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
-    github_client_secret: "github_client_secret (registreer op https://github.com/settings/applications)"
     readonly_mode_during_backup: "Alleen-lezenmodus tijdens het maken van een back-up inschakelen"
     allow_restore: "Herstellen van data toestaan, waarbij ALLE site-data wordt overschreven! Laat op 'false' staan, tenzij je een back-up terug wil zetten."
     maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
@@ -991,7 +964,6 @@ nl:
     title_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een topictitel is vereist."
     body_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor de hoofdtekst van een bericht is vereist."
     allow_uppercase_posts: "Sta alleen hoofdletters toe in een topic titel of bericht inhoud."
-    title_fancy_entities: "Algemene ASCII-tekens naar decoratieve HTML-entiteiten converteren in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants/)"
     min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     desktop_category_page_style: "Visuele stijl voor de categoriepagina."
@@ -1047,7 +1019,6 @@ nl:
     pop3_polling_host: "De servernaam om e-mail te pollen via POP3."
     pop3_polling_username: "De gebruikersnaam van het te pollen POP3 account voor e-mail."
     pop3_polling_password: "Het wachtwoord van het te pollen POP3 account voor e-mail."
-    log_mail_processing_failures: "Log alle e-mail verwerkingsfouten naar http://yoursitename.com/logs"
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'title' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als uw 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
@@ -1246,6 +1217,9 @@ nl:
     email_too_long: "De e-mail die je hebt opgegeven is te lang. Mailbox namen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
     reserved_username: "Die gebruikersnaam is niet toegestaan."
     missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
+  admin:
+    email:
+      sent_test: "verzonden!"
   user:
     username:
       short: "moet ten minste %{min} tekens zijn"

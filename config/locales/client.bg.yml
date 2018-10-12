@@ -226,12 +226,8 @@ bg:
         bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
     bookmarks:
-      not_logged_in: "съжаляваме, трябва да сте логнат, за да добавяте отметки"
       created: "Вие добавихте тази публикация в отметки"
-      not_bookmarked: "тази публикация е прочетена, добавете я в отметки"
-      last_read: "това е последната публикация която прочетохте, добавете я в отметки"
       remove: "Премахнете отметката"
-      confirm_clear: "Сигурен ли сте, че искате да премахните всичките отметки от тази тема ?"
     preview: "преглед"
     cancel: "прекрати"
     save: "Запазете промените"
@@ -239,7 +235,6 @@ bg:
     saved: "Запазено!"
     upload: "Качване"
     uploading: "Качва се..."
-    uploading_filename: "Качва се {{filename}}..."
     uploaded: "Качено!"
     enable: "Позволи"
     disable: "Деактивиране"
@@ -822,9 +817,6 @@ bg:
       enabled: "Сайта е в режим само за четене. Моля продължете да разглеждате, но отгавяне, харесване и всичко останали опции са спряни за сега."
       login_disabled: "Влизането е изключено докато страницата е в мод само за четене."
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
-    too_few_topics_and_posts_notice: "Нека да започнем <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>дискусията сега!</a> В момента има <strong>%{currentTopics} / %{requiredTopics}</strong> теми и <strong>%{currentPosts} / %{requiredPosts}</strong> постове. Новите посетители се нуждаят от теми за разговор, за да има на какво да четат и да отговарят."
-    too_few_topics_notice: "Нека да започнем <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>дискусията сега!</a>В момента има <strong>%{currentTopics} / %{requiredTopics}</strong> теми. Новите посетители се нуждаят от теми за разговор, за да има на какво да четат и да отговарят."
-    too_few_posts_notice: "Нека да започнем <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>дискусията сега!</a> В момента има <strong>%{currentPosts} / %{requiredPosts}</strong> постове. Новите посетители се нуждаят от теми за разговор, за да има на какво да четат и да отговарят."
     logs_error_rate_notice:
       rate:
         one: "1 грешка/%{duration}"
@@ -999,7 +991,6 @@ bg:
       link_description: "добави описание на връзката тук"
       link_dialog_title: "Добави хипервръзка"
       link_optional_text: "заглавие по избор"
-      link_url_placeholder: "http://example.com"
       quote_title: "Текстов блок"
       quote_text: "Текстов блок"
       code_title: "Форматиран текст"
@@ -1372,15 +1363,9 @@ bg:
           one: "Моля изберете тема в която искате да преместите тази публикация. "
           other: "Моля, изберете тема, в която искате да преместите тези <b>{{count}}</b> публикации.    "
       change_owner:
-        title: "Смени собственика на публикацията."
         action: "смени собственика"
         error: "Възникна грешка при смяната на собственика"
-        label: "Нов собственик на публикациите"
         placeholder: "име на новия собственик"
-        instructions:
-          one: "Моля изберете нов собственик на публикацията от  <b>{{old_user}}</b>."
-          other: "Моля, изберете новият собственик на {{count}} публикации от <b>{{old_user}}</b>. "
-        instructions_warn: "Имайте предвид, че известията към тази публикация няма да бъдат прехвърлени  със задна дата към новия потребител."
       change_timestamp:
         action: "смени времевия показател"
         invalid_timestamp: "Времевия показател неможе да бъде в бъдещето."
@@ -1791,7 +1776,6 @@ bg:
         this_week: "Седмица"
         today: "Днес"
         other_periods: "виж отгоре"
-    browser_update: 'За съжаление, <a href="http://www.discourse.org/faq/#browser">вашият браузър е твърде стар, за да работи с този сайт</a>. Моля, <a href="http://browsehappy.com">обновете вашия браузър</a>.'
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
@@ -1880,8 +1864,6 @@ bg:
           bookmarks: "Няма теми в Отметки."
           search: "Няма повече резултати от търсенето."
     invite:
-      custom_message: "Направете поканата си малко по-лична, като напишете "
-      custom_message_link: "персонализирано съобщение"
       custom_message_placeholder: "Въведете вашето персонализирано съобщение"
       custom_message_template_forum: "Хей, трябва да се присъединиш към този форум!"
       custom_message_template_topic: "Хей, мисля си, че ще се насладиш на тази тема!"
@@ -2099,7 +2081,6 @@ bg:
         new_style: "Нов стил"
         import: "Импорт"
         delete: "Изтрий"
-        about: "Променете CSS стиловете и HTML хедърите на сайта. Добавете нова настройка за да започнете."
         color: "Цвят"
         opacity: "Прозрачност"
         copy: "Копирай"
@@ -2228,7 +2209,6 @@ bg:
         staff_actions:
           title: "Действия на персонала"
           clear_filters: "Покажи всичко  "
-          staff_user: "Член на персонала"
           target_user: "Целеви потребител "
           subject: "Тема "
           when: "Кога "

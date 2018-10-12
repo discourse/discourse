@@ -215,12 +215,8 @@ ko:
         bookmark: "클릭하면 이 토픽의 첫번째 포스트가 북마크됩니다"
         unbookmark: "클릭하면 이 토픽에 속한 모든 북마크가 제거됩니다"
     bookmarks:
-      not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
-      not_bookmarked: "이 게시물을 읽으셨습니다. 즐겨찾기에 추가하려면 클릭하세요."
-      last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
       remove: "북마크 삭제"
-      confirm_clear: "정말로 이 토픽의 모든 북마크를 제거할까요?"
     drafts:
       remove: "삭제"
     preview: "미리보기"
@@ -230,7 +226,6 @@ ko:
     saved: "저장 완료!"
     upload: "업로드"
     uploading: "업로드 중..."
-    uploading_filename: "{{filename}} 업로드 중..."
     uploaded: "업로드 완료!"
     pasting: "붙혀넣는중..."
     enable: "활성화"
@@ -836,9 +831,6 @@ ko:
       enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
       logout_disabled: "사이트가 읽기 전용모드일 때 로그아웃은 비활성화됩니다."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제와 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제가 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 가 사이트 제한값 %{siteSettingRate}에 도달했습니다."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 가 사이트 제한값 %{siteSettingRate}을 초과하였습니다."
@@ -1064,7 +1056,6 @@ ko:
       link_description: "링크 설명을 입력"
       link_dialog_title: "하이퍼링크 삽입"
       link_optional_text: "옵션 제목"
-      link_url_placeholder: "http://example.com"
       quote_title: "인용구"
       quote_text: "인용구"
       code_title: "코드 샘플"
@@ -1519,13 +1510,9 @@ ko:
         action: "선택한 게시글 합치기"
         error: "선택한 게시글을 합치는 중 에러가 발생했습니다."
       change_owner:
-        title: "글 소유자 변경"
         action: "작성자 바꾸기"
         error: "작성자를 바꾸는 중 에러가 발생하였습니다."
-        label: "글의 새로운 작성자"
         placeholder: "새로운 작성자의 아이디"
-        instructions:
-          other: "<b>{{old_user}}</b>(이)가 작성한 글의 새로운 작성자를 선택해주세요."
       change_timestamp:
         title: "타임스탬프 변경하기..."
         action: "타임스탬프 변경"
@@ -1961,7 +1948,6 @@ ko:
         this_week: "주"
         today: "오늘"
         other_periods: "상단 보기"
-    browser_update: '안타깝게도 <a href="http://www.discourse.org/faq/#browser">사용하시는 브라우저가 오래되어서 이 사이트를 이용하기 어렵습니다.</a>. <a href="http://browsehappy.com">브라우저를 업그레이드 하시기 바랍니다.</a>.'
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -2124,8 +2110,6 @@ ko:
           bookmarks: "더 이상 북마크한 토픽이 없습니다."
           search: "더 이상 검색 결과가 없습니다."
     invite:
-      custom_message: "초청장을 좀 더 친근하게 만들고 싶다면,"
-      custom_message_link: "사용자 설정 메시지를 써보세요"
       custom_message_placeholder: "사용자 설정 메시지를 입력하세요"
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
       custom_message_template_topic: "이 토픽에 흥미 있을 거 같은데요!"
@@ -2444,7 +2428,6 @@ ko:
         import: "가져오기"
         delete: "삭제"
         delete_confirm: "이 테마를 삭제할까요?"
-        about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
         color: "색"
         opacity: "투명도"
         copy: "복사"
@@ -2487,7 +2470,6 @@ ko:
             invalid_syntax: "불가능한 변수명입니다. 알파벳만 허용되며, 문자로 시작해야 합니다."
             must_be_unique: "불가능한 변수명입니다. 반드시 고유해야 합니다."
           upload: "업로드"
-          child_themes_check: "다른 차일드 테마를  포함한 테마"
           css_html: "커스텀 CSS/HTML"
           edit_css_html: "CSS/HTML 편집하기"
           edit_css_html_help: "변경된 CSS 나 HTML이 없습니다."
@@ -2657,7 +2639,6 @@ ko:
           filter: "필터:"
           title: "스태프 기록"
           clear_filters: "전체 보기"
-          staff_user: "스태프 사용자"
           target_user: "타겟 사용자"
           subject: "제목"
           when: "언제"

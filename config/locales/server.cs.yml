@@ -109,10 +109,6 @@ cs:
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
     site_settings:
-      min_username_length_exists: "Nemůžete nastavit minimální délku uživatelského jména delší než je nejkratší uživatelské jméno."
-      min_username_length_range: "Nemůžete nastavit minimum nad maximum."
-      max_username_length_exists: "Nemůžete nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
-      max_username_length_range: "Nemůžete nastavit maximum pod minimum."
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
   activemodel:
@@ -763,13 +759,11 @@ cs:
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
-    gc_warning: 'Váš server používá výchozí nastavení ruby garbage collectoru, což způsobuje snížený výkon. Přečtěte si toto téma ohledně ladění výkonu: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq neběží. Řada úloh, jako je zasílání emailů, se provádí asynchronně na pozadí přes sidekiq. Prosím, ujistěte se, že alespoň jeden process sidekiq běží. <a href="https://github.com/mperham/sidekiq">Více o Sidekiq</a>.'
     memory_warning: 'Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti.'
     facebook_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Facebook (enable_facebook_logins), ale nejsou nastaveny hodnoty "app id" a "app secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     twitter_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Twitter (enable_twitter_logins), ale nejsou nastaveny hodnoty "key" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
-    image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
   site_settings:
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
@@ -779,8 +773,6 @@ cs:
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
-    ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
-    ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     enable_badges: "Povolit odznaky"
@@ -791,13 +783,6 @@ cs:
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
-    enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
-    enable_facebook_logins: "Povolit přihlašování přes Facebook, vyžaduje správně nastavené 'facebook_app_id' a 'facebook_app_secret'"
-    facebook_app_id: "'App id' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
-    facebook_app_secret: "'App secret' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
-    enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
-    github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
-    github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
     max_likes_per_day: "Maximální počet 'to se mi líbí', která smí uživatel za den udělit."
@@ -807,7 +792,6 @@ cs:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    title_fancy_entities: "Převádět běžné ASCII znaky na HTML entity v názvech témat, ve stylu SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky používání' hostovaný samostatně, napište sem jeho plnou URL."

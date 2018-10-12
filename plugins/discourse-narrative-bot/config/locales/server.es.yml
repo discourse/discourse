@@ -139,18 +139,9 @@ es:
           Mientras tanto, me quedaré fuera de tu camino.
     new_user_narrative:
       reset_trigger: "usuario nuevo"
-      title: "Certificado de completación para el nuevo usuario"
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario nuevo"
       hello:
         title: ":robot: Saludos!"
-        message: |-
-          Gracias por unirte a %{title}, y bienvenido!
-
-          - Soy solo un robot, pero [nuestro amigable staff](/about) está también aquí para ayudar si necesitas contactar a una persona.
-
-          - Por razones de seguridad, nosotros temporalmente limitamos lo que los nuevos usuarios pueden hacer. Tú podrás ganar nuevas habilidades (y [distintivos](/badges)) cuando te vayamos conociendo.
-
-          - Nosotros creemos en el [comportamiento de una comunidad civilizada](/guidelines) en todo momento.
       onebox:
         instructions: |-
           Ahora, tú puedes compartir uno de estos enlaces conmigo? Responde con **el enlace propiamente dicho**, y automáticamente se expandirá con un breve resumen.
@@ -257,8 +248,6 @@ es:
           >  :imp: Escribí algo asqueroso aquí
 
           Me imagino que sabes qué hacer. Anímate, **reporta este mensaje** con el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
-        reply: |-
-          [Nuestro staff](/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora.)
         not_found: |-
           Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">  para ver otras opciones para cada mensaje.
       search:
@@ -282,24 +271,12 @@ es:
           - Si tienes un :keyboard: físico, presiona la tecla <kbd>?</kbd> para ver nuestros prácticos atajos del teclado.
         not_found: |-
           Hmm… parece que estás en problemas. Lo siento. ¿Buscaste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> la palabra **capy&#8203;bara**?
-      end:
-        message: |-
-          Gracias por quedarte conmigo @%{username}! Hice esto por tí, creo que te lo has ganado:
-
-          %{certificate}
-
-          ¡Eso es todo por ahora! Echa un vistazo a [**nuestros últimos temas de discusión**](/latest) o las [**categorías de debate**](/categories). :sunglasses:
-
-          (Si deseas hablar conmigo de nuevo para aprender más, solo envía un mensaje privado o me mencionas `@%{discobot_username}` en cualquier momento!)
       certificate:
         alt: 'Certificado de logro'
     advanced_user_narrative:
       reset_trigger: 'usuario avanzado'
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario avanzado"
       title: ':arrow_up: Funciones avanzadas del usuario'
-      start_message: |-
-        Como un usuario _avanzado_, ¿no has visitado [tus preferencias](/my/preferences) aún @%{username}? Hay muchas formas de personalizar tu experiencia, por ejemplo podrías elegir un diseño oscuro.
-        ¡Pero yo divago, comencemos!
       edit:
         bot_created_post_raw: "@%{discobot_username} es, por lejos, el mejor bot que conozco :wink:"
         instructions: |-
@@ -356,9 +333,6 @@ es:
           Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
         not_found: |-
           Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, el mismo está debajo de todo el tema de debate.
-        reply: |-
-          ¡Impresionante trabajo! Espero que no silencies este tema ya que puedo ser un poco hablador a veces :grin:.
-          Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
       poll:
         instructions: |-
           ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.

@@ -105,6 +105,7 @@ zh_CN:
       user_left: "%{who}于%{when}离开了该私信"
       removed_user: "于%{when}移除了%{who}"
       removed_group: "于%{when}移除了%{who}"
+      autobumped: "自动碰撞 %{when}"
       autoclosed:
         enabled: '于%{when}关闭'
         disabled: '于%{when}打开'
@@ -141,6 +142,7 @@ zh_CN:
         ap_southeast_1: "亚太地区（Singapore）"
         ap_southeast_2: "亚太地区（Sydney）"
         cn_north_1: "中国（Beijing）"
+        cn_northwest_1: "中国（宁夏）"
         eu_central_1: "欧洲（Frankfurt）"
         eu_west_1: "欧洲（Ireland）"
         eu_west_2: "欧洲（London）"
@@ -174,6 +176,7 @@ zh_CN:
     privacy_policy: "隐私政策"
     privacy: "隐私"
     tos: "服务条款"
+    rules: "规则"
     mobile_view: "移动版"
     desktop_view: "桌面版"
     you: "你"
@@ -204,6 +207,8 @@ zh_CN:
       our_moderators: "我们的版主"
       stat:
         all_time: "全部"
+        last_7_days: "过去7天"
+        last_30_days: "过去30天"
       like_count: "赞"
       topic_count: "主题"
       post_count: "帖子"
@@ -218,12 +223,9 @@ zh_CN:
         bookmark: "点击收藏该主题的第一个帖子"
         unbookmark: "点击删除本主题的所以书签"
     bookmarks:
-      not_logged_in: "抱歉，你需要登录后才能收藏"
       created: "已经收藏了"
-      not_bookmarked: "你已经阅读过此帖；点击收藏"
-      last_read: "这是你阅读过的最后一帖；点击收藏"
       remove: "取消收藏"
-      confirm_clear: "你确定要清除该主题的所有收藏吗？"
+      confirm_clear: "你确定要清空这个主题中的所有书签？"
     topic_count_latest:
       other: "有 {{count}} 个更新或新主题"
     topic_count_unread:
@@ -233,13 +235,12 @@ zh_CN:
     preview: "预览"
     cancel: "取消"
     save: "保存更改"
-    saving: "保存中..."
+    saving: "保存中…"
     saved: "已保存！"
     upload: "上传"
-    uploading: "上传中..."
-    uploading_filename: "上传“{{filename}}”中..."
+    uploading: "上传中…"
     uploaded: "上传成功！"
-    pasting: "粘贴中..."
+    pasting: "粘贴中…"
     enable: "启用"
     disable: "停用"
     continue: "继续"
@@ -373,7 +374,6 @@ zh_CN:
         all: "所有群组"
         empty: "没有可见的群组。"
         filter: "根据群组类型筛选"
-        owner_groups: "拥有的群组"
         close_groups: "封闭群组"
         automatic_groups: "自动分组"
         automatic: "自动"
@@ -450,6 +450,7 @@ zh_CN:
       "14": "待定"
     categories:
       all: "所有分类"
+      all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
       category_list: "显示分类列表"
@@ -469,6 +470,7 @@ zh_CN:
         other: "%{count} 主题"
       topic_stat_sentence:
         other: "在过去一%{unit}中有 %{count} 个新主题。"
+      n_more: "分类 (还有%{count}个分类) ..."
     ip_lookup:
       title: IP 地址查询
       hostname: 主机名
@@ -683,7 +685,7 @@ zh_CN:
         not_available_no_suggestion: "不可用"
         too_short: "用户名过短"
         too_long: "用户名过长"
-        checking: "查看用户名是否可用..."
+        checking: "查看用户名是否可用…"
         prefilled: "邮箱与用户匹配成功"
       locale:
         title: "界面语言"
@@ -747,7 +749,7 @@ zh_CN:
         after_10_minutes: "10分钟后"
       notification_level_when_replying: "当我在主题中回复后，将主题设置至"
       invited:
-        search: "输入以搜索邀请..."
+        search: "输入以搜索邀请…"
         title: "邀请"
         user: "邀请用户"
         sent: "已发送"
@@ -845,7 +847,7 @@ zh_CN:
         sent_by: "发送时间"
         private_message: "私信"
         the_topic: "本主题"
-    loading: "载入中..."
+    loading: "载入中…"
     errors:
       prev_page: "无法载入"
       reasons:
@@ -873,15 +875,12 @@ zh_CN:
       enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
-    too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
-    too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
-    too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 达到了站点设置中的 %{siteSettingRate}。"
       exceeded: "<b>[%{relativeAge}]</b> 目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站点设置中的 %{siteSettingRate}。"
       rate:
         other: "%{count} 错误/%{duration}"
-    learn_more: "了解更多..."
+    learn_more: "了解更多…"
     all_time: '总量'
     all_time_desc: '创建的主题总量'
     year: '年'
@@ -964,9 +963,9 @@ zh_CN:
       blank_username: "请输入你的邮件地址或用户名。"
       blank_username_or_password: "请输入你的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
-      logging_in: "登录中..."
+      logging_in: "登录中…"
       or: "或"
-      authenticating: "验证中..."
+      authenticating: "验证中…"
       awaiting_activation: "你的帐号尚未激活，点击忘记密码链接以重新发送激活邮件。"
       awaiting_approval: "你的帐号尚未被论坛版主审核。请等待一段时间，当你的帐号被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
@@ -1035,7 +1034,7 @@ zh_CN:
     conditional_loading_section:
       loading: 载入中……
     select_kit:
-      default_header_text: 选择...
+      default_header_text: 选择…
       no_content: 无符合的结果
       filter_placeholder: 搜索……
       max_content_reached:
@@ -1070,10 +1069,10 @@ zh_CN:
       toggle_whisper: "折叠或展开密语"
       toggle_unlisted: "显示/隐藏于主题列表"
       posting_not_on_topic: "你想回复哪一个主题？"
-      saving_draft_tip: "保存中..."
+      saving_draft_tip: "保存中…"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
-      similar_topics: "你的主题有点类似于..."
+      similar_topics: "你的主题有点类似于…"
       drafts_offline: "离线草稿"
       group_mentioned:
         other: "提及 {{group}} 时，你将通知 <a href='{{group_link}}'>{{count}} 人</a> － 确定吗？"
@@ -1099,7 +1098,7 @@ zh_CN:
       create_whisper: "密语"
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
-      title_placeholder: "一句话告诉讨论什么..."
+      title_placeholder: "一句话概况讨论内容…"
       title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
@@ -1110,7 +1109,7 @@ zh_CN:
       saving: "保存中"
       saved: "已保存！"
       saved_draft: "帖子还没发表，点击继续"
-      uploading: "上传中..."
+      uploading: "上传中…"
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
       quote_post_title: "引用整个帖子"
@@ -1124,7 +1123,6 @@ zh_CN:
       link_description: "输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
-      link_url_placeholder: "http://example.com"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -1231,7 +1229,7 @@ zh_CN:
       full_page_title: "搜索主题或帖子"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
-      searching: "搜索中..."
+      searching: "搜索中…"
       post_format: "#{{post_number}} 来自于 {{username}}"
       results_page: "关于“{{term}}”的搜索结果"
       more_results: "还有更多结果。请增加您的搜索条件。"
@@ -1304,7 +1302,7 @@ zh_CN:
         delete: "删除主题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读主题"
-        dismiss_button: "忽略..."
+        dismiss_button: "忽略…"
         dismiss_tooltip: "仅忽略新帖子或停止跟踪主题"
         also_dismiss_topics: "停止追踪这些主题，这样这些主题就不再显示为未读了"
         dismiss_new: "设为已读"
@@ -1462,7 +1460,7 @@ zh_CN:
         go_bottom: "底部"
         go: "前往"
         jump_bottom: "跳至最后一个帖子"
-        jump_prompt: "跳到..."
+        jump_prompt: "跳到…"
         jump_prompt_of: "%{count} 帖子"
         jump_prompt_long: "你想跳转至哪一贴？"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
@@ -1516,10 +1514,10 @@ zh_CN:
         delete: "删除主题"
         open: "打开主题"
         close: "关闭主题"
-        multi_select: "选择帖子..."
-        timed_update: "设置主题计时器..."
-        pin: "置顶主题..."
-        unpin: "取消置顶主题..."
+        multi_select: "选择帖子…"
+        timed_update: "设置主题计时器…"
+        pin: "置顶主题…"
+        unpin: "取消置顶主题…"
         unarchive: "取消存档主题"
         archive: "存档主题"
         invisible: "隐藏主题"
@@ -1573,7 +1571,7 @@ zh_CN:
         banner_note: "用户能点击关闭隐藏横幅。且只能设置一个横幅主题。"
         no_banner_exists: "没有横幅主题。"
         banner_exists: "当前<strong class='badge badge-notification unread'>设置</strong>了横幅主题。"
-      inviting: "邀请中..."
+      inviting: "邀请中…"
       automatically_add_to_groups: "邀请将把用户加入群组："
       invite_private:
         title: '邀请至私信'
@@ -1624,13 +1622,9 @@ zh_CN:
         action: "合并选择的帖子"
         error: "合并选择的帖子试出错。"
       change_owner:
-        title: "更改帖子作者"
         action: "更改作者"
         error: "更改帖子作者时发生错误。"
-        label: "帖子的新作者"
         placeholder: "新作者的用户名"
-        instructions:
-          other: "请选择<b>{{old_user}}</b>创建的 {{count}} 个帖子的新作者。"
       change_timestamp:
         title: "修改时间"
         action: "修改时间"
@@ -1875,6 +1869,7 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
+      suppress_from_latest: "从最新主题列表中剔除该分类"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
@@ -1889,7 +1884,9 @@ zh_CN:
       default_position: "默认位置"
       position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序，"
       position_disabled_click: '启用“固定分类位置”设置。'
+      minimum_required_tags: '在一个主题中允许的最少标签数量：'
       parent: "上级分类"
+      num_auto_bump_daily: '每天自动碰撞的主题的数量'
       notifications:
         watching:
           title: "监看"
@@ -1948,7 +1945,7 @@ zh_CN:
         at_least:
           other: "输入至少 {{count}} 个字符"
         more:
-          other: "还差 {{count}} 个..."
+          other: "还差 {{count}} 个…"
         left:
           other: "剩余 {{count}}"
     flagging_topic:
@@ -1959,7 +1956,7 @@ zh_CN:
       title: "主题概要"
       participants_title: "主要发帖者"
       links_title: "热门链接"
-      links_shown: "显示更多链接..."
+      links_shown: "显示更多链接…"
       clicks:
         other: "%{count} 次点击"
     post_links:
@@ -2087,7 +2084,6 @@ zh_CN:
         this_week: "周"
         today: "今天"
         other_periods: "查看热门"
-    browser_update: '抱歉，<a href="http://www.discourse.com/faq/#browser">你的浏览器版本太低，无法正常访问该站点。</a>。请<a href="http://browsehappy.com">升级你的浏览器</a>。'
     permission_types:
       full: "创建 / 回复 / 阅读"
       create_post: "回复 / 阅读"
@@ -2251,15 +2247,13 @@ zh_CN:
           bookmarks: "没有更多收藏的主题了。"
           search: "没有更多搜索结果了。"
     invite:
-      custom_message: "让你的邀请稍稍个人化一些吧，写个"
-      custom_message_link: "留言"
       custom_message_placeholder: "输入留言"
       custom_message_template_forum: "你好，你应该来我们这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     safe_mode:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
   admin_js:
-    type_to_filter: "输入过滤条件..."
+    type_to_filter: "输入过滤条件…"
     admin:
       title: 'Discourse 管理员'
       moderator: '版主'
@@ -2336,7 +2330,7 @@ zh_CN:
         delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
         delete_post_agree_flag: "删除帖子并确认标记"
         delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
-        delete_flag_modal_title: "删除并..."
+        delete_flag_modal_title: "删除并…"
         delete_spammer: "删除垃圾发布者"
         delete_spammer_title: "移除该用户及其的所有帖子和主题。"
         disagree_flag_unhide_post: "否决（显示帖子）"
@@ -2345,7 +2339,7 @@ zh_CN:
         disagree_flag_title: "否却该标记（该标记无效或不正确）"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "主题的问题已经已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
-        more: "（更多回复...）"
+        more: "（更多回复…）"
         suspend_user: "禁用用户"
         suspend_user_title: "因该贴禁用用户"
         dispositions:
@@ -2444,7 +2438,7 @@ zh_CN:
         individual_event: "选择各个事件。"
         verify_certificate: "检查 Payload URL 的 TLS 证书"
         active: "启用"
-        active_notice: "我们将在事件发生时分发事件详情。"
+        active_notice: "当事件发生时，我们会推送细节"
         categories_filter_instructions: "相关 Webhook 事件将在满足特定分类的情况下才发送。留空忽略分类限制。"
         categories_filter: "触发的分类"
         groups_filter_instructions: "相关 Webhook 事件将在满足特定群组的情况下才发送。留空忽略群组限制。"
@@ -2521,7 +2515,7 @@ zh_CN:
         upload:
           label: "上传"
           title: "上传备份至实例"
-          uploading: "上传中..."
+          uploading: "上传中…"
           error: "上传“{{filename}}”时出错：{{message}}"
         operations:
           is_running: "已有操作正在执行"
@@ -2576,7 +2570,6 @@ zh_CN:
         import: "导入"
         delete: "删除"
         delete_confirm: "删除该主题？"
-        about: "修改站点的 CSS 样式表和 HTML 头部。添加一个自定义方案开始。"
         color: "颜色"
         opacity: "透明度"
         copy: "复制"
@@ -2613,10 +2606,9 @@ zh_CN:
           uploads: "上传"
           no_uploads: "你可以上传与主题相关的组件，例如字体和图片"
           add_upload: "添加上传"
-          upload_file_tip: "选择资源上传（png、woff2，其他...）"
+          upload_file_tip: "选择资源上传（png、woff2、其他…）"
           variable_name: "SCSS 变量名："
           upload: "上传"
-          child_themes_check: "主题包括其他子类主题"
           css_html: "自定义 CSS/HTML"
           edit_css_html: "编辑 CSS/HTML"
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
@@ -2627,7 +2619,7 @@ zh_CN:
           license: "许可证"
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
-          updating: "更新..."
+          updating: "更新…"
           up_to_date: "主题已经是最新版本，上次检查："
           add: "添加"
           theme_settings: "主题设置"
@@ -2708,7 +2700,7 @@ zh_CN:
         settings: "设置"
         templates: "模板"
         preview_digest: "预览"
-        sending_test: "发送测试邮件..."
+        sending_test: "发送测试邮件…"
         error: "<b>错误</b> - %{server_error}"
         test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"
         sent: "已发送"
@@ -2729,7 +2721,7 @@ zh_CN:
         refresh: "刷新"
         send_digest_label: "发送结果至："
         send_digest: "发送"
-        sending_email: "发送邮件..."
+        sending_email: "发送邮件…"
         format: "格式"
         html: "html"
         text: "text"
@@ -2755,7 +2747,7 @@ zh_CN:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "主题..."
+            subject_placeholder: "主题…"
             error_placeholder: "错误"
         logs:
           none: "未发现日志。"
@@ -2795,7 +2787,6 @@ zh_CN:
           filter: "过滤器："
           title: "管理人员操作"
           clear_filters: "显示全部"
-          staff_user: "管理人员"
           target_user: "目标用户"
           subject: "主题"
           when: "时间"
@@ -3332,7 +3323,7 @@ zh_CN:
       next: "下一步"
       step: "%{current} / %{total}"
       upload: "上传"
-      uploading: "上传中..."
+      uploading: "上传中…"
       quit: "以后再说"
       staff_count:
         other: "你的社区中包括你在内有 %{count} 位工作人员。"
