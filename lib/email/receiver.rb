@@ -577,7 +577,6 @@ module Email
 
       case destination[:type]
       when :group
-        enable_email_pm_setting(user)
         group = destination[:obj]
         create_group_post(group, user, body, elided, hidden_reason_id)
 
@@ -601,8 +600,6 @@ module Email
         if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
           raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
-
-        enable_email_pm_setting(user)
 
         post = Post.with_deleted.find(post_reply_key.post_id)
 
@@ -639,6 +636,8 @@ module Email
                      topic: post.topic,
                      skip_validations: true)
       else
+        enable_email_pm_setting(user)
+
         create_topic(user: user,
                      raw: body,
                      elided: elided,
@@ -845,6 +844,7 @@ module Email
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
       options[:post] = nil if options[:post]&.trashed?
+      enable_email_pm_setting(options[:user]) if options[:topic].archetype == Archetype.private_message
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
