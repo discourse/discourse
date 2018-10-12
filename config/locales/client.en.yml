@@ -1427,6 +1427,8 @@ en:
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
+      enter_fullscreen: "enter fullscreen composer"
+      exit_fullscreen: "exit fullscreen composer"
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
@@ -2613,6 +2615,7 @@ en:
       composing:
         title: 'Composing'
         return: '<b>shift</b>+<b>c</b> Return to composer'
+        fullscreen: '<b>shift</b>+<b>F11</b> Fullscreen composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
