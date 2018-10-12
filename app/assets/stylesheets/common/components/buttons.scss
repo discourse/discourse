@@ -203,6 +203,14 @@
   }
 }
 
+// File upload buttons
+// --------------------------------------------------
+
+.btn input[type="file"] {
+  visibility: hidden;
+  position: absolute;
+}
+
 // Button Sizes
 // --------------------------------------------------
 
