@@ -213,9 +213,7 @@
   }
   #reply-control {
     &.fullscreen {
-      // important needed because of
-      // inline styles when height is
-      // changed manually with grippie
+      // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
       z-index: z("header") + 1;
       .d-editor-preview-wrapper {
