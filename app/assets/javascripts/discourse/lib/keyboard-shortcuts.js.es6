@@ -204,16 +204,19 @@ export default {
     }
   },
 
-  fullscreenComposer() {
-    this.container.lookup("controller:composer").toggleFullscreen();
-  },
-
   focusComposer() {
     const composer = this.container.lookup("controller:composer");
     if (composer.get("model.viewOpen")) {
       setTimeout(() => $("textarea.d-editor-input").focus(), 0);
     } else {
       composer.send("openIfDraft");
+    }
+  },
+
+  fullscreenComposer() {
+    const composer = this.container.lookup("controller:composer");
+    if (composer.get("model")) {
+      composer.toggleFullscreen();
     }
   },
 
