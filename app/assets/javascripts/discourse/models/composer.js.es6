@@ -149,7 +149,7 @@ const Composer = RestModel.extend({
   viewOpenOrFullscreen: Em.computed.or("viewOpen", "viewFullscreen"),
 
   composeStateChanged: function() {
-    var oldOpen = this.get("composerOpened"),
+    let oldOpen = this.get("composerOpened"),
       elem = $("html");
 
     if (this.get("composeState") === FULLSCREEN) {
@@ -162,7 +162,7 @@ const Composer = RestModel.extend({
       this.set("composerOpened", oldOpen || new Date());
     } else {
       if (oldOpen) {
-        var oldTotal = this.get("composerTotalOpened") || 0;
+        let oldTotal = this.get("composerTotalOpened") || 0;
         this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
       }
       this.set("composerOpened", null);
@@ -170,9 +170,8 @@ const Composer = RestModel.extend({
   }.observes("composeState"),
 
   composerTime: function() {
-    var total = this.get("composerTotalOpened") || 0;
-
-    var oldOpen = this.get("composerOpened");
+    let total = this.get("composerTotalOpened") || 0,
+      oldOpen = this.get("composerOpened");
     if (oldOpen) {
       total += new Date() - oldOpen;
     }
@@ -193,7 +192,7 @@ const Composer = RestModel.extend({
   // view detected user is typing
   typing: _.throttle(
     function() {
-      var typingTime = this.get("typingTime") || 0;
+      let typingTime = this.get("typingTime") || 0;
       this.set("typingTime", typingTime + 100);
     },
     100,
