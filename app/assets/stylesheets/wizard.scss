@@ -326,6 +326,11 @@ body.wizard {
     .fa {
       margin-left: 0.5em;
     }
+
+    input[type="file"] {
+      visibility: hidden;
+      position: absolute;
+    }
   }
 
   .wizard-step-footer {
