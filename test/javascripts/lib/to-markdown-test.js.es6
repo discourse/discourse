@@ -340,3 +340,15 @@ QUnit.test("keeps emoji and removes click count", assert => {
 
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("keeps emoji syntax for custom emoji", assert => {
+  const html = `
+    <p>
+      <img class="emoji emoji-custom" title=":custom_emoji:" src="https://d11a6trkgmumsb.cloudfront.net/images/emoji/custom_emoji" alt=":custom_emoji:" />
+    </p>
+  `;
+
+  const markdown = `:custom_emoji:`;
+
+  assert.equal(toMarkdown(html), markdown);
+});

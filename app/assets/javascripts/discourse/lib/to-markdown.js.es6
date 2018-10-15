@@ -227,7 +227,7 @@ export class Tag {
         const src = attr.src || pAttr.src;
         const cssClass = attr.class || pAttr.class;
 
-        if (cssClass === "emoji") {
+        if (cssClass && cssClass.includes("emoji")) {
           return attr.title || pAttr.title;
         }
 
