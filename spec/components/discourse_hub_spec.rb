@@ -87,7 +87,7 @@ describe DiscourseHub do
     end
 
     it 'should log correctly on error' do
-      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api/test")).
+      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api") + '/test').
         to_return(status: 500, body: "", headers: {})
 
       DiscourseHub.collection_action(:get, '/test')
