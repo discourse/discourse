@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class JavascriptsController < ApplicationController
+class ThemeJavascriptsController < ApplicationController
   DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache"
 
   skip_before_action(
