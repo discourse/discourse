@@ -1040,9 +1040,14 @@ describe Topic do
 
       it "resets the topic archetype" do
         topic.expects(:add_moderator_post)
-        MessageBus.expects(:publish).with("/site/banner", nil)
-        topic.remove_banner!(user)
+
+        message = MessageBus.track_publish do
+          topic.remove_banner!(user)
+        end.first
+
         expect(topic.archetype).to eq(Archetype.default)
+        expect(message.channel).to eq("/site/banner")
+        expect(message.data).to eq(nil)
       end
 
     end
