@@ -99,21 +99,25 @@ describe Badge do
   end
 
   context "PopularLink badge" do
+
+    let(:popular_link_badge) do
+      Badge.find(Badge::PopularLink)
+    end
+
     before do
-      badge = Badge.find(Badge::PopularLink)
-      badge.query = BadgeQueries.linking_badge(2)
-      badge.save!
+      popular_link_badge.query = BadgeQueries.linking_badge(2)
+      popular_link_badge.save!
     end
 
     it "is awarded" do
       post = create_post(raw: "https://www.discourse.org/")
 
       TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
-      BadgeGranter.backfill(Badge.find(Badge::PopularLink))
+      BadgeGranter.backfill(popular_link_badge)
       expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
 
       TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
-      BadgeGranter.backfill(Badge.find(Badge::PopularLink))
+      BadgeGranter.backfill(popular_link_badge)
       expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(1)
     end
 
@@ -126,7 +130,7 @@ describe Badge do
 
       TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
       TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
-      BadgeGranter.backfill(Badge.find(Badge::PopularLink))
+      BadgeGranter.backfill(popular_link_badge)
       expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
     end
   end
