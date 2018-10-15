@@ -621,11 +621,6 @@ module Email
     end
 
     def create_group_post(group, user, body, elided, hidden_reason_id)
-      # ensure user PM emails are enabled (since user is posting via email)
-      if !user.staged && !user.user_option.email_private_messages
-        user.user_option.update!(email_private_messages: true)
-      end
-
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -648,6 +643,8 @@ module Email
                      topic: post.topic,
                      skip_validations: true)
       else
+        enable_email_pm_setting(user)
+
         create_topic(user: user,
                      raw: body,
                      elided: elided,
@@ -856,6 +853,7 @@ module Email
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
       options[:post] = nil if options[:post]&.trashed?
+      enable_email_pm_setting(options[:user]) if options[:topic].archetype == Archetype.private_message
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
@@ -1071,6 +1069,13 @@ module Email
         if user.posts.count == 0
           UserDestroyer.new(Discourse.system_user).destroy(user, quiet: true)
         end
+      end
+    end
+
+    def enable_email_pm_setting(user)
+      # ensure user PM emails are enabled (since user is posting via email)
+      if !user.staged && !user.user_option.email_private_messages
+        user.user_option.update!(email_private_messages: true)
       end
     end
   end
