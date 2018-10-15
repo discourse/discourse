@@ -15,7 +15,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include('class="discourse-local-date"')
     expect(cooked).to include('data-date="2018-05-08"')
     expect(cooked).to include('data-format="L LTS"')
-    expect(cooked).not_to include('data-force-timezone=')
+    expect(cooked).not_to include('data-timezone=')
 
     expect(cooked).to include(
       'data-timezones="Europe/Paris|America/Los_Angeles"'
@@ -32,7 +32,7 @@ RSpec.describe "Local Dates" do
 
     cooked = post.cooked
 
-    expect(cooked).to include('data-force-timezone="Asia/Calcutta"')
+    expect(cooked).to include('data-timezone="Asia/Calcutta"')
     expect(cooked).to include('05/08/2018 4:30:00 PM')
   end
 

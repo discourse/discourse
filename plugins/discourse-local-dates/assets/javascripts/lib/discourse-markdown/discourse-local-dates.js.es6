@@ -6,7 +6,7 @@ function addLocalDate(buffer, matches, state) {
   let config = {
     date: null,
     time: null,
-    forceTimezone: null,
+    timezone: null,
     format: "YYYY-MM-DD HH:mm:ss",
     timezones: "Etc/UTC"
   };
@@ -19,7 +19,7 @@ function addLocalDate(buffer, matches, state) {
 
   config.date = parsed.attrs.date;
   config.time = parsed.attrs.time;
-  config.forceTimezone = parsed.attrs.forceTimezone || parsed.attrs.timezone;
+  config.timezone = parsed.attrs.timezone;
   config.recurring = parsed.attrs.recurring;
   config.format = parsed.attrs.format || config.format;
   config.timezones = parsed.attrs.timezones || config.timezones;
@@ -37,12 +37,12 @@ function addLocalDate(buffer, matches, state) {
   }
 
   let dateTime;
-  if (config.forceTimezone) {
+  if (config.timezone) {
     token.attrs.push([
-      "data-force-timezone",
-      state.md.utils.escapeHtml(config.forceTimezone)
+      "data-timezone",
+      state.md.utils.escapeHtml(config.timezone)
     ]);
-    dateTime = moment.tz(`${config.date} ${config.time}`, config.forceTimezone);
+    dateTime = moment.tz(`${config.date} ${config.time}`, config.timezone);
   } else {
     dateTime = moment.utc(`${config.date} ${config.time}`);
   }
