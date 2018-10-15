@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe ColorScheme do
+  after do
+    ColorScheme.hex_cache.clear
+  end
 
   let(:valid_params) { { name: "Best Colors Evar", colors: valid_colors } }
+
   let(:valid_colors) { [
     { name: '$primary_background_color', hex: 'FFBB00' },
     { name: '$secondary_background_color', hex: '888888' }
