@@ -120,10 +120,12 @@ HTML
     theme.set_field(target: :common, name: "header", value: with_template)
     theme.save!
 
+    field = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: 'header')
     baked = Theme.lookup_field(theme.id, :mobile, "header")
 
-    expect(baked).to match(/HTMLBars/)
-    expect(baked).to match(/raw-handlebars/)
+    expect(baked).to include(field.javascript_cache.url)
+    expect(field.javascript_cache.content).to include('HTMLBars')
+    expect(field.javascript_cache.content).to include('raw-handlebars')
   end
 
   it 'should create body_tag_baked on demand if needed' do
@@ -214,7 +216,7 @@ HTML
   context "plugin api" do
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
-      f.value_baked
+      return f.value_baked, f.javascript_cache
     end
 
     it "transpiles ES6 code" do
@@ -224,10 +226,10 @@ HTML
         </script>
 HTML
 
-      transpiled = transpile(html)
-      expect(transpiled).to match(/\<script\>/)
-      expect(transpiled).to match(/var x = 1;/)
-      expect(transpiled).to match(/_registerPluginCode\('0.1'/)
+      baked, javascript_cache = transpile(html)
+      expect(baked).to include(javascript_cache.url)
+      expect(javascript_cache.content).to include('var x = 1;')
+      expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
     end
 
     it "converts errors to a script type that is not evaluated" do
@@ -238,9 +240,10 @@ HTML
         </script>
 HTML
 
-      transpiled = transpile(html)
-      expect(transpiled).to match(/text\/discourse-js-error/)
-      expect(transpiled).to match(/read-only/)
+      baked, javascript_cache = transpile(html)
+      expect(baked).to include(javascript_cache.url)
+      expect(javascript_cache.content).to include('Theme Transpilation Error')
+      expect(javascript_cache.content).to include('read-only')
     end
   end
 
@@ -319,33 +322,37 @@ HTML
 
     it "allows values to be used in JS" do
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
-      theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
+      theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
 
       transpiled = <<~HTML
-      <script>if ('Discourse' in window) {
+      if ('Discourse' in window) {
         Discourse._registerPluginCode('1.0', function (api) {
           var settings = { "name": "bob" };
           alert(settings.name);var a = function a() {};
         });
-      }</script>
+      }
       HTML
 
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
+      theme_field.reload
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
+      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
 
       transpiled = <<~HTML
-      <script>if ('Discourse' in window) {
+      if ('Discourse' in window) {
         Discourse._registerPluginCode('1.0', function (api) {
           var settings = { "name": "bill" };
           alert(settings.name);var a = function a() {};
         });
-      }</script>
+      }
       HTML
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
 
+      theme_field.reload
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
+      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
     end
 
   end

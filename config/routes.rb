@@ -450,6 +450,7 @@ Discourse::Application.routes.draw do
 
   get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
   get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+  get "javascripts/:digest.js" => "javascripts#show", constraints: { digest: /\h{40}/ }
 
   post "uploads" => "uploads#create"
   post "uploads/lookup-urls" => "uploads#lookup_urls"

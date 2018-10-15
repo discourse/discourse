@@ -3,6 +3,7 @@ require_dependency 'theme_settings_parser'
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
+  has_one :javascript_cache, dependent: :destroy
 
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?
@@ -68,6 +69,8 @@ PLUGIN_API_JS
 
   def process_html(html)
     errors = nil
+    javascript_cache || build_javascript_cache
+    javascript_cache.content = ''
 
     doc = Nokogiri::HTML.fragment(html)
     doc.css('script[type="text/x-handlebars"]').each do |node|
@@ -83,43 +86,52 @@ PLUGIN_API_JS
 
       if is_raw
         template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(hbs_template)})"
-        node.replace <<COMPILED
-          <script>
-            (function() {
-              if ('Discourse' in window) {
+        javascript_cache.content << <<COMPILED
+          (function() {
+            if ('Discourse' in window) {
               Discourse.RAW_TEMPLATES[#{name.sub(/\.raw$/, '').inspect}] = #{template};
-              }
-            })();
-          </script>
+            }
+          })();
 COMPILED
       else
         template = "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(hbs_template)})"
-        node.replace <<COMPILED
-          <script>
-            (function() {
-              if ('Em' in window) {
+        javascript_cache.content << <<COMPILED
+          (function() {
+            if ('Em' in window) {
               Ember.TEMPLATES[#{name.inspect}] = #{template};
-              }
-            })();
-          </script>
+            }
+          })();
 COMPILED
       end
 
+      node.remove
     end
 
     doc.css('script[type="text/discourse-plugin"]').each do |node|
       if node['version'].present?
         begin
-          code = transpile(node.inner_html, node['version'])
-          node.replace("<script>#{code}</script>")
+          javascript_cache.content << transpile(node.inner_html, node['version'])
         rescue MiniRacer::RuntimeError => ex
-          node.replace("<script type='text/discourse-js-error'>#{ex.message}</script>")
+          javascript_cache.content << "console.error('Theme Transpilation Error:', #{ex.message.inspect});"
+
           errors ||= []
           errors << ex.message
         end
+
+        node.remove
       end
     end
 
+    doc.css('script').each do |node|
+      next if node['src'].present?
+
+      javascript_cache.content << "(function() { #{node.inner_html} })();"
+      node.remove
+    end
+
+    javascript_cache.save!
+
+    doc.add_child("<script src='#{javascript_cache.url}'></script>") if javascript_cache.content.present?
     [doc.to_s, errors&.join("\n")]
   end
 
