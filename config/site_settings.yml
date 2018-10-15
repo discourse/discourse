@@ -345,6 +345,7 @@ login:
     default: ''
     type: list
     list_type: secret
+    secret: true
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
