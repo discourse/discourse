@@ -16,6 +16,12 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("tagging.manage_groups"),
         description: I18n.t("tagging.manage_groups_description"),
         icon: "wrench"
+      },
+      {
+        id: "uploadTags",
+        name: I18n.t("tagging.upload"),
+        description: I18n.t("tagging.upload_description"),
+        icon: "upload"
       }
     ];
 
@@ -23,7 +29,8 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   actionNames: {
-    manageGroups: "showTagGroups"
+    manageGroups: "showTagGroups",
+    uploadTags: "showUploader"
   },
 
   mutateValue(id) {

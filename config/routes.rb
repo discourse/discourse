@@ -775,6 +775,7 @@ Discourse::Application.routes.draw do
     get '/filter/search' => 'tags#search'
     get '/check' => 'tags#check_hashtag'
     get '/personal_messages/:username' => 'tags#personal_messages'
+    post '/upload' => 'tags#upload'
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'
