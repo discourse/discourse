@@ -12,9 +12,9 @@
       }
 
       var relativeTime;
-      if (options.forceTimezone) {
+      if (options.timezone) {
         relativeTime = moment
-          .tz(options.date + " " + options.time, options.forceTimezone)
+          .tz(options.date + " " + options.time, options.timezone)
           .utc();
       } else {
         relativeTime = moment.utc(options.date + " " + options.time);
@@ -104,7 +104,7 @@
       options.time = $this.attr("data-time") || "00:00:00";
       options.recurring = $this.attr("data-recurring");
       options.timezones = $this.attr("data-timezones");
-      options.forceTimezone = $this.attr("data-force-timezone");
+      options.timezone = $this.attr("data-timezone");
 
       processElement($this, options);
     });
