@@ -65,6 +65,7 @@ const bindings = {
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
   "shift+u": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
+  "shift+f11": { handler: "fullscreenComposer" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -209,6 +210,13 @@ export default {
       setTimeout(() => $("textarea.d-editor-input").focus(), 0);
     } else {
       composer.send("openIfDraft");
+    }
+  },
+
+  fullscreenComposer() {
+    const composer = this.container.lookup("controller:composer");
+    if (composer.get("model")) {
+      composer.toggleFullscreen();
     }
   },
 

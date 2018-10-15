@@ -4,18 +4,28 @@ export default Ember.Component.extend({
   tagName: "",
 
   @computed("composeState")
-  title(composeState) {
-    if (composeState === "draft" || composeState === "saving") {
-      return "composer.abandon";
-    }
-    return "composer.collapse";
+  toggleTitle(composeState) {
+    return composeState === "draft" || composeState === "saving"
+      ? "composer.abandon"
+      : "composer.collapse";
+  },
+
+  @computed("composeState")
+  fullscreenTitle(composeState) {
+    return composeState === "fullscreen"
+      ? "composer.exit_fullscreen"
+      : "composer.enter_fullscreen";
   },
 
   @computed("composeState")
   toggleIcon(composeState) {
-    if (composeState === "draft" || composeState === "saving") {
-      return "times";
-    }
-    return "chevron-down";
+    return composeState === "draft" || composeState === "saving"
+      ? "times"
+      : "chevron-down";
+  },
+
+  @computed("composeState")
+  fullscreenIcon(composeState) {
+    return composeState === "fullscreen" ? "compress" : "expand";
   }
 });

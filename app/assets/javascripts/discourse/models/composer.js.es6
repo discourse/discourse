@@ -26,6 +26,7 @@ const CLOSED = "closed",
   SAVING = "saving",
   OPEN = "open",
   DRAFT = "draft",
+  FULLSCREEN = "fullscreen",
   // When creating, these fields are moved into the post model from the composer model
   _create_serializer = {
     raw: "reply",
@@ -144,15 +145,24 @@ const Composer = RestModel.extend({
 
   viewOpen: Em.computed.equal("composeState", OPEN),
   viewDraft: Em.computed.equal("composeState", DRAFT),
+  viewFullscreen: Em.computed.equal("composeState", FULLSCREEN),
+  viewOpenOrFullscreen: Em.computed.or("viewOpen", "viewFullscreen"),
 
   composeStateChanged: function() {
-    var oldOpen = this.get("composerOpened");
+    let oldOpen = this.get("composerOpened"),
+      elem = $("html");
+
+    if (this.get("composeState") === FULLSCREEN) {
+      elem.addClass("fullscreen-composer");
+    } else {
+      elem.removeClass("fullscreen-composer");
+    }
 
     if (this.get("composeState") === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
     } else {
       if (oldOpen) {
-        var oldTotal = this.get("composerTotalOpened") || 0;
+        let oldTotal = this.get("composerTotalOpened") || 0;
         this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
       }
       this.set("composerOpened", null);
@@ -160,9 +170,8 @@ const Composer = RestModel.extend({
   }.observes("composeState"),
 
   composerTime: function() {
-    var total = this.get("composerTotalOpened") || 0;
-
-    var oldOpen = this.get("composerOpened");
+    let total = this.get("composerTotalOpened") || 0,
+      oldOpen = this.get("composerOpened");
     if (oldOpen) {
       total += new Date() - oldOpen;
     }
@@ -183,7 +192,7 @@ const Composer = RestModel.extend({
   // view detected user is typing
   typing: _.throttle(
     function() {
-      var typingTime = this.get("typingTime") || 0;
+      let typingTime = this.get("typingTime") || 0;
       this.set("typingTime", typingTime + 100);
     },
     100,
@@ -1041,6 +1050,7 @@ Composer.reopenClass({
   SAVING,
   OPEN,
   DRAFT,
+  FULLSCREEN,
 
   // The actions the composer can take
   CREATE_TOPIC,
