@@ -101,10 +101,6 @@ hu:
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltése során!"
     site_settings:
-      min_username_length_exists: "Nem lehet a legrövidebb felhasználói névnél rövidebb minimum felhasználói név hosszúságot beállítani."
-      min_username_length_range: "Nem lehet a maximum értéknél nagyobb minimum értéket beállítani."
-      max_username_length_exists: "Nem lehet a leghosszabb felhasználói névnél rövidebb maximum felhasználói név hosszúságot beállítani."
-      max_username_length_range: "Nem lehet a minimum értéknél kisebb maximum értéket beállítani."
       default_categories_already_selected: "Nem lehet olyan kategóriát kiválasztani ami másik listában már használva van."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba amíg nincs megadva a 's3_upload_bucket'."
   activemodel:
@@ -624,7 +620,6 @@ hu:
   dashboard:
     rails_env_warning: "A szerver jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
-    gc_warning: 'A szerver az alapértelmezett ruby memóriakezelést használja, ami nem a legoptimálisabb teljesítmény szempontjából. Olvasd el ezt a teljesítmény fokozásáról: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     memory_warning: 'A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott.'
   site_settings:
     allow_moderators_to_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
@@ -979,7 +974,6 @@ hu:
             placeholder: "name@example.com"
           contact_url:
             label: "Weboldal"
-            placeholder: "http://www.example.com/contact-us"
           site_contact:
             label: "Automatikus Üzenetek"
       corporate:

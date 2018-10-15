@@ -241,12 +241,8 @@ fa_IR:
         bookmark: "برای نشانک گذاری به اولین نوشته این موضوع مراجعه نمایید"
         unbookmark: "برای حذف تمام نشانک های این موضوع کلیک کنید"
     bookmarks:
-      not_logged_in: "متأسفیم، شما باید وارد شوید تا روی نوشته‌ها نشانک بگذارید"
       created: "شما روی این نوشته‌ها نشانک گذاشته‌اید"
-      not_bookmarked: "شما این نوشته را خوانده‌اید؛ برای نشانک گذاری کلیک کنید"
-      last_read: "این آخرین نوشته ای است که خوانده‌اید؛ بفشارید تا روی آن نشانک بگذارید."
       remove: "پاک کردن نشانک"
-      confirm_clear: "آیا مطمئنید که می‌خواهید همه نشانک ها را از این موضوع پاک کنید؟"
     topic_count_latest:
       one: "{{count}} موضوع تازه یا به‌ روز شده."
       other: "{{count}} موضوع تازه یا به‌ روز شده."
@@ -263,7 +259,6 @@ fa_IR:
     saved: "ذخیره شد!"
     upload: "بارگذاری"
     uploading: "در حال بارگذاری..."
-    uploading_filename: "بارگذاری {{filename}}..."
     uploaded: "بارگذاری شد!"
     pasting: "چسباندن..."
     enable: "فعال کردن"
@@ -405,7 +400,6 @@ fa_IR:
         all: "همه گروهها"
         empty: "هیچ گروه قابل نمایشی وجود ندارد."
         filter: "فیلتر با نوع گروه"
-        owner_groups: "گروه هایی که مالکشان هستم"
         automatic_groups: "گروههای خودکار"
         automatic: "خودکار"
         public: "عمومی"
@@ -898,9 +892,6 @@ fa_IR:
       enabled: "سایت در حال فقط خواندنی است. می‌توانید موضوعات را مشاهده کنید ولی امکان ارسال پاسخ، پسندیدن و سایر عملیات در حال حاضر غیر‌فعال است."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
-    too_few_topics_and_posts_notice: "بیا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر <strong>%{currentTopics} / %{requiredTopics}</strong> موضوع و <strong>%{currentPosts} / %{requiredPosts}</strong> ارسال ها وجود دارد. بازدید کنندگان تازه وارد به گفتگو‌هایی برای خواندن و پاسخ دادن نیاز دارند."
-    too_few_topics_notice: "بیا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر <strong>%{currentTopics} / %{requiredTopics}</strong> موضوع وجود دارد. بازدیدکنندگان تازه وارد به گفتگوهایی برای خواندن و پاسخ دادن نیاز دارند."
-    too_few_posts_notice: "بیاید <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر <strong>%{currentPosts} / %{requiredPosts}</strong> نوشته وجود دارد. بازدیدکنندگان تازه وارد به گفتگوهایی برای خواندن و پاسخ دادن نیاز دارند."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> به حد مجاز از %{siteSettingRate} رسیده است."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> از حد مجاز %{siteSettingRate} فراتر رفته است"
@@ -1115,7 +1106,6 @@ fa_IR:
       link_description: "توضیحات لینک را اینجا وارد کنید."
       link_dialog_title: "افزودن پیوند"
       link_optional_text: "عنوان اختیاری"
-      link_url_placeholder: "http://example.com"
       quote_title: "نقل‌قول"
       quote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
@@ -1559,14 +1549,9 @@ fa_IR:
         action: "ادغام نوشته‌های انتخاب شده"
         error: "خطایی در ادغام نوشته‌های انتخاب شده رخ داده است."
       change_owner:
-        title: "تغییر مالکیت نوشته‌ها"
         action: "تغییر مالکیت"
         error: "خطایی در تغییر مالکیت نوشته‌ها وجود داشت."
-        label: "مالک جدید نوشته‌ها "
         placeholder: "نام‌کاربری مالک جدید"
-        instructions:
-          one: "لطفا مالک جدید را برای این {{count}}  نوشته‌ی  <b>{{old_user}}</b>  انتخاب کنید."
-          other: "لطفا مالک جدید را برای این {{count}}  نوشته‌ی  <b>{{old_user}}</b>  انتخاب کنید."
       change_timestamp:
         title: "تغییر زمان"
         action: "تغییر زمان"
@@ -2032,7 +2017,6 @@ fa_IR:
         this_week: "هفته"
         today: "امروز"
         other_periods: "دیدن بالاترین مطالب"
-    browser_update: 'متاسفانه,<a href="http://www.discourse.org/faq/#browser">مرورگر شما خیلی قدیمی است برای ادامه کار در این وب سایت</a>. لطفا <a href="http://browsehappy.com">مرورگر خود را بروز رسانی نمایید</a>.'
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -2195,8 +2179,6 @@ fa_IR:
           bookmarks: "موضوع نشانه‌گذاری شده دیگری وجود ندارد."
           search: "نتیجه جستجوی دیگری وجود ندارد"
     invite:
-      custom_message: "دعوت خود را کمی بیشتر شخصی کنید با نوشتن یک "
-      custom_message_link: "پیام سفارشی"
       custom_message_placeholder: "متن پیام خود را وارد کنید"
       custom_message_template_forum: "سلام، باید عضو این انجمن بشی!"
       custom_message_template_topic: "سلام، فکر کردم از این موضوع لذت می‌بری!"
@@ -2476,7 +2458,6 @@ fa_IR:
         import: "ورود داده‌ها"
         delete: "پاک کردن"
         delete_confirm: "حذف قالب"
-        about: "اطلاح شیوه نامه CSS و هدر HTML در سایت، برای شروع یک کد سفارشی اضافه کنید."
         color: "رنگ"
         opacity: "تاری"
         copy: "کپی"
@@ -2515,7 +2496,6 @@ fa_IR:
           upload_file_tip: "انتخاب فایل برای بارگذاری (png، woff2،...)"
           variable_name: "نام متغیر SCSS:"
           upload: "بارگذاری"
-          child_themes_check: "این قالب دارای قالب‌های فرزند است"
           css_html: "CSS/HTML سفارشی"
           edit_css_html: "ویرایش CSS/HTML"
           edit_css_html_help: "شما CSS یا HTML را ویرایش نکرده‌اید"
@@ -2677,7 +2657,6 @@ fa_IR:
           all: "همه"
           title: "عملیات همکارا"
           clear_filters: "همه چیز را نشان بده "
-          staff_user: "کاربر همکار"
           target_user: "کاربر هدف"
           subject: "موضوع"
           when: "وقتی‌که"

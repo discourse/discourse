@@ -210,12 +210,8 @@ zh_TW:
         bookmark: "將此主題的第一篇文章加入書籤"
         unbookmark: "移除此主題所有書籤"
     bookmarks:
-      not_logged_in: "抱歉，你必須先登入才能將文章加上書籤"
       created: "你已將此文章加上書籤"
-      not_bookmarked: "你已閱讀過這篇文章，按此加上書籤"
-      last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
-      confirm_clear: "你確定要刪除該主題的所有書籤嗎？"
     preview: "預覽"
     cancel: "取消"
     save: "儲存變更"
@@ -223,7 +219,6 @@ zh_TW:
     saved: "儲存完畢！"
     upload: "上傳"
     uploading: "正在上傳..."
-    uploading_filename: "{{filename}} 上傳中..."
     uploaded: "上傳完畢！"
     enable: "啟用"
     disable: "停用"
@@ -354,7 +349,6 @@ zh_TW:
         title: "群組"
         all: "所有群組"
         empty: "沒有可看見的群組。"
-        owner_groups: "我是擁有者的群組"
         close_groups: "已關閉的群組"
         automatic_groups: "自動群組"
         automatic: "自動"
@@ -845,9 +839,6 @@ zh_TW:
       enabled: "站點正處於只讀模式。你可以繼續瀏覽，但是回覆、讚和其他操作暫時被禁用。"
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
-    too_few_topics_and_posts_notice: "讓我們<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 個主題和 <strong>%{currentPosts} / %{requiredPosts}</strong> 個帖子。新訪客需要一些討論串來閲讀和回覆。"
-    too_few_topics_notice: "讓我們<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 個主題。新訪客需要一些討論串來閲讀和回覆。"
-    too_few_posts_notice: "讓我們<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 個帖子。新訪客需要一些討論串來閲讀和回覆。"
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 達到了站點設置中的 %{siteSettingRate}。"
       exceeded: "<b>[%{relativeAge}]</b> 目前的錯誤率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站點設置中的 %{siteSettingRate}。"
@@ -1063,7 +1054,6 @@ zh_TW:
       link_description: "在此輸入超連結的描述"
       link_dialog_title: "插入超連結"
       link_optional_text: "標題 (可選填)"
-      link_url_placeholder: "http://example.com"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "預先格式化文字"
@@ -1507,13 +1497,9 @@ zh_TW:
         action: "合併選擇的帖子"
         error: "合併選擇的帖子試出錯。"
       change_owner:
-        title: "更改文章的擁有者"
         action: "變更擁有者"
         error: "修改文章擁有者時發生錯誤。"
-        label: "文章的新擁有者"
         placeholder: "新擁有者的用戶名稱"
-        instructions:
-          other: "請選擇一位新用戶作為此 {{count}} 篇由 <b>{{old_user}}</b> 撰寫之文章的擁有者。"
       change_timestamp:
         title: "變更時間標籤..."
         action: "變更時間戳記"
@@ -1927,7 +1913,6 @@ zh_TW:
         this_week: "週"
         today: "今天"
         other_periods: "前往頂端"
-    browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">您的瀏覽器版本太舊，無法正常訪問該站點。</a>。請<a href="http://browsehappy.com">升級您的瀏覽器</a>。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -2086,8 +2071,6 @@ zh_TW:
           bookmarks: "沒有更多收藏的主題了。"
           search: "沒有更多搜索結果了。"
     invite:
-      custom_message: "讓你的邀請稍稍個人化一些吧，寫個"
-      custom_message_link: "留言"
       custom_message_placeholder: "輸入留言"
       custom_message_template_forum: "你好，你應該來我們這個論壇！"
       custom_message_template_topic: "你好，我覺得你可能會喜歡這個主題！"
@@ -2368,7 +2351,6 @@ zh_TW:
         import: "匯入"
         delete: "刪除"
         delete_confirm: "刪除這個佈景？"
-        about: "修改網站的 CSS 和 HTML headers。請新增一個自定樣式來開始使用。"
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"
@@ -2504,7 +2486,6 @@ zh_TW:
         staff_actions:
           title: "工作人員動作"
           clear_filters: "全部顯示"
-          staff_user: "工作人員用戶"
           target_user: "目標用戶"
           subject: "主旨"
           when: "時間"

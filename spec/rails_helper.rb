@@ -134,6 +134,7 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
+    ColorScheme.hex_cache.clear
 
     raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
   end

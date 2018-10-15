@@ -139,7 +139,6 @@ sr:
     pop3_polling_port: "Port za proveru POP3 naloga."
     pop3_polling_username: "Korisničko ime POP3 naloga za proveru postojanja novih email poruka"
     pop3_polling_password: "Lozinka PO3 naloga za proveru postojanja novih email poruka"
-    log_mail_processing_failures: "Beleži sve greške u obradi email poruka na http://yoursitename.com/logs"
     minimum_topics_similar: "Koliko teme mora da postoji da bi se prikazivale slične teme prilikom kreiranja novih"
     delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
     delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
@@ -161,7 +160,6 @@ sr:
     default_code_lang: "Podrazumevani programski jezik za obeležavanje sintakse GitHub blokova koda (lang-auto, ruby, python itd.)"
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
-    highlighted_languages: "Uključena pravila za označavanje sintakse (Upozorenje: uključivanje previše jezika može da utiče na performanse). Pogledajte https://highlightjs.org/static/demo/ za demo."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
     delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana

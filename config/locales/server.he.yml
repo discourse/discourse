@@ -116,10 +116,6 @@ he:
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
     site_settings:
-      min_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המינימלי להיות ארוך יותר משם משתמש שכבר קיים."
-      min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
-      max_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המקסימלי לקצר יותר משם משתמש שכבר קיים."
-      max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת."
       s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
   activemodel:
@@ -843,7 +839,6 @@ he:
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
-    gc_warning: 'השרת שלכם משתמש בפרמטרי ברירת המחדל של garbage collection, שלא ייתנו לכם את הביצועים הטובים ביותר. קראו את הנושא הזה על כיוונון ביצועים: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">כיוונון Ruby on Rails בעבור Discourse</a>.'
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת מיילים, מבוצעות אסינכרונית באמצעות Sidekiq. אנא וודאו שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">לימדו על Sidekiq כאן</a>.'
     queue_size_warning: 'מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers.'
     memory_warning: 'בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון.'
@@ -851,9 +846,6 @@ he:
     facebook_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם פייסבוק (enable_facebook_logins), אבל ערכי מזהה האפליקציה וסוד האפליקציה אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
     twitter_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם טוויטר (enable_twitter_logins), אבל ערכי המפתח והסוד אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
     github_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם גיטהאב (enable_github_logins), אבל ערכי מזהה הלקוח והסוד אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
-    s3_config_warning: 'השרת מוגדר להעלות קבצים ל s3, אבל לפחות אחת ההגדרות הבאות לא נקבעה: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, או s3_upload_bucket. גשו ל-<a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ראו ״כיצד להגדיר העלאת קבצים ל S3?״ כלי ללמוד עוד</a>.'
-    s3_backup_config_warning: 'השרת מוגדר להעלות גיבויים ל s3, אבל לפחות אחת מההגדרות הבאות לא נקבעה: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, או s3_backup_bucket. גשו ל-<a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ראו ״כיצד להגדיר העלאת תמונות ל S3?״ כדי ללמוד עוד</a>.'
-    image_magick_warning: 'השרת מכוון ליצור צלמיות לתמונות גדולות, אבל ImageMagick לא מותקן. התקינו ImageMagick באמצעות מנהל החבילות האהוב עליכם או <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">הורידו את הגרסה האחרונה</a>.'
     failing_emails_warning: 'יש %{num_failed_jobs} עבודות מייל שנכשלו. בידקו את app.yml שלכם כדי לוודא ששרת המייל מוגדר כיאות. <a href="/sidekiq/retries" target="_blank">ראו את העבודות שנכשלו ב Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
@@ -888,14 +880,12 @@ he:
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
-    contact_url: "כתובת URL ליצירת קשר לעמוד זה. משמשת בטופס ה- /about לעניינים דחופים."
     crawl_images: "אחזור תמונות מכתובת URL רחוקה כדי להכניס את מימדי האורך והרוחב הנכונים."
     download_remote_images_to_local: "המרת תמונות מרחוק לתמונות מקומיות באמצעות הורדות; למניעת שגיאות של תמונות חסרות"
     download_remote_images_threshold: "שטח האכסון המינימלי (באחוזים) הנדרש להורדת תמונות באופן מקומי"
     download_remote_images_max_days_old: "לא להוריד תמונות מרוחקות עבור פוסטים בני יותר מ n ימים."
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
     editing_grace_period: "ל (n) שניות לאחר פרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
-    post_edit_time_limit: "העורכים יכולים לערוך או להסיר את הפוסט שלהם במשך (n) דקות לאחר הפרסום. הזינו 0 כ\"תמיד\"."
     edit_history_visible_to_public: "אפשרו לכולם לראות גרסאות קודמות של פוסט ערוך. כאשר אפשרות זו מנוטרלת, רק חברי צוות יכולים לצפות בהן."
     delete_removed_posts_after: "פוסטים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, פוסטים ימחקו מיידית."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפוסט"
@@ -909,14 +899,10 @@ he:
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פוסט Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_blacklist: "רשימת מתחמים (דומיינים) שלעולם לא יהיו Oneboxed."
     max_oneboxes_per_post: "מספר מקסימלי של onebox-ים בפוסט."
-    logo_url: "תמונת הלוגו בפינה הימנית עליונה של המסך, אמורה להיות מלבנית רחבה. אם נשארת ריקה, תוצג כותרת האתר."
     digest_logo_url: "תמונת הלוגו האלטרנטיבי שמשמשת בראש המיילים של הסיכום מאתרכם. אמורה להיות צורה מלבנית מוארכת. צריכה לא להיות תמונת SVG. אם נשאר ריק ייעשה שימוש ב `logo_url`."
-    logo_small_url: "תמונת לוגו קטנה בפינה הימנית עליונה של האתר, אמורה להיות ריבועית, נראית כאשר גוללים למטה. אם נשארת ריקה תוצג צלמית בית."
-    favicon_url: "צלמית favicon לאתר שלכם, ראו http://en.wikipedia.org/wiki/Favicon, כדי שתעבוד כמו שצריך עם CDN חייבת להיות png"
     apple_touch_icon_url: "אייקון שמשמש למכשירי טאץ׳ של אפל. גודל מומלץ 144 על 144 פיקסלים."
     notification_email: "מאת: נעשה שימוש בכתובת מייל זו כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
-    email_subject: "התאמה עצמית של מבנה נושא למיילים סטנדרטיים. ראו:\nhttps://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "הכריחו את אתרכם להשתמש אך ורק ב HTTPS. אזהרה: אל תאפשרו זאת עד שתוודאו ש HTTPS מותקן ועובד ממש בכל המקרים! וידאתם את הגדרות ה CDN שלכם, כל שירותי ההתחברות, וכל הלוגואים / תלויות החיצוניים - כדי לוודא שכולם עובדים גם כן עם HTTPS?"
     same_site_cookies: "שימוש בעוגיות של האתר, הן מבטלות את כל הווקטורים של Cross Site Request Forgery בדפדפנים נתמכים (Lax או Strict). אזהרה: Strict יעבוד רק על אתרים שמכריכים התחברות ומשתמשים ב SSO."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
@@ -943,10 +929,7 @@ he:
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     pending_users_reminder_delay: "הודיעו למנחים אם משתמשים חדשים ממתינים לאישור למעלה מכמות זו של שעות. קבעו ל -1 כדי לנטרל התראות."
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    ga_universal_tracking_code: "קוד מעקב של (Google Universal Analytics (analytics.js, למשל: UA-12345678-9; ראו http://google.com/analytics"
-    ga_universal_domain_name: "שם המתחם של (Google Universal Analytics analytics.js), למשל: mysite.com; ראו http://google.com/analytics"
     gtm_container_id: "מזהה קונטיינר של מנהל תגיות גוגל. למשל: GTM-ABCDEF"
-    enable_escaped_fragments: "נסיגה ל Ajax-Crawling API של גוגל אם לא מתגלה זחלן-רשת. ראו https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "אפשרו למנחים ליצור קטגוריות חדשות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_whitelist: "מנהלים יכולים להתחבר רק אם הכתובת שלהם מופיע ברשימת ה IPs המסוננים (ניהול > לוגים > כתובות IP מסוננות)."
@@ -974,7 +957,6 @@ he:
     email_domains_blacklist: "רשימה מופרדת בצינור (pipe) של דומיינים של אימייל אשר מהם משתמשים לא מורשים לרשום חשבונות. למשל: mailinator.com|trashmail.net"
     email_domains_whitelist: "רשימה מופרדת בצינור (pipe) אשר ר-ק ממנה משתמשים יכולים לרשום חשבונות. א-ז-ה-ר-ה: משתמשים עם אימיילים מדומיינים אחרים לא יורשו!"
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
-    version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה ב /admin"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_only: "הרשמה פומבית מנוטרלת, כל המשתמשים החדשים חייבים להיות מוזמנים על ידי הצוות."
@@ -987,7 +969,6 @@ he:
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     enable_sso: "הפעלת התחברות יחידה (Single Sign On) באמצעות אתר חיצוני (א-ז-ה-ר-ה: כתובות המייל של משתמשים *חייבות* לעבור אימות על ידי אתר חיצוני!)"
-    verbose_sso_logging: "רישום יומנים מפורטים בנוגע לדיאגנוסטיקות SSO ל /logs"
     enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
@@ -1001,19 +982,11 @@ he:
     allow_new_registrations: "הפעלת הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "הציגו מודעה למשתמשים אנונימיים חוזרים שמציעה להם להרשם כדי לקבל חשבון."
     enable_yahoo_logins: "איפשור אימות של Yahoo"
-    enable_google_oauth2_logins: "הפעלת הזדהות באמצעות Oauth2 של גוגל. זהו מנגנון ההזדהות שנתמך כרגע על ידי גוגל. דורש מפתח וסיסמה."
     google_oauth2_client_id: "זהות לקוח (Client ID) של אפליקציית ה-Google שלך."
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
-    enable_twitter_logins: "הפעלת אימות Twitter, מצריך twitter_consumer_key ו twitter_consumer_secret"
     enable_instagram_logins: "הפעלת אימות אינסטגרם, מצריך instagram_consumer_key ו instagram_consumer_secret"
     instagram_consumer_key: "מפתח לאימות אינסטגרם"
     instagram_consumer_secret: "סוד לאימות אינסטגרם"
-    enable_facebook_logins: "איפשור אימות פייסבוק, מצריך facebook_app_id ו facebook_app_secret"
-    facebook_app_id: "מזהה אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
-    facebook_app_secret: "סוד אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
-    enable_github_logins: "אפשור אימות Github, מצריך github_client_id ו github_client_secret"
-    github_client_id: "מזהה לקוח לאימות Github, רשום ב https://github.com/settings/applications"
-    github_client_secret: "סוד לקוח לאימות Github, רשום ב https://github.com/settings/applications"
     readonly_mode_during_backup: "הפעלת מצב קריאה בלבד בזמן גיבוי"
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\" (false) אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "המספר המקסימלי של גיבויים לשמירה על הכונן. גיבויים ישנים יותר ימחקו אוטומטית"
@@ -1111,7 +1084,6 @@ he:
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
-    title_fancy_entities: "המירו תווי ASCII ליישויות fancy HTML בכותרות נושאים, בסגנון SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
     min_body_similar_length: "האורך המינימלי של גוף הפוסט לפני שהוא ייבדק לאיתור נושאים דומים."
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
@@ -1189,7 +1161,6 @@ he:
     pop3_polling_host: "השרת המארח (Host) למשיכת דוא\"ל דרך POP3."
     pop3_polling_username: "שם המשתמש/ת לחשבון ה-POP3 לתשאול דוא\"ל."
     pop3_polling_password: "הסיסמה לחשבון ה-POP3 למשיכת הדוא\"ל."
-    log_mail_processing_failures: "רישום של כל בעיות העיבוד ל http://yoursitename.com/logs"
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמשים כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
     email_prefix: "ה[תווית] שתשמש כנושא של מיילים. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
     email_site_title: "הכותרת של האתר שתשמש כשם השולח של דוא\"ל מהאתר. במידה ולא יוגדר ערך, תכוון ברירת המחדל ל\"כותרת\". אם ה\"כותרת\" שלכם מכילה תוים שאינם מותרים לשימוש במחרוזות \"שם השולח\" בדוא\"ל, השתמשו בהגדרה זו."
@@ -1247,7 +1218,6 @@ he:
     default_code_lang: "תחביר שפת תכנות שיסופק כברירת מחדל על קטעי קוד מגיטהאב (לאנג-אוטו, רובי, פיתון וכד׳)"
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
-    highlighted_languages: "כולל הדגשת כללי תחביר (syntax). (אזהרה: הכללת שפות רבות מידי עשויה להשפיע על הביצועים) ראו: https://highlightjs.org/static/demo/ להדגמה."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
@@ -1671,14 +1641,6 @@ he:
         ```
     csv_export_succeeded:
       title: "יצוא CSV הצליח"
-      text_body_template: |
-        ייצוא המידע שלכם הצליח! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        קישור ההורדה למעלה יהיה בתוקף ל 48 שעות.
-
-        המידע מכווץ כקובץ gzip. אם הקובץ לא נפתח אוטומטית כשאתם פותחים אותו, השתמשו בכלים שמומלצים כאן: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "יצוא CSV נכשל"
       subject_template: "ייצוא הנתונים נכשל"
@@ -2443,7 +2405,6 @@ he:
             description: "כתובת מייל לאדם או קבוצה שאחראים על קהילה זו. משמשת להתראות קריטיות כמו דגלים שלא טופלו, עידכוני אבטחה, וב<a href='/about' target='_blank'>דף האודות שלכם</a> ליצירת קשר דחופה עם איש הקשר של הקהילה."
           contact_url:
             label: "דף ווב"
-            placeholder: "http://www.example.com/contact-us"
             description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות שלכם</a>."
           site_contact:
             label: "הודעות אוטומטיות"

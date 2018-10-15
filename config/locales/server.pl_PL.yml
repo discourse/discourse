@@ -112,10 +112,6 @@ pl_PL:
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
     site_settings:
-      min_username_length_exists: "Nie możesz ustawić najkrótszej długości nazwy użytkownika powyżej najkrótszej nazwy użytkownika."
-      min_username_length_range: "Nie możesz ustawić minimum powyżej maksimum."
-      max_username_length_exists: "Nie możesz ustawić maksymalnej długości nazwy użytkownika poniżej najdłuższej nazwy użytkownika."
-      max_username_length_range: "Nie możesz ustawić maksimum poniżej minimum."
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
   activemodel:
@@ -825,7 +821,6 @@ pl_PL:
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
-    gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     queue_size_warning: 'Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
@@ -833,9 +828,6 @@ pl_PL:
     facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
-    s3_config_warning: 'Serwer został skonfigurowany aby przesyłać pliki do s2, ale przynajmniej jeden z następujących parametrów nie został ustawiony: s3_access_key_id_, s3_secret_access_key, s3_use_iam_profile, lub s3_upload bucket. Przejdź do <a href="/admin/site_settings">Strony ustawień</a> i zaktualizuj ustawienia, <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Zobacz "Jak ustawić przesyłanie obrazu do S3" aby dowiedzieć się więcej</a>,'
-    s3_backup_config_warning: 'Serwer jest skonfigurowany tak, aby wysyłać kopie zapasowe do s3, ale jedno z ustawień nie jest ustawione prawidłowo: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Idź do <a href="/admin/site_settings"> ustawień strony </a> i zaktualizuj ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Zobacz Jak ustawić wysyłanie zdjęć do S3 </a>.'
-    image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
     subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
     email_polling_errored_recently:
@@ -870,15 +862,12 @@ pl_PL:
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
     title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
-    contact_email: "Adres email kogoś, z kim należy się kontaktować w kwestii serwisu. Istotne informacje z discourse.org dotyczące krytycznych aktualizacji mogą być wysyłane pod ten adres."
-    contact_url: "URL kontaktowy dla tego serwisu. Używany na podstronie /about."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     download_remote_images_max_days_old: "Nie pobieraj zdalnych obrazów dla postów które mają więcej niż n dni."
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
     editing_grace_period: "Przez (n) sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
-    post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
@@ -894,14 +883,10 @@ pl_PL:
     inline_onebox_domains_whitelist: "Lista domen, które będą zamknięte w miniaturze jeśli zostały zalinkowane bez tytułu."
     enable_inline_onebox_on_all_domains: "Zignoruj inline_onebox_domain_whitelist strony ustawień i zezwól na wstawki onebox we wszystkich domenach."
     max_oneboxes_per_post: "Masymalna ilość oneboxów w poście."
-    logo_url: "Zdjęcie logo w lewym górnym rogu twojej strony powinno mieć kształt szerokiego prostokąta. Jeśli zostawisz miejsce puste, wyświetlany będzie tytuł strony."
     digest_logo_url: "Alternatywne logo używane w biuletynie email. Powinno mieć kształt szerokiego prostokąta. Nie powinno być obrazkiem SVG. Jeśli puste, zostanie użyta wartość z pola `logo_url`."
-    logo_small_url: "Małe logo w lewym górnym rogu strony widoczne przy przewijaniu. Powinno mieć kwadratowy kształt. Jeśli zostawisz to pole puste zamiast logo pojawi się symbol strony domowej."
-    favicon_url: "Favicon serwisu. Więcej informacji: http://pl.wikipedia.org/wiki/Favicon Żeby działało poprawnie poprzez CDN musi być obrazem png"
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    email_subject: "Możliwość dostosowania formatu tematów maili. Szczegóły: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     same_site_cookies: "Używaj tych samych plików cookies, eliminują one wszystkie wektory Cross Site Request Forgery na wspieranych przeglądarkach (Lax lub Strict). Ostrzeżenie: Przeglądarka Strict działa jedynie na stronach, które wymagają logowania oraz używają SSO."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
@@ -928,11 +913,7 @@ pl_PL:
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu. UWAGA: włączenie tego dla już udostępnionej strony sprawi, że zostanie odebrany dostęp wszystkim istniejącym użytkownikom spoza zespołu."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
-    ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
-    ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
-    ga_universal_auto_link_domains: "Włącz Google Universal Analytics (analytics.js) śledzenie wielu domen. Linki wychodzące do tych domen będą miały dodane id klienta. Zobacz poradnik Google's Cross-Domain Tracking."
     gtm_container_id: "Kontener menadżera tagów Google np: GTM-ABCDEF"
-    enable_escaped_fragments: "Odwołuj się do API Google Ajax-Crawling jeżeli nie wykryto żadnego robota internetowego. Sprawdź https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_whitelist: "Administratorzy mogą się logować tylko z adresów IP zdefiniowanych w liście Screened IPs (Admin > Logi > Screened Ips)."
@@ -961,7 +942,6 @@ pl_PL:
     email_domains_blacklist: "Lista rozdzielonych pionową kreską domen e-mail, z których użytkownicy nie mogą się rejestrować. Przykład: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista rozdzielonych pionową kreską domen e-mail, z których użytkownicy MUSZĄ się rejestrować. UWAGA: Użytkownicy z domenami e-mail innymi niż wypisane nie będą dopuszczeni!"
     log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
-    version_checks: "Odpytuj Discourse Hub o aktualizacje i wyświetlaj wiadomości o nowej wersji w panelu /admin"
     new_version_emails: "Wyślij email na adres contact_email, kiedy nowa wersja Discourse będzie dostępna."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Rejestracja jest wyłączona. Nowi użytkownicy muszą zostać zaproszeni przez administrację."
@@ -974,7 +954,6 @@ pl_PL:
     password_unique_characters: "Minimalna ilość różnych znaków, które muszą być w haśle."
     block_common_passwords: "Nie zezwalaj na hasła znajdujące się w grupie 10 000 najpopularniejszych haseł."
     enable_sso: "Włącz pojedyncze logowanie przez zewnętrzną stronę (UWAGA: ADRESY E-MAIL UŻYTKOWNIKÓW *MUSZĄ* BYĆ ZATWIERDZONE PRZEZ ZEWNĘTRZNĄ STRONĘ!)"
-    verbose_sso_logging: "Log więcej diagnostyk związanych z SSO do /logs"
     enable_sso_provider: "Zaimplementuj protokół dostawcy Discourse SSO w endpoint /session/sso_provider, wymaga ustawienia sso_secret"
     sso_url: "URL endpoint pojedynczego logowania (musi zawierać http:// lub https://)"
     sso_secret: "Tajny ciąg znaków używany, aby kryptograficznie uwierzytelnić informacje SSO, powinien mieć 10 lub więcej znaków."
@@ -988,19 +967,11 @@ pl_PL:
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
     enable_yahoo_logins: "Włącz autoryzację Yahoo"
-    enable_google_oauth2_logins: "Włącz uwierzytelnienie za pomocą Google Oauth2. Jest to metoda uwierzytelniania, którą Google obecnie wspiera. Wymaga klucza i sekretu."
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
-    enable_twitter_logins: "Włącz autoryzację Twitter, wymagane twitter_consumer_key oraz twitter_consumer_secret"
     enable_instagram_logins: "Włącz uwierzytelnienie za pomocą Instagramu, wymaga instagram_consumer_key i instagram_consumer_secret."
     instagram_consumer_key: "Klucz konsumenta dla uwierzytelnienia Instragram"
     instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
-    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
-    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
-    enable_github_logins: "Włacz autoryzację Github, wymagane github_client_id oraz github_client_secret"
-    github_client_id: "Client id dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
-    github_client_secret: "Client secret dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
     readonly_mode_during_backup: "Włącz tryb tylko do odczytu podczas wykonywania kopii zapasowej"
     allow_restore: "Dopuść przywracanie, które może zamienić WSZYSTKIE dane strony! Zostaw fałsz, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
@@ -1098,7 +1069,6 @@ pl_PL:
     title_min_entropy: "Minimalna entropia tytułu wątku (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     body_min_entropy: "Minimalna entropia treści posta (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     allow_uppercase_posts: "Zezwól na same wielkie litery w tytule tematu lub treści postu."
-    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
     min_body_similar_length: "Minimalna długość treści posta zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
@@ -1176,7 +1146,6 @@ pl_PL:
     pop3_polling_host: "Host do przeglądania cyklicznego emaila poprzez POP3."
     pop3_polling_username: "Nazwa użytkownika dla konta POP3 do przeglądania cyklicznego emaila."
     pop3_polling_password: "Hasło dla konta POP3 do przeglądania cyklicznego maila."
-    log_mail_processing_failures: "Zapisuj wszystkie błędy w przetwarzaniu emaili na http://yoursitename.com/logs"
     email_in_min_trust: "Minimalny poziom zaufania, który musi posiadać użytkownik, aby móc dodawać nowe posty w tematach poprzez email."
     email_prefix: "Etykieta używana w temacie emaili. Domyślnie będzie ustawiana jako \"tytuł\", w przypadku braku ustawienia."
     email_site_title: "Tytuł strony używany jako nadawca emaili ze strony. Domyślnie ustawiony jako \"tytuł\", w przypadku braku ustawienia. Jeśli twój \"tytuł\" zawiera znaki, które nie są dozwolone przez ciągi znaków nadawcy emaila, użyj tego ustawienia."
@@ -1235,7 +1204,6 @@ pl_PL:
     default_code_lang: "Domyślny język programowania syntax podświetlający zastosowany do bloków kodu GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
-    highlighted_languages: "Uwzględniona reguły podświetlania syntax. (Ostrzeżenie: uwzględnianie zbyt wielu języków może mieć wpływ na działanie) zobacz demo: https://highlightjs.org/static/demo/"
     embed_truncate: "Okrój osadzone posty."
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
     embed_post_limit: "Maksymalna liczba postów do osadzenia."
@@ -1647,14 +1615,6 @@ pl_PL:
 
     csv_export_succeeded:
       title: "Eksport CSV udany "
-      text_body_template: |
-        Eksport danych zakończył się sukcesem! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Powyższy link będzie aktywny przez 48 godzin.
-
-        Dane są skompresowane do archiwum gzip. Jeśli archiwum nie rozpakowuje się samo gdy je otwierasz, użyj narzędzi zalecanych tutaj: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Eksport CSV nieudany "
       subject_template: "Nieudany eksport danych"
@@ -2586,7 +2546,6 @@ pl_PL:
             description: "Adres email osoby lub grupy odpowiedzialnej za tą społeczność. Używany dla krytycznych powiadomień jak na przykład nieobsłużone oflagowania, aktualizację bezpieczeństwa i na <a href='/about' target='_blank'>stronie o Tobie</a> dla szybkiego kontaktu."
           contact_url:
             label: "Strona kontaktowa"
-            placeholder: "http://www.example.com/contact-us"
             description: "Ogólna strona kontaktowa do ciebie i twojej organizacja. Będzie wyświetlane na <a href='/about' target='_blank'>twojej stronie </a>."
           site_contact:
             label: "Automatyczne wiadomości"

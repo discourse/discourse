@@ -143,14 +143,6 @@ it:
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
         title: ":robot: Benvenuto!"
-        message: |-
-          Grazie per esserti unito a %{title}, e benvenuto!
-
-          - Io sono solo un robot, ma [il nostro amichevole staff](/about) è qui per aiutarti se hai bisogno di contattare una persona.
-
-          - Per ragioni di sicurezza, abbiamo temporaneamente limitato ciò che i nuovi utenti possono fare. Potrai guadagnare nuove abilità (e [distintivi](/badges)) appena ti conosceremo meglio.
-
-          - Noi crediamo in una [comunità dal comportamento civile](/guidelines) in ogni momento.
       onebox:
         instructions: |-
           Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sé stante**, e verrà automaticamente espanso per includere un bel sommario.
@@ -204,15 +196,15 @@ it:
         instructions: |-
           Puoi provare a citarmi nella tua risposta, così saprò esattamente a quale parte del mio messaggio stai rispondendo?
 
-          > Se questo è caffè, per favore portami del thè; ma se questo è thè, per favore portami del caffè.
+          > Se questo è caffè, per favore portami del tè; ma se questo è tè, per favore portami del caffè.
           >
-          > Un vantaggio del parlare con sè stessi è che almeno sai che qualcuno ti sta ascoltando.
+          > Un vantaggio del parlare con se stessi è che almeno sai che qualcuno ti sta ascoltando.
           >
           > Alcune persone si fanno strada con le parole e altre persone… oh, oh, non hanno una strada.
 
           Seleziona il testo della citazione &uarr; che preferisci, e poi premi il pulsante **Cita** che comparirà sopra il testo selezionato – o il pulsante **Rispondi** in fondo a questo messaggio.
 
-          Sotto la citazione, digita una o due parole sul motivo per cui hai scelto proprio quella perchè sono curioso :thinking:
+          Sotto la citazione, digita una o due parole sul motivo per cui hai scelto proprio quella perché sono curioso :thinking:
         reply: |-
           Bel lavoro, hai scelto la mia citazione preferita! :left_speech_bubble:
         not_found: |-
@@ -261,8 +253,6 @@ it:
           >  :imp: Ho scritto qualcosa di brutto qui
 
           Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
-        reply: |-
-          [Il nostro staff](/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
           Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
@@ -286,25 +276,12 @@ it:
           - Se hai una :keyboard: fisica, premi <kbd>?</kbd> per visualizzare delle comode scorciatoie da tastiera.
         not_found: |-
           Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
-      end:
-        message: |-
-          Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
-
-          %{certificate}
-
-          E' tutto per ora! Controlla [**gli argomenti delle nostre ultime discussioni**](/latest) o [**le categorie di discussione**](/categories). :sunglasses:
-
-          (Se vuoi parlare con me ancora per imparare altro, inviami un messaggio o menzionami scrivendo `@%{discobot_username}` quando vuoi!)
       certificate:
         alt: 'Attestato di Merito'
     advanced_user_narrative:
       reset_trigger: 'utente avanzato'
       cert_title: "In riconoscimento del completamento con successo del tutorial utente avanzato"
       title: ':arrow_up: Funzioni utente avanzato'
-      start_message: |-
-        Come utente _avanzato_, hai già visitato [la pagina delle opzioni sul tuo profilo](/my/preferences) @%{username}? Ci sono molti modi per personalizzare la tua esperienza, ad esempio selezionando un tema scuro o uno chiaro.
-
-        Ma sto divagando, cominciamo!
       edit:
         bot_created_post_raw: "@%{discobot_username} è, di gran lunga, il bot più interessante che conosco :wink:"
         instructions: |-
@@ -367,7 +344,7 @@ it:
         reply: |-
           Lavoro impressionante! Spero tu non abbia silenziato questo argomento dato che a volte posso essere un po' loquace :grin:.
 
-          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](/my/preferences).
+          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Lo sapevi che puoi aggiungere un sondaggio in ogni messaggio? Prova ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor per **creare un sondaggio**.
@@ -405,7 +382,7 @@ it:
 
           Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
-          Hai problemi a creare un widget con dei dettagli? Prova a includere quello che segue nella tua prossima risposta:
+          Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 
           ```text
           [details=Selezionami per vedere i dettagli]

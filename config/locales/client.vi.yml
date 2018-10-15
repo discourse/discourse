@@ -213,12 +213,8 @@ vi:
         bookmark: "Chọn bài viết đầu tiên của chủ đề cho vào dấu trang"
         unbookmark: "Chọn để xoá toàn bộ dấu trang trong chủ đề này"
     bookmarks:
-      not_logged_in: "rất tiếc, bạn phải đăng nhập để đánh dấu bài viết"
       created: "bạn đã đánh dấu bài viết này"
-      not_bookmarked: "bạn đã đọc bài viết này; nhấp chuột để đánh dấu"
-      last_read: "đây là bài viết cuối cùng bạn đã đọc; nhấp chuột để đánh dấu"
       remove: "Xóa dấu trang"
-      confirm_clear: "Bạn có chắc muốn xóa tất cả dấu trang ở topic này?"
     preview: "xem trước"
     cancel: "hủy"
     save: "Lưu thay đổi"
@@ -226,7 +222,6 @@ vi:
     saved: "Đã lưu!"
     upload: "Tải lên"
     uploading: "Đang tải lên..."
-    uploading_filename: "Đang tải lên {{filename}}..."
     uploaded: "Đã tải lên!"
     pasting: "Đang gõ"
     enable: "Kích hoạt"
@@ -789,9 +784,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_topics_and_posts_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentTopics} / %{requiredTopics}</strong> chủ đề và <strong>%{currentPosts} / %{requiredPosts}</strong> bài viết. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
-    too_few_topics_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentTopics} / %{requiredTopics}</strong> chủ đề. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
-    too_few_posts_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentPosts} / %{requiredPosts}</strong> bài viết. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
     logs_error_rate_notice:
       rate:
         other: "%{count} lỗi/%{duration}"
@@ -980,7 +972,6 @@ vi:
       link_description: "Nhập mô tả liên kết ở đây"
       link_dialog_title: "Chèn liên kết"
       link_optional_text: "tiêu đề tùy chọn"
-      link_url_placeholder: "http://example.com"
       quote_title: "Trích dẫn"
       quote_text: "Trích dẫn"
       code_title: "Văn bản định dạng trước"
@@ -1349,13 +1340,9 @@ vi:
         instructions:
           other: "Hãy chọn chủ đề bạn muốn di chuyển <b>{{count}}</b> bài viết này tới."
       change_owner:
-        title: "Chuyển chủ sở hữu bài viết"
         action: "chuyển chủ sở hữu"
         error: "Có lỗi xảy ra khi thay đổi quyền sở hữu của các bài viết."
-        label: "Chủ sở hữ mới của Bài viết"
         placeholder: "tên đăng nhập của chủ sở hữu mới"
-        instructions:
-          other: "Hãy chọn chủ sở hữu mới cho {{count}} bài viết của <b>{{old_user}}</b>."
       change_timestamp:
         action: "đổi timestamp"
         invalid_timestamp: "Timestamp không thể trong tương lai."
@@ -1750,7 +1737,6 @@ vi:
         this_week: "Tuần"
         today: "Ngày"
         other_periods: "xem top"
-    browser_update: 'Không may, <a href="http://www.discourse.org/faq/#browser">trình duyệt của bạn quá cũ để website hoạt động</a>. Hãy <a href="http://browsehappy.com">nâng cấp trình duyệt</a> của bạn.'
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
@@ -2011,7 +1997,6 @@ vi:
         new_style: "Style mới"
         import: "Nhập"
         delete: "Xóa"
-        about: "Chỉnh sửa CSS  và HTML header trên trang. Thêm tùy biến để bắt đầu."
         color: "Màu sắc"
         opacity: "Độ mờ"
         copy: "Sao chép"
@@ -2139,7 +2124,6 @@ vi:
         staff_actions:
           title: "Staff Actions"
           clear_filters: "Hiện thị mọi thứ"
-          staff_user: "Tài khoản Nhân viên"
           target_user: "Target User"
           subject: "Chủ đề"
           when: "Khi"

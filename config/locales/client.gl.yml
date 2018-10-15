@@ -224,12 +224,8 @@ gl:
         bookmark: "Preme para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Preme para retirar todos os marcadores deste tema"
     bookmarks:
-      not_logged_in: "cómpre que teñas a sesión iniciada para engadir unha publicación aos marcadores"
       created: "engadiches aos marcadores esta publicación"
-      not_bookmarked: "Acabas de ler esta publicación; preme para engadila aos  marcadores"
-      last_read: "esta é a última publicación lida por ti; preme para engadila aos marcadores"
       remove: "Eliminar marcador"
-      confirm_clear: "Confirmas o borrado de todos os marcadores deste tema?"
     preview: "previsualizar"
     cancel: "cancelar"
     save: "Gardar cambios"
@@ -237,7 +233,6 @@ gl:
     saved: "Gardado!"
     upload: "Actualizar"
     uploading: "Actualizando..."
-    uploading_filename: "Actualizando {{filename}}..."
     uploaded: "Actualizado!"
     pasting: "A pegar..."
     enable: "Activar"
@@ -657,9 +652,6 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas e <strong>%{currentPosts} / %{requiredPosts}</strong> publicacións. Os novos visitantes precisan algunhas conversas par ler e participar."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Os novos visitantes precisan algunhas conversas par ler e participar."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentPosts} / %{requiredPosts}</strong> publicacións. Os novos visitantes precisan algunhas conversas par ler e participar."
     learn_more: "saber máis..."
     year: 'ano'
     year_desc: 'temas creados nos últimos 365 días'
@@ -1119,14 +1111,9 @@ gl:
           one: "Selecciona o tema ao que queres mover esta publicación."
           other: "Selecciona o tema ao que queres mover estas <b>{{count}}</b> publicacións."
       change_owner:
-        title: "Cambiar propietario das publicacións"
         action: "cambiar propiedade"
         error: "Produciuse un erro cambiando a propiedade das publicacións."
-        label: "Novo propietario das publicacións"
         placeholder: "nome do usuario do novo propietario"
-        instructions:
-          one: "Selecciona o novo propietario da publicación de <b>{{old_user}}</b>."
-          other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
       change_timestamp:
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
@@ -1510,7 +1497,6 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver destacados"
-    browser_update: 'Desgraciadamente, <a href="http://www.discourse.org/faq/#browser">o navegador é demasiado vello para funcionar nesta web</a>. <a href="http://browsehappy.com">Anóvao</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1703,7 +1689,6 @@ gl:
         new_style: "Novo estilo"
         import: "Importar"
         delete: "Eliminar"
-        about: "Modificar as follas de estilo CSS e as cabeceiras HTML do sitio. Engadir unha personalización para comezar."
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
@@ -1830,7 +1815,6 @@ gl:
         staff_actions:
           title: "Accións do equipo"
           clear_filters: "Amosar todo"
-          staff_user: "Usuario do equipo"
           target_user: "Usuario obxectivo"
           subject: "Asunto"
           when: "Cando"

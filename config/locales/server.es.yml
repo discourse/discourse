@@ -141,10 +141,6 @@ es:
       invalid_choice:
         one: 'Has especificado la opción inválida %{name}'
         other: 'Has especificado las opciones inválidas %{name}'
-      min_username_length_exists: "No se puede establecer una longitud mínima para nombre de usuario mayor que el nombre de usuario más corto ya existente."
-      min_username_length_range: "No se puede establecer el mínimo por encima del máximo."
-      max_username_length_exists: "No se puede establecer una longitud máxima de nombre de usuario menor que el nombre de usuario más largo ya existente."
-      max_username_length_range: "No puedes poner el máximo por debajo del mínimo."
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, póngase en contacto con miembros del staff y envíe esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -460,27 +456,6 @@ es:
         Quizás quieras "cerrar" este tema :wrench: (en la parte superior derecha o en la parte de abajo), para que las nuevas respuestas no se sumen en el anuncio.
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |2
-
-      ¡Enhorabuena! :confetti_ball:
-
-      Si puedes ver este tema, es que has sido promocionado a usuario **habitual** (nivel de confianza 3).
-
-      Ahora puedes &hellip;
-
-      * Editar el título de cualquier tema
-      * Cambiar la categoría de cualquier tema
-      * Tus enlaces no llevarán automáticamente la etiqueta [nofollow](http://es.wikipedia.org/wiki/Nofollow)
-      * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
-      * Ocultar spam con una sola vez que reportes
-
-      Consulta aquí [la lista actualizada de usuarios habituales](/badges/3/regular). ¡Manda un saludo!
-
-      ¡Gracias por formar la parte más importante de esta comunidad!
-
-      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán en el nivel de usuarios habituales.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "(Sustituye este primer párrafo con una descripción breve de tu nueva categoría. Esta descripción aparecerá en el área de selección de categoría, por ello, intenta que sea inferior a 200 caracteres. **Hasta que edites esta descripción o se creen temas, esta categoría no aparecerá en la página de categorías.**)"
@@ -628,17 +603,6 @@ es:
   email_login:
     invalid_token: "Lo sentimos, ese enlace de inicio de sesión de correo electrónico es demasiado viejo. Seleccione el botón Iniciar sesión y use 'Olvidé mi contraseña' para obtener un nuevo enlace."
     title: "Email login"
-  user_auth_tokens:
-    devices:
-      android: 'Dispositivo Android'
-      linux: 'Ordenador Linux'
-      windows: 'Ordenador Windows'
-      mac: 'Mac'
-      iphone: 'iPhone'
-      ipad: 'iPad'
-      ipod: 'iPod'
-      mobile: 'Dispositivo móvil'
-      unknown: 'Dispositivo desconocido'
   change_email:
     confirmed: "Tu email ha sido actualizado."
     please_continue: "Continuar a %{site_name}"
@@ -1011,7 +975,6 @@ es:
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
-    gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
@@ -1019,9 +982,6 @@ es:
     facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
     twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
     github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Revisa la guía para aprender más</a>.'
-    s3_config_warning: 'El servidor está configurado para permitir subir los archivos a s3, pero por al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
-    s3_backup_config_warning: 'El servidor está configurado para permitir subir los archivos a s3, pero por al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
-    image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
@@ -1063,8 +1023,6 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página /about de contacto para asuntos urgentes."
-    contact_url: "URL de contacto para este sitio. Utilizada en la sección /about para asuntos urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Mínimo espacio en disco necesario para descargar imágenes remotas de forma local (porcentaje)"
@@ -1074,7 +1032,6 @@ es:
     editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 0 y 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 2 y superior)"
     staff_edit_locks_post: "Se bloqueará la publicación de las publicaciones si son editadas por miembros del staff."
-    post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de un post editado. Si se deshabilita, solo los miembros del staff podrán verlas."
     delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
     max_image_width: "Ancho máximo de las miniaturas de las imágenes en un post"
@@ -1091,16 +1048,10 @@ es:
     inline_onebox_domains_whitelist: "Lista de dominios que serán oneboxed en miniatura si son enlazados sin un título"
     enable_inline_onebox_on_all_domains: "Ignorar configuración inline_onebox_domain_whitelist site y permitir inline onebox en todos los dominios."
     max_oneboxes_per_post: "Número máximo de oneboxes en un tema."
-    logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
     digest_logo_url: "La imagen de logo alterno utilizado en la parte superior del resumen del sitio enviado por email. Debería encajar en las dimensiones de un rectángulo. No debería ser una imagen SVG. Si se deja en blanco, se utilizará `logo_url`."
-    logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
-    favicon_url: "Un favicon para tu sitio, mira más info en http://es.wikipedia.org/wiki/Favicon - para que funcione correctamente sobre un CDN debe ser un png"
-    mobile_logo_url: "Url del logo personalizado usado en la versión móvil de tu sitio. Si lo dejas en blanco, `logo_url` será usado. Por ejemplo: http://example.com/uploads/default/logo.png"
-    large_icon_url: "Imagen usada como logo/splash en Android. Tamaño recomendado: 512px por 512px."
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
-    email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
     same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF -Cross-site request forgery o falsificación de petición en sitios cruzados- de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
@@ -1131,17 +1082,12 @@ es:
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     enable_markdown_typographer: "Utilice reglas de tipografía para mejorar la legibilidad de texto: remplace citas rectas 'con comillas', (c) (tm) con símbolos, - con emdash -, etc."
-    enable_markdown_linkify: "Trate automáticamente el texto que se ve como un enlace como un enlace: www.site.com y http://site.com se vincularán automáticamente"
     markdown_linkify_tlds: "Lista de dominios de nivel superior que se tratan automáticamente como enlaces"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
     maximum_session_age: "El usuario permanecerá n horas con su sesión iniciada desde su última visita"
-    ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
-    ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
-    ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Enlaces salientes de estos dominios serán del client id agregados. Por favor ver las guías de Seguimiento Multidominio en la página de soporte de Google."
     gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF"
-    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
     use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
@@ -1178,7 +1124,6 @@ es:
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
     hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con el email durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
-    version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por el staff."
@@ -1191,7 +1136,6 @@ es:
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Activar single sign on a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE EMAIL SERÁN VALIDADAS POR EL SITIO EXTERNO!)"
-    verbose_sso_logging: "Registrar diagnósticos detallados sobre el SSO en /logs"
     enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on (debe incluir http:// o https://)"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
@@ -1210,23 +1154,11 @@ es:
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
     enable_yahoo_logins: "Activar autenticación por Yahoo"
-    enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
     google_oauth2_client_secret: "Client secret de tu aplicación Google."
-    google_oauth2_prompt: "Una lista opcional delimitada por espacios de valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#prompt para conocer los valores posibles."
-    google_oauth2_hd: "Un dominio opcional hospedado de Google Apps al que se limitará el inicio de sesión. Consulte https://developers.google.com/identity/protocols/OpenIDConnect#hd-param para más detalles."
-    enable_twitter_logins: "Activar autenticación por Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret"
-    twitter_consumer_key: "Clave del consumidor para la autenticación de Twitter, registrado en  https://apps.twitter.com/"
-    twitter_consumer_secret: "Secreto del consumidor para la autenticación de Twitter, registrado en https://apps.twitter.com/"
     enable_instagram_logins: "Activar la autenticación por Instagram, requiere instagram_consumer_key y instagram_consumer_secret"
     instagram_consumer_key: "Consumer key para autenticación por Instagram"
     instagram_consumer_secret: "Consumer secret para autenticación por Instagram"
-    enable_facebook_logins: "Activar autenticación por Facebook, requiere una facebook_app_id y un facebook_app_secret"
-    facebook_app_id: "App id para la autenticación por Facebook, registrado en https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret para autenticación por Facebook, registrado en https://developers.facebook.com/apps"
-    enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret"
-    github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
-    github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
     readonly_mode_during_backup: "Habilitar el modo de 'solo-lectura' mientras se hace el backup"
     enable_backups: "Permitir a los administradores crear backups del foro"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
@@ -1348,7 +1280,6 @@ es:
     title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un tema."
     body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un post."
     allow_uppercase_posts: "Permite todas mayúsculas en el título de un tema o en el cuerpo del mensaje"
-    title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los temas, como SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "La extensión mínima que un título debe tener antes de revisar temas similares."
     min_body_similar_length: "La extensión mínima que el cuerpo de un post debe tener antes de revisar temas similares."
     desktop_category_page_style: "Estilo visual de la página de /categorías."
@@ -1437,7 +1368,6 @@ es:
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de e-mails."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
     pop3_polling_delete_from_server: "Eliminar correos electrónicos del servidor. NOTA: si desactiva esto, debe limpiar manualmente su bandeja de entrada de correo"
-    log_mail_processing_failures: "Registra todos los fallos de procesamiento de email a http://yoursitename.com/logs"
     email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
@@ -1450,7 +1380,6 @@ es:
     delete_all_posts_max: "El máximo número de posts que pueden ser eliminados a la vez con el botón \"Eliminar todos los posts\". Si un usuario tiene un mayor número de posts que este valor, éstos no podrán ser eliminados de una vez y el usuario no podrá ser eliminado."
     username_change_period: "El número máximo de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar el cambio de nombre)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
-    logout_redirect: "Ubicación para redirigir el navegador a después del cierre de sesión (por ejemplo: http://example.com/logout)"
     allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
     allow_animated_avatars: "Permitir a los usuarios utilizar imágenes de perfil animadas en gif. AVISO: ejecuta la tarea rake avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
@@ -1472,7 +1401,6 @@ es:
     staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     enable_user_directory: "Proporcionar un directorio de usuarios"
     enable_group_directory: "Activa un directorio de grupos para explorar"
-    group_in_subject: "Configura %{optional_pm} en el título del email para nombrar el primer grupo en MP, ver: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para activar el modo anónimo"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
@@ -1506,7 +1434,6 @@ es:
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
-    highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) mira: https://highlightjs.org/static/demo/ para ver una demo"
     embed_truncate: "Truncar los posts embebidos."
     embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
@@ -1570,7 +1497,6 @@ es:
     show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
-    tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la página Etiquetas (/tags)."
     tag_style: "Estilo visual de las etiquetas."
     allow_staff_to_tag_pms: "Permitir a los miembros del staff etiquetar cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
@@ -1579,7 +1505,6 @@ es:
     company_short_name: "Nombre de la empresa (corto)"
     company_full_name: "Nombre de la empresa (largo)"
     company_domain: "Dominio de la empresa"
-    shared_drafts_category: "Habilite la característica de Borradores Compartidos designando una categoría para borradores de temas."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
     push_notifications_icon_url: "El icono del distintivo que aparece en la esquina de notificaciones. El tamaño recomendado es 96px por 96px."
     errors:
@@ -1890,80 +1815,12 @@ es:
   test_mailer:
     title: "Mail de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de email"
-    text_body_template: |
-      Este es un correo electrónico de prueba de
-
-      [**%{base_url}**][0]
-
-      La entrega de correo electrónico es complicada. Aquí hay unas cuantas cosas importantes que deberías comprobar primero:
-
-      - *Asegúrate* de configurar la dirección correctamente en los ajustes de tu sitio de `notification email`. **El dominio especificado en la dirección "from" de los emails que envíes es el dominio contra el que se validará tu email**.
-
-      - Entérate de como ver el código fuente del email desde tu cliente de correo, para que así puedas examinar las cabeceras para ver pistas importantes. En Gmail está la opción "mostrar original" en el menú de lista desplegable en la parte superior derecha de cada email.
-
-      - **IMPORTANTE:** ¿Tu ISP tiene registros de DNS inversa para asociar los nombres de dominio y las direcciones IP desde donde envías los correos? [Comprueba tu registro PTR Inverso][2] aquí. Si tu ISP no introduce el puntero de registro DNS inverso adecuado, es muy improbable que cualquiera de tus correos pueda ser entregado.
-
-      - ¿Es el [registro SPF][8] de tu dominio correcto? [Comprueba tu registro SPF][1] aquí. Ten en cuenta que TXT es el tipo de registro oficial correcto para SPF.
-
-      - ¿Es el [registro DKIM][3] de tu dominio correcto? Esto puede mejorar significativamente la entregabilidad de correos. [Comprueba tu registro DKIM][7] aquí.
-
-      - Si estás corriendo tu propio servidor de correo, asegúrate de que las IPs de tu servidor de correo [no están en ninguna lista negra de correos][4]. También verifica que definitivamente se está enviando un nombre de huésped "hostname" completamente cualificado que resuelva en DNS en su mensaje HELO. Si no es así, esto causará que tu correo sea denegado por muchos servicios de correo.
-
-      - Recomendamos **enviar un email de prueba a [mail-tester.com][mt]** para verificar que todo está funcionando correctamente.
-
-      (La forma *fácil* es crear una cuenta gratuita en [Sendgrip][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que proveen generosamente planes de mailing gratuitos y serán adecuados para pequeñas comunidades. ¡De todas formas todavía tendrás que configurar los registros SPF y DKIM en tus DNS!)
-
-      ¡Esperamos que recibas esta prueba de entregabilidad de correo electrónico correctamente!
-
-      Buena suerte,
-
-      Tus amigos de [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Email de Nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Genial, una nueva versión de [Discourse](http://www.discourse.org) está disponible!
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando nuestro sencillo **[sistema de un clic para actualizar](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a los cambios en  [las notas de versión](https://meta.discourse.org/tags/release-notes) o en el  [changelog de GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debates y ayuda para Discourse.
   new_version_mailer_with_notes:
     title: "Email de Nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |+
-      ¡Genial, una nueva versión de [Discourse](http://www.discourse.org) está disponible!
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando nuestro sencillo **[sistema de un clic para actualizar](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a los cambios en  [las notas de versión](https://meta.discourse.org/tags/release-notes) o en el  [changelog de GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debates y ayuda para Discourse.
-
-      ### Detalles de la versión
-
-      %{notes}
-
   flag_reasons:
     off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o el primer post."
     inappropriate: "Tu post fue reportado como **inapropiado**: la comunidad piensa que es ofensivo, abusivo o que vulnera alguna de [nuestros consejos de uso](/guidelines)."
@@ -2047,10 +1904,6 @@ es:
     welcome_tl1_user:
       title: "Bienvenida al Usuario NC1"
       subject_template: "Gracias por pasar tiempo con nosotros"
-      text_body_template: |
-        Hola. Hemos visto que has estado leyendo muchas cosas, que es fantástico, ¡así que te hemos aumentado el [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Nos alegra que hayas pasado tiempo con nosotros y nos gustaría saber más sobre ti. Si puedes, tómate un minuto para [completar tu perfil](/my/preferences/profile) o [empieza un nuevo tema](/categories) si quieres.
     welcome_invite:
       title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -2135,14 +1988,6 @@ es:
     csv_export_succeeded:
       title: "Exportación de datos en CSV completada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
-      text_body_template: |
-        ¡Se han exportado tus datos correctamente! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        El enlace estará disponible durante 48 horas.
-
-        Los datos están comprimidos en un archivo gzip. Si el archivo no se extrae cuando lo abras, usa las herramientas recomendadas aquí: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Error en la exportación de datos en CSV"
       subject_template: "La exportación de datos falló"
@@ -2964,141 +2809,6 @@ es:
       Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y a tus datos &ndash; frente a gente poco amigable. Tenemos unos [Términos del Servicio](/tos) que describen nuestra forma de actuar (y la tuya), y los derechos con relación al contenido, la privacidad y las leyes, Para usar nuestros servicios, debes aceptar nuestros [Términos y Condiciones](/tos).
   tos_topic:
     title: "Términos de Servicio"
-    body: |
-      Los siguientes términos y condiciones rigen el uso del sitio web %{company_domain} y todo el contenido, servicios y productos disponibles a través del sitio web, incluidos, entre otros, el software del foro %{company_domain}, el foro de soporte de %{company_domain} y el servicio de alojamiento de alojamiento ("Hosting") si existiese, (en conjunto, el sitio web). El sitio web pertenece y es operado por %{company_full_name} ("%{company_name}"). El sitio web se ofrece sujeto a su aceptación sin modificación de todos los términos y condiciones aquí contenidos y todas las demás reglas operativas y políticas (incluyendo, sin limitación, las [Política de privacidad](/privacy) y las [Guías de la Comunidad](/faq) de %{company_domain}) y los procedimientos que pueden publicarse de vez en cuando en este Sitio por %{company_name} (colectivamente, el "Acuerdo").
-
-      Lea este Acuerdo detenidamente antes de acceder o utilizar el sitio web. Al acceder o usar cualquier parte del sitio web, usted acepta quedar sujeto a los términos y condiciones de este acuerdo. Si no acepta todos los términos y condiciones de este acuerdo, entonces no podrá acceder al sitio web ni utilizar ningún servicio. Si estos términos y condiciones se consideran una oferta de %{company_name}, la aceptación está expresamente limitada a estos términos. El sitio web está disponible solo para personas que tienen al menos 13 años de edad.
-
-      <a name="1"></a>
-
-      ## [1. Tu cuenta en %{company_domain}](#1)
-
-      Si crea una cuenta en el sitio web, usted es responsable de mantener la seguridad de su cuenta y usted es totalmente responsable de todas las actividades que ocurran en la cuenta. Debe notificar de inmediato a %{company_name} cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad. %{company_name} no será responsable de ningún acto u omisión por su parte, incluidos los daños y perjuicios de cualquier tipo incurridos como resultado de dichos actos u omisiones.
-      <a name="2"></a>
-
-      ## [2. Responsabilidad de los Colaboradores](#2)
-
-      Si publica material en el sitio web, ya sea publica enlaces en el sitio web o crea (o permite que un tercero lo haga) material disponible por medio del sitio web (cualquier material se considera "Contenido"), usted es completamente responsable del contenido y cualquier daño resultante de ese contenido. Este caso independientemente de si el Contenido en cuestión constituye texto, gráficos, un archivo de audio o software de computadora. Al hacer que el Contenido esté disponible, usted declara y garantiza que:
-
-      * la descarga, copia y uso del Contenido no infringirá los derechos de propiedad, incluidos, entre otros, los derechos de autor, patente, marca comercial o secreto comercial de terceros;
-      * si su empleador tiene derechos de propiedad intelectual que usted crea, usted (i) ha recibido permiso de su empleador para publicar o poner a disposición el Contenido, incluido, entre otros, cualquier software, o (ii) ha obtenido una exención de su empleador como a todos los derechos en o al Contenido;
-      * usted ha cumplido completamente con las licencias de terceros relacionadas con el Contenido, y ha hecho todo lo necesario para transmitir con éxito a los usuarios finales los términos requeridos;
-      * el contenido no contiene ni instala virus, gusanos, malware, caballos de Troya u otro contenido dañino o destructivo;
-      * el contenido no es correo no deseado, no se genera de forma automática o aleatoria, y no contiene contenido comercial no ético o no deseado diseñado para dirigir el tráfico a sitios de terceros o aumentar la clasificación de motores de búsqueda de sitios de terceros o actos ilegales (como phishing) o engañar a los destinatarios sobre el origen del material (como spoofing);
-      * el Contenido no es pornográfico, no contiene amenazas ni incita a la violencia, y no viola los derechos de privacidad o publicidad de ningún tercero;
-      * su contenido no se anuncia a través de mensajes electrónicos no deseados, como enlaces de spam en grupos de noticias, listas de correo electrónico, blogs y sitios web, y métodos de promoción no solicitados similares;
-      * su contenido no se nombra de una manera que induzca a error a sus lectores a pensar que usted es otra persona o empresa; y
-      * usted tiene, en el caso de Contenido que incluye código de computadora, categorizado y/o descrito con precisión el tipo, naturaleza, usos y efectos de los materiales, ya sea que lo solicite %{company_name} o de otra manera.
-
-      <a name="3"></a>
-
-      ## [3. Licencia de Contenido de Usuario](#3)
-
-      Las contribuciones de los usuarios están autorizadas bajo una [Reconocimiento-NoComercial-CompartirIgual 3.0 Unported (CC BY-NC-SA 3.0)](https://creativecommons.org/licenses/by-nc-sa/3.0/deed.es_ES). Sin limitar ninguna de esas representaciones o garantías, %{company_name} tiene el derecho (aunque no la obligación) de, en el exclusivo criterio de %{company_name} (i) rechazar o eliminar cualquier contenido que en opinión razonable de %{company_name}, viola cualquier política de %{company_name} o es de alguna manera dañina u objetable, o (ii) cancela o niega el acceso y uso del sitio web a cualquier individuo o entidad por cualquier motivo, en la única propiedad de %{company_name} discreción. %{company_name} no tendrá obligación de proporcionar un reembolso de los montos pagados previamente.
-
-      <a name="4"></a>
-
-      ## [4. Pago y Renovación](#4)
-
-      ### Términos Generales
-
-      Servicios pagos opcionales o actualizaciones pueden estar disponibles en el sitio web. Al utilizar un servicio o actualización pagada opcional, usted acepta pagar a %{company_name} las tarifas de suscripción mensuales o anuales indicadas. Los pagos se cobrarán de forma prepaga el día que comience a utilizar el servicio o la actualización, y cubrirá el uso de ese servicio o la actualización por un período de suscripción mensual o anual según lo indicado. Estas tarifas no son reembolsables.
-
-      ### Renovación Automática
-
-      A menos que notifique a %{company_name} antes del final del período de suscripción correspondiente que desea cancelar un servicio o una actualización, su suscripción se renovará automáticamente y usted nos autorizará a cobrar la tarifa de suscripción anual o mensual aplicable en ese momento (así como cualquier impuestos) utilizando cualquier tarjeta de crédito u otro mecanismo de pago que tengamos registrado para usted. Las suscripciones pueden cancelarse en cualquier momento.
-
-      <a name="5"></a>
-
-      ## [5. Servicios](#5)
-
-      ### Hosting, Servicios de Soporte
-
-      Servicios opcionales de Hosting y Soporte pueden ser provistos por %{company_name} bajo los términos y condiciones para cada servicio. Al suscribirse a una cuenta de servicios de Hosting/Soporte o Soporte, acepta cumplir con dichos términos y condiciones.
-
-      ### HTTPS
-
-      Ofrecemos HTTPS como un complemento pago. Al registrarse y utilizar un dominio personalizado en %{company_domain}, nos autoriza a actuar en nombre del registrante del nombre de dominio (al solicitar los certificados necesarios, por ejemplo) con el único propósito de proporcionar HTTPS en su sitio.
-
-      ### Enterprise
-
-      Los servicios de Enterprise Hosting son provistos por %{company_name} bajo los términos y condiciones para cada servicio, que están determinados por un contrato específico del cliente. Al registrarse en una cuenta de Enterprise Hosting, acepta cumplir con dichos términos y condiciones.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilidad de los visitantes del sitio web](#6)
-
-      %{company_name} no ha revisado, y no puede revisar, todo el material, incluido el software informático, publicado en el sitio web, y no puede ser responsable del contenido, uso o efectos de ese material. Al operar el sitio web, %{company_name} no representa ni implica que respalda el material allí publicado, o que considera que dicho material es preciso, útil o no dañino. Usted es responsable de tomar las precauciones necesarias para protegerse a usted mismo y a sus sistemas informáticos contra virus, gusanos, caballos de Troya y otros contenidos dañinos o destructivos. El sitio web puede contener contenido ofensivo, indecente u objetable, así como contenido que contenga inexactitudes técnicas, errores tipográficos y otros errores. El sitio web también puede contener material que viole los derechos de privacidad o publicidad, o que infrinja la propiedad intelectual y otros derechos de propiedad de terceros, o cuya descarga, copia o uso esté sujeto a términos y condiciones adicionales, establecidos o no. %{company_name} se exime de cualquier responsabilidad por cualquier daño que resulte del uso por parte de los visitantes del sitio web, o de cualquier descarga por parte de los visitantes del contenido allí publicado.
-
-      <a name="7"></a>
-
-      ## [7. Contenido publicado en otros sitios web](#7)
-
-      No hemos revisado, y no podemos revisar, todo el material, incluido el software de computadora, disponible a través de los sitios web y páginas web a los cuales %{company_domain} vincula, y ese enlace a %{company_domain}. %{company_name} no tiene ningún control sobre los sitios web y páginas web que no sean del %{company_domain}, y no es responsable de sus contenidos o su uso. Al vincular a un sitio web o página web que no sea de %{company_domain}, %{company_name} no representa ni implica que respalde dicho sitio web o página web. Usted es responsable de tomar las precauciones necesarias para protegerse a usted mismo y a sus sistemas informáticos contra virus, gusanos, caballos de Troya y otros contenidos dañinos o destructivos. %{company_name} no se responsabiliza por ningún daño derivado de su uso de sitios web y páginas web que no sean del %{company_domain}.
-
-      <a name="8"></a>
-
-      ## [8. Infracción de derechos de autor y política de DMCA](#8)
-
-      Como %{company_name} pide a los demás que respeten sus derechos de propiedad intelectual, respeta los derechos de propiedad intelectual de los demás. Si cree que el material ubicado en o vinculado a %{company_domain} infringe sus derechos de autor, y si este sitio web reside en los EE. UU., Le recomendamos que notifique a %{company_name} de acuerdo con %{company_name} [Digital Millennium Copyright Ley](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Política. %{company_name} responderá a todos los avisos, incluidos los necesarios o apropiados, eliminando el material infractor o deshabilitando todos los enlaces al material infractor. %{company_name} dará por terminado el acceso y uso del visitante del sitio web si, bajo circunstancias apropiadas, se determina que el visitante es un infractor recurrente de los derechos de autor u otros derechos de propiedad intelectual de %{company_name} u otros. En el caso de dicha finalización, %{company_name} no tendrá obligación de proporcionar un reembolso de los montos pagados previamente a %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Propiedad Intelectual](#9)
-
-      Este Acuerdo no transfiere de %{company_name} ninguna propiedad intelectual de %{company_name} o de terceros, y todos los derechos, títulos e intereses en y para dicha propiedad se mantendrán (entre las partes) únicamente con %{company_name}. %{company_name}, %{company_domain}, el logotipo de %{company_domain} y todas las demás marcas comerciales, marcas de servicio, gráficos y logotipos utilizados en relación con %{company_domain}, o el sitio web son marcas comerciales o marcas comerciales registradas de %{company_name} o los licenciantes de %{company_name}. Otras marcas comerciales, marcas de servicio, gráficos y logotipos utilizados en relación con el sitio web pueden ser marcas comerciales de otros terceros. Su uso del sitio web no le concede ningún derecho o licencia para reproducir o usar cualquier %{company_name} o marcas comerciales de terceros.
-
-      <a name="10"></a>
-
-      ## [10. Atribución](#10)
-
-      %{company_name} se reserva el derecho de mostrar vínculos de atribución como 'Desarrollado por %{company_domain},' autor del tema y atribución de fuentes en su pie de página de contenido.
-
-      <a name="11"></a>
-
-      ## [11. Cambios](#11)
-
-      %{company_name} se reserva el derecho, a su entera discreción, de modificar o reemplazar cualquier parte de este Acuerdo. Es su responsabilidad verificar este Acuerdo periódicamente para ver los cambios. Su uso continuo o acceso al sitio web después de la publicación de cualquier cambio en este Acuerdo constituye la aceptación de dichos cambios. %{company_name} también puede, en el futuro, ofrecer nuevos servicios y/o características a través del sitio web (incluido el lanzamiento de nuevas herramientas y recursos). Tales nuevas características y/o servicios estarán sujetos a los términos y condiciones de este Acuerdo.
-
-      <a name="12"></a>
-
-      ## [12. Terminación](#12)
-
-      %{company_name} puede finalizar su acceso a todo o a cualquier parte del sitio web en cualquier momento, con o sin causa, con o sin aviso, y con efecto inmediato. Si desea rescindir este Acuerdo o su cuenta de %{company_domain} (si tiene una), simplemente puede dejar de usar el sitio web. Todas las disposiciones de este Acuerdo que por su naturaleza deben seguir vigentes después de la terminación seguirán vigentes después de la terminación, incluidas, entre otras, las disposiciones de propiedad, los descargos de garantía, la indemnización y las limitaciones de responsabilidad.
-
-      <a name="13"></a>
-
-      ## [13. Descargo de garantías](#13)
-
-      El sitio web se proporciona "tal cual". %{company_name} y sus proveedores y licenciantes renuncian a todas las garantías de cualquier tipo, expresas o implícitas, incluidas, entre otras, las garantías de comerciabilidad, adecuación para un propósito particular y no infracción. Ni %{company_name} ni sus proveedores y licenciantes hacen ninguna garantía de que el sitio web esté libre de errores o que el acceso al mismo sea continuo o ininterrumpido. Usted entiende que la descarga u obtención de contenido o servicios a través del sitio web, a su propia discreción y riesgo.
-
-      <a name="14"></a>
-
-      ## [14. Limitación de Responsabilidad](#14)
-
-      En ningún caso %{company_name}, ni sus proveedores o licenciantes, serán responsables con respecto a cualquier tema de este acuerdo bajo ningún contrato, negligencia, responsabilidad estricta u otra teoría legal o equitativa para: (i) cualquier especial, incidental o daños generados; (ii) el costo de adquisición de productos o servicios sustitutos; (iii) por interrupción de uso o pérdida o corrupción de datos; o (iv) para cualquier cantidad que exceda las tarifas pagadas por usted a %{company_name} en virtud de este acuerdo durante el período de doce (12) meses anterior a la causa de la acción. %{company_name} no tendrá ninguna responsabilidad por cualquier falla o retraso debido a asuntos fuera de su control razonable. Lo anterior no se aplicará en la medida en que lo prohíba la ley aplicable.
-
-      <a name="15"></a>
-
-      ## [15. Representación general y garantía](#15)
-
-      Usted declara y garantiza que (i) su uso del sitio web será estrictamente de acuerdo con %{company_name} [Política de privacidad](/privacy), [Pautas de la comunidad](/guidelines), con este Acuerdo y con todas las leyes aplicables y normativas (incluidas, entre otras, leyes o normativas locales de su país, estado, ciudad u otra área gubernamental, relacionadas con la conducta en línea y el contenido aceptable, e incluidas todas las leyes aplicables relativas a la transmisión de datos técnicos exportados del país en el que se encuentra este sitio web reside o el país en el que usted reside) y (ii) su uso del sitio web no infringirá o mal apropiará los derechos de propiedad intelectual de ningún tercero.
-
-      <a name="16"></a>
-
-      ## [16. Indemnización](#16)
-
-      Usted acepta indemnizar y mantener indemne a %{company_name}, sus contratistas y sus licenciantes, y sus respectivos directores, funcionarios, empleados y agentes de y contra todos los reclamos y gastos, incluidos los honorarios de abogados, que surjan de su uso de el sitio web, incluyendo pero no limitado a su violación de este Acuerdo.
-
-      <a name="17"></a>
-
-      ## [17. Diversos](#17)
-
-      Este acuerdo constituye el acuerdo completo entre %{company_name} y usted con respecto al tema del presente documento, y solo se puede modificar mediante una enmienda escrita firmada por un ejecutivo autorizado de %{company_name}, o mediante la publicación por parte de %{company_name} de una versión revisada. Excepto en la medida en que la ley aplicable, de existir alguna, establezca lo contrario, este Acuerdo, cualquier acceso o uso del Sitio web se regirá por las leyes del estado de California, EE. UU., excluyendo las disposiciones sobre conflicto de leyes y el lugar adecuado para cualquier disputa que surja de o esté relacionada con cualquiera de los mismos será a los tribunales estatales y federales ubicados en el condado de San Francisco, California. A excepción de las reclamaciones por orden judicial o equitativo o reclamaciones relativas a los derechos de propiedad intelectual (que pueden ser llevados ante los tribunales competentes sin la fijación de un enlace), cualquier disputa que surja de este Acuerdo será resuelta de acuerdo con las Reglas completas de Arbitraje de la Judicial Arbitration and Mediation Service, Inc. ("JAMS") por tres árbitros designados de acuerdo con dichas Reglas. El arbitraje se llevará a cabo en San Francisco, California, en idioma inglés y la decisión de arbitraje se puede hacer cumplir en cualquier tribunal. La parte que prevalezca en cualquier acción o procedimiento para hacer cumplir este Acuerdo tendrá derecho a los costos y honorarios de abogados. Si alguna parte de este Acuerdo se considera inválida o no exigible, se interpretará que esa parte refleja la intención original de las partes, y las partes restantes permanecerán en pleno vigor y efecto. Una renuncia por cualquiera de las partes de cualquier término o condición de este Acuerdo o cualquier incumplimiento del mismo, en cualquier instancia, no renunciará a dicho término o condición o cualquier incumplimiento posterior de los mismos. Puede ceder sus derechos bajo este Acuerdo a cualquier parte que consienta y acuerde estar sujeto a sus términos y condiciones; %{company_name} puede asignar sus derechos bajo este Acuerdo sin condición. Este Acuerdo será vinculante y redundará en beneficio de las partes, sus sucesores y cesionarios permitidos.
-
-      Este documento es CC-BY-SA. Se actualizó por última vez el 1 de enero de 2017.
-
-      Originalmente adaptado de los [Términos del servicio de WordPress](http://en.wordpress.com/tos/) en inglés.
   privacy_topic:
     title: "Políticas de Privacidad"
     body: |
@@ -3454,7 +3164,6 @@ es:
             description: "Dirección de email de la persona o grupo responsable de esta comunidad. Usado para notificaciones críticas como reportes sin atender, actualizaciones de seguridad y estará en la <a href='/about' target='_blank'>página Acerca de</a> para cosas urgentes."
           contact_url:
             label: "Página web"
-            placeholder: "http://ejemplo.com/contacto"
             description: "Tu página de contacto o la de tu organización. Será mostrada en la <a href='/about' target='_blank'>página de acerca de</a>."
           site_contact:
             label: "Mensajes automáticos"
