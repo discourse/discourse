@@ -220,7 +220,8 @@ module SiteSettingExtension
         value: value.to_s,
         category: categories[s],
         preview: previews[s],
-        secret: secret_settings.include?(s)
+        secret: secret_settings.include?(s),
+        placeholder: placeholder(s)
       }.merge(type_supervisor.type_hash(s))
 
       opts
@@ -229,6 +230,12 @@ module SiteSettingExtension
 
   def description(setting)
     I18n.t("site_settings.#{setting}")
+  end
+
+  def placeholder(setting)
+    if !I18n.t("site_settings.placeholder.#{setting}", default: "").empty?
+      I18n.t("site_settings.placeholder.#{setting}")
+    end
   end
 
   def self.client_settings_cache_key

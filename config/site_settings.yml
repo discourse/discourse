@@ -341,6 +341,13 @@ login:
   sso_secret:
     default: ''
     secret: true
+  sso_provider_secrets:
+    default: ''
+    type: list
+    list_type: secret
+    placeholder:
+      key: "sso_provider.key_placeholder"
+      value: "sso_provider.value_placeholder"
   sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
