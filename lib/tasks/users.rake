@@ -147,6 +147,30 @@ task "users:disable_2fa", [:username] => [:environment] do |_, args|
   puts "2FA disabled for #{username}"
 end
 
+desc "Anonymize all users except staff"
+task "users:anonymize_all" => :environment do
+  require 'highline/import'
+
+  non_staff_users = User.where('NOT admin AND NOT moderator')
+  total = non_staff_users.count
+  anonymized = 0
+
+  confirm_anonymize = ask("Are you sure you want to anonymize #{total} users? (Y/n)")
+  exit 1 unless (confirm_anonymize == "" || confirm_anonymize.downcase == 'y')
+
+  system_user = Discourse.system_user
+  non_staff_users.each do |user|
+    begin
+      UserAnonymizer.new(user, system_user).make_anonymous
+      print_status(anonymized += 1, total)
+    rescue
+      # skip
+    end
+  end
+
+  puts "", "#{total} users anonymized.", ""
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
