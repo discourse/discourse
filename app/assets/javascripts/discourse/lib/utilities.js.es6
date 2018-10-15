@@ -225,6 +225,7 @@ export function validateUploadedFiles(files, opts) {
 }
 
 export function validateUploadedFile(file, opts) {
+  if (opts.skipValidation) return true;
   if (!authorizesOneOrMoreExtensions()) return false;
 
   opts = opts || {};
