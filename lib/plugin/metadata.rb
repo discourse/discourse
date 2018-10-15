@@ -4,6 +4,8 @@ module Plugin; end
 class Plugin::Metadata
 
   OFFICIAL_PLUGINS ||= Set.new([
+    # TODO: Remove this after everyone upgraded `discourse-canned-replies`
+    # to the renamed version.
     "Canned Replies",
     "customer-flair",
     "discourse-adplugin",
@@ -15,6 +17,7 @@ class Plugin::Metadata
     "discourse-bbcode",
     "discourse-bbcode-color",
     "discourse-cakeday",
+    "discourse-canned-replies",
     "discourse-calendar",
     "discourse-characters-required",
     "discourse-chat-integration",
