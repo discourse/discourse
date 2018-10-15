@@ -92,8 +92,10 @@ class SingleSignOn
     provider_secrets = SiteSetting.sso_provider_secrets.split(/[\|,\n]/)
     provider_secrets_hash = Hash[*provider_secrets]
     return_url_host = URI.parse(return_sso_url).host
+    # moves wildcard domains to the end of hash
+    sorted_secrets = provider_secrets_hash.sort_by { |k, _| k }.reverse.to_h
 
-    secret = provider_secrets_hash.select do |domain, _|
+    secret = sorted_secrets.select do |domain, _|
       WildcardDomainChecker.check_domain(domain, return_url_host)
     end
     secret.present? ? secret.values.first : nil
