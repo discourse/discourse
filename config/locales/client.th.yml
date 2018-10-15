@@ -496,7 +496,7 @@ th:
         failed_to_move: "เกิดความผิดพลาดในการย้ายหัวข้อที่เลือก (อาจเกิดจาดเครือข่ายของคุณล่ม)"
         select_all: "เลือกทั้งหมด"
       preferences_nav:
-        profile: "ข้อมูลผู้ใช้<br><div><br data-mce-bogus=\"1\"></div>"
+        profile: "ข้อมูลผู้ใช้"
         emails: "อีเมล"
         tags: "ป้าย"
       change_password:
