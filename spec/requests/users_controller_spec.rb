@@ -3265,13 +3265,14 @@ describe UsersController do
 
     context 'while logged in' do
       before do
-        sign_in(user)
-        sign_in(user)
+        2.times { sign_in(user) }
       end
 
       it 'logs user out' do
-        ids = user.user_auth_tokens.map { |token| token.id }
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        ids = user.user_auth_tokens.order(:created_at).pluck(:id)
+
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
 
         expect(response.status).to eq(200)
 

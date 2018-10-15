@@ -1130,9 +1130,7 @@ class UsersController < ApplicationController
 
     MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 
-    render json: {
-      success: true
-    }
+    render json: success_json
   end
 
   private
