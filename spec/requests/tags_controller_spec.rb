@@ -369,4 +369,50 @@ describe TagsController do
       end
     end
   end
+
+  context '#upload_csv' do
+    it 'requires you to be logged in' do
+      post "/tags/upload.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags.csv") }
+      let(:invalid_csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags_invalid.csv") }
+
+      let(:file) do
+        Rack::Test::UploadedFile.new(File.open(csv_file))
+      end
+
+      let(:invalid_file) do
+        Rack::Test::UploadedFile.new(File.open(invalid_csv_file))
+      end
+
+      let(:filename) { 'tags.csv' }
+
+      it "fails if you can't manage tags" do
+        sign_in(Fabricate(:user))
+        post "/tags/upload.json", params: { file: file, name: filename }
+        expect(response.status).to eq(403)
+      end
+
+      it "allows staff to bulk upload tags" do
+        sign_in(Fabricate(:moderator))
+        post "/tags/upload.json", params: { file: file, name: filename }
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly("tag1", "capitaltag2", "spaced-tag", "tag3", "tag4")
+        expect(Tag.find_by_name("tag3").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
+        expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
+      end
+
+      it "fails gracefully with invalid input" do
+        sign_in(Fabricate(:moderator))
+
+        expect do
+          post "/tags/upload.json", params: { file: invalid_file, name: filename }
+          expect(response.status).to eq(422)
+        end.not_to change { [Tag.count, TagGroup.count] }
+      end
+    end
+  end
 end
