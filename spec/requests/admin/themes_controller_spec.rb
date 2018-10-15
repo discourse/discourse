@@ -210,4 +210,22 @@ describe Admin::ThemesController do
       expect(JSON.parse(response.body)["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
     end
   end
+
+  describe '#destroy' do
+    let(:theme) { Fabricate(:theme) }
+
+    it "deletes the field's javascript cache" do
+      theme.set_field(target: :common, name: :header, value: '<script>console.log("test")</script>')
+      theme.save!
+
+      javascript_cache = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: :header).javascript_cache
+      expect(javascript_cache).to_not eq(nil)
+
+      delete "/admin/themes/#{theme.id}.json"
+
+      expect(response.status).to eq(204)
+      expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
