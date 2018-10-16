@@ -260,12 +260,12 @@ export default Ember.Controller.extend(
                 this.get("rejectedPasswords").pushObject(attrs.accountPassword);
               }
               this.set("formSubmitted", false);
-              $.cookie("destination_url", null);
+              $.removeCookie("destination_url");
             }
           },
           () => {
             this.set("formSubmitted", false);
-            $.cookie("destination_url", null);
+            $.removeCookie("destination_url");
             return this.flash(I18n.t("create_account.failed"), "error");
           }
         );
