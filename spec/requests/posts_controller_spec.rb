@@ -295,6 +295,13 @@ describe PostsController do
         expect(post.raw).to eq("edited body")
       end
 
+      it 'checks for an edit conflict' do
+        update_params[:post][:raw_old] = 'old body'
+        put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(409)
+      end
+
       it "raises an error when the post parameter is missing" do
         update_params.delete(:post)
         put "/posts/#{post.id}.json", params: update_params
