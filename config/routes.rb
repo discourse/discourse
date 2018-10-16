@@ -446,6 +446,8 @@ Discourse::Application.routes.draw do
   # in most production settings this is bypassed
   get "letter_avatar_proxy/:version/letter/:letter/:color/:size.png" => "user_avatars#show_proxy_letter"
 
+  get "svg-sprite/:hostname/:version.svg" => "svg_sprite#show", format: false, constraints: { hostname: /[\w\.-]+/ }
+
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
   get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
