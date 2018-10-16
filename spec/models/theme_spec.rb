@@ -417,6 +417,30 @@ HTML
     Theme.find_by(id: id).included_settings.to_json
   end
 
+  it 'clears color scheme cache correctly' do
+    Theme.destroy_all
+
+    cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
+      Fabricate(:color_scheme_color, name: 'header_primary',  hex: 'F0F0F0'),
+      Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
+      Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
+    ])
+
+    theme = Fabricate(:theme,
+      user_selectable: true,
+      user: Fabricate(:admin),
+      color_scheme_id: cs.id
+    )
+
+    theme.set_default!
+
+    expect(ColorScheme.hex_for_name('header_primary')).to eq('F0F0F0')
+
+    Theme.clear_default!
+
+    expect(ColorScheme.hex_for_name('header_primary')).to eq('333333')
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
