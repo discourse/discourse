@@ -327,7 +327,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         $.cookie("destination_url") || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
-        $.cookie("destination_url", null);
+        $.removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === Discourse.getURL("/login")) {
         window.location.pathname = Discourse.getURL("/");
