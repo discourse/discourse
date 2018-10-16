@@ -32,19 +32,20 @@ function addLocalDate(buffer, matches, state) {
     ["data-timezones", state.md.utils.escapeHtml(config.timezones)]
   ];
 
+  let dateTime = config.date;
   if (config.time) {
     token.attrs.push(["data-time", state.md.utils.escapeHtml(config.time)]);
+    dateTime = `${dateTime} ${config.time}`;
   }
 
-  let dateTime;
   if (config.timezone) {
     token.attrs.push([
       "data-timezone",
       state.md.utils.escapeHtml(config.timezone)
     ]);
-    dateTime = moment.tz(`${config.date} ${config.time}`, config.timezone);
+    dateTime = moment.tz(dateTime, config.timezone);
   } else {
-    dateTime = moment.utc(`${config.date} ${config.time}`);
+    dateTime = moment.utc(dateTime);
   }
 
   if (config.recurring) {
