@@ -38,7 +38,7 @@ export function setLocalTheme(ids, themeSeq) {
       expires: 9999
     });
   } else {
-    $.cookie("theme_ids", null, { path: "/", expires: 1 });
+    $.removeCookie("theme_ids", { path: "/", expires: 1 });
   }
 }
 
