@@ -574,19 +574,38 @@
   .external_url,
   .post {
     text-overflow: ellipsis;
-    white-space: nowrap;
+  }
+
+  &.grid tr.admin-list-item {
+    grid-template-columns: unset;
+  }
+}
+
+.permalink-search {
+  text-align: left;
+  @media screen and (min-width: map-get($breakpoints, tablet)) {
+    text-align: right;
   }
 }
 
 .permalink-form {
+  align-items: flex-start;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  @media screen and (min-width: map-get($breakpoints, tablet)) {
+    align-items: center;
+    flex-direction: row;
+  }
 
   .select-kit {
     width: 150px;
   }
   input {
-    margin: 0 5px;
+    margin: 5px 0;
+    @media screen and (min-width: map-get($breakpoints, tablet)) {
+      margin: 0 5px;
+    }
   }
 }
 
