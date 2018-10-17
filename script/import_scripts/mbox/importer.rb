@@ -131,7 +131,8 @@ module ImportScripts::Mbox
 
       if row['attachment_count'].positive?
         receiver = Email::Receiver.new(row['raw_message'])
-        body = receiver.add_attachments(body, user_id)
+        user = User.find(user_id)
+        body = receiver.add_attachments(body, user)
       end
 
       body << Email::Receiver.elided_html(elided) if elided.present?

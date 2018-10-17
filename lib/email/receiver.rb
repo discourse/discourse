@@ -890,12 +890,12 @@ module Email
 
     def create_post_with_attachments(options = {})
       # deal with attachments
-      options[:raw] = add_attachments(options[:raw], options[:user].id, options)
+      options[:raw] = add_attachments(options[:raw], options[:user], options)
 
       create_post(options)
     end
 
-    def add_attachments(raw, user_id, options = {})
+    def add_attachments(raw, user, options = {})
       rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
@@ -904,7 +904,7 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
-          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user_id)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
           if upload&.valid?
             # try to inline images
             if attachment.content_type&.start_with?("image/")
