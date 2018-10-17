@@ -61,12 +61,25 @@ class DiscourseCLI < Thor
     require "backup_restore/backup_restore"
     require "backup_restore/backuper"
 
-    puts "Starting backup..."
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename)
-    backup_filename = backuper.run
-    puts "Backup done."
-
     store = BackupRestore::BackupStore.create
+
+    if filename
+      destination_directory = File.dirname(filename).sub(/^\.$/, '')
+
+      if destination_directory.present? && store.remote?
+        puts "Only local backup storage supports paths."
+        exit(1)
+      end
+
+      filename_without_extension = File.basename(filename).sub(/\.(sql\.)?(tar\.gz|t?gz)$/i, '')
+    end
+
+    puts "Starting backup..."
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension)
+    backup_filename = backuper.run
+    exit(1) unless backuper.success
+
+    puts "Backup done."
 
     if store.remote?
       location = BackupLocationSiteSetting.values.find { |v| v[:value] == SiteSetting.backup_location }
@@ -74,10 +87,17 @@ class DiscourseCLI < Thor
       puts "Output file is stored on #{location} as #{backup_filename}", ""
     else
       backup = store.file(backup_filename, include_download_source: true)
-      puts "Output file is in: #{backup.source}", ""
-    end
 
-    exit(1) unless backuper.success
+      if destination_directory.present?
+        puts "Moving backup file..."
+        backup_path = File.join(destination_directory, backup_filename)
+        FileUtils.mv(backup.source, backup_path)
+      else
+        backup_path = backup.source
+      end
+
+      puts "Output file is in: #{backup_path}", ""
+    end
   end
 
   desc "export", "Backup a Discourse forum"
