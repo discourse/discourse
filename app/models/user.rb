@@ -252,8 +252,20 @@ class User < ActiveRecord::Base
     plugin_staff_user_custom_fields[custom_field_name] = plugin
   end
 
+  def self.plugin_public_user_custom_fields
+    @plugin_public_user_custom_fields ||= {}
+  end
+
+  def self.register_plugin_public_custom_field(custom_field_name, plugin)
+    plugin_public_user_custom_fields[custom_field_name] = plugin
+  end
+
   def self.whitelisted_user_custom_fields(guardian)
     fields = []
+
+    plugin_public_user_custom_fields.each do |k, v|
+      fields << k if v.enabled?
+    end
 
     if SiteSetting.public_user_custom_fields.present?
       fields += SiteSetting.public_user_custom_fields.split('|')
