@@ -889,10 +889,6 @@ export default Ember.Controller.extend({
           }
         ]);
       } else {
-        // in case the composer is
-        // cancelled while in fullscreen
-        $("html").removeClass("fullscreen-composer");
-
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft();
         this.get("model").clearState();
@@ -969,6 +965,10 @@ export default Ember.Controller.extend({
   },
 
   close() {
+    // the 'fullscreen-composer' class is added to remove scrollbars from the
+    // document while in fullscreen mode. If the composer is closed for any reason
+    // this class should be removed
+    $("html").removeClass("fullscreen-composer");
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 
