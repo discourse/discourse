@@ -29,4 +29,11 @@ RSpec.describe JavascriptCache, type: :model do
       expect(javascript_cache.errors.details[:content]).to include(error: :empty)
     end
   end
+
+  describe 'url' do
+    it 'works with multisite' do
+      javascript_cache = JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+      expect(javascript_cache.url).to include("?__ws=test.localhost")
+    end
+  end
 end
