@@ -142,6 +142,9 @@
           {{plugin-outlet name="user-card-metadata" args=(hash user=user)}}
         </div>
       {{/unless}}
+
+      {{plugin-outlet name="user-card-after-metadata" args=(hash user=user)}}
+
     {{/if}}
 
     {{#if publicUserFields}}
@@ -156,6 +159,8 @@
         {{/each}}
       </div>
     {{/if}}
+
+    {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
 
     {{#if showBadges}}
       {{#if user.featured_user_badges}}
