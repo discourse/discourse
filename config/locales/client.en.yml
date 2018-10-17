@@ -1372,6 +1372,7 @@ en:
         tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
+      overwrite_edit: "Overwrite Edit"
       reply_original: "Reply on Original Topic"
       reply_here: "Reply Here"
       reply: "Reply"
