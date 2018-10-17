@@ -196,11 +196,20 @@ describe UserSerializer do
       expect(json[:custom_fields]['secret_field']).to eq(nil)
     end
 
-    it "serializes the fields listed in plugin_public_user_custom_fields" do
-      plugin = Plugin::Instance.new
-      plugin.whitelist_public_user_custom_field :public_field
-      expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
-      expect(json[:custom_fields]['secret_field']).to eq(nil)
+    context "with user custom field" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.whitelist_public_user_custom_field :public_field
+      end
+
+      after do
+        User.plugin_public_user_custom_fields.clear
+      end
+
+      it "serializes the fields listed in plugin_public_user_custom_fields" do
+        expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
+        expect(json[:custom_fields]['secret_field']).to eq(nil)
+      end
     end
   end
 
