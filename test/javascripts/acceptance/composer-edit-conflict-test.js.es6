@@ -22,4 +22,5 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
     I18n.t("composer.overwrite_edit"),
     "it shows the overwrite button"
   );
+  await click("#reply-control button.create");
 });
