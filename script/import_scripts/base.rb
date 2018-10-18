@@ -283,6 +283,7 @@ class ImportScripts::Base
   end
 
   def create_user(opts, import_id)
+    original_opts = opts.dup
     opts.delete(:id)
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
@@ -360,7 +361,7 @@ class ImportScripts::Base
           u = existing
         end
       else
-        puts "Error on record: #{opts.inspect}"
+        puts "Error on record: #{original_opts.inspect}"
         raise e
       end
     end
