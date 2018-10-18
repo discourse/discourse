@@ -33,15 +33,15 @@ describe ThemeField do
   end
 
   it 'only extracts inline javascript to an external file' do
-    html = <<HTML
-<script type="text/discourse-plugin" version="0.8">
-  var a = "inline discourse plugin";
-</script>
-<script>
-  var b = "inline raw script";
-</script>
-<script src="/external-script.js"></script>
-HTML
+    html = <<~HTML
+    <script type="text/discourse-plugin" version="0.8">
+      var a = "inline discourse plugin";
+    </script>
+    <script>
+      var b = "inline raw script";
+    </script>
+    <script src="/external-script.js"></script>
+    HTML
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
 
