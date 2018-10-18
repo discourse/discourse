@@ -861,7 +861,7 @@ describe GroupsController do
         it "adds by username" do
           expect do
             put "/groups/#{group.id}/members.json",
-              params: { usernames: [user1.username, user2.username].join(",") }
+              params: { usernames: [user1.username, user2.username.upcase].join(",") }
           end.to change { group.users.count }.by(2)
 
           expect(response.status).to eq(200)
@@ -1075,7 +1075,7 @@ describe GroupsController do
           it "removes by username" do
             expect do
               delete "/groups/#{group1.id}/members.json",
-                params: { usernames: [user1.username, user2.username].join(",") }
+                params: { usernames: [user1.username, user2.username.upcase].join(",") }
             end.to change { group1.users.count }.by(-2)
             expect(response.status).to eq(200)
           end
