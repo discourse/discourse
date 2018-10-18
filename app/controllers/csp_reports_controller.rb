@@ -14,7 +14,7 @@ class CspReportsController < ApplicationController
   private
 
   def report
-    params.require('csp-report').permit(
+    @report ||= params.require('csp-report').permit(
       'blocked-uri',
       'disposition',
       'document-uri',
@@ -26,7 +26,7 @@ class CspReportsController < ApplicationController
       'violated-directive',
       'line-number',
       'source-file'
-    )
+    ).to_h
   end
 
   def report_collection_enabled?

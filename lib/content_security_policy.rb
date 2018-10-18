@@ -1,6 +1,46 @@
 # frozen_string_literal: true
+require_dependency 'global_path'
+
 class ContentSecurityPolicy
   include GlobalPath
+
+  class Middleware
+    WHITELISTED_PATHS = %w(
+      /logs
+    )
+
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      request = Rack::Request.new(env)
+      _, headers, _ = response = @app.call(env)
+
+      return response unless html_response?(headers)
+      return response if whitelisted?(request.path)
+
+      policy = ContentSecurityPolicy.new.build
+      headers['Content-Security-Policy'] = policy if SiteSetting.content_security_policy
+      headers['Content-Security-Policy-Report-Only'] = policy if SiteSetting.content_security_policy_report_only
+
+      response
+    end
+
+    private
+
+    def html_response?(headers)
+      headers['Content-Type'] && headers['Content-Type'] =~ /html/
+    end
+
+    def whitelisted?(path)
+      if GlobalSetting.relative_url_root
+        path.slice!(/^#{Regexp.quote(GlobalSetting.relative_url_root)}/)
+      end
+
+      WHITELISTED_PATHS.any? { |whitelisted| path.start_with?(whitelisted) }
+    end
+  end
 
   def initialize
     @directives = {
