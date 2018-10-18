@@ -7,7 +7,7 @@ class JavascriptCache < ActiveRecord::Base
   before_save :update_digest
 
   def url
-    "#{GlobalSetting.cdn_url}#{GlobalSetting.relative_url_root}/theme-javascripts/#{digest}.js"
+    "#{GlobalSetting.cdn_url}#{GlobalSetting.relative_url_root}/theme-javascripts/#{digest}.js?__ws=#{Discourse.current_hostname}"
   end
 
   private
