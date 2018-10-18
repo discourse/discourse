@@ -126,8 +126,15 @@ EOM
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query(<<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email,
-                 CONCAT(password, ':', salt) AS crypted_password
+          SELECT userid
+               , username
+               , homepage
+               , usertitle
+               , usergroupid
+               , joindate
+               , email
+               , password
+               , salt
             FROM #{TABLE_PREFIX}user
            WHERE userid > #{last_user_id}
         ORDER BY userid
@@ -145,13 +152,15 @@ EOM
         email = user["email"].presence || fake_email
         email = fake_email unless email[EmailValidator.email_regex]
 
+        password = [user["password"].presence, user["salt"].presence].compact.join(":")
+
         username = @htmlentities.decode(user["username"]).strip
 
         {
           id: user["userid"],
           name: username,
           username: username,
-          password: user["crypted_password"],
+          password: password,
           email: email,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
