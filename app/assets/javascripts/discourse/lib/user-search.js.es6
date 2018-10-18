@@ -109,6 +109,10 @@ function organizeResults(r, options) {
 }
 
 export default function userSearch(options) {
+  if (options.term && options.term.length > 0 && options.term[0] === "@") {
+    options.term = options.term.substring(1);
+  }
+
   var term = options.term || "",
     includeGroups = options.includeGroups,
     includeMentionableGroups = options.includeMentionableGroups,
