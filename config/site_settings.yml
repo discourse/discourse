@@ -1811,4 +1811,3 @@ tags:
     default: false
   force_lowercase_tags:
     default: true
-    client: true
