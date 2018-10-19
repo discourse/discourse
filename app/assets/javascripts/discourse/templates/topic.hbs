@@ -44,7 +44,7 @@
           </div>
 
         {{else}}
-          <h1>
+          <h1 data-topic-id="{{unbound model.id}}">
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 <a href={{pmPath}}>
