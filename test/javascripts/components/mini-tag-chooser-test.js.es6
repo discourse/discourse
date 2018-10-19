@@ -12,7 +12,6 @@ componentTest("default", {
 
   beforeEach() {
     this.siteSettings.max_tag_length = 24;
-    this.siteSettings.force_lowercase_tags = true;
 
     this.site.set("can_create_tag", true);
     this.set("tags", ["jeff", "neil", "arpit"]);
@@ -86,11 +85,11 @@ componentTest("default", {
     );
 
     await this.get("subject").expand();
-    await this.get("subject").fillInFilter("invalid' Tag");
+    await this.get("subject").fillInFilter("invalid'tag");
     await this.get("subject").keyboard("enter");
     assert.deepEqual(
       this.get("tags"),
-      ["jeff", "neil", "arpit", "régis", "joffrey", "invalid-tag"],
+      ["jeff", "neil", "arpit", "régis", "joffrey", "invalidtag"],
       "it strips invalid characters in tag"
     );
 
@@ -99,7 +98,7 @@ componentTest("default", {
     await this.get("subject").keyboard("enter");
     assert.deepEqual(
       this.get("tags"),
-      ["jeff", "neil", "arpit", "régis", "joffrey", "invalid-tag"],
+      ["jeff", "neil", "arpit", "régis", "joffrey", "invalidtag"],
       "it does not allow creating long tags"
     );
 
