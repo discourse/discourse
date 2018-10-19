@@ -139,6 +139,7 @@ en:
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
       max_emojis: "can't have more than %{max_emojis_count} emoji"
+      emojis_disabled: "can't have emoji"
       ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
@@ -1868,7 +1869,7 @@ en:
       sso_provider_secrets:
         key: "www.example.com"
         value: "SSO secret"
-        
+
   search:
     within_post: "#%{post_number} by %{username}"
     types:
