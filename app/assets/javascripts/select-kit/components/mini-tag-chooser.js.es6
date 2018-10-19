@@ -214,28 +214,6 @@ export default ComboBox.extend(TagsMixin, {
     this.destroyTags(tags);
   },
 
-  _sanitizeContent(content, property) {
-    switch (typeof content) {
-      case "string":
-        // See lib/discourse_tagging#clean_tag.
-        return content
-          .trim()
-          .replace(/\s+/, "-")
-          .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/, "")
-          .substring(0, this.siteSettings.max_tag_length);
-      default:
-        return get(content, this.get(property));
-    }
-  },
-
-  valueForContentItem(content) {
-    return this._sanitizeContent(content, "valueAttribute");
-  },
-
-  _nameForContent(content) {
-    return this._sanitizeContent(content, "nameProperty");
-  },
-
   actions: {
     onSelect(tag) {
       this.set("tags", makeArray(this.get("tags")).concat(tag));
