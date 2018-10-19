@@ -28,8 +28,8 @@ describe CspReportsController do
           "source-file": "http://localhost:3000/",
           "status-code": 200,
           "script-sample": ""
-        }, headers: { "Content-Type": "application/csp-report" }
-      }
+        }
+      }.to_json, headers: { "Content-Type": "application/csp-report" }
     end
 
     it 'is enabled by SiteSetting' do
