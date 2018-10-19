@@ -313,7 +313,7 @@ describe TagsController do
         Fabricate(:tag, name: 'tag2', topic_count: 100)
         Fabricate(:tag, name: 'tag', topic_count: 1)
 
-        get "/tags/filter/search.json", params: { q: 'tag', limit: 2 }
+        get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
