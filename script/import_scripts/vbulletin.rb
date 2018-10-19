@@ -146,7 +146,7 @@ EOM
 
       last_user_id = users[-1]["userid"]
       before = users.size
-      users.reject! { |u| @lookup.user_already_imported?(u["userid"].to_i) }
+      users.reject! { |u| @lookup.user_already_imported?(u["userid"]) }
 
       create_users(users, total: user_count, offset: offset) do |user|
         email = user["email"].presence || fake_email
@@ -162,6 +162,7 @@ EOM
           username: username,
           password: password,
           email: email,
+          merge: true,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
           primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
@@ -176,7 +177,6 @@ EOM
     end
 
     @usernames = UserCustomField.joins(:user).where(name: 'import_username').pluck('user_custom_fields.value', 'users.username').to_h
-
   end
 
   def create_groups_membership
