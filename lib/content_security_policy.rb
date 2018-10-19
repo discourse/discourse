@@ -17,7 +17,7 @@ class ContentSecurityPolicy
       request = Rack::Request.new(env)
       _, headers, _ = response = @app.call(env)
 
-      return response unless html_response?(headers)
+      return response unless html_response?(headers) && ContentSecurityPolicy.enabled?
       return response if whitelisted?(request.path)
 
       policy = ContentSecurityPolicy.new.build
@@ -40,6 +40,10 @@ class ContentSecurityPolicy
 
       WHITELISTED_PATHS.any? { |whitelisted| path.start_with?(whitelisted) }
     end
+  end
+
+  def self.enabled?
+    SiteSetting.content_security_policy || SiteSetting.content_security_policy_report_only
   end
 
   def initialize
