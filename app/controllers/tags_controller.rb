@@ -178,8 +178,13 @@ class TagsController < ::ApplicationController
   def search
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
+    # Prioritize exact matches when ordering
+    order_query = Tag.sanitize_sql_for_order(
+      ["lower(name) = lower(?) DESC, topic_count DESC", params[:q]]
+    )
+
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      Tag.order('topic_count DESC').limit(params[:limit]),
+      Tag.order(order_query).limit(params[:limit]),
       guardian,
       for_input: params[:filterForInput],
       term: params[:q],
