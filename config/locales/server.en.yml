@@ -3655,6 +3655,11 @@ en:
       description: First post edit
       long_description: |
         This badge is granted the first time you edit one of your posts. While you won’t be able to edit your posts forever, editing is encouraged — you can improve the formatting, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
+    wiki_editor:
+      name: Wiki Editor
+      description: First wiki edit
+      long_description: |
+        This badge is granted the first time you edit one wiki post.
     basic_user:
       name: Basic
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> all essential community functions
