@@ -308,6 +308,17 @@ describe TagsController do
         expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
+      it "returns tags ordered by topic_count, and prioritises exact matches" do
+        Fabricate(:tag, name: 'tag1', topic_count: 10)
+        Fabricate(:tag, name: 'tag2', topic_count: 100)
+        Fabricate(:tag, name: 'tag', topic_count: 1)
+
+        get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
+        expect(response.status).to eq(200)
+        json = ::JSON.parse(response.body)
+        expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
+      end
+
       it "can say if given tag is not allowed" do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         category = Fabricate(:category, tags: [yup])
