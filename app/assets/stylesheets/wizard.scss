@@ -543,7 +543,7 @@ body.wizard {
     max-height: none;
   }
   .wizard-step-contents {
-    min-height: none !important;
+    min-height: auto !important;
   }
   .wizard-step-banner {
     width: 100% !important;
