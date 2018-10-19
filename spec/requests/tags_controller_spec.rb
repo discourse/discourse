@@ -316,7 +316,7 @@ describe TagsController do
         get "/tags/filter/search.json", params: { q: 'tag', limit: 2 }
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
-        expect(json["results"].map { |j| j["id"] }).to eq(['tag', 'tag2'])
+        expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
       end
 
       it "can say if given tag is not allowed" do
