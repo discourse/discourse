@@ -190,9 +190,6 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    require 'content_security_policy'
-    config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware, ContentSecurityPolicy::Middleware
-
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 

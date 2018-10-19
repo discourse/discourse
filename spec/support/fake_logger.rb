@@ -1,14 +1,9 @@
 class FakeLogger
-  attr_reader :warnings, :errors, :infos
+  attr_reader :warnings, :errors
 
   def initialize
     @warnings = []
     @errors = []
-    @infos = []
-  end
-
-  def info(message = nil)
-    @infos << message
   end
 
   def warn(message)
