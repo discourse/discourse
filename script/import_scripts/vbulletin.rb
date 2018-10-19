@@ -145,7 +145,6 @@ EOM
       break if users.empty?
 
       last_user_id = users[-1]["userid"]
-      before = users.size
       users.reject! { |u| @lookup.user_already_imported?(u["userid"]) }
 
       create_users(users, total: user_count, offset: offset) do |user|
