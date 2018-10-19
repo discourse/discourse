@@ -514,8 +514,8 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不当内容'
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
-      short_description: '违反了<a href="/guidelines">我们的社群指引</a>'
+      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_url}/guidelines">我们的社区准则</a>。'
+      short_description: '违反了<a href="%{base_url}/guidelines">我们的社群指引</a>'
       long_form: '标记为不当内容'
     notify_user:
       title: '给@{{username}}发送一条私信'
@@ -558,11 +558,11 @@ zh_CN:
       long_form: '标记为垃圾'
     inappropriate:
       title: '不当内容'
-      description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
+      description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_url}/guidelines">我们的社区准则</a>。'
       long_form: '标记为不当内容'
     notify_moderators:
       title: "其他内容"
-      description: '此帖需要版主依据<a href="/guidelines">社区准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
+      description: '此帖需要版主依据<a href="%{base_url}/guidelines">社区准则</a>、<a href="%{base_url}/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
       long_form: '标记为需版主注意'
       email_title: '“{title}”主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
@@ -758,11 +758,11 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
-    facebook_config_warning: '服务器允许使用 Facebook 帐号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
-    twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
-    github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
+    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="%{base_url}/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
+    facebook_config_warning: '服务器允许使用 Facebook 帐号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="%{base_url}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
+    twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="%{base_url}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
+    github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="%{base_url}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
+    failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="%{base_url}/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
@@ -2202,7 +2202,7 @@ zh_CN:
       你需要一个账号。请创建一个账号或者登录以继续。
   terms_of_service:
     title: "服务条款"
-    signup_form_message: '我已经阅读并接受 <a href="/tos" target="_blank">服务条款</a>。'
+    signup_form_message: '我已经阅读并接受 <a href="%{base_url}/tos" target="_blank">服务条款</a>。'
   deleted: '已删除'
   image: "图片"
   upload:

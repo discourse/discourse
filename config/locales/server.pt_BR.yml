@@ -637,8 +637,8 @@ pt_BR:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropriado'
-      description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
-      short_description: 'Uma violação de <a href="/guidelines">nossas diretrizes da comunidade</a>'
+      description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="%{base_url}/guidelines">nossas diretrizes da comunidade</a>.'
+      short_description: 'Uma violação de <a href="%{base_url}/guidelines">nossas diretrizes da comunidade</a>'
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Envie ao(à) @ {{nome de usuário}} uma mensagem'
@@ -684,12 +684,12 @@ pt_BR:
       short_description: 'Este é um anúncio'
     inappropriate:
       title: 'Impróprio'
-      description: 'Este tópico contém um conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou violação de <a href="/guidelines">nossas diretrizes da comunidade</a>.'
+      description: 'Este tópico contém um conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou violação de <a href="%{base_url}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizar como impróprio'
-      short_description: 'Uma violação de <a href="/guidelines">nossas diretrizes da comunidade</a>'
+      short_description: 'Uma violação de <a href="%{base_url}/guidelines">nossas diretrizes da comunidade</a>'
     notify_moderators:
       title: "Algo mais"
-      description: 'Este tópico requer a atenção geral da equipe baseado nas <a href="/guidelines">diretrizes da comunidade</a>,  no <a href="%{tos_url}">Termos de Serviço</a>, ou em outra razão não listada acima.'
+      description: 'Este tópico requer a atenção geral da equipe baseado nas <a href="%{base_url}/guidelines">diretrizes da comunidade</a>,  no <a href="%{tos_url}">Termos de Serviço</a>, ou em outra razão não listada acima.'
       long_form: 'sinalizar isso para atenção da moderação'
       short_description: 'Requer atenção da equipe por outro motivo'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
@@ -968,11 +968,11 @@ pt_BR:
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: 'O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o signup e login com Google OAuth2 (enable_google_oauth2_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia e aprenda mais</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
-    failing_emails_warning: 'Existem %{num_failed_jobs} tarefas de email que falharam. Verifique seu app.yml e se assegure que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
+    google_oauth2_config_warning: 'O servidor está configurado para permitir o signup e login com Google OAuth2 (enable_google_oauth2_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="%{base_url}/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia e aprenda mais</a>.'
+    facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="%{base_url}/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
+    twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="%{base_url}/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
+    github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="%{base_url}/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
+    failing_emails_warning: 'Existem %{num_failed_jobs} tarefas de email que falharam. Verifique seu app.yml e se assegure que as configurações do servidor de email estão corretas. <a href="%{base_url}/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
     email_polling_errored_recently:
       one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
@@ -2603,7 +2603,7 @@ pt_BR:
       Uma conta é necessária. Por favor, crie uma conta ou faça o login para continuar.
   terms_of_service:
     title: "Termos de Serviço"
-    signup_form_message: 'Eu li e aceito os <a href="/tos" target="_blank">Termos de Serviço</ a>.'
+    signup_form_message: 'Eu li e aceito os <a href="%{base_url}/tos" target="_blank">Termos de Serviço</ a>.'
   deleted: 'removido'
   image: "imagem"
   upload:

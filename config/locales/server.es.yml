@@ -644,8 +644,8 @@ es:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiado'
-      description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
-      short_description: 'Una violación a las <a href="/guidelines">guías de nuestra comunidad</a>'
+      description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="%{base_url}/guidelines">nuestras directrices de comunidad</a>.'
+      short_description: 'Una violación a las <a href="%{base_url}/guidelines">guías de nuestra comunidad</a>'
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Enviar un mensaje a @{{username}}'
@@ -694,12 +694,12 @@ es:
       short_description: 'Esto es un anuncio'
     inappropriate:
       title: 'Inapropiado'
-      description: 'Este tema contiene material que una persona sensata podría considerar ofensivo, abusivo, o que viola <a href="/guidelines">las directrices de nuestra comunidad</a>.'
+      description: 'Este tema contiene material que una persona sensata podría considerar ofensivo, abusivo, o que viola <a href="%{base_url}/guidelines">las directrices de nuestra comunidad</a>.'
       long_form: 'marcado como inapropiado'
-      short_description: 'Incumple <a href="/guidelines">nuestras directrices de la comunidad</a>'
+      short_description: 'Incumple <a href="%{base_url}/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema requiere atención del equipo de moderación basándose en las <a href="/guidelines">pautas de la comunidad</a> o los  <a href="%{tos_url}">Términos y condiciones</a>, o por otra razón no especificada arriba.'
+      description: 'Este tema requiere atención del equipo de moderación basándose en las <a href="%{base_url}/guidelines">pautas de la comunidad</a> o los  <a href="%{tos_url}">Términos y condiciones</a>, o por otra razón no especificada arriba.'
       long_form: 'reportado para atención de los moderadores'
       short_description: 'Requiere atención del staff por otro motivo'
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
@@ -978,11 +978,11 @@ es:
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
-    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
-    facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
-    twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
-    github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Revisa la guía para aprender más</a>.'
-    failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
+    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="%{base_url}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
+    facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="%{base_url}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
+    twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="%{base_url}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
+    github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="%{base_url}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Revisa la guía para aprender más</a>.'
+    failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="%{base_url}/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
@@ -2643,7 +2643,7 @@ es:
       Una cuenta es requerida. Por favor cree una cuenta o inicie sesión para continuar.
   terms_of_service:
     title: "Condiciones Generales de Uso"
-    signup_form_message: 'He leído y acepto las <a href="/tos" target="_blank">Condiciones de Servicio</a>.'
+    signup_form_message: 'He leído y acepto las <a href="%{base_url}/tos" target="_blank">Condiciones de Servicio</a>.'
   deleted: 'borrado'
   image: "imagen"
   upload:

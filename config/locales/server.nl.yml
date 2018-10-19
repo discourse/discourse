@@ -532,8 +532,8 @@ nl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ongepast'
-      description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="/guidelines">onze gemeenschapsrichtlijnen</a> zou beschouwen.'
-      short_description: 'Een overtreding van <a href="/guidelines">onze community richtlijnen</a>'
+      description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="%{base_url}/guidelines">onze gemeenschapsrichtlijnen</a> zou beschouwen.'
+      short_description: 'Een overtreding van <a href="%{base_url}/guidelines">onze community richtlijnen</a>'
       long_form: 'heeft dit als ongepast gemarkeerd'
     notify_user:
       title: '@{{username}} een bericht sturen'
@@ -573,11 +573,11 @@ nl:
       long_form: 'heeft dit als spam gemarkeerd'
     inappropriate:
       title: 'Ongepast'
-      description: 'Dit topic bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="/guidelines">onze gemeenschapsrichtlijnen</a> zou beschouwen.'
+      description: 'Dit topic bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="%{base_url}/guidelines">onze gemeenschapsrichtlijnen</a> zou beschouwen.'
       long_form: 'heeft dit als ongepast gemarkeerd'
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit topic vereist algemene aandacht van een staflid op basis van de <a href="/guidelines">richtlijnen</a>, <a href="%{tos_url}">voorwaarden</a>, of om een andere reden dan hierboven vermeld.'
+      description: 'Dit topic vereist algemene aandacht van een staflid op basis van de <a href="%{base_url}/guidelines">richtlijnen</a>, <a href="%{tos_url}">voorwaarden</a>, of om een andere reden dan hierboven vermeld.'
       long_form: 'heeft dit gemarkeerd voor aandacht van een moderator'
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
       email_body: "%{link}\n\n%{message}"
@@ -759,11 +759,11 @@ nl:
     sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg ervoor dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
     queue_size_warning: 'Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit zou op een probleem met Sidekiq-processen kunnen duiden, of mogelijk dient u meer Sidekiq-workers toe te voegen.'
     memory_warning: 'Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen.'
-    google_oauth2_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 (enable_google_oauth2_logins) toe te staan, maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer uw bestand app.yml en zorg ervoor dat de mailserverinstellingen juist zijn. <a href="/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
+    google_oauth2_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 (enable_google_oauth2_logins) toe te staan, maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="%{base_url}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="%{base_url}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="%{base_url}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="%{base_url}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer uw bestand app.yml en zorg ervoor dat de mailserverinstellingen juist zijn. <a href="%{base_url}/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
     subfolder_ends_in_slash: "Uw submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
     email_polling_errored_recently:
       one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details."
@@ -1377,7 +1377,7 @@ nl:
     search_title: "Zoeken op deze website"
   terms_of_service:
     title: "Servicevoorwaarden"
-    signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Servicevoorwaarden</a> gelezen en ga hiermee akkoord.'
+    signup_form_message: 'Ik heb de <a href="%{base_url}/tos" target="_blank">Servicevoorwaarden</a> gelezen en ga hiermee akkoord.'
   deleted: 'verwijderd'
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
