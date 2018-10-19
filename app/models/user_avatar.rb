@@ -13,7 +13,7 @@ class UserAvatar < ActiveRecord::Base
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
       begin
-        self.update_columns(last_gravatar_download_attempt: Time.now)
+        self.update!(last_gravatar_download_attempt: Time.now)
 
         max = Discourse.avatar_sizes.max
         email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
@@ -47,17 +47,12 @@ class UserAvatar < ActiveRecord::Base
               end
 
               gravatar_upload&.destroy!
-              self.gravatar_upload = upload
-              save!
+              self.update!(gravatar_upload: upload)
             end
           end
         end
-      rescue OpenURI::HTTPError
-        save!
-      rescue SocketError
-        # skip saving, we are not connected to the net
       ensure
-        tempfile.try(:close!)
+        tempfile&.close!
       end
     end
   end

@@ -74,7 +74,9 @@ describe UserAvatar do
 
         FileHelper.expects(:download).raises(SocketError)
 
-        expect { avatar.update_gravatar! }.to_not change { Upload.count }
+        expect do
+          expect { avatar.update_gravatar! }.to raise_error(SocketError)
+        end.to_not change { Upload.count }
 
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
       end
