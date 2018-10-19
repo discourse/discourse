@@ -10,7 +10,8 @@ class UserApiKey < ActiveRecord::Base
       [:get, 'session#current'],
       [:get, 'users#topic_tracking_state'],
       [:get, 'list#unread'],
-      [:get, 'list#new']
+      [:get, 'list#new'],
+      [:get, 'list#latest']
     ]
   }
 
