@@ -112,7 +112,7 @@ export default createWidget("topic-admin-menu", {
     if (attrs.openUpwards) {
       const documentHeight = $(document).height();
       const mainHeight = $("#main").height();
-      let bottom = documentHeight - top - $("#main").offset().top;
+      let bottom = documentHeight - top - 70 - $("#main").offset().top;
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
