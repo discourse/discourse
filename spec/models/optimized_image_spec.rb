@@ -47,7 +47,9 @@ describe OptimizedImage do
             filename: "test.png"
           )
 
-          expect(orig_size).to be > File.size(original_path)
+          new_size = File.size(original_path)
+          expect(orig_size).to be > new_size
+          expect(new_size).not_to eq(0)
 
         ensure
           File.delete(original_path) if File.exists?(original_path)
