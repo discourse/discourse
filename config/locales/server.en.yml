@@ -709,6 +709,7 @@ en:
       firefox: "Firefox"
       opera: "Opera"
       ie: "Internet Explorer"
+      edge: "Microsoft Edge"
       unknown: "unknown browser"
     device:
       android: "Android Device"
