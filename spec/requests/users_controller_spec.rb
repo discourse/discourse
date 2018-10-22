@@ -250,6 +250,35 @@ describe UsersController do
         expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
       end
 
+      context "rate limiting" do
+
+        before { RateLimiter.clear_all!; RateLimiter.enable }
+        after  { RateLimiter.disable }
+
+        it "rate limits reset passwords" do
+          freeze_time
+
+          token = user.email_tokens.create!(email: user.email).token
+
+          3.times do
+            put "/u/password-reset/#{token}", params: {
+              second_factor_token: 123456,
+              second_factor_method: 1
+            }
+
+            expect(response.status).to eq(200)
+          end
+
+          put "/u/password-reset/#{token}", params: {
+            second_factor_token: 123456,
+            second_factor_method: 1
+          }
+
+          expect(response.status).to eq(429)
+        end
+
+      end
+
       context '2 factor authentication required' do
         let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 

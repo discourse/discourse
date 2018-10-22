@@ -453,12 +453,11 @@ class UsersController < ApplicationController
     token = params[:token]
 
     if EmailToken.valid_token_format?(token)
-      @user =
-        if request.put?
-          EmailToken.confirm(token)
-        else
-          EmailToken.confirmable(token)&.user
-        end
+      @user = if request.put?
+        EmailToken.confirm(token)
+      else
+        EmailToken.confirmable(token)&.user
+      end
 
       if @user
         secure_session["password-#{token}"] = @user.id
@@ -468,9 +467,15 @@ class UsersController < ApplicationController
       end
     end
 
-    totp_enabled = @user&.totp_enabled?
+    second_factor_token = params[:second_factor_token]
+    second_factor_method = params[:second_factor_method].to_i
 
-    if !totp_enabled || @user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+    if second_factor_token.present? && second_factor_token[/\d{6}/] && UserSecondFactor.methods[second_factor_method]
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+      second_factor_authenticated = @user&.authenticate_second_factor(second_factor_token, second_factor_method)
+    end
+
+    if second_factor_authenticated || !@user&.totp_enabled?
       secure_session["second-factor-#{token}"] = "true"
     end
 
@@ -479,13 +484,10 @@ class UsersController < ApplicationController
     if !@user
       @error = I18n.t('password_reset.no_token')
     elsif request.put?
-      @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
-
       if !valid_second_factor
-        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
         @user.errors.add(:user_second_factors, :invalid)
         @error = I18n.t('login.invalid_second_factor_code')
-      elsif @invalid_password
+      elsif @invalid_password = params[:password].blank? || params[:password].size > User.max_password_length
         @user.errors.add(:password, :invalid)
       else
         @user.password = params[:password]
@@ -547,6 +549,8 @@ class UsersController < ApplicationController
         end
       end
     end
+  rescue RateLimiter::LimitExceeded => e
+    render_rate_limit_error(e)
   end
 
   def confirm_email_token
