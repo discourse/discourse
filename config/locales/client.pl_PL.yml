@@ -285,12 +285,8 @@ pl_PL:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
-      not_logged_in: "przykro nam, ale należy się zalogować, aby dodawać zakładki"
       created: "zakładka dodana"
-      not_bookmarked: "wpis przeczytany: kliknij, aby dodać zakładkę"
-      last_read: "to ostatni przeczytany przez ciebie wpis: kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
-      confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki ustawione w tym temacie?"
     drafts:
       remove: "Usuń"
     topic_count_latest:
@@ -315,7 +311,6 @@ pl_PL:
     saved: "Zapisano!"
     upload: "Dodaj"
     uploading: "Wysyłam…"
-    uploading_filename: "Wysyłanie {{filename}}..."
     uploaded: "Wgrano!"
     pasting: "Wklejanie..."
     enable: "Włącz"
@@ -459,7 +454,6 @@ pl_PL:
         title: "Grupy"
         all: "Wszystkie grupy"
         empty: "Nie ma widocznych grup"
-        owner_groups: "Grupy, które do mnie należą"
         close_groups: "Zamknięte grupy"
         closed: "Zamknięta"
         public: "Publiczna"
@@ -1007,9 +1001,6 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_and_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
-    too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
-    too_few_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> osiągnął ustawiony limit %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> przekroczył ustawiony limit %{siteSettingRate}."
@@ -1278,7 +1269,6 @@ pl_PL:
       link_description: "wprowadź tutaj opis odnośnika"
       link_dialog_title: "Wstaw odnośnik"
       link_optional_text: "opcjonalny tytuł"
-      link_url_placeholder: "http://example.com"
       quote_title: "Cytat"
       quote_text: "Cytat"
       code_title: "Tekst sformatowany"
@@ -1801,16 +1791,9 @@ pl_PL:
         action: "scal wybrane posty"
         error: "Wystąpił błąd podczas łączenia wybranych postów"
       change_owner:
-        title: "Zmień właściciela wpisów"
         action: "zmień właściciela"
         error: "Wystąpił błąd podczas zmiany właściciela wpisów."
-        label: "Nowy właściciel wpisów"
         placeholder: "nazwa nowego właściciela"
-        instructions:
-          one: "Wybierz nowego właściciela wpisu autorstwa <b>{{old_user}}</b>."
-          few: "Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>."
-          many: "Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>."
-          other: "Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>."
       change_timestamp:
         title: "zmień znacznik czasu"
         action: "zmień znacznik czasu"
@@ -2370,7 +2353,6 @@ pl_PL:
         this_week: "Tydzień"
         today: "Dzisiaj"
         other_periods: "zobacz najważniejsze"
-    browser_update: 'Niestety <a href="http://www.discourse.org/faq/#browser">twoja przeglądarka jest zbyt przestarzała, aby obsłużyć ten serwis</a>. Prosimy <a href="http://browsehappy.com">zaktualizuj swoją przeglądarkę</a>.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -2543,8 +2525,6 @@ pl_PL:
           bookmarks: "Nie ma więcej dodanych tematów do zakładek."
           search: "Nie znaleziono więcej wyników wyszukiwania."
     invite:
-      custom_message: "Stwórz bardziej osobiste zaproszenie dodając"
-      custom_message_link: "niestandardowa wiadomość"
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
       custom_message_template_topic: "Hej, pomyślałem że spodoba Ci się ten temat !"
@@ -2852,7 +2832,6 @@ pl_PL:
         import: "Import"
         delete: "Usuń"
         delete_confirm: "Usunąć ten motyw?"
-        about: "Zmień arkusze stylów CSS i nagłówki HTML w witrynie. Dodaj własne ustawienie aby rozpocząć."
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Kopiuj"
@@ -2891,7 +2870,6 @@ pl_PL:
           upload_file_tip: "Wybierz plik do wysłania (png, woff2, itp.)"
           variable_name: "Nazwa zmiennej SCSS:"
           upload: "Plik"
-          child_themes_check: "Motyw importuje zawartość innych motywów"
           css_html: "Własny CSS/HTML"
           edit_css_html: "Edytuj CSS/HTML"
           edit_css_html_help: "Nie modyfikowałeś CSS ani HTML"
@@ -3068,7 +3046,6 @@ pl_PL:
           filter: "Filtruj:"
           title: "Działania obsługi"
           clear_filters: "Pokaż wszystko"
-          staff_user: "Użytkownik obsługi"
           target_user: "Użytkownik będący Obiektem"
           subject: "Temat"
           when: "Kiedy"

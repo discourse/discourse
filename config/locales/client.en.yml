@@ -618,6 +618,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
       collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
@@ -770,12 +771,13 @@ en:
         enable: "Enable <a href>two factor authentication</a> for enhanced account security"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
+        rate_limit: "Please wait before trying another authentication code."
         enable_description: |
-          Scan this QR code in a supported app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) and enter your authentication code.
+          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> and enter your authentication code.
         disable_description: "Please enter the authentication code from your app"
         show_key_description: "Enter manually"
         extended_description: |
-          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, and <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> devices.
+          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
 
       change_about:
@@ -887,6 +889,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
+      hide_profile_and_presence: "Hide my public profile and presence features"
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"
@@ -1282,6 +1285,7 @@ en:
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_top_topics: "Categories and Top Topics"
+      categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
 
     shortcut_modifier_key:
@@ -1369,6 +1373,7 @@ en:
         tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
+      overwrite_edit: "Overwrite Edit"
       reply_original: "Reply on Original Topic"
       reply_here: "Reply Here"
       reply: "Reply"
@@ -1424,6 +1429,8 @@ en:
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
+      enter_fullscreen: "enter fullscreen composer"
+      exit_fullscreen: "exit fullscreen composer"
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
@@ -2610,6 +2617,7 @@ en:
       composing:
         title: 'Composing'
         return: '<b>shift</b>+<b>c</b> Return to composer'
+        fullscreen: '<b>shift</b>+<b>F11</b> Fullscreen composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2694,7 +2702,10 @@ en:
       sort_by_name: "name"
       manage_groups: "Manage Tag Groups"
       manage_groups_description: "Define groups to organize tags"
-
+      upload: "Upload Tags"
+      upload_description: "Upload a text file to create tags in bulk"
+      upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
+      upload_successful: "Tags uploaded successfully"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -3131,6 +3142,7 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
+          uploading_progress: "Uploading... {{progress}}%"
           success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
@@ -3161,6 +3173,9 @@ en:
             label: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
+        location:
+          local: "Local"
+          s3: "Amazon S3"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."

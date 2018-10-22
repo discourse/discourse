@@ -57,7 +57,7 @@
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
     <%- if !current_user && flash[:authentication_data] %>
-      <meta id="data-authentication" data-authentiation-data="<%= flash[:authentication_data] %>">
+      <meta id="data-authentication" data-authentication-data="<%= flash[:authentication_data] %>">
       <%= preload_script "authentication-complete" %>
     <%- end %>
   </head>
@@ -86,7 +86,7 @@
       </footer>
     </noscript>
 
-    <%- unless customization_disabled? || loading_admin? %>
+    <%- unless customization_disabled? %>
       <%= theme_lookup("header") %>
       <%= build_plugin_html 'server:header' %>
     <%- end %>

@@ -13,7 +13,7 @@ export default Ember.Component.extend({
   _yourselfConfirm: null,
   similarTopics: null,
 
-  hidden: Ember.computed.not("composer.viewOpen"),
+  hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
     this._super();

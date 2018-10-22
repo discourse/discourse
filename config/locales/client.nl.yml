@@ -112,11 +112,14 @@ nl:
       email: 'deze koppeling delen via e-mail'
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
+      private_topic: "heeft dit topic een privé bericht gemaakt op %{when}"
       split_topic: "heeft dit topic gesplitst op %{when}"
       invited_user: "heeft %{who} uitgenodigd op %{when}"
       invited_group: "heeft %{who} uitgenodigd op %{when}"
+      user_left: "%{who} heeft zichzelf verwijderd van dit bericht %{when}"
       removed_user: "heeft %{who} verwijderd op %{when}"
       removed_group: "heeft %{who} verwijderd op %{when}"
+      autobumped: "automatisch gebumped %{when}"
       autoclosed:
         enabled: 'gesloten op %{when}'
         disabled: 'geopend op %{when}'
@@ -141,6 +144,8 @@ nl:
     topic_admin_menu: "beheeracties voor topic"
     wizard_required: "Welkom bij je nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
+    bootstrap_mode_enabled: "%{min_users}"
+    bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
     themes:
       default_description: "Standaard"
     s3:
@@ -151,9 +156,11 @@ nl:
         ap_southeast_1: "Azië Pacifisch (Singapore)"
         ap_southeast_2: "Azië Pacifisch (Sydney)"
         cn_north_1: "China (Peking)"
+        cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Ierland)"
         eu_west_2: "EU (Londen)"
+        eu_west_3: "EU (Parijs)"
         sa_east_1: "Zuid-Amerika (Sao Paulo)"
         us_east_1: "VS Oost (N. Virginia)"
         us_east_2: "VS Oost (Ohio)"
@@ -184,6 +191,7 @@ nl:
     privacy_policy: "Privacybeleid"
     privacy: "Privacy"
     tos: "Algemene Voorwaarden"
+    rules: "Regels"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
     you: "Jij"
@@ -215,6 +223,8 @@ nl:
       our_moderators: "Onze moderators"
       stat:
         all_time: "Sinds het begin"
+        last_7_days: "Laatste 7"
+        last_30_days: "Laatste 30"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
@@ -229,12 +239,23 @@ nl:
         bookmark: "Klik om een bladwijzer voor het eerste bericht van dit topic te maken"
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
     bookmarks:
-      not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt een bladwijzer voor dit bericht gemaakt"
-      not_bookmarked: "je hebt dit bericht gelezen; klik om er een bladwijzer voor te maken"
-      last_read: "dit is het laatste bericht dat je hebt gelezen; klik om er een bladwijzer voor te maken"
       remove: "Bladwijzer verwijderen"
-      confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
+    drafts:
+      resume: "Doorgaan"
+      remove: "Verwijderen"
+      new_topic: "Nieuw topic (het) concept"
+      new_private_message: "Nieuw privé bericht concept"
+      topic_reply: "Reageer concept"
+    topic_count_latest:
+      one: "Zie {{count}} nieuwe of bijgewerkte topic (het)."
+      other: "Zie {{count}} nieuwe of bijgewerkte topics."
+    topic_count_unread:
+      one: "Zie {{count}} ongelezen topic"
+      other: "Zie {{count}} ongelezen topics"
+    topic_count_new:
+      one: "Zie {{count}} nieuwe topic"
+      other: "Zie {{count}} nieuwe topics"
     preview: "voorbeeld"
     cancel: "annuleer"
     save: "Wijzigingen opslaan"
@@ -242,8 +263,9 @@ nl:
     saved: "Opgeslagen!"
     upload: "Uploaden"
     uploading: "Uploaden..."
-    uploading_filename: "{{filename}} uploaden..."
+    clipboard: "klembord"
     uploaded: "Geupload!"
+    pasting: "Plakken..."
     enable: "Inschakelen"
     disable: "Uitschakelen"
     continue: "Doorgaan"
@@ -324,13 +346,31 @@ nl:
         make_user_group_owner: "Eigenaar maken"
         remove_user_as_group_owner: "Eigenaar intrekken"
     groups:
+      add_members:
+        title: "Leden toevoegen"
+        description: "Het lidmaatschap van deze groep beheren"
+        usernames: "Gebruikersnamen"
       manage:
         name: 'Naam'
         full_name: 'Volledige naam'
         add_members: "Leden toevoegen"
+        delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
         profile:
           title: Profiel
+        interaction:
+          posting: Plaatsen
+          notification: Melding
+        membership:
+          title: Lidmaatschap
+          access: Toegang
         logs:
+          title: "Logboeken"
+          when: "Wanneer"
+          action: "Actie"
+          acting_user: "Uitvoerende gebruiker"
+          target_user: "Doel gebruiker"
+          subject: "Onderwerp"
+          details: "Details"
           from: "Van"
           to: "Naar"
       public_admission: "Gebruikers toestaan om vrij aan de groep deel te nemen (Groep moet hiervoor zichtbaar zijn)"
@@ -343,7 +383,9 @@ nl:
         topics: "Er zijn geen topics van leden van deze groep."
         logs: "Er zijn geen logs voor deze groep."
       add: "Toevoegen"
+      join: "Toetreden"
       leave: "Verlaat"
+      request: "Aanvraag"
       message: "Bericht"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
@@ -353,11 +395,14 @@ nl:
         reason: "Laat de groepbeheerders weten waarom je in deze groep hoort"
       membership: "Lidmaatschap"
       name: "Naam"
+      group_name: "Groepsnaam"
       user_count: "Gebruikers"
       bio: "Over groep"
+      selector_placeholder: "voer gebruikersnaam in"
       owner: "eigenaar"
       index:
         title: "Groepen"
+        all: "Alle groepen"
         empty: "Er zijn geen zichtbare groepen."
         automatic: "Automatisch"
         closed: "Gesloten"
@@ -372,6 +417,7 @@ nl:
         other: "Groepen"
       activity: "Activiteit"
       members:
+        title: "Leden"
         filter_placeholder_admin: "gebruikersnaam of e-mail, e-mailadres"
         filter_placeholder: "gebruikersnaam"
       topics: "Topics"
@@ -463,6 +509,7 @@ nl:
       post_count: "# berichten"
       confirm_delete_other_accounts: "Weet u zeker dat u deze accounts wilt verwijderen?"
       powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "gekopieerd"
     user_fields:
       none: "(selecteer een optie)"
     user:
@@ -846,9 +893,6 @@ nl:
       enabled: "Deze website bevindt zich in alleen-lezenmodus. U kunt doorgaan met browsen, maar berichten beantwoorden, likes geven en andere acties zijn momenteel uitgeschakeld."
       login_disabled: "Aanmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
-    too_few_topics_and_posts_notice: "Laten we <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en te reageren."
-    too_few_topics_notice: "Laten we <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentTopics} / %{requiredTopics}</strong> topics. Nieuwe bezoekers hebben conversaties nodig om te lezen en te reageren."
-    too_few_posts_notice: "Laten we <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a>. Er zijn op dit moment <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en te reageren."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet voor de website-instelling van %{siteSettingRate} bereikt."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet voor de website-instelling van %{siteSettingRate} overschreden."
@@ -1075,7 +1119,6 @@ nl:
       link_description: "voer hier een omschrijving in"
       link_dialog_title: "Hyperlink invoegen"
       link_optional_text: "optionele titel"
-      link_url_placeholder: "http://example.com"
       quote_title: "Citaat"
       quote_text: "Citaat"
       code_title: "Vooraf opgemaakte tekst"
@@ -1545,14 +1588,9 @@ nl:
         action: "geselecteerde berichten samenvoegen"
         error: "Er is een fout opgetreden bij het samenvoegen van de geselecteerde berichten."
       change_owner:
-        title: "Eigenaar van berichten wijzigen"
         action: "eigendom wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van het eigendom van de berichten."
-        label: "Nieuwe eigenaar van berichten"
         placeholder: "gebruikersnaam van nieuwe eigenaar"
-        instructions:
-          one: "Kies de nieuwe eigenaar van het bericht door <b>{{old_user}}</b>."
-          other: "Kies de nieuwe eigenaar van de {{count}} berichten door <b>{{old_user}}</b>."
       change_timestamp:
         title: "Tijdstempel wijzigen..."
         action: "tijdstempel wijzigen"
@@ -2026,7 +2064,6 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken"
-    browser_update: 'Helaas <a href="http://www.discourse.org/faq/#browser">is uw browser te oud om met deze website te kunnen werken</a>. <a href="http://browsehappy.com">Upgrade uw browser</a>.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -2193,8 +2230,6 @@ nl:
           bookmarks: "Er zijn geen topics met bladwijzers meer."
           search: "Er zijn geen zoekresultaten meer."
     invite:
-      custom_message: "Maak uw uitnodiging iets persoonlijker door het schrijven van een"
-      custom_message_link: "eigen bericht"
       custom_message_placeholder: "Voer uw eigen bericht in"
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
@@ -2487,7 +2522,6 @@ nl:
         import: "Importeren"
         delete: "Verwijderen"
         delete_confirm: "Dit thema verwijderen?"
-        about: "Pas CSS-stylesheets en HTML-kopteksten aan op de website. Voeg een aanpassing toe om te beginnen."
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
         copy: "Kopiëren"
@@ -2526,7 +2560,6 @@ nl:
           upload_file_tip: "Kies een asset om te uploaden (png, woff2, etc...)"
           variable_name: "SCSS variabele naam:"
           upload: "Upload"
-          child_themes_check: "Thema bevat andere onderliggende thema's"
           css_html: "Aangepaste CSS/HTML"
           edit_css_html: "CSS/HTML bewerken"
           edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
@@ -2692,7 +2725,6 @@ nl:
           filter: "Filter:"
           title: "Stafacties"
           clear_filters: "Alles tonen"
-          staff_user: "Staflid"
           target_user: "Doelgebruiker"
           subject: "Onderwerp"
           when: "Wanneer"
@@ -3199,3 +3231,6 @@ nl:
           admin: "Beheerder"
           moderator: "Moderator"
           regular: "Normale gebruiker"
+      previews:
+        share_button: "Delen"
+        reply_button: "Reageren"

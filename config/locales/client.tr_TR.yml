@@ -241,12 +241,8 @@ tr_TR:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıkla"
         unbookmark: "Bu konudaki tüm işaretlenenleri kaldırmak için tıkla"
     bookmarks:
-      not_logged_in: "üzgünüz, gönderileri işaretleyebilmek için giriş yapmalısın"
       created: "bu gönderiyi işaretledin"
-      not_bookmarked: "bu gönderiyi okudun; işaretlemek için tıkla"
-      last_read: "bu okuduğun son gönderi; işaretlemek için tıkla"
       remove: "İşareti Kaldır"
-      confirm_clear: "Bu konuya ait tüm işaretleri kaldırmak istediğine emin misin?"
     drafts:
       resume: "Sürdür"
       remove: "Kaldır"
@@ -269,7 +265,6 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
-    uploading_filename: "{{filemame}} yükleniyor..."
     uploaded: "Yüklendi!"
     pasting: "Yapıştırılıyor..."
     enable: "Etkinleştir"
@@ -413,7 +408,6 @@ tr_TR:
         all: "Tüm Gruplar"
         empty: "Görünen hiçbir grup bulunmuyor. "
         filter: "Grup tipine göre filtrele"
-        owner_groups: "Sahibi olduğum gruplar"
         close_groups: "Kapanmış Gruplar"
         automatic_groups: "Otomatik Gruplar"
         automatic: "Otomatik"
@@ -517,7 +511,6 @@ tr_TR:
       topic_stat_sentence:
         one: "%{unit} beri %{count} yeni konu."
         other: "%{unit} beri %{count} yeni konu."
-      more: " (%{count} daha fazla) ..."
     ip_lookup:
       title: IP Adresi Ara
       hostname: Sunucu ismi
@@ -966,9 +959,6 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
-    too_few_topics_and_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç sohbet görmek isteyeceklerdir. "
-    too_few_topics_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç sohbet görmek isteyeceklerdir. "
-    too_few_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç sohbet görmek isteyeceklerdir. "
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> , %{siteSettingRate} 'in site ayarları limitine ulaştı."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> , %{siteSettingRate} 'in site ayarları limitini aştı."
@@ -1249,7 +1239,6 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını gir"
       link_dialog_title: "Hyperlink ekle"
       link_optional_text: "isteğe bağlı başlık"
-      link_url_placeholder: "http://ornek.com"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -1777,15 +1766,9 @@ tr_TR:
         action: "seçili gönderileri birleştir"
         error: "Seçili gönderileri birleştirirken bir hata oluştu."
       change_owner:
-        title: "Gönderilerin Sahibini Değiştir"
         action: "sahipliği değiştir"
         error: "Gönderilerin sahipliği değiştirilirken bir hata oluştu."
-        label: "Gönderilerin Yeni Sahibi"
         placeholder: "yeni sahibin kullanıcı adı"
-        instructions:
-          one: "Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seçin."
-          other: "Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seç."
-        instructions_warn: "Bu gönderiye ilişkin bildirimlerin; yeni kullanıcıya, geriye dönük olarak aktarılmayacağını unutma."
       change_timestamp:
         title: "Tarih Bilgisini Değiştir"
         action: "tarih bilgisini değiştir"
@@ -2291,7 +2274,6 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "yukarı bak"
-    browser_update: 'Malesef,  <a href="http://www.discourse.org/faq/#browser">tarayıcın bu site için çok eski</a>. Lütfen <a href="http://browsehappy.com">tarayıcını güncelle</a>.'
     permission_types:
       full: "Oluştur / Cevapla / Bak"
       create_post: "Cevapla / Bak"
@@ -2470,8 +2452,6 @@ tr_TR:
           bookmarks: "Daha fazla işaretlenmiş konu bulunmuyor."
           search: "Daha fazla arama sonucu bulunmuyor."
     invite:
-      custom_message: "Davetini daha özel hale getirmek için şunu yaz"
-      custom_message_link: "kişiselleştirilmiş mesaj"
       custom_message_placeholder: "Kişiselleştirilmiş mesajlarını düzenle"
       custom_message_template_forum: "Hey, bu foruma katılmalısın!"
       custom_message_template_topic: "Hey, bu konu senin için eğlenceli olabilir!"
@@ -2873,7 +2853,6 @@ tr_TR:
         import: "İçe Aktar"
         delete: "Sil"
         delete_confirm: "Bu tema silinsin mi?"
-        about: "Sitedeki CSS biçim sayfalarını ve HTML başlıklarını değiştir. Başlamak için kişiselleştirme ekle."
         color: "Renk"
         opacity: "Saydam"
         copy: "Kopyala"
@@ -2918,7 +2897,6 @@ tr_TR:
             no_overwrite: "Geçersiz değişken adı. Mevcut bir değişkenin üzerine yazılmamalıdır."
             must_be_unique: "Geçersiz değişken adı. Benzersiz olmalıdır."
           upload: "Yükle"
-          child_themes_check: "Tema diğer çocuk temalarını içerir"
           css_html: "İsteğe uyarlanmış CSS/HTML"
           edit_css_html: "CSS/HTML Düzenle"
           edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemedin"
@@ -3095,7 +3073,6 @@ tr_TR:
           filter: "Filtrele:"
           title: "Görevli Eylemleri"
           clear_filters: "Hepsini Göster"
-          staff_user: "Görevli Kullanıcı"
           target_user: "Hedef Kullanıcı"
           subject: "Konu"
           when: "Ne zaman"

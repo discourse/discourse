@@ -178,6 +178,22 @@ describe CookedPostProcessor do
         expect(cpp).to be_dirty
       end
 
+      describe 'when image is inside onebox' do
+        let(:url) { 'https://image.com/my-avatar' }
+        let(:post) { Fabricate(:post, raw: url) }
+
+        before do
+          Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='/uploads/default/original/1X/1234567890123456.jpg' />")
+        end
+
+        it 'should not add lightbox' do
+          cpp.post_process_oneboxes
+          cpp.post_process_images
+
+          expect(cpp.html).to match_html("<p><img class=\"onebox\" src=\"/uploads/default/original/1X/1234567890123456.jpg\" width=\"690\"\ height=\"788\"></p>")
+        end
+      end
+
       describe 'when image is an svg' do
         let(:post) do
           Fabricate(:post, raw: '<img src="/uploads/default/original/1X/1234567890123456.svg">')

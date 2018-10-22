@@ -250,6 +250,35 @@ describe UsersController do
         expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
       end
 
+      context "rate limiting" do
+
+        before { RateLimiter.clear_all!; RateLimiter.enable }
+        after  { RateLimiter.disable }
+
+        it "rate limits reset passwords" do
+          freeze_time
+
+          token = user.email_tokens.create!(email: user.email).token
+
+          3.times do
+            put "/u/password-reset/#{token}", params: {
+              second_factor_token: 123456,
+              second_factor_method: 1
+            }
+
+            expect(response.status).to eq(200)
+          end
+
+          put "/u/password-reset/#{token}", params: {
+            second_factor_token: 123456,
+            second_factor_method: 1
+          }
+
+          expect(response.status).to eq(429)
+        end
+
+      end
+
       context '2 factor authentication required' do
         let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
@@ -2171,6 +2200,14 @@ describe UsersController do
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
+
+    it "returns 404 for a hidden profile" do
+      user = Fabricate(:user)
+      user.user_option.update_column(:hide_profile_and_presence, true)
+
+      get "/u/#{user.username_lower}/summary.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#confirm_admin' do
@@ -2417,7 +2454,23 @@ describe UsersController do
       it "returns success" do
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["user"]["username"]).to eq(user.username)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed['username']).to eq(user.username)
+        expect(parsed["profile_hidden"]).to be_blank
+        expect(parsed["trust_level"]).to be_present
+      end
+
+      it "returns a hidden profile" do
+        user.user_option.update_column(:hide_profile_and_presence, true)
+
+        get "/u/#{user.username}.json"
+        expect(response.status).to eq(200)
+        parsed = JSON.parse(response.body)["user"]
+
+        expect(parsed["username"]).to eq(user.username)
+        expect(parsed["profile_hidden"]).to eq(true)
+        expect(parsed["trust_level"]).to be_blank
       end
 
       it "should redirect to login page for anonymous user when profiles are hidden" do
@@ -3241,16 +3294,14 @@ describe UsersController do
 
     context 'while logged in' do
       before do
-        sign_in(user)
-        sign_in(user)
+        2.times { sign_in(user) }
       end
 
       it 'logs user out' do
-        SiteSetting.log_out_strict = false
-        expect(user.user_auth_tokens.count).to eq(2)
+        ids = user.user_auth_tokens.order(:created_at).pluck(:id)
 
-        ids = user.user_auth_tokens.map { |token| token.id }
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: ids[0] }
 
         expect(response.status).to eq(200)
 
@@ -3259,20 +3310,17 @@ describe UsersController do
         expect(user.user_auth_tokens.first.id).to eq(ids[1])
       end
 
-      it 'logs user out from everywhere if log_out_strict is enabled' do
-        SiteSetting.log_out_strict = true
-        expect(user.user_auth_tokens.count).to eq(2)
+      it 'does not let user log out of current session' do
+        token = UserAuthToken.generate!(user_id: user.id)
+        env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
 
-        ids = user.user_auth_tokens.map { |token| token.id }
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
 
-        expect(response.status).to eq(200)
-        expect(user.user_auth_tokens.count).to eq(0)
+        expect(response.status).to eq(400)
       end
 
       it 'logs user out from everywhere if token_id is not present' do
-        expect(user.user_auth_tokens.count).to eq(2)
-
         post "/u/#{user.username}/preferences/revoke-auth-token.json"
 
         expect(response.status).to eq(200)

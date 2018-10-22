@@ -140,10 +140,6 @@ nb_NO:
       invalid_choice:
         one: 'Du spesifiserte det ugyldige valget %{name}'
         other: 'Du spesifiserte de ugyldige valgene %{name}'
-      min_username_length_exists: "Du kan ikke sette minimumslengden på brukernavn over det korteste brukernavnet."
-      min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
-      max_username_length_exists: "Du kan ikke sette maksimallengden for brukernavn under det lengste brukernavnet."
-      max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -458,27 +454,6 @@ nb_NO:
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   lounge_welcome:
     title: "Velkommen til salongen"
-    body: |2
-
-      Gratulerer! :confetti_ball:
-
-      Hvis du kan se dette emnet betyr det at du nylig ble forfremmet til  **trofast** (tillitsnivå 3).
-
-      Du kan nå &hellip;
-
-      * Redigere tittelen på alle emner
-      * Endre kategorien på alle emner
-      * Tillate søkemotorer å følge lenkene dine ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
-      * Delta i en privat Lounge kategori som kun er synlig for brukere med tillitsnivå 3 og høyere
-      * Skjule spam med et enkelt flagg
-
-      Her er [hele listen over trofaste brukere](/badges/3/regular). Si gjerne hei til dem!
-
-      Takk for at du er en viktig del av dette brukersamfunnet!
-
-      (For mer informasjon om forskjellige tillitsnivå, [se dette emnet][trust]. Vær klar over at brukere må fortsette å oppfylle kravene over tid for å forbli i gruppen for trofaste.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Om kategorien %{category} "
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
@@ -998,7 +973,6 @@ nb_NO:
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
-    gc_warning: 'Serveren din bruker standardinstillingene for garbage collection i Ruby, dette gir ikke den beste ytelsen. Les dette emnet om hvordan man optimaliserer ytelse: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq kjører ikke. Mange oppgaver, som å sende e-post, kjøres i bakgrunnen av sidekiq. Vennligst verifiser at minst én sidekiq-prosess kjører. <a href="https://github.com/mperham/sidekiq" target="_blank">Lær mer om Sidekiq her</a>.'
     queue_size_warning: 'Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere.'
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
@@ -1006,9 +980,6 @@ nb_NO:
     facebook_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Facebook (enable_facebook_logins), men verdiene for app-id og app-hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Les denne guiden for å lære mer</a>.'
     twitter_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Twitter (enable_twitter_logins), men verdiene for nøkkel og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Les denne guiden for å lære mer</a>.'
     github_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med GitHub (enable_github_logins), men verdiene for klientid og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Les denne guiden for å lære mer</a>.'
-    s3_config_warning: 'Denne serveren er konfigurert for å tillate opplasting av filer til s3, men minst en av de følgende verdiene er ikke satt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Les "How to set up image uploads to S3?" for å lære mer</a>.'
-    s3_backup_config_warning: 'Denne serveren er konfigurert for å sende backup til s3, men minst en av de følgende verdiene er ikke satt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Les "How to set up image uploads to S3?" for å lære mer</a>.'
-    image_magick_warning: 'Denne serveren er konfigurert for å lage miniatyrer for store bilder, men ImageMagick er ikke installert. Installer ImageMagick via operativsystemets pakkehåndtering eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">last ned den siste versjonen</a>.'
     failing_emails_warning: 'Det er %{num_failed_jobs} e-postjobber som har feilet. Sjekk instillingene i app.yml og verifiser at serverinstillingene for e-post er riktige. <a href="/sidekiq/retries" target="_blank">Se de feilede jobbene i Sidekiq</a>.'
     subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
     email_polling_errored_recently:
@@ -1050,8 +1021,6 @@ nb_NO:
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
     site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
-    contact_email: "E-postadresser for nøkkelpersonen ansvarlig for dette nettstedet. Brukes for kritiske varsler, i tillegg til på /about kontaktskjema for saker som haster."
-    contact_url: "Kontakt-URL for siden. Brukes på /om siden."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
@@ -1061,7 +1030,6 @@ nb_NO:
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
     editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
     staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
-    post_edit_time_limit: "Forfatteren kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett til 0 for uendelig."
     edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
@@ -1078,16 +1046,10 @@ nb_NO:
     inline_onebox_domains_whitelist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_whitelist innstillingen og tillat inline onebox på alle domener."
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
-    logo_url: "Bildet som skal brukes som logo øverst til venstre på nettstedet, må være en bred rektangel. Hvis instillingen er blank brukes kun tittelteksten."
     digest_logo_url: "Alternativt bilde for logoen som brukes i toppen av nettstedets oppsummeringer på e-post. Må være et bredt rektangulært bilde. Bør ikke være i SVG format. Hvis instillingen er blank, brukes `logo_url` i stedet."
-    logo_small_url: "Den lille logoen øverst til venstre på nettstedet, bør være et kvadratisk bilde. Dette bildet brukes når man blar nedover på sidene. Hvis den er blank brukes et symbol for 'Hjem' i stedet."
-    favicon_url: "Bildet som skal være favicon for nettstedet, se http://en.wikipedia.org/wiki/Favicon, for å fungere via et CDN må filen være i png-format"
-    mobile_logo_url: "URL for tilpasset logo som skal brukes på den mobile versjonen av nettstedet. Hvis blank, brukes `logo_url` i stedet, for eksempel: http://example.com/uploads/default/logo.png "
-    large_icon_url: "Bildet som skal brukes som logo/splash på Android. Anbefalt størrelse er 512x512 piksler."
     apple_touch_icon_url: "Ikon brukt på Apple touch enheter. Anbefalt størrelse er 144px x 144px."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
-    email_subject: "Tilpasset formatering av emnefeltet i standard e-poster. Se også https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 "
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
@@ -1479,7 +1441,6 @@ nb_NO:
             placeholder: "navn@example.com"
           contact_url:
             label: "Nettside"
-            placeholder: "http://www.eksempel.no/kontakt-oss"
           site_contact:
             label: "Automatiserte meldinger"
       corporate:

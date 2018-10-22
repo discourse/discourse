@@ -50,9 +50,14 @@ class SingleSignOn
 
   def self.parse(payload, sso_secret = nil)
     sso = new
-    sso.sso_secret = sso_secret if sso_secret
 
     parsed = Rack::Utils.parse_query(payload)
+    decoded = Base64.decode64(parsed["sso"])
+    decoded_hash = Rack::Utils.parse_query(decoded)
+
+    return_sso_url = decoded_hash['return_sso_url']
+    sso.sso_secret = sso_secret || (provider_secret(return_sso_url) if return_sso_url)
+
     if sso.sign(parsed["sso"]) != parsed["sig"]
       diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
       if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n\/+]/m
@@ -83,6 +88,19 @@ class SingleSignOn
     sso
   end
 
+  def self.provider_secret(return_sso_url)
+    provider_secrets = SiteSetting.sso_provider_secrets.split(/[\|,\n]/)
+    provider_secrets_hash = Hash[*provider_secrets]
+    return_url_host = URI.parse(return_sso_url).host
+    # moves wildcard domains to the end of hash
+    sorted_secrets = provider_secrets_hash.sort_by { |k, _| k }.reverse.to_h
+
+    secret = sorted_secrets.select do |domain, _|
+      WildcardDomainChecker.check_domain(domain, return_url_host)
+    end
+    secret.present? ? secret.values.first : nil
+  end
+
   def diagnostics
     SingleSignOn::ACCESSORS.map { |a| "#{a}: #{send(a)}" }.join("\n")
   end
@@ -99,8 +117,9 @@ class SingleSignOn
     @custom_fields ||= {}
   end
 
-  def sign(payload)
-    OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
+  def sign(payload, provider_secret = nil)
+    secret = provider_secret || sso_secret
+    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
   end
 
   def to_url(base_url = nil)
@@ -108,9 +127,9 @@ class SingleSignOn
     "#{base}#{base.include?('?') ? '&' : '?'}#{payload}"
   end
 
-  def payload
+  def payload(provider_secret = nil)
     payload = Base64.strict_encode64(unsigned_payload)
-    "sso=#{CGI::escape(payload)}&sig=#{sign(payload)}"
+    "sso=#{CGI::escape(payload)}&sig=#{sign(payload, provider_secret)}"
   end
 
   def unsigned_payload

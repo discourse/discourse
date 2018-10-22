@@ -233,6 +233,19 @@ Badge.seed do |b|
   b.system = true
 end
 
+Badge.seed do |b|
+  b.id = Badge::WikiEditor
+  b.name = "Wiki Editor"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.query = BadgeQueries::WikiEditor
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostRevision
+  b.system = true
+end
+
 [
   [Badge::NicePost,   "Nice Post",   BadgeType::Bronze, false],
   [Badge::GoodPost,   "Good Post",   BadgeType::Silver, false],

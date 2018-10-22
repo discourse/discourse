@@ -572,14 +572,12 @@ bg:
   dashboard:
     rails_env_warning: "Вашият сървър е в % {env} режим."
     host_names_warning: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "
-    gc_warning: 'Вашият сървър използва default ruby garbage collection parameters, които не Ви гарантират най-добрата производителност. Прочетете тази тема за настройки <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq не работи. Много задачи, като изпращане на имейли, се изпълняват несинхронизирано от sidekiq.  Моля убедете се, че поне един процес sidekiq работи.  <a href="https://github.com/mperham/sidekiq" target="_blank">Научете повече за Sidekiq тук</a>.'
     memory_warning: 'Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ.'
     google_oauth2_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с Google OAuth2 (enable_google_oauth2_logins), но client id и client secret values не са определени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и актуализирайте настройките. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"">За повече информация вижте тук</a>.'
     facebook_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с Facebook (enable_facebook_logins), app id и app secret values  не са изпратени. Отидете на  <a href="/admin/site_settings"> Настройките на сайта </a> и обновете настройките.<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">За повече информация вижте тук</a>.'
     twitter_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване със Twitter (enable_twitter_logins),но the key and secret values не са изпратени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и обновете настройките. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> За повече информация вижте тук</a>.'
     github_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с GitHub (enable_github_logins), но client id и secret values не са изпратени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и обновете настройките<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">За повече информация вижте тук</a>.'
-    image_magick_warning: 'Сървърът е конфигуриран за създаване на умалени изображения на оригиналните, но ImageMagick не е инсталиран. Инсталирайте ImageMagick използвайки вашия системен мениджър или <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">изтеглете най-новата версия</a>.'
     subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
   site_settings:
     censored_words: "Думите които ще бъдат автоматично заменени с &#9632;&#9632;&#9632;&#9632;"
@@ -597,12 +595,10 @@ bg:
     educate_until_posts: "Когато потребителят започне да пише своите първи (n) публикации, покажи поп-ъп панела за \"обучение на нови потребители\" в \"composer\" панела. "
     title: "Наименованието на този сайт , както е използвано в заглавния маркер."
     site_description: "Опишете този сайт с едно изречение като използвате мета описателен таг."
-    contact_url: "Контакт URL за този сайт. Използва се в /about контакт формата при спешни случаи."
     crawl_images: "Възстановете изображенията от отдалечения URLs,  за да въведете размери с правилната дължина и ширина."
     download_remote_images_to_local: "Конвертирайте отдалечените изображения в местни изображения като ги свалите; това ще предотврати повредата им."
     download_remote_images_threshold: "Минимум необходимо дисково пространство за изтеглянето на отдалечените изображения ( в проценти)"
     disabled_image_download_domains: "Отдалечените изображения никога няма да бъдат изтеглени от тези домейни. Разделен със знака \"|\" списък."
-    post_edit_time_limit: "Авторът може да промени или изтрие своя пост (n) минути след публикацията. Задайте 0 за постоянно."
     edit_history_visible_to_public: "Позволи на всички потребители да видят предишните версии на публикацията. Ако е деактивитано, историята на публикациите ще бъде видима само за членовете на персонала. "
     delete_removed_posts_after: "Публикации, които са премахнати от автор ще бъдат автоматично  изтрити след (n) часа. Ако е зададено 0, публикациите ще бъдат изтрити веднага."
     max_image_width: "Максимална ширина на умалените изображения в публикацията"
@@ -615,7 +611,6 @@ bg:
     apple_touch_icon_url: "Иконата се използва за Apple сензорни устройства. Препоръчителният размер е  144px по 144px"
     notification_email: "Подател: имейлът се използва при изпращане на всички системни съобщения. Посоченият тук домейн трябва да се конфигурира правилно със SPF, DKIM и PTR данни за успешна доставка."
     email_custom_headers: "Разделен със знака \"|\" списък от персонализирани имейл хедъри. "
-    email_subject: "Персонализиран формат на темата за стандартни имейли. Виж https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     summary_score_threshold: "Минимална оценка необходима за една публикация, за да бъде включена в \"Обобщи тази тема\""
     summary_posts_required: "Минимум публикации в темата преди \"Обобщи тази тема\" да бъде активирано"
     summary_likes_required: "Минимум харесвания в темата преди \"Обобщи тази тема\" да бъде активирано"
@@ -635,8 +630,6 @@ bg:
     traditional_markdown_linebreaks: "Използвайте стандартния метод за пренасяне на нов ред в Markdown, който изисква два интервала за пренасянето на нов ред."
     post_undo_action_window_mins: "Брой минути, през които потребителите могат да отменят своите действия в публикацията ( харесване, сигнал, и т.н.) "
     must_approve_users: "Персоналът трябва да одобри всички нови потребителски акаунти, преди да им бъде разрешен достъп до сайта. ВНИМАНИЕ: Включвайки тази функция, достъпът до сайта ще бъде разрешен само за персонала на сайта!"
-    ga_universal_tracking_code: "Google универсален анализ (analytics.js) проследяващ код, напр.: UA-12345678-9; see http://google.com/analytics"
-    ga_universal_domain_name: "Google универсален анализ (analytics.js) име на домейн, напр.: mysite.com; вижте http://google.com/analytics"
     allow_moderators_to_create_categories: "Позволи на модераторите да създават нови категории"
     cors_origins: "Позволени източници за cross-origin requests (CORS). Всеки източник трябва да включва http:// или https://. \nПроменливата за DISCOURSE_ENABLE_CORS env трябва да бъде правилно настроена за да позволи CORS."
     top_menu: "Определете кои елементи да се показват в навигацията на началната страница, и в какъв ред. Например последни|нови|непрочетени|категории|топ|прочетени|публикувани|отметки"
@@ -659,7 +652,6 @@ bg:
     email_domains_blacklist: "Разделен със знака \"|\" списък на имейл домейните, от които потребителите нямат право да се регистрират. Например: mailinator.com|trashmail.net "
     email_domains_whitelist: "Разделен със знака \"|\" списък на имейл домейните, от които потребителите трябва да се регистрират. ВНИМАНИЕ: Потребители с имейл домейни, различни от тези в списъка, няма да бъдат допуснати!"
     log_out_strict: "При изход, да се прекратяват ВСИЧКИ сесии на този потребител на всички устройства "
-    version_checks: "Следи Discourse Hub за актуализации и показвай съобщение за нова версия на /admin таблото."
     new_version_emails: "Изпратете имейл до contact_email адрес когато има нова версия на Discourse."
     invite_expiry_days: "Колко дълго са валидни ключовете за покана, в дни"
     login_required: "Изисква разпознаване за прочит на съдържанието на сайта, не е разрешен анонимен достъп."
@@ -667,7 +659,6 @@ bg:
     min_admin_password_length: "Минимална дължина на парола за Админ."
     block_common_passwords: "Не са разрешени паролите, които са в топ 10,000 от най-често използваните."
     enable_sso: "Активиране на SSO чрез външен сайт (ВНИМАНИЕ: Имейл адресите на потребителите трябва да бъдат потвърдени от външния сайт!)"
-    verbose_sso_logging: "Запис на дебъг съобщенията свързани със SSO  в папка /logs"
     enable_sso_provider: "Имплементиране на Discourse SSO протокол в /session/sso_provider крайна точка, изисква sso_secret да бъде настроен"
     sso_secret: "Таен стринг използван за криптографско удостоверяване на SSO  информацията, уверете се, че е минимум 10 символа"
     sso_overrides_email: "Заместване на локалния имейл с друг от външен сайт от SSO доставчика при всяко влизане, и предотвратяване на локални промени. (ВНИМАНИЕ: могат да настъпят несъответствия поради нормализирането на локалните имейли)"
@@ -677,16 +668,8 @@ bg:
     sso_not_approved_url: "Пренасочване на неодобрените SSO акаунти към този URL"
     allow_new_registrations: "Позволи регистрация на нови потребители. Махни отметката, за да не може никой да създаде нов акаунт."
     enable_yahoo_logins: "Активиране на Yahoo удостоверяване"
-    enable_google_oauth2_logins: "Активиране на Google Oauth2 удостоверяване. Това е начина на удостоверяване, който се поддържа от Google в момента. Изисква key и secret."
     google_oauth2_client_id: "Client ID за Google приложение."
     google_oauth2_client_secret: "Client secret за Google приложение."
-    enable_twitter_logins: "Активиране на Twitter удостоверяване, изисква  twitter_consumer_key и twitter_consumer_secret"
-    enable_facebook_logins: "Активиране на Facebook удостоверяване изисква facebook_app_id и facebook_app_secret "
-    facebook_app_id: "App id за Facebook удостоверяване, регистрирано на https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret за Facebook удостоверяване, регистрирано на https://developers.facebook.com/apps"
-    enable_github_logins: "Разрешете Github удостоверяване, изисква github_client_id и github_client_secret"
-    github_client_id: "Client id за Github удостоверяване, регистрирано на https://github.com/settings/applications"
-    github_client_secret: "Client secret за Github удостоверяване, регистриран на https://github.com/settings/applications"
     allow_restore: "Позволи възстановяване, което може да замени ВСИЧКИ данни на сайта! Оставете го погрешно освен ако не планирате да възстановите бекъпа"
     maximum_backups: "Максимално количество бекъпи, които могат да бъдат съхранени на диска. По-старите бекъпи са автоматично изтрити"
     enable_s3_backups: "Качи бекъпи на S3 когато е пълен. ВАЖНО: изисква валидни S3 правомощия въведени в настройките на файловете."
@@ -750,7 +733,6 @@ bg:
     title_max_word_length: "Малсимално разрешена дължина на думата в символи в заглавието на темата"
     title_min_entropy: "Минимална ентропия ( уникални символи, тези които не са английски  се броят за повече) изисквана за заглавието на темата."
     body_min_entropy: "Минимална ентропия ( уникални символи, тези които не са английски  се броят за повече) изисквана за текста на публикацията."
-    title_fancy_entities: "Конвертирайте обикновените ASCII символи в луксозните HTML символи в заглавията на темите, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Минимална дължина на заглавието на темата, като тя ще бъде проверена за наличие на подобна."
     min_body_similar_length: "Минимална дължина на съдържанието на публикацията, при което то ще бъде проверено за наличие на подобно."
     category_colors: "Списък от шестнадесетични цветови стойности разрешени за категориите."

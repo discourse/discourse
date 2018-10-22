@@ -31,7 +31,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "disable_jump_reply",
       "automatically_unpin_topics",
       "allow_private_messages",
-      "homepage_id"
+      "homepage_id",
+      "hide_profile_and_presence"
     ];
 
     if (makeDefault) {

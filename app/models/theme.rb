@@ -109,6 +109,7 @@ class Theme < ActiveRecord::Base
     Site.clear_anon_cache!
     clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
+    ColorScheme.hex_cache.clear
   end
 
   def self.clear_default!

@@ -239,12 +239,8 @@ ur:
         bookmark: "اِس ٹاپک کی پہلی پوسٹ بُک مارک کرنے کے لئے کلک کریں"
         unbookmark: "اِس ٹاپک کے تمام بُک مارک ہٹانے کے لئے کلک کریں"
     bookmarks:
-      not_logged_in: "معذرت، پوسٹ بُک مارک کرنے کے لئے آپ کا لاگڈ ان ہونا ضروری ہے"
       created: "آپ نے یہ پوسٹ بُک مارک کرلی ہے"
-      not_bookmarked: "آپ یہ پوسٹ پڑھ چکے ہیں؛ بُک مارک کرنے کے لئے کلک کریں"
-      last_read: "یہ آخری پوسٹ آپ نے پڑھی ہے؛ اِسے بُک مارک کرنے کے لئے کلک کریں"
       remove: "بُک مارک ہٹائیں"
-      confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
     topic_count_latest:
       one: "{{count}} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "{{count}} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
@@ -261,7 +257,6 @@ ur:
     saved: "محفوظ کر لیا گیا ہے!"
     upload: "اَپ لوڈ"
     uploading: "اَپ لوڈ کیا جا رہا ہے..."
-    uploading_filename: "{{filename}} اَپ لوڈ کیا جا رہا ہے..."
     uploaded: "اَپ لوڈ کیا جا چکا ہے!"
     pasting: "پیسٹ کیا جا رہا ہے..."
     enable: "فعال کریں"
@@ -394,7 +389,6 @@ ur:
         all: "تمام گروپس"
         empty: "کوئی نظر آنے والے گروپ موجود نہیں ہیں۔"
         filter: "گروپ قِسم کے حساب سے فِلٹر کریں"
-        owner_groups: "گروپس جن کا میں مالک ہوں"
         close_groups: "بند گروپس"
         automatic_groups: "خودکار گروپس"
         automatic: "خود کار طریقے سے"
@@ -917,9 +911,6 @@ ur:
       enabled: "یہ سائٹ صرف پڑھنے کے مَوڈ میں ہے۔ براہِ مہربانی براؤز کرتے رہئیے، لیکن جواب دینا، لائکس دینا، اور دیگر اعمال ابھی کے لئے غیر فعال ہیں۔"
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
-    too_few_topics_and_posts_notice: "چلیں <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> اِس وقت اَبھی <strong>%{currentTopics}/%{requiredTopics}</strong> ٹاپکس اور <strong>%{currentPosts}/%{requiredPosts}</strong> پوسٹس ہیں۔ نئے زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے کچھ مکالمات کی ضرورت ہے۔"
-    too_few_topics_notice: "چلیں <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> اِس وقت اَبھی <strong>%{currentTopics}/%{requiredTopics}</strong> ٹاپکس ہیں۔ نئے زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے کچھ مکالمات کی ضرورت ہے۔"
-    too_few_posts_notice: "چلیں <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> اِس وقت اَبھی <strong>%{currentPosts}/%{requiredPosts}</strong> پوسٹس ہیں۔ نئے زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے کچھ مکالمات کی ضرورت ہے۔"
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> سائٹ سیٹِنگ لِمٹ %{siteSettingRate} تک پہنچ گئی۔"
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> سائٹ سیٹِنگ لِمٹ %{siteSettingRate} سے تجاوز کر گئی۔"
@@ -1183,7 +1174,6 @@ ur:
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_title: "ہائپرلِنک ڈالیں"
       link_optional_text: "اختیاری عنوان"
-      link_url_placeholder: "http://example.com"
       quote_title: "بلاک کوٹ"
       quote_text: "بلاک کوٹ"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
@@ -1705,14 +1695,9 @@ ur:
         action: "منتخب کردہ پوسٹس کو ضم کریں"
         error: "منتخب کردہ پوسٹس کو ضم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
       change_owner:
-        title: "پوسٹس کے مالک کو تبدیل کریں"
         action: "پوسٹس کے مالک کو تبدیل کریں"
         error: "پوسٹس کے مالک کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
-        label: "پوسٹس کا نیا مالک"
         placeholder: "نئے مالک کا صارف نام"
-        instructions:
-          one: "براہ مہربانی، <b>{{old_user}}</b> کی پوسٹ کے نئے مالک کو منتخب کریں۔"
-          other: "براہ مہربانی، <b>{{old_user}}</b> کی {{count}} پوسٹس کے نئے مالک کو منتخب کریں۔"
       change_timestamp:
         title: "ٹائمسٹیمپ تبدیل کریں..."
         action: "ٹائمسٹیمپ تبدیل کریں"
@@ -2226,7 +2211,6 @@ ur:
         this_week: "ہفتہ"
         today: "آج"
         other_periods: "سب سے اوپر دیکھیں"
-    browser_update: 'بدقسمتی سے، <a href="http://www.discourse.org/faq/#browser"> آپ کا براؤزر اِس سائٹ کے لئے کام کرنے کے لئے بہت پرانا ہے</a>۔ براہ مہربانی <a href="http://browsehappy.com">اپنے براؤزر کو اَپ گریڈ</a> کریں۔'
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
@@ -2406,8 +2390,6 @@ ur:
           bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
           search: "سرچ کے مزید کوئی نتائج نہیں۔"
     invite:
-      custom_message: "اپنے دعوت نامہ کو ذرا سا مذید ذاتی بنانے کیلئے لکھیں"
-      custom_message_link: "اپنی مرضی کے پیغام"
       custom_message_placeholder: "اپنی مرضی کے پیغام درج کریں"
       custom_message_template_forum: "ارے، آپ کو اس فورم میں شامل ہونا چاہیے!"
       custom_message_template_topic: "ارے، میں نے سوچا کہ آپ اِس ٹاپک سے لطف اندوز ہوں گے!"
@@ -2738,7 +2720,6 @@ ur:
         import: "اِمپورٹ"
         delete: "حذف کریں"
         delete_confirm: "اس تِھیم کو حذف کریں؟"
-        about: "سائٹ پر CSS سٹائل شیٹس اور HTML ہیڈرز میں ترمیم کریں۔ شروع کرنے کیلئے ایک اِصلاح شامل کریں۔"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "کاپی"
@@ -2779,7 +2760,6 @@ ur:
           variable_name: "SCSS وار نام:"
           variable_name_invalid: "غلط وَیری اَیبل نام۔ صرف حرف و نمبر کی اجازت ہے۔ ایک حرف کے ساتھ شروع ہونا لاذمی ہے۔ منفرد ہونا لاذمی ہے۔"
           upload: "اَپ لوڈ"
-          child_themes_check: "تِھیم میں دوسری ماتحت تِھیمز شامل ہیں"
           css_html: "اپنی مرضی کے مطابق CSS/HTML"
           edit_css_html: "CSS/HTML ترمیم کریں"
           edit_css_html_help: "آپ نے کوئی بھی CSS یا HTML ترمیم نہیں کیا ہے"
@@ -2961,7 +2941,6 @@ ur:
           filter: "فِلٹر:"
           title: "سٹاف عوامل"
           clear_filters: "سب کچھ دکھائیں"
-          staff_user: "سٹاف یوزر"
           target_user: "ہدف صارف"
           subject: "موضوع"
           when: "کب"

@@ -52,10 +52,12 @@ module Email
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
       @raw_email = mail_string
+
       COMMON_ENCODINGS.each do |encoding|
         fixed = try_to_encode(mail_string, encoding)
         break @raw_email = fixed if fixed.present?
       end
+
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
@@ -482,7 +484,12 @@ module Email
     end
 
     def subject
-      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
+      @subject ||=
+        if mail_subject = @mail.subject
+          mail_subject.delete("\u0000")
+        else
+          I18n.t("emails.incoming.default_subject", email: @from_email)
+        end
     end
 
     def find_user(email)
@@ -614,11 +621,6 @@ module Email
     end
 
     def create_group_post(group, user, body, elided, hidden_reason_id)
-      # ensure user PM emails are enabled (since user is posting via email)
-      if !user.staged && !user.user_option.email_private_messages
-        user.user_option.update!(email_private_messages: true)
-      end
-
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
@@ -641,6 +643,8 @@ module Email
                      topic: post.topic,
                      skip_validations: true)
       else
+        enable_email_pm_setting(user)
+
         create_topic(user: user,
                      raw: body,
                      elided: elided,
@@ -831,6 +835,8 @@ module Email
 
     def subscription_action_for(body, subject)
       return unless SiteSetting.unsubscribe_via_email
+      return if sent_to_mailinglist_mirror?
+
       if ([subject, body].compact.map(&:to_s).map(&:downcase) & ['unsubscribe']).any?
         :confirm_unsubscribe
       end
@@ -847,6 +853,7 @@ module Email
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
       options[:post] = nil if options[:post]&.trashed?
+      enable_email_pm_setting(options[:user]) if options[:topic].archetype == Archetype.private_message
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
@@ -1062,6 +1069,13 @@ module Email
         if user.posts.count == 0
           UserDestroyer.new(Discourse.system_user).destroy(user, quiet: true)
         end
+      end
+    end
+
+    def enable_email_pm_setting(user)
+      # ensure user PM emails are enabled (since user is posting via email)
+      if !user.staged && !user.user_option.email_private_messages
+        user.user_option.update!(email_private_messages: true)
       end
     end
   end

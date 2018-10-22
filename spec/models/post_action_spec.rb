@@ -501,6 +501,37 @@ describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
     end
 
+    it "hide non-tl4 posts that are flagged by a tl4 user" do
+      SiteSetting.site_contact_username = admin.username
+
+      post_action_type = PostActionType.types[:spam]
+      tl4_user = Fabricate(:trust_level_4)
+
+      user = Fabricate(:leader)
+      post = create_post(user: user)
+
+      PostAction.act(tl4_user, post, post_action_type)
+
+      post.reload
+
+      expect(post.hidden).to be_truthy
+      expect(post.hidden_at).to be_present
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl4_user])
+
+      post = create_post(user: user)
+      PostAction.act(Fabricate(:leader), post, post_action_type)
+      post.reload
+
+      expect(post.hidden).to be_falsey
+
+      user = Fabricate(:trust_level_4)
+      post = create_post(user: user)
+      PostAction.act(tl4_user, post, post_action_type)
+      post.reload
+
+      expect(post.hidden).to be_falsey
+    end
+
     it "can flag the topic instead of a post" do
       post1 = create_post
       _post2 = create_post(topic: post1.topic)

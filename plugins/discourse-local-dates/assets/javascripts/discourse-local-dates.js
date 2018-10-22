@@ -12,9 +12,9 @@
       }
 
       var relativeTime;
-      if (options.forceTimezone) {
+      if (options.timezone) {
         relativeTime = moment
-          .tz(options.date + " " + options.time, options.forceTimezone)
+          .tz(options.date + " " + options.time, options.timezone)
           .utc();
       } else {
         relativeTime = moment.utc(options.date + " " + options.time);
@@ -53,9 +53,8 @@
         }
       });
 
-      var relativeTime = relativeTime.tz(
-        options.forceTimezone || moment.tz.guess()
-      );
+      var displayTimezone = moment.tz.guess();
+      var relativeTime = relativeTime.tz(displayTimezone);
 
       if (
         options.format !== "YYYY-MM-DD HH:mm:ss" &&
@@ -78,7 +77,7 @@
 
       var displayedTime = relativeTime.replace(
         "TZ",
-        _formatTimezone(options.forceTimezone || moment.tz.guess()).join(": ")
+        _formatTimezone(displayTimezone).join(": ")
       );
 
       $element
@@ -102,10 +101,10 @@
       var options = {};
       options.format = $this.attr("data-format");
       options.date = $this.attr("data-date");
-      options.time = $this.attr("data-time");
+      options.time = $this.attr("data-time") || "00:00:00";
       options.recurring = $this.attr("data-recurring");
-      options.timezones = $this.attr("data-timezones") || "Etc/UTC";
-      options.forceTimezone = $this.attr("data-force-timezone");
+      options.timezones = $this.attr("data-timezones");
+      options.timezone = $this.attr("data-timezone");
 
       processElement($this, options);
     });

@@ -193,7 +193,7 @@ GEM
       mini_mime (>= 0.1.1)
     maxminddb (0.1.21)
     memory_profiler (0.9.12)
-    message_bus (2.1.5)
+    message_bus (2.1.6)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
@@ -258,7 +258,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.63)
+    onebox (1.8.64)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -512,7 +512,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.63)
+  onebox (= 1.8.64)
   openid-redis-store
   pg
   pry-nav

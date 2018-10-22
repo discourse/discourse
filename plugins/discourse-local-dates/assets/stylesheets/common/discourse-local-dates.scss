@@ -4,24 +4,16 @@
 
   &.cooked-date {
     color: $primary;
-    font-weight: bold;
     cursor: pointer;
+    border-bottom: 1px dashed $primary-medium;
 
     .d-icon-globe {
       margin-right: 0.25em;
-      color: $primary-medium;
-
-      &:hover {
-        color: $primary-high;
-      }
-    }
-
-    &:hover .d-icon-globe {
-      color: $primary-high;
+      color: $primary;
     }
 
     &.past {
-      font-weight: normal;
+      border-bottom-color: $primary-low-mid;
     }
   }
 }

@@ -100,10 +100,6 @@ et:
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
     site_settings:
-      min_username_length_exists: "Miinimum kasutajanime pikkuseks ei saa olla süsteemi lühimast kasutajanimest pikem väärtus."
-      min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
-      max_username_length_exists: "Maksimaalseks kasutajanime pikkuseks ei saa olla süsteemi pikimast kasutajanimest madalam väärtus."
-      max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
   activemodel:
@@ -904,7 +900,6 @@ et:
             placeholder: "nimi@kuskil.ee"
           contact_url:
             label: "Veebileht"
-            placeholder: "http://www.example.com/contact-us"
           site_contact:
             label: "Automaatsed sõnumid"
       corporate:

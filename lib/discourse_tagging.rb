@@ -202,10 +202,13 @@ module DiscourseTagging
   end
 
   def self.clean_tag(tag)
+    tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
-    tag.strip
-      .gsub(/\s+/, '-').squeeze('-')
-      .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
+    tag.strip!
+    tag.gsub!(/\s+/, '-')
+    tag.squeeze!('-')
+    tag.gsub!(TAGS_FILTER_REGEXP, '')
+    tag[0...SiteSetting.max_tag_length]
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})

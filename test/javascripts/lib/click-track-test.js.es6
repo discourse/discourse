@@ -81,6 +81,26 @@ QUnit.test("does not track clicks to internal links in quotes", assert => {
   );
 });
 
+QUnit.test("can open links inside quotes in new window", assert => {
+  sandbox.stub(DiscourseURL, "routeTo");
+  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+
+  track(
+    $.Event("click", {
+      currentTarget: fixture(".quote a:first-child")[0],
+      ctrlKey: true,
+      which: 1
+    })
+  );
+
+  assert.ok(
+    window.open.calledWith(
+      "https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30",
+      "_blank"
+    )
+  );
+});
+
 QUnit.test("does not track clicks to external links in quotes", assert => {
   track(generateClickEventOn(".quote a:last-child"));
   assert.ok(DiscourseURL.redirectTo.calledWith("https://google.com"));

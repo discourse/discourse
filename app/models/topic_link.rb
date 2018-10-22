@@ -112,24 +112,23 @@ SQL
     return if post.blank? || post.whisper?
 
     added_urls = []
-    TopicLink.transaction do
+    reflected_ids = []
 
-      added_urls = []
-      reflected_ids = []
-
-      PrettyText
-        .extract_links(post.cooked)
-        .map do |u|
-          uri = begin
-            URI.parse(u.url)
-          rescue URI::Error
-          end
-
-          [u, uri]
+    PrettyText
+      .extract_links(post.cooked)
+      .map do |u|
+        uri = begin
+          URI.parse(u.url)
+        rescue URI::Error
         end
-        .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
-        .uniq { |_, p| p }
-        .each do |link, parsed|
+
+        [u, uri]
+      end
+      .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
+      .uniq { |_, p| p }
+      .each do |link, parsed|
+
+      TopicLink.transaction do
         begin
           url = link.url
           internal = false
@@ -185,7 +184,7 @@ SQL
                                 link_post_id: reflected_post.try(:id),
                                 quote: link.is_quote,
                                 extension: file_extension)
-            rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
+            rescue ActiveRecord::RecordNotUnique
               # it's fine
             end
           end

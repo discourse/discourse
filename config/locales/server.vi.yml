@@ -85,10 +85,6 @@ vi:
     embed:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
-      min_username_length_exists: "Bạn không thể thiết lập chiều dài tối thiểu của username nhỏ hơn chiều dài của username ngắn nhất"
-      min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
-      max_username_length_exists: "Bạn không thể thiết lập chiều dài tối đa của username nhỏ hơn username dài nhất"
-      max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
   activemodel:
@@ -545,7 +541,6 @@ vi:
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
-    gc_warning: 'Máy chủ của bạn hiện tại sử dụng cơ chế dọn rác mặc định của ruby, điều này khiến cho hiệu năng của máy chủ không tốt lắm. Đọc chủ đề sau cho việc tối ưu hiệu năng <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tối ưu Ruby and Rails cho Discourse</a>.'
     sidekiq_warning: ' Sidekiq đang không hoạt động. Rất nhiều tác vụ, như gửi email, là được thực thi không đồng bộ bởi sidekiq. Hãy chắc chắn rằng ít nhất một tiến trình sidekiq phải đang hoạt động. <a href="https://github.com/mperham/sidekiq" target="_blank">Đọc thêm về Sidekiq tại đây</a>.'
     queue_size_warning: 'Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ().'
     memory_warning: 'Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB .'
@@ -553,7 +548,6 @@ vi:
     facebook_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với Facebook  (enable_facebook_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
     twitter_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với Twitter   (enable_twitter_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
     github_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với GitHub    (enable_github_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
-    image_magick_warning: 'Máy chủ đã cấu hình để tạo hình đại diện nhỏ từ những hình lới, nhưng ImageMagick chưa được cài đặt. Cài ImageMagick sử dụng trình quản lý package yêu thích của bạn hoặc <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">tải về phiên bản mới nhất</a>.'
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
@@ -579,13 +573,11 @@ vi:
     educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     title: "Tên của trang này, sử dụng trong thẻ tiêu đề"
     site_description: "Mô tả trang này trong một câu, nó sẽ được sử dụng trong thẻ meta description"
-    contact_url: "URL liên hệ trong trang này. Sử dụng trong form liên hệ /about cho những vấn đề cấp bách."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_to_local: "Tải ảnh về lưu trữ để tránh ảnh bị hư."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
     disabled_image_download_domains: "Tải ảnh từ xa sẽ không áp dụng với các tên miền sau. Phân cách bằng dấu |"
     editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử bài viết."
-    post_edit_time_limit: "Tác giả có thể sửa hoặc xóa bài viết của họ trong (n) phút sau khi đăng. 0 là mãi mãi."
     edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa bài viết. Khi không cho phép, chỉ nhân viên có thể xem."
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     max_image_width: "Chiều rộng tối đa của ảnh thu nhỏ trong bài viết."
@@ -595,13 +587,9 @@ vi:
     add_rel_nofollow_to_user_content: "Thêm rel='nofollow' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: \"rake posts:rebake\""
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
-    logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
-    logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
-    favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"
     apple_touch_icon_url: "Biểu tượng sử dụng trong các thiết bị cảm ứng của Apple. Kích thước gợi ý 144px x 144px"
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
-    email_subject: "Tùy biến định dạng chủ đề cho chuẩn email. Xem tại https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_posts_required: "Số bài viết tối thiểu trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
     summary_likes_required: "Số lượt thích trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
@@ -623,8 +611,6 @@ vi:
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
     must_approve_users: "Quản trị viên phải duyệt tất cả các tài khoản thành viên mới trước khi họ có quyền truy cập website. LƯU Ý: bật tính năng này trên site đang hoạt động sẽ hủy bỏ quyền truy cập đối với các tài khoản thành viên hiện tại!"
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
-    ga_universal_tracking_code: "Mã theo dõi Google Universal Analytics (analytics.js) , Ví dụ: UA-12345678-9; chi tiết http://google.com/analytics"
-    ga_universal_domain_name: "Tên miền Google Universal Analytics (analytics.js), ví dụ: mysite.com; chi tiết http://google.com/analytics"
     allow_moderators_to_create_categories: "Cho phép điều hành viên tạo danh mục mới"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_whitelist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
@@ -649,7 +635,6 @@ vi:
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
     email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với  tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
-    version_checks: "Ping Discourse Hub để cập nhật phiên bản và hiện thông báo phiên bản mới trong bảng điều khiển quản trị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
@@ -657,7 +642,6 @@ vi:
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
     block_common_passwords: "Không cho phép mật khẩu trong danh sách 10.000 mật khẩu phổ biến."
     enable_sso: "Cho phép dùng single sign on bằng trang ngoài (CẢNH BÁO: ĐỊA CHỈ EMAIL CỦA NGƯỜI DÙNG PHẢI ĐƯỢC CHỨNG THỰC BỞI TRANG NGOÀI!)"
-    verbose_sso_logging: "Nhật ký chi tiết SSO chẩn đoán liên quan với /logs"
     enable_sso_provider: "Thực hiện giao thức cung cấp Discourse SSO tại điểm cuối /session/sso_provider, yêu cầu phải thiết lập sso_secret"
     sso_url: "URL đầu cuối của Single Sign On (phải kèm theo http:// hoặc https://)"
     sso_secret: "Chuỗi bảo mật đã được sử dụng để chứng thực thông tin SSO, chắc chắn nó có ít nhất 10 ký tự."
@@ -669,19 +653,11 @@ vi:
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_yahoo_logins: "Cho phé chứng thực qua Yahoo"
-    enable_google_oauth2_logins: "Cho phép chứng thực qua Google Oauth2. Nó là cách chứng thực mà Google hỗ trợ. Yêu cầu key và secret."
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
-    enable_twitter_logins: "Cho phép chứng thực qua Twitter, yêu cầu twitter_consumer_key và twitter_consumser_secret"
     enable_instagram_logins: "Bật chứng thực Instagram, yêu cầu instagram_consumer_key và instagram_consumer_secret"
     instagram_consumer_key: "Khóa người dùng để chứng thực Instagram"
     instagram_consumer_secret: "Khóa bảo mật để chứng thực Instagram"
-    enable_facebook_logins: "Cho phép chứng thực Facebook, yêu cầu facebook_app_id và facebook_app_secret"
-    facebook_app_id: "App id cho chứng thực Facebook, đăng ký tại https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret cho chứng thực Facebook, đăng ký tại https://developers.facebook.com/apps"
-    enable_github_logins: "Cho phép chứng thực Github, yêu cầu gitbug_client_id và githup_client_secret"
-    github_client_id: "Client id cho chứng thực Github, đăng ký tại https://github.com/settings/applications"
-    github_client_secret: "Client secret cho chứng thực Github, đăng ký tại https://github.com/settings/applications"
     allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
@@ -765,7 +741,6 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
-    title_fancy_entities: "Chuyển đổi các ký tự ASCII thành các đối tượng HTML trong tên chủ đề, http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     min_body_similar_length: "Chiều dài tối thiểu của nội dung bài viết trước khi kiểm trang chủ đề tương tự."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
@@ -820,7 +795,6 @@ vi:
     pop3_polling_host: "Máy chủ để poll email thông qua POP3."
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
-    log_mail_processing_failures: "Ghi lại tất cả các lỗi xử lý email vào http://yoursitename.com/logs"
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."

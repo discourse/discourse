@@ -4,6 +4,8 @@ module Plugin; end
 class Plugin::Metadata
 
   OFFICIAL_PLUGINS ||= Set.new([
+    # TODO: Remove this after everyone upgraded `discourse-canned-replies`
+    # to the renamed version.
     "Canned Replies",
     "customer-flair",
     "discourse-adplugin",
@@ -15,6 +17,8 @@ class Plugin::Metadata
     "discourse-bbcode",
     "discourse-bbcode-color",
     "discourse-cakeday",
+    "discourse-canned-replies",
+    "discourse-calendar",
     "discourse-characters-required",
     "discourse-chat-integration",
     "discourse-checklist",
@@ -22,10 +26,13 @@ class Plugin::Metadata
     "discourse-data-explorer",
     "discourse-details",
     "discourse-footnote",
-    "discourse-github-linkback",
+    "discourse-github",
     "discourse-gradle-issue",
+    "discourse-graphviz",
     "discourse-invite-tokens",
     "discourse-local-dates",
+    "discourse-logster-rate-limit-checker",
+    "discourse-logster-transporter",
     "discourse-math",
     "discourse-moderator-attention",
     "discourse-narrative-bot",
@@ -33,18 +40,20 @@ class Plugin::Metadata
     "discourse-no-bump",
     "discourse-oauth2-basic",
     "discourse-patreon",
-    "discourse-perspective-api",
+    "discourse-perspective",
     "discourse-plugin-discord-auth",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
     "discourse-policy",
     "discourse-presence",
     "discourse-prometheus",
+    "discourse-prometheus-alert-receiver",
     "discourse-push-notifications",
     "discourse-saved-searches",
     "discourse-signatures",
     "discourse-sitemap",
     "discourse-solved",
+    "discourse-spoiler-alert",
     "discourse-staff-notes",
     "discourse-styleguide",
     "discourse-tooltips",
@@ -52,12 +61,8 @@ class Plugin::Metadata
     "discourse-user-card-badges",
     "discourse-voting",
     "docker_manager",
-    "GitHub badges",
     "lazyYT",
-    "logster-rate-limit-checker",
-    "poll",
-    "Spoiler Alert!",
-    "staff-notes"
+    "poll"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

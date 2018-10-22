@@ -381,6 +381,12 @@ class Guardian
       (components - Theme.components_for(parent)).empty?
   end
 
+  def auth_token
+    if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
+      UserAuthToken.hash_token(cookie)
+    end
+  end
+
   private
 
   def is_my_own?(obj)

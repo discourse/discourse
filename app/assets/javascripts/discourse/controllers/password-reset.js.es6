@@ -83,8 +83,12 @@ export default Ember.Controller.extend(PasswordValidation, {
             }
           }
         })
-        .catch(error => {
-          throw new Error(error);
+        .catch(e => {
+          if (e.jqXHR && e.jqXHR.status === 429) {
+            this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
+          } else {
+            throw new Error(e);
+          }
         });
     },
 

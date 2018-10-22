@@ -117,6 +117,35 @@ class TagsController < ::ApplicationController
     end
   end
 
+  def upload
+    guardian.ensure_can_admin_tags!
+
+    file = params[:file] || params[:files].first
+
+    hijack do
+      begin
+        Tag.transaction do
+          CSV.foreach(file.tempfile) do |row|
+            raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long")) if row.length > 2
+
+            tag_name = DiscourseTagging.clean_tag(row[0])
+            tag_group_name = row[1] || nil
+
+            tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
+
+            if tag_group_name
+              tag_group = TagGroup.find_by(name: tag_group_name) || TagGroup.create!(name: tag_group_name)
+              tag.tag_groups << tag_group unless tag.tag_groups.include?(tag_group)
+            end
+          end
+        end
+        render json: success_json
+      rescue Discourse::InvalidParameters => e
+        render json: failed_json.merge(errors: [e.message]), status: 422
+      end
+    end
+  end
+
   def destroy
     guardian.ensure_can_admin_tags!
     tag_name = params[:tag_id]
@@ -147,13 +176,19 @@ class TagsController < ::ApplicationController
   end
 
   def search
+    clean_name = DiscourseTagging.clean_tag(params[:q])
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
+    # Prioritize exact matches when ordering
+    order_query = Tag.sanitize_sql_for_order(
+      ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
+    )
+
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      Tag.order('topic_count DESC').limit(params[:limit]),
+      Tag.order(order_query).limit(params[:limit]),
       guardian,
       for_input: params[:filterForInput],
-      term: params[:q],
+      term: clean_name,
       category: category,
       selected_tags: params[:selected_tags]
     )
@@ -162,7 +197,7 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    if Tag.where_name(params[:q]).exists? && !tags.find { |h| h[:id] == params[:q] }
+    if Tag.where_name(clean_name).exists? && !tags.find { |h| h[:id].downcase == clean_name.downcase }
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
     end

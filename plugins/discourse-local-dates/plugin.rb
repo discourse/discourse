@@ -27,9 +27,10 @@ after_initialize do
     dates = doc.css('span.discourse-local-date').map do |cooked_date|
       date = {}
       cooked_date.attributes.values.each do |attribute|
-        if attribute.name && ['data-date', 'data-time'].include?(attribute.name)
+        data_name = attribute.name&.gsub('data-', '')
+        if data_name && ['date', 'time', 'timezone'].include?(data_name)
           unless attribute.value == 'undefined'
-            date[attribute.name.gsub('data-', '')] = CGI.escapeHTML(attribute.value || "")
+            date[data_name] = CGI.escapeHTML(attribute.value || "")
           end
         end
       end
@@ -50,11 +51,12 @@ after_initialize do
   end
 
   on(:reduce_cooked) do |fragment|
-    container = fragment.css(".discourse-local-date").first
+    fragment.css(".discourse-local-date").each do |container|
 
-    if container && container.attributes["data-email-preview"]
-      preview = container.attributes["data-email-preview"].value
-      container.content = preview
+      if container.attributes["data-email-preview"]
+        preview = container.attributes["data-email-preview"].value
+        container.content = preview
+      end
     end
   end
 end

@@ -341,6 +341,14 @@ login:
   sso_secret:
     default: ''
     secret: true
+  sso_provider_secrets:
+    default: ''
+    type: list
+    list_type: secret
+    secret: true
+    placeholder:
+      key: "sso_provider.key_placeholder"
+      value: "sso_provider.value_placeholder"
   sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
@@ -1101,6 +1109,7 @@ trust:
     default: 5
   tl3_promotion_min_duration:
     default: 14
+    max: 10000
   tl3_requires_likes_given:
     default: 30
   tl3_requires_likes_received:
@@ -1170,6 +1179,15 @@ security:
     default: 'bingbot'
     list_type: compact
   slow_down_crawler_rate: 60
+  content_security_policy:
+    default: false
+  content_security_policy_report_only:
+    default: false
+  content_security_policy_collect_reports:
+    default: true
+  content_security_policy_script_src:
+    type: list
+    default: ''
 
 onebox:
   enable_flash_video_onebox: false
@@ -1404,6 +1422,12 @@ backups:
   allow_restore:
     default: false
     shadowed_by_global: true
+  backup_location:
+    default: 'local'
+    type: enum
+    enum: 'BackupLocationSiteSetting'
+    shadowed_by_global: true
+    client: true
   maximum_backups:
     client: true
     default: 5
@@ -1415,9 +1439,6 @@ backups:
     min: 1
     max: 30
     default: 7
-    shadowed_by_global: true
-  enable_s3_backups:
-    default: false
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
@@ -1790,3 +1811,4 @@ tags:
     default: false
   force_lowercase_tags:
     default: true
+    client: true
