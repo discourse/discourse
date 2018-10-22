@@ -76,6 +76,7 @@ script:
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
         bundle exec danger && \
+        yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6" \
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \
