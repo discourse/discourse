@@ -37,7 +37,7 @@ module ImportScripts
 
     # Get the Discourse Group id based on the id of the source group
     def group_id_from_imported_group_id(import_id)
-      @groups[import_id] || @groups[import_id.to_s] || find_group_by_import_id(import_id).try(:id)
+      @groups[import_id] || @groups[import_id.to_s]
     end
 
     # Get the Discourse Group based on the id of the source group
@@ -47,7 +47,7 @@ module ImportScripts
 
     # Get the Discourse User id based on the id of the source user
     def user_id_from_imported_user_id(import_id)
-      @users[import_id] || @users[import_id.to_s] || find_user_by_import_id(import_id).try(:id)
+      @users[import_id] || @users[import_id.to_s]
     end
 
     # Get the Discourse User based on the id of the source user
