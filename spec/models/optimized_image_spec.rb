@@ -37,6 +37,8 @@ describe OptimizedImage do
           # we use "filename" to get the correct extension here, it is more important
           # then any other param
 
+          orig_size = File.size(original_path)
+
           OptimizedImage.resize(
             original_path,
             original_path,
@@ -45,9 +47,8 @@ describe OptimizedImage do
             filename: "test.png"
           )
 
-          expect(File.read(original_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
-          )
+          expect(orig_size).to be > File.size(original_path)
+
         ensure
           File.delete(original_path) if File.exists?(original_path)
         end
