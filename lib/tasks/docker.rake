@@ -38,11 +38,6 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     @good = true
-
-    if ENV["INSTALL_OFFICIAL_PLUGINS"]
-      @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
-    end
-
     unless ENV['SKIP_LINT']
       puts "travis_fold:start:lint" if ENV["TRAVIS"]
       puts "Running linters/prettyfiers"
@@ -95,6 +90,10 @@ task 'docker:test' do
       ENV["RAILS_ENV"] = "test"
 
       @good &&= run_or_fail("bundle exec rake db:create")
+
+      if ENV["INSTALL_OFFICIAL_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
+      end
 
       if ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake db:migrate")
