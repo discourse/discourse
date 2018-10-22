@@ -41,7 +41,8 @@ export default Ember.Controller.extend(PasswordValidation, {
           second_factor_token: this.get("secondFactor"),
           second_factor_method: this.get("secondFactorMethod")
         }
-      }).then(result => {
+      })
+        .then(result => {
           if (result.success) {
             this.set("successMessage", result.message);
             this.set("redirectTo", result.redirect_to);
