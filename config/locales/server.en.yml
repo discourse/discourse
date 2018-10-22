@@ -718,7 +718,7 @@ en:
       ipod: "iPod"
       mobile: "Mobile Device"
       mac: "Mac"
-      linux: "Linux Computer"
+      linux: "GNU/Linux Computer"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
