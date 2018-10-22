@@ -621,10 +621,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
     Time.zone.at(@tz.utc_to_local(timestamp))
   end
 
-  def fake_email
-    SecureRandom.hex << "@domain.com"
-  end
-
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
   end

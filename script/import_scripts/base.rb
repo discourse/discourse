@@ -253,7 +253,7 @@ class ImportScripts::Base
 
         if user_id_from_imported_user_id(import_id)
           skipped += 1
-        elsif u[:email].present?
+        else
           new_user = create_user(u, import_id)
           created_user(new_user)
 
@@ -270,9 +270,6 @@ class ImportScripts::Base
               end
             end
           end
-        else
-          failed += 1
-          puts "Skipping user id #{import_id} because email is blank"
         end
       end
 
@@ -314,8 +311,8 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
 
-    unless opts[:email].match(EmailValidator.email_regex)
-      opts[:email] = "invalid#{SecureRandom.hex}@no-email.invalid"
+    unless opts[:email][EmailValidator.email_regex]
+      opts[:email] = fake_email
       puts "Invalid email #{original_email} for #{opts[:username]}. Using: #{opts[:email]}"
     end
 
@@ -880,5 +877,9 @@ class ImportScripts::Base
       yield offset
       offset += batch_size
     end
+  end
+
+  def fake_email
+    SecureRandom.hex << "@domain.com"
   end
 end
