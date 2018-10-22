@@ -390,7 +390,8 @@ class ImportScripts::Base
   end
 
   def find_existing_user(email, username)
-    User.joins(:user_emails).where("user_emails.email = ? OR username = ?", email.downcase, username).first
+    # Force the use of the index on the 'user_emails' table
+    UserEmail.where("lower(email) = ?", email.downcase).first&.user || User.where(username: username).first
   end
 
   def created_category(category)
