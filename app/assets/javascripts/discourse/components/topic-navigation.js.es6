@@ -35,7 +35,7 @@ export default Ember.Component.extend(PanEvents, {
           height -= $("#reply-control").height();
         }
 
-        renderTimeline = width > 960 && height > 520;
+        renderTimeline = width > 924 && height > 520;
       }
 
       info.setProperties({
