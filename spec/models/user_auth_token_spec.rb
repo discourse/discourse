@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'discourse_ip_info'
 
 describe UserAuthToken do
 
@@ -280,6 +281,38 @@ describe UserAuthToken do
     lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
     lookup.reload
     expect(lookup.auth_token_seen).to eq(true)
+  end
+
+  context "suspicious login" do
+
+    let(:user) { Fabricate(:user) }
+
+    before do
+      UserAuthToken.stubs(:login_location).with("1.1.1.1").returns("Location 1")
+      UserAuthToken.stubs(:login_location).with("1.1.1.2").returns("Location 1")
+      UserAuthToken.stubs(:login_location).with("1.1.2.1").returns("Location 2")
+    end
+
+    it "will not send an email on first login" do
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :suspicious_login)).never
+      UserAuthToken.generate!(user_id: user.id, client_ip: "1.1.1.1")
+    end
+
+    it "will not send an email when user log in from a known location" do
+      UserAuthTokenLog.create!(action: "generate", user_id: user.id, client_ip: "1.1.1.1")
+
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :suspicious_login)).never
+      UserAuthToken.generate!(user_id: user.id, client_ip: "1.1.1.1")
+      UserAuthToken.generate!(user_id: user.id, client_ip: "1.1.1.2")
+    end
+
+    it "will send an email when user logs in from a new location" do
+      UserAuthTokenLog.create!(action: "generate", user_id: user.id, client_ip: "1.1.1.1")
+
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :suspicious_login))
+      UserAuthToken.generate!(user_id: user.id, client_ip: "1.1.2.1")
+    end
+
   end
 
 end
