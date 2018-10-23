@@ -414,6 +414,7 @@ after_initialize do
     polls = post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].dup
 
     polls.each do |_, poll|
+      next if !poll
       poll["options"].each do |option|
         option.delete("voter_ids")
       end
