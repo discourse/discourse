@@ -167,8 +167,6 @@ class SearchIndexer
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
 
-    DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
-
     attr_reader :scrubbed
 
     def initialize(strip_diacritics: false)
@@ -196,15 +194,8 @@ class SearchIndexer
       end
     end
 
-    def strip_diacritics(str)
-      s = str.unicode_normalize(:nfkd)
-      s.gsub!(DIACRITICS, "")
-      s.strip!
-      s
-    end
-
     def characters(str)
-      str = strip_diacritics(str) if @strip_diacritics
+      str = Search.strip_diacritics(str) if @strip_diacritics
       scrubbed << " #{str} "
     end
   end
