@@ -144,10 +144,13 @@
       }
     }
     .composer-controls {
+      display: flex;
       margin-left: auto;
-      margin-right: -5px;
       button {
-        padding: 0 2px;
+        padding: 5px 7px;
+        &.toggler {
+          order: 2;
+        }
       }
     }
   }
