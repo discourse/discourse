@@ -51,6 +51,10 @@ class UserAvatar < ActiveRecord::Base
             end
           end
         end
+      rescue OpenURI::HTTPError => e
+        if e.io&.status[0].to_i != 404
+          raise e
+        end
       ensure
         tempfile&.close!
       end

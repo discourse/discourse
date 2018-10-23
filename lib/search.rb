@@ -2,9 +2,17 @@ require_dependency 'search/grouped_search_results'
 
 class Search
   INDEX_VERSION = 2.freeze
+  DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
   def self.per_facet
     5
+  end
+
+  def self.strip_diacritics(str)
+    s = str.unicode_normalize(:nfkd)
+    s.gsub!(DIACRITICS, "")
+    s.strip!
+    s
   end
 
   def self.per_filter
@@ -59,6 +67,9 @@ class Search
     end
 
     data.force_encoding("UTF-8")
+    if SiteSetting.search_ignore_accents
+      data = strip_diacritics(data)
+    end
     data
   end
 
