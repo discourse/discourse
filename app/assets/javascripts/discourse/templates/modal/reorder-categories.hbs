@@ -9,8 +9,8 @@
       <tr data-category-id="{{cat.id}}">
         <td>
           {{number-field number=cat.position}}
-          {{d-button class="no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
-          {{d-button class="no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
+          {{d-button class="btn-default no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
+          {{d-button class="btn-default no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
           {{#if cat.hasBufferedChanges}}
             {{d-button class="no-text ok" action="commit" icon="check"}}
           {{/if}}

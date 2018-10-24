@@ -1,18 +1,18 @@
 <section class="details {{unless model.active 'not-activated'}}">
   <div class='user-controls'>
     {{#if model.canViewProfile}}
-      {{#link-to 'user' model class="btn"}}
+      {{#link-to 'user' model class="btn btn-default"}}
         {{d-icon "user"}}
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
 
     {{#if model.can_view_action_logs}}
-      {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
+      {{d-button action="viewActionLogs" class="btn-default" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
     {{/if}}
     {{#if model.active}}
       {{#if currentUser.admin}}
-        {{d-button action="logOut" icon="power-off" label="admin.user.log_out"}}
+        {{d-button  class="btn-default" action="logOut" icon="power-off" label="admin.user.log_out"}}
       {{/if}}
     {{/if}}
     {{plugin-outlet name="admin-user-controls-after" args=(hash model=model) tagName="" connectorTagName=""}}
@@ -29,10 +29,10 @@
     </div>
     <div class='controls'>
       {{#if editingUsername}}
-        {{d-button action="saveUsername" label="admin.user_fields.save"}}
+        {{d-button class="btn-default" action="saveUsername" label="admin.user_fields.save"}}
         <a href {{action "toggleUsernameEdit"}}>{{i18n 'cancel'}}</a>
       {{else}}
-        {{d-button action="toggleUsernameEdit" icon="pencil"}}
+        {{d-button class="btn-default" action="toggleUsernameEdit" icon="pencil"}}
       {{/if}}
     </div>
   </div>
@@ -48,10 +48,10 @@
     </div>
     <div class='controls'>
       {{#if editingName}}
-        {{d-button action="saveName" label="admin.user_fields.save"}}
+        {{d-button class="btn-default" action="saveName" label="admin.user_fields.save"}}
         <a href {{action "toggleNameEdit"}}>{{i18n 'cancel'}}</a>
       {{else}}
-        {{d-button action="toggleNameEdit" icon="pencil"}}
+        {{d-button  class="btn-default" action="toggleNameEdit" icon="pencil"}}
       {{/if}}
     </div>
   </div>
@@ -68,7 +68,7 @@
         {{#if model.email}}
           <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
         {{else}}
-          {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
+          {{d-button  class="btn-default" action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
         {{/if}}
       </div>
     </div>
@@ -89,6 +89,7 @@
           {{/if}}
         {{else}}
           {{d-button action="checkEmail"
+              class="btn-default"
               actionParam=model
               icon="envelope-o"
               label="admin.users.check_email.text"
@@ -102,7 +103,7 @@
       <div class='value'>{{model.bounceScore}}</div>
       <div class='controls'>
         {{#if model.canResetBounceScore}}
-          {{d-button action="resetBounceScore" label="admin.user.reset_bounce_score.label" title="admin.user.reset_bounce_score.title"}}
+          {{d-button class="btn-default" action="resetBounceScore" label="admin.user.reset_bounce_score.label" title="admin.user.reset_bounce_score.title"}}
         {{/if}}
         {{model.bounceScoreExplanation}}
       </div>
@@ -114,7 +115,7 @@
         {{#if associatedAccountsLoaded}}
           {{associatedAccounts}}
         {{else}}
-          {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
+          {{d-button class="btn-default" action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
         {{/if}}
       </div>
     </div>
@@ -139,10 +140,10 @@
     </div>
     <div class='controls'>
       {{#if editingTitle}}
-        {{d-button action="saveTitle" label="admin.user_fields.save"}}
+        {{d-button  class="btn-default" action="saveTitle" label="admin.user_fields.save"}}
         <a href {{action "toggleTitleEdit"}}>{{i18n 'cancel'}}</a>
       {{else}}
-        {{d-button action="toggleTitleEdit" icon="pencil"}}
+        {{d-button class="btn-default" action="toggleTitleEdit" icon="pencil"}}
       {{/if}}
     </div>
   </div>
@@ -152,7 +153,7 @@
     <div class='value'>{{model.ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.staff}}
-        {{d-button action="refreshBrowsers" label="admin.user.refresh_browsers"}}
+        {{d-button class="btn-default" action="refreshBrowsers" label="admin.user.refresh_browsers"}}
         {{ip-lookup ip=model.ip_address userId=model.id}}
       {{/if}}
     </div>
@@ -191,7 +192,7 @@
     </div>
     <div class='controls'>
       {{#if canDisableSecondFactor}}
-        {{d-button action="disableSecondFactor" icon="unlock-alt" label="user.second_factor.disable"}}
+        {{d-button class="btn-default" action="disableSecondFactor" icon="unlock-alt" label="user.second_factor.disable"}}
       {{/if}}
     </div>
   </div>
@@ -236,7 +237,7 @@
           {{i18n 'admin.user.approve_success'}}
         {{else}}
           {{#if model.can_approve}}
-            {{d-button action="approve" icon="check" label="admin.user.approve"}}
+            {{d-button class="btn-default" action="approve" icon="check" label="admin.user.approve"}}
           {{/if}}
         {{/if}}
       </div>
@@ -249,15 +250,15 @@
     <div class='controls'>
       {{#if model.active}}
         {{#if model.can_deactivate}}
-          {{d-button action="deactivate" label="admin.user.deactivate_account"}}
+          {{d-button class="btn-default" action="deactivate" label="admin.user.deactivate_account"}}
           {{i18n 'admin.user.deactivate_explanation'}}
         {{/if}}
       {{else}}
         {{#if model.can_send_activation_email}}
-          {{d-button action="sendActivationEmail" icon="envelope" label="admin.user.send_activation_email"}}
+          {{d-button class="btn-default" action="sendActivationEmail" icon="envelope" label="admin.user.send_activation_email"}}
         {{/if}}
         {{#if model.can_activate}}
-          {{d-button action="activate" icon="check" label="admin.user.activate"}}
+          {{d-button class="btn-default" action="activate" icon="check" label="admin.user.activate"}}
         {{/if}}
       {{/if}}
     </div>
@@ -275,15 +276,15 @@
       {{#if model.api_key}}
         <div class='long-value'>
           {{model.api_key.key}}
-          {{d-button action="regenerateApiKey" icon="undo" label="admin.api.regenerate"}}
-          {{d-button action="revokeApiKey" icon="times" label="admin.api.revoke"}}
+          {{d-button class="btn-default" action="regenerateApiKey" icon="undo" label="admin.api.regenerate"}}
+          {{d-button class="btn-default" action="revokeApiKey" icon="times" label="admin.api.revoke"}}
         </div>
       {{else}}
         <div class='value'>
           &mdash;
         </div>
         <div class='controls'>
-          {{d-button action="generateApiKey" icon="key" label="admin.api.generate"}}
+          {{d-button class="btn-default" action="generateApiKey" icon="key" label="admin.api.generate"}}
         </div>
       {{/if}}
     </div>
@@ -294,10 +295,10 @@
     <div class='value'>{{i18n-yes-no model.admin}}</div>
     <div class='controls'>
       {{#if model.can_revoke_admin}}
-        {{d-button action="revokeAdmin" icon="shield" label="admin.user.revoke_admin"}}
+        {{d-button class="btn-default" action="revokeAdmin" icon="shield" label="admin.user.revoke_admin"}}
       {{/if}}
       {{#if model.can_grant_admin}}
-        {{d-button action="grantAdmin" icon="shield" label="admin.user.grant_admin"}}
+        {{d-button class="btn-default" action="grantAdmin" icon="shield" label="admin.user.grant_admin"}}
       {{/if}}
     </div>
   </div>
@@ -307,10 +308,10 @@
     <div class='value'>{{i18n-yes-no model.moderator}}</div>
     <div class='controls'>
       {{#if model.can_revoke_moderation}}
-        {{d-button action="revokeModeration" icon="shield" label="admin.user.revoke_moderation"}}
+        {{d-button class="btn-default" action="revokeModeration" icon="shield" label="admin.user.revoke_moderation"}}
       {{/if}}
       {{#if model.can_grant_moderation}}
-        {{d-button action="grantModeration" icon="shield" label="admin.user.grant_moderation"}}
+        {{d-button class="btn-default" action="grantModeration" icon="shield" label="admin.user.grant_moderation"}}
       {{/if}}
     </div>
   </div>
@@ -330,14 +331,14 @@
       {{#if model.canLockTrustLevel}}
         {{#if hasLockedTrustLevel}}
           {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
-          {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
+          {{d-button class="btn-default" action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
           {{d-icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
-          {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
+          {{d-button class="btn-default" action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
         {{/if}}
       {{/if}}
       {{#if model.tl3Requirements}}
-        {{#link-to 'adminUser.tl3Requirements' model class="btn"}}{{i18n 'admin.user.trust_level_3_requirements'}}{{/link-to}}
+        {{#link-to 'adminUser.tl3Requirements' model class="btn btn-default"}}{{i18n 'admin.user.trust_level_3_requirements'}}{{/link-to}}
       {{/if}}
     </div>
   </div>
@@ -439,6 +440,7 @@
       {{#if currentUser.admin}}
         <div class='controls'>
           {{d-button label="admin.user.clear_penalty_history.title"
+                     class="btn-default"
                      icon="times"
                      action=(action "clearPenaltyHistory")}}
           {{i18n "admin.user.clear_penalty_history.description"}}
@@ -537,6 +539,7 @@
     <div class='controls'>
       {{#if model.flags_received_count}}
         {{d-button
+          class="btn-default"
           action=(action "showFlagsReceived")
           label="admin.user.show_flags_received"
           icon="flag"

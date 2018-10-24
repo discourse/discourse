@@ -7,7 +7,7 @@
         <li><a {{action "selectTagGroup" tagGroup}} class="{{if tagGroup.selected 'active'}}">{{tagGroup.name}}</a></li>
       {{/each}}
     </ul>
-    <button {{action "newTagGroup"}} class='btn'>{{d-icon "plus"}}{{i18n 'tagging.groups.new'}}</button>
+    <button {{action "newTagGroup"}} class='btn btn-default'>{{d-icon "plus"}}{{i18n 'tagging.groups.new'}}</button>
   </div>
 
   {{outlet}}

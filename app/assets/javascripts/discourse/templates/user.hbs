@@ -51,7 +51,7 @@
               </li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
                               connectorTagName="li"
@@ -60,11 +60,11 @@
               {{#if canExpandProfile}}
                 <li>
                   {{#if collapsedInfo}}
-                    <a {{action "expandProfile"}} href class="btn">
+                    <a {{action "expandProfile"}} href class="btn btn-default">
                       {{d-icon "angle-double-down"}} {{i18n 'user.expand_profile'}}
                     </a>
                   {{else}}
-                    <a {{action "collapseProfile"}} href class="btn">
+                    <a {{action "collapseProfile"}} href class="btn btn-default">
                       {{d-icon "angle-double-up"}} {{i18n 'user.collapse_profile'}}
                     </a>
                   {{/if}}
