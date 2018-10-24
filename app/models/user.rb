@@ -439,26 +439,36 @@ class User < ActiveRecord::Base
   # expensive queries
   MAX_UNREAD_NOTIFICATIONS = 99
 
+  def self.max_unread_notifications
+    @max_unread_notifications ||= MAX_UNREAD_NOTIFICATIONS
+  end
+
+  def self.max_unread_notifications=(val)
+    @max_unread_notifications = val
+  end
+
   def unread_notifications
     @unread_notifications ||= begin
       # perf critical, much more efficient than AR
       sql = <<~SQL
-        SELECT COUNT(*) FROM notifications n
-        LEFT JOIN topics t ON t.id = n.topic_id
-         WHERE t.deleted_at IS NULL AND
-          n.notification_type <> :pm AND
-          n.user_id = :user_id AND
-          n.id > :seen_notification_id AND
-          NOT read
-        LIMIT :limit
-
+        SELECT COUNT(*) FROM (
+          SELECT 1 FROM
+          notifications n
+          LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL AND
+            n.notification_type <> :pm AND
+            n.user_id = :user_id AND
+            n.id > :seen_notification_id AND
+            NOT read
+          LIMIT :limit
+        ) AS X
       SQL
 
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
         pm:  Notification.types[:private_message],
-        limit: MAX_UNREAD_NOTIFICATIONS
+        limit: User.max_unread_notifications
     )[0].to_i
     end
   end
