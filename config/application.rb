@@ -123,6 +123,8 @@ module Discourse
       authentication-complete.js
       print-page.js
       omniauth-complete.js
+      activate-account.js
+      auto-redirect.js
     }
 
     # Precompile all available locales
