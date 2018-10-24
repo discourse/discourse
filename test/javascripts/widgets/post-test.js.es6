@@ -206,6 +206,12 @@ widgetTest("anon liking", {
     assert.ok(!!this.$(".actions button.like").length);
     assert.ok(this.$(".actions button.like-count").length === 0);
 
+    assert.equal(
+      this.$("button.like").attr("title"),
+      I18n.t("post.controls.like"),
+      `shows the right button title for anonymous users`
+    );
+
     await click(".actions button.like");
     assert.ok(this.loginShown);
   }
