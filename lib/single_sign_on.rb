@@ -89,7 +89,7 @@ class SingleSignOn
   end
 
   def self.provider_secret(return_sso_url)
-    provider_secrets = SiteSetting.sso_provider_secrets.split(/[\|,\n]/)
+    provider_secrets = SiteSetting.sso_provider_secrets.split(/[|\n]/)
     provider_secrets_hash = Hash[*provider_secrets]
     return_url_host = URI.parse(return_sso_url).host
     # moves wildcard domains to the end of hash
