@@ -856,12 +856,12 @@ describe GroupsController do
 
       context "is able to add several members to a group" do
         let(:user1) { Fabricate(:user) }
-        let(:user2) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
           expect do
             put "/groups/#{group.id}/members.json",
-              params: { usernames: [user1.username, user2.username].join(",") }
+              params: { usernames: [user1.username, user2.username.upcase].join(",") }
           end.to change { group.users.count }.by(2)
 
           expect(response.status).to eq(200)
@@ -1069,13 +1069,13 @@ describe GroupsController do
       context '#remove_members' do
         context "is able to remove several members from a group" do
           let(:user1) { Fabricate(:user) }
-          let(:user2) { Fabricate(:user) }
+          let(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
           it "removes by username" do
             expect do
               delete "/groups/#{group1.id}/members.json",
-                params: { usernames: [user1.username, user2.username].join(",") }
+                params: { usernames: [user1.username, user2.username.upcase].join(",") }
             end.to change { group1.users.count }.by(-2)
             expect(response.status).to eq(200)
           end

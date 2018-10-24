@@ -1020,21 +1020,42 @@ describe Search do
     end
   end
 
-  context 'diacritics' do
+  context 'ignore_diacritics' do
+    before { SiteSetting.search_ignore_accents = true }
+    let!(:post1) { Fabricate(:post, raw: 'สวัสดี Rágis hello') }
+
+    it ('allows strips correctly') do
+      results = Search.execute('hello', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('ragis', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('Rágis', type_filter: 'topic', include_blurbs: true)
+      expect(results.posts.length).to eq(1)
+
+      # TODO: this is a test we need to fix!
+      #expect(results.blurb(results.posts.first)).to include('Rágis')
+
+      results = Search.execute('สวัสดี', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+    end
+  end
+
+  context 'include_diacritics' do
+    before { SiteSetting.search_ignore_accents = false }
     let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }
 
     it ('allows strips correctly') do
       results = Search.execute('hello', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
 
-      # TODO when we add diacritic support we should return 1 here
       results = Search.execute('regis', type_filter: 'topic')
       expect(results.posts.length).to eq(0)
 
       results = Search.execute('Régis', type_filter: 'topic', include_blurbs: true)
       expect(results.posts.length).to eq(1)
 
-      # this is a test we got to keep working
       expect(results.blurb(results.posts.first)).to include('Régis')
 
       results = Search.execute('สวัสดี', type_filter: 'topic')

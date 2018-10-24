@@ -176,13 +176,19 @@ class TagsController < ::ApplicationController
   end
 
   def search
+    clean_name = DiscourseTagging.clean_tag(params[:q])
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
+    # Prioritize exact matches when ordering
+    order_query = Tag.sanitize_sql_for_order(
+      ["lower(name) = lower(?) DESC, topic_count DESC", clean_name]
+    )
+
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      Tag.order('topic_count DESC').limit(params[:limit]),
+      Tag.order(order_query).limit(params[:limit]),
       guardian,
       for_input: params[:filterForInput],
-      term: params[:q],
+      term: clean_name,
       category: category,
       selected_tags: params[:selected_tags]
     )
@@ -191,7 +197,7 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    if Tag.where_name(params[:q]).exists? && !tags.find { |h| h[:id] == params[:q] }
+    if Tag.where_name(clean_name).exists? && !tags.find { |h| h[:id].downcase == clean_name.downcase }
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
     end

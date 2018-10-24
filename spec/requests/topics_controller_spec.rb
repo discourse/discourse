@@ -1407,6 +1407,17 @@ RSpec.describe TopicsController do
         expect(response.headers['Discourse-Readonly']).to eq('true')
       end
     end
+
+    describe "image only topic" do
+      it "uses image alt tag for meta description" do
+        post = Fabricate(:post, raw: "![image_description|690x405](upload://sdtr5O5xaxf0iEOxICxL36YRj86.png)")
+
+        get post.topic.url
+
+        body = response.body
+        expect(body).to have_tag(:meta, with: { name: 'description', content: '[image_description]' })
+      end
+    end
   end
 
   describe '#post_ids' do

@@ -7,7 +7,7 @@ task 'plugin:install_all_official' do
     'discourse-nginx-performance-report',
     'lazyYT',
     'poll',
-    'discourse-prometheus-alert-receiver'
+    'discourse-calendar'
   ])
 
   map = {

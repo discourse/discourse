@@ -139,6 +139,7 @@ en:
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
       max_emojis: "can't have more than %{max_emojis_count} emoji"
+      emojis_disabled: "can't have emoji"
       ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
@@ -304,6 +305,7 @@ en:
     badge: "%{display_name} badge on %{site_title}"
 
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
   excerpt_image: "image"
@@ -707,6 +709,7 @@ en:
       firefox: "Firefox"
       opera: "Opera"
       ie: "Internet Explorer"
+      edge: "Microsoft Edge"
       unknown: "unknown browser"
     device:
       android: "Android Device"
@@ -715,7 +718,7 @@ en:
       ipod: "iPod"
       mobile: "Mobile Device"
       mac: "Mac"
-      linux: "Linux Computer"
+      linux: "GNU/Linux Computer"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
@@ -1266,6 +1269,10 @@ en:
     blacklisted_crawler_user_agents: 'Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive'
     slow_down_crawler_rate: 'If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)'
+    content_security_policy: EXPERIMENTAL - Turn on Content-Security-Policy
+    content_security_policy_report_only: EXPERIMENTAL - Turn on Content-Security-Policy-Report-Only
+    content_security_policy_collect_reports: Enable CSP violation report collection at /csp_reports
+    content_security_policy_script_src: Additional whitelisted script sources. The current host and CDN are included by default.
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1867,7 +1874,7 @@ en:
       sso_provider_secrets:
         key: "www.example.com"
         value: "SSO secret"
-        
+
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -3654,6 +3661,11 @@ en:
       description: First post edit
       long_description: |
         This badge is granted the first time you edit one of your posts. While you won’t be able to edit your posts forever, editing is encouraged — you can improve the formatting, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
+    wiki_editor:
+      name: Wiki Editor
+      description: First wiki edit
+      long_description: |
+        This badge is granted the first time you edit one wiki post.
     basic_user:
       name: Basic
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> all essential community functions

@@ -15,6 +15,7 @@ class Badge < ActiveRecord::Base
   GreatPost = 8
   Autobiographer = 9
   Editor = 10
+  WikiEditor = 48
 
   FirstLike = 11
   FirstShare = 12

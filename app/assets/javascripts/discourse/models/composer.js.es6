@@ -387,9 +387,14 @@ const Composer = RestModel.extend({
     return SAVE_ICONS[action];
   },
 
-  @computed("action", "whisper")
-  saveLabel(action, whisper) {
-    return whisper ? "composer.create_whisper" : SAVE_LABELS[action];
+  @computed("action", "whisper", "editConflict")
+  saveLabel(action, whisper, editConflict) {
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (whisper) {
+      return "composer.create_whisper";
+    }
+    return SAVE_LABELS[action];
   },
 
   hasMetaData: function() {
@@ -727,7 +732,8 @@ const Composer = RestModel.extend({
       composerOpened: null,
       composerTotalOpened: 0,
       featuredLink: null,
-      noBump: false
+      noBump: false,
+      editConflict: false
     });
   },
 
@@ -762,6 +768,7 @@ const Composer = RestModel.extend({
 
     const props = {
       raw: this.get("reply"),
+      raw_old: this.get("editConflict") ? null : this.get("originalText"),
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
       cooked: this.getCookedHtml()
@@ -769,9 +776,12 @@ const Composer = RestModel.extend({
 
     this.set("composeState", SAVING);
 
-    let rollback = throwAjaxError(() => {
+    let rollback = throwAjaxError(error => {
       post.set("cooked", oldCooked);
       this.set("composeState", OPEN);
+      if (error.jqXHR && error.jqXHR.status === 409) {
+        this.set("editConflict", true);
+      }
     });
 
     return promise

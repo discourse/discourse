@@ -2,6 +2,8 @@ module BrowserDetection
 
   def self.browser(user_agent)
     case user_agent
+    when /Edge/i
+      :edge
     when /Opera/i, /OPR/i
       :opera
     when /Firefox/i
