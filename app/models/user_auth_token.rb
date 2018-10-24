@@ -50,7 +50,9 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def self.is_suspicious(user_id, user_ip)
-    ips = UserAuthTokenLog.where(user_id: user_id).pluck('DISTINCT client_ip')
+    ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
+    ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurance (current)
+    ips.uniq!
     return false if ips.empty? # first login is never suspicious
 
     user_location = login_location(user_ip)
@@ -70,14 +72,6 @@ class UserAuthToken < ActiveRecord::Base
     )
     user_auth_token.unhashed_auth_token = token
 
-    if is_suspicious(info[:user_id], info[:client_ip])
-      Jobs.enqueue(:critical_user_email,
-                   type: :suspicious_login,
-                   user_id: info[:user_id],
-                   client_ip: info[:client_ip],
-                   user_agent: info[:user_agent])
-    end
-
     log(action: 'generate',
         user_auth_token_id: user_auth_token.id,
         user_id: info[:user_id],
@@ -85,6 +79,11 @@ class UserAuthToken < ActiveRecord::Base
         client_ip: info[:client_ip],
         path: info[:path],
         auth_token: hashed_token)
+
+    Jobs.enqueue(:suspicious_login,
+                 user_id: info[:user_id],
+                 client_ip: info[:client_ip],
+                 user_agent: info[:user_agent])
 
     user_auth_token
   end
