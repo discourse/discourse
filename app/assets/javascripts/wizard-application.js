@@ -15,4 +15,3 @@
 //= require_tree ./wizard/lib
 //= require_tree ./wizard/mixins
 //= require_tree ./wizard/initializers
-//= require wizard/entry-point

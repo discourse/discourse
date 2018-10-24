@@ -125,6 +125,7 @@ module Discourse
       omniauth-complete.js
       activate-account.js
       auto-redirect.js
+      wizard-start.js
     }
 
     # Precompile all available locales
