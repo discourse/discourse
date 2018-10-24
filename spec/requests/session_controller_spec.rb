@@ -589,7 +589,12 @@ RSpec.describe SessionController do
         SiteSetting.enable_sso_provider = true
         SiteSetting.enable_sso = false
         SiteSetting.enable_local_logins = true
-        SiteSetting.sso_provider_secrets = "*|secretforAll\n*.rainbow|wrongSecretForOverRainbow\nwww.random.site|secretForRandomSite\nsomewhere.over.rainbow|secretForOverRainbow"
+        SiteSetting.sso_provider_secrets = [
+          "*|secret,forAll",
+          "*.rainbow|wrongSecretForOverRainbow",
+          "www.random.site|secretForRandomSite",
+          "somewhere.over.rainbow|secretForOverRainbow",
+        ].join("\n")
 
         @sso = SingleSignOn.new
         @sso.nonce = "mynonce"
