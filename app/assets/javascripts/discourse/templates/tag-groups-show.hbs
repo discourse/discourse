@@ -43,7 +43,7 @@
     </div>
   </section>
 
-  <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'tagging.groups.save'}}</button>
+  <button {{action "save"}} disabled={{model.disableSave}} class='btn btn-default'>{{i18n 'tagging.groups.save'}}</button>
   <button {{action "destroy"}} disabled={{model.disableSave}} class='btn btn-danger'>{{d-icon "trash-o"}} {{i18n 'tagging.groups.delete'}}</button>
   <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
 </div>

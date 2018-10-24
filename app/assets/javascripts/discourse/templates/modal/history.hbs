@@ -1,19 +1,20 @@
 {{#d-modal-body title="history" maxHeight="70%"}}
   <div id="revision">
     <div id="revision-controls">
-      {{d-button action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
-      {{d-button action="loadPreviousVersion" icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
+      {{d-button class="btn-default" action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
+      {{d-button class="btn-default" action="loadPreviousVersion" icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
       <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
         {{#conditional-loading-spinner condition=loading size="small"}}
           {{{revisionsText}}}
         {{/conditional-loading-spinner}}
       </div>
-      {{d-button action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
-      {{d-button action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+      {{d-button class="btn-default" action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
+      {{d-button class="btn-default" action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
     </div>
 
     {{#if displayEdit}}
       {{d-button action="editPost"
+          class="btn-default"
           icon="pencil"
           label=editButtonLabel}}
     {{/if}}
@@ -131,12 +132,13 @@
     {{/if}}
 
     {{#if displayShow}}
-      {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" disabled=loading}}
+      {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
     {{/if}}
 
     {{#if displayEdit}}
       {{d-button action="editPost"
           icon="pencil"
+          class="btn-default"
           label=editButtonLabel}}
     {{/if}}
 </div>

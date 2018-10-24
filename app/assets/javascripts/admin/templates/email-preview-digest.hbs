@@ -29,7 +29,7 @@
       {{else}}
         <label>{{i18n 'admin.email.send_digest_label'}}</label>
         {{text-field value=email placeholderKey="admin.email.test_email_address"}}
-        <button class='btn' {{action "sendEmail"}} disabled={{sendEmailDisabled}}>{{i18n 'admin.email.send_digest'}}</button>
+        <button class='btn btn-default' {{action "sendEmail"}} disabled={{sendEmailDisabled}}>{{i18n 'admin.email.send_digest'}}</button>
         {{#if sentEmail}}
           <span class='result-message'>{{i18n 'admin.email.sent_test'}}</span>
         {{/if}}

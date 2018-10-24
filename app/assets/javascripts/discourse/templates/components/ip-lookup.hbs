@@ -1,5 +1,5 @@
 {{#if ip}}
-  <button class="btn" {{action "lookup"}}>
+  <button class="btn btn-default" {{action "lookup"}}>
     {{d-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
   </button>
 {{/if}}
@@ -7,9 +7,9 @@
   <div class="location-box">
     <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if copied}}
-      <a class="btn btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
+      <a class="btn btn-default btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
     {{else}}
-      <a class="btn pull-right no-text" {{action "copy"}}>{{d-icon "copy"}}</a>
+      <a class="btn btn-default pull-right no-text" {{action "copy"}}>{{d-icon "copy"}}</a>
     {{/if}}
     <h4>{{i18n 'ip_lookup.title'}}</h4>
     <p class='powered-by'>{{{i18n 'ip_lookup.powered_by'}}}</p>
