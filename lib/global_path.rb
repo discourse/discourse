@@ -9,7 +9,7 @@ module GlobalPath
 
   def upload_cdn_path(p)
     if SiteSetting.Upload.s3_cdn_url.present?
-      p = p.sub(Discourse.store.absolute_base_url, SiteSetting.Upload.s3_cdn_url)
+      p = Discourse.store.cdn_url(p)
     end
     p =~ /^http/ ? p : cdn_path(p)
   end
