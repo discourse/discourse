@@ -121,6 +121,7 @@ module Discourse
       google-universal-analytics.js
       preload-application-data.js
       authentication-complete.js
+      print-page.js
     }
 
     # Precompile all available locales
