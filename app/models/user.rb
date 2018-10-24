@@ -434,24 +434,31 @@ class User < ActiveRecord::Base
     @unread_pms ||= unread_notifications_of_type(Notification.types[:private_message])
   end
 
+  # PERF: This safeguard is in place to avoid situations where
+  # a user with enormous amounts of unread data can issue extremely
+  # expensive queries
+  MAX_UNREAD_NOTIFICATIONS = 99
+
   def unread_notifications
     @unread_notifications ||= begin
       # perf critical, much more efficient than AR
       sql = <<~SQL
-          SELECT COUNT(*)
-            FROM notifications n
-       LEFT JOIN topics t ON t.id = n.topic_id
-           WHERE t.deleted_at IS NULL
-             AND n.notification_type <> :pm
-             AND n.user_id = :user_id
-             AND n.id > :seen_notification_id
-             AND NOT read
+        SELECT COUNT(*) FROM notifications n
+        LEFT JOIN topics t ON t.id = n.topic_id
+         WHERE t.deleted_at IS NULL AND
+          n.notification_type <> :pm AND
+          n.user_id = :user_id AND
+          n.id > :seen_notification_id AND
+          NOT read
+        LIMIT :limit
+
       SQL
 
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
-        pm:  Notification.types[:private_message]
+        pm:  Notification.types[:private_message],
+        limit: MAX_UNREAD_NOTIFICATIONS
     )[0].to_i
     end
   end
