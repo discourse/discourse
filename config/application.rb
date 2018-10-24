@@ -122,6 +122,7 @@ module Discourse
       preload-application-data.js
       authentication-complete.js
       print-page.js
+      omniauth-complete.js
     }
 
     # Precompile all available locales
