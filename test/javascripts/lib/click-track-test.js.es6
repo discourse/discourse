@@ -69,6 +69,12 @@ QUnit.test("does not track clicks on back buttons", assert => {
   assert.ok(track(generateClickEventOn(".back")));
 });
 
+QUnit.test("does not track right clicks inside quotes", assert => {
+  const event = generateClickEventOn(".quote a:first-child");
+  event.which = 3;
+  assert.ok(track(event));
+});
+
 QUnit.test("does not track clicks to internal links in quotes", assert => {
   sandbox.stub(DiscourseURL, "routeTo");
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
