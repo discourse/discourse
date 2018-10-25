@@ -4,8 +4,12 @@ class DiscourseIpInfo
   include Singleton
 
   def initialize
+    open_db(File.join(Rails.root, 'vendor', 'data'))
+  end
+
+  def open_db(path)
     begin
-      @mmdb_filename = File.join(Rails.root, 'vendor', 'data', 'GeoLite2-City.mmdb')
+      @mmdb_filename = File.join(path, 'GeoLite2-City.mmdb')
       @mmdb = MaxMindDB.new(@mmdb_filename, MaxMindDB::LOW_MEMORY_FILE_READER)
       @cache = LruRedux::ThreadSafeCache.new(1000)
     rescue Errno::ENOENT => e
@@ -15,7 +19,7 @@ class DiscourseIpInfo
     end
   end
 
-  def lookup(ip)
+  def lookup(ip, locale = :en)
     return {} unless @mmdb
 
     begin
@@ -26,22 +30,28 @@ class DiscourseIpInfo
 
     return {} if !result || !result.found?
 
+    locale = locale.to_s.sub('_', '-')
+
     {
-      country: result.country.name,
+      country: result.country.name(locale) || result.country.name,
       country_code: result.country.iso_code,
-      region: result.subdivisions.most_specific.name,
-      city: result.city.name,
+      region: result.subdivisions.most_specific.name(locale) || result.subdivisions.most_specific.name,
+      city: result.city.name(locale) || result.city.name,
     }
   end
 
-  def get(ip)
+  def get(ip, locale = :en)
     return {} unless @mmdb
 
     ip = ip.to_s
-    @cache[ip] ||= lookup(ip)
+    @cache["#{ip}-#{locale}"] ||= lookup(ip, locale)
   end
 
-  def self.get(ip)
-    instance.get(ip)
+  def self.open_db(path)
+    instance.open_db(path)
+  end
+
+  def self.get(ip, locale = :en)
+    instance.get(ip, locale)
   end
 end
