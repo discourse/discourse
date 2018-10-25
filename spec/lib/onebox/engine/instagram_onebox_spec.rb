@@ -9,7 +9,7 @@ describe Onebox::Engine::InstagramOnebox do
   end
 
   it "includes title" do
-    expect(html).to include("National Geographic on Instagram")
+    expect(html).to include('<a href="https://www.instagram.com/p/BgSPalMjddb/" target="_blank">National Geographic</a>')
   end
 
   it "includes image" do

@@ -12,7 +12,7 @@ module Onebox
 
       def data
         og = get_opengraph
-        title = og[:title].split(":")[0].strip
+        title = og[:title].split(":")[0].strip.gsub(" on Instagram", "")
         html_entities = HTMLEntities.new
 
         json_data = html_doc.xpath('//script[contains(text(),"window._sharedData")]').text.to_s
