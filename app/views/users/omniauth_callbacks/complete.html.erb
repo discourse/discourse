@@ -15,6 +15,11 @@
       border-bottom-color: #999;
     }
   </style>
+  <%= tag.meta id: 'data-auth-result', data: {
+    auth_result: @auth_result.to_client_hash,
+    base_url: Discourse.base_url
+  } %>
+  <%= preload_script('omniauth-complete') %>
 </head>
 
 <body>
@@ -23,18 +28,6 @@
       <%=t "login.auth_complete" %>
       <a href="<%= Discourse.base_url.html_safe %>?authComplete=true"><%= t("login.click_to_continue") %></a>
     </p>
-
-    <script type="text/javascript">
-       var authResult = <%=@auth_result.to_client_hash.to_json.html_safe%>;
-
-       if (!window.opener) {
-         localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
-         window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';
-       } else {
-         window.opener.Discourse.authenticationComplete(authResult);
-         window.close();
-       }
-    </script>
   </div>
 </body>
 </html>
