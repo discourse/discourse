@@ -144,8 +144,14 @@
     max-width: 300px;
   }
 
-  a.title {
-    color: $primary;
+  .main-link {
+    line-height: $line-height-medium;
+    position: relative;
+    z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
+    a.title {
+      color: $primary;
+      padding: 0.5em 0.667em 1.2em 0;
+    }
   }
 
   .badge-notification,
@@ -177,6 +183,9 @@
   }
 
   .topic-item-stats {
+    position: relative;
+    margin-top: 0.25em;
+    z-index: z("base");
     .category,
     .num,
     .last-poster {
