@@ -50,6 +50,8 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def self.is_suspicious(user_id, user_ip)
+    return false unless User.find_by(id: user_id)&.staff?
+
     ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
     ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurance (current)
     ips.uniq!
@@ -59,13 +61,13 @@ class UserAuthToken < ActiveRecord::Base
     ips.none? { |ip| user_location == login_location(ip) }
   end
 
-  def self.generate!(info)
+  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token = UserAuthToken.create!(
-      user_id: info[:user_id],
-      user_agent: info[:user_agent],
-      client_ip: info[:client_ip],
+      user_id: user_id,
+      user_agent: user_agent,
+      client_ip: client_ip,
       auth_token: hashed_token,
       prev_auth_token: hashed_token,
       rotated_at: Time.zone.now
@@ -74,22 +76,23 @@ class UserAuthToken < ActiveRecord::Base
 
     log(action: 'generate',
         user_auth_token_id: user_auth_token.id,
-        user_id: info[:user_id],
-        user_agent: info[:user_agent],
-        client_ip: info[:client_ip],
-        path: info[:path],
+        user_id: user_id,
+        user_agent: user_agent,
+        client_ip: client_ip,
+        path: path,
         auth_token: hashed_token)
 
-    Jobs.enqueue(:suspicious_login,
-                 user_id: info[:user_id],
-                 client_ip: info[:client_ip],
-                 user_agent: info[:user_agent])
+    if staff
+      Jobs.enqueue(:suspicious_login,
+        user_id: user_id,
+        client_ip: client_ip,
+        user_agent: user_agent)
+    end
 
     user_auth_token
   end
 
   def self.lookup(unhashed_token, opts = nil)
-
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)

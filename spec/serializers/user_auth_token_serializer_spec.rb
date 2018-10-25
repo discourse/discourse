@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe UserAuthTokenSerializer do
 
-  let(:user) { Fabricate(:user) }
-  let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '2a02:ea00::') }
+  let(:user) { Fabricate(:moderator) }
+  let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '2a02:ea00::', staff: true) }
 
   before(:each) do
     DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))

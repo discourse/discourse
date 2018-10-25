@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Jobs::SuspiciousLogin do
 
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:moderator) }
 
   before do
     UserAuthToken.stubs(:login_location).with("1.1.1.1").returns("Location 1")
