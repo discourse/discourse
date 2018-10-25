@@ -3,7 +3,11 @@ require 'rails_helper'
 describe UserAuthTokenSerializer do
 
   let(:user) { Fabricate(:user) }
-  let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '5.44.112.0') }
+  let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '2a02:ea00::') }
+
+  before(:each) do
+    DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))
+  end
 
   it 'serializes user auth tokens with respect to user locale' do
     I18n.locale = 'de'

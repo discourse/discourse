@@ -4,8 +4,12 @@ class DiscourseIpInfo
   include Singleton
 
   def initialize
+    open_db(File.join(Rails.root, 'vendor', 'data'))
+  end
+
+  def open_db(path)
     begin
-      @mmdb_filename = File.join(Rails.root, 'vendor', 'data', 'GeoLite2-City.mmdb')
+      @mmdb_filename = File.join(path, 'GeoLite2-City.mmdb')
       @mmdb = MaxMindDB.new(@mmdb_filename, MaxMindDB::LOW_MEMORY_FILE_READER)
       @cache = LruRedux::ThreadSafeCache.new(1000)
     rescue Errno::ENOENT => e
@@ -41,6 +45,10 @@ class DiscourseIpInfo
 
     ip = ip.to_s
     @cache["#{ip}-#{locale}"] ||= lookup(ip, locale)
+  end
+
+  def self.open_db(path)
+    instance.open_db(path)
   end
 
   def self.get(ip, locale = :en)
