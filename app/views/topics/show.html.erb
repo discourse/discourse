@@ -110,10 +110,6 @@
           color: #0088cc !important;
         }
       </style>
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          window.print();
-        });
-      </script>
+      <%= preload_script('print-page') %>
   <% end %>
 <% end %>

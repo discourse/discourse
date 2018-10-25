@@ -121,6 +121,11 @@ module Discourse
       google-universal-analytics.js
       preload-application-data.js
       authentication-complete.js
+      print-page.js
+      omniauth-complete.js
+      activate-account.js
+      auto-redirect.js
+      wizard-start.js
     }
 
     # Precompile all available locales

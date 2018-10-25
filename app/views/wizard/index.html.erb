@@ -17,12 +17,6 @@
 
   <body class='wizard'>
     <div id='wizard-main'></div>
-
-    <script>
-      (function() {
-        var wizard = require('wizard/wizard').default.create();
-        wizard.start();
-      })();
-    </script>
+    <%= preload_script 'wizard-start' %>
   </body>
 </html>
