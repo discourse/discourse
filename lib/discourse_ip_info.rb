@@ -37,6 +37,7 @@ class DiscourseIpInfo
   def get(ip)
     return {} unless @mmdb
 
+    ip = ip.to_s
     @cache[ip] ||= lookup(ip)
   end
 
