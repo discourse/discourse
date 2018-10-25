@@ -6,7 +6,7 @@ class UserApiKeysController < ApplicationController
   skip_before_action :redirect_to_login_if_required, only: [:new]
   skip_before_action :check_xhr, :preload_json
 
-  AUTH_API_VERSION ||= 2
+  AUTH_API_VERSION ||= 3
 
   def new
 
