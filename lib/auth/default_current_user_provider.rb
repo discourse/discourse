@@ -240,6 +240,8 @@ class Auth::DefaultCurrentUserProvider
   def should_update_last_seen?
     if @request.xhr?
       @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+    elsif !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
+      false
     else
       true
     end
