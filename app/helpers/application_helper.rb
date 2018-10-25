@@ -423,6 +423,7 @@ module ApplicationHelper
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
+      svg_sprite_path: SvgSprite.path,
     }
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

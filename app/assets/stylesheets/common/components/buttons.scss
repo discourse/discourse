@@ -164,42 +164,42 @@
   &.google,
   &.google_oauth2 {
     background: $google;
-    &:before {
-      content: $fa-var-google;
-    }
+    // &:before {
+    //   content: $fa-var-google;
+    // }
   }
   &.instagram {
     background: $instagram;
-    &:before {
-      content: $fa-var-instagram;
-    }
+    // &:before {
+    //   content: $fa-var-instagram;
+    // }
   }
   &.facebook {
     background: $facebook;
-    &:before {
-      content: $fa-var-facebook;
-    }
+    // &:before {
+    //   content: $fa-var-facebook;
+    // }
   }
   &.cas {
     background: $cas;
   }
   &.twitter {
     background: $twitter;
-    &:before {
-      content: $fa-var-twitter;
-    }
+    // &:before {
+    //   content: $fa-var-twitter;
+    // }
   }
   &.yahoo {
     background: $yahoo;
-    &:before {
-      content: $fa-var-yahoo;
-    }
+    // &:before {
+    //   content: $fa-var-yahoo;
+    // }
   }
   &.github {
     background: $github;
-    &:before {
-      content: $fa-var-github;
-    }
+    // &:before {
+    //   content: $fa-var-github;
+    // }
   }
 }
 

@@ -6,7 +6,7 @@ def library_src
   "#{Rails.root}/node_modules"
 end
 
-task 'svgs:update' do
+task 'svgicons:update' do
 
   yarn = system("yarn install")
   abort('Unable to run "yarn install"') unless yarn
@@ -35,22 +35,4 @@ task 'svgs:update' do
   end
 
   STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(2)} secs"
-end
-
-task 'svgs:subset' do
-  require 'nokogiri'
-
-  @icons = 'surprise|sun|thumbs-up|smile'
-  @doc = Nokogiri::XML(File.open("#{Rails.root}/vendor/assets/svg-icons/fontawesome/regular.svg")) do |config|
-    config.options = Nokogiri::XML::ParseOptions::NOBLANKS
-  end
-
-  @doc.css('symbol').each do |sym|
-    unless @icons.include? sym.attr('id')
-      sym.remove
-    end
-  end
-
-  File.write("#{Rails.root}/vendor/assets/svg-icons/fontawesome/subset.svg", @doc.to_xml)
-
 end

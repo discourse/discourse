@@ -17,7 +17,7 @@ module Jobs
     end
 
     def should_poll?
-      return false if Rails.env.development? && ENV["POLL_MAILBOX"].nil?
+      # return false if Rails.env.development? && ENV["POLL_MAILBOX"].nil?
       SiteSetting.pop3_polling_enabled?
     end
 

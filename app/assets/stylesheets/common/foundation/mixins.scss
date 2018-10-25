@@ -86,3 +86,10 @@ $breakpoints: (
   -moz-appearance: none;
   appearance: none;
 }
+
+@mixin rotate($degrees, $rotation) {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=#{$rotation})";
+  -webkit-transform: rotate($degrees);
+      -ms-transform: rotate($degrees);
+          transform: rotate($degrees);
+}

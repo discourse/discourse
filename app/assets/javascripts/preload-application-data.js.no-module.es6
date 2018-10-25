@@ -34,6 +34,7 @@
   }
 
   Discourse.HighlightJSPath = setupData.highlightJsPath;
+  Discourse.SvgSpritePath = setupData.svgSpritePath;
 
   if (setupData.s3BaseUrl) {
     Discourse.S3CDN = setupData.s3Cdn;

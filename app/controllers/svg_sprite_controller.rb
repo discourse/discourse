@@ -7,16 +7,13 @@ class SvgSpriteController < ApplicationController
 
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
 
-      # current_version = HighlightJs.version(SiteSetting.highlighted_languages)
+      current_version = SvgSprite.version(SiteSetting.svg_icon_subset)
 
-      # if current_version != params[:version]
-      #   return redirect_to path(HighlightJs.path)
-      # end
+      if current_version != params[:version]
+        return redirect_to path(SvgSprite.path)
+      end
 
-      # note, this can be slightly optimised by caching the bundled file, it cuts down on N reads
-      # our nginx config caches this so in practical terms it does not really matter and keeps
-      # code simpler
-      svg_sprite = SvgSprite.bundle('surprise|sun')
+      svg_sprite = SvgSprite.bundle
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate
       response.headers["Content-Length"] = svg_sprite.bytesize.to_s
