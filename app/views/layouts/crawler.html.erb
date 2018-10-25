@@ -16,6 +16,8 @@
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
+
+    <%= build_plugin_html 'server:before-head-close-crawler' %>
   </head>
   <body class="crawler">
     <%= theme_lookup("header") %>
