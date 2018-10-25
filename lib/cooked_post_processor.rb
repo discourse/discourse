@@ -309,7 +309,7 @@ class CookedPostProcessor
       end
     end
 
-    add_lightbox!(img, original_width, original_height, upload)
+    add_lightbox!(img, original_width, original_height, upload, cropped: crop)
   end
 
   def is_a_hyperlink?(img)
@@ -330,7 +330,7 @@ class CookedPostProcessor
       .each { |r| yield r if r > 1 }
   end
 
-  def add_lightbox!(img, original_width, original_height, upload = nil)
+  def add_lightbox!(img, original_width, original_height, upload, cropped: false)
     # first, create a div to hold our lightbox
     lightbox = create_node("div", "lightbox-wrapper")
     img.add_next_sibling(lightbox)
@@ -352,7 +352,7 @@ class CookedPostProcessor
     if upload
       thumbnail = upload.thumbnail(w, h)
       if thumbnail && thumbnail.filesize.to_i < upload.filesize
-        img["src"] = upload.thumbnail(w, h).url
+        img["src"] = thumbnail.url
 
         srcset = +""
 
@@ -360,19 +360,16 @@ class CookedPostProcessor
           resized_w = (w * ratio).to_i
           resized_h = (h * ratio).to_i
 
-          if upload.width && resized_w > upload.width
+          if !cropped && upload.width && resized_w > upload.width
             cooked_url = UrlHelper.cook_url(upload.url)
-            srcset << ", #{cooked_url} #{ratio}x"
-          else
-            if t = upload.thumbnail(resized_w, resized_h)
-              cooked_url = UrlHelper.cook_url(t.url)
-              srcset << ", #{cooked_url} #{ratio}x"
-            end
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+          elsif t = upload.thumbnail(resized_w, resized_h)
+            cooked_url = UrlHelper.cook_url(t.url)
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
           end
+
+          img["srcset"] = "#{UrlHelper.cook_url(img["src"])}#{srcset}" if srcset.present?
         end
-
-        img["srcset"] = "#{UrlHelper.cook_url(img["src"])}#{srcset}" if srcset.length > 0
-
       else
         img["src"] = upload.url
       end
