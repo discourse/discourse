@@ -29,8 +29,8 @@
       .filter-input,
       .filter-input:focus,
       .filter-input:active {
-        width: auto;
-        max-width: 90%; // Firefox quirk
+        flex: 0 0 auto;
+        width: 90%; // Firefox quirk
       }
 
       .filter-icon {
