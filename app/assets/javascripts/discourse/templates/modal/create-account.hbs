@@ -1,6 +1,6 @@
 {{#create-account email=accountEmail disabled=submitDisabled action="createAccount"}}
   {{#unless complete}}
-    {{#d-modal-body title="create_account.title"}}
+    {{#d-modal-body title="create_account.title" class=(concat (if hasAtLeastOneLoginButton "has-alt-auth") " " (if userFields "has-user-fields"))}}
           
       {{#unless hasAuthOptions}}
         {{login-buttons externalLogin="externalLogin"}}
