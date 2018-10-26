@@ -1,4 +1,121 @@
 module SvgSprite
+  SVG_ICONS ||= Set.new([
+    "anchor",
+    "angle-double-down",
+    "angle-double-up",
+    "angle-down",
+    "angle-up",
+    "archive",
+    "arrow-up",
+    "backward",
+    "bars",
+    "bold",
+    "book",
+    "bookmark",
+    "calendar-alt",
+    "caret-down",
+    "caret-left",
+    "caret-right",
+    "caret-up",
+    "certificate",
+    "chart-bar",
+    "chart-pie",
+    "check",
+    "chevron-down",
+    "circle",
+    "code",
+    "cog",
+    "columns",
+    "comment",
+    "copy",
+    "crosshairs",
+    "cube",
+    "desktop",
+    "download",
+    "ellipsis-h",
+    "envelope",
+    "envelope-square",
+    "exclamation-circle",
+    "exclamation-triangle",
+    "expand",
+    "fab-apple",
+    "fab-facebook-square",
+    "fab-twitter-square",
+    "far-bell-slash",
+    "far-calendar-plus",
+    "far-circle",
+    "far-clipboard",
+    "far-clock",
+    "far-comment",
+    "far-dot-circle",
+    "far-edit",
+    "far-envelope",
+    "far-eye",
+    "far-eye-slash",
+    "far-file-alt",
+    "far-frown",
+    "far-heart",
+    "far-image",
+    "far-list-alt",
+    "far-smile",
+    "far-square",
+    "far-trash-alt",
+    "fast-backward",
+    "fast-forward",
+    "flag",
+    "folder",
+    "forward",
+    "globe",
+    "heading",
+    "heart",
+    "info-circle",
+    "italic",
+    "key",
+    "link",
+    "list",
+    "list-ol",
+    "list-ul",
+    "lock",
+    "microphone-slash",
+    "minus",
+    "mobile-alt",
+    "paint-brush",
+    "pencil-alt",
+    "plus",
+    "power-off",
+    "question",
+    "question-circle",
+    "quote-left",
+    "quote-right",
+    "reply",
+    "rocket",
+    "search",
+    "share",
+    "shield-alt",
+    "sign-out-alt",
+    "sync",
+    "tasks",
+    "thumbtack",
+    "times",
+    "times-circle",
+    "trash-alt",
+    "undo",
+    "unlock",
+    "upload",
+    "user",
+    "user-plus",
+    "users",
+    "wrench"
+  ])
+
+  FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
+
+  def self.icons
+    SVG_ICONS.merge(SiteSetting.svg_icon_subset.split('|'))
+    SVG_ICONS.merge(DiscoursePluginRegistry.svg_icons)
+    SVG_ICONS.merge(badge_icons)
+  end
+
   def self.bundle
     require 'nokogiri'
 
@@ -18,17 +135,16 @@ module SvgSprite
       svg_filename = "#{File.basename(fname, ".svg")}"
 
       svg_file.css('symbol').each do |sym|
-        key = ''
+        icon_id = sym.attr('id')
+
         case svg_filename
         when "regular"
-          key = 'far-'
+          icon_id = icon_id.prepend('far-')
         when "brands"
-          key = 'fab-'
+          icon_id = icon_id.prepend('fab-')
         end
 
-        icon_id = key + sym.attr('id')
-
-        if SiteSetting.svg_icon_subset.split('|').include? icon_id
+        if icons.include? icon_id
           sym.attributes['id'].value = icon_id
           @svg_subset << sym.to_xml
         end
@@ -44,6 +160,15 @@ module SvgSprite
   end
 
   def self.path
-    "/svg-sprite/#{Discourse.current_hostname}/#{version SiteSetting.svg_icon_subset}.svg"
+    "/svg-sprite/#{Discourse.current_hostname}/#{version icons.to_s}.svg"
+  end
+
+  def self.badge_icons
+    Badge.all.pluck(:icon).uniq.each { |i| process(i) }
+  end
+
+  def self.process(icon_name)
+    FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
+    icon_name
   end
 end

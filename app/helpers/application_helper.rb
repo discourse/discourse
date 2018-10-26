@@ -424,6 +424,7 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path,
+      svg_icon_list: SvgSprite.icons,
     }
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

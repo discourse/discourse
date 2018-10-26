@@ -1,7 +1,5 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse/lib/attribute-hook";
-import svgSpriteLoader from "discourse/lib/svg-sprite-loader";
-import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -67,7 +65,6 @@ const fa4Replacements = {
   "line-chart": "chart-line",
   "linkedin-square": "fab-linkedin",
   "list-alt": "far-list-alt",
-  "list-ol": "list-ol",
   "mail-forward": "share",
   "mail-reply": "reply",
   "mail-reply-all": "reply-all",
@@ -240,33 +237,9 @@ function iconClasses(id, opts) {
   return classes;
 }
 
-// this needs a better solution
-window.svgIconsSubset = Discourse.SiteSettings.svg_icon_subset.split("|");
-
-// Push missing/deprecated icons to the svg subset automatically
-// May be a performance hog
-function pushToSubset(id) {
-
-  if (
-    Discourse.User.current() &&
-    Discourse.User.current().admin &&
-    window.svgIconsSubset.indexOf(id) === -1
-  ) {
-    console.log("missing from subset: " + id);
-
-    window.svgIconsSubset.push(id);
-    window.svgIconsSubset.sort();
-
-    Ember.run.cancel(window._lastSvgIconTimeout);
-
-    window._lastSvgIconTimeout = Ember.run.later(() => {
-      ajax("/admin/site_settings/svg_icon_subset", {
-        type: "PUT",
-        data: { svg_icon_subset: window.svgIconsSubset.join("|") }
-      }).then(() => {
-        svgSpriteLoader.load(Discourse.SvgSpritePath, "fontawesome");
-      });
-    }, 2000);
+function warnIfMissing(id) {
+  if (Discourse.SvgIconList.indexOf(id) === -1) {
+    console.warn(`The icon "${id}" is missing from the SVG subset.`);
   }
 }
 
@@ -275,26 +248,22 @@ function handleIconIds(icon) {
 
   if (fa4Replacements.hasOwnProperty(id)) {
     deprecated(
-      `Icon "${id}" is now "${
-        fa4Replacements[id]
-      }" in Font Awesome 5. Please update all references to it.`
+      `Icon "${id}" is now "${fa4Replacements[id]}" in Font Awesome 5.`
     );
     id = fa4Replacements[id];
-  } else if (id.indexOf("-o") > -1) {
+  } else if (id.substr(id.length - 2) === "-o") {
     let new_id = "far-" + id.replace("-o", "");
-    deprecated(
-      `Icon "${id}" is now "${new_id}" in Font Awesome 5. Please update all references to it.`
-    );
+    deprecated(`Icon "${id}" is now "${new_id}" in Font Awesome 5.`);
     id = new_id;
   }
 
-  pushToSubset(id);
+  warnIfMissing(id);
   return id;
 }
 
 // default resolver is font awesome
 registerIconRenderer({
-  name: "font-awesome-5",
+  name: "font-awesome",
 
   string(icon, opts) {
     let id = handleIconIds(icon);
@@ -303,7 +272,7 @@ registerIconRenderer({
     // ugly unpinned thumbtack hack
     id = id.replace(" unpinned", "");
 
-    return `<svg class="${classes}" xmlns="${SVG_NAMESPACE}" version="2"><use href="#${id}" /></svg>`;
+    return `<svg class="${classes}" xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
   },
 
   node(icon, opts) {
@@ -321,7 +290,7 @@ registerIconRenderer({
       },
       [
         h("use", {
-          href: attributeHook("http://www.w3.org/1999/xlink", `#${id}`),
+          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#${id}`),
           namespace: SVG_NAMESPACE
         })
       ]

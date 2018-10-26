@@ -1672,7 +1672,9 @@ uncategorized:
     min: 0
 
   svg_icon_subset:
-    default: '|anchor|angle-double-down|angle-double-up|angle-down|angle-up|archive|arrow-up|backward|bars|bold|book|bookmark|calendar-alt|caret-down|caret-right|caret-up|certificate|chart-bar|chart-pie|check|chevron-down|circle|code|cog|columns|comment|copy|crosshairs|cube|desktop|download|ellipsis-h|envelope|envelope-square|exclamation-circle|exclamation-triangle|expand|fab-apple|fab-facebook-square|fab-twitter-square|far-bell-slash|far-calendar-plus|far-circle|far-clipboard|far-clock|far-comment|far-dot-circle|far-edit|far-envelope|far-eye|far-eye-slash|far-file-alt|far-frown|far-heart|far-image|far-list-alt|far-listl|far-powerff|far-smile|far-square|far-trash-alt|fast-backward|fast-forward|flag|folder|forward|fw|globe|heart|info-circle|italic|key|link|list|list-ol|list-ul|lock|microphone-slash|minus|mobile-alt|paint-brush|pencil-alt|plus|question|question-circle|quote-left|quote-right|reply|rocket|search|share|shield-alt|sign-out-alt|sync|tasks|thumbtack|times|times-circle|trash-alt|undo|unlock|upload|user|user-plus|users|wrench'
+    default: ''
+    type: 'list'
+    list_type: 'compact'
     client: true
 
 user_preferences:

@@ -6,9 +6,13 @@ export default htmlHelper(function({ icon, image }) {
     return `<img src='${image}'>`;
   }
 
-  if (Ember.isEmpty(icon) || icon.indexOf("fa-") !== 0) {
+  if (Ember.isEmpty(icon) || icon.indexOf("fa-") < 0) {
     return "";
   }
 
-  return iconHTML(icon.replace("fa-", ""));
+  icon = icon.replace("far fa-", "far-");
+  icon = icon.replace("fab fa-", "fab-");
+  icon = icon.replace("fa-", "");
+
+  return iconHTML(icon);
 });
