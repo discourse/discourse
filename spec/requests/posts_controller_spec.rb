@@ -1173,6 +1173,25 @@ describe PostsController do
       end
     end
 
+    context "when post is hidden" do
+      before {
+        post.hidden = true
+        post.save
+      }
+
+      it "throws an exception for users" do
+        sign_in(Fabricate(:user))
+        get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "works for admins" do
+        sign_in(Fabricate(:admin))
+        get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
     context "when edit history is visible to everyone" do
 
       before { SiteSetting.edit_history_visible_to_public = true }
