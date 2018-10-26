@@ -19,7 +19,7 @@ class MetadataController < ApplicationController
     end
     file_info = get_file_info(logo)
 
-    display = request.user_agent =~ /iPad|iPhone/ ? 'browser' : 'standalone'
+    display = Regexp.new(SiteSetting.pwa_display_browser_regex).match(request.user_agent) ? 'browser' : 'standalone'
 
     manifest = {
       name: SiteSetting.title,
