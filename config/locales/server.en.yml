@@ -898,6 +898,13 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
+    most_disagreed_flaggers:
+      title: "Most disagreed flaggers"
+      labels:
+        user: User
+        agreed_flags: Agreed flags
+        disagreed_flags: Disagreed flags
+        score: Score
     moderators_activity:
       title: "Moderators activity"
       labels:
@@ -2725,7 +2732,7 @@ en:
         This is an automated message.
 
         The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
-        
+
         Please [review the user](%{user_url}).
 
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings. Consider adding %{domains} to the whitelist if they should be exempt.
