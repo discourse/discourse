@@ -1215,7 +1215,7 @@ class Report
                (SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) - SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)), 2) as score
       FROM post_actions AS pa
       INNER JOIN users AS u ON u.id = pa.user_id
-      WHERE pa.post_action_type_id IN (3, 4 , 8)
+      WHERE pa.post_action_type_id IN (#{PostActionType.flag_types.values.join(', ')})
         AND pa.user_id NOT IN (-1)
       GROUP BY u.id, u.username, u.silenced_till
       HAVING SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) > SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)
