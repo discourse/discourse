@@ -82,7 +82,7 @@ class UserAuthToken < ActiveRecord::Base
         path: path,
         auth_token: hashed_token)
 
-    if staff
+    if staff && path !~ /\/admin\/impersonate/
       Jobs.enqueue(:suspicious_login,
         user_id: user_id,
         client_ip: client_ip,
