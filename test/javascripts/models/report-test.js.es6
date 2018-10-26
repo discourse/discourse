@@ -515,4 +515,22 @@ QUnit.test("computed labels", assert => {
     "<a href='/t/-/2/3'>This is the beginning of</a>"
   );
   assert.equal(computedPostLabel.value, "This is the beginning of");
+
+  // subfolder support
+  Discourse.BaseUri = "/forum";
+
+  const postLink = computedLabels[5].compute(row).formatedValue;
+  assert.equal(
+    postLink,
+    "<a href='/forum/t/-/2/3'>This is the beginning of</a>"
+  );
+
+  const topicLink = computedLabels[4].compute(row).formatedValue;
+  assert.equal(topicLink, "<a href='/forum/t/-/2'>Test topic</a>");
+
+  const userLink = computedLabels[0].compute(row).formatedValue;
+  assert.equal(
+    userLink,
+    "<a href='/forum/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+  );
 });
