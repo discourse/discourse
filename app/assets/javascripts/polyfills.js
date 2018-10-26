@@ -43,6 +43,7 @@ if (typeof Object.assign !== 'function') {
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
+/* eslint-disable */
 if (!Array.prototype.includes) {
   Object.defineProperty(Array.prototype, 'includes', {
     value: function(searchElement, fromIndex) {
@@ -93,3 +94,4 @@ if (!Array.prototype.includes) {
     }
   });
 }
+/* eslint-enable */
