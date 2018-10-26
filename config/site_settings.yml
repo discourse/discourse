@@ -1665,6 +1665,10 @@ uncategorized:
 
   native_app_install_banner: false
 
+  pwa_display_browser_regex:
+    default: "iPad|iPhone"
+    hidden: true
+
   share_anonymized_statistics: true
 
   auto_handle_queued_age:
