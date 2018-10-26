@@ -101,6 +101,7 @@
     form,
     table {
       width: 100%;
+      display: block; //IE11
     }
 
     tr {
@@ -180,6 +181,7 @@
     }
     &:not(:empty),
     &:empty + td {
+      display: block;
       min-height: 1.75em;
       width: 240px;
     }
