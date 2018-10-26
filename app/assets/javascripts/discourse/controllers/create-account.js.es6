@@ -9,6 +9,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
+import { findAll } from "discourse/models/login-method";
 
 export default Ember.Controller.extend(
   ModalFunctionality,
@@ -175,6 +176,11 @@ export default Ember.Controller.extend(
         this.fetchExistingUsername();
       }
     }.observes("emailValidation", "accountEmail"),
+
+    // Determines whether at least one login button is enabled
+    hasAtLeastOneLoginButton: function() {
+      return findAll(this.siteSettings).length > 0;
+    }.property(),
 
     @on("init")
     fetchConfirmationValue() {
