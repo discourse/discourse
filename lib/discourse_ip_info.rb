@@ -35,6 +35,8 @@ class DiscourseIpInfo
           ret[:country_code] = result.country.iso_code
           ret[:region] = result.subdivisions.most_specific.name(locale) || result.subdivisions.most_specific.name
           ret[:city] = result.city.name(locale) || result.city.name
+          ret[:latitude] = result.location.latitude
+          ret[:longitude] = result.location.longitude
           ret[:location] = [ret[:city], ret[:region], ret[:country]].reject(&:blank?).join(", ")
         end
       rescue

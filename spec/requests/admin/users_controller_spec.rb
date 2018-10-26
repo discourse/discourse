@@ -726,6 +726,8 @@ RSpec.describe Admin::UsersController do
         hostname: "ip-81-2-69-142.example.com",
         location: "London, England, United Kingdom",
         region: "England",
+        latitude: 51.5142,
+        longitude: -0.0931,
       )
     end
   end

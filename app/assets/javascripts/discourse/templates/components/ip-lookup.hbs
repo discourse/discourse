@@ -23,7 +23,7 @@
         <dt>{{i18n 'ip_lookup.location'}}</dt>
         <dd>
           {{#if location.location}}
-            <a href="https://maps.google.com/maps?q={{unbound location.location}}" target="_blank">{{location.location}}</a>
+            <a href="https://maps.google.com/maps?q={{unbound location.latitude}},{{unbound location.longitude}}" target="_blank">{{location.location}}</a>
           {{else}}
             {{i18n 'ip_lookup.location_not_found'}}
           {{/if}}
