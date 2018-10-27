@@ -204,10 +204,6 @@ export default Ember.Controller.extend(
         bootbox.dialog(message, buttons, { classes: "delete-account" });
       },
 
-      showTwoFactorModal() {
-        showModal("second-factor-intro");
-      },
-
       revokeAccount(account) {
         const model = this.get("model");
         this.set("revoking", true);
