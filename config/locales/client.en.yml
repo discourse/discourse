@@ -875,10 +875,10 @@ en:
         show_all: "Show all ({{count}})"
         show_few: "Show fewer"
         was_this_you: "Was this you?"
-        was_this_you_description: "If it wasn't you who logged in, we recommend you to change your password and log out of all devices. We also recommend setting up second-factor authentication for a better protection of your account."
+        was_this_you_description: "If it wasn’t you, we recommend you change your password and log out everywhere."
         browser_and_device: "{{browser}} on {{device}}"
-        secure_account: "Secure my account"
-        latest_post: "You last posted..."
+        secure_account: "Secure my Account"
+        latest_post: "You last posted…"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
@@ -902,7 +902,7 @@ en:
         always: "always"
         never: "never"
       email_digests:
-        title: "When I don't visit here, send me an email summary of popular topics and replies"
+        title: "When I don’t visit here, send me an email summary of popular topics and replies"
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"

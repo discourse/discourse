@@ -6,9 +6,11 @@
 
   <div>
     <h3>{{i18n 'user.auth_tokens.details'}}</h3>
-    <p>{{d-icon "clock-o"}} {{format-date model.seen_at}}</p>
-    <p>{{d-icon "map-marker"}} {{model.location}}</p>
-    <p>{{d-icon model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=model.browser device=model.device}}</p>
+    <ul style="list-style-type:none">
+      <li>{{d-icon "clock-o"}} {{format-date model.seen_at}}</li>
+      <li>{{d-icon "map-marker"}} {{model.location}}</li>
+      <li>{{d-icon model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=model.browser device=model.device}}</li>
+    </ul>
   </div>
 
   {{#if latest_post}}
