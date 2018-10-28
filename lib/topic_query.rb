@@ -22,10 +22,6 @@ class TopicQuery
         int.call(x) && x.to_i.between?(0, PG_MAX_INT)
       end
 
-      one_up_to_max_int = lambda do |x|
-        int.call(x) && x.to_i.between?(1, PG_MAX_INT)
-      end
-
       array_int_or_int = lambda do |x|
         int.call(x) || (
           Array === x && x.length > 0 && x.all?(&int)
@@ -173,6 +169,19 @@ class TopicQuery
     if @user
       if topic.private_message?
 
+        # we start with related conversations cause they are the most relevant
+        if pm_params[:my_group_ids].present?
+          builder.add_results(related_messages_group(
+            pm_params.merge(count: [3, builder.results_left].max,
+                            exclude: builder.excluded_topic_ids)
+          ))
+        else
+          builder.add_results(related_messages_user(
+            pm_params.merge(count: [3, builder.results_left].max,
+                            exclude: builder.excluded_topic_ids)
+          ))
+        end
+
         builder.add_results(new_messages(
           pm_params.merge(count: builder.results_left)
         )) unless builder.full?
@@ -187,18 +196,7 @@ class TopicQuery
       end
     end
 
-    if topic.private_message?
-
-      builder.add_results(related_messages_group(
-        pm_params.merge(count: [3, builder.results_left].max,
-                        exclude: builder.excluded_topic_ids)
-      )) if pm_params[:my_group_ids].present?
-
-      builder.add_results(related_messages_user(
-        pm_params.merge(count: [3, builder.results_left].max,
-                        exclude: builder.excluded_topic_ids)
-      ))
-    else
+    if !topic.private_message?
       builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids)) unless builder.full?
     end
 
