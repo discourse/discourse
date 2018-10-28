@@ -3233,22 +3233,19 @@ en:
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
     suspicious_login:
-      title: "Suspicious Login Activity Detected"
-      subject_template: "Suspicious Login Activity Detected"
+      title: "Unusual Login Alert"
+      subject_template: "Unusual Login Alert"
       text_body_template: |
         Hello,
 
-        Suspicious login activity has been detected on your account. Check the details below for more information about this login.
+        We noticed a login from a device or location you don’t usually use. Was this you?
 
-         - IP: %{client_ip}
-         - Location: %{location}
+         - Location: %{location} (%{client_ip})
          - Browser: %{browser}
          - Device: %{device}
          - Operating System: %{os}
-
-        If you do not recognize this information, please reset your password to prevent future attacks on your account.
-
-        To strengthen your account's security, please enable second-factor authentication.
+         
+        If this was not you, please reset your password as soon as possible.
 
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
