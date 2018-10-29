@@ -110,7 +110,7 @@ module SvgSprite
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
 
-  def self.icons
+  def self.all_icons
     SVG_ICONS.merge(SiteSetting.svg_icon_subset.split('|'))
     SVG_ICONS.merge(DiscoursePluginRegistry.svg_icons)
     SVG_ICONS.merge(badge_icons)
@@ -119,6 +119,8 @@ module SvgSprite
 
   def self.bundle
     require 'nokogiri'
+
+    icons = all_icons
 
     @svg_subset = """
       <!--
