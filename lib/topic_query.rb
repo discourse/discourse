@@ -148,39 +148,43 @@ class TopicQuery
     pm_params =
       if topic.private_message?
 
-        group_ids = topic.topic_allowed_groups
+        my_group_ids = topic.topic_allowed_groups
           .joins("
             LEFT JOIN group_users gu
             ON topic_allowed_groups.group_id = gu.group_id
-            AND user_id = #{@user.id.to_i}
+            AND gu.user_id = #{@user.id.to_i}
           ")
           .where("gu.group_id IS NOT NULL")
           .pluck(:group_id)
 
+        target_group_ids = topic.topic_allowed_groups.pluck(:group_id)
+
+        target_users = topic
+          .topic_allowed_users
+
+        if my_group_ids.present?
+
+          # strip out users in groups you already belong to
+          target_users = target_users
+            .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND gu.group_id IN (#{sanitize_sql_array(my_group_ids)})")
+            .where('gu.group_id IS NULL')
+        end
+
+        target_user_ids = target_users
+          .where('NOT topic_allowed_users.user_id = ?', @user.id)
+          .pluck(:user_id)
+
         {
           topic: topic,
-          my_group_ids: group_ids,
-          target_group_ids: topic.topic_allowed_groups.pluck(:group_id),
-          target_user_ids: topic.topic_allowed_users.pluck(:user_id) - [@user.id]
+          my_group_ids: my_group_ids,
+          target_group_ids: target_group_ids,
+          target_user_ids: target_user_ids
         }
       end
 
     # When logged in we start with different results
     if @user
       if topic.private_message?
-
-        # we start with related conversations cause they are the most relevant
-        if pm_params[:my_group_ids].present?
-          builder.add_results(related_messages_group(
-            pm_params.merge(count: [3, builder.results_left].max,
-                            exclude: builder.excluded_topic_ids)
-          ))
-        else
-          builder.add_results(related_messages_user(
-            pm_params.merge(count: [3, builder.results_left].max,
-                            exclude: builder.excluded_topic_ids)
-          ))
-        end
 
         builder.add_results(new_messages(
           pm_params.merge(count: builder.results_left)
@@ -189,6 +193,18 @@ class TopicQuery
         builder.add_results(unread_messages(
           pm_params.merge(count: builder.results_left)
         )) unless builder.full?
+
+        if pm_params[:my_group_ids].present?
+          builder.add_results(related_messages_group(
+            pm_params.merge(count: [3, builder.results_left].max,
+                            exclude: builder.excluded_topic_ids)
+          ), :ultra_high)
+        else
+          builder.add_results(related_messages_user(
+            pm_params.merge(count: [3, builder.results_left].max,
+                            exclude: builder.excluded_topic_ids)
+          ), :ultra_high)
+        end
 
       else
         builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
@@ -830,16 +846,19 @@ class TopicQuery
   end
 
   def new_messages(params)
-    TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
+    query = TopicQuery
+      .new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
       .limit(params[:count])
+    query
   end
 
   def unread_messages(params)
-    TopicQuery.unread_filter(
+    query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
       @user&.id,
       staff: @user&.staff?)
       .limit(params[:count])
+    query
   end
 
   def related_messages_user(params)
