@@ -229,7 +229,7 @@ export function registerIconRenderer(renderer) {
 }
 
 function iconClasses(icon, params) {
-  let classNames = `d-icon d-icon-${icon.id} svg-icon`;
+  let classNames = `fa d-icon d-icon-${icon.id} svg-icon`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
@@ -258,11 +258,10 @@ function handleIconId(icon) {
     id = new_id;
   }
 
-  warnIfMissing(id);
-
-  // TODO: remove this ugly unpinned thumbtack hack
+  // TODO: the "unpinned thumbtack" icon should be replaced, but currently it's used in too many places
   id = id.replace(" unpinned", "");
 
+  warnIfMissing(id);
   return id;
 }
 

@@ -257,7 +257,7 @@
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
-      div i.fa {
+      div .fa {
         display: none;
       }
 
@@ -275,7 +275,6 @@
         padding: 0;
         > div {
           overflow: hidden; // clears the text from wrapping below icons
-          display: inline-flex;
         }
       }
 
@@ -286,7 +285,7 @@
     }
     li:not(.show-all) {
       padding: 0.25em 0.5em;
-      i {
+      svg {
         float: left;
         margin-right: 5px;
         padding-top: 2px;

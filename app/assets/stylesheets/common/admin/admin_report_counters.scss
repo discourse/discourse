@@ -23,7 +23,7 @@
           text-align: center;
         }
 
-        i {
+        svg {
           margin: 0;
         }
       }
@@ -41,13 +41,13 @@
 
       &.high-trending-up,
       &.trending-up {
-        i {
+        svg {
           color: $success;
         }
       }
       &.high-trending-down,
       &.trending-down {
-        i {
+        svg {
           color: $danger;
         }
       }

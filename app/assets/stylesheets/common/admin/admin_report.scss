@@ -61,7 +61,7 @@
 
     &.no-change {
       color: $primary-medium;
-      i {
+      svg {
         display: none;
       }
     }
@@ -90,15 +90,16 @@
     padding: 3em;
     border: 1px solid transparent;
 
+
     a {
       color: $primary-medium;
     }
 
     .d-icon {
       color: currentColor;
-      margin-bottom: 0.25em;
       font-size: $font-up-5;
       display: block;
+      margin: 0.25em auto;
     }
 
     &.no-data,

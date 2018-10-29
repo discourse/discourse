@@ -630,7 +630,7 @@ blockquote > *:last-child {
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
-    i {
+    svg {
       font-size: 2em;
       width: 45px;
       text-align: center;
@@ -742,7 +742,7 @@ a.mention-group {
       overflow: hidden;
     }
 
-    > i.fa {
+    > .fa {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 6px;
       font-size: $font-0;
