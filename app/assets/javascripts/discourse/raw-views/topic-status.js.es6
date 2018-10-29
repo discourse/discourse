@@ -49,7 +49,7 @@ export default Ember.Object.extend({
     }
 
     if (topic.get("unpinned")) {
-      results.push({ icon: "thumbtack unpinned", key: "unpinned" });
+      results.push({ icon: "thumbtack", key: "unpinned" });
     }
 
     if (topic.get("invisible")) {
@@ -74,7 +74,6 @@ export default Ember.Object.extend({
     if (results.length === 0 && defaultIcon) {
       this.set("showDefault", defaultIcon);
     }
-
     return results;
   }
 });

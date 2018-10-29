@@ -189,7 +189,7 @@ export default createWidget("topic-admin-menu", {
       buttons.push({
         className: "topic-admin-pin",
         action: "showFeatureTopic",
-        icon: "thumb-tack",
+        icon: "thumbtack",
         label: featured ? "actions.unpin" : "actions.pin"
       });
     }

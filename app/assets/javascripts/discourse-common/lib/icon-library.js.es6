@@ -228,13 +228,14 @@ export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
 }
 
-function iconClasses(id, opts) {
-  let classes = `d-icon d-icon-${id.replace(/\./, "-")}`;
-  if (opts.class) {
-    classes += ` ${opts.class}`;
+function iconClasses(icon, params) {
+  let classNames = `d-icon d-icon-${icon.id} svg-icon`;
+
+  if (params && params["class"]) {
+    classNames += " " + params["class"];
   }
 
-  return classes;
+  return classNames;
 }
 
 function warnIfMissing(id) {
@@ -243,7 +244,7 @@ function warnIfMissing(id) {
   }
 }
 
-function handleIconIds(icon) {
+function handleIconId(icon) {
   let id = icon.replacementId || icon.id || "";
 
   if (fa4Replacements.hasOwnProperty(id)) {
@@ -258,6 +259,10 @@ function handleIconIds(icon) {
   }
 
   warnIfMissing(id);
+
+  // TODO: remove this ugly unpinned thumbtack hack
+  id = id.replace(" unpinned", "");
+
   return id;
 }
 
@@ -266,21 +271,15 @@ registerIconRenderer({
   name: "font-awesome",
 
   string(icon, opts) {
-    let id = handleIconIds(icon);
-    let classes = iconClasses(id, opts) + " svg-icon svg-string";
-
-    // ugly unpinned thumbtack hack
-    id = id.replace(" unpinned", "");
+    let id = handleIconId(icon);
+    let classes = iconClasses(icon, opts) + " svg-string";
 
     return `<svg class="${classes}" xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
   },
 
   node(icon, opts) {
-    let id = handleIconIds(icon);
-    let classes = iconClasses(id, opts) + " svg-icon svg-node";
-
-    // ugly unpinned thumbtack hack
-    id = id.replace(" unpinned", "");
+    let id = handleIconId(icon);
+    let classes = iconClasses(icon, opts) + " svg-node";
 
     return h(
       "svg",

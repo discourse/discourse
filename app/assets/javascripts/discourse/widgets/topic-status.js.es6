@@ -37,8 +37,8 @@ export default createWidget("topic-status", {
       renderIconIf("archived", "lock", "archived");
     }
 
-    renderIconIf("pinned", "thumb-tack", "pinned");
-    renderIconIf("unpinned", "thumb-tack", "unpinned");
+    renderIconIf("pinned", "thumbtack", "pinned");
+    renderIconIf("unpinned", "thumbtack", "unpinned");
     renderIconIf("invisible", "eye-slash", "invisible");
 
     return result;

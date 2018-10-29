@@ -67,7 +67,7 @@ export default ComboBox.extend(TagsMixin, {
 
   @computed("hasReachedMaximum")
   caretIcon(hasReachedMaximum) {
-    return hasReachedMaximum ? null : "plus fa-fw";
+    return hasReachedMaximum ? null : "plus";
   },
 
   @computed("tags")
