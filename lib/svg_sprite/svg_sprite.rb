@@ -163,7 +163,7 @@ module SvgSprite
   end
 
   def self.path
-    "/svg-sprite/#{Discourse.current_hostname}/#{version icons.to_s}.svg"
+    "/svg-sprite/#{Discourse.current_hostname}/#{version all_icons.to_s}.svg"
   end
 
   def self.badge_icons
