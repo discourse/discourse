@@ -114,6 +114,7 @@ module SvgSprite
     SVG_ICONS.merge(SiteSetting.svg_icon_subset.split('|'))
     SVG_ICONS.merge(DiscoursePluginRegistry.svg_icons)
     SVG_ICONS.merge(badge_icons)
+    SVG_ICONS.merge(theme_icons)
   end
 
   def self.bundle
@@ -165,6 +166,20 @@ module SvgSprite
 
   def self.badge_icons
     Badge.all.pluck(:icon).uniq.each { |i| process(i) }
+  end
+
+  def self.theme_icons
+    theme_icon_settings = Array.new
+
+    Theme.all.each do |theme|
+      theme&.included_settings&.each do |name, value|
+        if name.to_s.include? "_icon"
+          theme_icon_settings |= [value]
+        end
+      end
+    end
+
+    theme_icon_settings.each { |i| process(i) }
   end
 
   def self.process(icon_name)
