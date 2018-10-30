@@ -246,7 +246,7 @@ function iconClasses(icon, params) {
 }
 
 function warnIfMissing(id) {
-  if (Discourse.SvgIconList.indexOf(id) === -1) {
+  if (Discourse && Discourse.SvgIconList && Discourse.SvgIconList.indexOf(id) === -1) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`);
   }
 }
@@ -265,7 +265,7 @@ function handleIconId(icon) {
     id = new_id;
   }
 
-  // TODO: the "unpinned thumbtack" icon should be replaced, but currently it's used in too many places
+  // TODO: replace "thumbtack unpinned" icon class (currently used in too many places)
   id = id.replace(" unpinned", "");
 
   warnIfMissing(id);
