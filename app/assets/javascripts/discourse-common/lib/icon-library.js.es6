@@ -189,6 +189,7 @@ const fa4Replacements = {
   warning: "exclamation-triangle",
   whatsapp: "fab-whatsapp",
   windows: "fab-windows",
+  yahoo: "fab-yahoo",
   youtube: "fab-youtube"
 };
 
@@ -246,8 +247,14 @@ function iconClasses(icon, params) {
 }
 
 function warnIfMissing(id) {
-  if (Discourse && Discourse.SvgIconList && Discourse.SvgIconList.indexOf(id) === -1) {
+  if (Discourse.SvgIconList && Discourse.SvgIconList.indexOf(id) === -1) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`);
+  }
+}
+
+function warnIfDeprecated(oldId, newId) {
+  if (Discourse.Environment === "development" && !Ember.testing) {
+    deprecated(`Icon "${oldId}" is now "${newId}".`);
   }
 }
 
@@ -255,14 +262,12 @@ function handleIconId(icon) {
   let id = icon.replacementId || icon.id || "";
 
   if (fa4Replacements.hasOwnProperty(id)) {
-    deprecated(
-      `Icon "${id}" is now "${fa4Replacements[id]}" in Font Awesome 5.`
-    );
+    warnIfDeprecated(id, fa4Replacements[id]);
     id = fa4Replacements[id];
   } else if (id.substr(id.length - 2) === "-o") {
-    let new_id = "far-" + id.replace("-o", "");
-    deprecated(`Icon "${id}" is now "${new_id}" in Font Awesome 5.`);
-    id = new_id;
+    let newId = "far-" + id.replace("-o", "");
+    warnIfDeprecated(id, newId);
+    id = newId;
   }
 
   // TODO: replace "thumbtack unpinned" icon class (currently used in too many places)
