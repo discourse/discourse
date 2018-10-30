@@ -46,6 +46,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       "user_notifications.account_created",
       "user_notifications.admin_login",
       "user_notifications.confirm_new_email",
+      "user_notifications.email_login",
       "user_notifications.forgot_password",
       "user_notifications.notify_old_email",
       "user_notifications.set_password",
