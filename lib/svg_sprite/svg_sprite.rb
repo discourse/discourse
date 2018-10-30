@@ -69,6 +69,7 @@ module SvgSprite
     "folder",
     "forward",
     "globe",
+    "globe-americas",
     "heading",
     "heart",
     "info-circle",
