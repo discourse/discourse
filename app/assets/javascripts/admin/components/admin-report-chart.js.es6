@@ -89,7 +89,12 @@ export default Ember.Component.extend({
           yAxes: [
             {
               display: true,
-              ticks: { callback: label => number(label) }
+              ticks: {
+                userCallback: label => {
+                  if (Math.floor(label) === label) return label;
+                },
+                callback: label => number(label)
+              }
             }
           ],
           xAxes: [
