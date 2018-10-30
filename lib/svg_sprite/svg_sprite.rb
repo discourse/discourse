@@ -164,6 +164,7 @@ module SvgSprite
 
         if icons.include? icon_id
           sym.attributes['id'].value = icon_id
+          sym.css('title').each { |t| t.remove }
           @svg_subset << sym.to_xml
         end
       end
