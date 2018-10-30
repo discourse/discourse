@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'discourse_ip_info'
 
 RSpec.describe Admin::UsersController do
   let(:admin) { Fabricate(:admin) }
@@ -710,19 +711,24 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#ip_info' do
-    it "uses ipinfo.io webservice to retrieve the info" do
-      ip = "192.168.1.1"
-      ip_data = {
-        city: "Jeddah",
-        country: "SA",
-        ip: ip
-      }
-      url = "https://ipinfo.io/#{ip}/json"
+    it "retrieves IP info" do
+      ip = "81.2.69.142"
 
-      stub_request(:get, url).to_return(status: 200, body: ip_data.to_json)
+      DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))
+      Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
+
       get "/admin/users/ip-info.json", params: { ip: ip }
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).symbolize_keys).to eq(ip_data)
+      expect(JSON.parse(response.body).symbolize_keys).to eq(
+        city: "London",
+        country: "United Kingdom",
+        country_code: "GB",
+        hostname: "ip-81-2-69-142.example.com",
+        location: "London, England, United Kingdom",
+        region: "England",
+        latitude: 51.5142,
+        longitude: -0.0931,
+      )
     end
   end
 

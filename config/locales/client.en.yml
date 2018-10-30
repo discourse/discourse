@@ -597,7 +597,7 @@ en:
       topics_entered: "topics entered"
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
 
     user_fields:
