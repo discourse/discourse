@@ -3,7 +3,7 @@
   <div class="controls">
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
-      {{#link-to "preferences.username" class="btn btn-small btn-icon pad-left no-text"}}
+      {{#link-to "preferences.username" class="btn btn-default btn-small btn-icon pad-left no-text"}}
       {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
@@ -37,7 +37,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -45,7 +45,7 @@
       </div>
     {{else}}
       <div class="controls">
-        {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+        {{d-button action="checkEmail" class="btn-default" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
   </div>
@@ -55,7 +55,7 @@
 <div class="control-group pref-password">
   <label class="control-label">{{i18n 'user.password.title'}}</label>
   <div class="controls">
-    <a href {{action "changePassword"}} class='btn'>
+    <a href {{action "changePassword"}} class='btn btn-default'>
       {{d-icon "envelope"}}
       {{#if model.no_password}}
         {{i18n 'user.change_password.set_password'}}
@@ -71,11 +71,11 @@
     {{#if model.second_factor_enabled}}
       {{i18n 'user.second_factor.disable'}}
     {{else}}
-      {{discourse-linked-text action="showTwoFactorModal" text="user.second_factor.enable"}}
+      {{i18n 'user.second_factor.enable'}}
     {{/if}}
 
     {{#if isCurrentUser}}
-      {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
+      {{#link-to "preferences.second-factor" class="btn btn-default btn-small btn-icon pad-left no-text"}}
         {{d-icon "pencil"}}
       {{/link-to}}
     {{/if}}
@@ -90,7 +90,7 @@
       {{/if}}
 
       {{#if isCurrentUser}}
-        {{#link-to "preferences.second-factor-backup" class="btn btn-small btn-icon pad-left no-text"}}
+        {{#link-to "preferences.second-factor-backup" class="btn btn-default btn-small btn-icon pad-left no-text"}}
           {{d-icon "pencil"}}
         {{/link-to}}
       {{/if}}
@@ -144,7 +144,7 @@
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
-      {{d-button action="showAvatarSelector" actionParam=model class="pad-left" icon="pencil"}}
+      {{d-button action="showAvatarSelector" actionParam=model class="btn-default pad-left" icon="pencil"}}
     </div>
   </div>
 {{/unless}}

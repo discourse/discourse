@@ -57,9 +57,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Determines whether at least one login button is enabled
-  hasAtLeastOneLoginButton: function() {
-    return findAll(this.siteSettings).length > 0;
-  }.property(),
+  @computed("canLoginLocalWithEmail")
+  hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
+    return findAll(this.siteSettings).length > 0 || canLoginLocalWithEmail;
+  },
 
   @computed("loggingIn")
   loginButtonLabel(loggingIn) {

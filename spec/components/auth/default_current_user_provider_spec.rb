@@ -32,7 +32,11 @@ describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct per-user api key" do
       user = Fabricate(:user)
       ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
-      expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
+      good_provider = provider("/?api_key=hello")
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(good_provider.is_api?).to eq(true)
+      expect(good_provider.is_user_api?).to eq(false)
+      expect(good_provider.should_update_last_seen?).to eq(false)
 
       user.update_columns(active: false)
 
@@ -399,6 +403,7 @@ describe Auth::DefaultCurrentUserProvider do
       expect(good_provider.current_user.id).to eq(user.id)
       expect(good_provider.is_api?).to eq(false)
       expect(good_provider.is_user_api?).to eq(true)
+      expect(good_provider.should_update_last_seen?).to eq(false)
 
       expect {
         provider("/", params.merge("REQUEST_METHOD" => "POST")).current_user

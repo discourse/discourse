@@ -898,6 +898,13 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
+    most_disagreed_flaggers:
+      title: "Most disagreed flaggers"
+      labels:
+        user: User
+        agreed_flags: Agreed flags
+        disagreed_flags: Disagreed flags
+        score: Score
     moderators_activity:
       title: "Moderators activity"
       labels:
@@ -1323,7 +1330,7 @@ en:
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_sso_logging: "Log verbose SSO related diagnostics to <a href='/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
+    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as a SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
@@ -2728,7 +2735,7 @@ en:
 
         Please [review the user](%{user_url}).
 
-        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
+        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings. Consider adding %{domains} to the whitelist if they should be exempt.
 
     unsilenced:
       title: "Unsilenced"
@@ -3224,6 +3231,22 @@ en:
         %{base_url}/u/activate-account/%{email_token}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+    suspicious_login:
+      title: "New Login Alert"
+      subject_template: "New Login Alert"
+      text_body_template: |
+        Hello,
+
+        We noticed a login from a device or location you don’t usually use. Was this you?
+
+         - Location: %{location} (%{client_ip})
+         - Browser: %{browser}
+         - Device: %{device} – %{os}
+
+        If this was you, great! There’s nothing else you need to do.
+
+        If this was not you, please reset your password as soon as possible.
 
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."

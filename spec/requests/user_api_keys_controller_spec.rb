@@ -48,7 +48,7 @@ describe UserApiKeysController do
     it "supports a head request cleanly" do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
-      expect(response.headers["Auth-Api-Version"]).to eq("2")
+      expect(response.headers["Auth-Api-Version"]).to eq("3")
     end
   end
 
@@ -156,7 +156,7 @@ describe UserApiKeysController do
 
       expect(parsed["nonce"]).to eq(args[:nonce])
       expect(parsed["push"]).to eq(false)
-      expect(parsed["api"]).to eq(2)
+      expect(parsed["api"]).to eq(3)
 
       key = user.user_api_keys.first
       expect(key.scopes).to include("push")

@@ -1,7 +1,7 @@
 import Button from "discourse/components/d-button";
 
 export default Button.extend({
-  classNames: ["share"],
+  classNames: ["btn-default", "share"],
   icon: "link",
   title: "topic.share.help",
   label: "topic.share.title",

@@ -13,6 +13,11 @@ export function isValidLink($link) {
 
 export default {
   trackClick(e) {
+    // right clicks are not tracked
+    if (e.which === 3) {
+      return true;
+    }
+
     // cancel click if triggered as part of selection.
     if (selectedText() !== "") {
       return false;

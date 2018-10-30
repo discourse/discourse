@@ -59,7 +59,7 @@
 
 <div class="clearfix list-actions">
     {{#if showToggleBulkSelect}}
-      <button {{action "toggleBulkSelect"}} class="btn bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
+      <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
         {{d-icon "list"}}
       </button>
     {{/if}}
@@ -71,19 +71,19 @@
     {{/if}}
 
     {{#if canArchive}}
-    <button {{action "archive"}} class="btn btn-archive">
+    <button {{action "archive"}} class="btn btn-default btn-archive">
       {{i18n "user.messages.move_to_archive"}}
     </button>
     {{/if}}
 
     {{#if canMoveToInbox}}
-    <button {{action "toInbox"}} class="btn btn-to-inbox">
+    <button {{action "toInbox"}} class="btn btn-default btn-to-inbox">
       {{i18n "user.messages.move_to_inbox"}}
     </button>
     {{/if}}
 
     {{#if bulkSelectEnabled}}
-    <button {{action "selectAll"}} class="btn btn-select-all">
+    <button {{action "selectAll"}} class="btn btn-default btn-select-all">
       {{i18n "user.messages.select_all"}}
     </button>
     {{/if}}

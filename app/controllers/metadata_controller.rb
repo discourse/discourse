@@ -19,13 +19,12 @@ class MetadataController < ApplicationController
     end
     file_info = get_file_info(logo)
 
-    display = request.user_agent =~ /iPad|iPhone/ ? 'browser' : 'standalone'
+    display = Regexp.new(SiteSetting.pwa_display_browser_regex).match(request.user_agent) ? 'browser' : 'standalone'
 
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: display,
-      orientation: 'any',
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
       background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
       theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",

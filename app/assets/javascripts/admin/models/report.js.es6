@@ -304,7 +304,7 @@ const Report = Discourse.Model.extend({
         avatar_template: row[properties.avatar]
       });
 
-      const href = `/admin/users/${userId}/${username}`;
+      const href = Discourse.getURL(`/admin/users/${userId}/${username}`);
 
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
@@ -327,7 +327,7 @@ const Report = Discourse.Model.extend({
 
     const formatedValue = () => {
       const topicId = row[properties.id];
-      const href = `/t/-/${topicId}`;
+      const href = Discourse.getURL(`/t/-/${topicId}`);
       return `<a href='${href}'>${topicTitle}</a>`;
     };
 
@@ -341,7 +341,7 @@ const Report = Discourse.Model.extend({
     const postTitle = row[properties.truncated_raw];
     const postNumber = row[properties.number];
     const topicId = row[properties.topic_id];
-    const href = `/t/-/${topicId}/${postNumber}`;
+    const href = Discourse.getURL(`/t/-/${topicId}/${postNumber}`);
 
     return {
       property: properties.title,
@@ -395,7 +395,7 @@ const Report = Discourse.Model.extend({
 
   _linkLabel(properties, row) {
     const property = properties[0];
-    const value = row[property];
+    const value = Discourse.getURL(row[property]);
     const formatedValue = (href, anchor) => {
       return `<a href="${escapeExpression(href)}">${escapeExpression(
         anchor

@@ -140,7 +140,7 @@ export default Ember.Component.extend({
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
     return Ember.makeArray(modes).map(mode => {
-      const base = `mode-btn ${mode}`;
+      const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 
       return {

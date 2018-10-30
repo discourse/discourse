@@ -185,7 +185,7 @@ GEM
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
     logster (1.2.11)
-    loofah (2.2.2)
+    loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
@@ -258,7 +258,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.64)
+    onebox (1.8.65)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -512,7 +512,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.64)
+  onebox (= 1.8.65)
   openid-redis-store
   pg
   pry-nav
@@ -557,4 +557,4 @@ DEPENDENCIES
   webpush
 
 BUNDLED WITH
-   1.16.6
+   1.17.0

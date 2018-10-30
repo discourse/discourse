@@ -5,10 +5,10 @@
 {{#if showDismissAtTop}}
   <div class="row">
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-    <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}>{{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
+    <button id='dismiss-new-top' class='btn btn-default dismiss-read' {{action "resetNew"}}>{{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
   </div>
 {{/if}}
@@ -69,10 +69,10 @@
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
+      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn btn-default dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}>
+      <button id='dismiss-new' class='btn btn-default dismiss-read' {{action "resetNew"}}>
         {{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
 

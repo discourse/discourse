@@ -334,7 +334,7 @@ login:
   verbose_sso_logging: false
   verbose_auth_token_logging:
     hidden: true
-    default: false
+    default: true
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -1664,6 +1664,10 @@ uncategorized:
     client: true
 
   native_app_install_banner: false
+
+  pwa_display_browser_regex:
+    default: "iPad|iPhone"
+    hidden: true
 
   share_anonymized_statistics: true
 

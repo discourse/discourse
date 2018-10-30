@@ -1,7 +1,7 @@
 <p>
   {{i18n 'admin.logs.screened_urls.description'}}
 </p>
-  <button class="btn" {{action "exportScreenedUrlList"}} title="{{i18n 'admin.export_csv.button_title.screened_url'}}">{{d-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+  <button class="btn btn-default" {{action "exportScreenedUrlList"}} title="{{i18n 'admin.export_csv.button_title.screened_url'}}">{{d-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
 <br>
 
 {{#conditional-loading-spinner condition=loading}}
