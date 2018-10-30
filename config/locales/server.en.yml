@@ -3234,7 +3234,7 @@ en:
 
     suspicious_login:
       title: "New Login Alert"
-      subject_template: "New Login Alert"
+      subject_template: "[%{site_name}] New Login from %{location}"
       text_body_template: |
         Hello,
 
@@ -3246,7 +3246,7 @@ en:
 
         If this was you, great! There’s nothing else you need to do.
 
-        If this was not you, please reset your password as soon as possible.
+        If this was not you, please [reset your %{site_name} password as soon as possible](%{base_url}/my/preferences/account).
 
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
