@@ -219,6 +219,13 @@ export function iconNode(id, params) {
   return renderIcon("node", id, params);
 }
 
+export function convertIconClass(icon) {
+  icon = icon.replace("far fa-", "far-");
+  icon = icon.replace("fab fa-", "fab-");
+  icon = icon.replace("fa-", "");
+  return icon;
+}
+
 // TODO: Improve how helpers are registered for vdom compliation
 if (typeof Discourse !== "undefined") {
   Discourse.__widget_helpers.iconNode = iconNode;

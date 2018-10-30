@@ -23,7 +23,7 @@
           text-align: center;
         }
 
-        svg {
+        .d-icon {
           margin: 0;
         }
       }
@@ -41,13 +41,13 @@
 
       &.high-trending-up,
       &.trending-up {
-        svg {
+        .d-icon {
           color: $success;
         }
       }
       &.high-trending-down,
       &.trending-down {
-        svg {
+        .d-icon {
           color: $danger;
         }
       }

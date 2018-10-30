@@ -35,6 +35,7 @@ module SvgSprite
     "desktop",
     "download",
     "ellipsis-h",
+    "ellipsis-v",
     "envelope",
     "envelope-square",
     "exclamation-circle",
@@ -120,6 +121,7 @@ module SvgSprite
     SVG_ICONS.merge(SiteSetting.svg_icon_subset.split('|'))
     SVG_ICONS.merge(DiscoursePluginRegistry.svg_icons)
     SVG_ICONS.merge(badge_icons)
+    SVG_ICONS.merge(group_icons)
     SVG_ICONS.merge(theme_icons)
   end
 
@@ -173,7 +175,11 @@ module SvgSprite
   end
 
   def self.badge_icons
-    Badge.all.pluck(:icon).uniq.each { |i| process(i) }
+    Badge.all.pluck(:icon).uniq.each { |icon| process(icon) }
+  end
+
+  def self.group_icons
+    Group.where("flair_url LIKE '%fa-%'").pluck(:flair_url).uniq.each { |icon| process(icon) }
   end
 
   def self.theme_icons

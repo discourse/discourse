@@ -6,7 +6,7 @@
   margin-left: 0;
 }
 
-h1 .topic-statuses .topic-status i {
+h1 .topic-statuses .topic-status .d-icon {
   font-size: 0.857em;
   vertical-align: middle;
 }
@@ -145,7 +145,7 @@ nav.post-controls {
         color: $primary;
       }
     }
-    i {
+    .d-icon {
       margin-left: 5px;
       font-size: $font-down-1;
     }
@@ -155,7 +155,7 @@ nav.post-controls {
     color: dark-light-choose($primary-high, $secondary-low);
     margin-left: 10px;
   }
-  .create i {
+  .create .d-icon {
     margin-right: 5px;
   }
   button {
@@ -369,7 +369,7 @@ nav.post-controls {
       line-height: $line-height-large;
     }
     .number,
-    i {
+    .d-icon {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-2;
       line-height: $line-height-medium;
@@ -461,7 +461,7 @@ nav.post-controls {
 
 #suggested-topics .topic-statuses .topic-status {
   padding: 0;
-  i {
+  .d-icon {
     font-size: 1em;
   }
 }
@@ -515,7 +515,7 @@ video {
     animation: fadein 0.7s;
   }
   .topic-statuses {
-    i {
+    .d-icon {
       color: $header_primary;
     }
     .d-icon-envelope {
@@ -806,7 +806,7 @@ $topic-avatar-width: 45px;
     font-size: $font-up-4;
     color: $primary;
     margin-bottom: 5px;
-    i {
+    .d-icon {
       margin-right: 7px;
     }
   }
