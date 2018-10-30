@@ -9,7 +9,10 @@ componentTest("default", {
     const html = this.$()
       .html()
       .trim();
-    assert.equal(html, '<svg class=\"fa d-icon d-icon-bars svg-icon svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use xlink:href=\"#bars\"></use></svg>');
+    assert.equal(
+      html,
+      '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#bars"></use></svg>'
+    );
   }
 });
 
@@ -22,7 +25,7 @@ componentTest("with replacement", {
       .trim();
     assert.equal(
       html,
-      '<svg class=\"fa d-icon d-icon-d-watching svg-icon svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use xlink:href=\"#exclamation-circle\"></use></svg>'
+      '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#exclamation-circle"></use></svg>'
     );
   }
 });
