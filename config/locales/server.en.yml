@@ -1118,6 +1118,16 @@ en:
       labels:
         user_agent: "User Agent"
         page_views: "Pageviews"
+    suspicious_logins:
+      title: "Suspcious Logins"
+      labels:
+        user: User
+        client_ip: Client IP
+        location: Location
+        browser: Browser
+        device: Device
+        os: Operating System
+        login_time: Login Time
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
