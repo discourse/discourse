@@ -79,12 +79,17 @@ describe PostAction do
       # Acting on the flag should not post an automated status message (since a moderator already replied)
       expect(topic.posts.count).to eq(2)
       PostAction.agree_flags!(post, admin)
+      expect(action.user.user_stat.flags_agreed).to eq(1)
+      expect(action.user.user_stat.flags_disagreed).to eq(0)
+
       topic.reload
       expect(topic.posts.count).to eq(2)
 
       # Clearing the flags should not post an automated status message
-      PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
+      new_action = PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
       PostAction.clear_flags!(post, admin)
+      expect(new_action.user.user_stat.flags_agreed).to eq(0)
+      expect(new_action.user.user_stat.flags_disagreed).to eq(1)
       topic.reload
       expect(topic.posts.count).to eq(2)
 
@@ -95,6 +100,9 @@ describe PostAction do
 
       expect(topic.posts.count).to eq(1)
       PostAction.agree_flags!(another_post, admin)
+      expect(action.user.user_stat.flags_agreed).to eq(2)
+      expect(action.user.user_stat.flags_disagreed).to eq(0)
+
       topic.reload
       expect(topic.posts.count).to eq(2)
       expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
@@ -361,7 +369,7 @@ describe PostAction do
 
         # If a flag is dismissed
         PostAction.clear_flags!(post, admin)
-        expect(PostAction.flag_counts_for(post.id)).to eq([8, 0])
+        expect(PostAction.flag_counts_for(post.id)).to eq([0, 8])
       end
     end
 
@@ -689,6 +697,7 @@ describe PostAction do
 
       SiteSetting.auto_respond_to_flag_actions = false
       PostAction.agree_flags!(post, admin)
+      expect(action.user.user_stat.flags_agreed).to eq(1)
 
       topic.reload
       expect(topic.posts.count).to eq(1)
@@ -704,6 +713,7 @@ describe PostAction do
 
       SiteSetting.auto_respond_to_flag_actions = true
       PostAction.agree_flags!(post, admin)
+      expect(action.user.user_stat.flags_agreed).to eq(1)
 
       user_notifications = user.notifications
       expect(user_notifications.count).to eq(1)
@@ -715,11 +725,12 @@ describe PostAction do
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")
-      topic = action.reload.related_post.topic
+      action.reload.related_post.topic
       expect(user.notifications.count).to eq(0)
 
       SiteSetting.auto_respond_to_flag_actions = true
       PostAction.agree_flags!(post, admin)
+      expect(action.user.user_stat.flags_agreed).to eq(0)
 
       user_notifications = user.notifications
       expect(user_notifications.count).to eq(0)
