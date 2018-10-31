@@ -15,9 +15,9 @@ export default Ember.Component.extend({
     return flairURL && flairURL.substr(0, 3) === "fa-";
   },
 
-  @computed("model.flair_url")
-  flairPreviewIconUrl(flairURL) {
-    return convertIconClass(flairURL);
+  @computed("model.flair_url", "flairPreviewIcon")
+  flairPreviewIconUrl(flairURL, flairPreviewIcon) {
+    return flairPreviewIcon ? convertIconClass(flairURL) : '';
   },
 
   @computed("model.flair_url", "flairPreviewIcon")
