@@ -18,9 +18,11 @@ class DiscourseIpInfo
     begin
       MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
     rescue Errno::ENOENT => e
-      Rails.logger.warn("MaxMindDB could not be found: #{e}")
-    rescue
-      Rails.logger.warn("MaxMindDB could not be loaded.")
+      Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
+      nil
+    rescue => e
+      Discourse.warn_exception(e, "MaxMindDB (#{filepath}) could not be loaded.")
+      nil
     end
   end
 
@@ -39,8 +41,8 @@ class DiscourseIpInfo
           ret[:longitude] = result.location.longitude
           ret[:location] = [ret[:city], ret[:region], ret[:country]].reject(&:blank?).join(", ")
         end
-      rescue
-        Rails.logger.error("IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
+      rescue => e
+        Discourse.warn_exception(e, "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
       end
     end
 
@@ -52,8 +54,8 @@ class DiscourseIpInfo
           ret[:asn] = result["autonomous_system_number"]
           ret[:organization] = result["autonomous_system_organization"]
         end
-      rescue
-        Rails.logger.error("IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
+      rescue => e
+        Discourse.warn_exception(e, "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
       end
     end
 
