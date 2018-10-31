@@ -34,7 +34,10 @@ export default Em.Mixin.create({
     const $upload = this.$();
     const reset = () =>
       this.setProperties({ uploading: false, uploadProgress: 0 });
-    const maxFiles = this.getWithDefault("maxFiles", 10);
+    const maxFiles = this.getWithDefault(
+      "maxFiles",
+      this.siteSettings.simultaneous_uploads
+    );
 
     $upload.on("fileuploaddone", (e, data) => {
       let upload = data.result;
@@ -56,8 +59,12 @@ export default Em.Mixin.create({
     );
 
     $upload.on("fileuploaddrop", (e, data) => {
-      if (data.files.length > maxFiles) {
-        bootbox.alert(I18n.t("post.errors.too_many_dragged_and_dropped_files"));
+      if (maxFiles > 0 && data.files.length > maxFiles) {
+        bootbox.alert(
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            max: maxFiles
+          })
+        );
         return false;
       } else {
         return true;
