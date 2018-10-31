@@ -1,7 +1,6 @@
 # encoding: utf-8
 #
-# Author: Erick Guan <fantasticfears@gmail.com>
-#
+# Author: Erick Guan <fantasticfears@gmail.com>, heavily modified by zh99998, Cryonyx & freeman
 # This script import the data from latest Discuz! X
 # Should work among Discuz! X3.x
 # This script is tested only on Simplified Chinese Discuz! X instances
@@ -14,39 +13,41 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::DiscuzX < ImportScripts::Base
 
-  DISCUZX_DB = "ultrax"
-  DB_TABLE_PREFIX = 'pre_'
+  DISCUZX_DB = "discuzx" #你原来的discuz数据库名
+  DB_TABLE_PREFIX = 'pre_' #你原来的discuz数据库表前缀
   BATCH_SIZE = 1000
-  ORIGINAL_SITE_PREFIX = "oldsite.example.com/forums" # without http(s)://
-  NEW_SITE_PREFIX      = "http://discourse.example.com"  # with http:// or https://
+  ORIGINAL_SITE_PREFIX = "www.infinity-game.com/bbs" # without http(s):// 你的discuz原始URL
+  NEW_SITE_PREFIX      = "https://forums.infinity-game.com"  # with http:// or https:// 你未来的discourse论坛URL
 
   # Set DISCUZX_BASE_DIR to the base directory of your discuz installation.
-  DISCUZX_BASE_DIR      = '/var/www/discuz/upload'
-  AVATAR_DIR            = '/uc_server/data/avatar'
-  ATTACHMENT_DIR        = '/data/attachment/forum'
-  AUTHORIZED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'pdf']
+  DISCUZX_BASE_DIR      = '/shared/bbs' #绝对路径
+  AVATAR_DIR            = '/uc_server/data/avatar' #相对上面DISCUZX_BASE_DIR的路径
+  ATTACHMENT_DIR        = '/data/attachment/forum' #相对上面DISCUZX_BASE_DIR的路径
+  AUTHORIZED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'pdf', 'doc']
 
   def initialize
     super
 
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      #password: "password",
+      host: "145.152.120.15", #你的discuz数据库IP
+      username: "root", #你的discuz数据库用户名
+      password: "ewiorewj", #你的discuz数据库密码
       database: DISCUZX_DB
     )
     @first_post_id_by_topic_id = {}
 
     @internal_url_regexps = [
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=viewthread(?:&|&amp;)tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/viewthread\.php\?tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=redirect(?:&|&amp;)goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/redirect\.php\?goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forumdisplay\.php\?fid=(?<fid>\d+)(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=forumdisplay(?:&|&amp;)fid=(?<fid>\d+)(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>index)\.php(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>stats)\.php(?:[^\[\]\s]*)/,
-      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/misc.php\?mod=(?<mod>stat|ranklist)(?:[^\[\]\s]*)/
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=viewthread(?:&|&amp;)tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/viewthread\.php\?tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=redirect(?:&|&amp;)goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/redirect\.php\?goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forumdisplay\.php\?fid=(?<fid>\d+)(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=forumdisplay(?:&|&amp;)fid=(?<fid>\d+)(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>index)\.php(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>stats)\.php(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/misc.php\?mod=(?<mod>stat|ranklist)(?:[^\[\]\s]*)/i,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/thread-(?<tid>\d+)-(?:[^\[\]\s]*)/i, #如果论坛开启了伪静态则需要
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum-(?<fid>\d+)-(?:[^\[\]\s]*)/i #如果论坛开启了伪静态则需要
     ]
 
   end
@@ -164,7 +165,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           email: user['email'],
           username: user['username'],
           name: first_exists(user['realname'], user['customstatus'], user['username']),
-          import_pass: user['password_hash'],
+          password_hash: user['password_hash'],
           active: true,
           salt: user['salt'],
           # TODO: title: user['customstatus'], # move custom title to name since discourse can't let user custom title https://meta.discourse.org/t/let-users-custom-their-title/37626
@@ -232,8 +233,12 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               end
             end
 
-            # we don't send email to the unconfirmed user
-            newmember.update(email_digests: user['email_confirmed'] == 1) if newmember.email_digests
+            # if user in discuz has email confirmed, confirm in discourse as well
+	    if user['email_confirmed'] == 1
+	    newmember.email_tokens.where(confirmed: false).update_all 'confirmed = true'
+	    end
+	    # we don't send email to the unconfirmed user
+	    newmember.user_option.update(email_digests: user['email_confirmed'] == 1) if newmember.user_option.email_digests
             newmember.update(name: '') if !newmember.name.blank? && newmember.name == (newmember.username)
           end
         }
@@ -323,11 +328,12 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                    p.dateline post_time,
                    p2.pid first_id,
                    p.invisible status,
-                   t.special special
+                   t.special special,
+                   t.views views
               FROM #{posts_table} p
-              JOIN #{posts_table} p2 ON p2.first AND p2.tid = p.tid
-              JOIN #{topics_table} t ON t.tid = p.tid
-              where t.tid < 10000
+              JOIN #{posts_table} p2 USING(tid)
+              JOIN #{topics_table} t USING(tid)
+              WHERE p2.first
              ORDER BY id ASC, topic_id ASC
              LIMIT #{BATCH_SIZE}
             OFFSET #{offset};
@@ -349,6 +355,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         if m['id'] == m['first_id']
           mapped[:category] = category_id_from_imported_category_id(m['category_id'])
           mapped[:title] = CGI.unescapeHTML(m['title'])
+          mapped[:views] = m['views'] #修复读取阅读数
 
           if m['special'] == 1
             results = mysql_query("
@@ -361,7 +368,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               FROM #{table_name 'forum_polloption'}
               WHERE tid = #{m['topic_id']}
               ORDER BY displayorder")
-            if results.empty?
+            if results.count < 1 #修复导入帖子时候报错undefined method `empty?'
               puts "WARNING: can't find poll options for topic #{m['topic_id']}, skip poll"
             else
               mapped[:raw].prepend "[poll#{poll['multiple'] ? ' type=multiple' : ''}#{poll['maxchoices'] > 0 ? " max=#{poll['maxchoices']}" : ''}]\n#{results.map { |option|'- ' + option['polloption'] }.join("\n")}\n[/poll]\n"
@@ -546,15 +553,49 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
   end
 
+  def get_dz_username(uid)
+    results = mysql_query(
+       "SELECT username 
+             FROM pre_common_member
+             WHERE uid=#{uid};")
+
+    if results.size < 1
+      nil
+    else
+      results.first['username']
+    end
+  end
+
   def process_discuzx_post(raw, import_id)
     # raw = process_and_upload_inline_images(raw)
     s = raw.dup
+
+    #转换帖子中的用户连接
+    s.gsub!(/http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/home\.php\?mod=space&uid=(\d+)(?:&\w+=\w+|&\w+)*/) do |link|
+      uid = $1
+      if uid.nil?
+        link
+      else
+        uname = get_dz_username(uid)
+        "#{NEW_SITE_PREFIX}/u/#{uname}"
+      end
+    end
+
+    s.gsub!(/\[url=home\.php\?mod=space&uid=(\d+)(?:&\w+=\w+|&\w+)*/) do |link|
+      uid = $1
+      if uid.nil?
+        link
+      else
+        uname = get_dz_username(uid)
+        "[url=#{NEW_SITE_PREFIX}/u/#{uname}"
+      end
+    end
 
     # Strip the quote
     # [quote] quotation includes the topic which is the same as reply to in Discourse
     # We get the pid to find the post number the post reply to. So it can be stripped
     s = s.gsub(/\[b\]回复 \[url=forum.php\?mod=redirect&goto=findpost&pid=\d+&ptid=\d+\].* 的帖子\[\/url\]\[\/b\]/i, '').strip
-    s = s.gsub(/\[b\]回复 \[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\].*?\[\/b\]/i, '').strip
+    s = s.gsub(/\[b\]回复 \[url=http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\].*?\[\/b\]/i, '').strip
 
     s.gsub!(/\[quote\](.*)?\[\/quote\]/im) do |matched|
       content = $1
@@ -562,33 +603,31 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       if post_import_id
         post_id = post_id_from_imported_post_id(post_import_id.to_i)
         if (post = Post.find_by(id: post_id))
-          "[quote=\"#{post.user.username}\", post: #{post.post_number}, topic: #{post.topic_id}]\n#{content}\n[/quote]"
+          "[quote=\"#{post.user.username}, post: #{post.post_number}, topic: #{post.topic_id}\"]\n#{content}\n[/quote]"  #修复引用的格式为discourse的标准
         else
           puts "post #{import_id} quote to not exists post #{post_import_id}, skip reply"
-          matched[0]
+          matched
         end
       else
-        matched[0]
+        matched
       end
     end
 
     s.gsub!(/\[size=2\]\[color=#999999\].*? 发表于 [\d\-\: ]*\[\/color\] \[url=forum.php\?mod=redirect&goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\]\[\/size\]/i, '')
-    s.gsub!(/\[size=2\]\[color=#999999\].*? 发表于 [\d\-\: ]*\[\/color\] \[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\]\[\/size\]/i, '')
+    s.gsub!(/\[size=2\]\[color=#999999\].*? 发表于 [\d\-\: ]*\[\/color\] \[url=http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\]\[\/size\]/i, '')
 
     # convert quote
-    s.gsub!(/\[quote\](.*?)\[\/quote\]/m) { "\n" + ($1.strip).gsub(/^/, '> ') + "\n" }
+    s.gsub!(/\[quote\](.*?)\[\/quote\]/mi) { "\n" + ($1.strip).gsub(/^/, '> ') + "\n" }
 
     # truncate line space, preventing line starting with many blanks to be parsed as code blocks
     s.gsub!(/^ {4,}/, '   ')
 
     # TODO: Much better to use bbcode-to-md gem
     # Convert image bbcode with width and height
-    s.gsub!(/\[img[^\]]*\]https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)\[\/img\]/i, '[x-attach]\1[/x-attach]') # dont convert attachment
-    s.gsub!(/<img[^>]*src="https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)".*?>/i, '[x-attach]\1[/x-attach]') # dont convert attachment
-    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/blog\/(.*)\[\/img\]/i, '[x-attach]../blog/\1[/x-attach]') # 私货
-    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/ucenter\/avatar.php\?uid=(\d+)[^\]]*\[\/img\]/i) { "[x-attach]#{discuzx_avatar_fullpath($1, false)[0]}[/x-attach]" } # 私货
-    s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
-    s.gsub!(/\[img\]([^\]]*)\[\/img\]/i, '<img src="\1">')
+    s.gsub!(/\[img[^\]]*\]http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*?)\[\/img\]/i, '[xattach]\1[/xattach]') # dont convert attachment
+    s.gsub!(/<img[^>]*src="http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*?)".*?>/i, '[xattach]\1[/xattach]') # dont convert attachment
+    s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*?)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
+    s.gsub!(/\[img\]([^\]]*?)\[\/img\]/i, '<img src="\1">')
 
     s.gsub!(/\[qq\]([^\]]*)\[\/qq\]/i, '<a href="http://wpa.qq.com/msgrd?V=3&Uin=\1&Site=[Discuz!]&from=discuz&Menu=yes" target="_blank"><!--<img src="static/image/common/qq_big.gif" border="0">-->QQ 交谈</a>')
 
@@ -636,9 +675,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # Convert code
     s.gsub!(/\[\/?code\]/i, "\n```\n")
 
-    # The edit notice should be removed
+    # 删除编辑标签
     # example: 本帖最后由 Helloworld 于 2015-1-28 22:05 编辑
-    s.gsub!(/\[i=s\] 本帖最后由[\s\S]*?编辑 \[\/i\]/, '')
+    s.gsub!(/\[i=s\] 本帖最后由[\s\S]*?编辑 \[\/i\]/i, '')
+    s.gsub!(/\[?\[i(.*?)\] 本帖最后由[\s\S]*?编辑 \[\/i\]\]?/i, '') #dz7以下版本格式
 
     # Convert the custom smileys to emojis
     # `{:cry:}` to `:cry`
@@ -647,15 +687,41 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # Replace internal forum links that aren't in the <!-- l --> format
     # convert list tags to ul and list=1 tags to ol
     # (basically, we're only missing list=a here...)
-    s.gsub!(/\[list\](.*?)\[\/list:u\]/m, '[ul]\1[/ul]')
-    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/m, '[ol]\1[/ol]')
+    s.gsub!(/\[list\](.*?)\[\/list(?::u)?\]/mi, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list(?::o)?\]/mi, '[ol]\1[/ol]')
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
     s.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+
+    # convert table
+    # 转换表格里的特殊内容
+    s.gsub!(/\[table(?:.*?)\](.*?)\[\/table\]/im) do |tbl|
+      # 转换加粗
+      tbl.gsub!(/\[b\](.*?)\[\/b\]/i, '<b>\1</b>')
+
+      # 转换超链接
+      tbl.gsub!(/\[url=(.*?)\](.*?)\[\/url\]/i, '<a href=\'\1\'>\2</a>')
+      #tbl.gsub!(/\[url\](.*?)\[\/url\]/i, '<a>\1</a>')
+
+      tbl
+    end
+
+    s.gsub!(/\[td\]/i, '<td>')
+    s.gsub!(/\[\/td\]/i, '</td>')
+    s.gsub!(/\[tr\]/i, '<tr>')
+    s.gsub!(/\[\/tr\]/i, '</tr>')
+    s.gsub!(/\[table\]/i, '<table>')
+    s.gsub!(/\[table=(.*)\]/, '<table width=\1>')
+    s.gsub!(/\[\/table\]/i, '</table>')
+
+    # 转换列表
+    s.gsub!(/\[\*\](.*)/, '* \1')
+    s.gsub!(/\[list.*\]/, '')
+    s.gsub!(/\[\/list\]/, '')
 
     # Discuz can create PM out of a post, which will generates like
     # [url=http://example.com/forum.php?mod=redirect&goto=findpost&pid=111&ptid=11][b]关于您在“主题名称”的帖子[/b][/url]
     s.gsub!(pm_url_regexp) do |discuzx_link|
-      replace_internal_link(discuzx_link, $1)
+      replace_internal_link(discuzx_link, ($~[:tid].to_i rescue nil), ($~[:pid].to_i rescue nil), ($~[:fid].to_i rescue nil), ($~[:action] rescue nil))
     end
 
     # [url][b]text[/b][/url] to **[url]text[/url]**
@@ -732,8 +798,8 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     setting = AUTHORIZED_EXTENSIONS.join('|')
     SiteSetting.authorized_extensions = setting if setting != SiteSetting.authorized_extensions
 
-    attachment_regex = /\[attach\](\d+)\[\/attach\]/
-    attachment_link_regex = /\[x-attach\](.+)\[\/x-attach\]/
+    attachment_regex = /\[attach\](\d+?)\[\/attach\]/
+    attachment_link_regex = /\[xattach\](.+?)\[\/xattach\]/
 
     current_count = 0
     total_count = mysql_query("SELECT count(*) count FROM #{table_name 'forum_post'};").first['count']
@@ -804,7 +870,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: '从 Discuz 中导入附件')
+        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: '从 Discuz 中导入附件' })
       end
 
       success_count += 1
@@ -838,7 +904,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     case raw
     when /\[url=forum.php\?mod=redirect&goto=findpost&pid=(\d+)&ptid=\d+\]/ #standard
       $1
-    when /\[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=(\d+)&ptid=\d+\]/ # old discuz 7 format
+    when /\[url=http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=(\d+)&ptid=\d+\]/ # old discuz 7 format
       $1
     when /\[quote\][\S\s]*pid=(\d+)[\S\s]*\[\/quote\]/ # quote
       $1
@@ -948,7 +1014,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   end
 
   def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
+    @client.query(sql, cache_rows: false).to_a
   end
 end
 
