@@ -409,7 +409,7 @@ tr_TR:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Uygunsuz'
-      description: 'Bu gönderi saldırgan, kötüleyici ya da <a href="%{base_url}/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
+      description: 'Bu gönderi saldırgan, kötüleyici ya da <a href="/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
       long_form: 'bunu uygunsuz olarak bildirdi'
     notify_user:
       title: '@{{username}} adlı kullanıcıya ileti gönder'
@@ -438,11 +438,11 @@ tr_TR:
       long_form: 'bunu istenmeyen olarak bildirdi'
     inappropriate:
       title: 'Uygunsuz'
-      description: 'Bu konu saldırgan, kötüleyici ya da <a href="%{base_url}/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
+      description: 'Bu konu saldırgan, kötüleyici ya da <a href="/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
       long_form: 'bunu uygunsuz olarak bildirdi'
     notify_moderators:
       title: "Başka Bir Şey"
-      description: 'Bu gönderi <a href="%{base_url}/guidelines">yönergeler</a>, <a href="%{tos_url}">hizmet şartları</a> veya başka herhangi bir nedenden dolayı görevli incelemesi gerektirmektedir.'
+      description: 'Bu gönderi <a href="/guidelines">yönergeler</a>, <a href="%{tos_url}">hizmet şartları</a> veya başka herhangi bir nedenden dolayı görevli incelemesi gerektirmektedir.'
       long_form: 'bunu moderatörün ilgisi için bildirdi'
       email_title: '"%{title}" konu başlığının moderatör tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
@@ -612,11 +612,11 @@ tr_TR:
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
     queue_size_warning: 'Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
-    google_oauth2_config_warning: 'Sunucu Google OAuth2 (enable_google_oauth2_logins) ile üyelik oluşturulması ve giriş yapılmasına elveriyor, fakat the kullanıcı IDsi and gizli kullanıcı değerleri henüz ayarlanmamış. <a href="%{base_url}/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
-    facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat app ID ve gizli app değerleri henüz ayarlanmamış. <a href="%{base_url}/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
-    twitter_config_warning: 'Sunucu Twitter (enable_twitter_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat anahtar ve gizli değerler henüz ayarlanmamış. <a href="%{base_url}/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
-    github_config_warning: 'Sunucu GitHub (enable_github_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat kullanıcı IDsi ve gizli değerler henüz ayarlanmamış. <a href="%{base_url}/admin/site_settings">Site Ayarları</a> sayfasına gidin ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
-    failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="%{base_url}/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
+    google_oauth2_config_warning: 'Sunucu Google OAuth2 (enable_google_oauth2_logins) ile üyelik oluşturulması ve giriş yapılmasına elveriyor, fakat the kullanıcı IDsi and gizli kullanıcı değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
+    facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat app ID ve gizli app değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
+    twitter_config_warning: 'Sunucu Twitter (enable_twitter_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat anahtar ve gizli değerler henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
+    github_config_warning: 'Sunucu GitHub (enable_github_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat kullanıcı IDsi ve gizli değerler henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
+    failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
     bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
@@ -1334,7 +1334,7 @@ tr_TR:
     search_title: "Bu sitede ara"
   terms_of_service:
     title: "Üyelik Sözleşmesi"
-    signup_form_message: '<a href="%{base_url}/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'
+    signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'
   deleted: 'silindi'
   upload:
     edit_reason: "resimlerin yerel kopyaları indirildi"

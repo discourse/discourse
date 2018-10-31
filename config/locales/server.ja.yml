@@ -375,7 +375,7 @@ ja:
       long_form: '不適切として通報する'
     notify_moderators:
       title: "その他"
-      description: 'このトピックは <a href="%{base_url}/guidelines">ガイドライン</a>, <a href="%{tos_url}">利用規約</a>の違反や、その他不適切な理由がある。'
+      description: 'このトピックは <a href="/guidelines">ガイドライン</a>, <a href="%{tos_url}">利用規約</a>の違反や、その他不適切な理由がある。'
       long_form: 'モデレーターへ知らせるために通報する'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
@@ -537,10 +537,10 @@ ja:
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
     queue_size_warning: 'キューイングされたジョブの数は %{queue_size} で、これは多いです。SIdekiqのプロセスに問題があるか、Sidekiqのworkerを増やす必要があります'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
-    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="%{base_url}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="%{base_url}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="%{base_url}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="%{base_url}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
@@ -986,7 +986,7 @@ ja:
     search_google: "Google"
   terms_of_service:
     title: "利用規約"
-    signup_form_message: '<a href="%{base_url}/tos" target="_blank">Terms of Service</a>を読んで同意しました'
+    signup_form_message: '<a href="/tos" target="_blank">Terms of Service</a>を読んで同意しました'
   deleted: '削除'
   upload:
     edit_reason: "ダウンロードされた画像のコピー"

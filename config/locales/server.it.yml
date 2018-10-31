@@ -642,7 +642,7 @@ it:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriato'
-      description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="%{base_url}/guidelines">linee guida della comunità</a>.'
+      description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       short_description: 'Una violazione delle </a>linee guida della nostra comunità </a>'
       long_form: 'segnalato come inappropriato'
     notify_user:
@@ -688,11 +688,11 @@ it:
       long_form: 'segnalato come spam'
     inappropriate:
       title: 'Inappropriato'
-      description: 'Questo argomento ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="%{base_url}/guidelines">linee guida della comunità</a>.'
+      description: 'Questo argomento ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_moderators:
       title: "Altro"
-      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="%{base_url}/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
+      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
       long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
@@ -923,11 +923,11 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
-    google_oauth2_config_warning: 'Il server è configurato per permettere iscrizioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="%{base_url}/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
-    facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="%{base_url}/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
-    twitter_config_warning: 'Il server è configurato per accettare iscrizioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="%{base_url}/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
-    github_config_warning: 'Il server è configurato per accettare iscrizioni e login con GitHub (enable_github_logins), tuttavia i parametri client id e secret non sono stati impostati. Vai alle <a href="%{base_url}/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
-    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="%{base_url}/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
+    google_oauth2_config_warning: 'Il server è configurato per permettere iscrizioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
+    facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
+    twitter_config_warning: 'Il server è configurato per accettare iscrizioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
+    github_config_warning: 'Il server è configurato per accettare iscrizioni e login con GitHub (enable_github_logins), tuttavia i parametri client id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
+    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
@@ -2335,7 +2335,7 @@ it:
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
   terms_of_service:
     title: "Termini di Servizio"
-    signup_form_message: 'Ho letto e accetto i <a href="%{base_url}/tos" target="_blank">Termini del Servizio</a>.'
+    signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellati'
   image: "immagine"
   upload:

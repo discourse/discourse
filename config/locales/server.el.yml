@@ -548,8 +548,8 @@ el:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ανάρμοστο'
-      description: 'Το περιεχόμενο αυτής της δημοσίευσης θα θεωρούνταν από κάθε λογικό άνθρωπο, προσβλητικό, καταχρηστικό ή αντίθετο με τις  <a href="%{base_url}/guidelines">οδηγίες χρήσης της κοινότητάς μας</a>'
-      short_description: 'Παράβαση των <a href="%{base_url}/guidelines">Οδηγιών της Κοινότητας</a>'
+      description: 'Το περιεχόμενο αυτής της δημοσίευσης θα θεωρούνταν από κάθε λογικό άνθρωπο, προσβλητικό, καταχρηστικό ή αντίθετο με τις  <a href="/guidelines">οδηγίες χρήσης της κοινότητάς μας</a>'
+      short_description: 'Παράβαση των <a href="/guidelines">Οδηγιών της Κοινότητας</a>'
       long_form: 'το επισήμαναν ως ανάρμοστο'
     notify_user:
       title: 'Αποστολή μηνύματος στον @{{username}} '
@@ -592,11 +592,11 @@ el:
       long_form: 'το επισήμαναν ως ανεπιθύμητο'
     inappropriate:
       title: 'Ανάρμοστο'
-      description: 'Αυτό το θέμα έχει περιεχόμενο το οποίο θα θεωρούνταν από κάθε λογικό άνθρωπο προσβλητικό, καταχρηστικό ή αντίθετο με τις  <a href="%{base_url}/guidelines">οδηγίες χρήσης της κοινότητας μας</a>.'
+      description: 'Αυτό το θέμα έχει περιεχόμενο το οποίο θα θεωρούνταν από κάθε λογικό άνθρωπο προσβλητικό, καταχρηστικό ή αντίθετο με τις  <a href="/guidelines">οδηγίες χρήσης της κοινότητας μας</a>.'
       long_form: 'το επισήμαναν ως ανάρμοστο'
     notify_moderators:
       title: "Κάτι άλλο"
-      description: 'Το θέμα απαιτεί την γενική προσοχή του προσωπικού, βασισμένη στις <a href="%{base_url}/guidelines">κατευθυντήριες γραμμές</a>, τους<a href="%{tos_url}">όρους χρήσης</a> ή για άλλο λόγο που δεν αναφέρεται πιο πάνω.'
+      description: 'Το θέμα απαιτεί την γενική προσοχή του προσωπικού, βασισμένη στις <a href="/guidelines">κατευθυντήριες γραμμές</a>, τους<a href="%{tos_url}">όρους χρήσης</a> ή για άλλο λόγο που δεν αναφέρεται πιο πάνω.'
       long_form: 'το επισήμαναν για έλεγχο από συντονιστή'
       email_title: 'Το θέμα "%{title}" χρειάζεται έλεγχο από συντονιστή'
       email_body: "%{link}\n\n%{message}"
@@ -782,11 +782,11 @@ el:
       <a href="https://github.com/mperham/sidekiq" target="_blank">Περισσότερα για το Sidekiq εδώ</a>.'
     queue_size_warning: 'Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής  είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. '
     memory_warning: 'Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης.'
-    google_oauth2_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Google OAuth2 (enable_google_oauth2_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="%{base_url}/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
-    facebook_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Facebook (enable_facebook_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="%{base_url}/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
-    twitter_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Twitter  (enable_twitter_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="%{base_url}/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
-    github_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με GitHub  (enable_github_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="%{base_url}/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
-    failing_emails_warning: 'Υπάρχουν %{num_failed_jobs} εργασίες email οι οποίες απέτυχαν. Ελέγξτε το app.yml  και βεβαιωθείτε πως οι ρυθμίσεις του mail server σας είναι σωστές.  <a href="%{base_url}/sidekiq/retries" target="_blank">Δείτε τις αποτυχημένες εργασίες στο Sidekiq</a>.'
+    google_oauth2_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Google OAuth2 (enable_google_oauth2_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
+    facebook_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Facebook (enable_facebook_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
+    twitter_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με Twitter  (enable_twitter_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
+    github_config_warning: 'Ο server είναι ρυθμισμένος να επιτρέπει την εγγραφή και την είσοδο με GitHub  (enable_github_logins), αλλά η ταυτότητα του πελάτη και οι μυστικές τιμές δεν έχουν οριστεί. Πηγαίνετε στις <a href="/admin/site_settings">Ρυθμίσεις Σελίδας</a> και ανανεώστε τις ρυθμίσεις. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Δείτε τον οδηγό για περισσότερα</a>.'
+    failing_emails_warning: 'Υπάρχουν %{num_failed_jobs} εργασίες email οι οποίες απέτυχαν. Ελέγξτε το app.yml  και βεβαιωθείτε πως οι ρυθμίσεις του mail server σας είναι σωστές.  <a href="/sidekiq/retries" target="_blank">Δείτε τις αποτυχημένες εργασίες στο Sidekiq</a>.'
     subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη.  "
     email_polling_errored_recently:
       one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.   "
@@ -2174,7 +2174,7 @@ el:
       Παρακαλούμε δημιουργήστε έναν λογαριασμό ή συνδεθείτε για να συνεχίσετε..
   terms_of_service:
     title: "Όροι Χρήσης"
-    signup_form_message: 'Έχω διαβάσει και αποδέχομαι τους <a href="%{base_url}/tos" target="_blank">Όρους Χρήσης</a>.'
+    signup_form_message: 'Έχω διαβάσει και αποδέχομαι τους <a href="/tos" target="_blank">Όρους Χρήσης</a>.'
   deleted: 'διεγράφη'
   image: "εικόνα"
   upload:

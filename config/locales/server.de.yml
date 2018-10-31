@@ -670,8 +670,8 @@ de:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Unangemessen'
-      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_url}/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
-      short_description: 'Ein Verstoß gegen <a href="%{base_url}/guidelines">unsere Community-Richtlinien</a>'
+      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
+      short_description: 'Ein Verstoß gegen <a href="/guidelines">unsere Community-Richtlinien</a>'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: 'Schreibe @{{username}} eine Nachricht'
@@ -720,12 +720,12 @@ de:
       short_description: 'Dies ist ist Werbung'
     inappropriate:
       title: 'Unangemessen'
-      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_url}/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
+      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'als unangemessen gemeldet'
-      short_description: 'Ein Verstoß gegen <a href="%{base_url}/guidelines">unsere Community-Richtlinien</a>'
+      short_description: 'Ein Verstoß gegen <a href="/guidelines">unsere Community-Richtlinien</a>'
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: 'Dieser Beitrag erfordert die allgemeine Aufmerksamkeit des Teams, da er entweder nicht mit den <a href="%{base_url}/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus anderen Gründen.'
+      description: 'Dieser Beitrag erfordert die allgemeine Aufmerksamkeit des Teams, da er entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus anderen Gründen.'
       long_form: ' hast dies den Moderatoren gemeldet'
       short_description: 'Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams'
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
@@ -1007,10 +1007,10 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von E-Mails, werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: 'Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
-    google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google OAuth2 (enable_google_oauth2_logins)  konfiguriert, aber die Client-ID und das Client-Gemeheimnis sind nicht gesetzt. Trage diese in den <a href="%{base_url}/admin/site_settings">Einstellung</a> ein. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Eine Anleitung zu diesem Thema findest du hier</a>.'
-    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_url}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_url}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_url}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google OAuth2 (enable_google_oauth2_logins)  konfiguriert, aber die Client-ID und das Client-Gemeheimnis sind nicht gesetzt. Trage diese in den <a href="/admin/site_settings">Einstellung</a> ein. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Eine Anleitung zu diesem Thema findest du hier</a>.'
+    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
@@ -2716,7 +2716,7 @@ de:
       Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an.
   terms_of_service:
     title: "Nutzungsbedingungen"
-    signup_form_message: 'Ich habe die <a href="%{base_url}/tos" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiert.'
+    signup_form_message: 'Ich habe die <a href="/tos" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiert.'
   deleted: 'gelöscht'
   image: "Bild"
   upload:

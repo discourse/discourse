@@ -540,7 +540,7 @@ ru:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Неприемлемо'
-      description: 'Это сообщение может быть оскорбительным или нарушает <a href="%{base_url}/guidelines">правила поведения</a>.'
+      description: 'Это сообщение может быть оскорбительным или нарушает <a href="/guidelines">правила поведения</a>.'
       long_form: 'отметить как неуместное'
     notify_user:
       title: 'Отправить @{{username}} личное сообщение'
@@ -575,7 +575,7 @@ ru:
       long_form: 'отмечено как спам'
     inappropriate:
       title: 'Неуместно'
-      description: 'Эта тема может быть сочтена оскорбительной или нарушает <a href="%{base_url}/guidelines">правила поведения на сайте</a>.'
+      description: 'Эта тема может быть сочтена оскорбительной или нарушает <a href="/guidelines">правила поведения на сайте</a>.'
       long_form: 'отмеченно как неуместное'
     notify_moderators:
       title: "Другое"
@@ -756,10 +756,10 @@ ru:
     host_names_warning: "Ваш файл config/database.yml использует локальное имя хоста по умолчанию. Поменяйте его на имя хоста вашего сайта."
     sidekiq_warning: 'Sidekiq не запущен. Сейчас многие задачи, такие как отправка электронных писем, выполняются асинхронно.  Пожалуйста, убедитесь, что хотя бы один процесс sidekiq запущен. <a href="https://github.com/mperham/sidekiq">Узнайте больше о  Sidekiq здесь</a>.'
     memory_warning: 'Общее количество памяти, используемое вашим сервером, составляет менее 1 GB. Рекомендовано использовать минимум 1 GB.'
-    google_oauth2_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Google OAuth2 (enable_google_oauth2_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="%{base_url}/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
-    facebook_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Facebook (enable_facebook_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="%{base_url}/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
-    twitter_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Twitter (enable_twitter_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="%{base_url}/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
-    github_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи GitHub (enable_github_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="%{base_url}/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
+    google_oauth2_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Google OAuth2 (enable_google_oauth2_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
+    facebook_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Facebook (enable_facebook_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
+    twitter_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи Twitter (enable_twitter_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
+    github_config_warning: 'Сервер позволяет регистрацию и вход на сайт с использованием учетной записи GitHub (enable_github_logins), но id и секретные значения не заданы. Пройдите в раздел <a href="/admin/site_settings">Настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Ознакомьтесь с данным руководством для получения дополнительной информации</a>.'
   site_settings:
     censored_words: "Слова, которые будут автоматически заменены на &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Автоматически удалять сообщения, скрытые дольше чем 30 дней."
@@ -1320,7 +1320,7 @@ ru:
     search_button: "Поиск"
   terms_of_service:
     title: "Условия предоставления услуг"
-    signup_form_message: 'Я прочитал(а) и согласен(а) с <a href="%{base_url}/tos" target="_blank">пользовательским соглашением</a>.'
+    signup_form_message: 'Я прочитал(а) и согласен(а) с <a href="/tos" target="_blank">пользовательским соглашением</a>.'
   deleted: 'удалено'
   upload:
     edit_reason: "загружены и сохранены локально использованные с других сайтов картинки"

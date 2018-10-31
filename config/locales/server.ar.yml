@@ -626,8 +626,8 @@ ar:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'غير مناسب'
-      description: 'محتوي هذا المنشور أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="%{base_url}/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
-      short_description: 'انتهاك <a href="%{base_url}/guidelines">للقواعد العامة للمجتمع</a>'
+      description: 'محتوي هذا المنشور أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
+      short_description: 'انتهاك <a href="/guidelines">للقواعد العامة للمجتمع</a>'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_user:
       title: 'أرسل رسالة إلى @{{username}}'
@@ -666,11 +666,11 @@ ar:
       long_form: 'ترفع علم هذا كدعاية'
     inappropriate:
       title: 'غير مناسب'
-      description: 'هذا الموضوع يشمل محتوى أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="%{base_url}/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
+      description: 'هذا الموضوع يشمل محتوى أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_moderators:
       title: "شيء آخر "
-      description: 'هذا الموضوع يتطلب اهتمام الطاقم العام معتمداً على  <a href="%{base_url}/guidelines">التوجيهات</a>, <a href="%{tos_url}">شروط الخدمة</a>, أو لسبب آخر لم يذكر أعلاه.'
+      description: 'هذا الموضوع يتطلب اهتمام الطاقم العام معتمداً على  <a href="/guidelines">التوجيهات</a>, <a href="%{tos_url}">شروط الخدمة</a>, أو لسبب آخر لم يذكر أعلاه.'
       long_form: 'علم هذا لتنبيه المراقب'
       email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
       email_body: "%{link}\n\n%{message}"
@@ -852,11 +852,11 @@ ar:
     sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\".  <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
     queue_size_warning: 'عدد المهام في الطّابور هو %{queue_size}، وهذا رقم كبير. قد يكون هذا مؤشّرًا لوجود مشكلة بعمليّات Sidekiq، أو قد تحتاج إضافة عاملي Sidekiq أخرى.'
     memory_warning: 'خادمك يعمل بأقل من 1 جيجا بايت من الذاكرة الإجمالية. يتطلب على الأقل 1 جيجا بايت من الذاكرة.'
-    google_oauth2_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Google OAuth2 (enable_google_oauth2_logins)، لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="%{base_url}/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    facebook_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Facebook (enable_facebook_logins), لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="%{base_url}/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394"  target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    twitter_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Twitter (enable_twitter_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="%{base_url}/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    github_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع GitHub (enable_github_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="%{base_url}/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد إلكتروني فشلت. تحقق من app.yml الخاص بك وتأكد من إعدادات خادم البريد أنها صحيحة. <a href="%{base_url}/sidekiq/retries" target="_blank">أنظر للمهام الفاشلة في Sidekiq</a>.'
+    google_oauth2_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Google OAuth2 (enable_google_oauth2_logins)، لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    facebook_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Facebook (enable_facebook_logins), لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394"  target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    twitter_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Twitter (enable_twitter_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    github_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع GitHub (enable_github_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد إلكتروني فشلت. تحقق من app.yml الخاص بك وتأكد من إعدادات خادم البريد أنها صحيحة. <a href="/sidekiq/retries" target="_blank">أنظر للمهام الفاشلة في Sidekiq</a>.'
     subfolder_ends_in_slash: "إعدادات المجلدات الداخلية خاطئ;ال DISCOURSE_RELATIVE_URL_ROOT يجب ان تنتهي ب سلاش."
   site_settings:
     censored_words: "الكلمات التي ستُستبدل آليًّا ب‍ &#9632;&#9632;&#9632;&#9632;"
@@ -1488,7 +1488,7 @@ ar:
       من فضلك قم بتسجيل الدخول او انشاء حساب جديد للمتابعة.
   terms_of_service:
     title: "شروط الخدمة"
-    signup_form_message: 'لقد قرأت و أوافق على <a href="%{base_url}/tos" target="_blank">بنود الخدمة</a>.'
+    signup_form_message: 'لقد قرأت و أوافق على <a href="/tos" target="_blank">بنود الخدمة</a>.'
   deleted: 'حذف'
   upload:
     edit_reason: "تحميل نسخ محلية للصور"

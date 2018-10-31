@@ -611,8 +611,8 @@ ur:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'نامناسب'
-      description: 'اِس پوسٹ میں ایسا مواد شامل ہے جو ایک مناسب شخص جارحانہ، غیر مہذب، یا <a href="%{base_url}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کے خلاف سمجھے گا۔'
-      short_description: '<a href="%{base_url}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کی خلاف ورزی'
+      description: 'اِس پوسٹ میں ایسا مواد شامل ہے جو ایک مناسب شخص جارحانہ، غیر مہذب، یا <a href="/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کے خلاف سمجھے گا۔'
+      short_description: '<a href="/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کی خلاف ورزی'
       long_form: 'اِس کو نامناسب ہونے کے طور پر فلَیگ کیا گیا'
     notify_user:
       title: '@{{username}} کو ایک پیغام بھیجیں'
@@ -657,11 +657,11 @@ ur:
       long_form: 'اِس کو سپَیم کے طور پر فلَیگ کیا گیا'
     inappropriate:
       title: 'نامناسب'
-      description: 'اِس ٹاپک میں ایسا مواد شامل ہے جو ایک مناسب شخص جارحانہ، غیر مہذب، یا <a href="%{base_url}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کے خلاف سمجھے گا۔'
+      description: 'اِس ٹاپک میں ایسا مواد شامل ہے جو ایک مناسب شخص جارحانہ، غیر مہذب، یا <a href="/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کے خلاف سمجھے گا۔'
       long_form: 'اِس کو نامناسب ہونے کے طور پر فلَیگ کیا گیا'
     notify_moderators:
       title: "کچھ اور"
-      description: 'اِس ٹاپک کو، <a href="%{base_url}/guidelines">قواعد و ضوابط</a>، <a href="%{tos_url}">سروس کی شرائط</a>، یا مندرجہ بالا درج وجوہات کے علاوہ، کے مطابق اسٹاف کی عام توجہ کی ضرورت ہے۔'
+      description: 'اِس ٹاپک کو، <a href="/guidelines">قواعد و ضوابط</a>، <a href="%{tos_url}">سروس کی شرائط</a>، یا مندرجہ بالا درج وجوہات کے علاوہ، کے مطابق اسٹاف کی عام توجہ کی ضرورت ہے۔'
       long_form: 'اِس کو ماڈریٹر کی توجہ کیلئے فلَیگ کیا گیا'
       email_title: 'ٹاپک "%{title}" پر اسٹاف کی توجہ درکار ہے'
       email_body: "%{link}\n\n%{message}"
@@ -850,10 +850,10 @@ ur:
     sidekiq_warning: 'Sidekiq نہیں چل رہا۔ بہت سے کام، جیسا کہ ای میل بھیجنا، sidekq کی طرف سے اےسِنکرونسلی مکمل کیے جاتے ہیں۔ براہ کرم یقینی بنائیں کہ کم ازکم ایک sidekq پراسیس چل رہا ہے۔ <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq کے بارے میں یہاں سے جانیے</a>۔'
     queue_size_warning: 'قطار میں موجود جابز کی تعداد %{queue_size} ہے، جو کہ زیادہ ہے۔ یہ Sidekiq پراسیس کے ساتھ ایک مسئلہ کی نشاندہی کر سکتا ہے، یا آپ کو مزید Sidekiq کارکنوں کو شامل کرنے کی ضرورت ہوسکتی ہے۔'
     memory_warning: 'آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔'
-    google_oauth2_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گُوگل (OAuth2 (enable_google_oauth2_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور کلائنٹ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_url}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    facebook_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ فیس بُک (OAuth2 (enable_facebook_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن اَیپ آئی ڈی اور اَیپ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_url}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    twitter_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ ٹَوِیٹر (enable_twitter_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن قیی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_url}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    github_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گِٹ ہَب (enable_github_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_url}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
+    google_oauth2_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گُوگل (OAuth2 (enable_google_oauth2_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور کلائنٹ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
+    facebook_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ فیس بُک (OAuth2 (enable_facebook_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن اَیپ آئی ڈی اور اَیپ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
+    twitter_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ ٹَوِیٹر (enable_twitter_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن قیی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
+    github_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گِٹ ہَب (enable_github_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
     failing_emails_warning: 'ناکام ہونے والی %{num_failed_jobs} اِی مَیل جابز موجود ہیں۔ اپنا app.yml چیک کریں اور یہ یقینی بنائیں کہ میل سرور کی ترتیبات درست ہیں۔ Sidekiq میں ناکام جابز ملاحظہ کریں۔'
     subfolder_ends_in_slash: "آپ کا سب-فولڈر سیٹ اپ غلط ہے؛ DISCOURSE_RELATIVE_URL_ROOT ایک سلَیش میں ختم ہوتا ہے۔"
     email_polling_errored_recently:
@@ -2407,7 +2407,7 @@ ur:
       ایک اکاؤنٹ کی ضرورت ہے۔ برائے مہربانی جاری رکھنے کیلئے ایک اکاؤنٹ بنائیں یا لاگ اِن کریں۔
   terms_of_service:
     title: "سروس کی شرائط"
-    signup_form_message: 'میں نے <a href="%{base_url}/tos" target="_blank">سروس کی شرائط</a> کو پڑھا اور قبول کر لیا ہے۔'
+    signup_form_message: 'میں نے <a href="/tos" target="_blank">سروس کی شرائط</a> کو پڑھا اور قبول کر لیا ہے۔'
   deleted: 'حذف کردہ'
   image: "تصویر"
   upload:

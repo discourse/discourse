@@ -510,7 +510,7 @@ ko:
     inappropriate:
       title: '부적절함'
       description: '이 글은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
-      short_description: '<a href="%{base_url}/guidelines">커뮤니티 가이드라인</a> 의 위반'
+      short_description: '<a href="/guidelines">커뮤니티 가이드라인</a> 의 위반'
       long_form: '부적절함으로 신고하기'
     notify_user:
       title: '@{{username}} 님에게 메시지를 보냅니다'
@@ -554,11 +554,11 @@ ko:
       title: '부적절함'
       description: '이 글은 평균적인 사람들의 관점에서 볼 때 공격적이나 모욕적인 글을 담고 있거나,
 
-        <a href="%{base_url}/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
+        <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
       title: "기타"
-      description: '이 주제는 <a href="%{base_url}/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 위에서 언급되지 않은 기타 사유로 인해 운영진이 검토할 필요가 있습니다.'
+      description: '이 주제는 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 위에서 언급되지 않은 기타 사유로 인해 운영진이 검토할 필요가 있습니다.'
       long_form: '관리자의 주의를 위해 신고'
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
@@ -741,11 +741,11 @@ ko:
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: '큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
-    google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="%{base_url}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
-    facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="%{base_url}/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
-    twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="%{base_url}/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
-    github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="%{base_url}/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
-    failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="%{base_url}/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
+    google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
+    facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
+    twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
+    github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
+    failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
       other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요."
@@ -1363,7 +1363,7 @@ ko:
     search_title: "이 사이트 검색"
   terms_of_service:
     title: "서비스 이용약관"
-    signup_form_message: 'I have read and accept the <a href="%{base_url}/tos" target="_blank">Terms of Service</a>.'
+    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: '삭제되었습니다'
   image: "이미지"
   upload:

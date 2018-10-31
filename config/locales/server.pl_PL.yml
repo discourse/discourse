@@ -593,8 +593,8 @@ pl_PL:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Niewłaściwe'
-      description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="%{base_url}/guidelines">wytyczne społeczności</a>.'
-      short_description: 'Naruszenie  <a href="%{base_url}/guidelines">naszych wytycznych dla społeczności </a>'
+      description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
+      short_description: 'Naruszenie  <a href="/guidelines">naszych wytycznych dla społeczności </a>'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
       title: 'Wyślij @{{username}} wiadomość'
@@ -637,11 +637,11 @@ pl_PL:
       long_form: 'oflagowano jako spam'
     inappropriate:
       title: 'Niewłaściwe'
-      description: 'Ten temat zawiera treści jakie rozsądna osoba może uznać za agresywne, obraźliwe,  lub sprzeczne z <a href="%{base_url}/guidelines">wytycznymi społeczności</a>.'
+      description: 'Ten temat zawiera treści jakie rozsądna osoba może uznać za agresywne, obraźliwe,  lub sprzeczne z <a href="/guidelines">wytycznymi społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
       title: "Coś innego"
-      description: 'Ten wpis wymaga interwencji moderatora z uwagi na niezgodność z <a href="%{base_url}/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
+      description: 'Ten wpis wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
       long_form: 'oznaczył to dla uwagi moderatora'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -824,11 +824,11 @@ pl_PL:
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     queue_size_warning: 'Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
-    google_oauth2_config_warning: 'Serwer został skonfigurowany, aby umożliwić rejestracje i logowanie za pomocą Google OAuth2 (enable_google_oauth2_logins), ale id klienta oraz tajne wartości klienta nie są ustawione. Przejdź do <a href="%{base_url}/admin/site_settings">strony ustawień</a> i zaktualizuj ustawienia, <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> Zobacz przewodnik, aby dowiedzieć się więcej</a>.'
-    facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="%{base_url}/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
-    twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="%{base_url}/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
-    github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="%{base_url}/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
-    failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są poprawne. <a href="%{base_url}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
+    google_oauth2_config_warning: 'Serwer został skonfigurowany, aby umożliwić rejestracje i logowanie za pomocą Google OAuth2 (enable_google_oauth2_logins), ale id klienta oraz tajne wartości klienta nie są ustawione. Przejdź do <a href="/admin/site_settings">strony ustawień</a> i zaktualizuj ustawienia, <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> Zobacz przewodnik, aby dowiedzieć się więcej</a>.'
+    facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
+    twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
+    github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
+    failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
     subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
     email_polling_errored_recently:
       one: "Email polling wygenerował 1 błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='/logs' target='_blank'>logach</a>."
@@ -2084,7 +2084,7 @@ pl_PL:
 
   terms_of_service:
     title: "Warunki użytkowania serwisu"
-    signup_form_message: 'Przeczytałem i zgadzam się z <a href="%{base_url}/tos" target="_blank">Regulaminem Serwisu</a>.'
+    signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
   deleted: 'usunięte'
   image: "obraz"
   upload:

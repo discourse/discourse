@@ -613,8 +613,8 @@ he:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'לא ראוי'
-      description: 'פוסט זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="%{base_url}/guidelines">כללי הקהילה</a>.'
-      short_description: 'הפרה של <a href="%{base_url}/guidelines">כללי הקהילה שלנו</a>'
+      description: 'פוסט זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines">כללי הקהילה</a>.'
+      short_description: 'הפרה של <a href="/guidelines">כללי הקהילה שלנו</a>'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
       title: 'שלחו הודעה ל @{{username}}'
@@ -656,11 +656,11 @@ he:
       long_form: 'דיגלתם זאת כספאם'
     inappropriate:
       title: 'לא ראוי'
-      description: 'נושא זה מכיל תוכן שהאדם הסביר היה מחשיב פוגעני, מתעלל או הפרה של <a href="%{base_url}/guidelines">כללי ההתנהלות בקהילה שלנו</a>.'
+      description: 'נושא זה מכיל תוכן שהאדם הסביר היה מחשיב פוגעני, מתעלל או הפרה של <a href="/guidelines">כללי ההתנהלות בקהילה שלנו</a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_moderators:
       title: "משהו אחר"
-      description: 'נושא זה דורש תשומת לב של הצוות בהתאם ל<a href="%{base_url}/guidelines">הנחיות הקהילה</a>, <a href="%{tos_url}">תנאי השירות</a>, או מסיבה אחרת שאינה רשומה למעלה.'
+      description: 'נושא זה דורש תשומת לב של הצוות בהתאם ל<a href="/guidelines">הנחיות הקהילה</a>, <a href="%{tos_url}">תנאי השירות</a>, או מסיבה אחרת שאינה רשומה למעלה.'
       long_form: 'זה סומן לתשומת הלב של מנחה'
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנחה'
       email_body: "%{link}\n\n%{message}"
@@ -842,11 +842,11 @@ he:
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת מיילים, מבוצעות אסינכרונית באמצעות Sidekiq. אנא וודאו שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">לימדו על Sidekiq כאן</a>.'
     queue_size_warning: 'מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers.'
     memory_warning: 'בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון.'
-    google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסמת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="%{base_url}/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
-    facebook_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם פייסבוק (enable_facebook_logins), אבל ערכי מזהה האפליקציה וסוד האפליקציה אינם קבועים. לכו ל <a href="%{base_url}/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
-    twitter_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם טוויטר (enable_twitter_logins), אבל ערכי המפתח והסוד אינם קבועים. לכו ל <a href="%{base_url}/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
-    github_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם גיטהאב (enable_github_logins), אבל ערכי מזהה הלקוח והסוד אינם קבועים. לכו ל <a href="%{base_url}/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
-    failing_emails_warning: 'יש %{num_failed_jobs} עבודות מייל שנכשלו. בידקו את app.yml שלכם כדי לוודא ששרת המייל מוגדר כיאות. <a href="%{base_url}/sidekiq/retries" target="_blank">ראו את העבודות שנכשלו ב Sidekiq</a>.'
+    google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסמת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
+    facebook_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם פייסבוק (enable_facebook_logins), אבל ערכי מזהה האפליקציה וסוד האפליקציה אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
+    twitter_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם טוויטר (enable_twitter_logins), אבל ערכי המפתח והסוד אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
+    github_config_warning: 'השרת מכוון לאפשר הרשמה והתחברות עם גיטהאב (enable_github_logins), אבל ערכי מזהה הלקוח והסוד אינם קבועים. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות האלו. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">ראו מדריך זה כדי ללמוד עוד</a>.'
+    failing_emails_warning: 'יש %{num_failed_jobs} עבודות מייל שנכשלו. בידקו את app.yml שלכם כדי לוודא ששרת המייל מוגדר כיאות. <a href="/sidekiq/retries" target="_blank">ראו את העבודות שנכשלו ב Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
       one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -2036,7 +2036,7 @@ he:
       נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
-    signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="%{base_url}/tos" target="_blank">תנאי השירות</a>.'
+    signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
   deleted: 'נמחק'
   image: "תמונה"
   upload:

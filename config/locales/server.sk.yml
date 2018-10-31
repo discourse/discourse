@@ -516,7 +516,7 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Nevhodné'
-      description: 'Obsah tohto príspevku môže byť nektorými osobami považovaný za urážlivý, hanlivý, alebo  porušujúci  <a href="%{base_url}/guidelines">pravidlá slušného správania</a>.'
+      description: 'Obsah tohto príspevku môže byť nektorými osobami považovaný za urážlivý, hanlivý, alebo  porušujúci  <a href="/guidelines">pravidlá slušného správania</a>.'
       long_form: 'toto označ ako nevhodné'
     notify_user:
       title: 'Poslať @{{username}} správu'
@@ -547,11 +547,11 @@ sk:
       long_form: 'označiť toto ako spam'
     inappropriate:
       title: 'Nevhodné'
-      description: 'Táto téma môže byť nektorými osobami považovaná za urážlivú, hanlivú, alebo  porušujúcu  <a href="%{base_url}/guidelines">pravidlá slušného správania</a>.'
+      description: 'Táto téma môže byť nektorými osobami považovaná za urážlivú, hanlivú, alebo  porušujúcu  <a href="/guidelines">pravidlá slušného správania</a>.'
       long_form: 'toto označ ako nevhodné'
     notify_moderators:
       title: "Niečo iné"
-      description: 'Táto téma vyžaduje pozornosť obsluhy na základe <a href="%{base_url}/guidelines">pravidiel</a>, <a href="%{tos_url}">TOS</a>, alebo z iného dôvodu ako je uvedené vyššie.'
+      description: 'Táto téma vyžaduje pozornosť obsluhy na základe <a href="/guidelines">pravidiel</a>, <a href="%{tos_url}">TOS</a>, alebo z iného dôvodu ako je uvedené vyššie.'
       long_form: 'označené do pozornosti moderátora'
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
       email_body: "%{link}\n\n%{message}"
@@ -715,11 +715,11 @@ sk:
     sidekiq_warning: 'Sidekiq neni spustený. Množstvo úloh, ako napríklad posielanie emailov, je vykonávaných asynchrónne prostrednictvom sidekiq. Prosim zabezpečte aby bol spustený aspoň jeden proces sidekiq <a href="https://github.com/mperham/sidekiq" target="_blank">Viac o Sidekiq</a>.'
     queue_size_warning: 'Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov.'
     memory_warning: 'Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. '
-    google_oauth2_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Google OAuth2 (enable_google_oauth2_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené. Navštívte <a href="%{base_url}/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    facebook_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Facebooku (enable_facebook_logins), ale údaje "app Id" a tajné hodnoty nie sú nastavené. Navštívte <a href="%{base_url}/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    twitter_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Twitteru (enable_twitter_logins), ale kľúč a tajné hodnoty nie sú nastavené. Navštívte  <a href="%{base_url}/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    github_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou GitHub (enable_github_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené.. Navštívte <a href="%{base_url}/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="%{base_url}/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
+    google_oauth2_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Google OAuth2 (enable_google_oauth2_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    facebook_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Facebooku (enable_facebook_logins), ale údaje "app Id" a tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    twitter_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Twitteru (enable_twitter_logins), ale kľúč a tajné hodnoty nie sú nastavené. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    github_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou GitHub (enable_github_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené.. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
@@ -1248,7 +1248,7 @@ sk:
     search_title: "Prehľadať tieto stránky"
   terms_of_service:
     title: "Podmienky používania"
-    signup_form_message: 'Prečítal som si <a href="%{base_url}/tos" target="_blank">Podmienky používania</a> a súhlasím s nimi.'
+    signup_form_message: 'Prečítal som si <a href="/tos" target="_blank">Podmienky používania</a> a súhlasím s nimi.'
   deleted: 'vymazané'
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"

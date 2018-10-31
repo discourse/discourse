@@ -692,8 +692,8 @@ fi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Sopimaton'
-      description: 'Viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="%{base_url}/guidelines">palstan sääntöjen</a> kanssa.'
-      short_description: '<a href="%{base_url}/guidelines">Palstan sääntöjen</a> vastainen'
+      description: 'Viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
+      short_description: '<a href="/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
@@ -742,12 +742,12 @@ fi:
       short_description: 'Tämä on mainos'
     inappropriate:
       title: 'Sopimaton'
-      description: 'Ketjussa on loukkaavaa, herjaavaa tai <a href="%{base_url}/guidelines">palstan sääntöjen</a> kanssa ristiriitaista sisältöä.'
+      description: 'Ketjussa on loukkaavaa, herjaavaa tai <a href="/guidelines">palstan sääntöjen</a> kanssa ristiriitaista sisältöä.'
       long_form: 'liputti tämän sopimattomaksi'
-      short_description: '<a href="%{base_url}/guidelines">Palstan sääntöjen</a> vastainen'
+      short_description: '<a href="/guidelines">Palstan sääntöjen</a> vastainen'
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Valvojan tulee huomioida tämä ketju <a href="%{base_url}/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
+      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
       short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
@@ -1029,11 +1029,11 @@ fi:
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
-    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="%{base_url}/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
-    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="%{base_url}/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
-    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Twitterin kautta (enable_twitter_logins), mutta salaisia arvoja ei ole asetettu. Päivitä arvot <a href="%{base_url}/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">tästä oppaasta</a>.'
-    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Githubin kautta (enable_github_logins), mutta client id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="%{base_url}/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">tästä oppaasta</a>.'
-    failing_emails_warning: 'Epäonnistuneiden sähköpostitehtävien määrä on %{num_failed_jobs}. Tarkista app.yml ja varmista, että palvelimen asetukset ovat kunnossa. <a href="%{base_url}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
+    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
+    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
+    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Twitterin kautta (enable_twitter_logins), mutta salaisia arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">tästä oppaasta</a>.'
+    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Githubin kautta (enable_github_logins), mutta client id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">tästä oppaasta</a>.'
+    failing_emails_warning: 'Epäonnistuneiden sähköpostitehtävien määrä on %{num_failed_jobs}. Tarkista app.yml ja varmista, että palvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
       one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
@@ -2711,7 +2711,7 @@ fi:
       Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
   terms_of_service:
     title: "Käyttöehdot"
-    signup_form_message: 'Olen lukenut ja ymmärtänyt <a href="%{base_url}/tos" target="_blank">Käyttöehdot</a>.'
+    signup_form_message: 'Olen lukenut ja ymmärtänyt <a href="/tos" target="_blank">Käyttöehdot</a>.'
   deleted: 'poistettu'
   image: "kuva"
   upload:
