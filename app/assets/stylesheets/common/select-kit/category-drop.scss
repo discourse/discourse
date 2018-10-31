@@ -60,6 +60,10 @@
         .badge-wrapper {
           margin: 0;
           font-weight: bold;
+
+          &:nth-child(2) {
+            margin-left: 10px;
+          }
         }
       }
 
