@@ -355,12 +355,18 @@ class PostsController < ApplicationController
   end
 
   def revisions
+    post = find_post_from_params
+    raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
+
     post_revision = find_post_revision_from_params
     post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
     render_json_dump(post_revision_serializer)
   end
 
   def latest_revision
+    post = find_post_from_params
+    raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
+
     post_revision = find_latest_post_revision_from_params
     post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
     render_json_dump(post_revision_serializer)
