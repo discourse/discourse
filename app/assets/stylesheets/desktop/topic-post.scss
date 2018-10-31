@@ -819,22 +819,6 @@ a.attachment:before {
   vertical-align: middle;
 }
 
-.private_message .gutter,
-.deleted-topic .gutter,
-.read_restricted .gutter {
-  position: relative;
-}
-
-.deleted-topic .gutter:before {
-  display: block;
-  position: absolute;
-  left: 767px;
-  color: rgba($primary-low, 0.8);
-  font: 6.429em/1 FontAwesome;
-  content: "\f014";
-  z-index: z("base");
-}
-
 .topic-meta-data {
   align-items: center;
 
@@ -899,9 +883,6 @@ span.highlighted {
 /* Tablet (portrait) ----------- */
 
 @media all and (max-width: 775px) {
-  .gutter {
-    display: none;
-  }
   .topic-avatar {
     width: 45px;
   }

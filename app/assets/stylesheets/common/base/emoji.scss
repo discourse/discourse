@@ -182,10 +182,6 @@ img.emoji {
   background-color: lighten($tertiary, 40%);
 }
 
-.wmd-emoji-button:before {
-  content: "\f118";
-}
-
 .emoji-picker-modal.fadeIn {
   z-index: z("modal", "overlay");
   position: fixed;
