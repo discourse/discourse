@@ -48,20 +48,20 @@ def get(url)
   end
 end
 
-def extract(css, elem = driver)
+def extract(css, parent_element = driver)
   begin
     retries ||= 0
-    elem.find_elements(css: css).map { |elem| yield(elem) }
+    parent_element.find_elements(css: css).map { |element| yield(element) }
   rescue Net::ReadTimeout, Selenium::WebDriver::Error::StaleElementReferenceError
     sleep retries
     retry if (retries += 1) < MAX_FIND_RETRIES
   end
 end
 
-def find(css, elem = driver)
+def find(css, parent_element = driver)
   begin
     retries ||= 0
-    elem.find_element(css: css)
+    parent_element.find_element(css: css)
   rescue Net::ReadTimeout, Selenium::WebDriver::Error::ElementNotVisibleError
     sleep retries
     retry if (retries += 1) < MAX_FIND_RETRIES
@@ -73,10 +73,10 @@ def crawl_categories
     url = "https://groups.google.com/forum/?_escaped_fragment_=categories/#{@groupname}[#{start}-#{start + 99}]"
     get(url)
 
-    urls = extract(".subject a[href*='#{@groupname}']") { |a| a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/") }
-    break if urls.size == 0
+    topic_urls = extract(".subject a[href*='#{@groupname}']") { |a| a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/") }
+    break if topic_urls.size == 0
 
-    urls.each { |url| crawl_topic(url) }
+    topic_urls.each { |topic_url| crawl_topic(topic_url) }
   end
 end
 
@@ -94,7 +94,7 @@ def crawl_topic(url)
       a["href"].sub("/d/msg/", "/forum/message/raw?msg="),
       a["title"].empty?
     ]
-  end.each { |url, might_be_deleted| crawl_message(url, might_be_deleted) }
+  end.each { |msg_url, might_be_deleted| crawl_message(msg_url, might_be_deleted) }
 
   @scraped_topic_urls << url
 rescue
