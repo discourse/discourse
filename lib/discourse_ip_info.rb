@@ -11,7 +11,7 @@ class DiscourseIpInfo
   def open_db(path)
     @loc_mmdb = mmdb_load(File.join(path, 'GeoLite2-City.mmdb'))
     @asn_mmdb = mmdb_load(File.join(path, 'GeoLite2-ASN.mmdb'))
-    @cache = LruRedux::ThreadSafeCache.new(1000)
+    @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
   def mmdb_load(filepath)
@@ -24,7 +24,7 @@ class DiscourseIpInfo
     end
   end
 
-  def lookup(ip, locale = :en)
+  def lookup(ip, locale: :en, resolve_hostname: false)
     ret = {}
 
     if @loc_mmdb
@@ -57,27 +57,32 @@ class DiscourseIpInfo
       end
     end
 
-    begin
-      result = Resolv::DNS.new.getname(ip)
-      ret[:hostname] = result&.to_s
-    rescue Resolv::ResolvError
+    # this can block for quite a while
+    # only use it explicitly when needed
+    if resolve_hostname
+      begin
+        result = Resolv::DNS.new.getname(ip)
+        ret[:hostname] = result&.to_s
+      rescue Resolv::ResolvError
+      end
     end
 
     ret
   end
 
-  def get(ip, locale = :en)
+  def get(ip, locale: :en, resolve_hostname: false)
     ip = ip.to_s
     locale = locale.to_s.sub('_', '-')
 
-    @cache["#{ip}-#{locale}"] ||= lookup(ip, locale)
+    @cache["#{ip}-#{locale}-#{resolve_hostname}"] ||=
+      lookup(ip, locale: locale, resolve_hostname: resolve_hostname)
   end
 
   def self.open_db(path)
     instance.open_db(path)
   end
 
-  def self.get(ip, locale = :en)
-    instance.get(ip, locale)
+  def self.get(ip, locale: :en, resolve_hostname: false)
+    instance.get(ip, locale: locale, resolve_hostname: resolve_hostname)
   end
 end
