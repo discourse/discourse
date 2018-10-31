@@ -4,6 +4,8 @@ export default {
   name: "svg-sprite-fontawesome",
 
   initialize() {
-    svgSpriteLoader.load(Discourse.SvgSpritePath, "fontawesome");
+    if (Discourse && Discourse.SvgSpritePath) {
+      svgSpriteLoader.load(Discourse.SvgSpritePath, "fontawesome");
+    }
   }
 };
