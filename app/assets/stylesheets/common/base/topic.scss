@@ -258,11 +258,7 @@ a.topic-featured-link {
   text-transform: lowercase;
   color: dark-light-choose($primary-medium, $secondary-medium);
   font-size: 0.875rem;
-  &::before {
-    position: relative;
-    top: 0.1em;
-    padding-right: 3px;
-    font-family: FontAwesome;
-    content: "\f08e";
+  .d-icon {
+    margin-right: 3px;
   }
 }

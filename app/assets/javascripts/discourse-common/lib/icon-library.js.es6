@@ -8,9 +8,9 @@ let _renderers = [];
 const REPLACEMENTS = {
   "d-tracking": "circle",
   "d-muted": "times-circle",
-  "d-regular": "circle-o",
+  "d-regular": "far-circle",
   "d-watching": "exclamation-circle",
-  "d-watching-first": "dot-circle-o",
+  "d-watching-first": "far-dot-circle",
   "d-drop-expanded": "caret-down",
   "d-drop-collapsed": "caret-right",
   "d-unliked": "far-heart",
@@ -32,7 +32,7 @@ const REPLACEMENTS = {
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "hand-o-right",
-  "notification.watching_first_post": "dot-circle-o",
+  "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "group"
 };
 
@@ -237,7 +237,13 @@ export function registerIconRenderer(renderer) {
 }
 
 function iconClasses(icon, params) {
-  let classNames = `fa d-icon d-icon-${icon.id} svg-icon`;
+  // "notification." is invalid syntax for classes, use replacement instead
+  let dClass =
+    icon.replacementId && icon.id.indexOf("notification.") > -1
+      ? icon.replacementId
+      : icon.id;
+
+  let classNames = `fa d-icon d-icon-${dClass} svg-icon`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
@@ -270,7 +276,7 @@ function handleIconId(icon) {
     id = newId;
   }
 
-  // TODO: replace "thumbtack unpinned" icon class (currently used in too many places)
+  // TODO: clean up "thumbtack unpinned" at source instead of here
   id = id.replace(" unpinned", "");
 
   warnIfMissing(id);

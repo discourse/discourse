@@ -188,10 +188,7 @@
       }
     }
     .is-warning {
-      .d-icon-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
+      .d-icon-far-envelope {
         color: $danger;
       }
     }
