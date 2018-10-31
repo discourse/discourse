@@ -1283,11 +1283,11 @@ class Report
       FROM user_auth_token_logs t
       JOIN users u ON u.id = t.user_id
       WHERE t.action = 'suspicious'
-        AND t.created_at >= '#{report.start_date}'
-        AND t.created_at <= '#{report.end_date}'
+        AND t.created_at >= :start_date
+        AND t.created_at <= :end_date
     SQL
 
-    DB.query(sql).each do |row|
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
       data = {}
 
       ipinfo = DiscourseIpInfo.get(row.client_ip)
