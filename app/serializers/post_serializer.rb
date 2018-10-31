@@ -346,6 +346,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def version
+    return 1 if object.hidden && !scope.can_view_hidden_post_revisions?
+
     scope.is_staff? ? object.version : object.public_version
   end
 
