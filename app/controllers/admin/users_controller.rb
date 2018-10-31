@@ -436,7 +436,7 @@ class Admin::UsersController < Admin::AdminController
   def ip_info
     params.require(:ip)
 
-    render json: DiscourseIpInfo.get(params[:ip])
+    render json: DiscourseIpInfo.get(params[:ip], resolve_hostname: true)
   end
 
   def sync_sso
