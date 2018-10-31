@@ -1207,18 +1207,16 @@ class Report
              u.username,
              u.uploaded_avatar_id as avatar_id,
              CASE WHEN u.silenced_till IS NOT NULL THEN 't' ELSE 'f' END as silenced,
-             SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) as disagreed_flags,
-             SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END) as agreed_flags,
-             ROUND(SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)::numeric / SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END)::numeric, 2) as ratio,
-             SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) - SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END) spread,
-             ROUND((1-(SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)::numeric / SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END)::numeric)) *
-               (SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) - SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)), 2) as score
-      FROM post_actions AS pa
-      INNER JOIN users AS u ON u.id = pa.user_id
-      WHERE pa.post_action_type_id IN (#{PostActionType.flag_types.values.join(', ')})
-        AND pa.user_id <> -1
-      GROUP BY u.id, u.username, u.silenced_till
-      HAVING SUM(CASE WHEN pa.disagreed_at IS NOT NULL THEN 1 ELSE 0 END) > SUM(CASE WHEN pa.agreed_at IS NOT NULL THEN 1 ELSE 0 END)
+             us.flags_disagreed AS disagreed_flags,
+             us.flags_agreed AS agreed_flags,
+             ROUND(us.flags_agreed::numeric / us.flags_disagreed::numeric, 2) as ratio,
+             us.flags_disagreed - us.flags_agreed AS spread,
+             ROUND((1-(us.flags_agreed::numeric / us.flags_disagreed::numeric)) *
+                   (us.flags_disagreed - us.flags_agreed)) AS score
+      FROM users AS u
+        INNER JOIN user_stats AS us ON us.user_id = u.id
+      WHERE u.id <> -1
+        AND flags_disagreed > flags_agreed
       ORDER BY score DESC
       LIMIT 20
       SQL

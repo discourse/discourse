@@ -164,6 +164,9 @@ class PostAction < ActiveRecord::Base
       trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
 
+    # Update the flags_agreed user stat
+    UserStat.where(user_id: actions.map(&:user_id)).update_all("flags_agreed = flags_agreed + 1")
+
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     if actions.first.present?
@@ -183,8 +186,7 @@ class PostAction < ActiveRecord::Base
         PostActionType.notify_flag_type_ids
       end
 
-    actions = PostAction.where(post_id: post.id)
-      .where(post_action_type_id: action_type_ids)
+    actions = PostAction.active.where(post_id: post.id).where(post_action_type_id: action_type_ids)
 
     actions.each do |action|
       action.disagreed_at = Time.zone.now
@@ -193,6 +195,9 @@ class PostAction < ActiveRecord::Base
       action.save
       action.add_moderator_post_if_needed(moderator, :disagreed)
     end
+
+    # Update the flags_disagreed user stat
+    UserStat.where(user_id: actions.map(&:user_id)).update_all("flags_disagreed = flags_disagreed + 1")
 
     # reset all cached counters
     cached = {}

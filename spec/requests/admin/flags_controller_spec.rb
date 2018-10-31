@@ -59,6 +59,7 @@ RSpec.describe Admin::FlagsController do
 
       post_action.reload
       expect(post_action.agreed_by_id).to eq(admin.id)
+      expect(user.user_stat.reload.flags_agreed).to eq(1)
 
       post_1.reload
       expect(post_1.deleted_at).to eq(nil)
@@ -77,6 +78,7 @@ RSpec.describe Admin::FlagsController do
       post_action.reload
 
       expect(post_action.agreed_by_id).to eq(admin.id)
+      expect(user.user_stat.reload.flags_agreed).to eq(1)
 
       agree_post = Topic.joins(:topic_allowed_users).where('topic_allowed_users.user_id = ?', user.id).order(:id).last.posts.last
       expect(agree_post.raw).to eq(I18n.with_locale(:en) { I18n.t('flags_dispositions.agreed') })
