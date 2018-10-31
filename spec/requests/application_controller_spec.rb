@@ -42,6 +42,17 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'missing required param' do
+    it 'should return a 400' do
+      get "/search/query.json", params: { trem: "misspelled term" }
+
+      expect(response.status).to eq(400)
+      expect(JSON.parse(response.body)).to eq(
+        "errors" => ["param is missing or the value is empty: term"]
+      )
+    end
+  end
+
   describe 'build_not_found_page' do
     describe 'topic not found' do
 
