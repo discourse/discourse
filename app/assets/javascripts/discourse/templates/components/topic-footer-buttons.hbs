@@ -24,7 +24,7 @@
                                      showInvite=showInvite
                                      showFlagTopic=showFlagTopic}}
     {{else}}
-      {{d-button class="btn-default {{bookmarkClass}}"
+      {{d-button class=(concat "btn-default " bookmarkClass)
                  title=bookmarkTitle
                  label=bookmarkLabel
                  icon="bookmark"
