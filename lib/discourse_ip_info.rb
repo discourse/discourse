@@ -42,7 +42,7 @@ class DiscourseIpInfo
           ret[:location] = [ret[:city], ret[:region], ret[:country]].reject(&:blank?).join(", ")
         end
       rescue => e
-        Discourse.warn_exception(e, "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
+        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
       end
     end
 
@@ -55,7 +55,7 @@ class DiscourseIpInfo
           ret[:organization] = result["autonomous_system_organization"]
         end
       rescue => e
-        Discourse.warn_exception(e, "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
+        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
       end
     end
 
