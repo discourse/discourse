@@ -43,7 +43,7 @@ describe ThemeField do
     <script>
       var b = "inline raw script";
     </script>
-    <script type="text/javascript">
+    <script type="texT/jAvasCripT">
       var c = "text/javascript";
     </script>
     <script type="application/javascript">

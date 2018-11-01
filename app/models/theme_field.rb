@@ -267,7 +267,7 @@ COMPILED
     if node['src'].present?
       false
     elsif node['type'].present?
-      JAVASCRIPT_TYPES.include?(node['type'])
+      JAVASCRIPT_TYPES.include?(node['type'].downcase)
     else
       true
     end
