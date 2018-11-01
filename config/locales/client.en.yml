@@ -413,6 +413,7 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
+      member_added: "Added"
       add_members:
         title: "Add Members"
         description: "Manage the membership of this group"

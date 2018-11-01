@@ -216,6 +216,8 @@ class GroupsController < ApplicationController
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
+    elsif params[:order] == 'added_at'
+      order = "group_users.created_at #{dir}"
     end
 
     users = group.users.human_users
@@ -230,6 +232,8 @@ class GroupsController < ApplicationController
         users = users.filter_by_username(filter)
       end
     end
+
+    users = users.select('users.*, group_users.created_at as added_at')
 
     members = users
       .order('NOT group_users.owner')
