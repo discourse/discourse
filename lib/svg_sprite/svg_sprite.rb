@@ -103,7 +103,6 @@ module SvgSprite
     "quote-left",
     "quote-right",
     "reply",
-    "rocket",
     "search",
     "share",
     "shield-alt",
