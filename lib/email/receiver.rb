@@ -882,7 +882,7 @@ module Email
     def attachments
       # strip blacklisted attachments (mostly signatures)
       @attachments ||= begin
-        attachments =  @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
+        attachments =  @mail.parts.select { |part| part.attachment? && is_whitelisted_attachment?(part) }
         attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
         attachments
       end
