@@ -1,5 +1,5 @@
-require_dependency 'maxminddb'
-require_dependency 'resolv'
+require 'maxminddb'
+require 'resolv'
 
 class DiscourseIpInfo
   include Singleton
