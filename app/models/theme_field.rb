@@ -123,9 +123,10 @@ COMPILED
     end
 
     doc.css('script').each do |node|
-      next if node['src'].present?
+      next unless inline_javascript?(node)
 
-      javascript_cache.content << "(function() { #{node.inner_html} })();"
+      javascript_cache.content << node.inner_html
+      javascript_cache.content << "\n"
       node.remove
     end
 
@@ -252,6 +253,24 @@ COMPILED
     # TODO message for mobile vs desktop
     MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
     MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
+  end
+
+  private
+
+  JAVASCRIPT_TYPES = %w(
+    text/javascript
+    application/javascript
+    application/ecmascript
+  )
+
+  def inline_javascript?(node)
+    if node['src'].present?
+      false
+    elsif node['type'].present?
+      JAVASCRIPT_TYPES.include?(node['type'].downcase)
+    else
+      true
+    end
   end
 end
 
