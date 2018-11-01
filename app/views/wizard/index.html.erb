@@ -16,5 +16,12 @@
   <body class='wizard'>
     <div id='wizard-main'></div>
     <%= preload_script 'wizard-start' %>
+
+    <div id="svg-sprites" style="display:none;">
+      <div class="fontawesome">
+        <%= raw SvgSprite.bundle %>
+      </div>
+    </div>
+
   </body>
 </html>

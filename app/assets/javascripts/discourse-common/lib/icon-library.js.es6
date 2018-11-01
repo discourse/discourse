@@ -1,5 +1,5 @@
 import { h } from "virtual-dom";
-import attributeHook from "discourse/lib/attribute-hook";
+import attributeHook from "discourse-common/lib/attribute-hook";
 import deprecated from "discourse-common/lib/deprecated";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -253,13 +253,21 @@ function iconClasses(icon, params) {
 }
 
 function warnIfMissing(id) {
-  if (Discourse.SvgIconList && Discourse.SvgIconList.indexOf(id) === -1) {
+  if (
+    typeof Discourse !== "undefined" &&
+    Discourse.SvgIconList &&
+    Discourse.SvgIconList.indexOf(id) === -1
+  ) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`);
   }
 }
 
 function warnIfDeprecated(oldId, newId) {
-  if (Discourse.Environment === "development" && !Ember.testing) {
+  if (
+    typeof Discourse !== "undefined" &&
+    Discourse.Environment === "development" &&
+    !Ember.testing
+  ) {
     deprecated(`Icon "${oldId}" is now "${newId}".`);
   }
 }

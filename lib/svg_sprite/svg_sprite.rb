@@ -23,6 +23,7 @@ module SvgSprite
     "chart-pie",
     "check",
     "chevron-down",
+    "chevron-right",
     "chevron-up",
     "circle",
     "code",
