@@ -35,7 +35,10 @@
 
   Discourse.HighlightJSPath = setupData.highlightJsPath;
   Discourse.SvgSpritePath = setupData.svgSpritePath;
-  Discourse.SvgIconList = setupData.svgIconList;
+
+  if (Discourse.Environment === 'development') {
+    Discourse.SvgIconList = setupData.svgIconList;
+  }
 
   if (setupData.s3BaseUrl) {
     Discourse.S3CDN = setupData.s3Cdn;
