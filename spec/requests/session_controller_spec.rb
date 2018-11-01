@@ -286,6 +286,23 @@ RSpec.describe SessionController do
       sso
     end
 
+    it 'does not create superflous auth tokens when already logged in' do
+      user = Fabricate(:user)
+      sign_in(user)
+
+      sso = get_sso("/")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      expect do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user.id).to eq(user.id)
+      end.not_to change { UserAuthToken.count }
+
+    end
+
     it 'can take over an account' do
       sso = get_sso("/")
       user = Fabricate(:user)
