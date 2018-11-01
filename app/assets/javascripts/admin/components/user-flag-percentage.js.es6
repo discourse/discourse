@@ -42,7 +42,7 @@ export default Ember.Component.extend({
       disagreed: I18n.t("admin.flags.user_percentage.disagreed", {
         count: result.disagreed
       }),
-      ignored: I18n.t("admin.flags.user_percentage.disagreed", {
+      ignored: I18n.t("admin.flags.user_percentage.ignored", {
         count: result.ignored
       }),
       count: total
