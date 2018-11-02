@@ -82,12 +82,25 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
   def register_middleware(omniauth)
     omniauth.provider :open_id,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:store] = OpenID::Store::Redis.new($redis)
-           },
-           name: name,
-           identifier: identifier,
-           require: "omniauth-openid"
+         setup: lambda { |env|
+           strategy = env["omniauth.strategy"]
+           strategy.options[:store] = OpenID::Store::Redis.new($redis)
+
+           # Add CSRF protection in addition to OpenID Specification
+           def strategy.query_string
+              session["omniauth.state"] = state = SecureRandom.hex(24)
+             "?state=#{state}"
+           end
+
+           def strategy.callback_phase
+             stored_state = session.delete("omniauth.state")
+             provided_state = request.params["state"]
+             return fail!(:invalid_credentials) unless provided_state == stored_state
+             super
+           end
+         },
+         name: name,
+         identifier: identifier,
+         require: "omniauth-openid"
   end
 end
