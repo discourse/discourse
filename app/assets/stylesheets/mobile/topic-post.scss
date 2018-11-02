@@ -164,10 +164,10 @@ a.reply-to-tab {
 }
 
 .topic-map {
-  margin: 10px 0;
-  h4 {
+  .topic-map-post-heading {
     line-height: $line-height-medium;
   }
+
   .user {
     float: left;
     margin-right: 10px;
