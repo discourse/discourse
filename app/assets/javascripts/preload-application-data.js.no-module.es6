@@ -36,7 +36,7 @@
   Discourse.HighlightJSPath = setupData.highlightJsPath;
   Discourse.SvgSpritePath = setupData.svgSpritePath;
 
-  if (Discourse.Environment === 'development') {
+  if (Discourse.Environment === "development") {
     Discourse.SvgIconList = setupData.svgIconList;
   }
 
