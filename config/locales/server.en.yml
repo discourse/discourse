@@ -904,6 +904,7 @@ en:
         user: User
         agreed_flags: Agreed flags
         disagreed_flags: Disagreed flags
+        ignored_flags: Ignored flags
         score: Score
     moderators_activity:
       title: "Moderators activity"
