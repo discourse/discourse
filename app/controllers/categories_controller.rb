@@ -307,11 +307,11 @@ class CategoriesController < ApplicationController
 
   def include_topics(parent_category = nil)
     style = SiteSetting.desktop_category_page_style
-    !view_context.mobile_view? &&
-      (params[:include_topics] ||
+    view_context.mobile_view? ||
+      params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
       style == "categories_with_featured_topics".freeze ||
       style == "categories_boxes_with_topics".freeze ||
-      style == "categories_with_top_topics".freeze)
+      style == "categories_with_top_topics".freeze
   end
 end
