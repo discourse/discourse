@@ -302,8 +302,7 @@ aside.quote {
     font-size: $font-0;
   }
 
-  .topic-map-post-heading {
-    display: block;
+  h4 {
     margin: 1px 0 2px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
