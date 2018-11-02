@@ -78,6 +78,7 @@ module SvgSprite
     "flag",
     "folder",
     "forward",
+    "gavel",
     "globe",
     "globe-americas",
     "heading",
