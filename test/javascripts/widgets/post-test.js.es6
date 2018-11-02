@@ -389,6 +389,16 @@ widgetTest(`flagging: can't flag`, {
   }
 });
 
+widgetTest(`flagging: can't flag when post is hidden`, {
+  template: '{{mount-widget widget="post" args=args}}',
+  beforeEach() {
+    this.set("args", { canFlag: true, hidden: true });
+  },
+  test(assert) {
+    assert.ok(this.$("button.create-flag").length === 0);
+  }
+});
+
 widgetTest(`read indicator`, {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
