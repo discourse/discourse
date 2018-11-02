@@ -109,7 +109,7 @@ registerButton("like-count", attrs => {
 });
 
 registerButton("flag", attrs => {
-  if (attrs.canFlag) {
+  if (attrs.canFlag && !attrs.hidden) {
     return {
       action: "showFlags",
       title: "post.controls.flag",
