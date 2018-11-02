@@ -53,16 +53,7 @@ createWidget("avatar-flair", {
   html(attrs) {
     if (this.isIcon(attrs)) {
       let icon = convertIconClass(attrs.primary_group_flair_url);
-
-      let params = {
-        style: attrs.primary_group_flair_color
-          ? `color: #${Handlebars.Utils.escapeExpression(
-              attrs.primary_group_flair_color
-            )} ; `
-          : ""
-      };
-
-      return [iconNode(icon, params)];
+      return [iconNode(icon)];
     } else {
       return [];
     }

@@ -70,6 +70,8 @@ module SvgSprite
     "far-list-alt",
     "far-smile",
     "far-square",
+    "far-thumbs-down",
+    "far-thumbs-up",
     "far-trash-alt",
     "fast-backward",
     "fast-forward",

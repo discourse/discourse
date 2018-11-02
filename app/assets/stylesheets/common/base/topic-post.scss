@@ -31,11 +31,15 @@
     a {
       color: dark-light-choose($primary-high, $secondary-low);
     }
+
   }
   .fa {
     font-size: $font-down-1;
-    margin-left: 3px;
     color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .svg-icon-title {
+    margin-left: 3px;
+    margin-right: 0px;
   }
   .new_user a,
   .user-title,

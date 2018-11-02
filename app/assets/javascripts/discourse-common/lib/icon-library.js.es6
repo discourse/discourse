@@ -93,6 +93,8 @@ const fa4Replacements = {
   "star-half-empty": "far-star-half",
   "star-half-full": "far-star-half",
   "thumb-tack": "thumbtack",
+  "thumbs-o-down": "far-thumbs-down",
+  "thumbs-o-up": "far-thumbs-up",
   "times-rectangle": "window-close",
   "times-rectangle-o": "far-window-close",
   "toggle-down": "far-caret-square-down",
@@ -296,21 +298,33 @@ function handleIconId(icon) {
 registerIconRenderer({
   name: "font-awesome",
 
-  string(icon, opts) {
+  string(icon, params) {
     let id = handleIconId(icon);
-    let classes = iconClasses(icon, opts) + " svg-string";
+    let html = `<svg class='${iconClasses(icon, params)} svg-string'`;
 
-    return `<svg class="${classes}" xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
+    if (params.label) {
+      html += " aria-hidden='true'";
+    }
+    html += ` xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
+    if (params.label) {
+      html += `<span class='sr-only'>${params.label}</span>`;
+    }
+    if (params.title) {
+      html = `<span class="svg-icon-title" title='${I18n.t(
+        params.title
+      ).replace(/'/g, "&#39;")}'>${html}</span>`;
+    }
+    return html;
   },
 
-  node(icon, opts) {
+  node(icon, params) {
     let id = handleIconId(icon);
-    let classes = iconClasses(icon, opts) + " svg-node";
+    let classes = iconClasses(icon, params) + " svg-node";
 
-    return h(
+    let svg = h(
       "svg",
       {
-        attributes: { class: classes },
+        attributes: { class: classes, "aria-hidden": true },
         namespace: SVG_NAMESPACE
       },
       [
@@ -320,5 +334,18 @@ registerIconRenderer({
         })
       ]
     );
+
+    if (params.title) {
+      return h(
+        "span",
+        {
+          title: params.title,
+          attributes: { class: "svg-icon-title" }
+        },
+        [svg]
+      );
+    } else {
+      return svg;
+    }
   }
 });
