@@ -1175,6 +1175,8 @@ class Report
 
     report.modes = [:table]
 
+    report.dates_filtering = false
+
     report.labels = [
       {
         type: :user,
