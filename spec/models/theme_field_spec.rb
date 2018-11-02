@@ -37,8 +37,17 @@ describe ThemeField do
     <script type="text/discourse-plugin" version="0.8">
       var a = "inline discourse plugin";
     </script>
+    <script type="text/template" data-template="custom-template">
+      <div>custom script type</div>
+    </script>
     <script>
       var b = "inline raw script";
+    </script>
+    <script type="texT/jAvasCripT">
+      var c = "text/javascript";
+    </script>
+    <script type="application/javascript">
+      var d = "application/javascript";
     </script>
     <script src="/external-script.js"></script>
     HTML
@@ -47,8 +56,27 @@ describe ThemeField do
 
     expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
-    expect(theme_field.javascript_cache.content).to include('inline discourse plugin')
-    expect(theme_field.javascript_cache.content).to include('inline raw script')
+    expect(theme_field.value_baked).to include('<script type="text/template"')
+    expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
+    expect(theme_field.javascript_cache.content).to include('b = "inline raw script"')
+    expect(theme_field.javascript_cache.content).to include('c = "text/javascript"')
+    expect(theme_field.javascript_cache.content).to include('d = "application/javascript"')
+  end
+
+  it 'adds newlines between the extracted javascripts' do
+    html = <<~HTML
+    <script>var a = 10</script>
+    <script>var b = 10</script>
+    HTML
+
+    extracted = <<~JavaScript
+    var a = 10
+    var b = 10
+    JavaScript
+
+    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+
+    expect(theme_field.javascript_cache.content).to eq(extracted)
   end
 
   it "correctly extracts and generates errors for transpiled js" do

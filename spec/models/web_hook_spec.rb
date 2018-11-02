@@ -404,6 +404,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(post_action.id)
 
+      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam])
       PostAction.clear_flags!(post, moderator)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 

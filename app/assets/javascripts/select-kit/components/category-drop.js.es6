@@ -3,6 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+const { isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
@@ -21,6 +22,7 @@ export default ComboBoxComponent.extend({
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
   subCategory: false,
+  isAsync: Ember.computed.not("subCategory"),
 
   init() {
     this._super();
@@ -45,7 +47,11 @@ export default ComboBoxComponent.extend({
 
   @computed("content")
   filterable(content) {
-    return content && content.length >= 15;
+    const contentLength = (content && content.length) || 0;
+    return (
+      contentLength >= 15 ||
+      (this.get("isAsync") && contentLength < Discourse.Category.list().length)
+    );
   },
 
   @computed(
@@ -139,6 +145,37 @@ export default ComboBoxComponent.extend({
       const categoryURL =
         Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
       DiscourseURL.routeTo(categoryURL);
+    },
+
+    onExpand() {
+      if (this.get("isAsync") && isEmpty(this.get("asyncContent"))) {
+        this.set("asyncContent", this.get("content"));
+      }
+    },
+
+    onFilter(filter) {
+      if (!this.get("isAsync")) {
+        return;
+      }
+
+      if (isEmpty(filter)) {
+        this.set("asyncContent", this.get("content"));
+        return;
+      }
+
+      let results = Discourse.Category.search(filter);
+      results = results.sort((a, b) => {
+        if (a.parent_category_id && !b.parent_category_id) {
+          return 1;
+        } else if (!a.parent_category_id && b.parent_category_id) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+
+      this.set("asyncContent", results);
+      this.autoHighlight();
     }
   }
 });

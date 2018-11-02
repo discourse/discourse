@@ -25,6 +25,7 @@
       <thead>
         {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
         <th class='group-owner'>{{i18n "groups.members.owner"}}</th>
+        {{group-index-toggle order=order desc=desc field='added_at' i18nKey='groups.member_added'}}
         {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
         {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
         <th></th>
@@ -44,7 +45,9 @@
                 </strong>
               {{/if}}
             </td>
-
+            <td>
+              <span class="text">{{bound-date m.added_at}}</span>
+            </td>
             <td>
               <span class="text">{{bound-date m.last_posted_at}}</span>
             </td>

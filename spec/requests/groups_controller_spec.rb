@@ -360,7 +360,15 @@ describe GroupsController do
     end
 
     it "ensures that membership can be paginated" do
-      5.times { group.add(Fabricate(:user)) }
+
+      freeze_time
+
+      first_user = Fabricate(:user)
+      group.add(first_user)
+
+      freeze_time 1.day.from_now
+
+      4.times { group.add(Fabricate(:user)) }
       usernames = group.users.map { |m| m.username }.sort
 
       get "/groups/#{group.name}/members.json", params: { limit: 3 }
@@ -378,6 +386,11 @@ describe GroupsController do
       members = JSON.parse(response.body)["members"]
 
       expect(members.map { |m| m['username'] }).to eq(usernames[3..5])
+
+      get "/groups/#{group.name}/members.json", params: { order: 'added_at', desc: true }
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.last['added_at']).to eq(first_user.created_at.as_json)
     end
   end
 

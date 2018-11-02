@@ -206,7 +206,7 @@ module FlagQuery
     results = PostAction
       .flags
       .active
-      .includes(post: [:user, :topic])
+      .includes(post: [{ user: :user_stat }, :topic])
       .references(:post)
       .where("posts.user_id > 0")
       .order('post_actions.created_at DESC')

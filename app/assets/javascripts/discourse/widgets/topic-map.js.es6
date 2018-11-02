@@ -87,7 +87,7 @@ createWidget("topic-map-summary", {
     contents.push(
       h("li", [
         h(
-          "h4",
+          "span.topic-map-post-heading",
           { attributes: { role: "presentation" } },
           I18n.t("created_lowercase")
         ),
@@ -106,7 +106,7 @@ createWidget("topic-map-summary", {
         "li",
         h("a", { attributes: { href: attrs.lastPostUrl } }, [
           h(
-            "h4",
+            "span.topic-map-post-heading",
             { attributes: { role: "presentation" } },
             I18n.t("last_reply_lowercase")
           ),
@@ -125,7 +125,7 @@ createWidget("topic-map-summary", {
       h("li", [
         numberNode(attrs.topicReplyCount),
         h(
-          "h4",
+          "span.topic-map-post-heading",
           { attributes: { role: "presentation" } },
           I18n.t("replies_lowercase", { count: attrs.topicReplyCount })
         )
@@ -135,7 +135,7 @@ createWidget("topic-map-summary", {
       h("li.secondary", [
         numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
         h(
-          "h4",
+          "span.topic-map-post-heading",
           { attributes: { role: "presentation" } },
           I18n.t("views_lowercase", { count: attrs.topicViews })
         )
@@ -147,7 +147,7 @@ createWidget("topic-map-summary", {
         h("li.secondary", [
           numberNode(attrs.participantCount),
           h(
-            "h4",
+            "span.topic-map-post-heading",
             { attributes: { role: "presentation" } },
             I18n.t("users_lowercase", { count: attrs.participantCount })
           )
@@ -160,7 +160,7 @@ createWidget("topic-map-summary", {
         h("li.secondary", [
           numberNode(attrs.topicLikeCount),
           h(
-            "h4",
+            "span.topic-map-post-heading",
             { attributes: { role: "presentation" } },
             I18n.t("likes_lowercase", { count: attrs.topicLikeCount })
           )
@@ -173,7 +173,7 @@ createWidget("topic-map-summary", {
         h("li.secondary", [
           numberNode(attrs.topicLinkLength),
           h(
-            "h4",
+            "span.topic-map-post-heading",
             { attributes: { role: "presentation" } },
             I18n.t("links_lowercase", { count: attrs.topicLinkLength })
           )
