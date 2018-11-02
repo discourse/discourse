@@ -1197,6 +1197,11 @@ class Report
       },
       {
         type: :number,
+        property: :ignored_flags,
+        title: I18n.t("reports.most_disagreed_flaggers.labels.ignored_flags")
+      },
+      {
+        type: :number,
         property: :score,
         title: I18n.t("reports.most_disagreed_flaggers.labels.score")
       },
@@ -1209,8 +1214,7 @@ class Report
              CASE WHEN u.silenced_till IS NOT NULL THEN 't' ELSE 'f' END as silenced,
              us.flags_disagreed AS disagreed_flags,
              us.flags_agreed AS agreed_flags,
-             ROUND(us.flags_agreed::numeric / us.flags_disagreed::numeric, 2) as ratio,
-             us.flags_disagreed - us.flags_agreed AS spread,
+             us.flags_ignored AS ignored_flags,
              ROUND((1-(us.flags_agreed::numeric / us.flags_disagreed::numeric)) *
                    (us.flags_disagreed - us.flags_agreed)) AS score
       FROM users AS u
@@ -1227,6 +1231,7 @@ class Report
       flagger[:username] = row.username
       flagger[:avatar_template] = User.avatar_template(row.username, row.avatar_id)
       flagger[:disagreed_flags] = row.disagreed_flags
+      flagger[:ignored_flags] = row.ignored_flags
       flagger[:agreed_flags] = row.agreed_flags
       flagger[:score] = row.score
 
