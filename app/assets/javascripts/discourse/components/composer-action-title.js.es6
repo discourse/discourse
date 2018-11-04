@@ -66,9 +66,9 @@ export default Ember.Component.extend({
   },
 
   _formatReplyToTopic(link) {
-    return `<a class="topic-link" href="${link.href}">${
-      link.anchor
-    }</a>`.htmlSafe();
+    return `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
+      "model.topic.id"
+    )}">${link.anchor}</a>`.htmlSafe();
   },
 
   _formatReplyToUserPost(avatar, link) {

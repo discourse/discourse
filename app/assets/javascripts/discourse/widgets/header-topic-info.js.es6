@@ -40,6 +40,7 @@ export default createWidget("header-topic-info", {
           className: "topic-link",
           action: "jumpToTopPost",
           href,
+          attributes: { "data-topic-id": topic.get("id") },
           contents: () => titleHTML
         })
       );
