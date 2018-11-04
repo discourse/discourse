@@ -464,7 +464,11 @@ createWidget("post-article", {
   },
 
   buildAttributes(attrs) {
-    return { "data-post-id": attrs.id, "data-user-id": attrs.user_id };
+    return {
+      "data-post-id": attrs.id,
+      "data-topic-id": attrs.topicId,
+      "data-user-id": attrs.user_id
+    };
   },
 
   html(attrs, state) {
