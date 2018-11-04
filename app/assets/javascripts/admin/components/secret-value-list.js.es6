@@ -2,11 +2,10 @@ import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   classNameBindings: [":value-list", ":secret-value-list"],
-  inputInvalidKey: Ember.computed.empty("newKey"),
-  inputInvalidSecret: Ember.computed.empty("newSecret"),
   inputDelimiter: null,
   collection: null,
   values: null,
+  validationMessage: null,
 
   @on("didReceiveAttrs")
   _setupCollection() {
@@ -20,21 +19,37 @@ export default Ember.Component.extend({
 
   actions: {
     changeKey(index, newValue) {
+      if (this._checkInvalidInput(newValue)) return;
       this._replaceValue(index, newValue, "key");
     },
 
     changeSecret(index, newValue) {
+      if (this._checkInvalidInput(newValue)) return;
       this._replaceValue(index, newValue, "secret");
     },
 
     addValue() {
-      if (this.get("inputInvalidKey") || this.get("inputInvalidSecret")) return;
+      if (this._checkInvalidInput([this.get("newKey"), this.get("newSecret")]))
+        return;
       this._addValue(this.get("newKey"), this.get("newSecret"));
       this.setProperties({ newKey: "", newSecret: "" });
     },
 
     removeValue(value) {
       this._removeValue(value);
+    }
+  },
+
+  _checkInvalidInput(inputs) {
+    this.set("validationMessage", null);
+    for (let input of inputs) {
+      if (Ember.isEmpty(input) || input.includes("|")) {
+        this.set(
+          "validationMessage",
+          I18n.t("admin.site_settings.secret_list.invalid_input")
+        );
+        return true;
+      }
     }
   },
 
