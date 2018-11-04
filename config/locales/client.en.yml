@@ -3948,6 +3948,8 @@ en:
           tags: "Tags"
           search: "Search"
           groups: "Groups"
+        secret_list:
+          invalid_input: "Input fields cannot be empty or contain vertical bar character."
 
       badges:
         title: Badges

@@ -41,6 +41,34 @@ componentTest("adding a value", {
   }
 });
 
+componentTest("adding an invalid value", {
+  template: "{{secret-value-list values=values}}",
+
+  async test(assert) {
+    await fillIn(".new-value-input.key", "someString");
+    await fillIn(".new-value-input.secret", "keyWithAPipe|Hidden");
+    await click(".add-value-btn");
+
+    assert.ok(
+      find(".values .value").length === 0,
+      "it doesn't add the value to the list of values"
+    );
+
+    assert.deepEqual(
+      this.get("values"),
+      undefined,
+      "it doesn't add the value to the list of values"
+    );
+
+    assert.ok(
+      find(".validation-error")
+        .html()
+        .indexOf(I18n.t("admin.site_settings.secret_list.invalid_input")) > -1,
+      "it shows validation error"
+    );
+  }
+});
+
 componentTest("removing a value", {
   template: "{{secret-value-list values=values}}",
 

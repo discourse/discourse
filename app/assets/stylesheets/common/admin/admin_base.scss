@@ -935,12 +935,23 @@ table#user-badges {
       margin-left: 0.25em;
       margin-top: 0.125em;
     }
-    &:last-of-type {
-      .new-value-input {
-        &:first-of-type {
-          margin-left: 0.25em;
-        }
-      }
+    .new-value-input {
+      margin-left: 0.25em;
+    }
+  }
+}
+
+.mobile-view .secret-value-list {
+  .add-value-btn {
+    margin-bottom: 9px;
+  }
+  .value {
+    .value-input:last-of-type {
+      margin-left: 2.35em;
+    }
+    .new-value-input:first-of-type {
+      margin-right: 2.15em;
+      margin-left: 0.25em;
     }
   }
 }
