@@ -686,6 +686,8 @@ const Composer = RestModel.extend({
           originalText: post.get("raw"),
           loading: false
         });
+
+        composer.appEvents.trigger("composer:reply-reloaded", composer);
       });
     } else if (opts.action === REPLY && opts.quote) {
       this.setProperties({
@@ -699,6 +701,10 @@ const Composer = RestModel.extend({
     this.set("originalText", opts.draft ? "" : this.get("reply"));
     if (this.get("editingFirstPost")) {
       this.set("originalTitle", this.get("title"));
+    }
+
+    if (!isEdit(opts.action) || !opts.post) {
+      composer.appEvents.trigger("composer:reply-reloaded", composer);
     }
 
     return false;
