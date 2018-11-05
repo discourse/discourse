@@ -3259,7 +3259,7 @@ en:
 
         If this was you, great! There’s nothing else you need to do.
 
-        If this was not you, please [reset your %{site_name} password as soon as possible](%{base_url}/my/preferences/account).
+        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
 
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
