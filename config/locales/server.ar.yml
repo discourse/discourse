@@ -626,8 +626,6 @@ ar:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'غير مناسب'
-      description: 'محتوي هذا المنشور أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
-      short_description: 'انتهاك <a href="/guidelines">للقواعد العامة للمجتمع</a>'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_user:
       title: 'أرسل رسالة إلى @{{username}}'
@@ -666,11 +664,9 @@ ar:
       long_form: 'ترفع علم هذا كدعاية'
     inappropriate:
       title: 'غير مناسب'
-      description: 'هذا الموضوع يشمل محتوى أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_moderators:
       title: "شيء آخر "
-      description: 'هذا الموضوع يتطلب اهتمام الطاقم العام معتمداً على  <a href="/guidelines">التوجيهات</a>, <a href="%{tos_url}">شروط الخدمة</a>, أو لسبب آخر لم يذكر أعلاه.'
       long_form: 'علم هذا لتنبيه المراقب'
       email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
       email_body: "%{link}\n\n%{message}"
@@ -852,11 +848,6 @@ ar:
     sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\".  <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
     queue_size_warning: 'عدد المهام في الطّابور هو %{queue_size}، وهذا رقم كبير. قد يكون هذا مؤشّرًا لوجود مشكلة بعمليّات Sidekiq، أو قد تحتاج إضافة عاملي Sidekiq أخرى.'
     memory_warning: 'خادمك يعمل بأقل من 1 جيجا بايت من الذاكرة الإجمالية. يتطلب على الأقل 1 جيجا بايت من الذاكرة.'
-    google_oauth2_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Google OAuth2 (enable_google_oauth2_logins)، لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    facebook_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Facebook (enable_facebook_logins), لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394"  target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    twitter_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Twitter (enable_twitter_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    github_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع GitHub (enable_github_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
-    failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد إلكتروني فشلت. تحقق من app.yml الخاص بك وتأكد من إعدادات خادم البريد أنها صحيحة. <a href="/sidekiq/retries" target="_blank">أنظر للمهام الفاشلة في Sidekiq</a>.'
     subfolder_ends_in_slash: "إعدادات المجلدات الداخلية خاطئ;ال DISCOURSE_RELATIVE_URL_ROOT يجب ان تنتهي ب سلاش."
   site_settings:
     censored_words: "الكلمات التي ستُستبدل آليًّا ب‍ &#9632;&#9632;&#9632;&#9632;"
@@ -962,13 +953,11 @@ ar:
     min_admin_password_length: "أدنى طول لكلمة سرّ الإداريّ."
     block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
     enable_sso: " اسمح تسجيل دخول واحد عبر موقع خارجي(تحذير :عنوان بريد المستخدم *يجب* ان يتم التحقق من صحته عبر الموقع الخارجي)"
-    enable_sso_provider: "تنفيذ مزود بروتوكول Discourse SSO على نقطة نهاية /session/sso_provider, يتطلب sso_secret لتعينها"
     sso_secret: "السلسلة السرية استخدمت لتشفير مصادقة معلومات SSO, كن متأكداً أنها 10 حروف أو أكثر"
     sso_overrides_bio: "تخطى التعريف المبسط بالعضو، ولا تسمح له بتغييره."
     sso_overrides_email: "يتجاوز البريد الاكتوني المحلي مع بريد موقع خارجي من حمولة SSO عند كل تسجيل دخول, ويمنع   التتغيرات المحلية. (تحذير: ممكن يحدث تعارض بسبب الاختلاف طول اسم المستخدم/المتطلبات)"
     sso_overrides_username: "يتجاوز \"اسم المستخدم المحلي\" مع \"اسم مستخدم موقع خارجي\" من حمولة SSO عند كل تسجيل دخول, ويمنع التغيرات المحلية. (تحذير: ممكن يحدث تعارض بسبب الاختلاف طول اسم المستخدم/المتطلبات)"
     sso_overrides_name: "يتجاوز الاسم المحلي مع اسم موقع خارجي من حمولة SSO عند كل تسجيل دخول, ويمنع التغيرات المحلية. "
-    sso_overrides_avatar: "تجاوز صوره المستخدم الرمزيه بواسطه موقع ور رميه خارجي من SSO المحمول. اذا فعلت, الغي allow_uploaded_avatarsعاليه  مطلوبه "
     sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
     allow_new_registrations: "السماح بتسجيل حسابات جديدة. عطل هذه الخاصية إذا كنت تريد منع الكل من عمل حساب جديد علي الموقع."
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
@@ -982,7 +971,6 @@ ar:
     allow_restore: "تسمح استعادة، والتي يمكن أن تحل محل ALL بيانات الموقع! ترك كاذبة إلا إذا كنت تخطط لاستعادة نسخة احتياطية"
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
-    enable_s3_backups: "تحميل النسخ الاحتياطي لS3 عند اكتماله. هام: يتطلب اعتماد S3 صالحة دخلت في إعدادات الملفات."
     s3_backup_bucket: "الرفع عن بعد لإجراء نسخ إحتياطية. تحذير : تأكد من أنه رفع خاص."
     s3_disable_cleanup: "عطل النسخ الاحتياطيه المحذوفه من S3 عندما يتم حذفها محلياً"
     backup_time_of_day: "الوقت الذي يجب ان تأخد النسخ الاحتياطية فيه."
@@ -1488,7 +1476,6 @@ ar:
       من فضلك قم بتسجيل الدخول او انشاء حساب جديد للمتابعة.
   terms_of_service:
     title: "شروط الخدمة"
-    signup_form_message: 'لقد قرأت و أوافق على <a href="/tos" target="_blank">بنود الخدمة</a>.'
   deleted: 'حذف'
   upload:
     edit_reason: "تحميل نسخ محلية للصور"

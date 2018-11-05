@@ -489,7 +489,6 @@ ro:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Necorespunzător'
-      description: 'Această postare are un conținut pe care o persoană rezonabilă l-ar putea considera drept ofensator, abuziv, sau o violare a <a href="/guidelines"> ghidului comunității</a>.'
       long_form: 'marcat ca necorespunzător'
     notify_user:
       title: 'Trimite-i un mesaj lui @{{username}}'
@@ -523,11 +522,9 @@ ro:
       long_form: 'Marchează ca spam'
     inappropriate:
       title: 'Necorespunzător'
-      description: 'Acest subiect are conținut ce ar putea fi considerat drept ofensator, abuziv, sau o violare a <a href="/guidelines"> regulilor comunității</a>.'
       long_form: 'marcat cu marcaj de avertizare ca inadecvat'
     notify_moderators:
       title: "Alt motiv"
-      description: 'Acest subiect necesită atenția generală a echipei pe  baza <a href="/guidelines">ghidului</a>, <a href="%{tos_url}">CGU</a>, sau pentru un alt motiv care nu este menționat anterior.'
       long_form: 'marcat cu marcaj de avertizare în atenția moderatorilor'
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
@@ -717,11 +714,6 @@ ro:
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate asincron de către sidekiq. Asigură-te că măcar un proces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Citește despre Sidekiq aici</a>.'
     queue_size_warning: 'Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi  Sidekiq workers.'
     memory_warning: 'Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie.'
-    google_oauth2_config_warning: 'Serverul e configurat să permită autentificarea cu Google OAuth2 (enable_google_oauth2_logins), dar valorile secrete ale clientului precum și id-ul clientului nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setările. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    facebook_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Facebook (enable_facebook_logins), dar app id și valoarea app secret nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setările. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    twitter_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Twitter (enable_twitter_logins),dar cheia și valoarea secretă nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    github_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu GitHub (enable_github_logins), dar id-ul de client și valorile secrete nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    failing_emails_warning: 'Există %{num_failed_jobs} (de) sarcini email care au eșuat. Verifică app.yml și asigură-te că setările serverului de mail sunt corecte. <a href="/sidekiq/retries" target="_blank">Vizualizează sarcini eșuate în Sidekiq</a>.'
     subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
     email_polling_errored_recently:
       one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
@@ -834,14 +826,12 @@ ro:
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     enable_sso: "Activează opțiunea single sign on via site extern (ATENȚIE: ADRESELE DE EMAIL ALE UTILIZATORILOR *TREBUIE* VALIDATE DE SITE-UL EXTERN!)"
-    enable_sso_provider: "Implementează protocolul furnizorului SSO Discourse la punctul final /session/sso_provider, sso_secret trebuie să fie setat."
     sso_url: "URL pentru autentificare unică la punct final (trebuie să includă http:// or https://)"
     sso_secret: "șir secret folosit pentru autentificarea criptografică a SSO, asigură-te că este de minim 10 caractere"
     sso_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
     sso_overrides_email: "Suprascrie emailul local cu un email de pe un site extern din datele furnizate de SSO la fiecare autentificare și împiedică schimbările locale. (ATENȚIE: pot apărea discrepanțe din cauza normalizării emailurilor locale)"
     sso_overrides_username: "Suprascrie numele de utilizator local cu numele utilizator de pe site-ul extern din datele SSO la fiecare autentificare și împiedică schimbările locale (ATENȚIE: pot apărea discrepanțe din cauza diferențelor în lungimea/pre-condițiile numelui utilizator)"
     sso_overrides_name: "Suprascrie numele întreg de pe local cu numele întreg din datele SSO la fiecare autentificare și împiedică schimbările locale."
-    sso_overrides_avatar: "Suprascrie avatarul utilizatorului cu avatarul din datele SSO. Dacă este activat, se recomandă călduros dezactivarea allow_uploaded_avatars"
     sso_not_approved_url: "Redirecționează conturile neaprobate SSO către acest URL"
     sso_allows_all_return_paths: "Nu restricționa domeniul pentru return_paths furnizate de SSO (implicit, calea de întoarcere trebuie să fie pe site-ul curent)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
@@ -856,7 +846,6 @@ ro:
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
-    enable_s3_backups: "Încarcă fișierele backup pe s3 când sunt complete. IMPORTANT: sunt necesare date de autentificare valide pentru S3 în secțiunea FIșIERE."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -1640,7 +1629,6 @@ ro:
     search_title: "Caută în site"
   terms_of_service:
     title: "Condițiile generale de utilizare"
-    signup_form_message: 'Am citit și accept <a href="/tos" target="_blank">Condițiile generale de utilizare</a>.'
   deleted: 'șters'
   upload:
     edit_reason: "copii locale ale imaginilor descărcate"
@@ -2048,9 +2036,6 @@ ro:
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
-        description: |
-          <p>Dacă vei dori vreodată să schimbi aceste setări, vizitează <a href='/admin' target='_blank'>secțiunea admin</a>; care se găsește lângă iconița cu cheia franceză din meniul site-ului.</p>
-          <p>Distracție plăcută și mult succes<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>la construcția noii comunități!</a></p>
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

@@ -583,7 +583,6 @@ sk:
       topics_entered: "založených tém"
       post_count: "# príspevkov"
       confirm_delete_other_accounts: "Ste si istý že chcete zmazať tieto účty?"
-      powered_by: "Beží cez <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(vyberte možnosť)"
     user:
@@ -667,7 +666,6 @@ sk:
       watched_first_post_tags: "Sledovaný prvý príspevok"
       watched_first_post_tags_instructions: "Budete upozornený na prvý príspevok v každej novej téme s týmito štítkami."
       muted_categories: "Ignorované"
-      muted_categories_instructions: "Nebudete informovaný o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
       no_category_access: "Ako moderátor máte obmedzený prístup ku kategóriám. Ukladanie nie je povolené."
       delete_account: "Vymazať môj účet"
       delete_account_confirm: "Ste si istý, že chcete permanentne vymazať váš účet? Táto akcia je nenávratná."
@@ -736,11 +734,8 @@ sk:
       second_factor:
         title: "Dvojfaktorová autentifikácia"
         disable: "Vypnúť dvojfaktorovú autentifikáciu"
-        enable: "Zapnúť <a href>dvojfaktorovú autentifikáciu</a> pre vylepšené zabezpečenie účtu"
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         label: "Kód"
-        enable_description: |
-          Oskentujte tento QR kód v podporovanej aplikácii (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) a zadajte váš overovací kód.
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
       change_about:
@@ -829,7 +824,6 @@ sk:
         always: "vždy"
         never: "nikdy"
       email_digests:
-        title: "Keď nenavštevujem toto fórum, chcem dostať zhrnutie o populárnych témach a odpovediach emailom"
         every_30_minutes: "každých 30 mintút"
         every_hour: "každú hodinu"
         daily: "denne"
@@ -1693,7 +1687,6 @@ sk:
         upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
         file_too_large: "Ľutujeme, daný súbor je príliš veľký (maximálna veľkosť je {{max_size_kb}}kB). Čo takto nahrať ten súbor na zdielané cloudové úložisko a nazdielať odkaz?"
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať iba jeden súbor."
-        too_many_dragged_and_dropped_files: "Ľutujeme, ale naraz je možné nahrať iba 10 súborov."
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."

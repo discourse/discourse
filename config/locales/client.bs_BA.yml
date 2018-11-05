@@ -551,7 +551,6 @@ bs_BA:
       topics_entered: "pogledano tema"
       post_count: "# postova"
       confirm_delete_other_accounts: "Jeste sigurni da želite da izbrišete ove račune?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
       copied: "koprian"
     user_fields:
       none: "(odaberi opciju)"
@@ -636,7 +635,6 @@ bs_BA:
       watched_first_post_tags: "Prva objava"
       watched_first_post_tags_instructions: "Bit će te obavješteni o prvoj objavi u svakoj novoj temi sa ovim tagovima."
       muted_categories: "Utišan"
-      muted_categories_instructions: "Nećete biti obavješteni o bilo čemu što se odnosi na nove teme u ovim kategorijama, i neće biti prikazani u listi Novije."
       no_category_access: "Kao moderator imate ograničen pristup kategoriji, sačuvati je isključeno."
       delete_account: "Izbriši moj račun"
       delete_account_confirm: "Da li ste sigurni da želite zauvijek izbrisati vas račun? Ova radnja je kasnije nepovratna!"
@@ -696,15 +694,10 @@ bs_BA:
       second_factor:
         title: "Two Factor Authentication"
         disable: "Isključi two factor authentication"
-        enable: "Uključi <a href>two factor authentication</a> za pojačanu sigurnost korisničkih računa"
         confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         label: "Šifra"
-        enable_description: |
-          Skeniraj ovaj QR kod u podržanoj aplikaciji (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) a potom unesite kod za ovjeru.
         disable_description: "Molimo da uneste kod za ovjeru autentičnosti sa vaše aplikacije"
         show_key_description: "Unesi manuelno"
-        extended_description: |
-          Two factor authentication (dvofaktorska ovjera autentičnosti) dodaje ekstra nivo sigurnosti vašem korisničkom računu tako što zahtjeva i jednokratni "token" (bon) pored vaše šifre. Bonovi se mogu generisati na  <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, i <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> uređajima.
         oauth_enabled_warning: "Imajte na umu da će ulogovanje korištenjem socijalnih mreža biti isključeno u momentu kad uključite two factor authentication (dvofaktorsku ovjeru autentičnosti) na vašem korisničkom računu."
       change_about:
         title: "Promjeni O meni"
@@ -723,7 +716,6 @@ bs_BA:
         title: "Promjeni sliku"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baziran na"
         gravatar_title: "Promjenite vaš avatar na Gravatar web stranici."
-        gravatar_failed: "Neuspješno učitavanje Gravatar-a. Postoji li uopšte Gravatar povezan na vašu email adresu?"
         refresh_gravatar_title: "Osvježi Gravatar"
         letter_based: "Avatar dodjeljen od sistema"
         uploaded_avatar: "Vaša slika"
@@ -792,7 +784,6 @@ bs_BA:
         always: "uvijek"
         never: "nikad"
       email_digests:
-        title: "Kada forum ne posjećujem, pošaljite mi e-mail sa Sažetkom popularnih tema i odgovora"
         every_30_minutes: "svakih 30. min"
         every_hour: "po satu"
         daily: "dnevno"
@@ -1879,7 +1870,6 @@ bs_BA:
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Nažalost, taj fajl je prevelik (maksimalna veličina je {{max_size_kb}} kilobajta). Alternativno možete vaš preveliki fajl spremiti na neki od cloud sharing servisa, a potom ovdje objaviti link do tog fajla?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Žao nam je, možete dizati samo 10 slika odjednom."
         upload_not_authorized: "Nažalost, fajl koji pokušavate da učitate nije dozvoljen za učitavanje (dozvoljene ekstenzije su: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."

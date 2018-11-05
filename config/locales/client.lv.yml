@@ -524,7 +524,6 @@ lv:
       watched_first_post_tags: "Seko pirmajam ierakstam"
       watched_first_post_tags_instructions: "Jums paziņos par pirmo ierakstu katrā jaunajā tēmā ar šiem tagiem."
       muted_categories: "Klusināts"
-      muted_categories_instructions: "Jums nepaziņos neko par jaunām tēmām šajās sadaļās, un tās neparādīsies starp tēmām ar pēdējām izmaiņām."
       no_category_access: "Kā moderatoram jums ir ierobežota kategoriju piekļuve, saglabāšana ir atspējota."
       delete_account: "Izdzēst manu profilu"
       delete_account_confirm: "Vai esat drošs, ka vēlaties neatgriezeniski dzēst savu profilu? Šo darbību nevar atcelt!"
@@ -661,7 +660,6 @@ lv:
         always: "vienmēr"
         never: "nekad"
       email_digests:
-        title: "Kad es neapmeklēju šo vietni, sūtīt man kopsavilkumu par populārām tēmām un atbildēm"
         every_30_minutes: "katras 30 minūtes"
         every_hour: "katru stundu"
         daily: "katru dienu"
@@ -1569,7 +1567,6 @@ lv:
         upload: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         file_too_large: "Atvainojiet, šis fails ir pārāk liels (maksimālais izmērs ir {{max_size_kb}} kb). Varbūt augšuplādējiet jūsu lielo failu uz kādu mākoņservisu, bet pēc tam padalieties ar saiti?"
         too_many_uploads: "Atvainojiet, jūs varat augšuplādēt tikai vienu failu vienā reizē."
-        too_many_dragged_and_dropped_files: "Atvainojiet, jūs varat augšuplādēt tikai 10 failus vienā reizē."
         upload_not_authorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."
         attachment_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt pielikumus."

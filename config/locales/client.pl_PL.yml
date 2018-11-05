@@ -573,7 +573,6 @@ pl_PL:
       topics_entered: "wprowadzone tematy:"
       post_count: "# wpisów"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
-      powered_by: "obsługiwane przez <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(wybierz opcję)"
     user:
@@ -655,7 +654,6 @@ pl_PL:
       watched_first_post_tags: "Oglądasz pierwszy post"
       watched_first_post_tags_instructions: "Zostaniesz powiadomiony tylko o pierwszym wpisie w każdym nowym temacie oznaczonym tymi tagami."
       muted_categories: "Wyciszone"
-      muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       no_category_access: "Jako moderator masz limitowany dostęp do kategorii, możliwość zapisu jest wyłączona."
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
@@ -717,12 +715,8 @@ pl_PL:
         disable: "Wyłącz dwuskładnikowe uwierzytelnianie"
         confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         label: "Kod"
-        enable_description: |
-          Zeskanuj ten kod QR za pomocą wspieranej aplikacji (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a>– <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) i podaj swój kod uwierzytelniający.
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
         show_key_description: "Wpisz ręcznie"
-        extended_description: |
-          Dwuskładnikowe uwierzytelnianie zwiększa bezpieczeństwo twojego konta dzięki wymogowi podawanie jednorazowego tokenu oprócz twego hasła przy każdej próbie zalogowania. Tokeny można generować na urządzeniach z systemem <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> lub <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -811,7 +805,6 @@ pl_PL:
         always: "zawsze"
         never: "nigdy"
       email_digests:
-        title: "Gdy nie odwiedzam strony, wysyłaj e-mail podsumowujący z popularnymi tematami i odpowiedziami."
         every_30_minutes: "co 30 minut"
         every_hour: "co godzinę"
         daily: "codziennie"
@@ -1869,7 +1862,6 @@ pl_PL:
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ale plik jest za duży (maksymalny rozmiar to {{max_size_kb}}kb). Załaduj plik na zewnętrzny serwer plików i dodaj udostępniony link."
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
-        too_many_dragged_and_dropped_files: "Przepraszamy, ale możesz wgrać tylko 10 plików naraz."
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."

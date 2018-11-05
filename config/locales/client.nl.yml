@@ -508,7 +508,6 @@ nl:
       topics_entered: "topics ingevoerd"
       post_count: "# berichten"
       confirm_delete_other_accounts: "Weet u zeker dat u deze accounts wilt verwijderen?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
       copied: "gekopieerd"
     user_fields:
       none: "(selecteer een optie)"
@@ -588,7 +587,6 @@ nl:
       watched_first_post_tags: "Eerste bericht in de gaten houden"
       watched_first_post_tags_instructions: "U ontvangt een melding bij het eerste bericht in elk nieuw topic met deze tags."
       muted_categories: "Genegeerd"
-      muted_categories_instructions: "U ontvangt geen melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet in Nieuwste."
       no_category_access: "Als een beheerder heeft u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
@@ -727,7 +725,6 @@ nl:
         always: "altijd"
         never: "nooit"
       email_digests:
-        title: "Mij bij afwezigheid een e-mailsamenvatting van populaire topics en antwoorden sturen"
         every_30_minutes: "elke 30 minuten"
         every_hour: "elk uur"
         daily: "dagelijks"
@@ -1647,7 +1644,6 @@ nl:
         upload: "Sorry, er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
         file_too_large: "Sorry, dat bestand is te groot (maximale grootte is {{max_size_kb}} kB). Misschien kunt u dit bestand uploaden naar een cloudopslagdienst en de koppeling ernaar delen?"
         too_many_uploads: "Sorry, u kunt maar één bestand tegelijk uploaden."
-        too_many_dragged_and_dropped_files: "Sorry, u kunt maar 10 bestanden tegelijk uploaden."
         upload_not_authorized: "Sorry, het bestand dat u probeert te uploaden is niet geautoriseerd (geautoriseerde extensies: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."

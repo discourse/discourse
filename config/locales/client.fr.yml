@@ -536,7 +536,6 @@ fr:
       topics_entered: "sujets visités"
       post_count: "# messages"
       confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
-      powered_by: "propulsé par <a href='https://ipinfo.io'>ipinfo.io</a>"
       copied: "copié"
     user_fields:
       none: "(choisir une option)"
@@ -621,7 +620,6 @@ fr:
       watched_first_post_tags: "Surveiller les nouveaux sujets"
       watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces tags."
       muted_categories: "Silencieuses"
-      muted_categories_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
       no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut pas être annulée !"
@@ -695,16 +693,10 @@ fr:
       second_factor:
         title: "Authentification à deux étapes"
         disable: "Désactiver l'authentification à deux étapes"
-        enable: "Activer <a href>l'authentification à deux étapes</a> pour une sécurité accrue des comptes."
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
-        enable_description: |
-          Scanner ce code QR dans une app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) et saisir votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisir manuellement"
-        extended_description: |
-          L'authentification à deux étapes ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en
-          plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, et <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux étapes aura été activée sur votre compte."
       change_about:
         title: "Modifier À propos de moi"
@@ -724,7 +716,6 @@ fr:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         gravatar_title: "Modifier votre avatar sur le site de Gravatar"
-        gravatar_failed: "Impossible de récupérer le Gravatar. En existe-t-il un associé à cette adresse courriel ?"
         refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -802,7 +793,6 @@ fr:
         always: "toujours"
         never: "jamais"
       email_digests:
-        title: "Lorsque je ne visite pas le site, m'envoyer un courriel avec un résumé des sujets et réponses populaires"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
@@ -1881,7 +1871,6 @@ fr:
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
         file_too_large: "Désolé, ce fichier est trop gros (la taille maximale est {{max_size_kb}}kb). Pourquoi ne pas télécharger votre gros fichier sur un service partagé cloud, puis partager le lien?"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
-        too_many_dragged_and_dropped_files: "Désolé, vous ne pouvez télécharger que 10 fichiers à la fois."
         upload_not_authorized: "Désolé, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."

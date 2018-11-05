@@ -113,6 +113,9 @@ et:
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
     invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
+    location:
+      local: "Kohalik"
+      s3: "Amazon S3"
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -307,6 +310,7 @@ et:
     replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
     post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
     errors:
+      not_found: "Kategooriat ei leitud!"
       uncategorized_parent: "'Liigitamata' ei saa omada vanem-liiki"
       self_parent: "Alamliigi vanemaks ei tohi olla alamliik ise"
       depth: "Alamliiki ei saa paigutada teise alamliigi alla"
@@ -330,6 +334,9 @@ et:
     leader:
       title: "juht"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
+  post:
+    image_placeholder:
+      broken: "See pilt on katki"
   rate_limiter:
     hours:
       one: "1 tund"
@@ -420,6 +427,32 @@ et:
     title: 'Uuenda Parool'
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      edge: "Microsoft Edge"
+      unknown: "tundmatu brauser"
+    device:
+      android: "Androidi seade"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "Mobiilne seade"
+      mac: "Mac"
+      linux: "GNU/Linuxiga arvuti"
+      windows: "Windowsi arvuti"
+      unknown: "tundmatu seade"
+    os:
+      android: "Android"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "tundmatu operatsioonisüsteem"
   change_email:
     confirmed: "Sinu meiliaadress on uuendatud."
     please_continue: "Edasi saidile %{site_name}"
@@ -449,7 +482,6 @@ et:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ebasünnis'
-      description: 'Selle postituse sisu on iga mõistliku inimese hinnangul solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_user:
       title: 'Saada kasutajale @{{username}} sõnum'
@@ -465,29 +497,33 @@ et:
     bookmark:
       title: 'Järjehoidja'
       description: 'Lisa sellele postitusele järjehoidja'
+      short_description: 'Lisa sellele postitusele järjehoidja'
       long_form: 'lisasin sellele postitusele järjehoidja'
     like:
       title: 'Laigi'
       description: 'Laigi seda postitust'
       long_form: 'laikis seda'
   user_activity:
+    no_default:
+      others: "Tegevusi pole."
     no_bookmarks:
       others: "Järjehoidjad puuduvad."
     no_likes_given:
       self: "Sa pole oma meeldimist ühelegi postitusele andnud."
       others: "Meeldimisega postitusi veel pole."
+    no_replies:
+      others: "Vastuseid pole."
   topic_flag_types:
     spam:
       title: 'Spämm'
       description: 'See teema on reklaam. See ei ole ei kasulik ega teemakohane.'
       long_form: 'tähistasin selle kui spämmi'
+      short_description: 'See on reklaam'
     inappropriate:
       title: 'Ebasobiv'
-      description: 'Selle teema sisu on iga mõistliku inimese hinnangu järgi solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_moderators:
       title: "Miski muu"
-      description: 'See teema vajab saidi meeskonna tähelepanu tulenevalt <a href="/guidelines">juhisest</a>, <a href="%{tos_url}">kasutustingimustest</a> või mõnest muust põhjusest, mida pole siin mainitud.'
       long_form: 'tähistasin selle kui moderaatori tähelepanu vajava'
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
       email_body: "%{link}\n\n%{message}"
@@ -507,12 +543,48 @@ et:
     authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    scopes:
+      read: "Loe kõiki"
+      write: "Kirjuta kõikidesse"
   reports:
+    default:
+      labels:
+        count: Arv
+        percent: Protsent
+        day: Päev
+    post_edits:
+      title: "Postituse muutmised"
+      labels:
+        post: Postitus
+        author: Autor
+        edit_reason: Põhjus
+    moderators_activity:
+      title: "Modereerimise tegevus"
+      labels:
+        moderator: Moderaator
+        time_read: Lugemise aeg
+        topic_count: Teemade loomise aeg
+        post_count: Postitusi loodud
+    flags_status:
+      values:
+        agreed: Nõus
+        disagreed: Polnud nõus
+        no_action: Tegevust pole
+      labels:
+        flag: Liik
+        assigned: Määratud
+        poster: Postitaja
     visits:
       title: "Kasutajakülastused"
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
+      xaxis: "Päev"
+    new_contributors:
+      xaxis: "Päev"
+    dau_by_mau:
+      xaxis: "Päev"
+    daily_engaged_users:
       xaxis: "Päev"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
@@ -543,11 +615,28 @@ et:
     users_by_trust_level:
       xaxis: "Usaldustase"
       yaxis: "Kasutajate arv"
+      labels:
+        level: Tase
+    users_by_type:
+      xaxis: "Liik"
+      yaxis: "Kasutajate arv"
+      labels:
+        type: Liik
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderaator
+        silenced: Vaigistatud
+    trending_search:
+      labels:
+        searches: Otsingud
     emails:
       title: "Saadetud kirjad"
       xaxis: "Päev"
       yaxis: "Kirjade hulk"
     user_to_user_private_messages:
+      xaxis: "Päev"
+      yaxis: "Sõnumite arv"
+    user_to_user_private_messages_with_replies:
       xaxis: "Päev"
       yaxis: "Sõnumite arv"
     system_private_messages:
@@ -577,8 +666,15 @@ et:
       num_clicks: "Klikid"
       num_topics: "Teemad"
       num_users: "Kasutajad"
+      labels:
+        domain: Domeen
+        num_clicks: Klikke
+        num_topics: Teemasid
     top_referred_topics:
       title: "Parimad viidatud teemad"
+      labels:
+        num_clicks: "Klikke"
+        topic: "Teema"
     page_view_anon_reqs:
       title: "Anonüümne"
       xaxis: "Päev"
@@ -619,6 +715,9 @@ et:
     mobile_visits:
       xaxis: "Päev"
       yaxis: "Külastuste arv"
+    web_crawlers:
+      labels:
+        page_views: "Lehekülje vaatamisi"
   dashboard:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
@@ -714,8 +813,11 @@ et:
     pasted_image_filename: "Asetatud pilt"
   color_schemes:
     dark: "Tume skeem"
+    default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
+    neutral_theme_name: "Neutraalne"
+    summer_theme_name: "Suvi"
   about: "Teave"
   guidelines: "Juhendid"
   privacy: "Privaatsus"
@@ -952,3 +1054,6 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
+  staff_action_logs:
+    not_found: "ei leitud"
+    unknown: "tundmatu"

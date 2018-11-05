@@ -126,6 +126,8 @@ ko:
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
     not_enough_space_on_disk: "백업을 업로드할 디스크 공간이 충분하지 않습니다."
     invalid_filename: "백업 파일명에 허용되지 않는 문자가 포함되어 있습니다. 알파벳, 숫자, 점(.), 대쉬(-), 언더바(_)만 사용할 수 있습니다."
+    location:
+      s3: "아마존 S3"
   not_logged_in: "로그인이 필요합니다."
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
@@ -470,6 +472,11 @@ ko:
     title: '비밀번호 초기화'
     success: "비밀번호를 성공적으로 변경하고 지금 로그인 되었습니다."
     success_unapproved: "비밀번호를 성공적으로 변경하였습니다."
+  user_auth_tokens:
+    browser:
+      edge: "마이크로소프트 엣지"
+    device:
+      unknown: "알수없는 디바이스"
   change_email:
     confirmed: "이메일 주소가 변경되었습니다."
     please_continue: "%{site_name}으로 가기"
@@ -509,8 +516,6 @@ ko:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '부적절함'
-      description: '이 글은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
-      short_description: '<a href="/guidelines">커뮤니티 가이드라인</a> 의 위반'
       long_form: '부적절함으로 신고하기'
     notify_user:
       title: '@{{username}} 님에게 메시지를 보냅니다'
@@ -552,13 +557,9 @@ ko:
       long_form: '스팸으로 신고하였습니다.'
     inappropriate:
       title: '부적절함'
-      description: '이 글은 평균적인 사람들의 관점에서 볼 때 공격적이나 모욕적인 글을 담고 있거나,
-
-        <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
       title: "기타"
-      description: '이 주제는 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 위에서 언급되지 않은 기타 사유로 인해 운영진이 검토할 필요가 있습니다.'
       long_form: '관리자의 주의를 위해 신고'
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
@@ -603,6 +604,18 @@ ko:
       read: "모두 읽기"
       write: "모두 쓰기"
   reports:
+    default:
+      labels:
+        percent: 퍼센트
+    post_edits:
+      labels:
+        edit_reason: 사유
+    moderators_activity:
+      labels:
+        revision_count: 리비젼
+    flags_status:
+      labels:
+        flag: 종류
     visits:
       title: "사용자 방문"
       xaxis: "일"
@@ -641,6 +654,9 @@ ko:
       title: "회원등급당 사용자 수"
       xaxis: "회원등급"
       yaxis: "사용자 수"
+    users_by_type:
+      labels:
+        type: 종류
     emails:
       title: "이메일 보냄"
       xaxis: "일"
@@ -741,11 +757,6 @@ ko:
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: '큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
-    google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
-    facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
-    twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
-    github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
-    failing_emails_warning: '실패한 이메일 작업이 %{num_failed_jobs} 개 있습니다. app.yml 을 열어서 메일 서버 설정이 정확한지 확인해보세요. <a href="/sidekiq/retries" target="_blank">Sidekiq에서 실패한 작업 보기</a>.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
       other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요."
@@ -866,14 +877,12 @@ ko:
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
-    enable_sso_provider: "/session/sso_provider 를 엔드포인트로 사용해서 Discourse SSO 제공 프로토콜 구현하기, sso_secret 체크 필요"
     sso_url: " 싱글 사인 온(SSO)엔드포인트의 URL (http:// 또는 https:// 포함 필수)"
     sso_secret: "SSO 정보 암호화 인증에 사용 될 암호 문자열, 10글자 이상이어야 합니다."
     sso_overrides_bio: "사용자 프로필에서 사용자 bio를 덮어쓰고 사용자의 변경을 금지"
     sso_overrides_email: "SSO로 접속 시 사용자 이메일 정보 갱신 후 사용자 임의 변경 금지 설정 (경고: 이메일 정보 불일치가 생길 수도 있습니다)"
     sso_overrides_username: "SSO로 접속 시 사용자 아이디 정보 갱신 후 사용자 임의 변경 금지 설정 (경고: 아이디 길이/필요조건 등 내부 규정으로 인해 불일치가 생길 수도 있습니다)"
     sso_overrides_name: "SSO로 접속 시 사용자 실명 정보 갱신 후 사용자 임의 변경 금지 설정"
-    sso_overrides_avatar: "SSO로 접속 시 사용자 아바타 이미지 갱신. 활성화하고 allow_uploaded_avatars를 비활성화를 매우 권장합니다."
     sso_not_approved_url: "승인안된 SSO 계정은 이 URL로 이동"
     sso_allows_all_return_paths: "SSO로 제공된 return_paths를 위한 도메인 제한 해제 (기본 return path는 현재 사이트로 설정)"
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
@@ -888,7 +897,6 @@ ko:
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     automatic_backups_enabled: "설정된 백업 주기로 자동 백업 실행"
-    enable_s3_backups: "백업이 완료되면 Amazon S3로 업로드합니다. 중요: s3 credentials을 기입되어있는지 확인 필요"
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     s3_disable_cleanup: "로컬에서 백업 삭제 시 S3에서 백업 제거하는 기능 해제"
     backup_time_of_day: "백업이 실행되어야 할 UTC 시간"
@@ -1204,6 +1212,9 @@ ko:
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
+    second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
+    second_factor_toggle:
+      backup_code: "대신 백업 코드 사용"
   user:
     deactivated_by_staff: "운영진에 의해 비활성화됨"
     activated_by_staff: "운영진에 의해 활성화됨"
@@ -1272,6 +1283,8 @@ ko:
         이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
     email_error_notification:
       title: "이메일 에러 알림"
+    email_revoked:
+      subject_template: "이메일 주소가 맞습니까?"
     too_many_tl3_flags:
       title: "TL3 Flag가 너무 많음"
       subject_template: "대기중인 신규 계정"
@@ -1361,9 +1374,9 @@ ko:
     recent_topics: "최근"
     see_more: "더"
     search_title: "이 사이트 검색"
+    search_button: "검색"
   terms_of_service:
     title: "서비스 이용약관"
-    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: '삭제되었습니다'
   image: "이미지"
   upload:
@@ -1378,6 +1391,11 @@ ko:
     images:
       too_large: "죄송합니다, 업로드하려는 이미지가 너무 큽니다. (최대 크기 %{max_size_kb}KB). 크기를 줄여서 다시 시도해보세요."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
+  skipped_email_log:
+    user_email_anonymous_user: "사용자는 익명입니다"
+    user_email_user_suspended: "사용자가 차단됨"
+    sender_message_blank: "메시지 내용이 없습니다"
+    sender_body_blank: "본문 내용이 없습니다"
   color_schemes:
     base_theme_name: "기본 테마 색상"
     dark: "다크 Scheme"
@@ -1695,6 +1713,3 @@ ko:
         title: "운영진 초청하기"
       finished:
         title: "당신의 Discourse가 준비되었습니다!"
-        description: |
-          <p>이 설정을 바꾸고 싶어지면, <a href='/admin' target='_blank'>관리자 섹션</a>으로 들어가세요. 사이트 메뉴에 공구처럼 생긴 아이콘을 누르면 됩니다.</p>
-          <p>당신의 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 만들기</a>를 응원합니다!</p>

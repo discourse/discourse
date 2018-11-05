@@ -435,7 +435,6 @@ pt:
       topics_entered: "tópicos inseridos"
       post_count: "# publicações"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
-      powered_by: "desenvolvido por <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(selecione uma opção)"
     user:
@@ -510,7 +509,6 @@ pt:
       watched_first_post_tags: "A Vigiar a Primeira Resposta"
       watched_first_post_tags_instructions: "Será notificado acerca da primeira resposta em cada novo tópico nestas categorias."
       muted_categories: "Silenciado"
-      muted_categories_instructions: "Não será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
       delete_account: "Eliminar A Minha Conta"
       delete_account_confirm: "Tem a certeza que pretende eliminar a sua conta de forma permanente? Esta ação não pode ser desfeita!"
       deleted_yourself: "A sua conta foi eliminada com sucesso."
@@ -646,7 +644,6 @@ pt:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Quando eu não vier aqui, enviar-me uma mensagem resumo dos tópicos e respostas populares"
         every_30_minutes: "a cada 30 minutos"
         every_hour: "de hora em hora"
         daily: "diariamente"
@@ -1559,7 +1556,6 @@ pt:
         upload: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
         file_too_large: "Lamentamos mas esse ficheiro é demasiado grande (o tamanho máximo é de {{max_size_kb}}kb). Porque não carregar o seu ficheiro grande para um serviço de partilha na nuvem e depois partilhar o link?"
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
-        too_many_dragged_and_dropped_files: "Lamentamos mas só pode carregar 10 ficheiros de cada vez."
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Desculpe, precisa de iniciar a sessão para transferir anexos."

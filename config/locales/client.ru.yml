@@ -654,7 +654,6 @@ ru:
       watched_first_post_tags: "Просмотр Первого сообщения"
       watched_first_post_tags_instructions: "Уведомлять только о первом сообщении в каждой новой теме с этими тегами."
       muted_categories: "Выключенные разделы"
-      muted_categories_instructions: "Не уведомлять меня о новых темах в этих разделах и не показывать новые темы на странице «Непрочитанные»."
       no_category_access: "Как модератор Вы ограничены в доступе к разделу, сохранения отклонены."
       delete_account: "Удалить мою учётную запись"
       delete_account_confirm: "Вы уверены, что хотите удалить свою учётную запись? Отменить удаление будет невозможно!"
@@ -716,7 +715,6 @@ ru:
       second_factor:
         title: "Двухфакторная аутентификация"
         disable: "Отключить двухфакторную аутентификацию"
-        enable_description: "Сканируйте этот QR-код в поддерживаемом приложении (<a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\" target=\"_blank\">Android</a> – <a href=\"https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8\" target=\"_blank\">iOS</a> – <a href=\"https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj\" target='_blank'>Windows Phone</a>) и  введите свой код аутентификации. \n"
       change_about:
         title: "Изменить информацию обо мне"
         error: "При изменении значения произошла ошибка."
@@ -810,7 +808,6 @@ ru:
         always: "всегда"
         never: "никогда"
       email_digests:
-        title: "В случае моего отсутствия на форуме, присылайте мне сводку популярных новостей"
         every_30_minutes: "каждые 30 минут"
         every_hour: "каждый час"
         daily: "ежедневно"
@@ -1864,7 +1861,6 @@ ru:
         upload: "К сожалению, не удалось загрузить файл. Попробуйте ещё раз."
         file_too_large: "К сожалению, этот файл слишком большой (максимально допустимый размер {{max_size_kb}} КБ). Почему бы не загрузить Ваш большой файл в службу облачного обмена, а затем поделиться ссылкой?"
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
-        too_many_dragged_and_dropped_files: "К сожалению, за один раз можно загрузить только 10 файлов."
         upload_not_authorized: "К сожалению, вы не можете загрузить файл данного типа (список разрешённых типов файлов: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "К сожалению, загрузка изображений недоступна новым пользователям."
         attachment_upload_not_allowed_for_new_user: "К сожалению, загрузка файлов недоступна новым пользователям."

@@ -642,8 +642,6 @@ it:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriato'
-      description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
-      short_description: 'Una violazione delle </a>linee guida della nostra comunità </a>'
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
@@ -688,11 +686,9 @@ it:
       long_form: 'segnalato come spam'
     inappropriate:
       title: 'Inappropriato'
-      description: 'Questo argomento ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_moderators:
       title: "Altro"
-      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
       long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
@@ -923,11 +919,6 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
-    google_oauth2_config_warning: 'Il server è configurato per permettere iscrizioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
-    facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
-    twitter_config_warning: 'Il server è configurato per accettare iscrizioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
-    github_config_warning: 'Il server è configurato per accettare iscrizioni e login con GitHub (enable_github_logins), tuttavia i parametri client id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
-    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
@@ -1061,14 +1052,12 @@ it:
     password_unique_characters: "Numero minimo di caratteri unici che una password deve avere."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
     enable_sso: "Abilita il single sign on da sito esterno (ATTENZIONE: L'INDIRIZZO EMAIL DEGLI UTENTI *DEVE* ESSERE VALIDATO DAL SITO ESTERNO!)"
-    enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
     sso_url: "URL per l'endpoint del single sign on (deve includere http:// o https://)"
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_bio: "Sovrascrive la biografia utente nel profilo utente ed impedisce agli utenti di cambiarla"
     sso_overrides_email: "Sovrascrive le email locali con quelle del sito esterno con cui ci si connette tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle normalizzazioni delle email locali)"
     sso_overrides_username: "Sovrascrive il nome utente locale con quello del sito esterno con cui ci si connette tramite SSO e impedisce  cambiamenti locali (ATTENZIONE: potrebbero verificarsi discrepanze a causa delle differenze tra lunghezza effettiva e richiesta del nome utente)"
     sso_overrides_name: "Sovrascrive il nome locale completo con quello del sito esterno con cui ci si connettei tramite SSO, e impedisce modifiche locali."
-    sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     sso_not_approved_url: "Ridirigi a questa URL gli account SSO non approvati"
     sso_allows_all_return_paths: "Non restringere il dominio per i return_paths forniti da SSO (per default il return path deve essere sul sito corrente)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
@@ -1084,7 +1073,6 @@ it:
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     automatic_backups_enabled: "Esegui backup automatici come definito nella frequenza di backup"
     backup_frequency: "Numero di giorni tra due backup."
-    enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     s3_disable_cleanup: "Disabilita la rimozione dei backup da S3 quando rimossi localmente."
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
@@ -2335,7 +2323,6 @@ it:
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
   terms_of_service:
     title: "Termini di Servizio"
-    signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellati'
   image: "immagine"
   upload:
@@ -2928,9 +2915,6 @@ it:
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per far partire la tua comunità. "
       finished:
         title: "Il tuo Discourse è Pronto!"
-        description: |
-          <p>Se te la senti di cambiare queste impostazioni, visita <a href='/admin' target='_blank'>la tua sezione amministrazione</a>; la trovi accanto all'icona della chiave inglese nel menu hamburger del sito.</p>
-          <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   discourse_push_notifications:
     popup:
       confirm_body: 'Successo! Le notifiche sono state abilitate.'

@@ -409,6 +409,7 @@ it:
         all: "Tutti i gruppi"
         empty: "Non ci sono gruppi visibili."
         filter: "Filtra per tipo di gruppo"
+        owner_groups: "Guppi di cui sono proprietario"
         close_groups: "Gruppi Chiusi"
         automatic_groups: "Gruppi Automatici"
         automatic: "Automatico"
@@ -512,6 +513,7 @@ it:
       topic_stat_sentence:
         one: "%{count} nuovo argomento nell'ultimo %{unit}."
         other: "%{count} nuovi argomenti nell'ultimo %{unit}."
+      n_more: "Categorie (altre %{count}) ..."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Hostname
@@ -527,7 +529,7 @@ it:
       topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
       confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
-      powered_by: "fornito da <a href='https://ipinfo.io'>ipinfo.io</a>"
+      copied: "copiato"
     user_fields:
       none: "(scegli un'opzione)"
     user:
@@ -545,6 +547,7 @@ it:
       private_messages: "Messaggi"
       activity_stream: "Attività"
       preferences: "Opzioni"
+      profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
       collapse_profile: "Raggruppa"
       bookmarks: "Segnalibri"
@@ -611,7 +614,6 @@ it:
       watched_first_post_tags: "Osservando Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
       muted_categories: "Silenziate"
-      muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Recenti."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -630,6 +632,7 @@ it:
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
+      api_last_used_at: "Ultimo utilizzo:"
       theme: "Tema"
       home: "Home Page Predefinita"
       staged: "Temporaneo"
@@ -684,15 +687,10 @@ it:
       second_factor:
         title: "Autenticazione a Due Fattori"
         disable: "Disabilita l'autenticazione a due fattori"
-        enable: "Attiva<a href>l'autenticazione a due fattori</a> per migliorare la sicurezza dell'account"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
-        enable_description: |
-          Esegui la scansione di questo codice QR con un'app supportata (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) e inserisci il tuo codice di autenticazione.
         disable_description: "Inserisci il codice di autenticazione dalla tua app"
         show_key_description: "Inserisci manualmente"
-        extended_description: |
-          L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account richiedendo un token monouso oltre alla tua password. I token possono essere generati su dispositivi <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> e <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
       change_about:
         title: "Modifica i dati personali"
@@ -712,7 +710,6 @@ it:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
         gravatar_title: "Cambia il tuo avatar sul sito Gravatar"
-        gravatar_failed: "Impossibile recuperare il Gravatar. Ce n'è uno associato a questo indirizzo email?"
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
         letter_based: "Immagine del profilo assegnata dal sistema"
         uploaded_avatar: "Immagine personalizzata"
@@ -768,6 +765,17 @@ it:
         any: "qualunque"
       password_confirmation:
         title: "Ripeti la password"
+      auth_tokens:
+        title: "Dispositivi utilizzati di recente"
+        ip: "IP"
+        details: "Dettagli"
+        log_out_all: "Disconnetti tutti"
+        active: "attivo ora"
+        not_you: "Non sei tu?"
+        show_all: "Mostra tutti ({{count}})"
+        show_few: "Mostrane di meno"
+        was_this_you: "Eri tu?"
+        browser_and_device: "{{browser}} su {{device}}"
       last_posted: "Ultimo Messaggio"
       last_emailed: "Ultima email inviata"
       last_seen: "Ultima visita"
@@ -776,6 +784,7 @@ it:
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
+      hide_profile_and_presence: "Nascondi il mio profilo pubblico e la mia presenza"
       like_notification_frequency:
         title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
@@ -788,7 +797,6 @@ it:
         always: "sempre"
         never: "mai"
       email_digests:
-        title: "Quando non visito il sito, inviami un riassunto via email degli argomenti più discussi e delle risposte"
         every_30_minutes: "ogni 30 minuti"
         every_hour: "ogni ora"
         daily: "ogni giorno"
@@ -996,6 +1004,8 @@ it:
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
       hidden_for_session: "Ok, te lo chiederò domani. Puoi anche usare 'Connetti' per creare un account."
+      intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
+      value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{replyCount}}</b> risposte."
@@ -1009,6 +1019,8 @@ it:
       disable: "Mostra Messaggi Eliminati"
     private_message_info:
       title: "Messaggio"
+      invite: "Invita altri..."
+      edit: "Aggiungi o rimuovi..."
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Davvero vuoi rimuovere {{name}} da questo messaggio?"
       remove_allowed_group: "Vuoi veramente rimuovere {{name}} da questo messaggio?"
@@ -1144,6 +1156,7 @@ it:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
       filter_placeholder: Ricerca...
+      filter_placeholder_with_any: Cerca o crea...
       create: "Crea: '{{content}}'"
       max_content_reached:
         one: "Puoi selezionare solo {{count}} elemento."
@@ -1247,6 +1260,7 @@ it:
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
+      link_url_placeholder: "https://example.com"
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -1846,7 +1860,6 @@ it:
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, il file è troppo grande (la grandezza massima è {{max_size_kb}}kb). Perché non carichi il file con un servizio di cloud sharing e poi ne condividi il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
-        too_many_dragged_and_dropped_files: "Spiacenti, puoi caricare solo 10 file alla volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
@@ -2067,6 +2080,7 @@ it:
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
+      all_topics_wiki: "Rendi automaticamente i nuovi Argomenti delle Wiki"
       subcategory_list_style: "Stile Lista Sottocategorie:"
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
@@ -2654,6 +2668,7 @@ it:
             trust_levels_title: "Livello Esperienza assegnato automaticamente agli utenti quando vengono aggiunti:"
             trust_levels_none: "Nessuno"
             primary_group: "Imposta automaticamente come gruppo primario"
+        name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"
         no_primary: "(nessun gruppo primario)"
         title: "Gruppi"
@@ -2866,6 +2881,8 @@ it:
           theme: "Tema"
           component: "Componente"
           components: "Componenti"
+          theme_name: "Nome del Tema"
+          component_name: "Nome del Componente"
           import_theme: "Importa Tema"
           customize_desc: "Personalizza:"
           title: "Temi"
@@ -2886,6 +2903,11 @@ it:
           color_scheme_select: "Seleziona i colori da usare nel tema"
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
+          convert: "Converti"
+          convert_component_tooltip: "Converti questo Componente in Tema"
+          convert_theme_alert: "Sei sicuro di voler convertire questo Tema in Componente? Sarà rimosso come Tema Padre da %{relatives}."
+          convert_theme_tooltip: "Converti questo Tema in Componente"
+          inactive_themes: "Temi non attivi:"
           uploads: "Carica"
           no_uploads: "Puoi caricare le risorse associate al tuo tema come il tipo di carattere e le immagini"
           add_upload: "Aggiungi Caricamento"

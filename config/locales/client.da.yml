@@ -530,7 +530,6 @@ da:
       watched_first_post_tags: "Ser Første Indlæg"
       watched_first_post_tags_instructions: "Du får besked om første indlæg i hvert nyt emne med disse tags."
       muted_categories: "Ignoreret"
-      muted_categories_instructions: "Du får ikke beskeder om nye emner i disse kategorier og de fremstår ikke i seneste."
       no_category_access: "Som moderator har du begrænset kategori-adgang, at gemme er slået fra. "
       delete_account: "Slet min konto"
       delete_account_confirm: "Er du sikker på du vil slette din konto permanent? Dette kan ikke fortrydes!"
@@ -667,7 +666,6 @@ da:
         always: "altid"
         never: "aldrig"
       email_digests:
-        title: "Når jeg ikke kommer forbi her, send mig da en email opsummering af populære emner og indlæg"
         every_30_minutes: "hvert 30. minut"
         every_hour: "hver time"
         daily: "dagligt"
@@ -1536,7 +1534,6 @@ da:
         upload: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
         file_too_large: "Beklager, filen du prøver at uploade er for stor (den maksimale størrelse er {{max_size_kb}}kb). Du kan evt. uploade filen til en fildelings service og dele linket her."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
-        too_many_dragged_and_dropped_files: "Beklager, du kan maksimalt uploade 10 filer ad gangen"
         upload_not_authorized: "Beklager, filen som du forsøger at uploade, er ikke tiladt (tilladte filendelser: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."

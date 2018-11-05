@@ -5,4 +5,12 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  js:
+    discourse_local_dates:
+      create:
+        modal_subtitle: "날짜와 시간이 사용자의 현지 시간대로 자동 변환됩니다."
+        form:
+          date_title: 날짜
+          time_title: 시간
+          format_title: 날짜 형식
