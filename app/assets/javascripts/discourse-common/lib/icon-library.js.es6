@@ -299,7 +299,7 @@ registerIconRenderer({
   name: "font-awesome",
 
   string(icon, params) {
-    let id = handleIconId(icon);
+    const id = handleIconId(icon);
     let html = `<svg class='${iconClasses(icon, params)} svg-string'`;
 
     if (params.label) {
