@@ -240,7 +240,7 @@ export function registerIconRenderer(renderer) {
 
 function iconClasses(icon, params) {
   // "notification." is invalid syntax for classes, use replacement instead
-  let dClass =
+  const dClass =
     icon.replacementId && icon.id.indexOf("notification.") > -1
       ? icon.replacementId
       : icon.id;
