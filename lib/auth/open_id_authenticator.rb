@@ -88,7 +88,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
            # Add CSRF protection in addition to OpenID Specification
            def strategy.query_string
-              session["omniauth.state"] = state = SecureRandom.hex(24)
+             session["omniauth.state"] = state = SecureRandom.hex(24)
              "?state=#{state}"
            end
 
