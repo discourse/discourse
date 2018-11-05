@@ -212,9 +212,9 @@ describe TopicQuery do
 
       it "returns topics in the given category with the given tag" do
         tagged_topic1 = Fabricate(:topic, category: category1, tags: [tag])
-        tagged_topic2 = Fabricate(:topic, category: category2, tags: [tag])
+        _tagged_topic2 = Fabricate(:topic, category: category2, tags: [tag])
         tagged_topic3 = Fabricate(:topic, category: category1, tags: [tag, other_tag])
-        no_tags_topic = Fabricate(:topic, category: category1)
+        _no_tags_topic = Fabricate(:topic, category: category1)
 
         expect(TopicQuery.new(moderator, category: category1.id, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
         expect(TopicQuery.new(moderator, category: category2.id, tags: [other_tag.name]).list_latest.topics.size).to eq(0)
@@ -489,7 +489,7 @@ describe TopicQuery do
 
       context 'list_unread' do
         it 'lists topics correctly' do
-          new_topic = Fabricate(:post, user: creator).topic
+          _new_topic = Fabricate(:post, user: creator).topic
 
           expect(topic_query.list_unread.topics).to eq([])
           expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
@@ -694,11 +694,11 @@ describe TopicQuery do
       read(user, related_by_group_pm, 1)
 
       expect(TopicQuery.new(user).list_suggested_for(pm_to_group).topics.map(&:id)).to(
-        eq([related_by_group_pm.id, related_by_user_pm.id, pm_to_user.id])
+        eq([related_by_group_pm.id])
       )
 
       expect(TopicQuery.new(user).list_suggested_for(pm_to_user).topics.map(&:id)).to(
-        eq([new_pm.id, unread_pm.id, related_by_user_pm.id])
+        eq([related_by_user_pm.id, new_pm.id, unread_pm.id])
       )
 
       SiteSetting.enable_personal_messages = false

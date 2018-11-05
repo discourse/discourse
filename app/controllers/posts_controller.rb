@@ -200,7 +200,7 @@ class PostsController < ApplicationController
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
     if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
-      return render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
+      return render_json_error(I18n.t('too_late_to_edit'))
     end
 
     guardian.ensure_can_edit!(post)
@@ -209,6 +209,11 @@ class PostsController < ApplicationController
       raw: params[:post][:raw],
       edit_reason: params[:post][:edit_reason]
     }
+
+    raw_old = params[:post][:raw_old]
+    if raw_old.present? && raw_old != post.raw
+      return render_json_error(I18n.t('edit_conflict'), status: 409)
+    end
 
     # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
@@ -350,12 +355,18 @@ class PostsController < ApplicationController
   end
 
   def revisions
+    post = find_post_from_params
+    raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
+
     post_revision = find_post_revision_from_params
     post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
     render_json_dump(post_revision_serializer)
   end
 
   def latest_revision
+    post = find_post_from_params
+    raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
+
     post_revision = find_latest_post_revision_from_params
     post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
     render_json_dump(post_revision_serializer)

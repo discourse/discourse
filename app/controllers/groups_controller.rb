@@ -216,6 +216,8 @@ class GroupsController < ApplicationController
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
+    elsif params[:order] == 'added_at'
+      order = "group_users.created_at #{dir}"
     end
 
     users = group.users.human_users
@@ -230,6 +232,8 @@ class GroupsController < ApplicationController
         users = users.filter_by_username(filter)
       end
     end
+
+    users = users.select('users.*, group_users.created_at as added_at')
 
     members = users
       .order('NOT group_users.owner')
@@ -484,7 +488,7 @@ class GroupsController < ApplicationController
 
   def users_from_params
     if params[:usernames].present?
-      users = User.where(username: params[:usernames].split(","))
+      users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
     elsif params[:user_ids].present?
       users = User.where(id: params[:user_ids].split(","))

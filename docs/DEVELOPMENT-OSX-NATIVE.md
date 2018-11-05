@@ -10,7 +10,7 @@ Obviously, if you **already** develop Ruby on OS X, a lot of this will be redund
 
 If you don't already have a Ruby environment that's tuned to your liking, you can do most of this set up in just a few steps:
 
-1. Install XCode and/or the XCode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). This should also install Git.
+1. Install Xcode and/or the Xcode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). (Please note that you need an Apple Developer account to access this page. If you don't have one, you can use your current iCloud or Apple ID, or [sign up for a new free account](https://appleid.apple.com/account).) This should also install Git.
 2. Clone the Discourse repo and cd into it.
 3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
@@ -35,7 +35,7 @@ As the [RVM website](http://rvm.io) makes clear, there are some serious issues b
 
 This means that you need to do a little bit of groundwork if you do not already have an environment that you know for certain yields working rubies and gems.
 
-You will want to install XCode Command Line Tools. If you already have XCode installed, you can do this from within XCode's preferences. You can also install just the command line tools, without the rest of XCode, at [Apple's developer site](https://developer.apple.com/downloads/index.action). You will need these more for some of the headers they include than the compilers themselves.
+You will want to install Xcode Command Line Tools. If you already have Xcode installed, you can do this from within Xcode's preferences. You can also install just the command line tools, without the rest of Xcode, at [Apple's developer site](https://developer.apple.com/downloads/index.action). You will need these more for some of the headers they include than the compilers themselves.
 
 You will then need the old GCC-4.2 compilers, which leads us to...
 

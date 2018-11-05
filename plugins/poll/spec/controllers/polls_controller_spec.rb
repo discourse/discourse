@@ -12,17 +12,20 @@ describe ::DiscoursePoll::PollsController do
   describe "#vote" do
 
     it "works" do
-      MessageBus.expects(:publish)
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
 
-      put :vote, params: {
-        post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
-      }, format: :json
+        expect(response.status).to eq(200)
+      end.first
 
-      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
     end
 
     it "requires at least 1 valid option" do
@@ -202,28 +205,33 @@ describe ::DiscoursePoll::PollsController do
   describe "#toggle_status" do
 
     it "works for OP" do
-      MessageBus.expects(:publish)
+      message = MessageBus.track_publish do
+        put :toggle_status, params: {
+          post_id: poll.id, poll_name: "poll", status: "closed"
+        }, format: :json
 
-      put :toggle_status, params: {
-        post_id: poll.id, poll_name: "poll", status: "closed"
-      }, format: :json
+        expect(response.status).to eq(200)
+      end.first
 
-      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
     end
 
     it "works for staff" do
       log_in(:moderator)
-      MessageBus.expects(:publish)
 
-      put :toggle_status, params: {
-        post_id: poll.id, poll_name: "poll", status: "closed"
-      }, format: :json
+      message = MessageBus.track_publish do
+        put :toggle_status, params: {
+          post_id: poll.id, poll_name: "poll", status: "closed"
+        }, format: :json
 
-      expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
+      end.first
+
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
     end
 
     it "ensures post is not trashed" do

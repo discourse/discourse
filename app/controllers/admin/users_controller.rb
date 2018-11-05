@@ -435,18 +435,8 @@ class Admin::UsersController < Admin::AdminController
 
   def ip_info
     params.require(:ip)
-    ip = params[:ip]
 
-    # should we cache results in redis?
-    begin
-      location = Excon.get(
-        "https://ipinfo.io/#{ip}/json",
-        read_timeout: 10, connect_timeout: 10
-      )&.body
-    rescue Excon::Error
-    end
-
-    render json: location
+    render json: DiscourseIpInfo.get(params[:ip], resolve_hostname: true)
   end
 
   def sync_sso

@@ -57,9 +57,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Determines whether at least one login button is enabled
-  hasAtLeastOneLoginButton: function() {
-    return findAll(this.siteSettings).length > 0;
-  }.property(),
+  @computed("canLoginLocalWithEmail")
+  hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
+    return findAll(this.siteSettings).length > 0 || canLoginLocalWithEmail;
+  },
 
   @computed("loggingIn")
   loginButtonLabel(loggingIn) {
@@ -158,12 +159,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
               .val(self.get("loginPassword"));
 
             if (ssoDestinationUrl) {
-              $.cookie("sso_destination_url", null);
+              $.removeCookie("sso_destination_url");
               window.location.assign(ssoDestinationUrl);
               return;
             } else if (destinationUrl) {
               // redirect client to the original URL
-              $.cookie("destination_url", null);
+              $.removeCookie("destination_url");
               $hidden_login_form
                 .find("input[name=redirect]")
                 .val(destinationUrl);
@@ -327,7 +328,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         $.cookie("destination_url") || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
-        $.cookie("destination_url", null);
+        $.removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === Discourse.getURL("/login")) {
         window.location.pathname = Discourse.getURL("/");

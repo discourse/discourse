@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'discourse_ip_info'
 
 describe UserAuthToken do
 

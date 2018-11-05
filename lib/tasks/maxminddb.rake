@@ -3,22 +3,28 @@ require 'zlib'
 
 desc "downloads MaxMind's GeoLite2-City database"
 task "maxminddb:get" do
-  puts "Downloading maxmind db"
-  uri = URI("http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz")
-  tar_gz_archive = Net::HTTP.get(uri)
 
-  extractor = Gem::Package::TarReader.new(Zlib::GzipReader.new(StringIO.new(tar_gz_archive)))
-  extractor.rewind
+  def download_mmdb(name)
+    puts "Downloading MaxMindDb #{name}"
+    uri = URI("http://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
+    tar_gz_archive = Net::HTTP.get(uri)
 
-  extractor.each do |entry|
-    next unless entry.full_name.ends_with?(".mmdb")
+    extractor = Gem::Package::TarReader.new(Zlib::GzipReader.new(StringIO.new(tar_gz_archive)))
+    extractor.rewind
 
-    filename = File.join(Rails.root, 'vendor', 'data', 'GeoLite2-City.mmdb')
-    puts "Writing #{filename}"
-    File.open(filename, "wb") do |f|
-      f.write(entry.read)
+    extractor.each do |entry|
+      next unless entry.full_name.ends_with?(".mmdb")
+
+      filename = File.join(Rails.root, 'vendor', 'data', "#{name}.mmdb")
+      puts "Writing #{filename}..."
+      File.open(filename, "wb") do |f|
+        f.write(entry.read)
+      end
     end
+
+    extractor.close
   end
 
-  extractor.close
+  download_mmdb('GeoLite2-City')
+  download_mmdb('GeoLite2-ASN')
 end

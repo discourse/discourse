@@ -2,28 +2,16 @@ module ImportScripts
   class LookupContainer
     def initialize
       puts 'Loading existing groups...'
-      @groups = {}
-      GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
-        @groups[import_id] = group_id
-      end
+      @groups = GroupCustomField.where(name: 'import_id').pluck(:value, :group_id).to_h
 
       puts 'Loading existing users...'
-      @users = {}
-      UserCustomField.where(name: 'import_id').pluck(:user_id, :value).each do |user_id, import_id|
-        @users[import_id] = user_id
-      end
+      @users = UserCustomField.where(name: 'import_id').pluck(:value, :user_id).to_h
 
       puts 'Loading existing categories...'
-      @categories = {}
-      CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-        @categories[import_id] = category_id
-      end
+      @categories = CategoryCustomField.where(name: 'import_id').pluck(:value, :category_id).to_h
 
       puts 'Loading existing posts...'
-      @posts = {}
-      PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
-        @posts[import_id] = post_id
-      end
+      @posts = PostCustomField.where(name: 'import_id').pluck(:value, :post_id).to_h
 
       puts 'Loading existing topics...'
       @topics = {}
@@ -49,7 +37,7 @@ module ImportScripts
 
     # Get the Discourse Group id based on the id of the source group
     def group_id_from_imported_group_id(import_id)
-      @groups[import_id] || @groups[import_id.to_s] || find_group_by_import_id(import_id).try(:id)
+      @groups[import_id] || @groups[import_id.to_s]
     end
 
     # Get the Discourse Group based on the id of the source group
@@ -59,7 +47,7 @@ module ImportScripts
 
     # Get the Discourse User id based on the id of the source user
     def user_id_from_imported_user_id(import_id)
-      @users[import_id] || @users[import_id.to_s] || find_user_by_import_id(import_id).try(:id)
+      @users[import_id] || @users[import_id.to_s]
     end
 
     # Get the Discourse User based on the id of the source user
@@ -73,19 +61,19 @@ module ImportScripts
     end
 
     def add_group(import_id, group)
-      @groups[import_id] = group.id
+      @groups[import_id.to_s] = group.id
     end
 
     def add_user(import_id, user)
-      @users[import_id] = user.id
+      @users[import_id.to_s] = user.id
     end
 
     def add_category(import_id, category)
-      @categories[import_id] = category.id
+      @categories[import_id.to_s] = category.id
     end
 
     def add_post(import_id, post)
-      @posts[import_id] = post.id
+      @posts[import_id.to_s] = post.id
     end
 
     def add_topic(post)

@@ -217,7 +217,7 @@ zh_CN:
       invalid_incoming_email: "“%{email}”不是有效邮箱地址。"
       email_already_used_in_group: "“%{email}”已经被群组“%{group_name}”使用了。"
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
-      cant_allow_membership_requests: "对没有拥有者的小组，你无法批准成员请求。"
+      cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
     default_names:
       everyone: "任何人"
       admins: "管理面板"
@@ -514,8 +514,6 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不当内容'
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
-      short_description: '违反了<a href="/guidelines">我们的社群指引</a>'
       long_form: '标记为不当内容'
     notify_user:
       title: '给@{{username}}发送一条私信'
@@ -558,11 +556,9 @@ zh_CN:
       long_form: '标记为垃圾'
     inappropriate:
       title: '不当内容'
-      description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
       long_form: '标记为不当内容'
     notify_moderators:
       title: "其他内容"
-      description: '此帖需要版主依据<a href="/guidelines">社区准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
       long_form: '标记为需版主注意'
       email_title: '“{title}”主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
@@ -758,11 +754,6 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
-    facebook_config_warning: '服务器允许使用 Facebook 帐号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
-    twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
-    github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
@@ -885,22 +876,20 @@ zh_CN:
     invite_expiry_days: "多少天以内用户的邀请码是有效的"
     invite_only: "公开注册已被禁用，所有新用户必须由管理人员邀请进来。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
-    min_username_length: "最小用户名长度。警告：如果任何现存的用户或小组名字长度比这短，站点将无法正常工作！"
-    max_username_length: "最大用户名长度。警告：如果任何现存的用户或小组名字长度比这长，站点将无法正常工作！"
+    min_username_length: "最小用户名长度。警告：如果任何现存的用户或群组名字长度比这短，站点将无法正常工作！"
+    max_username_length: "最大用户名长度。警告：如果任何现存的用户或群组名字长度比这长，站点将无法正常工作！"
     reserved_usernames: "不可注册的用户名。通配符 * 能用来匹配字符 0 到多次。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
     password_unique_characters: "密码中必须包含几个不同的字符。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
-    enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点（必须包含 http:// 或 https://）"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
     sso_overrides_bio: "在用户页面中覆盖用户的个人信息并禁止用户修改"
     sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
     sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
     sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
-    sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
@@ -915,7 +904,6 @@ zh_CN:
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
-    enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
     backup_time_of_day: "备份的 UTC 时间"
@@ -1393,9 +1381,9 @@ zh_CN:
       如果你想要继续收到邮件更新，你可以忽略这封邮件。
   invite_mailer:
     title: "要求发件人"
-    subject_template: "%{inviter_name} 邀请您参与 '%{topic_title}' 于 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请你参与 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请您参与讨论
+      %{inviter_name} 邀请你参与讨论
 
       > **%{topic_title}**
       >
@@ -1405,14 +1393,14 @@ zh_CN:
 
       > %{site_title} -- %{site_description}
 
-      如果您感兴趣，点击以下链接:
+      如果你感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
-    subject_template: "%{inviter_name} 邀请您加入 '%{topic_title}' 于 %{site_domain_name}"
+    subject_template: "%{inviter_name}邀请你加入'%{topic_title}'于%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请您参与讨论
+      %{inviter_name} 邀请你参与讨论
 
       > **%{topic_title}**
       >
@@ -1426,27 +1414,27 @@ zh_CN:
 
       > %{user_custom_message}
 
-      如果您感兴趣，点击以下链接:
+      如果你感兴趣，点击以下链接:
 
       %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
-    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
+    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请您加入
+      %{inviter_name} 邀请你加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      如果您感兴趣，点击以下链接:
+      如果你感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_forum_mailer:
     title: "自定义论坛邀请发件人"
-    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
+    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请您加入
+      %{inviter_name} 邀请你加入
 
       > **%{site_title}**
       >
@@ -1456,7 +1444,7 @@ zh_CN:
 
       > %{user_custom_message}
 
-      如果您感兴趣，点击以下链接:
+      如果你感兴趣，点击以下链接:
 
       %{invite_link}
   invite_password_instructions:
@@ -1763,7 +1751,7 @@ zh_CN:
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
-        在处理您的电子邮件时出现无法识别的错误，它并未发布。你可以再试一次，或者[联系管理人员](%{base_url}/about)。
+        在处理你的电子邮件时出现无法识别的错误，它并未发布。你可以再试一次，或者[联系管理人员](%{base_url}/about)。
     email_error_notification:
       title: "邮件错误提醒"
       subject_template: "[%{email_prefix}] 电子邮件错误 -- POP 验证错误"
@@ -1812,14 +1800,6 @@ zh_CN:
     spam_post_blocked:
       title: "垃圾帖子被封锁"
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
-      text_body_template: |
-        这是自动发出的消息。
-
-        新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核该用户](%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unsilenced:
       title: "解除禁言"
       subject_template: "账户不再被挂起"
@@ -1918,7 +1898,7 @@ zh_CN:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
-      title: "用户邀请小组至私信"
+      title: "用户邀请群组至私信"
       subject_template: "[%{email_prefix}] %{username}邀请 @%{group_name} 加入消息交流：“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
@@ -2009,7 +1989,7 @@ zh_CN:
 
         %{respond_instructions}
     user_group_mentioned:
-      title: "用户小组提及"
+      title: "用户群组提及"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2202,7 +2182,6 @@ zh_CN:
       你需要一个账号。请创建一个账号或者登录以继续。
   terms_of_service:
     title: "服务条款"
-    signup_form_message: '我已经阅读并接受 <a href="/tos" target="_blank">服务条款</a>。'
   deleted: '已删除'
   image: "图片"
   upload:
@@ -2672,7 +2651,7 @@ zh_CN:
           contact_email:
             label: "邮件"
             placeholder: "name@example.com"
-            description: "社区的负责人或小组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
+            description: "社区的负责人或群组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
           contact_url:
             label: "网页"
             description: "你或者你的组织平时用于联络的网页。将被显示在<a href='/about' target='_blank'>关于页面</a>中。"
@@ -2734,6 +2713,3 @@ zh_CN:
         description: "你快做完啦！让我们邀请一些工作人员来帮助你创建一些有趣的主题和回复来<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>启动你的讨论</a>以开始社区之旅。"
       finished:
         title: "你的 Discourse 已经准备就绪！"
-        description: |
-          <p>如果你觉得需要修改这些设置，访问<a href='/admin' target='_blank'>管理员分块</a>；你可以在站点菜单找到扳手图标旁找到。</p>
-          <p>祝你玩得开心，还有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建设新社区好运！</a></p>

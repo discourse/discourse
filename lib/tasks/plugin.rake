@@ -7,12 +7,12 @@ task 'plugin:install_all_official' do
     'discourse-nginx-performance-report',
     'lazyYT',
     'poll',
+    'discourse-calendar'
   ])
 
   map = {
     'Canned Replies' => 'https://github.com/discourse/discourse-canned-replies',
-    'discourse-logster-rate-limit-checker' => 'https://github.com/discourse/logster-rate-limit-checker',
-    'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api',
+    'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
   }
 
   #require 'plugin/metadata'

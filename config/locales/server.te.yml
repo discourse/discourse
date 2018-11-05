@@ -295,7 +295,6 @@ te:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'అసమంజసమైనది'
-      description: 'ఈ టపాలో విషయం కొంతమందికి అభ్యంతరకరమైనది, అగౌరవపరిచేది లేదా <a href="/guidelines">మా కమ్యునిటీ మార్గదర్శకాలకు</a> లోబడినది కాదు.'
       long_form: 'దీన్ని అసమంజసమైనదిగా కేతనించాము'
     notify_user:
       email_title: '"%{title}" లో మీ టపా'
@@ -318,7 +317,6 @@ te:
       long_form: 'దీన్ని స్పాముగా కేతనించారు'
     inappropriate:
       title: 'అసమంజసం'
-      description: 'ఈ అంశంలో ఉన్న విషయం ద్వారా ఒక సహేతుకమైన వ్యక్తిని ప్రమాదకరమైన,అసంబధ్ధమైనవానిగా పరిగణిస్తారు,లేదా <a href="/guidelines"> మన వర్గ మార్గదర్శకాల ఉల్లంఘన జరుగుతుంది</a>.'
       long_form: 'దీన్ని అసమంజసమైనదిగా కేతనించారు'
     notify_moderators:
       title: "వేరే ఏదో"
@@ -532,7 +530,6 @@ te:
     search_title: "ఈ సైట్ వెదుకు"
   terms_of_service:
     title: "సేవా నియమాలు"
-    signup_form_message: 'నేను <a href="/tos" target="_blank">సేవా నియమాలను</a> చదివాను, వాటికి అంగీకరిస్తున్నాను.'
   deleted: 'తొలగించారు'
   upload:
     images:

@@ -1,5 +1,5 @@
 {{#if ip}}
-  <button class="btn" {{action "lookup"}}>
+  <button class="btn btn-default" {{action "lookup"}}>
     {{d-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
   </button>
 {{/if}}
@@ -7,9 +7,9 @@
   <div class="location-box">
     <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if copied}}
-      <a class="btn btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
+      <a class="btn btn-default btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
     {{else}}
-      <a class="btn pull-right no-text" {{action "copy"}}>{{d-icon "copy"}}</a>
+      <a class="btn btn-default pull-right no-text" {{action "copy"}}>{{d-icon "copy"}}</a>
     {{/if}}
     <h4>{{i18n 'ip_lookup.title'}}</h4>
     <p class='powered-by'>{{{i18n 'ip_lookup.powered_by'}}}</p>
@@ -22,22 +22,16 @@
 
         <dt>{{i18n 'ip_lookup.location'}}</dt>
         <dd>
-          {{#if location.loc}}
-            <a href="https://maps.google.com/maps?q={{unbound location.loc}}" target="_blank">{{location.loc}}</a><br>
-            {{city}}
+          {{#if location.location}}
+            <a href="https://maps.google.com/maps?q={{unbound location.latitude}},{{unbound location.longitude}}" target="_blank">{{location.location}}</a>
           {{else}}
             {{i18n 'ip_lookup.location_not_found'}}
           {{/if}}
         </dd>
 
-        {{#if location.org}}
+        {{#if location.organization}}
           <dt>{{i18n 'ip_lookup.organisation'}}</dt>
-          <dd>{{location.org}}</dd>
-        {{/if}}
-
-        {{#if location.phone}}
-          <dt>{{i18n 'ip_lookup.phone'}}</dt>
-          <dd>{{location.phone}}</dd>
+          <dd>{{location.organization}}</dd>
         {{/if}}
       {{else}}
         {{loading-spinner size="small"}}

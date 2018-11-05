@@ -121,6 +121,12 @@ class Plugin::Instance
     end
   end
 
+  def whitelist_public_user_custom_field(field)
+    reloadable_patch do |plugin|
+      ::User.register_plugin_public_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
   def register_editable_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_editable_user_custom_field(field, plugin) # plugin.enabled? is checked at runtime

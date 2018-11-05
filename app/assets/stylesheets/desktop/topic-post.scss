@@ -48,6 +48,10 @@ section.post-menu-area {
   padding-left: 11px;
 }
 
+.post-links-container {
+  margin-left: 11px;
+}
+
 nav.post-controls {
   padding: 0;
   .like-button {
@@ -247,7 +251,6 @@ nav.post-controls {
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 15px 25px 0 15px;
   } // this is covered by .topic-body .regular on a normal post
   // but no such class structure exists for an embedded, expanded post
   .cooked {
@@ -273,6 +276,7 @@ nav.post-controls {
   &.bottom {
     border-top: none;
     margin-bottom: 20px;
+    margin-left: 11px;
     &.hidden {
       display: block;
       opacity: 0;
@@ -345,7 +349,7 @@ nav.post-controls {
 }
 
 .topic-map {
-  margin: 20px 0;
+  margin: 20px 0 20px 11px;
   .map {
     .secondary {
       text-align: center;

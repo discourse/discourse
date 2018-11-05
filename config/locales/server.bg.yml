@@ -400,7 +400,6 @@ bg:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Неприлично'
-      description: 'Този пост има съдържание, което всеки разумен човек би сметнал за обидно и оскърбително  of <a href="/guidelines">Правилата на Общността</a>.'
       long_form: 'Маркирахте това като неприлично'
     notify_user:
       title: 'Изпрати съобщение до @{{username}}'
@@ -427,7 +426,6 @@ bg:
       long_form: 'маркирахте това като спам'
     inappropriate:
       title: 'Неприлично'
-      description: 'Този пост има съдържание, което всеки разумен човек би сметнал за обидно и оскърбително , или нарушава of <a href="/guidelines">виж Правилата на Общността</a>.'
       long_form: 'Маркирано като неприлично'
     notify_moderators:
       title: "Нещо друго"
@@ -574,10 +572,6 @@ bg:
     host_names_warning: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "
     sidekiq_warning: 'Sidekiq не работи. Много задачи, като изпращане на имейли, се изпълняват несинхронизирано от sidekiq.  Моля убедете се, че поне един процес sidekiq работи.  <a href="https://github.com/mperham/sidekiq" target="_blank">Научете повече за Sidekiq тук</a>.'
     memory_warning: 'Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ.'
-    google_oauth2_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с Google OAuth2 (enable_google_oauth2_logins), но client id и client secret values не са определени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и актуализирайте настройките. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"">За повече информация вижте тук</a>.'
-    facebook_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с Facebook (enable_facebook_logins), app id и app secret values  не са изпратени. Отидете на  <a href="/admin/site_settings"> Настройките на сайта </a> и обновете настройките.<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">За повече информация вижте тук</a>.'
-    twitter_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване със Twitter (enable_twitter_logins),но the key and secret values не са изпратени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и обновете настройките. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> За повече информация вижте тук</a>.'
-    github_config_warning: 'Сървърът е конфигуриран да позволи регистрация и вписване с GitHub (enable_github_logins), но client id и secret values не са изпратени. Отидете на <a href="/admin/site_settings">Настройките на сайта</a> и обновете настройките<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">За повече информация вижте тук</a>.'
     subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
   site_settings:
     censored_words: "Думите които ще бъдат автоматично заменени с &#9632;&#9632;&#9632;&#9632;"
@@ -659,12 +653,10 @@ bg:
     min_admin_password_length: "Минимална дължина на парола за Админ."
     block_common_passwords: "Не са разрешени паролите, които са в топ 10,000 от най-често използваните."
     enable_sso: "Активиране на SSO чрез външен сайт (ВНИМАНИЕ: Имейл адресите на потребителите трябва да бъдат потвърдени от външния сайт!)"
-    enable_sso_provider: "Имплементиране на Discourse SSO протокол в /session/sso_provider крайна точка, изисква sso_secret да бъде настроен"
     sso_secret: "Таен стринг използван за криптографско удостоверяване на SSO  информацията, уверете се, че е минимум 10 символа"
     sso_overrides_email: "Заместване на локалния имейл с друг от външен сайт от SSO доставчика при всяко влизане, и предотвратяване на локални промени. (ВНИМАНИЕ: могат да настъпят несъответствия поради нормализирането на локалните имейли)"
     sso_overrides_username: "Заместване на локалното потребителско име с друго от външен сайт от SSO доставчика при всяко влизане, и предотвратяване на локални промени. (ВНИМАНИЕ: могат да настъпят несъответствия поради нормализирането на потребителското име с дължината/изискванията)"
     sso_overrides_name: "Сменете потребителското име с това, което е предоставено от SSO доставчика."
-    sso_overrides_avatar: "Заместване на потребителския аватар с друг от външен сайт от SSO payload. Ако е разрешено деактивирането на allow_uploaded_avatars е препоръчително"
     sso_not_approved_url: "Пренасочване на неодобрените SSO акаунти към този URL"
     allow_new_registrations: "Позволи регистрация на нови потребители. Махни отметката, за да не може никой да създаде нов акаунт."
     enable_yahoo_logins: "Активиране на Yahoo удостоверяване"
@@ -672,7 +664,6 @@ bg:
     google_oauth2_client_secret: "Client secret за Google приложение."
     allow_restore: "Позволи възстановяване, което може да замени ВСИЧКИ данни на сайта! Оставете го погрешно освен ако не планирате да възстановите бекъпа"
     maximum_backups: "Максимално количество бекъпи, които могат да бъдат съхранени на диска. По-старите бекъпи са автоматично изтрити"
-    enable_s3_backups: "Качи бекъпи на S3 когато е пълен. ВАЖНО: изисква валидни S3 правомощия въведени в настройките на файловете."
     s3_backup_bucket: "Remote bucket за съхранение на бекъпи. ВНИМАНИЕ: Бъдете сигурни, че това е remote bucket."
     active_user_rate_limit_secs: "Колко често обновяваме полето the 'last_seen_at', в секунди "
     verbose_localization: "Покажи разширени локализационни съвети в потребителския интерфейс "
@@ -1062,7 +1053,6 @@ bg:
     search_title: "Търси този сайт"
   terms_of_service:
     title: "Правила за ползване"
-    signup_form_message: 'Аз прочетох и приемам  <a href="/tos" target="_blank">правилата за ползване</a>.'
   deleted: 'изтрит'
   upload:
     edit_reason: "изтеглено локално копие на изображенията"

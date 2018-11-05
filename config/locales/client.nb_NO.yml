@@ -528,7 +528,6 @@ nb_NO:
       topics_entered: "emner åpnet"
       post_count: "# innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
-      powered_by: "drevet av <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(velg et alternativ)"
     user:
@@ -612,7 +611,6 @@ nb_NO:
       watched_first_post_tags: "Følger første innlegg"
       watched_first_post_tags_instructions: "Du vil bli varslet om det første innlegget i hvert nye emne med disse stikkordene."
       muted_categories: "Ignorert"
-      muted_categories_instructions: "Du vil ikke bli varslet om noe som omhandler nye emner i disse kategoriene, og de vil ikke vises i siste."
       no_category_access: "Som moderator har du begrenset kategoritilgang, lagring er avskrudd."
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
@@ -685,15 +683,10 @@ nb_NO:
       second_factor:
         title: "Totrinnsverifisering"
         disable: "Skru av totrinnsverifisering"
-        enable: "Aktiver <a href>tofaktorautentisering</a> for å øke kontosikkerheten"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
         label: "Kode"
-        enable_description: |
-          Les av denne QR-koden med en støttet app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a>–<a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a>–<a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) og skriv inn autentiseringskoden din.
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
-        extended_description: |
-          Tofaktor autentisering øker sikkerheten for kontoen din ved at den krever en unik engangskode i tillegg til passordet. Kodene kan genereres med en <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>,<a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> eller <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> enhet.
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
       change_about:
         title: "Rediger om meg"
@@ -713,7 +706,6 @@ nb_NO:
         title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         gravatar_title: "Endre din avatar på Gravatars nettside"
-        gravatar_failed: "Kunne ikke hente Gravatar-bilde. Er det et tilknyttet den e-postadressen?"
         refresh_gravatar_title: "Oppdater din Gravatar"
         letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
@@ -789,7 +781,6 @@ nb_NO:
         always: "alltid"
         never: "aldri"
       email_digests:
-        title: "Send meg en oppsummering på e-post av populære emner og svar dersom jeg ikke besøker siden"
         every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
@@ -1855,7 +1846,6 @@ nb_NO:
         upload: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
         file_too_large: "Beklager, den filen er for stor. Største tillatte størrelse er {{max_size_kb}} kb. Hvorfor ikke heller laste opp filen til en fildelingstjeneste og dele lenken?"
         too_many_uploads: "Du kan bare laste opp ett bilde av gangen."
-        too_many_dragged_and_dropped_files: "Beklager, du kan bare laste opp 10 filer om gangen."
         upload_not_authorized: "Beklager, filen du forsøket å laste opp er ikke tillatt. Tillatte filendelser er {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."

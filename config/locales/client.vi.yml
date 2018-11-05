@@ -495,7 +495,6 @@ vi:
       watched_first_post_tags: "Xem bài viết đầu tiên"
       watched_first_post_tags_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới có chứa thẻ này."
       muted_categories: "Im lặng"
-      muted_categories_instructions: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong các chuyên mục này, và chúng sẽ không hiển thị mới nhất"
       delete_account: "Xoá Tài khoản của tôi"
       delete_account_confirm: "Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản của bạn? Hành động này không thể được hoàn tác!"
       deleted_yourself: "Tài khoản của bạn đã được xóa thành công."
@@ -628,7 +627,6 @@ vi:
         always: "luôn luôn"
         never: "không"
       email_digests:
-        title: "Khi tôi không ghé thăm,  hãy gửi cho tôi email tóm tắt về các chủ đề nhiều người quan tâm nhất và các câu trả lời."
         every_30_minutes: "mỗi 30 phút"
         every_hour: "hàng giờ"
         daily: "hàng ngày"

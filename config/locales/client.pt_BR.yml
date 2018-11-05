@@ -528,7 +528,6 @@ pt_BR:
       topics_entered: "tópicos em que entrou"
       post_count: "# mensagens"
       confirm_delete_other_accounts: "Você tem certeza que deseja apagar essas contas?"
-      powered_by: "distribuído por <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(selecione uma opção)"
     user:
@@ -612,7 +611,6 @@ pt_BR:
       watched_first_post_tags: "Observando a primeira mensagem"
       watched_first_post_tags_instructions: "Você será notificado sobre a primeira postagem em cada novo tópico com estas etiquetas."
       muted_categories: "Silenciado"
-      muted_categories_instructions: "Você não será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes"
       no_category_access: "Como moderador, você tem acesso limitado à categoria, a economia está desativada."
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
@@ -685,15 +683,10 @@ pt_BR:
       second_factor:
         title: "Autenticação de dois fatores"
         disable: "Desabilitar autenticação de dois fatores"
-        enable: "Habilitar <a href>autenticação de dois fatores</a> para segurança avançada da conta"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
         label: "Código"
-        enable_description: |
-          Digitalize este código QR em um aplicativo compatível (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank"> iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) e insira seu código de autenticação.
         disable_description: "Por favor, insira o código de autenticação do seu aplicativo"
         show_key_description: "Entre manualmente"
-        extended_description: |
-          A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Os tokens podem ser gerados em <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, e <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> dispositivos.
         oauth_enabled_warning: "Tenha em atenção que os logins sociais serão desativados quando a autenticação de dois fatores estiver ativada na sua conta."
       change_about:
         title: "Modificar Sobre Mim"
@@ -713,7 +706,6 @@ pt_BR:
         title: "Alterar sua imagem de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
         gravatar_title: "Alterar seu avatar no site do Gravatar"
-        gravatar_failed: "Não foi possível buscar o Gravatar. Existe um associado a esse endereço de e-mail?"
         refresh_gravatar_title: "Atualize seu Gravatar"
         letter_based: "Sistema concedeu imagem de perfil."
         uploaded_avatar: "Foto pessoal"
@@ -789,7 +781,6 @@ pt_BR:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Mande-me um email com o sumário dos tópicos e respostas populares quando eu não visitar o fórum"
         every_30_minutes: "a cada 30 minutos"
         every_hour: "a cada hora"
         daily: "diariamente"
@@ -1855,7 +1846,6 @@ pt_BR:
         upload: "Desculpe, houve um erro ao enviar esse arquivo. Por favor, tente outra vez."
         file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb). Que tal enviar o seu arquivo grande para um serviço de hospedagem na nuvem e depois compartilhar o link?"
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
-        too_many_dragged_and_dropped_files: "Desculpe, você só pode subir até 10 arquivos de cada vez."
         upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."

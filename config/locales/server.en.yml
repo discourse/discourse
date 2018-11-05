@@ -139,6 +139,7 @@ en:
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
       max_emojis: "can't have more than %{max_emojis_count} emoji"
+      emojis_disabled: "can't have emoji"
       ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
@@ -166,6 +167,7 @@ en:
         other: 'You specified the invalid choices %{name}'
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
+      s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:
@@ -194,6 +196,10 @@ en:
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
     invalid_filename: "The backup filename contains invalid characters. Valid characters are a-z 0-9 . - _."
+    file_exists: "The file you are trying to upload already exists."
+    location:
+      local: "Local"
+      s3: "Amazon S3"
 
   invalid_params: "You supplied invalid parameters to the request: %{message}"
   not_logged_in: "You need to be logged in to do that."
@@ -299,6 +305,7 @@ en:
     badge: "%{display_name} badge on %{site_title}"
 
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
   excerpt_image: "image"
@@ -702,6 +709,7 @@ en:
       firefox: "Firefox"
       opera: "Opera"
       ie: "Internet Explorer"
+      edge: "Microsoft Edge"
       unknown: "unknown browser"
     device:
       android: "Android Device"
@@ -710,7 +718,7 @@ en:
       ipod: "iPod"
       mobile: "Mobile Device"
       mac: "Mac"
-      linux: "Linux Computer"
+      linux: "GNU/Linux Computer"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
@@ -890,6 +898,14 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
+    most_disagreed_flaggers:
+      title: "Most disagreed flaggers"
+      labels:
+        user: User
+        agreed_flags: Agreed flags
+        disagreed_flags: Disagreed flags
+        ignored_flags: Ignored flags
+        score: Score
     moderators_activity:
       title: "Moderators activity"
       labels:
@@ -1103,6 +1119,16 @@ en:
       labels:
         user_agent: "User Agent"
         page_views: "Pageviews"
+    suspicious_logins:
+      title: "Suspcious Logins"
+      labels:
+        user: User
+        client_ip: Client IP
+        location: Location
+        browser: Browser
+        device: Device
+        os: Operating System
+        login_time: Login Time
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1261,6 +1287,10 @@ en:
     blacklisted_crawler_user_agents: 'Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive'
     slow_down_crawler_rate: 'If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)'
+    content_security_policy: EXPERIMENTAL - Turn on Content-Security-Policy
+    content_security_policy_report_only: EXPERIMENTAL - Turn on Content-Security-Policy-Report-Only
+    content_security_policy_collect_reports: Enable CSP violation report collection at /csp_reports
+    content_security_policy_script_src: Additional whitelisted script sources. The current host and CDN are included by default.
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1311,15 +1341,16 @@ en:
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_sso_logging: "Log verbose SSO related diagnostics to <a href='/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
+    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
+    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as a SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
-    sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
+    sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, users will not be allowed to upload avatars on Discourse."
     sso_overrides_profile_background: "Overrides user profile background with external site avatar from SSO payload."
     sso_overrides_card_background: "Overrides user card background with external site avatar from SSO payload."
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
@@ -1359,7 +1390,6 @@ en:
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
-    enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
     s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
@@ -1367,6 +1397,7 @@ en:
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -1439,6 +1470,8 @@ en:
     strip_image_metadata: "Strip image metadata."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
+
+    simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -1856,6 +1889,11 @@ en:
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
+
+    placeholder:
+      sso_provider_secrets:
+        key: "www.example.com"
+        value: "SSO secret"
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2710,7 +2748,7 @@ en:
 
         Please [review the user](%{user_url}).
 
-        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
+        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings. Consider adding %{domains} to the whitelist if they should be exempt.
 
     unsilenced:
       title: "Unsilenced"
@@ -3207,6 +3245,22 @@ en:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
+    suspicious_login:
+      title: "New Login Alert"
+      subject_template: "[%{site_name}] New Login from %{location}"
+      text_body_template: |
+        Hello,
+
+        We noticed a login from a device or location you don’t usually use. Was this you?
+
+         - Location: %{location} (%{client_ip})
+         - Browser: %{browser}
+         - Device: %{device} – %{os}
+
+        If this was you, great! There’s nothing else you need to do.
+
+        If this was not you, please [reset your %{site_name} password as soon as possible](%{base_url}/my/preferences/account).
+
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
@@ -3643,6 +3697,11 @@ en:
       description: First post edit
       long_description: |
         This badge is granted the first time you edit one of your posts. While you won’t be able to edit your posts forever, editing is encouraged — you can improve the formatting, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
+    wiki_editor:
+      name: Wiki Editor
+      description: First wiki edit
+      long_description: |
+        This badge is granted the first time you edit one wiki post.
     basic_user:
       name: Basic
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> all essential community functions
@@ -3892,6 +3951,7 @@ en:
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
     minimum_required_tags: "You must select at least %{count} tags."
+    upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
@@ -4057,7 +4117,7 @@ en:
       finished:
         title: "Your Discourse is Ready!"
         description: |
-          <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
+          <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
 
   search_logs:

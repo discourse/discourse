@@ -30,13 +30,44 @@ class UserAuthToken < ActiveRecord::Base
     end
   end
 
-  def self.generate!(info)
+  # Returns the login location as it will be used by the the system to detect
+  # suspicious login.
+  #
+  # This should not be very specific because small variations in location
+  # (i.e. changes of network, small trips, etc) will be detected as suspicious
+  # logins.
+  #
+  # On the other hand, if this is too broad it will not report any suspicious
+  # logins at all.
+  #
+  # For example, let's choose the country as the only component in login
+  # locations. In general, this should be a pretty good choce with the
+  # exception that for users from huge countries it might not be specific
+  # enoguh. For US users where the real user and the malicious one could
+  # happen to live both in USA, this will not detect any suspicious activity.
+  def self.login_location(ip)
+    DiscourseIpInfo.get(ip)[:country]
+  end
+
+  def self.is_suspicious(user_id, user_ip)
+    return false unless User.find_by(id: user_id)&.staff?
+
+    ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
+    ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurance (current)
+    ips.uniq!
+    return false if ips.empty? # first login is never suspicious
+
+    user_location = login_location(user_ip)
+    ips.none? { |ip| user_location == login_location(ip) }
+  end
+
+  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token = UserAuthToken.create!(
-      user_id: info[:user_id],
-      user_agent: info[:user_agent],
-      client_ip: info[:client_ip],
+      user_id: user_id,
+      user_agent: user_agent,
+      client_ip: client_ip,
       auth_token: hashed_token,
       prev_auth_token: hashed_token,
       rotated_at: Time.zone.now
@@ -45,17 +76,23 @@ class UserAuthToken < ActiveRecord::Base
 
     log(action: 'generate',
         user_auth_token_id: user_auth_token.id,
-        user_id: info[:user_id],
-        user_agent: info[:user_agent],
-        client_ip: info[:client_ip],
-        path: info[:path],
+        user_id: user_id,
+        user_agent: user_agent,
+        client_ip: client_ip,
+        path: path,
         auth_token: hashed_token)
+
+    if staff
+      Jobs.enqueue(:suspicious_login,
+        user_id: user_id,
+        client_ip: client_ip,
+        user_agent: user_agent)
+    end
 
     user_auth_token
   end
 
   def self.lookup(unhashed_token, opts = nil)
-
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)

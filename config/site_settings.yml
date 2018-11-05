@@ -334,13 +334,21 @@ login:
   verbose_sso_logging: false
   verbose_auth_token_logging:
     hidden: true
-    default: false
+    default: true
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret:
     default: ''
     secret: true
+  sso_provider_secrets:
+    default: ''
+    type: list
+    list_type: secret
+    secret: true
+    placeholder:
+      key: "sso_provider.key_placeholder"
+      value: "sso_provider.value_placeholder"
   sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
@@ -1023,6 +1031,11 @@ files:
     default: 0.45 # 90% of 18:9
     min: 0
     max: 1
+  simultaneous_uploads:
+    client: true
+    default: 5
+    min: 0
+    max: 20
 
 trust:
   default_trust_level:
@@ -1171,6 +1184,15 @@ security:
     default: 'bingbot'
     list_type: compact
   slow_down_crawler_rate: 60
+  content_security_policy:
+    default: false
+  content_security_policy_report_only:
+    default: false
+  content_security_policy_collect_reports:
+    default: true
+  content_security_policy_script_src:
+    type: list
+    default: ''
 
 onebox:
   enable_flash_video_onebox: false
@@ -1405,6 +1427,12 @@ backups:
   allow_restore:
     default: false
     shadowed_by_global: true
+  backup_location:
+    default: 'local'
+    type: enum
+    enum: 'BackupLocationSiteSetting'
+    shadowed_by_global: true
+    client: true
   maximum_backups:
     client: true
     default: 5
@@ -1416,9 +1444,6 @@ backups:
     min: 1
     max: 30
     default: 7
-    shadowed_by_global: true
-  enable_s3_backups:
-    default: false
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
@@ -1645,6 +1670,10 @@ uncategorized:
 
   native_app_install_banner: false
 
+  pwa_display_browser_regex:
+    default: "iPad|iPhone"
+    hidden: true
+
   share_anonymized_statistics: true
 
   auto_handle_queued_age:
@@ -1791,3 +1820,4 @@ tags:
     default: false
   force_lowercase_tags:
     default: true
+    client: true

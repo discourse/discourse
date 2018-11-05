@@ -1,4 +1,5 @@
-require 'disk_space'
+require "disk_space"
+require "mini_mime"
 
 module BackupRestore
 
@@ -10,6 +11,7 @@ module BackupRestore
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
+      @filename_override = opts[:filename]
 
       ensure_no_operation_is_running
       ensure_we_have_a_user
@@ -42,6 +44,7 @@ module BackupRestore
       log "Finalizing backup..."
 
       @with_uploads ? create_archive : move_dump_backup
+      upload_archive
 
       after_create_hook
     rescue SystemExit
@@ -52,9 +55,9 @@ module BackupRestore
       @success = false
     else
       @success = true
-      File.join(@archive_directory, @backup_filename)
+      @backup_filename
     ensure
-      remove_old
+      delete_old
       clean_up
       notify_user
       log "Finished!"
@@ -75,12 +78,14 @@ module BackupRestore
 
     def initialize_state
       @success = false
+      @store = BackupRestore::BackupStore.create
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-      @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
-      @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
+      @archive_directory = BackupRestore::LocalBackupStore.base_directory(@current_db)
+      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
       @backup_filename =
         if @with_uploads
@@ -195,8 +200,10 @@ module BackupRestore
     def move_dump_backup
       log "Finalizing database dump file: #{@backup_filename}"
 
+      archive_filename = File.join(@archive_directory, @backup_filename)
+
       Discourse::Utils.execute_command(
-        'mv', @dump_filename, File.join(@archive_directory, @backup_filename),
+        'mv', @dump_filename, archive_filename,
         failure_message: "Failed to move database dump file."
       )
 
@@ -243,17 +250,30 @@ module BackupRestore
       Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
     end
 
-    def after_create_hook
-      log "Executing the after_create_hook for the backup..."
-      backup = Backup.create_from_filename(@backup_filename)
-      backup.after_create_hook
+    def upload_archive
+      return unless @store.remote?
+
+      log "Uploading archive..."
+      content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
+      archive_path = File.join(@archive_directory, @backup_filename)
+      @store.upload_file(@backup_filename, archive_path, content_type)
+    ensure
+      log "Removing archive from local storage..."
+      FileUtils.remove_file(archive_path, force: true)
     end
 
-    def remove_old
-      log "Removing old backups..."
-      Backup.remove_old
+    def after_create_hook
+      log "Executing the after_create_hook for the backup..."
+      DiscourseEvent.trigger(:backup_created)
+    end
+
+    def delete_old
+      return if Rails.env.development?
+
+      log "Deleting old backups..."
+      @store.delete_old
     rescue => ex
-      log "Something went wrong while removing old backups.", ex
+      log "Something went wrong while deleting old backups.", ex
     end
 
     def notify_user

@@ -413,6 +413,7 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
+      member_added: "Added"
       add_members:
         title: "Add Members"
         description: "Manage the membership of this group"
@@ -597,7 +598,7 @@ en:
       topics_entered: "topics entered"
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
 
     user_fields:
@@ -688,7 +689,7 @@ en:
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
 
       muted_categories: "Muted"
-      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -768,15 +769,16 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         disable: "Disable two factor authentication"
-        enable: "Enable <a href>two factor authentication</a> for enhanced account security"
+        enable: "Enable two factor authentication for enhanced account security"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
+        rate_limit: "Please wait before trying another authentication code."
         enable_description: |
-          Scan this QR code in a supported app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) and enter your authentication code.
+          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> and enter your authentication code.
         disable_description: "Please enter the authentication code from your app"
         show_key_description: "Enter manually"
         extended_description: |
-          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, and <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> devices.
+          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
 
       change_about:
@@ -800,7 +802,7 @@ en:
         title: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
-        gravatar_failed: "Could not fetch the Gravatar. Is there one associated to that email address?"
+        gravatar_failed: "We could not find a Gravatar with that email address."
         refresh_gravatar_title: "Refresh your Gravatar"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
@@ -874,10 +876,10 @@ en:
         show_all: "Show all ({{count}})"
         show_few: "Show fewer"
         was_this_you: "Was this you?"
-        was_this_you_description: "If it wasn't you who logged in, we recommend you to change your password and log out of all devices. We also recommend setting up second-factor authentication for a better protection of your account."
+        was_this_you_description: "If it wasn’t you, we recommend you change your password and log out everywhere."
         browser_and_device: "{{browser}} on {{device}}"
-        secure_account: "Secure my account"
-        latest_post: "You last posted..."
+        secure_account: "Secure my Account"
+        latest_post: "You last posted…"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
@@ -901,7 +903,7 @@ en:
         always: "always"
         never: "never"
       email_digests:
-        title: "When I don't visit here, send me an email summary of popular topics and replies"
+        title: "When I don’t visit here, send me an email summary of popular topics and replies"
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"
@@ -1372,6 +1374,7 @@ en:
         tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
+      overwrite_edit: "Overwrite Edit"
       reply_original: "Reply on Original Topic"
       reply_here: "Reply Here"
       reply: "Reply"
@@ -1427,6 +1430,8 @@ en:
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
+      enter_fullscreen: "enter fullscreen composer"
+      exit_fullscreen: "exit fullscreen composer"
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
@@ -2089,7 +2094,7 @@ en:
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Sorry, you can only upload 10 files at a time."
+        too_many_dragged_and_dropped_files: "Sorry, you can only upload {{max}} files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
@@ -2613,6 +2618,7 @@ en:
       composing:
         title: 'Composing'
         return: '<b>shift</b>+<b>c</b> Return to composer'
+        fullscreen: '<b>shift</b>+<b>F11</b> Fullscreen composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2697,7 +2703,10 @@ en:
       sort_by_name: "name"
       manage_groups: "Manage Tag Groups"
       manage_groups_description: "Define groups to organize tags"
-
+      upload: "Upload Tags"
+      upload_description: "Upload a text file to create tags in bulk"
+      upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
+      upload_successful: "Tags uploaded successfully"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -2922,6 +2931,21 @@ en:
         was_edited: "Post was edited after the first flag"
         previous_flags_count: "This post has already been flagged {{count}} times."
         show_details: "Show flag details"
+
+        user_percentage:
+          summary:
+            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"
+            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flags)"
+          agreed:
+            one: "{{count}}% agree"
+            other: "{{count}}% agree"
+          disagreed:
+            one: "{{count}}% disagree"
+            other: "{{count}}% disagree"
+          ignored:
+            one: "{{count}}% ignore"
+            other: "{{count}}% ignore"
+
         details: "details"
 
         flagged_topics:
@@ -3134,6 +3158,7 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
+          uploading_progress: "Uploading... {{progress}}%"
           success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
@@ -3164,6 +3189,9 @@ en:
             label: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
+        location:
+          local: "Local"
+          s3: "Amazon S3"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
@@ -3920,6 +3948,8 @@ en:
           tags: "Tags"
           search: "Search"
           groups: "Groups"
+        secret_list:
+          invalid_input: "Input fields cannot be empty or contain vertical bar character."
 
       badges:
         title: Badges

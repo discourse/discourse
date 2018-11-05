@@ -581,7 +581,6 @@ ar:
       topics_entered: " مواضيع فُتحت"
       post_count: "# المنشورات"
       confirm_delete_other_accounts: "أمتأكد من حذف هذه الحسابات؟"
-      powered_by: "مقدم من قبل <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(إختر خيار )"
     user:
@@ -662,7 +661,6 @@ ar:
       watched_first_post_tags: "مراقبة أول منشور"
       watched_first_post_tags_instructions: "سيصلك إشعار بأول منشور في كل موضوع يستخدم هذة الأوسمة."
       muted_categories: "مكتوم"
-      muted_categories_instructions: "لن يتم إشعارك بأي جديد عن الموضوعات الجديدة في هذا القسم، ولن تظهر موضوعات هذا القسم في قائمة الموضوعات المنشورة مؤخراً."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للأقسام, الحفظ معطل"
       delete_account: "أحذف الحسابي"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
@@ -811,7 +809,6 @@ ar:
         always: "دائما"
         never: "أبدا"
       email_digests:
-        title: "إن لم أزر الموقع، أرسل إلي بريدا إلكترونيا يلخص الموضوعات والردود الشائعة"
         every_30_minutes: "كل 30 دقيقة"
         every_hour: "كل ساعة"
         daily: "يوميا"
@@ -1867,7 +1864,6 @@ ar:
         upload: "عذرا، حدثت مشكلة اثناء رفع الملف. من فضلك حاول مجددا."
         file_too_large: "عذرا، هذا الملف كبير جدا (أقصى حجم هو {{max_size_kb}}ك.بايت). ما رأيك برفع الملف على خدمة سحابية، ثم مشاركة رابط الملف؟"
         too_many_uploads: "عذرا، يمكنك فقط رفع ملف واحد كل مرة."
-        too_many_dragged_and_dropped_files: "عذرا، يمكنك فقط رفع 10 ملفات كل مرة."
         upload_not_authorized: "عذرا, نوع الملف الذي تحاول رفعة محذور ( الانواع المسموح بها: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع المرفقات."

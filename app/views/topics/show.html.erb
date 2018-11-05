@@ -106,14 +106,16 @@
   <% content_for :after_body do %>
       <style media="print">
         /* For readability */
-        a, a:visited {
+        a,
+        a:visited {
           color: #0088cc !important;
         }
+        /* hide crawler nav in print view */
+        .crawler-nav,
+        .powered-by-link {
+          display: none;
+        }
       </style>
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          window.print();
-        });
-      </script>
+      <%= preload_script('print-page') %>
   <% end %>
 <% end %>

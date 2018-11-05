@@ -618,7 +618,6 @@ export default Ember.Component.extend({
 
   _bindUploadTarget() {
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
-
     this._pasted = false;
 
     const $element = this.$();
@@ -649,12 +648,23 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsubmit", (e, data) => {
+      const max = this.siteSettings.simultaneous_uploads;
+
+      // Limit the number of simultaneous uploads
+      if (max > 0 && data.files.length > max) {
+        bootbox.alert(
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", { max })
+        );
+        return false;
+      }
+
       // Look for a matching file upload handler contributed from a plugin
       const matcher = handler => {
         const ext = handler.extensions.join("|");
         const regex = new RegExp(`\\.(${ext})$`, "i");
         return regex.test(data.files[0].name);
       };
+
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
         matchingHandler.method(data.files[0]);

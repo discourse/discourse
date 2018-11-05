@@ -20,7 +20,7 @@ module UserAuthTokensMixin
   end
 
   def location
-    ipinfo = DiscourseIpInfo.get(client_ip)
+    ipinfo = DiscourseIpInfo.get(client_ip, locale: I18n.locale)
 
     location = [ipinfo[:city], ipinfo[:region], ipinfo[:country]].reject { |x| x.blank? }.join(", ")
     return I18n.t('staff_action_logs.unknown') if location.blank?

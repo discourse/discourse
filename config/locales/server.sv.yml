@@ -442,7 +442,6 @@ sv:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Olämpligt'
-      description: 'Detta inläggs innehåll inkluderar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Skicka ett meddelande till @{{username}} '
@@ -476,11 +475,9 @@ sv:
       long_form: 'flaggad som spam'
     inappropriate:
       title: 'Olämpligt'
-      description: 'Detta ämne har innehåll som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="/guidelines">våra riktlinjer</a>.'
       long_form: 'flaggad som olämplig'
     notify_moderators:
       title: "Annat"
-      description: 'Det här inlägget kräver generell uppmärksamhet från personalen baserat på  <a href="/guidelines">riktlinjerna</a>, <a href="%{tos_url}">användarvillkoren</a> eller på grund av en annan anledning som inte finns med ovan.'
       long_form: 'flaggade det här för granskning av moderator'
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
@@ -661,11 +658,6 @@ sv:
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, sm att skicka e-post, utförs asynkront av sidekiq. Var vänlig se till att minst en sidekiqprocess körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
     queue_size_warning: 'Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq process(er), eller så kanske du behöver lägga till fler Sidekiqarbetare.'
     memory_warning: 'Din server körs med mindre än 1 GB minne. Minne på minst 1 GB är rekommenderat.'
-    google_oauth2_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (inställningen enable_google_oauth2). men klient-id och klienthemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    facebook_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (inställningen enable_facebook_logins). men app-id och appens hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    twitter_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (inställningen twitter_logins). men nyckel- och hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (inställningen twitter_logins). men klient-id och hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml-fil för att säkerställa att serverinställningarna för e-post är korrekta. <a href="/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -778,14 +770,12 @@ sv:
     password_unique_characters: "Minsta antalet unika tecken som ett lösenord måste ha."
     block_common_passwords: "Tillåt inte lösenord som är bland de 10000 vanligaste lösenorden."
     enable_sso: "Aktivera Single sign on via en extern sida (VARNING: ANVÄNDARENS E-POSTADRESS *MÅSTE* VARA VALIDERAD AV DEN EXTERNA SIDAN!)"
-    enable_sso_provider: "Implementera Discourse SSO leverantörsprotokoll vid /session/sso_provider endpoint, kräver att sso_secret är inställd"
     sso_url: "URL för single sign on endpoint (måste inkludera http:// eller https://)"
     sso_secret: "Hemlig sträng som används för att kryptografiskt autentisera SSO-information, se till att den är 10 tecken eller mer"
     sso_overrides_bio: "Åsidosätter användar bio i användarprofil och förhindrar användare från att ändra det"
     sso_overrides_email: "Åsidosätter lokal e-post med externa webbplatsers e-post från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar (VARNING: diskrepanser kan inträffa på grund av normalisering av lokala e-poster)"
     sso_overrides_username: "Åsidosätter lokala användarnamn med externa webbplatsers användarnamn från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar. (VARNING: diskrepanser kan inträffa på grund av skillnader i användarnamnets längd/krav)"
     sso_overrides_name: "Åsidosätter lokala fullständiga namn med externa webbplatsers fullständiga namn från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar."
-    sso_overrides_avatar: "Åsidosätter användares avatarer med externa webbplatsers avatarer från SSO-nyttolast. Om aktiverad är inaktivering av allow_uploaded_avatars högt rekommenderat"
     sso_not_approved_url: "Omdirigera icke godkända SSO-konton till den här URL:en"
     allow_new_registrations: "Tillåt nya användarregistreringar. Avbocka det här för att förhindra vem som helst från att skapa ett nytt konto."
     enable_signup_cta: "Visa en notis för återvändande anonyma användare för att förmå dem att registrera ett nytt konto."
@@ -799,7 +789,6 @@ sv:
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
-    enable_s3_backups: "Ladda upp säkerhetskopior till S3 vid färdigställning. VIKTIGT: kräver giltiga S3-kreditiv inlagda i Webbplatsinställningar > Filer."
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det här en privat behållare."
     s3_disable_cleanup: "Inaktivera borttagande av säkerhetskopior från S3 när de tagits bort lokalt."
     backup_time_of_day: "Tid på dygnet UTC då säkerhetskopieringen sker."
@@ -1548,7 +1537,6 @@ sv:
     search_title: "Sök på hemsidan"
   terms_of_service:
     title: "Användarvillkor"
-    signup_form_message: 'Jag har läst och accepterat <a href="/tos" target="_blank">Användarvillkoren</a>.'
   deleted: 'raderad'
   upload:
     edit_reason: "nedladdade lokala kopior av bilder"

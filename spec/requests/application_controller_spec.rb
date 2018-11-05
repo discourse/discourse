@@ -42,6 +42,17 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'missing required param' do
+    it 'should return a 400' do
+      get "/search/query.json", params: { trem: "misspelled term" }
+
+      expect(response.status).to eq(400)
+      expect(JSON.parse(response.body)).to eq(
+        "errors" => ["param is missing or the value is empty: term"]
+      )
+    end
+  end
+
   describe 'build_not_found_page' do
     describe 'topic not found' do
 
@@ -194,6 +205,71 @@ RSpec.describe ApplicationController do
       get "/"
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id])
+    end
+  end
+
+  describe 'Content Security Policy' do
+    it 'is enabled by SiteSettings' do
+      SiteSetting.content_security_policy = false
+      SiteSetting.content_security_policy_report_only = false
+
+      get '/'
+
+      expect(response.headers).to_not include('Content-Security-Policy')
+      expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
+
+      get '/'
+
+      expect(response.headers).to include('Content-Security-Policy')
+      expect(response.headers).to include('Content-Security-Policy-Report-Only')
+    end
+
+    it 'can be customized with SiteSetting' do
+      SiteSetting.content_security_policy = true
+
+      get '/'
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+
+      expect(script_src).to_not include('example.com')
+
+      SiteSetting.content_security_policy_script_src = 'example.com'
+
+      get '/'
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+
+      expect(script_src).to include('example.com')
+      expect(script_src).to include("'self'")
+      expect(script_src).to include("'unsafe-eval'")
+    end
+
+    it 'does not set CSP when responding to non-HTML' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
+
+      get '/latest.json'
+
+      expect(response.headers).to_not include('Content-Security-Policy')
+      expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+    end
+
+    it 'does not set CSP for /logs' do
+      sign_in(Fabricate(:admin))
+      SiteSetting.content_security_policy = true
+
+      get '/logs'
+
+      expect(response.status).to eq(200)
+      expect(response.headers).to_not include('Content-Security-Policy')
+    end
+
+    def parse(csp_string)
+      csp_string.split(';').map do |policy|
+        directive, *sources = policy.split
+        [directive, sources]
+      end.to_h
     end
   end
 end

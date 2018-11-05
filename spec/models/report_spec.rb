@@ -935,4 +935,66 @@ describe Report do
       end
     end
   end
+
+  describe 'most_disagreed_flaggers' do
+    let(:joffrey) { Fabricate(:user, username: "joffrey") }
+    let(:robin) { Fabricate(:user, username: "robin") }
+    let(:moderator) { Fabricate(:moderator) }
+
+    context 'with data' do
+      it "it works" do
+        10.times do
+          post_disagreed = Fabricate(:post)
+          PostAction.act(joffrey, post_disagreed, PostActionType.types[:spam])
+          PostAction.clear_flags!(post_disagreed, moderator)
+        end
+
+        3.times do
+          post_disagreed = Fabricate(:post)
+          PostAction.act(robin, post_disagreed, PostActionType.types[:spam])
+          PostAction.clear_flags!(post_disagreed, moderator)
+        end
+        post_agreed = Fabricate(:post)
+        PostAction.act(robin, post_agreed, PostActionType.types[:off_topic])
+        PostAction.agree_flags!(post_agreed, moderator)
+
+        report = Report.find('most_disagreed_flaggers')
+
+        first = report.data[0]
+        expect(first[:username]).to eq("joffrey")
+        expect(first[:score]).to eq(10)
+        expect(first[:agreed_flags]).to eq(0)
+        expect(first[:disagreed_flags]).to eq(10)
+
+        second = report.data[1]
+        expect(second[:username]).to eq("robin")
+        expect(second[:agreed_flags]).to eq(1)
+        expect(second[:disagreed_flags]).to eq(3)
+      end
+    end
+  end
+
+  describe "report_suspicious_logins" do
+    let(:joffrey) { Fabricate(:user, username: "joffrey") }
+    let(:robin) { Fabricate(:user, username: "robin") }
+
+    context "with data" do
+      it "works" do
+        SiteSetting.verbose_auth_token_logging = true
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        UserAuthToken.log(action: "suspicious", user_id: robin.id)
+        UserAuthToken.log(action: "suspicious", user_id: joffrey.id)
+        UserAuthToken.log(action: "suspicious", user_id: joffrey.id)
+
+        report = Report.find("suspicious_logins")
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("robin")
+        expect(report.data[1][:username]).to eq("joffrey")
+        expect(report.data[2][:username]).to eq("joffrey")
+      end
+    end
+
+  end
 end

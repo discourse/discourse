@@ -308,6 +308,17 @@ describe TagsController do
         expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
+      it "returns tags ordered by topic_count, and prioritises exact matches" do
+        Fabricate(:tag, name: 'tag1', topic_count: 10)
+        Fabricate(:tag, name: 'tag2', topic_count: 100)
+        Fabricate(:tag, name: 'tag', topic_count: 1)
+
+        get '/tags/filter/search.json', params: { q: 'tag', limit: 2 }
+        expect(response.status).to eq(200)
+        json = ::JSON.parse(response.body)
+        expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
+      end
+
       it "can say if given tag is not allowed" do
         yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
         category = Fabricate(:category, tags: [yup])
@@ -316,6 +327,14 @@ describe TagsController do
         json = ::JSON.parse(response.body)
         expect(json["results"].map { |j| j["id"] }.sort).to eq([])
         expect(json["forbidden"]).to be_present
+      end
+
+      it "matches tags after sanitizing input" do
+        yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
+        get "/tags/filter/search.json", params: { q: 'N/ope' }
+        expect(response.status).to eq(200)
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map { |j| j["id"] }.sort).to eq(["nope"])
       end
 
       it "can return tags that are in secured categories but are allowed to be used" do
@@ -366,6 +385,52 @@ describe TagsController do
           json = ::JSON.parse(response.body)
           expect(json['error_type']).to eq('not_found')
         end
+      end
+    end
+  end
+
+  context '#upload_csv' do
+    it 'requires you to be logged in' do
+      post "/tags/upload.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags.csv") }
+      let(:invalid_csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags_invalid.csv") }
+
+      let(:file) do
+        Rack::Test::UploadedFile.new(File.open(csv_file))
+      end
+
+      let(:invalid_file) do
+        Rack::Test::UploadedFile.new(File.open(invalid_csv_file))
+      end
+
+      let(:filename) { 'tags.csv' }
+
+      it "fails if you can't manage tags" do
+        sign_in(Fabricate(:user))
+        post "/tags/upload.json", params: { file: file, name: filename }
+        expect(response.status).to eq(403)
+      end
+
+      it "allows staff to bulk upload tags" do
+        sign_in(Fabricate(:moderator))
+        post "/tags/upload.json", params: { file: file, name: filename }
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly("tag1", "capitaltag2", "spaced-tag", "tag3", "tag4")
+        expect(Tag.find_by_name("tag3").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
+        expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
+      end
+
+      it "fails gracefully with invalid input" do
+        sign_in(Fabricate(:moderator))
+
+        expect do
+          post "/tags/upload.json", params: { file: invalid_file, name: filename }
+          expect(response.status).to eq(422)
+        end.not_to change { [Tag.count, TagGroup.count] }
       end
     end
   end

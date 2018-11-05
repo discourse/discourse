@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import showModal from "discourse/lib/show-modal";
 
 export default Ember.Controller.extend({
   sortProperties: ["totalCount:desc", "id"],
@@ -33,6 +34,10 @@ export default Ember.Controller.extend({
         sortedByCount: false,
         sortedByName: true
       });
+    },
+
+    showUploader() {
+      showModal("tag-upload");
     }
   }
 });

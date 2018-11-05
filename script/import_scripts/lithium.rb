@@ -1032,10 +1032,6 @@ SQL
     html
   end
 
-  def fake_email
-    SecureRandom.hex << "@domain.com"
-  end
-
   def mysql_query(sql)
     @client.query(sql, cache_rows: true)
   end

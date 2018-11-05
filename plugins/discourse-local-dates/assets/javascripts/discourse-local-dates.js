@@ -12,9 +12,9 @@
       }
 
       var relativeTime;
-      if (options.forceTimezone) {
+      if (options.timezone) {
         relativeTime = moment
-          .tz(options.date + " " + options.time, options.forceTimezone)
+          .tz(options.date + " " + options.time, options.timezone)
           .utc();
       } else {
         relativeTime = moment.utc(options.date + " " + options.time);
@@ -56,6 +56,26 @@
       var displayTimezone = moment.tz.guess();
       var relativeTime = relativeTime.tz(displayTimezone);
 
+      var d = function(key) {
+        var translated = I18n.t("discourse_local_dates.relative_dates." + key, {
+          time: "LT"
+        });
+        translated = translated
+          .split("LT")
+          .map(function(w) {
+            return "[" + w + "]";
+          })
+          .join("LT");
+        return translated;
+      };
+
+      var relativeFormat = {
+        sameDay: d("today"),
+        nextDay: d("tomorrow"),
+        lastDay: d("yesterday"),
+        sameElse: "L"
+      };
+
       if (
         options.format !== "YYYY-MM-DD HH:mm:ss" &&
         relativeTime.isBetween(
@@ -63,7 +83,7 @@
           moment().add(2, "day")
         )
       ) {
-        relativeTime = relativeTime.calendar();
+        relativeTime = relativeTime.calendar(null, relativeFormat);
       } else {
         relativeTime = relativeTime.format(options.format);
       }
@@ -104,7 +124,7 @@
       options.time = $this.attr("data-time") || "00:00:00";
       options.recurring = $this.attr("data-recurring");
       options.timezones = $this.attr("data-timezones");
-      options.forceTimezone = $this.attr("data-force-timezone");
+      options.timezone = $this.attr("data-timezone");
 
       processElement($this, options);
     });

@@ -182,6 +182,9 @@
   .d-editor-preview {
     background-color: $primary-very-low;
     padding: 5px;
+    &:empty {
+      padding: 0;
+    }
   }
 }
 

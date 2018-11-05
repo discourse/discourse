@@ -60,19 +60,9 @@ class UserSummary
       .order('COUNT(*) DESC')
       .limit(MAX_SUMMARY_RESULTS)
       .pluck('acting_user_id, COUNT(*)')
-      .each { |l| likers[l[0].to_s] = l[1] }
+      .each { |l| likers[l[0]] = l[1] }
 
-    User.where(id: likers.keys)
-      .pluck(:id, :username, :name, :uploaded_avatar_id)
-      .map do |u|
-      UserWithCount.new(
-        id: u[0],
-        username: u[1],
-        name: u[2],
-        avatar_template: User.avatar_template(u[1], u[3]),
-        count: likers[u[0].to_s]
-      )
-    end.sort_by { |u| -u[:count] }
+    user_counts(likers)
   end
 
   def most_liked_users
@@ -85,19 +75,9 @@ class UserSummary
       .order('COUNT(*) DESC')
       .limit(MAX_SUMMARY_RESULTS)
       .pluck('user_actions.user_id, COUNT(*)')
-      .each { |l| liked_users[l[0].to_s] = l[1] }
+      .each { |l| liked_users[l[0]] = l[1] }
 
-    User.where(id: liked_users.keys)
-      .pluck(:id, :username, :name, :uploaded_avatar_id)
-      .map do |u|
-      UserWithCount.new(
-        id: u[0],
-        username: u[1],
-        name: u[2],
-        avatar_template: User.avatar_template(u[1], u[3]),
-        count: liked_users[u[0].to_s]
-      )
-    end.sort_by { |u| -u[:count] }
+    user_counts(liked_users)
   end
 
   REPLY_ACTIONS ||= [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
@@ -117,19 +97,9 @@ class UserSummary
       .order('COUNT(*) DESC')
       .limit(MAX_SUMMARY_RESULTS)
       .pluck('replies.user_id, COUNT(*)')
-      .each { |r| replied_users[r[0].to_s] = r[1] }
+      .each { |r| replied_users[r[0]] = r[1] }
 
-    User.where(id: replied_users.keys)
-      .pluck(:id, :username, :name, :uploaded_avatar_id)
-      .map do |u|
-      UserWithCount.new(
-        id: u[0],
-        username: u[1],
-        name: u[2],
-        avatar_template: User.avatar_template(u[1], u[3]),
-        count: replied_users[u[0].to_s]
-      )
-    end.sort_by { |u| -u[:count] }
+    user_counts(replied_users)
   end
 
   def badges
@@ -214,5 +184,18 @@ class UserSummary
            :post_count,
            :time_read,
            to: :user_stat
+
+protected
+
+  def user_counts(user_hash)
+    user_ids = user_hash.keys
+
+    lookup = AvatarLookup.new(user_ids)
+    user_ids.map do |user_id|
+      UserWithCount.new(
+        lookup[user_id].attributes.merge(count: user_hash[user_id])
+      )
+    end.sort_by { |u| -u[:count] }
+  end
 
 end

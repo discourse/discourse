@@ -68,5 +68,20 @@ export default Ember.Mixin.create({
     }
 
     return true;
+  },
+
+  createContentFromInput(input) {
+    // See lib/discourse_tagging#clean_tag.
+    var content = input
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
+      .substring(0, this.siteSettings.max_tag_length);
+
+    if (this.siteSettings.force_lowercase_tags) {
+      content = content.toLowerCase();
+    }
+
+    return content;
   }
 });

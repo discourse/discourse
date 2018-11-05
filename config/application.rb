@@ -121,6 +121,11 @@ module Discourse
       google-universal-analytics.js
       preload-application-data.js
       authentication-complete.js
+      print-page.js
+      omniauth-complete.js
+      activate-account.js
+      auto-redirect.js
+      wizard-start.js
     }
 
     # Precompile all available locales
@@ -189,6 +194,9 @@ module Discourse
     # so nginx strips etags, may revisit when mainline nginx
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
+
+    require 'content_security_policy'
+    config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware, ContentSecurityPolicy::Middleware
 
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)

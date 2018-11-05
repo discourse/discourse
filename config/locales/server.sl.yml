@@ -85,4 +85,7 @@ sl:
     anniversary:
       name: Obletnica
       long_description: |
-        Ta značka je podeljeno, ko ste bili član eno leto in ste v tem letu naredili vsaj eno objavo. Hvala, da ste ostali in prispevali k naši skupnosti. Brez vas ne bi zmogli.
+        Ta značka je podeljena, ko ste bili član eno leto in ste v tem letu naredili vsaj eno objavo. Hvala, da ste ostali in prispevali k naši skupnosti. Brez vas ne bi zmogli.
+    aficionado:
+      long_description: |
+        Ta značka je podeljena za obiskovanje 100 zaporednih dni. To je več kot tri mesece!

@@ -5,16 +5,6 @@ import copyText from "discourse/lib/copy-text";
 export default Ember.Component.extend({
   classNames: ["ip-lookup"],
 
-  city: function() {
-    return [
-      this.get("location.city"),
-      this.get("location.region"),
-      this.get("location.country")
-    ]
-      .filter(Boolean)
-      .join(", ");
-  }.property("location.{city,region,country}"),
-
   otherAccountsToDelete: function() {
     // can only delete up to 50 accounts at a time
     var total = Math.min(50, this.get("totalOthersWithSameIP") || 0);
@@ -72,24 +62,19 @@ export default Ember.Component.extend({
         }
 
         text += I18n.t("ip_lookup.location");
-        if (location.loc) {
-          text += `: ${location.loc} ${this.get("city")}\n`;
+        if (location.location) {
+          text += `: ${location.location}\n`;
         } else {
           text += `: ${I18n.t("ip_lookup.location_not_found")}\n`;
         }
 
-        if (location.org) {
+        if (location.organization) {
           text += I18n.t("ip_lookup.organisation");
-          text += `: ${location.org}\n`;
-        }
-
-        if (location.phone) {
-          text += I18n.t("ip_lookup.phone");
-          text += `: ${location.phone}\n`;
+          text += `: ${location.organization}\n`;
         }
       }
       const copyRange = $('<p id="copy-range"></p>');
-      copyRange.html(text.trim().replace("\n", "<br>"));
+      copyRange.html(text.trim().replace(/\n/g, "<br>"));
       $(document.body).append(copyRange);
       if (copyText(text, copyRange[0])) {
         this.set("copied", true);

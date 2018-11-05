@@ -491,7 +491,6 @@ ca:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiat'
-      description: 'Aquesta publicació té contingut que una persona raonable consideraria ofensiu, abusiu o una violació de les <a href="/guidelines">nostres normes de la comunitat</a>.'
       long_form: 'marcar amb bandera d''inapropiat'
     notify_user:
       title: 'Envia un missatge a @{{username}}'
@@ -525,11 +524,9 @@ ca:
       long_form: 'marcat amb bandera de brossa'
     inappropriate:
       title: 'Inapropiat'
-      description: 'Aquest tema té contingut que una persona raonable consideraria ofensiu, abusiu o una violació de les <a href="/guidelines">nostres normes de la comunitat</a>.'
       long_form: 'marcat amb bandera d''inapropiat'
     notify_moderators:
       title: "Alguna altra cosa"
-      description: 'Aquest tema necessita la supervisió general de l''equip basada en les <a href="/guidelines">normes</a>, <a href="%{tos_url}">TOS</a> o per un altre motiu abans no esmentat.'
       long_form: 'marcat per a la supervisió moderadora'
       email_title: 'El tema "%{title}" necessita la supervisió moderadora'
       email_body: "%{link}\n\n%{message}"
@@ -717,11 +714,6 @@ ca:
     sidekiq_warning: 'No s''està executant <i>Sidekiq</i>. Hi ha moltes tasques asincrònicament en execució per <i>Sidekiq</i>, com ara enviament de correus. Si us plau, assegura''t que com a mínim hi ha un procés <i>Sidekiq</i> en marxa.  <a href="https://github.com/mperham/sidekiq" target="_blank">Aprèn més aquí sobre <i>Sidekiq</i></a>.'
     queue_size_warning: 'La quantitat de tasques en cua és de %{queue_size}, que és elevada. Això podria indicar un problema amb un o més procesos o potser et cal afegir-hi més treballadors de <i>Sidekiq</i>.'
     memory_warning: 'El teu servidor s''està executant amb menys d''1 GB de memòria total. Se''n recomana com a mínim un 1 GB de memòria.'
-    google_oauth2_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb Google OAuth2 (enable_google_oauth2_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira aquesta guia per saber-ne més</a>.'
-    facebook_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb Facebook (enable_facebook_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Mira aquesta guia per saber-ne més</a>.'
-    twitter_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb Twitter (enable_twitter_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Mira aquesta guia per saber-ne més</a>.'
-    github_config_warning: 'El servidor està configurat per permetre el registre i inici de sessió amb GitHub (enable_github_logins), però l''id de client i els valors secrets de client no estan configurats. Vés a <a href="/admin/site_settings">la Configuració del Lloc</a> i actualitza les configuracions. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Mira aquesta guia per aprendre''n més</a>.'
-    failing_emails_warning: 'Hi ha %{num_failed_jobs} tasques de correu fallides. Revisa el teu app.yml i assegura''t que la configuració del servidor de correu és correcta. <a href="/sidekiq/retries" target="_blank">Mira les tasques fallides a <i>Sidekiq</i></a>.'
     subfolder_ends_in_slash: "La teva configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
     email_polling_errored_recently:
       one: "L'enquesta per correu electrònic ha generat un error durant les darreres 24 hores. Fes un cop d'ull als <a href='/logs' target='_blank'>registres</a> per saber-ne més."
@@ -836,14 +828,12 @@ ca:
     password_unique_characters: "Quantitat mínima de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que es trobin entre les 10000 més comuns."
     enable_sso: "Activa l'autenticació única des d'un lloc extern (ATENCIÓ: LES ADRECES DE CORREU *HAN* DE SER VALIDADES PER UN LLOC EXTERN!)"
-    enable_sso_provider: "Implementa el protocol de proveïdor de l'autenticació única del Discourse a /session/sso_provider endpoint, necessita sso_secret per ser activada"
     sso_url: "Adreça URL d'autenticació única a un punt final (ha dincloure http:// o https://)"
     sso_secret: "Cadena secreta emprada per autenticar criptogràficament la informació d'autenticació única, assegura't que té 10 caràcters o més"
     sso_overrides_bio: "Anul·la la biografia de la persona al perfil i evita que es pugui canviar"
     sso_overrides_email: "Anul·la el correu local amb correu extern per a l'autenticació única a cada connexió i evita els canvis en local. (ATENCIÓ: poden succeir incidències a causa de la normalització dels correus locals)"
     sso_overrides_username: "Anul·la el nom local de persona amb nom de lloc extern per a la càrrega útil d'autenticació única a cada connexió i evita els canvis en local. (ATENCIÓ: poden succeir incidències a causa de les diferències a la mida i a les condicions dels noms de persona usuària)"
     sso_overrides_name: "Anul·la el nom sencer local amb nom sencer extern per a la càrrega útil d'autenticació única a cada connexió i evita els canvis en local."
-    sso_overrides_avatar: "Anul·la l'avatar de la persona amb avatar de lloc extern de la càrrega útil d'autenticació única, es recomana molt la inhabilitació de allow_uploaded_avatars"
     sso_not_approved_url: "Redirecciona els comptes d'autenticació única a aquesta adreça URL"
     sso_allows_all_return_paths: "No restringeixis el domini per a return_paths facilitat per l'autenticació única (per defecte el camí de retorn ha de ser el lloc actual)"
     allow_new_registrations: "Permet registres de noves persones. Inhabilita-ho per tal d'evitar que qualsevol pugui crear un nou compte."
@@ -858,7 +848,6 @@ ca:
     allow_restore: "Permet restablir, que pot reemplaçar TOTES les dades del lloc! Deixa-ho com a \"false\" si no pretens restablir una còpia de seguretat"
     maximum_backups: "Quantitat màxima de còpies de seguretat per mantenir al disc. Les còpies més antigues seran esborrades automàticament"
     automatic_backups_enabled: "Executa còpies de seguretat automàtiques tal com estan definides a la freqüències de la còpia de seguretat"
-    enable_s3_backups: "Carrega còpies de seguretat a S3 quan es completi. IMPORTANT: necessita credencials vàlides de S3 introduïdes a la configuració de fitxer."
     s3_backup_bucket: "Sistema remot de càrrega de còpies de seguretat. ATENCIÓ: Assegura't que és una càrrega privada."
     s3_disable_cleanup: "Inhabilita l'eliminació de còpies de seguretat de S3 quan s'eliminin localment."
     backup_time_of_day: "Temps del dia UTC quan la còpia de seguretat hauria d'executar-se."
@@ -1668,7 +1657,6 @@ ca:
     search_title: "Busca aquest lloc"
   terms_of_service:
     title: "Condicions d'ús"
-    signup_form_message: 'He llegit i accepto les <a href="/tos" target="_blank">Condicions del servei</a>.'
   deleted: 'esborrat'
   upload:
     edit_reason: "còpia local d'imatges descarregada"
@@ -1994,6 +1982,3 @@ ca:
         title: "Convida equip"
       finished:
         title: "El teu Discourse està llest!"
-        description: |
-          <p>Si mai vols canviar aquesta configuració, visita <a href='/admin' target='_blank'>la teva secció d'administració</a>; troba-ho al costat de la icona de clau anglesa al menú del lloc.</p>
-          <p>Passa-t'ho bé i molta sort <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>amb la construcció de la teva nova comunitat!</a></p>

@@ -67,13 +67,18 @@ registerButton("like", attrs => {
     className
   };
 
-  if (attrs.canToggleLike) {
+  // If the user has already liked the post and doesn't have permission
+  // to undo that operation, then indicate via the title that they've liked it
+  // and disable the button. Otherwise, set the title even if the user
+  // is anonymous (meaning they don't currently have permission to like);
+  // this is important for accessibility.
+  if (attrs.liked && !attrs.canToggleLike) {
+    button.title = "post.controls.has_liked";
+    button.disabled = true;
+  } else {
     button.title = attrs.liked
       ? "post.controls.undo_like"
       : "post.controls.like";
-  } else if (attrs.liked) {
-    button.title = "post.controls.has_liked";
-    button.disabled = true;
   }
 
   return button;
