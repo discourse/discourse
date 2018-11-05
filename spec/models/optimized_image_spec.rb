@@ -17,9 +17,12 @@ describe OptimizedImage do
             5
           )
 
-          expect(File.read(tmp_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/cropped.png")
-          )
+          fixture_path = "#{Rails.root}/spec/fixtures/images/cropped.png"
+          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+
+          cropped_hex = Digest::MD5.hexdigest(File.read(tmp_path))
+
+          expect(cropped_hex).to eq(fixture_hex)
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -120,9 +123,12 @@ describe OptimizedImage do
             "100x100\>"
           )
 
-          expect(File.read(tmp_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/downsized.png")
-          )
+          fixture_path = "#{Rails.root}/spec/fixtures/images/downsized.png"
+          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+
+          downsized_hex = Digest::MD5.hexdigest(File.read(tmp_path))
+
+          expect(downsized_hex).to eq(fixture_hex)
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
