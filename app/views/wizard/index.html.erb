@@ -5,7 +5,6 @@
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
-    <%= render partial: "common/special_font_face" %>
     <script src="<%= ExtraLocalesController.url("wizard") %>"></script>
     <%= csrf_meta_tags %>
 
