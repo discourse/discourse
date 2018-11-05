@@ -36,5 +36,8 @@
     "qunit": "2.6",
     "route-recognizer": "^0.3.3",
     "sinon": "^6.3.5"
+  },
+  "scripts": {
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
   }
 }
