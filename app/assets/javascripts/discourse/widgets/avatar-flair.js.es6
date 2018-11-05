@@ -52,7 +52,7 @@ createWidget("avatar-flair", {
 
   html(attrs) {
     if (this.isIcon(attrs)) {
-      let icon = convertIconClass(attrs.primary_group_flair_url);
+      const icon = convertIconClass(attrs.primary_group_flair_url);
       return [iconNode(icon)];
     } else {
       return [];
