@@ -40,6 +40,9 @@ module PostGuardian
       # Silenced users can't flag
       return false if is_flag && @user.silenced?
 
+      # Hidden posts can't be flagged
+      return false if is_flag && post.hidden?
+
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
         (!SiteSetting.allow_flagging_staff?) &&
