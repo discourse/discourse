@@ -223,10 +223,10 @@ export function iconNode(id, params) {
 }
 
 export function convertIconClass(icon) {
-  icon = icon.replace("far fa-", "far-");
-  icon = icon.replace("fab fa-", "fab-");
-  icon = icon.replace("fa-", "");
-  return icon;
+  return icon
+    .replace("far fa-", "far-")
+    .replace("fab fa-", "fab-")
+    .replace("fa-", "");
 }
 
 // TODO: Improve how helpers are registered for vdom compliation

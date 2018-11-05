@@ -61,7 +61,7 @@ class DiscoursePluginRegistry
     end
 
     def svg_icons
-      @svg_icons ||= Set.new
+      @svg_icons ||= []
     end
 
     def handlebars

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "anchor",
@@ -132,11 +134,9 @@ module SvgSprite
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
 
   def self.all_icons
-    SVG_ICONS.merge(SiteSetting.svg_icon_subset.split('|'))
-    SVG_ICONS.merge(DiscoursePluginRegistry.svg_icons)
-    SVG_ICONS.merge(badge_icons)
-    SVG_ICONS.merge(group_icons)
-    SVG_ICONS.merge(theme_icons)
+    icons = SVG_ICONS.dup
+    icons.merge(SiteSetting.svg_icon_subset.split('|'))
+    icons.merge(plugin_icons).merge(badge_icons).merge(group_icons).merge(theme_icons)
   end
 
   def self.bundle
@@ -150,7 +150,7 @@ module SvgSprite
       License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
       -->
       <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
-    """
+    """.dup
 
     Dir["#{Rails.root}/vendor/assets/svg-icons/fontawesome/*.svg"].each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
@@ -189,6 +189,10 @@ module SvgSprite
     "/svg-sprite/#{Discourse.current_hostname}/#{version all_icons.to_s}.svg"
   end
 
+  def self.plugin_icons
+    DiscoursePluginRegistry.svg_icons.each { |icon| process(icon) }
+  end
+
   def self.badge_icons
     Badge.all.pluck(:icon).uniq.each { |icon| process(icon) }
   end
@@ -198,7 +202,7 @@ module SvgSprite
   end
 
   def self.theme_icons
-    theme_icon_settings = Array.new
+    theme_icon_settings = []
 
     Theme.all.each do |theme|
       theme&.included_settings&.each do |name, value|
