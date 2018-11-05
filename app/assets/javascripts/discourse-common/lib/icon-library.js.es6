@@ -318,7 +318,7 @@ registerIconRenderer({
   },
 
   node(icon, params) {
-    let id = handleIconId(icon);
+    const id = handleIconId(icon);
     let classes = iconClasses(icon, params) + " svg-node";
 
     let svg = h(
