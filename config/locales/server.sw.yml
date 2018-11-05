@@ -463,8 +463,6 @@ sw:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Haifai'
-      description: 'Chapisho hili lina maandishi ambayo mtu mwenye akili timamu anaweza kuona ni matusi, ubaguzi, au kukiuka <a href="/guidelines">mwongozo wa jumuiya</a>.'
-      short_description: 'Ukiukaji wa <a href="/guidelines">miongozo ya jukwaa letu</a>'
       long_form: 'imeripotiwa kuwa haiko sawa'
     notify_user:
       title: 'Mtumie @{{username}} ujumbe'
@@ -509,11 +507,9 @@ sw:
       long_form: 'imeripotiwa kama barua taka'
     inappropriate:
       title: 'Haifai'
-      description: 'Mada hii ina maandishi ambayo mtu mwenye akili timamu anaweza kuona ni matusi, ubaguzi, au kukiuka <a href="/guidelines">mwongozo wa jumuiya</a>.'
       long_form: 'imeripotiwa kuwa haiko sawa'
     notify_moderators:
       title: "Kitu Kingine"
-      description: 'Mada hii inahitaji kupitiwa na msaidizi kwa sababu za <a href="/guidelines">mwongozo</a>, <a href="%{tos_url}">TOS</a>, au kwa sababu nyingine ambayo haijaorodheshwa.'
       long_form: 'imeripotiwa na itapitiwa na msimamizi'
       email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
       email_body: "%{link}\n\n%{message}"
@@ -715,11 +711,6 @@ sw:
     sidekiq_warning: 'Sidekiq haifanyi kazi. Shughuli nyingi kama kutuma barua pepe, zinashughulikiwa na sidekiq. Tafadhali hakikisha kuwa mfumo wa sidekiq unafanya kazi. <a href="https://github.com/mperham/sidekiq" target="_blank">Jifunza kuhusu Sidekiq hapa</a>.'
     queue_size_warning: 'Namba za kazi zilizopangwa ni %{queue_size}, ambazo ni nyingi. Hii inaweza kusababishwa na tatizo na m(i)fumo wa Sidekiq, au inabidi uongeze wafanyakazi wa Sidekiq.'
     memory_warning: 'Seva yako inatumia chini ya GB 1 ya kumbukumbu. Tunakushauri utumie kumbukumbu zaidi ya GB 1.'
-    google_oauth2_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia  Google OAuth2 (enable_google_oauth2_logins), lakini taarifa za  client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings"> Mipangilio ya Tovuti </a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> Tembelea mwongozo kwa taarifa zaidi</a>.'
-    facebook_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Facebook (enable_facebook_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
-    twitter_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Twitter (enable_twitter_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
-    github_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Github (enable_github_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
-    failing_emails_warning: 'Kuna kazi %{num_failed_jobs} za barua pepe ambazo zimeshindwa. Angalia file la app.yml na hakikisha mipangilio ya seva za barua ziko sawa. <a href="/sidekiq/retries" target="_blank">Ona kazi zilizoshindwa ndani ya Sidekiq</a>.'
     missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
     bad_favicon_url: "Ishara unayoipenda imeshindwa kuonekana. Angalia mipangilio ya favicon_url ndani ya <a href='/admin/site_settings'>Mipangilio ya Tovuti</a>."
     force_https_warning: "Tovuti yako inatumia SSL. Lakini `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
@@ -1498,14 +1489,6 @@ sw:
     spam_post_blocked:
       title: "Chapisho Taka Limezuiliwa"
       subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"
-      text_body_template: |
-        Huu ni ujumbe kutoka kwa roboti.
-
-        Mtumiaji mpya [%{username}](%{user_url}) amejaribu kuandika maandishi mapya mengi yenye viungo kwenda kwa %{domains}, lakini zimezuiliwa kukwepa barua taka. Bado mtumiaji anaweza kutengeneza machapisho ambayo hayana viungo kwenda kwa %{domains}.
-
-        Tafadhali [kagua mtumiaji](%{user_url}).
-
-        Tohoa kwa kupitia `newuser_spam_host_threshold` na `white_listed_spam_host_domains` mipangilio ya tovuti.
     unsilenced:
       title: "Hajanyamazishwa Tena"
       subject_template: "Akaunti haijasimamishwa tena"
@@ -2328,9 +2311,6 @@ sw:
         description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
       finished:
         title: "Discourse yako iko Tayari!"
-        description: |
-          <p>Kama unataka kubadilisha mipangilio hii, tembelea <a href='/admin' target='_blank'>kifungu cha kiongozi</a>; utaiona pembeni ya ikoni ya spana kwenye menyu ya tovuti.</p>
-          <p>Kila la kheri<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>kwenye ujengaji wa jumuiya yako mpya!</a></p>
   search_logs:
     graph_title: "Idadi ya Utafiti"
   joined: "Alijiunga"

@@ -467,7 +467,6 @@ th:
       watched_categories: "ดูแล้ว"
       tracked_categories: "ติดตาม"
       muted_categories: "ปิดเสียง"
-      muted_categories_instructions: "คุณจะไม่ได้รับการแจ้งเตือนใดๆเกี่ยวกับกระทู้ใหม่ในหมวดนี้ และจะไม่แสดงในเมนูยังไม่ได้อ่าน"
       delete_account: "ลบบัญชีของคุณ"
       delete_account_confirm: "คุณแน่ใจใหม่ที่จะลบบัญชีอย่างถาวร? การกระทำนี้ไม่สามารถยกเลิกได้"
       deleted_yourself: "คุณลบบัญชีเสร็จเเรียบร้อยแล้ว"

@@ -642,8 +642,6 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Upassende'
-      description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til denne gemenskapen</a>.'
-      short_description: 'Et brudd på <a href="/guidelines">retningslinjene for samfunnet</a>'
       long_form: 'markerte dette som upassende'
     notify_user:
       title: 'Send en melding til @{{username}}'
@@ -692,12 +690,9 @@ nb_NO:
       short_description: 'Dette er en reklame'
     inappropriate:
       title: 'Upassende'
-      description: 'Dette innlegget har innhold som en fornuftig person vil anslå å være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til denne gemenskapen</a>.'
       long_form: 'markerte dette som upassende'
-      short_description: 'Et brudd på <a href="/guidelines">retningslinjene for samfunnet</a>'
     notify_moderators:
       title: "Noe annet"
-      description: 'Emnet krever oppfølging av staben basert på <a href="/guidelines">retningslinjene</a>, <a href="%{tos_url}">brukeravtale</a>, eller en annen grunn ikke i listen over.'
       long_form: 'Markert for mederering'
       short_description: 'Krever handling fra staben av en annen grunn'
       email_title: 'Tråden "%{title}" krever oppmerksomhet fra en moderator'
@@ -976,11 +971,6 @@ nb_NO:
     sidekiq_warning: 'Sidekiq kjører ikke. Mange oppgaver, som å sende e-post, kjøres i bakgrunnen av sidekiq. Vennligst verifiser at minst én sidekiq-prosess kjører. <a href="https://github.com/mperham/sidekiq" target="_blank">Lær mer om Sidekiq her</a>.'
     queue_size_warning: 'Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere.'
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
-    google_oauth2_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Google OAuth2 (enable_google_oauth2_logins), men verdiene for klientid og klienthemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Les denne guiden for å lære mer</a>.'
-    facebook_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Facebook (enable_facebook_logins), men verdiene for app-id og app-hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Les denne guiden for å lære mer</a>.'
-    twitter_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med Twitter (enable_twitter_logins), men verdiene for nøkkel og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Les denne guiden for å lære mer</a>.'
-    github_config_warning: 'Denne serveren er konfigurert for å tillate innmelding og innlogging med GitHub (enable_github_logins), men verdiene for klientid og hemmelighet er ikke satt. Gå til <a href="/admin/site_settings">Instillingene for nettstedet</a> og oppdater dem. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Les denne guiden for å lære mer</a>.'
-    failing_emails_warning: 'Det er %{num_failed_jobs} e-postjobber som har feilet. Sjekk instillingene i app.yml og verifiser at serverinstillingene for e-post er riktige. <a href="/sidekiq/retries" target="_blank">Se de feilede jobbene i Sidekiq</a>.'
     subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
     email_polling_errored_recently:
       one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='/logs' target='_blank'>loggene</a> for mer detaljer."
@@ -1263,7 +1253,6 @@ nb_NO:
     search_title: "Søk i denne siden"
   terms_of_service:
     title: "Bruksvilkår"
-    signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">Bruksvilkårene</a>.'
   deleted: 'slettet'
   upload:
     edit_reason: "Last ned lokal kopi av bilder"

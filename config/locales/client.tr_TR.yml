@@ -125,6 +125,7 @@ tr_TR:
       user_left: "%{who} bu mesajdan ayrıldı %{when}"
       removed_user: "%{when} %{who} kaldırıldı"
       removed_group: "%{who} %{when} kaldırıldı"
+      autobumped: "otomatik olarak çarptı %{when}"
       autoclosed:
         enabled: '%{when} kapatıldı'
         disabled: '%{when} açıldı'
@@ -149,6 +150,7 @@ tr_TR:
     topic_admin_menu: "konu yöneticisi eylemleri"
     wizard_required: "Yeni Discourse'una hoşgeldin!  Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    bootstrap_mode_enabled: "Yeni sitenizi daha kolay başlatmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özet güncellemeleri etkinleştirilir. Bu,%{min_users} kullanıcının katıldığı zaman otomatik olarak kapatılacaktır."
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak. "
     themes:
       default_description: "Varsayılan "
@@ -160,6 +162,7 @@ tr_TR:
         ap_southeast_1: "Asya Pasifik (Singapur)"
         ap_southeast_2: "Asya Pasifik (Sidney)"
         cn_north_1: "Çin (Pekin)"
+        cn_northwest_1: "Çin (Pekin)"
         eu_central_1: "AB (Frankfurt)"
         eu_west_1: "AB (İrlanda)"
         eu_west_2: "AB (Londra)"
@@ -194,6 +197,7 @@ tr_TR:
     privacy_policy: "Gizlilik Sözleşmesi"
     privacy: "Gizlilik"
     tos: "Kullanım Koşulları"
+    rules: "Kurallar"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
     you: "Sen"
@@ -242,7 +246,9 @@ tr_TR:
         unbookmark: "Bu konudaki tüm işaretlenenleri kaldırmak için tıkla"
     bookmarks:
       created: "bu gönderiyi işaretledin"
+      not_bookmarked: "bu yazıya yer işareti koy"
       remove: "İşareti Kaldır"
+      confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
     drafts:
       resume: "Sürdür"
       remove: "Kaldır"
@@ -265,6 +271,8 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
+    uploading_filename: "Yükleme: {{filename}}..."
+    clipboard: "pano"
     uploaded: "Yüklendi!"
     pasting: "Yapıştırılıyor..."
     enable: "Etkinleştir"
@@ -408,6 +416,7 @@ tr_TR:
         all: "Tüm Gruplar"
         empty: "Görünen hiçbir grup bulunmuyor. "
         filter: "Grup tipine göre filtrele"
+        owner_groups: "Sahip olduğum gruplar"
         close_groups: "Kapanmış Gruplar"
         automatic_groups: "Otomatik Gruplar"
         automatic: "Otomatik"
@@ -511,6 +520,7 @@ tr_TR:
       topic_stat_sentence:
         one: "%{unit} beri %{count} yeni konu."
         other: "%{unit} beri %{count} yeni konu."
+      n_more: "Kategoriler (%{count}daha fazla) ..."
     ip_lookup:
       title: IP Adresi Ara
       hostname: Sunucu ismi
@@ -526,7 +536,7 @@ tr_TR:
       topics_entered: "girilen konular"
       post_count: "# gönderi"
       confirm_delete_other_accounts: "Bu hesapları silmek isteğine emin misin?"
-      powered_by: "<a href='https://ipinfo.io'>ipinfo.io</a> tarafından güçlendirildi"
+      copied: "kopyalanan"
     user_fields:
       none: "(bir seçenek tercih et)"
     user:
@@ -544,6 +554,7 @@ tr_TR:
       private_messages: "Mesajlar"
       activity_stream: "Aktivite"
       preferences: "Tercihler"
+      profile_hidden: "Bu kullanıcının genel profili gizli."
       expand_profile: "Genişlet"
       collapse_profile: "Daralt"
       bookmarks: "İşaretlenenler"
@@ -608,7 +619,6 @@ tr_TR:
       watched_first_post_tags: "İlk gönderiyi izleme"
       watched_first_post_tags_instructions: "Bu etiketlerdeki her yeni konu başlığındaki ilk gönderi için bildirim alacaksın. "
       muted_categories: "Sessiz"
-      muted_categories_instructions: "Bu kategorilerdeki yeni konu başlıkları hakkında herhangi bir bildiri almayacaksın ve bu konu başlıkları en son gönderilerde gözükmeyecek."
       no_category_access: "Bir moderatör olarak kategori erişimin sınırlı ve kaydetme devre dışıdır."
       delete_account: "Hesabımı Sil"
       delete_account_confirm: "Hesabını kalıcı olarak silmek istediğine emin misin? Bu eylemi geri alamazsın!"
@@ -627,6 +637,7 @@ tr_TR:
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylanmış:"
+      api_last_used_at: "Son kullanılan:"
       theme: "Tema"
       home: "Varsayılan Anasayfa"
       staged: "Aşamalı"
@@ -683,12 +694,8 @@ tr_TR:
         disable: "İki faktörlü kimlik doğrulamayı devre dışı bırak"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         label: "Kod"
-        enable_description: |
-          Desteklenen bir uygulamada bu QR kodunu tarayın (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> - <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> - <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) ve kimlik doğrulama kodunuzu girin.
         disable_description: "Lütfen kimlik doğrulama kodunu \"Uygulama\"dan gir"
         show_key_description: "Manuel olarak gir"
-        extended_description: |
-          İki faktörlü kimlik doğrulama, şifrenize ek olarak tek seferlik bir kod gerektirerek hesabınıza ek güvenlik ekler. Kodlar <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, ve <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> cihazlar üzerinde oluşturulabilir.
         oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
@@ -708,7 +715,6 @@ tr_TR:
         title: "Profil resmini değiştir"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
         gravatar_title: "Profil görselini \"Gravatar web sitesi\"nde değiştir"
-        gravatar_failed: "Gravatar getirilemedi. Bu e-posta adresiyle ilişkili bir yönlendirme  bulunuyor mu?"
         refresh_gravatar_title: "Gravatar profil görselini yenile"
         letter_based: "Sistem profil görseli atadı"
         uploaded_avatar: "Kişisel resim"
@@ -764,6 +770,16 @@ tr_TR:
         any: "hiçbir"
       password_confirmation:
         title: "Şifre tekrarı"
+      auth_tokens:
+        title: "Son Kullanılan Cihazlar"
+        ip: "IP"
+        details: "Detaylar"
+        log_out_all: "Hepisini Çıkış Yap"
+        active: "şimdi aktif"
+        not_you: "Sen değil?"
+        show_all: "Tümünü göster ({{count}})"
+        show_few: "Daha az göster"
+        was_this_you: "Bu sen miydin?"
       last_posted: "Son Gönderi"
       last_emailed: "Gönderilen Son E-posta"
       last_seen: "Görüldü"
@@ -784,7 +800,6 @@ tr_TR:
         always: "her zaman"
         never: "asla"
       email_digests:
-        title: "Ben burda değilken konuşulan popüler konu ve cevapların özetini e-posta olarak gönder"
         every_30_minutes: "Her 30 dakikada"
         every_hour: "saatlik"
         daily: "günlük"
@@ -1838,7 +1853,6 @@ tr_TR:
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar dene."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla {{max_size_kb}}kb). Neden paylaşımını buluta  yükleyip bağlantını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda sadece tek dosya yüklenebilir."
-        too_many_dragged_and_dropped_files: "Üzgünüz, aynı anda sadece 10 dosya yükleyebilirsin."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığın dosya izinli değil (izinli uzantılar : {{izinli uzantılar}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
@@ -2869,9 +2883,13 @@ tr_TR:
           revert: "Değişiklikleri Geri Al"
           revert_confirm: "Değişiklikleri geri almak istediğine emin misin?"
         theme:
+          browse_themes: "Topluluk temalarına göz atın"
           import_theme: "Temayı İçe Aktar"
           customize_desc: "Kişiselleştir:"
           title: "Temalar"
+          create: "Oluştur"
+          create_type: "Tür:"
+          create_name: "İsim:"
           long_title: "Sitenin renklerini, CSS ve HTML içeriğini değiştir"
           edit: "Düzenle"
           edit_confirm: "Bu, uzak bir temadır. Eğer CSS / HTML'yi düzenlersen, temayı güncellediğinde değişiklikler silinir."
@@ -2886,6 +2904,7 @@ tr_TR:
           color_scheme_select: "Temada kullanılacak renkleri seç"
           custom_sections: "İsteğe uyarlanmış bölümler:"
           theme_components: "Tema Öğeleri"
+          convert: "Dönüştür"
           uploads: "Yüklemeler"
           no_uploads: "Fontlar ve resimler gibi temayla ilişkili varlıkları yükleyebilirsin"
           add_upload: "Yükleme Ekle"
@@ -2897,6 +2916,8 @@ tr_TR:
             no_overwrite: "Geçersiz değişken adı. Mevcut bir değişkenin üzerine yazılmamalıdır."
             must_be_unique: "Geçersiz değişken adı. Benzersiz olmalıdır."
           upload: "Yükle"
+          discard: "At"
+          stay: "Kalmak"
           css_html: "İsteğe uyarlanmış CSS/HTML"
           edit_css_html: "CSS/HTML Düzenle"
           edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemedin"
@@ -2904,9 +2925,11 @@ tr_TR:
           import_web_tip: "Veri havuzu içeren tema"
           import_file_tip: "Tema içeren .dcstyle.json dosyası"
           is_private: "Tema özel bir git veri havuzunda"
+          remote_branch: "Şube adı (isteğe bağlı)"
           public_key: "Repo'ya aşağıdaki genel anahtar erişimini ver:"
           about_theme: "Tema Hakkında"
           license: "Lisans"
+          component_of: "Bileşen:"
           update_to_latest: "Sona Doğru Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor..."
@@ -3073,6 +3096,7 @@ tr_TR:
           filter: "Filtrele:"
           title: "Görevli Eylemleri"
           clear_filters: "Hepsini Göster"
+          staff_user: "Kullanıcı"
           target_user: "Hedef Kullanıcı"
           subject: "Konu"
           when: "Ne zaman"

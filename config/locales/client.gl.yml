@@ -420,7 +420,6 @@ gl:
       watched_categories: "Visto"
       tracked_categories: "Seguido"
       muted_categories: "Silenciado"
-      muted_categories_instructions: "Non se che notificará nada sobre os temas novos nestas categorías e non aparecerán na lista de últimos."
       delete_account: "Eliminar a miña conta"
       delete_account_confirm: "Confirmas que queres eliminar definitivamente a túa conta? Esta acción non se pode desfacer!"
       deleted_yourself: "A túa conta acaba de ser eliminada completamente."

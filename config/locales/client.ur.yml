@@ -505,7 +505,6 @@ ur:
       topics_entered: " داخل ہوئے ٹاپک"
       post_count: "# پوسٹ"
       confirm_delete_other_accounts: "کیا آپ واقعی یہ اکاؤنٹس حذف کرنا چاہتے ہیں؟"
-      powered_by: "<a href='https://ipinfo.io'>ipinfo.io</a> کے مرہونِ مِنَّت"
     user_fields:
       none: "(ایک آپشن منتخب کریں)"
     user:
@@ -586,7 +585,6 @@ ur:
       watched_first_post_tags: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
       watched_first_post_tags_instructions: "آپ کو اِن ٹیگ والے ہر نئے ٹاپک کی پہلی پوسٹ کے بارے میں مطلع کیا جائے گا۔"
       muted_categories: "خاموش کِیا ہوا"
-      muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ حذف کریں"
       delete_account_confirm: "کیا آپ واقعی مستقل طور پر اپنا اکاؤنٹ حذف کرنا چاہتے ہیں؟ اس عمل کو کالعدم نہیں کیا جا سکتا!"
@@ -647,12 +645,8 @@ ur:
         disable: "دو فیکٹر توثیق غیر فعال کریں"
         confirm_password_description: "جاری رکھنے کیلئے براہ کرم اپنے پاسوَرڈ کی تصدیق کریں"
         label: "کَوڈ"
-        enable_description: |
-          اِس QR کَوڈ کو کسی قابل اَیپ (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">اینڈرائڈ</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a>– <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>وِنڈَوز فون</a>) میں اسکَین کریں اور اپنا توثیقی کَوڈ جمع کریں۔
         disable_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں"
         show_key_description: "دستی طور پر درج کریں"
-        extended_description: |
-          دو فیکٹر توثیق پاسوَرڈ کے ساتھ ساتھ ایک دفعہ کے ٹَوکن کو مانگ کر آپ کے اکاؤنٹ کیلئے اضافی سیکورٹی شامل کرتا ہے۔ ٹَوکن <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>اینڈرائڈ</a>، <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>، اور <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>وِنڈَوز فون</a> ڈیوائسوں پر تخلیق کیے جا سکتے ہیں۔
         oauth_enabled_warning: "براہ مہربانی نوٹ کریں کہ ایک بار جب آپ کے اکاؤنٹ پر دو فیکٹر توثیق فعال ہو جائے تو سَوشَل لاگ اِن غیر فعال ہوجائیں گے۔"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
@@ -671,7 +665,6 @@ ur:
         title: "اپنے پروفائل کی تصویر تبدیل کریں"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>گَرِیوَّٹار</a>، کی بنیاد پر"
         gravatar_title: "گَرِیوَّٹار کی ویب سائٹ پر اپنے اوتار کو تبدیل کریں"
-        gravatar_failed: "گَرَیوَٹار درآمد نہیں کرایا جاسکا۔ کیا اس ای میل ایڈریس کے ساتھ ایک منسلک ہے؟ "
         refresh_gravatar_title: "اپنے گَرِیوَّٹار کو رِیفریش کریں"
         letter_based: "سسٹم تفویض کردہ پروفائل تصویر"
         uploaded_avatar: "اپنی مرضی کی تصویر"
@@ -739,7 +732,6 @@ ur:
         always: "ہمیشہ"
         never: "کبھی نہیں "
       email_digests:
-        title: "جب میں یہاں کا دورا نہ کروں، مجھے مقبول ٹاپک اور جوابات کا ایک اِی میل خلاصہ بھیجیں"
         every_30_minutes: "ہر 30 منٹ"
         every_hour: "گھنٹہ وار"
         daily: "روزانہ "
@@ -1768,7 +1760,6 @@ ur:
         upload: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔  براہ مہربانی دوبارہ کوشش کریں۔"
         file_too_large: "معذرت، یہ فائل بہت بڑی ہے (زیادہ سے زیادہ سائز {{max_size_kb}}kb) ہے۔ کیوں نہ آپ اپنی بڑی فائل ایک کلاؤڈ شیئرنگ سروس پر اَپ لوڈ کریں اور اس کا لنک شیئر کریں؟"
         too_many_uploads: "معذرت، آپ ایک وقت میں صرف ایک ہی فائل اَپ لوڈ کر سکتے ہیں۔"
-        too_many_dragged_and_dropped_files: "معذرت، آپ ایک وقت میں صرف 10 فائلیں ہی اَپ لوڈ کر سکتے ہیں۔"
         upload_not_authorized: "معذرت، جو فائل آپ اَپ لوڈ کرنے کے کوشش کر رہے ہیں اُس کی اجازت نہیں ہے (اجازت یافتہ ایکسٹینشنز: {{authorized_extensions}})۔"
         image_upload_not_allowed_for_new_user: "معذرت، نئے صارفین تصاویر اَپ لوڈ نہیں کر سکتے۔"
         attachment_upload_not_allowed_for_new_user: "معذرت، نئے صارفین اٹیچمنٹس اَپ لوڈ نہیں کر سکتے۔"

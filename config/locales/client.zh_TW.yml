@@ -25,20 +25,20 @@ zh_TW:
         thousands: "{{number}} 千"
         millions: "{{number}} 百萬"
     dates:
-      time: "h:mm"
-      timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "YYYY MMM D h:mm a"
-      long_with_year_no_time: "YYYY MMM D"
-      full_with_year_no_time: "YYYY MMMM Do"
-      long_date_with_year: "'YY MMM D LT"
-      long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "'YY MMM D"
-      long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "'YY MMM D<br/>LT"
-      wrap_ago: "%{date}以前"
+      time: "h:mm a"
+      timeline_date: "YYYY年 M月"
+      long_no_year: "M月 D日 h:mm a"
+      long_no_year_no_time: "M月 D日"
+      full_no_year_no_time: "M月 D日"
+      long_with_year: "YYYY年 M月 D日 h:mm a"
+      long_with_year_no_time: "YYYY年 M月 D日"
+      full_with_year_no_time: "YYYY年 M月 D日"
+      long_date_with_year: "YYYY年 M月 D日 LT"
+      long_date_without_year: "M月 D日 LT"
+      long_date_with_year_without_time: "YYYY年 M月 D日"
+      long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
+      long_date_with_year_with_linebreak: "YYYY年 M月 D日<br/>LT"
+      wrap_ago: "%{date}前"
       tiny:
         half_a_minute: "< 1 分鐘"
         less_than_x_seconds:
@@ -54,15 +54,15 @@ zh_TW:
         x_days:
           other: "%{count} 天"
         x_months:
-          other: "%{count} 月"
+          other: "%{count} 個月"
         about_x_years:
           other: "%{count} 年"
         over_x_years:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_month: "M月 D日"
+        date_year: "YYYY年 M月"
       medium:
         x_minutes:
           other: "%{count} 分鐘"
@@ -70,7 +70,7 @@ zh_TW:
           other: "%{count} 小時"
         x_days:
           other: "%{count} 天"
-        date_year: "'YY MMM D"
+        date_year: "YYYY年 M月 D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -97,11 +97,13 @@ zh_TW:
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     action_codes:
-      public_topic: "%{when}時讓大家看到這個主題"
+      public_topic: "於 %{when}發佈這個話題"
+      private_topic: "於 %{when} 私訊這個話題"
       split_topic: "於 %{when} 分割此討論話題"
-      invited_user: "邀請 %{who} 於 %{when} "
-      invited_group: "邀請 %{who} %{when}"
-      removed_user: "刪除 %{who} 於 %{when} "
+      invited_user: "於 %{when} 邀請 %{who}"
+      invited_group: "於 %{when} 邀請 %{who} "
+      user_left: "%{who} 已於 %{when} 將自己從此訊息中移除"
+      removed_user: "已於 %{when} 刪除 %{who}"
       removed_group: "刪除 %{who} %{when}"
       autoclosed:
         enabled: '於 %{when} 關閉'
@@ -121,8 +123,14 @@ zh_TW:
       visible:
         enabled: '於 %{when} 列出'
         disabled: '於 %{when} 除名'
+      banner:
+        enabled: '已於 %{when} 將其作為橫幅主題。它將一直顯示直至使用者關閉它。'
+        disabled: '已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。'
     topic_admin_menu: "版區管理員操作"
-    emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
+    wizard_required: "歡迎來到您的新 Discourse！執行<a href='%{url}' data-auto-route='true'>設定精靈</a>開始吧 ✨"
+    emails_are_disabled: "管理員已停用了全域的外部信件功能。任何類型的電子郵件都將不再寄出。"
+    bootstrap_mode_enabled: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{min_users} 個使用者註冊後自動關閉。"
+    bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
     s3:
@@ -133,9 +141,11 @@ zh_TW:
         ap_southeast_1: "亞太地區 (新加坡)"
         ap_southeast_2: "亞太地區 (悉尼)"
         cn_north_1: "中國 (北京)"
+        cn_northwest_1: "中國 (寧夏)"
         eu_central_1: "歐洲 (法蘭克福)"
         eu_west_1: "歐洲 (愛爾蘭)"
         eu_west_2: "歐洲 (倫敦)"
+        eu_west_3: "歐洲 (巴黎)"
         sa_east_1: "南美洲 (聖保羅)"
         us_east_1: "美國東部 (北維珍尼亞州)"
         us_east_2: "美國東部 (俄亥俄州)"
@@ -539,7 +549,6 @@ zh_TW:
       watched_first_post_tags: "關注第一則帖子"
       watched_first_post_tags_instructions: "在有了這些標籤的每一個新主題，第一帖會通知你。"
       muted_categories: "靜音"
-      muted_categories_instructions: "在這些分類裡面，你將不會收到新主題任何通知，它們也不會出現在“最新”主題列表。"
       delete_account: "刪除我的帳號"
       delete_account_confirm: "你真的要刪除帳號嗎?此動作不能被還原!"
       deleted_yourself: "你的帳號已成功刪除"
@@ -595,7 +604,6 @@ zh_TW:
       second_factor:
         title: "兩步驟驗證"
         disable: "停用兩步驟驗證"
-        enable: "啟用<a href>兩步驟驗證</a>來增加帳號安全性"
         disable_description: "請從您的應用程式輸入驗證碼"
         show_key_description: "手動輸入"
       change_about:
@@ -680,7 +688,6 @@ zh_TW:
         always: "總是"
         never: "永不"
       email_digests:
-        title: "長期未訪問時發送熱門主題和回覆的摘要郵件"
         every_30_minutes: "每 30 分鐘"
         every_hour: "每小時"
         daily: "每天"
@@ -1552,7 +1559,6 @@ zh_TW:
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         file_too_large: "檔案過大（最大 {{max_size_kb}}KB）。為什麼不就大檔案上傳至雲存儲服務後再分享連結呢？"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
-        too_many_dragged_and_dropped_files: "抱歉，一次只能上傳 10 個檔案。"
         upload_not_authorized: "抱歉，你沒有上傳檔案的權限 (驗證擴展：{{authorized_extensions}})。"
         image_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳附件。"
@@ -1679,7 +1685,7 @@ zh_TW:
       tags: "標籤"
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
-      topic_featured_link_allowed: "運行在該分類中發佈特色連結"
+      topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
       delete: '刪除分類'
       create: '新分類'
       create_long: '建立新的分類'

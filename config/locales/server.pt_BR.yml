@@ -637,8 +637,6 @@ pt_BR:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropriado'
-      description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
-      short_description: 'Uma violação de <a href="/guidelines">nossas diretrizes da comunidade</a>'
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Envie ao(à) @ {{nome de usuário}} uma mensagem'
@@ -684,12 +682,9 @@ pt_BR:
       short_description: 'Este é um anúncio'
     inappropriate:
       title: 'Impróprio'
-      description: 'Este tópico contém um conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou violação de <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizar como impróprio'
-      short_description: 'Uma violação de <a href="/guidelines">nossas diretrizes da comunidade</a>'
     notify_moderators:
       title: "Algo mais"
-      description: 'Este tópico requer a atenção geral da equipe baseado nas <a href="/guidelines">diretrizes da comunidade</a>,  no <a href="%{tos_url}">Termos de Serviço</a>, ou em outra razão não listada acima.'
       long_form: 'sinalizar isso para atenção da moderação'
       short_description: 'Requer atenção da equipe por outro motivo'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
@@ -968,11 +963,6 @@ pt_BR:
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: 'O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o signup e login com Google OAuth2 (enable_google_oauth2_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia e aprenda mais</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
-    failing_emails_warning: 'Existem %{num_failed_jobs} tarefas de email que falharam. Verifique seu app.yml e se assegure que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
     email_polling_errored_recently:
       one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
@@ -1125,7 +1115,6 @@ pt_BR:
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
     enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
-    enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL do ponto final do logon único (SSO) (deve incluir http:// ou https://)"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
     sso_overrides_bio: "Sobrescreve a bio de usuário e impede o usuário de mudá-la."
@@ -1133,7 +1122,6 @@ pt_BR:
     sso_overrides_email: "Substitui endereço de e-mail local pelo fornecido no site externo através de cada informação de login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a normalização de e-mails locais)"
     sso_overrides_username: "Substitui nome de usuário local com o fornecido pelo site externo através da informação de cada login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a diferenças ao tamanho e pré-requisitos de nomes de usuário)"
     sso_overrides_name: "Substitui nome completo local com nome completo do site externo através da informação de login, e previne mudanças locais."
-    sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
     sso_overrides_profile_background: "Substitui o plano de fundo do perfil do usuário pelo avatar do site externo da carga útil do SSO."
     sso_overrides_card_background: "Substitui o plano de fundo do cartão do usuário pelo avatar do site externo da carga útil do SSO."
     sso_not_approved_url: "Redireciona contas não aprovadas no login externo para este endereço"
@@ -1154,7 +1142,6 @@ pt_BR:
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
     backup_frequency: "O número de dias entre os backups."
-    enable_s3_backups: "Fazer upload dos backups para o S3 quando completado. IMPORTANTE: exige credenciais válidas do S3 configuradas nas Configurações de Arquivos."
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     s3_endpoint: "O endpoint pode ser modificado para fazer backup em um serviço compatível com S3, como DigitalOcean Spaces ou Minio. AVISO: use o padrão se estiver usando o AWS S3"
     s3_force_path_style: "Implemente o endereçamento de estilo de caminho para seu endpoint personalizado. IMPORTANTE: Necessário para usar uploads e backups do Minio."
@@ -2174,14 +2161,6 @@ pt_BR:
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Novo usuário%{username} postagens bloqueadas devido a links repetidos"
-      text_body_template: |
-        Essa é uma mensagem automatizada.
-
-        O novo usuário [%{username}](%{user_url}) tentou criar vários posts com links para%{domains}, mas essas postagens foram bloqueadas para evitar spam. O usuário ainda pode criar novas postagens que não vinculam a %{domains}.
-
-        Por favor, [revise o usuário](%{user_url}).
-
-        Isso pode ser modificado através das configurações do site `newuser_spam_host_threshold` e` white_listed_spam_host_domains`.
     unsilenced:
       title: "Não silenciado"
       subject_template: "Conta não está mais em espera"
@@ -2603,7 +2582,6 @@ pt_BR:
       Uma conta é necessária. Por favor, crie uma conta ou faça o login para continuar.
   terms_of_service:
     title: "Termos de Serviço"
-    signup_form_message: 'Eu li e aceito os <a href="/tos" target="_blank">Termos de Serviço</ a>.'
   deleted: 'removido'
   image: "imagem"
   upload:
@@ -3151,9 +3129,6 @@ pt_BR:
         description: "Você está quase pronto! Vamos convidar algumas pessoas para ajudar <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\nsemear suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."
       finished:
         title: "Seu Discourse está pronto!"
-        description: |
-          <p>Se você sentir vontade de alterar essas configurações, visite <a href='/admin' target='_blank'>sua seção administrativa</a>; encontre-o ao lado do ícone de chave inglesa no menu do site.</p>
-          <p>Divirta-se e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construindo sua nova comunidade!</a></p>
   search_logs:
     graph_title: "Contagem de pesquisa"
   joined: "Ingressou"

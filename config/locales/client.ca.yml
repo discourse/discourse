@@ -509,7 +509,6 @@ ca:
       watched_first_post_tags: "Mirant la primera publicació"
       watched_first_post_tags_instructions: "Et notificarem la primera publicació per cada nou tema a aquestes etqieuetes."
       muted_categories: "Silenciades"
-      muted_categories_instructions: "No et notificarem res sobre nous temes amb aquestes categories i no apareixeran a les darreres.."
       no_category_access: "Com a moderador/a tens accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Esborra el meu compte"
       delete_account_confirm: "Segur que vols esborrar el teu compte permanentment? Aquesta acció no es pot desfer!"
@@ -644,7 +643,6 @@ ca:
         always: "sempre"
         never: "mai"
       email_digests:
-        title: "Quan no ho visiti, envieu-me un correu electrònic amb un resum dels temes i respostes populars "
         every_30_minutes: "cada 30 minuts"
         every_hour: "cada hora"
         daily: "cada dia"
@@ -1470,7 +1468,6 @@ ca:
         upload: "Disculpa, s'ha produït una errada en carregar aquest fitxer. Si us plau, torna-ho a provar."
         file_too_large: "Disculpa, el fitxer és massa gran (la mida màxima és de {{max_size_kb}}kb). Per què no ho carregues a un servei de núvol, per compartir-ne l'enllaç?"
         too_many_uploads: "Disculpa, només pots carregar un fitxer d'un cop."
-        too_many_dragged_and_dropped_files: "Disculpa, només pots carregar 10 fitxers d'un cop."
         upload_not_authorized: "Disculpa, el fitxer que estàs provant de carregar no està autoritzat (les extensions autoritzades són: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Disculpa, les noves persones usuàries no poden carregar imatges."
         attachment_upload_not_allowed_for_new_user: "Disculpa, les noves persones usuàries no poden adjuntar fitxers."

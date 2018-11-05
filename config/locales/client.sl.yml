@@ -478,7 +478,6 @@ sl:
       topics_entered: "vstop v teme"
       post_count: "# objave"
       confirm_delete_other_accounts: "Si prepričan, da želiš izbrisati te račune?"
-      powered_by: "podprto s strani <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(izberi možnost)"
     user:
@@ -538,7 +537,6 @@ sl:
       tracked_categories: "Sledena"
       watched_first_post_tags: "Opazuješ prvo objavo"
       muted_categories: "Zamolčano"
-      muted_categories_instructions: "O temah v teh kategorijah ne boste obveščeni in ne bodo se pojavile med najnovejšimi."
       no_category_access: "Kot moderator imaš omejen dostop do kategorije, shranjevanje je onemogočeno"
       delete_account: "Izbriši Moj Račun"
       delete_account_confirm: "Si prepričan, da želiš trajno izbrisati svoj račun? Tega postopka ni mogoče razveljaviti!"
@@ -584,10 +582,6 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
-      second_factor:
-        enable: "Omogoči <a href>preverjanje v dveh korakih</a> za večjo varnost uporabniškega računa."
-        extended_description: |
-          Preverjanje v dveh korakih poveča varnost vašega uporabniškega računa tako, da zahteva enkratno kodo poleg vašega gesla. KEnkratno kodo lahko ustvarite na <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> in <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> napravah.
       change_about:
         title: "Spremeni O meni"
       change_username:
@@ -662,7 +656,6 @@ sl:
         always: "zmeraj"
         never: "nikoli"
       email_digests:
-        title: "Kadar ne obiščem redno, mi pošljite pregled popularnih tem in objav."
         every_30_minutes: "vsakih 30 minut"
         every_hour: "vsako uro"
         daily: "dnevno"
@@ -1124,8 +1117,12 @@ sl:
         yes_value: "Ja, zavrži"
       controls:
         reply: "sestavi odgovor na to objavo"
+        like: "všečkaj to objavo"
+        has_liked: "všečkali ste to objavo"
+        undo_like: "razveljavi všeček"
         edit: "uredi objavo"
         edit_action: "Uredi"
+        edit_anonymous: "Oprostite vendar morate biti prijavljeni, da lahko uredite to objavo."
         delete: "izbriši objavo"
         share: "deli povezavo do te objave"
         more: "Več"
@@ -1208,17 +1205,30 @@ sl:
         created: "Ustvarjeno"
       sort_ascending: 'Naraščajoče'
       sort_descending: 'Padajoče'
+      subcategory_list_styles:
+        rows: "Vrstice"
+        rows_with_featured_topics: "Vrstice z izpostavljenimi temami"
     flagging:
+      title: 'Hvala, da pomagate ohraniti civilizirano skupnost!'
       action: 'Postavi zastavico na objavo'
+      take_action: "Ukrepaj"
       notify_action: 'Sporočilo'
+      official_warning: 'Uradno opozorilo'
+      delete_spammer: "Izbriši spammerja"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrito)"
+      notify_staff: 'Zasebno obvestite skrbnika'
+      formatted_name:
+        inappropriate: "Ni primerno"
+        spam: "Je nezaželeno"
     flagging_topic:
+      title: "Hvala, da pomagate ohraniti civilizirano skupnost!"
       action: "Postavi zastavico na objavo"
       notify_action: "Sporočilo"
     topic_map:
       title: "Povzetek teme"
       links_title: "Popularne povezave"
+      links_shown: "prikaži več povezav..."
     topic_statuses:
       pinned_globally:
         title: "Pripeto globalno"
@@ -1342,6 +1352,7 @@ sl:
         flag: '<b>!</b> Prijavi objavo'
     badges:
       title: Značke
+      multiple_grant: "To lahko osvojite večkrat."
     tagging:
       all_tags: "Vse oznake"
       selector_all_tags: "vse oznake"
@@ -1421,6 +1432,9 @@ sl:
           notify_user: "po meri"
           notify_moderators: "po meri"
       groups:
+        manage:
+          membership:
+            trust_levels_title: "Stopnja zaupanja, ki je avtomatsko dodeljena članom, ko so dodani:"
         primary: "Primarna skupina"
         no_primary: "(ni primarne skupine)"
         title: "Skupine"
@@ -1801,12 +1815,14 @@ sl:
         delete_confirm: "Si prepričan/a, da želiš odstraniti to značko?"
         revoke: Odstrani
         reason: Razlog
+        no_badges: "Ni značk, ki bi lahko bile podeljene."
         icon: Ikona
         trigger: Sproži
         trigger_type:
           none: "Posodobi dnevno"
           post_revision: "Ko uporabnik ustvari ali uredi objavo"
         preview:
+          link_text: "Oglejte si podeljene značke"
           bad_count_warning:
             header: "POZOR!"
           sample: "Primer:"

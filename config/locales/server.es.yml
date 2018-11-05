@@ -67,6 +67,7 @@ es:
       maximum_staged_user_per_email_reached: "Alcanzado el número máximo de usuarios provisionales creados por email."
       no_subject: "(sin título)"
       no_body: "(sin mensaje)"
+      missing_attachment: '(falta archivo adjunto %{filename})'
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del email que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el email no tiene Id del mensaje en el encabezado."
@@ -116,6 +117,7 @@ es:
       odd: debe ser impar
       record_invalid: 'Error en la validación: %{errors}'
       max_emojis: "no puede tener más de %{max_emojis_count} emoji"
+      emojis_disabled: "no puede tener emoji"
       ip_address_already_screened: "ya se está incluido en una regla existente"
       restrict_dependent_destroy:
         one: "No se pudo eliminar el registro porque existe otro %{record} dependiente"
@@ -143,6 +145,7 @@ es:
         other: 'Has especificado las opciones inválidas %{name}'
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
+      s3_backup_requires_s3_settings: "No puedes usar S3 como método de copia de seguridad salvo que hayas rellenado '%{setting_name}'."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, póngase en contacto con miembros del staff y envíe esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -166,6 +169,10 @@ es:
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
     invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
+    file_exists: "El archivo que estás intentando subir ya existe."
+    location:
+      local: "Local"
+      s3: "Amazon S3"
   invalid_params: "Proporcionó parámetros no válidos para la solicitud: %{message}"
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
@@ -261,6 +268,7 @@ es:
     tag: "Temas etiquetados"
     badge: "%{display_name} distintivo en %{site_title}"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
+  edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no pueden ser guardados."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
   queue:
@@ -603,6 +611,32 @@ es:
   email_login:
     invalid_token: "Lo sentimos, ese enlace de inicio de sesión de correo electrónico es demasiado viejo. Seleccione el botón Iniciar sesión y use 'Olvidé mi contraseña' para obtener un nuevo enlace."
     title: "Email login"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      edge: "Microsoft Edge"
+      unknown: "navegador desconocido"
+    device:
+      android: "Dispositivo Android"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "Dispositivo móvil"
+      mac: "Mac"
+      linux: "Ordenador GNU/Linux"
+      windows: "Ordenador Windows"
+      unknown: "dispositivo desconocido"
+    os:
+      android: "Android"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "sistema operativo desconocido"
   change_email:
     confirmed: "Tu email ha sido actualizado."
     please_continue: "Continuar a %{site_name}"
@@ -644,8 +678,8 @@ es:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiado'
-      description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
-      short_description: 'Una violación a las <a href="/guidelines">guías de nuestra comunidad</a>'
+      description: 'Esta publicación tiene contenido que una persona razonable podría considerar ofensivo, abusivo o una violación de <a href="/guidelines">nuestras directrices de la comunidad</a>.'
+      short_description: 'Infringe <a href="/guidelines">nuestras directrices de la comunidad</a>'
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Enviar un mensaje a @{{username}}'
@@ -694,12 +728,9 @@ es:
       short_description: 'Esto es un anuncio'
     inappropriate:
       title: 'Inapropiado'
-      description: 'Este tema contiene material que una persona sensata podría considerar ofensivo, abusivo, o que viola <a href="/guidelines">las directrices de nuestra comunidad</a>.'
       long_form: 'marcado como inapropiado'
-      short_description: 'Incumple <a href="/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema requiere atención del equipo de moderación basándose en las <a href="/guidelines">pautas de la comunidad</a> o los  <a href="%{tos_url}">Términos y condiciones</a>, o por otra razón no especificada arriba.'
       long_form: 'reportado para atención de los moderadores'
       short_description: 'Requiere atención del staff por otro motivo'
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
@@ -746,6 +777,9 @@ es:
       session_info: "Leer información de la sesión del usuario"
       read: "Leer todo"
       write: "Escribir todo"
+  flags:
+    errors:
+      already_handled: "El reporte ya ha sido atendido"
   reports:
     default:
       labels:
@@ -759,6 +793,13 @@ es:
         editor: Editor
         author: Autor
         edit_reason: Motivo
+    most_disagreed_flaggers:
+      labels:
+        user: Usuari
+        agreed_flags: Reportes de acuerdo
+        disagreed_flags: Reportes en desacuerdo
+        ignored_flags: Reportes ignorados
+        score: Puntuación
     moderators_activity:
       title: "Actividad de moderadores"
       labels:
@@ -972,17 +1013,22 @@ es:
       labels:
         user_agent: "Agente de usuario"
         page_views: "Páginas vistas"
+    suspicious_logins:
+      title: "Inicios de sesión sospechosos"
+      labels:
+        user: Usuario
+        client_ip: IP del cliente
+        location: Ubicación
+        browser: Navegador
+        device: Dispositivo
+        os: Sistema operativo
+        login_time: Fecha y hora de inicio de sesión
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
-    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
-    facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
-    twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
-    github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Revisa la guía para aprender más</a>.'
-    failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
@@ -1136,7 +1182,6 @@ es:
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Activar single sign on a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE EMAIL SERÁN VALIDADAS POR EL SITIO EXTERNO!)"
-    enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on (debe incluir http:// o https://)"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_bio: "Sobreescribe la bio del usuario en su perfil y deshabilita que pueda cambiarla"
@@ -1144,7 +1189,6 @@ es:
     sso_overrides_email: "Sobreescribe el email local con el email que provea sitio externo desde el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a la normalización de los emails locales)"
     sso_overrides_username: "Sobreescribe el usuario local con el usuario que provea el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a las diferencias en los requirimientos/longitud del usuario)"
     sso_overrides_name: "Sobreescribe el nombre completo con el que provee el payload del SSO en cada registro, y previene cambios locales."
-    sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
     sso_overrides_profile_background: "Sobrescribe el fondo del perfil del usuario con el avatar del sitio externo desde SSO payload."
     sso_overrides_card_background: "Sobrescribe el fondo de la tarjeta de usuario con el avatar de sitio externo desde SSO payload."
     sso_not_approved_url: "Redireccionar cuentas SSO sin aprobar a esta URL"
@@ -1165,7 +1209,6 @@ es:
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar backups automáticos definidos por la opción de frecuencia de backups"
     backup_frequency: "El número de días entre backups."
-    enable_s3_backups: "Sube copias de seguridad a S3 cuando complete. IMPORTANTE: requiere credenciales validas de S3 puestas Archivos configuración."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El punto final se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: utilice el valor predeterminado si usa AWS S3"
     s3_force_path_style: "Haga cumplir el direccionamiento de estilo de ruta para su punto final personalizado. IMPORTANTE: se requiere para usar cargas y copias de seguridad desde Minio."
@@ -1544,7 +1587,7 @@ es:
       user: 'Usuarios'
     results_page: "Resultados de búsqueda para '%{term}'"
   sso:
-    login_error: "Error en Ingreso"
+    login_error: "Error al iniciar sesión"
     not_found: "No se pudo encontrar tu cuenta. Por favor contacta al administrador del sitio."
     account_not_approved: "Tu cuenta está pendiente de aprobación. Recibirás una notificación por email cuando se apruebe."
     unknown_error: "Hay un problema con tu cuenta. Por favor contacta al administrador del sitio."
@@ -2204,14 +2247,6 @@ es:
     spam_post_blocked:
       title: "Post con Spam Bloqueado"
       subject_template: "Nuevo usuario %{username} posts bloqueados debido a repetición de enlaces."
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El usuario nuevo [%{username}](%{user_url}) ha intentado crear múltiples temas con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario todavía puede crear temas, siempre y cuando no contengan enlaces a %{domains}.
-
-        Por favor, [echa un vistazo al usuario](%{user_url}).
-
-        Esto puede ser modificado con los ajustes `newuser_spam_host_threshold` y `white_listed_spam_host_domains`.
     unsilenced:
       title: "Dejar de silenciar"
       subject_template: "Cuenta no retenida"
@@ -2537,8 +2572,8 @@ es:
         Haz clic en el siguiente enlace para cambiar tu contraseña:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
-      title: "Ingreso vía enlace"
-      subject_template: "[%{email_prefix}] Ingreso vía enlace"
+      title: "Iniciar sesión con un enlace"
+      subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para ingresar a [%{site_name}](%{base_url}).
 
@@ -2560,7 +2595,7 @@ es:
       title: "Admin Login"
       subject_template: "[%{email_prefix}] Inicio de sesión"
       text_body_template: |
-        Alguien pidió iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
+        Alguien ha pedido iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
 
         Si tú no realizaste esta petición, puedes ignorar este email.
 
@@ -2640,10 +2675,9 @@ es:
   login_required:
     welcome_message: |
       ## [Bienvenido a %{title}](#welcome)
-      Una cuenta es requerida. Por favor cree una cuenta o inicie sesión para continuar.
+      Hace falta una cuenta para usar el sitio. Por favor crea una o inicia sesión para continuar.
   terms_of_service:
     title: "Condiciones Generales de Uso"
-    signup_form_message: 'He leído y acepto las <a href="/tos" target="_blank">Condiciones de Servicio</a>.'
   deleted: 'borrado'
   image: "imagen"
   upload:
@@ -3233,9 +3267,6 @@ es:
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."
       finished:
         title: "Tu foro de Discourse está listo!"
-        description: |
-          <p>Si alguna vez quieres cambiar alguno de estos ajustes, visita <a href='/admin' target='_blank'>tu sección de administrador</a>; la puedes encontrar el lado del icono de una llave inglesa en el menú de la página..</p>
-          <p>Diviértete, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Cuenta de Búsquedas"
   joined: "Registrado"

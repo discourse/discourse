@@ -156,6 +156,7 @@ et:
         eu_central_1: "EL (Frankfurt)"
         eu_west_1: "EL (Iirimaa)"
         eu_west_2: "EU (London)"
+        eu_west_3: "EL (Pariis)"
         sa_east_1: "Lõuna-Ameerika (Sao Paulo)"
         us_east_1: "US Ida (N. Virginia)"
         us_east_2: "US Ida (Ohio)"
@@ -186,6 +187,7 @@ et:
     privacy_policy: "Privaatsuspoliitika"
     privacy: "Privaatsus"
     tos: "Teenuse tingimused"
+    rules: "Reeglid"
     mobile_view: "Mobiilne vaade"
     desktop_view: "Täisvaade"
     you: "Sina"
@@ -217,6 +219,8 @@ et:
       our_moderators: "Meie moderaatorid"
       stat:
         all_time: "Alates algusest"
+        last_7_days: "Viimased 7"
+        last_30_days: "Viimased 30"
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
@@ -232,7 +236,13 @@ et:
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "lisasid sellele postitusele järjehoidja"
+      not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
+    drafts:
+      resume: "Taasta"
+      remove: "Eemalda"
+      new_topic: "Uus teema mustand"
+      topic_reply: "Mustandi vastus"
     preview: "eelvaade"
     cancel: "tühista"
     save: "Salvesta muudatused"
@@ -240,10 +250,12 @@ et:
     saved: "Salvestatud!"
     upload: "Lae üles"
     uploading: "Laen üles..."
+    clipboard: "lõikelaud"
     uploaded: "Üles laetud!"
     pasting: "Asetamine..."
     enable: "Võimalda"
     disable: "Tõkesta"
+    continue: "Jätka"
     undo: "Ennista"
     revert: "Võta tagasi"
     failed: "Ebaõnnestus"
@@ -321,6 +333,32 @@ et:
         make_user_group_owner: "Määra omanikuks"
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
+      add_members:
+        title: "Lisa liikmeid"
+        usernames: "Kasutajanimed"
+      manage:
+        title: 'Halda'
+        name: 'Nimi'
+        full_name: 'Täisnimi'
+        add_members: "Lisa liikmeid"
+        profile:
+          title: Profiil
+        interaction:
+          posting: Postitamine
+          notification: Teavitus
+        membership:
+          title: Liikmelisus
+          access: Juurdepääs
+        logs:
+          title: "Logid"
+          when: "Millal"
+          action: "Tegevus"
+          acting_user: "Tegev kasutaja"
+          target_user: "Sihtkasutaja"
+          subject: "Teema"
+          details: "Detailid"
+          from: "Kellelt"
+          to: "Kellele"
       public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
         posts: "Selle grupi liikmetelt ei ole postitusi."
@@ -330,21 +368,46 @@ et:
         topics: "Selle grupi liikmetelt ei ole teemasid."
         logs: "Sellele grupile logid puuduvad."
       add: "Lisa"
+      join: "Liitu"
+      leave: "Lahku"
+      request: "Päring"
       message: "Sõnum"
       membership_request:
         submit: "Saada päring"
       membership: "Liikmelisus"
       name: "Nimi"
+      group_name: "Grupi nimi"
+      user_count: "Kasutajad"
       bio: "Grupist"
       selector_placeholder: "sisesta kasutajanimi"
       owner: "omanik"
       index:
         title: "Grupid"
         empty: "Ühtegi nähtavat gruppi pole."
+        automatic_groups: "Automaatsed grupid"
+        automatic: "Automaatne"
+        closed: "Suletud"
+        public: "Avalik"
+        private: "Privaatne"
+        public_groups: "Avalikud grupid"
+        automatic_group: Automaatne grupp
+        close_group: Sulge grupp
+        my_groups: "Minu grupid"
+        group_type: "Grupi liik"
+        is_group_user: "Liige"
+        is_group_owner: "Omanik"
       title:
         one: "Grupp"
         other: "Grupid"
       activity: "Tegevused"
+      members:
+        title: "Liikmed"
+        filter_placeholder_admin: "kasutajanimi või e-post"
+        filter_placeholder: "kasutajanimi"
+        remove_member: "Eemalda liige"
+        make_owner: "Määra omanikuks"
+        remove_owner: "Eemalda omanik"
+        owner: "Omanik"
       topics: "Teemat"
       posts: "Postitused"
       mentions: "Mainimisi"
@@ -393,8 +456,10 @@ et:
       "12": "Saatmisi"
       "13": "Postkast"
       "14": "Ootel"
+      "15": "Mustandid"
     categories:
       all: "kõik foorumid"
+      all_subcategories: "kõik"
       no_subcategory: "mitte ükski"
       category: "Foorum"
       category_list: "Kuva foorumid"
@@ -431,6 +496,7 @@ et:
       topics_entered: "külastatud teemasid"
       post_count: "# postitust"
       confirm_delete_other_accounts: "Kindel, et soovid need kontod kustutada?"
+      copied: "kopeeritud"
     user_fields:
       none: "(vali võimalus)"
     user:
@@ -449,6 +515,7 @@ et:
       activity_stream: "Tegevused"
       preferences: "Eelistused"
       expand_profile: "Näita veel"
+      collapse_profile: "Ahenda"
       bookmarks: "Järjehoidjad"
       bio: "Minust"
       invited_by: "Kasutaja, kes kutsus"
@@ -510,7 +577,6 @@ et:
       watched_first_post_tags: "Vaatan esimest postitust"
       watched_first_post_tags_instructions: "Sind teavitatakse esimesest postitusest igas nende siltidega uues teemas."
       muted_categories: "Vaigistatud"
-      muted_categories_instructions: "Sind ei teavitata ühestki uuest teemast nendes foorumites, samuti ei ilmu nad viimaste teemade alla."
       delete_account: "Kustuta minu konto"
       delete_account_confirm: "Kas oled kindel, et soovid oma konto jäädavalt kustutada? Seda toimingut ei ole võimalik tagasi võtta!"
       deleted_yourself: "Konto on edukalt kustutatud."
@@ -564,6 +630,13 @@ et:
         set_password: "Määra parool"
         choose_new: "Vali uus parool"
         choose: "Vali parool"
+      second_factor_backup:
+        regenerate: "Genereeri uus"
+        disable: "Keela"
+        enable: "Luba"
+      second_factor:
+        label: "Kood"
+        show_key_description: "Sisesta käsitsi"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -595,6 +668,9 @@ et:
         instructions: "Taustapildidd tsentreeritakse ja on vaikimisi 590 pikslit laiad."
       email:
         title: "Meiliaadress"
+        primary: "Peamine e-post"
+        secondary: "Teine e-post"
+        no_secondary: "Teist e-posti pole"
         instructions: "ei näidata kunagi avalikult"
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
@@ -603,6 +679,11 @@ et:
         frequency:
           one: "Saadame meili vaid siis, kui pole sind viimase minuti jooksul näinud."
           other: "Saadame meili vaid siis, kui pole Sind viimase {{count}} minuti jooksul näinud."
+      associated_accounts:
+        title: "Seotud kontod"
+        connect: "Ühenda"
+        revoke: "Tühista"
+        not_connected: "(pole ühendatud)"
       name:
         title: "Nimi"
         instructions: "sinu täisnimi (mittekohustuslik)"
@@ -627,6 +708,16 @@ et:
         any: "iga"
       password_confirmation:
         title: "Salasõna uuesti"
+      auth_tokens:
+        title: "Hiljuti kasutatud seadmed"
+        ip: "IP"
+        details: "Üksikasjad"
+        log_out_all: "Logi kõik välja"
+        active: "praegu aktiivne"
+        not_you: "See pole sina?"
+        show_all: "Näita kõiki ({{count}})"
+        show_few: "Näita vähem"
+        was_this_you: "Kas see olid sina?"
       last_posted: "Viimane postitus"
       last_emailed: "Viimati meilitud"
       last_seen: "Vaadatud"
@@ -647,7 +738,6 @@ et:
         always: "alati"
         never: "mitte kunagi"
       email_digests:
-        title: "Kui ma siinset paika ei külasta, saada mulle kokkuvõtlik meil populaarsemate teemade ja vastustega."
         every_30_minutes: "iga pooltund"
         every_hour: "iga tund"
         daily: "igapäevaselt"
@@ -734,6 +824,7 @@ et:
         title: "Kokkuvõte"
         stats: "Statistika"
         time_read: "lugemise aeg"
+        recent_time_read: "viimane lugemise aeg"
         topic_count:
           one: "teema loodud"
           other: "teemat loodud"
@@ -749,6 +840,9 @@ et:
         days_visited:
           one: "päev külastatud"
           other: "päevi külastatud"
+        topics_entered:
+          one: "vaadatud teema"
+          other: "vaadatud teemat"
         posts_read:
           one: "postitus loetud"
           other: "postitust loetud"
@@ -770,6 +864,8 @@ et:
         most_liked_users: "Enim meeldinud"
         most_replied_to_users: "Enim vastatud teemasse"
         no_likes: "Meeldimisi veel pole."
+        topics: "Teemad"
+        replies: "Vastused"
       ip_address:
         title: "Viimane IP-aadress"
       registration_ip_address:
@@ -779,6 +875,7 @@ et:
         header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
+        none: "(pole)"
       filters:
         all: "Kõik"
       stream:
@@ -834,6 +931,7 @@ et:
     mute: Vaigista
     unmute: Tühista vaigistus
     last_post: Postitatud
+    time_read: Loe
     last_reply_lowercase: viimane vastus
     replies_lowercase:
       one: vastus
@@ -856,6 +954,8 @@ et:
       disable: "Näita kustutatud postitusi"
     private_message_info:
       title: "Sõnum"
+      invite: "Kutsu teisi..."
+      edit: "Lisa või eemalda..."
       remove_allowed_user: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
       remove_allowed_group: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
     email: 'Meiliaadress'
@@ -909,21 +1009,27 @@ et:
       forgot: "Ma ei mäleta oma konto üksikasju"
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
       google_oauth2:
+        name: "Google"
         title: "Google abil"
         message: "Autentimine Google abil (veendu, et hüpikaknad oleks lubatud)"
       twitter:
+        name: "Twitter"
         title: "Twitteri abil"
         message: "Autentimine Twitteri abil (veendu, et hüpikaknad oleks lubatud)"
       instagram:
+        name: "Instagram"
         title: "Instagram'iga"
         message: "Autentimine Instagram'i kaudu (vaata, et hüpikaknad ei oleks keelatud)"
       facebook:
+        name: "Facebook"
         title: "Facebooki abil"
         message: "Autentimine Facebooki abil (veendu, et hüpikaknad oleks lubatud)"
       yahoo:
+        name: "Yahoo"
         title: "Yahoo abil"
         message: "Autentimine Yahoo abil (veendu, et hüpikaknad oleks lubatud)"
       github:
+        name: "GitHub"
         title: "GitHub abil"
         message: "Autentimine GitHub abil (veendu, et hüpikaknad oleks lubatud)"
     invites:
@@ -955,10 +1061,13 @@ et:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    conditional_loading_section:
+      loading: Laadimine...
     select_kit:
       default_header_text: Vali...
       no_content: Midagi ei leitud
       filter_placeholder: Otsi...
+      filter_placeholder_with_any: Otsi või loo...
     emoji_picker:
       filter_placeholder: Otsi emojit
       people: Inimesed
@@ -1041,6 +1150,7 @@ et:
       link_description: "sisesta viite kirjeldus siia"
       link_dialog_title: "Lisa hüperlink"
       link_optional_text: "valikuline pealkiri"
+      link_url_placeholder: "https://example.com"
       quote_title: "Plokktsitaat"
       quote_text: "Plokktsitaat"
       code_title: "Eelvormindatud tekst"
@@ -1059,6 +1169,18 @@ et:
         title: "Kas unustasid saajad lisada?"
         body: "Hetkel saadetakse see sõnum vaid sulle endale!"
       admin_options_title: "Meeskonna valikulised sätted selle teema jaoks"
+      composer_actions:
+        reply: Vasta
+        draft: Mustand
+        edit: Muuda
+        reply_as_private_message:
+          label: Uus sõnum
+        reply_to_topic:
+          label: Vasta teemale
+        create_topic:
+          label: "Uus teema"
+        shared_draft:
+          label: "Jagatud mustand"
     notifications:
       tooltip:
         regular:
@@ -1237,6 +1359,7 @@ et:
         other: "{{count}} postitust teemas"
       create: 'Uus teema'
       create_long: 'Loo uus teema'
+      open_draft: "Ava mustand"
       private_message: 'Alusta sõnumit'
       archive_message:
         help: 'Liiguta sõnum oma arhiivi'
@@ -1244,6 +1367,8 @@ et:
       move_to_inbox:
         title: 'Liiguta Postkasti'
         help: 'Liiguta sõnum tagasi Postkasti'
+      edit_message:
+        title: 'Muuda sõnumit'
       list: 'Teemad'
       new: 'uus teema'
       unread: 'lugemata'
@@ -1312,6 +1437,18 @@ et:
         one_year: "Aasta pärast"
         forever: "Igavesti"
         pick_date_and_time: "Vali kuupäev ja kellaaeg"
+      publish_to_category:
+        title: "Ajastatud avaldamine"
+      temp_open:
+        title: "Ava ajutiselt"
+      auto_reopen:
+        title: "Loo teema automaatselt"
+      temp_close:
+        title: "Sulge ajutiselt"
+      auto_close:
+        title: "Sulge teema automaatselt"
+      auto_delete:
+        title: "Kustuta teema automaatselt"
       reminder:
         title: "Tuleta mulle meelde"
       auto_close_title: 'Automaatse sulgumise sätted'
@@ -1379,6 +1516,7 @@ et:
         open: "Ava teema"
         close: "Sulge teema"
         multi_select: "Vali postitused..."
+        timed_update: "Määra teema taimer..."
         pin: "Tõsta teema esile..."
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
@@ -1525,6 +1663,7 @@ et:
       deleted_by_author:
         one: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
         other: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
+      collapse: "ahenda"
       expand_collapse: "laienda/ahenda"
       gap:
         one: "vaata 1 peidetud vastust"
@@ -1549,7 +1688,6 @@ et:
         upload: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
         file_too_large: "Vabandame. see fail on liiga suur (maksimum on {{max_size_kb}}kB). Miks mitte laadida see suur fail mõnda failijagamisteenusesse pilves ja jagada viidet selleni?"
         too_many_uploads: "Vabandame, faile saab üles laadida vaid ühekaupa."
-        too_many_dragged_and_dropped_files: "Vabandame, faile saab üles laadida vaid kuni 10 korraga."
         upload_not_authorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa pilte üles laadida."
         attachment_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa manuseid üles laadida."
@@ -1589,6 +1727,7 @@ et:
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
         change_owner: "Omanikuvahetus"
+        lock_post: "Lukusta postitus"
       actions:
         flag: 'Tähis'
         undo:
@@ -2151,9 +2290,15 @@ et:
         page_views: "Vaatamisi"
         page_views_short: "Vaatamisi"
         show_traffic_report: "Näita liikluse detailraportit"
+        all_reports: "Kõik aruanded"
+        general_tab: "Üldine"
+        moderation_tab: "Modereerimine"
+        disabled: Välja lülitatud
         reports:
           today: "Täna"
           yesterday: "Eile"
+          last_7_days: "Viimased 7"
+          last_30_days: "Viimased 30"
           all_time: "Alates algusest"
           7_days_ago: "7 päeva tagasi"
           30_days_ago: "30 päeva tagasi"
@@ -2164,6 +2309,7 @@ et:
           start_date: "Alguskuupäev"
           end_date: "Lõpukuupäev"
           groups: "Kõik grupid"
+          no_data: "Pole andmeid, mida näidata."
       commits:
         latest_changes: "Viimased muudatused: palun värskenda tihti!"
         by: "autor"
@@ -2173,6 +2319,9 @@ et:
         old_posts: "Vanad tähistatud postitused"
         agree: "Nõustun"
         agree_title: "Kinnita see tähis kui korrektne ja kehtiv"
+        agree_flag_hide_post: "Peida postitus"
+        agree_flag_silence: "Vaigista kasutaja"
+        ignore_flag: "Ignoreeri"
         delete: "Kustuta"
         delete_title: "Kustuta postitus, millele see tähis viitab."
         delete_post_defer_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
@@ -2213,6 +2362,29 @@ et:
           notify_user: "kohandatud"
           notify_moderators: "kohandatud"
       groups:
+        new:
+          title: "Uus grupp"
+          create: "Loo"
+          name:
+            too_short: "Grupi nimi on liiga lühike"
+            too_long: "Grupi nimi on liiga pikk"
+            available: "Grupi nimi on saadaval"
+            not_available: "Grupi nimi pole saadaval"
+            blank: "Grupi nimi ei saa olla tühi"
+        manage:
+          interaction:
+            email: E-post
+            visibility: Nähtavus
+            visibility_levels:
+              title: "Kes näevad seda gruppi?"
+              public: "Kõik"
+              members: "Grupi omanikud, liikmed ja adminid"
+              staff: "Grupi omanikud ja personal"
+              owners: "Grupi omanikud ja adminid"
+          membership:
+            automatic: Automaatne
+            trust_level: Usalduse tase
+            trust_levels_none: "Pole"
         primary: "Peamine grupp"
         no_primary: "(peamine grupp puudub)"
         title: "Grupid"
@@ -2374,6 +2546,9 @@ et:
             label: "Pööra tagasi"
             title: "Pööra andmebaas tagasi viimati toiminud olekusse"
             confirm: "Oled kindel, et soovid andmebaasi tagasi viimati toiminud olekusse pöörata?"
+        location:
+          local: "Kohalik"
+          s3: "Amazon S3"
       export_csv:
         success: "Eksportimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         failed: "Eksportimine ebaõnnestus. Kontrolli logisid."
@@ -2413,20 +2588,32 @@ et:
           revert: "Loobu muudatustest"
           revert_confirm: "Oled kindel, et soovid oma muudatustest loobuda?"
         theme:
+          theme: "Teema"
+          component: "Komponent"
+          components: "Komponendid"
+          theme_name: "Teema nimi"
+          component_name: "Komponendi nimi"
           import_theme: "Impordi teema"
           customize_desc: "Kohanda:"
           title: "Kujundused"
+          create: "Loo"
+          create_type: "Liik:"
+          create_name: "Nimi:"
           edit: "Muuda"
           common: "Tavaline"
           desktop: "Töölaud"
           mobile: "Mobiil"
+          settings: "Seaded"
           preview: "Eelvaade"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           color_scheme: "Värvid"
           theme_components: "Kujunduse osad"
+          convert: "Konverdi"
+          collapse: Ahenda
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
+          select_component: "Vali komponent..."
           about_theme: "Kujunduse info"
           license: "Litsents"
           updating: "Uuendamine..."

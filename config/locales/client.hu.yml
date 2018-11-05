@@ -526,7 +526,6 @@ hu:
       topics_entered: "témákba lépett"
       post_count: "# bejegyzés"
       confirm_delete_other_accounts: "Biztosan törölni szeretnéd ezeket a fiókokat?"
-      powered_by: "<a href='https://ipinfo.io'>ipinfo.io</a> által"
     user_fields:
       none: "(válassz egy lehetőséget)"
     user:
@@ -674,15 +673,10 @@ hu:
       second_factor:
         title: "Két-faktoros hitelesítés"
         disable: "Két-faktoros azonosítás letiltása"
-        enable: "Engedélyezd <a href>a két-faktoros azonosítást</a>, hogy biztonságosabbá tedd a fiókod."
         confirm_password_description: "Kérlek erősítsd meg a jelszavad a továbbhaladáshoz"
         label: "Kód"
-        enable_description: |
-          Olvasd be ezt a QR-kódot egy támogatott alkalmazással (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) és add meg az azonosító kódodat.
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
-        extended_description: |
-          A két-faktoros azonosítás plusz biztonságot a fiókhoz úgy, hogy egy extra tokent kér bejelentkezéskor a jelszó mellé. A tokenek generálhatóak <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a> vagy <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> eszközökön.
         oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
       change_about:
         title: "Rólam megváltoztatása"
@@ -772,7 +766,6 @@ hu:
         always: "mindig"
         never: "soha"
       email_digests:
-        title: "Ha nem látogatom az oldalt. küldjön kivonatos e-mailt az újdonságokról"
         every_30_minutes: "minden 30 percben"
         every_hour: "óránként"
         daily: "naponta"

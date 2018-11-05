@@ -522,7 +522,6 @@ sv:
       watched_first_post_tags: "Bevakar första inlägget"
       watched_first_post_tags_instructions: "Du kommer att bli notifierad om första inlägget i varje nytt ämne med dessa taggar."
       muted_categories: "Tystad"
-      muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under bland dina olästa ämnen. "
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."
@@ -647,7 +646,6 @@ sv:
         always: "alltid"
         never: "aldrig"
       email_digests:
-        title: "Skicka mig en e-postsammanfattning av populära ämnen och inlägg när jag inte besökt sidan"
         every_30_minutes: "var 30:e minut"
         every_hour: "varje timma"
         daily: "dagligen"
@@ -1467,7 +1465,6 @@ sv:
         upload: "Tyvärr, det uppstod ett fel under uppladdandet av den filen. Vad god försök igen."
         file_too_large: "Tyvärr, filen är för stor (maximal filstorlek är {{max_size_kb}}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sen dela länken?"
         too_many_uploads: "Tyvärr, du kan bara ladda upp en bild i taget."
-        too_many_dragged_and_dropped_files: "Tyvärr, du kan bara ladda upp 10 filer åt gången."
         upload_not_authorized: "Tyvärr, filen du försöker ladda upp är inte tillåten (tillåtna filtyper: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."

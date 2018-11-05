@@ -555,7 +555,6 @@ ro:
       topics_entered: "Subiecte la care particip"
       post_count: "# postări"
       confirm_delete_other_accounts: "Ești sigur că vrei să ștergi aceste conturi?"
-      powered_by: "creat de <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(alege o opțiune)"
     user:
@@ -637,7 +636,6 @@ ro:
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
       muted_categories: "Setat pe silențios"
-      muted_categories_instructions: "Nu vei fi notificat despre nimic legat de noile subiecte din aceste categorii și subiectele respective nu vor apărea în lista cu cele mai recente subiecte."
       no_category_access: "În calitate de moderator ai acces limitat la categorii, salvarea este dezactivată."
       delete_account: "Șterge-mi contul"
       delete_account_confirm: "Ești sigur că vrei să ștergi contul? Această acțiune este ireversibilă!"
@@ -709,7 +707,6 @@ ro:
         title: "Schimbă poza de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazat pe"
         gravatar_title: "Schimbă-ți avatarul de pe site-ul Gravatar."
-        gravatar_failed: "Gravatarul nu a putut fi preluat. Există unul asociat cu adresa de email respectivă?"
         refresh_gravatar_title: "Reactualizează Gravatarul"
         letter_based: "Poză de profil atribuită de sistem."
         uploaded_avatar: "Poză preferată"
@@ -778,7 +775,6 @@ ro:
         always: "întotdeauna"
         never: "niciodată"
       email_digests:
-        title: "Când nu vin aici în vizită, trimite-mi un email cu rezumatul subiectelor și răspunsurilor populare"
         every_30_minutes: "La fiecare 30 de minute "
         every_hour: "În fiecare oră"
         daily: "Zilnic"
@@ -1776,7 +1772,6 @@ ro:
         upload: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
         file_too_large: "Ne pare rău, fișierul este prea mare (mărimea maximă este {{max_size_kb}}kb). De ce nu încarci  acest fișier mare pe un serviciu de distribuție prin cloud și apoi să îi partajezi link-ul?"
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
-        too_many_dragged_and_dropped_files: "Ne pare rău, poți încărca doar 10 fișiere simultan."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."

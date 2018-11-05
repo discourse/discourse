@@ -569,7 +569,6 @@ lt:
       topics_entered: "paskelbtos temos"
       post_count: "# įrašai"
       confirm_delete_other_accounts: "Ar tikrai nori ištrinti šias paskyras?"
-      powered_by: "pagamino <a href='https://ipinfo.io'>ipinfo.io</a>"
       copied: "nukopijuota"
     user_fields:
       none: "(pasirink nustatymą)"
@@ -653,7 +652,6 @@ lt:
       watched_first_post_tags: "Stebime Pirmą Įrašą"
       watched_first_post_tags_instructions: "Jūs būsite perspėjami apie įrašus kėkvienoje naujoje temoje su pasirinktomis etiketėmis."
       muted_categories: "Nutildytos"
-      muted_categories_instructions: "Jums bus pranešta dėl naujų temų šioje kategorijoje."
       delete_account: "Ištrinti mano vartotoją"
       delete_account_confirm: "Ar tikrai norite visam laikui ištrinti savo paskyrą? Šis veiksmas yra galutinis."
       deleted_yourself: "Jūsų paskyra sėkmingai ištrinta."
@@ -810,7 +808,6 @@ lt:
         always: "visada"
         never: "niekada"
       email_digests:
-        title: "Kaip nesilankau čia, atsiųsti santraupas man į elektroninį paštą apie populiarias temas ir populiarius įrašus"
         every_30_minutes: "kas 30 minučių"
         every_hour: "kas valandą"
         daily: "kas dieną"

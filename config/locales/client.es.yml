@@ -162,6 +162,7 @@ es:
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "China (Pekín)"
+        cn_northwest_1: "China (Ningxia)"
         eu_central_1: "UE (Frankfurt)"
         eu_west_1: "UE (Irlanda)"
         eu_west_2: "EU (Londres)"
@@ -245,7 +246,9 @@ es:
         unbookmark: "Haz clic para quitar todos los marcadores de este tema"
     bookmarks:
       created: "has guardado este post en marcadores"
+      not_bookmarked: "guarda este post"
       remove: "Eliminar marcador"
+      confirm_clear: "¿Seguro que deseas borrar todos tus marcadores de este tema?"
     drafts:
       resume: "Resúmen"
       remove: "Eliminar"
@@ -268,6 +271,8 @@ es:
     saved: "¡Guardado!"
     upload: "Subir"
     uploading: "Subiendo..."
+    uploading_filename: "Subiendo: {{filename}}..."
+    clipboard: "portapapeles"
     uploaded: "¡Subido!"
     pasting: "Pegando..."
     enable: "Activar"
@@ -350,6 +355,7 @@ es:
         make_user_group_owner: "Convertir en dueño"
         remove_user_as_group_owner: "Quitar de dueño"
     groups:
+      member_added: "Agregado"
       add_members:
         title: "Añadir miembros"
         description: "Administrar la membresía de éste grupo"
@@ -411,6 +417,7 @@ es:
         all: "Todos los Grupos"
         empty: "No hay grupos visibles."
         filter: "Filtrar por tipo de grupo"
+        owner_groups: "Grupos que poseo"
         close_groups: "Grupos Cerrados"
         automatic_groups: "Grupos Automáticos"
         automatic: "Automáticos"
@@ -514,6 +521,7 @@ es:
       topic_stat_sentence:
         one: "%{count} tema nuevo en los últimos %{unit}."
         other: "%{count} temas nuevos en los últimos %{unit}."
+      n_more: "Categorías (%{count} más) ..."
     ip_lookup:
       title: Búsqueda de Direcciones IP
       hostname: Nombre del host
@@ -529,7 +537,7 @@ es:
       topics_entered: "temas vistos"
       post_count: "# posts"
       confirm_delete_other_accounts: "¿Seguro que quieres eliminar estas cuentas?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
+      powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
     user_fields:
       none: "(selecciona una opción)"
@@ -548,6 +556,7 @@ es:
       private_messages: "Mensajes"
       activity_stream: "Actividad"
       preferences: "Preferencias"
+      profile_hidden: "Este perfil público del usuario ha sido ocultado."
       expand_profile: "Expandir"
       collapse_profile: "Contraer"
       bookmarks: "Marcadores"
@@ -614,7 +623,7 @@ es:
       watched_first_post_tags: "Vigilando Primer Post"
       watched_first_post_tags_instructions: "Se te notificará del primer post en cada nuevo tema con estas etiquetas."
       muted_categories: "Silenciado"
-      muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
+      muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de categorías o mensajes recientes."
       no_category_access: "Como un moderador, tienes acceso limitado a categorías, guardar está deshabilitado."
       delete_account: "Borrar Mi Cuenta"
       delete_account_confirm: "¿Estás seguro que quieres borrar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
@@ -688,15 +697,16 @@ es:
       second_factor:
         title: "Autenticación Dos Factores"
         disable: "Inhabilitar Autenticación Dos Factores"
-        enable: "Hablita <a href>two factor authentication</a> para mejorar la seguridad de la cuenta"
+        enable: "Habilita la autenticación en dos pasos para mejorar la seguridad de la cuenta"
         confirm_password_description: "Por favor confirma tu contraseña para continuar"
         label: "Código"
+        rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
         enable_description: |
-          Escanee el siguiente código QR en una aplicación soportada (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) e ingresa tu código de autenticación.
+          Escanee este código QR en una app soportada (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e ingrese su código de autenticación.
         disable_description: "Por favor ingrese el código de autenticación desde su aplicación"
         show_key_description: "Ingrese Manualmente"
         extended_description: |
-          La Autenticación de Dos Factores agrega un paso de seguridad adicional en tu cuenta al inicio de sesión al requerir un token de un solo uso además de su contraseña. Estos tokens pueden ser generados en dispositivos <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, y <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
+          La verificación en dos pasos añade una capa extra de seguridad requiriendo un token por única vez además de tu contraseña. Los códigos (token) se generan en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
       change_about:
         title: "Cambiar 'Acerca de mí'"
@@ -716,7 +726,7 @@ es:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
         gravatar_title: "Cambia tu avatar en la web de Gravatar"
-        gravatar_failed: "No se pudo obtener el Gravatar. ¿Hay alguno asociado a esa dirección de correo electrónico?"
+        gravatar_failed: "No pudimos encontrar tu Gravatar con esta dirección de correo."
         refresh_gravatar_title: "Actualizar tu Gravatar"
         letter_based: "Imagen de perfil asignada por el sistema"
         uploaded_avatar: "Foto personalizada"
@@ -774,6 +784,18 @@ es:
         title: "Introduce de nuevo la contraseña"
       auth_tokens:
         title: "Dispositivos utilizados recientemente"
+        ip: "IP"
+        details: "Detalles"
+        log_out_all: "Cerrar sesión de todos"
+        active: "activo ahora"
+        not_you: "¿No eres tú?"
+        show_all: "Mostrar todos ({{count}})"
+        show_few: "Mostrar menos"
+        was_this_you: "¿Eras tú?"
+        was_this_you_description: "Si no eras tú, recomendamos que cambies tu contraseña y salgas de sesión de todo."
+        browser_and_device: "{{browser}} en {{device}}"
+        secure_account: "Asegurar mi cuenta"
+        latest_post: "Tu última publicación..."
       last_posted: "Último post"
       last_emailed: "Último Enviado por email"
       last_seen: "Visto por última vez"
@@ -782,6 +804,7 @@ es:
       location: "Ubicación"
       website: "Sitio Web"
       email_settings: "E-mail"
+      hide_profile_and_presence: "Ocultar mi perfil público y características de presencia"
       like_notification_frequency:
         title: "Notificar cuando me dan Me gusta"
         always: "Con cada Me gusta que reciban mis posts"
@@ -969,6 +992,9 @@ es:
       enabled: "Este sitio está en modo solo-lectura. Puedes continuar navegando pero algunas acciones como responder o dar \"me gusta\" no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de sólo lectura."
+    too_few_topics_and_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_topics_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
@@ -1144,6 +1170,8 @@ es:
       categories_with_featured_topics: "Categorías y temas destacados"
       categories_and_latest_topics: "Categorías y temas recientes"
       categories_and_top_topics: "Categorías y Temas Top"
+      categories_boxes: "Cajas con Subcategorías"
+      categories_boxes_with_topics: "Cajas con temas destacados"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1220,6 +1248,7 @@ es:
         category_missing: "Debes escoger una categoría."
         tags_missing: "Debes seleccionar al menos {{count}} etiquetas"
       save_edit: "Guardar edición"
+      overwrite_edit: "Sobrescribir Edición"
       reply_original: "Responder en el Tema Original"
       reply_here: "Responder Aquí"
       reply: "Responder"
@@ -1258,6 +1287,7 @@ es:
       link_description: "introduzca descripción del enlace aquí"
       link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
+      link_url_placeholder: "https://ejemplo.com"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -1272,6 +1302,8 @@ es:
       help: "Ayuda de Edición con Markdown"
       collapse: "minimizar el panel de edición"
       abandon: "cerrar el editor y descartar borrador"
+      enter_fullscreen: "ingresar al editor en pantalla completa"
+      exit_fullscreen: "salir del editor en pantalla completa"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
@@ -1305,6 +1337,7 @@ es:
           desc: "Haz borrador al tema que será visible únicamente por el staff"
         toggle_topic_bump:
           label: "Alternar BUMP del tema"
+          desc: "Responder sin alterar la fecha de última respuesta"
     notifications:
       tooltip:
         regular:
@@ -1795,9 +1828,13 @@ es:
         action: "unir posts seleccionados"
         error: "Hubo un error al unir los posts seleccionados."
       change_owner:
+        title: "Cambiar Dueño"
         action: "cambiar dueño"
         error: "Hubo un error cambiando la autoría de los posts."
         placeholder: "nombre de usuario del nuevo dueño"
+        instructions:
+          one: "Por favor escoge el nuevo dueño del post de <b>@{{old_user}}</b>"
+          other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Cambiar Timestamp..."
         action: "cambiar timestamp"
@@ -1868,7 +1905,7 @@ es:
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
-        too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir 10 archivos a la vez."
+        too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir {{max}} archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
@@ -2321,6 +2358,7 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver temas top"
+    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="https://browsehappy.com">actualiza tu navegador</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2363,6 +2401,7 @@ es:
       composing:
         title: 'Redactando'
         return: '<b>shift</b>+<b>c</b> Regresar al editor'
+        fullscreen: '<b>shift</b>+<b>F11</b> Fullscreen Editor'
       actions:
         title: 'Acciones'
         bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
@@ -2444,6 +2483,10 @@ es:
       sort_by_name: "nombre"
       manage_groups: "Administrar grupos de etiquetas"
       manage_groups_description: "Definir grupos para organizar etiquetas"
+      upload: "Subir Etiquetas"
+      upload_description: "Subir un archivo de texto para crear etiquetas de forma masiva"
+      upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato 'tag_name,tag_group'."
+      upload_successful: "Etiquetas subidas exitosamente"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter} %{tag} temas en %{category}"
@@ -2503,6 +2546,7 @@ es:
           bookmarks: "No hay más temas guardados en marcadores."
           search: "No hay más resultados de búsqueda."
     invite:
+      custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Introducir un mensaje personalizado"
       custom_message_template_forum: "Hey, ¡quizá deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, he pensado que este tema te va a encantar!"
@@ -2649,6 +2693,19 @@ es:
         was_edited: "El post fue editado después del primer reporte"
         previous_flags_count: "Este post ya fue marcado {{count}} veces."
         show_details: "Mostrar detalles del reporte"
+        user_percentage:
+          summary:
+            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} reporte en total)"
+            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} reportes totales)"
+          agreed:
+            one: "{{count}}% de acuerdo"
+            other: "{{count}}% de acuerdo"
+          disagreed:
+            one: "{{count}}% en desacuerdo"
+            other: "{{count}}% en desacuerdo"
+          ignored:
+            one: "{{count}}% ignorado"
+            other: "{{count}}% ignorado"
         details: "detalles"
         flagged_topics:
           topic: "Tema"
@@ -2855,6 +2912,7 @@ es:
           label: "Subir"
           title: "Subir un backup a esta instancia"
           uploading: "Subiendo..."
+          uploading_progress: "Subiendo... {{progress}}%"
           success: "'{{filename}}' ha sido exitosamente subido. El archivo se procesará ahora y tomará hasta un minuto para ser mostrado en la lista."
           error: "Ha ocurrido un error al subir el archivo '{{filename}}': {{message}}"
         operations:
@@ -2885,6 +2943,9 @@ es:
             label: "Revertir"
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Seguro que quieres retornar la base de datos al estado funcional previo?"
+        location:
+          local: "Local"
+          s3: "Amazon S3"
       export_csv:
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
@@ -2930,12 +2991,19 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
+          theme_name: "Nombre del Theme"
+          component_name: "Nombre del Componente"
+          themes_intro: "Selecciona un theme existente o crear nuevo para empezar"
+          beginners_guide_title: "Guía para novatos usando Discourse Themes"
+          developers_guide_title: "Guía para desarrolladores para Discourse Themes"
+          browse_themes: "Navegar themes de la comunidad"
           import_theme: "Importar Theme"
           customize_desc: "Personalizar:"
           title: "Themes"
           create: "Crear"
           create_type: "Tipo:"
           create_name: "Nombre:"
+          name_too_short: "El nombre debe tener al menos 4 caracteres de largo."
           long_title: "Modifique los colores, los CSS y los contenidos HTML de su sitio"
           edit: "Editar"
           edit_confirm: "Este es un theme remoto, si editas CSS/HTML, los cambios serán borrados en la próxima actualización al theme."
@@ -2950,6 +3018,17 @@ es:
           color_scheme_select: "Selecciona colores para ser usados en el theme"
           custom_sections: "Personalizaciones:"
           theme_components: "Componentes del Theme"
+          convert: "Convertir"
+          convert_component_alert: "¿Estás seguro que quieres convertir este componente en theme? Será eliminado como componente desde %{relatives}."
+          convert_component_tooltip: "Convertir este componente en theme"
+          convert_theme_alert: "¿Estás seguro que quieres convertir este theme en componente? Será eliminado como principal desde %{relatives}."
+          convert_theme_tooltip: "Convertir este theme en componente"
+          inactive_themes: "Themes inactivos:"
+          broken_theme_tooltip: "Este theme tiene errores en su CSS, HTML o YAML"
+          default_theme_tooltip: "Este theme es el theme por defecto del sitio"
+          updates_available_tooltip: "Hay actualizaciones disponibles para este theme"
+          and_x_more: "y {{count}} más."
+          collapse: Colapsar
           uploads: "Subidos"
           no_uploads: "Puedes subir archivos asociados con tu theme como fuentes e imágenes "
           add_upload: "Agregar Subido"
@@ -2961,6 +3040,10 @@ es:
             no_overwrite: "Nombre de variable inválido. No debe sobrescribir una variable existente. "
             must_be_unique: "Nombre de variable inválido. Debe ser único."
           upload: "Subir"
+          select_component: "Seleccionar un componente..."
+          unsaved_changes_alert: "No has guardado los cambios aún, ¿los quieres deshacer y seguir adelante?"
+          discard: "Deshacer"
+          stay: "Permanecer"
           css_html: "Personalizar CSS/HTML"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No has editado ningún CSS o HTML"
@@ -2968,6 +3051,7 @@ es:
           import_web_tip: "Repositorio que contiene el theme"
           import_file_tip: "archivo .dcstyle.json que contiene el theme"
           is_private: "El theme está en un repositorio privado de git"
+          remote_branch: "Nombre del Branch (opcional)"
           public_key: "Conceda la siguiente clave pública de acceso para el repositorio:"
           about_theme: "Acerca del Theme"
           license: "Licencia"
@@ -2984,6 +3068,7 @@ es:
             one: "Theme está 1 commit detrás!"
             other: "Theme está {{count}} commits detrás!"
           compare_commits: "(Ver nuevos commits)"
+          repo_unreachable: "No se pudo contactar con el repositorio Git de este theme. Mensaje de error:"
           scss:
             text: "CSS"
             title: "Ingresa tu CSS, aceptamos estilos válidos de CSS y SCSS"
@@ -3145,6 +3230,7 @@ es:
           filter: "Filtrar:"
           title: "Acciones del staff"
           clear_filters: "Mostrar todo"
+          staff_user: "Usuario"
           target_user: "Usuario enfocado"
           subject: "Sujeto"
           when: "Cuándo"
@@ -3214,6 +3300,7 @@ es:
             change_badge: "cambiar distintivo"
             delete_badge: "borrar distintivo"
             merge_user: "unir usuario"
+            entity_export: "entidad exportadora"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
