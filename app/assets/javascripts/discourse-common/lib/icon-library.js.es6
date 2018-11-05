@@ -321,7 +321,7 @@ registerIconRenderer({
     const id = handleIconId(icon);
     let classes = iconClasses(icon, params) + " svg-node";
 
-    let svg = h(
+    const svg = h(
       "svg",
       {
         attributes: { class: classes, "aria-hidden": true },
