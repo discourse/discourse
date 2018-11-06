@@ -10,7 +10,7 @@
 {{#unless showPositionInput}}
   <section class='field'>
     {{i18n 'category.position_disabled'}}
-    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
+    <a href="{{get-url '/admin/site_settings/category/basic'}}">{{i18n 'category.position_disabled_click'}}</a>
   </section>
 {{/unless}}
 
@@ -187,6 +187,6 @@
 {{#unless emailInEnabled}}
   <section class='field'>
     {{i18n 'category.email_in_disabled'}}
-    <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
+    <a href="{{get-url '/admin/site_settings/category/email'}}">{{i18n 'category.email_in_disabled_click'}}</a>
   </section>
 {{/unless}}
