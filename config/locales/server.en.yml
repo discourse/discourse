@@ -1120,7 +1120,7 @@ en:
         user_agent: "User Agent"
         page_views: "Pageviews"
     suspicious_logins:
-      title: "Suspcious Logins"
+      title: "Suspicious Logins"
       labels:
         user: User
         client_ip: Client IP
