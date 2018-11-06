@@ -32,8 +32,12 @@ describe SvgSprite do
 
     setting = theme.settings.find { |s| s.name == :custom_icon }
     setting.value = 'gamepad'
-
     expect(SvgSprite.bundle).to match(/gamepad/)
+
+    setting = theme.settings.find { |s| s.name == :custom_icon }
+    setting.value = 'fab fa-bandcamp'
+    expect(SvgSprite.bundle).to match(/fab-bandcamp/)
+
   end
 
   it 'includes icons from SiteSettings' do
