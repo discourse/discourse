@@ -246,8 +246,17 @@ describe Search do
 
     context 'search within topic' do
 
-      def new_post(raw, topic)
+      def new_post(raw, topic = nil)
+        topic ||= Fabricate(:topic)
         Fabricate(:post, topic: topic, topic_id: topic.id, user: topic.user, raw: raw)
+      end
+
+      it 'works in Chinese' do
+        SiteSetting.search_tokenize_chinese_japanese_korean = true
+        post = new_post('I am not in English 何点になると思いますか')
+
+        results = Search.execute('何点になると思', search_context: post.topic)
+        expect(results.posts.map(&:id)).to eq([post.id])
       end
 
       it 'displays multiple results within a topic' do
