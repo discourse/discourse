@@ -34,10 +34,91 @@ export default createPreviewComponent(659, 320, {
     ) {
       this.drawPills(colors, height * 0.15, { categories: true });
       this.renderCategories(ctx, colors, width, height);
+    } else if (
+      ["categories_boxes", "categories_boxes_with_topics"].includes(
+        this.get("step.fieldsById.homepage_style.value")
+      )
+    ) {
+      this.drawPills(colors, height * 0.15, { categories: true });
+      const topics =
+        this.get("step.fieldsById.homepage_style.value") ===
+        "categories_boxes_with_topics";
+      this.renderCategoriesBoxes(ctx, colors, width, height, { topics });
     } else {
       this.drawPills(colors, height * 0.15, { categories: true });
       this.renderCategoriesWithTopics(ctx, colors, width, height);
     }
+  },
+
+  renderCategoriesBoxes(ctx, colors, width, height, opts) {
+    opts = opts || {};
+
+    const borderColor = darkLightDiff(
+      colors.primary,
+      colors.secondary,
+      90,
+      -75
+    );
+    const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
+    const margin = height * 0.03;
+    const bodyFontSize = height / 440.0;
+    const boxHeight = height * 0.7 - margin * 2;
+    const descriptions = this.getDescriptions();
+    const boxesSpacing = 15;
+    const boxWidth = (width - margin * 2 - boxesSpacing * 2) / 3;
+
+    this.categories().forEach((category, index) => {
+      const boxStartX = margin + index * boxWidth + index * boxesSpacing;
+      const boxStartY = height * 0.33;
+
+      this.drawSquare(
+        ctx,
+        { x: boxStartX, y: boxStartY },
+        { x: boxStartX + boxWidth, y: boxStartY + boxHeight },
+        [
+          { color: borderColor },
+          { color: borderColor },
+          { color: borderColor },
+          { color: category.color, width: 5 }
+        ]
+      );
+
+      ctx.font = `Bold ${bodyFontSize * 1.3}em 'Arial'`;
+      ctx.fillStyle = colors.primary;
+      ctx.textAlign = "center";
+      ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
+      ctx.textAlign = "left";
+
+      if (opts.topics) {
+        let startY = boxStartY + 60;
+        this.getTitles().forEach(title => {
+          ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+          ctx.fillStyle = colors.tertiary;
+          startY +=
+            this.fillTextMultiLine(
+              ctx,
+              title.split("\n").join(" "),
+              boxStartX + 10,
+              startY,
+              13,
+              boxWidth * 0.95
+            ) + 8;
+        });
+      } else {
+        ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = "center";
+        this.fillTextMultiLine(
+          ctx,
+          descriptions[index],
+          boxStartX + boxWidth / 2,
+          boxStartY + 60,
+          13,
+          boxWidth * 0.8
+        );
+        ctx.textAlign = "left";
+      }
+    });
   },
 
   renderCategories(ctx, colors, width, height) {
@@ -272,6 +353,10 @@ export default createPreviewComponent(659, 320, {
       .map(t => t.substring(0, 40));
   },
 
+  getDescriptions() {
+    return LOREM.split(".");
+  },
+
   renderLatest(ctx, colors, width, height) {
     const rowHeight = height / 10.0;
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
@@ -353,6 +438,54 @@ export default createPreviewComponent(659, 320, {
       }
       drawLine(y + rowHeight * 1);
       y += rowHeight;
+    });
+  },
+
+  fillTextMultiLine(ctx, text, x, y, lineHeight, maxWidth) {
+    const words = text.split(" ").filter(f => f);
+    let line = "";
+    let totalHeight = 0;
+
+    words.forEach(word => {
+      if (ctx.measureText(`${line} ${word} `).width >= maxWidth) {
+        ctx.fillText(line, x, y + totalHeight);
+        totalHeight += lineHeight;
+        line = word.trim();
+      } else {
+        line = `${line} ${word}`.trim();
+      }
+    });
+
+    ctx.fillText(line, x, y + totalHeight);
+    totalHeight += lineHeight;
+
+    return totalHeight;
+  },
+
+  // Edges expected in this order: NW to NE -> NE to SE -> SE to SW -> SW to NW
+  drawSquare(ctx, from, to, edges = []) {
+    const edgeConfiguration = index => {
+      const edge = edges[index] || {};
+
+      return {
+        width: edge.width || 1,
+        color: edge.color || "#333"
+      };
+    };
+
+    [
+      { from: { x: from.x, y: from.y }, to: { x: to.x, y: from.y } },
+      { from: { x: to.x, y: from.y }, to: { x: to.x, y: to.y } },
+      { from: { x: to.x, y: to.y }, to: { x: from.x, y: to.y } },
+      { from: { x: from.x, y: to.y }, to: { x: from.x, y: from.y } }
+    ].forEach((path, index) => {
+      const configuration = edgeConfiguration(index);
+      ctx.beginPath();
+      ctx.moveTo(path.from.x, path.from.y);
+      ctx.strokeStyle = configuration.color;
+      ctx.lineWidth = configuration.width;
+      ctx.lineTo(path.to.x, path.to.y);
+      ctx.stroke();
     });
   }
 });
