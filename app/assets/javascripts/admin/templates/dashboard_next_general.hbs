@@ -5,7 +5,7 @@
     <div class="period-section">
       <div class="section-title">
         <h2>
-          <a href="/admin/reports">
+          <a href="{{get-url '/admin/reports'}}">
             {{i18n "admin.dashboard.community_health"}}
           </a>
         </h2>
@@ -111,7 +111,7 @@
               {{#if currentUser.admin}}
                 <div class="backups">
                   <h3 class="durability-title">
-                    <a href="/admin/backups">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
+                    <a href="{{get-url '/admin/backups'}}">{{d-icon "archive"}} {{i18n "admin.dashboard.backups"}}</a>
                   </h3>
                   <p>
                     {{diskSpace.backups_used}} ({{i18n "admin.dashboard.space_free" size=diskSpace.backups_free}})
