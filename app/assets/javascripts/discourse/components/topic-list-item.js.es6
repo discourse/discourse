@@ -96,13 +96,6 @@ export default Ember.Component.extend(
       return classes.join(" ");
     },
 
-    titleColSpan: function() {
-      return !this.get("hideCategory") &&
-        this.get("topic.isPinnedUncategorized")
-        ? 2
-        : 1;
-    }.property("topic.isPinnedUncategorized"),
-
     hasLikes: function() {
       return this.get("topic.like_count") > 0;
     },

@@ -24,19 +24,28 @@
       {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
   </span>
-
+  <div class="link-bottom-line">
+  {{#unless hideCategory}}
+    {{#unless topic.isPinnedUncategorized}}
+      {{category-link topic.category}}
+    {{/unless}}
+  {{/unless}}
   {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
   {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+  </div>
 </td>
 
+<!--
 {{#unless hideCategory}}
   {{#unless topic.isPinnedUncategorized}}
     {{raw "list/category-column" category=topic.category}}
   {{/unless}}
 {{/unless}}
+
+-->
 
 {{#if showPosters}}
   {{raw "list/posters-column" posters=topic.posters}}

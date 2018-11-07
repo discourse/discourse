@@ -128,8 +128,11 @@
     }
   }
 
-  .discourse-tag {
-    font-size: $font-down-2;
+  .discourse-tags {
+    display: inline-block;
+    .discourse-tag {
+      font-size: $font-down-1;
+    }
   }
 
   .topic-featured-link {
