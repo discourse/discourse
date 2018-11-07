@@ -89,7 +89,7 @@
       }
 
       var html = "<span>";
-      html += "<i class='fa fa-globe d-icon d-icon-globe'></i>";
+      html += `<svg class="fa d-icon d-icon-globe-americas svg-icon"><use xlink:href="#globe-americas"></use></svg>`;
       html += "<span class='relative-time'></span>";
       html += "</span>";
 

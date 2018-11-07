@@ -52,7 +52,7 @@ span.badge-posts {
             max-width: unset;
             margin-right: 0;
             padding: 8px 9px 8px 8px;
-            i {
+            .d-icon {
               padding-left: 8px;
             }
           }
@@ -189,7 +189,7 @@ a.reply-to-tab {
       line-height: $line-height-medium;
     }
     .number,
-    i {
+    .d-icon {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-1;
     }
@@ -400,10 +400,6 @@ blockquote {
 
 .gap {
   padding: 0.25em 0;
-}
-
-.gutter {
-  display: none;
 }
 
 .posts-wrapper {

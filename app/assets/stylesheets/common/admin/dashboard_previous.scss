@@ -154,37 +154,37 @@
     td.value {
       font-weight: bold;
       text-align: center;
-      i {
+      .d-icon {
         display: none;
       }
       &.high-trending-up,
       &.trending-up {
-        i.up {
+        .up {
           color: $success;
           display: inline;
         }
       }
       &.high-trending-down,
       &.trending-down {
-        i.down {
+        .down {
           color: $danger;
           display: inline;
         }
       }
       &.no-change {
-        i.down {
+        .down {
           display: inline;
           visibility: hidden;
         }
       }
     }
     tr.reverse-colors {
-      td.value.high-trending-down i.down,
-      td.value.trending-down i.down {
+      td.value.high-trending-down .down,
+      td.value.trending-down .down {
         color: $success;
       }
-      td.value.high-trending-up i.up,
-      td.value.trending-up i.up {
+      td.value.high-trending-up .up,
+      td.value.trending-up .up {
         color: $danger;
       }
     }

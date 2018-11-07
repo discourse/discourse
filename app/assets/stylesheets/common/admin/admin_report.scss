@@ -61,7 +61,7 @@
 
     &.no-change {
       color: $primary-medium;
-      i {
+      .d-icon {
         display: none;
       }
     }
@@ -96,9 +96,9 @@
 
     .d-icon {
       color: currentColor;
-      margin-bottom: 0.25em;
       font-size: $font-up-5;
       display: block;
+      margin: 0.25em auto;
     }
 
     &.no-data,
