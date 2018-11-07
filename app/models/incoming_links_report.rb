@@ -105,7 +105,7 @@ class IncomingLinksReport
   end
 
   def self.report_top_referred_topics(report)
-    report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
+    report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.labels.num_clicks")
     num_clicks = link_count_per_topic(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id)
     num_clicks = num_clicks.to_a.sort_by { |x| x[1] }.last(report.limit || 10).reverse
     report.data = []
