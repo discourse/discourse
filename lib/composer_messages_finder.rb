@@ -34,12 +34,18 @@ class ComposerMessagesFinder
     end
 
     if count < SiteSetting.educate_until_posts
-      education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {
         id: 'education',
         templateName: 'education',
         wait_for_typing: true,
-        body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text, site_name: SiteSetting.title))
+        body: PrettyText.cook(
+          I18n.t(
+            education_key,
+            education_posts_text: I18n.t('education.until_posts', count: SiteSetting.educate_until_posts),
+            site_name: SiteSetting.title,
+            base_path: Discourse.base_path
+          )
+        )
       }
     end
 
@@ -173,7 +179,8 @@ class ComposerMessagesFinder
         I18n.t(
           'education.get_a_room',
           count: SiteSetting.get_a_room_threshold,
-          reply_username: reply_username
+          reply_username: reply_username,
+          base_path: Discourse.base_path
         )
       )
     }
@@ -191,7 +198,12 @@ class ComposerMessagesFinder
       templateName: 'education',
       wait_for_typing: false,
       extraClass: 'education-message',
-      body: PrettyText.cook(I18n.t('education.reviving_old_topic', time_ago: FreedomPatches::Rails4.time_ago_in_words(@topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose')))
+      body: PrettyText.cook(
+        I18n.t(
+          'education.reviving_old_topic',
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(@topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
     }
   end
 

@@ -36,6 +36,18 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
+def each_translation(hash, parent_key = '', &block)
+  hash.each do |key, value|
+    current_key = parent_key.blank? ? key : "#{parent_key}.#{key}"
+
+    if Hash === value
+      each_translation(value, current_key, &block)
+    else
+      yield(current_key, value.to_s)
+    end
+  end
+end
+
 describe "i18n integrity checks" do
 
   it 'has an i18n key for each Trust Levels' do
@@ -95,6 +107,29 @@ describe "i18n integrity checks" do
 
         it "has valid pluralizations for '#{key}'" do
           expect(hash.keys).to contain_exactly("one", "other")
+        end
+      end
+
+      context "valid translations" do
+        invalid_relative_links = {}
+        invalid_relative_image_sources = {}
+
+        each_translation(english_yaml) do |key, value|
+          if value.match?(/href\s*=\s*["']\/[^\/]|\]\(\/[^\/]/i)
+            invalid_relative_links[key] = value
+          elsif value.match?(/src\s*=\s*["']\/[^\/]/i)
+            invalid_relative_image_sources[key] = value
+          end
+        end
+
+        it "uses %{base_url} or %{base_path} for relative links" do
+          keys = invalid_relative_links.keys.join("\n")
+          expect(invalid_relative_links).to be_empty, "The following keys have relative links, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
+        end
+
+        it "uses %{base_url} or %{base_path} for relative image src" do
+          keys = invalid_relative_image_sources.keys.join("\n")
+          expect(invalid_relative_image_sources).to be_empty, "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
         end
       end
     end

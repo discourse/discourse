@@ -139,7 +139,7 @@ en:
         second_response: |-
           Aw, sorry. I’m still not getting it. :anguished:
 
-          I’m just a bot, but if you’d like to reach a real person, see [our contact page](/about).
+          I’m just a bot, but if you’d like to reach a real person, see [our contact page](%{base_path}/about).
 
           In the meantime, I’ll stay out of your way.
 
