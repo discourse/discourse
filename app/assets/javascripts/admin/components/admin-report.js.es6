@@ -41,7 +41,7 @@ export default Ember.Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
-  disabledLabel: "admin.dashboard.disabled",
+  disabledLabel: I18n.t("admin.dashboard.disabled"),
   isLoading: false,
   rateLimitationString: null,
   dataSourceName: null,

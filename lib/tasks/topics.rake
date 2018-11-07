@@ -91,9 +91,11 @@ task "topics:update_static", [:locale] => [:environment] do |_, args|
   update_static_page_topic(locale, "tos_topic_id", "tos_topic.title", "tos_topic.body",
                            company_domain: SiteSetting.company_domain.presence || "company_domain",
                            company_full_name: SiteSetting.company_full_name.presence || "company_full_name",
-                           company_name: SiteSetting.company_short_name.presence || "company_short_name")
+                           company_name: SiteSetting.company_short_name.presence || "company_short_name",
+                           base_path: Discourse.base_path)
 
-  update_static_page_topic(locale, "guidelines_topic_id", "guidelines_topic.title", "guidelines_topic.body")
+  update_static_page_topic(locale, "guidelines_topic_id", "guidelines_topic.title", "guidelines_topic.body",
+                           base_path: Discourse.base_path)
 
   update_static_page_topic(locale, "privacy_topic_id", "privacy_topic.title", "privacy_topic.body")
 end
