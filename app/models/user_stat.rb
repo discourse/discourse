@@ -130,4 +130,7 @@ end
 #  topic_count              :integer          default(0), not null
 #  bounce_score             :float            default(0.0), not null
 #  reset_bounce_score_after :datetime
+#  flags_agreed             :integer          default(0), not null
+#  flags_disagreed          :integer          default(0), not null
+#  flags_ignored            :integer          default(0), not null
 #
