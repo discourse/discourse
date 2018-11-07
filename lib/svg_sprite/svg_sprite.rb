@@ -9,6 +9,7 @@ module SvgSprite
     "angle-up",
     "archive",
     "arrow-up",
+    "at",
     "backward",
     "ban",
     "bars",
