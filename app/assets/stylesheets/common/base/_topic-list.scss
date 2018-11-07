@@ -252,7 +252,7 @@ ol.category-breadcrumb {
 }
 
 .d-icon-thumbtack.unpinned {
-  @include rotate(180deg, 1);
+  @include fa-rotate(180deg, 1);
   color: $primary;
   /* because it is rotated, right becomes left! */
   padding-left: 3px;
