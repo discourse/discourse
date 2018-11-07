@@ -952,7 +952,7 @@ class User < ActiveRecord::Base
       .where.not(post_id: disagreed_flag_post_ids)
       .each do |tl|
       begin
-        message = I18n.t('flag_reason.spam_hosts', domain: tl.domain)
+        message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
         PostAction.act(Discourse.system_user, tl.post, PostActionType.types[:spam], message: message)
       rescue PostAction::AlreadyActed
         # If the user has already acted, just ignore it

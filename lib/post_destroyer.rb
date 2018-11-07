@@ -227,7 +227,11 @@ class PostDestroyer
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
           url: @post.url,
-          flag_reason: I18n.t("flag_reasons.#{@post.active_flags.last.post_action_type.name_key}", locale: SiteSetting.default_locale)
+          flag_reason: I18n.t(
+            "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",
+            locale: SiteSetting.default_locale,
+            base_path: Discourse.base_path
+          )
         }
       )
     end

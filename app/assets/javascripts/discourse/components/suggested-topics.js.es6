@@ -60,7 +60,8 @@ export default Ember.Component.extend({
         NEW: newTopics,
         CATEGORY: category ? true : false,
         latestLink: opts.latestLink,
-        catLink: opts.catLink
+        catLink: opts.catLink,
+        basePath: ""
       });
     } else if (category) {
       return I18n.t("topic.read_more_in_category", opts);

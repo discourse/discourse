@@ -104,7 +104,7 @@ class Invite < ActiveRecord::Base
 
     if user = find_user_by_email(lower_email)
       extend_permissions(topic, user, invited_by) if topic
-      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
+      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username, base_path: Discourse.base_path)
     end
 
     invite = Invite.with_deleted

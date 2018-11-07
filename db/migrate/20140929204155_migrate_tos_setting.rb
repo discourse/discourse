@@ -5,7 +5,7 @@ class MigrateTosSetting < ActiveRecord::Migration[4.2]
       label = nil
 
       I18n.overrides_disabled do
-        label = I18n.t("terms_of_service.signup_form_message")
+        label = I18n.t("terms_of_service.signup_form_message", base_path: "")
       end
 
       res = execute("SELECT value FROM site_texts WHERE text_type = 'tos_signup_form_message'")
