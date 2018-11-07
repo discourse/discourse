@@ -128,6 +128,7 @@ const fa4Replacements = {
   deafness: "deaf",
   dedent: "outdent",
   diamond: "far-gem",
+  discord: "fab-discord",
   dollar: "dollar-sign",
   exchange: "exchange-alt",
   eye: "far-eye",
