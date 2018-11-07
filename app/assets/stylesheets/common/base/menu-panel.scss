@@ -153,7 +153,7 @@
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
-      div i.fa {
+      div .fa {
         display: none;
       }
 
@@ -181,17 +181,14 @@
     }
     li:not(.show-all) {
       padding: 0.25em 0.5em;
-      i {
+      .d-icon {
         float: left;
         margin-right: 5px;
         padding-top: 2px;
       }
     }
     .is-warning {
-      .d-icon-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
+      .d-icon-far-envelope {
         color: $danger;
       }
     }

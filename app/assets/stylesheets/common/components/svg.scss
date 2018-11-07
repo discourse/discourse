@@ -1,0 +1,12 @@
+.svg-icon,
+.svg-icon-title {
+  height: 1em;
+  width: 1em;
+  line-height: 1;
+  display: inline-flex;
+  position: relative;
+  vertical-align: -0.125em;
+  fill: currentColor;
+  flex-shrink: 0; // Prevent the icon from shrinking if it's in a flexbox
+  overflow: visible;
+}

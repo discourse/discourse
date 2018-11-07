@@ -3,6 +3,7 @@ import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
+import { iconHTML } from "discourse-common/lib/icon-library";
 const { get, isEmpty, run, makeArray } = Ember;
 
 export default ComboBox.extend(TagsMixin, {
@@ -67,7 +68,7 @@ export default ComboBox.extend(TagsMixin, {
 
   @computed("hasReachedMaximum")
   caretIcon(hasReachedMaximum) {
-    return hasReachedMaximum ? null : "plus fa-fw";
+    return hasReachedMaximum ? null : "plus";
   },
 
   @computed("tags")
@@ -125,7 +126,7 @@ export default ComboBox.extend(TagsMixin, {
           <button aria-label="${tag}" title="${tag}" class="selected-tag ${
           isHighlighted ? "is-highlighted" : ""
         }" data-value="${tag}">
-            ${tag}
+            ${tag} ${iconHTML("times")}
           </button>
         `;
       });

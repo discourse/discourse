@@ -1680,6 +1680,12 @@ uncategorized:
     default: 60
     min: 0
 
+  svg_icon_subset:
+    default: ''
+    type: 'list'
+    list_type: 'compact'
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
