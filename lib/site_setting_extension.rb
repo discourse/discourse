@@ -212,7 +212,9 @@ module SiteSettingExtension
     defaults.all(default_locale)
       .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
+
       value = send(s)
+
       opts = {
         setting: s,
         description: description(s),

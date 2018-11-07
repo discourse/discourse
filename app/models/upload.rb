@@ -33,6 +33,10 @@ class Upload < ActiveRecord::Base
     UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
   end
 
+  def to_s
+    self.url
+  end
+
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end

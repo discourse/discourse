@@ -45,6 +45,9 @@ required:
   site_contact_username:
     default: ''
     type: username
+  logo:
+    client: true
+    type: upload
   logo_url:
     client: true
     default: '/images/d-logo-sketch.png'
