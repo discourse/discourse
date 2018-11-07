@@ -185,6 +185,21 @@ describe OptimizedImage do
 
   describe ".create_for" do
 
+    it "is able to 'optimize' an svg" do
+
+      # we don't really optimize anything, we simply copy
+      # but at least this confirms this actually works
+
+      SiteSetting.authorized_extensions = 'svg'
+      svg = file_from_fixtures('image.svg')
+      upload = UploadCreator.new(svg, 'image.svg').create_for(Discourse.system_user.id)
+      resized = upload.get_optimized_image(50, 50, {})
+
+      # we perform some basic svg mangling but expect the string Discourse to be there
+      expect(File.read(Discourse.store.path_for(resized))).to include("Discourse")
+      expect(File.read(Discourse.store.path_for(resized))).to eq(File.read(Discourse.store.path_for(upload)))
+    end
+
     context "when using an internal store" do
 
       let(:store) { FakeInternalStore.new }

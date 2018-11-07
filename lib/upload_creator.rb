@@ -44,7 +44,7 @@ class UploadCreator
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @filename[/\.svg$/i]
+        if @image_info.type.to_s == "svg"
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if should_convert_to_jpeg?
@@ -131,7 +131,7 @@ class UploadCreator
         end
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
       end
 
