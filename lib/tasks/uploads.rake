@@ -226,6 +226,14 @@ def migrate_to_s3
   s3 = FileStore::S3Store.new
   local = FileStore::LocalStore.new
 
+  exclude_tables = %i{
+    incoming_emails
+    stylesheet_cache
+    search_logs
+    post_search_data
+    notifications
+  }
+
   # Migrate all uploads
   Upload.where.not(sha1: nil)
     .where("url NOT LIKE '#{s3.absolute_base_url}%'")
@@ -257,9 +265,14 @@ def migrate_to_s3
     end
 
     # remap the URL
-    DbHelper.remap(UrlHelper.absolute(from), Discourse.store.cdn_url(to))
-    DbHelper.remap(UrlHelper.absolute_without_cdn(from), Discourse.store.cdn_url(to))
-    DbHelper.remap(from, to)
+    [
+      [UrlHelper.absolute(from), Discourse.store.cdn_url(to)],
+      [UrlHelper.absolute_without_cdn(from), Discourse.store.cdn_url(to)],
+      [from, to],
+    ].each do |from_url, to_url|
+      DbHelper.remap(from_url, to_url, exclude_tables: exclude_tables)
+    end
+
     upload.optimized_images.destroy_all
 
     putc "."
