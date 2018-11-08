@@ -240,7 +240,7 @@ def migrate_to_s3
   image_uploads = file_uploads.where("lower(extension) NOT IN (?)", FileHelper.supported_images.to_a)
 
   [image_uploads, file_uploads].each do |uploads|
-    upload.find_in_batches(batch_size: 100) do |batch|
+    uploads.find_in_batches(batch_size: 100) do |batch|
       batch.each do |upload|
         now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         # remove invalid uploads
