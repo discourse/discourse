@@ -35,8 +35,15 @@
   .alert-info,
   .badge-category,
   .badge-category-bg,
-  .badge-notification.clicks {
+  .badge-notification.clicks,
+  .crawler-nav,
+  .powered-by-link {
     display: none !important;
+  }
+  /* For readability */
+  a,
+  a:visited {
+    color: #0088cc !important;
   }
   /* bottom border to help separate posts */
   div.row {
