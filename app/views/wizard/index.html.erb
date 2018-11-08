@@ -5,6 +5,7 @@
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
+    <%= render partial: "common/special_font_face" %>
     <script src="<%= ExtraLocalesController.url("wizard") %>"></script>
     <%= csrf_meta_tags %>
 
@@ -15,12 +16,5 @@
   <body class='wizard'>
     <div id='wizard-main'></div>
     <%= preload_script 'wizard-start' %>
-
-    <div id="svg-sprites" style="display:none;">
-      <div class="fontawesome">
-        <%= raw SvgSprite.bundle %>
-      </div>
-    </div>
-
   </body>
 </html>

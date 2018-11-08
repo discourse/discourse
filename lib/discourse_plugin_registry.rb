@@ -15,7 +15,6 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
-    attr_writer :svg_icons
     attr_writer :locales
     attr_accessor :custom_html
 
@@ -58,10 +57,6 @@ class DiscoursePluginRegistry
 
     def sass_variables
       @sass_variables ||= Set.new
-    end
-
-    def svg_icons
-      @svg_icons ||= []
     end
 
     def handlebars
@@ -108,10 +103,6 @@ class DiscoursePluginRegistry
 
   def self.register_service_worker(filename, options = {})
     self.service_workers << filename
-  end
-
-  def self.register_svg_icon(icon)
-    self.svg_icons << icon
   end
 
   def register_css(filename)

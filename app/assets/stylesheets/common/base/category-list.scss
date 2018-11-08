@@ -175,18 +175,26 @@
       margin: 0;
     }
     li {
-      padding: 4px 0;
-      display: flex;
+      padding: 0;
+      margin-left: 1.5em;
       .overflow {
         max-height: 3em;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
-      .d-icon {
-        margin-right: 6px;
-        margin-top: 2px;
-      }
+    }
+    li:before {
+      content: "\f0f6";
+      font-family: "FontAwesome";
+      float: left;
+      margin-left: -1.5em;
+    }
+    li.topic-pinned:before {
+      content: "\f08d";
+    }
+    li.topic-closed:before,
+    li.topic-archived:before {
+      content: "\f023";
     }
   }
 }

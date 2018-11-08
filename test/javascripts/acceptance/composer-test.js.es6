@@ -375,7 +375,9 @@ QUnit.test("Composer can toggle whispers", async assert => {
   );
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+    find(".composer-fields .whisper")
+      .text()
+      .indexOf(I18n.t("composer.whisper")) > 0,
     "it sets the post type to whisper"
   );
 
@@ -385,7 +387,9 @@ QUnit.test("Composer can toggle whispers", async assert => {
   );
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper")
+      .text()
+      .indexOf(I18n.t("composer.whisper")) <= 0,
     "it removes the whisper mode"
   );
 });
@@ -402,7 +406,9 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+      find(".composer-fields .whisper")
+        .text()
+        .indexOf(I18n.t("composer.whisper")) > 0,
       "it sets the post type to whisper"
     );
 
@@ -411,7 +417,9 @@ QUnit.test(
 
     await click("#create-topic");
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+      find(".composer-fields .whisper")
+        .text()
+        .indexOf(I18n.t("composer.whisper")) === -1,
       "it should reset the state of the composer's model"
     );
 

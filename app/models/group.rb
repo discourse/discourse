@@ -49,7 +49,7 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {

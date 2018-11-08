@@ -2,15 +2,19 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   tagName: "li",
+  classNameBindings: ["topicStatusIcon"],
 
   @computed("topic.pinned", "topic.closed", "topic.archived")
   topicStatusIcon(pinned, closed, archived) {
     if (pinned) {
-      return "thumbtack";
+      return "topic-pinned";
     }
-    if (closed || archived) {
-      return "lock";
+    if (closed) {
+      return "topic-closed";
     }
-    return "far-file-alt";
+    if (archived) {
+      return "topic-archived";
+    }
+    return "topic-open";
   }
 });
