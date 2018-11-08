@@ -180,7 +180,7 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{min_users} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
@@ -3393,7 +3393,7 @@ en:
         title: "Emails"
         settings: "Settings"
         templates: "Templates"
-        preview_digest: "Preview Digest"
+        preview_digest: "Preview Summary"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
@@ -3411,7 +3411,7 @@ en:
         send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
-        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
+        preview_digest_desc: "Preview the content of the summary emails sent to inactive users."
         refresh: "Refresh"
         send_digest_label: "Send this result to:"
         send_digest: "Send"
@@ -3420,7 +3420,7 @@ en:
         html: "html"
         text: "text"
         last_seen_user: "Last Seen User:"
-        no_result: "No results found for digest."
+        no_result: "No results found for summary."
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
         incoming_emails:
