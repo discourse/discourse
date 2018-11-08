@@ -212,7 +212,7 @@ tr_TR:
 
       - Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisine sıkça kullanılan kelimeler dahil edin. Konunuzun benzer konularla gruplanması için bir kategori seçin.
 
-      Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
+      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
     'new-reply': |
       %{site_name} topluluğuna hoş geldiniz &mdash; **katılımınız için teşekkür ederiz!**
 
@@ -222,7 +222,7 @@ tr_TR:
 
       - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
 
-      Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
+      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
   activerecord:
     attributes:
       category:
@@ -610,7 +610,7 @@ tr_TR:
     queue_size_warning: 'Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
-    bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
+    bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='%{base_path}/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
@@ -841,7 +841,7 @@ tr_TR:
     auto_respond_to_flag_actions: "Bir bildirim kaldırırken otomatik olarak cevaplamayı etkinleştir"
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
-    reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "2800 Byte boyutundan küçük e-postalardan resimleri çıkar"
     short_email_length: "Kısa e-postanın uzunluğu, Byte olarak"
     unsubscribe_via_email: "Kullanıcıların konu veya içerik alanında 'unsubscribe' olan bir e-posta göndererek e-postalara abonelikten çıkmasına izin ver"
@@ -951,7 +951,7 @@ tr_TR:
       invalid_string_min_max: "%{min} ile %{max} karakter arasında olmalı."
       invalid_string_min: "En az %{min} karakter olmalı."
       invalid_string_max: "En fazla %{max} karakter olabilir."
-      invalid_reply_by_email_address: "Değer '%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
+      invalid_reply_by_email_address: "Değer '%%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
       pop3_polling_authentication_failed: "POP3 kimlik doğrulaması başarısız. Lütfen pop3 bilgilerinizi kontrol edin."
   search:
     within_post: "%{username} tarafından #%{post_number}"
@@ -1068,7 +1068,7 @@ tr_TR:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
   flag_reasons:
     off_topic: "Gönderiniz **konu-dışı** olarak bildirildi: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğine uygun olmadığını düşünüyor. "
-    inappropriate: "Gönderiniz **uygunsuz** olarak bildirildi: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğunu düşünüyor."
+    inappropriate: "Gönderiniz **uygunsuz** olarak bildirildi: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](%{base_path}/guidelines) aykırı olduğunu düşünüyor."
     spam: "Gönderiniz **istenmeyen** olarak bildirildi: topluluk, gönderinizin mevcut konuya uygun veya yararlı olmaktansa fazlasıyla promosyonel ve reklam içerikli olduğunu düşünüyor."
     notify_moderators: "Gönderiniz **moderatör kontrolü için** bildirildi: topluluk, gönderinizle ilgili bir şeyin moderatör tarafından kontrol edilmesi gerektiğini düşünüyor."
   flags_dispositions:

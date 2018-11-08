@@ -1470,7 +1470,7 @@ lt:
       toggle_information: "perjungti temos detales"
       read_more_in_category: "Nori skaityti daugiau? Ieškok kitų temų {{catLink}} arba {{latestLink}}."
       read_more: "Norite skaityti daugiau? {{catLink}} arba {{latestLink}}."
-      read_more_MF: "Šiuo metu { UNREAD, plural, =0 {} one { yra <a href='/unread'>1 neperskaityta</a> } other { yra <a href='/unread'># neperskaitytos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nauja</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># naujos</a> temos} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Šiuo metu { UNREAD, plural, =0 {} one { yra <a href='{basePath}/unread'>1 neperskaityta</a> } other { yra <a href='{basePath}/unread'># neperskaitytos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nauja</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># naujos</a> temos} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Žiūrėkite visas kategorijas
       view_latest_topics: peržiūrėkite paskutines temas
       suggest_create_topic: "Kodėl gi nesukūrus naujos temos?"
@@ -2345,7 +2345,7 @@ lt:
           end_date: "End Date"
           groups: "Visos grupės"
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Paieškos įrašai</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
       commits:
         latest_changes: "Paskutiniai pakeitimai:"
         by: "nuo"

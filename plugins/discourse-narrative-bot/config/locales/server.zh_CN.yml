@@ -136,7 +136,7 @@ zh_CN:
         second_response: |-
           啊，抱歉。我还是没懂。 :anguished:
 
-          我只是个机器人，但是如果你想要找到真人，看看[我们的联系页面](/about)。
+          我只是个机器人，但是如果你想要找到真人，看看[我们的联系页面](%{base_path}/about)。
 
           同时，我不会再烦你。
     new_user_narrative:

@@ -135,7 +135,7 @@ ko:
         second_response: |-
           오 미안. 아직도 무슨 말인지 모르겠어. :anguished:
 
-          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면  [우리 연락처 페이지](/about) 를 참고해.
+          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면  [우리 연락처 페이지](%{base_path}/about) 를 참고해.
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
@@ -164,7 +164,7 @@ ko:
         instructions: |-
           유니콘 사진이야.
 
-          <img src="/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_path}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
 
           (당연히 그렇겠지만) 맘에 들면 이 포스트 아래에 있는 '좋아요'버튼을 눌러봐.
 

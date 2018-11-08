@@ -135,7 +135,7 @@ nb_NO:
         second_response: |-
           Æsj, unnskyld. Jeg skjønner fremdeles ingenting. :anguished:
 
-          Jeg er bare en robot, men hvis du trenger å snakke med en ekte person kan du gå til denne [siden for kontakter](/about).
+          Jeg er bare en robot, men hvis du trenger å snakke med en ekte person kan du gå til denne [siden for kontakter](%{base_path}/about).
 
           I mellomtiden skal jeg ikke plage deg mer.
     new_user_narrative:

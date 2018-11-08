@@ -115,7 +115,7 @@ zh_CN:
       <<: *errors
   invite:
     not_found: "你的邀请码不正确。请联系网站管理员。"
-    user_exists: "不需要邀请<b>%{email}</b>，他们<a href='/u/%{username}/summary'>已经有帐号了！</a>"
+    user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经有帐号了！</a>"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     error: "上传文件的时候出错了。请重试。"
@@ -242,7 +242,7 @@ zh_CN:
 
       - 选择常用的词句以便别人能找到你的主题。若想要给主题和类似主题分组，选择一个分类。
 
-      更多的帮助信息，[请查看我们的社区准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
+      更多的帮助信息，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
     'new-reply': |
       欢迎来到%{site_name} &mdash; **感谢你的贡献！**
 
@@ -252,7 +252,7 @@ zh_CN:
 
       - 欢迎有建设性的批评，但是请批判观点，而不是人身攻击。
 
-      欲查看更多，[请查看我们的社区准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text}时显示。
+      欲查看更多，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在你发表前 %{education_posts_text}时显示。
     avatar: |
       ### 想更改你的头像吗?
 
@@ -282,7 +282,7 @@ zh_CN:
 
       你打算回复下这个讨论里的其他人吗？杰出的讨论需要多种声音和多个角度。
 
-      如果你想要继续长篇大论，[考虑发私信吧](/u/%{reply_username})。
+      如果你想要继续长篇大论，[考虑发私信吧](%{base_path}/u/%{reply_username})。
     too_many_replies: |
       ### 你发表的回复数量已经达到了上限。
 
@@ -350,7 +350,7 @@ zh_CN:
             word:
               too_many: "对该操作敏感词过多"
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的个人主页中的关于我部分目前还是空白，<a href='/u/%{username_lower}/preferences/about-me'>你想要补些什么吗？</a></div>"
+    no_info_me: "<div class='missing-profile'>你的个人主页中的关于我部分目前还是空白，<a href='%{base_path}/u/%{username_lower}/preferences/about-me'>你想要补些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "信任等级3的用户参与讨论的分类。"
@@ -359,7 +359,7 @@ zh_CN:
   staff_category_name: "管理人员"
   staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览主题。"
   assets_topic_title: "站点设计资源"
-  assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。请勿删除！\n\n\n详细教程：\n\n\n1. 回复这个主题。\n2. 在此上传你想用作站点标志、图标等的所有图片。（使用帖子编辑器工具栏中的上传图标，或者拖放、粘贴图片。）\n3. 提交你的回复以发布。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的路径，或者点击编辑按钮来编辑帖子并获得到这些图片的路径。复制这些图片路径。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要启用不同的文件类型上传，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
+  assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。请勿删除！\n\n\n详细教程：\n\n\n1. 回复这个主题。\n2. 在此上传你想用作站点标志、图标等的所有图片。（使用帖子编辑器工具栏中的上传图标，或者拖放、粘贴图片。）\n3. 提交你的回复以发布。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的路径，或者点击编辑按钮来编辑帖子并获得到这些图片的路径。复制这些图片路径。\n5. 粘贴这些图像的路径到[基础设置](%{base_path}/admin/site_settings/category/required)。\n\n\n如果你需要启用不同的文件类型上传，在[文件设置](%{base_path}/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "欢迎来到 Discourse"
     body: |2
@@ -373,7 +373,7 @@ zh_CN:
         - 为什么他们要来这？
         - 他们能在哪里阅读更多的内容（链接、资源等）？
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
   lounge_welcome:
@@ -756,10 +756,10 @@ zh_CN:
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
-      other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
-    bad_favicon_url: "网站图标无法载入。检查<a href='/admin/site_settings'>站点设置</a>中的 favicon_url。"
-    poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
-    poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>。"
+      other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='%{base_path}/logs' target='_blank'>日志</a>寻找详情。"
+    bad_favicon_url: "网站图标无法载入。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的 favicon_url。"
+    poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
+    poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
@@ -1045,8 +1045,8 @@ zh_CN:
     auto_silence_first_post_regex: "检查用户首贴的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。例子：raging|a[bc]a 将匹配 raging、aba 或者 aca，因此禁言该用户。只对首贴有效。"
     flags_default_topics: "在管理栏目中默认显示被标记的主题"
     reply_by_email_enabled: "启用通过邮件回复。"
-    reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "通过邮件回复的回复地址模板，例如：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "通过邮件回复的回复地址模板，例如：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "忽略邮件中小于 2800 字节的图片"
     short_email_length: "短邮件地址长度（以比特作为单位）"
     display_name_on_email_from: "在邮件的来自栏显示昵称"
@@ -1218,8 +1218,8 @@ zh_CN:
       invalid_string_min_max: "必须在 %{min} 和 %{max} 字内。"
       invalid_string_min: "必须超过 %{min} 个字符。"
       invalid_string_max: "必须不超过 %{max} 个字符。"
-      invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
-      invalid_alternative_reply_by_email_addresses: "必须包括 “%{reply_key}” 并与通知邮件地址不同。"
+      invalid_reply_by_email_address: "值必须包含 '%%{reply_key' 并且要与通知邮件不同。"
+      invalid_alternative_reply_by_email_addresses: "必须包括 “%%{reply_key}” 并与通知邮件地址不同。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling password'。"
@@ -1364,7 +1364,7 @@ zh_CN:
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
   flags_reminder:
     flags_were_submitted:
-      other: "标志已经提交%{count}小时前。[请审核他们](/admin/flags)。"
+      other: "标志已经提交%{count}小时前。[请审核他们](%{base_path}/admin/flags)。"
     subject_template:
       other: "%{count} 个标记需要被处理"
   unsubscribe_mailer:
@@ -1486,7 +1486,7 @@ zh_CN:
     subject_template: "[%{email_prefix}] 可以升级"
   flag_reasons:
     off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社区成员们感觉它不适合处于这个主题中。"
-    inappropriate: "你的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](/guidelines)。"
+    inappropriate: "你的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](%{base_path}/guidelines)。"
     spam: "你的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
     notify_moderators: "你的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
   flags_dispositions:
@@ -2202,8 +2202,8 @@ zh_CN:
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   flag_reason:
-    sockpuppet: "新用户创建了主题，而另一个新用户以同一个 IP 在该主题回复。查看站点设置的 <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
-    spam_hosts: "新用户试图在多个创建帖子中发表链接到同一个域名的内容。查看站点设置的 <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
+    sockpuppet: "新用户创建了主题，而另一个新用户以同一个 IP 在该主题回复。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
+    spam_hosts: "新用户试图在多个创建帖子中发表链接到同一个域名的内容。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
   color_schemes:
     base_theme_name: "基础"
     dark: "暗色方案"
@@ -2310,13 +2310,13 @@ zh_CN:
 
       ## [有你参与](#power)
 
-      这个站点由[一群友善的管理人员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[管理人员页面](/about)联系我们。
+      这个站点由[一群友善的管理人员](%{base_path}/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](%{base_path}/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[管理人员页面](%{base_path}/about)联系我们。
 
       <a name="tos"></a>
 
       ## [使用条款](#tos)
 
-      是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。
+      是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](%{base_path}/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
   privacy_topic:
@@ -2651,16 +2651,16 @@ zh_CN:
           contact_email:
             label: "邮件"
             placeholder: "name@example.com"
-            description: "社区的负责人或群组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
+            description: "社区的负责人或群组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='%{base_path}/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
           contact_url:
             label: "网页"
-            description: "你或者你的组织平时用于联络的网页。将被显示在<a href='/about' target='_blank'>关于页面</a>中。"
+            description: "你或者你的组织平时用于联络的网页。将被显示在<a href='%{base_path}/about' target='_blank'>关于页面</a>中。"
           site_contact:
             label: "自动私信"
             description: "所有 Discourse 自动发送的私信将以该用户的名义发送，比如标志警告和备份完成通知。"
       corporate:
         title: "组织"
-        description: "这些名字将显示于<a href='/privacy' target='blank'>隐私策略</a>和<a href='/tos' target='blank'>服务条款</a>中，你可以随时在工作人员分类中编辑他们。如果你没有公司，现在你可以跳过这个步骤。"
+        description: "这些名字将显示于<a href='%{base_path}/privacy' target='blank'>隐私策略</a>和<a href='%{base_path}/tos' target='blank'>服务条款</a>中，你可以随时在工作人员分类中编辑他们。如果你没有公司，现在你可以跳过这个步骤。"
         fields:
           company_short_name:
             label: "公司名（短）"

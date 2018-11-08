@@ -245,7 +245,7 @@ pt:
 
       - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
 
-      Para mais, [verifique as orientações da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
+      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
     'new-reply': |
       Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -255,7 +255,7 @@ pt:
 
       - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
 
-      Para mais, [verifique as orientações da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
+      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -702,11 +702,11 @@ pt:
     memory_warning: 'O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada.'
     subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
     email_polling_errored_recently:
-      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
-      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
-    bad_favicon_url: "Não estamos a conseguir carregar o favicon. Por favor, confirme a sua configuração favicon_url nas  <a href='/admin/site_settings'>Configurações do sítio</a>."
-    poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
-    poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a>."
+      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
+      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
+    bad_favicon_url: "Não estamos a conseguir carregar o favicon. Por favor, confirme a sua configuração favicon_url nas  <a href='%{base_path}/admin/site_settings'>Configurações do sítio</a>."
+    poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
+    poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
@@ -958,8 +958,8 @@ pt:
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
     min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
-    reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
-    alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
+    reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
+    alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
     display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
@@ -1115,8 +1115,8 @@ pt:
       invalid_string_min_max: "Deve ser entre %{min} e %{max} caracteres."
       invalid_string_min: "Deve ser pelo menos %{min} caracteres."
       invalid_string_max: "Não deve ser mais que %{max} caracteres."
-      invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
-      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%{reply_key}' e ser diferentes do email de notificação."
+      invalid_reply_by_email_address: "O valor deve conter '%%{reply_key}' e ser diferente do email de notificação."
+      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%%{reply_key}' e ser diferentes do email de notificação."
       pop3_polling_host_is_empty: "Deve configurar um 'pop3 polling host' antes de ativar o polling POP3."
       pop3_polling_username_is_empty: "Deve configurar um 'nome de utilizador de polling pop3' antes de ativar o polling POP3."
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
@@ -1255,7 +1255,7 @@ pt:
     subject_template: "[%{email_prefix}] disponível atualização"
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
-    inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](/guidelines)."
+    inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](%{base_path}/guidelines)."
     spam: "A sua mensagem foi marcada como **spam**: a comunidade sente que é um anúncio, algo que é excecionalmente promocional na sua natureza em vez de ser útil ou relevante para o tópico tal como seria esperado."
     notify_moderators: "A sua mensagem foi marcada **para atenção do moderador**: a comunidade sente que algo na sua mensagem requer intervenção manual de um membro do pessoal."
   flags_dispositions:
@@ -1588,8 +1588,8 @@ pt:
   avatar:
     missing: "Desculpe, mas não conseguimos encontrar nenhum avatar associado com esse endereço de email. Pode tentar carregá-lo novamente?"
   flag_reason:
-    sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address})  respondeu. Veja as configurações de <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
-    spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio  (%{domain}). Verifique as configurações do sítio de <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address})  respondeu. Veja as configurações de <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
+    spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio  (%{domain}). Verifique as configurações do sítio de <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Base"
   about: "Sobre"
@@ -1914,10 +1914,10 @@ pt:
           contact_email:
             label: "Email"
             placeholder: "name@example.com"
-            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim  como <a href='/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
+            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim  como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
           contact_url:
             label: "Página da Internet"
-            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='/about' target='_blank'>sua página de descrição</a>."
+            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
           site_contact:
             label: "Mensagens Automatizadas"
       corporate:

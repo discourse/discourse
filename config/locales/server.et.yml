@@ -227,7 +227,7 @@ et:
 
       - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
 
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
+      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
     'new-reply': |
       Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
 
@@ -237,7 +237,7 @@ et:
 
       - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
 
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
+      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -300,7 +300,7 @@ et:
         - Miks peaks keegi siia tulema?
         - Kust saab rohkem infot (lingid, ressursid jne)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:

@@ -132,7 +132,7 @@ sw:
         second_response: |-
           Oh, jamani. Bado Nashindwa kukuelewa. :anguished:
 
-          Mimi ni roboti tu, kama hautajali unaweza kuwasiliana na binadamu, tembelea [ukurasa wa mawasiliano](/kuhusu)
+          Mimi ni roboti tu, kama hautajali unaweza kuwasiliana na binadamu, tembelea [ukurasa wa mawasiliano](%{base_path}/kuhusu)
 
           Kwa sasa, nitakaa pembeni.
     new_user_narrative:

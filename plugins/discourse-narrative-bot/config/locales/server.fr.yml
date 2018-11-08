@@ -136,7 +136,7 @@ fr:
         second_response: |-
           Vraiment désolé. Je ne comprend toujours pas .:anguished:
 
-          Je suis juste un robot, mais si vous souhaitez contacter une personne réelle, consultez [notre page de contact](/ about).
+          Je suis juste un robot, mais si vous souhaitez contacter une personne réelle, consultez [notre page de contact](%{base_path}/ about).
 
           Pendant ce temps là, je serais silencieux.
     new_user_narrative:

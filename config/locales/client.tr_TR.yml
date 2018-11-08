@@ -1545,7 +1545,7 @@ tr_TR:
       toggle_information: "konu ayrıntılarını değiştir"
       read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? {{catLink}} ya da {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış mesaj</a> } other { <a href='/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: Son konuları görüntüle
       suggest_create_topic: "Konu oluşturmaya ne dersin?"
@@ -1633,7 +1633,7 @@ tr_TR:
           "2_8": 'Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz.'
           "2_4": 'Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz.'
           "2_2": 'Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz.'
-          "2": 'Yeni cevapların sayısını göreceksiniz çünkü <a href="/u/{{username}}/preferences">bu konuyu okudunuz</a>.'
+          "2": 'Yeni cevapların sayısını göreceksiniz çünkü <a href="{{basePath}}/u/{{username}}/preferences">bu konuyu okudunuz</a>.'
           "1_2": 'Birisi @isminden bahsederse ya da sana cevap verirse bildirim alacaksın.'
           "1": 'Birisi @isminden bahsederse veya sana cevap verirse bildirim alacaksın.'
           "0_7": 'Bu kategoriye ait tüm bildirimleri yok sayıyorsun.'
@@ -2544,7 +2544,7 @@ tr_TR:
           total: "Tüm zamanlar toplamı"
           no_data: "Gösterilecek bilgi yok."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Arama Günlükleri</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Arama Günlükleri</a>'
       commits:
         latest_changes: "En son değişiklikler: lütfen sık sık güncelle!"
         by: "tarafından"

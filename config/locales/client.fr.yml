@@ -1042,7 +1042,7 @@ fr:
       complete_email_found: "Nous avons trouvé un compte correspond au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
-      help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='/about'>nos responsables serviables.</a></p>"
+      help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='%{basePath}/about'>nos responsables serviables.</a></p>"
       button_ok: "OK"
       button_help: "Aide"
     email_login:
@@ -1555,7 +1555,7 @@ fr:
       toggle_information: "basculer affichage des détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus ? {{catLink}} ou {{latestLink}}."
-      read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='/unread'>1 sujet non lu</a> } other { a <a href='/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
       suggest_create_topic: "Pourquoi ne pas créer un sujet ?"
@@ -1645,7 +1645,7 @@ fr:
           "2_8": 'Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie.'
           "2_4": 'Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet.'
           "2_2": 'Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet.'
-          "2": 'Vous verrez un compteur de nouvelles réponses car vous <a href="/u/{{username}}/preferences">avez lu ce sujet</a>.'
+          "2": 'Vous verrez un compteur de nouvelles réponses car vous <a href="{{basePath}}/u/{{username}}/preferences">avez lu ce sujet</a>.'
           "1_2": 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           "1": 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           "0_7": 'Vous ignorez toutes les notifications de cette catégorie.'
@@ -2585,8 +2585,8 @@ fr:
           total: "Total depuis toujours"
           no_data: "Aucune donnée à afficher."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Journal des recherches</a>'
-            disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
+            disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
       commits:
         latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
         by: "par"

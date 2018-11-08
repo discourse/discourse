@@ -1411,7 +1411,7 @@ sk:
       toggle_information: "zmeniť detaily témy"
       read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v {{catLink}} alebo v {{latestLink}}."
       read_more: "Chcete si prečítať viac?  {{catLink}} alebo v {{latestLink}}."
-      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='/unread'>1 neprečítanú</a> } other { <a href='/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v  {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v  {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
       suggest_create_topic: "Čo tak vytvoriť novú tému?"
