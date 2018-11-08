@@ -32,5 +32,13 @@ RSpec.describe DbHelper do
       expect(badge_attributes.except("query"))
         .to eq(badge.attributes.except("query"))
     end
+
+    it 'allows tables to be excluded from scanning' do
+      post = Fabricate(:post, cooked: "test")
+
+      DbHelper.remap("test", "something else", exclude_tables: %w{posts})
+
+      expect(post.reload.cooked).to eq('test')
+    end
   end
 end

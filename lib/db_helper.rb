@@ -8,7 +8,7 @@ class DbHelper
        AND (data_type LIKE 'char%' OR data_type LIKE 'text%')
   ORDER BY table_name, column_name"
 
-  def self.remap(from, to, anchor_left = false, anchor_right = false)
+  def self.remap(from, to, anchor_left: false, anchor_right: false, exclude_tables: [])
     results = DB.query(REMAP_SQL).to_a
     like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
 
@@ -19,7 +19,10 @@ class DbHelper
       remappable_columns[result.table_name] << result.column_name
     end
 
+    exclude_tables = exclude_tables.map(&:to_s)
+
     remappable_columns.each do |table_name, column_names|
+      next if exclude_tables.include?(table_name)
       set_clause = column_names.map do |column_name|
         "#{column_name} = REPLACE(#{column_name}, :from, :to)"
       end.join(", ")
