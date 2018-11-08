@@ -3684,6 +3684,8 @@ es:
           tags: "Etiquetas"
           search: "Búsqueda"
           groups: "Grupos"
+        secret_list:
+          invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo

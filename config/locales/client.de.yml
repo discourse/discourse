@@ -355,6 +355,7 @@ de:
         make_user_group_owner: "Zum Eigentümer machen"
         remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
+      member_added: "Hinzugefügt"
       add_members:
         title: "Mitglieder hinzufügen"
         description: "Verwalte die Mitgliedschaft in dieser Gruppe"
@@ -536,6 +537,7 @@ de:
       topics_entered: "betrachtete Themen"
       post_count: "# Beiträge"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
+      powered_by: "verwendet <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
     user_fields:
       none: "(wähle eine Option aus)"
@@ -621,6 +623,7 @@ de:
       watched_first_post_tags: "Ersten Beitrag beobachten"
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
       muted_categories: "Stummgeschaltet"
+      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -637,7 +640,7 @@ de:
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       apps: "Apps"
       revoke_access: "Entziehe Zugriffsrecht"
-      undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
+      undo_revoke_access: "Zugriffsrecht wiederherstellen"
       api_approved: "Genehmigt:"
       api_last_used_at: "Zuletzt benutzt am:"
       theme: "Design"
@@ -694,8 +697,10 @@ de:
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         disable: "Zwei-Faktor-Authentifizierung deaktivieren"
+        enable: "Zwei-Faktor-Authentifizierung aktivieren, um das Benutzerkonto besser zu schützen"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         label: "Code"
+        rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
         enable_description: |
           Scanne diesen QR-Code in einer unterstützten App (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) und gib’ deinen Authentifizierungscode ein.
         disable_description: "Bitte gib den Authentifizierungscode aus deiner App ein."
@@ -721,6 +726,7 @@ de:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
         gravatar_title: "Ändere deinen Avatar auf der Gravatar-Webseite"
+        gravatar_failed: "Wir konnten kein Gravatar für diese E-Mail-Adresse finden."
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
@@ -786,7 +792,10 @@ de:
         show_all: "Alle anzeigen ({{count}})"
         show_few: "Weniger anzeigen"
         was_this_you: "Warst das du?"
+        was_this_you_description: "Wenn du das gewesen bist, empfehlen wir dir, dein Passwort zu ändern und dich überall abzumelden."
         browser_and_device: "{{browser}} auf {{device}}"
+        secure_account: "Mein Konto absichern"
+        latest_post: "Dein letzter Beitrag…"
       last_posted: "Letzter Beitrag"
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
@@ -808,6 +817,7 @@ de:
         always: "immer"
         never: "nie"
       email_digests:
+        title: "Wenn ich nicht vorbeischaue, sende mir eine E-Mail-Zusammenfassung beliebter Themen und Antworten"
         every_30_minutes: "alle 30 Minuten"
         every_hour: "stündlich"
         daily: "täglich"
@@ -1238,6 +1248,7 @@ de:
         category_missing: "Du musst eine Kategorie auswählen"
         tags_missing: "Du musst mindestens %{count} Schlagwörter wählen."
       save_edit: "Speichern"
+      overwrite_edit: "Bearbeitung überschreiben"
       reply_original: "Auf das ursprünglichen Thema antworten"
       reply_here: "Hier antworten"
       reply: "Antworten"
@@ -1894,6 +1905,7 @@ de:
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, diese Datei ist zu groß (maximal erlaubt sind {{max_size_kb}} KB). Wie wär’s, wenn du deine große Datei bei einem Filehosting-Dienst hochlädst und dann den Link teilst?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
+        too_many_dragged_and_dropped_files: "Entschuldige, du kannst nur {{max}} Dateien auf einmal hochladen."
         upload_not_authorized: "Entschuldigung, die Datei die du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
@@ -2677,6 +2689,19 @@ de:
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
         previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
         show_details: "Zeige Meldungsdetails"
+        user_percentage:
+          summary:
+            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldung insgesamt)"
+            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldungen insgesamt)"
+          agreed:
+            one: "{{count}}% akzeptiert"
+            other: "{{count}}% akzeptiert"
+          disagreed:
+            one: "{{count}}% abgelehnt"
+            other: "{{count}}% abgelehnt"
+          ignored:
+            one: "{{count}}% ignoriert"
+            other: "{{count}}% ignoriert"
         details: "Details"
         flagged_topics:
           topic: "Thema"
@@ -3655,6 +3680,8 @@ de:
           tags: "Schlagwörter"
           search: "Suche"
           groups: "Gruppen"
+        secret_list:
+          invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
