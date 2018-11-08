@@ -101,6 +101,10 @@
       max-width: calc(100% - 60px);
       flex: 1 1 auto;
       white-space: nowrap;
+
+      .d-icon {
+        opacity: 0.8;
+      }
     }
     .composer-action-title {
       display: inline-flex;

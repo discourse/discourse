@@ -7,9 +7,7 @@ class SvgSpriteController < ApplicationController
 
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
 
-      current_version = SvgSprite.version(SvgSprite.all_icons.to_s)
-
-      if current_version != params[:version]
+      if SvgSprite.version != params[:version]
         return redirect_to path(SvgSprite.path)
       end
 

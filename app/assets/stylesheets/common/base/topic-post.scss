@@ -28,7 +28,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: middle;
     a {
+      vertical-align: middle;
       color: dark-light-choose($primary-high, $secondary-low);
     }
   }
@@ -836,11 +838,6 @@ a.mention-group {
   .reply-to-tab {
     span {
       display: none;
-    }
-  }
-  .names {
-    span {
-      display: block;
     }
   }
   .user-title {

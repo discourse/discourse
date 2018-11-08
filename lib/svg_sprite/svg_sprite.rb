@@ -13,9 +13,11 @@ module SvgSprite
     "backward",
     "ban",
     "bars",
+    "bed",
     "bold",
     "book",
     "bookmark",
+    "briefcase",
     "calendar-alt",
     "caret-down",
     "caret-left",
@@ -73,6 +75,7 @@ module SvgSprite
     "far-list-alt",
     "far-smile",
     "far-square",
+    "far-sun",
     "far-thumbs-down",
     "far-thumbs-up",
     "far-trash-alt",
@@ -82,10 +85,12 @@ module SvgSprite
     "file-alt",
     "flag",
     "folder",
+    "folder-open",
     "forward",
     "gavel",
     "globe",
     "globe-americas",
+    "hand-point-right",
     "heading",
     "heart",
     "info-circle",
@@ -96,6 +101,7 @@ module SvgSprite
     "list-ol",
     "list-ul",
     "lock",
+    "magic",
     "microphone-slash",
     "minus",
     "mobile-alt",
@@ -103,6 +109,8 @@ module SvgSprite
     "pencil-alt",
     "plug",
     "plus",
+    "plus-circle",
+    "plus-square",
     "power-off",
     "question",
     "question-circle",
@@ -181,13 +189,14 @@ module SvgSprite
     @svg_subset << '</svg>'
   end
 
-  def self.version(svg_subset)
-    (@svg_subset_cache ||= {})[svg_subset] ||=
-      Digest::SHA1.hexdigest(svg_subset)
+  def self.version
+    icon_subset = all_icons.sort.join('|')
+    (@svg_subset_cache ||= {})[icon_subset] ||=
+      Digest::SHA1.hexdigest(icon_subset)
   end
 
   def self.path
-    "/svg-sprite/#{Discourse.current_hostname}/#{version all_icons.to_s}.svg"
+    "/svg-sprite/#{Discourse.current_hostname}/#{version}.svg"
   end
 
   def self.plugin_icons

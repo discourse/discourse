@@ -7,11 +7,11 @@ describe SvgSprite do
     expect(bundle).to match(/angle-double-down/)
   end
 
-  it 'can get a version string' do
-    version1 = SvgSprite.version("heart|caret-down")
-    version2 = SvgSprite.version("heart|caret-down|caret-up")
+  it 'can get a consistent version string' do
+    version1 = SvgSprite.version
+    version2 = SvgSprite.version
 
-    expect(version1).not_to eq(version2)
+    expect(version1).to eq(version2)
   end
 
   it 'includes  Font Awesome 4.7 icons from badges' do
