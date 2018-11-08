@@ -728,16 +728,19 @@ es:
       short_description: 'Esto es un anuncio'
     inappropriate:
       title: 'Inapropiado'
+      description: 'Este tema tiene contenido que una persona razonable consideraría ofensivo, abusivo o que vulnera las <a href="/guidelines">directrices de la comunidad</a>.'
       long_form: 'marcado como inapropiado'
+      short_description: 'Vulneración de las <a href="/guidelines">directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
+      description: 'Este tema necesita revisión por parte del staff por infringir las <a href="/guidelines">directrices</a>, <a href="%{tos_url}">Términos y Condiciones</a> o por otros motivos.'
       long_form: 'reportado para atención de los moderadores'
       short_description: 'Requiere atención del staff por otro motivo'
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="%{path}">mira tus mensajes</a>.</p>'
-    user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
+    user_must_edit: '<p>Esta publicación ha sido reportada por la comunidad y está oculta temporalmente.</p>'
   archetypes:
     regular:
       title: "Tema normal"
@@ -794,6 +797,7 @@ es:
         author: Autor
         edit_reason: Motivo
     most_disagreed_flaggers:
+      title: "Most disagreed flaggers"
       labels:
         user: Usuari
         agreed_flags: Reportes de acuerdo
@@ -1014,7 +1018,6 @@ es:
         user_agent: "Agente de usuario"
         page_views: "Páginas vistas"
     suspicious_logins:
-      title: "Inicios de sesión sospechosos"
       labels:
         user: Usuario
         client_ip: IP del cliente
@@ -1026,9 +1029,11 @@ es:
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
+    gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
+    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicia sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
@@ -1039,6 +1044,7 @@ es:
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
     force_https_warning: "Tu sitio web está usando SSL. Pero  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` no está aún habilitado en la configuración de tu sitio."
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
+    unreachable_themes: "No pudimos verificar actualizaciones de los siguientes themes:"
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
@@ -1063,12 +1069,14 @@ es:
     log_search_queries: "Log de búsquedas de los usuarios"
     search_query_log_max_size: "Cantidad máxima de consultas a conservar"
     search_query_log_max_retention_days: "Cantidad máxima de tiempo para mantener consultas de búsqueda, en días."
+    search_ignore_accents: "Ignora los acentos cuando busques texto."
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de activar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
     unique_posts_mins: "¿Cuántos minutos deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo?"
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
+    contact_url: "URL de contacto para este sitio. Usada en la página <a href='/about' target='_blank'>/about</a> como formulario de contacto para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Mínimo espacio en disco necesario para descargar imágenes remotas de forma local (porcentaje)"
@@ -1144,6 +1152,8 @@ es:
     blacklisted_crawler_user_agents: 'Palabra única insensible a mayúsculas y minúsculas en la cadena del user agent que identifica rastreadores web a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista blanca.'
     slow_down_crawler_user_agents: 'User agents de rastreadores web a los que se debe aplicar una tarifa limitada en robots.txt utilizando la directiva de retardo de rastreo'
     slow_down_crawler_rate: 'Si slow_down_crawler_user_agents es especificado, este ratio aplicará para todos los crawlers (la solicitud demora número de segundos)'
+    content_security_policy: EXPERIMENTAL - Turn on Content-Security-Policy
+    content_security_policy_report_only: EXPERIMENTAL - Turn on Content-Security-Policy-Report-Only
     top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
@@ -1579,6 +1589,9 @@ es:
       reply_by_email_disabled: "Primero debes habilitar 'reply by email' antes de habilitar esta configuración."
       sso_url_is_empty: "Debe establecer una 'sso url' antes de habilitar esta configuración."
       enable_local_logins_disabled: "Primero debes habilitar 'enable local logins'  antes de habilitar esta configuración."
+    placeholder:
+      sso_provider_secrets:
+        key: "www.ejemplo.com"
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1947,6 +1960,10 @@ es:
     welcome_tl1_user:
       title: "Bienvenida al Usuario NC1"
       subject_template: "Gracias por pasar tiempo con nosotros"
+      text_body_template: |
+        Hola. Hemos visto que has estado leyendo, lo cual nos parece fantástico, ¡por lo que te hemos subido tu [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Nos alegramos de ver que estés pasando tiempo con nosotros, y nos gustaría saber más sobre ti. Cuando puedas, [rellena tu perfil](%{base_url}/my/preferences/profile) o [crea un nuevo tema](%{base_url}/categories).
     welcome_invite:
       title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -2211,6 +2228,14 @@ es:
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automatizado de %{site_name} para hacerte saber que tu publicación ha sido temporalmente ocultada porque ha sido reportada por la comunidad.
+
+        Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del equipo la revise. Sentimos las molestias.
+
+        Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Demasiadas banderas NC3"
       subject_template: "Nueva cuenta retenida"
@@ -2662,6 +2687,9 @@ es:
         %{base_url}/u/activate-account/%{email_token}
 
         Si el enlace anterior no es clicable, prueba copiando y pegándolo en la barra de direcciones de tu navegador.
+    suspicious_login:
+      title: "Alerta de nuevo inicio de sesión"
+      subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Populares"
@@ -2678,6 +2706,7 @@ es:
       Hace falta una cuenta para usar el sitio. Por favor crea una o inicia sesión para continuar.
   terms_of_service:
     title: "Condiciones Generales de Uso"
+    signup_form_message: 'He leído y acepto los <a href="/tos" target="_blank">Términos del Servicio</a>.'
   deleted: 'borrado'
   image: "imagen"
   upload:
@@ -2936,6 +2965,11 @@ es:
       description: Primera edición de un post
       long_description: |
         Este distintivo se concede la primera vez que editas uno de tus posts. Aunque no siempre podrás editar tus posts, editar es una buena idea — te permite mejorar tus posts, corregir pequeños errores o añadir algo que se te había pasado. ¡Editar hace mejores tus publicaciones!
+    wiki_editor:
+      name: Editor de Wiki
+      description: Primera edición de un tema wiki
+      long_description: |
+        Esta medalla se concede la primera vez que editas un tema de tipo wiki.
     basic_user:
       name: Básico
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dispone</a> de todas las funciones esenciales de la comunidad"

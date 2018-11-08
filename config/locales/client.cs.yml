@@ -165,6 +165,7 @@ cs:
       user_left: "%{who} se odstranil z této zpráy %{when}"
       removed_user: "%{who} smazán %{when}"
       removed_group: "%{who} smazána %{when}"
+      autobumped: "automaticky bumped %{when}"
       autoclosed:
         enabled: 'uzavřeno %{when}'
         disabled: 'otevřeno %{when}'
@@ -201,6 +202,7 @@ cs:
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "Čína (Peking)"
+        cn_northwest_1: "Čína (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irsko)"
         eu_west_2: "EU (Londýn)"
@@ -409,6 +411,7 @@ cs:
         make_user_group_owner: "Udělej vlastníkem"
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
+      member_added: "Přidáno"
       add_members:
         title: "Přidat členy"
         description: "Spravovat členství v této skupině"
@@ -422,6 +425,7 @@ cs:
         profile:
           title: Profil
         interaction:
+          title: Interakce
           posting: Přispívání
           notification: Notifikace
         membership:
@@ -595,6 +599,7 @@ cs:
       topics_entered: "témat zadáno"
       post_count: "počet příspěvků"
       confirm_delete_other_accounts: "Určitě chcete smazat tyto účty?"
+      powered_by: "používá <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "zkopírováno"
     user_fields:
       none: "(zvolit možnost)"
@@ -680,6 +685,7 @@ cs:
       watched_first_post_tags: "Hlídané první příspěvky"
       watched_first_post_tags_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
       muted_categories: "Ztišené"
+      muted_categories_instructions: "Nebudete upozorněni na nic o nových tématech v těchto kategoriích ty se neobjeví v přehledu kategorií či v aktuálních,"
       no_category_access: "Jako moderátor máte omezený přístup ke kategorii bez možnosti ukládat změny."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
@@ -753,8 +759,10 @@ cs:
       second_factor:
         title: "Dvoufázové přihlašování"
         disable: "Vypnout dvoufaktorovou autentizaci"
+        enable: "Povolte dvoufaktorovou autentizaci pro zlepšení zabezpečení vašeho účtu"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
+        rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
         enable_description: |
           Vyfoťte tento QR kód v podporované aplikaci (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) a zadejte svůj autentikační kód.
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
@@ -780,6 +788,7 @@ cs:
         title: "Změňte si svůj profilový obrázek"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
         gravatar_title: "Změňte si avatar na webových stránkách Gravatar"
+        gravatar_failed: "Nemohli sme najít Gravatar asociován s touto email adresou."
         refresh_gravatar_title: "Obnovit Gravatar"
         letter_based: "Systémem přidělený profilový obrázek"
         uploaded_avatar: "Vlastní obrázek"
