@@ -1027,7 +1027,7 @@ ro:
       complete_email_found: "Am găsit un cont care se potrivește cu adresa <b>%{email}</b>, vei primi un email cu instrucțiunile de resetare a parolei în cel mai scurt timp."
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa  <b>%{email}</b>"
-      help: "Email-ul nu a sosit? Asigură-te că verifici mai întâi în folderul Spam. <p>Nu ești sigur ce adresă de email folosești? Scrie adresa de email și îți vom spune dacă aceasta există.</p><p>Dacă nu mai ai acces în contul tău la adresa de email, te rog contactează <a href='/about'>echipa de ajutor.</a></p>"
+      help: "Email-ul nu a sosit? Asigură-te că verifici mai întâi în folderul Spam. <p>Nu ești sigur ce adresă de email folosești? Scrie adresa de email și îți vom spune dacă aceasta există.</p><p>Dacă nu mai ai acces în contul tău la adresa de email, te rog contactează <a href='%{basePath}/about'>echipa de ajutor.</a></p>"
       button_ok: "Ok"
       button_help: "Ajutor"
     login:
@@ -1463,7 +1463,7 @@ ro:
       toggle_information: "comută între detaliile subiectului"
       read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din {{catLink}} sau {{latestLink}}."
       read_more: "Vrei să citești mai multe subiecte? {{catLink}} sau {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='/unread'>un subiect necitit</a> } other { Sunt <a href='/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='/new'>un subiect  nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='{basePath}/unread'>un subiect necitit</a> } other { Sunt <a href='{basePath}/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='{basePath}/new'>un subiect  nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='{basePath}/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
       suggest_create_topic: "Ce ar fi să creezi un subiect?"
@@ -1546,7 +1546,7 @@ ro:
           "3_1": 'Vei primi notificări deoarece ai creat acest subiect.'
           "3": 'Vei primi notificări deoarece urmărești activ acest subiect.'
           "2_2": 'Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect.'
-          "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="/u/{{username}}/preferences">citești acest subiect</a>'
+          "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="{{basePath}}/u/{{username}}/preferences">citești acest subiect</a>'
           "1_2": 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           "1": 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           "0_7": 'Ignori toate notificările din această categorie.'

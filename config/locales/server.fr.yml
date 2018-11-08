@@ -155,7 +155,7 @@ fr:
       <p>Si vous vous rappelez de votre mot de passe vous pouvez vous <a href="%{base_url}/login">Connecter</a>.</p>
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">Réinitialiser mot de passe</a>.</p>
-    user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='/u/%{username}/summary'>a déjà un compte</a> !"
+    user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
@@ -307,7 +307,7 @@ fr:
 
       - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie.
 
-      Pour plus d'info, [jettez un œil sur la charte de la communauté](/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour plus d'info, [jettez un œil sur la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     'new-reply': |
       Bienvenue sur %{site_name} &mdash; **Merci de contribuer !**
 
@@ -317,7 +317,7 @@ fr:
 
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les gens.
 
-      Pour plus d'informations, [consulter la charte de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
+      Pour plus d'informations, [consulter la charte de la communauté](%{base_path}/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -347,7 +347,7 @@ fr:
 
       Avez-vous aussi pensé répondre à d'autres personnes dans cette discussion ? Une grande discussion implique plusieurs avis et points de vue.
 
-      Si vous aimeriez prolonger la discussion avec cet utilisateur en particulier, [envoyez-leur un message direct](/u/%{reply_username}).
+      Si vous aimeriez prolonger la discussion avec cet utilisateur en particulier, [envoyez-leur un message direct](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Vous avez atteint le nombre de réponses maximum dans ce sujet
 
@@ -428,7 +428,7 @@ fr:
             word:
               too_many: "Trop de mots pour cette action"
   user_profile:
-    no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
+    no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ À propos de moi de son profil</div>"
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
@@ -437,7 +437,7 @@ fr:
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
   assets_topic_title: "Ressources pour le style du site"
-  assets_topic_body: "Ce sujet, visible uniquement par les responsables, permet de stocker les images et fichiers utilisés pour le design du site. Ne le supprimez pas !\n\n\nVoici comment :\n\n1. Répondez à ce sujet.\n2. Envoyez toutes les images que vous voulez utiliser comme logos, favicons, etc. sur ce sujet. (Utiliser l'icône dans la barre d'édition, glisser-déposer ou coller les images.)\n3. Envoyez votre réponse.\n4. Faites un clic droit afin d'obtenir le chemin vers vos images ou modifier votre message pour récupérer le chemin. Copiez le chemin.\n5. Collez les chemins des images dans les [paramètres requis](/admin/site_settings/category/required).\n\n\nSi vous avez besoin d'activer d'autres formats de fichier, modifiez l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
+  assets_topic_body: "Ce sujet, visible uniquement par les responsables, permet de stocker les images et fichiers utilisés pour le design du site. Ne le supprimez pas !\n\n\nVoici comment :\n\n1. Répondez à ce sujet.\n2. Envoyez toutes les images que vous voulez utiliser comme logos, favicons, etc. sur ce sujet. (Utiliser l'icône dans la barre d'édition, glisser-déposer ou coller les images.)\n3. Envoyez votre réponse.\n4. Faites un clic droit afin d'obtenir le chemin vers vos images ou modifier votre message pour récupérer le chemin. Copiez le chemin.\n5. Collez les chemins des images dans les [paramètres requis](%{base_path}/admin/site_settings/category/required).\n\n\nSi vous avez besoin d'activer d'autres formats de fichier, modifiez l'option `authorized_extensions` dans les [paramètres de fichier](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Bienvenue sur Discourse"
     body: |2
@@ -451,7 +451,7 @@ fr:
         - Pourquoi devraient-ils venir ici ?
         - Où peuvent-ils en savoir plus (liens, ressources, etc.) ?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et le bas) afin que des réponses ne s'accumulent pas après une annonce.
   lounge_welcome:
@@ -975,13 +975,13 @@ fr:
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
     email_polling_errored_recently:
-      one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
-      other: "La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
+      one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour plus de détails."
+      other: "La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour plus de détails."
     missing_mailgun_api_key: "Le serveur est configuré pour envoyer des courriels via Mailgun mais vous n'avez pas fourni la clef API nécessaire pour vérifier les messages webhook."
-    bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
-    poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
-    poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
-    force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
+    bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
+    poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
+    poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a>."
+    force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
@@ -1317,8 +1317,8 @@ fr:
     flags_default_topics: "Afficher les sujets signalés par défaut dans la section administrateur"
     min_flags_staff_visibility: "Le nombre minimum de signalements sur un message avant qu'un responsable puisse le voir sous admin."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
-    reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilisez HTML plutôt que du texte pour les courriels entrants."
     disable_emails: "Empêcher Discourse d'envoyer tout type de courriels. Sélectionnez 'oui' pour désactiver les courriels pour tous les utilisateurs. Sélectionnez 'non-responsables' pour désactiver les courriels uniquement pour les utilisateurs qui ne sont pas des responsables."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
@@ -1510,8 +1510,8 @@ fr:
       invalid_string_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
-      invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente du courriel de notification."
-      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes du courriel de notification."
+      invalid_reply_by_email_address: "La valeur doit contenir « %%{reply_key} » et être différente du courriel de notification."
+      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %%{reply_key} » et être différentes du courriel de notification."
       pop3_polling_host_is_empty: "Vous devez définir « pop3 polling host » avant d'activer le relevé via POP3."
       pop3_polling_username_is_empty: "Vous devez définir « pop3 polling username » avant d'activer le relevé via POP3."
       pop3_polling_password_is_empty: "Vous devez définir « pop3 polling password » avant d'activer le relevé via POP3."
@@ -1691,8 +1691,8 @@ fr:
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
   flags_reminder:
     flags_were_submitted:
-      one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](/admin/flags)."
-      other: "Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](/admin/flags)."
+      one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](%{base_path}/admin/flags)."
+      other: "Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](%{base_path}/admin/flags)."
     subject_template:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
@@ -1815,7 +1815,7 @@ fr:
     subject_template: "[%{email_prefix}] mise à jour disponible"
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond au sujet en discussion qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."
+    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](%{base_path}/guidelines)."
     spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité, ou du contenu trop promotionnel au lieu d'être utile et pertinent au sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
@@ -2129,7 +2129,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Le sujet à lequel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, ](/about)contactez un responsable](%{base_url}/about).
+        Le sujet à lequel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, ](%{base_path}/about)contactez un responsable](%{base_url}/about).
     email_reject_topic_closed:
       title: "Courriel rejeté - Sujet fermé"
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet fermé"
@@ -2668,8 +2668,8 @@ fr:
   avatar:
     missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
   flag_reason:
-    sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP (%{ip_address}) a répondu. Voir le paramètre <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Ce nouvel utilisateur a tenté de créer plusieurs messages avec des liens vers le même domaine (%{domain}). Voir le paramètre <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP (%{ip_address}) a répondu. Voir le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Ce nouvel utilisateur a tenté de créer plusieurs messages avec des liens vers le même domaine (%{domain}). Voir le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user dépassé"
     exceeded_bounces_limit: "bounce_score_threshold dépassé"
@@ -2811,13 +2811,13 @@ fr:
 
       ## [Powered by You](#power)
 
-      Ce site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about).
+      Ce site est géré par votre [équipe de responsables](%{base_path}/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](%{base_path}/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](%{base_path}/about).
 
       <a name="tos"></a>
 
       ## [Lisez les conditions générales d'utilisation](#tos)
 
-      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
+      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](%{base_path}/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](%{base_path}/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
   privacy_topic:
@@ -3217,16 +3217,16 @@ fr:
           contact_email:
             label: "Courriel"
             placeholder: "nom@exemple.com"
-            description: "Adresse courriel de la personne ou groupe responsable de cette communauté. Utilisée pour des notifications critiques comme des signalements non réglés, des mises à jour de sécurité et sur la page <a href='/about' target='_blank'>À propos</a> pour des contacts urgents. "
+            description: "Adresse courriel de la personne ou groupe responsable de cette communauté. Utilisée pour des notifications critiques comme des signalements non réglés, des mises à jour de sécurité et sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> pour des contacts urgents. "
           contact_url:
             label: "Page Web"
-            description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
+            description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
             description: "Tous les messages directs de Discourse seront envoyés de cet utilisateur, tels que les signalements et les notifications de sauvegarde."
       corporate:
         title: "Organisation"
-        description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."
+        description: "Ces noms seront renseignés dans les pages <a href='%{base_path}/privacy' target='blank'>Politique de confidentialité</a> et <a href='%{base_path}/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."
         fields:
           company_short_name:
             label: "Nom de société (court)"

@@ -136,7 +136,7 @@ it:
         second_response: |-
           Oh, scusa. Non sto ancora capendo. :anguished:
 
-          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](/about).
+          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](%{base_path}/about).
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:

@@ -136,7 +136,7 @@ de:
         second_response: |-
           Es tut mir leid, aber ich verstehe es noch immer nicht. :anguished:
 
-          Ich bin nur ein Bot. Schau dir [unsere Kontaktinformationen](/about) an, falls du dich mit einer echten Person unterhalten möchtest.
+          Ich bin nur ein Bot. Schau dir [unsere Kontaktinformationen](%{base_path}/about) an, falls du dich mit einer echten Person unterhalten möchtest.
 
           In der Zwischenzeit lass ich dich erst mal in Ruhe.
     new_user_narrative:

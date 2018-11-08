@@ -115,7 +115,7 @@ ko:
       <<: *errors
   invite:
     not_found: "초대 토큰이 유효하지 않습니다. 사이트 관리자에게 문의하세요."
-    user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='/u/%{username}/summary'>이미 회원이거든요!</a>"
+    user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     error: "해당 파일을 업로드하는 중에 에러가 발생했습니다. 다음에 다시 시도해보세요."
@@ -242,7 +242,7 @@ ko:
 
       - 사람들이 *검색*할 수 있도록 토픽에 흔히 사용하는 단어를 집어넣으세요. 관련 토픽과 같이 엮으려면 해당 카테고리를 선택하시고요.
 
-      이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)을 참조하세요.
+      이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)을 참조하세요.
     'new-reply': |
       %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
 
@@ -252,7 +252,7 @@ ko:
 
       - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
 
-      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)를 참조하여 주세요.
+      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)를 참조하여 주세요.
     avatar: |
       ### 계정에 사진을 걸어두는 건 어떠세요?
 
@@ -282,7 +282,7 @@ ko:
 
       이 토론에서 *다른 사람*에게도 관심을 주시는 건 어떨까요? 무릇 훌륭한 토론이란 여러 목소리와 관점이 어우러지는 법이죠.
 
-      이 주제에 대하여, 개인적으로 더 심도깊은 대화를 이어가고 싶다면 [개인 메시지를 보내보세요](/u/%{reply_username}).
+      이 주제에 대하여, 개인적으로 더 심도깊은 대화를 이어가고 싶다면 [개인 메시지를 보내보세요](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### 이 토픽 답글 제한량을 모두 채우셨습니다
 
@@ -346,7 +346,7 @@ ko:
             word:
               too_many: "해당 행동을 위한 단어가 너무 많습니다."
   user_profile:
-    no_info_me: "<div class='missing-profile'>프로필의 자기소개란이 비어있습니다. <a href='/u/%{username_lower}/preferences/about-me'>뭔가 써보지 않으실래요?</a></div>"
+    no_info_me: "<div class='missing-profile'>프로필의 자기소개란이 비어있습니다. <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>뭔가 써보지 않으실래요?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
   vip_category_name: "라운지"
   vip_category_description: "회원등 3 혹은 그 이상의 회원만 입장가능한 카테고리"
@@ -369,7 +369,7 @@ ko:
         - 여기에 왜 와야하나요?
         - 더 알고싶으면 뭘 봐야 하나요 (링크, 자료, 기타 등등)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         이 토픽에 답글이 쌓이는 게 싫다면, 관리기능 :wrench:(우측 상단에 있어요)을 통해 이 토픽을 닫을 수 있습니다.
   lounge_welcome:
@@ -759,10 +759,10 @@ ko:
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
     email_polling_errored_recently:
-      other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='/logs' target='_blank'>로그</a>에서 확인하세요."
-    bad_favicon_url: "파비콘 불러오기가 실패했습니다. <a href='/admin/site_settings'>사이트 설정</a>에서 favicon_url 설정을 확인해보세요."
-    poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
-    poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
+      other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='%{base_path}/logs' target='_blank'>로그</a>에서 확인하세요."
+    bad_favicon_url: "파비콘 불러오기가 실패했습니다. <a href='%{base_path}/admin/site_settings'>사이트 설정</a>에서 favicon_url 설정을 확인해보세요."
+    poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
+    poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -1031,8 +1031,8 @@ ko:
     auto_respond_to_flag_actions: "신고 기각 시 자동 답변 활성화"
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
     reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
-    reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
-    alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %%{reply_key}@reply.myforum.com"
+    alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
     short_email_length: "짦은 이메일 바이트 길이"
     display_name_on_email_from: "이메일 보낸사람 필드에 전체 이름을 표시"
@@ -1151,7 +1151,7 @@ ko:
       invalid_string_min_max: "글자 수가 %{min}자 이상 %{max}자 이하이어야 합니다."
       invalid_string_min: "글자수가 %{min}자 이상이어야 합니다."
       invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
-      invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
+      invalid_reply_by_email_address: "값이 반드시 '%%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_regex: "허용되지 않거나 올바르지 않은 정규표현식입니다."
   search:
     within_post: "#%{post_number} by %{username}"
@@ -1247,7 +1247,7 @@ ko:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
   flag_reasons:
     off_topic: "내가 올린 글타래가 **주제 벗어난 이야기**으로 신고 되었습니다. 사람들이 이 글타래의 제목이랑 글 내용이 안 맞는다고 느끼나 봅니다. "
-    inappropriate: "내가 올린 글타래가 **부적절**로 신고 되었습니다. 사람들이 이 글타래가 [가이드라인](/guidelines)에서 벗어나 공격적, 모욕적, 폭력적이라고 느낍니다."
+    inappropriate: "내가 올린 글타래가 **부적절**로 신고 되었습니다. 사람들이 이 글타래가 [가이드라인](%{base_path}/guidelines)에서 벗어나 공격적, 모욕적, 폭력적이라고 느낍니다."
     spam: "내가 올린 글타래가 **스팸**으로 신고 되었습니다. 커뮤니티가 이 글타래가 생각보다 광고성, 선동적이라고 느끼나 봅니다."
     notify_moderators: "내가 올린 글타래가 **관리자의 관심 필요**로 신고 되었습니다. 커뮤니티가 관리자의 세심한 중재가 필요하다고 느낍니다."
   flags_dispositions:
@@ -1294,7 +1294,7 @@ ko:
       text_body_template: |
         가입 승인 대기중(또는 거절된)인 새로운 사용자가 있습니다.
 
-        [운영자 색션에서 새로운 사용자들을 리뷰하세요](/admin/users/list/pending).
+        [운영자 색션에서 새로운 사용자들을 리뷰하세요](%{base_path}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "해제된 원격 이미지 다운로드하기"
       subject_template: "외부에서 이미지 다운로드 못함"
@@ -1653,15 +1653,15 @@ ko:
           contact_email:
             label: "메일"
             placeholder: "name@example.com"
-            description: "이 커뮤니티를 대표하는 개인 또는 그룹 이메일 주소를 입력하세요. 처리되지 않은 신고, 보안 업데이트와 같은 중요한 알림을 받게되며 긴급한 커뮤니티 연락을 받도록<a href='/about' target='_blank'>about 페이지</a> 에도 표시됩니다."
+            description: "이 커뮤니티를 대표하는 개인 또는 그룹 이메일 주소를 입력하세요. 처리되지 않은 신고, 보안 업데이트와 같은 중요한 알림을 받게되며 긴급한 커뮤니티 연락을 받도록<a href='%{base_path}/about' target='_blank'>about 페이지</a> 에도 표시됩니다."
           contact_url:
             label: "웹 페이지"
-            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
+            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
           site_contact:
             label: "자동화된 메시지"
       corporate:
         title: "소속"
-        description: "이 이름은 운영자 카테고리에서 편집할 수 있는<a href='/privacy' target='blank'>개인정보 정책</a> 과 <a href='/tos' target='blank'>서비스 이용 약관</a> 토픽에 들어가게 됩니다. 회사가 없다면, 이 단계를 건너뛰어도 무방합니다."
+        description: "이 이름은 운영자 카테고리에서 편집할 수 있는<a href='%{base_path}/privacy' target='blank'>개인정보 정책</a> 과 <a href='%{base_path}/tos' target='blank'>서비스 이용 약관</a> 토픽에 들어가게 됩니다. 회사가 없다면, 이 단계를 건너뛰어도 무방합니다."
         fields:
           company_short_name:
             label: "회사 이름 (짧게)"

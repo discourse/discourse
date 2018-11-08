@@ -1189,7 +1189,7 @@ bg:
       toggle_information: "Показване / скриване на подробна информация за дадена тема "
       read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в {{catLink}} или {{latestLink}}."
       read_more: "Искате да прочетете повече ? {{catLink}} или {{latestLink}}."
-      read_more_MF: "Ето { UNREAD, plural, =0 {} one { <a href='/unread'>1 непрочетено</a> } other { <a href='/unread'># непрочетено </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># теми </a>} } напомняне, или {CATEGORY, select, true {потърски други теми в {catLink}} погрешен {{latestLink}} other {}}"
+      read_more_MF: "Ето { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетено </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } напомняне, или {CATEGORY, select, true {потърски други теми в {catLink}} погрешен {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
       suggest_create_topic: "Защо не създадете тема ?"

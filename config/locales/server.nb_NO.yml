@@ -154,7 +154,7 @@ nb_NO:
       <p>Hvis du husker passordet ditt kan du <a href="%{base_url}/login">Logge Inn</a>.</p>
 
       <p>Hvis ikke kan du <a href="%{base_url}/password-reset">Nullstille Passordet</a>.</p>
-    user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='/u/%{username}/summary'>har allerede en konto!</a>"
+    user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='%{base_path}/u/%{username}/summary'>har allerede en konto!</a>"
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
     error: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
@@ -305,7 +305,7 @@ nb_NO:
 
       - Bruk relevante begrep i tråden slik at andre kan *finne* det. Velg en kategori for å gruppere tråden ditt med andre lignende tråder.
 
-      [Se retningslinjene for dette nettstedet](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
+      [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
     'new-reply': |
       Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
 
@@ -315,7 +315,7 @@ nb_NO:
 
       - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
 
-      For mer informasjon [se retningslinjene våre](/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
+      For mer informasjon [se retningslinjene våre](%{base_path}/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     avatar: |
       ### Hva med et bilde på kontoen din?
 
@@ -345,7 +345,7 @@ nb_NO:
 
       Har du vurdert å skrive svar til *andre* folk i diskusjonen også? En bra diskusjon involverer mange stemmer og perspektiv.
 
-      Hvis du vil fortsette en lang samtale med denne ene personen kan det være bedre å [sende dem en personlig melding](/u/%{reply_username}).
+      Hvis du vil fortsette en lang samtale med denne ene personen kan det være bedre å [sende dem en personlig melding](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du har nådd grensen for svar i dette emnet
 
@@ -426,7 +426,7 @@ nb_NO:
             word:
               too_many: "For mange ord for den handlingen"
   user_profile:
-    no_info_me: "<div class='missing-profile'>feltet \"Om Meg\" i profilen din er foreløpig blankt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
+    no_info_me: "<div class='missing-profile'>feltet \"Om Meg\" i profilen din er foreløpig blankt, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet i profilen sin ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
@@ -435,7 +435,7 @@ nb_NO:
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Tråder er kun synlige for administratorer og moderatorer."
   assets_topic_title: "Ressurser til nettstedets design"
-  assets_topic_body: "Dette emnet, kun synlig for staben, brukes for å lagre bilder og filer som benyttes av nettstedets design. Ikke slett emnet!\n\n\nHer er hvordan du bruker det:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du ønsker å bruke som logoer, ikoner og så videre her. (Bruk knappen merket \"last opp\" i redigeringsverktøyet eller trekk og slipp bilder.)\n3. Publiser svaret ditt.\n4. Høyreklikk på bildene for å kopiere stien til bildet, eller klikk på redigeringsknappen for å vise stien der. Kopier lenken til utklippstavlen.\n5. Lim lenkene til bildene inn der du ønsker å bruke dem i [grunnleggende oppsett](admin/site_settings/category/required).\n\n\nHvis du trenger å laste opp en annen type fil, kan du legge den til i listen `godkjente_filendelser` i instillingene for [Filer](/admin/site_settings/category/files)."
+  assets_topic_body: "Dette emnet, kun synlig for staben, brukes for å lagre bilder og filer som benyttes av nettstedets design. Ikke slett emnet!\n\n\nHer er hvordan du bruker det:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du ønsker å bruke som logoer, ikoner og så videre her. (Bruk knappen merket \"last opp\" i redigeringsverktøyet eller trekk og slipp bilder.)\n3. Publiser svaret ditt.\n4. Høyreklikk på bildene for å kopiere stien til bildet, eller klikk på redigeringsknappen for å vise stien der. Kopier lenken til utklippstavlen.\n5. Lim lenkene til bildene inn der du ønsker å bruke dem i [grunnleggende oppsett](admin/site_settings/category/required).\n\n\nHvis du trenger å laste opp en annen type fil, kan du legge den til i listen `godkjente_filendelser` i instillingene for [Filer](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
     body: |2
@@ -449,7 +449,7 @@ nb_NO:
       - Hvorfor skal de besøke stedet?
       - Hvor kan de lese mer (lenker, ressurser, etc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   lounge_welcome:
@@ -973,13 +973,13 @@ nb_NO:
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
     email_polling_errored_recently:
-      one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='/logs' target='_blank'>loggene</a> for mer detaljer."
-      other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='/logs' target='_blank'>loggene</a> for mer detaljer."
+      one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
+      other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
     missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
-    bad_favicon_url: "Favicon filen blir ikke lastet inn. Sjekk instillingen for favicon_url i <a href='/admin/site_settings'>Instillingene for nettstedet</a>."
-    poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
-    poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='/admin/site_settings/category/email'>POP3 instillingene</a>. "
-    force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
+    bad_favicon_url: "Favicon filen blir ikke lastet inn. Sjekk instillingen for favicon_url i <a href='%{base_path}/admin/site_settings'>Instillingene for nettstedet</a>."
+    poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
+    poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>POP3 instillingene</a>. "
+    force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
     out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"

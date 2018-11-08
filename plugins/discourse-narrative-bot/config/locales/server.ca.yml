@@ -135,7 +135,7 @@ ca:
         second_response: |-
           Ai, ho sento. Encara no ho he captat. :anguished:
 
-          Només sóc un robot, però si vols contactar amb una persona, vés a [la nostra pàgina de contacte](/about).
+          Només sóc un robot, però si vols contactar amb una persona, vés a [la nostra pàgina de contacte](%{base_path}/about).
 
           Mentrestant, no et destorbaré.
     new_user_narrative:

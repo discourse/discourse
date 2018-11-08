@@ -191,7 +191,7 @@ vi:
 
       - Sử dụng những từ khóa phổ biến để người khác có thể tìm thấy chủ đề của bạn dễ hơn. Để nhóm chủ đề của bạn với các chủ đề liên quan khác, hãy chọn chuyên mục cho chủ đề của mình.
 
-      Xem thêm, [hướng dẫn cộng đồng của chúng tôi](/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện vào lần đầu %{education_posts_text}.
+      Xem thêm, [hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện vào lần đầu %{education_posts_text}.
     'new-reply': |
       Chào mừng bạn đến với %{site_name} &mdash; **cám ơn vì đã đóng góp!**
 
@@ -201,7 +201,7 @@ vi:
 
       - Lời phê bình mang tính đóng góp cũng được chào đón, nhưng bạn nên phê bình *ý tưởng* chứ không phải con người.
 
-      [Đọc hướng dẫn cộng đồng](/guidelines) để có thêm thông tin. Bảng này chỉ xuất hiện cho bài viết đầu tiên của bạn %{education_posts_text}.
+      [Đọc hướng dẫn cộng đồng](%{base_path}/guidelines) để có thêm thông tin. Bảng này chỉ xuất hiện cho bài viết đầu tiên của bạn %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -543,10 +543,10 @@ vi:
     memory_warning: 'Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB .'
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
-      other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
-    bad_favicon_url: "Favicon không tải được, bạn hãy kiểm tra lại favicon_url trong <a href='/admin/site_settings'>Thiết Lập Website</a>."
-    poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
-    poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a>."
+      other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
+    bad_favicon_url: "Favicon không tải được, bạn hãy kiểm tra lại favicon_url trong <a href='%{base_path}/admin/site_settings'>Thiết Lập Website</a>."
+    poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
+    poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
   site_settings:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
@@ -768,7 +768,7 @@ vi:
     auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
     min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
     reply_by_email_enabled: "Cho phép trả lời chủ đề qua email."
-    reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %{reply_key}@reply.example.com hoặc replies+%{reply_key}@example.com"
+    reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %%{reply_key}@reply.example.com hoặc replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Tất cả các ảnh từ email phải có kích cỡ nhỏ hơn 2800 Bytes"
     short_email_length: "Độ dài email ngắn theo Bytes"
     display_name_on_email_from: "Hiển thị tên đầy đủ trên email từ trường"
@@ -866,7 +866,7 @@ vi:
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
       invalid_string_min: "Phải ít nhất %{min} ký tự."
       invalid_string_max: "Không nhiều hơn %{max} ký tự."
-      invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
+      invalid_reply_by_email_address: "Giá trị phải chứa '%%{reply_key}' và phải khác với email thông báo."
       pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
       pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
@@ -968,7 +968,7 @@ vi:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
-    inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](/guidelines)."
+    inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
     spam: "Bài viết của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mại thay vì một nội dung hữu ích như mong đợi."
     notify_moderators: "Bài viết của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
   flags_dispositions:

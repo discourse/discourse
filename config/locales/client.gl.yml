@@ -955,7 +955,7 @@ gl:
       toggle_information: "cambiar detalles do tema"
       read_more_in_category: "Queres ler máis? explora outros temas en {{catLink}} ou {{latestLink}}."
       read_more: "Queres ler máis? {{catLink}} ou {{latestLink}}."
-      read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='/unread'>1 sen ler</a> } other { <a href='/unread'># sen ler</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e} false { } other{}} <a href='/new'>1 novo</a> topic} other { {BOTH, select, true{e} false { } other{}} <a href='/new'># novos</a> topics} } restantes, ou {CATEGORY, select, true {explora outros temas en {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 sen ler</a> } other { <a href='{basePath}/unread'># sen ler</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e} false { } other{}} <a href='{basePath}/new'>1 novo</a> topic} other { {BOTH, select, true{e} false { } other{}} <a href='{basePath}/new'># novos</a> topics} } restantes, ou {CATEGORY, select, true {explora outros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Explorar todas as categorías
       view_latest_topics: ver últimos temas
       suggest_create_topic: "Porque non crear un tema?"

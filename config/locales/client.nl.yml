@@ -956,7 +956,7 @@ nl:
       complete_email_found: "We hebben een account gevonden met het e-mailadres <b>%{email}<b/>. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_not_found: "Geen account met de gebruikersnaam <b>%{username}</b> gevonden"
       complete_email_not_found: "Geen account met het e-mailadres <b>%{email}</b> gevonden"
-      help: "Komt de e-mail niet aan? Controleer eerst je spam map.<p>Weet je niet zeker welk e-mailadres je gebruikt hebt? Voer een e-mailadres in en we laten je weten of het hier bestaat.</p><p>Als je niet langer toegang hebt tot het e-mailadres van je account, neem alsjeblieft contact op met <a href='/about'>onze hulpvolle staf.</a></p>"
+      help: "Komt de e-mail niet aan? Controleer eerst je spam map.<p>Weet je niet zeker welk e-mailadres je gebruikt hebt? Voer een e-mailadres in en we laten je weten of het hier bestaat.</p><p>Als je niet langer toegang hebt tot het e-mailadres van je account, neem alsjeblieft contact op met <a href='%{basePath}/about'>onze hulpvolle staf.</a></p>"
       button_ok: "OK"
       button_help: "Help"
     login:
@@ -1354,7 +1354,7 @@ nl:
       toggle_information: "topicdetails in-/uitschakelen"
       read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in {{catLink}} bladeren, of de {{latestLink}}."
       read_more: "Wilt u meer lezen? {{catLink}} of {{latestLink}}."
-      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
       view_latest_topics: nieuwste topics bekijken
       suggest_create_topic: "Waarom maakt u geen topic aan?"
@@ -1438,7 +1438,7 @@ nl:
           "2_8": 'U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt.'
           "2_4": 'U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst.'
           "2_2": 'U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt.'
-          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
+          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="{{basePath}}/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           "1_2": 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           "1": 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           "0_7": 'U negeert alle meldingen in deze categorie.'

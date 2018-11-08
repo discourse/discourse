@@ -1071,7 +1071,7 @@ fi:
       complete_email_found: "Sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
-      help: "Eikö sähköposti saavu? Ensiksi tarkasta roskapostikansiosi.<p>Etkö ole varma sähköpostiosoitteesta? Syötä sähköpostiosoite niin saat tietää onko sillä luotu tunnusta.</p><p>Jos et enää hallitse sähköpostiosoitettasi, ota yhteyttä <a href='/about'>avuliaaseen henkilökuntaamme.</a></p>"
+      help: "Eikö sähköposti saavu? Ensiksi tarkasta roskapostikansiosi.<p>Etkö ole varma sähköpostiosoitteesta? Syötä sähköpostiosoite niin saat tietää onko sillä luotu tunnusta.</p><p>Jos et enää hallitse sähköpostiosoitettasi, ota yhteyttä <a href='%{basePath}/about'>avuliaaseen henkilökuntaamme.</a></p>"
       button_ok: "OK"
       button_help: "Apua"
     email_login:
@@ -1590,7 +1590,7 @@ fi:
       toggle_information: "näytä/kätke ketjun tiedot"
       read_more_in_category: "Haluatko lukea lisää? Selaile muita alueen {{catLink}} ketjuja tai {{latestLink}}."
       read_more: "Haluatko lukea lisää? Selaa aluetta {{catLink}} tai katsele {{latestLink}}."
-      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 ketju</a>, jossa on viestejä } other { <a href='/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
+      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 ketju</a>, jossa on viestejä } other { <a href='{basePath}/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
       browse_all_categories: Selaa keskustelualueita
       view_latest_topics: tuoreimpia ketjuja
       suggest_create_topic: "Jospa aloittaisit uuden ketjun?"
@@ -1680,7 +1680,7 @@ fi:
           "2_8": 'Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan.'
           "2_4": 'Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun.'
           "2_2": 'Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan.'
-          "2": 'Näet uusien vastausten määrän, koska <a href="/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
+          "2": 'Näet uusien vastausten määrän, koska <a href="{{basePath}}/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
           "1_2": 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           "1": 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           "0_7": 'Et saa mitään ilmoituksia tältä alueelta.'
@@ -2628,8 +2628,8 @@ fi:
           total: "Kaikki yhteensä"
           no_data: "Ei näytettäviä tietoja"
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Hakulokit</a>'
-            disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
+            disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"

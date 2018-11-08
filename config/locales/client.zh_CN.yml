@@ -1027,7 +1027,7 @@ zh_CN:
       complete_email_found: "你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
-      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='/about'>我们的工作人员。</a></p>"
+      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
       button_ok: "OK"
       button_help: "帮助"
     email_login:
@@ -1530,7 +1530,7 @@ zh_CN:
       toggle_information: "切换主题详情"
       read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题或{{latestLink}}。"
       read_more: "想阅读更多？{{catLink}}或{{latestLink}}。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
+      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
       suggest_create_topic: 创建一个新的主题吧！
@@ -1619,7 +1619,7 @@ zh_CN:
           "2_8": '因为你追踪了该分类，所以你会看到新回复的数量。'
           "2_4": '因为你回复过该主题，所以你会看到新回复的数量。'
           "2_2": '因为你追踪了该主题，所以你会看到新回复的数量。'
-          "2": '因为你<a href="/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
+          "2": '因为你<a href="{{basePath}}/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
           "1_2": '如果有人@你或回复你，将通知你。'
           "1": '如果有人@你或回复你，将通知你。'
           "0_7": '你将忽略关于该分类的所有通知。'
@@ -2514,8 +2514,8 @@ zh_CN:
           total: "所有时间总计"
           no_data: "没有数据显示。"
           trending_search:
-            more: '<a href="/admin/logs/search_logs">搜索日志</a>'
-            disabled: '趋势搜索报告已停用。启用<a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
+            more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
+            disabled: '趋势搜索报告已停用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
