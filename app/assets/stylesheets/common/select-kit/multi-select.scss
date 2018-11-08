@@ -125,20 +125,25 @@
       }
 
       .selected-category {
-        .body {
-          display: flex;
-          align-items: center;
-        }
         .badge-wrapper {
           &.bullet {
             margin-right: 2.5px;
           }
 
+          margin: auto 2.5px;
           padding: 2px 4px;
           line-height: $line-height-medium;
           display: flex;
           flex: 1;
           align-items: center;
+
+          &:after {
+            content: "\f00d";
+            color: $primary-low-mid;
+            font-family: "FontAwesome";
+            font-size: $font-down-2;
+            margin-left: 5px;
+          }
         }
       }
 
@@ -154,12 +159,19 @@
           padding: 4px;
         }
 
-        .d-icon {
-          color: $primary-low-mid;
-          vertical-align: middle;
-        }
-        &:hover .d-icon {
-          color: $danger;
+        .name {
+          &:after {
+            content: "\f00d";
+            color: $primary-low-mid;
+            font-family: "FontAwesome";
+            font-size: $font-down-2;
+          }
+
+          &:hover {
+            &:after {
+              color: $danger;
+            }
+          }
         }
 
         &.is-highlighted {

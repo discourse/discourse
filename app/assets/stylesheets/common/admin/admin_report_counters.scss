@@ -47,7 +47,7 @@
           text-align: center;
         }
 
-        .d-icon {
+        i {
           margin: 0;
         }
       }
@@ -65,13 +65,13 @@
 
       &.high-trending-up,
       &.trending-up {
-        .d-icon {
+        i {
           color: $success;
         }
       }
       &.high-trending-down,
       &.trending-down {
-        .d-icon {
+        i {
           color: $danger;
         }
       }

@@ -196,7 +196,7 @@ export default createWidget("topic-admin-menu", {
         className: "topic-admin-pin",
         buttonClass: "btn-default",
         action: "showFeatureTopic",
-        icon: "thumbtack",
+        icon: "thumb-tack",
         label: featured ? "actions.unpin" : "actions.pin"
       });
     }

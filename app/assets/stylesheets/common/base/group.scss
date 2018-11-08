@@ -57,7 +57,7 @@
     background-size: $size;
     height: $size;
 
-    .d-icon {
+    i {
       font-size: $size !important;
     }
   }
@@ -86,7 +86,7 @@ table.group-manage-logs {
   .group-manage-logs-expand-details {
     cursor: pointer;
 
-    .d-icon {
+    i {
       color: blend-primary-secondary(50%);
     }
   }
@@ -117,7 +117,7 @@ table.group-members {
   }
 
   th.sortable {
-    .d-icon {
+    i {
       margin-left: 5px;
     }
 

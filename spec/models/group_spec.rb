@@ -820,22 +820,4 @@ describe Group do
       end
     end
   end
-
-  it "allows Font Awesome 4.7 syntax as group avatar flair" do
-    group = Fabricate(:group)
-    group.flair_url = "fa-air-freshener"
-    group.save
-
-    group = Group.find(group.id)
-    expect(group.flair_url).to eq("fa-air-freshener")
-  end
-
-  it "allows Font Awesome 5 syntax as group avatar flair" do
-    group = Fabricate(:group)
-    group.flair_url = "fab fa-bandcamp"
-    group.save
-
-    group = Group.find(group.id)
-    expect(group.flair_url).to eq("fab fa-bandcamp")
-  end
 end

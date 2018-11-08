@@ -499,7 +499,9 @@ button {
     padding-right: 36px; // leave some space for counter at right side
 
     // add the download icon
-    a.image-source-link .d-icon {
+    a.image-source-link:before {
+      content: "\f019";
+      font-family: FontAwesome;
       padding-right: 5px;
     }
   }

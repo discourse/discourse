@@ -1,5 +1,6 @@
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 
 function description(attrs) {
   const daysSince = attrs.daysSince;
@@ -20,7 +21,7 @@ export default createWidget("time-gap", {
 
   html(attrs) {
     return [
-      h("div.topic-avatar", ""),
+      h("div.topic-avatar", iconNode("fw")),
       h("div.small-action-desc.timegap", description(attrs))
     ];
   }
