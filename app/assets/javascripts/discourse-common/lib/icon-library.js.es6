@@ -26,12 +26,12 @@ const REPLACEMENTS = {
   "notification.liked_many": "heart",
   "notification.private_message": "far-envelope",
   "notification.invited_to_private_message": "far-envelope",
-  "notification.invited_to_topic": "far-hand-point-right",
+  "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out",
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
-  "notification.topic_reminder": "hand-o-right",
+  "notification.topic_reminder": "hand-point-right",
   "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "group"
 };
@@ -60,6 +60,7 @@ const fa4Replacements = {
   "github-square": "fab-github-square",
   "hacker-news": "fab-hacker-news",
   "hand-grab-o": "far-hand-rock",
+  "hand-o-right": "hand-point-right",
   "id-badge": "far-id-badge",
   "internet-explorer": "fab-internet-explorer",
   "line-chart": "chart-line",
