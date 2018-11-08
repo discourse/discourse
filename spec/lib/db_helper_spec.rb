@@ -40,5 +40,29 @@ RSpec.describe DbHelper do
 
       expect(post.reload.cooked).to eq('test')
     end
+
+    it 'accepts a POSIX regular expression' do
+      url = "https://some.complicated.url/that/I/can/come/up.with"
+
+      post = Fabricate(:post,
+        cooked: "something something#{url}something something"
+      )
+
+      url2 = "https://some.other.complicated/url/I/can/come/up.with"
+
+      post2 = Fabricate(:post,
+        cooked: "something #{url2} something something"
+      )
+
+      DbHelper.remap("(#{url}|#{url2})", "DISCOURSE!")
+
+      expect(post.reload.cooked).to eq(
+        'something somethingDISCOURSE!something something'
+      )
+
+      expect(post2.reload.cooked).to eq(
+        "something DISCOURSE! something something"
+      )
+    end
   end
 end
