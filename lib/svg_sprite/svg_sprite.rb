@@ -135,6 +135,7 @@ module SvgSprite
     "trash-alt",
     "undo",
     "unlock",
+    "unlock-alt",
     "upload",
     "user",
     "user-plus",
