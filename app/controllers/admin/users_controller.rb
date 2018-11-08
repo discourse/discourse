@@ -156,6 +156,8 @@ class Admin::UsersController < Admin::AdminController
     @user.save!
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
 
+    DiscourseEvent.trigger(:user_unsuspended, user: @user)
+
     render_json_dump(
       suspension: {
         suspended: false
