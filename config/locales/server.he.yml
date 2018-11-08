@@ -123,7 +123,7 @@ he:
       <<: *errors
   invite:
     not_found: "אסימון ההזמנה שלכם אינו תקין. אנא צרו קשר עם האדמיניסטרטור של האתר."
-    user_exists: "אין צורך להזמין את <b>%{email}</b>, הוא/היא <a href='/u/%{username}/summary'>כבר בעלים של חשבון!</a>"
+    user_exists: "אין צורך להזמין את <b>%{email}</b>, הוא/היא <a href='%{base_path}/u/%{username}/summary'>כבר בעלים של חשבון!</a>"
   bulk_invite:
     file_should_be_csv: "הקובץ שמועלה אמור להיות בפורמט csv."
     error: "ארעה שגיאה בהעלת הקובץ. אנא נסו שוב מאוחר יותר."
@@ -281,7 +281,7 @@ he:
 
       - ביקורת מבנה היא רצויה, אבל אנא בקרו *רעיונות*, לא אנשים.
 
-      למידע נוסף [ראו את הכללים המנחים שלנו](/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} התגובות הראשונות שלך.
+      למידע נוסף [ראו את הכללים המנחים שלנו](%{base_path}/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} התגובות הראשונות שלך.
     avatar: |
       ### מה אתם אומרים על תמונה לחשבון שלכם?
 
@@ -311,7 +311,7 @@ he:
 
       האם שקלתם לענות לאנשים *אחרים* בדיון גם כן? דיון מעולה מערב פרספקטיבות וקולות רבים.
 
-      אם הייתם רוצים להמשיך את הדיון באריכות עם משתמש/ת ספציפי/ת זה/זו, [שילחו אליהם הודעה אישית](/u/%{reply_username}).
+      אם הייתם רוצים להמשיך את הדיון באריכות עם משתמש/ת ספציפי/ת זה/זו, [שילחו אליהם הודעה אישית](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### הגעתם למספר המקסימלי של תגובות לנושא זה
 
@@ -375,7 +375,7 @@ he:
             word:
               too_many: "יש יותר מדי מילים בפעולה הזו"
   user_profile:
-    no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
+    no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין/ה דבר בשדה אודות של הפרופיל שלו/ה</div>"
   vip_category_name: "לאונג'"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
@@ -397,7 +397,7 @@ he:
         - למה כדאי להם לבוא לפה?
         - איפה אפשר לקרוא עוד (קישורים, מקורות, וכד׳)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
   lounge_welcome:
@@ -840,13 +840,13 @@ he:
     memory_warning: 'בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון.'
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
-      one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      two: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      many: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-    bad_favicon_url: "ה favicon לא עולה. אנא בדקו את הגדרת ה favicon_url ב <a href='/admin/site_settings'>הגדרות האתר</a>."
-    poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו  מאוחזר. אנא בדקו את <a href='/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
-    poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
+      one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      two: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      many: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+    bad_favicon_url: "ה favicon לא עולה. אנא בדקו את הגדרת ה favicon_url ב <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
+    poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו  מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
+    poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
   site_settings:
     censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
@@ -1115,8 +1115,8 @@ he:
     auto_respond_to_flag_actions: "הפעלת תגובה אוטמטית עם הסרת דגל."
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
     reply_by_email_enabled: "הפעלת תגובה לנושאים באמצעות הדוא\"ל."
-    reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בתים"
     short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"
     display_name_on_email_from: "הצגת שמות מלאים בשדה ה״מאת״ במיילים"
@@ -1280,8 +1280,8 @@ he:
       invalid_string_min_max: "חייב להיות בין  %{min} ל- %{max} תווים."
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
-      invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה ממייל ההתראה."
-      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול  '%{reply_key}' ולהיות שונים ממייל העדכון."
+      invalid_reply_by_email_address: "הערך חייב להכיל '%%{reply_key}' ולהיות שונה ממייל ההתראה."
+      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול  '%%{reply_key}' ולהיות שונים ממייל העדכון."
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_username_is_empty: "עליכם לקבוע 'שם-משתמש לתשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
@@ -1465,10 +1465,10 @@ he:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
   flags_reminder:
     flags_were_submitted:
-      one: "דגלים נרשמו לפני יותר משעה. [אנא סיקרו אותם](/admin/flags)."
-      two: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](/admin/flags)."
-      many: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](/admin/flags)."
-      other: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](/admin/flags)."
+      one: "דגלים נרשמו לפני יותר משעה. [אנא סיקרו אותם](%{base_path}/admin/flags)."
+      two: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
+      many: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
+      other: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
     subject_template:
       one: "דגל אחד ממתין לטיפול"
       two: "%{count} דגלים ממתינים לטיפול"
@@ -1532,7 +1532,7 @@ he:
     subject_template: "[%{email_prefix}] עדכון זמין"
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
-    inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](/guidelines)"
+    inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
     spam: "הפוסט שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
     notify_moderators: "הפוסט שלך דוגל **לתשומת לב מנחה**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של צוות האתר. "
   flags_dispositions:
@@ -2042,8 +2042,8 @@ he:
   avatar:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
   flag_reason:
-    sockpuppet: "משתמש חדש יצר נושא, ומשתמש חדש אחר מאותה כתובת IP (%{ip_address}) ענו להם. ראו את הגדרת האתר <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת (%{domain}). ראו את הגדרת האתר <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "משתמש חדש יצר נושא, ומשתמש חדש אחר מאותה כתובת IP (%{ip_address}) ענו להם. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת (%{domain}). ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "בסיס"
     dark: "סכמה כהה"
@@ -2389,15 +2389,15 @@ he:
           contact_email:
             label: "מייל"
             placeholder: "name@example.com"
-            description: "כתובת מייל לאדם או קבוצה שאחראים על קהילה זו. משמשת להתראות קריטיות כמו דגלים שלא טופלו, עידכוני אבטחה, וב<a href='/about' target='_blank'>דף האודות שלכם</a> ליצירת קשר דחופה עם איש הקשר של הקהילה."
+            description: "כתובת מייל לאדם או קבוצה שאחראים על קהילה זו. משמשת להתראות קריטיות כמו דגלים שלא טופלו, עידכוני אבטחה, וב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a> ליצירת קשר דחופה עם איש הקשר של הקהילה."
           contact_url:
             label: "דף ווב"
-            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות שלכם</a>."
+            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a>."
           site_contact:
             label: "הודעות אוטומטיות"
       corporate:
         title: "ארגון"
-        description: "שמות אלו יוכנסו ל<a href='/privacy' target='blank'>מדיניות הפרטיות</a> שלכם ול<a href='/tos' target='blank'>תנאי השימוש</a>, שתוכלו לערוך בכל זמן בקטגוריית הצוות. אם אין לכם חברה, הרגישו חופשי לדלג על שלב זה לעת עתה."
+        description: "שמות אלו יוכנסו ל<a href='%{base_path}/privacy' target='blank'>מדיניות הפרטיות</a> שלכם ול<a href='%{base_path}/tos' target='blank'>תנאי השימוש</a>, שתוכלו לערוך בכל זמן בקטגוריית הצוות. אם אין לכם חברה, הרגישו חופשי לדלג על שלב זה לעת עתה."
         fields:
           company_short_name:
             label: "שם החברה (קצר)"

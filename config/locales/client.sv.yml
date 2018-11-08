@@ -1206,7 +1206,7 @@ sv:
       toggle_information: "slå av/på ämnesdetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i {{catLink}} eller {{latestLink}}."
       read_more: "Vill du läsa mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='/unread'>1 oläst</a> } other { <a href='/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Bläddra bland alla kategorier
       view_latest_topics: visa senaste ämnen
       suggest_create_topic: "Varför inte skapa ett ämne?"

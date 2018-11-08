@@ -165,13 +165,13 @@ ja:
 
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
 
-      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このメッセージは最初の %{education_posts_text} まで表示されます。
+      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](%{base_path}/guidelines) を参照してください。このメッセージは最初の %{education_posts_text} まで表示されます。
     'new-reply': |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
       - あなたの回答は議論に何らかの形で貢献していますか?
       - 会話は礼儀正しく、マナーを守りましょう。
       - しっかりとした批判は良いかと思います。ただし「その人」に対してでは無く、「そのアイディア」に対してしましょう。
-      詳細は[コミュニティガイドライン](/guidelines)を参照してください。このメッセージは最初の %{education_posts_text} のみに表示されます。
+      詳細は[コミュニティガイドライン](%{base_path}/guidelines)を参照してください。このメッセージは最初の %{education_posts_text} のみに表示されます。
   activerecord:
     attributes:
       category:
@@ -227,7 +227,7 @@ ja:
         * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
         * 一度の報告でスパムを非表示にできます
 
-        [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
+        [現在レギュラーに所属している人の一覧](%{base_path}/badges/3/regular)からリストを確認する事ができます。
 
         コミュニティを支えていただき、ありがとうございます！
         (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
@@ -375,7 +375,7 @@ ja:
       long_form: '不適切として通報する'
     notify_moderators:
       title: "その他"
-      description: 'このトピックは <a href="/guidelines">ガイドライン</a>, <a href="%{tos_url}">利用規約</a>の違反や、その他不適切な理由がある。'
+      description: 'このトピックは <a href="%{base_path}/guidelines">ガイドライン</a>, <a href="%{tos_url}">利用規約</a>の違反や、その他不適切な理由がある。'
       long_form: 'モデレーターへ知らせるために通報する'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
@@ -537,10 +537,10 @@ ja:
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
     queue_size_warning: 'キューイングされたジョブの数は %{queue_size} で、これは多いです。SIdekiqのプロセスに問題があるか、Sidekiqのworkerを増やす必要があります'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
-    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="%{base_path}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="%{base_path}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="%{base_path}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
+    github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="%{base_path}/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
@@ -751,7 +751,7 @@ ja:
     auto_respond_to_flag_actions: "フラグを解除時の自動返信を有効にする"
     min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
-    reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %%{reply_key}@reply.myforum.com"
     strip_images_from_short_emails: "メールのサイズが2800 Bytesを超えないように画像を削除する"
     short_email_length: "ショートメールのバイト数"
     pop3_polling_enabled: "メール回答のために POP3 をポーリングする"
@@ -822,7 +822,7 @@ ja:
       invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
-      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
+      invalid_reply_by_email_address: "値は'%%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -911,7 +911,7 @@ ja:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
     off_topic: "あなたの投稿/トピックは「話題に関係ない」として通報されました"
-    inappropriate: "あなたの投稿は「不適切」として通報されました。攻撃的、 [コミュニティガイドライン](/guidelines)に違反している可能性があります。"
+    inappropriate: "あなたの投稿は「不適切」として通報されました。攻撃的、 [コミュニティガイドライン](%{base_path}/guidelines)に違反している可能性があります。"
     spam: "あなたの投稿は「スパム」として通報されました。営利目的、宣伝目的の投稿を行った可能性があります。"
     notify_moderators: "あなたの投稿は「モデレータへ通報」として通報されました。モデレータによる判断が必要な内容を含んでいる可能性があります。"
   flags_dispositions:
@@ -951,7 +951,7 @@ ja:
       text_body_template: |
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
 
-        [管理者セクションで確認する](/admin/users/list/pending).
+        [管理者セクションで確認する](%{base_path}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
       text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
@@ -986,7 +986,7 @@ ja:
     search_google: "Google"
   terms_of_service:
     title: "利用規約"
-    signup_form_message: '<a href="/tos" target="_blank">Terms of Service</a>を読んで同意しました'
+    signup_form_message: '<a href="%{base_path}/tos" target="_blank">Terms of Service</a>を読んで同意しました'
   deleted: '削除'
   upload:
     edit_reason: "ダウンロードされた画像のコピー"

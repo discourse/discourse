@@ -154,7 +154,7 @@ it:
       <p>Se ricordi la tua password puoi effettuare il <a href="%{base_url}/login">Login</a>.</p>
 
       <p>In caso contrario <a href="%{base_url}/password-reset">Reimposta la Password</a>.</p>
-    user_exists: "Non c'è bisogno di invitare <b>%{email}</b>, perché <a href='/u/%{username}/summary'>ha già un account!</a>"
+    user_exists: "Non c'è bisogno di invitare <b>%{email}</b>, perché <a href='%{base_path}/u/%{username}/summary'>ha già un account!</a>"
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     error: "Si è verificato un errore durante il caricamento del file. Per favore riprova più tardi."
@@ -305,7 +305,7 @@ it:
 
       - Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria.
 
-      Per maggiori informazioni, [leggi le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i tuoi primi %{education_posts_text}.
+      Per maggiori informazioni, [leggi le linee guida della comunità](%{base_path}/guidelines). Questo pannello sarà visualizzato solo per i tuoi primi %{education_posts_text}.
     'new-reply': |
       Benvenuto su %{site_name} &mdash; **grazie per il tuo contributo!**
 
@@ -315,7 +315,7 @@ it:
 
       - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
 
-      Per maggiori informazioni, [leggi le linee guida della nostra comunità](/guidelines). Questo pannello sarà visualizzato soltanto per i tuoi primi %{education_posts_text}.
+      Per maggiori informazioni, [leggi le linee guida della nostra comunità](%{base_path}/guidelines). Questo pannello sarà visualizzato soltanto per i tuoi primi %{education_posts_text}.
     avatar: |
       ### Che ne dici di aggiungere un'immagine al tuo account?
 
@@ -345,7 +345,7 @@ it:
 
       Hai già considerato di rispondere ad *altre* persone nella stessa discussione? Una buona discussione coinvolge più voci e prospettive.
 
-      Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](/u/%{reply_username}).
+      Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](%{base_path}/u/%{reply_username}).
 
     too_many_replies: |+
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -429,7 +429,7 @@ it:
             word:
               too_many: "Troppe parole per quest'azione"
   user_profile:
-    no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/u/%{username_lower}/preferences/about-me'>vuoi compilarlo? </a></div>"
+    no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>vuoi compilarlo? </a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
   vip_category_name: "Salotto"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
@@ -438,7 +438,7 @@ it:
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
   assets_topic_title: "Risorse per il design del sito"
-  assets_topic_body: "Questo argomento, visibile solo allo staff, è per l'archiviazione di immagini e file utilizzati nel disegno del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica tutte le immagini che desideri utilizzare per loghi, favicon e così via (usa l'icona di caricamento nella barra degli strumenti sull'editor del messaggio, oppure trascina o incolla le immagini).\n3. Invia la risposta per pubblicarla.\n4. Fai clic con il pulsante destro sulle immagini nel nuovo messaggio per ottenere il percorso delle immagini caricate, oppure fai clic sull'icona di modifica per modificare il messaggio e recuperare il percorso delle immagini. Copia i percorsi delle immagini.\n5. Incolla i percorsi delle immagini nelle [impostazioni di base](/admin/site_settings/category/required).\n\n\nSe è necessario abilitare il caricamento di file di tipo diverso, modifica `authorized_extensions` nelle [impostazioni dei file](/admin/site_settings/category/files)."
+  assets_topic_body: "Questo argomento, visibile solo allo staff, è per l'archiviazione di immagini e file utilizzati nel disegno del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica tutte le immagini che desideri utilizzare per loghi, favicon e così via (usa l'icona di caricamento nella barra degli strumenti sull'editor del messaggio, oppure trascina o incolla le immagini).\n3. Invia la risposta per pubblicarla.\n4. Fai clic con il pulsante destro sulle immagini nel nuovo messaggio per ottenere il percorso delle immagini caricate, oppure fai clic sull'icona di modifica per modificare il messaggio e recuperare il percorso delle immagini. Copia i percorsi delle immagini.\n5. Incolla i percorsi delle immagini nelle [impostazioni di base](%{base_path}/admin/site_settings/category/required).\n\n\nSe è necessario abilitare il caricamento di file di tipo diverso, modifica `authorized_extensions` nelle [impostazioni dei file](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Benvenuto in Discourse"
     body: |2
@@ -452,7 +452,7 @@ it:
       - Perché dovrebbero venire qui?
       - Dove possono leggere di più (collegamenti, risorse, ecc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Potresti voler chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
@@ -921,12 +921,12 @@ it:
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
     email_polling_errored_recently:
-      one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
-      other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli. "
+      one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli."
+      other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli. "
     missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
-    bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='/admin/site_settings'>Impostazioni del sito</a>."
-    poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
-    poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='/admin/site_settings/category/email'>configurazione POP3</a>."
+    bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='%{base_path}/admin/site_settings'>Impostazioni del sito</a>."
+    poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
+    poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a>."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -1215,8 +1215,8 @@ it:
     auto_silence_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il silenziamento del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio."
     flags_default_topics: "Di default, mostra gli argomenti segnalati nella sezione di amministrazione"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
-    reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
-    alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "Modello per rispondere via email, per esempio: %%{reply_key}@risposta.esempio.com o risposte+%%{reply_key}@esempio.com"
+    alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Usa HTML al posto del testo per le email in arrivo."
     disable_emails: "Impedisci a Discourse di inviare qualsiasi tipo di email. Seleziona 'Sì' per disabilitare le email per tutti gli utenti. Seleziona 'non-staff' per disabilitare le email solo per gli utenti non staff."
     strip_images_from_short_emails: "Elimina le immagini dalle email aventi dimensione inferiore a 2800 Byte."
@@ -1391,8 +1391,8 @@ it:
       invalid_string_min_max: "Il numero di caratteri deve essere tra %{min} e %{max}."
       invalid_string_min: "Il numero di caratteri deve essere di almeno %{min}."
       invalid_string_max: "Il numero di caratteri non deve eccedere %{max}."
-      invalid_reply_by_email_address: "Il valore deve contenere '%{reply_key}' ed essere differente dalla email di notifica."
-      invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%{reply_key}' ed essere differenti dalla email di notifica."
+      invalid_reply_by_email_address: "Il valore deve contenere '%%{reply_key}' ed essere differente dalla email di notifica."
+      invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%%{reply_key}' ed essere differenti dalla email di notifica."
       pop3_polling_host_is_empty: "È necessario impostare 'pop3 polling host' prima di attivare il polling POP3."
       pop3_polling_username_is_empty: "È necessario impostare 'pop3 polling username' prima di attivare il polling POP3."
       pop3_polling_password_is_empty: "È necessario impostare 'pop3 polling password' prima di attivare il polling POP3."
@@ -1556,8 +1556,8 @@ it:
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
   flags_reminder:
     flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
-      other: "Delle segnalazioni sono state inviate oltre %{count} ore fa. [Per favore, revisionale](/admin/flags)."
+      one: "Flags were submitted over 1 hour ago. [Please review them](%{base_path}/admin/flags)."
+      other: "Delle segnalazioni sono state inviate oltre %{count} ore fa. [Per favore, revisionale](%{base_path}/admin/flags)."
     subject_template:
       one: "1 segnalazione in attesa di essere revisionata"
       other: "%{count} segnalazioni in attesa di essere revisionate"
@@ -1619,7 +1619,7 @@ it:
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
-    inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
+    inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
     spam: "Il tuo messaggio è stato segnalato come **spam**: la comunità ritiene che sia pubblicità o qualcosa di natura meramente promozionale invece di essere utile o rilevante per l'argomento, come invece ci si aspetterebbe."
     notify_moderators: "Il tuo messaggio è stato segnalato **all'attenzione dei moderatori**: la comunità ritiene che ci sia qualcosa nel messaggio che richiede l'intervento manuale di un membro dello staff."
   flags_dispositions:
@@ -2343,8 +2343,8 @@ it:
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
-    sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Base"
     dark: "Combinazione Scura"
@@ -2452,13 +2452,13 @@ it:
 
       ## [Fatto da Te](#power)
 
-      Questo sito è gestito dal tuo [simpatico staff](/about) e da *te*, la comunità. Se hai altre domande su come le cose dovrebbero funzionare qui apri un nuovo argomento nella [categoria Feedback Sito](/c/site-feedback) e parliamone! Se c'è un problema urgente e importante che non si può affrontare in un argomento o con una segnalazione,contattaci tramite la [pagina staff](/about)
+      Questo sito è gestito dal tuo [simpatico staff](%{base_path}/about) e da *te*, la comunità. Se hai altre domande su come le cose dovrebbero funzionare qui apri un nuovo argomento nella [categoria Feedback Sito](%{base_path}/c/site-feedback) e parliamone! Se c'è un problema urgente e importante che non si può affrontare in un argomento o con una segnalazione,contattaci tramite la [pagina staff](%{base_path}/about)
 
       <a name="tos"></a>
 
       ## [Termini di Servizio](#tos)
 
-      Sì, l'avvocatese è noioso, ma ci dobbiamo proteggere &ndash; e, per estensione, proteggere anche te ed i tuoi dati &ndash; contro persone non amichevoli. Abbiamo dei [Termini di Servizio](/tos) che descrivono il tuo (e il nostro) comportamento ed i diritti che riguardano i contenuti, la privacy e le leggi. Per poter usare questo servizio, devi accettare i nostri [TDS](/tos)
+      Sì, l'avvocatese è noioso, ma ci dobbiamo proteggere &ndash; e, per estensione, proteggere anche te ed i tuoi dati &ndash; contro persone non amichevoli. Abbiamo dei [Termini di Servizio](%{base_path}/tos) che descrivono il tuo (e il nostro) comportamento ed i diritti che riguardano i contenuti, la privacy e le leggi. Per poter usare questo servizio, devi accettare i nostri [TDS](%{base_path}/tos)
   tos_topic:
     title: "Termini del Servizio"
   privacy_topic:
@@ -2845,16 +2845,16 @@ it:
           contact_email:
             label: "Email"
             placeholder: "nome@esempio.com"
-            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche quali segnalazioni non gestite, aggiornamenti sulla protezione e sulla tua pagina <a href='/about' target='_blank'>informazioni</a> per un contatto urgente."
+            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche quali segnalazioni non gestite, aggiornamenti sulla protezione e sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a> per un contatto urgente."
           contact_url:
             label: "Sito Web"
-            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='/about' target='_blank'>informazioni</a>."
+            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a>."
           site_contact:
             label: "Messaggi Automatici"
             description: "Tutti i messaggi personali automatici di Discourse saranno inviati da questo utente, quali avvisi di segnalazione e avvisi di completamento di backup."
       corporate:
         title: "Società"
-        description: "Questi nomi verranno inseriti nelle <a href='/privacy' target='blank'>Norme sulla Privacy</a> e nei <a href='/tos' target='blank'>Termini di servizio</a>, che sono argomenti che è possibile modificare nella categoria Staff. Se non hai un'azienda, non esitare a saltare questo passaggio per ora."
+        description: "Questi nomi verranno inseriti nelle <a href='%{base_path}/privacy' target='blank'>Norme sulla Privacy</a> e nei <a href='%{base_path}/tos' target='blank'>Termini di servizio</a>, che sono argomenti che è possibile modificare nella categoria Staff. Se non hai un'azienda, non esitare a saltare questo passaggio per ora."
         fields:
           company_short_name:
             label: "Nome Azienda (breve)"

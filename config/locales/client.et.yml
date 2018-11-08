@@ -1407,7 +1407,7 @@ et:
       toggle_information: "lülita teema üksikasjad ümber"
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid {{catLink}} või {{latestLink}}."
       read_more: "Soovid veel lugeda? {{catLink}} või {{latestLink}}."
-      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
+      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 lugemata</a> } other { are <a href='{basePath}/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
       suggest_create_topic: "Teeks äkki teema?"

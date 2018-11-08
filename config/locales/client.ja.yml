@@ -884,7 +884,7 @@ ja:
       complete_email_found: "<b>%{email}</b>宛にパスワード再設定メールを送信しました。"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
-      help: "メールが届いていませんか？ まずは迷惑メールのフォルダに入っていないか確認してください。<p>どのメールアドレスを使用したか忘れてしまいましたか？メールアドレスを入力いただければ、登録時のものと一致するかどうか確認できます。</p><p>もし登録したメールアドレスが利用できない状況でしたら、<a href='/about'>へルプスタッフ</a>までご連絡ください。</p>"
+      help: "メールが届いていませんか？ まずは迷惑メールのフォルダに入っていないか確認してください。<p>どのメールアドレスを使用したか忘れてしまいましたか？メールアドレスを入力いただければ、登録時のものと一致するかどうか確認できます。</p><p>もし登録したメールアドレスが利用できない状況でしたら、<a href='%{basePath}/about'>へルプスタッフ</a>までご連絡ください。</p>"
       button_ok: "OK"
       button_help: "ヘルプ"
     login:
@@ -1281,7 +1281,7 @@ ja:
       toggle_information: "トピックの詳細を切り替え"
       read_more_in_category: "{{catLink}}の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>未読 1つ</a> } other { <a href='/unread'>未読 #つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{} false {} other{}} <a href='/new'>新規トピック 1つ</a>} other { {BOTH, select, true{} false {} other{}} <a href='/new'>新規トピック #つ</a>} } remaining, or {CATEGORY, select, true {{catLink}の他のトピックを読む} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>未読 1つ</a> } other { <a href='{basePath}/unread'>未読 #つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{} false {} other{}} <a href='{basePath}/new'>新規トピック 1つ</a>} other { {BOTH, select, true{} false {} other{}} <a href='{basePath}/new'>新規トピック #つ</a>} } remaining, or {CATEGORY, select, true {{catLink}の他のトピックを読む} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: "新しいトピックを作成しませんか?"
@@ -1357,7 +1357,7 @@ ja:
           "3_1": 'このトピックを作成したため通知されます。'
           "3": 'このトピックをウォッチしているため通知されます。'
           "2_4": 'このトピックに返信したので、新たな返信のカウント数が表示されます。'
-          "2": '<a href="/u/{{username}}/preferences">このトピックを購読中なので</a>、新たな返信のカウント数が表示されます。'
+          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを購読中なので</a>、新たな返信のカウント数が表示されます。'
           "1_2": '他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。'
           "1": '他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。'
           "0_7": 'このカテゴリに関して一切通知を受け取りません。'

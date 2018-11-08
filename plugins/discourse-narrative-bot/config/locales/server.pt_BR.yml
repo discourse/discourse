@@ -135,7 +135,7 @@ pt_BR:
         second_response: |-
           Me perdoe. Mas eu não estou entendendo ainda. :anguished:
 
-          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](/about).
+          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](%{base_path}/about).
 
           Enquanto isso eu ficarei fora do seu caminho.
     new_user_narrative:

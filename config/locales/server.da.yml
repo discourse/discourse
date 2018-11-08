@@ -110,7 +110,7 @@ da:
       <<: *errors
   invite:
     not_found: "Dit invitation-token er ugyldigt. Kontakt veligst sitets administrator."
-    user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='/u/%{username}/summary'>har allerede en profil!</a>"
+    user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i csv format."
     error: "Der skete en fejl ved upload af filen. Prøv venligst igen senere."
@@ -238,7 +238,7 @@ da:
       -  Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
       -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
 
-      For mere info, [se vores retningslinjer](/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
+      For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
     'new-reply': |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
@@ -250,7 +250,7 @@ da:
 
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
 
-      For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
+      For flere tips, [se vores retningslinier](%{base_path}/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
       ### Hvad med et billede til din konto?
 
@@ -281,7 +281,7 @@ da:
 
       Har du overveje også at give svar til *andre* personer i denne diskussion? En god diskussion involverer mange stemmer og perspektiver.
 
-      Hvis du ønsker at fortsætte din dialog med denne specifikke bruger i fuld længde, [så send dem en personlig besked](/u/%{reply_username}).
+      Hvis du ønsker at fortsætte din dialog med denne specifikke bruger i fuld længde, [så send dem en personlig besked](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
 
@@ -337,7 +337,7 @@ da:
             name:
               taken: er allerede i brug af en anden emoji
   user_profile:
-    no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"
+    no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
@@ -357,7 +357,7 @@ da:
         - Hvad kan de finde her?
         - Hvorfor bør de komme her?
         - Hvor finde de mere information (links, ressourcer, osv.)?
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
@@ -524,7 +524,7 @@ da:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
-      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href="/faq">Den Gode Tone</a>, <a href="%{tos_url}">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor.'
+      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href="%{base_path}/faq">Den Gode Tone</a>, <a href="%{tos_url}">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor.'
       long_form: 'Har flagged dette overfor administrator'
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
@@ -735,11 +735,11 @@ da:
     memory_warning: 'Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse.'
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
     email_polling_errored_recently:
-      one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
-      other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer."
-    bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='/admin/site_settings'>Site Settings</a>"
-    poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
-    poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='/admin/site_settings/category/email'>POP3 settings</a>."
+      one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
+      other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
+    bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='%{base_path}/admin/site_settings'>Site Settings</a>"
+    poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
+    poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
@@ -867,7 +867,7 @@ da:
     num_flags_to_close_topic: "Minimum antal aktive flagmarkeringer, der skal til for automatisk at pause et emne til indgriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
-    reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %{reply_key}@reply.myforum.com."
+    reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %%{reply_key}@reply.myforum.com."
     strip_images_from_short_emails: "Undlad at inkludere billeder fra emails som fylder mindre end 2800 Bytes"
     short_email_length: "Kort email i Bytes"
     display_name_on_email_from: "Vis fulde navne på emails fra felter"
@@ -1052,7 +1052,7 @@ da:
     subject_template: "[%{email_prefix}] opdatering tilgængelig"
   flag_reasons:
     off_topic: "Dit indlæg blev flagmarkeret som **off-topic**: Fællesskabet synes ikke, at det passer godt ind i emnet, som er blevet defineret af titlen og det første indlæg."
-    inappropriate: "Dit indlæg blev markeret som **upassende**: Fællesskabet synes, at det er stødende, groft eller krænker [vores fællesskabs retningslinier](/guidelines)."
+    inappropriate: "Dit indlæg blev markeret som **upassende**: Fællesskabet synes, at det er stødende, groft eller krænker [vores fællesskabs retningslinier](%{base_path}/guidelines)."
     spam: "Dit indlæg blev markeret som **spam**: Fællesskabet synes, at det er en reklame, noget der er overdrevent salgsfremmende i stedet for at være brugbart eller relevant for emnet."
     notify_moderators: "Dit indlæg var markeret **til moderation**: Fællesskabet synes, at noget ved indlægget kræver ingriben af et medlem af hjælperteamet."
   flags_dispositions:
@@ -1347,7 +1347,7 @@ da:
       too_large: "Beklager, men billedet som du forsøger at uploade er for stort (den maksimale størrelse er %{max_size_kb}KB). Gør det venligst mindre og prøv igen."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
-    sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse (%{ip_address}) besvarede. Se indstillinger for <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse (%{ip_address}) besvarede. Se indstillinger for <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
   color_schemes:
     base_theme_name: "Base"
   about: "Om"

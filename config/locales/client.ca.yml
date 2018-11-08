@@ -1219,7 +1219,7 @@ ca:
       toggle_information: "canvia els detalls del tema"
       read_more_in_category: "Vols llegir-ne més? Navega per altres temes a {{catLink}} o {{latestLink}}."
       read_more: "Vols llegir-ne més? {{catLink}} o {{latestLink}}."
-      read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='/unread'>1 no llegit</a> } other { <a href='/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='/new'>1 nou</a> topic} other { {BOTH, select, true{i } false {són } other{}} <a href='/new'># nous</a> topics} } restants, o {CATEGORY, select, true {navega altres temes a {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no llegit</a> } other { <a href='{basePath}/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='{basePath}/new'>1 nou</a> topic} other { {BOTH, select, true{i } false {són } other{}} <a href='{basePath}/new'># nous</a> topics} } restants, o {CATEGORY, select, true {navega altres temes a {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mostra els darrers temes
       suggest_create_topic: "Per què no crear un tema?"
@@ -1266,7 +1266,7 @@ ca:
           "2_8": 'Rebràs notificacions, perquè estàs seguint aquesta categoria.'
           "2_4": 'Rebràs notificacions, perquè has escrit una resposta a aquest tema.'
           "2_2": 'Rebràs notificacions, perquè estàs seguint aquest tema.'
-          "2": 'Rebràs notificacions, perquè has <a href="/users/{{username}}/preferences">llegit aquest tema</a>.'
+          "2": 'Rebràs notificacions, perquè has <a href="%{basePath}/users/{{username}}/preferences">llegit aquest tema</a>.'
           "1_2": 'Només se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           "1": 'Se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           "0_7": 'No estàs fent cas de les alertes d''aquesta categoria.'

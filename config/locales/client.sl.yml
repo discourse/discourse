@@ -783,7 +783,7 @@ sl:
       action: "Pozabil sem geslo"
       invite: "Vpišite uporabniško ime ali email in poslali vam bomo email za ponastavitev gesla."
       reset: "Ponastavi geslo"
-      help: "Ali elektronska pošta ne prihaja? Najprej preverite mapo z neželeno pošto.<p>Ne veste kateri elektronski naslov ste uporabili? Vpišite elektronski naslov in povedali vam bomo če obstaja pri nas.</p><p>Če nimate več dostopa do elektronskega naslova vašega računa kontaktirajte o <a href='/about'>našo ekipo.</a></p>"
+      help: "Ali elektronska pošta ne prihaja? Najprej preverite mapo z neželeno pošto.<p>Ne veste kateri elektronski naslov ste uporabili? Vpišite elektronski naslov in povedali vam bomo če obstaja pri nas.</p><p>Če nimate več dostopa do elektronskega naslova vašega računa kontaktirajte o <a href='%{basePath}/about'>našo ekipo.</a></p>"
     login:
       title: "Prijava"
       username: "Uporabnik"
@@ -1016,7 +1016,7 @@ sl:
           "2_8": 'Videli boste število novih odgovorov, ker sledite tej kategoriji.'
           "2_4": 'Videli boste število novih odgovorov, ker ste objavili odgovor na to temo.'
           "2_2": 'Videli boste število novih odgovorov, ker sledite tej temi.'
-          "2": 'Videli boste število novih odgovorov, ker ste . <a href="/u/{{username}}/preferences">prebrali to temo</a>.'
+          "2": 'Videli boste število novih odgovorov, ker ste . <a href="{{basePath}}/u/{{username}}/preferences">prebrali to temo</a>.'
           "1_2": 'Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori.'
           "1": 'Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori.'
           "0_7": 'Ignorirate vsa obvestila za to kategorijo.'
