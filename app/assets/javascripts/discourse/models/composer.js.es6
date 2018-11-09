@@ -977,6 +977,7 @@ const Composer = RestModel.extend({
 
     const data = {
       reply: this.get("reply"),
+      originalText: this.get("originalText"),
       action: this.get("action"),
       title: this.get("title"),
       categoryId: this.get("categoryId"),
@@ -991,22 +992,35 @@ const Composer = RestModel.extend({
       noBump: this.get("noBump")
     };
 
-    this.set("draftStatus", I18n.t("composer.saving_draft_tip"));
-
-    const composer = this;
+    this.setProperties({
+      draftStatus: I18n.t("composer.saving_draft_tip"),
+      draftConflictUser: null
+    });
 
     if (this._clearingStatus) {
       Em.run.cancel(this._clearingStatus);
       this._clearingStatus = null;
     }
 
-    // try to save the draft
     return Draft.save(this.get("draftKey"), this.get("draftSequence"), data)
-      .then(function() {
-        composer.set("draftStatus", I18n.t("composer.saved_draft_tip"));
+      .then(result => {
+        if (result.conflict_user) {
+          this.setProperties({
+            draftStatus: I18n.t("composer.edit_conflict"),
+            draftConflictUser: result.conflict_user
+          });
+        } else {
+          this.setProperties({
+            draftStatus: I18n.t("composer.saved_draft_tip"),
+            draftConflictUser: null
+          });
+        }
       })
-      .catch(function() {
-        composer.set("draftStatus", I18n.t("composer.drafts_offline"));
+      .catch(() => {
+        this.setProperties({
+          draftStatus: I18n.t("composer.drafts_offline"),
+          draftConflictUser: null
+        });
       });
   },
 
@@ -1019,6 +1033,7 @@ const Composer = RestModel.extend({
         this,
         function() {
           self.set("draftStatus", null);
+          self.set("draftConflictUser", null);
           self._clearingStatus = null;
         },
         1000

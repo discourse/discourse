@@ -25,13 +25,15 @@ Draft.reopenClass({
   },
 
   save(key, sequence, data) {
-    data = typeof data === "string" ? data : JSON.stringify(data);
+    const dataJson = typeof data === "string" ? dataJson : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
       data: {
         draft_key: key,
-        data: data,
-        sequence: sequence
+        data: dataJson,
+        sequence,
+        post_id: data.postId,
+        original_text: data.originalText
       }
     });
   }

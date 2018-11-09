@@ -10,6 +10,15 @@ class DraftController < ApplicationController
 
   def update
     Draft.set(current_user, params[:draft_key], params[:sequence].to_i, params[:data])
+
+    if params[:post_id] && params[:original_text]
+      post = Post.find_by(id: params[:post_id])
+      if post && post.raw != params[:original_text]
+        conflict_user = BasicUserSerializer.new(post.last_editor, root: false)
+        return render json: success_json.merge(conflict_user: conflict_user)
+      end
+    end
+
     render json: success_json
   end
 
