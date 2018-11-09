@@ -22,6 +22,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     "model.attributes.last_backup_taken_at"
   ),
   shouldDisplayDurability: Ember.computed.and("diskSpace"),
+  basePath: Discourse.BaseUri,
 
   @computed
   activityMetrics() {
@@ -75,6 +76,13 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     return {
       table: { total: false, limit: 8 }
     };
+  },
+
+  @computed
+  trendingSearchDisabledLabel() {
+    return I18n.t("admin.dashboard.reports.trending_search.disabled", {
+      basePath: Discourse.BaseUri
+    });
   },
 
   usersByTypeReport: staticReport("users_by_type"),

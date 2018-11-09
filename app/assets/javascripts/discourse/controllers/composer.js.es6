@@ -186,6 +186,15 @@ export default Ember.Controller.extend({
     );
   },
 
+  @computed("model.whisper", "model.unlistTopic")
+  whisperOrUnlistTopicText(whisper, unlistTopic) {
+    if (whisper) {
+      return I18n.t("composer.whisper");
+    } else if (unlistTopic) {
+      return I18n.t("composer.unlist");
+    }
+  },
+
   @computed
   isStaffUser() {
     const currentUser = this.currentUser;

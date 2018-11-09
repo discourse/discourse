@@ -1027,7 +1027,7 @@ zh_CN:
       complete_email_found: "你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
-      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='/about'>我们的工作人员。</a></p>"
+      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
       button_ok: "OK"
       button_help: "帮助"
     email_login:
@@ -1530,7 +1530,7 @@ zh_CN:
       toggle_information: "切换主题详情"
       read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题或{{latestLink}}。"
       read_more: "想阅读更多？{{catLink}}或{{latestLink}}。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
+      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
       suggest_create_topic: 创建一个新的主题吧！
@@ -1619,7 +1619,7 @@ zh_CN:
           "2_8": '因为你追踪了该分类，所以你会看到新回复的数量。'
           "2_4": '因为你回复过该主题，所以你会看到新回复的数量。'
           "2_2": '因为你追踪了该主题，所以你会看到新回复的数量。'
-          "2": '因为你<a href="/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
+          "2": '因为你<a href="{{basePath}}/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
           "1_2": '如果有人@你或回复你，将通知你。'
           "1": '如果有人@你或回复你，将通知你。'
           "0_7": '你将忽略关于该分类的所有通知。'
@@ -2514,8 +2514,8 @@ zh_CN:
           total: "所有时间总计"
           no_data: "没有数据显示。"
           trending_search:
-            more: '<a href="/admin/logs/search_logs">搜索日志</a>'
-            disabled: '趋势搜索报告已停用。启用<a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
+            more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
+            disabled: '趋势搜索报告已停用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
@@ -2727,6 +2727,7 @@ zh_CN:
           details: "当标签创建，审批通过，审批不通过或忽略时。"
         queued_post_event:
           name: "帖子审批事件"
+          details: "当新的帖子队列创建，审批通过或拒绝时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -2871,10 +2872,10 @@ zh_CN:
           components: "组件"
           theme_name: "主题名称"
           component_name: "组件名称"
-          themes_intro: "选择已存在的风格主题或创建一个新以开始。"
-          beginners_guide_title: "使用Discourse风格主题的初学者指导"
-          developers_guide_title: "Discourse风格主题的开发者指导"
-          browse_themes: "浏览社区风格主题"
+          themes_intro: "选择已存在的主题或创建一个新以开始。"
+          beginners_guide_title: "使用Discourse主题的初学者指导"
+          developers_guide_title: "Discourse主题的开发者指导"
+          browse_themes: "浏览社区主题"
           import_theme: "导入主题"
           customize_desc: "定制："
           title: "主题"
@@ -2884,7 +2885,7 @@ zh_CN:
           name_too_short: "名称至少4字节。"
           long_title: "修改你站点的色彩、CSS 和 HTML"
           edit: "编辑"
-          edit_confirm: "这是一个远程主题。如果你编辑了 CSS/HTML，在下一次更新该主题后这些自定义项目将会被删除。"
+          edit_confirm: "这是一个远程主题。如果你编辑了CSS/HTML，在下一次更新该主题后这些自定义项目将会被删除。"
           common: "通用"
           desktop: "桌面"
           mobile: "移动"
@@ -2897,22 +2898,43 @@ zh_CN:
           custom_sections: "自定义段落："
           theme_components: "主题组件"
           convert: "转换"
-          convert_component_alert: "你确定转换此组件到风格主题吗？将会从组件%{relatives}中移除。"
-          convert_component_tooltip: "转换此组件到风格主题"
+          convert_component_alert: "你确定转换此组件到主题吗？将会从组件%{relatives}中移除。"
+          convert_component_tooltip: "转换此组件到主题"
+          convert_theme_alert: "你确定转换此组件到主题吗？它将作为%{relatives}的父级删除。"
+          convert_theme_tooltip: "转换此主题到组件"
+          inactive_themes: "非活动主题："
+          broken_theme_tooltip: "此主题的CSS，HTML或YAML中存在错误"
+          default_theme_tooltip: "此主题是网站的默认主题"
+          updates_available_tooltip: "此主题有更新可用"
+          and_x_more: "和{{count}}更多。"
+          collapse: 折叠
           uploads: "上传"
           no_uploads: "你可以上传与主题相关的组件，例如字体和图片"
           add_upload: "添加上传"
           upload_file_tip: "选择资源上传（png、woff2、其他…）"
           variable_name: "SCSS 变量名："
+          variable_name_invalid: "变量名无效。只允许使用字母数字。必须以字母开头。必须是独特的。"
+          variable_name_error:
+            invalid_syntax: "变量名无效。只允许使用字母数字。必须以字母开头。"
+            no_overwrite: "变量名无效。不得覆盖现有变量。"
+            must_be_unique: "变量名无效。必须是独特的。"
           upload: "上传"
+          select_component: "选择一个组件……"
+          unsaved_changes_alert: "你还未保存更改，舍弃并继续？"
+          discard: "舍去"
+          stay: "保留"
           css_html: "自定义 CSS/HTML"
           edit_css_html: "编辑 CSS/HTML"
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
           import_web_tip: "目录包含主题"
           import_file_tip: ".dcstyle.json 文件包含主题"
+          is_private: "主题在私有git存储库中"
+          remote_branch: "分支名称（可选）"
+          public_key: "授予对repo的以下公钥访问权限："
           about_theme: "关于主题"
           license: "许可证"
+          component_of: "组件："
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
           updating: "更新…"
@@ -2920,8 +2942,11 @@ zh_CN:
           add: "添加"
           theme_settings: "主题设置"
           no_settings: "这个主题内没有设置"
+          empty: "无项目"
           commits_behind:
             other: "主题落后了 {{count}} 个变更！"
+          compare_commits: "（查看新提交）"
+          repo_unreachable: "无法联系此主题的Git存储库。错误信息："
           scss:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
@@ -3083,6 +3108,7 @@ zh_CN:
           filter: "过滤器："
           title: "管理人员操作"
           clear_filters: "显示全部"
+          staff_user: "用户"
           target_user: "目标用户"
           subject: "主题"
           when: "时间"
@@ -3105,6 +3131,8 @@ zh_CN:
             change_site_text: "更改站点文字"
             suspend_user: "封禁用户"
             unsuspend_user: "解禁用户"
+            removed_suspend_user: "禁止用户（已移除）"
+            removed_unsuspend_user: "禁止的用户（已移除）"
             grant_badge: "授予徽章"
             revoke_badge: "撤销徽章"
             check_email: "检查电子邮件"
@@ -3119,6 +3147,8 @@ zh_CN:
             create_category: "创建分类"
             silence_user: "禁言用户"
             unsilence_user: "解除禁言用户"
+            removed_silence_user: "禁言用户（已移除）"
+            removed_unsilence_user: "取消禁言用户（已移除）"
             grant_admin: "授予管理员权限"
             revoke_admin: "撤销管理员权限"
             grant_moderation: "授予版主权限"
@@ -3142,10 +3172,13 @@ zh_CN:
             check_personal_message: "检查个人信息"
             disabled_second_factor: "停用双重验证"
             topic_published: "帖子已发布"
+            post_approved: "帖子已审批"
+            post_rejected: "帖子已拒绝"
             create_badge: "创建徽章"
             change_badge: "更换徽章"
             delete_badge: "删除徽章"
             merge_user: "合并用户"
+            entity_export: "导出实体"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -3187,6 +3220,8 @@ zh_CN:
             all_search_types: "所有搜索类型"
             header: "头部"
             full_page: "完整页面"
+            click_through_only: "全部（仅点击）"
+          header_search_results: "标题搜索结果"
         logster:
           title: "错误日志"
       watched_words:
@@ -3236,6 +3271,7 @@ zh_CN:
           suspended: '禁止登录'
           silenced: '已禁言'
           suspect: '怀疑'
+          staged: '暂存'
         approved: "已批准？"
         approved_selected:
           other: "审核通过用户（{{count）"
@@ -3256,6 +3292,7 @@ zh_CN:
           silenced: '被禁言的用户'
           suspended: '被禁用户'
           suspect: '嫌疑用户'
+          staged: '暂存用户'
         reject_successful:
           other: "成功拒绝 %{count} 个用户。"
         reject_failures:
@@ -3286,9 +3323,14 @@ zh_CN:
         suspended_until: "（直到%{until}）"
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"
+        penalty_post_actions: "你想对相关帖子做什么？"
         penalty_post_delete: "删除帖子"
         penalty_post_edit: "编辑帖子"
         penalty_post_none: "什么都不做"
+        penalty_count: "处罚计数"
+        clear_penalty_history:
+          title: "清除处罚历史"
+          description: "有处罚的用户无法达到TL3"
         delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个主题} other {# 个主题}}。确定吗？"
         silence: "禁言"
         unsilence: "解除禁言"
@@ -3313,6 +3355,9 @@ zh_CN:
         grant_moderation: '赋予论坛版主资格'
         unsuspend: '解禁'
         suspend: '禁止'
+        show_flags_received: "显示收到的标记"
+        flags_received_by: "%{username}收到的标记"
+        flags_received_none: "此用户未收到任何标记。"
         reputation: 声誉
         permissions: 权限
         activity: 活动
@@ -3402,6 +3447,8 @@ zh_CN:
           likes_received: "获得赞"
           likes_received_days: "获得赞：独立天数"
           likes_received_users: "获得赞：每用户"
+          suspended: "禁止（所有时间）"
+          silenced: "禁言（所有时间）"
           qualifies: "符合信任等级3要求"
           does_not_qualify: "不符合信任等级3要求"
           will_be_promoted: "将在近期被提升。"
@@ -3461,14 +3508,24 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: '只显示修改过的'
       settings:
+        show_overriden: '只显示被覆盖'
         reset: '重置'
         none: '无'
       site_settings:
         title: '设置'
         no_results: "找不到结果。"
+        more_than_30_results: "超过30个结果。请优化你的搜索或选择一个分类。"
         clear_filter: "清除"
         add_url: "增加链接"
         add_host: "添加主机"
+        uploaded_image_list:
+          label: "编辑列表"
+          empty: "没有图片。请上传一个。"
+          upload:
+            label: "上传"
+            title: "上传图片"
+        selectable_avatars:
+          title: "用户可选择的头像列表"
         categories:
           all_results: '全部'
           required: '必填'
@@ -3496,6 +3553,8 @@ zh_CN:
           tags: "标签"
           search: "搜索"
           groups: "群组"
+        secret_list:
+          invalid_input: "输入字段不能为空或包含竖线字符。"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -3532,6 +3591,8 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
+        icon_help: "使用Font Awesome类"
+        image_help: "输入图像的URL（如果两者都设置，则覆盖图标）"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询
@@ -3620,6 +3681,7 @@ zh_CN:
       step: "%{current} / %{total}"
       upload: "上传"
       uploading: "上传中…"
+      upload_error: "抱歉，上传文件时发生了错误。请重试。"
       quit: "以后再说"
       staff_count:
         other: "你的社区中包括你在内有 %{count} 位工作人员。"
@@ -3631,5 +3693,6 @@ zh_CN:
           moderator: "版主"
           regular: "普通用户"
       previews:
+        topic_title: "讨论主题"
         share_button: "分享"
         reply_button: "回复"

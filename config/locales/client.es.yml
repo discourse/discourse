@@ -1070,7 +1070,7 @@ es:
       complete_email_found: "Encontramos una cuenta que coincide con el e-mail <b>%{email}</b>, deberías recibir en breve un e-mail con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "Ninguna cuenta concuerda con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "Ninguna cuenta concuerda con <b>%{email}</b>"
-      help: "¿No llegó el email? Asegúrese de chequear primero su carpeta de correo no deseado. <p>¿No estás seguro de qué email usaste? Ingrese su email y le avisaremos si existe aquí.</p><p>Si no tienes acceso al email de tu cuenta, por favor contacta <a href='/about'>a nuestro staff.</a></p>"
+      help: "¿No llegó el email? Asegúrese de chequear primero su carpeta de correo no deseado. <p>¿No estás seguro de qué email usaste? Ingrese su email y le avisaremos si existe aquí.</p><p>Si no tienes acceso al email de tu cuenta, por favor contacta <a href='%{basePath}/about'>a nuestro staff.</a></p>"
       button_ok: "OK"
       button_help: "Ayuda"
     email_login:
@@ -1589,7 +1589,7 @@ es:
       toggle_information: "alternar detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} o {{latestLink}}."
       read_more: "¿Quieres leer más? {{catLink}} o {{latestLink}}."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: "¿Por qué no creas un tema?"
@@ -1679,7 +1679,7 @@ es:
           "2_8": 'Tú verás la cuenta de nuevas respuestas porque estás siguiendo esta categoría.'
           "2_4": 'Tú verás la cuenta de nuevas respuestas porque has publicado una respuesta en este tema.'
           "2_2": 'Tú verás la cuenta de nuevas respuestas porque estás siguiendo este tema.'
-          "2": 'Tú verás la cuenta de nuevas respuestas porque has <a href="/u/{{username}}/preferences">leído este tema</a>.'
+          "2": 'Tú verás la cuenta de nuevas respuestas porque has <a href="{{basePath}}/u/{{username}}/preferences">leído este tema</a>.'
           "1_2": 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
           "1": 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           "0_7": 'Estás ignorando todas las notificaciones en esta categoría.'
@@ -2627,8 +2627,8 @@ es:
           total: "Total de siempre"
           no_data: "Ningún dato a mostrar."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Buscar logs</a>'
-            disabled: 'El reporte de Tendencias de Búsquedas está inhabilitado. Habilita el <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log consultas de búsquedas</a> para colectar datos.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Buscar logs</a>'
+            disabled: 'El reporte de Tendencias de Búsquedas está inhabilitado. Habilita el <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log consultas de búsquedas</a> para colectar datos.'
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"
@@ -3684,6 +3684,8 @@ es:
           tags: "Etiquetas"
           search: "Búsqueda"
           groups: "Grupos"
+        secret_list:
+          invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo

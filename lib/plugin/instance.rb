@@ -357,10 +357,6 @@ class Plugin::Instance
     javascripts << js
   end
 
-  def register_svg_icon(icon)
-    DiscoursePluginRegistry.register_svg_icon(SvgSprite.process(icon))
-  end
-
   # @option opts [String] :name
   # @option opts [String] :nativeName
   # @option opts [String] :fallbackLocale

@@ -1046,7 +1046,7 @@ it:
       complete_email_found: "C'è un account che corrisponde alla email <b>%{email}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account corrisponde alla email <b>%{email}</b>"
-      help: "Non arrivano email? Per prima cosa assicurati di controllare la cartella spam.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='/about'>il nostro disponibile staff.</a><p>"
+      help: "Non arrivano email? Per prima cosa assicurati di controllare la cartella spam.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='%{basePath}/about'>il nostro disponibile staff.</a><p>"
       button_ok: "OK"
       button_help: "Aiuto"
     email_login:
@@ -1551,7 +1551,7 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='/unread'>1 argomento non letto</a> } other { Ci sono <a href='/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='/new'># nuovi</a>  argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a>  argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: "Perché non crei un argomento?"
@@ -1639,7 +1639,7 @@ it:
           "2_8": 'Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria.'
           "2_4": 'Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento.'
           "2_2": 'Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento.'
-          "2": 'Vedrai un conteggio delle nuove risposte perché <a href="/u/{{username}}/preferences">hai letto questo argomento</a>.'
+          "2": 'Vedrai un conteggio delle nuove risposte perché <a href="{{basePath}}/u/{{username}}/preferences">hai letto questo argomento</a>.'
           "1_2": 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           "1": 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           "0_7": 'Stai ignorando tutte le notifiche di questa categoria.'
@@ -2555,8 +2555,8 @@ it:
           disabled: "Il rapporto è disabilitato"
           no_data: "Non ci sono dati da mostrare."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Cerca nei log</a>'
-            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione<a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>per iniziare a raccogliere i dati.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
+            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>per iniziare a raccogliere i dati.'
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"

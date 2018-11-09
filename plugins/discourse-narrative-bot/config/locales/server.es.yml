@@ -134,7 +134,7 @@ es:
         second_response: |-
           Aw, lo siento. Sigo sin entenderlo. :anguished:
 
-          Soy solo un robot, pero si quieres contactar a una persona real, mira [nuestra página de contacto](/about).
+          Soy solo un robot, pero si quieres contactar a una persona real, mira [nuestra página de contacto](%{base_path}/about).
 
           Mientras tanto, me quedaré fuera de tu camino.
     new_user_narrative:

@@ -692,7 +692,9 @@ class ApplicationController < ActionController::Base
     return if current_user || (request.format.json? && is_api?)
 
     if SiteSetting.login_required?
+
       flash.keep
+      dont_cache_page
 
       if SiteSetting.enable_sso?
         # save original URL in a session so we can redirect after login

@@ -33,10 +33,10 @@
 // --------------------------------------------------
 
 .topic-list-icons {
-  .d-icon-thumbtack {
+  .d-icon-thumb-tack {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
-  .d-icon-thumbtack.unpinned {
+  .d-icon-thumb-tack.unpinned {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
   a.title {
@@ -242,7 +242,7 @@ button.dismiss-read {
     span {
       display: none;
     }
-    .d-icon {
+    i {
       margin-right: 0;
     }
   }

@@ -1,6 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
-import { convertIconClass } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   classNames: ["group-flair-inputs"],
@@ -13,11 +12,6 @@ export default Ember.Component.extend({
   @computed("model.flair_url")
   flairPreviewIcon(flairURL) {
     return flairURL && flairURL.substr(0, 3) === "fa-";
-  },
-
-  @computed("model.flair_url", "flairPreviewIcon")
-  flairPreviewIconUrl(flairURL, flairPreviewIcon) {
-    return flairPreviewIcon ? convertIconClass(flairURL) : "";
   },
 
   @computed("model.flair_url", "flairPreviewIcon")

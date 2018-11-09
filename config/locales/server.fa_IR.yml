@@ -111,7 +111,7 @@ fa_IR:
       <<: *errors
   invite:
     not_found: "رمز دعوت شما نامعتبر است. لطفا با مدیریت سایت تماس بگیرید."
-    user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='/u/%{username}/summary'>حساب کاربری دارند!</a> "
+    user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
@@ -243,7 +243,7 @@ fa_IR:
 
       - به همراه کلمه‌هایی که عموما در موضوع شما برای *پیدا* کردن استفاده می‌شود. برای گروه کردن موضوعاتتان با موضوعات مرتبط، یک دسته‌بندی انتخاب کنید.
 
-      برای اطلاعات بیشتر [دستورالعمل های انجمن را ببینید](/guidelines). این پنل اول فقط به شما نشان داد می‌شود %{education_posts_text}.
+      برای اطلاعات بیشتر [دستورالعمل های انجمن را ببینید](%{base_path}/guidelines). این پنل اول فقط به شما نشان داد می‌شود %{education_posts_text}.
     'new-reply': |
       به %{site_name} &mdash; خوش آمدید **با تشکر از شما برای همکارییتان!**
 
@@ -253,7 +253,7 @@ fa_IR:
 
       - از انتقاد سازنده استقبال می‌کنیم, ولی از *نظرات*، انتقاد کنید نه مردم.
 
-      برای اطلاعات بیشتر، [راهنمای انجمن را ببینید](/guidelines). این قسمت برای %{education_posts_text} نمایش داده می‌شود.
+      برای اطلاعات بیشتر، [راهنمای انجمن را ببینید](%{base_path}/guidelines). این قسمت برای %{education_posts_text} نمایش داده می‌شود.
     avatar: |
       ### نظرتان درباره تصویر حساب کاربری چیست؟
 
@@ -283,7 +283,7 @@ fa_IR:
 
       آیا در نظر دارید که به دیگر کاربران هم در این بحث پاسخ دهید؟ بحث خوب بحثی است که شامل نظرات مختلف باشد.
 
-      اگر می‌خواهید به گفتو با این کاربر ادامه بدهید [پیام خصوصی ارسال کنید](/u/%{reply_username}).
+      اگر می‌خواهید به گفتو با این کاربر ادامه بدهید [پیام خصوصی ارسال کنید](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       شما به حداکثر پاسخ برای این موضوع رسیدید
 
@@ -347,7 +347,7 @@ fa_IR:
             word:
               too_many: "برای چنین کاری کلمات زیادی است"
   user_profile:
-    no_info_me: "<div class='missing-profile'>فیلد درباره من نمایه شما خالی است, <a href='/u/%{username_lower}/preferences/about-me'>قصد نوشتن دارید؟</a></div>"
+    no_info_me: "<div class='missing-profile'>فیلد درباره من نمایه شما خالی است, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>قصد نوشتن دارید؟</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} هنوز در نمایه‌اش چیزی در فیلد 'درباره من' وارد نکرده است."
   vip_category_name: "سالن"
   vip_category_description: "دسته‌بندی مخصوص برای اعضا با سطح اعتماد 3 و بالاتر."
@@ -368,7 +368,7 @@ fa_IR:
         - چه چیزی را در اینجا پیدا می‌کنند؟
         - چرا باید به اینجا بیایند؟
         - چه زمانی می‌توانند بیشتر بخوانند (پیوند‌ها، منابع و...)؟
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         شاید بخواهید این موضوع را از طریق مدیریت ببندید :wrench: (در قسمت بالا سمت راست و پایین)، بنابراین پاسخ‌ها در اعلان ها انباشته نمی‌شوند.
   lounge_welcome:
@@ -759,11 +759,11 @@ fa_IR:
     memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است، برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کند.'
     subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
     email_polling_errored_recently:
-      one: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='/logs' target='_blank'>گزارشات</a> را ببینید."
-      other: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='/logs' target='_blank'>گزارشات</a> را ببینید."
-    bad_favicon_url: "favicon نمی‌تواند بارگذاری شود. مقدار favicon_url را در <a href='/admin/site_settings'>تنظیمات سایت</a> بررسی کنید."
-    poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا  <a href='/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
-    poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
+      one: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
+      other: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
+    bad_favicon_url: "favicon نمی‌تواند بارگذاری شود. مقدار favicon_url را در <a href='%{base_path}/admin/site_settings'>تنظیمات سایت</a> بررسی کنید."
+    poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا  <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
+    poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
   site_settings:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "پاک کردن خودکار تمام نوشته‌هایی که بیش از 30 روز بصورت پنهان باقی می‌مانند. "
@@ -1031,8 +1031,8 @@ fa_IR:
     auto_respond_to_flag_actions: "فعال کردن پاسخ خودکار برای زمانی که پرچم‌گذاری دفع می شود."
     min_first_post_typing_time: "حداقل زمان تایپ برای اولین نوشته کاربر به واحد میلی ثانیه، اگر این زمان رعایت نشود نوشته نیازمند تایید خواهد بود. 0 برای غیر فعال (توصیه نمی‌شود)"
     reply_by_email_enabled: "Enable replying to topics via email."
-    reply_by_email_address: "نمونه برای پاسخ به ایمیل، آدرس‌های ایمیل آمده برای مثال: %{reply_key}@reply.example.com یا replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "لیست قالب‌های مشابه برای پاسخ به ایمیل‌های دریافتی. مثال:\n%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "نمونه برای پاسخ به ایمیل، آدرس‌های ایمیل آمده برای مثال: %%{reply_key}@reply.example.com یا replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "لیست قالب‌های مشابه برای پاسخ به ایمیل‌های دریافتی. مثال:\n%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "محروم کردن تصاویر از ایمیل‌هایی با حجم کمتر از 2800 بایت"
     short_email_length: "طول ایمیل کوتاه به بایت"
     display_name_on_email_from: "نمایش نام و نام‌خانوادگی در زمینه‌ی فرستنده‌ی ایمیل"
@@ -1195,8 +1195,8 @@ fa_IR:
       invalid_string_min_max: "باید بین  %{min}  و %{max} نویسه باشد"
       invalid_string_min: "باید حداقل  %{min}  نویسه باشد "
       invalid_string_max: "نباید بیشتر از %{max}  نویسه باشد"
-      invalid_reply_by_email_address: "مقدار باید شامل '%{reply_key}' و از ایمیل آگاه سازی متفاوت باشد"
-      invalid_alternative_reply_by_email_addresses: "تمام مقدار‌ها باید شامل '%{reply_key}' و ازسایر ایمیل‌های اطلاع‌رسانی جدا باشند."
+      invalid_reply_by_email_address: "مقدار باید شامل '%%{reply_key}' و از ایمیل آگاه سازی متفاوت باشد"
+      invalid_alternative_reply_by_email_addresses: "تمام مقدار‌ها باید شامل '%%{reply_key}' و ازسایر ایمیل‌های اطلاع‌رسانی جدا باشند."
       pop3_polling_host_is_empty: "حداقل باید یک 'هاست رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
       pop3_polling_username_is_empty: "حداقل باید یک 'نام کاربری رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
       pop3_polling_password_is_empty: "حداقل باید یک 'رمز‌عبور رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
@@ -1345,8 +1345,8 @@ fa_IR:
       domain_not_allowed: "سایت نامعتبر است. دامنه‌های مجاز: %{domains}"
   flags_reminder:
     flags_were_submitted:
-      one: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](/admin/flags)."
-      other: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](/admin/flags)."
+      one: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](%{base_path}/admin/flags)."
+      other: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](%{base_path}/admin/flags)."
     subject_template:
       one: "%{count} نشانه ها منتظر استفاده"
       other: "%{count} نشانه ها منتظر استفاده"
@@ -1409,7 +1409,7 @@ fa_IR:
     subject_template: "[%{email_prefix}] نسخه جدید موجود است"
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به موضوع** پرچم‌گذاری شده. انجمن احساس خوبی برای جا دادن آن در موضوع ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
-    inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم‌گذاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](/guidelines)"
+    inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم‌گذاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](%{base_path}/guidelines)"
     spam: "نوشته شما به عنوان **هرزنامه** پرچم‌گذاری شده. انجمن احساس کرده که این یک تبلیغ هست٬ چیزی بیش از حد تبلیغات بجای این‌که بدرد بخور باشد یا به موضوع ربط داشته باشد. "
     notify_moderators: "نوشته شما پرچم‌گذاری شده ** برای توجه مدیران**. انجمن احساس کرده که نوشته شما نیاز به دخالت دستی یکی از همکاران را دارد."
   flags_dispositions:
@@ -1950,8 +1950,8 @@ fa_IR:
   avatar:
     missing: "با عرض پوزش، نمی‌توانیم آواتار مرتبطی با این ایمیل پیدا کنیم. لطفا دوباره آپلود کنید."
   flag_reason:
-    sockpuppet: "یک کاربر جدید موضوع جدیدی ایجاد کرده و کاربری با همان آیپی به موضوع پاسخ داده (%{ip_address}). قسمت <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> را از تنظیمات سایت ببینید."
-    spam_hosts: "این کاربر تلاش کرده چند نوشته با لینک به یک دامنه ارسال کند(%{domain}). قسمت <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> را از تنظیمات سایت ببینید."
+    sockpuppet: "یک کاربر جدید موضوع جدیدی ایجاد کرده و کاربری با همان آیپی به موضوع پاسخ داده (%{ip_address}). قسمت <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> را از تنظیمات سایت ببینید."
+    spam_hosts: "این کاربر تلاش کرده چند نوشته با لینک به یک دامنه ارسال کند(%{domain}). قسمت <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> را از تنظیمات سایت ببینید."
   color_schemes:
     base_theme_name: "پایه"
     dark: "طرح تیره"
@@ -1990,7 +1990,7 @@ fa_IR:
       description: یک پسند دریافت کرده‌اید
     autobiographer:
       name: نویسنده شرح‌حال
-      description: اطلاعات <a href="/my/preferences">صفحه شخصی</a>  خود را تکمیل کرده
+      description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a>  خود را تکمیل کرده
     anniversary:
       name: سالگرد
       description: برای یک سال کاربر فعال بوده، حداقل یک نوشته دارد.
@@ -2220,15 +2220,15 @@ fa_IR:
           contact_email:
             label: "ایمیل"
             placeholder: "name@example.com"
-            description: "ایمیل شخص یا گروه پاسخگوی انجمن. برای اطلاعات مهمی مانند پرچم‌های کنترل نشده، به‌روز‌رسانی‌های امنیتی و تماس‌های فوری در <a href='/about' target='_blank'>صفحه دباره‌ما</a> "
+            description: "ایمیل شخص یا گروه پاسخگوی انجمن. برای اطلاعات مهمی مانند پرچم‌های کنترل نشده، به‌روز‌رسانی‌های امنیتی و تماس‌های فوری در <a href='%{base_path}/about' target='_blank'>صفحه دباره‌ما</a> "
           contact_url:
             label: "صفحه وب"
-            description: "صفحه تماس عمومی شما در <a href='/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
+            description: "صفحه تماس عمومی شما در <a href='%{base_path}/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
           site_contact:
             label: "پیام‌های خودکار"
       corporate:
         title: "سازمان"
-        description: "این نام ها در <a href='/privacy' target='blank'>سیاست حفظ حریم خصوصی</a> و <a href='/tos' target='blank'>شرایط استفاده از سرویس</a> وارد می‌شوند، که موضوعات قابل ویرایشی در دسته‌بندی کارکنان هستند. اگر شرکت ندارید این قسمت را رد کنید."
+        description: "این نام ها در <a href='%{base_path}/privacy' target='blank'>سیاست حفظ حریم خصوصی</a> و <a href='%{base_path}/tos' target='blank'>شرایط استفاده از سرویس</a> وارد می‌شوند، که موضوعات قابل ویرایشی در دسته‌بندی کارکنان هستند. اگر شرکت ندارید این قسمت را رد کنید."
         fields:
           company_short_name:
             label: "نام شرکت (کوتاه)"

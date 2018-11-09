@@ -134,7 +134,7 @@ id:
         second_response: |-
           Aduh maaf. Saya masih belum paham. :anguished:
 
-          Saya hanya robot, jika ingin berkomunikas dengan manusia asli, buka [our contact page](/about).
+          Saya hanya robot, jika ingin berkomunikas dengan manusia asli, buka [our contact page](%{base_path}/about).
 
           Sementara ini, saya akan mendampingi Anda.
     new_user_narrative:

@@ -155,8 +155,11 @@ describe SiteSettingExtension do
     end
 
     it "should have the correct desc" do
-      I18n.expects(:t).with("site_settings.test_setting").returns("test description")
-      expect(settings.description(:test_setting)).to eq("test description")
+      I18n.backend.store_translations(:en, site_settings: { test_setting: "test description <a href='%{base_path}/admin'>/admin</a>" })
+      expect(settings.description(:test_setting)).to eq("test description <a href='/admin'>/admin</a>")
+
+      Discourse.stubs(:base_path).returns("/forum")
+      expect(settings.description(:test_setting)).to eq("test description <a href='/forum/admin'>/admin</a>")
     end
 
     it "should have the correct default" do

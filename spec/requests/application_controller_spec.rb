@@ -13,6 +13,11 @@ RSpec.describe ApplicationController do
       get "/?authComplete=true"
       expect(response).to redirect_to('/login?authComplete=true')
     end
+
+    it "should never cache a login redirect" do
+      get "/"
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
   end
 
   describe 'invalid request params' do

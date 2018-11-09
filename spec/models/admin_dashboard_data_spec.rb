@@ -306,7 +306,7 @@ describe AdminDashboardData do
 
     it 'returns nil if force_https site setting not enabled' do
       SiteSetting.force_https = false
-      expect(subject).to eq(I18n.t('dashboard.force_https_warning'))
+      expect(subject).to eq(I18n.t('dashboard.force_https_warning', base_path: Discourse.base_path))
     end
   end
 
@@ -339,12 +339,12 @@ describe AdminDashboardData do
 
     it 'returns a message if it was added' do
       described_class.add_problem_message(key)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key))
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
     end
 
     it 'returns a message if it was added with an expiry' do
       described_class.add_problem_message(key, 300)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key))
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
     end
   end
 

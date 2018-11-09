@@ -134,7 +134,7 @@ sk:
         second_response: |-
           Ach, prepáč, stále to chechápem. :anguished:
 
-          Som iba robot, ale ak chceš kontaktovať reálnu osobu, skús [našu kontaktnú stránku](/about).
+          Som iba robot, ale ak chceš kontaktovať reálnu osobu, skús [našu kontaktnú stránku](%{base_path}/about).
 
           Zatiaľ sa Ti nebudem pliesť do cesty.
     new_user_narrative:

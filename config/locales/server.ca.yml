@@ -238,7 +238,7 @@ ca:
 
       - Inclou mots emprats amb freqüència al teu tema perquè la resta ho puguin *trobar*. Per tal d'agrupar el teu tema amb d'altres relacionats, tria una categoria.
 
-      Per saber-ne més, [fes un cop d'ull a la guia de la comunitat](/guidelines). Aquest avís només apareixerà per al teu primer %{education_posts_text}.
+      Per saber-ne més, [fes un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà per al teu primer %{education_posts_text}.
     'new-reply': |
       Et donem la benvinguda a %{site_name} &mdash; **gràcies per contribuir-hi!**
 
@@ -248,7 +248,7 @@ ca:
 
       - Les crítiques constructives són benvingudes, però per criticar *idees*, no pas persones.
 
-      Per saber-ne més, [fes un cop d'ull a la guia de la comunitat](/guidelines). Aquest avís només apareixerà per al teu primer %{education_posts_text}.
+      Per saber-ne més, [fes un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà per al teu primer %{education_posts_text}.
     avatar: |
       ### Què tal si poses una fotografia per al teu compte?
 
@@ -339,7 +339,7 @@ ca:
         - Per què haurien de venir aquí?
         - On poden llegir-ne més (enllaços, recursos, etcètera)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
   lounge_welcome:
@@ -716,11 +716,11 @@ ca:
     memory_warning: 'El teu servidor s''està executant amb menys d''1 GB de memòria total. Se''n recomana com a mínim un 1 GB de memòria.'
     subfolder_ends_in_slash: "La teva configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
     email_polling_errored_recently:
-      one: "L'enquesta per correu electrònic ha generat un error durant les darreres 24 hores. Fes un cop d'ull als <a href='/logs' target='_blank'>registres</a> per saber-ne més."
-      other: "L'enquesta per correu electrònic ha generat %{count} errors durant les darreres 24 hores. Fes un cop d'ull als <a href='/logs' target='_blank'>registres</a> per saber-ne més."
-    bad_favicon_url: "La càrrega de <i>favicon</i> està fallant. Revisa la configuració de favicon_url a la <a href='/admin/site_settings'>Configuració del lloc</a>."
-    poll_pop3_timeout: "S'ha esgotat del temps de connexió al servidor POP3. No s'ha pogut lliurar el correu entrant. Si us plau, revisa la teva <a href='/admin/site_settings/category/email'>configuració de POP3</a> i el proveïdor de serveis."
-    poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Si us plau, revisa la teva <a href='/admin/site_settings/category/email'>configuració de POP3</a>."
+      one: "L'enquesta per correu electrònic ha generat un error durant les darreres 24 hores. Fes un cop d'ull als <a href='%{base_path}/logs' target='_blank'>registres</a> per saber-ne més."
+      other: "L'enquesta per correu electrònic ha generat %{count} errors durant les darreres 24 hores. Fes un cop d'ull als <a href='%{base_path}/logs' target='_blank'>registres</a> per saber-ne més."
+    bad_favicon_url: "La càrrega de <i>favicon</i> està fallant. Revisa la configuració de favicon_url a la <a href='%{base_path}/admin/site_settings'>Configuració del lloc</a>."
+    poll_pop3_timeout: "S'ha esgotat del temps de connexió al servidor POP3. No s'ha pogut lliurar el correu entrant. Si us plau, revisa la teva <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a> i el proveïdor de serveis."
+    poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Si us plau, revisa la teva <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a>."
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Esborra automàticament qualsevol publicació que resten oculta durant més de 30 dies."
@@ -976,8 +976,8 @@ ca:
     auto_respond_to_flag_actions: "Activa resposta automàtica en rebutjar una bandera."
     min_first_post_typing_time: "Quantitat mínima de temps en mil·lisegons que una persona pot escriure durant la primera publicació, si no s'assoleix el límit posterior la publicació passarà automàticament a la cua d'aprovació necessitats. Configura a 0 per desactivar (no recomanat)"
     reply_by_email_enabled: "Activa la resposta a temes per correu."
-    reply_by_email_address: "Plantilla per respondre per correu una adreça de correu entrant, per exemple:  %{reply_key}@reply.example.com o replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Llista de plantilles alternatives per respondre per correu adreces de correu entrant. Per exemple: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "Plantilla per respondre per correu una adreça de correu entrant, per exemple:  %%{reply_key}@reply.example.com o replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Llista de plantilles alternatives per respondre per correu adreces de correu entrant. Per exemple: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Eliminar imatges de correus electrònics amb una mida inferior a 2800 bytes"
     short_email_length: "Mostra la mida del correu en bits"
     display_name_on_email_from: "Mostra noms sencers al correu des dels camps"
@@ -1138,8 +1138,8 @@ ca:
       invalid_string_min_max: "Ha de ser d'entre %{min} i %{max} caràcters."
       invalid_string_min: "Com a mínim ha de tenir %{min} caràcters."
       invalid_string_max: "No ha de tenir més de %{max} caràcters."
-      invalid_reply_by_email_address: "El valor ha de tenir '%{reply_key}' i ser diferent del correu de notificació."
-      invalid_alternative_reply_by_email_addresses: "Tots els valors han d'incloure '%{reply_key}' i ser diferents del correu de notificació."
+      invalid_reply_by_email_address: "El valor ha de tenir '%%{reply_key}' i ser diferent del correu de notificació."
+      invalid_alternative_reply_by_email_addresses: "Tots els valors han d'incloure '%%{reply_key}' i ser diferents del correu de notificació."
       pop3_polling_host_is_empty: "Has de configurar 'pop3 polling host' abans d'activar enquestes POP3."
       pop3_polling_username_is_empty: "Has de configurar 'pop3 polling username' abans d'activar enquestes POP3."
       pop3_polling_password_is_empty: "Has de configurar 'pop3 polling password' abans d'activar enquestes POP3."
@@ -1285,7 +1285,7 @@ ca:
     title: "Nova versió remitent amb notes"
   flag_reasons:
     off_topic: "La teva publicació ha estat abanderada com a **fora de context**: la comunitat troba que no encaixa amb el tema, tal i com el defineix el títol i la primera publicació."
-    inappropriate: "La teva publicació ha estat abanderada com a **inapropiada**: la comunitat troba que és ofensiva, abusiva o una violació de [les nostres normes de comunitat](/guidelines)."
+    inappropriate: "La teva publicació ha estat abanderada com a **inapropiada**: la comunitat troba que és ofensiva, abusiva o una violació de [les nostres normes de comunitat](%{base_path}/guidelines)."
     spam: "La teva publicació ha estat abanderada com a **brossa**: la comunitat troba que és un anunci, que és de tipus publicitari en comptes de ser útil o important per al tema, com s'esperava."
     notify_moderators: "La teva publicació ha estat abanderada per a **consideració moderadora**: la comunitat troba que la publicació necessita la intervenció de l'equip."
   flags_dispositions:
@@ -1673,8 +1673,8 @@ ca:
   avatar:
     missing: "Disculpa, no podem trobar cap avatar associat amb aquesta adreça de correu. Que pots provar de tornar a carregar-ho?"
   flag_reason:
-    sockpuppet: "Una nova persona ha creat un tema i una altra amb la mateixa adreça IP  (%{ip_address}) ha respost. Mira la configuració <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Aquesta nova persona ha creat moltes publicacions amb enllaços al mateix domini (%{domain}). Mira la configuració <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Una nova persona ha creat un tema i una altra amb la mateixa adreça IP  (%{ip_address}) ha respost. Mira la configuració <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Aquesta nova persona ha creat moltes publicacions amb enllaços al mateix domini (%{domain}). Mira la configuració <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Base"
   about: "Sobre"
@@ -1922,15 +1922,15 @@ ca:
           contact_email:
             label: "Correu"
             placeholder: "name@example.com"
-            description: "L'adreça de correu per a la persona o grup responsable d'aquesta comunitat. Fet servir per a notificacions importants com ara banderes sense manipular, actualitzacions de seguretat ia <a href='/about' target='_blank'>pàgina sobre tu</a> per a un contacte urgent de la comunitat."
+            description: "L'adreça de correu per a la persona o grup responsable d'aquesta comunitat. Fet servir per a notificacions importants com ara banderes sense manipular, actualitzacions de seguretat ia <a href='%{base_path}/about' target='_blank'>pàgina sobre tu</a> per a un contacte urgent de la comunitat."
           contact_url:
             label: "Pàgina web"
-            description: "Pàgina web de contacte general per a tu o la teva organització. Es mostrarà a <a href='/about' target='_blank'>la teva pàgina sobre tu</a>."
+            description: "Pàgina web de contacte general per a tu o la teva organització. Es mostrarà a <a href='%{base_path}/about' target='_blank'>la teva pàgina sobre tu</a>."
           site_contact:
             label: "Missatges automàtics"
       corporate:
         title: "Organització"
-        description: "Els noms s'inclouran a la teva <a href='/privacy' target='blank'>Política de Privacitat</a> i a les <a href='/tos' target='blank'>Condicions del Servei</a>, que són temes que pots editar a la categoria d'equip. Si no tens cap empresa, pots deixar-ho buit."
+        description: "Els noms s'inclouran a la teva <a href='%{base_path}/privacy' target='blank'>Política de Privacitat</a> i a les <a href='%{base_path}/tos' target='blank'>Condicions del Servei</a>, que són temes que pots editar a la categoria d'equip. Si no tens cap empresa, pots deixar-ho buit."
         fields:
           company_short_name:
             label: "Nom de l'empresa (breu)"

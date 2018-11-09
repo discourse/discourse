@@ -382,11 +382,8 @@ const Composer = RestModel.extend({
     return this.get("titleLength") <= this.siteSettings.max_topic_title_length;
   }.property("minimumTitleLength", "titleLength", "post.static_doc"),
 
-  @computed("action", "whisper")
-  saveIcon(action, whisper) {
-    if (whisper) {
-      return "eye-slash";
-    }
+  @computed("action")
+  saveIcon(action) {
     return SAVE_ICONS[action];
   },
 

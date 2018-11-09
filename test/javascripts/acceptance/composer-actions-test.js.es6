@@ -88,7 +88,11 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("toggle_whisper");
 
-  assert.ok(find(".composer-fields .whisper .d-icon-eye-slash").length === 1);
+  assert.ok(
+    find(".composer-fields .whisper")
+      .text()
+      .indexOf(I18n.t("composer.whisper")) > 0
+  );
 });
 
 QUnit.test("replying to post - reply_as_new_topic", async assert => {

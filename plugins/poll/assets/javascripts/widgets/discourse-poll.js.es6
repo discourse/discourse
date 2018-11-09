@@ -39,9 +39,9 @@ createWidget("discourse-poll-option", {
     const chosen = vote.indexOf(option.id) !== -1;
 
     if (attrs.isMultiple) {
-      result.push(iconNode(chosen ? "far-check-square" : "far-square"));
+      result.push(iconNode(chosen ? "check-square-o" : "square-o"));
     } else {
-      result.push(iconNode(chosen ? "far-dot-circle" : "far-circle"));
+      result.push(iconNode(chosen ? "dot-circle-o" : "circle-o"));
     }
     result.push(" ");
     result.push(optionHtml(option));
