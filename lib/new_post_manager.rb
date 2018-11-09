@@ -119,14 +119,6 @@ class NewPostManager
           result.errors[:base] << I18n.t(:topic_not_found)
           return result
         end
-      elsif manager.args[:category]
-        category = Category.find_by_id(manager.args[:category])
-
-        unless manager.user.guardian.can_create_topic_on_category?(category)
-          result = NewPostResult.new(:created_post, false)
-          result.errors[:base] << I18n.t("js.errors.reasons.forbidden")
-          return result
-        end
       end
 
       result = manager.enqueue('default')
