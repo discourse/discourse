@@ -555,3 +555,8 @@ aside.onebox.stackexchange .onebox-body {
 .mobile-view article.onebox-body {
   border-top: none;
 }
+
+// Google Photos Album
+.onebox.google-photos-album {
+  @extend .imgur-album;
+}
