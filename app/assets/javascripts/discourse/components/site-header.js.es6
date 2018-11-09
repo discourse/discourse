@@ -82,6 +82,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         $centeredElement.parents(".panel-body").length) &&
       (e.direction === "left" || e.direction === "right")
     ) {
+      e.originalEvent.preventDefault();
       this.set("isPanning", true);
     } else if (
       center.x < 30 &&
@@ -137,6 +138,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     if (!this.get("isPanning")) {
       return;
     }
+    e.originalEvent.preventDefault();
     const $menuPanels = $(".menu-panel");
     const panMenuOffset = this.get("panMenuOffset");
     $menuPanels.each((idx, panel) => {
@@ -334,8 +336,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
         const menuTop = this.site.mobileView ? 0 : headerHeight();
 
-        let height;
-        const winHeight = $(window).height() - 16;
+        let height = window.innerHeight
+          ? window.innerHeight
+          : $(window).height();
+        const winHeight = height - 16;
         height = winHeight - menuTop;
 
         if ($panelBody.prop("style").height !== "100%") {

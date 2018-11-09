@@ -140,6 +140,7 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   panStart(e) {
+    e.originalEvent.preventDefault();
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
@@ -153,6 +154,7 @@ export default Ember.Component.extend(PanEvents, {
     if (!this.get("isPanning")) {
       return;
     }
+    e.originalEvent.preventDefault();
     this.set("isPanning", false);
     if (this._shouldPanClose(e)) {
       this._panOpenClose(e.deltaY, 40, "close");
@@ -165,6 +167,7 @@ export default Ember.Component.extend(PanEvents, {
     if (!this.get("isPanning")) {
       return;
     }
+    e.originalEvent.preventDefault();
     $(".timeline-container").css("bottom", Math.min(0, -e.deltaY));
   },
 
