@@ -168,6 +168,11 @@ class SessionController < ApplicationController
           end
         end
 
+        # never redirects back to sso in an sso loop
+        if return_path.start_with?(path("/sso"))
+          return_path = path("/")
+        end
+
         redirect_to return_path
       else
         render_sso_error(text: I18n.t("sso.not_found"), status: 500)
