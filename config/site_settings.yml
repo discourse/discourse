@@ -49,6 +49,7 @@ required:
     client: true
     type: upload
   logo_url:
+    hidden: true
     client: true
     default: '/images/d-logo-sketch.png'
   logo_small_url:
