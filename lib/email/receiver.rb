@@ -994,6 +994,7 @@ module Email
          end
         raise TooShortPost
       end
+
       raise InvalidPost, errors.join("\n") if result.errors.any?
 
       if result.post
