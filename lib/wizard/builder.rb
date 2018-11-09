@@ -144,7 +144,7 @@ class Wizard
       end
 
       @wizard.append_step('logos') do |step|
-        step.add_field(id: 'logo_url', type: 'image', value: SiteSetting.logo_url)
+        step.add_field(id: 'logo_url', type: 'image', value: SiteSetting.site_logo_url)
         step.add_field(id: 'logo_small_url', type: 'image', value: SiteSetting.logo_small_url)
 
         step.on_update do |updater|

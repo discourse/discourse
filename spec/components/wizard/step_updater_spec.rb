@@ -221,7 +221,7 @@ describe Wizard::StepUpdater do
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('logos')).to eq(true)
-      expect(SiteSetting.logo_url).to eq('/uploads/logo.png')
+      expect(SiteSetting.site_logo_url).to eq('/uploads/logo.png')
       expect(SiteSetting.logo_small_url).to eq('/uploads/logo-small.png')
     end
   end

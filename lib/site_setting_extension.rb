@@ -190,7 +190,11 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@client_settings.map { |n| [n, self.send(n)] }.flatten])
+    MultiJson.dump(Hash[*@client_settings.map do |name|
+      value = self.public_send(name)
+      value = value.to_s if type_supervisor.get_type(name) == :upload
+      [name, value]
+    end.flatten])
   end
 
   # Retrieve all settings

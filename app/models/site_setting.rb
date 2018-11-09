@@ -168,6 +168,12 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting::Upload
   end
 
+  client_settings << :site_logo_url
+
+  def self.site_logo_url
+    SiteSetting.logo&.url || SiteSetting.logo_url
+  end
+
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i

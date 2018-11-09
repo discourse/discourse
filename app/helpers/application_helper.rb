@@ -271,7 +271,7 @@ module ApplicationHelper
   end
 
   def application_logo_url
-    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url).presence || SiteSetting.logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url).presence || SiteSetting.site_logo_url
   end
 
   def login_path

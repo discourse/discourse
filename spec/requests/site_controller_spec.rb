@@ -7,7 +7,7 @@ describe SiteController do
 
       SiteSetting.title = "Hammer Time"
       SiteSetting.site_description = "A time for Hammer"
-      SiteSetting.logo_url = "/uploads/logo.png"
+      SiteSetting.site_logo_url = "/uploads/logo.png"
       SiteSetting.logo_small_url = "http://boom.com/uploads/logo_small.png"
       SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
       SiteSetting.mobile_logo_url = "https://a.a/a.png"

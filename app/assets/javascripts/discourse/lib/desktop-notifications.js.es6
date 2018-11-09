@@ -71,7 +71,7 @@ function confirmNotification() {
       body: I18n.t("notifications.popup.confirm_body"),
       icon:
         Discourse.SiteSettings.logo_small_url ||
-        Discourse.SiteSettings.logo_url,
+        Discourse.SiteSettings.site_logo_url,
       tag: "confirm-subscription"
     }
   );
@@ -150,8 +150,11 @@ function onNotification(data) {
   });
 
   const notificationBody = data.excerpt;
+
   const notificationIcon =
-    Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url;
+    Discourse.SiteSettings.logo_small_url ||
+    Discourse.SiteSettings.site_logo_url;
+
   const notificationTag =
     "discourse-notification-" +
     Discourse.SiteSettings.title +
