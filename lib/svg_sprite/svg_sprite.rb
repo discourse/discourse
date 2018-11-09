@@ -110,6 +110,7 @@ module SvgSprite
     "magic",
     "microphone-slash",
     "minus",
+    "minus-circle",
     "mobile-alt",
     "paint-brush",
     "pencil-alt",
