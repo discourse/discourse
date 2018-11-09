@@ -172,4 +172,18 @@ describe Tag do
       expect(tag.topic_count).to eq(1)
     end
   end
+
+  context "unused tags scope" do
+    let!(:tags) do
+      [ Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
+      Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
+      Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
+      Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
+      Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0)]
+    end
+
+    it "returns the correct tags" do
+      expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")
+    end
+  end
 end
