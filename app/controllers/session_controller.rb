@@ -173,7 +173,7 @@ class SessionController < ApplicationController
         end
 
         # never redirects back to sso in an sso loop
-        if return_path.start_with?(path("/sso"))
+        if return_path.start_with?(path("/session/sso"))
           return_path = path("/")
         end
 
