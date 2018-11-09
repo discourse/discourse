@@ -30,14 +30,14 @@ module Onebox
         def album_html(og)
           escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
           escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
-          album_title = "[Album] #{Onebox::Helpers.truncate(og[:title].strip, 80)}"
+          album_title = Onebox::Helpers::blank?(og[:description]) ? og[:title].strip : "[#{og[:description].strip}] #{og[:title].strip}"
 
           <<-HTML
             <div class='onebox google-photos-album'>
               <a href='#{escaped_url}' target='_blank'>
                 <span class='outer-box' style='width:#{og[:image_width]}px'>
                   <span class='inner-box'>
-                    <span class='album-title'>#{album_title}</span>
+                    <span class='album-title'>#{Onebox::Helpers.truncate(album_title, 80)}</span>
                   </span>
                 </span>
                 <img src='#{escaped_src}' #{Helpers.title_attr(og)} height='#{og[:image_height]}' width='#{og[:image_width]}'>

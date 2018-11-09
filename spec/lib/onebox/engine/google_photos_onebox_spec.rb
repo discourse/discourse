@@ -9,7 +9,7 @@ describe Onebox::Engine::GooglePhotosOnebox do
   end
 
   it "includes album title" do
-    expect(html).to include("[Album] Mesmerizing Singapore")
+    expect(html).to include("[3 new photos · Album by Arpit Jalan] Mesmerizing Singapore")
   end
 
   it "includes album poster image" do
