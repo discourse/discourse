@@ -34,8 +34,7 @@ matrix:
     env: "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 rvm:
-  - 2.5.1
-  - 2.4.4
+  - 2.5.3
 
 services:
   - redis-server

@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
+# note, we require 2.5.2 and up cause 2.5.1 had some mail bugs we no longer
+# monkey patch, so this avoids people booting with this problem version
 begin
-  if !RUBY_VERSION.match?(/^2\.[456]/)
-    STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  if !RUBY_VERSION.match?(/^2\.(([67])|(5\.[2-9]))/)
+    STDERR.puts "Discourse requires Ruby 2.5.2 or up"
     exit 1
   end
 rescue
   # no String#match?
-  STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  STDERR.puts "Discourse requires Ruby 2.5.2 or up"
   exit 1
 end
 
