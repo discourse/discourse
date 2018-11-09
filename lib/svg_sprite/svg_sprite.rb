@@ -8,6 +8,7 @@ module SvgSprite
     "angle-down",
     "angle-up",
     "archive",
+    "arrows-alt-h",
     "arrow-up",
     "at",
     "backward",
