@@ -1485,9 +1485,7 @@ export default {
         topic_url: "/t/category-definition-for-dev/1026",
         read_restricted: false,
         permission: null,
-        notification_level: null,
-        logo_url: null,
-        background_url: null
+        notification_level: null
       }
     ],
     grouped_search_result: {
