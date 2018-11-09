@@ -162,7 +162,11 @@ class SessionController < ApplicationController
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
-            return_path = path("/") unless SiteSetting.sso_allows_all_return_paths || uri.host == Discourse.current_hostname
+            if (uri.hostname == Discourse.current_hostname)
+              return_path = uri.request_uri
+            elsif !SiteSetting.sso_allows_all_return_paths
+              return_path = path("/")
+            end
           rescue
             return_path = path("/")
           end
