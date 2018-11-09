@@ -825,7 +825,7 @@ describe Email::Receiver do
 
       Group.refresh_automatic_group!(:trust_level_4)
 
-      expect { process(:tl3_user) }.to_not change(Topic, :count)
+      expect { process(:tl3_user) }.to raise_error(Email::Receiver::InvalidPost)
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
