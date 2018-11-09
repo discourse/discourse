@@ -311,7 +311,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-15T16:53:49Z",
         excerpt:
-          "A good fix would be to have the ERB template do an if statement. We&#39;d happily accept a PR that did this if you feel up to it: \n\n &lt;% if SiteSetting.logo_url.present? %&gt;\n  display logo html\n&lt;% else %&gt;\n  display title html\n&lt;% end %&gt;",
+          "A good fix would be to have the ERB template do an if statement.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -341,7 +341,7 @@ export default {
         action_type: 5,
         created_at: "2014-01-15T15:21:37Z",
         excerpt:
-          "A good fix would be to have the ERB template do an if statement. We&#39;d happily accept a PR that did this if you feel up to it: \n\n &lt;% if SiteSetting.logo_url.present? %&gt;\n  display logo html\n&lt;% else %&gt;\n  display title html\n&lt;% end %&gt;",
+          "A good fix would be to have the ERB template do an if statement.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
