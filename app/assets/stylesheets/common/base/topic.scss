@@ -97,7 +97,7 @@ a.badge-category {
   a.badge-category {
     margin-top: 5px;
   }
-  a.edit-topic i {
+  a.edit-topic .d-icon {
     font-size: 0.8em;
   }
   .edit-topic-title {
@@ -232,21 +232,21 @@ a.badge-category {
         margin-left: 0.5em;
         flex: 0 0 auto;
       }
-      i {
+      .d-icon {
         font-size: $font-down-2;
         margin: 0 0.5em 0 0;
       }
     }
   }
   a.reply-new {
-    i {
+    .d-icon {
       background: $secondary;
       border-radius: 20px;
       transition: all linear 0.15s;
     }
     &:hover {
       color: $tertiary;
-      i {
+      .d-icon {
         background: $tertiary-low;
       }
     }
@@ -258,11 +258,7 @@ a.topic-featured-link {
   text-transform: lowercase;
   color: dark-light-choose($primary-medium, $secondary-medium);
   font-size: 0.875rem;
-  &::before {
-    position: relative;
-    top: 0.1em;
-    padding-right: 3px;
-    font-family: FontAwesome;
-    content: "\f08e";
+  .d-icon {
+    margin-right: 3px;
   }
 }

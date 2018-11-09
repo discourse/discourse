@@ -36,7 +36,7 @@
       border-color: $secondary;
       border-right-color: transparent;
     }
-    i {
+    .d-icon {
       color: $secondary;
     }
   }
@@ -94,13 +94,17 @@
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
-    i {
+    .d-icon {
       color: $primary-high;
     }
     .reply-details {
       max-width: calc(100% - 60px);
       flex: 1 1 auto;
       white-space: nowrap;
+
+      .d-icon {
+        opacity: 0.8;
+      }
     }
     .composer-action-title {
       display: inline-flex;

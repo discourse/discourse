@@ -206,7 +206,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.set("inviteIcon", "envelope");
           return I18n.t("topic.invite_reply.to_topic_email");
         } else {
-          this.set("inviteIcon", "hand-o-right");
+          this.set("inviteIcon", "hand-point-right");
           return I18n.t("topic.invite_reply.to_topic_username");
         }
       }

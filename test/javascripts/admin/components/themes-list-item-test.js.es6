@@ -11,7 +11,7 @@ componentTest("default theme", {
 
   test(assert) {
     assert.expect(1);
-    assert.equal(this.$(".fa-check").length, 1, "shows default theme icon");
+    assert.equal(this.$(".d-icon-check").length, 1, "shows default theme icon");
   }
 });
 
@@ -26,11 +26,15 @@ componentTest("pending updates", {
 
   test(assert) {
     assert.expect(1);
-    assert.equal(this.$(".fa-refresh").length, 1, "shows pending update icon");
+    assert.equal(
+      this.$(".d-icon-refresh").length,
+      1,
+      "shows pending update icon"
+    );
   }
 });
 
-componentTest("borken theme", {
+componentTest("broken theme", {
   template: "{{themes-list-item theme=theme}}",
   beforeEach() {
     this.set(
@@ -45,7 +49,7 @@ componentTest("borken theme", {
   test(assert) {
     assert.expect(1);
     assert.equal(
-      this.$(".fa-exclamation-circle").length,
+      this.$(".d-icon-exclamation-circle").length,
       1,
       "shows broken theme icon"
     );
