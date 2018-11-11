@@ -3591,5 +3591,5 @@ pl_PL:
         none_added: "Nie zaprosiłeś nikogo. Czy na pewno chcesz kontynuować?"
         roles:
           admin: "Administratorzy"
-          moderator: "Moderatoratorzy"
+          moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
