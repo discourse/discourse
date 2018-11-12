@@ -1,5 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
   sortProperties: ["totalCount:desc", "id"],
@@ -38,6 +40,41 @@ export default Ember.Controller.extend({
 
     showUploader() {
       showModal("tag-upload");
+    },
+
+    deleteUnused() {
+      ajax("/tags/unused", { type: "GET" })
+        .then(result => {
+          const displayN = 20;
+          const tags = result["tags"];
+          const tagString = tags.slice(0, displayN).join(", ");
+          var more = Math.max(0, tags.length - displayN);
+          const string =
+            more === 0
+              ? I18n.t("tagging.delete_unused_confirmation", {
+                  count: tags.length,
+                  tags: tagString
+                })
+              : I18n.t("tagging.delete_unused_confirmation_more", {
+                  total: tags.length,
+                  tags: tagString,
+                  count: more
+                });
+
+          bootbox.confirm(
+            string,
+            I18n.t("tagging.cancel_delete_unused"),
+            I18n.t("tagging.delete_unused"),
+            proceed => {
+              if (proceed) {
+                ajax("/tags/unused", { type: "DELETE" })
+                  .then(() => this.send("refresh"))
+                  .catch(popupAjaxError);
+              }
+            }
+          );
+        })
+        .catch(popupAjaxError);
     }
   }
 });

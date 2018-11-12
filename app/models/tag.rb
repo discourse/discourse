@@ -9,6 +9,8 @@ class Tag < ActiveRecord::Base
     where("lower(name) IN (?)", name)
   end
 
+  scope :unused, -> { where(topic_count: 0, pm_topic_count: 0) }
+
   has_many :tag_users # notification settings
 
   has_many :topic_tags, dependent: :destroy
