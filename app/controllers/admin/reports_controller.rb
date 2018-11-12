@@ -39,7 +39,12 @@ class Admin::ReportsController < Admin::AdminController
             Report.cache(report, 35.minutes)
           end
 
-          reports << report if report
+          if report.blank?
+            report = Report._get(report_type, args)
+            report.error = :not_found
+          end
+
+          reports << report
         end
       end
 

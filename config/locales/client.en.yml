@@ -2840,6 +2840,7 @@ en:
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
+        not_found_error: Sorry, this report doesn’t exist
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
