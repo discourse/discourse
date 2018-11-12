@@ -120,7 +120,7 @@ class SiteSettings::TypeSupervisor
     when self.class.types[:string]
       value.to_s
     when self.class.types[:upload]
-      Upload.find_by(id: value.to_i)
+      Upload.find_by(id: value.to_i) if value.to_i > 0
     else
       return value if self.class.types[type]
       # Otherwise it's a type error
