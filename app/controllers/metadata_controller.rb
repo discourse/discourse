@@ -13,10 +13,14 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+    logo = SiteSetting.large_icon_url.presence ||
+      SiteSetting.site_logo_small_url.presence ||
+      SiteSetting.apple_touch_icon_url.presence
+
     if !logo
       logo = path('/images/d-logo-sketch-small.png')
     end
+
     file_info = get_file_info(logo)
 
     display = Regexp.new(SiteSetting.pwa_display_browser_regex).match(request.user_agent) ? 'browser' : 'standalone'

@@ -51,8 +51,11 @@ required:
   logo_url:
     hidden: true
     default: '/images/d-logo-sketch.png'
-  logo_small_url:
+  logo_small:
     client: true
+    type: upload
+  logo_small_url:
+    hidden: true
     default: '/images/d-logo-sketch-small.png'
   digest_logo_url:
     default: ''

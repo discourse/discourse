@@ -57,7 +57,7 @@ describe Jobs::CleanUpUploads do
     avatar1_upload = fabricate_upload
     avatar2_upload = fabricate_upload
 
-    SiteSetting.site_logo_url = logo_upload.url
+    SiteSetting.logo_url = logo_upload.url
     SiteSetting.logo_small_url = logo_small_upload.url
     SiteSetting.digest_logo_url = digest_logo_upload.url
     SiteSetting.mobile_logo_url = mobile_logo_upload.url

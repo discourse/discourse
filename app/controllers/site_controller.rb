@@ -38,7 +38,7 @@ class SiteController < ApplicationController
   def basic_info
     results = {
       logo_url: UrlHelper.absolute(SiteSetting.site_logo_url),
-      logo_small_url: UrlHelper.absolute(SiteSetting.logo_small_url),
+      logo_small_url: UrlHelper.absolute(SiteSetting.site_logo_small_url),
       apple_touch_icon_url: UrlHelper.absolute(SiteSetting.apple_touch_icon_url),
       favicon_url:  UrlHelper.absolute(SiteSetting.favicon_url),
       title: SiteSetting.title,

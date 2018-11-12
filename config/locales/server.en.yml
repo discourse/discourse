@@ -1216,8 +1216,8 @@ en:
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
     logo: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     digest_logo_url: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
-    logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown. Use <a href='%{base_path}/wizard/steps/logos' target='_blank'>the wizard</a> to update."
     favicon_url: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Use <a href='%{base_path}/wizard/steps/icons' target='_blank'>the wizard</a> to update."
     mobile_logo_url: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
     large_icon_url: "Image used as logo/splash image on Android. Recommended size is 512px by 512px. Use <a href='%{base_path}/wizard/steps/icons' target='_blank'>the wizard</a> to update."

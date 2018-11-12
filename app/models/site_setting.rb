@@ -168,10 +168,17 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting::Upload
   end
 
-  client_settings << :site_logo_url
+  %i{
+    site_logo_url
+    site_logo_small_url
+  }.each { |client_setting| client_settings << client_setting }
 
   def self.site_logo_url
     SiteSetting.logo&.url || SiteSetting.logo_url
+  end
+
+  def self.site_logo_small_url
+    SiteSetting.logo_small&.url || SiteSetting.logo_small_url
   end
 
   def self.shared_drafts_enabled?
