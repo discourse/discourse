@@ -5,8 +5,10 @@ module Validators; end
 class Validators::UploadValidator < ActiveModel::Validator
 
   def validate(upload)
-    # staff can upload any file in PM
-    if upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm
+    # staff can upload any file in PM and site settings
+    if (upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm) ||
+       (upload.for_site_setting)
+
       return true if upload.user&.staff?
     end
 

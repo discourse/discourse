@@ -21,6 +21,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_theme
   attr_accessor :for_private_message
   attr_accessor :for_export
+  attr_accessor :for_site_setting
 
   validates_presence_of :filesize
   validates_presence_of :original_filename

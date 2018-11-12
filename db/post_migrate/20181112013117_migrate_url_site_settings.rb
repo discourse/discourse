@@ -30,7 +30,8 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
       upload = UploadCreator.new(
         file,
         "#{new_setting}",
-        origin: UrlHelper.absolute(old_url)
+        origin: UrlHelper.absolute(old_url),
+        for_site_setting: true
       ).create_for(Discourse.system_user.id)
 
       execute <<~SQL

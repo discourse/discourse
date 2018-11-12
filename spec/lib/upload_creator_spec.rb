@@ -37,6 +37,26 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'when image is not authorized' do
+      describe 'when image is for site setting' do
+        let(:filename) { 'logo.png' }
+        let(:file) { file_from_fixtures(filename) }
+
+        before do
+          SiteSetting.authorized_extensions = 'jpg'
+        end
+
+        it 'should create the right upload' do
+          upload = UploadCreator.new(file, filename,
+            for_site_setting: true
+          ).create_for(Discourse.system_user.id)
+
+          expect(upload.persisted?).to eq(true)
+          expect(upload.original_filename).to eq(filename)
+        end
+      end
+    end
+
     describe 'when image has the wrong extension' do
       let(:filename) { "png_as.bin" }
       let(:file) { file_from_fixtures(filename) }
