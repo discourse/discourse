@@ -124,6 +124,20 @@ const Topic = RestModel.extend({
     return newTags;
   },
 
+  @computed("related_messages")
+  relatedMessages(relatedMessages) {
+    if (relatedMessages) {
+      const store = this.store;
+
+      return this.set(
+        "related_messages",
+        relatedMessages.map(st => {
+          return store.createRecord("topic", st);
+        })
+      );
+    }
+  },
+
   @computed("suggested_topics")
   suggestedTopics(suggestedTopics) {
     if (suggestedTopics) {

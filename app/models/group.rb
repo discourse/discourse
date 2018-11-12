@@ -193,10 +193,10 @@ class Group < ActiveRecord::Base
 
   def posts_for(guardian, opts = nil)
     opts ||= {}
-    user_ids = group_users.map { |gu| gu.user_id }
-    result = Post.includes(:user, :topic, topic: :category)
+    result = Post.joins(:topic, user: :groups, topic: :category)
+      .preload(:topic, user: :groups, topic: :category)
       .references(:posts, :topics, :category)
-      .where(user_id: user_ids)
+      .where(groups: { id: id })
       .where('topics.archetype <> ?', Archetype.private_message)
       .where('topics.visible')
       .where(post_type: Post.types[:regular])

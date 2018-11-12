@@ -221,7 +221,7 @@
     &:empty + td {
       display: block;
       min-height: 1.75em;
-      width: 240px;
+      max-width: 240px;
     }
   }
 }
