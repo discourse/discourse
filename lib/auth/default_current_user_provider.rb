@@ -156,7 +156,7 @@ class Auth::DefaultCurrentUserProvider
       path: @env['REQUEST_PATH'],
       client_ip: @request.ip,
       staff: user.staff?,
-      impersonate: opts.impersonate)
+      impersonate: opts[:impersonate])
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
     unstage_user(user)
