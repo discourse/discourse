@@ -708,6 +708,7 @@ describe SiteSettingExtension do
       upload = Fabricate(:upload)
       settings.setting(:upload_type, upload, type: :upload, client: true)
       settings.setting(:string_type, 'haha', client: true)
+      settings.refresh!
 
       expect(settings.client_settings_json_uncached).to eq(
         "{\"default_locale\":\"en\",\"upload_type\":\"#{upload.url}\",\"string_type\":\"haha\"}"

@@ -418,7 +418,7 @@ module SiteSettingExtension
 
     define_singleton_method clean_name do
       if (c = current[name]).nil?
-        refresh!
+        refresh! if type_supervisor.get_type(name) != :upload
         current[name]
       else
         c
