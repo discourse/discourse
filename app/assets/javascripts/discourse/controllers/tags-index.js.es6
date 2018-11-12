@@ -47,19 +47,21 @@ export default Ember.Controller.extend({
         .then(result => {
           const displayN = 20;
           const tags = result["tags"];
-          const tagString = tags.slice(0, displayN).join(", ");
+          const joinedTags = tags.slice(0, displayN).join(", ");
           var more = Math.max(0, tags.length - displayN);
-          const string =
+
+          const tagsString =
             more === 0
-              ? I18n.t("tagging.delete_unused_confirmation", {
-                  count: tags.length,
-                  tags: tagString
-                })
-              : I18n.t("tagging.delete_unused_confirmation_more", {
-                  total: tags.length,
-                  tags: tagString,
-                  count: more
+              ? joinedTags
+              : I18n.t("tagging.delete_unused_confirmation_more_tags", {
+                  count: more,
+                  tags: joinedTags
                 });
+
+          const string = I18n.t("tagging.delete_unused_confirmation", {
+            count: tags.length,
+            tags: tagsString
+          });
 
           bootbox.confirm(
             string,
