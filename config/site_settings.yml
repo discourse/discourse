@@ -87,7 +87,11 @@ required:
   apple_touch_icon_url:
     hidden: true
     default: '/images/default-apple-touch-icon.png'
-  default_opengraph_image_url: ''
+  opengraph_image:
+    type: upload
+  default_opengraph_image_url:
+    hidden: true
+    default: ''
   twitter_summary_large_image_url: ''
   exclude_rel_nofollow_domains:
     default: ''

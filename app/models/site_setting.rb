@@ -203,6 +203,10 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.apple_touch_icon&.url || SiteSetting.apple_touch_icon_url
   end
 
+  def self.opengraph_image_url
+    SiteSetting.opengraph_image&.url || SiteSetting.default_opengraph_image_url
+  end
+
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i

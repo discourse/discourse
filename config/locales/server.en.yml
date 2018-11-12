@@ -1222,6 +1222,8 @@ en:
     large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px. Use <a href='%{base_path}/wizard/steps/icons' target='_blank'>the wizard</a> to update."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
     apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    opengraph_image: "Default opengraph image, used when the page has no other suitable image or site logo."
+    twitter_summary_large_image_url: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1453,9 +1455,6 @@ en:
 
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
     selectable_avatars: "List of avatars users can choose from."
-
-    default_opengraph_image_url: "Default opengraph image, used when the page has no other suitable image or site logo."
-    twitter_summary_large_image_url: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
