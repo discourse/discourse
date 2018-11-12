@@ -139,8 +139,9 @@ class CookedPostProcessor
 
   def add_broken_image_placeholder!(img)
     img.name = "span"
-    img.set_attribute("class", "broken-image fa fa-chain-broken")
+    img.set_attribute("class", "broken-image")
     img.set_attribute("title", I18n.t("post.image_placeholder.broken"))
+    img << '<svg class="fa d-icon d-icon-unlink svg-icon" aria-hidden="true"><use xlink:href="#unlink"></use></svg>'
     img.remove_attribute("src")
     img.remove_attribute("width")
     img.remove_attribute("height")

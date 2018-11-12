@@ -140,6 +140,7 @@ module SvgSprite
     "times-circle",
     "trash-alt",
     "undo",
+    "unlink",
     "unlock",
     "unlock-alt",
     "upload",
@@ -153,8 +154,12 @@ module SvgSprite
 
   def self.all_icons
     icons = SVG_ICONS.dup
-    icons.merge(SiteSetting.svg_icon_subset.split('|'))
-    icons.merge(plugin_icons).merge(badge_icons).merge(group_icons).merge(theme_icons)
+    icons
+      .merge(settings_icons)
+      .merge(plugin_icons)
+      .merge(badge_icons)
+      .merge(group_icons)
+      .merge(theme_icons)
   end
 
   def self.bundle
@@ -208,6 +213,18 @@ module SvgSprite
     "/svg-sprite/#{Discourse.current_hostname}/#{version}.svg"
   end
 
+  def self.settings_icons
+    # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
+    site_setting_icons = []
+    SiteSetting.all.pluck(:name, :value).each do |setting|
+      if setting[0].to_s.include? "_icon"
+        site_setting_icons |= setting[1].split('|')
+      end
+    end
+
+    site_setting_icons.each { |i| process(i) }
+  end
+
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons.each { |icon| process(icon) }
   end
@@ -226,7 +243,7 @@ module SvgSprite
     Theme.all.each do |theme|
       theme&.included_settings&.each do |name, value|
         if name.to_s.include? "_icon"
-          theme_icon_settings |= [value]
+          theme_icon_settings |= value.split('|')
         end
       end
     end
