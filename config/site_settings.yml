@@ -63,8 +63,11 @@ required:
   digest_logo_url:
     hidden: true
     default: ''
-  mobile_logo_url:
+  mobile_logo:
     client: true
+    type: upload
+  mobile_logo_url:
+    hidden: true
     default: ''
   large_icon_url:
     default: ''

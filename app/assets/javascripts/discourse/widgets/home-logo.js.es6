@@ -20,7 +20,7 @@ export default createWidget("home-logo", {
     const { siteSettings } = this;
     const mobileView = this.site.mobileView;
 
-    const mobileLogoUrl = siteSettings.mobile_logo_url || "";
+    const mobileLogoUrl = siteSettings.site_mobile_logo_url || "";
     const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
 
     const logoUrl = siteSettings.site_logo_url || "";

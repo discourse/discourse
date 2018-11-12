@@ -171,6 +171,7 @@ class SiteSetting < ActiveRecord::Base
   %i{
     site_logo_url
     site_logo_small_url
+    site_mobile_logo_url
   }.each { |client_setting| client_settings << client_setting }
 
   def self.site_logo_url
@@ -183,6 +184,10 @@ class SiteSetting < ActiveRecord::Base
 
   def self.site_digest_logo_url
     SiteSetting.digest_logo&.url || SiteSetting.digest_logo_url
+  end
+
+  def self.site_mobile_logo_url
+    SiteSetting.mobile_logo&.url || SiteSetting.mobile_logo_url
   end
 
   def self.shared_drafts_enabled?
