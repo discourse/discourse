@@ -4,7 +4,7 @@
       {{d-icon "picture-o"}}
       <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
     </label>
-    {{#if backgroundStyle}}
+    {{#if hasBackgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "trash-o"}}</button>
     {{/if}}
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
