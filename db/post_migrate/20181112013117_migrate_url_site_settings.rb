@@ -2,7 +2,8 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
   def up
     [
       'logo_url',
-      'logo_small_url'
+      'logo_small_url',
+      'digest_logo_url'
     ].each do |url_site_setting|
       old_logo_url = DB.query_single(
         "SELECT value FROM site_settings WHERE name = '#{url_site_setting}'"

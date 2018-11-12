@@ -181,6 +181,10 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.logo_small&.url || SiteSetting.logo_small_url
   end
 
+  def self.site_digest_logo_url
+    SiteSetting.digest_logo&.url || SiteSetting.digest_logo_url
+  end
+
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
