@@ -19,9 +19,10 @@ module Onebox
 
         def video_html(og)
           escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
+          escaped_image_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
           <<-HTML
-            <video width='#{og[:video_width]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)} controls loop>
+            <video width='#{og[:video_width]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)} poster="#{escaped_image_src}" controls loop>
               <source src='#{escaped_src}' type='video/mp4'>
             </video>
           HTML
