@@ -447,7 +447,7 @@ nav.post-controls {
   width: 757px;
 }
 
-#suggested-topics {
+.suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
   table {
@@ -459,7 +459,7 @@ nav.post-controls {
   }
 }
 
-#suggested-topics .topic-statuses .topic-status {
+.suggested-topics .topic-statuses .topic-status {
   padding: 0;
   i {
     font-size: 1em;

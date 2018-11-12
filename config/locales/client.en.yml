@@ -252,6 +252,9 @@ en:
       one: "{{count}} character"
       other: "{{count}} characters"
 
+    related_messages:
+      title: "Related Messages"
+
     suggested_topics:
       title: "Suggested Topics"
       pm_title: "Suggested Messages"
