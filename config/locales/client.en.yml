@@ -2711,11 +2711,11 @@ en:
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
       delete_unused_confirmation:
-        one: "1 tag will be deleted: %{tags}"
-        other: "{{count}} tags will be deleted: %{tags}"
-      delete_unused_confirmation_more:
-        one: "{{total}} tags will be deleted: %{tags} and one more"
-        other: "{{total}} tags will be deleted: %{tags} and %{count} more"
+        one: "%{count} tag will be deleted: %{tags}"
+        other: "%{count} tags will be deleted: %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} and %{count} more"
+        other: "%{tags} and %{count} more"
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
