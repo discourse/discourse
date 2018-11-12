@@ -187,7 +187,7 @@ RSpec.configure do |config|
   end
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
-    def log_on_user(user, session, cookies)
+    def log_on_user(user, session, cookies, opts = {})
       session[:current_user_id] = user.id
       super
     end

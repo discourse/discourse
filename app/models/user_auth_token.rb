@@ -61,7 +61,7 @@ class UserAuthToken < ActiveRecord::Base
     ips.none? { |ip| user_location == login_location(ip) }
   end
 
-  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil)
+  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil, impersonate: false)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token = UserAuthToken.create!(
@@ -82,7 +82,7 @@ class UserAuthToken < ActiveRecord::Base
         path: path,
         auth_token: hashed_token)
 
-    if staff
+    if staff && !impersonate
       Jobs.enqueue(:suspicious_login,
         user_id: user_id,
         client_ip: client_ip,
