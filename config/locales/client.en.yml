@@ -1372,7 +1372,7 @@ en:
         title_too_long: "Title can't be more than {{max}} characters"
         post_missing: "Post can't be empty"
         post_length: "Post must be at least {{min}} characters"
-        try_like: 'Have you tried the <svg class="fa d-icon d-icon-heart svg-icon" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#heart"></use></svg> button?'
+        try_like: "Have you tried the {{heart}} button?"
         category_missing: "You must choose a category"
         tags_missing: "You must choose at least {{count}} tags"
 
@@ -2053,7 +2053,6 @@ en:
 
     post:
       quote_reply: "Quote"
-      edit: '<svg class="fa d-icon d-icon-pencil-alt svg-icon" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#pencil-alt"></use></svg> {{link}} {{replyAvatar}} {{username}}'
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki last edited on"
@@ -2254,7 +2253,7 @@ en:
           revert: "Revert to this revision"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <svg class=\"fa d-icon d-icon-arrows-alt-h svg-icon\" xmlns=\"http://www.w3.org/2000/svg\"><use xlink:href=\"#arrows-alt-h\"></use></svg> <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
