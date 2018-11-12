@@ -45,9 +45,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
       {
         previous,
-        icon: iconHTML('arrows-alt-h'),
+        icon: iconHTML("arrows-alt-h"),
         current,
-        total,
+        total
       }
     );
   },

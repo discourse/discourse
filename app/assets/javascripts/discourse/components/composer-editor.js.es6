@@ -211,7 +211,9 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
       const tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
-        reason += "<br/>" + I18n.t("composer.error.try_like", { heart: iconHTML('heart')});
+        reason +=
+          "<br/>" +
+          I18n.t("composer.error.try_like", { heart: iconHTML("heart") });
       }
     }
 
