@@ -44,6 +44,7 @@ describe InlineOneboxer do
       SiteSetting.enable_inline_onebox_on_all_domains = true
       url = "https://example.com/random-url"
 
+      InlineOneboxer.purge(url)
       expect(InlineOneboxer.cache_lookup(url)).to be_blank
 
       result = InlineOneboxer.lookup(url)
