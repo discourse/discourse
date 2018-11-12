@@ -2709,6 +2709,15 @@ en:
       upload_description: "Upload a text file to create tags in bulk"
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
+      delete_unused_confirmation:
+        one: "%{count} tag will be deleted: %{tags}"
+        other: "%{count} tags will be deleted: %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} and %{count} more"
+        other: "%{tags} and %{count} more"
+      delete_unused: "Delete Unused Tags"
+      delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
+      cancel_delete_unused: "Cancel"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -2839,6 +2848,7 @@ en:
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
+        not_found_error: Sorry, this report doesn’t exist
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -3532,6 +3542,7 @@ en:
             revoke_moderation: "revoke moderation"
             backup_create: "create backup"
             deleted_tag: "deleted tag"
+            deleted_unused_tags: "deleted unused tags"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"

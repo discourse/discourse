@@ -149,13 +149,14 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
-  def log_on_user(user, session, cookies)
+  def log_on_user(user, session, cookies, opts = {})
     @user_token = UserAuthToken.generate!(
       user_id: user.id,
       user_agent: @env['HTTP_USER_AGENT'],
       path: @env['REQUEST_PATH'],
       client_ip: @request.ip,
-      staff: user.staff?)
+      staff: user.staff?,
+      impersonate: opts[:impersonate])
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
     unstage_user(user)

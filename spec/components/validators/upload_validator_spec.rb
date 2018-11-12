@@ -29,5 +29,29 @@ describe Validators::UploadValidator do
 
       expect(UploadCreator.new(csv_file, "#{filename}.gz", for_export: true).create_for(user.id)).to be_valid
     end
+
+    describe 'when allow_staff_to_upload_any_file_in_pm is true' do
+      it 'should allow uploads for pm' do
+        upload = Fabricate.build(:upload,
+          user: Fabricate(:admin),
+          original_filename: 'test.ico',
+          for_private_message: true
+        )
+
+        expect(subject.validate(upload)).to eq(true)
+      end
+
+      describe 'for a normal user' do
+        it 'should not allow uploads for pm' do
+          upload = Fabricate.build(:upload,
+            user: Fabricate(:user),
+            original_filename: 'test.ico',
+            for_private_message: true
+          )
+
+          expect(subject.validate(upload)).to eq(nil)
+        end
+      end
+    end
   end
 end

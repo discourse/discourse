@@ -146,6 +146,19 @@ class TagsController < ::ApplicationController
     end
   end
 
+  def list_unused
+    guardian.ensure_can_admin_tags!
+    render json: { tags: Tag.unused.pluck(:name) }
+  end
+
+  def destroy_unused
+    guardian.ensure_can_admin_tags!
+    tags = Tag.unused
+    StaffActionLogger.new(current_user).log_custom('deleted_unused_tags', tags: tags.pluck(:name))
+    tags.destroy_all
+    render json: success_json
+  end
+
   def destroy
     guardian.ensure_can_admin_tags!
     tag_name = params[:tag_id]

@@ -20,7 +20,7 @@ export default Em.Mixin.create({
     return (
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
-      this.messageBus.clientId +
+      (this.messageBus && this.messageBus.clientId) +
       "&authenticity_token=" +
       encodeURIComponent(Discourse.Session.currentProp("csrfToken"))
     );
@@ -99,7 +99,9 @@ export default Em.Mixin.create({
   }.on("didInsertElement"),
 
   _destroy: function() {
-    this.messageBus.unsubscribe("/uploads/" + this.get("type"));
+    this.messageBus &&
+      this.messageBus.unsubscribe("/uploads/" + this.get("type"));
+
     const $upload = this.$();
     try {
       $upload.fileupload("destroy");
