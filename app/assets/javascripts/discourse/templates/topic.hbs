@@ -284,6 +284,9 @@
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
+              {{#if model.relatedMessages.length}}
+                {{related-messages topic=model}}
+              {{/if}}
               {{#if model.suggestedTopics.length}}
                 {{suggested-topics topic=model}}
               {{/if}}

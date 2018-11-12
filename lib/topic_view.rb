@@ -402,8 +402,16 @@ class TopicView
     @initial_load
   end
 
+  def pm_params
+    @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
+  end
+
   def suggested_topics
-    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
+    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+  end
+
+  def related_messages
+    @related_messages ||= TopicQuery.new(@user).list_related_for(topic, pm_params: pm_params)
   end
 
   # This is pending a larger refactor, that allows custom orders

@@ -644,7 +644,7 @@ describe TopicQuery do
     end
   end
 
-  context 'suggested_for message do' do
+  context 'list_related_for do' do
 
     let(:user) do
       Fabricate(:admin)
@@ -679,11 +679,6 @@ describe TopicQuery do
       pm_to_group = create_pm(sender, target_group_names: [group_with_user.name])
       pm_to_user = create_pm(sender, target_usernames: [user.username])
 
-      new_pm = create_pm(target_usernames: [user.username])
-
-      unread_pm = create_pm(target_usernames: [user.username])
-      read(user, unread_pm, 0)
-
       old_unrelated_pm = create_pm(target_usernames: [user.username])
       read(user, old_unrelated_pm, 1)
 
@@ -693,17 +688,17 @@ describe TopicQuery do
       related_by_group_pm = create_pm(sender, target_group_names: [group_with_user.name])
       read(user, related_by_group_pm, 1)
 
-      expect(TopicQuery.new(user).list_suggested_for(pm_to_group).topics.map(&:id)).to(
+      expect(TopicQuery.new(user).list_related_for(pm_to_group).topics.map(&:id)).to(
         eq([related_by_group_pm.id])
       )
 
-      expect(TopicQuery.new(user).list_suggested_for(pm_to_user).topics.map(&:id)).to(
-        eq([related_by_user_pm.id, new_pm.id, unread_pm.id])
+      expect(TopicQuery.new(user).list_related_for(pm_to_user).topics.map(&:id)).to(
+        eq([related_by_user_pm.id])
       )
 
       SiteSetting.enable_personal_messages = false
-      expect(TopicQuery.new(user).list_suggested_for(pm_to_group)).to be_blank
-      expect(TopicQuery.new(user).list_suggested_for(pm_to_user)).to be_blank
+      expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
+      expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank
     end
   end
 
