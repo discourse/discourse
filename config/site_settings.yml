@@ -69,7 +69,11 @@ required:
   mobile_logo_url:
     hidden: true
     default: ''
+  large_icon:
+    client: true
+    type: upload
   large_icon_url:
+    hidden: true
     default: ''
   favicon_url:
     client: true

@@ -190,6 +190,10 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.mobile_logo&.url || SiteSetting.mobile_logo_url
   end
 
+  def self.site_large_icon_url
+    SiteSetting.large_icon&.url || SiteSetting.large_icon_url
+  end
+
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i

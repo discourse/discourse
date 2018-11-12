@@ -163,7 +163,7 @@ class Wizard
             upload = Upload.find_by_url(updater.fields[:apple_touch_icon_url])
             dimensions = 180 # for apple touch icon
             if upload && upload.width > dimensions && upload.height > dimensions
-              updater.update_setting(:large_icon_url, updater.fields[:apple_touch_icon_url])
+              updater.update_setting(:large_icon, upload)
 
               apple_touch_icon_optimized = OptimizedImage.create_for(
                 upload,

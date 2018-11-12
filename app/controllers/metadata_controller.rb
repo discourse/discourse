@@ -13,12 +13,12 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    logo = SiteSetting.large_icon_url.presence ||
+    logo = SiteSetting.site_large_icon_url.presence ||
       SiteSetting.site_logo_small_url.presence ||
       SiteSetting.apple_touch_icon_url.presence
 
     if !logo
-      logo = path('/images/d-logo-sketch-small.png')
+      logo = '/images/d-logo-sketch-small.png'
     end
 
     file_info = get_file_info(logo)
@@ -34,7 +34,7 @@ class MetadataController < ApplicationController
       theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
       icons: [
         {
-          src: logo,
+          src: UrlHelper.absolute(logo),
           sizes: file_info[:size],
           type: file_info[:type]
         }
