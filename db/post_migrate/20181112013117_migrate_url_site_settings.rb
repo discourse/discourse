@@ -29,7 +29,7 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
 
       upload = UploadCreator.new(
         file,
-        'site_setting_logo',
+        "#{new_setting}",
         origin: UrlHelper.absolute(old_url)
       ).create_for(Discourse.system_user.id)
 
