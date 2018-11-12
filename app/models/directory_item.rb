@@ -78,13 +78,13 @@ class DirectoryItem < ActiveRecord::Base
                     u.id user_id,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :was_liked_type THEN 1 ELSE 0 END) likes_received,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :like_type THEN 1 ELSE 0 END) likes_given,
-                    COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at >= :since), 0) topics_entered,
-                    COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at >= :since), 0) days_visited,
-                    COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since), 0) posts_read,
+                    COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at > :since), 0) topics_entered,
+                    COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at > :since), 0) days_visited,
+                    COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at > :since), 0) posts_read,
                     SUM(CASE WHEN t2.id IS NOT NULL AND ua.action_type = :new_topic_type THEN 1 ELSE 0 END) topic_count,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :reply_type THEN 1 ELSE 0 END) post_count
                   FROM users AS u
-                  LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id AND COALESCE(ua.created_at, :since) >= :since
+                  LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id AND COALESCE(ua.created_at, :since) > :since
                   LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id AND p.deleted_at IS NULL AND p.post_type = :regular_post_type AND NOT p.hidden
                   LEFT OUTER JOIN topics AS t ON p.topic_id = t.id AND t.archetype = 'regular' AND t.deleted_at IS NULL AND t.visible
                   LEFT OUTER JOIN topics AS t2 ON t2.id = ua.target_topic_id AND t2.archetype = 'regular' AND t2.deleted_at IS NULL AND t2.visible
