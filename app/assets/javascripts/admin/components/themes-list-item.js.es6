@@ -67,6 +67,11 @@ export default Ember.Component.extend({
     return children.map(t => t.get("name"));
   },
 
+  @computed("children")
+  childrenString(children) {
+    return children.join(", ");
+  },
+
   @computed(
     "theme.childThemes.length",
     "theme.component",

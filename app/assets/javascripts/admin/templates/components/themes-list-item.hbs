@@ -25,20 +25,19 @@
 
   {{#if displayComponents}}
     <div class="components-list">
-      {{#each children as |child|}}
-        <span class="component">
-          {{child}}
-        </span>
-      {{/each}}
-      {{#if displayHasMore}}
-        <span {{action "toggleChildrenExpanded"}} class="others-count">
-          {{#if childrenExpanded}}
-            {{I18n "admin.customize.theme.collapse"}}
-          {{else}}
-            {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
-          {{/if}}
-        </span>
-      {{/if}}
+      <span class="components">
+        {{childrenString}}
+
+        {{#if displayHasMore}}
+          <span {{action "toggleChildrenExpanded"}} class="others-count">
+            {{#if childrenExpanded}}
+              {{I18n "admin.customize.theme.collapse"}}
+            {{else}}
+              {{I18n "admin.customize.theme.and_x_more" count=moreCount}}
+            {{/if}}
+          </span>
+        {{/if}}
+      </span>
     </div>
   {{/if}}
 </div>
