@@ -195,8 +195,8 @@ module ApplicationHelper
     if opts[:image].blank? && (SiteSetting.default_opengraph_image_url.present? || SiteSetting.twitter_summary_large_image_url.present?)
       opts[:twitter_summary_large_image] = SiteSetting.twitter_summary_large_image_url if SiteSetting.twitter_summary_large_image_url.present?
       opts[:image] = SiteSetting.default_opengraph_image_url.present? ? SiteSetting.default_opengraph_image_url : SiteSetting.twitter_summary_large_image_url
-    elsif opts[:image].blank? && SiteSetting.apple_touch_icon_url.present?
-      opts[:image] = SiteSetting.apple_touch_icon_url
+    elsif opts[:image].blank? && SiteSetting.site_apple_touch_icon_url.present?
+      opts[:image] = SiteSetting.site_apple_touch_icon_url
     end
 
     # Use the correct scheme for open graph image

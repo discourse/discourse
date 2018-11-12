@@ -81,7 +81,12 @@ required:
   favicon_url:
     hidden: true
     default: '/images/default-favicon.ico'
-  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+  apple_touch_icon:
+    client: true
+    type: upload
+  apple_touch_icon_url:
+    hidden: true
+    default: '/images/default-apple-touch-icon.png'
   default_opengraph_image_url: ''
   twitter_summary_large_image_url: ''
   exclude_rel_nofollow_domains:

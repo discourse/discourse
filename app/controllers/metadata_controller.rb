@@ -15,7 +15,7 @@ class MetadataController < ApplicationController
   def default_manifest
     logo = SiteSetting.site_large_icon_url.presence ||
       SiteSetting.site_logo_small_url.presence ||
-      SiteSetting.apple_touch_icon_url.presence
+      SiteSetting.site_apple_touch_icon_url.presence
 
     if !logo
       logo = '/images/d-logo-sketch-small.png'
