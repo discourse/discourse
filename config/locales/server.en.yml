@@ -4066,20 +4066,20 @@ en:
       logos:
         title: "Logos"
         fields:
-          logo_url:
+          logo:
             label: "Primary Logo"
             description: "The logo image at the top left of your site. Use a wide rectangle shape."
-          logo_small_url:
+          logo_small:
             label: "Compact Logo"
             description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
 
       icons:
         title: "Icons"
         fields:
-          favicon_url:
+          favicon:
             label: "Small Icon"
             description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px. Recommended image extensions are PNG or JPG."
-          apple_touch_icon_url:
+          apple_touch_icon:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."
 

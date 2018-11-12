@@ -214,15 +214,21 @@ describe Wizard::StepUpdater do
 
   context "logos step" do
     it "updates the fields correctly" do
-      updater = wizard.create_updater('logos',
-                                      logo_url: '/uploads/logo.png',
-                                      logo_small_url: '/uploads/logo-small.png')
+      upload = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      updater = wizard.create_updater(
+        'logos',
+        logo: upload.url,
+        logo_small: upload2.url
+      )
+
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('logos')).to eq(true)
-      expect(SiteSetting.site_logo_url).to eq('/uploads/logo.png')
-      expect(SiteSetting.site_logo_small_url).to eq('/uploads/logo-small.png')
+      expect(SiteSetting.logo).to eq(upload)
+      expect(SiteSetting.logo_small).to eq(upload2)
     end
   end
 
@@ -232,8 +238,8 @@ describe Wizard::StepUpdater do
       upload2 = Fabricate(:upload)
 
       updater = wizard.create_updater('icons',
-        favicon: upload,
-        apple_touch_icon: upload2
+        favicon: upload.url,
+        apple_touch_icon: upload2.url
       )
 
       updater.update
@@ -246,7 +252,7 @@ describe Wizard::StepUpdater do
 
     it "updates large_icon if the uploaded icon size is greater than 180x180" do
       upload = Fabricate(:upload, width: 512, height: 512)
-      updater = wizard.create_updater('icons', apple_touch_icon_url: upload.url)
+      updater = wizard.create_updater('icons', apple_touch_icon: upload.url)
       updater.update
 
       expect(updater).to be_success
