@@ -121,6 +121,8 @@ class PostRevisor
 
     @topic_changes = TopicChanges.new(@topic, editor)
 
+    return false if @fields.has_key?(:raw) && @fields[:raw].blank?
+
     # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
