@@ -796,7 +796,7 @@ es:
         editor: Editor
         author: Autor
         edit_reason: Motivo
-    most_disagreed_flaggers:
+    user_flagging_ratio:
       title: "Most disagreed flaggers"
       labels:
         user: Usuari

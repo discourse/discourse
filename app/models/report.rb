@@ -1170,7 +1170,7 @@ class Report
     end
   end
 
-  def self.report_most_disagreed_flaggers(report)
+  def self.report_user_flagging_ratio(report)
     report.data = []
 
     report.modes = [:table]
@@ -1185,27 +1185,27 @@ class Report
           id: :user_id,
           avatar: :avatar_template,
         },
-        title: I18n.t("reports.most_disagreed_flaggers.labels.user")
+        title: I18n.t("reports.user_flagging_ratio.labels.user")
       },
       {
         type: :number,
         property: :disagreed_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.disagreed_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
       },
       {
         type: :number,
         property: :agreed_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.agreed_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
       },
       {
         type: :number,
         property: :ignored_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.ignored_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
       },
       {
         type: :number,
         property: :score,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.score")
+        title: I18n.t("reports.user_flagging_ratio.labels.score")
       },
     ]
 
@@ -1224,7 +1224,7 @@ class Report
       WHERE u.id <> -1
         AND flags_disagreed > flags_agreed
       ORDER BY score DESC
-      LIMIT 20
+      LIMIT 100
       SQL
 
     DB.query(sql).each do |row|
