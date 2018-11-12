@@ -4,6 +4,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   elementId: "suggested-topics",
+  classNames: ["suggested-topics"],
 
   @computed("topic")
   suggestedTitle(topic) {
