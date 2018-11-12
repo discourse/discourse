@@ -18,7 +18,8 @@ export default Em.Mixin.create({
 
   calculateUploadUrl() {
     return (
-      +".json?client_id=" +
+      getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
+      ".json?client_id=" +
       (this.messageBus && this.messageBus.clientId) +
       "&authenticity_token=" +
       encodeURIComponent(Discourse.Session.currentProp("csrfToken"))
