@@ -75,8 +75,11 @@ required:
   large_icon_url:
     hidden: true
     default: ''
-  favicon_url:
+  favicon:
     client: true
+    type: upload
+  favicon_url:
+    hidden: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
   default_opengraph_image_url: ''

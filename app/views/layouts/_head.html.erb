@@ -1,7 +1,7 @@
 <meta name="author" content="">
 <meta name="generator" content="Discourse <%= Discourse::VERSION::STRING %> - https://github.com/discourse/discourse version <%= Discourse.git_version %>">
-<%- if SiteSetting.favicon_url.present? %>
-<link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
+<%- if SiteSetting.site_favicon_url.present? %>
+<link rel="icon" type="image/png" href="<%=SiteSetting.site_favicon_url%>">
 <%- end %>
 <%- if SiteSetting.apple_touch_icon_url.present? %>
 <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">

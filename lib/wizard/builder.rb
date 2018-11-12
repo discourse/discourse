@@ -153,11 +153,11 @@ class Wizard
       end
 
       @wizard.append_step('icons') do |step|
-        step.add_field(id: 'favicon_url', type: 'image', value: SiteSetting.favicon_url)
+        step.add_field(id: 'favicon_url', type: 'image', value: SiteSetting.favicon)
         step.add_field(id: 'apple_touch_icon_url', type: 'image', value: SiteSetting.apple_touch_icon_url)
 
         step.on_update do |updater|
-          updater.apply_settings(:favicon_url)
+          updater.apply_settings(:favicon)
 
           if updater.fields[:apple_touch_icon_url] != SiteSetting.apple_touch_icon_url
             upload = Upload.find_by_url(updater.fields[:apple_touch_icon_url])

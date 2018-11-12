@@ -228,14 +228,18 @@ describe Wizard::StepUpdater do
 
   context "icons step" do
     it "updates the fields correctly" do
+      upload = Fabricate(:upload)
+
       updater = wizard.create_updater('icons',
-                                      favicon_url: "/uploads/favicon.png",
-                                      apple_touch_icon_url: "/uploads/apple.png")
+        favicon: upload,
+        apple_touch_icon_url: "/uploads/apple.png"
+      )
+
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('icons')).to eq(true)
-      expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
+      expect(SiteSetting.favicon).to eq(upload)
       expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
     end
 

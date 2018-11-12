@@ -172,6 +172,7 @@ class SiteSetting < ActiveRecord::Base
     site_logo_url
     site_logo_small_url
     site_mobile_logo_url
+    site_favicon_url
   }.each { |client_setting| client_settings << client_setting }
 
   def self.site_logo_url
@@ -192,6 +193,10 @@ class SiteSetting < ActiveRecord::Base
 
   def self.site_large_icon_url
     SiteSetting.large_icon&.url || SiteSetting.large_icon_url
+  end
+
+  def self.site_favicon_url
+    SiteSetting.favicon&.url || SiteSetting.favicon_url
   end
 
   def self.shared_drafts_enabled?

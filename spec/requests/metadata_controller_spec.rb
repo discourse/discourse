@@ -68,15 +68,15 @@ RSpec.describe MetadataController do
   describe 'opensearch.xml' do
     it 'returns the right output' do
       title = 'MyApp'
-      favicon_path = '/uploads/something/23432.png'
       SiteSetting.title = title
-      SiteSetting.favicon_url = favicon_path
+      SiteSetting.favicon = upload
       get "/opensearch.xml"
+
       expect(response.status).to eq(200)
       expect(response.body).to include(title)
       expect(response.body).to include("/search?q={searchTerms}")
       expect(response.body).to include('image/png')
-      expect(response.body).to include(favicon_path)
+      expect(response.body).to include(UrlHelper.absolute(upload.url))
       expect(response.content_type).to eq('application/xml')
     end
   end
