@@ -21,6 +21,7 @@ class UploadsController < ApplicationController
     file   = params[:file] || params[:files]&.first
     pasted = params[:pasted] == "true"
     for_private_message = params[:for_private_message] == "true"
+    for_site_setting = params[:for_site_setting] == "true"
     is_api = is_api?
     retain_hours = params[:retain_hours].to_i
 
@@ -34,6 +35,7 @@ class UploadsController < ApplicationController
           url: url,
           type: type,
           for_private_message: for_private_message,
+          for_site_setting: for_site_setting,
           pasted: pasted,
           is_api: is_api,
           retain_hours: retain_hours
@@ -93,7 +95,16 @@ class UploadsController < ApplicationController
     serialized ||= (data || {}).as_json
   end
 
-  def self.create_upload(current_user:, file:, url:, type:, for_private_message:, pasted:, is_api:, retain_hours:)
+  def self.create_upload(current_user:,
+                         file:,
+                         url:,
+                         type:,
+                         for_private_message:,
+                         for_site_setting:,
+                         pasted:,
+                         is_api:,
+                         retain_hours:)
+
     if file.nil?
       if url.present? && is_api
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
@@ -114,6 +125,7 @@ class UploadsController < ApplicationController
     opts = {
       type: type,
       for_private_message: for_private_message,
+      for_site_setting: for_site_setting,
       pasted: pasted,
     }
 

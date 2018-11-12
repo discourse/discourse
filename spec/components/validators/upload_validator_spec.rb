@@ -73,6 +73,13 @@ describe Validators::UploadValidator do
         it 'should allow the upload' do
           expect(subject.validate(upload)).to eq(true)
         end
+
+        describe 'when filename is invalid' do
+          it 'should not allow the upload' do
+            upload.original_filename = 'test.txt'
+            expect(subject.validate(upload)).to eq(nil)
+          end
+        end
       end
 
       describe 'for normal user' do
