@@ -92,7 +92,11 @@ required:
   default_opengraph_image_url:
     hidden: true
     default: ''
-  twitter_summary_large_image_url: ''
+  twitter_summary_large_image:
+    type: upload
+  twitter_summary_large_image_url:
+    hidden: true
+    default: ''
   exclude_rel_nofollow_domains:
     default: ''
     type: list

@@ -192,9 +192,14 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
-    if opts[:image].blank? && (SiteSetting.opengraph_image_url.present? || SiteSetting.twitter_summary_large_image_url.present?)
-      opts[:twitter_summary_large_image] = SiteSetting.twitter_summary_large_image_url if SiteSetting.twitter_summary_large_image_url.present?
-      opts[:image] = SiteSetting.opengraph_image_url.present? ? SiteSetting.opengraph_image_url : SiteSetting.twitter_summary_large_image_url
+    twitter_summary_large_image_url =
+      SiteSetting.site_twitter_summary_large_image_url
+
+    opengraph_image_url = SiteSetting.opengraph_image_url
+
+    if opts[:image].blank? && (opengraph_image_url.present? || twitter_summary_large_image_url.present?)
+      opts[:twitter_summary_large_image] = twitter_summary_large_image_url if twitter_summary_large_image_url.present?
+      opts[:image] = opengraph_image_url.present? ? opengraph_image_url : twitter_summary_large_image_url
     elsif opts[:image].blank? && SiteSetting.site_apple_touch_icon_url.present?
       opts[:image] = SiteSetting.site_apple_touch_icon_url
     end

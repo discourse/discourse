@@ -8,7 +8,8 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
       'large_icon_url',
       'favicon_url',
       'apple_touch_icon_url',
-      'default_opengraph_image_url'
+      'default_opengraph_image_url',
+      'twitter_summary_large_image_url'
     ].each do |url_site_setting|
       old_logo_url = DB.query_single(
         "SELECT value FROM site_settings WHERE name = '#{url_site_setting}'"

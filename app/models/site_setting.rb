@@ -207,6 +207,11 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.opengraph_image&.url || SiteSetting.default_opengraph_image_url
   end
 
+  def self.site_twitter_summary_large_image_url
+    SiteSetting.twitter_summary_large_image&.url ||
+      SiteSetting.twitter_summary_large_image_url
+  end
+
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
