@@ -9,7 +9,13 @@ export default Em.Component.extend(UploadMixin, {
     if (Em.isNone(imageUrl)) {
       return "".htmlSafe();
     }
+
     return `background-image: url(${imageUrl})`.htmlSafe();
+  },
+
+  @computed("backgroundStyle")
+  hasBackgroundStyle(backgroundStyle) {
+    Ember.isEmpty(backgroundStyle);
   },
 
   validateUploadedFilesOptions() {
