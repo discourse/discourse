@@ -745,9 +745,10 @@ a.mention-group {
 
     > * {
       overflow: hidden;
+      vertical-align: middle;
     }
 
-    > .fa {
+    > .d-icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 6px;
       font-size: $font-0;
