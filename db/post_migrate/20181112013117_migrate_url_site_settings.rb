@@ -17,13 +17,22 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
 
       next if old_url.blank?
 
-      file = FileHelper.download(
-        UrlHelper.absolute(old_url),
-        max_file_size: 20.megabytes,
-        tmp_file_name: 'tmp_site_setting_logo',
-        skip_rate_limit: true,
-        follow_redirect: true
-      )
+      count = 0
+      file = nil
+      sleep_interval = 5
+
+      loop do
+        file = FileHelper.download(
+          UrlHelper.absolute(old_url),
+          max_file_size: 20.megabytes,
+          tmp_file_name: 'tmp_site_setting_logo',
+          skip_rate_limit: true,
+          follow_redirect: true
+        )
+        count += 1
+        break if file || (file.blank? && count >= 3)
+        sleep(count * sleep_interval)
+      end
 
       next if file.blank?
 
