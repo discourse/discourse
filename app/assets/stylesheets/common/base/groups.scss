@@ -100,6 +100,12 @@
         text-align: left;
         line-height: $line-height-medium;
         margin-bottom: 0.5em;
+        a {
+          display: flex;
+        }
+        .group-avatar-flair {
+          margin-right: 0.5em;
+        }
         .groups-info-name {
           word-break: break-all;
           max-width: 45vw;
@@ -125,6 +131,9 @@
         grid-column-end: 3;
         text-align: left;
         align-self: center;
+        .d-icon {
+          margin-right: 0.25em;
+        }
       }
       td.groups-table-membership {
         grid-row-start: 3;
@@ -137,7 +146,6 @@
         button {
           margin-left: 5px;
           display: flex;
-          align-items: baseline;
         }
         &:empty {
           display: none;
@@ -197,7 +205,6 @@
 
     span {
       display: inline-block;
-      vertical-align: middle;
     }
 
     $size: 40px;
