@@ -839,11 +839,17 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        post "/posts.json", params: { raw: raw, title: title, wpid: 1 }
+        expect do
+          post "/posts.json", params: { raw: raw, title: title, wpid: 1 }
+        end.to change { Post.count }
+
         expect(response.status).to eq(200)
 
-        post "/posts.json", params: { raw: raw, title: title, wpid: 2 }
-        expect(response).not_to be_successful
+        expect do
+          post "/posts.json", params: { raw: raw, title: title, wpid: 2 }
+        end.to_not change { Post.count }
+
+        expect(response.status).to eq(422)
       end
 
       it 'can not create a post in a disallowed category' do
