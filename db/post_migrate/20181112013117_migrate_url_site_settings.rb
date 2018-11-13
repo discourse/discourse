@@ -44,10 +44,7 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
         for_site_setting: true
       ).create_for(Discourse.system_user.id)
 
-      execute <<~SQL
-      INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
-      VALUES ('#{new_setting}', 18, #{upload.id}, now(), now())
-      SQL
+      SiteSetting.public_send("#{new_setting}=", upload)
     end
   end
 

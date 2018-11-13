@@ -49,12 +49,15 @@ RSpec.describe MigrateUrlSiteSettings do
       STDOUT.unstub(:write)
     end
 
-    upload = Upload.find_by(original_filename: "smallest.png")
-    upload2 = Upload.find_by(original_filename: "downsized.png")
-    upload3 = Upload.find_by(original_filename: "smallest.ico")
+    upload = Upload.find_by(original_filename: "logo.png")
+    upload2 = Upload.find_by(original_filename: "logo_small.png")
+    upload3 = Upload.find_by(original_filename: "favicon.ico")
 
     expect(SiteSetting.logo_small).to eq(upload2)
+    expect(SiteSetting.logo_small.is_a?(Upload)).to eq(true)
+
     expect(SiteSetting.favicon).to eq(upload3)
+    expect(SiteSetting.favicon.is_a?(Upload)).to eq(true)
 
     %i{
       logo
@@ -67,6 +70,7 @@ RSpec.describe MigrateUrlSiteSettings do
       push_notifications_icon
     }.each do |setting|
       expect(SiteSetting.public_send(setting)).to eq(upload)
+      expect(SiteSetting.public_send(setting).is_a?(Upload)).to eq(true)
     end
   end
 end
