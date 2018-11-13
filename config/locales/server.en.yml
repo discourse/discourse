@@ -1849,7 +1849,7 @@ en:
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
-    push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
+    push_notifications_icon: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
 
     errors:
       invalid_email: "Invalid email address."

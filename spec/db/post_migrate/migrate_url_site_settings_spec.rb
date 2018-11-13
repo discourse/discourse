@@ -16,7 +16,8 @@ RSpec.describe MigrateUrlSiteSettings do
       %w{large_icon_url /test.png},
       %w{apple_touch_icon_url /test.png},
       %w{default_opengraph_image_url /test.png},
-      %w{twitter_summary_large_image_url //omg.aws.somestack/test.png}
+      %w{twitter_summary_large_image_url //omg.aws.somestack/test.png},
+      %w{push_notifications_icon_url //omg.aws.somestack/test.png}
     ].each do |name, value|
 
       SiteSetting.create!(
@@ -63,6 +64,7 @@ RSpec.describe MigrateUrlSiteSettings do
       apple_touch_icon
       opengraph_image
       twitter_summary_large_image
+      push_notifications_icon
     }.each do |setting|
       expect(SiteSetting.public_send(setting)).to eq(upload)
     end
