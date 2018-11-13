@@ -416,12 +416,31 @@ module SiteSettingExtension
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
 
-    define_singleton_method clean_name do
-      if (c = current[name]).nil?
-        refresh! if type_supervisor.get_type(name) != :upload
-        current[name]
-      else
-        c
+    if type_supervisor.get_type(name) == :upload
+      define_singleton_method clean_name do
+        upload = uploads[name]
+        return upload if upload
+
+        if (value = current[name]).nil?
+          refresh!
+          value = current[name]
+        end
+
+        value = value.to_i
+
+        if value > 0
+          upload = Upload.find_by(id: value)
+          uploads[name] = upload if upload
+        end
+      end
+    else
+      define_singleton_method clean_name do
+        if (c = current[name]).nil?
+          refresh!
+          current[name]
+        else
+          c
+        end
       end
     end
 
@@ -453,6 +472,11 @@ module SiteSettingExtension
   end
 
   private
+
+  def uploads
+    @uploads ||= {}
+    @uploads[provider.current_site] ||= {}
+  end
 
   def logger
     Rails.logger

@@ -67,7 +67,7 @@ describe Admin::SiteSettingsController do
           UserHistory.actions[:change_site_setting]
         )
 
-        expect(user_history.previous_value).to eq('')
+        expect(user_history.previous_value).to eq(nil)
         expect(user_history.new_value).to eq(upload.url)
 
         put "/admin/site_settings/test_upload.json", params: {

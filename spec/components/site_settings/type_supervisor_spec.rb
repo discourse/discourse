@@ -282,10 +282,10 @@ describe SiteSettings::TypeSupervisor do
         upload = Fabricate(:upload)
 
         expect(settings.type_supervisor.to_rb_value(:type_upload, ''))
-          .to eq(nil)
+          .to eq('')
 
         expect(settings.type_supervisor.to_rb_value(:type_upload, upload.id))
-          .to eq(upload)
+          .to eq(upload.id)
       end
 
       it 'returns value with string default' do
