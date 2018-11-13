@@ -318,11 +318,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields
-    @topic_view.user_custom_fields[object.user_id]
+    user_custom_fields_object[object.user_id]
   end
 
   def include_user_custom_fields?
-    (@topic_view&.user_custom_fields || {})[object.user_id]
+    user_custom_fields_object[object.user_id]
   end
 
   def static_doc
@@ -387,6 +387,10 @@ class PostSerializer < BasicPostSerializer
   end
 
   private
+
+  def user_custom_fields_object
+    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+  end
 
   def topic
     @topic = object.topic
