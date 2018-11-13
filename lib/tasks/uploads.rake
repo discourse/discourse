@@ -120,6 +120,8 @@ def migrate_from_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
+  
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
   Post
     .where("user_id > 0")
@@ -131,7 +133,7 @@ def migrate_from_s3
       post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+            file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
             sha1 = Upload.generate_digest(file)
             origin = nil
 
@@ -160,7 +162,7 @@ def migrate_from_s3
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
                 filename = upload.original_filename
                 origin = upload.origin
                 upload.destroy
