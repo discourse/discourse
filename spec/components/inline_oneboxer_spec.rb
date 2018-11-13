@@ -35,7 +35,6 @@ describe InlineOneboxer do
       expect(result).to be_present
 
       cached = InlineOneboxer.cache_lookup(topic.url)
-      expect(cached).to be_present
       expect(cached[:url]).to eq(topic.url)
       expect(cached[:title]).to eq(topic.title)
     end
@@ -51,7 +50,6 @@ describe InlineOneboxer do
       expect(result).to be_present
 
       cached = InlineOneboxer.cache_lookup(url)
-      expect(cached).to be_present
       expect(cached[:url]).to eq(url)
       expect(cached[:title]).to be_nil
     end
