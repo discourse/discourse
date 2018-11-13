@@ -250,7 +250,12 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    if params[:last].to_s == "1"
+      PostTiming.destroy_last_for(current_user, params[:topic_id])
+    else
+      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    end
+
     render body: nil
   end
 
