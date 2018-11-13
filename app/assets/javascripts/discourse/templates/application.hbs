@@ -10,6 +10,7 @@
 {{plugin-outlet name="below-site-header" args=(hash currentPath=currentPath)}}
 
 <div id="main-outlet" class="wrap">
+  {{plugin-outlet name="above-main-container"}}
   <div class="container">
     {{#if showTop}}
       {{custom-html name="top"}}
