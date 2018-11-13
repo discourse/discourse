@@ -82,10 +82,6 @@ describe SiteSettings::YamlLoader do
     expect { receiver.load_yaml(nil_default) }.to raise_error(StandardError)
   end
 
-  it "does not raise invalid parameter for upload type without default" do
-    receiver.load_yaml(upload_without_default)
-  end
-
   it "can load settings with locale default" do
     receiver.expects(:setting).with('search', 'min_search_term_length', 3, min: 2, client: true, locale_default: { zh_CN: 2, zh_TW: 2 })
     receiver.load_yaml(locale_default)

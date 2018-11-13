@@ -318,6 +318,7 @@ module SiteSettingExtension
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+    uploads.delete(name)
     clear_cache!
   end
 
@@ -325,6 +326,7 @@ module SiteSettingExtension
     val, type = type_supervisor.to_db_value(name, val)
     provider.save(name, val, type)
     current[name] = type_supervisor.to_rb_value(name, val)
+    uploads.delete(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
