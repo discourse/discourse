@@ -69,12 +69,17 @@ componentTest("with children", {
   test(assert) {
     assert.expect(2);
     assert.deepEqual(
-      Array.from(this.$(".component")).map(node => node.innerText.trim()),
-      childrenList.splice(0, 4).map(theme => theme.get("name")),
+      find(".components")
+        .text()
+        .trim(),
+      childrenList
+        .splice(0, 4)
+        .map(theme => theme.get("name"))
+        .join(", "),
       "lists the first 4 children"
     );
     assert.deepEqual(
-      this.$(".others-count")
+      find(".others-count")
         .text()
         .trim(),
       I18n.t("admin.customize.theme.and_x_more", { count: 1 }),

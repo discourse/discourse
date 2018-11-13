@@ -25,11 +25,8 @@
 
   {{#if displayComponents}}
     <div class="components-list">
-      {{#each children as |child|}}
-        <span class="component">
-          {{child}}
-        </span>
-      {{/each}}
+      <span class="components">{{childrenString}}</span>
+
       {{#if displayHasMore}}
         <span {{action "toggleChildrenExpanded"}} class="others-count">
           {{#if childrenExpanded}}
