@@ -1191,7 +1191,7 @@ hu:
       title: "Vagy nyomj Ctrl+Enter-t"
       users_placeholder: "Felhasználó hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
-      title_or_link_placeholder: "Adj címet vagy másolj idea egy linket"
+      title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
       edit_reason_placeholder: "miért szerkesztesz?"
       show_edit_reason: "(szerkesztés okának hozzáadása)"
       remove_featured_link: "Hivatkozás eltávolítása a témából."
