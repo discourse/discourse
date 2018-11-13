@@ -83,6 +83,9 @@
     .saving-text {
       display: none;
     }
+    .toggler {
+      order: 2;
+    }
   }
 
   &.saving .saving-text {
@@ -98,7 +101,7 @@
       color: $primary-high;
     }
     .reply-details {
-      max-width: calc(100% - 60px);
+      max-width: calc(100% - 175px);
       flex: 1 1 auto;
       white-space: nowrap;
     }
