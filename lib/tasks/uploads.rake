@@ -120,7 +120,7 @@ def migrate_from_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
-  
+
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
   Post
