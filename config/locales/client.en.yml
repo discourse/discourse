@@ -4099,6 +4099,7 @@ en:
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
       quit: "Maybe Later"
+      overwritten_by: "This field is overwritten by the `%{site_setting}` site setting."
 
       staff_count:
         one: "Your community has 1 staff (you). "

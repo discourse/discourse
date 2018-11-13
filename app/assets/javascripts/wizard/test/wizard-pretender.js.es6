@@ -55,7 +55,14 @@ export default function() {
               fields: [
                 { id: "snack", type: "dropdown", required: true },
                 { id: "theme-preview", type: "component" },
-                { id: "an-image", type: "image" }
+                { id: "an-image", type: "image" },
+                {
+                  id: "welcome",
+                  type: "text",
+                  required: true,
+                  value: "Discourse is about discussions",
+                  overwritten_by: "site_description"
+                }
               ],
               previous: "hello-world"
             }

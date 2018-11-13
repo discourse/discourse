@@ -65,3 +65,14 @@ test("Going back and forth in steps", async assert => {
   assert.ok(exists(".wizard-btn.next"));
   assert.ok(!exists(".wizard-prev"));
 });
+
+test("Warns of overwritten field", async assert => {
+  await visit("/steps/second-step");
+  assert.ok(exists(".wizard-field .field-info-description"));
+  assert.equal(
+    find(".wizard-field .field-info-description")
+      .text()
+      .trim(),
+    "This field is overwritten by the `site_description` site setting."
+  );
+});

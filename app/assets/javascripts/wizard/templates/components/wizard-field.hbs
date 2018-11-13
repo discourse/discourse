@@ -10,6 +10,12 @@
   {{component inputComponentName field=field step=step fieldClass=fieldClass wizard=wizard}}
 </div>
 
+{{#if field.overwritten_by}}
+  <div class='field-info-description'>
+    {{i18n "wizard.overwritten_by" site_setting=field.overwritten_by}}
+  </div>
+{{/if}}
+
 {{#if field.errorDescription}}
   <div class='field-error-description'>{{{field.errorDescription}}}</div>
 {{/if}}
