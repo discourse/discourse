@@ -13,7 +13,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   },
 
   @computed
-  mostDisagreedFlaggersOptions() {
+  userFlaggingRatioOptions() {
     return {
       table: {
         total: false,

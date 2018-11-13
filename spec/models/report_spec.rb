@@ -936,7 +936,7 @@ describe Report do
     end
   end
 
-  describe 'most_disagreed_flaggers' do
+  describe 'user_flagging_ratio' do
     let(:joffrey) { Fabricate(:user, username: "joffrey") }
     let(:robin) { Fabricate(:user, username: "robin") }
     let(:moderator) { Fabricate(:moderator) }
@@ -958,7 +958,7 @@ describe Report do
         PostAction.act(robin, post_agreed, PostActionType.types[:off_topic])
         PostAction.agree_flags!(post_agreed, moderator)
 
-        report = Report.find('most_disagreed_flaggers')
+        report = Report.find('user_flagging_ratio')
 
         first = report.data[0]
         expect(first[:username]).to eq("joffrey")

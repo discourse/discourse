@@ -5,10 +5,6 @@ class ContentSecurityPolicy
   include GlobalPath
 
   class Middleware
-    WHITELISTED_PATHS = %w(
-      /logs
-    )
-
     def initialize(app)
       @app = app
     end
@@ -18,7 +14,6 @@ class ContentSecurityPolicy
       _, headers, _ = response = @app.call(env)
 
       return response unless html_response?(headers) && ContentSecurityPolicy.enabled?
-      return response if whitelisted?(request.path)
 
       policy = ContentSecurityPolicy.new.build
       headers['Content-Security-Policy'] = policy if SiteSetting.content_security_policy
@@ -31,14 +26,6 @@ class ContentSecurityPolicy
 
     def html_response?(headers)
       headers['Content-Type'] && headers['Content-Type'] =~ /html/
-    end
-
-    def whitelisted?(path)
-      if GlobalSetting.relative_url_root
-        path.slice!(/^#{Regexp.quote(GlobalSetting.relative_url_root)}/)
-      end
-
-      WHITELISTED_PATHS.any? { |whitelisted| path.start_with?(whitelisted) }
     end
   end
 

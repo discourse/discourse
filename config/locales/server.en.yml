@@ -894,8 +894,8 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
-    most_disagreed_flaggers:
-      title: "Most disagreed flaggers"
+    user_flagging_ratio:
+      title: "User Flagging Ratio"
       labels:
         user: User
         agreed_flags: Agreed flags

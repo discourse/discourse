@@ -22,7 +22,12 @@ module Jobs
       ignore_urls = [
         SiteSetting.logo_url,
         SiteSetting.logo_small_url,
+        SiteSetting.digest_logo_url,
+        SiteSetting.mobile_logo_url,
+        SiteSetting.large_icon_url,
         SiteSetting.favicon_url,
+        SiteSetting.default_opengraph_image_url,
+        SiteSetting.twitter_summary_large_image_url,
         SiteSetting.apple_touch_icon_url,
         *SiteSetting.selectable_avatars.split("\n"),
       ].flatten.map do |url|

@@ -29,8 +29,6 @@ addons:
 
 matrix:
   fast_finish: true
-  exclude:
-  - env: "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 rvm:
   - 2.5.3

@@ -10,11 +10,13 @@ export function applyInlineOneboxes(inline, ajax) {
     data: { urls: Object.keys(inline) }
   }).then(result => {
     result["inline-oneboxes"].forEach(onebox => {
-      _cache[onebox.url] = onebox;
-      let links = inline[onebox.url] || [];
-      links.forEach(link => {
-        link.text(onebox.title);
-      });
+      if (onebox.title) {
+        _cache[onebox.url] = onebox;
+        let links = inline[onebox.url] || [];
+        links.forEach(link => {
+          link.text(onebox.title);
+        });
+      }
     });
   });
 }

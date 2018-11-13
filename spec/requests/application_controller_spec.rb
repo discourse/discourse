@@ -260,16 +260,6 @@ RSpec.describe ApplicationController do
       expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
     end
 
-    it 'does not set CSP for /logs' do
-      sign_in(Fabricate(:admin))
-      SiteSetting.content_security_policy = true
-
-      get '/logs'
-
-      expect(response.status).to eq(200)
-      expect(response.headers).to_not include('Content-Security-Policy')
-    end
-
     def parse(csp_string)
       csp_string.split(';').map do |policy|
         directive, *sources = policy.split

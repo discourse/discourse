@@ -797,7 +797,7 @@ de:
         editor: Bearbeiter
         author: Ersteller
         edit_reason: Grund
-    most_disagreed_flaggers:
+    user_flagging_ratio:
       title: "Melder mit höchster Ablehnung"
       labels:
         user: Benutzer
