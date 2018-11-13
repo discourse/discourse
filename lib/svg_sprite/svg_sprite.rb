@@ -140,6 +140,8 @@ module SvgSprite
     "tag",
     "tasks",
     "tv",
+    "thumbs-down",
+    "thumbs-up",
     "thumbtack",
     "times",
     "times-circle",
