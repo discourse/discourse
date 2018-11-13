@@ -20,10 +20,9 @@ export default SelectKitRowComponent.extend({
     return displayCategoryDescription;
   },
 
-  @computed("descriptionText", "category.name")
-  title(categoryDescription, categoryName) {
-    if (categoryDescription) return categoryDescription;
-    return categoryName;
+  @computed("descriptionText", "description", "category.name")
+  title(descriptionText, description, name) {
+    return descriptionText || description || name;
   },
 
   @computed("computedContent.value", "computedContent.name")
