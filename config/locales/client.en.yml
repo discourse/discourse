@@ -2708,7 +2708,7 @@ en:
       manage_groups: "Manage Tag Groups"
       manage_groups_description: "Define groups to organize tags"
       upload: "Upload Tags"
-      upload_description: "Upload a text file to create tags in bulk"
+      upload_description: "Upload a csv file to create tags in bulk"
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
       delete_unused_confirmation:
