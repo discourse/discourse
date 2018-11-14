@@ -39,6 +39,8 @@ class WizardStepSerializer < ApplicationSerializer
   end
 
   def description
+    return translate("disabled") if object.disabled
+
     translate("description", base_path: Discourse.base_path)
   end
 

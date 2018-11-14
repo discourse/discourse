@@ -233,24 +233,27 @@ class Wizard
       end
 
       @wizard.append_step('invites') do |step|
+        if SiteSetting.enable_local_logins
+          staff_count = User.staff.human_users.where('username_lower not in (?)', reserved_usernames).count
+          step.add_field(id: 'staff_count', type: 'component', value: staff_count)
 
-        staff_count = User.staff.human_users.where('username_lower not in (?)', reserved_usernames).count
-        step.add_field(id: 'staff_count', type: 'component', value: staff_count)
+          step.add_field(id: 'invite_list', type: 'component')
 
-        step.add_field(id: 'invite_list', type: 'component')
+          step.on_update do |updater|
+            users = JSON.parse(updater.fields[:invite_list])
 
-        step.on_update do |updater|
-          users = JSON.parse(updater.fields[:invite_list])
-
-          users.each do |u|
-            args = {}
-            args[:moderator] = true if u['role'] == 'moderator'
-            begin
-              Invite.create_invite_by_email(u['email'], @wizard.user, args)
-            rescue => e
-              updater.errors.add(:invite_list, e.message.concat("<br>"))
+            users.each do |u|
+              args = {}
+              args[:moderator] = true if u['role'] == 'moderator'
+              begin
+                Invite.create_invite_by_email(u['email'], @wizard.user, args)
+              rescue => e
+                updater.errors.add(:invite_list, e.message.concat("<br>"))
+              end
             end
           end
+        else
+          step.disabled = true
         end
       end
 
