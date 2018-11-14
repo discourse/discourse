@@ -163,9 +163,12 @@ describe SiteSetting do
 
     it 'should act as a proxy to the new methods' do
       begin
-        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.push(%w{
-          use_https force_https 0.0.1
-        })
+        original_settings = SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS
+        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.clear
+
+        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.push([
+          'use_https', 'force_https', true, '0.0.1'
+        ])
 
         SiteSetting.setup_deprecated_methods
 
@@ -183,7 +186,11 @@ describe SiteSetting do
         expect(SiteSetting.force_https).to eq(false)
         expect(SiteSetting.force_https?).to eq(false)
       ensure
-        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.pop
+        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.clear
+
+        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.concat(
+          original_settings
+        )
       end
     end
   end

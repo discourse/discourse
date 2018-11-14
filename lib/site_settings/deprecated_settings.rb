@@ -16,7 +16,11 @@ module SiteSettings::DeprecatedSettings
 
   def setup_deprecated_methods
     DEPRECATED_SETTINGS.each do |old_setting, new_setting, override, version|
-      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}", :"#{old_setting}")
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}", :"#{old_setting}"
+        )
+      end
 
       define_singleton_method old_setting do |warn: true|
         if warn
@@ -30,7 +34,11 @@ module SiteSettings::DeprecatedSettings
         self.public_send(override ? new_setting : "_#{old_setting}")
       end
 
-      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}?", :"#{old_setting}?")
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}?", :"#{old_setting}?"
+        )
+      end
 
       define_singleton_method "#{old_setting}?" do |warn: true|
         if warn
@@ -44,7 +52,11 @@ module SiteSettings::DeprecatedSettings
         self.public_send("#{override ? new_setting : "_" + old_setting}?")
       end
 
-      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}=", :"#{old_setting}=")
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}=", :"#{old_setting}="
+        )
+      end
 
       define_singleton_method "#{old_setting}=" do |val, warn: true|
         if warn
