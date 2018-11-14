@@ -1356,6 +1356,7 @@ en:
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
+      edit_conflict: 'edit conflict'
 
       group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
       group_mentioned:
