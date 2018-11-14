@@ -545,7 +545,7 @@ describe UsersController do
         post "/u.json", params: {
           name: @user.name,
           username: @user.username,
-          passsword: 'tesing12352343'
+          password: 'tesing12352343'
         }
         expect(response.status).to eq(400)
       end
