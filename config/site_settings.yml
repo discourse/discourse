@@ -381,6 +381,9 @@ login:
   verbose_auth_token_logging:
     hidden: true
     default: true
+  max_suspicious_distance_km:
+    hidden: true
+    default: 500
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
