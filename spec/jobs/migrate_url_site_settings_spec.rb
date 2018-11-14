@@ -1,7 +1,6 @@
 require 'rails_helper'
-require_relative '../../../db/post_migrate/20181112013117_migrate_url_site_settings'
 
-RSpec.describe MigrateUrlSiteSettings do
+RSpec.describe Jobs::MigrateUrlSiteSettings do
   before do
     SiteSetting.authorized_extensions = ''
   end
@@ -42,12 +41,9 @@ RSpec.describe MigrateUrlSiteSettings do
     stub_request(:get, "http://test.discourse.awesome/some.ico")
       .to_return(status: 200, body: file_from_fixtures("smallest.ico").read)
 
-    begin
-      STDOUT.stubs(:write)
-      expect { MigrateUrlSiteSettings.new.up }.to change { Upload.count }.by(3)
-    ensure
-      STDOUT.unstub(:write)
-    end
+    expect do
+      described_class.new.execute_onceoff({})
+    end.to change { Upload.count }.by(3)
 
     upload = Upload.find_by(original_filename: "logo.png")
     upload2 = Upload.find_by(original_filename: "logo_small.png")
