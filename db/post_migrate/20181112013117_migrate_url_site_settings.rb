@@ -33,10 +33,10 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
             skip_rate_limit: true,
             follow_redirect: true
           )
-        rescue OpenURI::HTTPError => e
+        rescue OpenURI::HTTPError, Net::OpenTimeout, Net::ReadTimeout => e
           logger.info(
             "HTTP error encountered when trying to download file " +
-            "for #{new_setting}.\n#{e.message}"
+            "for #{new_setting}.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
           )
         end
 
