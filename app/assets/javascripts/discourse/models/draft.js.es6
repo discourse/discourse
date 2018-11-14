@@ -22,7 +22,7 @@ Draft.reopenClass({
   },
 
   save(key, sequence, data) {
-    data = typeof(data) === "string" ? data : JSON.stringify(data);
+    data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
       data: { draft_key: key, sequence, data }
