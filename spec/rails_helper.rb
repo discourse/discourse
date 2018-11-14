@@ -60,6 +60,7 @@ end
 # let's not run seed_fu every test
 SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
+SiteSetting.max_consecutive_replies = 0
 SiteSetting.automatically_download_gravatars = false
 
 SeedFu.seed
@@ -161,6 +162,9 @@ RSpec.configure do |config|
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
+
+    # it makes hard to test
+    SiteSetting.max_consecutive_replies = 0
 
     Discourse.clear_readonly!
     Sidekiq::Worker.clear_all
