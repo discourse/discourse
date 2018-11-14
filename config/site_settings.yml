@@ -594,6 +594,8 @@ posting:
     default: false
     locale_default:
       ja: true
+  max_consecutive_replies:
+    default: 0
   title_prettify:
     default: true
     locale_default:
