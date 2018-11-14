@@ -10,6 +10,17 @@ acceptance("Admin - Site Settings", {
   }
 });
 
+QUnit.test("upload site setting", async assert => {
+  await visit("/admin/site_settings");
+
+  assert.ok(
+    exists(".row.setting.upload .image-uploader"),
+    "image uploader is present"
+  );
+
+  assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
+});
+
 QUnit.test("changing value updates dirty state", async assert => {
   await visit("/admin/site_settings");
   await fillIn("#setting-filter", "title");

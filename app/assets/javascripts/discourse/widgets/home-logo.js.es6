@@ -20,14 +20,14 @@ export default createWidget("home-logo", {
     const { siteSettings } = this;
     const mobileView = this.site.mobileView;
 
-    const mobileLogoUrl = siteSettings.mobile_logo_url || "";
+    const mobileLogoUrl = siteSettings.site_mobile_logo_url || "";
     const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
 
-    const logoUrl = siteSettings.logo_url || "";
+    const logoUrl = siteSettings.site_logo_url || "";
     const title = siteSettings.title;
 
     if (!mobileView && this.attrs.minimized) {
-      const logoSmallUrl = siteSettings.logo_small_url || "";
+      const logoSmallUrl = siteSettings.site_logo_small_url || "";
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",

@@ -62,7 +62,7 @@ const Discourse = Ember.Application.extend({
   @observes("notifyCount")
   faviconChanged() {
     if (Discourse.User.currentProp("dynamic_favicon")) {
-      let url = Discourse.SiteSettings.favicon_url;
+      let url = Discourse.SiteSettings.site_favicon_url;
       if (/^http/.test(url)) {
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }

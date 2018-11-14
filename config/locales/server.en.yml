@@ -1146,7 +1146,7 @@ en:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
     missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
-    bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
+    bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
@@ -1215,13 +1215,15 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
-    logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown. Use <a href='%{base_path}/wizard/steps/logos' target='_blank'>the wizard</a> to update."
-    digest_logo_url: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
-    logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown. Use <a href='%{base_path}/wizard/steps/logos' target='_blank'>the wizard</a> to update."
-    favicon_url: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Use <a href='%{base_path}/wizard/steps/icons' target='_blank'>the wizard</a> to update."
-    mobile_logo_url: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
-    large_icon_url: "Image used as logo/splash image on Android. Recommended size is 512px by 512px. Use <a href='%{base_path}/wizard/steps/icons' target='_blank'>the wizard</a> to update."
-    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    logo: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
+    digest_logo: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
+    mobile_logo: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
+    large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
+    favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
+    apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    opengraph_image: "Default opengraph image, used when the page has no other suitable image or site logo."
+    twitter_summary_large_image: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1453,9 +1455,6 @@ en:
 
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
     selectable_avatars: "List of avatars users can choose from."
-
-    default_opengraph_image_url: "Default opengraph image, used when the page has no other suitable image or site logo."
-    twitter_summary_large_image_url: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
@@ -1850,7 +1849,7 @@ en:
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
-    push_notifications_icon_url: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
+    push_notifications_icon: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
 
     errors:
       invalid_email: "Invalid email address."
@@ -4067,20 +4066,20 @@ en:
       logos:
         title: "Logos"
         fields:
-          logo_url:
+          logo:
             label: "Primary Logo"
             description: "The logo image at the top left of your site. Use a wide rectangle shape."
-          logo_small_url:
+          logo_small:
             label: "Compact Logo"
             description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
 
       icons:
         title: "Icons"
         fields:
-          favicon_url:
+          favicon:
             label: "Small Icon"
             description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px. Recommended image extensions are PNG or JPG."
-          apple_touch_icon_url:
+          apple_touch_icon:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."
 

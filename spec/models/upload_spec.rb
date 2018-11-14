@@ -222,4 +222,10 @@ describe Upload do
     end
   end
 
+  describe '#to_s' do
+    it 'should return the right value' do
+      expect(upload.to_s).to eq(upload.url)
+    end
+  end
+
 end

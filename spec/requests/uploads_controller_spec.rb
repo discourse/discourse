@@ -124,7 +124,26 @@ describe UploadsController do
 
         expect(response.status).to eq(200)
         id = JSON.parse(response.body)["id"]
-        expect(id).to be_present
+        expect(Upload.last.id).to eq(id)
+      end
+
+      it 'allows staff to upload supported images for site settings' do
+        SiteSetting.authorized_extensions = ''
+        user.update!(admin: true)
+
+        post "/uploads.json", params: {
+          file: logo,
+          type: "site_setting",
+          for_site_setting: "true",
+        }
+
+        expect(response.status).to eq(200)
+        id = JSON.parse(response.body)["id"]
+
+        upload = Upload.last
+
+        expect(upload.id).to eq(id)
+        expect(upload.original_filename).to eq('logo.png')
       end
 
       it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
