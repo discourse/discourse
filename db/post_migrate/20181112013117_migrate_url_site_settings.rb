@@ -34,12 +34,19 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
             follow_redirect: true
           )
         rescue OpenURI::HTTPError => e
-          puts "HTTP error encountered when trying to download file for #{new_setting}.\n#{e.message}"
+          logger.info(
+            "HTTP error encountered when trying to download file " +
+            "for #{new_setting}.\n#{e.message}"
+          )
         end
 
         count += 1
         break if file || (file.blank? && count >= 3)
-        puts "Failed to download upload from #{url} for #{new_setting}. Retrying..."
+
+        logger.info(
+          "Failed to download upload from #{url} for #{new_setting}. Retrying..."
+        )
+
         sleep(count * sleep_interval)
       end
 
@@ -58,5 +65,11 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
 
   def down
     raise ActiveRecord::IrreversibleMigration
+  end
+
+  private
+
+  def logger
+    Rails.logger
   end
 end
