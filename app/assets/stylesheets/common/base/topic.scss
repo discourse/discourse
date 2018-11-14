@@ -167,6 +167,44 @@ a.badge-category {
   max-width: 757px;
 }
 
+@include breakpoint(medium, min-width) {
+  .suggested-topics-wrapper.related-messages-wrapper {
+    display: flex;
+    width: 100%;
+    .suggested-topics,
+    .related-messages {
+      thead {
+        display: none;
+      }
+      .posts,
+      .age {
+        width: 45px;
+      }
+      .views {
+        display: none;
+      }
+      .posters {
+        width: 60px;
+        a {
+          display: none;
+          &:first-of-type,
+          &:last-of-type {
+            display: inline;
+          }
+        }
+      }
+    }
+    #suggested-topics {
+      order: 1;
+      margin-right: 1em;
+    }
+    #related-messages {
+      order: 2;
+      margin-left: 1em;
+    }
+  }
+}
+
 // Target the .badge-category text, the bullet icon needs to maintain `display: block`
 .suggested-topics h3 .badge-wrapper.bullet span.badge-category,
 .suggested-topics h3 .badge-wrapper.box span,
