@@ -4,10 +4,25 @@ describe Jobs::SuspiciousLogin do
 
   let(:user) { Fabricate(:moderator) }
 
+  let(:zurich) { [47.3686498, 8.5391825] } # Zurich, Switzerland
+  let(:bern) { [46.947922, 7.444608] }  # Bern, Switzerland
+  let(:london) { [51.5073509, -0.1277583] } # London, United Kingdom
+
   before do
-    UserAuthToken.stubs(:login_location).with("1.1.1.1").returns("Location 1")
-    UserAuthToken.stubs(:login_location).with("1.1.1.2").returns("Location 1")
-    UserAuthToken.stubs(:login_location).with("1.1.2.1").returns("Location 2")
+    UserAuthToken.stubs(:login_location).with("1.1.1.1").returns(zurich)
+    UserAuthToken.stubs(:login_location).with("1.1.1.2").returns(bern)
+    UserAuthToken.stubs(:login_location).with("1.1.2.1").returns(london)
+  end
+
+  it "will correctly compute distance" do
+    def expect_distance(from, to, distance)
+      expect(UserAuthToken.distance(from, to).to_i).to eq(distance)
+      expect(UserAuthToken.distance(to, from).to_i).to eq(distance)
+    end
+
+    expect_distance(zurich, bern, 95)
+    expect_distance(zurich, london, 776)
+    expect_distance(bern, london, 747)
   end
 
   it "will not send an email on first login" do
