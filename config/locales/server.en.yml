@@ -4112,6 +4112,7 @@ en:
       invites:
         title: "Invite Staff"
         description: "You’re almost done! Let’s invite some people to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
+        disabled: "Since local logins are disabled, it’s not possible to send invites to anyone. Please proceed to the next step."
 
       finished:
         title: "Your Discourse is Ready!"
