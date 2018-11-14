@@ -19,7 +19,6 @@ class SiteSetting < ActiveRecord::Base
   end
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
-  setup_deprecated_methods
 
   unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
@@ -27,6 +26,7 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  setup_deprecated_methods
   client_settings << :available_locales
 
   def self.available_locales

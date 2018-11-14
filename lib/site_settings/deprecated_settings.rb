@@ -2,20 +2,22 @@ module SiteSettings; end
 
 module SiteSettings::DeprecatedSettings
   DEPRECATED_SETTINGS = [
-    %w{logo_url logo 2.4},
-    %w{logo_small_url logo_small 2.4},
-    %w{digest_logo_url digest_logo 2.4},
-    %w{mobile_logo_url mobile_logo 2.4},
-    %w{large_icon_url large_icon 2.4},
-    %w{favicon_url favicon 2.4},
-    %w{apple_touch_icon_url apple_touch_icon 2.4},
-    %w{default_opengraph_image_url opengraph_image 2.4},
-    %w{twitter_summary_large_image_url twitter_summary_large_image 2.4},
-    %w{push_notifications_icon_url push_notifications_icon 2.4}
+    ['logo_url', 'logo', false, '2.4'],
+    ['logo_small_url', 'logo_small', false, '2.4'],
+    ['digest_logo_url', 'digest_logo', false, '2.4'],
+    ['mobile_logo_url', 'mobile_logo', false, '2.4'],
+    ['large_icon_url', 'large_icon', false, '2.4'],
+    ['favicon_url', 'favicon', false, '2.4'],
+    ['apple_touch_icon_url', 'apple_touch_icon', false, '2.4'],
+    ['default_opengraph_image_url', 'opengraph_image', false, '2.4'],
+    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.4'],
+    ['push_notifications_icon_url', 'push_notifications_icon', false, '2.4']
   ]
 
   def setup_deprecated_methods
-    DEPRECATED_SETTINGS.each do |old_setting, new_setting, version|
+    DEPRECATED_SETTINGS.each do |old_setting, new_setting, override, version|
+      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}", :"#{old_setting}")
+
       define_singleton_method old_setting do |warn: true|
         if warn
           logger.warn(
@@ -25,8 +27,10 @@ module SiteSettings::DeprecatedSettings
           )
         end
 
-        self.public_send new_setting
+        self.public_send(override ? new_setting : "_#{old_setting}")
       end
+
+      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}?", :"#{old_setting}?")
 
       define_singleton_method "#{old_setting}?" do |warn: true|
         if warn
@@ -37,8 +41,10 @@ module SiteSettings::DeprecatedSettings
           )
         end
 
-        self.public_send "#{new_setting}?"
+        self.public_send("#{override ? new_setting : "_" + old_setting}?")
       end
+
+      SiteSetting.singleton_class.public_send(:alias_method, :"_#{old_setting}=", :"#{old_setting}=")
 
       define_singleton_method "#{old_setting}=" do |val, warn: true|
         if warn
@@ -49,7 +55,7 @@ module SiteSettings::DeprecatedSettings
           )
         end
 
-        self.public_send "#{new_setting}=", val
+        self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
       end
     end
   end
