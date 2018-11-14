@@ -103,6 +103,8 @@
     .reply-details {
       max-width: calc(100% - 175px);
       flex: 1 1 auto;
+      display: flex;
+      align-items: center;
       white-space: nowrap;
 
       .d-icon {
