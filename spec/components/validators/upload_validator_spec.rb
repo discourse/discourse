@@ -53,5 +53,42 @@ describe Validators::UploadValidator do
         end
       end
     end
+
+    describe 'upload for site settings' do
+      let(:user) { Fabricate(:admin) }
+
+      let(:upload) do
+        Fabricate.build(:upload,
+          user: user,
+          original_filename: 'test.ico',
+          for_site_setting: true
+        )
+      end
+
+      before do
+        SiteSetting.authorized_extensions = 'png'
+      end
+
+      describe 'for admin user' do
+        it 'should allow the upload' do
+          expect(subject.validate(upload)).to eq(true)
+        end
+
+        describe 'when filename is invalid' do
+          it 'should not allow the upload' do
+            upload.original_filename = 'test.txt'
+            expect(subject.validate(upload)).to eq(nil)
+          end
+        end
+      end
+
+      describe 'for normal user' do
+        let(:user) { Fabricate(:user) }
+
+        it 'should not allow the upload' do
+          expect(subject.validate(upload)).to eq(nil)
+        end
+      end
+    end
   end
 end

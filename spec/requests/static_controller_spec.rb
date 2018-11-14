@@ -1,18 +1,21 @@
 require 'rails_helper'
 
 describe StaticController do
+  let(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
     let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
 
     before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
 
+    after do
+      $redis.flushall
+    end
+
     it 'returns the default favicon for a missing download' do
-      url = "https://fav.icon/#{SecureRandom.hex}.png"
-
+      url = UrlHelper.absolute(upload.url)
+      SiteSetting.favicon = upload
       stub_request(:get, url).to_return(status: 404)
-
-      SiteSetting.favicon_url = url
 
       get '/favicon/proxied'
 
@@ -24,11 +27,9 @@ describe StaticController do
     end
 
     it 'can proxy a favicon correctly' do
-      url = "https://fav.icon/#{SecureRandom.hex}.png"
-
+      url = UrlHelper.absolute(upload.url)
+      SiteSetting.favicon = upload
       stub_request(:get, url).to_return(status: 200, body: png)
-
-      SiteSetting.favicon_url = url
 
       get '/favicon/proxied'
 

@@ -46,6 +46,11 @@ module Jobs
 
       result = Upload.where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
+        .joins(<<~SQL)
+          LEFT JOIN site_settings ss
+          ON ss.value::integer = uploads.id
+          AND ss.data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}
+        SQL
         .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
         .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
         .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
@@ -62,6 +67,7 @@ module Jobs
         .where("ce.upload_id IS NULL")
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
+        .where("ss.value IS NULL")
 
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 

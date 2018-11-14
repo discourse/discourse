@@ -3,10 +3,12 @@
   <ShortName><%= SiteSetting.title %> Search</ShortName>
   <Description>Search for posts on <%= SiteSetting.title %></Description>
   <Tags>discourse forum</Tags>
-  <% if SiteSetting.favicon_url =~ /\.ico$/ -%>
-  <Image height="16" width="16" type="image/vnd.microsoft.icon"><%= UrlHelper.absolute SiteSetting.favicon_url %></Image>
+  <% site_favicon_url = SiteSetting.site_favicon_url %>
+  <% absolute_site_favicon_url = UrlHelper.absolute(site_favicon_url) %>
+  <% if site_favicon_url =~ /\.ico$/ -%>
+    <Image height="16" width="16" type="image/vnd.microsoft.icon"><%= absolute_site_favicon_url %></Image>
   <%- else -%>
-  <Image type="image/png"><%= UrlHelper.absolute SiteSetting.favicon_url %></Image>
+    <Image type="image/png"><%= absolute_site_favicon_url %></Image>
   <%- end %>
   <Url type="application/opensearchdescription+xml" rel="self" template="<%= Discourse.base_url %>/opensearch.xml"/>
   <Url type="text/html" template="<%= Discourse.base_url %>/search?q={searchTerms}"/>

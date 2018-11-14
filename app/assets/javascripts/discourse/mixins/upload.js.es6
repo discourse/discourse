@@ -22,9 +22,12 @@ export default Em.Mixin.create({
       ".json?client_id=" +
       (this.messageBus && this.messageBus.clientId) +
       "&authenticity_token=" +
-      encodeURIComponent(Discourse.Session.currentProp("csrfToken"))
+      encodeURIComponent(Discourse.Session.currentProp("csrfToken")) +
+      this.uploadUrlParams
     );
   },
+
+  uploadUrlParams: "",
 
   uploadOptions() {
     return {};
