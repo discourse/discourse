@@ -23,7 +23,7 @@ class MigrateUrlSiteSettings < ActiveRecord::Migration[5.2]
       sleep_interval = 5
 
       loop do
-        url = UrlHelper.absolute(old_url)
+        url = UrlHelper.absolute_without_cdn(old_url)
 
         begin
           file = FileHelper.download(
