@@ -235,6 +235,22 @@ describe UsersController do
         expect(response).to redirect_to(wizard_path)
       end
 
+      it "logs the password change" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+        token = user.email_tokens.create(email: user.email).token
+        get "/u/password-reset/#{token}"
+
+        expect do
+          put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
+        end.to change { UserHistory.count }.by (1)
+
+        entry = UserHistory.last
+
+        expect(entry.target_user_id).to eq(user.id)
+        expect(entry.action).to eq(UserHistory.actions[:change_password])
+      end
+
       it "doesn't invalidate the token when loading the page" do
         user = Fabricate(:user)
         user_token = UserAuthToken.generate!(user_id: user.id)

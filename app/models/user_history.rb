@@ -82,7 +82,8 @@ class UserHistory < ActiveRecord::Base
       removed_unsuspend_user: 63,
       post_rejected: 64,
       merge_user: 65,
-      entity_export: 66
+      entity_export: 66,
+      change_password: 67
     )
   end
 
