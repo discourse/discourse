@@ -710,11 +710,16 @@ describe Group do
     end
 
     it "always sets user's primary group" do
-      group.update(primary_group: true)
+      group.update(primary_group: true, title: 'AAAA')
       expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
 
-      new_group = Fabricate(:group, primary_group: true)
-      expect { new_group.add(user) }.to change { user.reload.primary_group }.from(group).to(new_group)
+      new_group = Fabricate(:group, primary_group: true, title: 'BBBB')
+
+      expect {
+        new_group.add(user)
+        user.reload
+      }.to change { user.primary_group }.from(group).to(new_group)
+        .and change { user.title }.from('AAAA').to('BBBB')
     end
 
     context 'when adding a user into a public group' do

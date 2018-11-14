@@ -108,10 +108,10 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
+      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
         begin
           file = FileHelper.download(
-            SiteSetting.favicon_url,
+            UrlHelper.absolute(SiteSetting.site_favicon_url),
             max_file_size: 50.kilobytes,
             tmp_file_name: FAVICON,
             follow_redirect: true
@@ -122,7 +122,7 @@ class StaticController < ApplicationController
           data
         rescue => e
           AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
           ""
         end
       end

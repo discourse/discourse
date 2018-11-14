@@ -31,6 +31,7 @@ class SiteSettings::TypeSupervisor
       username: 15,
       category: 16,
       uploaded_image_list: 17,
+      upload: 18,
     )
   end
 
@@ -133,7 +134,7 @@ class SiteSettings::TypeSupervisor
 
   def type_hash(name)
     name = name.to_sym
-    type = self.class.types[@types[name]]
+    type = get_type(name)
 
     result = { type: type.to_s }
 
@@ -150,6 +151,10 @@ class SiteSettings::TypeSupervisor
     result
   end
 
+  def get_type(name)
+    self.class.types[@types[name.to_sym]]
+  end
+
   private
 
   def normalize_input(name, val)
@@ -164,6 +169,8 @@ class SiteSettings::TypeSupervisor
       type = get_data_type(name, val)
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
+    elsif type == self.class.types[:upload] && val.present?
+      val = val.id
     end
 
     [val, type]

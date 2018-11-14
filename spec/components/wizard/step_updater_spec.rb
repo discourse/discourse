@@ -214,38 +214,49 @@ describe Wizard::StepUpdater do
 
   context "logos step" do
     it "updates the fields correctly" do
-      updater = wizard.create_updater('logos',
-                                      logo_url: '/uploads/logo.png',
-                                      logo_small_url: '/uploads/logo-small.png')
+      upload = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      updater = wizard.create_updater(
+        'logos',
+        logo: upload.url,
+        logo_small: upload2.url
+      )
+
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('logos')).to eq(true)
-      expect(SiteSetting.logo_url).to eq('/uploads/logo.png')
-      expect(SiteSetting.logo_small_url).to eq('/uploads/logo-small.png')
+      expect(SiteSetting.logo).to eq(upload)
+      expect(SiteSetting.logo_small).to eq(upload2)
     end
   end
 
   context "icons step" do
     it "updates the fields correctly" do
+      upload = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
       updater = wizard.create_updater('icons',
-                                      favicon_url: "/uploads/favicon.png",
-                                      apple_touch_icon_url: "/uploads/apple.png")
+        favicon: upload.url,
+        apple_touch_icon: upload2.url
+      )
+
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('icons')).to eq(true)
-      expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
-      expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
+      expect(SiteSetting.favicon).to eq(upload)
+      expect(SiteSetting.apple_touch_icon).to eq(upload2)
     end
 
-    it "updates large_icon_url if the uploaded icon size is greater than 180x180" do
+    it "updates large_icon if the uploaded icon size is greater than 180x180" do
       upload = Fabricate(:upload, width: 512, height: 512)
-      updater = wizard.create_updater('icons', apple_touch_icon_url: upload.url)
+      updater = wizard.create_updater('icons', apple_touch_icon: upload.url)
       updater.update
 
       expect(updater).to be_success
-      expect(SiteSetting.large_icon_url).to eq(upload.url)
+      expect(SiteSetting.large_icon).to eq(upload)
     end
   end
 

@@ -283,13 +283,14 @@
               {{/if}}
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
-
-              {{#if model.relatedMessages.length}}
-                {{related-messages topic=model}}
-              {{/if}}
-              {{#if model.suggestedTopics.length}}
-                {{suggested-topics topic=model}}
-              {{/if}}
+              <div class="{{if model.relatedMessages.length 'related-messages-wrapper'}}{{if model.suggestedTopics.length 'suggested-topics-wrapper'}}">
+                {{#if model.relatedMessages.length}}
+                  {{related-messages topic=model}}
+                {{/if}}
+                {{#if model.suggestedTopics.length}}
+                  {{suggested-topics topic=model}}
+                {{/if}}
+              </div>
             {{/if}}
           {{/conditional-loading-spinner}}
 

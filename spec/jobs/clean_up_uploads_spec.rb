@@ -44,7 +44,54 @@ describe Jobs::CleanUpUploads do
     end
   end
 
-  it "does not clean up uploads in site settings" do
+  it 'does not clean up upload site settings' do
+    begin
+      original_provider = SiteSetting.provider
+      SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+
+      logo_upload = fabricate_upload
+      logo_small_upload = fabricate_upload
+      digest_logo_upload = fabricate_upload
+      mobile_logo_upload = fabricate_upload
+      large_icon_upload = fabricate_upload
+      opengraph_image_upload = fabricate_upload
+      twitter_summary_large_image_upload = fabricate_upload
+      favicon_upload = fabricate_upload
+      apple_touch_icon_upload = fabricate_upload
+
+      SiteSetting.logo = logo_upload
+      SiteSetting.logo_small = logo_small_upload
+      SiteSetting.digest_logo = digest_logo_upload
+      SiteSetting.mobile_logo = mobile_logo_upload
+      SiteSetting.large_icon = large_icon_upload
+      SiteSetting.opengraph_image = opengraph_image_upload
+
+      SiteSetting.twitter_summary_large_image =
+        twitter_summary_large_image_upload
+
+      SiteSetting.favicon = favicon_upload
+      SiteSetting.apple_touch_icon = apple_touch_icon_upload
+
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      [
+        logo_upload,
+        logo_small_upload,
+        digest_logo_upload,
+        mobile_logo_upload,
+        large_icon_upload,
+        opengraph_image_upload,
+        twitter_summary_large_image_upload,
+        favicon_upload,
+        apple_touch_icon_upload
+      ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
+    ensure
+      SiteSetting.delete_all
+      SiteSetting.provider = original_provider
+    end
+  end
+
+  it "does not clean up uploads with URLs used in site settings" do
     logo_upload = fabricate_upload
     logo_small_upload = fabricate_upload
     digest_logo_upload = fabricate_upload

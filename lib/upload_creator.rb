@@ -117,6 +117,7 @@ class UploadCreator
       @upload.for_group_message   = true if @opts[:for_group_message]
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
+      @upload.for_site_setting    = true if @opts[:for_site_setting]
 
       return @upload unless @upload.save
 

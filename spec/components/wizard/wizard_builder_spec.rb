@@ -27,4 +27,14 @@ describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
+  it "returns wizard with disabled invites step when local_logins are off" do
+    SiteSetting.enable_local_logins = false
+
+    wizard = Wizard::Builder.new(moderator).build
+
+    invites_step = wizard.steps.find { |s| s.id == "invites" }
+    expect(invites_step.fields).to be_blank
+    expect(invites_step.disabled).to be_truthy
+  end
+
 end
