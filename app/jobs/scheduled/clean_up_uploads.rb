@@ -20,15 +20,15 @@ module Jobs
 
       # Any URLs in site settings are fair game
       ignore_urls = [
-        SiteSetting.logo_url,
-        SiteSetting.logo_small_url,
-        SiteSetting.digest_logo_url,
-        SiteSetting.mobile_logo_url,
-        SiteSetting.large_icon_url,
-        SiteSetting.favicon_url,
-        SiteSetting.default_opengraph_image_url,
-        SiteSetting.twitter_summary_large_image_url,
-        SiteSetting.apple_touch_icon_url,
+        SiteSetting.logo_url(warn: false),
+        SiteSetting.logo_small_url(warn: false),
+        SiteSetting.digest_logo_url(warn: false),
+        SiteSetting.mobile_logo_url(warn: false),
+        SiteSetting.large_icon_url(warn: false),
+        SiteSetting.favicon_url(warn: false),
+        SiteSetting.default_opengraph_image_url(warn: false),
+        SiteSetting.twitter_summary_large_image_url(warn: false),
+        SiteSetting.apple_touch_icon_url(warn: false),
         *SiteSetting.selectable_avatars.split("\n"),
       ].flatten.map do |url|
         if url.present?
