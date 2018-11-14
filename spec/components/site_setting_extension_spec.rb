@@ -711,7 +711,7 @@ describe SiteSettingExtension do
       settings.refresh!
 
       expect(settings.client_settings_json_uncached).to eq(
-        "{\"default_locale\":\"en\",\"upload_type\":\"#{upload.url}\",\"string_type\":\"haha\"}"
+        %Q|{"default_locale":"en","upload_type":"#{upload.url}","string_type":"haha"}|
       )
     end
   end
