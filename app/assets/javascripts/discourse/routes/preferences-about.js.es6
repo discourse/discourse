@@ -37,6 +37,7 @@ export default RestrictedUserRoute.extend({
           },
           function() {
             // model failed to save
+            controller.set("saving", false);
             bootbox.alert(I18n.t("generic_error"));
           }
         );
