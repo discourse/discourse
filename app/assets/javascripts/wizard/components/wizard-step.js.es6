@@ -40,6 +40,16 @@ export default Ember.Component.extend({
   @computed("step.displayIndex", "wizard.totalSteps")
   showDoneButton: (current, total) => current === total,
 
+  @computed(
+    "step.index",
+    "step.displayIndex",
+    "wizard.totalSteps",
+    "wizard.completed"
+  )
+  showFinishButton: (index, displayIndex, total, completed) => {
+    return index !== 0 && displayIndex !== total && completed;
+  },
+
   @computed("step.index")
   showBackButton: index => index > 0,
 
@@ -110,6 +120,24 @@ export default Ember.Component.extend({
   actions: {
     quit() {
       document.location = getUrl("/");
+    },
+
+    exitEarly() {
+      const step = this.get("step");
+      step.validate();
+
+      if (step.get("valid")) {
+        this.set("saving", true);
+
+        step
+          .save()
+          .then(() => this.send("quit"))
+          .catch(() => this.animateInvalidFields())
+          .finally(() => this.set("saving", false));
+      } else {
+        this.animateInvalidFields();
+        this.autoFocus();
+      }
     },
 
     backStep() {
