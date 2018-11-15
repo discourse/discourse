@@ -268,6 +268,10 @@ RSpec.describe Admin::BackupsController do
 
   describe "#email" do
     it "enqueues email job" do
+
+      # might as well test this here if we really want www.example.com
+      SiteSetting.force_hostname = "www.example.com"
+
       create_backup_files(backup_filename)
 
       expect {
