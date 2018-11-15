@@ -37,4 +37,36 @@ describe Wizard::Builder do
     expect(invites_step.disabled).to be_truthy
   end
 
+  context 'introduction step' do
+    let(:wizard) { Wizard::Builder.new(moderator).build }
+    let(:introduction_step) { wizard.steps.find { |s| s.id == 'introduction' } }
+
+    context 'step has not been completed' do
+      it 'enables the step' do
+        expect(introduction_step.disabled).to be_nil
+      end
+    end
+
+    context 'step has been completed' do
+      before do
+        wizard = Wizard::Builder.new(moderator).build
+        introduction_step = wizard.steps.find { |s| s.id == 'introduction' }
+
+        # manually sets the step as completed
+        logger = StaffActionLogger.new(moderator)
+        logger.log_wizard_step(introduction_step)
+      end
+
+      it 'disables step if no welcome topic' do
+        expect(introduction_step.disabled).to eq(true)
+      end
+
+      it 'enables step if welcome topic is present' do
+        topic = Fabricate(:topic, title: 'Welcome to Discourse')
+        welcome_post = Fabricate(:post, topic: topic, raw: "this will be the welcome topic post\n\ncool!")
+
+        expect(introduction_step.disabled).to be_nil
+      end
+    end
+  end
 end

@@ -46,15 +46,19 @@ class Wizard
       @wizard.append_step('introduction') do |step|
         introduction = IntroductionUpdater.new(@wizard.user)
 
-        step.add_field(id: 'welcome', type: 'textarea', required: true, value: introduction.get_summary)
+        if @wizard.completed_steps?('introduction') && !introduction.get_summary
+          step.disabled = true
+        else
+          step.add_field(id: 'welcome', type: 'textarea', required: true, value: introduction.get_summary)
 
-        step.on_update do |updater|
-          value = updater.fields[:welcome].strip
+          step.on_update do |updater|
+            value = updater.fields[:welcome].strip
 
-          if value.index("\n")
-            updater.errors.add(:welcome, I18n.t("wizard.step.introduction.fields.welcome.one_paragraph"))
-          else
-            introduction.update_summary(value)
+            if value.index("\n")
+              updater.errors.add(:welcome, I18n.t("wizard.step.introduction.fields.welcome.one_paragraph"))
+            else
+              introduction.update_summary(value)
+            end
           end
         end
       end
