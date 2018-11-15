@@ -259,7 +259,6 @@ RSpec.describe ApplicationController do
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to include('example.com')
-      expect(script_src).to include("'self'")
       expect(script_src).to include("'unsafe-eval'")
     end
 
