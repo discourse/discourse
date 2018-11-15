@@ -119,3 +119,13 @@ div.poll {
     }
   }
 }
+
+// hides 0 vote count in crawler and print view
+body.crawler {
+  .poll {
+    .poll-info,
+    .poll-button {
+      display: none;
+    }
+  }
+}
