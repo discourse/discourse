@@ -162,6 +162,7 @@ const fa4Replacements = {
   mobile: "mobile-alt",
   navicon: "bars",
   paste: "far-clipboard",
+  patreon: "fab-patreon",
   pencil: "pencil-alt",
   photo: "far-image",
   refresh: "sync",
@@ -263,7 +264,7 @@ function warnIfMissing(id) {
     Discourse.SvgIconList &&
     Discourse.SvgIconList.indexOf(id) === -1
   ) {
-    console.warn(`The icon "${id}" is missing from the SVG subset.`);
+    console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
 
