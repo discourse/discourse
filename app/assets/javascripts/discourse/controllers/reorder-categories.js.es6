@@ -34,8 +34,6 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     return anyChanged;
   }.property("categoriesBuffered.@each.hasBufferedChanges"),
 
-  saveDisabled: Ember.computed.alias("showApplyAll"),
-
   moveDir(cat, dir) {
     const cats = this.get("categoriesOrdered");
     const curIdx = cats.indexOf(cat);
@@ -82,11 +80,15 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
         );
       }
     }
-
-    this.send("commit");
   },
 
   actions: {
+    change(cat, e) {
+      let position = parseInt($(e.target).val());
+      cat.set("position", position);
+      this.fixIndices();
+    },
+
     moveUp(cat) {
       this.moveDir(cat, -1);
     },
@@ -95,6 +97,8 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     },
 
     commit() {
+      this.fixIndices();
+
       this.get("categoriesBuffered").forEach(bc => {
         if (bc.get("hasBufferedChanges")) {
           bc.applyBufferedChanges();
@@ -104,7 +108,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     },
 
     saveOrder() {
-      this.fixIndices();
+      this.send("commit");
 
       const data = {};
       this.get("categoriesBuffered").forEach(cat => {
