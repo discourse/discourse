@@ -1,0 +1,13 @@
+.select-kit {
+  &.combo-box {
+    &.tag-drop {
+      .select-kit-row {
+        &[data-value="all-tags"],
+        &[data-value="no-tags"] {
+          color: $tertiary;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
