@@ -43,11 +43,20 @@ end
 
 def helper
   @helper ||= begin
-    setting = use_db_s3_config ? SiteSetting : GlobalSetting
+    bucket, options =
+      if use_db_s3_config
+        [
+          SiteSetting.s3_upload_bucket.downcase,
+          S3Helper.s3_options(SiteSetting)
+        ]
+      else
+        [
+          GlobalSetting.s3_bucket.downcase,
+          S3Helper.s3_options(GlobalSetting)
+        ]
+      end
 
-    S3Helper.new(
-      setting.s3_bucket.downcase, '', S3Helper.s3_options(setting)
-    )
+    S3Helper.new(bucket, '', options)
   end
 end
 
