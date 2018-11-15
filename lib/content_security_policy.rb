@@ -37,6 +37,7 @@ class ContentSecurityPolicy
     @request = request
     @directives = {
       script_src: script_src,
+      worker_src: [:self],
     }
 
     @directives[:report_uri] = path('/csp_reports') if SiteSetting.content_security_policy_collect_reports
