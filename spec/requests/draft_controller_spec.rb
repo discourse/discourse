@@ -29,7 +29,8 @@ describe DraftController do
       sequence: 0,
       data: {
         postId: post.id,
-        originalText: post.raw
+        originalText: post.raw,
+        action: "edit"
       }.to_json
     }
 
@@ -41,7 +42,8 @@ describe DraftController do
       sequence: 0,
       data: {
         postId: post.id,
-        originalText: "something else"
+        originalText: "something else",
+        action: "edit"
       }.to_json
     }
 

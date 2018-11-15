@@ -4,6 +4,7 @@ import deprecated from "discourse-common/lib/deprecated";
 const keySelector = "meta[name=discourse_theme_ids]";
 
 export function currentThemeKey() {
+  // eslint-disable-next-line no-console
   if (console && console.warn && console.trace) {
     // TODO: Remove this code Jan 2019
     deprecated(

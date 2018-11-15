@@ -75,6 +75,7 @@ export default Discourse.Route.extend({
       })
       .catch(e => {
         if (!Ember.testing) {
+          // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
         }
       });

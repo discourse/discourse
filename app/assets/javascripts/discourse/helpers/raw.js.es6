@@ -40,6 +40,7 @@ registerUnbound("raw", function(templateName, params) {
   const container = Discourse.__container__;
   const template = findRawTemplate(templateName);
   if (!template) {
+    // eslint-disable-next-line no-console
     console.warn("Could not find raw template: " + templateName);
     return;
   }

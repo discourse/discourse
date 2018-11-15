@@ -1325,6 +1325,15 @@ class Report
   end
 
   def rgba_color(hex, opacity = 1)
+    if hex.length === 3
+      chars = hex.scan(/\w/)
+      hex = chars.zip(chars).flatten.join.ljust(6)
+    end
+
+    if hex.length < 3
+      hex = hex.ljust(6, hex.last)
+    end
+
     rgbs = hex_to_rgbs(hex)
 
     "rgba(#{rgbs.join(',')},#{opacity})"
