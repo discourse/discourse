@@ -14,6 +14,7 @@ export default class WidgetGlue {
     this._widgetClass =
       queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
     if (!this._widgetClass) {
+      // eslint-disable-next-line no-console
       console.error(`Error: Could not find widget: ${name}`);
     }
   }

@@ -16,10 +16,7 @@ import hbs from "discourse/widgets/hbs-compiler";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
-  console.log("transforming!");
-  console.log(transformed);
   postTransformCallbacks(transformed);
-  console.log("transforming! done");
   return transformed;
 }
 

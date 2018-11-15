@@ -52,6 +52,7 @@
     }
 
     if (Discourse.Environment === "development") {
+      /* eslint-disable no-console  */
       if (e) {
         if (e.message || e.stack) {
           console.log(e.message);
@@ -62,6 +63,7 @@
       } else {
         console.log("A promise failed but was not caught.");
       }
+      /* eslint-enable no-console  */
     }
 
     window.onerror(e && e.message, null, null, null, e);
