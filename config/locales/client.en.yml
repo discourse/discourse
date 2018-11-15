@@ -4093,6 +4093,7 @@ en:
   wizard_js:
     wizard:
       done: "Done"
+      finish: "Finish"
       back: "Back"
       next: "Next"
       step: "%{current} of %{total}"
