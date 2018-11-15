@@ -213,6 +213,19 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'Custom hostname' do
+
+    it 'does not allow arbitrary host injection' do
+      get("/latest",
+        headers: {
+          "X-Forwarded-Host" => "test123.com"
+        }
+      )
+
+      expect(response.body).not_to include("test123")
+    end
+  end
+
   describe 'Content Security Policy' do
     it 'is enabled by SiteSettings' do
       SiteSetting.content_security_policy = false
