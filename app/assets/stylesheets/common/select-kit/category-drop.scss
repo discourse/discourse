@@ -42,6 +42,12 @@
         flex-direction: column;
         align-items: flex-start;
 
+        &[data-value="all-categories"],
+        &[data-value="no-categories"] {
+          color: $tertiary;
+          font-weight: 700;
+        }
+
         .category-desc {
           font-weight: normal;
           color: $primary-medium;

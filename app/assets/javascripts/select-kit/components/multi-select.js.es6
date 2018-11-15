@@ -264,6 +264,11 @@ export default SelectKitComponent.extend({
       return;
     }
 
+    if (computedContentItem.__sk_row_type === "noopRow") {
+      this._boundaryActionHandler("onSelect", computedContentItem.value);
+      return;
+    }
+
     if (computedContentItem.__sk_row_type === "createRow") {
       if (
         !this.get("computedValues").includes(computedContentItem.value) &&

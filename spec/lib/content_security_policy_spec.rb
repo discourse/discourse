@@ -14,16 +14,20 @@ describe ContentSecurityPolicy do
   end
 
   describe 'script-src defaults' do
-    it 'always have self and unsafe-eval' do
+    it 'always have self, logster, sidekiq, and assets' do
       script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to eq(%w['self' 'unsafe-eval'])
-    end
-
-    it 'enforces https when SiteSetting.force_https' do
-      SiteSetting.force_https = true
-
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to include('https:')
+      expect(script_srcs).to eq(%w[
+        'unsafe-eval'
+        http://test.localhost/logs/
+        http://test.localhost/sidekiq/
+        http://test.localhost/mini-profiler-resources/
+        http://test.localhost/assets/
+        http://test.localhost/brotli_asset/
+        http://test.localhost/extra-locales/
+        http://test.localhost/highlight-js/
+        http://test.localhost/javascripts/
+        http://test.localhost/theme-javascripts/
+      ])
     end
 
     it 'whitelists Google Analytics and Tag Manager when integrated' do
@@ -31,15 +35,34 @@ describe ContentSecurityPolicy do
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
       script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to include('www.google-analytics.com')
-      expect(script_srcs).to include('www.googletagmanager.com')
+      expect(script_srcs).to include('https://www.google-analytics.com')
+      expect(script_srcs).to include('https://www.googletagmanager.com')
     end
 
-    it 'whitelists CDN when integrated' do
-      set_cdn_url('cdn.com')
+    it 'whitelists CDN assets when integrated' do
+      set_cdn_url('https://cdn.com')
 
       script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to include('cdn.com')
+      expect(script_srcs).to include(*%w[
+        https://cdn.com/assets/
+        https://cdn.com/brotli_asset/
+        https://cdn.com/highlight-js/
+        https://cdn.com/javascripts/
+        https://cdn.com/theme-javascripts/
+        http://test.localhost/extra-locales/
+      ])
+
+      global_setting(:s3_cdn_url, 'https://s3-cdn.com')
+
+      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://s3-cdn.com/assets/
+        https://s3-cdn.com/brotli_asset/
+        https://cdn.com/highlight-js/
+        https://cdn.com/javascripts/
+        https://cdn.com/theme-javascripts/
+        http://test.localhost/extra-locales/
+      ])
     end
 
     it 'can be extended with more sources' do
@@ -48,7 +71,6 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include('example.com')
       expect(script_srcs).to include('another.com')
       expect(script_srcs).to include("'unsafe-eval'")
-      expect(script_srcs).to include("'self'")
     end
   end
 
