@@ -197,6 +197,9 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
+    require 'middleware/enforce_hostname'
+    config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
+
     require 'content_security_policy'
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware, ContentSecurityPolicy::Middleware
 
