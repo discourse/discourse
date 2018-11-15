@@ -169,4 +169,18 @@ RSpec.describe ApplicationController do
       expect(controller.theme_ids).to eq([theme.id])
     end
   end
+
+  describe 'Custom hostname' do
+
+    it 'does not allow arbitrary host injection' do
+      get("/latest",
+        headers: {
+          "X-Forwarded-Host" => "test123.com"
+        }
+      )
+
+      expect(response.body).not_to include("test123")
+    end
+  end
+
 end

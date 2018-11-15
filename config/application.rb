@@ -186,6 +186,8 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
+    require 'middleware/enforce_hostname'
+    config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
