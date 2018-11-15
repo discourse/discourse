@@ -38,11 +38,5 @@
     </div>
   </div>
 
-  <script language="Javascript">
-    window.onpopstate = function(event) {
-      if (event.state && !window.hasOwnProperty("Discourse")) {  //check if Discourse object exists if not take care of back navigation
-        window.location = document.location;
-      }
-    };
-  </script>
+  <%= preload_script('onpopstate-handler') %>
 <%- end %>
