@@ -58,7 +58,7 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
-  def preload_script(script)
+  def script_asset_path(script)
     path = asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
@@ -88,6 +88,12 @@ module ApplicationHelper
         path = path + "?#{Time.now.to_f}"
       end
     end
+
+    path
+  end
+
+  def preload_script(script)
+    path = script_asset_path(script)
 
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
@@ -422,7 +428,7 @@ module ApplicationHelper
       base_uri: Discourse::base_uri,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
-      markdown_it_url: asset_url('markdown-it-bundle.js'),
+      markdown_it_url: script_asset_path('markdown-it-bundle'),
       service_worker_url: service_worker_url,
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,
