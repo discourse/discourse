@@ -15,7 +15,7 @@ class ContentSecurityPolicy
 
       return response unless html_response?(headers) && ContentSecurityPolicy.enabled?
 
-      policy = ContentSecurityPolicy.new.build
+      policy = ContentSecurityPolicy.new(request).build
       headers['Content-Security-Policy'] = policy if SiteSetting.content_security_policy
       headers['Content-Security-Policy-Report-Only'] = policy if SiteSetting.content_security_policy_report_only
 
@@ -33,7 +33,8 @@ class ContentSecurityPolicy
     SiteSetting.content_security_policy || SiteSetting.content_security_policy_report_only
   end
 
-  def initialize
+  def initialize(request = nil)
+    @request = request
     @directives = {
       script_src: script_src,
     }
@@ -57,14 +58,47 @@ class ContentSecurityPolicy
 
   private
 
-  def script_src
-    sources = [:self, :unsafe_eval]
+  attr_reader :request
 
-    sources << :https if SiteSetting.force_https
-    sources << Discourse.asset_host if Discourse.asset_host.present?
-    sources << 'www.google-analytics.com' if SiteSetting.ga_universal_tracking_code.present?
-    sources << 'www.googletagmanager.com' if SiteSetting.gtm_container_id.present?
+  SCRIPT_ASSET_DIRECTORIES = [
+    # [dir, can_use_s3_cdn, can_use_cdn]
+    ['/assets/',             true, true],
+    ['/brotli_asset/',       true, true],
+    ['/extra-locales/',      false, false],
+    ['/highlight-js/',       false, true],
+    ['/javascripts/',        false, true],
+    ['/theme-javascripts/',  false, true],
+  ]
+
+  def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url)
+    SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn|
+      if can_use_s3_cdn && s3_cdn
+        s3_cdn + dir
+      elsif can_use_cdn && cdn
+        cdn + dir
+      else
+        base + dir
+      end
+    end
+  end
+
+  def script_src
+    sources = [
+      :unsafe_eval,
+      "#{base_url}/logs/",
+      "#{base_url}/sidekiq/",
+      "#{base_url}/mini-profiler-resources/",
+    ]
+
+    sources.concat(script_assets)
+
+    sources << 'https://www.google-analytics.com' if SiteSetting.ga_universal_tracking_code.present?
+    sources << 'https://www.googletagmanager.com' if SiteSetting.gtm_container_id.present?
 
     sources.concat(SiteSetting.content_security_policy_script_src.split('|'))
+  end
+
+  def base_url
+    @base_url ||= Rails.env.development? ? request.host_with_port : Discourse.base_url
   end
 end
