@@ -887,3 +887,26 @@ componentTest("onDeselect", {
     );
   }
 });
+
+componentTest("noopRow", {
+  template: "{{single-select value=value content=content}}",
+
+  beforeEach() {
+    this.set("value", "blue");
+    this.set("content", [
+      { id: "red", name: "Red", __sk_row_type: "noopRow" },
+      "blue",
+      "green"
+    ]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("red");
+    assert.equal(this.get("value"), "blue", "it doesn’t change the value");
+
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("green");
+    assert.equal(this.get("value"), "green");
+  }
+});
