@@ -10,6 +10,9 @@
 
 .lightbox-wrapper {
   display: inline-block;
+  img {
+    width: auto;
+  }
   &,
   * {
     outline: 0;

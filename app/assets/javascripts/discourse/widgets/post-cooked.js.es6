@@ -131,7 +131,7 @@ export default class PostCooked {
     if ($aside.data("expanded")) {
       this._updateQuoteElements($aside, "chevron-up");
       // Show expanded quote
-      const $blockQuote = $("blockquote", $aside);
+      const $blockQuote = $("> blockquote", $aside);
       $aside.data("original-contents", $blockQuote.html());
 
       const originalText = $blockQuote.text().trim();

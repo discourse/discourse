@@ -3999,6 +3999,7 @@ en:
 
       introduction:
         title: "Introduction"
+        disabled: "We couldn’t find any Welcome Topic. Create a topic with `Welcome to Discourse` as title to fix this issue."
 
         fields:
           welcome:

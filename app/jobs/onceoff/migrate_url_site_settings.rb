@@ -37,7 +37,12 @@ module Jobs
               skip_rate_limit: true,
               follow_redirect: true
             )
-          rescue OpenURI::HTTPError, Net::OpenTimeout, Net::ReadTimeout, Errno::ECONNREFUSED => e
+          rescue OpenURI::HTTPError,
+                 Net::OpenTimeout,
+                 Net::ReadTimeout,
+                 Errno::ECONNREFUSED,
+                 Discourse::InvalidParameters => e
+
             logger.info(
               "Error encountered when trying to download file " +
               "for #{new_setting}.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
