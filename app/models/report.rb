@@ -1325,12 +1325,12 @@ class Report
   end
 
   def rgba_color(hex, opacity = 1)
-    if hex.length === 3
+    if hex.size == 3
       chars = hex.scan(/\w/)
-      hex = chars.zip(chars).flatten.join.ljust(6)
+      hex = chars.zip(chars).flatten.join
     end
 
-    if hex.length < 3
+    if hex.size < 3
       hex = hex.ljust(6, hex.last)
     end
 
