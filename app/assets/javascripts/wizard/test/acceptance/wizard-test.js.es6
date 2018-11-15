@@ -24,7 +24,7 @@ test("Going back and forth in steps", async assert => {
     exists(".wizard-step-hello-world"),
     "it adds a class for the step id"
   );
-
+  assert.ok(!exists(".wizard-btn.finish"), "can’t finish on first step");
   assert.ok(exists(".wizard-progress"));
   assert.ok(exists(".wizard-step-title"));
   assert.ok(exists(".wizard-step-description"));
@@ -50,15 +50,19 @@ test("Going back and forth in steps", async assert => {
   await fillIn("input.field-full-name", "Evil Trout");
   await click(".wizard-btn.next");
   assert.ok(!exists(".wizard-field .field-error-description"));
-  assert.ok(!exists(".wizard-step-title"));
   assert.ok(!exists(".wizard-step-description"));
+  assert.ok(
+    exists(".wizard-btn.finish"),
+    "shows finish on an intermediate step"
+  );
 
+  await click(".wizard-btn.next");
   assert.ok(exists(".select-kit.field-snack"), "went to the next step");
   assert.ok(exists(".preview-area"), "renders the component field");
-
-  assert.ok(!exists(".wizard-btn.next"));
   assert.ok(exists(".wizard-btn.done"), "last step shows a done button");
   assert.ok(exists(".action-link.back"), "shows the back button");
+  assert.ok(!exists(".wizard-step-title"));
+  assert.ok(!exists(".wizard-btn.finish"), "can’t finish on last step");
 
   await click(".action-link.back");
   assert.ok(exists(".wizard-step-title"));
