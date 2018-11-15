@@ -42,7 +42,7 @@ componentTest("default", {
 
     assert.equal(
       this.get("subject")
-        .rowByIndex(0)
+        .rowByIndex(1)
         .name(),
       "jeff",
       "it has the correct tag"
@@ -50,7 +50,7 @@ componentTest("default", {
 
     assert.equal(
       this.get("subject")
-        .rowByIndex(1)
+        .rowByIndex(2)
         .name(),
       "neil",
       "it has the correct tag"
@@ -68,7 +68,7 @@ componentTest("default", {
     await this.get("subject").fillInFilter("");
     assert.equal(
       this.get("subject")
-        .rowByIndex(0)
+        .rowByIndex(1)
         .name(),
       "jeff",
       "it returns top tags for an empty search"
