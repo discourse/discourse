@@ -76,7 +76,7 @@ def asset_paths
 end
 
 def ensure_s3_configured!
-  unless GlobalSetting.use_s3?
+  unless GlobalSetting.use_s3? || ENV["USE_DB_S3_CONFIG"]
     STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
     exit 1
   end
