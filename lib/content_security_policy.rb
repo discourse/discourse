@@ -60,17 +60,26 @@ class ContentSecurityPolicy
 
   attr_reader :request
 
-  SCRIPT_ASSET_DIRECTORIES = %w(
-    /assets/
-    /brotli_asset/
-    /extra-locales/
-    /highlight-js/
-    /javascripts/
-    /theme-javascripts/
-  )
+  SCRIPT_ASSET_DIRECTORIES = [
+    # [dir, can_use_s3_cdn, can_use_cdn]
+    ['/assets/',             true, true],
+    ['/brotli_asset/',       true, true],
+    ['/extra-locales/',      false, false],
+    ['/highlight-js/',       false, true],
+    ['/javascripts/',        false, true],
+    ['/theme-javascripts/',  false, true],
+  ]
 
-  def script_assets(base = base_url)
-    SCRIPT_ASSET_DIRECTORIES.map { |dir| base + dir }
+  def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url)
+    SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn|
+      if can_use_s3_cdn && s3_cdn
+        s3_cdn + dir
+      elsif can_use_cdn && cdn
+        cdn + dir
+      else
+        base + dir
+      end
+    end
   end
 
   def script_src
@@ -82,8 +91,6 @@ class ContentSecurityPolicy
     ]
 
     sources.concat(script_assets)
-    sources.concat(script_assets(GlobalSetting.cdn_url)) if GlobalSetting.cdn_url
-    sources.concat(script_assets(GlobalSetting.s3_cdn_url)) if GlobalSetting.s3_cdn_url
 
     sources << 'https://www.google-analytics.com' if SiteSetting.ga_universal_tracking_code.present?
     sources << 'https://www.googletagmanager.com' if SiteSetting.gtm_container_id.present?
@@ -91,15 +98,7 @@ class ContentSecurityPolicy
     sources.concat(SiteSetting.content_security_policy_script_src.split('|'))
   end
 
-  def protocal
-    @protocal ||= SiteSetting.force_https ? 'https://' : 'http://'
-  end
-
-  def with_protocal(url)
-    protocal + url
-  end
-
   def base_url
-    @base_url ||= Rails.env.development? ? with_protocal(request.host_with_port) : Discourse.base_url
+    @base_url ||= Rails.env.development? ? request.host_with_port : Discourse.base_url
   end
 end

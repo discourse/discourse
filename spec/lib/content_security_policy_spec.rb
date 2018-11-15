@@ -46,10 +46,22 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include(*%w[
         https://cdn.com/assets/
         https://cdn.com/brotli_asset/
-        https://cdn.com/extra-locales/
         https://cdn.com/highlight-js/
         https://cdn.com/javascripts/
         https://cdn.com/theme-javascripts/
+        http://test.localhost/extra-locales/
+      ])
+
+      global_setting(:s3_cdn_url, 'https://s3-cdn.com')
+
+      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://s3-cdn.com/assets/
+        https://s3-cdn.com/brotli_asset/
+        https://cdn.com/highlight-js/
+        https://cdn.com/javascripts/
+        https://cdn.com/theme-javascripts/
+        http://test.localhost/extra-locales/
       ])
     end
 
