@@ -128,6 +128,7 @@ module Discourse
       activate-account.js
       auto-redirect.js
       wizard-start.js
+      onpopstate-handler.js
     }
 
     # Precompile all available locales
