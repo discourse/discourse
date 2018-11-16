@@ -17,6 +17,7 @@
               {{#unless model.viewFullscreen}}
                 <div class="reply-details">
                   {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
+                  {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                   {{#unless site.mobileView}}
                     {{#if model.whisper}}
