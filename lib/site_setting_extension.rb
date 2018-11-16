@@ -269,8 +269,16 @@ module SiteSettingExtension
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
       changes, deletions = diff_hash(new_hash, current)
-      changes.each   { |name, val| current[name] = val }
-      deletions.each { |name, _|   current[name] = defaults_view[name] }
+
+      changes.each do |name, val|
+        current[name] = val
+        clear_uploads_cache(name)
+      end
+
+      deletions.each do |name, _|
+        current[name] = defaults_view[name]
+        clear_uploads_cache(name)
+      end
 
       clear_cache!
     end
@@ -318,7 +326,7 @@ module SiteSettingExtension
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
-    uploads.delete(name)
+    clear_uploads_cache(name)
     clear_cache!
   end
 
@@ -326,7 +334,7 @@ module SiteSettingExtension
     val, type = type_supervisor.to_db_value(name, val)
     provider.save(name, val, type)
     current[name] = type_supervisor.to_rb_value(name, val)
-    uploads.delete(name)
+    clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -478,6 +486,12 @@ module SiteSettingExtension
   def uploads
     @uploads ||= {}
     @uploads[provider.current_site] ||= {}
+  end
+
+  def clear_uploads_cache(name)
+    if type_supervisor.get_type(name) == :upload && uploads.has_key?(name)
+      uploads.delete(name)
+    end
   end
 
   def logger
