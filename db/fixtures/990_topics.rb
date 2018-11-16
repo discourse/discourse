@@ -39,8 +39,6 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body', base_path: Discourse.base_path), title: I18n.t('assets_topic_title'), skip_validations: true, category: staff ? staff.name : nil)
-
   post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
   post.topic.update_pinned(true, true)
   TopicCustomField.create(topic_id: post.topic.id, name: "is_welcome_topic", value: "true")
