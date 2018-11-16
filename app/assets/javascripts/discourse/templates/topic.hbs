@@ -322,7 +322,7 @@
 
   {{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
 
-  {{#if currentUser.enable_quoting}}
+  {{#if embedQuoteButton}}
     {{quote-button quoteState=quoteState selectText=(action "selectText")}}
   {{/if}}
 {{/discourse-topic}}
