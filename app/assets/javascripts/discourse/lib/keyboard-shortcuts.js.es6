@@ -130,9 +130,7 @@ export default {
   quoteReply() {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    setTimeout(function() {
-      $(".d-editor .quote").click();
-    }, 500);
+    Ember.run.later(() => $(".d-editor .quote").click(), 500);
   },
 
   goToFirstPost() {

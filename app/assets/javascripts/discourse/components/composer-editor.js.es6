@@ -786,7 +786,7 @@ export default Ember.Component.extend({
 
           // The paste doesn't finish immediately and we don't have any onpaste
           // event, so wait for 100ms which _should_ be enough time.
-          setTimeout(() => {
+          Ember.run.later(() => {
             const pastedImg = contentEditableDiv.find("img");
 
             if (pastedImg.length === 1) {

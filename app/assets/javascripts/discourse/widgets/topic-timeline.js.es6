@@ -395,7 +395,7 @@ export default createWidget("topic-timeline", {
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    setTimeout(() => {
+    Ember.run.later(() => {
       if (!this.state.position === pos) {
         return;
       }
