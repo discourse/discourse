@@ -49,7 +49,7 @@ const Category = RestModel.extend({
 
   @computed("url")
   fullSlug(url) {
-    return url.slice(3).replace("/", "-");
+    return url.slice(Discourse.BaseUri.length + 3).replace(/\//g, "-");
   },
 
   @computed("name")

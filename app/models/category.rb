@@ -535,7 +535,8 @@ class Category < ActiveRecord::Base
   end
 
   def full_slug(separator = "-")
-    url[3..-1].gsub("/", separator)
+    start_idx = "#{Discourse.base_uri}/c/".length
+    url[start_idx..-1].gsub("/", separator)
   end
 
   def url
