@@ -133,6 +133,24 @@ describe SiteSettingExtension do
       settings.foo = "baz"
       expect(settings.foo).to eq("baz")
     end
+
+    it "clears the cache for site setting uploads" do
+      settings.setting(:upload_type, "", type: :upload)
+      upload = Fabricate(:upload)
+      settings.upload_type = upload
+
+      expect(settings.upload_type).to eq(upload)
+      expect(settings.send(:uploads)[:upload_type]).to eq(upload)
+
+      upload2 = Fabricate(:upload)
+      settings.provider.save(:upload_type, upload2.id, SiteSetting.types[:upload])
+
+      expect do
+        settings.refresh!
+      end.to change { settings.send(:uploads)[:upload_type] }.from(upload).to(nil)
+
+      expect(settings.upload_type).to eq(upload2)
+    end
   end
 
   describe "multisite" do
