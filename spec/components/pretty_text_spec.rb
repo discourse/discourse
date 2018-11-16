@@ -226,6 +226,14 @@ describe PrettyText do
       expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
     end
 
+    it "can handle group mention" do
+      group = Fabricate(:group)
+
+      expect(PrettyText.cook("hi @#{group.name}! hi")).to match_html(
+        %Q{<p>hi <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a>! hi</p>}
+      )
+    end
+
     it "can handle mentions inside a hyperlink" do
       expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
     end

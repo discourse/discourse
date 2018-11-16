@@ -167,40 +167,24 @@ a.badge-category {
   max-width: 757px;
 }
 
-@include breakpoint(medium, min-width) {
-  .suggested-topics-wrapper.related-messages-wrapper {
-    display: flex;
-    width: 100%;
-    .suggested-topics,
-    .related-messages {
-      thead {
-        display: none;
-      }
-      .posts,
-      .age {
-        width: 45px;
-      }
-      .views {
-        display: none;
-      }
-      .posters {
-        width: 60px;
-        a {
-          display: none;
-          &:first-of-type,
-          &:last-of-type {
-            display: inline;
-          }
-        }
-      }
+.suggested-topics-wrapper.related-messages-wrapper {
+  .topic-list th,
+  .topic-list td {
+    padding: 5px;
+  }
+  .topic-list .main-link {
+    font-size: 1em;
+    .topic-list-item .discourse-tags {
+      font-size: $font-down-1;
     }
-    #suggested-topics {
-      order: 2;
-      margin-left: 1em;
-    }
-    #related-messages {
-      order: 1;
-      margin-right: 1em;
+  }
+  #related-messages {
+    padding-bottom: 0;
+  }
+  #suggested-topics {
+    padding-top: 0.5em;
+    thead {
+      display: none;
     }
   }
 }

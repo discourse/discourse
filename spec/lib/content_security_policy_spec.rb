@@ -13,8 +13,18 @@ describe ContentSecurityPolicy do
     end
   end
 
-  describe 'script-src defaults' do
-    it 'always have self, logster, sidekiq, and assets' do
+  describe 'worker-src' do
+    it 'always has self and blob' do
+      worker_srcs = parse(ContentSecurityPolicy.new.build)['worker-src']
+      expect(worker_srcs).to eq(%w[
+        'self'
+        blob:
+      ])
+    end
+  end
+
+  describe 'script-src' do
+    it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
       expect(script_srcs).to eq(%w[
         'unsafe-eval'
@@ -26,6 +36,7 @@ describe ContentSecurityPolicy do
         http://test.localhost/extra-locales/
         http://test.localhost/highlight-js/
         http://test.localhost/javascripts/
+        http://test.localhost/plugins/
         http://test.localhost/theme-javascripts/
       ])
     end
@@ -48,6 +59,7 @@ describe ContentSecurityPolicy do
         https://cdn.com/brotli_asset/
         https://cdn.com/highlight-js/
         https://cdn.com/javascripts/
+        https://cdn.com/plugins/
         https://cdn.com/theme-javascripts/
         http://test.localhost/extra-locales/
       ])
@@ -60,6 +72,7 @@ describe ContentSecurityPolicy do
         https://s3-cdn.com/brotli_asset/
         https://cdn.com/highlight-js/
         https://cdn.com/javascripts/
+        https://cdn.com/plugins/
         https://cdn.com/theme-javascripts/
         http://test.localhost/extra-locales/
       ])

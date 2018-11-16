@@ -37,7 +37,7 @@ class ContentSecurityPolicy
     @request = request
     @directives = {
       script_src: script_src,
-      worker_src: [:self],
+      worker_src: [:self, :blob],
     }
 
     @directives[:report_uri] = path('/csp_reports') if SiteSetting.content_security_policy_collect_reports
@@ -68,6 +68,7 @@ class ContentSecurityPolicy
     ['/extra-locales/',      false, false],
     ['/highlight-js/',       false, true],
     ['/javascripts/',        false, true],
+    ['/plugins/',            false, true],
     ['/theme-javascripts/',  false, true],
   ]
 
