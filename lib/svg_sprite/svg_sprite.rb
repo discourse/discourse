@@ -99,6 +99,7 @@ module SvgSprite
     "fast-forward",
     "file",
     "file-alt",
+    "filter",
     "flag",
     "folder",
     "folder-open",
