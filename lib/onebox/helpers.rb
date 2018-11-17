@@ -187,5 +187,19 @@ module Onebox
       url
     end
 
+    def self.get_absolute_image_url(src, url)
+      if src && !!(src =~ /^\/\//)
+        uri = URI(url)
+        src = "#{uri.scheme}:#{src}"
+      elsif src && src.match(/^https?:\/\//i).nil?
+        uri = URI(url)
+        src = if !src.start_with?("/") && uri.path.present?
+          "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}#{uri.path.sub(/\/$/, '')}/#{src.sub(/^\//, '')}"
+        else
+          "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}/#{src.sub(/^\//, '')}"
+        end
+      end
+      src
+    end
   end
 end

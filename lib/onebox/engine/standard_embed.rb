@@ -122,18 +122,7 @@ module Onebox
           favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
           favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
 
-          if favicon && !!(favicon =~ /^\/\//)
-            uri = URI(url)
-            favicon = "#{uri.scheme}:#{favicon}"
-          elsif favicon && favicon.match(/^https?:\/\//i).nil?
-            uri = URI(url)
-            favicon = if !favicon.start_with?("/") && uri.path.present?
-              "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}#{uri.path.sub(/\/$/, '')}/#{favicon.sub(/^\//, '')}"
-            else
-              "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}/#{favicon.sub(/^\//, '')}"
-            end
-          end
-          favicon
+          Onebox::Helpers::get_absolute_image_url(favicon, url)
         end
     end
   end
