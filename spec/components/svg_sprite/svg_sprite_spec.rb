@@ -49,6 +49,7 @@ describe SvgSprite do
     provider = SiteSettings::DbProvider.new(SiteSetting)
     provider.save("svg_icon_subset", "blender|drafting-compass|fab-bandcamp", 1)
     provider.save("another_setting_icon", "x-ray", 1)
+    provider.save("nil_icon", nil, 1)
 
     bundle = SvgSprite.bundle
     expect(bundle).to match(/blender/)
