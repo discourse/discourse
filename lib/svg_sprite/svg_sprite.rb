@@ -240,7 +240,7 @@ module SvgSprite
     # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
     site_setting_icons = []
     SiteSetting.all.pluck(:name, :value).each do |setting|
-      if setting[0].to_s.include? "_icon"
+      if setting[0].to_s.include? "_icon" && setting[1].present?
         site_setting_icons |= setting[1].split('|')
       end
     end
