@@ -186,11 +186,9 @@ module SvgSprite
   end
 
   def self.bundle
-    require 'nokogiri'
-
     icons = all_icons
 
-    @svg_subset = """
+    svg_subset = """
       <!--
       Font Awesome Free 5.4.1 by @fontawesome - https://fontawesome.com
       License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -218,12 +216,12 @@ module SvgSprite
         if icons.include? icon_id
           sym.attributes['id'].value = icon_id
           sym.css('title').each { |t| t.remove }
-          @svg_subset << sym.to_xml
+          svg_subset << sym.to_xml
         end
       end
     end
 
-    @svg_subset << '</svg>'
+    svg_subset << '</svg>'
   end
 
   def self.version
