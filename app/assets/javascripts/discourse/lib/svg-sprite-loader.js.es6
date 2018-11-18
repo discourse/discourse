@@ -11,8 +11,10 @@ export default {
     if ($($spriteEl).length === 0)
       $($cEl).append(`<div class="${spriteName}">`);
 
-    ajax(spritePath, { type: "GET", dataType: "text" }).then(data => {
-      $($spriteEl).html(data);
-    });
+    ajax(spritePath, { type: "GET", dataType: "text", cache: true }).then(
+      data => {
+        $($spriteEl).html(data);
+      }
+    );
   }
 };
