@@ -10,3 +10,10 @@ This PR doesn't match our required code formatting standards, as enforced by pre
 #{prettier_offenses.map { |o| github.html_link(o) }.join("\n")}
   })
 end
+
+has_locales_changes = !git.modified_files.grep(/config\/locales/).empty?
+has_en_locales_changes = git.modified_files.include?("config/locales/client.en.yml") || git.modified_files.include?("config/locales/server.en.yml")
+
+if has_locales_changes && !has_en_locales_changes
+  fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
+end
