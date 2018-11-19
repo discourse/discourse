@@ -291,3 +291,10 @@ def has_trigger?(trigger_name)
     WHERE trigger_name = '#{trigger_name}'
   SQL
 end
+
+def silence_stdout
+  STDOUT.stubs(:write)
+  yield
+ensure
+  STDOUT.unstub(:write)
+end

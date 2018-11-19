@@ -1,15 +1,15 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe NewPostManager do
   let(:user) { Fabricate(:newuser) }
   let(:admin) { Fabricate(:admin) }
 
-  describe 'when new post containing a poll is queued for approval' do
+  describe "when new post containing a poll is queued for approval" do
     before do
       SiteSetting.poll_minimum_trust_level_to_create = 0
     end
 
-    it 'should render the poll upon approval' do
+    it "should render the poll upon approval" do
       params = {
         raw: "[poll]\n* 1\n* 2\n* 3\n[/poll]",
         archetype: "regular",
@@ -29,11 +29,9 @@ describe NewPostManager do
       expect { NewPostManager.new(user, params).perform }
         .to change { QueuedPost.count }.by(1)
 
-      queued_post = QueuedPost.last
-      queued_post.approve!(admin)
+      QueuedPost.last.approve!(admin)
 
-      expect(Post.last.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
-        .to_not eq(nil)
+      expect(Poll.where(post: Post.last).exists?).to eq(true)
     end
   end
 end
