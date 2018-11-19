@@ -116,7 +116,7 @@ const Report = Discourse.Model.extend({
 
   @computed("data")
   currentTotal(data) {
-    return _.reduce(data, (cur, pair) => cur + pair.y, 0);
+    return data.reduce((cur, pair) => cur + pair.y, 0);
   },
 
   @computed("data", "currentTotal")
