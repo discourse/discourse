@@ -2,7 +2,11 @@ require_dependency 'report'
 
 class Admin::ReportsController < Admin::AdminController
   def index
-    reports_methods = Report.singleton_methods.grep(/^report_(?!about)/)
+    reports_methods = ['page_view_total_reqs'] +
+      ApplicationRequest.req_types.keys
+        .select { |r| r =~ /^page_view_/ && r !~ /mobile/ }
+        .map { |r| r + "_reqs" } +
+      Report.singleton_methods.grep(/^report_(?!about)/)
 
     reports = reports_methods.map do |name|
       type = name.to_s.gsub('report_', '')
