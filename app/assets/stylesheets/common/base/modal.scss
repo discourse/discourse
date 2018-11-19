@@ -573,11 +573,11 @@
 .split-modal {
   // move to existing topic
   .existing-topic {
-    label.radio {
+    .radio {
       flex-wrap: wrap;
       align-items: center;
     }
-    span.topic-categories {
+    .topic-categories {
       width: 100%;
       margin-left: 5px;
     }
