@@ -25,10 +25,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
           lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
       });
 
-      if (
-        badges.length === 1 ||
-        _.include(expandedBadges, badges[0].badge.id)
-      ) {
+      if (badges.length === 1 || expandedBadges.includes(badges[0].badge.id)) {
         _.each(badges, badge => expanded.push(badge));
         return;
       }

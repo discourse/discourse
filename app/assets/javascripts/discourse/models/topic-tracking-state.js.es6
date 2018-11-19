@@ -45,7 +45,10 @@ const TopicTrackingState = Discourse.Model.extend({
         const muted_category_ids = Discourse.User.currentProp(
           "muted_category_ids"
         );
-        if (_.include(muted_category_ids, data.payload.category_id)) {
+        if (
+          muted_category_ids &&
+          muted_category_ids.includes(data.payload.category_id)
+        ) {
           return;
         }
       }
@@ -145,7 +148,8 @@ const TopicTrackingState = Discourse.Model.extend({
         "suppressed_from_latest_category_ids"
       );
       if (
-        _.include(suppressed_from_latest_category_ids, data.payload.category_id)
+        suppressed_from_latest_category_ids &&
+        suppressed_from_latest_category_ids.includes(data.payload.category_id)
       ) {
         return;
       }
