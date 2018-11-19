@@ -205,13 +205,14 @@ module SvgSprite
   def self.bundle
     icons = all_icons
 
-    svg_subset = """
-      <!--
-      Font Awesome Free 5.4.1 by @fontawesome - https://fontawesome.com
-      License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
-      -->
-      <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
-    """.dup
+    doc = File.open("#{Rails.root}/vendor/assets/svg-icons/fontawesome/solid.svg") { |f| Nokogiri::XML(f) }
+    fa_license = doc.at('//comment()').text
+
+    svg_subset = """<!--
+Discourse SVG subset of #{fa_license}
+-->
+<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
+""".dup
 
     Dir["#{Rails.root}/vendor/assets/svg-icons/fontawesome/*.svg"].each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|

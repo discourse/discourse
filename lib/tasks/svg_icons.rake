@@ -21,7 +21,7 @@ task 'svgicons:update' do
   start = Time.now
 
   dependencies.each do |f|
-    src = "#{library_src}/#{f[:source]}"
+    src = "#{library_src}/#{f[:source]}/."
 
     unless f[:destination]
       filename = f[:source].split("/").last
