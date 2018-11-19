@@ -8,6 +8,15 @@
                   valueAttribute="value"}}
     </div>
 
+    <div class="input-group poll-select">
+      <label class="input-group-label">{{i18n 'poll.ui_builder.poll_result.label'}}</label>
+      {{combo-box content=pollResults
+                  value=pollResult
+                  allowInitialValueMutation=true
+                  valueAttribute="value"}}
+    </div>
+
+
     {{#if showMinMax}}
       <div class="input-group poll-number">
         {{input-tip validation=minMaxValueValidation}}

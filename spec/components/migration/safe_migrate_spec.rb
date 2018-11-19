@@ -104,7 +104,7 @@ describe Migration::SafeMigrate do
       migrate_up(path)
     end
 
-    expect(output).to include("drop_table(:users)")
+    expect(output).to include("drop_table(:email_logs)")
   end
 
   describe 'for a post deployment migration' do
@@ -112,13 +112,13 @@ describe Migration::SafeMigrate do
       user = Fabricate(:user)
       Migration::SafeMigrate::SafeMigration.enable_safe!
 
-      path = File.expand_path "#{Rails.root}/spec/fixtures/db/post_migrate/drop_table"
+      path = File.expand_path "#{Rails.root}/spec/fixtures/db/post_migrate"
 
       output = capture_stdout do
         migrate_up(path)
       end
 
-      expect(output).to include("drop_table(:users)")
+      expect(output).to include("drop_table(:email_logs)")
       expect(user.reload).to eq(user)
     end
   end

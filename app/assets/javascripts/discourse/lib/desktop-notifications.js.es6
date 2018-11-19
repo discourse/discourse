@@ -79,7 +79,7 @@ function confirmNotification() {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  setTimeout(() => {
+  Ember.run.later(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);
@@ -177,7 +177,7 @@ function onNotification(data) {
     }
 
     notification.addEventListener("click", clickEventHandler);
-    setTimeout(function() {
+    Ember.run.later(() => {
       notification.close();
       notification.removeEventListener("click", clickEventHandler);
     }, 10 * 1000);

@@ -411,6 +411,7 @@ def list_missing_uploads(skip_optimized: false)
 
   public_directory = "#{Rails.root}/public"
 
+  count = 0
   Upload.find_each do |upload|
 
     # could be a remote image
@@ -423,10 +424,15 @@ def list_missing_uploads(skip_optimized: false)
     rescue
       # something is messed up
     end
-    puts path if bad
+    if bad
+      count += 1
+      puts path
+    end
   end
+  puts "Missing uploads: #{count}/#{Upload.count}" if count > 0
 
   unless skip_optimized
+    count = 0
     OptimizedImage.find_each do |optimized_image|
       # remote?
       next unless optimized_image.url =~ /^\/[^\/]/
@@ -439,8 +445,12 @@ def list_missing_uploads(skip_optimized: false)
       rescue
         # something is messed up
       end
-      puts path if bad
+      if bad
+        count += 1
+        puts path
+      end
     end
+    puts "Missing optimized images: #{count}/#{OptimizedImage.count}" if count > 0
   end
 end
 

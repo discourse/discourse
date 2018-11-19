@@ -1036,6 +1036,10 @@ en:
       xaxis: "User"
       num_clicks: "Clicks"
       num_topics: "Topics"
+      labels:
+        user: "User"
+        num_clicks: "Clicks"
+        num_topics: "Topics"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"

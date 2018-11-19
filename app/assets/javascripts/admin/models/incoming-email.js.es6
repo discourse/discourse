@@ -32,7 +32,7 @@ IncomingEmail.reopenClass({
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
       data: filter
     }).then(incomings =>
-      _.map(incomings, incoming => IncomingEmail.create(incoming))
+      incomings.map(incoming => IncomingEmail.create(incoming))
     );
   },
 

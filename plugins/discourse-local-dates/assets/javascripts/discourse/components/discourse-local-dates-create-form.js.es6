@@ -71,7 +71,7 @@ export default Ember.Component.extend({
 
   @computed()
   allTimezones() {
-    return _.map(moment.tz.names(), z => z);
+    return moment.tz.names();
   },
 
   @observes(

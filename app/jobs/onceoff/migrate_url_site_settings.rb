@@ -43,6 +43,7 @@ module Jobs
                  Net::OpenTimeout,
                  Net::ReadTimeout,
                  Errno::ECONNREFUSED,
+                 SocketError,
                  Discourse::InvalidParameters => e
 
             logger.info(

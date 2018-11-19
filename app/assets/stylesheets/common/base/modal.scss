@@ -569,6 +569,23 @@
   }
 }
 
+// split topic modal
+.split-modal {
+  // move to existing topic
+  .existing-topic {
+    .radio {
+      flex-wrap: wrap;
+    }
+    .topic-title {
+      max-width: 90%;
+    }
+    .topic-categories {
+      width: 100%;
+      margin-left: 5px;
+    }
+  }
+}
+
 .tabbed-modal {
   .modal-body {
     position: relative;

@@ -27,7 +27,7 @@ EmailLog.reopenClass({
 
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
       data: filter
-    }).then(logs => _.map(logs, log => EmailLog.create(log)));
+    }).then(logs => logs.map(log => EmailLog.create(log)));
   }
 });
 
