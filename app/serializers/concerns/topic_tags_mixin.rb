@@ -14,17 +14,11 @@ module TopicTagsMixin
     if scope.is_staff?
       tags
     else
-      tags - (@options[:hidden_tag_names] || hidden_tag_names)
+      tags - scope.hidden_tag_names
     end
   end
 
   def topic
     object.is_a?(Topic) ? object : object.topic
-  end
-
-  private
-
-  def hidden_tag_names
-    @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
   end
 end
