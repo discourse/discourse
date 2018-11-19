@@ -178,7 +178,9 @@ module SvgSprite
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
 
-  @svg_sprite_cache = DistributedCache.new('svg_sprite_version')
+  def self.svg_sprite_cache
+    @svg_sprite_cache = DistributedCache.new('svg_sprite_version')
+  end
 
   def self.all_icons
     icons = SVG_ICONS.dup
@@ -191,15 +193,15 @@ module SvgSprite
   end
 
   def self.rebuild_cache
-    @svg_sprite_cache['version'] = Digest::SHA1.hexdigest(all_icons.sort.join('|'))
+    svg_sprite_cache['version'] = Digest::SHA1.hexdigest(all_icons.sort.join('|'))
   end
 
   def self.expire_cache
-    @svg_sprite_cache.clear
+    svg_sprite_cache.clear
   end
 
   def self.version
-    @svg_sprite_cache['version'] || rebuild_cache
+    svg_sprite_cache['version'] || rebuild_cache
   end
 
   def self.bundle
