@@ -14,49 +14,48 @@ describe SvgSprite do
     expect(version1).to eq(version2)
   end
 
-  it 'includes  Font Awesome 4.7 icons from badges' do
+  it 'includes Font Awesome 4.7 icons from badges' do
     Fabricate(:badge, name: 'Custom Icon Badge', icon: 'fa-gamepad')
-    expect(SvgSprite.bundle).to match(/gamepad/)
+    expect(SvgSprite.all_icons).to include("gamepad")
   end
 
-  it 'includes  Font Awesome 5 icons from badges' do
+  it 'includes Font Awesome 5 icons from badges' do
     Fabricate(:badge, name: 'Custom Icon Badge', icon: 'far fa-building')
-    expect(SvgSprite.bundle).to match(/building/)
+    expect(SvgSprite.all_icons).to include("far-building")
   end
 
   it 'includes icons defined in theme settings' do
     theme = Fabricate(:theme)
-    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: gas-pump")
+    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: bars")
     theme.save!
-    expect(SvgSprite.bundle).to match(/gas-pump/)
 
-    setting = theme.settings.find { |s| s.name == :custom_icon }
-    setting.value = 'gamepad'
-    expect(SvgSprite.bundle).to match(/gamepad/)
+    theme.update_setting(:custom_icon, "gas-pump")
+    expect(SvgSprite.all_icons).to include("gas-pump")
+
+    theme.update_setting(:custom_icon, "gamepad")
+    expect(SvgSprite.all_icons).to include("gamepad")
+    expect(SvgSprite.all_icons).not_to include("gas-pump")
 
     # FA5 syntax
-    setting.value = 'fab fa-bandcamp'
-    expect(SvgSprite.bundle).to match(/fab-bandcamp/)
+    theme.update_setting(:custom_icon, "fab fa-bandcamp")
+    expect(SvgSprite.all_icons).to include("fab-bandcamp")
 
-    # Internal Discourse syntax + multiple icons split by pipe |
-    setting.value = 'fab-android|dragon'
-    expect(SvgSprite.bundle).to match(/fab-android/)
-    expect(SvgSprite.bundle).to match(/dragon/)
-
+    # Internal Discourse syntax + multiple icons
+    theme.update_setting(:custom_icon, "fab-android|dragon")
+    expect(SvgSprite.all_icons).to include("fab-android")
+    expect(SvgSprite.all_icons).to include("dragon")
   end
 
   it 'includes icons from SiteSettings' do
-    provider = SiteSettings::DbProvider.new(SiteSetting)
-    provider.save("svg_icon_subset", "blender|drafting-compass|fab-bandcamp", 1)
-    provider.save("another_setting_icon", "x-ray", 1)
-    provider.save("nil_icon", nil, 1)
+    SiteSetting.svg_icon_subset = "blender|drafting-compass|fab-bandcamp"
 
-    bundle = SvgSprite.bundle
-    expect(bundle).to match(/blender/)
-    expect(bundle).to match(/drafting-compass/)
-    expect(bundle).to match(/fab-bandcamp/)
-    expect(bundle).to match(/x-ray/)
-    expect(bundle).not_to match(/dragon/)
+    all_icons = SvgSprite.all_icons
+    expect(all_icons).to include("blender")
+    expect(all_icons).to include("drafting-compass")
+    expect(all_icons).to include("fab-bandcamp")
+
+    SiteSetting.svg_icon_subset = nil
+    expect(SvgSprite.all_icons).not_to include("drafting-compass")
   end
 
   it 'includes icons from plugin registry' do

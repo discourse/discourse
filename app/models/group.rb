@@ -42,6 +42,7 @@ class Group < ActiveRecord::Base
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
+    SvgSprite.expire_cache
   end
 
   validate :name_format_validator

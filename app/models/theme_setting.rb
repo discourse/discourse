@@ -9,6 +9,7 @@ class ThemeSetting < ActiveRecord::Base
     theme.clear_cached_settings!
     theme.remove_from_cache!
     theme.theme_fields.update_all(value_baked: nil)
+    SvgSprite.expire_cache if self.name.to_s.include?("_icon")
   end
 
   def self.types

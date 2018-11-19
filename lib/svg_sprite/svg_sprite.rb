@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'distributed_cache'
+
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "adjust",
@@ -137,6 +139,7 @@ module SvgSprite
     "question-circle",
     "quote-left",
     "quote-right",
+    "random",
     "redo",
     "reply",
     "rocket",
@@ -175,6 +178,8 @@ module SvgSprite
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
 
+  @svg_sprite_cache = DistributedCache.new('svg_sprite_version')
+
   def self.all_icons
     icons = SVG_ICONS.dup
     icons
@@ -183,6 +188,18 @@ module SvgSprite
       .merge(badge_icons)
       .merge(group_icons)
       .merge(theme_icons)
+  end
+
+  def self.rebuild_cache
+    @svg_sprite_cache['version'] = Digest::SHA1.hexdigest(all_icons.sort.join('|'))
+  end
+
+  def self.expire_cache
+    @svg_sprite_cache.clear
+  end
+
+  def self.version
+    @svg_sprite_cache['version'] || rebuild_cache
   end
 
   def self.bundle
@@ -224,12 +241,6 @@ module SvgSprite
     svg_subset << '</svg>'
   end
 
-  def self.version
-    icon_subset = all_icons.sort.join('|')
-    (@svg_subset_cache ||= {})[icon_subset] ||=
-      Digest::SHA1.hexdigest(icon_subset)
-  end
-
   def self.path
     "/svg-sprite/#{Discourse.current_hostname}/svg-#{version}.js"
   end
@@ -237,13 +248,18 @@ module SvgSprite
   def self.settings_icons
     # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
     site_setting_icons = []
-    SiteSetting.all.pluck(:name, :value).each do |setting|
-      if setting[0].to_s.include?("_icon") && setting[1].present?
-        site_setting_icons |= setting[1].split('|')
+
+    SiteSetting.settings_hash.select do |key, value|
+      if key.to_s.include?("_icon") && value.present?
+        site_setting_icons |= value.split('|').each { |i| process(i) }
       end
     end
 
-    site_setting_icons.each { |i| process(i) }
+    site_setting_icons
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    expire_cache if site_setting.name.to_s.include?("_icon")
   end
 
   def self.plugin_icons
@@ -261,15 +277,11 @@ module SvgSprite
   def self.theme_icons
     theme_icon_settings = []
 
-    Theme.all.each do |theme|
-      theme&.included_settings&.each do |name, value|
-        if name.to_s.include? "_icon"
-          theme_icon_settings |= value.split('|')
-        end
-      end
+    ThemeSetting.where("name LIKE '%_icon%'").pluck(:value).each do |icons|
+      theme_icon_settings |= icons.split('|').each { |icon| process(icon) }
     end
 
-    theme_icon_settings.each { |i| process(i) }
+    theme_icon_settings
   end
 
   def self.process(icon_name)
