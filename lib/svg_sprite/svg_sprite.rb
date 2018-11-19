@@ -231,7 +231,7 @@ module SvgSprite
   end
 
   def self.path
-    "/svg-sprite/#{Discourse.current_hostname}/#{version}.svg"
+    "/svg-sprite/#{Discourse.current_hostname}/svg-#{version}.js"
   end
 
   def self.settings_icons
