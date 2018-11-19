@@ -163,7 +163,7 @@ NavItem.reopenClass({
 
     if (
       args.filterMode &&
-      !_.some(items, i => i.indexOf(args.filterMode) !== -1)
+      !items.some(i => i.indexOf(args.filterMode) !== -1)
     ) {
       items.push(args.filterMode);
     }
