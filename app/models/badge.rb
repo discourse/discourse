@@ -112,9 +112,9 @@ class Badge < ActiveRecord::Base
 
   before_create :ensure_not_system
 
-  # after_commit do
-  #   SvgSprite.expire_cache
-  # end
+  after_commit do
+    SvgSprite.expire_cache
+  end
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
