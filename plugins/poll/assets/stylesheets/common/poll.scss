@@ -58,9 +58,6 @@ div.poll {
   }
 
   .poll-buttons {
-    button {
-      float: none;
-    }
     .info-text {
       margin: 0 5px;
       color: $primary-medium;
@@ -81,6 +78,7 @@ div.poll {
 
   .results {
     > li {
+      cursor: default;
       padding: 0.5em 0.7em 0.7em 0.5em;
     }
     .option {
