@@ -54,7 +54,7 @@ describe Scheduler::Defer do
         sleep
       end
 
-      wait_for(100) do
+      wait_for(200) do
         messages.length == 1
       end
     end
