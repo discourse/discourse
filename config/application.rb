@@ -60,7 +60,6 @@ module Discourse
 
     # tiny files needed by site settings
     require_dependency 'lib/highlight_js/highlight_js'
-    require_dependency 'lib/svg_sprite/svg_sprite'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
     #  require, patched in source, on upgrade remove this
@@ -244,6 +243,7 @@ module Discourse
     end
 
     require_dependency 'stylesheet/manager'
+    require_dependency 'lib/svg_sprite/svg_sprite'
 
     config.after_initialize do
       # require common dependencies that are often required by plugins
