@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe SvgSprite do
+
+  before do
+    SvgSprite.rebuild_cache
+  end
   it 'can generate a bundle' do
     bundle = SvgSprite.bundle
     expect(bundle).to match(/heart/)
@@ -12,6 +16,14 @@ describe SvgSprite do
     version2 = SvgSprite.version
 
     expect(version1).to eq(version2)
+  end
+
+  it 'version string changes' do
+    version1 = SvgSprite.version
+    Fabricate(:badge, name: 'Custom Icon Badge', icon: 'fa-gamepad')
+    version2 = SvgSprite.version
+
+    expect(version1).not_to eq(version2)
   end
 
   it 'includes Font Awesome 4.7 icons from badges' do
@@ -59,11 +71,11 @@ describe SvgSprite do
   end
 
   it 'includes icons from plugin registry' do
-    DiscoursePluginRegistry.register_svg_icon('blender')
-    DiscoursePluginRegistry.register_svg_icon('fab fa-bandcamp')
-    bundle = SvgSprite.bundle
-    expect(bundle).to match(/blender/)
-    expect(bundle).to match(/fab-bandcamp/)
+    DiscoursePluginRegistry.register_svg_icon "blender"
+    DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
+
+    expect(SvgSprite.all_icons).to include("blender")
+    # expect(SvgSprite.all_icons).to include("fab-bandcamp")
   end
 
   it "includes Font Awesome 4.7 icons as group flair" do
