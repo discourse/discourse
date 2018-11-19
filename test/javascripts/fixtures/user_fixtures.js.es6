@@ -124,9 +124,9 @@ export default {
       last_posted_at: "2015-05-07T15:23:35.074Z",
       last_seen_at: "2015-05-13T14:34:23.188Z",
       bio_raw:
-        'Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>.',
+        'Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>. I am @eviltrout.',
       bio_cooked:
-        '<p>Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>.</p>',
+        '<p>Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>. I am <a class="mention" href="/u/eviltrout">@eviltrout</a>.</p>',
       created_at: "2013-02-03T15:19:22.704Z",
       website: "http://eviltrout.com",
       location: "Toronto",
@@ -150,7 +150,7 @@ export default {
       can_send_private_messages: true,
       can_send_private_message_to_user: false,
       bio_excerpt:
-        'Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>.',
+        '<p>Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>. I am <a class="mention" href="/u/eviltrout">@eviltrout</a>.</p>',
       trust_level: 4,
       moderator: true,
       admin: true,
