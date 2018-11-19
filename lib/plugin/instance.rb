@@ -358,7 +358,7 @@ class Plugin::Instance
   end
 
   def register_svg_icon(icon)
-    DiscoursePluginRegistry.register_svg_icon(SvgSprite.process(icon))
+    DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
   # @option opts [String] :name

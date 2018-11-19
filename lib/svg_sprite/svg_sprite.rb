@@ -263,7 +263,7 @@ module SvgSprite
   end
 
   def self.plugin_icons
-    DiscoursePluginRegistry.svg_icons.each { |icon| process(icon) }
+    DiscoursePluginRegistry.svg_icons.each { |icon| process(icon.dup) }
   end
 
   def self.badge_icons
