@@ -119,7 +119,7 @@ Site.reopenClass(Singleton, {
       let subcatMap = {};
 
       result.categoriesById = {};
-      result.categories = _.map(result.categories, c => {
+      result.categories = result.categories.map(c => {
         if (c.parent_category_id) {
           subcatMap[c.parent_category_id] =
             subcatMap[c.parent_category_id] || [];
@@ -158,7 +158,7 @@ Site.reopenClass(Singleton, {
 
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
-      result.post_action_types = _.map(result.post_action_types, p => {
+      result.post_action_types = result.post_action_types.map(p => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -167,7 +167,7 @@ Site.reopenClass(Singleton, {
 
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = Em.Object.create();
-      result.topic_flag_types = _.map(result.topic_flag_types, p => {
+      result.topic_flag_types = result.topic_flag_types.map(p => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -175,7 +175,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.archetypes) {
-      result.archetypes = _.map(result.archetypes, a => {
+      result.archetypes = result.archetypes.map(a => {
         a.site = result;
         return Archetype.create(a);
       });

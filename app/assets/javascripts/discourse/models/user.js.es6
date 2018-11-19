@@ -469,7 +469,7 @@ const User = RestModel.extend({
     }).then(json => {
       if (!Em.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
-          _.map(json.user.stats, s => {
+          json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
           })
