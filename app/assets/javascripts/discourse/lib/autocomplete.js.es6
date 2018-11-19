@@ -398,10 +398,8 @@ export default function(options) {
   $(window).on("click.autocomplete", () => closeAutocomplete());
   $(this).on("click.autocomplete", () => closeAutocomplete());
 
-  $(this).on("paste.autocomplete", function() {
-    _.delay(function() {
-      me.trigger("keydown");
-    }, 50);
+  $(this).on("paste.autocomplete", () => {
+    Ember.run.later(() => me.trigger("keydown"), 50);
   });
 
   function checkTriggerRule(opts) {
