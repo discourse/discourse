@@ -70,8 +70,8 @@ test("Single Poll", async assert => {
               edit_reason: null,
               can_view_edit_history: true,
               wiki: false,
-              polls: {
-                poll: {
+              polls: [
+                {
                   options: [
                     {
                       id: "57ddd734344eb7436d64a7d68a0df444",
@@ -88,7 +88,7 @@ test("Single Poll", async assert => {
                   status: "open",
                   name: "poll"
                 },
-                test: {
+                {
                   options: [
                     {
                       id: "c26ad90783b0d80936e5fdb292b7963c",
@@ -105,7 +105,7 @@ test("Single Poll", async assert => {
                   status: "open",
                   name: "test"
                 }
-              }
+              ]
             }
           ],
           stream: [19]
@@ -391,8 +391,8 @@ test("Public poll", async assert => {
               edit_reason: null,
               can_view_edit_history: true,
               wiki: false,
-              polls: {
-                poll: {
+              polls: [
+                {
                   options: [
                     {
                       id: "4d8a15e3cc35750f016ce15a43937620",
@@ -418,7 +418,7 @@ test("Public poll", async assert => {
                   max: "3",
                   public: "true"
                 }
-              }
+              ]
             }
           ],
           stream: [15]
@@ -596,9 +596,199 @@ test("Public poll", async assert => {
   server.get("/polls/voters.json", request => { // eslint-disable-line no-undef
     let body = {};
 
-    if (_.isEqual(request.queryParams, { post_id: "15", poll_name: "poll" })) {
+    if (
+      request.queryParams["post_id"] === "15" &&
+      request.queryParams["poll_name"] === "poll" &&
+      request.queryParams["page"] === "1" &&
+      request.queryParams["option_id"] === "68b434ff88aeae7054e42cd05a4d9056"
+    ) {
       body = {
-        poll: {
+        voters: {
+          "68b434ff88aeae7054e42cd05a4d9056": [
+            {
+              id: 402,
+              username: "bruce400",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 409,
+              username: "bruce407",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 410,
+              username: "bruce408",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 411,
+              username: "bruce409",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 421,
+              username: "bruce419",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 422,
+              username: "bruce420",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 423,
+              username: "bruce421",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 426,
+              username: "bruce424",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 429,
+              username: "bruce427",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 437,
+              username: "bruce435",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 440,
+              username: "bruce438",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 442,
+              username: "bruce440",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 443,
+              username: "bruce441",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 445,
+              username: "bruce443",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 450,
+              username: "bruce448",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 451,
+              username: "bruce449",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 453,
+              username: "bruce451",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 455,
+              username: "bruce453",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 456,
+              username: "bruce454",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 461,
+              username: "bruce459",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 466,
+              username: "bruce464",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 468,
+              username: "bruce466",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 477,
+              username: "bruce475",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 478,
+              username: "bruce476",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            },
+            {
+              id: 498,
+              username: "bruce496",
+              avatar_template: "/images/avatar.png",
+              name: "Bruce Wayne",
+              title: null
+            }
+          ]
+        }
+      };
+    } else if (
+      request.queryParams["post_id"] === "15" &&
+      request.queryParams["poll_name"] === "poll"
+    ) {
+      body = {
+        voters: {
           "68b434ff88aeae7054e42cd05a4d9056": [
             {
               id: 402,
@@ -1132,195 +1322,6 @@ test("Public poll", async assert => {
           ]
         }
       };
-    } else if (
-      _.isEqual(request.queryParams, {
-        post_id: "15",
-        poll_name: "poll",
-        offset: "1",
-        option_id: "68b434ff88aeae7054e42cd05a4d9056"
-      })
-    ) {
-      body = {
-        poll: {
-          "68b434ff88aeae7054e42cd05a4d9056": [
-            {
-              id: 402,
-              username: "bruce400",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 409,
-              username: "bruce407",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 410,
-              username: "bruce408",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 411,
-              username: "bruce409",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 421,
-              username: "bruce419",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 422,
-              username: "bruce420",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 423,
-              username: "bruce421",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 426,
-              username: "bruce424",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 429,
-              username: "bruce427",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 437,
-              username: "bruce435",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 440,
-              username: "bruce438",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 442,
-              username: "bruce440",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 443,
-              username: "bruce441",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 445,
-              username: "bruce443",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 450,
-              username: "bruce448",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 451,
-              username: "bruce449",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 453,
-              username: "bruce451",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 455,
-              username: "bruce453",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 456,
-              username: "bruce454",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 461,
-              username: "bruce459",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 466,
-              username: "bruce464",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 468,
-              username: "bruce466",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 477,
-              username: "bruce475",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 478,
-              username: "bruce476",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            },
-            {
-              id: 498,
-              username: "bruce496",
-              avatar_template: "/images/avatar.png",
-              name: "Bruce Wayne",
-              title: null
-            }
-          ]
-        }
-      };
     }
 
     return [200, { "Content-Type": "application/json" }, body];
@@ -1409,8 +1410,8 @@ test("Public number poll", async assert => {
               edit_reason: null,
               can_view_edit_history: true,
               wiki: false,
-              polls: {
-                poll: {
+              polls: [
+                {
                   options: [
                     {
                       id: "4d8a15e3cc35750f016ce15a43937620",
@@ -1522,7 +1523,7 @@ test("Public number poll", async assert => {
                   step: "1",
                   public: "true"
                 }
-              }
+              ]
             }
           ],
           stream: [16]
@@ -1742,9 +1743,91 @@ test("Public number poll", async assert => {
   server.get("/polls/voters.json", request => { // eslint-disable-line no-undef
     let body = {};
 
-    if (_.isEqual(request.queryParams, { post_id: "16", poll_name: "poll" })) {
+    if (
+      request.queryParams["post_id"] === "16" &&
+      request.queryParams["poll_name"] === "poll" &&
+      request.queryParams["page"] === "1"
+    ) {
       body = {
-        poll: [
+        voters: [
+          {
+            id: 418,
+            username: "bruce416",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 420,
+            username: "bruce418",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 423,
+            username: "bruce421",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 426,
+            username: "bruce424",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 428,
+            username: "bruce426",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 429,
+            username: "bruce427",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 432,
+            username: "bruce430",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 433,
+            username: "bruce431",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 434,
+            username: "bruce432",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          },
+          {
+            id: 436,
+            username: "bruce434",
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+            title: null
+          }
+        ]
+      };
+    } else if (
+      request.queryParams["post_id"] === "16" &&
+      request.queryParams["poll_name"] === "poll"
+    ) {
+      body = {
+        voters: [
           {
             id: 402,
             username: "bruce400",
@@ -1916,87 +1999,6 @@ test("Public number poll", async assert => {
           {
             id: 435,
             username: "bruce433",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          }
-        ]
-      };
-    } else if (
-      _.isEqual(request.queryParams, {
-        post_id: "16",
-        poll_name: "poll",
-        offset: "1"
-      })
-    ) {
-      body = {
-        poll: [
-          {
-            id: 418,
-            username: "bruce416",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 420,
-            username: "bruce418",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 423,
-            username: "bruce421",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 426,
-            username: "bruce424",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 428,
-            username: "bruce426",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 429,
-            username: "bruce427",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 432,
-            username: "bruce430",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 433,
-            username: "bruce431",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 434,
-            username: "bruce432",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-            title: null
-          },
-          {
-            id: 436,
-            username: "bruce434",
             avatar_template: "/images/avatar.png",
             name: "Bruce Wayne",
             title: null

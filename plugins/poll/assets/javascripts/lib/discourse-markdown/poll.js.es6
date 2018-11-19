@@ -3,15 +3,16 @@
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
 const WHITELISTED_ATTRIBUTES = [
-  "type",
-  "name",
-  "min",
+  "close",
   "max",
-  "step",
+  "min",
+  "name",
   "order",
-  "status",
   "public",
-  "close"
+  "results",
+  "status",
+  "step",
+  "type",
 ];
 
 function replaceToken(tokens, target, list) {

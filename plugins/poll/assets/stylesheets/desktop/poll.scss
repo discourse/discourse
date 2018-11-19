@@ -32,6 +32,10 @@ div.poll {
     border-top: 1px solid $primary-low;
     padding: 1em 1.25em;
 
+    .info-text {
+      line-height: 2em;
+    }
+
     .toggle-status {
       float: right;
     }
