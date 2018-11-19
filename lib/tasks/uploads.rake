@@ -227,6 +227,7 @@ def migrate_to_s3
   # will throw an exception if the bucket is missing
   s3 = FileStore::S3Store.new
   local = FileStore::LocalStore.new
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
   exclude_tables = %i{
     incoming_emails
@@ -252,16 +253,25 @@ def migrate_to_s3
         end
         # store the old url
         from = upload.url
-        # retrieve the path to the local file
-        path = local.path_for(upload)
-        # make sure the file exists locally
-        if !path || !File.exists?(path)
-          puts "#{from} does not exist locally"
-          next
-        end
 
         begin
-          file = File.open(path)
+          # Try to retrieve the path to the local file
+          path = local.path_for(upload)
+          if path && File.exists?(path)
+            file = File.open(path)
+          # Otherwise, see if the file is stored remotely (likely in a different S3 bucket)
+          elsif from&.start_with?("//")
+            file = FileHelper.download("http:#{from}", max_file_size: max_file_size, tmp_file_name: "to_s3", follow_redirect: true)
+            unless file
+              puts "#{from} could not be downloaded"
+              next
+            end
+            path = file.path
+          else
+            puts "#{from} does not exist locally"
+            next
+          end
+
           content_type = `file --mime-type -b #{path}`.strip
           to = s3.store_upload(file, upload, content_type)
         rescue => e
