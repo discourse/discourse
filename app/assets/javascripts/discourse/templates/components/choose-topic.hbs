@@ -9,13 +9,18 @@
     <p>{{i18n 'choose_topic.none_found'}}</p>
   {{else}}
     {{#each topics as |t|}}
-      <div class='controls'>
+      <div class='controls existing-topic'>
         <label class='radio'>
-        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>{{t.title}}
-        {{#if t.category.parentCategory}}
-          {{bound-category-link t.category.parentCategory}}
-        {{/if}}
-        {{bound-category-link t.category}}
+        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
+        <span class="topic-title">
+          {{t.title}}
+        </span>
+        <span class="topic-categories">
+          {{#if t.category.parentCategory}}
+            {{bound-category-link t.category.parentCategory}}
+          {{/if}}
+          {{bound-category-link t.category}}
+       </span>
         </label>
       </div>
     {{/each}}
