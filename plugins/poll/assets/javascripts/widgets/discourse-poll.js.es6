@@ -81,7 +81,7 @@ createWidget("discourse-poll-load-more", {
 
     state.loading = true;
     return this.sendWidgetAction("loadMore").finally(
-      () => state.loading = false
+      () => (state.loading = false)
     );
   }
 });
@@ -113,7 +113,10 @@ createWidget("discourse-poll-voters", {
       state.loaded = "loaded";
       state.page += 1;
 
-      const newVoters = attrs.pollType === "number" ? result.voters : result.voters[attrs.optionId];
+      const newVoters =
+        attrs.pollType === "number"
+          ? result.voters
+          : result.voters[attrs.optionId];
       state.voters = [...new Set([...state.voters, ...newVoters])];
 
       this.scheduleRerender();
@@ -518,21 +521,17 @@ export default createWidget("discourse-poll", {
   defaultState(attrs) {
     const { post, poll } = attrs;
 
-    const showResults = (
+    const showResults =
       post.get("topic.archived") ||
       this.isClosed() ||
-      (poll.get("results") !== "on_close" && this.hasVoted())
-    );
+      (poll.get("results") !== "on_close" && this.hasVoted());
 
     return { loading: false, showResults };
   },
 
   html(attrs, state) {
-    const showResults = (
-      state.showResults ||
-      attrs.post.get("topic.archived") ||
-      this.isClosed()
-    );
+    const showResults =
+      state.showResults || attrs.post.get("topic.archived") || this.isClosed();
 
     const newAttrs = jQuery.extend({}, attrs, {
       canCastVotes: this.canCastVotes(),
@@ -542,7 +541,7 @@ export default createWidget("discourse-poll", {
       isMultiple: this.isMultiple(),
       max: this.max(),
       min: this.min(),
-      showResults,
+      showResults
     });
 
     return h("div", [
@@ -631,21 +630,24 @@ export default createWidget("discourse-poll", {
               poll_name: poll.get("name"),
               status
             }
-          }).then(() => {
-            poll.set("status", status);
-            if (poll.get("results") === "on_close") {
-              state.showResults = status === "closed";
-            }
-            this.scheduleRerender();
-          }).catch(error => {
-            if (error) {
-              popupAjaxError(error);
-            } else {
-              bootbox.alert(I18n.t("poll.error_while_toggling_status"));
-            }
-          }).finally(() => {
-            state.loading = false;
-          });
+          })
+            .then(() => {
+              poll.set("status", status);
+              if (poll.get("results") === "on_close") {
+                state.showResults = status === "closed";
+              }
+              this.scheduleRerender();
+            })
+            .catch(error => {
+              if (error) {
+                popupAjaxError(error);
+              } else {
+                bootbox.alert(I18n.t("poll.error_while_toggling_status"));
+              }
+            })
+            .finally(() => {
+              state.loading = false;
+            });
         }
       }
     );
@@ -698,19 +700,22 @@ export default createWidget("discourse-poll", {
         poll_name: attrs.poll.get("name"),
         options: attrs.vote
       }
-    }).then(({ poll }) => {
-      attrs.poll.setProperties(poll);
-      if (attrs.poll.get("results") !== "on_close") {
-        state.showResults = true;
-      }
-    }).catch(error => {
-      if (error) {
-        popupAjaxError(error);
-      } else {
-        bootbox.alert(I18n.t("poll.error_while_casting_votes"));
-      }
-    }).finally(() => {
-      state.loading = false;
-    });
+    })
+      .then(({ poll }) => {
+        attrs.poll.setProperties(poll);
+        if (attrs.poll.get("results") !== "on_close") {
+          state.showResults = true;
+        }
+      })
+      .catch(error => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_casting_votes"));
+        }
+      })
+      .finally(() => {
+        state.loading = false;
+      });
   }
 });
