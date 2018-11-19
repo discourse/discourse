@@ -9,26 +9,11 @@ class TopicListSerializer < ApplicationSerializer
              :per_page,
              :top_tags,
              :tags,
-             :shared_drafts,
-             :topics
+             :shared_drafts
 
+  has_many :topics, serializer: TopicListItemSerializer, embed: :objects
   has_many :shared_drafts, serializer: TopicListItemSerializer, embed: :objects
   has_many :tags, serializer: TagSerializer, embed: :objects
-
-  def topics
-    opts = {
-      scope: scope,
-      root: false
-    }
-
-    if SiteSetting.tagging_enabled && !scope.is_staff?
-      opts.merge!(hidden_tag_names: DiscourseTagging.hidden_tag_names(scope))
-    end
-
-    object.topics.map do |topic|
-      TopicListItemSerializer.new(topic, opts)
-    end
-  end
 
   def can_create_topic
     scope.can_create?(Topic)
