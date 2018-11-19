@@ -112,7 +112,7 @@ class Badge < ActiveRecord::Base
 
   before_create :ensure_not_system
 
-  after_save do
+  after_commit do
     SvgSprite.expire_cache
   end
 
