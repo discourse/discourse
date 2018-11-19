@@ -259,9 +259,9 @@ Discourse SVG subset of #{fa_license}
     site_setting_icons
   end
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    expire_cache if site_setting.name.to_s.include?("_icon")
-  end
+  # DiscourseEvent.on(:site_setting_saved) do |site_setting|
+  #   expire_cache if site_setting.name.to_s.include?("_icon")
+  # end
 
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons.each { |icon| process(icon.dup) }
