@@ -575,7 +575,9 @@
   .existing-topic {
     .radio {
       flex-wrap: wrap;
-      align-items: center;
+    }
+    .topic-title {
+      max-width: 90%;
     }
     .topic-categories {
       width: 100%;
