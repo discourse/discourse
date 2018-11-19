@@ -12,7 +12,7 @@ const WHITELISTED_ATTRIBUTES = [
   "results",
   "status",
   "step",
-  "type",
+  "type"
 ];
 
 function replaceToken(tokens, target, list) {
