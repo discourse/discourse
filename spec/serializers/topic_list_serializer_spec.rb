@@ -17,7 +17,7 @@ RSpec.describe TopicListSerializer do
     ).as_json
 
     expect(serialized[:users].first[:id]).to eq(topic.user_id)
-    expect(serialized[:primar_groups]).to eq([])
+    expect(serialized[:primary_groups]).to eq([])
     expect(serialized[:topic_list][:topics].first[:id]).to eq(topic.id)
   end
 end
