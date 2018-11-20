@@ -239,7 +239,7 @@ en:
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 reply"
+      one: "%{count} reply"
       other: "%{count} replies"
 
   no_mentions_allowed: "Sorry, you can't mention other users."
