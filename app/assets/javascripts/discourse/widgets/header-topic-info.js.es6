@@ -20,7 +20,7 @@ export default createWidget("header-topic-info", {
       if (href) {
         heading.push(
           h(
-            "a",
+            "a.private-message-glyph-wrapper",
             { attributes: { href } },
             h("span.private-message-glyph", iconNode("envelope"))
           )
