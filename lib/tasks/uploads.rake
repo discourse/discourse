@@ -272,20 +272,15 @@ def migrate_to_s3
         end
 
         # remap the URL
-        DbHelper.remap(from, to, exclude_tables: exclude_tables)
+        [
+          [UrlHelper.absolute(from), Discourse.store.cdn_url(to)],
+          [UrlHelper.absolute_without_cdn(from), Discourse.store.cdn_url(to)],
+          [from, to],
+        ].each do |from_url, to_url|
+          DbHelper.remap(from_url, to_url, exclude_tables: exclude_tables)
+          puts "Migrating #{from} --> #{to}"
+        end
         upload.optimized_images.destroy_all
-        puts "Migrating #{from} --> #{to} took #{Process.clock_gettime(Process::CLOCK_MONOTONIC) - now} seconds"
-      end
-
-      [
-        Discourse.asset_host,
-        Discourse.base_url_no_prefix
-      ].each do |from|
-        now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        from = "#{from}#{SiteSetting.Upload.s3_base_url}"
-        to = SiteSetting.s3_cdn_url
-        DbHelper.remap(from, to, exclude_tables: exclude_tables)
-        puts "Remapping #{from} --> #{to} took #{Process.clock_gettime(Process::CLOCK_MONOTONIC) - now} seconds"
       end
     end
   end
