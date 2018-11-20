@@ -1,7 +1,7 @@
 module SiteSettings; end
 
 module SiteSettings::DeprecatedSettings
-  DEPRECATED_SETTINGS = [
+  SETTINGS = [
     ['logo_url', 'logo', false, '2.4'],
     ['logo_small_url', 'logo_small', false, '2.4'],
     ['digest_logo_url', 'digest_logo', false, '2.4'],
@@ -15,7 +15,7 @@ module SiteSettings::DeprecatedSettings
   ]
 
   def setup_deprecated_methods
-    DEPRECATED_SETTINGS.each do |old_setting, new_setting, override, version|
+    SETTINGS.each do |old_setting, new_setting, override, version|
       unless override
         SiteSetting.singleton_class.public_send(
           :alias_method, :"_#{old_setting}", :"#{old_setting}"
