@@ -474,7 +474,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :include_polls?) do
-    preloaded_polls.present?
+    SiteSetting.poll_enabled && preloaded_polls.present?
   end
 
   add_to_serializer(:post, :polls_votes, false) do
@@ -490,6 +490,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :include_polls_votes?) do
+    SiteSetting.poll_enabled &&
     scope.user&.id.present? &&
     preloaded_polls.present? &&
     preloaded_polls.any? { |p| p.has_voted?(scope.user) }
