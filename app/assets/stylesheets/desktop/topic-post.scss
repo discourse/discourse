@@ -11,14 +11,6 @@ h1 .topic-statuses .topic-status i {
   vertical-align: middle;
 }
 
-.logo-small {
-  margin-right: 8px;
-  width: auto;
-  max-width: 80px;
-  height: auto;
-  max-height: 40px;
-}
-
 .topic-body {
   padding: 0;
   &:first-of-type {
@@ -503,64 +495,6 @@ video {
   }
   to {
     opacity: 1;
-  }
-}
-
-.extra-info-wrapper {
-  overflow: hidden;
-  .badge-wrapper,
-  i,
-  .topic-link {
-    -webkit-animation: fadein 0.7s;
-    animation: fadein 0.7s;
-  }
-  .topic-statuses {
-    i {
-      color: $header_primary;
-    }
-    .d-icon-envelope {
-      color: $danger;
-    }
-    .d-icon-lock {
-      padding-top: 0.15em;
-    }
-    .unpinned {
-      color: $header_primary;
-    }
-  }
-  .topic-link {
-    color: $header_primary;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .topic-header-extra {
-    margin: 0 0 0 5px;
-  }
-}
-
-/* default docked header CSS for all topics, including those without categories */
-
-.extra-info {
-  h1 {
-    margin: 5px 0 0 0;
-    font-size: $font-up-3;
-    line-height: $line-height-large;
-    width: 100%;
-  }
-  .topic-statuses {
-    margin-top: -2px;
-  }
-}
-
-/* override docked header CSS for topics with categories */
-
-.extra-info.two-rows {
-  h1 {
-    line-height: $line-height-medium;
-    margin: 0;
-    width: 100%;
   }
 }
 
