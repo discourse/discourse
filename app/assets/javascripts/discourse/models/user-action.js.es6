@@ -21,9 +21,9 @@ const UserActionTypes = {
 };
 const InvertedActionTypes = {};
 
-_.each(UserActionTypes, (k, v) => {
-  InvertedActionTypes[k] = v;
-});
+Object.keys(UserActionTypes).forEach(
+  k => (InvertedActionTypes[k] = UserActionTypes[k])
+);
 
 const UserAction = RestModel.extend({
   @on("init")
