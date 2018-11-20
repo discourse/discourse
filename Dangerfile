@@ -17,3 +17,5 @@ has_en_locales_changes = git.modified_files.include?("config/locales/client.en.y
 if has_locales_changes && !has_en_locales_changes
   fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
 end
+
+test
