@@ -546,10 +546,10 @@ class UsersController < ApplicationController
           end
         else
           render json: {
-            is_developer: UsernameCheckerService.is_developer?(@user.email),
-            admin: @user.admin?,
+            is_developer: UsernameCheckerService.is_developer?(@user&.email),
+            admin: @user&.admin?,
             second_factor_required: !valid_second_factor,
-            backup_enabled: @user.backup_codes_enabled?
+            backup_enabled: @user&.backup_codes_enabled?
           }
         end
       end
