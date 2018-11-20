@@ -14,7 +14,7 @@ QUnit.module("lib:keyboard-shortcuts", {
         }, this);
 
         if (_.isArray(bindings)) {
-          _.each(bindings, registerBinding, this);
+          bindings.forEach(registerBinding, this);
         } else {
           registerBinding(bindings);
         }
@@ -67,9 +67,9 @@ QUnit.module("lib:keyboard-shortcuts", {
   }
 });
 
-var pathBindings = KeyboardShortcuts.PATH_BINDINGS;
-
-_.each(pathBindings, function(path, binding) {
+var pathBindings = KeyboardShortcuts.PATH_BINDINGS || {};
+Object.keys(pathBindings).forEach(path => {
+  const binding = pathBindings[path];
   var testName = binding + " goes to " + path;
 
   test(testName, function(assert) {
@@ -80,9 +80,9 @@ _.each(pathBindings, function(path, binding) {
   });
 });
 
-var clickBindings = KeyboardShortcuts.CLICK_BINDINGS;
-
-_.each(clickBindings, function(selector, binding) {
+var clickBindings = KeyboardShortcuts.CLICK_BINDINGS || {};
+Object.keys(clickBindings).forEach(selector => {
+  const binding = clickBindings[selector];
   var bindings = binding.split(",");
 
   var testName = binding + " clicks on " + selector;
@@ -93,19 +93,15 @@ _.each(clickBindings, function(selector, binding) {
       assert.ok(true, selector + " was clicked");
     });
 
-    _.each(
-      bindings,
-      function(b) {
-        testMouseTrap.trigger(b);
-      },
-      this
-    );
+    bindings.forEach(function(b) {
+      testMouseTrap.trigger(b);
+    }, this);
   });
 });
 
-var functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS;
-
-_.each(functionBindings, function(func, binding) {
+var functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS || {};
+Object.keys(functionBindings).forEach(func => {
+  const binding = functionBindings[func];
   var testName = binding + " calls " + func;
 
   test(testName, function(assert) {

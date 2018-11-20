@@ -19,7 +19,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
 
   schemeJson() {
     let buffer = [];
-    _.each(this.get("colors"), c => {
+    this.get("colors").forEach(c => {
       buffer.push(`  "${c.get("name")}": "${c.get("hex")}"`);
     });
 
@@ -32,7 +32,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       can_edit: true,
       colors: Em.A()
     });
-    _.each(this.get("colors"), function(c) {
+    this.get("colors").forEach(c => {
       newScheme.colors.pushObject(
         ColorSchemeColor.create({
           name: c.get("name"),
@@ -86,7 +86,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       data.name = this.name;
       data.base_scheme_id = this.get("base_scheme_id");
       data.colors = [];
-      _.each(this.get("colors"), function(c) {
+      this.get("colors").forEach(c => {
         if (!self.id || c.get("changed")) {
           data.colors.pushObject({ name: c.get("name"), hex: c.get("hex") });
         }
@@ -107,9 +107,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       }
       if (!opts || !opts.enabledOnly) {
         self.startTrackingChanges();
-        _.each(self.get("colors"), function(c) {
-          c.startTrackingChanges();
-        });
+        self.get("colors").forEach(c => c.startTrackingChanges());
       }
       self.set("savingStatus", I18n.t("saved"));
       self.set("saving", false);
@@ -130,7 +128,7 @@ ColorScheme.reopenClass({
   findAll: function() {
     var colorSchemes = ColorSchemes.create({ content: [], loading: true });
     return ajax("/admin/color_schemes").then(function(all) {
-      _.each(all, function(colorScheme) {
+      all.forEach(colorScheme => {
         colorSchemes.pushObject(
           ColorScheme.create({
             id: colorScheme.id,

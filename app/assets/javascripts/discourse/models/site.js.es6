@@ -11,7 +11,9 @@ const Site = RestModel.extend({
   @computed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
-    _.each(notificationTypes, (v, k) => (result[v] = k));
+    Object.keys(notificationTypes).forEach(
+      k => (result[notificationTypes[k]] = k)
+    );
     return result;
   },
 

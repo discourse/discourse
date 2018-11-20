@@ -25,9 +25,9 @@ const TopicList = RestModel.extend({
   forEachNew(topics, callback) {
     const topicIds = [];
 
-    _.each(this.get("topics"), topic => (topicIds[topic.get("id")] = true));
+    this.get("topics").forEach(topic => (topicIds[topic.get("id")] = true));
 
-    _.each(topics, topic => {
+    topics.forEach(topic => {
       if (!topicIds[topic.id]) {
         callback(topic);
       }

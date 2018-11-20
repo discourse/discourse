@@ -542,7 +542,7 @@ const AdminUser = Discourse.User.extend({
 
 AdminUser.reopenClass({
   bulkApprove(users) {
-    _.each(users, function(user) {
+    users.forEach(user => {
       user.setProperties({
         approved: true,
         can_approve: false,
@@ -557,7 +557,7 @@ AdminUser.reopenClass({
   },
 
   bulkReject(users) {
-    _.each(users, function(user) {
+    users.forEach(user => {
       user.set("can_approve", false);
       user.set("selected", false);
     });
