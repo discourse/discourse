@@ -259,7 +259,7 @@ Category.reopenClass({
 
   findByIds(ids) {
     const categories = [];
-    _.each(ids, id => {
+    ids.forEach(id => {
       const found = Category.findById(id);
       if (found) {
         categories.push(found);

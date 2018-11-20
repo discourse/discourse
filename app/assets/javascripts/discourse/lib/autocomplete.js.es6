@@ -218,7 +218,7 @@ export default function(options) {
     );
 
     var vals = this.val().split(",");
-    _.each(vals, function(x) {
+    vals.forEach(x => {
       if (x !== "") {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);
@@ -231,7 +231,7 @@ export default function(options) {
     });
 
     if (options.items) {
-      _.each(options.items, function(item) {
+      options.items.forEach(item => {
         if (options.single) {
           me.hide();
         }
