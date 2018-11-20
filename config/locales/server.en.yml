@@ -1546,7 +1546,6 @@ en:
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
 
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
 
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
