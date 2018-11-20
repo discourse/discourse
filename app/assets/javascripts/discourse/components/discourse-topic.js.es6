@@ -145,7 +145,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // conditions for showing topic title in the header for mobile
     if (
       this.site.mobileView &&
-      scrollDirection != "up" &&
+      scrollDirection !== "up" &&
       offset > this.dockAt
     ) {
       return true;
@@ -199,10 +199,10 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
     delta = offset - lastScroll;
     // 3px buffer so that the switch doesn't happen with tiny scrolls
-    if (delta > 3 && scrollDirection != "down") {
+    if (delta > 3 && scrollDirection !== "down") {
       scrollDirection = "down";
       this.appEvents.trigger("header:show-topic", this.topic);
-    } else if (delta < -3 && scrollDirection != "up") {
+    } else if (delta < -3 && scrollDirection !== "up") {
       scrollDirection = "up";
       this.appEvents.trigger("header:hide-topic");
     }
