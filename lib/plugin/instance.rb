@@ -488,6 +488,13 @@ class Plugin::Instance
   def auth_provider(opts)
     provider = Auth::AuthProvider.new
 
+    Auth::AuthProvider.deprecated_auth_attributes.each do |struct|
+      if opts.key?(struct.attribute)
+        message = "[auth_provider] :#{struct.attribute} is deprectated since Discourse #{struct.version} and will not be supported since #{struct.drop_version}. #{struct.comment}"
+        log_warn(message)
+      end
+    end
+
     Auth::AuthProvider.auth_attributes.each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
@@ -615,17 +622,29 @@ class Plugin::Instance
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
         msg = "Invalid locale! #{opts.inspect}"
-        # The logger isn't always present during boot / parsing locales from plugins
-        if Rails.logger.present?
-          Rails.logger.error(msg)
-        else
-          puts msg
-        end
+        log_error(msg)
       end
     end
   end
 
   private
+
+  # When booting/parsing locales from plugins, some actions are invoked before Rails logger.
+  def log(level, message)
+    if Rails.logger.present?
+      Rails.logger.send(level.to_sym, message)
+    else
+      puts message
+    end
+  end
+
+  def log_warn(message)
+    log(:warn, message)
+  end
+
+  def log_error(message)
+    log(:error, message)
+  end
 
   def write_asset(path, contents)
     unless File.exists?(path)
