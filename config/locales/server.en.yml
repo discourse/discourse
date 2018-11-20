@@ -1847,9 +1847,9 @@ en:
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
-    company_short_name: "Company Name (short)"
-    company_full_name: "Company Name (full)"
-    company_domain: "Company Domain"
+    company_name: "Company Name"
+    governing_law: "Governing Law"
+    city_for_disputes: "City for Disputes"
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
@@ -3469,142 +3469,177 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](%{base_path}/privacy) and [Community Guidelines](%{base_path}/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
+      These terms govern use of the Internet forum at <%{base_url}>.  To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
-      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
+      The company may offer other products and services, under different terms.  These terms apply only to use of the forum.
 
-      <a name="1"></a>
+      Skip to:
 
-      ## [1. Your %{company_domain} Account](#1)
+      - [Important Terms](#heading--important-terms)
+      - [Your Permission to Use the Forum](#heading--permission)
+      - [Conditions for Use of the Forum](#heading--conditions)
+      - [Acceptable Use](#heading--acceptable-use)
+      - [Content Standards](#heading--content-standards)
+      - [Enforcement](#heading--enforcement)
+      - [Your Account](#heading--your-account)
+      - [Your Content](#heading--your-content)
+      - [Your Responsibility](#heading--responsibility)
+      - [Disclaimers](#heading--disclaimers)
+      - [Limits on Liability](#heading--liability)
+      - [Feedback](#heading--feedback)
+      - [Termination](#heading--termination)
+      - [Disputes](#heading--disputes)
+      - [General Terms](#heading--general)
+      - [Contact](#heading--contact)
+      - [Changes](#heading--changes)
 
-      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Important Terms</a></h2>
 
-      <a name="2"></a>
+      ***These terms include a number of important provisions that affect your rights and responsibilities, such as the disclaimers in [Disclaimers](#heading--disclaimers), limits on the company's liability to you in [Limits on Liability](#heading--liability), your agreement to cover the company for damages caused by your misuse of the forum in [Responsibility for Your Use](#heading--responsibility), and an agreement to arbitrate disputes in [Disputes](#heading--disputes).***
 
-      ## [2. Responsibility of Contributors](#2)
+      <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
 
-      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
+      Subject to these terms, the company gives you permission to use the forum.  Everyone needs to agree to these terms to use the forum.
 
-      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
-      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
-      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
-      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
-      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
-      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
-      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
-      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
-      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
+      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
 
-      <a name="3"></a>
+      Your permission to use the forum is subject to the following conditions:
 
-      ## [3. User Content License](#3)
+      1.  You must be at least thirteen years old.
 
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
+      2.  You may no longer use the forum if the company contacts you directly to say that you may not.
 
+      3.  You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
 
-      <a name="4"></a>
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
 
-      ## [4. Payment and Renewal](#4)
+      1.  You may not break the law using the forum.
 
-      ### General Terms
+      2.  You may not use or try to use another's account on the forum without their specific permission.
 
-      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
+      3.  You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
 
-      ### Automatic Renewal
+      4.  You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
 
-      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
+      5.  You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser.  You may crawl the forum to index it for a publicly available search engine, if you run one.
 
-      <a name="5"></a>
+      6.  You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
 
-      ## [5. Services](#5)
+      7.  You may not falsely imply that you're affiliated with or endorsed by the company.
 
-      ### Hosting, Support Services
+      8.  You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
 
-      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
+      9.  You may not remove any marks showing proprietary ownership from materials you download from the forum.
 
-      ### HTTPS
+      10.  You may not show any part of the forum on other websites with `<iframe>`.
 
-      We offer HTTPS as a paid add-on. By signing up and using a custom domain on %{company_domain}, you authorize us to act on the domain name registrant’s behalf (by requesting the necessary certificates, for example) for the sole purpose of providing HTTPS on your site.
+      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
 
-      ### Enterprise
+      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
 
-      Enterprise Hosting services are provided by %{company_name} under the terms and conditions for each such service, which are determined by a customer-specific contract. By signing up for an Enterprise Hosting account you agree to abide by such terms and conditions.
+      13.  You may not impersonate others through the forum.
 
-      <a name="6"></a>
+      14. You may not encourage or help anyone in violation of these terms.
 
-      ## [6. Responsibility of Website Visitors](#6)
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
 
-      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
+      1.  You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others.  This includes content that is harassing, inappropriate, or abusive.
 
-      <a name="7"></a>
+      2.  You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
 
-      ## [7. Content Posted on Other Websites](#7)
+      3.  You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
 
-      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
+      4.  You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
 
-      <a name="8"></a>
+      5.  You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
 
-      ## [8. Copyright Infringement and DMCA Policy](#8)
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
 
-      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](https://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
+      The company may investigate and prosecute violations of these terms to the fullest legal extent.  The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
 
-      <a name="9"></a>
+      The company reserves the right to change, redact, and delete content on the forum for any reason.  If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
 
-      ## [9. Intellectual Property](#9)
+      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
 
-      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
+      You must create and log into an account to use some features of the forum.
 
-      <a name="10"></a>
+      To create an account, you must provide some information about yourself.  If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date.  You may close your account at any time by e-mailing <%{contact_email}>.
 
-      ## [10. Attribution](#10)
+      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised.  You agree to notify the company immediately if you suspect your account has been compromised.  You agree to select a secure password for your account, and keep it secret.
 
-      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer.
+      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
 
-      <a name="11"></a>
+      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
 
-      ## [11. Changes](#11)
+      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum.  Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
 
-      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
+      Between you and the company, you remain solely responsible for content you submit to the forum.  You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company.  These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
 
-      <a name="12"></a>
+      Content you submit to the forum belongs to you, and you decide what permission to give others for it.  But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum.  That special license allows the company to copy, publish, and analyze content you submit to the forum.
 
-      ## [12. Termination](#12)
+      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems.  Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed.  Those licenses may give others, or the company itself, the right to share your content through the forum again.
 
-      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
+      Others who receive content you submit to the forum may violate the terms on which you license your content.  You agree that the company will not be liable to you for those violations or their consequences.
 
-      <a name="13"></a>
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
 
-      ## [13. Disclaimer of Warranties](#13)
+      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum.  Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible.  If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice.  You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts.  The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
 
-      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](https://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
 
-      <a name="14"></a>
+      ***You accept all risk of using the forum and content on the forum.  As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
 
-      ## [14. Limitation of Liability](#14)
+      The forum may hyperlink to and integrate forums and services run by others.  The company does not make any warranty about services run by others, or content they may provide.  Use of services run by others may be governed by other terms between you and the one running service.
 
-      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
+      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
 
-      <a name="15"></a>
+      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
 
-      ## [15. General Representation and Warranty](#15)
+      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
 
-      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](%{base_path}/privacy), [Community Guidelines](%{base_path}/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
+      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
 
-      <a name="16"></a>
+      The company welcomes your feedback and suggestions for the forum.  See the [Contact](#heading--contact) section below for ways to get in touch with us.
 
-      ## [16. Indemnification](#16)
+      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you.  You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
 
-      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
+      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
 
-      <a name="17"></a>
+      Either you or the company may end the agreement written out in these terms at any time.  When our agreement ends, your permission to use the forum also ends.
 
-      ## [17. Miscellaneous](#17)
+      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
 
-      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
 
-      This document is CC-BY-SA. It was last updated January 1, 2018.
+      %{governing_law} will govern any dispute related to these terms or your use of the forum.
 
-      Originally adapted from the [WordPress Terms of Service](https://en.wordpress.com/tos/).
+      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+
+      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
+
+      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
+
+      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable.  Otherwise, that provision should be removed.
+
+      You may not assign your agreement with the company.  The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum.  Any attempted assignment against these terms has no legal effect.
+
+      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
+
+      These terms embody all the terms of agreement between you and the company about use of the forum.  These terms entirely replace any other agreements about your use of the forum, written or not.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+
+      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
+
+      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
+
+      The company last updated these terms on July 12, 2018, and may update these terms again.  The company will post all updates to the forum.  For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address.  The company may also announce updates with special messages or alerts on the forum.
+
+      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
@@ -4049,18 +4084,18 @@ en:
 
       corporate:
         title: "Organization"
-        description: "These names will be entered in your <a href='%{base_path}/privacy' target='blank'>Privacy Policy</a> and <a href='%{base_path}/tos' target='blank'>Terms of Service</a>, which are topics you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
+        description: "This information will be entered in your <a href='%{base_path}/tos' target='blank'>Terms of Service</a>, which is a topic you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
 
         fields:
-          company_short_name:
-            label: "Company Name (short)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Company Name (full)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Company Domain Name"
-            placeholder: "initech.com"
+          company_name:
+            label: "Company Name"
+            placeholder: "Example Organization"
+          governing_law:
+            label: "Governing Law"
+            placeholder: "California law"
+          city_for_disputes:
+            label: "City for Disputes"
+            placeholder: "San Francisco, California"
 
       colors:
         title: "Theme"
