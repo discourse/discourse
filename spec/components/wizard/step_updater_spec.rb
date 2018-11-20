@@ -82,6 +82,9 @@ describe Wizard::StepUpdater do
 
   context "contact step" do
     it "updates the fields correctly" do
+      p = Fabricate(:post, raw: '<contact_email> template')
+      SiteSetting.tos_topic_id = p.topic_id
+
       updater = wizard.create_updater('contact',
                                       contact_email: 'eviltrout@example.com',
                                       contact_url: 'http://example.com/custom-contact-url',
@@ -92,6 +95,23 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
       expect(SiteSetting.contact_url).to eq("http://example.com/custom-contact-url")
       expect(SiteSetting.site_contact_username).to eq(user.username)
+
+      # Should update the TOS topic
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      expect(raw).to eq("<eviltrout@example.com> template")
+
+      # Can update the TOS topic again
+      updater = wizard.create_updater('contact', contact_email: 'alice@example.com')
+      updater.update
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      expect(raw).to eq("<alice@example.com> template")
+
+      # Can update the TOS to nothing
+      updater = wizard.create_updater('contact', {})
+      updater.update
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
+      expect(raw).to eq("<contact_email> template")
+
       expect(wizard.completed_steps?('contact')).to eq(true)
     end
 
@@ -110,37 +130,37 @@ describe Wizard::StepUpdater do
 
     it "updates the fields properly" do
 
-      p = Fabricate(:post, raw: 'company_domain - company_full_name - company_short_name template')
+      p = Fabricate(:post, raw: 'company_name - governing_law - city_for_disputes template')
       SiteSetting.tos_topic_id = p.topic_id
 
       updater = wizard.create_updater('corporate',
-                                      company_short_name: 'ACME',
-                                      company_full_name: 'ACME, Inc.',
-                                      company_domain: 'acme.com')
+                                      company_name: 'ACME, Inc.',
+                                      governing_law: 'New Jersey law',
+                                      city_for_disputes: 'Fairfield, New Jersey')
       updater.update
       expect(updater).to be_success
-      expect(SiteSetting.company_short_name).to eq("ACME")
-      expect(SiteSetting.company_full_name).to eq("ACME, Inc.")
-      expect(SiteSetting.company_domain).to eq("acme.com")
+      expect(SiteSetting.company_name).to eq("ACME, Inc.")
+      expect(SiteSetting.governing_law).to eq("New Jersey law")
+      expect(SiteSetting.city_for_disputes).to eq("Fairfield, New Jersey")
 
       # Should update the TOS topic
       raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
-      expect(raw).to eq("acme.com - ACME, Inc. - ACME template")
+      expect(raw).to eq("ACME, Inc. - New Jersey law - Fairfield, New Jersey template")
 
       # Can update the TOS topic again
       updater = wizard.create_updater('corporate',
-                                      company_short_name: 'PPI',
-                                      company_full_name: 'Pied Piper Inc',
-                                      company_domain: 'piedpiper.com')
+                                      company_name: 'Pied Piper Inc',
+                                      governing_law: 'California law',
+                                      city_for_disputes: 'San Francisco, California')
       updater.update
       raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
-      expect(raw).to eq("piedpiper.com - Pied Piper Inc - PPI template")
+      expect(raw).to eq("Pied Piper Inc - California law - San Francisco, California template")
 
       # Can update the TOS to nothing
       updater = wizard.create_updater('corporate', {})
       updater.update
       raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
-      expect(raw).to eq("company_domain - company_full_name - company_short_name template")
+      expect(raw).to eq("company_name - governing_law - city_for_disputes template")
 
       expect(wizard.completed_steps?('corporate')).to eq(true)
     end
