@@ -429,7 +429,7 @@ def list_missing_uploads(skip_optimized: false)
       puts path
     end
   end
-  puts "Missing uploads: #{count}/#{Upload.count}" if count > 0
+  puts "#{count} of #{Upload.count} uploads are missing" if count > 0
 
   unless skip_optimized
     count = 0
@@ -450,7 +450,7 @@ def list_missing_uploads(skip_optimized: false)
         puts path
       end
     end
-    puts "Missing optimized images: #{count}/#{OptimizedImage.count}" if count > 0
+    puts "#{count} of #{OptimizedImage.count} optimized images are missing" if count > 0
   end
 end
 
