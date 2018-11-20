@@ -26,10 +26,12 @@ unless Rails.env.test?
     end
   end
 
-  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service",     company_domain: "company_domain",
-                                                                                                                    company_full_name: "company_full_name",
-                                                                                                                    company_name: "company_short_name",
-                                                                                                                    base_path: Discourse.base_path)
+  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service",
+                           company_name: SiteSetting.company_name.presence || "company_name",
+                           base_url: Discourse.base_url,
+                           contact_email: SiteSetting.contact_email.presence || "contact_email",
+                           governing_law: SiteSetting.governing_law.presence || "governing_law",
+                           city_for_disputes: SiteSetting.city_for_disputes.presence || "city_for_disputes")
 
   create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body", nil, staff, "guidelines", base_path: Discourse.base_path)
 
