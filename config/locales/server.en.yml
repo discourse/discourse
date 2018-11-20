@@ -3999,7 +3999,11 @@ en:
 
       introduction:
         title: "Introduction"
-        disabled: "We couldn’t find any Welcome Topic. Create a topic with `Welcome to Discourse` as title to fix this issue."
+        disabled: "<p>We couldn’t find any topic with the title “Welcome to Discourse”</p>.
+          <ul>
+          <li>If you have changed the title, edit that topic to modify your site’s introductory text.</li>
+          <li>If you have deleted this topic, create another topic with “Welcome to Discourse” as the title. The content of the first post is your site’s introductory text.</li>
+          </ul>"
 
         fields:
           welcome:
