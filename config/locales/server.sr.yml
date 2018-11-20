@@ -1,0 +1,199 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sr:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [~, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+  title: "Discourse"
+  topics: "Teme"
+  posts: "poruke"
+  loading: "Učitavanje"
+  log_in: "Prijava"
+  disable_remote_images_download_reason: "Daljinske slike za download je onemogućeno zato što nije bilo dovoljno slobodnog prostora na disku."
+  anonymous: "Anonimno"
+  remove_posts_deleted_by_author: "Izbrisano od strane autora"
+  emails:
+    incoming:
+      default_subject: "Ovoj temi je potreban naslov"
+  errors: &errors
+    messages:
+      too_long_validation: "je limitirano na %{max} karaktera; koje ste vi uneli %{length}."
+      invalid_boolean: "Nepravilan boolean."
+      even: mora biti parno
+      exclusion: je rezervisano
+      greater_than: "mora biti veće od %{count}"
+      contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
+      less_than: "mora biti manje od 1%{count}"
+      not_a_number: nije broj
+      not_an_integer: mora biti ceo broj
+      record_invalid: 'Verifikacija neuspešna: 1%{errors}'
+    embed:
+      load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
+    site_settings:
+      default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  activemodel:
+    errors:
+      <<: *errors
+  bulk_invite:
+    file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
+  topic_invite:
+    user_exists: "Žao nam je, korisnik je već pozvan. Korisnik može biti pozvan na temu samo jednom."
+  backup:
+    operation_already_running: "Jedna operacija je trenutno pokrenuta. Ne mogu da pokrenem drugu trenutno."
+    backup_file_should_be_tar_gz: "Rezervna datoteka bi trebala biti u .tar.gz arhivi."
+    not_enough_space_on_disk: "Nema dovoljno prostora na disku da bi ubacili ovau rezervu."
+  not_logged_in: "Niste prijavljeni da bi uradili to."
+  not_found: "Zatraženi URL ili resurs nije pronađen."
+  read_only_mode_enabled: "Sajt je u čitaj samo modu. Interakcije su isključene."
+  reading_time: "Vreme za čitanje"
+  likes: "Lajkovi"
+  embed:
+    start_discussion: "Započnite diskusiju"
+    continue: "Nastavite diskusiju"
+  no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
+  user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
+  topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
+  not_accepting_pms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
+  invalid_characters: "sadrži nevažeće karaktere."
+  is_invalid: "deluje nejasno, da li je rečenica kompletna?"
+  next_page: "sledeća strana →"
+  prev_page: "← prethodna strana"
+  page_num: "Strana %{num}"
+  home_title: "Home"
+  topics_in_category: "Teme u '%{category}' kategoriji"
+  num_posts: "Postovi:"
+  num_participants: "Učesnici: "
+  read_full_topic: "Pročitajte celu temu"
+  rss_description:
+    latest: "Poslednje teme"
+    hot: "Vruće teme"
+    top: "Top teme"
+    user_posts: "Poslednji postovi autora @%{username}"
+    user_topics: "Poslednje teme autora @%{username}"
+    tag: "Označene teme"
+  revert_version_same: "Trenutna verzija je ista onoj na koju pokušavate da se vratite."
+  excerpt_image: "slika"
+  groups:
+    default_names:
+      everyone: "svi"
+      admins: "admini"
+      moderators: "moderatori"
+      staff: "osoblje"
+  activerecord:
+    attributes:
+      category:
+        name: "Ime kategorije"
+      topic:
+        title: 'Naslov'
+      user_profile:
+        bio_raw: "O meni"
+    errors:
+      <<: *errors
+      models:
+        user:
+          attributes:
+            password:
+              common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
+              same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+  change_email:
+    authorizing_old:
+      title: "Hvala što ste potvrdili svoju važeću email adresu"
+  site_settings:
+    min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
+    max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
+    min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
+    apple_touch_icon_url: "Ikonica koja se koristi za Apple touch uređaje. Preporučena veličina 144px sa 144px."
+    max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
+    flag_sockpuppets: "Ako novi korisnik odgovara na temu sa iste IP adrese kao i novi korisnik koji je pokrenuo temu, označi obe njihove poruke kao potencijalni spam."
+    pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
+    maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
+    max_image_megapixels: "Maksimalan dozvoljeni broj megapiksela za slike."
+    topic_views_heat_low: "Nakon ovoliko pregleda, polje pregleda je blago označeno."
+    topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
+    topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
+    num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
+    reply_by_email_enabled: "Omogući odgovore na teme putem email poruka."
+    delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
+    block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
+    ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
+    enable_forwarded_emails: "[BETA] Dozvoli korisnicima da kreiraju temu prosleđivanjem email poruke."
+    private_email: "Ne uključuj sadržaj  poruka ili tema u email porukama radi dodatne privatnosti."
+    pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
+    pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
+    pop3_polling_port: "Port za proveru POP3 naloga."
+    pop3_polling_username: "Korisničko ime POP3 naloga za proveru postojanja novih email poruka"
+    pop3_polling_password: "Lozinka PO3 naloga za proveru postojanja novih email poruka"
+    log_mail_processing_failures: "Beleži sve greške u obradi email poruka na http://yoursitename.com/logs"
+    minimum_topics_similar: "Koliko teme mora da postoji da bi se prikazivale slične teme prilikom kreiranja novih"
+    delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
+    delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
+    email_editable: "Dozvoli korisnicima da promene svoju email adresu nakon registracije"
+    allow_uploaded_avatars: "Dozvoli korisnicima da postave svoju sliku za profil"
+    default_avatars: "URL avatara koji će biti korišćeni kao podrazumevani za nove korisnike dok ih ne promene. "
+    digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
+    digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
+    email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
+    allow_anonymous_posting: "Dozvoli korisnicima da se prebace u anonimni mod"
+    hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
+    sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o  prevelikom broju uzastopnih odgovora."
+    disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
+    read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
+    share_anonymized_statistics: "Deli anonimizirane statistike korišćenja"
+    full_name_required: "Puno ime je obavezno polje profila korisnika."
+    display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
+    show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
+    default_code_lang: "Podrazumevani programski jezik za obeležavanje sintakse GitHub blokova koda (lang-auto, ruby, python itd.)"
+    warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
+    autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
+    highlighted_languages: "Uključena pravila za označavanje sintakse (Upozorenje: uključivanje previše jezika može da utiče na performanse). Pogledajte https://highlightjs.org/static/demo/ za demo."
+    embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
+    show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
+    delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
+    enable_emoji: "Omogući emotikone"
+    enforce_square_emoji: "Forsiraj kvadratni oblik za sve emotikone."
+    auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori  (0 da se isključi)"
+    default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
+    default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
+    default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
+  wizard:
+    step:
+      locale:
+        title: "Dobrodošli na vaš Discourse"
+        fields:
+          default_locale:
+            description: "Koji je podrazumevani jezik vaše zajednice?"
+      forum_title:
+        title: "Ime foruma"
+        description: "Naziv foruma je <i>prva</i> stvar koju će posetioci primetiti. Šta vaše ime govori o vašoj zajednici?"
+        fields:
+          title:
+            label: "Ime vaše zajednice"
+            placeholder: "Milenino mesto za bleju"
+          site_description:
+            label: "Opišite vašu zajednicu u jednoj kratkoj rečenici"
+            placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
+      introduction:
+        title: "Uvod"
+        fields:
+          welcome:
+            label: "Tema dobrodošlice"
+            description: "<p>Kako biste najbolje opisali vašu zajednicu totalnom strancu u liftu u 1 minuti?</p> <ul> <li>Za koga su ove diskusije?</li> <li>Šta ovde mogu da pronađem?</li> <li>Zašto bih ovo posećivao?</li> </ul> <p>Vaša tema dobrodošlice je prvo što će novi posetioci pročitati. Posmatrajte je to kao <b>vašu misiju</b> u jednom paragrafu. </p>"
+            one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
+      finished:
+        title: "Vaš Discource je spreman!"

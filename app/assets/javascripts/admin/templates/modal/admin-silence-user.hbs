@@ -1,0 +1,35 @@
+{{#d-modal-body title="admin.user.silence_modal_title"}}
+  {{#conditional-loading-spinner condition=loadingUser}}
+
+    <div class='until-controls'>
+      <label>
+        {{future-date-input
+          class="silence-until"
+          label="admin.user.silence_duration"
+          includeFarFuture=true
+          input=silenceUntil}}
+      </label>
+    </div>
+
+    {{silence-details reason=reason message=message}}
+    {{#if post}}
+      {{penalty-post-action
+        post=post
+        postAction=postAction
+        postEdit=postEdit}}
+    {{/if}}
+
+  {{/conditional-loading-spinner}}
+
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-danger perform-silence"
+    action="silence"
+    disabled=submitDisabled
+    icon="microphone-slash"
+    label="admin.user.silence"}}
+  {{d-modal-cancel close=(action "closeModal")}}
+  {{conditional-loading-spinner condition=loading size="small"}}
+</div>

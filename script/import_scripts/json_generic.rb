@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 class ImportScripts::JsonGeneric < ImportScripts::Base
 
   JSON_FILE_PATH = ENV['JSON_FILE']
-  BATCH_SIZE  ||= 1000
+  BATCH_SIZE ||= 1000
 
   def initialize
     super
@@ -59,7 +59,6 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
     end
   end
 
-
   def import_discussions
     puts "", "Importing discussions"
 
@@ -103,6 +102,6 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
   end
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::JsonGeneric.new.perform
 end

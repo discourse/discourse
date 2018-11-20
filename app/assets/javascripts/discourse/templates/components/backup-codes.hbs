@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <textarea id="backupCodes" class="backup-codes-area" readonly>{{formattedBackupCodes}}</textarea>
+
+  {{d-button
+    action="copyToClipboard"
+    class="backup-codes-copy-btn"
+    icon="copy"}}
+
+  <a download="backup_codes.txt"
+     class="btn no-text btn-icon backup-codes-download-btn"
+     target="_blank"
+     href="data:application/octet-stream;charset=utf-8;base64,{{base64BackupCode}}">
+    {{d-icon "download"}}
+  </a>
+</div>

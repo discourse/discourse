@@ -1,10 +1,10 @@
-class AddEmailHashedPasswordNameSaltToUsers < ActiveRecord::Migration
+class AddEmailHashedPasswordNameSaltToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :email, :string, limit: 256
 
     execute "update users set email= md5(random()::text) || 'domain.com'"
 
-    change_column :users, :email, :string, limit:256, null: false
+    change_column :users, :email, :string, limit: 256, null: false
     add_index :users, [:email], unique: true
 
     rename_column :users, :display_username, :name
@@ -12,7 +12,7 @@ class AddEmailHashedPasswordNameSaltToUsers < ActiveRecord::Migration
     add_column :users, :password_hash, :string, limit: 64
     add_column :users, :salt, :string, limit: 32
     add_column :users, :active, :boolean
-    add_column :users, :activation_key,:string, limit: 32
+    add_column :users, :activation_key, :string, limit: 32
 
     add_column :user_open_ids, :active, :boolean, null: false
 

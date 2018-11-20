@@ -1,10 +1,9 @@
 #topic-entrance {
-
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   padding: 5px;
   background: $secondary;
-  box-shadow: 0 0px 2px rgba(0,0,0, .2);
-  z-index: 100;
+  box-shadow: shadow("card");
+  z-index: z("dropdown");
 
   position: absolute;
   width: 133px;
@@ -18,7 +17,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 1.286em;
+      font-size: $font-up-2;
     }
   }
   button.btn.jump-bottom {

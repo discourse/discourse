@@ -7,6 +7,7 @@ class SidekiqPauser
 
   def pause!
     redis.setex paused_key, 60, "paused"
+
     @mutex.synchronize do
       @extend_lease_thread ||= extend_lease_thread
       sleep 0.001 while !paused?
@@ -35,7 +36,7 @@ class SidekiqPauser
       while true do
         break unless @mutex.synchronize { @extend_lease_thread }
         redis.expire paused_key, 60
-        sleep 30
+        sleep(Rails.env.test? ? 0.01 : 30)
       end
     end
   end
@@ -73,10 +74,14 @@ class Sidekiq::Pausable
   end
 
   def call(worker, msg, queue)
-    if Sidekiq.paused?
+    if Sidekiq.paused? && !(Jobs::RunHeartbeat === worker)
       worker.class.perform_in(@delay, *msg['args'])
     else
-      yield
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      result = yield
+      duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+      DiscourseEvent.trigger(:sidekiq_job_ran, worker, msg, queue, duration)
+      result
     end
   end
 

@@ -4,9 +4,9 @@
 // https://github.com/terkel/mathsass
 
 // Constants
-$E:     2.718281828459045;
-$PI:    3.141592653589793;
-$LN2:   0.6931471805599453;
+$E: 2.718281828459045;
+$PI: 3.141592653589793;
+$LN2: 0.6931471805599453;
 $SQRT2: 1.4142135623730951;
 
 @function error($message) {
@@ -20,8 +20,8 @@ $SQRT2: 1.4142135623730951;
 // @example
 //     fact(0) // 1
 //     fact(8) // 40320
-@function fact ($x) {
-  @if $x < 0 or  $x != floor($x) {
+@function fact($x) {
+  @if $x < 0 or $x != floor($x) {
     @warn "Argument for `fact()` must be a positive integer.";
     @return null;
   }
@@ -33,11 +33,10 @@ $SQRT2: 1.4142135623730951;
   @return $ret;
 }
 
-
 // Returns a two-element list containing the normalized fraction and exponent of number.
 // @param {Number} $x
 // @return {List} fraction, exponent
-@function frexp ($x) {
+@function frexp($x) {
   $exp: 0;
   @if $x < 0 {
     $x: $x * -1;
@@ -59,7 +58,7 @@ $SQRT2: 1.4142135623730951;
 // Returns $x * 2^$exp
 // @param {Number} $x
 // @param {Number} $exp
-@function ldexp ($x, $exp) {
+@function ldexp($x, $exp) {
   $b: if($exp >= 0, 2, 1 / 2);
   @if $exp < 0 {
     $exp: $exp * -1;
@@ -79,7 +78,7 @@ $SQRT2: 1.4142135623730951;
 // @example
 //     log(2)  // 0.69315
 //     log(10) // 2.30259
-@function log ($x) {
+@function log($x) {
   @if $x <= 0 {
     @return 0 / 0;
   }
@@ -124,7 +123,7 @@ $SQRT2: 1.4142135623730951;
 // @example
 //     exp(1)  // 2.71828
 //     exp(-1) // 0.36788
-@function exp ($x) {
+@function exp($x) {
   $ret: 0;
   @for $n from 0 to 24 {
     $ret: $ret + ipow($x, $n) / fact($n);
@@ -140,7 +139,7 @@ $SQRT2: 1.4142135623730951;
 //     pow(4, 2)   // 16
 //     pow(4, -2)  // 0.0625
 //     pow(4, 0.2) // 1.31951
-@function pow ($base, $exp) {
+@function pow($base, $exp) {
   @if $exp == floor($exp) {
     @return ipow($base, $exp);
   } @else {
@@ -153,7 +152,7 @@ $SQRT2: 1.4142135623730951;
 // @example
 //     sqrt(2) // 1.41421
 //     sqrt(5) // 2.23607
-@function sqrt ($x) {
+@function sqrt($x) {
   @if $x < 0 {
     @return error("Argument for `sqrt()` must be a positive number.");
   }

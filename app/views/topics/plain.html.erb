@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="<%=SiteSetting.default_locale%>">
+<html lang="<%= html_lang %>">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title><%= @topic_view.topic.title %></title>
-  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary, image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count) %>
+  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, published_time: @topic_view.published_time) %>
   <% if @topic_view.prev_page %>
     <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
   <% end %>

@@ -2,7 +2,7 @@ require_dependency 'ip_addr'
 
 class Admin::ScreenedIpAddressesController < Admin::AdminController
 
-  before_filter :fetch_screened_ip_address, only: [:update, :destroy]
+  before_action :fetch_screened_ip_address, only: [:update, :destroy]
 
   def index
     filter = params[:filter]
@@ -33,7 +33,7 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
 
   def update
     if @screened_ip_address.update_attributes(allowed_params)
-      render json: success_json
+      render_serialized(@screened_ip_address, ScreenedIpAddressSerializer)
     else
       render_json_error(@screened_ip_address)
     end
@@ -46,18 +46,18 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
 
   def roll_up
     subnets = ScreenedIpAddress.roll_up(current_user)
-    render json: success_json.merge!({ subnets: subnets })
+    render json: success_json.merge!(subnets: subnets)
   end
 
   private
 
-    def allowed_params
-      params.require(:ip_address)
-      params.permit(:ip_address, :action_name)
-    end
+  def allowed_params
+    params.require(:ip_address)
+    params.permit(:ip_address, :action_name)
+  end
 
-    def fetch_screened_ip_address
-      @screened_ip_address = ScreenedIpAddress.find(params[:id])
-    end
+  def fetch_screened_ip_address
+    @screened_ip_address = ScreenedIpAddress.find(params[:id])
+  end
 
 end

@@ -2,6 +2,9 @@ class DiskSpace
 
   extend ActionView::Helpers::NumberHelper
 
+  DISK_SPACE_STATS_CACHE_KEY = 'disk_space_stats'.freeze
+  DISK_SPACE_STATS_UPDATED_CACHE_KEY = 'disk_space_stats_updated'.freeze
+
   def self.uploads_used_bytes
     # used(uploads_path)
     # temporary (on our internal setup its just too slow to iterate)
@@ -37,21 +40,22 @@ class DiskSpace
     }
   end
 
+  def self.reset_cached_stats
+    Discourse.cache.delete(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
+    Discourse.cache.delete(DISK_SPACE_STATS_CACHE_KEY)
+  end
+
   def self.cached_stats
-    stats = $redis.get('disk_space_stats')
-    updated_at = $redis.get('disk_space_stats_updated')
+    stats = Discourse.cache.read(DISK_SPACE_STATS_CACHE_KEY)
+    updated_at = Discourse.cache.read(DISK_SPACE_STATS_UPDATED_CACHE_KEY)
 
     unless updated_at && (Time.now.to_i - updated_at.to_i) < 30.minutes
-      Scheduler::Defer.later "updated stats" do
-        $redis.set('disk_space_stats_updated', Time.now.to_i)
-        $redis.set('disk_space_stats', self.stats.to_json)
-      end
+      Jobs.enqueue(:update_disk_space)
     end
 
     if stats
       JSON.parse(stats)
     end
-
   end
 
   protected
@@ -63,5 +67,4 @@ class DiskSpace
   def self.used(path)
     `du -s #{path}`.to_i * 1024
   end
-
 end

@@ -11,6 +11,9 @@ require "fileutils"
 @mem_stats = false
 @unicorn = false
 @dump_heap = false
+@concurrency = 1
+@skip_asset_bundle = false
+@unicorn_workers = 3
 
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
@@ -35,8 +38,17 @@ opts = OptionParser.new do |o|
   o.on("-m", "--memory_stats") do
     @mem_stats = true
   end
-  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to thin") do
+  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to puma") do
     @unicorn = true
+  end
+  o.on("-c", "--concurrency [NUM]", "Run benchmark with this number of concurrent requests (default: 1)") do |i|
+    @concurrency = i.to_i
+  end
+  o.on("-w", "--unicorn_workers [NUM]", "Run benchmark with this number of unicorn workers (default: 3)") do |i|
+    @unicorn_workers = i.to_i
+  end
+  o.on("-s", "--skip-bundle-assets", "Skip bundling assets") do
+    @skip_asset_bundle = true
   end
 end
 opts.parse!
@@ -63,7 +75,6 @@ rescue LoadError
 end
 
 @timings = {}
-
 
 def measure(name)
   start = Time.now
@@ -100,7 +111,6 @@ unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
 
-
 unless File.exists?("config/database.yml")
   puts "Copying database.yml.development.sample to database.yml"
   `cp config/database.yml.development-sample config/database.yml`
@@ -108,23 +118,44 @@ end
 
 ENV["RAILS_ENV"] = "profile"
 
-
-discourse_env_vars = %w(DISCOURSE_DUMP_HEAP RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
+discourse_env_vars = %w(
+  DISCOURSE_DUMP_HEAP
+  RUBY_GC_HEAP_INIT_SLOTS
+  RUBY_GC_HEAP_FREE_SLOTS
+  RUBY_GC_HEAP_GROWTH_FACTOR
+  RUBY_GC_HEAP_GROWTH_MAX_SLOTS
+  RUBY_GC_MALLOC_LIMIT
+  RUBY_GC_OLDMALLOC_LIMIT
+  RUBY_GC_MALLOC_LIMIT_MAX
+  RUBY_GC_OLDMALLOC_LIMIT_MAX
+  RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR
+  RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR
+  RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR
+  RUBY_GLOBAL_METHOD_CACHE_SIZE
+  LD_PRELOAD
+)
 
 if @include_env
   puts "Running with tuned environment"
-  discourse_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
+  discourse_env_vars.each do |v|
     ENV.delete v
   end
+
+  ENV['RUBY_GLOBAL_METHOD_CACHE_SIZE'] = '131072'
+  ENV['RUBY_GC_HEAP_GROWTH_MAX_SLOTS'] = '40000'
+  ENV['RUBY_GC_HEAP_INIT_SLOTS'] = '400000'
+  ENV['RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR'] = '1.5'
+
 else
   # clean env
   puts "Running with the following custom environment"
-  discourse_env_vars.each do |w|
-    puts "#{w}: #{ENV[w]}"
-  end
 end
 
-def port_available? port
+discourse_env_vars.each do |w|
+  puts "#{w}: #{ENV[w]}" if ENV[w].to_s.length > 0
+end
+
+def port_available?(port)
   server = TCPServer.open("0.0.0.0", port)
   server.close
   true
@@ -156,10 +187,11 @@ api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 def bench(path, name)
   puts "Running apache bench warmup"
   add = ""
-  add = "-c 3 " if @unicorn
-  `ab #{add} -n 10 "http://127.0.0.1:#{@port}#{path}"`
+  add = "-c #{@concurrency} " if @concurrency > 1
+  `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
+
   puts "Benchmarking #{name} @ #{path}"
-  `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -171,16 +203,20 @@ end
 
 begin
   # critical cause cache may be incompatible
-  puts "precompiling assets"
-  run("bundle exec rake assets:precompile")
+  unless @skip_asset_bundle
+    puts "precompiling assets"
+    run("bundle exec rake assets:precompile")
+  end
 
-  pid = if @unicorn
-          ENV['UNICORN_PORT'] = @port.to_s
-          FileUtils.mkdir_p(File.join('tmp', 'pids'))
-          spawn("bundle exec unicorn -c config/unicorn.conf.rb")
-        else
-          spawn("bundle exec thin start -p #{@port}")
-        end
+  pid =
+    if @unicorn
+      ENV['UNICORN_PORT'] = @port.to_s
+      ENV['UNICORN_WORKERS'] = @unicorn_workers.to_s
+      FileUtils.mkdir_p(File.join('tmp', 'pids'))
+      spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+    else
+      spawn("bundle exec puma -p #{@port} -e production")
+    end
 
   while port_available? @port
     sleep 1
@@ -190,16 +226,22 @@ begin
   append = "?api_key=#{api_key}&api_username=admin1"
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o /dev/null"
+  run "wget http://127.0.0.1:#{@port}/ -o /dev/null -O /dev/null"
 
   tests = [
     ["categories", "/categories"],
     ["home", "/"],
-    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
+    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/179"]
     # ["user", "/u/admin1/activity"],
   ]
 
-  tests = tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]} + tests
+  tests.concat(tests.map { |k, url| ["#{k}_admin", "#{url}#{append}"] })
+
+  tests.each do |_, path|
+    if `curl -s -I "http://127.0.0.1:#{@port}#{path}"` !~ /200 OK/
+      raise "#{path} returned non 200 response code"
+    end
+  end
 
   # NOTE: we run the most expensive page first in the bench
 
@@ -210,24 +252,33 @@ begin
     a[50] < b[50] ? a : b
   end
 
-
   results = {}
   @best_of.times do
     tests.each do |name, url|
-      results[name] = best_of(bench(url, name),results[name])
+      results[name] = best_of(bench(url, name), results[name])
     end
   end
 
-
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
+
+  if @unicorn
+    puts "Unicorn: (workers: #{@unicorn_workers})"
+  else
+    # TODO we want to also bench puma clusters
+    puts "Puma: (single threaded)"
+  end
+  puts "Include env: #{@include_env}"
+  puts "Iterations: #{@iterations}, Best of: #{@best_of}"
+  puts "Concurrency: #{@concurrency}"
+  puts
 
   # Prevent using external facts because it breaks when running in the
   # discourse/discourse_bench docker container.
   Facter::Util::Config.external_facts_dirs = []
   facts = Facter.to_hash
 
-  facts.delete_if{|k,v|
-    !["operatingsystem","architecture","kernelversion",
+  facts.delete_if { |k, v|
+    !["operatingsystem", "architecture", "kernelversion",
     "memorysize", "physicalprocessorcount", "processor0",
     "virtual"].include?(k)
   }
@@ -238,15 +289,12 @@ begin
     YAML.load `ruby script/memstats.rb #{pid} --yaml`
   end
 
-
   mem = get_mem(pid)
 
-  results = results.merge({
-    "timings" => @timings,
-    "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-    "rss_kb" => mem["rss_kb"],
-    "pss_kb" => mem["pss_kb"]
-  }).merge(facts)
+  results = results.merge("timings" => @timings,
+                          "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+                          "rss_kb" => mem["rss_kb"],
+                          "pss_kb" => mem["pss_kb"]).merge(facts)
 
   if @unicorn
     child_pids = `ps --ppid #{pid} | awk '{ print $1; }' | grep -v PID`.split("\n")
@@ -270,7 +318,7 @@ begin
   end
 
   if @result_file
-    File.open(@result_file,"wb") do |f|
+    File.open(@result_file, "wb") do |f|
       f.write(results)
     end
   end

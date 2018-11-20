@@ -1,4 +1,4 @@
-class AddUrlToOptimizedImages < ActiveRecord::Migration
+class AddUrlToOptimizedImages < ActiveRecord::Migration[4.2]
   def up
     # add a nullable url column
     add_column :optimized_images, :url, :string

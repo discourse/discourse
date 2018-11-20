@@ -32,35 +32,35 @@
 </h1>
 
 <% @breadcrumbs = categories_breadcrumb(@topic_view.topic)
-   if @breadcrumbs.present? %>
-    <div id='breadcrumbs'>
-      <% @breadcrumbs.each_with_index do |c, i| %>
-          <div id="breadcrumb-<%= i %>" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"
-               <%- if (i+1) < @breadcrumbs.length %>
-               itemref="breadcrumb-<%= (i+1) %>"
-               <%- end %>>
-            <a href="<%= c[:url] %>" itemprop="url">
-              <span itemprop="title"><%= c[:name] %></span>
-            </a>
-          </div>
-      <% end %>
+    if @breadcrumbs.present? %>
+<div id='breadcrumbs'>
+  <% @breadcrumbs.each_with_index do |c,i| %>
+    <div id="breadcrumb-<%=i%>" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"
+      <%-if (i+1) < @breadcrumbs.length%>
+        itemref="breadcrumb-<%=(i+1)%>"
+      <%-end%>>
+      <a href="<%=c[:url]%>" itemprop="url">
+        <span itemprop="title"><%=c[:name]%></span>
+      </a>
     </div>
+  <% end %>
+</div>
 <% end %>
 
 <% if SiteSetting.tagging_enabled %>
-    <% @tags = @topic_view.topic.tags %>
-    <% if @tags.present? %>
-        <div class='tags-list' itemscope itemtype='http://schema.org/ItemList'>
-          <% @tags.each do |tag| %>
-              <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-                <meta itemprop='url' content='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>'>
-                <a href='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>' itemprop='item'>
-                  <span itemprop='name'><%= tag.name -%></span>
-                </a>
-              </div>
-          <% end %>
+  <% @tags = @topic_view.topic.tags %>
+  <% if @tags.present? %>
+    <div class='tags-list' itemscope itemtype='http://schema.org/ItemList'>
+      <% @tags.each do |tag| %>
+        <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+          <meta itemprop='url' content='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>'>
+          <a href='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>' itemprop='item'>
+            <span itemprop='name'><%= tag.name -%></span>
+          </a>
         </div>
-    <% end %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
 
 
@@ -70,140 +70,96 @@
 
 <%- if include_crawler_content? %>
 
-    <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
-    <% if params[:oe].present? %>
-        <script>
-            var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
-        </script>
-    <% end %>
-    <%# -------------------------------------- -%>
+  <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
+  <% if params[:oe].present? %>
+    <script>
+      var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
+    </script>
+  <% end %>
+  <%# -------------------------------------- -%>
 
-    <% @topic_view.posts.each do |post| %>
-        <div id="post-<%= post.id %>" itemscope itemtype='http://schema.org/DiscussionForumPosting'>
-          <% if (u = post.user) %>
-              <div class='creator'>
+<% @topic_view.posts.each do |post| %>
+  <div id="post-<%= post.id %>"  itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+    <% if (u = post.user) %>
+      <div class='creator'>
         <span>
           <a href='<%= Discourse.base_uri %>/u/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
-          <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
-          <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
-            <%= post.created_at %>
-          </time>
+           <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+           <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
+             <%= post.created_at %>
+           </time>
         </span>
-                <span itemprop='position'>#<%= post.post_number %></span>
-              </div>
-              <div class='post' itemprop='articleBody'>
-                <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
-              </div>
-              <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
-              <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
-              <meta itemprop='headline' content='<%= @topic_view.title %>'>
-              <hr>
-              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
-                  <% @topic_view.link_counts[post.id].each do |link| %>
-                      <% if link[:reflection] && link[:title].present? %>
-                          <a href="<%= link[:url] %>"><%= link[:title] %></a>
-                          <hr>
-                      <% end %>
-                  <% end %>
-              <% end %>
+        <span itemprop='position'>#<%= post.post_number %></span>
+      </div>
+      <div class='post' itemprop='articleBody'>
+        <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+      </div>
+      <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
+      <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
+      <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <hr>
+      <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
+        <% @topic_view.link_counts[post.id].each do |link| %>
+          <% if link[:reflection] && link[:title].present? %>
+            <a href="<%=link[:url]%>"><%=link[:title]%></a>
+            <hr>
           <% end %>
-        </div>
-
-
-
-        <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
-        <% if params[:oe].present? %>
-            <script>
-                jQuery(function ($) {
-
-                    var content = $('#post-<%= post.id %> > .post').annotator();
-
-                    content.annotator('addPlugin', 'Tags');
-
-                    $('#post-<%= post.id %> > .post').data('annotator').plugins.Tags.input.autocomplete({
-                        source: availableTags,
-                        minLength: 0,
-                        open: function () {
-                            $(this).autocomplete('widget').css('z-index', 10000);
-                            return false;
-                        }
-                    }).focus(function () {
-                        $(this).data("uiAutocomplete").search($(this).val());
-                    });
-
-                    content.annotator('addPlugin', 'Store', {
-                        prefix: '/annotator_store',
-                        annotationData: {
-                            'annotator_schema_version': "v1.0",
-                            'uri': '/post/<%= post.id %>',
-                            'post': <%= post.id %>
-                        },
-                        loadFromSearch: {
-                            'uri': '/post/<%= post.id %>'
-                        }
-                    });
-
-                    $("#post-<%= post.id %> .annotator-adder").on("click", function () {
-                        setTimeout(function() { $("#post-<%= post.id %> input").focus();   }, 150);
-                    });
-                });
-            </script>
         <% end %>
-        <%# -------------------------------------- -%>
+      <% end %>
     <% end %>
+  </div>
+<% end %>
 
-
-
-    <% if @topic_view.prev_page || @topic_view.next_page %>
-        <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <% if @topic_view.prev_page %>
-              <%# damingo (Github ID), 2017-08-22, #annotator %>
-              <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path+(params[:oe].present? ? (@topic_view.prev_page > 1 ? '&oe=1' : '?oe=1') : ''), rel: 'prev', itemprop: 'name' %></span>
-          <% end %>
-          <% if @topic_view.next_page %>
-              <%# damingo (Github ID), 2017-08-22, #annotator %>
-              <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path+(params[:oe].present? ? '&oe=1' : ''), rel: 'next', itemprop: 'name' %></b></span>
-          <% end %>
-        </div>
+<% if @topic_view.prev_page || @topic_view.next_page %>
+  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% if @topic_view.prev_page %>
+      <%# damingo (Github ID), 2017-08-22, #annotator %>
+      <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path + (params[:oe].present? ? (@topic_view.prev_page > 1 ? '&oe=1' : '?oe=1') : ''), rel: 'prev', itemprop: 'name' %></span>
     <% end %>
+    <% if @topic_view.next_page %>
+      <%# damingo (Github ID), 2017-08-22, #annotator %>
+      <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path + (params[:oe].present? ? '&oe=1' : ''), rel: 'next', itemprop: 'name' %></b></span>
+    <% end %>
+  </div>
+<% end %>
 
 <% end %>
 
 <% content_for :head do %>
-    <% if params[:oe].present? %>
-        <%# damingo (Github ID), 2017-08-22, #annotator %>
-        <%= javascript_include_tag 'annotator_store/application' %>
-        <%= stylesheet_link_tag 'annotator_store/application' %>
-    <% end %>
+  <% if params[:oe].present? %>
+    <%# damingo (Github ID), 2017-08-22, #annotator %>
+    <%= javascript_include_tag 'annotator_store/application' %>
+    <%= stylesheet_link_tag 'annotator_store/application' %>
+  <% end %>
 
-    <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
-    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary, image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count) %>
+  <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
+  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time) %>
 
-    <% if @topic_view.prev_page || @topic_view.next_page %>
-        <% if @topic_view.prev_page %>
-            <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
-        <% end %>
-        <% if @topic_view.next_page %>
-            <link rel="next" href="<%= @topic_view.next_page_path -%>">
-        <% end %>
+  <% if @topic_view.prev_page || @topic_view.next_page %>
+    <% if @topic_view.prev_page %>
+      <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
     <% end %>
+    <% if @topic_view.next_page %>
+      <link rel="next" href="<%= @topic_view.next_page_path -%>">
+    <% end %>
+  <% end %>
 <% end %>
 
-<% content_for(:title) { "#{gsub_emoji_to_unicode(@topic_view.page_title)}" } %>
+<% content_for(:title) { @title || "#{gsub_emoji_to_unicode(@topic_view.page_title)} - #{SiteSetting.title}" } %>
 
 <%# damingo (Github ID), 2017-08-22, #annotator %>
 <% if @topic_view.print && !params[:oe].present? %>
-    <% content_for :after_body do %>
-        <style media="print">
-            /* For readability */
-            a, a:visited {
-                color: #0088cc !important;
-            }
-        </style>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                window.print();
-            });
-        </script>
-    <% end %>
+  <% content_for :after_body do %>
+      <style media="print">
+        /* For readability */
+        a, a:visited {
+          color: #0088cc !important;
+        }
+      </style>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          window.print();
+        });
+      </script>
+  <% end %>
 <% end %>

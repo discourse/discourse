@@ -39,7 +39,7 @@ module UserNameSuggester
   end
 
   def self.sanitize_username(name)
-    name = ActiveSupport::Inflector.transliterate(name)
+    name = ActiveSupport::Inflector.transliterate(name.to_s)
     # 1. replace characters that aren't allowed with '_'
     name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, "_")
     name.gsub!(/[^\w.-]/, "_")

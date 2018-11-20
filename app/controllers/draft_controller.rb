@@ -1,11 +1,11 @@
 class DraftController < ApplicationController
-  before_filter :ensure_logged_in
-  # TODO really do we need to skip this?
-  skip_before_filter :check_xhr, :preload_json
+  requires_login
+
+  skip_before_action :check_xhr, :preload_json
 
   def show
     seq = params[:sequence] || DraftSequence.current(current_user, params[:draft_key])
-    render json: {draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq}
+    render json: { draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq }
   end
 
   def update

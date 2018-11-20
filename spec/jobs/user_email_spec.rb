@@ -7,10 +7,10 @@ describe Jobs::UserEmail do
     SiteSetting.email_time_window_mins = 10
   end
 
-  let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago ) }
-  let(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago ) }
-  let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now ) }
-  let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago ) }
+  let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
+  let(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
+  let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now) }
+  let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago) }
   let(:mailer) { Mail::Message.new(to: user.email) }
 
   it "raises an error when there is no user" do
@@ -45,7 +45,6 @@ describe Jobs::UserEmail do
 
       email_log = EmailLog.where(user_id: user.id).last
       expect(email_log.email_type).to eq("signup")
-      expect(email_log.skipped).to eq(false)
     end
 
   end
@@ -79,35 +78,46 @@ describe Jobs::UserEmail do
   end
 
   context "email_log" do
+    let(:post) { Fabricate(:post) }
 
-    before { Fabricate(:post) }
+    before do
+      SiteSetting.editing_grace_period = 0
+      post
+    end
 
     it "creates an email log when the mail is sent (via Email::Sender)" do
       last_emailed_at = user.last_emailed_at
 
-      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      expect do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id,)
+      end.to change { EmailLog.count }.by(1)
 
       email_log = EmailLog.last
-      expect(email_log.skipped).to eq(false)
-      expect(email_log.user_id).to eq(user.id)
 
+      expect(email_log.user).to eq(user)
+      expect(email_log.post).to eq(nil)
       # last_emailed_at should have changed
       expect(email_log.user.last_emailed_at).to_not eq(last_emailed_at)
     end
 
-    it "creates an email log when the mail is skipped" do
+    it "creates a skipped email log when the mail is skipped" do
       last_emailed_at = user.last_emailed_at
       user.update_columns(suspended_till: 1.year.from_now)
 
-      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      expect do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+      end.to change { SkippedEmailLog.count }.by(1)
 
-      email_log = EmailLog.last
-      expect(email_log.skipped).to eq(true)
-      expect(email_log.skipped_reason).to be_present
-      expect(email_log.user_id).to eq(user.id)
+      expect(SkippedEmailLog.exists?(
+        email_type: "digest",
+        user: user,
+        post: nil,
+        to_address: user.email,
+        reason_type: SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm]
+      )).to eq(true)
 
       # last_emailed_at doesn't change
-      expect(email_log.user.last_emailed_at).to eq(last_emailed_at)
+      expect(user.last_emailed_at).to eq(last_emailed_at)
     end
 
   end
@@ -115,7 +125,7 @@ describe Jobs::UserEmail do
   context 'args' do
 
     it 'passes a token as an argument when a token is present' do
-      UserNotifications.expects(:forgot_password).with(user, {email_token: 'asdfasdf'}).returns(mailer)
+      UserNotifications.expects(:forgot_password).with(user, email_token: 'asdfasdf').returns(mailer)
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, email_token: 'asdfasdf')
     end
@@ -124,7 +134,7 @@ describe Jobs::UserEmail do
       let(:post) { Fabricate(:post, user: user) }
 
       it 'passes a post as an argument when a post_id is present' do
-        UserNotifications.expects(:user_private_message).with(user, {post: post}).returns(mailer)
+        UserNotifications.expects(:user_private_message).with(user, post: post).returns(mailer)
         Email::Sender.any_instance.expects(:send)
         Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
       end
@@ -162,7 +172,7 @@ describe Jobs::UserEmail do
       end
 
       context 'user is anonymous' do
-        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+        before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never
@@ -177,7 +187,6 @@ describe Jobs::UserEmail do
         end
       end
     end
-
 
     context 'notification' do
       let(:post) { Fabricate(:post, user: user) }
@@ -195,17 +204,23 @@ describe Jobs::UserEmail do
       it "doesn't send the email if the notification has been seen" do
         notification.update_column(:read, true)
         message, err = Jobs::UserEmail.new.message_for_email(
-                                          user,
-                                          post,
-                                          :user_mentioned,
-                                          notification,
-                                          notification.notification_type,
-                                          notification.data_hash,
-                                          nil,
-                                          nil)
+          user,
+          post,
+          :user_mentioned,
+          notification,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
 
-        expect(message).to eq nil
-        expect(err.skipped_reason).to match(/notification.*already/)
+        expect(message).to eq(nil)
+
+        expect(SkippedEmailLog.exists?(
+          email_type: "user_mentioned",
+          user: user,
+          post: post,
+          to_address: user.email,
+          reason_type: SkippedEmailLog.reason_types[:user_email_notification_already_read]
+        )).to eq(true)
       end
 
       it "does send the email if the notification has been seen but the user is set for email_always" do
@@ -229,20 +244,100 @@ describe Jobs::UserEmail do
         end
 
         it "does not send notification if limit is reached" do
-          Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+          expect do
+            2.times do
+              Jobs::UserEmail.new.execute(
+                type: :user_mentioned,
+                user_id: user.id,
+                notification_id: notification.id,
+                post_id: post.id
+              )
+            end
+          end.to change { SkippedEmailLog.count }.by(1)
+
+          expect(SkippedEmailLog.exists?(
+            email_type: "user_mentioned",
+            user: user,
+            post: post,
+            to_address: user.email,
+            reason_type: SkippedEmailLog.reason_types[:exceeded_emails_limit]
+          )).to eq(true)
+
+          freeze_time(Time.zone.now.tomorrow + 1.second)
+
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :user_mentioned,
+              user_id: user.id,
+              notification_id: notification.id,
+              post_id: post.id
+            )
+          end.to change { SkippedEmailLog.count }.by(0)
         end
 
         it "sends critical email" do
-          Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, notification_id: notification.id, post_id: post.id)
-          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(0)
+          expect do
+            Jobs::UserEmail.new.execute(
+              type: :forgot_password,
+              user_id: user.id,
+              notification_id: notification.id,
+            )
+          end.to change { EmailLog.count }.by(1)
+
+          expect(EmailLog.exists?(
+            email_type: "forgot_password",
+            user: user,
+          )).to eq(true)
         end
+      end
+
+      it "erodes bounce score each time an email is sent" do
+        SiteSetting.bounce_score_erode_on_send = 0.2
+
+        user.user_stat.update(bounce_score: 2.7)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(2.5)
+
+        user.user_stat.update(bounce_score: 0)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          notification_id: notification.id,
+          post_id: post.id
+        )
+
+        user.user_stat.reload
+        expect(user.user_stat.bounce_score).to eq(0)
       end
 
       it "does not send notification if bounce threshold is reached" do
         user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+
+        expect do
+          Jobs::UserEmail.new.execute(
+            type: :user_mentioned,
+            user_id: user.id,
+            notification_id: notification.id,
+            post_id: post.id
+          )
+        end.to change { SkippedEmailLog.count }.by(1)
+
+        expect(SkippedEmailLog.exists?(
+          email_type: "user_mentioned",
+          user: user,
+          post: post,
+          to_address: user.email,
+          reason_type: SkippedEmailLog.reason_types[:exceeded_bounces_limit]
+        )).to eq(true)
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode" do
@@ -283,7 +378,7 @@ describe Jobs::UserEmail do
 
       context 'user is suspended' do
         it "doesn't send email for a pm from a regular user" do
-          msg,err = Jobs::UserEmail.new.message_for_email(
+          msg, err = Jobs::UserEmail.new.message_for_email(
               suspended,
               Fabricate.build(:post),
               :user_private_message,
@@ -316,7 +411,7 @@ describe Jobs::UserEmail do
           end
 
           it "sends an email" do
-            msg,err = sent_message
+            msg, err = sent_message
             expect(msg).not_to be(nil)
             expect(err).to be(nil)
           end
@@ -324,7 +419,7 @@ describe Jobs::UserEmail do
           it "sends an email even if user was last seen recently" do
             suspended.update_column(:last_seen_at, 1.minute.ago)
 
-            msg,err = sent_message
+            msg, err = sent_message
             expect(msg).not_to be(nil)
             expect(err).to be(nil)
           end
@@ -332,7 +427,7 @@ describe Jobs::UserEmail do
       end
 
       context 'user is anonymous' do
-        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+        before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never

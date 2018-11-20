@@ -1,9 +1,21 @@
-.topic-list-item td:first-child, .topic-post {
+.topic-list-item td:first-child,
+.topic-post {
   border-left: 1px solid transparent;
 }
 
-.topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
+.topic-list tr.selected td:first-child,
+.topic-list-item.selected td:first-child,
+.latest-topic-list-item.selected {
+  box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
+}
+
+.featured-topic.selected,
+.topic-post.selected {
   box-shadow: -3px 0 0 $danger;
+}
+
+.latest .featured-topic {
+  padding-left: 4px;
 }
 
 .topic-list-item.selected {
@@ -15,21 +27,25 @@
 }
 
 #keyboard-shortcuts-help {
-  .span6 {
-    width:32%;
+  div.row {
+    width: 100%;
+    div {
+      float: left;
+      width: 32%;
+    }
   }
   ul {
     list-style: none;
     margin-left: 0;
 
     li {
-      margin: 5px 0
+      margin: 5px 0;
     }
 
     b {
       padding: 2px 6px;
       border-radius: 4px;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.2),0 0 0 1px dark-light-choose(#fff,#000) inset;
+      box-shadow: shadow("kbd");
       background: dark-light-choose(#fafafa, #333);
       border: 1px solid dark-light-choose(#ccc, #555);
       border-bottom: medium none dark-light-choose(#fff, #000);

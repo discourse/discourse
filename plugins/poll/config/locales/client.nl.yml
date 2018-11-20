@@ -55,6 +55,7 @@ nl:
         help:
           options_count: Geef ten minste 2 opties
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
+          min_step_value: De minimale waarde voor stap is 1
         poll_type:
           label: Type
           regular: Eén keuze

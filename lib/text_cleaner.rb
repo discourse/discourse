@@ -17,7 +17,8 @@ class TextCleaner
       remove_all_periods_from_the_end: SiteSetting.title_prettify,
       remove_extraneous_space: SiteSetting.title_prettify && SiteSetting.default_locale == "en",
       fixes_interior_spaces: true,
-      strip_whitespaces: true
+      strip_whitespaces: true,
+      strip_zero_width_spaces: true
     }
   end
 
@@ -31,7 +32,7 @@ class TextCleaner
     # Replace ????? with a single ?
     text.gsub!(/\?+/, '?') if opts[:deduplicate_question_marks]
     # Replace all-caps text with regular case letters
-    text = text.mb_chars.downcase.to_s if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
+    text = text.mb_chars.downcase.to_s if opts[:replace_all_upper_case] && (text == text.mb_chars.upcase)
     # Capitalize first letter, but only when entire first word is lowercase
     first, rest = text.split(' ', 2)
     if first && opts[:capitalize_first_letter] && first == first.mb_chars.downcase
@@ -47,6 +48,8 @@ class TextCleaner
     text = normalize_whitespaces(text)
     # Strip whitespaces
     text.strip! if opts[:strip_whitespaces]
+    # Strip zero width spaces
+    text.gsub!(/\u200b/, '') if opts[:strip_zero_width_spaces]
 
     text
   end

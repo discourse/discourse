@@ -6,7 +6,7 @@ module Jobs
     every 1.day
 
     def execute(args)
-      if SiteSetting.version_checks? and (DiscourseUpdates.updated_at.nil? or DiscourseUpdates.updated_at < 1.minute.ago)
+      if SiteSetting.version_checks? && (DiscourseUpdates.updated_at.nil? || DiscourseUpdates.updated_at < (1.minute.ago))
         begin
           prev_missing_versions_count = DiscourseUpdates.missing_versions_count || 0
 
@@ -18,10 +18,10 @@ module Jobs
           DiscourseUpdates.updated_at = Time.zone.now
           DiscourseUpdates.missing_versions = json['versions']
 
-          if  GlobalSetting.new_version_emails and
-              SiteSetting.new_version_emails and
-              json['missingVersionsCount'] > 0 and
-              prev_missing_versions_count < json['missingVersionsCount'].to_i
+          if  GlobalSetting.new_version_emails &&
+              SiteSetting.new_version_emails &&
+              json['missingVersionsCount'] > (0) &&
+              prev_missing_versions_count < (json['missingVersionsCount'].to_i)
 
             message = VersionMailer.send_notice
             Email::Sender.new(message, :new_version).send

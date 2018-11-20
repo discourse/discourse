@@ -1,8 +1,16 @@
-// styles that apply to the user page
+// Desktop styles for "/user" section
+.user-right {
+  display: table-cell;
 
-.groups {
-  .group-link {
-    color: $tertiary;
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 10px;
+    }
+  }
+
+  .show-mores {
+    position: absolute;
   }
 }
 
@@ -10,7 +18,7 @@
   height: 420px;
   width: 100%;
   background-size: cover;
-  transition: height .15s linear;
+  transition: height 0.15s linear;
 }
 
 .no-background {
@@ -19,47 +27,273 @@
   }
 }
 
-.user-preferences {
-  padding-top: 10px;
+.form-horizontal .control-group.category {
+  margin-top: 18px;
+}
 
-  input.category-selector, input.user-selector, input.tag-chooser {
-    width: 530px;
+.user-table {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+
+  .wrapper {
+    display: table-row;
+  }
+}
+
+.user-navigation {
+  display: table-cell;
+  vertical-align: top;
+  width: 170px;
+
+  .nav-stacked {
+    background-color: transparent;
+
+    li {
+      border-bottom: none;
+
+      &.archive {
+        padding-left: 15px;
+      }
+    }
+
+    a {
+      color: dark-light-choose($primary-medium, $secondary-high);
+
+      &.active {
+        color: $primary;
+        font-weight: bold;
+        background-color: transparent;
+
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.user-content {
+  padding: 10px 8px;
+  background-color: $secondary;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+
+  &.user-badges-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .btn.right {
+    float: right;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+}
+
+.pref-avatar {
+  .avatar {
+    max-width: 45px;
+    max-height: 45px;
+  }
+}
+
+.pref-second-factor {
+  margin-top: 10px;
+}
+
+.user-invite-list {
+  width: 100%;
+  margin-top: 15px;
+
+  th {
+    text-align: left;
+    padding: 0 0 10px 0;
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    font-weight: normal;
+  }
+
+  td {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid $primary-low;
+  }
+}
+
+.user-invite-search {
+  clear: both;
+  margin: 15px 0px -15px 0px;
+}
+
+.user-invite-none {
+  clear: both;
+  padding: 15px;
+}
+
+.user-main {
+  margin-bottom: 50px;
+
+  .about {
+    background-position: center center;
+    background-size: cover;
+
+    &.group {
+      .details {
+        padding: 15px 0;
+        margin: 0;
+        color: dark-light-choose(lighten($primary, 10%), $secondary);
+      }
+    }
+
+    .details {
+      padding: 0 0 4px 0;
+      margin-top: -200px;
+      transition: margin 0.15s linear;
+
+      img.avatar {
+        margin: 0 20px 10px 0;
+        transition: all 0.1s linear;
+      }
+
+      .primary {
+        .primary-textual {
+          padding: 3px;
+          a[href] {
+            text-decoration: underline;
+          }
+          .location-and-website {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .bio {
+          max-width: 750px;
+
+          a.mention {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    &.has-background {
+      .details {
+        padding: 15px 15px 4px 15px;
+      }
+    }
+
+    .controls {
+      padding: 0 0 12px 0;
+      float: right;
+      text-align: right;
+
+      a {
+        width: 140px;
+      }
+
+      .right {
+        float: right;
+        margin-left: 5px;
+      }
+    }
+
+    &.collapsed-info {
+      .controls {
+        width: auto;
+
+        ul {
+          li {
+            display: inline;
+          }
+
+          a {
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            width: auto;
+          }
+        }
+      }
+
+      .details {
+        padding: 0 0 2px 0;
+        border-bottom: 1px solid $primary-low;
+      }
+
+      &.has-background {
+        .details {
+          padding: 12px 15px 2px 15px;
+        }
+      }
+    }
+  }
+
+  .staff-counters {
+    margin-bottom: 20px;
+  }
+
+  .user-field {
+    input[type="text"] {
+      width: 530px;
+    }
+
+    .controls {
+      .instructions {
+        display: block;
+      }
+    }
+  }
+
+  .public-user-fields {
+    overflow: hidden;
+  }
+
+  .viewing-self & .about.collapsed-info {
+    .secondary,
+    .staff-counters {
+      display: inherit;
+    }
+  }
+}
+
+.user-preferences {
+  display: table-cell;
+  vertical-align: top;
+  padding-top: 10px;
+  padding-left: 30px;
+
+  h3 {
+    color: $primary;
+    margin: 20px 0 10px 0;
   }
 
   textarea {
     width: 530px;
-    height: 100px;
   }
 
-  input[type=text] {
-    @include small-width {
-      width: 450px;
+  .category-selector,
+  .tag-chooser {
+    width: 530px;
+  }
+
+  input {
+    &.user-selector {
+      width: 530px;
+    }
+
+    &[type="text"] {
+      @include breakpoint(medium) {
+        width: 450px;
+      }
     }
   }
 
-  .static {
-    color: $primary;
-    display: inline-block;
-  }
   .instructions {
     display: inline-block;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 80%;
-    line-height: 1.4em;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $tertiary;
-  }
-  .warning {
-    background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
-    color: $secondary;
-    width: 520px;
   }
 
   .pref-mailing-list-mode .controls {
@@ -68,586 +302,16 @@
     }
   }
 
-  .notifications, .category-notifications, .tag-notifications, .user-custom-preferences-outlet {
+  .notifications,
+  .category-notifications,
+  .tag-notifications,
+  .user-custom-preferences-outlet {
     .controls select {
       width: 280px;
     }
   }
 
-  .category-notifications .category-controls, .tag-notifications .tag-controls {
-    margin-top: 24px;
-  }
-}
-
-.user-main .user-preferences .user-field.text {
-  padding-top: 0;
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
-}
-
-.user-table {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.user-navigation .nav-stacked .glyph {
-  display: none;
-  // float: right;
-  // display: block;
-  // position: static;
-}
-
-.user-navigation, .user-preferences {
-  display: table-cell;
-  vertical-align: top;
-  width: 170px;
-  padding-left: 30px;
-
-  h3 {
-    color: $primary;
-    margin: 20px 0 10px 0;
-  }
-
-}
-
-.viewing-self .user-main .about.collapsed-info {
-  .secondary, .staff-counters {
-    display: inherit;
-  }
-}
-
-.user-main {
-  margin-bottom: 50px;
-
-  // name hacky so lastpass does not freak out
-  // -search- means it is bypassed
-  #add-user-to-group {
-    button, .ac-wrap {
-      float: left;
-    }
-    button {
-      margin-top: 5px;
-    }
-    #user-search-selector {
-      width: 400px;
-    }
-   }
-
-  .user-right {
-    width: 900px;
-    display: table-cell;
-  }
-
-  .user-content {
-    padding: 10px 8px;
-    background-color: $secondary;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-
-    .btn.right {
-      float: right
-    }
-
-    h2 {
-      margin-bottom: 10px;
-    }
-
-    .user-invite-list {
-      width: 100%;
-      margin-top: 15px;
-
-      th {
-        text-align: left;
-        border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        padding: 0 0 10px 0;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-weight: normal;
-      }
-
-      td {
-        padding: 10px 0 10px 0;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      }
-    }
-
-    .pref-avatar {
-      .avatar {
-        max-width: 45px;
-        max-height: 45px;
-      }
-    }
-
-    .user-invite-controls {
-      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
-      padding: 5px 10px 0px 0;
-      height: 35px;
-    }
-
-    .user-invite-search {
-      clear: both;
-      margin: 15px 0px -15px 0px;
-    }
-
-    .user-invite-none {
-      clear: both;
-      padding: 15px;
-    }
-  }
-
-  .about {
-    background-position: center center;
-    background-size: cover;
-    width: 100%;
-    overflow: hidden;
-
-    &.group {
-      .details {
-        padding: 15px 0px;
-        margin: 0;
-        color: dark-light-choose(lighten($primary, 10%), $secondary);
-      }
-    }
-
-  .secondary {
-    background: scale-color($secondary, $lightness: -5%);
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    font-size: 0.929em;
-      .btn { padding: 3px 12px; }
-
-      dl dd {
-        display: inline;
-        margin: 0 10px 0 0;
-        padding: 0;
-      }
-
-      dl dt {
-        display: inline-block;
-        margin: 0 5px 0 0;
-        padding: 0;
-      }
-
-      dl {
-        margin: 0;
-        padding: 8px 10px;
-      }
-
-      dd {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: $primary;
-      }
-
-      dd.groups {
-        span:after {
-          content: ','
-        }
-        span:last-of-type:after {
-          content:''
-        }
-      }
-
-      dt {
-        color: dark-light-diff($secondary, $primary, 50%, -40%);
-        margin: 0;
-      }
-    }
-
-    .details {
-      padding: 0 0 4px 0;
-      background: rgba($secondary, .85);
-      margin-top: -200px;
-      transition: margin .15s linear;
-
-      blockquote {
-        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
-        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
-      }
-
-      h1 {
-        font-size: 2.143em;
-        font-weight: normal;
-        i {font-size: .8em;}
-      }
-
-      h2 {
-        font-size: 1.214em;
-        font-weight: normal;
-        margin-top: 10px;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      h3 {
-        font-weight: normal;
-        font-size: 1em;
-        margin: 5px 0;
-        i:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-
-      .groups {
-        margin-left: 10px;
-        display: inline;
-        }
-
-      img.avatar {
-        margin: 0 20px 10px 0;
-        float: left;
-        transition: all .1s linear;
-      }
-
-      .suspended {
-        color: $danger;
-      }
-
-      .primary {
-        width: 100%;
-        position: relative;
-        float: left;
-
-        h1 {font-weight: bold;}
-
-        .primary-textual {
-          padding: 3px;
-          a[href] {
-            text-decoration: underline;
-          }
-        }
-
-        .bio {
-          max-height: 300px;
-          overflow: auto;
-          max-width: 750px;
-
-          a[href] {
-            text-decoration: underline;
-          }
-
-          a.mention {
-            text-decoration: none;
-          }
-
-          img {
-            max-width: 100%;
-          }
-        }
-      }
-    }
-        &.has-background {
-          .details { padding: 15px 15px 4px 15px;}
-        }
-
-    .controls {
-      padding: 0 0 12px 0;
-      float: right;
-      text-align: right;
-      width: 180px;
-      ul {list-style-type: none;}
-      a {
-        padding: 5px 10px;
-        width: 140px;
-        margin-bottom: 10px;
-      }
-
-      .right {
-        float: right;
-        margin-left: 5px;
-      }
-    }
-  }
-
-  .about.collapsed-info {
-    .controls {
-      margin-top: 0;
-      width: auto;
-      ul {
-        li {display: inline;}
-        a {
-          padding: 5px 10px;
-          margin-bottom: 10px;
-          width: auto;
-          }
-      }
-    }
-
-    .staff-counters {
-      display: none;
-    }
-
-    .secondary { display: none; }
-
-    .profile-image {
-      height: 0;
-    }
-
-    .details {
-      padding: 0 0 2px 0;
-      margin-top: 0;
-      background: rgba($secondary, .85);
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      .bio { display: none; }
-
-      .primary {
-        text-align: left;
-        margin-top: 0;
-        width: 100%;
-
-        .avatar {
-          float: left;
-          margin-right: 10px;
-          width: 45px;
-          height: 45px;
-        }
-
-        h1 {
-          font-size: 1.429em;
-        }
-
-        h2 {
-          font-size: 1.071em;
-          margin-top: 4px;
-        }
-
-        h3 {
-          display: none;
-        }
-      }
-    }
-
-    &.has-background {
-      .details {  padding: 12px 15px 2px 15px;}
-    }
-
-  }
-
-  .user-stream {
-    .excerpt {
-      margin: 5px 0;
-      font-size: 0.929em;
-      word-wrap: break-word;
-      color: $primary;
-    }
-    .item.moderator-action {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
-    }
-    .item.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
-    }
-    .item.hidden {
-      display: block;
-      opacity: 0.4;
-    }
-    .item {
-      padding: 20px 8px 15px 8px;
-      background-color: $secondary;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
-    .type {
-      color: $primary;
-    }
-    span.name {
-      color: $primary;
-    }
-    .time, .delete-info {
-      display: block;
-      float: right;
-      color: lighten($primary, 40%);
-      margin-right: 8px;
-      font-size: 11px;
-    }
-    .delete-info i {
-      font-size: 1em;
-    }
-    .avatar-link {
-      float: left;
-      margin-right: 4px;
-    }
-    .title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .name {
-      font-size: 1em;
-      max-width: 400px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .edit-reason {
-      background-color: dark-light-choose(scale-color($highlight, $lightness: 25%), scale-color($highlight, $lightness: -50%));
-      padding: 3px 5px 5px 5px;
-    }
-    .remove-bookmark {
-      float: right;
-      margin-top: -4px;
-    }
-    .notification {
-      &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-      }
-
-      li { display: inline-block; }
-      p {
-        display: inline-block;
-        margin-left: 10px;
-        span {
-          color: $primary;
-        }
-      }
-      .time {
-        display: inline-block;
-        margin-left: 10px;
-        float: none;
-      }
-      // common/base/header.scss
-      .fa, .icon {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-size: 1.714em;
-      }
-    }
-    .group-member-info {
-      .name {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-      .title {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-    }
-  }
-
-  .staff-counters {
-    text-align: left;
-    background: $primary;
-    color: $secondary;
-    margin-bottom: 20px;
-    a {
-      color: $secondary;
-    }
-    > div {
-      margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-      }
-      span {
-        padding: 1px 5px;
-        border-radius: 10px;
-      }
-    }
-    .active {
-      font-weight: bold;
-    }
-  }
-
-  .pill {
-    border-radius: 15px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-  }
-  .helpful-flags {
-    background-color: green;
-  }
-  .flagged-posts {
-    background-color: #E49735;
-  }
-  .warnings-received {
-    background-color: #EC441B;
-  }
-  .deleted-posts {
-    background-color: #EC441B;
-  }
-  .suspensions {
-    background-color: #c22020;
-  }
-
-  .user-field.text {
-    padding-top: 18px;
-  }
-
-  .user-field {
-    input[type=text] {
-      width: 530px;
-    }
-    .controls {
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-        float: auto;
-      }
-      .instructions {
-        display: block;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 80%;
-        line-height: 1.4em;
-      }
-    }
-    clear: both;
-    margin-bottom: 10px;
-  }
-  .group-notification-menu .dropdown-menu {
-    top: 30px;
-    bottom: auto;
-    left: auto;
-    right: 10px;
-  }
-}
-
-.paginated-topics-list {
-  .user-content {
-    width: 100%;
-    margin-top: 0;
-  }
-}
-
-.user-right .group-notification-menu {
-  float: right;
-  margin-bottom: 5px;
-}
-
-.user-main .nav-stacked {
-  &.activity-list {
-    padding-top: 20px;
-  }
-  background-color: transparent;
-
-  li {
-    border-bottom: none;
-    > a {
-      padding: 8px 13px;
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
-    }
-  }
-
-  li > a.active {
-    color: $primary;
-    font-weight: bold;
-    background-color: transparent;
-  }
-  li > a.active:after {
-    display: none;
-  }
-
-  li.archive {
-    padding-left: 15px;
+  .user-main & .user-field.text {
+    padding-top: 0;
   }
 }

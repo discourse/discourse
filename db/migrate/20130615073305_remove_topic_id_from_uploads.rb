@@ -1,4 +1,4 @@
-class RemoveTopicIdFromUploads < ActiveRecord::Migration
+class RemoveTopicIdFromUploads < ActiveRecord::Migration[4.2]
   def up
     remove_column :uploads, :topic_id
   end

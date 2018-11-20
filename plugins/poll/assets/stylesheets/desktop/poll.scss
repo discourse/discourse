@@ -1,6 +1,5 @@
 div.poll {
   display: table;
-  min-width: 500px;
   width: 100%;
   box-sizing: border-box;
 
@@ -8,26 +7,30 @@ div.poll {
     min-width: 150px;
     width: 100%;
     display: table-cell;
-    border-left: 1px solid $border-color;
+    text-align: center;
+    border-left: 1px solid $primary-low;
 
-    p {
-      margin: 40px 20px;
+    .info-number {
+      font-size: 3.5em;
     }
 
-    .info-text {
+    p {
+      margin: 1.5em;
+    }
+
+    .info-label {
       display: block;
     }
   }
 
   .poll-container {
     display: table-cell;
-    min-width: 330px;
     width: 100%;
   }
 
   .poll-buttons {
-    border-top: 1px solid $border-color;
-    padding: 10px;
+    border-top: 1px solid $primary-low;
+    padding: 1em 1.25em;
 
     .toggle-status {
       float: right;
@@ -38,7 +41,7 @@ div.poll {
 .d-editor-preview {
   .poll-buttons {
     a:not(:first-child) {
-      margin-left: 5px;
+      margin-left: 0.25em;
     }
   }
 
@@ -46,9 +49,9 @@ div.poll {
     li[data-poll-option-id]:before {
       font-family: FontAwesome;
       content: "\f10c";
-      margin-right: 3px;
+      margin-right: 0.25em;
       position: relative;
-      top: 1px;
+      vertical-align: baseline;
     }
 
     &[data-poll-type="multiple"] {

@@ -1,0 +1,24 @@
+<div class="cell title">
+  {{#if model.icon}}
+    {{d-icon model.icon}}
+  {{/if}}
+  <a href="{{model.reportUrl}}">{{model.title}}</a>
+</div>
+
+<div class="cell value today-count">{{number model.todayCount}}</div>
+
+<div class="cell value yesterday-count {{model.yesterdayTrend}}" title={{model.yesterdayCountTitle}}>
+  {{number model.yesterdayCount}} {{d-icon model.yesterdayTrendIcon}}
+</div>
+
+<div class="cell value sevendays-count {{model.sevenDaysTrend}}" title={{model.sevenDaysCountTitle}}>
+  {{number model.lastSevenDaysCount}} {{d-icon model.sevenDaysTrendIcon}}
+</div>
+
+<div class="cell value thirty-days-count {{model.thirtyDaysTrend}}" title={{model.thirtyDaysCountTitle}}>
+  {{number model.lastThirtyDaysCount}}
+
+  {{#if model.prev30Days}}
+    {{d-icon model.thirtyDaysTrendIcon}}
+  {{/if}}
+</div>

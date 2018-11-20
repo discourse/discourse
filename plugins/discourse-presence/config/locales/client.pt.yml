@@ -1,0 +1,15 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+pt:
+  js:
+    presence:
+      replying: "a responder"
+      editing: "a editar"
+      replying_to_topic:
+        one: "a responder"
+        other: "a responder"

@@ -55,20 +55,13 @@ describe Jobs do
           Jobs::ProcessPost.any_instance.stubs(:execute).returns(true)
         end
 
-        it 'should not execute the job' do
-          Jobs::ProcessPost.any_instance.expects(:execute).never
-          Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db') rescue nil
-        end
-
         it 'should raise an exception' do
+          Jobs::ProcessPost.any_instance.expects(:execute).never
+          RailsMultisite::ConnectionManagement.expects(:establish_connection).never
+
           expect {
             Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
           }.to raise_error(ArgumentError)
-        end
-
-        it 'should not connect to the given database' do
-          RailsMultisite::ConnectionManagement.expects(:establish_connection).never
-          Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db') rescue nil
         end
       end
     end
@@ -76,14 +69,15 @@ describe Jobs do
   end
 
   describe 'cancel_scheduled_job' do
+    let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
+
+    after do
+      scheduled_jobs.clear
+    end
 
     it 'deletes the matching job' do
-      SiteSetting.queue_jobs = true
-
       Sidekiq::Testing.disable! do
-        scheduled_jobs = Sidekiq::ScheduledSet.new
         scheduled_jobs.clear
-
         expect(scheduled_jobs.size).to eq(0)
 
         Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)
@@ -107,17 +101,15 @@ describe Jobs do
 
   describe 'enqueue_at' do
     it 'calls enqueue_in for you' do
-      Timecop.freeze(Time.zone.now) do
-        Jobs.expects(:enqueue_in).with(3 * 60 * 60, :eat_lunch, {}).returns(true)
-        Jobs.enqueue_at(3.hours.from_now, :eat_lunch, {})
-      end
+      freeze_time
+      Jobs.expects(:enqueue_in).with(3 * 60 * 60, :eat_lunch, {}).returns(true)
+      Jobs.enqueue_at(3.hours.from_now, :eat_lunch, {})
     end
 
     it 'handles datetimes that are in the past' do
-      Timecop.freeze(Time.zone.now) do
-        Jobs.expects(:enqueue_in).with(0, :eat_lunch, {}).returns(true)
-        Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
-      end
+      freeze_time
+      Jobs.expects(:enqueue_in).with(0, :eat_lunch, {}).returns(true)
+      Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
     end
   end
 

@@ -1,4 +1,4 @@
-class AddReplyToToPosts < ActiveRecord::Migration
+class AddReplyToToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :reply_to_post_number, :integer, null: true
     add_index :posts, :reply_to_post_number

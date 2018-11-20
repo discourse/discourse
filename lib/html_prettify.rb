@@ -12,7 +12,7 @@ class HtmlPrettify < String
     new(html).to_html
   end
 
-    # Create a new RubyPants instance with the text in +string+.
+  # Create a new RubyPants instance with the text in +string+.
   #
   # Allowed elements in the options array:
   #
@@ -50,7 +50,7 @@ class HtmlPrettify < String
   # <tt>:ellipsis</tt>           :: <tt>&#8230;</tt>
   # <tt>:html_quote</tt>         :: <tt>&quot; </tt>
   #
-  def initialize(string, options=[2], entities = {})
+  def initialize(string, options = [2], entities = {})
     super string
 
     @options = [*options]
@@ -172,7 +172,6 @@ class HtmlPrettify < String
   end
 
   protected
-
 
   # The string, with each instance of "<tt>--</tt>" translated to an
   # em-dash HTML entity.
@@ -319,14 +318,14 @@ class HtmlPrettify < String
     new_str = str.dup
 
     {
-      :en_dash            => '-',
-      :em_dash            => '--',
-      :single_left_quote  => "'",
-      :single_right_quote => "'",
-      :double_left_quote  => '"',
-      :double_right_quote => '"',
-      :ellipsis           => '...'
-    }.each do |k,v|
+      en_dash: '-',
+      em_dash: '--',
+      single_left_quote: "'",
+      single_right_quote: "'",
+      double_left_quote: '"',
+      double_right_quote: '"',
+      ellipsis: '...'
+    }.each do |k, v|
       new_str.gsub!(/#{entity(k)}/, v)
     end
 

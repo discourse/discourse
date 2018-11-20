@@ -1,3 +1,19 @@
+{{#if showPositionInput}}
+  <section class='field position-fields'>
+    <label>
+      {{i18n 'category.position'}}
+      {{text-field value=category.position class="position-input" type="number"}}
+    </label>
+  </section>
+{{/if}}
+
+{{#unless showPositionInput}}
+  <section class='field'>
+    {{i18n 'category.position_disabled'}}
+    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
+  </section>
+{{/unless}}
+
 <section class='field'>
   <div class="control-group">
     <label>
@@ -21,8 +37,8 @@
 
 <section class="field">
   <label>
-    {{input type="checkbox" checked=category.suppress_from_homepage}}
-    {{i18n "category.suppress_from_homepage"}}
+    {{input type="checkbox" checked=category.suppress_from_latest}}
+    {{i18n "category.suppress_from_latest"}}
   </label>
 </section>
 
@@ -47,35 +63,48 @@
 <section class="field default-view-field">
   <label>
     {{i18n "category.default_view"}}
-    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+  </div>
 </section>
 
 <section class="field default-top-period-field">
   <label>
     {{i18n "category.default_top_period"}}
-    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
+  </div>
 </section>
 
 <section class="field">
   <label>
     {{i18n "category.sort_order"}}
-    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
-    {{#unless isDefaultSortOrder}}
-      {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
-    {{/unless}}
   </label>
+  <div class="controls">
+  {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+  {{#unless isDefaultSortOrder}}
+    {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+  {{/unless}}
+    </div>
 </section>
 
-<section class="field num-featured-topics-fields">
+<section class="field">
   <label>
     {{#if category.parent_category_id}}
       {{i18n "category.subcategory_num_featured_topics"}}
     {{else}}
       {{i18n "category.num_featured_topics"}}
     {{/if}}
-    {{text-field value=category.num_featured_topics}}
+    {{text-field value=category.num_featured_topics type="number"}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{i18n "category.num_auto_bump_daily"}}
+    {{text-field value=category.custom_fields.num_auto_bump_daily type="number"}}
   </label>
 </section>
 
@@ -83,6 +112,13 @@
   <label>
     {{input type="checkbox" checked=category.all_topics_wiki}}
     {{i18n "category.all_topics_wiki"}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.navigate_to_first_post_after_read}}
+    {{i18n "category.navigate_to_first_post_after_read"}}
   </label>
 </section>
 
@@ -107,23 +143,46 @@
 
     <section class='field'>
       <label>
-        {{fa-icon "envelope-o"}}
+        {{d-icon "envelope-o"}}
         {{i18n 'category.email_in'}}
         {{text-field class="email-in" value=category.email_in}}
       </label>
     </section>
 
+    <section class='field'>
+        <label>
+          {{input type="checkbox" checked=category.mailinglist_mirror}}
+          {{i18n 'category.mailinglist_mirror'}}
+        </label>
+    </section>
+
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 
-{{#if showPositionInput}}
-  <section class='field position-fields'>
+{{#if siteSettings.tagging_enabled}}
+  <section class='field minimum-required-tags'>
     <label>
-      {{i18n 'category.position'}}
-      {{text-field value=category.position class="position-input"}}
+      {{i18n 'category.minimum_required_tags'}}
+      {{text-field value=category.minimum_required_tags type="number"}}
     </label>
   </section>
 {{/if}}
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.custom_fields.require_topic_approval}}
+    {{i18n 'category.require_topic_approval'}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.custom_fields.require_reply_approval}}
+    {{i18n 'category.require_reply_approval'}}
+  </label>
+</section>
+
+{{plugin-outlet name="category-custom-settings" args=(hash category=category)}}
 
 {{#unless emailInEnabled}}
   <section class='field'>
@@ -131,12 +190,3 @@
     <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
   </section>
 {{/unless}}
-
-{{#unless showPositionInput}}
-  <section class='field'>
-    {{i18n 'category.position_disabled'}}
-    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
-  </section>
-{{/unless}}
-
-{{plugin-outlet name="category-custom-settings" args=(hash category=category)}}

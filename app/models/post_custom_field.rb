@@ -15,6 +15,7 @@ end
 #
 # Indexes
 #
-#  index_post_custom_fields_on_name_and_value    (name)
+#  idx_post_custom_fields_akismet                (post_id) WHERE (((name)::text = 'AKISMET_STATE'::text) AND (value = 'needs_review'::text))
+#  index_post_custom_fields_on_name_and_value    (name, "left"(value, 200))
 #  index_post_custom_fields_on_post_id_and_name  (post_id,name)
 #

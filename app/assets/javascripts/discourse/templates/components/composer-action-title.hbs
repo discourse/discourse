@@ -1,0 +1,14 @@
+{{#if isEditing}}
+  {{d-icon "pencil"}}
+{{else}}
+  {{composer-actions
+    composerModel=model
+    options=model.replyOptions
+    canWhisper=canWhisper
+    action=model.action
+    tabindex=tabindex}}
+{{/if}}
+
+<span class="action-title">
+  {{actionTitle}}
+</span>

@@ -1,5 +1,246 @@
+// Common
+// global styles that apply to the Discourse application specifically
+// BEWARE: changing these styles implies they take effect anywhere they are seen
+// throughout the Discourse application
+
+// Animation Keyframes
+@keyframes ping {
+  from {
+    transform: scale(0.25);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes rotate-forever {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes background-fade-highlight {
+  0% {
+    background-color: $tertiary-low;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+// Base Elements
+html {
+  height: 100%;
+}
+
+body {
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100%;
+
+  @include clearfix;
+}
+
+// setting a static limit on big and small prevents nesting abuse
+big {
+  font-size: $font-up-5;
+}
+small {
+  font-size: $font-down-2;
+}
+
+blockquote {
+  @include post-aside;
+  clear: both;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+button {
+  &.ok {
+    background: $success;
+    color: $secondary;
+
+    @include hover {
+      background: lighten($success, 10%);
+      color: $secondary;
+    }
+  }
+
+  &.cancel {
+    background: $danger;
+    color: $secondary;
+
+    @include hover {
+      background: lighten($danger, 10%);
+      color: $secondary;
+    }
+  }
+}
+
+ul.breadcrumb {
+  margin: 0 10px 0 10px;
+}
+
+a.no-href {
+  cursor: pointer;
+}
+
 img.avatar {
   border-radius: 50%;
+}
+
+// don't wrap relative dates; we want Jul 26, '15, not: Jul
+//                                                      26,
+//                                                      '15
+span.relative-date {
+  white-space: nowrap;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  &[type="radio"],
+  &[type="checkbox"] {
+    margin: 3px 0;
+    line-height: $line-height-medium;
+    cursor: pointer;
+  }
+  &[type="submit"],
+  &[type="reset"],
+  &[type="button"],
+  &[type="radio"],
+  &[type="checkbox"] {
+    width: auto;
+  }
+
+  &.invalid {
+    background-color: dark-light-choose(
+      $danger-low,
+      scale-color($danger, $lightness: -60%)
+    );
+  }
+
+  .radio &[type="radio"],
+  .checkbox &[type="checkbox"] {
+    float: left;
+    margin-left: -18px;
+  }
+}
+
+input,
+select,
+textarea {
+  color: $primary;
+
+  &[class*="span"] {
+    float: none;
+    margin-left: 0;
+  }
+
+  &[disabled],
+  &[readonly] {
+    cursor: not-allowed;
+    background-color: $primary-low;
+    border-color: $primary-low;
+  }
+
+  &:focus:required:invalid {
+    color: $danger;
+    border-color: $danger;
+  }
+
+  &:focus:required:invalid:focus {
+    border-color: $danger;
+    box-shadow: shadow("focus-danger");
+  }
+}
+
+input {
+  &[type="text"],
+  &[type="password"],
+  &[type="datetime"],
+  &[type="datetime-local"],
+  &[type="date"],
+  &[type="month"],
+  &[type="time"],
+  &[type="week"],
+  &[type="number"],
+  &[type="email"],
+  &[type="url"],
+  &[type="search"],
+  &[type="tel"],
+  &[type="color"] {
+    @include appearance-none;
+    display: inline-block;
+    padding: $input-padding;
+    margin-bottom: 9px;
+    font-size: $font-0;
+    line-height: $line-height-large;
+    color: $primary;
+    background-color: $secondary;
+    border: 1px solid $primary-medium;
+    border-radius: 0;
+    &:focus {
+      border-color: $tertiary;
+      box-shadow: shadow("focus");
+      outline: 0;
+    }
+  }
+}
+
+textarea {
+  height: auto;
+  background-color: $secondary;
+  border: 1px solid $primary-medium;
+  &:focus {
+    border-color: $tertiary;
+    box-shadow: shadow("focus");
+    outline: 0;
+  }
+}
+
+select {
+  border: 1px solid $primary-low;
+}
+
+// Common Classes
+.radio,
+.checkbox {
+  min-height: 18px;
+  padding-left: 18px;
+
+  .controls > &:first-child {
+    padding-top: 5px;
+  }
+
+  &.inline {
+    display: inline-block;
+    padding-top: 5px;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+}
+
+.radio.inline .radio.inline,
+.checkbox.inline .checkbox.inline {
+  margin-left: 10px;
 }
 
 .container {
@@ -11,8 +252,15 @@ img.avatar {
   margin-right: auto;
   margin-left: auto;
   padding: 0 8px;
+
   .contents {
     position: relative;
+  }
+}
+
+.boxed {
+  &.white {
+    background-color: $secondary;
   }
 }
 
@@ -20,177 +268,59 @@ img.avatar {
   margin-left: 12px;
 }
 
-big {
-  font-size: 28px;
+// the default for table cells in topic list
+// is $primary-medium
+// numbers get dimmer as they get colder
+.coldmap {
+  &-high {
+    color: dark-light-choose($primary-low-mid, $secondary-high) !important;
+  }
+
+  &-med {
+    color: dark-light-choose($primary-medium, $secondary-high) !important;
+  }
+
+  &-low {
+    color: dark-light-choose($primary-medium, $secondary-medium) !important;
+  }
 }
 
-small {
-  font-size: 9px;
+.top-space {
+  margin-top: 10px;
 }
 
-//setting a static limit on big and small prevents nesting abuse
+.message {
+  border-radius: 8px;
+  background-color: $secondary;
+  padding: 14px;
 
-
-blockquote {
-  @include post-aside;
-  clear: both;
+  h2 {
+    margin-bottom: 20px;
+  }
 }
 
-a.no-href {
-  cursor: pointer;
+.clear-transitions {
+  transition: none !important;
 }
 
-html {
-  height: 100%;
+.tip {
+  display: inline-block;
+  &.good {
+    color: $success;
+  }
+  &.bad {
+    color: $danger;
+  }
 }
 
-body {
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-    margin-bottom: .5rem;
-  }
+.avatar-wrapper {
+  background-color: $secondary;
+  display: inline-block;
+  border-radius: 50%;
+}
 
-  background-attachment: fixed;
-  background-size: cover;
-  min-height: 100%;
-
-  @include clearfix;
-
-  button.ok {
-    background: $success;
-    color: $secondary;
-    @include hover {
-      background: lighten($success, 10%);
-      color: $secondary;
-    }
-  }
-  button.cancel {
-    background: $danger;
-    color: $secondary;
-    @include hover {
-      background: lighten($danger, 10%);
-      color: $secondary;
-    }
-  }
-
-  // the default for table cells in topic list
-  // is scale-color($primary, $lightness: 50%)
-  // numbers get dimmer as they get colder
-  .coldmap-high {
-    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
-  }
-  .coldmap-med {
-    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
-  }
-  .coldmap-low {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
-  }
-
-  #loading-message {
-    position: absolute;
-    font-size: 2.143em;
-    text-align: center;
-    top: 120px;
-    left: 500px;
-    color: $primary;
-  }
-    .top-space {
-    margin-top: 10px;
-  }
-  ul.breadcrumb {
-    margin: 0 10px 0 10px;
-  }
-
-  .message {
-    @include border-radius-all(8px);
-    background-color: $secondary;
-    padding: 14px;
-
-    h2 {
-      margin-bottom: 20px;
-    }
-  }
-
-  #footer {
-    .container {
-      height: 50px;
-      .contents {
-        padding-top: 10px;
-        a[href] {
-          color: $secondary;
-        }
-      }
-    }
-  }
-
-  .clear-transitions {
-    transition:none !important;
-  }
-
-  .tip {
-    display: inline-block;
-    &.good {
-      color: $success;
-    }
-    &.bad {
-      color: $danger;
-    }
-  }
-
-  input[type].invalid {
-    background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
-  }
-
-  .d-editor-input {
-    resize: none;
-  }
-
-  .avatar-wrapper {
-    background-color: $secondary;
-    display: inline-block;
-    border-radius: 50%;
-  }
-
-  .profiler-results.profiler-left {
-    top: 60px !important;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  input {
-    &[type="radio"], &[type="checkbox"] {
-      margin: 3px 0;
-      line-height: normal;
-      cursor: pointer;
-    }
-    &[type="submit"], &[type="reset"], &[type="button"], &[type="radio"], &[type="checkbox"] {
-      width: auto;
-    }
-  }
-  .radio, .checkbox {
-    min-height: 18px;
-    padding-left: 18px;
-  }
-  .radio input[type="radio"], .checkbox input[type="checkbox"] {
-    float: left;
-    margin-left: -18px;
-  }
-  .controls > {
-    .radio:first-child, .checkbox:first-child {
-      padding-top: 5px;
-    }
-  }
-  .radio.inline, .checkbox.inline {
-    display: inline-block;
-    padding-top: 5px;
-    margin-bottom: 0;
-    vertical-align: middle;
-  }
-  .radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
-    margin-left: 10px;
-  }
+.profiler-results.profiler-left {
+  top: 60px !important;
 }
 
 .flex-center-align {
@@ -201,7 +331,10 @@ body {
 .unread-private-messages {
   color: $secondary;
   background: $success;
-  &.badge-notification[href] {color: $secondary;}
+
+  &.badge-notification[href] {
+    color: $secondary;
+  }
 }
 
 .ring-backdrop-spotlight {
@@ -210,7 +343,11 @@ body {
   height: 80px;
   top: -18px;
   right: -18px;
-  background-image: radial-gradient(40px at 50% 50% , transparent 95%, $primary 100%);
+  background-image: radial-gradient(
+    40px at 50% 50%,
+    transparent 95%,
+    $primary 100%
+  );
   opacity: 0.85;
 }
 
@@ -221,7 +358,7 @@ body {
   top: -18px !important;
   right: -18px !important;
   box-shadow: 0 0 0 9999px rgba($primary, 0.85);
-  z-index: 1040;
+  z-index: z("modal", "overlay");
 }
 
 .ring-first-notification {
@@ -231,7 +368,7 @@ body {
   right: 70px;
   top: 60px;
   width: 230px;
-  line-height: 30px;
+  line-height: $line-height-medium;
 }
 
 .ring {
@@ -255,50 +392,12 @@ body {
   -webkit-animation-name: ping;
 }
 
-@-webkit-keyframes ping {
-  from {
-    $scale: 0.25;
-    transform: scale($scale);
-    -ms-transform: scale($scale);
-    -webkit-transform: scale($scale);
-    -o-transform: scale($scale);
-    -moz-transform: scale($scale);
-    opacity: 1;
-  }
-  to {
-    $scale: 2;
-    transform: scale($scale);
-    -ms-transform: scale($scale);
-    -webkit-transform: scale($scale);
-    -o-transform: scale($scale);
-    -moz-transform: scale($scale);
-    opacity: 0;
-  }
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
-}
 
-.fade.in {
-  opacity: 1;
-}
-
-@-webkit-keyframes rotate-forever {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@keyframes rotate-forever {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+  &.in {
+    opacity: 1;
   }
 }
 
@@ -314,7 +413,7 @@ body {
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
-  border: 4px solid dark-light-diff($primary, $secondary, 50%, -50%);
+  border: 4px solid blend-primary-secondary(50%);
   border-right-color: transparent;
   border-radius: 50%;
 
@@ -327,10 +426,9 @@ body {
 }
 
 .content-list {
-
   h3 {
-    color: dark-light-diff($primary, $secondary, 50%, -20%);
-    font-size: 1.071em;
+    color: $primary-medium;
+    font-size: $font-up-1;
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -339,50 +437,168 @@ body {
     list-style: none;
     margin: 0;
 
-    li:first-of-type {
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
     li {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
+      border-bottom: 1px solid $primary-low;
 
-    li a {
-      display: block;
-      padding: 10px;
-      color: $primary;
-
-      &:hover {
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-        color: $primary;
+      &:first-of-type {
+        border-top: 1px solid $primary-low;
       }
 
-      &.active {
-        font-weight: bold;
+      a {
+        display: block;
+        padding: 10px;
         color: $primary;
+
+        &:hover {
+          background-color: $primary-low;
+          color: $primary;
+        }
+
+        &.active {
+          font-weight: bold;
+          color: $primary;
+        }
       }
     }
   }
 }
 
-// don't wrap relative dates, we want
-//
-// Jul 26, '15
-//
-// not
-//
-// Jul
-// 26,
-// '15
-//
-span.relative-date {
-  white-space:nowrap;
+.form-vertical {
+  input,
+  textarea,
+  select,
+  .input-prepend,
+  .input-append {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  .control-group {
+    @include clearfix;
+
+    .table {
+      width: 100%;
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+    }
+  }
+
+  .control-label {
+    font-weight: bold;
+    font-size: $font-up-2;
+    line-height: $line-height-large;
+  }
+
+  .controls {
+    margin-left: 0;
+  }
 }
 
-@keyframes background-fade-highlight {
-  0% {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+// Special elements
+// Special elements
+#main {
+  img.avatar {
+    &.header {
+      width: 45px;
+      height: 45px;
+    }
+
+    &.medium {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.small {
+      width: 25px;
+      height: 25px;
+    }
+
+    &.tiny {
+      width: 20px;
+      height: 20px;
+    }
   }
-  100% {
-    background-color: transparent;
+
+  .user-list {
+    .user {
+      padding-bottom: 5px;
+    }
+  }
+}
+
+#loading-message {
+  position: absolute;
+  font-size: $font-up-5;
+  text-align: center;
+  top: 120px;
+  left: 500px;
+  color: $primary;
+}
+
+#footer {
+  .container {
+    height: 50px;
+    .contents {
+      padding-top: 10px;
+      a[href] {
+        color: $secondary;
+      }
+    }
+  }
+}
+
+.inline {
+  display: inline;
+}
+
+.pref-auth-tokens {
+  .control-label {
+    display: inline-block;
+  }
+
+  .row {
+    margin: 5px 0px;
+  }
+
+  .muted {
+    color: $primary-medium;
+  }
+
+  .perf-auth-token {
+    background-color: $primary-very-low;
+    color: $primary;
+    display: block;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .auth-token-summary {
+    padding: 0px 10px;
+
+    .auth-token-label,
+    .auth-token-value {
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
+  }
+
+  .auth-token-details {
+    background: $secondary;
+    padding: 5px 10px;
+    margin: 10px 5px 5px 5px;
+
+    .auth-token-label {
+      color: $primary-medium;
+    }
+  }
+
+  .auth-token-label,
+  .auth-token-value {
+    float: left;
+    width: 50%;
   }
 }

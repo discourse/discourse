@@ -1,12 +1,12 @@
-import { registerHelpers } from 'discourse-common/lib/helpers';
+import { registerHelpers } from "discourse-common/lib/helpers";
 
 export default {
-  name: 'load-helpers',
+  name: "load-helpers",
 
   initialize(application) {
     Object.keys(requirejs.entries).forEach(entry => {
-      if ((/\/helpers\//).test(entry)) {
-        require(entry, null, null, true);
+      if (/\/helpers\//.test(entry)) {
+        requirejs(entry, null, null, true);
       }
     });
     registerHelpers(application);

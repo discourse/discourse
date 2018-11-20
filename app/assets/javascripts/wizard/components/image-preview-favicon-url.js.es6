@@ -1,18 +1,18 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { observes } from "ember-addons/ember-computed-decorators";
 
-import { createPreviewComponent, } from 'wizard/lib/preview';
+import { createPreviewComponent } from "wizard/lib/preview";
 
 export default createPreviewComponent(371, 124, {
   tab: null,
   image: null,
 
-  @observes('field.value')
+  @observes("field.value")
   imageChanged() {
     this.reload();
   },
 
   images() {
-    return { tab: "/images/wizard/tab.png", image: this.get('field.value') };
+    return { tab: "/images/wizard/tab.png", image: this.get("field.value") };
   },
 
   paint(ctx, colors, width, height) {
@@ -20,9 +20,9 @@ export default createPreviewComponent(371, 124, {
     this.scaleImage(this.image, 40, 25, 30, 30);
 
     ctx.font = `20px 'Arial'`;
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = "#000";
 
-    let title = this.get('wizard').getTitle();
+    let title = this.get("wizard").getTitle();
     if (title.length > 20) {
       title = title.substring(0, 20) + "...";
     }

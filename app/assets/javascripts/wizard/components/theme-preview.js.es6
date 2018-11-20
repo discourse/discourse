@@ -1,69 +1,105 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
 
 import {
   createPreviewComponent,
   darkLightDiff,
-  chooseBrighter,
+  chooseDarker,
   LOREM
-} from 'wizard/lib/preview';
+} from "wizard/lib/preview";
 
-export default createPreviewComponent(659, 320, {
+export default createPreviewComponent(305, 165, {
   logo: null,
   avatar: null,
 
-  @observes('step.fieldsById.base_scheme_id.value')
+  classNameBindings: ["isSelected"],
+
+  @computed("selectedId", "colorsId")
+  isSelected(selectedId, colorsId) {
+    return selectedId === colorsId;
+  },
+
+  click() {
+    this.sendAction("onChange", this.get("colorsId"));
+  },
+
+  @observes("step.fieldsById.base_scheme_id.value")
   themeChanged() {
     this.triggerRepaint();
   },
 
   images() {
-    return { logo: this.get('wizard').getLogoUrl(), avatar: '/images/wizard/trout.png' };
+    return {
+      logo: this.get("wizard").getLogoUrl(),
+      avatar: "/images/wizard/trout.png"
+    };
   },
 
   paint(ctx, colors, width, height) {
-    const headerHeight = height * 0.15;
+    const headerHeight = height * 0.3;
 
     this.drawFullHeader(colors);
 
-    const margin = width * 0.02;
-    const avatarSize = height * 0.1;
-    const lineHeight = height / 19.0;
+    const margin = width * 0.04;
+    const avatarSize = height * 0.2;
+    const lineHeight = height / 9.5;
 
     // Draw a fake topic
-    this.scaleImage(this.avatar, margin, headerHeight + (height * 0.17), avatarSize, avatarSize);
+    this.scaleImage(
+      this.avatar,
+      margin,
+      headerHeight + height * 0.085,
+      avatarSize,
+      avatarSize
+    );
 
     const titleFontSize = headerHeight / 44;
 
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
     ctx.font = `bold ${titleFontSize}em 'Arial'`;
-    ctx.fillText("Welcome to Discourse", margin, (height * 0.25));
+    ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
 
-    const bodyFontSize = height / 440.0;
+    const bodyFontSize = height / 220.0;
     ctx.font = `${bodyFontSize}em 'Arial'`;
 
     let line = 0;
     const lines = LOREM.split("\n");
-    for (let i=0; i<10; i++) {
-      line = (height * 0.3) + (i * lineHeight);
+    for (let i = 0; i < 4; i++) {
+      line = height * 0.35 + i * lineHeight;
       ctx.fillText(lines[i], margin + avatarSize + margin, line);
     }
 
+    // Share Button
+    ctx.beginPath();
+    ctx.rect(margin, line + lineHeight, width * 0.14, height * 0.14);
+    ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
+    ctx.fill();
+    ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
+    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.fillText(
+      I18n.t("wizard.previews.share_button"),
+      margin + width / 55,
+      line + lineHeight * 1.85
+    );
+
     // Reply Button
     ctx.beginPath();
-    ctx.rect(width * 0.57, line + lineHeight, width * 0.1, height * 0.07);
+    ctx.rect(
+      margin * 2 + width * 0.14,
+      line + lineHeight,
+      width * 0.14,
+      height * 0.14
+    );
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
-    ctx.fillStyle = chooseBrighter(colors.primary, colors.secondary);
+    ctx.fillStyle = colors.secondary;
     ctx.font = `${bodyFontSize}em 'Arial'`;
-    ctx.fillText("Reply", width * 0.595, line + (lineHeight * 1.85));
-
-    // Icons
-    ctx.font = `${bodyFontSize}em FontAwesome`;
-    ctx.fillStyle = colors.love;
-    ctx.fillText("\uf004", width * 0.48, line + (lineHeight * 1.8));
-    ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 65, 55);
-    ctx.fillText("\uf040", width * 0.525, line + (lineHeight * 1.8));
+    ctx.fillText(
+      I18n.t("wizard.previews.reply_button"),
+      margin * 2 + width * 0.14 + width / 55,
+      line + lineHeight * 1.85
+    );
 
     // Draw Timeline
     const timelineX = width * 0.8;
@@ -71,7 +107,7 @@ export default createPreviewComponent(659, 320, {
     ctx.strokeStyle = colors.tertiary;
     ctx.lineWidth = 0.5;
     ctx.moveTo(timelineX, height * 0.3);
-    ctx.lineTo(timelineX, height * 0.6);
+    ctx.lineTo(timelineX, height * 0.7);
     ctx.stroke();
 
     // Timeline
@@ -84,6 +120,6 @@ export default createPreviewComponent(659, 320, {
 
     ctx.font = `Bold ${bodyFontSize}em Arial`;
     ctx.fillStyle = colors.primary;
-    ctx.fillText("1 / 20", timelineX + margin, (height * 0.3) + (margin * 1.5));
+    ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
   }
 });

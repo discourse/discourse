@@ -1,15 +1,14 @@
-import { resendActivationEmail } from 'discourse/lib/user-activation';
+import { resendActivationEmail } from "discourse/lib/user-activation";
 
 export default Ember.Controller.extend({
   actions: {
     sendActivationEmail() {
-      resendActivationEmail(this.get('accountCreated.username')).then(() => {
-        this.transitionToRoute('account-created.resent');
+      resendActivationEmail(this.get("accountCreated.username")).then(() => {
+        this.transitionToRoute("account-created.resent");
       });
     },
     editActivationEmail() {
-      this.transitionToRoute('account-created.edit-email');
+      this.transitionToRoute("account-created.edit-email");
     }
   }
 });
-

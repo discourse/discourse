@@ -1,4 +1,4 @@
-class CreateCustomEmojis < ActiveRecord::Migration
+class CreateCustomEmojis < ActiveRecord::Migration[4.2]
   def change
     create_table :custom_emojis do |t|
       t.string :name, null: false

@@ -1,0 +1,19 @@
+no_match_setting:
+  type: bool
+  default: "string value"
+
+no_default_setting:
+  type: string
+
+invalid_type_setting:
+  type: listt
+  default: "name|age|last name"
+
+default_out_of_range:
+  default: 100
+  min: 1
+  max: 20
+
+string_default_out_of_range:
+  default: "abcdefg"
+  min: 20

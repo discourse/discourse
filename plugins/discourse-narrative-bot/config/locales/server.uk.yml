@@ -5,4 +5,25 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  badges:
+    certified:
+      name: Сертифікований
+  discourse_narrative_bot:
+    dice:
+      trigger: "крутити"
+    quote:
+      '9':
+        author: "Брюс Лі"
+    magic_8_ball:
+      answers:
+        '9': "Так"
+        '17': "Моя відповідь - ні"
+    track_selector:
+      reset_trigger: 'розпочати'
+      skip_trigger: 'пропустити'
+      help_trigger: 'показати допомогу'
+    new_user_narrative:
+      reset_trigger: "новий користувач"
+    advanced_user_narrative:
+      reset_trigger: 'професійний користувач'

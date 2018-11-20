@@ -13,7 +13,7 @@ class PostActionNotifier
   end
 
   def self.refresh_like_notification(post, read)
-    return unless post && post.user_id
+    return unless post && post.user_id && post.topic
 
     usernames = post.post_actions.where(post_action_type_id: PostActionType.types[:like])
       .joins(:user)
@@ -41,7 +41,6 @@ class PostActionNotifier
   end
 
   def self.post_action_deleted(post_action)
-
     return if @disabled
 
     # We only care about deleting post actions for now
@@ -69,7 +68,6 @@ class PostActionNotifier
   end
 
   def self.post_action_created(post_action)
-
     return if @disabled
 
     # We only notify on likes for now
@@ -89,7 +87,6 @@ class PostActionNotifier
   end
 
   def self.after_create_post_revision(post_revision)
-
     return if @disabled
 
     post = post_revision.post
@@ -97,6 +94,7 @@ class PostActionNotifier
     return unless post
     return if post_revision.user.blank?
     return if post_revision.user_id == post.user_id
+    return if post.topic.blank?
     return if post.topic.private_message?
     return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
 
@@ -105,8 +103,22 @@ class PostActionNotifier
       Notification.types[:edited],
       post,
       display_username: post_revision.user.username,
-      acting_user_id: post_revision.try(:user_id)
+      acting_user_id: post_revision.try(:user_id),
+      revision_number: post_revision.number
     )
   end
 
+  def self.after_post_unhide(post, flaggers)
+    return if @disabled || post.last_editor.blank? || flaggers.blank?
+
+    flaggers.each do |flagger|
+      alerter.create_notification(
+        flagger,
+        Notification.types[:edited],
+        post,
+        display_username: post.last_editor.username,
+        acting_user_id: post.last_editor.id
+      )
+    end
+  end
 end

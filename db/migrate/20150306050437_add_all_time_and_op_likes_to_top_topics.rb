@@ -1,4 +1,4 @@
-class AddAllTimeAndOpLikesToTopTopics < ActiveRecord::Migration
+class AddAllTimeAndOpLikesToTopTopics < ActiveRecord::Migration[4.2]
   def change
     add_column :top_topics, :all_score, :float, default: 0
     [:daily, :weekly, :monthly, :yearly].each do |period|

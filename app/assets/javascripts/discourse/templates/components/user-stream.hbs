@@ -1,0 +1,8 @@
+{{#each stream.content as |item|}}
+  {{user-stream-item
+      item=item
+      removeBookmark=(action "removeBookmark")
+      resumeDraft=(action "resumeDraft")
+      removeDraft=(action "removeDraft")
+  }}
+{{/each}}

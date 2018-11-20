@@ -1,7 +1,8 @@
 class ApiKey < ActiveRecord::Base
   belongs_to :user
-  belongs_to :created_by, class_name: User
+  belongs_to :created_by, class_name: 'User'
 
+  validates :user_id, uniqueness: true
   validates_presence_of :key
 
   def regenerate!(updated_by)

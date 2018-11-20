@@ -1,6 +1,8 @@
-require 'rails_helper'
+require 'rails_helper';
+
 require 'guardian'
 require_dependency 'post_destroyer'
+require_dependency 'post_locker'
 
 describe Guardian do
 
@@ -24,7 +26,63 @@ describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
-  describe 'post_can_act?' do
+  describe "link_posting_access" do
+    it "is none for anonymous users" do
+      expect(Guardian.new.link_posting_access).to eq('none')
+    end
+
+    it "is full for regular users" do
+      expect(Guardian.new(user).link_posting_access).to eq('full')
+    end
+
+    it "is none for a user of a low trust level" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('none')
+    end
+
+    it "is limited for a user of a low trust level with a whitelist" do
+      SiteSetting.whitelisted_link_domains = 'example.com'
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).link_posting_access).to eq('limited')
+    end
+  end
+
+  describe "can_post_link?" do
+    let(:host) { "discourse.org" }
+
+    it "returns false for anonymous users" do
+      expect(Guardian.new.can_post_link?(host: host)).to eq(false)
+    end
+
+    it "returns true for a regular user" do
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
+    end
+
+    it "supports customization by site setting" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 0
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
+    end
+
+    describe "whitelisted host" do
+      before do
+        SiteSetting.whitelisted_link_domains = host
+      end
+
+      it "allows a new user to post the link to the host" do
+        user.trust_level = 0
+        SiteSetting.min_trust_to_post_links = 1
+        expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
+        expect(Guardian.new(user).can_post_link?(host: 'another-host.com')).to eq(false)
+      end
+    end
+  end
+
+  describe '#post_can_act?' do
     let(:post) { build(:post) }
     let(:user) { build(:user) }
 
@@ -46,9 +104,44 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
     end
 
-    it "always allows flagging" do
+    it "works as expected for silenced users" do
+      UserSilencer.silence(user, admin)
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
+      expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
+    end
+
+    it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
+    end
+
+    it "allows flagging of staff posts when allow_flagging_staff is true" do
+      SiteSetting.allow_flagging_staff = true
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
+    end
+
+    describe 'when allow_flagging_staff is false' do
+      let(:staff_post) { Fabricate(:post, user: Fabricate(:moderator)) }
+
+      before do
+        SiteSetting.allow_flagging_staff = false
+      end
+
+      it "doesn't allow flagging of staff posts" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
+      end
+
+      it "allows flagging of staff posts when staff has been deleted" do
+        staff_post.user.destroy!
+        staff_post.reload
+        expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(true)
+      end
+
+      it "allows liking of staff" do
+        expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+      end
     end
 
     it "returns false when liking yourself" do
@@ -56,26 +149,32 @@ describe Guardian do
     end
 
     it "returns false when you've already done it" do
-      expect(Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.types[:like] => 1})).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :like, opts: {
+        taken_actions: { PostActionType.types[:like] => 1 }
+      })).to be_falsey
     end
 
     it "returns false when you already flagged a post" do
-      expect(Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.types[:spam] => 1})).to be_falsey
+      PostActionType.notify_flag_types.each do |type, _id|
+        expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
+          taken_actions: { PostActionType.types[type] => 1 }
+        })).to be_falsey
+      end
     end
 
     it "returns false for notify_user if private messages are disabled" do
-      SiteSetting.enable_private_messages = false
+      SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
-    it "returns false for notify_user if private messages are enabled but threshold not met" do
-      SiteSetting.enable_private_messages = true
+    it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
+      SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_truthy
+      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     describe "trust levels" do
@@ -84,9 +183,15 @@ describe Guardian do
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
       end
 
-      it "returns false for a new user flagging a standard post as spam" do
+      it "returns false for a new user flagging as spam" do
         user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+      end
+
+      it "returns true for a new user flagging as spam if enabled" do
+        SiteSetting.min_trust_to_flag_posts = 0
+        user.trust_level = TrustLevel[0]
+        expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 
       it "returns true for a new user flagging a private message as spam" do
@@ -108,6 +213,34 @@ describe Guardian do
     end
   end
 
+  describe "can_enable_safe_mode" do
+    let(:user) { Fabricate.build(:user) }
+    let(:moderator) { Fabricate.build(:moderator) }
+
+    context "when enabled" do
+      before do
+        SiteSetting.enable_safe_mode = true
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(true)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+
+    context "when disabled" do
+      before do
+        SiteSetting.enable_safe_mode = false
+      end
+
+      it "can be performed" do
+        expect(Guardian.new.can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(user).can_enable_safe_mode?).to eq(false)
+        expect(Guardian.new(moderator).can_enable_safe_mode?).to eq(true)
+      end
+    end
+  end
 
   describe "can_defer_flags" do
     let(:post) { Fabricate(:post) }
@@ -165,8 +298,8 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
-    context "enable_private_messages is false" do
-      before { SiteSetting.enable_private_messages = false }
+    context "enable_personal_messages is false" do
+      before { SiteSetting.enable_personal_messages = false }
 
       it "returns false if user is not staff member" do
         expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
@@ -189,9 +322,9 @@ describe Guardian do
       end
     end
 
-    context "author is blocked" do
+    context "author is silenced" do
       before do
-        user.blocked = true
+        user.silenced_till = 1.year.from_now
         user.save
       end
 
@@ -207,8 +340,47 @@ describe Guardian do
       it "returns true if target is a staff group" do
         Group::STAFF_GROUPS.each do |name|
           g = Group[name]
-          g.alias_level = Group::ALIAS_LEVELS[:everyone]
+          g.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
           expect(Guardian.new(user).can_send_private_message?(g)).to be_truthy
+        end
+      end
+    end
+
+    it "respects the group's messageable_level" do
+      group = Fabricate(:group)
+
+      Group::ALIAS_LEVELS.each do |level, _|
+        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
+        output = level == :everyone ? true : false
+
+        expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
+      end
+
+      admin = Fabricate(:admin)
+
+      Group::ALIAS_LEVELS.each do |level, _|
+        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
+        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
+      end
+    end
+
+    context 'target user has private message disabled' do
+      before do
+        another_user.user_option.update!(allow_private_messages: false)
+      end
+
+      context 'for a normal user' do
+        it 'should return false' do
+          expect(Guardian.new(user).can_send_private_message?(another_user)).to eq(false)
+        end
+      end
+
+      context 'for a staff user' do
+        it 'should return true' do
+          [admin, moderator].each do |staff_user|
+            expect(Guardian.new(staff_user).can_send_private_message?(another_user))
+              .to eq(true)
+          end
         end
       end
     end
@@ -243,7 +415,7 @@ describe Guardian do
 
   describe 'can_see_post_actors?' do
 
-    let(:topic) { Fabricate(:topic, user: coding_horror)}
+    let(:topic) { Fabricate(:topic, user: coding_horror) }
 
     it 'displays visibility correctly' do
       guardian = Guardian.new(user)
@@ -252,15 +424,9 @@ describe Guardian do
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:vote])).to be_truthy
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
 
       expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
-    end
-
-    it 'returns false for private votes' do
-      topic.expects(:has_meta_data_boolean?).with(:private_poll).returns(true)
-      expect(Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote])).to be_falsey
     end
 
   end
@@ -303,7 +469,7 @@ describe Guardian do
     end
 
     it 'returns true when the site requires approving users and is mod' do
-      SiteSetting.expects(:must_approve_users?).returns(true)
+      SiteSetting.must_approve_users = true
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
@@ -322,11 +488,34 @@ describe Guardian do
     end
 
     it 'returns false when the local logins are disabled' do
-      SiteSetting.stubs(:enable_local_logins).returns(false)
+      SiteSetting.enable_local_logins = false
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_falsey
     end
 
+    context 'with groups' do
+      let(:group) { Fabricate(:group) }
+      let(:another_group) { Fabricate(:group) }
+      let(:groups) { [group, another_group] }
+
+      before do
+        user.update!(trust_level: TrustLevel[2])
+        group.add_owner(user)
+      end
+
+      it 'returns false when user is not allowed to edit a group' do
+        expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(false)
+
+        expect(Guardian.new(Fabricate(:admin)).can_invite_to_forum?(groups))
+          .to eq(true)
+      end
+
+      it 'returns true when user is allowed to edit groups' do
+        another_group.add_owner(user)
+
+        expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(true)
+      end
+    end
   end
 
   describe 'can_invite_to?' do
@@ -368,12 +557,18 @@ describe Guardian do
       it 'returns true for a group owner' do
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
+
+      it 'returns true for normal user when inviting to topic and PM disabled' do
+        SiteSetting.enable_personal_messages = false
+        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
     end
 
     describe "private messages" do
       let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       let!(:pm) { Fabricate(:private_message_topic, user: user) }
       let(:admin) { Fabricate(:admin) }
+      let(:moderator) { Fabricate(:moderator) }
 
       context "when private messages are disabled" do
         it "allows an admin to invite to the pm" do
@@ -384,7 +579,7 @@ describe Guardian do
 
       context "when private messages are disabled" do
         before do
-          SiteSetting.enable_private_messages = false
+          SiteSetting.enable_personal_messages = false
         end
 
         it "doesn't allow a regular user to invite" do
@@ -392,9 +587,24 @@ describe Guardian do
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
         end
       end
+
+      context "when PM has receached the maximum number of recipients" do
+        before do
+          SiteSetting.max_allowed_message_recipients = 2
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+
+        it "allows staff to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          pm.grant_permission_to_user(moderator.email)
+          expect(Guardian.new(moderator).can_invite_to?(pm)).to be_truthy
+        end
+      end
     end
   end
-
 
   describe 'can_invite_via_email?' do
     it 'returns true for all (tl2 and above) users when sso is disabled, local logins are enabled, user approval is not required' do
@@ -404,6 +614,7 @@ describe Guardian do
     end
 
     it 'returns false for all users when sso is enabled' do
+      SiteSetting.sso_url = "https://www.example.com/sso"
       SiteSetting.enable_sso = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
@@ -432,31 +643,6 @@ describe Guardian do
 
     it 'returns false with a nil object' do
       expect(Guardian.new.can_see?(nil)).to be_falsey
-    end
-
-    describe 'a Group' do
-      let(:group) { Group.new }
-      let(:invisible_group) { Group.new(visible: false, name: 'invisible') }
-
-      it "returns true when the group is visible" do
-        expect(Guardian.new.can_see?(group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is an admin" do
-        admin = Fabricate.build(:admin)
-        expect(Guardian.new(admin).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is a member" do
-        invisible_group.save!
-        member = Fabricate.build(:user)
-        GroupUser.create(group: invisible_group, user: member)
-        expect(Guardian.new(member).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns false when the group is invisible" do
-        expect(Guardian.new.can_see?(invisible_group)).to be_falsey
-      end
     end
 
     describe 'a Category' do
@@ -561,7 +747,7 @@ describe Guardian do
 
       it "restricts static doc topics" do
         tos_topic = Fabricate(:topic, user: Discourse.system_user)
-        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+        SiteSetting.tos_topic_id = tos_topic.id
 
         expect(Guardian.new(build(:user)).can_edit?(tos_topic)).to be_falsey
         expect(Guardian.new(moderator).can_edit?(tos_topic)).to be_falsey
@@ -634,7 +820,7 @@ describe Guardian do
       let(:post_revision) { Fabricate(:post_revision) }
 
       context 'edit_history_visible_to_public is true' do
-        before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+        before { SiteSetting.edit_history_visible_to_public = true }
 
         it 'is false for nil' do
           expect(Guardian.new.can_see?(nil)).to be_falsey
@@ -650,7 +836,7 @@ describe Guardian do
       end
 
       context 'edit_history_visible_to_public is false' do
-        before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+        before { SiteSetting.edit_history_visible_to_public = false }
 
         it 'is true for staff' do
           expect(Guardian.new(Fabricate(:admin)).can_see?(post_revision)).to be_truthy
@@ -692,34 +878,34 @@ describe Guardian do
     describe 'a Topic' do
       it 'does not allow moderators to create topics in readonly categories' do
         category = Fabricate(:category)
-        category.set_permissions(:everyone => :read)
+        category.set_permissions(everyone: :read)
         category.save
 
-        expect(Guardian.new(moderator).can_create?(Topic,category)).to be_falsey
+        expect(Guardian.new(moderator).can_create?(Topic, category)).to be_falsey
       end
 
       it 'should check for full permissions' do
         category = Fabricate(:category)
-        category.set_permissions(:everyone => :create_post)
+        category.set_permissions(everyone: :create_post)
         category.save
-        expect(Guardian.new(user).can_create?(Topic,category)).to be_falsey
+        expect(Guardian.new(user).can_create?(Topic, category)).to be_falsey
       end
 
       it "is true for new users by default" do
-        expect(Guardian.new(user).can_create?(Topic,Fabricate(:category))).to be_truthy
+        expect(Guardian.new(user).can_create?(Topic, Fabricate(:category))).to be_truthy
       end
 
       it "is false if user has not met minimum trust level" do
-        SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
-        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_falsey
+        SiteSetting.min_trust_to_create_topic = 1
+        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
-        SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
-        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_truthy
+        SiteSetting.min_trust_to_create_topic = 1
+        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
       end
     end
 
@@ -728,7 +914,7 @@ describe Guardian do
       it "is false on readonly categories" do
         category = Fabricate(:category)
         topic.category = category
-        category.set_permissions(:everyone => :readonly)
+        category.set_permissions(everyone: :readonly)
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
@@ -816,6 +1002,25 @@ describe Guardian do
         end
       end
 
+      context "system message" do
+        let(:private_message) {
+          Fabricate(
+            :topic,
+            archetype: Archetype.private_message,
+            subtype: 'system_message',
+            category_id: nil
+          )
+        }
+
+        before { user.save! }
+        it "allows the user to reply to system messages" do
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
+          SiteSetting.enable_system_message_replies = false
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(false)
+        end
+
+      end
+
       context "private message" do
         let(:private_message) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
 
@@ -830,14 +1035,14 @@ describe Guardian do
           expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
         end
 
-        it "allows new posts from blocked users included in the pm" do
-          user.update_attribute(:blocked, true)
+        it "allows new posts from silenced users included in the pm" do
+          user.update_attribute(:silenced_till, 1.year.from_now)
           private_message.topic_allowed_users.create!(user_id: user.id)
           expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
         end
 
-        it "doesn't allow new posts from blocked users not invited to the pm" do
-          user.update_attribute(:blocked, true)
+        it "doesn't allow new posts from silenced users not invited to the pm" do
+          user.update_attribute(:silenced_till, 1.year.from_now)
           expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
         end
       end
@@ -857,41 +1062,18 @@ describe Guardian do
         Guardian.new(user)
       end
 
-
       it "isn't allowed when not logged in" do
-        expect(Guardian.new(nil).post_can_act?(post,:vote)).to be_falsey
+        expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
       end
 
       it "is allowed as a regular user" do
-        expect(guardian.post_can_act?(post,:vote)).to be_truthy
-      end
-
-      it "doesn't allow voting if the user has an action from voting already" do
-        expect(guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:vote] => 1})).to be_falsey
-      end
-
-      it "allows voting if the user has performed a different action" do
-        expect(guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:like] => 1})).to be_truthy
+        expect(guardian.post_can_act?(post, :vote)).to be_truthy
       end
 
       it "isn't allowed on archived topics" do
         topic.archived = true
-        expect(Guardian.new(user).post_can_act?(post,:like)).to be_falsey
+        expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       end
-
-
-      describe 'multiple voting' do
-
-        it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
-          Topic.any_instance.expects(:has_meta_data_boolean?).with(:single_vote).returns(true)
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: true)).to be_falsey
-        end
-
-        it "is allowed if the user voted and the topic doesn't allow multiple votes" do
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: false)).to be_truthy
-        end
-      end
-
     end
   end
 
@@ -993,12 +1175,23 @@ describe Guardian do
       expect(Guardian.new(trust_level_4).can_convert_topic?(topic)).to be_falsey
     end
 
+    it 'returns false for category definition topics' do
+      c = Fabricate(:category)
+      topic = Topic.find_by(id: c.topic_id)
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
+    end
+
     it 'returns true when a moderator' do
       expect(Guardian.new(moderator).can_convert_topic?(topic)).to be_truthy
     end
 
     it 'returns true when an admin' do
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
+
+    it 'returns false when personal messages are disabled' do
+      SiteSetting.enable_personal_messages = false
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
     end
   end
 
@@ -1009,6 +1202,11 @@ describe Guardian do
     end
 
     describe 'a Post' do
+
+      it 'returns false for silenced users' do
+        post.user.silenced_till = 1.day.from_now
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
+      end
 
       it 'returns false when not logged in' do
         expect(Guardian.new.can_edit?(post)).to be_falsey
@@ -1021,6 +1219,11 @@ describe Guardian do
 
       it 'returns true if you want to edit your own post' do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns false if you try to edit a locked post' do
+        post.locked_by_id = moderator.id
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
       end
 
       it "returns false if the post is hidden due to flagging and it's too soon" do
@@ -1081,7 +1284,7 @@ describe Guardian do
 
       it "returns false if a wiki but the user can't create a post" do
         c = Fabricate(:category)
-        c.set_permissions(:everyone => :readonly)
+        c.set_permissions(everyone: :readonly)
         c.save
 
         topic = Fabricate(:topic, category: c)
@@ -1096,12 +1299,22 @@ describe Guardian do
         expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
       end
 
+      it 'returns true as a moderator, even if locked' do
+        post.locked_by_id = admin.id
+        expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
+      end
+
       it 'returns true as an admin' do
         expect(Guardian.new(admin).can_edit?(post)).to be_truthy
       end
 
       it 'returns true as a trust level 4 user' do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
+        SiteSetting.trusted_users_can_edit_others = false
+        expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
       end
 
       it 'returns false when trying to edit a post with no trust' do
@@ -1119,7 +1332,7 @@ describe Guardian do
       end
 
       it 'returns false when another user has too low trust level to edit wiki post' do
-        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        SiteSetting.min_trust_to_edit_wiki_post = 2
         post.wiki = true
         coding_horror.trust_level = 1
 
@@ -1127,7 +1340,7 @@ describe Guardian do
       end
 
       it 'returns true when another user has adequate trust level to edit wiki post' do
-        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        SiteSetting.min_trust_to_edit_wiki_post = 2
         post.wiki = true
         coding_horror.trust_level = 2
 
@@ -1135,7 +1348,7 @@ describe Guardian do
       end
 
       it 'returns true for post author even when he has too low trust level to edit wiki post' do
-        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        SiteSetting.min_trust_to_edit_wiki_post = 2
         post.wiki = true
         post.user.trust_level = 1
 
@@ -1144,8 +1357,9 @@ describe Guardian do
 
       context 'post is older than post_edit_time_limit' do
         let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+
         before do
-          SiteSetting.stubs(:post_edit_time_limit).returns(5)
+          SiteSetting.post_edit_time_limit = 5
         end
 
         it 'returns false to the author of the post' do
@@ -1173,7 +1387,7 @@ describe Guardian do
       context "first post of a static page doc" do
         let!(:tos_topic) { Fabricate(:topic, user: Discourse.system_user) }
         let!(:tos_first_post) { build(:post, topic: tos_topic, user: tos_topic.user) }
-        before { SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id) }
+        before { SiteSetting.tos_topic_id = tos_topic.id }
 
         it "restricts static doc posts" do
           expect(Guardian.new(build(:user)).can_edit?(tos_first_post)).to be_falsey
@@ -1208,6 +1422,11 @@ describe Guardian do
 
         it 'returns true at trust level 3' do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
+        end
+
+        it 'is false at TL3, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
         end
 
         it "returns false when the category is read only" do
@@ -1259,6 +1478,11 @@ describe Guardian do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
         end
 
+        it 'is false at TL4, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
+        end
+
         it 'returns false at trust level 3' do
           expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to be_falsey
         end
@@ -1271,7 +1495,7 @@ describe Guardian do
       context 'very old' do
         let(:old_topic) { build(:topic, user: user, created_at: 6.minutes.ago) }
 
-        before { SiteSetting.stubs(:post_edit_time_limit).returns(5) }
+        before { SiteSetting.post_edit_time_limit = 5 }
 
         it 'returns true as a moderator' do
           expect(Guardian.new(moderator).can_edit?(old_topic)).to be_truthy
@@ -1343,9 +1567,9 @@ describe Guardian do
       expect(Guardian.new(user).can_moderate?(nil)).to be_falsey
     end
 
-    context 'when user is blocked' do
+    context 'when user is silenced' do
       it 'returns false' do
-        user.toggle!(:blocked)
+        user.update_column(:silenced_till, 1.year.from_now)
         expect(Guardian.new(user).can_moderate?(post)).to be(false)
         expect(Guardian.new(user).can_moderate?(topic)).to be(false)
       end
@@ -1458,7 +1682,7 @@ describe Guardian do
 
       it 'returns false for static doc topics' do
         tos_topic = Fabricate(:topic, user: Discourse.system_user)
-        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+        SiteSetting.tos_topic_id = tos_topic.id
         expect(Guardian.new(admin).can_delete?(tos_topic)).to be_falsey
       end
     end
@@ -1503,38 +1727,10 @@ describe Guardian do
 
       it 'returns false when post is first in a static doc topic' do
         tos_topic = Fabricate(:topic, user: Discourse.system_user)
-        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+        SiteSetting.tos_topic_id = tos_topic.id
         post.update_attribute :post_number, 1
         post.update_attribute :topic_id, tos_topic.id
         expect(Guardian.new(admin).can_delete?(post)).to be_falsey
-      end
-
-      context 'post is older than post_edit_time_limit' do
-        let(:old_post) { build(:post, topic: topic, user: topic.user, post_number: 2, created_at: 6.minutes.ago) }
-        before do
-          SiteSetting.stubs(:post_edit_time_limit).returns(5)
-        end
-
-        it 'returns false to the author of the post' do
-          expect(Guardian.new(old_post.user).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(true)
-        end
-
-        it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_delete?(old_post)).to eq(true)
-        end
-
-        it "returns false when it's the OP, even as a moderator" do
-          old_post.post_number = 1
-          expect(Guardian.new(moderator).can_delete?(old_post)).to eq(false)
-        end
-
-        it 'returns false for another regular user trying to delete your post' do
-          expect(Guardian.new(coding_horror).can_delete?(old_post)).to eq(false)
-        end
       end
 
       context 'the topic is archived' do
@@ -1657,6 +1853,11 @@ describe Guardian do
       expect(Guardian.new(admin).can_approve?(user)).to be_falsey
     end
 
+    it "returns false when the user is not active" do
+      user.active = false
+      expect(Guardian.new(admin).can_approve?(user)).to be_falsey
+    end
+
     it "allows an admin to approve a user" do
       expect(Guardian.new(admin).can_approve?(user)).to be_truthy
     end
@@ -1664,7 +1865,6 @@ describe Guardian do
     it "allows a moderator to approve a user" do
       expect(Guardian.new(moderator).can_approve?(user)).to be_truthy
     end
-
 
   end
 
@@ -1806,7 +2006,7 @@ describe Guardian do
 
     context "when must_approve_users is false" do
       before do
-        SiteSetting.stubs(:must_approve_users?).returns(false)
+        SiteSetting.must_approve_users = false
       end
 
       it "returns true for a nil user" do
@@ -1820,7 +2020,7 @@ describe Guardian do
 
     context 'when must_approve_users is true' do
       before do
-        SiteSetting.stubs(:must_approve_users?).returns(true)
+        SiteSetting.must_approve_users = true
       end
 
       it "returns false for a nil user" do
@@ -1884,8 +2084,9 @@ describe Guardian do
 
       it "is true if user is not an admin and first post is not too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(9.days.ago)
-        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
       end
 
@@ -1895,20 +2096,33 @@ describe Guardian do
 
       it "is false if user's first post is too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(11.days.ago)
-        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_falsey
+      end
+    end
+
+    shared_examples "can_delete_user staff examples" do
+      it "is true if posts are less than or equal to 5" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(4)
+        user.stubs(:first_post_created_at).returns(11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
       end
     end
 
     context "for moderators" do
       let(:actor) { moderator }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:actor) { admin }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
   end
 
@@ -1927,21 +2141,21 @@ describe Guardian do
 
     shared_examples "can_delete_all_posts examples" do
       it "is true if user has no posts" do
-        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago))).to be_truthy
       end
 
       it "is true if user's first post is newer than delete_user_max_post_age days old" do
         user = Fabricate(:user, created_at: 100.days.ago)
         user.stubs(:first_post_created_at).returns(9.days.ago)
-        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
       end
 
       it "is false if user's first post is older than delete_user_max_post_age days old" do
         user = Fabricate(:user, created_at: 100.days.ago)
         user.stubs(:first_post_created_at).returns(11.days.ago)
-        SiteSetting.stubs(:delete_user_max_post_age).returns(10)
+        SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
       end
 
@@ -1952,14 +2166,14 @@ describe Guardian do
       it "is true if number of posts is small" do
         u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(1)
-        SiteSetting.stubs(:delete_all_posts_max).returns(10)
+        SiteSetting.delete_all_posts_max = 10
         expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
 
       it "is false if number of posts is not small" do
         u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(11)
-        SiteSetting.stubs(:delete_all_posts_max).returns(10)
+        SiteSetting.delete_all_posts_max = 10
         expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_falsey
       end
     end
@@ -2037,8 +2251,40 @@ describe Guardian do
     it 'is false without a user to look at' do
       expect(Guardian.new(admin).can_grant_title?(nil)).to be_falsey
     end
-  end
 
+    context 'with title argument' do
+      let(:title_badge) { Fabricate(:badge, name: 'Helper', allow_title: true) }
+      let(:no_title_badge) { Fabricate(:badge, name: 'Writer', allow_title: false) }
+      let(:group) { Fabricate(:group, title: 'Groupie') }
+
+      it 'returns true if title belongs to a badge that user has' do
+        BadgeGranter.grant(title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(true)
+      end
+
+      it "returns false if title belongs to a badge that user doesn't have" do
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(false)
+      end
+
+      it "returns false if title belongs to a badge that user has but can't be used as a title" do
+        BadgeGranter.grant(no_title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, no_title_badge.name)).to eq(false)
+      end
+
+      it 'returns true if title is from a group the user belongs to' do
+        group.add(user)
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(true)
+      end
+
+      it "returns false if title is from a group the user doesn't belong to" do
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
+      end
+
+      it "returns true if the title is set to an empty string" do
+        expect(Guardian.new(user).can_grant_title?(user, '')).to eq(true)
+      end
+    end
+  end
 
   describe 'can_change_trust_level?' do
 
@@ -2089,7 +2335,7 @@ describe Guardian do
 
     context 'for an old user' do
       before do
-        SiteSetting.stubs(:username_change_period).returns(3)
+        SiteSetting.username_change_period = 3
       end
 
       let(:target_user) { Fabricate(:user, created_at: 4.days.ago) }
@@ -2112,7 +2358,7 @@ describe Guardian do
 
     context 'when editing is disabled in preferences' do
       before do
-        SiteSetting.stubs(:username_change_period).returns(0)
+        SiteSetting.username_change_period = 0
       end
 
       include_examples "staff can always change usernames"
@@ -2124,8 +2370,9 @@ describe Guardian do
 
     context 'when SSO username override is active' do
       before do
-        SiteSetting.stubs(:enable_sso).returns(true)
-        SiteSetting.stubs(:sso_overrides_username).returns(true)
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_username = true
       end
 
       it "is false for admins" do
@@ -2145,7 +2392,7 @@ describe Guardian do
   describe "can_edit_email?" do
     context 'when allowed in settings' do
       before do
-        SiteSetting.stubs(:email_editable?).returns(true)
+        SiteSetting.email_editable = true
       end
 
       it "is false when not logged in" do
@@ -2171,7 +2418,7 @@ describe Guardian do
 
     context 'when not allowed in settings' do
       before do
-        SiteSetting.stubs(:email_editable?).returns(false)
+        SiteSetting.email_editable = false
       end
 
       it "is false when not logged in" do
@@ -2197,8 +2444,10 @@ describe Guardian do
 
     context 'when SSO email override is active' do
       before do
-        SiteSetting.stubs(:enable_sso).returns(true)
-        SiteSetting.stubs(:sso_overrides_email).returns(true)
+        SiteSetting.email_editable = false
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_email = true
       end
 
       it "is false for admins" do
@@ -2242,7 +2491,7 @@ describe Guardian do
 
     context 'when name is disabled in preferences' do
       before do
-        SiteSetting.stubs(:enable_names).returns(false)
+        SiteSetting.enable_names = false
       end
 
       it 'is false for the user to change their own name' do
@@ -2260,13 +2509,13 @@ describe Guardian do
 
     context 'when name is enabled in preferences' do
       before do
-        SiteSetting.stubs(:enable_names).returns(true)
+        SiteSetting.enable_names = true
       end
 
       context 'when SSO is disabled' do
         before do
-          SiteSetting.stubs(:enable_sso).returns(false)
-          SiteSetting.stubs(:sso_overrides_name).returns(false)
+          SiteSetting.enable_sso = false
+          SiteSetting.sso_overrides_name = false
         end
 
         it 'is true for admins' do
@@ -2284,12 +2533,13 @@ describe Guardian do
 
       context 'when SSO is enabled' do
         before do
-          SiteSetting.stubs(:enable_sso).returns(true)
+          SiteSetting.sso_url = "https://www.example.com/sso"
+          SiteSetting.enable_sso = true
         end
 
         context 'when SSO name override is active' do
           before do
-            SiteSetting.stubs(:sso_overrides_name).returns(true)
+            SiteSetting.sso_overrides_name = true
           end
 
           it 'is false for admins' do
@@ -2307,7 +2557,7 @@ describe Guardian do
 
         context 'when SSO name override is not active' do
           before do
-            SiteSetting.stubs(:sso_overrides_name).returns(false)
+            SiteSetting.sso_overrides_name = false
           end
 
           it 'is true for admins' do
@@ -2323,6 +2573,49 @@ describe Guardian do
           end
         end
       end
+    end
+  end
+
+  describe "#allow_themes?" do
+    let(:theme) { Fabricate(:theme) }
+    let(:theme2) { Fabricate(:theme) }
+
+    it "allows staff to use any themes" do
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
+      expect(Guardian.new(admin).allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(true)
+    end
+
+    it "only allows normal users to use user-selectable themes or default theme" do
+      user_guardian = Guardian.new(user)
+
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
+
+      theme.set_default!
+      expect(user_guardian.allow_themes?([theme.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      theme2.update!(user_selectable: true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id, theme.id])).to eq(false)
+    end
+
+    it "allows child themes to be only used with their parent" do
+      user_guardian = Guardian.new(user)
+
+      theme.update!(user_selectable: true)
+      theme2.update!(user_selectable: true)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(false)
+
+      theme2.update!(user_selectable: false, component: true)
+      theme.add_child_theme!(theme2)
+      expect(user_guardian.allow_themes?([theme.id, theme2.id])).to eq(true)
+      expect(user_guardian.allow_themes?([theme2.id])).to eq(false)
     end
   end
 
@@ -2400,40 +2693,138 @@ describe Guardian do
     context "tagging is enabled" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_to_create_tag = 3
         SiteSetting.min_trust_level_to_tag_topics = 1
       end
 
-      describe "can_create_tag" do
-        it "returns false if trust level is too low" do
-          expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
+      context 'min_trust_to_create_tag is 3' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 3
         end
 
-        it "returns true if trust level is high enough" do
-          expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
+        describe "can_create_tag" do
+          it "returns false if trust level is too low" do
+            expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
+          end
+
+          it "returns true if trust level is high enough" do
+            expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
+          end
+
+          it "returns true for staff" do
+            expect(Guardian.new(admin).can_create_tag?).to be_truthy
+            expect(Guardian.new(moderator).can_create_tag?).to be_truthy
+          end
         end
 
-        it "returns true for staff" do
+        describe "can_tag_topics" do
+          it "returns false if trust level is too low" do
+            expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+          end
+
+          it "returns true if trust level is high enough" do
+            expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+          end
+
+          it "returns true for staff" do
+            expect(Guardian.new(admin).can_tag_topics?).to be_truthy
+            expect(Guardian.new(moderator).can_tag_topics?).to be_truthy
+          end
+        end
+      end
+
+      context 'min_trust_to_create_tag is "staff"' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 'staff'
+        end
+
+        it "returns false if not staff" do
+          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
+        end
+
+        it "returns true if staff" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
           expect(Guardian.new(moderator).can_create_tag?).to be_truthy
         end
       end
 
-      describe "can_tag_topics" do
-        it "returns false if trust level is too low" do
-          expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+      context 'min_trust_to_create_tag is "admin"' do
+        before do
+          SiteSetting.min_trust_to_create_tag = 'admin'
         end
 
-        it "returns true if trust level is high enough" do
-          expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+        it "returns false if not admin" do
+          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
+          expect(Guardian.new(moderator).can_create_tag?).to eq(false)
         end
 
-        it "returns true for staff" do
-          expect(Guardian.new(admin).can_tag_topics?).to be_truthy
-          expect(Guardian.new(moderator).can_tag_topics?).to be_truthy
+        it "returns true if admin" do
+          expect(Guardian.new(admin).can_create_tag?).to be_truthy
         end
       end
     end
+  end
+
+  describe(:can_see_group) do
+    it 'Correctly handles owner visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles staff visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+    end
+
+    it 'Correctly handles member visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles public groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
+
+      expect(Guardian.new.can_see_group?(group)).to eq(true)
+    end
+
   end
 
   context 'topic featured link category restriction' do
@@ -2467,6 +2858,90 @@ describe Guardian do
 
       it 'returns false if the category does not allow it' do
         expect(guardian.can_edit_featured_link?(category.id)).to eq(false)
+      end
+    end
+  end
+
+  context "suspension reasons" do
+    let(:user) { Fabricate(:user) }
+
+    it "will be shown by default" do
+      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
+    end
+
+    context "with hide suspension reason enabled" do
+      let(:moderator) { Fabricate(:moderator) }
+
+      before do
+        SiteSetting.hide_suspension_reasons = true
+      end
+
+      it "will not be shown to anonymous users" do
+        expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
+      end
+
+      it "users can see their own suspensions" do
+        expect(Guardian.new(user).can_see_suspension_reason?(user)).to eq(true)
+      end
+
+      it "staff can see suspensions" do
+        expect(Guardian.new(moderator).can_see_suspension_reason?(user)).to eq(true)
+      end
+    end
+  end
+
+  describe '#can_remove_allowed_users?' do
+    context 'staff users' do
+      it 'should be true' do
+        expect(Guardian.new(moderator).can_remove_allowed_users?(topic))
+          .to eq(true)
+      end
+    end
+
+    context 'normal user' do
+      let(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
+      let(:another_user) { Fabricate(:user) }
+
+      before do
+        topic.allowed_users << user
+        topic.allowed_users << another_user
+      end
+
+      it 'should be false' do
+        expect(Guardian.new(user).can_remove_allowed_users?(topic))
+          .to eq(false)
+      end
+
+      describe 'target_user is the user' do
+        describe 'when user is in a pm with another user' do
+          it 'should return true' do
+            expect(Guardian.new(user).can_remove_allowed_users?(topic, user))
+              .to eq(true)
+          end
+        end
+
+        describe 'when user is the creator of the topic' do
+          it 'should return false' do
+            expect(Guardian.new(topic.user).can_remove_allowed_users?(topic, topic.user))
+              .to eq(false)
+          end
+        end
+
+        describe 'when user is the only user in the topic' do
+          it 'should return false' do
+            topic.remove_allowed_user(Discourse.system_user, another_user.username)
+
+            expect(Guardian.new(user).can_remove_allowed_users?(topic, user))
+              .to eq(false)
+          end
+        end
+      end
+
+      describe 'target_user is not the user' do
+        it 'should return false' do
+          expect(Guardian.new(user).can_remove_allowed_users?(topic, moderator))
+            .to eq(false)
+        end
       end
     end
   end

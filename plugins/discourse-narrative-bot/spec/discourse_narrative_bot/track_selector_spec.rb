@@ -36,13 +36,17 @@ describe DiscourseNarrativeBot::TrackSelector do
     end_message.chomp
   end
 
+  before do
+    SiteSetting.queue_jobs = false
+  end
+
   describe '#select' do
     context 'in a PM with discobot' do
       let(:first_post) { Fabricate(:post, user: discobot_user) }
 
       let(:topic) do
         Fabricate(:private_message_topic, first_post: first_post,
-          topic_allowed_users: [
+                                          topic_allowed_users: [
             Fabricate.build(:topic_allowed_user, user: discobot_user),
             Fabricate.build(:topic_allowed_user, user: user),
           ]
@@ -204,6 +208,19 @@ describe DiscourseNarrativeBot::TrackSelector do
                     .to eq("tutorial_formatting")
               end
             end
+          end
+        end
+
+        context 'when a new user is added into the topic' do
+          before do
+            topic.allowed_users << Fabricate(:user)
+          end
+
+          it 'should stop the new user track' do
+            post
+
+            expect { described_class.new(:reply, user, post_id: post.id).select }
+              .to_not change { Post.count }
           end
         end
       end
@@ -441,7 +458,6 @@ describe DiscourseNarrativeBot::TrackSelector do
           expect(new_post.raw).to eq(random_mention_reply)
         end
 
-
         describe 'rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }
           let(:other_post) { Fabricate(:post, raw: '@discobot show me something', topic: topic) }
@@ -549,7 +565,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when roll dice command is present inside a quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot roll 2d1[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot roll 2d1\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }
@@ -586,7 +602,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when quote command is present inside a onebox or quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot quote[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot quote\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }

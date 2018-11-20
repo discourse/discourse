@@ -1,4 +1,4 @@
-class RenameStaffActionLogsToUserHistory < ActiveRecord::Migration
+class RenameStaffActionLogsToUserHistory < ActiveRecord::Migration[4.2]
   def up
     remove_index :staff_action_logs, [:staff_user_id, :id]
     rename_table :staff_action_logs, :user_histories

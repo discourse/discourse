@@ -10,7 +10,7 @@ class TopicFeaturedUsers
   end
 
   # Chooses which topic users to feature
-  def choose(args={})
+  def choose(args = {})
     self.class.ensure_consistency!(topic.id.to_i)
     update_participant_count
   end
@@ -22,7 +22,7 @@ class TopicFeaturedUsers
      topic.featured_user4_id].uniq.compact
   end
 
-  def self.ensure_consistency!(topic_id=nil)
+  def self.ensure_consistency!(topic_id = nil)
 
     filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
     filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
@@ -79,13 +79,13 @@ WHERE tt.id = tt2.id AND
 #{filter2}
 SQL
 
-    Topic.exec_sql(sql)
+    DB.exec(sql)
   end
 
   private
 
-    def update_participant_count
-      count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
-      topic.update_columns(participant_count: count)
-    end
+  def update_participant_count
+    count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
+    topic.update_columns(participant_count: count)
+  end
 end

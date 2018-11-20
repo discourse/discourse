@@ -1,4 +1,4 @@
-class DropDefaultsOnEmailDigestColumnsOfUsers < ActiveRecord::Migration
+class DropDefaultsOnEmailDigestColumnsOfUsers < ActiveRecord::Migration[4.2]
   def up
     change_column_default :users, :email_digests,     nil
     change_column         :users, :digest_after_days, :integer, default: nil, null: true

@@ -1,0 +1,12 @@
+.select-kit {
+  &.categories-admin-dropdown {
+    .select-kit-body {
+      min-width: auto;
+      width: 250px;
+    }
+
+    .select-kit-header .d-icon {
+      justify-content: space-between;
+    }
+  }
+}

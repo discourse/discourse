@@ -3,11 +3,14 @@ require 'rails_helper'
 RSpec.describe WebHookPostSerializer do
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
-  let(:serializer) { WebHookPostSerializer.new(post, scope: Guardian.new(admin), root: false) }
+
+  def serialized_for_user(u)
+    WebHookPostSerializer.new(post, scope: Guardian.new(u), root: false).as_json
+  end
 
   it 'should only include the required keys' do
-    count = serializer.as_json.keys.count
-    difference = count - 40
+    count = serialized_for_user(admin).keys.count
+    difference = count - 34
 
     expect(difference).to eq(0), lambda {
       message = ""
@@ -20,5 +23,19 @@ RSpec.describe WebHookPostSerializer do
 
       message << "\nPlease verify if those key(s) are required as part of the web hook's payload."
     }
+  end
+
+  it 'should only include deleted topic title for staffs' do
+    topic = post.topic
+    PostDestroyer.new(Discourse.system_user, post).destroy
+    post.reload
+
+    [nil, post.user, Fabricate(:user)].each do |user|
+      expect(serialized_for_user(user)[:topic_title]).to eq(nil)
+    end
+
+    [Fabricate(:moderator), admin].each do |user|
+      expect(serialized_for_user(user)[:topic_title]).to eq(topic.title)
+    end
   end
 end

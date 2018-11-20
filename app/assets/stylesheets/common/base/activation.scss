@@ -2,7 +2,7 @@
 // account or changing their email.
 
 #simple-container {
-  @include border-radius-all(10px);
+  border-radius: 10px;
   background-color: $secondary;
   padding: 20px;
   width: 550px;
@@ -10,8 +10,8 @@
 
   .account-created {
     .ac-message {
-      font-size: 16px;
-      line-height: 24px;
+      font-size: $font-up-1;
+      line-height: $line-height-large;
     }
 
     .activation-controls {

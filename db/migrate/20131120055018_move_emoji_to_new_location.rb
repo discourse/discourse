@@ -1,4 +1,4 @@
-class MoveEmojiToNewLocation < ActiveRecord::Migration
+class MoveEmojiToNewLocation < ActiveRecord::Migration[4.2]
   def up
     execute("update posts set cooked = regexp_replace(cooked, '\(<img[^\>]*)assets\/emoji\/', '\\1plugins\/emoji\/images\/' , 'g') where cooked like '%emoji%'")
   end

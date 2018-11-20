@@ -1,4 +1,4 @@
-import Permalink from 'admin/models/permalink';
+import Permalink from "admin/models/permalink";
 
 export default Discourse.Route.extend({
   model() {
@@ -6,6 +6,6 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    controller.set('model', model);
+    controller.set("model", model);
   }
 });

@@ -1,4 +1,4 @@
-class CreateSiteCustomizations < ActiveRecord::Migration
+class CreateSiteCustomizations < ActiveRecord::Migration[4.2]
   def change
     create_table :site_customizations do |t|
       t.string :name, null: false
@@ -8,7 +8,7 @@ class CreateSiteCustomizations < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.boolean :enabled, null: false
       t.string :key, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :site_customizations, [:key]

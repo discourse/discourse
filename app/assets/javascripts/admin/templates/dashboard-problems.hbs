@@ -1,0 +1,27 @@
+{{#if foundProblems}}
+  <div class="section dashboard-problems">
+    <div class="section-title">
+      <h2>
+        {{d-icon "exclamation-triangle"}}
+        {{i18n 'admin.dashboard.problems_found'}}
+      </h2>
+    </div>
+
+    <div class="section-body">
+      {{#conditional-loading-section isLoading=loadingProblems}}
+        <div class="problem-messages">
+          <ul>
+            {{#each problems as |problem|}}
+              <li>{{{problem}}}</li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <p class="actions">
+          <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
+          {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
+        </p>
+      {{/conditional-loading-section}}
+    </div>
+  </div>
+{{/if}}

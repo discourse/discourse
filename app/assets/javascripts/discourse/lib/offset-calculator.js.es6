@@ -1,49 +1,37 @@
-// TODO: This is quite ugly but seems reasonably fast? Maybe refactor
-// this out before we merge into stable.
 export function scrollTopFor(y) {
-  let off = 0;
-  for (let i=0; i<3; i++) {
-    off = offsetCalculator(y - off);
-  }
-  return off;
+  return y - offsetCalculator();
 }
 
-export default function offsetCalculator(y) {
-  const $header = $('header');
-  const $title = $('#topic-title');
-  const rawWinHeight = $(window).height();
-  const windowHeight = rawWinHeight - $title.height();
-  const eyeTarget = (windowHeight / 10);
-  const headerHeight = $header.outerHeight(true);
-  const expectedOffset = $title.height() - $header.find('.contents').height() + (eyeTarget * 2);
-  const ideal = headerHeight + ((expectedOffset < 0) ? 0 : expectedOffset);
+export function minimumOffset() {
+  const $header = $("header.d-header");
+  const headerHeight = $header.outerHeight(true) || 0;
+  const headerPositionTop = $header.position().top;
+  return headerHeight + headerPositionTop;
+}
 
-  const $container = $('.posts-wrapper');
-  if ($container.length === 0) { return expectedOffset; }
+export default function offsetCalculator() {
+  const min = minimumOffset();
 
-  const topPos = $container.offset().top;
+  // on mobile, just use the header
+  if ($("html").hasClass("mobile-view")) return min;
 
-  const scrollTop = y || $(window).scrollTop();
-  const docHeight = $(document).height();
-  let scrollPercent = Math.min((scrollTop / (docHeight-rawWinHeight)), 1.0);
+  const $window = $(window);
+  const windowHeight = $window.height();
+  const documentHeight = $(document).height();
+  const topicBottomOffsetTop = $("#topic-bottom").offset().top;
 
-  let inter = topPos - scrollTop + ($container.height() * scrollPercent);
-  if (inter < headerHeight + eyeTarget) {
-    inter = headerHeight + eyeTarget;
+  // the footer is bigger than the window, we can scroll down past the last post
+  if (documentHeight - windowHeight > topicBottomOffsetTop) return min;
+
+  const scrollTop = $window.scrollTop();
+  const visibleBottomHeight = scrollTop + windowHeight - topicBottomOffsetTop;
+
+  if (visibleBottomHeight > 0) {
+    const bottomHeight = documentHeight - topicBottomOffsetTop;
+    const offset =
+      ((windowHeight - bottomHeight) * visibleBottomHeight) / bottomHeight;
+    return Math.max(min, offset);
   }
 
-
-  if (inter > ideal) {
-    const bottom = $('#topic-bottom').offset().top;
-    const switchPos = bottom - rawWinHeight - ideal;
-
-    if (scrollTop > switchPos) {
-      const p = Math.max(Math.min((scrollTop + inter - switchPos) / rawWinHeight, 1.0), 0.0);
-      return ((1 - p) * ideal) + (p * inter);
-    } else {
-      return ideal;
-    }
-  }
-
-  return inter;
+  return min;
 }

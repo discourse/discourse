@@ -1,0 +1,34 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+th:
+  site_settings:
+    poll_maximum_options: "จำนวนตัวเลือกมากสุดที่อนุญาตให้ในการสร้างแบบสำรวจ"
+  poll:
+    multiple_polls_without_name: "มีการสำรวจจำนวนมากที่ไม่มีชื่อ ใช้แอทเทอบิว '<code>name</code>' เพื่อระบุตัวตนของการสำรวจนั้น"
+    multiple_polls_with_same_name: "มีการสำรวจจำนวนมากที่ใช้ชื่อเดียวกัน: <strong>%{name}</strong> ลองใช้แอทเทอบิว '<code>name</code>' เพื่อระบุตัวตนของการสำรวจนั้น"
+    default_poll_must_have_at_least_2_options: "แบบสำรวจต้องมีอย่างน้อย 2 ตัวเลือก"
+    named_poll_must_have_at_least_2_options: "แบบสำรวจ <strong>%{name}</strong> จะต้องมีอย่างน้อย 2 ตัวเลือก"
+    default_poll_must_have_less_options:
+      other: "แบบสำรวจต้องมีอย่างน้อย %{count} ตัวเลือก"
+    named_poll_must_have_less_options:
+      other: "แบบสำรวจชื่อ <strong>%{name}</strong> ต้องมีอย่างน้อย %{count} ตัวเลือก"
+    default_poll_must_have_different_options: "แบบสำรวจต้องมีตัวเลือกที่แตกต่างกัน"
+    named_poll_must_have_different_options: "แบบสำรวจ <strong>%{name}</strong> ต้องมีตัวเลือกที่แตกต่างกัน"
+    default_poll_with_multiple_choices_has_invalid_parameters: "มีการใส่ค่าผิดในแบบสำรวจพร้อมหลายตัวเลือก"
+    named_poll_with_multiple_choices_has_invalid_parameters: "แบบสำรวจพร้อมหลายตัวเลือกชื่อ <strong>%{name}</strong> มีการตั้งค่าผิด"
+    requires_at_least_1_valid_option: "คุณจำเป็นต้องเลือกอย่างน้อย 1 ตัวเลือก"
+    default_cannot_be_made_public: "โพลด้วยคะแนนเสียงนี้ไม่สามารถทำให้เป็นสาธารณะได้."
+    no_polls_associated_with_this_post: "ไม่มีการสำรวจใดมีความเกี่ยวข้องกับโพสนี้"
+    no_poll_with_this_name: "ไม่มีการสำรวจที่ชื่อ <strong>%{name}</strong> เกี่ยวข้องกับโพสนี้"
+    post_is_deleted: "ไม่สามารถลบโพสได้"
+    topic_must_be_open_to_vote: "หัวข้อต้องเปิดเพื่อให้โหวตได้"
+    poll_must_be_open_to_vote: "แบบสำรวจต้องเปิดเพื่อให้ลงคะแนน"
+    topic_must_be_open_to_toggle_status: "หัวข้อจะต้องเปิดเพื่อให้ปรับสถานะ"
+    only_staff_or_op_can_toggle_status: "มีเฉพาะเจ้าหน้าที่หรือผู้โพสแรกเริ่มเท่านั้นที่จะปรับสถานะของแบบสำรวจได้"
+    email:
+      link_to_poll: "คลิกเพื่อดูแบบสำรวจ"

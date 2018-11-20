@@ -1,4 +1,4 @@
-class MigrateTosSetting < ActiveRecord::Migration
+class MigrateTosSetting < ActiveRecord::Migration[4.2]
   def up
     res = execute("SELECT * FROM site_settings WHERE name = 'tos_accept_required' AND value = 't'")
     if res.present? && res.cmd_tuples > 0
@@ -12,7 +12,6 @@ class MigrateTosSetting < ActiveRecord::Migration
       if res.present? && res.cmd_tuples == 1
         label = res[0]['value']
       end
-
 
       label = PG::Connection.escape_string(label)
       execute("INSERT INTO user_fields (name, field_type, editable) VALUES ('#{label}', 'confirm', false)")

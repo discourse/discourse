@@ -7,7 +7,7 @@ describe SuggestedTopicsBuilder do
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
   before do
-    SiteSetting.stubs(:suggested_topics).returns(5)
+    SiteSetting.suggested_topics = 5
   end
 
   context "splicing category results" do
@@ -17,30 +17,30 @@ describe SuggestedTopicsBuilder do
     end
 
     let(:builder) do
-      SuggestedTopicsBuilder.new(fake_topic(1,1))
+      SuggestedTopicsBuilder.new(fake_topic(1, 1))
     end
 
     it "prioritizes category correctly" do
-      builder.splice_results([fake_topic(2,2)], :high)
-      builder.splice_results([fake_topic(3,1)], :high)
-      builder.splice_results([fake_topic(4,1)], :high)
+      builder.splice_results([fake_topic(2, 2)], :high)
+      builder.splice_results([fake_topic(3, 1)], :high)
+      builder.splice_results([fake_topic(4, 1)], :high)
 
-      expect(builder.results.map(&:id)).to eq([3,4,2])
+      expect(builder.results.map(&:id)).to eq([3, 4, 2])
 
       # we have 2 items in category 1
       expect(builder.category_results_left).to eq(3)
     end
 
     it "inserts using default approach for non high priority" do
-      builder.splice_results([fake_topic(2,2)], :high)
-      builder.splice_results([fake_topic(3,1)], :low)
+      builder.splice_results([fake_topic(2, 2)], :high)
+      builder.splice_results([fake_topic(3, 1)], :low)
 
-      expect(builder.results.map(&:id)).to eq([2,3])
+      expect(builder.results.map(&:id)).to eq([2, 3])
     end
 
     it "inserts multiple results and puts topics in the correct order" do
-      builder.splice_results([fake_topic(2,1), fake_topic(3,2), fake_topic(4,1)], :high)
-      expect(builder.results.map(&:id)).to eq([2,4,3])
+      builder.splice_results([fake_topic(2, 1), fake_topic(3, 2), fake_topic(4, 1)], :high)
+      expect(builder.results.map(&:id)).to eq([2, 4, 3])
     end
   end
 
@@ -84,9 +84,9 @@ describe SuggestedTopicsBuilder do
     end
 
     context "adding topics that are not open" do
-      let!(:archived_topic) { Fabricate(:topic, archived: true)}
-      let!(:closed_topic) { Fabricate(:topic, closed: true)}
-      let!(:invisible_topic) { Fabricate(:topic, visible: false)}
+      let!(:archived_topic) { Fabricate(:topic, archived: true) }
+      let!(:closed_topic) { Fabricate(:topic, closed: true) }
+      let!(:invisible_topic) { Fabricate(:topic, visible: false) }
 
       it "adds archived and closed, but not invisible topics" do
         builder.add_results(Topic)
@@ -107,6 +107,5 @@ describe SuggestedTopicsBuilder do
     end
 
   end
-
 
 end

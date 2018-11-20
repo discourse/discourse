@@ -6,11 +6,11 @@
 export default {
   didInsertElement() {
     this._super();
-    this.appEvents.on('url:refresh', () => this.sendAction('refresh'));
+    this.appEvents.on("url:refresh", () => this.sendAction("refresh"));
   },
 
   willDestroyElement() {
     this._super();
-    this.appEvents.off('url:refresh');
+    this.appEvents.off("url:refresh");
   }
 };

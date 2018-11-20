@@ -1,8 +1,8 @@
-class DropUnreadTrackingColumns < ActiveRecord::Migration
+class DropUnreadTrackingColumns < ActiveRecord::Migration[4.2]
   def up
   end
 
   def down
-    raise "Can not be reverted"
+    raise ActiveRecord::IrreversibleMigration
   end
 end

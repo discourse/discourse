@@ -6,32 +6,56 @@ describe PostAnalyzer do
   let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }
 
   describe '#cook' do
-    let(:post_analyzer) {PostAnalyzer.new nil, nil  }
+    let(:post_analyzer) { PostAnalyzer.new nil, nil  }
 
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
-    let(:args) { [raw, options] }
 
     before { Oneboxer.stubs(:onebox) }
 
     it 'fetches the cached onebox for any urls in the post' do
       Oneboxer.expects(:cached_onebox).with url
-      post_analyzer.cook(*args)
+      post_analyzer.cook(raw, options)
       expect(post_analyzer.found_oneboxes?).to be(true)
     end
 
     it 'does not invalidate the onebox cache' do
       Oneboxer.expects(:invalidate).with(url).never
-      post_analyzer.cook(*args)
+      post_analyzer.cook(raw, options)
     end
 
     context 'when invalidating oneboxes' do
-      let(:options) {{ invalidate_oneboxes: true }}
+      let(:options) { { invalidate_oneboxes: true } }
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
-        post_analyzer.cook(*args)
+        post_analyzer.cook(raw, options)
       end
+    end
+
+    it "does nothing when the cook_method is 'raw_html'" do
+      cooked = post_analyzer.cook('Hello <div/> world', cook_method: Post.cook_methods[:raw_html])
+      expect(cooked).to eq('Hello <div/> world')
+    end
+
+    it "does not interpret Markdown when cook_method is 'email' and raw contains plaintext" do
+      cooked = post_analyzer.cook("[plaintext]\n*this is not italic* and here is a link: https://www.example.com\n[/plaintext]", cook_method: Post.cook_methods[:email])
+      expect(cooked).to eq('*this is not italic* and here is a link: <a href="https://www.example.com">https://www.example.com</a>')
+    end
+
+    it "does interpret Markdown when cook_method is 'email' and raw does not contain plaintext" do
+      cooked = post_analyzer.cook('*this is italic*', cook_method: Post.cook_methods[:email])
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
+    end
+
+    it "does interpret Markdown when cook_method is 'regular'" do
+      cooked = post_analyzer.cook('*this is italic*', cook_method: Post.cook_methods[:regular])
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
+    end
+
+    it "does interpret Markdown when not cook_method is set" do
+      cooked = post_analyzer.cook('*this is italic*')
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
     end
   end
 
@@ -78,17 +102,12 @@ describe PostAnalyzer do
 
       it "returns the host and a count for links" do
         post_analyzer = PostAnalyzer.new(raw_two_links_html, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
+        expect(post_analyzer.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
       it "it counts properly with more than one link on the same host" do
         post_analyzer = PostAnalyzer.new(raw_three_links, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
-      end
-
-      it 'returns blank for ipv6 output' do
-        post_analyzer = PostAnalyzer.new('PING www.google.com(lb-in-x93.1e100.net) 56 data bytes', default_topic_id)
-        expect(post_analyzer.linked_hosts).to be_blank
+        expect(post_analyzer.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
   end
@@ -118,21 +137,25 @@ describe PostAnalyzer do
 
     it "doesn't count avatars as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_avatars, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_avatars)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count favicons as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_favicon, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_favicon)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_thumbnail, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_thumbnail)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
+      PrettyText.stubs(:cook).returns(raw_post_with_two_classy_images)
       post_analyzer = PostAnalyzer.new(raw_post_with_two_classy_images, default_topic_id)
       expect(post_analyzer.image_count).to eq(0)
     end
@@ -153,6 +176,11 @@ describe PostAnalyzer do
       expect(post_analyzer.link_count).to eq(0)
     end
 
+    it "returns links with href=''" do
+      post_analyzer = PostAnalyzer.new('<a href="">Hello world</a>', nil)
+      expect(post_analyzer.link_count).to eq(1)
+    end
+
     it "finds links from markdown" do
       Oneboxer.stubs :onebox
       post_analyzer = PostAnalyzer.new(raw_post_one_link_md, default_topic_id)
@@ -167,7 +195,6 @@ describe PostAnalyzer do
     end
   end
 
-
   describe "raw_mentions" do
 
     it "returns an empty array with no matches" do
@@ -181,12 +208,14 @@ describe PostAnalyzer do
     end
 
     it "ignores pre" do
-      post_analyzer = PostAnalyzer.new("<pre>@Jake</pre> @Finn", default_topic_id)
+      # note, CommonMark has rules for dealing with HTML, if your paragraph starts with it
+      # it will no longer be an "inline" so this means that @Finn in this case would not be a mention
+      post_analyzer = PostAnalyzer.new(". <pre>@Jake</pre> @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
     it "catches content between pre tags" do
-      post_analyzer = PostAnalyzer.new("<pre>hello</pre> @Finn <pre></pre>", default_topic_id)
+      post_analyzer = PostAnalyzer.new(". <pre>hello</pre> @Finn <pre></pre>", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
@@ -201,7 +230,7 @@ describe PostAnalyzer do
     end
 
     it "ignores quotes" do
-      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]@Jake[/quote] @Finn", default_topic_id)
+      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 

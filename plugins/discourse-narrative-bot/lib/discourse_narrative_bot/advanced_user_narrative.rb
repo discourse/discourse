@@ -74,12 +74,13 @@ module DiscourseNarrativeBot
           action: :reply_to_topic_notification_level_changed
         },
         reply: {
-          next_state: :tutorial_notification_level,
+          next_state: :tutorial_change_topic_notification_level,
           action: :missing_topic_notification_level_change
         }
       },
 
       tutorial_poll: {
+        prerequisite: Proc.new { SiteSetting.poll_enabled },
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
@@ -101,7 +102,7 @@ module DiscourseNarrativeBot
 
     def reset_bot(user, post)
       if pm_to_bot?(post)
-        reset_data(user, { topic_id: post.topic_id })
+        reset_data(user, topic_id: post.topic_id)
       else
         reset_data(user)
       end
@@ -116,14 +117,13 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(@user, {
-        raw: I18n.t(
+      post = PostCreator.create!(@user,         raw: I18n.t(
           "#{I18N_KEY}.edit.bot_created_post_raw",
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
-        topic_id: data[:topic_id],
-        skip_bot: true
-      })
+                                                topic_id: data[:topic_id],
+                                                skip_bot: true,
+                                                skip_validations: true)
 
       set_state_data(:post_id, post.id)
       post
@@ -132,17 +132,34 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(@user, {
+      post = PostCreator.create!(@user,
         raw: I18n.t(
           "#{I18N_KEY}.recover.deleted_post_raw",
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
         topic_id: data[:topic_id],
-        skip_bot: true
-      })
+        skip_bot: true,
+        skip_validations: true
+      )
 
       set_state_data(:post_id, post.id)
-      PostDestroyer.new(@user, post, skip_bot: true).destroy
+
+      opts = { skip_bot: true }
+
+      if SiteSetting.delete_removed_posts_after < 1
+        opts[:delete_removed_posts_after] = 1
+
+        # Flag it and defer so the stub doesn't get destroyed
+        flag = PostAction.create!(
+          user: self.discobot_user,
+          post: post, post_action_type_id:
+          PostActionType.types[:off_topic]
+        )
+
+        PostAction.defer_flags!(post, self.discobot_user)
+      end
+
+      PostDestroyer.new(@user, post, opts).destroy
     end
 
     def start_advanced_track
@@ -161,7 +178,7 @@ module DiscourseNarrativeBot
       }
 
       if @post &&
-         @post.archetype == Archetype.private_message &&
+         @post.topic.private_message? &&
          @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
 
         opts = opts.merge(topic_id: @post.topic_id)
@@ -305,6 +322,7 @@ module DiscourseNarrativeBot
         raw: raw,
         topic_id: @topic_id
       )
+
       enqueue_timeout_job(@user)
       post
     end

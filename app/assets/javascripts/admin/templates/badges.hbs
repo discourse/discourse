@@ -1,6 +1,6 @@
 <div class="badges">
 
-  <div class='content-list span6'>
+  <div class='content-list'>
     <h3>{{i18n 'admin.badges.title'}}</h3>
     <ul>
       {{#each model as |badge|}}
@@ -15,7 +15,7 @@
       {{/each}}
     </ul>
     {{#link-to 'adminBadges.show' 'new' class="btn"}}
-      {{fa-icon "plus"}} {{i18n 'admin.badges.new'}}
+      {{d-icon "plus"}} {{i18n 'admin.badges.new'}}
     {{/link-to}}
     <br>
     <br>

@@ -68,6 +68,7 @@ describe CategoryUser do
 
   context 'integration' do
     before do
+      SiteSetting.queue_jobs = false
       NotificationEmailer.enable
     end
 
@@ -116,7 +117,6 @@ describe CategoryUser do
       tu = TopicUser.get(first_post.topic, user)
       expect(tu.notification_level).to eq TopicUser.notification_levels[:tracking]
     end
-
 
     it "unwatches categories that have been changed" do
       user = Fabricate(:user)

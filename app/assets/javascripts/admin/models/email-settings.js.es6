@@ -1,9 +1,9 @@
-import { ajax } from 'discourse/lib/ajax';
+import { ajax } from "discourse/lib/ajax";
 const EmailSettings = Discourse.Model.extend({});
 
 EmailSettings.reopenClass({
   find: function() {
-    return ajax("/admin/email.json").then(function (settings) {
+    return ajax("/admin/email.json").then(function(settings) {
       return EmailSettings.create(settings);
     });
   }

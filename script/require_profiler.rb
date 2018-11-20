@@ -21,7 +21,7 @@ module RequireProfiler
       stop
     end
 
-    def start(tmp_options={})
+    def start(tmp_options = {})
       @start_time = Time.now
       [ ::Kernel, (class << ::Kernel; self; end) ].each do |klass|
         klass.class_eval do
@@ -61,7 +61,7 @@ module RequireProfiler
       @stack ||= []
       self.stats ||= {}
 
-      stat = self.stats.fetch(path){|key| self.stats[key] = {calls: 0, time: 0, parent_time: 0} }
+      stat = self.stats.fetch(path) { |key| self.stats[key] = { calls: 0, time: 0, parent_time: 0 } }
 
       @stack << stat
 
@@ -104,8 +104,6 @@ module RequireProfiler
   end
 end
 
-
-
 # RequireProfiler.gc_analyze do
 #   # require 'mime-types'
 #   require 'highline'
@@ -115,14 +113,14 @@ end
 RequireProfiler.profile do
   Bundler.definition.dependencies.each do |dep|
     begin
-      require dep.name unless dep.name =~ /timecop/
+      require dep.name
     rescue Exception
       # don't care
     end
   end
 end
 
-sorted = RequireProfiler.stats.to_a.sort{|a,b| b[1][:time] - b[1][:parent_time] <=> a[1][:time] - a[1][:parent_time]}
+sorted = RequireProfiler.stats.to_a.sort { |a, b| b[1][:time] - b[1][:parent_time] <=> a[1][:time] - a[1][:parent_time] }
 
 sorted[0..120].each do |k, v|
   puts "#{k} : time #{v[:time] - v[:parent_time]} "

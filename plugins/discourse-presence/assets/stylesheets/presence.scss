@@ -1,0 +1,76 @@
+.presence-users {
+  background-color: $secondary;
+  color: $primary-medium;
+  display: flex;
+
+  span.presence-text {
+    margin-left: 5px;
+    margin-right: 2px;
+    flex: 0 0 auto;
+    padding-top: 3px;
+  }
+
+  .presence-avatars {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+  }
+
+  .wave {
+    flex: 0 0 auto;
+
+    .dot {
+      display: inline-block;
+      animation: wave 1.8s linear infinite;
+
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
+  }
+
+  @keyframes wave {
+    0%,
+    60%,
+    100% {
+      transform: initial;
+    }
+
+    30% {
+      transform: translateY(-0.2em);
+    }
+  }
+}
+
+.composer-fields .presence-users {
+  position: absolute;
+  top: 18px;
+  right: 40px;
+  @media screen and (max-width: $small-width) {
+    max-width: 318px;
+    .presence-avatars {
+      flex-wrap: nowrap;
+    }
+  }
+}
+
+.mobile-view {
+  .presence-users {
+    font-size: $font-down-1;
+  }
+  .composer-fields .presence-users {
+    top: 3px;
+    right: 65px;
+    max-width: 70px;
+    .presence-avatars {
+      flex-wrap: nowrap;
+    }
+    .description {
+      display: none;
+    }
+  }
+}

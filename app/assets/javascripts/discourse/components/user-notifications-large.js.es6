@@ -1,15 +1,15 @@
-import MountWidget from 'discourse/components/mount-widget';
+import MountWidget from "discourse/components/mount-widget";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 export default MountWidget.extend({
-  widget: 'user-notifications-large',
+  widget: "user-notifications-large",
 
   init() {
     this._super();
-    this.args = { notifications: this.get('notifications') };
+    this.args = { notifications: this.get("notifications") };
   },
 
-  @observes('notifications.length', 'notifications.@each.read')
+  @observes("notifications.length", "notifications.@each.read")
   _triggerRefresh() {
     this.queueRerender();
   }

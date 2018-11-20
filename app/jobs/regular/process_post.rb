@@ -17,7 +17,7 @@ module Jobs
         cooking_options = args[:cooking_options] || {}
         cooking_options[:topic_id] = post.topic_id
         recooked = post.cook(post.raw, cooking_options.symbolize_keys)
-        post.update_column(:cooked, recooked)
+        post.update_columns(cooked: recooked, baked_at: Time.zone.now, baked_version: Post::BAKED_VERSION)
       end
 
       cp = CookedPostProcessor.new(post, args)
@@ -35,6 +35,14 @@ module Jobs
           post.update_column(:cooked, cp.html)
           extract_links(post)
           post.publish_change_to_clients! :revised
+        end
+      end
+
+      if !post.user&.staff? && !post.user&.staged?
+        s = post.cooked
+        s << " #{post.topic.title}" if post.post_number == 1
+        if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
+          PostAction.act(Discourse.system_user, post, PostActionType.types[:inappropriate]) rescue PostAction::AlreadyActed
         end
       end
     end

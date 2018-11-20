@@ -38,8 +38,10 @@ describe BadgeGranter do
   describe 'preview' do
     it 'can correctly preview' do
       Fabricate(:user, email: 'sam@gmail.com')
-      result = BadgeGranter.preview('select id user_id, null post_id, created_at granted_at from users
-                                     where email like \'%gmail.com\'', explain: true)
+      result = BadgeGranter.preview('select u.id user_id, null post_id, u.created_at granted_at from users u
+                                     join user_emails ue on ue.user_id = u.id AND ue.primary
+                                     where ue.email like \'%gmail.com\'', explain: true)
+
       expect(result[:grant_count]).to eq(1)
       expect(result[:query_plan]).to be_present
     end
@@ -81,7 +83,7 @@ describe BadgeGranter do
       }
 
       # TODO add welcome
-      expect(post.user.user_badges.pluck(:badge_id).sort).to eq([Badge::NiceTopic,Badge::GoodTopic])
+      expect(post.user.user_badges.pluck(:badge_id).sort).to eq([Badge::NiceTopic, Badge::GoodTopic])
 
       expect(post.user.notifications.count).to eq(2)
 
@@ -116,7 +118,8 @@ describe BadgeGranter do
   describe 'grant' do
 
     it 'allows overriding of granted_at does not notify old bronze' do
-      badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze)
+      badge = Badge.create!(name: 'a badge', badge_type_id: BadgeType::Bronze)
+
       time = 1.year.ago
 
       user_badge = BadgeGranter.grant(badge, user, created_at: time)
@@ -143,13 +146,11 @@ describe BadgeGranter do
     end
 
     it 'sets granted_at' do
-      time = Time.zone.now
-      Timecop.freeze time
+      time = 1.day.ago
+      freeze_time time
 
       user_badge = BadgeGranter.grant(badge, user)
-      expect(user_badge.granted_at).to eq(time)
-
-      Timecop.return
+      expect(user_badge.granted_at).to be_within(1.second).of(time)
     end
 
     it 'sets granted_by if the option is present' do
@@ -205,7 +206,7 @@ describe BadgeGranter do
     end
 
     it "grants autobiographer" do
-      user.user_profile.bio_raw  = "THIS IS MY bio it a long bio I like my bio"
+      user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"
       user.uploaded_avatar_id = 10
       user.user_profile.save
       user.save
@@ -237,7 +238,7 @@ describe BadgeGranter do
 
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(0)
 
-      PostRevisor.new(post).revise!(user, { raw: "This is my new test 1235 123" })
+      PostRevisor.new(post).revise!(user, raw: "This is my new test 1235 123")
       BadgeGranter.process_queue!
 
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(1)

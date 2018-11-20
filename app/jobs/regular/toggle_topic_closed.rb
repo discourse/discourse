@@ -16,6 +16,7 @@ module Jobs
 
       if Guardian.new(user).can_close?(topic)
         topic.update_status('autoclosed', state, user)
+        topic.inherit_auto_close_from_category if state == false
       end
     end
   end

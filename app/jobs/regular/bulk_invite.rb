@@ -8,6 +8,7 @@ module Jobs
     attr_accessor :current_user
 
     def initialize
+      super
       @logs    = []
       @sent    = 0
       @failed  = 0
@@ -17,19 +18,20 @@ module Jobs
       filename = args[:filename]
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:filename) if filename.blank?
+      csv_path = "#{Invite.base_directory}/#{filename}"
 
       # read csv file, and send out invitations
-      read_csv_file("#{Invite.base_directory}/#{filename}")
+      read_csv_file(csv_path)
     ensure
       # send notification to user regarding progress
       notify_user
 
-      # since emails have already been sent out, delete the uploaded csv file
-      FileUtils.rm_rf(csv_path) rescue nil
+      FileUtils.rm_rf(csv_path) if csv_path
     end
 
     def read_csv_file(csv_path)
-      CSV.foreach(csv_path, encoding: "bom|utf-8") do |csv_info|
+      file = File.open(csv_path, encoding: 'bom|utf-8')
+      CSV.new(file).each do |csv_info|
         if csv_info[0]
           if (EmailValidator.email_regex =~ csv_info[0])
             # email is valid
@@ -37,14 +39,16 @@ module Jobs
             @sent += 1
           else
             # invalid email
-            log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
+            save_log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
             @failed += 1
           end
         end
       end
     rescue Exception => e
-      log "Bulk Invite Process Failed -- '#{e.message}'"
+      save_log "Bulk Invite Process Failed -- '#{e.message}'"
       @failed += 1
+    ensure
+      file.close
     end
 
     def get_group_ids(group_names, csv_line_number)
@@ -58,7 +62,7 @@ module Jobs
             group_ids.push(group_detail.id)
           else
             # invalid group
-            log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
+            save_log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
             @failed += 1
           end
         }
@@ -71,7 +75,7 @@ module Jobs
       if topic_id
         topic = Topic.find_by_id(topic_id)
         if topic.nil?
-          log "Invalid Topic ID '#{topic_id}' at line number '#{csv_line_number}'"
+          save_log "Invalid Topic ID '#{topic_id}' at line number '#{csv_line_number}'"
           @failed += 1
         end
       end
@@ -85,14 +89,10 @@ module Jobs
       begin
         Invite.invite_by_email(email, @current_user, topic, group_ids)
       rescue => e
-        log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
+        save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
         @sent -= 1
         @failed += 1
       end
-    end
-
-    def log(message)
-      save_log(message)
     end
 
     def save_log(message)
@@ -102,9 +102,19 @@ module Jobs
     def notify_user
       if @current_user
         if (@sent > 0 && @failed == 0)
-          SystemMessage.create_from_system_user(@current_user, :bulk_invite_succeeded, sent: @sent)
+          SystemMessage.create_from_system_user(
+            @current_user,
+            :bulk_invite_succeeded,
+            sent: @sent
+          )
         else
-          SystemMessage.create_from_system_user(@current_user, :bulk_invite_failed, sent: @sent, failed: @failed, logs: @logs.join("\n"))
+          SystemMessage.create_from_system_user(
+            @current_user,
+            :bulk_invite_failed,
+            sent: @sent,
+            failed: @failed,
+            logs: @logs.join("\n")
+          )
         end
       end
     end

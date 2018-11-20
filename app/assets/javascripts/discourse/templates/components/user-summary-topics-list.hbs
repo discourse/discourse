@@ -1,0 +1,16 @@
+{{#if items}}
+  <ul>
+    {{#each items as |item|}}
+      {{yield item}}
+    {{/each}}
+  </ul>
+  {{#if hasMore}}
+    <p>
+      {{#link-to (concat "userActivity." type) user class="more"}}
+        {{i18n (concat "user.summary.more_" type)}}
+      {{/link-to}}
+    </p>
+  {{/if}}
+{{else}}
+  <p>{{i18n (concat "user.summary.no_" type)}}</p>
+{{/if}}

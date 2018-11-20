@@ -1,4 +1,4 @@
-class AddIndexToTopicStatusUpdates < ActiveRecord::Migration
+class AddIndexToTopicStatusUpdates < ActiveRecord::Migration[4.2]
   def up
     execute <<~SQL
     CREATE UNIQUE INDEX idx_topic_id_status_type_deleted_at

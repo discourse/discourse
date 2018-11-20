@@ -1,0 +1,28 @@
+{{plugin-outlet name="admin-dashboard-top"}}
+
+{{#if showVersionChecks}}
+  <div class="section-top">
+    <div class="version-checks">
+      {{partial "admin/templates/version-checks"}}
+    </div>
+  </div>
+{{/if}}
+
+{{partial "admin/templates/dashboard-problems"}}
+
+<ul class="navigation">
+  <li class="navigation-item general">
+    {{#link-to "admin.dashboardNext.general" class="navigation-link"}}
+      {{i18n "admin.dashboard.general_tab"}}
+    {{/link-to}}
+  </li>
+  <li class="navigation-item moderation">
+    {{#link-to "admin.dashboardNextModeration" class="navigation-link"}}
+      {{i18n "admin.dashboard.moderation_tab"}}
+    {{/link-to}}
+  </li>
+</ul>
+
+{{outlet}}
+
+{{plugin-outlet name="admin-dashboard-bottom"}}

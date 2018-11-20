@@ -1,4 +1,4 @@
-class AddNewSinceToUserStats < ActiveRecord::Migration
+class AddNewSinceToUserStats < ActiveRecord::Migration[4.2]
   def change
     add_column :user_stats, :new_since, :datetime
     execute "UPDATE user_stats AS us

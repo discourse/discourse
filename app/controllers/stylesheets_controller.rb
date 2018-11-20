@@ -1,11 +1,13 @@
 class StylesheetsController < ApplicationController
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map]
 
   def show_source_map
     show_resource(source_map: true)
   end
 
   def show
+    is_asset_path
+
     show_resource
   end
 
@@ -19,24 +21,30 @@ class StylesheetsController < ApplicationController
 
     no_cookies
 
-    target,digest = params[:name].split(/_([a-f0-9]{40})/)
+    target, digest = params[:name].split(/_([a-f0-9]{40})/)
 
-    if Rails.env == "development"
+    if !Rails.env.production?
       # TODO add theme
       # calling this method ensures we have a cache for said target
       # we hold of re-compilation till someone asks for asset
       if target.include?("theme")
-        split_target,theme_id = target.split(/_(-?[0-9]+)/)
-        theme = Theme.find(theme_id) if theme_id
+        split_target, theme_id = target.split(/_(-?[0-9]+)/)
+        theme = Theme.find_by(id: theme_id) if theme_id.present?
       else
-        split_target,color_scheme_id = target.split(/_(-?[0-9]+)/)
+        split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find_by(color_scheme_id: color_scheme_id)
       end
-      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.key)
+      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
     end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
-    cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
+
+    if cache_time
+      begin
+        cache_time = Time.rfc2822(cache_time)
+      rescue ArgumentError
+      end
+    end
 
     query = StylesheetCache.where(target: target)
     if digest
@@ -56,9 +64,8 @@ class StylesheetsController < ApplicationController
     end
 
     if cache_time && stylesheet_time && stylesheet_time <= cache_time
-      return render nothing: true, status: 304
+      return render body: nil, status: 304
     end
-
 
     unless File.exist?(location)
       if current = query.limit(1).pluck(source_map ? :source_map : :content).first
@@ -81,13 +88,21 @@ class StylesheetsController < ApplicationController
   def handle_missing_cache(location, name, digest)
     location = location.sub(".css.map", ".css")
     source_map_location = location + ".map"
+    existing = read_file(location)
 
-    existing = File.read(location) rescue nil
     if existing && digest
-      source_map = File.read(source_map_location) rescue nil
+      source_map = read_file(source_map_location)
       StylesheetCache.add(name, digest, existing, source_map)
     end
   end
 
-end
+  private
 
+  def read_file(location)
+    begin
+      File.read(location)
+    rescue Errno::ENOENT
+    end
+  end
+
+end

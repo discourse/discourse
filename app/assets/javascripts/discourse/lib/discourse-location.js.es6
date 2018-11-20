@@ -2,9 +2,10 @@
 @module Discourse
 */
 
-const get = Ember.get, set = Ember.set;
+const get = Ember.get,
+  set = Ember.set;
 let popstateFired = false;
-const supportsHistoryState = window.history && 'state' in window.history;
+const supportsHistoryState = window.history && "state" in window.history;
 
 const popstateCallbacks = [];
 
@@ -17,9 +18,8 @@ const popstateCallbacks = [];
   @extends Ember.Object
 */
 const DiscourseLocation = Ember.Object.extend({
-
   init() {
-    set(this, 'location', get(this, 'location') || window.location);
+    set(this, "location", get(this, "location") || window.location);
     this.initState();
   },
 
@@ -31,15 +31,15 @@ const DiscourseLocation = Ember.Object.extend({
     @method initState
   */
   initState() {
-    const history = get(this, 'history') || window.history;
+    const history = get(this, "history") || window.history;
     if (history && history.scrollRestoration) {
       history.scrollRestoration = "manual";
     }
 
-    set(this, 'history', history);
+    set(this, "history", history);
 
     let url = this.formatURL(this.getURL());
-    const loc = get(this, 'location');
+    const loc = get(this, "location");
 
     if (loc && loc.hash) {
       url += loc.hash;
@@ -54,7 +54,7 @@ const DiscourseLocation = Ember.Object.extend({
     @property rootURL
     @default '/'
   */
-  rootURL: '/',
+  rootURL: "/",
 
   /**
     @private
@@ -64,11 +64,12 @@ const DiscourseLocation = Ember.Object.extend({
     @method getURL
   */
   getURL() {
-    const location = get(this, 'location');
+    const location = get(this, "location");
     let url = location.pathname;
-    url = url.replace(Discourse.BaseUri, '');
 
-    const search = location.search || '';
+    url = url.replace(new RegExp(`^${Discourse.BaseUri}`), "");
+
+    const search = location.search || "";
     url += search;
     return url;
   },
@@ -118,7 +119,9 @@ const DiscourseLocation = Ember.Object.extend({
    @method getState
   */
   getState() {
-    return supportsHistoryState ? get(this, 'history').state : this._historyState;
+    return supportsHistoryState
+      ? get(this, "history").state
+      : this._historyState;
   },
 
   /**
@@ -136,7 +139,7 @@ const DiscourseLocation = Ember.Object.extend({
     if (!supportsHistoryState) {
       this._historyState = state;
     } else {
-      get(this, 'history').pushState(state, null, path);
+      get(this, "history").pushState(state, null, path);
     }
 
     // used for webkit workaround
@@ -158,7 +161,7 @@ const DiscourseLocation = Ember.Object.extend({
     if (!supportsHistoryState) {
       this._historyState = state;
     } else {
-      get(this, 'history').replaceState(state, null, path);
+      get(this, "history").replaceState(state, null, path);
     }
 
     // used for webkit workaround
@@ -176,13 +179,15 @@ const DiscourseLocation = Ember.Object.extend({
   */
   onUpdateURL(callback) {
     const guid = Ember.guidFor(this),
-        self = this;
+      self = this;
 
-    Ember.$(window).on('popstate.ember-location-'+guid, function() {
+    Ember.$(window).on("popstate.ember-location-" + guid, function() {
       // Ignore initial page load popstate event in Chrome
       if (!popstateFired) {
         popstateFired = true;
-        if (self.getURL() === self._previousURL) { return; }
+        if (self.getURL() === self._previousURL) {
+          return;
+        }
       }
       const url = self.getURL();
       popstateCallbacks.forEach(function(cb) {
@@ -201,12 +206,12 @@ const DiscourseLocation = Ember.Object.extend({
     @param url {String}
   */
   formatURL(url) {
-    let rootURL = get(this, 'rootURL');
+    let rootURL = get(this, "rootURL");
 
-    if (url !== '') {
-      rootURL = rootURL.replace(/\/$/, '');
+    if (url !== "") {
+      rootURL = rootURL.replace(/\/$/, "");
 
-      if (rootURL.length > 0 && url.indexOf(rootURL + "/") === 0){
+      if (rootURL.length > 0 && url.indexOf(rootURL + "/") === 0) {
         rootURL = "";
       }
     }
@@ -217,9 +222,8 @@ const DiscourseLocation = Ember.Object.extend({
   willDestroy() {
     const guid = Ember.guidFor(this);
 
-    Ember.$(window).off('popstate.ember-location-'+guid);
+    Ember.$(window).off("popstate.ember-location-" + guid);
   }
-
 });
 
 export default DiscourseLocation;

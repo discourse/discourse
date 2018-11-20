@@ -1,4 +1,4 @@
-class AddLastVersionAtToPosts < ActiveRecord::Migration
+class AddLastVersionAtToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :last_version_at, :timestamp
     execute "UPDATE posts SET last_version_at = COALESCE((SELECT max(created_at)

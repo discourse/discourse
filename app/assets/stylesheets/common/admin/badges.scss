@@ -1,0 +1,131 @@
+// Styles for admin/badges
+
+// Badges area
+.badges {
+  .content-list ul {
+    margin-bottom: 10px;
+    .list-badge {
+      float: right;
+      font-size: $font-down-1;
+      font-weight: normal;
+      padding: 0 6px;
+      color: $secondary;
+      background-color: $tertiary-medium;
+      border-radius: 3px;
+    }
+  }
+  .current-badge {
+    margin: 20px;
+    p.help {
+      margin: 0;
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      font-size: $font-down-1;
+    }
+  }
+  .form-horizontal {
+    .ace-wrapper {
+      position: relative;
+      height: 270px;
+      margin-bottom: 10px;
+      .ace_editor {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: 1px solid #e9e9e9;
+        border-radius: 3px;
+        .ace_gutter {
+          border-right: 1px solid #e9e9e9;
+          background: #f4f4f4;
+        }
+      }
+      &[data-disabled="true"] {
+        cursor: not-allowed;
+        opacity: 0.5;
+        .ace_editor {
+          pointer-events: none;
+          .ace_cursor {
+            visibility: hidden;
+          }
+        }
+      }
+    }
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+    textarea {
+      height: 200px;
+    }
+  }
+  .current-badge-actions {
+    margin: 10px;
+    padding: 10px;
+    border-top: 1px solid dark-light-choose($primary-low, $secondary-high);
+  }
+  .buttons {
+    float: left;
+    width: 200px;
+    .saving {
+      padding: 5px 0 0 0;
+      margin-left: 10px;
+      width: 80px;
+      color: $primary;
+    }
+  }
+}
+
+.badge-query-preview {
+  .grant-count,
+  .sample,
+  .error-header {
+    margin-left: 10px;
+  }
+  .badge-errors {
+    font-size: $font-0;
+    line-height: $line-height-medium;
+    padding: 4px;
+    background-color: $primary-low;
+  }
+  .badge-query-plan {
+    font-size: $font-down-1;
+    line-height: $line-height-medium;
+    padding: 4px;
+    background-color: $primary-low;
+  }
+  .count-warning {
+    background-color: dark-light-diff(
+      rgba($danger, 0.7),
+      $secondary,
+      50%,
+      -60%
+    );
+    margin: 0 0 7px 0;
+    padding: 10px 20px;
+    p {
+      margin: 0;
+    }
+    .heading {
+      color: $danger;
+      font-weight: bold;
+    }
+  }
+}
+
+.badge-groupings {
+  list-style: none;
+  margin: 0;
+  padding: 10px 3px;
+  li {
+    padding: 6px 0;
+    width: 600px;
+    border-bottom: 1px solid #dfdfdf;
+  }
+  .actions {
+    float: right;
+    .btn {
+      padding: 3px 6px;
+    }
+  }
+}

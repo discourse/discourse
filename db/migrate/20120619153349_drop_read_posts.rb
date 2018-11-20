@@ -1,4 +1,4 @@
-class DropReadPosts < ActiveRecord::Migration
+class DropReadPosts < ActiveRecord::Migration[4.2]
   def up
     drop_table :read_posts
   end

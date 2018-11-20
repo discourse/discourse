@@ -1,12 +1,12 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('admin_title');
+    return I18n.t("admin_title");
   },
 
   activate() {
     this.controllerFor("application").setProperties({
       showTop: false,
-      showFooter: false,
+      showFooter: false
     });
   },
 

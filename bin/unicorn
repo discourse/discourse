@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
+  Pathname.new(__FILE__).realpath)
+
+require 'rubygems'
+require 'bundler/setup'
+
+# in development do some fussing around, to automate config
+if !ARGV.include?("-E") &&
+    !ARGV.include?("--env") &&
+    (ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"])
+
+  ARGV.push("-N")
+  if !ARGV.include?("-c") && !ARGV.include?("--config-file")
+    ARGV.push("-c")
+    ARGV.push(File.expand_path("../../config/unicorn.conf.rb",
+      Pathname.new(__FILE__).realpath))
+  end
+
+  # we do not want to listen on 2 ports, so lets fix it
+  if (idx = ARGV.index("-p")) && (port = ARGV[idx + 1].to_i) > 0
+    ENV["UNICORN_PORT"] ||= port.to_s
+  end
+
+  ENV["UNICORN_PORT"] ||= "9292"
+
+  if ARGV.delete("-x")
+    puts "Running without sidekiq"
+    ENV["UNICORN_SIDEKIQS"] = "0"
+  end
+
+  ENV["UNICORN_SIDEKIQS"] ||= "1"
+
+end
+
+if ARGV.include?("--help")
+  fork do
+    load Gem.bin_path('unicorn', 'unicorn')
+  end
+  Process.wait
+  puts "Extra Discourse Options:"
+  puts "  -x                       run without sidekiq"
+  exit
+end
+
+load Gem.bin_path('unicorn', 'unicorn')

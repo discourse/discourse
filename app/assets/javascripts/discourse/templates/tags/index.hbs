@@ -13,8 +13,8 @@
 
 <div class='tag-sort-options'>
   {{i18n "tagging.sort_by"}}
-  <a {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a>
-  <a {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a>
+  <span class="tag-sort-count {{if sortedByCount 'active'}}"><a {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a></span>
+  <span class="tag-sort-name {{if sortedByName 'active'}}"><a {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a></span>
 </div>
 
 <hr/>
@@ -23,4 +23,10 @@
   {{tag-list tags=category.tags sortProperties=sortProperties categoryId=category.id}}
 {{/each}}
 
-{{tag-list tags=model sortProperties=sortProperties titleKey="tagging.all_tags"}}
+{{#each model.extras.tag_groups as |tagGroup|}}
+  {{tag-list tags=tagGroup.tags sortProperties=sortProperties tagGroupName=tagGroup.name}}
+{{/each}}
+
+{{#if model}}
+  {{tag-list tags=model sortProperties=sortProperties titleKey=otherTagsTitleKey}}
+{{/if}}

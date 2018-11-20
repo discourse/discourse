@@ -1,18 +1,26 @@
 language: ruby
 
+branches:
+  only:
+    - master
+    - beta
+    - stable
+
 env:
   global:
+    - TRAVIS_NODE_VERSION="10"
     - DISCOURSE_HOSTNAME=www.example.com
-    - RUBY_GC_MALLOC_LIMIT=50000000
+    - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
   matrix:
-    - "RAILS_MASTER=0 QUNIT_RUN=0"
-    - "RAILS_MASTER=1 QUNIT_RUN=0"
-    - "RAILS_MASTER=0 QUNIT_RUN=1"
-    - "RAILS_MASTER=1 QUNIT_RUN=1"
+    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=0"
+    - "RAILS_MASTER=0 QUNIT_RUN=1 RUN_LINT=0"
+    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 addons:
-  postgresql: 9.5
+  chrome: stable
+  postgresql: 9.6
   apt:
+    update: true
     packages:
     - gifsicle
     - jpegoptim
@@ -20,14 +28,14 @@ addons:
     - jhead
 
 matrix:
-  allow_failures:
-    - env: "RAILS_MASTER=1 QUNIT_RUN=0"
-    - env: "RAILS_MASTER=1 QUNIT_RUN=1"
   fast_finish: true
+  exclude:
+  - rvm: 2.4.4
+    env: "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 rvm:
-  - 2.4.1
-  - 2.3.3
+  - 2.5.1
+  - 2.4.4
 
 services:
   - redis-server
@@ -36,30 +44,49 @@ sudo: required
 dist: trusty
 
 cache:
+  apt: true
   yarn: true
   directories:
     - vendor/bundle
 
 before_install:
+  - nvm install node
+  - node --version
   - gem install bundler
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
-  - git clone --depth=1 https://github.com/discourse/discourse-slack-official.git plugins/discourse-slack-official
-  - yarn global add eslint@3 babel-eslint
-  - eslint app/assets/javascripts
-  - eslint --ext .es6 app/assets/javascripts
-  - eslint --ext .es6 test/javascripts
-  - eslint --ext .es6 plugins/**/assets/javascripts
-  - eslint test/javascripts
-
-before_script:
-  - bundle exec rake db:create db:migrate
+  - git clone --depth=1 https://github.com/discourse/discourse-chat-integration.git plugins/discourse-chat-integration
+  - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
+  - git clone --depth=1 https://github.com/discourse/discourse-patreon.git plugins/discourse-patreon
+  - git clone --depth=1 https://github.com/discourse/discourse-staff-notes.git plugins/discourse-staff-notes
+  - git clone --depth=1 https://github.com/discourse/discourse-group-tracker
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
-  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
-  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu > /dev/null; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3 > /dev/null; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '1' ] || [ '$RUN_LINT' == '1' ]; then yarn install --dev > /dev/null; fi"
+  - bash -c "if [ '$RUN_LINT' != '1' ]; then bundle exec rake db:create db:migrate > /dev/null; fi"
 
 script:
-  - bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rspec && bundle exec rake plugin:spec; else bundle exec rake qunit:test['200000']; fi"
+  - |
+    bash -c "
+      if [ '$RUN_LINT' == '1' ]; then
+        bundle exec rubocop --parallel && \
+        bundle exec danger && \
+        yarn eslint --ext .es6 app/assets/javascripts && \
+        yarn eslint --ext .es6 test/javascripts && \
+        yarn eslint --ext .es6 plugins/**/assets/javascripts && \
+        yarn eslint --ext .es6 plugins/**/test/javascripts && \
+        yarn eslint app/assets/javascripts test/javascripts
+      else
+        if [ '$QUNIT_RUN' == '1' ]; then
+          bundle exec rake qunit:test['500000'] && \
+          bundle exec rake plugin:qunit
+        else
+          bundle exec rspec && bundle exec rake plugin:spec
+        fi
+      fi
+    "

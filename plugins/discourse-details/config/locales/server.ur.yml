@@ -1,3 +1,8 @@
-ur:
-  site_settings:
-    details_enabled: "Enable the details plugin. If you change this, you must rebake all posts with: \"rake posts:rebake\"."
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur: {}

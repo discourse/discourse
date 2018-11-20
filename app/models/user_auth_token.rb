@@ -4,11 +4,25 @@ require 'digest/sha1'
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
+  # TODO 2019: remove this line
+  self.ignored_columns = ["legacy"]
+
   ROTATE_TIME = 10.minutes
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 
+  USER_ACTIONS = ['generate']
+
   attr_accessor :unhashed_auth_token
+
+  before_destroy do
+    UserAuthToken.log(action: 'destroy',
+                      user_auth_token_id: self.id,
+                      user_id: self.user_id,
+                      user_agent: self.user_agent,
+                      client_ip: self.client_ip,
+                      auth_token: self.auth_token)
+  end
 
   def self.log(info)
     if SiteSetting.verbose_auth_token_logging
@@ -40,7 +54,7 @@ class UserAuthToken < ActiveRecord::Base
     user_auth_token
   end
 
-  def self.lookup(unhashed_token, opts=nil)
+  def self.lookup(unhashed_token, opts = nil)
 
     mark_seen = opts && opts[:seen]
 
@@ -48,9 +62,8 @@ class UserAuthToken < ActiveRecord::Base
     expire_before = SiteSetting.maximum_session_age.hours.ago
 
     user_token = find_by("(auth_token = :token OR
-                          prev_auth_token = :token OR
-                          (auth_token = :unhashed_token AND legacy)) AND rotated_at > :expire_before",
-                          token: token, unhashed_token: unhashed_token, expire_before: expire_before)
+                          prev_auth_token = :token) AND rotated_at > :expire_before",
+                          token: token, expire_before: expire_before)
 
     if !user_token
 
@@ -123,13 +136,13 @@ class UserAuthToken < ActiveRecord::Base
 
   end
 
-  def rotate!(info=nil)
+  def rotate!(info = nil)
     user_agent = (info && info[:user_agent] || self.user_agent)
     client_ip = (info && info[:client_ip] || self.client_ip)
 
     token = SecureRandom.hex(16)
 
-    result = UserAuthToken.exec_sql("
+    result = DB.exec("
   UPDATE user_auth_tokens
   SET
     auth_token_seen = false,
@@ -148,7 +161,7 @@ class UserAuthToken < ActiveRecord::Base
    safeguard_time: 30.seconds.ago
   )
 
-    if result.cmdtuples > 0
+    if result > 0
       reload
       self.unhashed_auth_token = token
 
@@ -180,11 +193,10 @@ end
 #  prev_auth_token :string           not null
 #  user_agent      :string
 #  auth_token_seen :boolean          default(FALSE), not null
-#  legacy          :boolean          default(FALSE), not null
 #  client_ip       :inet
 #  rotated_at      :datetime         not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #  seen_at         :datetime
 #
 # Indexes

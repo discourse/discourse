@@ -1,4 +1,4 @@
-MessageBus.site_id_lookup do |env=nil|
+MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)
     env["__mb"][:site_id]
@@ -12,7 +12,23 @@ def setup_message_bus_env(env)
 
   host = RailsMultisite::ConnectionManagement.host(env)
   RailsMultisite::ConnectionManagement.with_hostname(host) do
-    user = CurrentUser.lookup_from_env(env)
+    extra_headers = {
+      "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
+      "Access-Control-Allow-Methods" => "GET, POST",
+      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
+    }
+
+    user = nil
+    begin
+      user = CurrentUser.lookup_from_env(env)
+    rescue Discourse::InvalidAccess => e
+      # this is bad we need to remove the cookie
+      if e.opts[:delete_cookie].present?
+        extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      end
+    rescue => e
+      Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
+    end
     user_id = user && user.id
     is_admin = !!(user && user.admin?)
     group_ids = if is_admin
@@ -22,13 +38,12 @@ def setup_message_bus_env(env)
       user.groups.pluck('groups.id')
     end
 
+    if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
+      extra_headers['Discourse-Logged-Out'] = '1'
+    end
+
     hash = {
-      extra_headers:
-        {
-          "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
-          "Access-Control-Allow-Methods" => "GET, POST",
-          "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
-        },
+      extra_headers: extra_headers,
       user_id: user_id,
       group_ids: group_ids,
       is_admin: is_admin,
@@ -65,7 +80,7 @@ MessageBus.on_middleware_error do |env, e|
   if Discourse::InvalidAccess === e
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
-    [429, {}, [e.description]]
+    [429, { 'Retry-After' => e.available_in }, [e.description]]
   end
 end
 

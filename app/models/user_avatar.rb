@@ -19,20 +19,41 @@ class UserAvatar < ActiveRecord::Base
         self.last_gravatar_download_attempt = Time.new
 
         max = Discourse.avatar_sizes.max
-        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
+        gravatar_url = "https://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
+
+        # follow redirects in case gravatar change rules on us
         tempfile = FileHelper.download(
           gravatar_url,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
           tmp_file_name: "gravatar",
-          skip_rate_limit: true
+          skip_rate_limit: true,
+          verbose: false,
+          follow_redirect: true
         )
-        if tempfile
-          upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
-          if gravatar_upload_id != upload.id
-            gravatar_upload.try(:destroy!) rescue nil
-            self.gravatar_upload = upload
-            save!
+        if tempfile
+          ext = File.extname(tempfile)
+          ext = '.png' if ext.blank?
+
+          upload = UploadCreator.new(
+            tempfile,
+            "gravatar#{ext}",
+            origin: gravatar_url,
+            type: "avatar"
+          ).create_for(user_id)
+
+          upload_id = upload.id
+
+          if gravatar_upload_id != upload_id
+            User.transaction do
+              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+                user.update!(uploaded_avatar_id: upload_id)
+              end
+
+              gravatar_upload&.destroy!
+              self.gravatar_upload = upload
+              save!
+            end
           end
         end
       rescue OpenURI::HTTPError
@@ -67,7 +88,7 @@ class UserAvatar < ActiveRecord::Base
     "#{upload_id}_#{OptimizedImage::VERSION}"
   end
 
-  def self.import_url_for_user(avatar_url, user, options=nil)
+  def self.import_url_for_user(avatar_url, user, options = nil)
     tempfile = FileHelper.download(
       avatar_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,
@@ -82,17 +103,17 @@ class UserAvatar < ActiveRecord::Base
 
     upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
 
-    user.create_user_avatar unless user.user_avatar
+    user.create_user_avatar! unless user.user_avatar
 
     if !user.user_avatar.contains_upload?(upload.id)
-      user.user_avatar.update_columns(custom_upload_id: upload.id)
-
+      user.user_avatar.update!(custom_upload_id: upload.id)
       override_gravatar = !options || options[:override_gravatar]
 
       if user.uploaded_avatar_id.nil? ||
           !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
           override_gravatar
-        user.update_columns(uploaded_avatar_id: upload.id)
+
+        user.update!(uploaded_avatar_id: upload.id)
       end
     end
 
@@ -102,6 +123,31 @@ class UserAvatar < ActiveRecord::Base
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
+  def self.ensure_consistency!
+    DB.exec <<~SQL
+      UPDATE user_avatars
+      SET gravatar_upload_id = NULL
+      WHERE gravatar_upload_id IN (
+        SELECT u1.gravatar_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.gravatar_upload_id = up.id
+        WHERE u1.gravatar_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE user_avatars
+      SET custom_upload_id = NULL
+      WHERE custom_upload_id IN (
+        SELECT u1.custom_upload_id FROM user_avatars u1
+        LEFT JOIN uploads up
+          ON u1.custom_upload_id = up.id
+        WHERE u1.custom_upload_id IS NOT NULL AND
+          up.id IS NULL
+      )
+    SQL
+  end
 end
 
 # == Schema Information

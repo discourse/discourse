@@ -1,9 +1,10 @@
 require_dependency 'discourse'
 
 class PostActionsController < ApplicationController
-  before_filter :ensure_logged_in
-  before_filter :fetch_post_from_params
-  before_filter :fetch_post_action_type_id_from_params
+  requires_login
+
+  before_action :fetch_post_from_params
+  before_action :fetch_post_action_type_id_from_params
 
   def create
     raise Discourse::NotFound if @post.blank?
@@ -13,8 +14,10 @@ class PostActionsController < ApplicationController
     guardian.ensure_post_can_act!(
       @post,
       PostActionType.types[@post_action_type_id],
-      is_warning: params[:is_warning],
-      taken_actions: taken
+      opts: {
+        is_warning: params[:is_warning],
+        taken_actions: taken
+      }
     )
 
     args = {}
@@ -23,7 +26,11 @@ class PostActionsController < ApplicationController
     args[:take_action] = true if guardian.is_staff? && params[:take_action] == 'true'
     args[:flag_topic] = true if params[:flag_topic] == 'true'
 
-    post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
+    begin
+      post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
+    rescue PostAction::FailedToCreatePost => e
+      return render_json_error(e.message)
+    end
 
     if post_action.blank? || post_action.errors.present?
       render_json_error(post_action)
@@ -62,32 +69,32 @@ class PostActionsController < ApplicationController
 
   private
 
-    def fetch_post_from_params
-      params.require(:id)
+  def fetch_post_from_params
+    params.require(:id)
 
-      flag_topic = params[:flag_topic]
-      flag_topic = flag_topic && (flag_topic == true || flag_topic == "true")
+    flag_topic = params[:flag_topic]
+    flag_topic = flag_topic && (flag_topic == true || flag_topic == "true")
 
-      post_id = if flag_topic
-        begin
-          Topic.find(params[:id]).posts.first.id
-        rescue
-          raise Discourse::NotFound
-        end
-      else
-        params[:id]
+    post_id = if flag_topic
+      begin
+        Topic.find(params[:id]).posts.first.id
+      rescue
+        raise Discourse::NotFound
       end
-
-      finder = Post.where(id: post_id)
-
-      # Include deleted posts if the user is a staff
-      finder = finder.with_deleted if guardian.is_staff?
-
-      @post = finder.first
+    else
+      params[:id]
     end
 
-    def fetch_post_action_type_id_from_params
-      params.require(:post_action_type_id)
-      @post_action_type_id = params[:post_action_type_id].to_i
-    end
+    finder = Post.where(id: post_id)
+
+    # Include deleted posts if the user is a staff
+    finder = finder.with_deleted if guardian.is_staff?
+
+    @post = finder.first
+  end
+
+  def fetch_post_action_type_id_from_params
+    params.require(:post_action_type_id)
+    @post_action_type_id = params[:post_action_type_id].to_i
+  end
 end

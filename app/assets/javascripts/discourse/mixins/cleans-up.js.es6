@@ -2,10 +2,10 @@
 // cleaned (usually on route change.)
 export default Ember.Mixin.create({
   _initializeChooser: function() {
-    this.appEvents.on('dom:clean', this, "cleanUp");
-  }.on('didInsertElement'),
+    this.appEvents.on("dom:clean", this, "cleanUp");
+  }.on("didInsertElement"),
 
   _clearChooser: function() {
-    this.appEvents.off('dom:clean', this, "cleanUp");
-  }.on('willDestroyElement')
+    this.appEvents.off("dom:clean", this, "cleanUp");
+  }.on("willDestroyElement")
 });

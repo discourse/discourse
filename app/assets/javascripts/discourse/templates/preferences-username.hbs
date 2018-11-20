@@ -1,4 +1,4 @@
-<section class='user-content'>
+<section class='user-preferences'>
   <form class="form-horizontal">
 
     <div class="control-group">
@@ -7,14 +7,6 @@
       </div>
     </div>
 
-    {{#if error}}
-      <div class="control-group">
-        <div class="instructions">
-          <div class='alert alert-error'>{{i18n 'user.change_username.error'}}</div>
-        </div>
-      </div>
-    {{/if}}
-
     <div class="control-group">
       <label class="control-label">{{i18n 'user.username.title'}}</label>
       <div class="controls">
@@ -22,10 +14,10 @@
       </div>
       <div class='instructions controls'>
         <p>
-        {{#if taken}}
-          {{i18n 'user.change_username.taken'}}
-        {{/if}}
-        <span>{{errorMessage}}</span>
+          {{#if taken}}
+            {{i18n 'user.change_username.taken'}}
+          {{/if}}
+          <span>{{errorMessage}}</span>
         </p>
       </div>
     </div>

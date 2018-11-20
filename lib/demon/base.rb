@@ -7,10 +7,10 @@ class Demon::Base
     @demons
   end
 
-  def self.start(count=1)
+  def self.start(count = 1, verbose: false)
     @demons ||= {}
     count.times do |i|
-      (@demons["#{prefix}_#{i}"] ||= new(i)).start
+      (@demons["#{prefix}_#{i}"] ||= new(i, verbose: verbose)).start
     end
   end
 
@@ -38,19 +38,21 @@ class Demon::Base
   attr_reader :pid, :parent_pid, :started, :index
   attr_accessor :stop_timeout
 
-  def initialize(index)
+  def initialize(index, rails_root: nil, parent_pid: nil, verbose: false)
     @index = index
     @pid = nil
-    @parent_pid = Process.pid
+    @parent_pid = parent_pid || Process.pid
     @started = false
     @stop_timeout = 10
+    @rails_root = rails_root || Rails.root
+    @verbose = verbose
   end
 
   def pid_file
-    "#{Rails.root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
+    "#{@rails_root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
   end
 
-  def alive?(pid=nil)
+  def alive?(pid = nil)
     pid ||= @pid
     if pid
       Demon::Base.alive?(pid)
@@ -59,18 +61,21 @@ class Demon::Base
     end
   end
 
+  def stop_signal
+    "HUP"
+  end
+
   def stop
     @started = false
     if @pid
-      # TODO configurable stop signal
-      Process.kill("HUP",@pid)
+      Process.kill(stop_signal, @pid)
 
       wait_for_stop = lambda {
         timeout = @stop_timeout
 
         while alive? && timeout > 0
-          timeout -= (@stop_timeout/10.0)
-          sleep(@stop_timeout/10.0)
+          timeout -= (@stop_timeout / 10.0)
+          sleep(@stop_timeout / 10.0)
           Process.waitpid(@pid, Process::WNOHANG) rescue -1
         end
 
@@ -80,12 +85,11 @@ class Demon::Base
       wait_for_stop.call
 
       if alive?
-        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid}"
+        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}"
         Process.kill("KILL", @pid)
       end
 
       wait_for_stop.call
-
 
       @pid = nil
       @started = false
@@ -116,7 +120,7 @@ class Demon::Base
     if existing = already_running?
       # should not happen ... so kill violently
       STDERR.puts "Attempting to kill pid #{existing}"
-      Process.kill("TERM",existing)
+      Process.kill("TERM", existing)
     end
 
     @started = true
@@ -154,9 +158,16 @@ class Demon::Base
 
   private
 
+  def verbose(msg)
+    if @verbose
+      puts msg
+    end
+  end
+
   def write_pid_file
-    FileUtils.mkdir_p(Rails.root + "tmp/pids")
-    File.open(pid_file,'w') do |f|
+    verbose("writing pid file #{pid_file} for #{@pid}")
+    FileUtils.mkdir_p(@rails_root + "tmp/pids")
+    File.open(pid_file, 'w') do |f|
       f.write(@pid)
     end
   end
@@ -182,7 +193,6 @@ class Demon::Base
     end
   end
 
-
   def suppress_stdout
     true
   end
@@ -192,7 +202,7 @@ class Demon::Base
   end
 
   def establish_app
-    Discourse.after_fork
+    Discourse.after_fork if defined?(Discourse)
 
     Signal.trap("HUP") do
       begin

@@ -40,12 +40,12 @@ source ~/.rvm/scripts/rvm
 rvm get stable
 rvm autolibs homebrew # Tell RVM to install anything it's missing with homebrew
 rvm requirements # This will install baseline requirements that might be missing
-rvm install 2.0.0-turbo # Now, install Ruby 2.0.0 with performance patches
-rvm --create --ruby-version use 2.0.0-turbo # Use this Ruby as the default in this directory
+rvm install 2.4.4 # Now, install Ruby 2.4.4
+rvm --create --ruby-version use 2.4.4 # Use this Ruby as the default in this directory
 
 # Check that the correct version is installed and active
 echo "Checking Ruby installation..."
-ruby -v | grep 2.0.0
+ruby -v | grep 2.4.4
 
 ## Configure PostgreSQL (PostgreSQL was installed by Homebrew using `brew bundle`) ##
 echo "Loading PostgreSQL..."
@@ -74,8 +74,8 @@ echo "Creating PostgreSQL databases..."
 psql -d postgres -c "ALTER USER vagrant WITH PASSWORD 'password';"
 psql -d postgres -c "create database discourse_development owner vagrant encoding 'UTF8' TEMPLATE template0;"
 psql -d postgres -c "create database discourse_test        owner vagrant encoding 'UTF8' TEMPLATE template0;"
-psql -d discourse_development -c "CREATE EXTENSION hstore;"
-psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
+psql -d discourse_development -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+psql -d discourse_development -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 
 ## Start Redis (Redis was installed by Homebrew using `brew bundle`) ##
 echo "Loading Redis..."

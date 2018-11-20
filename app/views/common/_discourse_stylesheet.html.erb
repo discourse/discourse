@@ -8,6 +8,6 @@
   <%= discourse_stylesheet_link_tag(:admin) %>
 <%- end %>
 
-<%- if theme_key %>
+<%- if theme_ids.present? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>

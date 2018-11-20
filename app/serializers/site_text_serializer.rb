@@ -19,4 +19,3 @@ class SiteTextSerializer < ApplicationSerializer
 
   alias_method :can_revert?, :overridden?
 end
-

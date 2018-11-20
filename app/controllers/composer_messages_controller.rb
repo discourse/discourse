@@ -2,7 +2,7 @@ require_dependency 'composer_messages_finder'
 
 class ComposerMessagesController < ApplicationController
 
-  before_filter :ensure_logged_in
+  requires_login
 
   def index
     finder = ComposerMessagesFinder.new(current_user, params.slice(:composer_action, :topic_id, :post_id))
@@ -11,7 +11,7 @@ class ComposerMessagesController < ApplicationController
     if params[:topic_id].present?
       topic = Topic.where(id: params[:topic_id]).first
       if guardian.can_see?(topic)
-        json[:extras] = {duplicate_lookup: TopicLink.duplicate_lookup(topic)}
+        json[:extras] = { duplicate_lookup: TopicLink.duplicate_lookup(topic) }
       end
     end
 

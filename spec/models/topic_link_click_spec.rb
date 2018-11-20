@@ -39,7 +39,6 @@ describe TopicLinkClick do
 
     context 'create_from' do
 
-
       it "works correctly" do
 
         # returns nil to prevent exploits
@@ -57,8 +56,6 @@ describe TopicLinkClick do
 
       end
 
-
-
       context 'with a valid url and post_id' do
         before do
           @url = TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1')
@@ -72,6 +69,22 @@ describe TopicLinkClick do
 
           # second click should not record
           expect { TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1') }.not_to change(TopicLinkClick, :count)
+        end
+
+      end
+
+      context 'while logged in' do
+        let(:other_user) { Fabricate(:user) }
+        before do
+          @url = TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1', user_id: other_user.id)
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click without an IP' do
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@click.user_id).to eq(other_user.id)
+          expect(@click.ip_address).to eq(nil)
         end
 
       end
@@ -148,6 +161,9 @@ describe TopicLinkClick do
 
           it "works with s3 urls" do
             SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
+            SiteSetting.s3_access_key_id = 'X'
+            SiteSetting.s3_secret_access_key = 'X'
+            SiteSetting.enable_s3_uploads = true
 
             post = Fabricate(:post, topic: @topic, raw: "[test](//test.localhost/uploads/default/my-test-link)")
             TopicLink.extract_from(post)
@@ -192,6 +208,32 @@ describe TopicLinkClick do
         end
       end
 
+      context 'with a query param and google analytics' do
+        before do
+          @topic = Fabricate(:topic)
+          @post = Fabricate(:post,
+              topic: @topic,
+              user: @topic.user,
+              raw: "Here's a link to twitter: http://twitter.com?ref=forum"
+            )
+          TopicLink.extract_from(@post)
+          @topic_link = @topic.topic_links.first
+        end
+
+        it 'creates a click' do
+          url = TopicLinkClick.create_from(
+            url: 'http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018',
+            topic_id: @topic.id,
+            post_id: @post.id,
+            ip: '127.0.0.3'
+          )
+          click = TopicLinkClick.last
+          expect(click).to be_present
+          expect(click.topic_link).to eq(@topic_link)
+          expect(url).to eq('http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018')
+        end
+      end
+
       context 'with a google analytics tracking code and a hash' do
         before do
           @url = TopicLinkClick.create_from(url: 'http://discourse.org?_ga=1.16846778.221554446.1071987018#faq',
@@ -205,7 +247,6 @@ describe TopicLinkClick do
           expect(@url).to eq('http://discourse.org?_ga=1.16846778.221554446.1071987018#faq')
         end
       end
-
 
       context 'with a valid url and topic_id' do
         before do

@@ -1,4 +1,4 @@
-{{#d-section class="current-badge span13"}}
+{{#d-section class="current-badge content-body"}}
   <form class="form-horizontal">
     <div>
       <label for="name">{{i18n 'admin.badges.name'}}</label>
@@ -18,7 +18,7 @@
     <div>
       <label for="image">{{i18n 'admin.badges.image'}}</label>
       {{input type="text" name="image" value=buffered.image}}
-      <p class='help'>{{i18n 'admin.badges.icon_help'}}</p>
+      <p class='help'>{{i18n 'admin.badges.image_help'}}</p>
     </div>
 
     <div>
@@ -26,9 +26,8 @@
       {{combo-box name="badge_type_id"
                   value=buffered.badge_type_id
                   content=badgeTypes
-                  optionValuePath="content.id"
-                  optionLabelPath="content.name"
-                  disabled=readOnly}}
+                  allowInitialValueMutation=true
+                  isDisabled=readOnly}}
     </div>
 
     <div>
@@ -36,9 +35,8 @@
       {{combo-box name="badge_grouping_id"
                   value=buffered.badge_grouping_id
                   content=badgeGroupings
-                  optionValuePath="content.id"
-                  optionLabelPath="content.displayName"}}
-      &nbsp;<button {{action "editGroupings"}} class='btn'>{{fa-icon 'pencil'}}</button>
+                  nameProperty="name"}}
+      &nbsp;<button {{action "editGroupings"}} class='btn'>{{d-icon 'pencil'}}</button>
     </div>
 
 
@@ -63,7 +61,7 @@
     {{#if siteSettings.enable_badge_sql}}
       <div>
         <label for="query">{{i18n 'admin.badges.query'}}</label>
-        {{textarea name="query" value=buffered.query disabled=readOnly}}
+        {{ace-editor content=buffered.query mode="sql" disabled=readOnly}}
       </div>
 
       {{#if hasQuery}}
@@ -146,7 +144,7 @@
 {{/d-section}}
 
 {{#if grant_count}}
-  <div class="span13 current-badge-actions">
+  <div class="content-body current-badge-actions">
     <div>
       {{#link-to 'badges.show' this}}{{i18n 'badges.granted' count=grant_count}}{{/link-to}}
     </div>

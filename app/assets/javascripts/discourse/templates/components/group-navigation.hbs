@@ -1,0 +1,21 @@
+{{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=currentPath}}
+  {{#if site.mobileView}}
+    <li>
+      {{#link-to "groups.index"}}
+        {{i18n "groups.index.all"}}
+      {{/link-to}}
+    </li>
+  {{else}}
+    {{group-dropdown content=group.extras.visible_group_names value=group.name}}
+  {{/if}}
+
+  {{#each tabs as |tab|}}
+    <li>
+      {{#link-to tab.route group title=tab.message class=tab.name}}
+        {{#if tab.icon}}{{d-icon tab.icon}}{{/if}}
+        {{tab.message}}
+        {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+      {{/link-to}}
+    </li>
+  {{/each}}
+{{/mobile-nav}}

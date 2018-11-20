@@ -32,8 +32,9 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    u = User.find_by("email = ?", Email.downcase(email))
-    if u && u.id != self.user_id
+    user = Invite.find_user_by_email(email)
+
+    if user && user.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
     end
@@ -52,8 +53,8 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def redeem(username: nil, name: nil, password: nil)
-    InviteRedeemer.new(self, username, name, password).redeem unless expired? || destroyed? || !link_valid?
+  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil)
+    InviteRedeemer.new(self, username, name, password, user_custom_fields).redeem unless expired? || destroyed? || !link_valid?
   end
 
   def self.extend_permissions(topic, user, invited_by)
@@ -69,48 +70,47 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil, custom_message=nil)
-    create_invite_by_email(email, invited_by, {
+  def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
+    create_invite_by_email(email, invited_by,
       topic: topic,
       group_ids: group_ids,
       custom_message: custom_message,
       send_email: true
-    })
+    )
   end
 
   # generate invite link
-  def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
-    invite = create_invite_by_email(email, invited_by, {
+  def self.generate_invite_link(email, invited_by, topic = nil, group_ids = nil)
+    invite = create_invite_by_email(email, invited_by,
       topic: topic,
       group_ids: group_ids,
       send_email: false
-    })
-    return "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
+    )
+
+    "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
 
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, opts=nil)
+  def self.create_invite_by_email(email, invited_by, opts = nil)
     opts ||= {}
 
     topic = opts[:topic]
     group_ids = opts[:group_ids]
     send_email = opts[:send_email].nil? ? true : opts[:send_email]
     custom_message = opts[:custom_message]
-
     lower_email = Email.downcase(email)
-    user = User.find_by(email: lower_email)
 
-    if user
+    if user = find_user_by_email(lower_email)
       extend_permissions(topic, user, invited_by) if topic
       raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
 
     invite = Invite.with_deleted
-                   .where(email: lower_email, invited_by_id: invited_by.id)
-                   .order('created_at DESC')
-                   .first
+      .where(email: lower_email, invited_by_id: invited_by.id)
+      .order('created_at DESC')
+      .first
 
     if invite && (invite.expired? || invite.deleted_at)
       invite.destroy
@@ -122,6 +122,7 @@ class Invite < ActiveRecord::Base
     if !invite
       create_args = { invited_by: invited_by, email: lower_email }
       create_args[:moderator] = true if opts[:moderator]
+      create_args[:custom_message] = custom_message if custom_message
       invite = Invite.create!(create_args)
     end
 
@@ -137,16 +138,20 @@ class Invite < ActiveRecord::Base
         invite.invited_groups.create!(group_id: group_id)
       end
     else
-      if topic && topic.category # && Guardian.new(invited_by).can_invite_to?(topic)
-        group_ids = topic.category.groups.pluck(:id) - invite.invited_groups.pluck(:group_id)
+      if topic && topic.category && Guardian.new(invited_by).can_invite_to?(topic)
+        group_ids = topic.category.groups.where(automatic: false).pluck(:id) - invite.invited_groups.pluck(:group_id)
         group_ids.each { |group_id| invite.invited_groups.create!(group_id: group_id) }
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id, custom_message: custom_message) if send_email
+    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
 
     invite.reload
     invite
+  end
+
+  def self.find_user_by_email(email)
+    User.with_email(email).where(staged: false).first
   end
 
   def self.get_group_ids(group_names)
@@ -161,32 +166,33 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
-  def self.find_all_invites_from(inviter, offset=0, limit=SiteSetting.invites_per_page)
+  INVITE_ORDER = <<~SQL
+  SQL
+
+  def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
-          .where('invites.email IS NOT NULL')
-          .includes(:user => :user_stat)
-          .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
-                 'user_stats.time_read DESC',
-                 'invites.redeemed_at DESC')
-          .limit(limit)
-          .offset(offset)
-          .references('user_stats')
+      .where('invites.email IS NOT NULL')
+      .includes(user: :user_stat)
+      .order("CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END, user_stats.time_read DESC, invites.redeemed_at DESC")
+      .limit(limit)
+      .offset(offset)
+      .references('user_stats')
   end
 
-  def self.find_pending_invites_from(inviter, offset=0)
+  def self.find_pending_invites_from(inviter, offset = 0)
     find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.created_at DESC')
   end
 
-  def self.find_redeemed_invites_from(inviter, offset=0)
+  def self.find_redeemed_invites_from(inviter, offset = 0)
     find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
   end
 
   def self.find_pending_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').reorder(nil).count
   end
 
   def self.find_redeemed_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').reorder(nil).count
   end
 
   def self.filter_by(email_or_username)
@@ -217,16 +223,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-  def self.redeem_from_token(token, email, username=nil, name=nil, topic_id=nil)
-    invite = Invite.find_by(invite_key: token)
-    if invite
-      invite.update_column(:email, email)
-      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic_id) if topic_id && Topic.find_by_id(topic_id) && !invite.topic_invites.pluck(:topic_id).include?(topic_id)
-      user = InviteRedeemer.new(invite, username, name).redeem
-    end
-    user
-  end
-
   def resend_invite
     self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
@@ -234,7 +230,13 @@ class Invite < ActiveRecord::Base
 
   def self.resend_all_invites_from(user_id)
     Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
-      invite.resend_invite unless invite.blank?
+      invite.resend_invite
+    end
+  end
+
+  def self.rescind_all_invites_from(user)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user.id).find_each do |invite|
+      invite.trash!(user)
     end
   end
 
@@ -271,6 +273,7 @@ end
 #  deleted_by_id  :integer
 #  invalidated_at :datetime
 #  moderator      :boolean          default(FALSE), not null
+#  custom_message :text
 #
 # Indexes
 #

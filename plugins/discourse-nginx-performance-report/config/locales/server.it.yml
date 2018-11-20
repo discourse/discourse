@@ -1,0 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+it:
+  site_settings:
+    daily_performance_report: "Analizza i log di NGINX giornalmente, e pubblica un argomento con i dettagli visibile solo allo Staff"

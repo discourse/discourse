@@ -43,7 +43,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
     end
 
     def initialize(cols)
-      cols.each_with_index do |col,idx|
+      cols.each_with_index do |col, idx|
         self.class.send(:define_method, col) do
           @row[idx]
         end
@@ -71,7 +71,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
     File.open(filename).each_line do |line|
 
       # escaping is mental here
-      line.gsub!(/\\(.{1})/){|m| m[-1] == '"'? '""': m[-1]}
+      line.gsub!(/\\(.{1})/) { |m| m[-1] == '"' ? '""' : m[-1] }
       line.strip!
 
       current_row << "\n" unless current_row.empty?
@@ -119,7 +119,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
   end
 
   def total_rows(table)
-    File.foreach("#{@path}/#{table}.csv").inject(0) {|c, line| c+1} - 1
+    File.foreach("#{@path}/#{table}.csv").inject(0) { |c, line| c + 1 } - 1
   end
 
   def import_users
@@ -169,7 +169,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
   def import_categories
     rows = []
     csv_parse("categories") do |row|
-      rows << {id: row.id, name: row.name, description: row.description}
+      rows << { id: row.id, name: row.name, description: row.description }
     end
 
     create_categories(rows) do |row|
@@ -181,45 +181,45 @@ class ImportScripts::Bespoke < ImportScripts::Base
     # purple and #1223f3
     raw.gsub!(/\[color=[#a-z0-9]+\]/i, "")
     raw.gsub!(/\[\/color\]/i, "")
-    raw.gsub!(/\[signature\].+\[\/signature\]/im,"")
+    raw.gsub!(/\[signature\].+\[\/signature\]/im, "")
     raw
   end
 
   def import_post_batch!(posts, topics, offset, total)
-      create_posts(posts, total: total, offset: offset) do |post|
+    create_posts(posts, total: total, offset: offset) do |post|
 
-        mapped = {}
+      mapped = {}
 
-        mapped[:id] = post[:id]
-        mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
-        mapped[:raw] = post[:body]
-        mapped[:created_at] = post[:created_at]
+      mapped[:id] = post[:id]
+      mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
+      mapped[:raw] = post[:body]
+      mapped[:created_at] = post[:created_at]
 
-        topic = topics[post[:topic_id]]
+      topic = topics[post[:topic_id]]
 
-        unless topic[:post_id]
-          mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
-          mapped[:title] = post[:title]
-          topic[:post_id] = post[:id]
-        else
-          parent = topic_lookup_from_imported_post_id(topic[:post_id])
-          next unless parent
+      unless topic[:post_id]
+        mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
+        mapped[:title] = post[:title]
+        topic[:post_id] = post[:id]
+      else
+        parent = topic_lookup_from_imported_post_id(topic[:post_id])
+        next unless parent
 
-          mapped[:topic_id] = parent[:topic_id]
+        mapped[:topic_id] = parent[:topic_id]
 
-          reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
-          if reply_to_post_id
-            reply_to_post_number = @post_number_map[reply_to_post_id]
-            if reply_to_post_number && reply_to_post_number > 1
-              mapped[:reply_to_post_number] = reply_to_post_number
-            end
+        reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
+        if reply_to_post_id
+          reply_to_post_number = @post_number_map[reply_to_post_id]
+          if reply_to_post_number && reply_to_post_number > 1
+            mapped[:reply_to_post_number] = reply_to_post_number
           end
         end
-
-        next if topic[:deleted] or post[:deleted]
-
-        mapped
       end
+
+      next if topic[:deleted] || post[:deleted]
+
+      mapped
+    end
 
       posts.clear
   end
@@ -262,7 +262,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
         created_at: DateTime.parse(row.dcreate)
       }
       posts << row
-      count+=1
+      count += 1
 
       if posts.length > 0 && posts.length % BATCH_SIZE == 0
         import_post_batch!(posts, topic_map, count - posts.length, total)
@@ -273,7 +273,6 @@ class ImportScripts::Bespoke < ImportScripts::Base
 
     exit
   end
-
 
 end
 

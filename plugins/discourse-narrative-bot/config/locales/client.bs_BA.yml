@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-bs_BA: {}
+bs_BA:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Odpočni tutorial za nove korisnike za sve novoregistrovane korisnike"
+        welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa smijernicama za korištenje"

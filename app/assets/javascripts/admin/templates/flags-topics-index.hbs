@@ -1,0 +1,51 @@
+{{plugin-outlet name="flagged-topics-before" noTags=true args=(hash flaggedTopics=flaggedTopics)}}
+
+{{#if flaggedTopics}}
+  <table class='flagged-topics grid'>
+    <thead>
+      {{plugin-outlet name="flagged-topic-header-row" noTags=true}}
+      <th>{{i18n "admin.flags.flagged_topics.topic"}} </th>
+      <th>{{i18n "admin.flags.flagged_topics.type"}}</th>
+      <th>{{I18n "admin.flags.flagged_topics.users"}}</th>
+      <th>{{i18n "admin.flags.flagged_topics.last_flagged"}}</th>
+      <th></th>
+    </thead>
+    <tbody>
+    {{#each flaggedTopics as |ft|}}
+      <tr class='flagged-topic'>
+        {{plugin-outlet name="flagged-topic-row" noTags=true args=(hash topic=ft.topic)}}
+
+        <td class="topic-title">
+          <a href={{ft.topic.relative_url}} target="_blank">{{replace-emoji ft.topic.fancy_title}}</a>
+        </td>
+        <td class="flag-counts">
+          {{#each ft.flag_counts as |fc|}}
+            <div class='flag-counts'>
+              <span class='type-name'>{{post-action-title fc.post_action_type_id fc.name_key}}</span>
+              <span class='type-count'>x{{fc.count}}</span>
+            </div>
+          {{/each}}
+        </td>
+        <td class='flagged-topic-users'>
+          {{flagged-topic-users users=ft.users tagName=""}}
+        </td>
+        <td class="last-flagged">
+          {{format-age ft.last_flag_at}}
+        </td>
+        <td class="flag-details">
+          {{#link-to
+            "adminFlags.topics.show"
+            ft.id
+            class="btn d-button no-text btn-small btn-primary show-details"
+            title=(i18n "admin.flags.show_details")}}
+            {{d-icon "list"}}
+            {{i18n "admin.flags.details"}}
+          {{/link-to}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  {{i18n "admin.flags.flagged_topics.no_results"}}
+{{/if}}

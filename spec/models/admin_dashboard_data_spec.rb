@@ -15,6 +15,9 @@ describe AdminDashboardData do
 
       AdminDashboardData.fetch_problems
       expect(called).to eq(true)
+
+      AdminDashboardData.fetch_problems(check_force_https: true)
+      expect(called).to eq(true)
     end
 
     it 'calls the passed method' do
@@ -128,37 +131,37 @@ describe AdminDashboardData do
     shared_examples 'problem detection for login providers' do
       context 'when disabled' do
         it 'returns nil' do
-          SiteSetting.stubs(enable_setting).returns(false)
+          SiteSetting.public_send("#{enable_setting}=", false)
           expect(subject).to be_nil
         end
       end
 
       context 'when enabled' do
         before do
-          SiteSetting.stubs(enable_setting).returns(true)
+          SiteSetting.public_send("#{enable_setting}=", true)
         end
 
         it 'returns nil when key and secret are set' do
-          SiteSetting.stubs(key).returns('12313213')
-          SiteSetting.stubs(secret).returns('12312313123')
+          SiteSetting.public_send("#{key}=", '12313213')
+          SiteSetting.public_send("#{secret}=", '12312313123')
           expect(subject).to be_nil
         end
 
         it 'returns a string when key is not set' do
-          SiteSetting.stubs(key).returns('')
-          SiteSetting.stubs(secret).returns('12312313123')
+          SiteSetting.public_send("#{key}=", '')
+          SiteSetting.public_send("#{secret}=", '12312313123')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when secret is not set' do
-          SiteSetting.stubs(key).returns('123123')
-          SiteSetting.stubs(secret).returns('')
+          SiteSetting.public_send("#{key}=", '123123')
+          SiteSetting.public_send("#{secret}=", '')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when key and secret are not set' do
-          SiteSetting.stubs(key).returns('')
-          SiteSetting.stubs(secret).returns('')
+          SiteSetting.public_send("#{key}=", '')
+          SiteSetting.public_send("#{secret}=", '')
           expect(subject).to_not be_nil
         end
       end
@@ -199,8 +202,8 @@ describe AdminDashboardData do
       def all_setting_permutations(keys)
         ['a', ''].repeated_permutation(keys.size) do |*values|
           hash = Hash[keys.zip(values)]
-          hash.each do |key,value|
-            SiteSetting.stubs(key).returns(value)
+          hash.each do |key, value|
+            SiteSetting.public_send("#{key}=", value)
           end
           yield hash
         end
@@ -209,8 +212,8 @@ describe AdminDashboardData do
       context 'when setting is enabled' do
         let(:setting_enabled) { true }
         before do
-          SiteSetting.stubs(setting_key).returns(setting_enabled)
-          SiteSetting.stubs(bucket_key).returns(bucket_value)
+          SiteSetting.public_send("#{setting_key}=", setting_enabled)
+          SiteSetting.public_send("#{bucket_key}=", bucket_value)
         end
 
         context 'when bucket is blank' do
@@ -226,7 +229,7 @@ describe AdminDashboardData do
         context 'when bucket is filled in' do
           let(:bucket_value) { 'a' }
           before do
-            SiteSetting.stubs(:s3_use_iam_profile).returns(use_iam_profile)
+            SiteSetting.public_send("s3_use_iam_profile=", use_iam_profile)
           end
 
           context 'when using iam profile' do
@@ -257,7 +260,7 @@ describe AdminDashboardData do
 
       context 'when setting is not enabled' do
         before do
-          SiteSetting.stubs(setting_key).returns(false)
+          SiteSetting.public_send("#{setting_key}=", false)
         end
 
         it "always returns nil" do
@@ -278,6 +281,32 @@ describe AdminDashboardData do
       let(:setting_key) { :enable_s3_backups }
       let(:bucket_key) { :s3_backup_bucket }
       include_examples 'problem detection for s3-dependent setting'
+    end
+  end
+
+  describe 'force_https_check' do
+    subject { described_class.new(check_force_https: true).force_https_check }
+
+    it 'returns nil if force_https site setting enabled' do
+      SiteSetting.force_https = true
+      expect(subject).to be_nil
+    end
+
+    it 'returns nil if force_https site setting not enabled' do
+      SiteSetting.force_https = false
+      expect(subject).to eq(I18n.t('dashboard.force_https_warning'))
+    end
+  end
+
+  describe 'ignore force_https_check' do
+    subject { described_class.new(check_force_https: false).force_https_check }
+
+    it 'returns nil' do
+      SiteSetting.force_https = true
+      expect(subject).to be_nil
+
+      SiteSetting.force_https = false
+      expect(subject).to be_nil
     end
   end
 
@@ -307,4 +336,19 @@ describe AdminDashboardData do
     end
   end
 
+  describe '#out_of_date_themes' do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
+
+    it "outputs correctly formatted html" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      dashboard_data = described_class.new
+      expect(dashboard_data.out_of_date_themes).to eq(
+        I18n.t("dashboard.out_of_date_themes") + "<ul><li><a href=\"/admin/customize/themes/#{theme.id}\">Test&lt; Theme</a></li></ul>"
+      )
+
+      remote.update!(local_version: "new version", commits_behind: 0)
+      expect(dashboard_data.out_of_date_themes).to eq(nil)
+    end
+  end
 end

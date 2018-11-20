@@ -1,14 +1,26 @@
-import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { h } from "virtual-dom";
 
-export default createWidget('button', {
-  tagName: 'button.widget-button',
+export const ButtonClass = {
+  tagName: "button.widget-button.btn",
 
   buildClasses(attrs) {
-    const className = this.attrs.className || '';
+    let className = this.attrs.className || "";
 
-    if (!attrs.label && !attrs.contents) {
-      return className + ' no-text';
+    let hasText = attrs.label || attrs.contents;
+
+    if (!hasText) {
+      className += " no-text";
+    }
+
+    if (attrs.icon) {
+      className += " btn-icon";
+      if (hasText) {
+        className += "-text";
+      }
+    } else if (hasText) {
+      className += " btn-text";
     }
 
     return className;
@@ -16,19 +28,22 @@ export default createWidget('button', {
 
   buildAttributes() {
     const attrs = this.attrs;
+    const attributes = {};
 
-    let title;
     if (attrs.title) {
-      title = I18n.t(attrs.title, attrs.titleOptions);
-    } else if (attrs.label) {
-      title = I18n.t(attrs.label, attrs.labelOptions);
+      const title = I18n.t(attrs.title, attrs.titleOptions);
+      attributes["aria-label"] = title;
+      attributes.title = title;
     }
 
-    const attributes = { "aria-label": title, title };
-    if (attrs.disabled) { attributes.disabled = "true"; }
+    if (attrs.disabled) {
+      attributes.disabled = "true";
+    }
 
     if (attrs.data) {
-      Object.keys(attrs.data).forEach(k => attributes[`data-${k}`] = attrs.data[k]);
+      Object.keys(attrs.data).forEach(
+        k => (attributes[`data-${k}`] = attrs.data[k])
+      );
     }
 
     return attributes;
@@ -37,19 +52,33 @@ export default createWidget('button', {
   html(attrs) {
     const contents = [];
     const left = !attrs.iconRight;
-    if (attrs.icon && left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
-    if (attrs.label) { contents.push(I18n.t(attrs.label, attrs.labelOptions)); }
-    if (attrs.contents) { contents.push(attrs.contents); }
-    if (attrs.icon && !left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
+    if (attrs.icon && left) {
+      contents.push(iconNode(attrs.icon, { class: attrs.iconClass }));
+    }
+    if (attrs.label) {
+      contents.push(
+        h("span.d-button-label", I18n.t(attrs.label, attrs.labelOptions))
+      );
+    }
+    if (attrs.contents) {
+      contents.push(attrs.contents);
+    }
+    if (attrs.icon && !left) {
+      contents.push(iconNode(attrs.icon, { class: attrs.iconClass }));
+    }
 
     return contents;
   },
 
   click(e) {
     const attrs = this.attrs;
-    if (attrs.disabled) { return; }
+    if (attrs.disabled) {
+      return;
+    }
 
-    $(`button.widget-button`).removeClass('d-hover').blur();
+    $(`button.widget-button`)
+      .removeClass("d-hover")
+      .blur();
     if (attrs.secondaryAction) {
       this.sendWidgetAction(attrs.secondaryAction);
     }
@@ -57,6 +86,15 @@ export default createWidget('button', {
     if (attrs.sendActionEvent) {
       return this.sendWidgetAction(attrs.action, e);
     }
-    return this.sendWidgetAction(attrs.action);
+    return this.sendWidgetAction(attrs.action, attrs.actionParam);
   }
-});
+};
+
+export default createWidget("button", ButtonClass);
+
+createWidget(
+  "flat-button",
+  jQuery.extend(ButtonClass, {
+    tagName: "button.widget-button.btn-flat"
+  })
+);

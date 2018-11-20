@@ -16,8 +16,8 @@ class GivenDailyLike < ActiveRecord::Base
       create(user_id: user_id, given_date: given_date, likes_given: 1)
     else
       find_for(user_id, given_date)
-              .where('limit_reached = false AND likes_given >= :limit', limit: SiteSetting.max_likes_per_day)
-              .update_all(limit_reached: true)
+        .where('limit_reached = false AND likes_given >= :limit', limit: SiteSetting.max_likes_per_day)
+        .update_all(limit_reached: true)
     end
   end
 
@@ -28,8 +28,8 @@ class GivenDailyLike < ActiveRecord::Base
 
     find_for(user_id, given_date).update_all('likes_given = likes_given - 1')
     find_for(user_id, given_date)
-            .where('limit_reached = true AND likes_given < :limit', limit: SiteSetting.max_likes_per_day)
-            .update_all(limit_reached: false)
+      .where('limit_reached = true AND likes_given < :limit', limit: SiteSetting.max_likes_per_day)
+      .update_all(limit_reached: false)
   end
 end
 

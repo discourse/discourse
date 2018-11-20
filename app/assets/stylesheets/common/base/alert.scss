@@ -1,15 +1,15 @@
 .alert {
   padding: 8px 35px 8px 14px;
-  background-color: scale-color($danger, $lightness: 75%);
+  background-color: $danger-low;
   color: #c09853;
 
   .close {
     position: relative;
     top: -2px;
     right: -21px;
-    line-height: 18px;
+    line-height: $line-height-small;
     float: right;
-    font-size: 1.429em;
+    font-size: $font-up-3;
     font-weight: bold;
     color: $primary;
     opacity: 0.2;
@@ -30,15 +30,15 @@
     -webkit-appearance: none;
   }
   &.alert-success {
-    background-color:  dark-light-diff($success, $secondary, 50%, -60%);
+    background-color: $success-medium;
     color: $primary;
   }
   &.alert-error {
-    background-color:  rgba(dark-light-diff($danger, $secondary, 50%, -60%), .5);
+    background-color: rgba($danger-low, 0.5);
     color: $primary;
   }
   &.alert-info {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color: $tertiary-low;
     color: $primary;
     &.clickable {
       color: $tertiary;

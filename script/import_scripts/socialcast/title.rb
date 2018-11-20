@@ -9,7 +9,7 @@ def titles
   topics = 0
   total = count_files(MESSAGES_DIR)
   Dir.foreach(MESSAGES_DIR) do |filename|
-    next if filename == '.' or filename == '..'
+    next if filename == ('.') || filename == ('..')
     message_json = File.read MESSAGES_DIR + '/' + filename
     message = SocialcastMessage.new(message_json)
     next unless message.title
@@ -21,7 +21,7 @@ def titles
 end
 
 def count_files(path)
-  Dir.foreach(path).select {|f| f != '.' && f != '..'}.count
+  Dir.foreach(path).select { |f| f != '.' && f != '..' }.count
 end
 
 titles

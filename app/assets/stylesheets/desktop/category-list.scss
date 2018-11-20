@@ -2,9 +2,9 @@
   margin-bottom: 10px;
   width: 100%;
 
-  td, th {
-    padding: 12px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+  td,
+  th {
+    @extend .list-cell;
   }
 
   td {
@@ -28,7 +28,7 @@
   .topics .badge-notification,
   .category .badge-notification {
     background-color: transparent;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
 
   .topics {
@@ -36,10 +36,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.2em;
+      font-size: $font-up-1;
     }
     .unit {
-      font-size: .8em;
+      font-size: $font-down-1;
     }
     .badge-notification {
       display: block;
@@ -49,20 +49,20 @@
     }
   }
 
-  .category-description,
   .subcategories {
-    margin-top: 10px;
-  }
-
-  .subcategories {
+    margin-top: 0.25em;
+    clear: both;
     .badge-notification.new-posts {
       padding: 0;
-      margin: 0 5px 0 0;
+      margin: 0 10px 0 0;
     }
   }
 
   .featured-topic {
     margin: 10px 0 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 
     &:first-of-type {
       margin-top: 13px;
@@ -70,36 +70,26 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.86em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+      font-size: $font-down-1;
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .topic-statuses .fa {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
-    .topic-post-badges {
-      position: relative;
-      top: -2px;
-    }
-
-    .badge-notification.new-posts {
-      margin: 0 2px;
+    .topic-post-badges .badge.new-posts,
+    .title {
+      margin-right: 5px;
     }
   }
 
   tbody {
-    tr {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
-      &:first-of-type {
-        border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
-      }
-    }
-
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.2em;
+        font-size: $font-up-2;
+        line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }
@@ -115,64 +105,34 @@
   }
 }
 
-.categories-and-latest {
+.categories-and-latest,
+.categories-and-top {
+  display: flex;
+  flex-flow: row wrap;
 
-  .category-list,
-  .topic-list-latest {
-    width: 48%;
-    float: left;
+  div.column {
+    flex: 1;
+    flex-direction: row;
+    min-width: 300px;
   }
 
-  .topic-list-latest {
-    margin-left: 4%;
-    th.latest {
-      line-height: 19px;
+  div.column.categories {
+    @media all and (max-width: 600px) {
+      margin-right: 0;
+    }
+    @media all and (min-width: 600px) {
+      margin-right: 1em;
+    }
+    @media all and (min-width: 700px) {
+      margin-right: 2em;
     }
   }
 
-  .main-link {
-    width: 100%;
-  }
-
-  .new-posts {
-    margin-left: 6px;
-  }
-
-  .topic-stats {
-    text-align: right;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
-  }
-
-  .topic-last-activity a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
-  }
-
   .discourse-tag {
-    font-size: 0.75em;
+    font-size: $font-down-2;
   }
 
   .topic-featured-link {
     padding-left: 8px;
-  }
-
-  .topic-list {
-    .posts {
-      width: 100%;
-      text-align: right;
-      margin-bottom: 10px;
-    }
-
-    .num.posts a {
-      padding: 0;
-    }
-
-    .more-topics,
-    .no-topics {
-      border-bottom: none;
-      td {
-        padding-right: 0;
-        color: $primary;
-      }
-    }
   }
 }

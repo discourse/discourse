@@ -1,0 +1,19 @@
+{{#if shouldDisplay}}
+  <div class="presence-users">
+    <div class="presence-avatars">
+      {{#each users as |user|}}
+        {{avatar user avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
+      {{/each}}
+    </div>
+    <span class="presence-text">
+      <span class="description">
+        {{#if isReply ~}}
+          {{i18n 'presence.replying'}}
+        {{~else~}}
+          {{i18n 'presence.editing'}}
+        {{~/if}}</span>{{!-- (using comment to stop whitespace)
+   --}}</span>{{!--
+   --}}<span class="wave"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </span>
+  </div>
+{{/if}}

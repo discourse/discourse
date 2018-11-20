@@ -1,9 +1,11 @@
 export const SEPARATOR = ":";
-import { caretRowCol } from 'discourse/lib/utilities';
+import { caretRowCol } from "discourse/lib/utilities";
 
 export function replaceSpan($elem, categorySlug, categoryLink) {
-  $elem.replaceWith(`<a href="${categoryLink}" class="hashtag">#<span>${categorySlug}</span></a>`);
-};
+  $elem.replaceWith(
+    `<a href="${categoryLink}" class="hashtag">#<span>${categorySlug}</span></a>`
+  );
+}
 
 export function categoryHashtagTriggerRule(textarea, opts) {
   const result = caretRowCol(textarea);
@@ -21,7 +23,7 @@ export function categoryHashtagTriggerRule(textarea, opts) {
 
   if (col < 6) {
     // Don't trigger autocomplete when ATX-style headers are used
-    return (line.slice(0, col) !== "#".repeat(col));
+    return line.slice(0, col) !== "#".repeat(col);
   } else {
     return true;
   }

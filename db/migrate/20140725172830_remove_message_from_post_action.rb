@@ -1,4 +1,4 @@
-class RemoveMessageFromPostAction < ActiveRecord::Migration
+class RemoveMessageFromPostAction < ActiveRecord::Migration[4.2]
   def up
     remove_column :post_actions, :message
   end

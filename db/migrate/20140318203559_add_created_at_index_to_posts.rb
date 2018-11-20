@@ -1,4 +1,4 @@
-class AddCreatedAtIndexToPosts < ActiveRecord::Migration
+class AddCreatedAtIndexToPosts < ActiveRecord::Migration[4.2]
   def up
     execute "CREATE INDEX idx_posts_created_at_topic_id ON posts(created_at, topic_id) WHERE deleted_at IS NULL"
     add_column :categories, :topics_day, :integer, default: 0

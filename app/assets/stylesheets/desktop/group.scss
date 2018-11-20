@@ -1,26 +1,13 @@
 .group-nav {
-  li {
-    float: left;
-
-    a, i {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
-    }
-
-    .active {
-      a, i {
-        color: $secondary;
-      }
-    }
+  .group-dropdown {
+    margin-right: 10px;
   }
-
-  margin-bottom: 30px;
 }
-
 .group-info {
   margin-bottom: 20px;
 }
 
-.group-activity-nav {
+.group-navigation {
   width: 15%;
   background-color: transparent;
 
@@ -28,32 +15,38 @@
     border: none;
 
     a {
-      padding: 8px 13px;
-    }
+      color: dark-light-choose($primary-medium, $secondary-high);
+      padding: 8px 0;
 
-    a.active {
-      background-color: transparent;
-      font-weight: bold;
-      color: $primary;
-    }
+      &.active {
+        background-color: transparent;
+        font-weight: bold;
+        color: $primary;
 
-    a.active:after {
-      display: none;
+        &:after {
+          display: none;
+        }
+      }
     }
   }
 }
 
-.group-activity-outlet {
+.group-activity-outlet,
+.group-messages-outlet,
+.group-manage-outlet {
   width: 85%;
 }
 
-.group-edit {
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 10px;
-
+.group-manage {
   .form-horizontal {
     button {
       float: none;
     }
   }
+}
+
+.group-details-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

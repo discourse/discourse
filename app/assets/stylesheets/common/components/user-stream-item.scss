@@ -1,0 +1,155 @@
+// Common styles for "user-stream-item" component
+.user-stream {
+  // DEPRECATED:
+  // The ".item" class should be removed because it's too generic.
+  // Once ".item" has been removed, ".user-stream-item" can replace
+  // ".user-stream" as the top-level selector on this file as all other
+  // selectors below are its children
+  .item,
+  .user-stream-item {
+    background-color: $secondary;
+    border-bottom: 1px solid $primary-low;
+
+    &.moderator-action {
+      background-color: $highlight-medium;
+    }
+
+    &.deleted {
+      opacity: 0.8;
+      background-color: dark-light-diff(
+        rgba($danger, 0.7),
+        $secondary,
+        50%,
+        -10%
+      );
+    }
+
+    &.hidden {
+      display: block;
+      opacity: 0.4;
+    }
+  }
+
+  .type,
+  span.name {
+    color: $primary;
+  }
+
+  .time,
+  .delete-info,
+  .draft-type {
+    display: block;
+    float: right;
+    color: lighten($primary, 40%);
+    font-size: $font-down-2;
+  }
+
+  .draft-type {
+    clear: right;
+  }
+
+  .delete-info i {
+    font-size: $font-0;
+  }
+
+  .expand-item,
+  .collapse-item {
+    float: right;
+    margin-right: 0.5em;
+    line-height: $line-height-small;
+    color: lighten($primary, 40%);
+  }
+
+  .avatar-link {
+    float: left;
+    margin-right: 4px;
+  }
+
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .name {
+    font-size: $font-0;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .edit-reason {
+    background-color: dark-light-choose(
+      $highlight-medium,
+      scale-color($highlight, $lightness: -50%)
+    );
+    padding: 3px 5px 5px 5px;
+  }
+
+  .remove-bookmark,
+  .remove-draft {
+    float: right;
+    margin-top: -4px;
+  }
+
+  .notification {
+    li {
+      display: inline-block;
+    }
+
+    p {
+      display: inline-block;
+
+      span {
+        color: $primary;
+      }
+    }
+
+    .time {
+      display: inline-block;
+      margin-left: 10px;
+      float: none;
+    }
+
+    // common/base/header.scss
+    .fa,
+    .icon {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      font-size: $font-up-4;
+    }
+  }
+
+  .excerpt {
+    margin: 5px 0;
+    font-size: $font-0;
+    word-wrap: break-word;
+    color: $primary;
+
+    details.disabled {
+      color: $primary-medium;
+    }
+  }
+
+  .group-member-info {
+    display: flex;
+  }
+}
+
+.user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
+.user-stream-item-actions,
+.user-stream-item-draft-actions {
+  margin-top: 8px;
+
+  .avatar-link {
+    float: none;
+    margin-right: 3px;
+  }
+
+  .fa {
+    width: 15px;
+    display: inline-block;
+    color: $primary;
+  }
+}

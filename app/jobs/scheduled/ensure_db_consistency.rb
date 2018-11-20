@@ -15,6 +15,10 @@ module Jobs
       Badge.ensure_consistency!
       CategoryUser.ensure_consistency!
       UserOption.ensure_consistency!
+      Tag.ensure_consistency!
+      CategoryTagStat.ensure_consistency!
+      User.ensure_consistency!
+      UserAvatar.ensure_consistency!
     end
   end
 end

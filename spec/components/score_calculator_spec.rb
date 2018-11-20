@@ -28,10 +28,6 @@ describe ScoreCalculator do
       expect(topic.score).to be_present
     end
 
-    it "gives the topic a percent_rank" do
-      expect(topic.percent_rank).not_to eq(1.0)
-    end
-
   end
 
   context 'summary' do

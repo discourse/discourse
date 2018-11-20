@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
 require_dependency 'guardian'
@@ -7,7 +8,7 @@ require_dependency 'configurable_urls'
 require_dependency 'mobile_detection'
 require_dependency 'category_badge'
 require_dependency 'global_path'
-require_dependency 'canonical_url'
+require_dependency 'emoji'
 
 module ApplicationHelper
   include CurrentUser
@@ -15,13 +16,20 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def google_universal_analytics_json(ua_domain_name=nil)
+  def self.extra_body_classes
+    @extra_body_classes ||= Set.new
+  end
+
+  def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
     if ua_domain_name
       result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
     end
     if current_user.present?
       result[:userId] = current_user.id
+    end
+    if SiteSetting.ga_universal_auto_link_domains.present?
+      result[:allowLinker] = true
     end
     result.to_json.html_safe
   end
@@ -45,15 +53,42 @@ module ApplicationHelper
     end
   end
 
+  def is_brotli_req?
+    ENV["COMPRESS_BROTLI"] == "1" &&
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
+  end
+
   def preload_script(script)
     path = asset_path("#{script}.js")
 
-    if  GlobalSetting.cdn_url &&
-        GlobalSetting.cdn_url.start_with?("https") &&
-        ENV["COMPRESS_BROTLI"] == "1" &&
-        request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
-        path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+    if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+      if GlobalSetting.cdn_url
+        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+      else
+        # we must remove the subfolder path here, assets are uploaded to s3
+        # without it getting involved
+        if ActionController::Base.config.relative_url_root
+          path = path.sub(ActionController::Base.config.relative_url_root, "")
+        end
+
+        path = "#{GlobalSetting.s3_cdn_url}#{path}"
+      end
+
+      if is_brotli_req?
+        path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      end
+
+    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
+      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
+
+    if Rails.env == "development"
+      if !path.include?("?")
+        # cache breaker for mobile iOS
+        path = path + "?#{Time.now.to_f}"
+      end
+    end
+
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
   end
@@ -72,9 +107,17 @@ module ApplicationHelper
   end
 
   def body_classes
+    result = ApplicationHelper.extra_body_classes.to_a
+
     if @category && @category.url.present?
-      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
     end
+
+    if current_user.present? && primary_group_name = current_user.primary_group&.name
+      result << "primary-group-#{primary_group_name.downcase}"
+    end
+
+    result.join(' ')
   end
 
   def rtl_class
@@ -140,14 +183,12 @@ module ApplicationHelper
     ["ar", "ur", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
-  def user_locale
-    locale = current_user.locale if current_user && SiteSetting.allow_user_locale
-    # changing back to default shoves a blank string there
-    locale.present? ? locale : SiteSetting.default_locale
+  def html_lang
+    SiteSetting.default_locale.sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
-  def crawlable_meta_data(opts=nil)
+  def crawlable_meta_data(opts = nil)
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
@@ -187,10 +228,9 @@ module ApplicationHelper
 
     [:url, :title, :description].each do |property|
       if opts[property].present?
-        escape = (property != :image)
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
-        result << tag(:meta, { property: "og:#{property}", content: content }, nil, escape)
-        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, escape)
+        result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
+        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
     end
 
@@ -199,6 +239,14 @@ module ApplicationHelper
       result << tag(:meta, name: 'twitter:data1', value: "#{opts[:read_time]} mins 🕑")
       result << tag(:meta, name: 'twitter:label2', value: I18n.t("likes"))
       result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} ❤")
+    end
+
+    if opts[:published_time]
+      result << tag(:meta, property: 'article:published_time', content: opts[:published_time])
+    end
+
+    if opts[:ignore_canonical]
+      result << tag(:meta, property: 'og:ignore_canonical', content: true)
     end
 
     result.join("\n")
@@ -219,13 +267,11 @@ module ApplicationHelper
   end
 
   def gsub_emoji_to_unicode(str)
-    if str
-      str.gsub(/:([\w\-+]*):/) { |name| Emoji.lookup_unicode($1) || name }
-    end
+    Emoji.gsub_emoji_to_unicode(str)
   end
 
   def application_logo_url
-    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url).presence || SiteSetting.logo_url
   end
 
   def login_path
@@ -233,11 +279,11 @@ module ApplicationHelper
   end
 
   def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
+    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
   end
 
   def crawler_layout?
-    controller.try(:use_crawler_layout?)
+    controller&.use_crawler_layout?
   end
 
   def include_crawler_content?
@@ -274,7 +320,7 @@ module ApplicationHelper
     controller.class.name.split("::").first == "Admin"
   end
 
-  def category_badge(category, opts=nil)
+  def category_badge(category, opts = nil)
     CategoryBadge.html_for(category, opts).html_safe
   end
 
@@ -288,11 +334,11 @@ module ApplicationHelper
     return "" if Rails.env.test?
 
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select {|c| c =~ matcher }
+    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
-    result = ""
-    erbs.each {|erb| result << render(file: erb) }
+    result = +""
+    erbs.each { |erb| result << render(file: erb) }
     result.html_safe
   end
 
@@ -308,12 +354,16 @@ module ApplicationHelper
     end
   end
 
-  def theme_key
+  def theme_ids
     if customization_disabled?
       nil
     else
-      request.env[:resolved_theme_key]
+      request.env[:resolved_theme_ids]
     end
+  end
+
+  def current_homepage
+    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
 
   def build_plugin_html(name)
@@ -321,18 +371,28 @@ module ApplicationHelper
     DiscoursePluginRegistry.build_html(name, controller) || ""
   end
 
+  # If there is plugin HTML return that, otherwise yield to the template
+  def replace_plugin_html(name)
+    if (html = build_plugin_html(name)).present?
+      html
+    else
+      yield
+      nil
+    end
+  end
+
   def theme_lookup(name)
-    lookup = Theme.lookup_field(theme_key, mobile_view? ? :mobile : :desktop, name)
+    lookup = Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
   end
 
-  def discourse_stylesheet_link_tag(name, opts={})
-    if opts.key?(:theme_key)
-      key = opts[:theme_key] unless customization_disabled?
+  def discourse_stylesheet_link_tag(name, opts = {})
+    if opts.key?(:theme_ids)
+      ids = opts[:theme_ids] unless customization_disabled?
     else
-      key = theme_key
+      ids = theme_ids
     end
 
-    Stylesheet::Manager.stylesheet_link_tag(name, 'all', key)
+    Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
   end
 end

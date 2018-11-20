@@ -1,4 +1,4 @@
-import deprecated from 'discourse-common/lib/deprecated';
+import deprecated from "discourse-common/lib/deprecated";
 
 export function getOwner(obj) {
   if (Ember.getOwner) {
@@ -15,13 +15,19 @@ export function getRegister(obj) {
   const register = {
     lookup: (...args) => owner.lookup(...args),
     lookupFactory: (...args) => {
-      return owner.lookupFactory ? owner.lookupFactory(...args) : owner._lookupFactory(...args);
+      if (owner.factoryFor) {
+        return owner.factoryFor(...args);
+      } else if (owner._lookupFactory) {
+        return owner._lookupFactory(...args);
+      }
     },
 
     deprecateContainer(target) {
-      Object.defineProperty(target, 'container', {
+      Object.defineProperty(target, "container", {
         get() {
-          deprecated("Use `this.register` or `getOwner` instead of `this.container`");
+          deprecated(
+            "Use `this.register` or `getOwner` instead of `this.container`"
+          );
           return register;
         }
       });

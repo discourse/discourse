@@ -3,12 +3,15 @@
   <div class="controls">
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
-      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+      {{#link-to "preferences.username" class="btn btn-small btn-icon pad-left no-text"}}
+      {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
-  <div class='instructions'>
-    {{{i18n 'user.username.short_instructions' username=model.username}}}
-  </div>
+  {{#if siteSettings.enable_mentions}}
+    <div class='instructions'>
+      {{{i18n 'user.username.short_instructions' username=model.username}}}
+    </div>
+  {{/if}}
 </div>
 
 {{#if canEditName}}
@@ -34,7 +37,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -53,50 +56,124 @@
   <label class="control-label">{{i18n 'user.password.title'}}</label>
   <div class="controls">
     <a href {{action "changePassword"}} class='btn'>
-      {{fa-icon "envelope"}}
+      {{d-icon "envelope"}}
       {{#if model.no_password}}
         {{i18n 'user.change_password.set_password'}}
       {{else}}
         {{i18n 'user.change_password.action'}}
       {{/if}}
     </a>
+
     {{passwordProgress}}
+  </div>
+
+  <div class="controls pref-second-factor">
+    {{#if model.second_factor_enabled}}
+      {{i18n 'user.second_factor.disable'}}
+    {{else}}
+      {{discourse-linked-text action="showTwoFactorModal" text="user.second_factor.enable"}}
+    {{/if}}
+
+    {{#if isCurrentUser}}
+      {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
+        {{d-icon "pencil"}}
+      {{/link-to}}
+    {{/if}}
+  </div>
+
+  <div class="controls pref-second-factor-backup">
+    {{#if model.second_factor_enabled}}
+      {{#if model.second_factor_backup_enabled}}
+        {{i18n 'user.second_factor_backup.manage'}}
+      {{else}}
+        {{i18n 'user.second_factor_backup.enable_long'}}
+      {{/if}}
+
+      {{#if isCurrentUser}}
+        {{#link-to "preferences.second-factor-backup" class="btn btn-small btn-icon pad-left no-text"}}
+          {{d-icon "pencil"}}
+        {{/link-to}}
+      {{/if}}
+    {{/if}}
   </div>
 </div>
 {{/if}}
 
-<div class="control-group pref-avatar">
-  <label class="control-label">{{i18n 'user.avatar.title'}}</label>
-  <div class="controls">
-    {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
-    {{bound-avatar model "huge"}}
-    {{#unless siteSettings.sso_overrides_avatar}}
-      {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
-    {{/unless}}
+{{#if canUpdateAssociatedAccounts}}
+  <div class="control-group pref-associated-accounts">
+    <label class="control-label">{{i18n 'user.associated_accounts.title'}}</label>
+    {{#if associatedAccountsLoaded}}
+      <table>
+      {{#each authProviders as |authProvider|}}
+        <tr>
+          <td>{{authProvider.method.prettyName}}</td>
+
+          {{#if authProvider.account}}
+            <td>{{authProvider.account.description}}</td>
+            <td>
+              {{#if authProvider.method.can_revoke}}
+                {{#conditional-loading-spinner condition=revoking size='small'}}
+                  {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" icon="times-circle" }}
+                {{/conditional-loading-spinner}}
+              {{/if}}
+            </td>
+          {{else}}
+            <td colspan=2>
+              {{#if authProvider.method.can_connect}}
+                {{d-button action="connectAccount" actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
+              {{else}}
+                {{i18n 'user.associated_accounts.not_connected'}}
+              {{/if}}
+              </td>
+          {{/if}}
+
+        </tr>
+      {{/each}}
+      </table>
+    {{else}}
+      <div class="controls">
+        {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+      </div>
+    {{/if}}
   </div>
-</div>
+{{/if}}
+
+{{#unless siteSettings.sso_overrides_avatar}}
+  <div class="control-group pref-avatar">
+    <label class="control-label">{{i18n 'user.avatar.title'}}</label>
+    <div class="controls">
+      {{! we want the "huge" version even though we're downsizing it in CSS }}
+      {{bound-avatar model "huge"}}
+      {{d-button action="showAvatarSelector" actionParam=model class="pad-left" icon="pencil"}}
+    </div>
+  </div>
+{{/unless}}
 
 {{#if canSelectTitle}}
   <div class="control-group pref-title">
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
-      <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+      {{combo-box
+        value=newTitleInput
+        content=model.availableTitles
+        none="user.title.none"}}
     </div>
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-preferences-account"}}
+{{plugin-outlet name="user-preferences-account" args=(hash model=model save=(action "save"))}}
 
 <br/>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
+{{#if canSaveUser}}
+  <div class="control-group save-button">
+    <div class="controls">
+      {{partial 'user/preferences/save-button'}}
+    </div>
   </div>
-</div>
+{{/if}}
 
 
 {{#if model.canDeleteAccount}}

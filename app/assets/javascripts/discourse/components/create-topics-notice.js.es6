@@ -1,9 +1,9 @@
-import computed from 'ember-addons/ember-computed-decorators';
-import { observes } from 'ember-addons/ember-computed-decorators';
-import LivePostCounts from 'discourse/models/live-post-counts';
+import computed from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
+import LivePostCounts from "discourse/models/live-post-counts";
 
 export default Ember.Component.extend({
-  classNameBindings: ['hidden:hidden',':create-topics-notice'],
+  classNameBindings: ["hidden:hidden", ":create-topics-notice"],
 
   enabled: false,
 
@@ -11,24 +11,27 @@ export default Ember.Component.extend({
   publicPostCount: null,
 
   requiredTopics: 5,
-  requiredPosts: Ember.computed.alias('siteSettings.tl1_requires_read_posts'),
+  requiredPosts: Ember.computed.alias("siteSettings.tl1_requires_read_posts"),
 
   init() {
     this._super();
-    if (this.get('shouldSee')) {
+    if (this.get("shouldSee")) {
       let topicCount = 0,
-          postCount = 0;
+        postCount = 0;
 
       // Use data we already have before fetching live stats
-      _.each(this.site.get('categories'), function(c) {
-        if (!c.get('read_restricted')) {
-          topicCount += c.get('topic_count');
-          postCount  += c.get('post_count');
+      _.each(this.site.get("categories"), function(c) {
+        if (!c.get("read_restricted")) {
+          topicCount += c.get("topic_count");
+          postCount += c.get("post_count");
         }
       });
 
-      if (topicCount < this.get('requiredTopics') || postCount < this.get('requiredPosts')) {
-        this.set('enabled', true);
+      if (
+        topicCount < this.get("requiredTopics") ||
+        postCount < this.get("requiredPosts")
+      ) {
+        this.set("enabled", true);
         this.fetchLiveStats();
       }
     }
@@ -37,47 +40,68 @@ export default Ember.Component.extend({
   @computed()
   shouldSee() {
     const user = this.currentUser;
-    return user && user.get('admin') &&
-           this.siteSettings.show_create_topics_notice &&
-           !this.site.get('wizard_required');
+    return (
+      user &&
+      user.get("admin") &&
+      this.siteSettings.show_create_topics_notice &&
+      !this.site.get("wizard_required")
+    );
   },
 
-  @computed('enabled', 'shouldSee', 'publicTopicCount', 'publicPostCount')
+  @computed("enabled", "shouldSee", "publicTopicCount", "publicPostCount")
   hidden() {
-    return !this.get('enabled') || !this.get('shouldSee') || this.get('publicTopicCount') == null || this.get('publicPostCount') == null;
+    return (
+      !this.get("enabled") ||
+      !this.get("shouldSee") ||
+      this.get("publicTopicCount") == null ||
+      this.get("publicPostCount") == null
+    );
   },
 
-  @computed('publicTopicCount', 'publicPostCount', 'topicTrackingState.incomingCount')
+  @computed(
+    "publicTopicCount",
+    "publicPostCount",
+    "topicTrackingState.incomingCount"
+  )
   message() {
     var msg = null;
 
-    if(this.get('publicTopicCount') < this.get('requiredTopics') && this.get('publicPostCount') < this.get('requiredPosts')) {
-      msg = 'too_few_topics_and_posts_notice';
-    } else if (this.get('publicTopicCount') < this.get('requiredTopics')) {
-      msg = 'too_few_topics_notice';
+    if (
+      this.get("publicTopicCount") < this.get("requiredTopics") &&
+      this.get("publicPostCount") < this.get("requiredPosts")
+    ) {
+      msg = "too_few_topics_and_posts_notice";
+    } else if (this.get("publicTopicCount") < this.get("requiredTopics")) {
+      msg = "too_few_topics_notice";
     } else {
-      msg = 'too_few_posts_notice';
+      msg = "too_few_posts_notice";
     }
 
-    return new Handlebars.SafeString(I18n.t(msg, {
-      requiredTopics: this.get('requiredTopics'),
-      requiredPosts:  this.get('requiredPosts'),
-      currentTopics:  this.get('publicTopicCount'),
-      currentPosts:   this.get('publicPostCount')
-    }));
+    return new Handlebars.SafeString(
+      I18n.t(msg, {
+        requiredTopics: this.get("requiredTopics"),
+        requiredPosts: this.get("requiredPosts"),
+        currentTopics: this.get("publicTopicCount"),
+        currentPosts: this.get("publicPostCount")
+      })
+    );
   },
 
-  @observes('topicTrackingState.incomingCount')
+  @observes("topicTrackingState.incomingCount")
   fetchLiveStats() {
-    if (!this.get('enabled')) { return; }
+    if (!this.get("enabled")) {
+      return;
+    }
 
-    LivePostCounts.find().then((stats) => {
-      if(stats) {
-        this.set('publicTopicCount', stats.get('public_topic_count'));
-        this.set('publicPostCount', stats.get('public_post_count'));
-        if (this.get('publicTopicCount') >= this.get('requiredTopics')
-            && this.get('publicPostCount') >= this.get('requiredPosts')) {
-          this.set('enabled', false); // No more checks
+    LivePostCounts.find().then(stats => {
+      if (stats) {
+        this.set("publicTopicCount", stats.get("public_topic_count"));
+        this.set("publicPostCount", stats.get("public_post_count"));
+        if (
+          this.get("publicTopicCount") >= this.get("requiredTopics") &&
+          this.get("publicPostCount") >= this.get("requiredPosts")
+        ) {
+          this.set("enabled", false); // No more checks
         }
       }
     });

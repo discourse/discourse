@@ -1,76 +1,93 @@
 const RestModel = Ember.Object.extend({
-  isNew: Ember.computed.equal('__state', 'new'),
-  isCreated: Ember.computed.equal('__state', 'created'),
+  isNew: Ember.computed.equal("__state", "new"),
+  isCreated: Ember.computed.equal("__state", "created"),
   isSaving: false,
 
-  afterUpdate: Ember.K,
+  beforeCreate() {},
+  afterUpdate() {},
 
   update(props) {
-    if (this.get('isSaving')) { return Ember.RSVP.reject(); }
+    if (this.get("isSaving")) {
+      return Ember.RSVP.reject();
+    }
 
     props = props || this.updateProperties();
 
-    const type = this.get('__type'),
-          store = this.get('store');
+    const type = this.get("__type"),
+      store = this.get("store");
 
     const self = this;
-    self.set('isSaving', true);
-    return store.update(type, this.get('id'), props).then(function(res) {
-      const payload = self.__munge(res.payload || res.responseJson);
+    self.set("isSaving", true);
+    return store
+      .update(type, this.get("id"), props)
+      .then(function(res) {
+        const payload = self.__munge(res.payload || res.responseJson);
 
-      if (payload.success === "OK") {
-        Ember.warn("An update call should return the updated attributes");
-        res = props;
-      }
+        if (payload.success === "OK") {
+          Ember.warn("An update call should return the updated attributes");
+          res = props;
+        }
 
-      self.setProperties(payload);
-      self.afterUpdate(res);
-      return res;
-    }).finally(() => this.set('isSaving', false));
+        self.setProperties(payload);
+        self.afterUpdate(res);
+        res.target = self;
+        return res;
+      })
+      .finally(() => this.set("isSaving", false));
   },
 
   _saveNew(props) {
-    if (this.get('isSaving')) { return Ember.RSVP.reject(); }
+    if (this.get("isSaving")) {
+      return Ember.RSVP.reject();
+    }
 
     props = props || this.createProperties();
 
-    const type = this.get('__type'),
-          store = this.get('store'),
-          adapter = store.adapterFor(type);
+    this.beforeCreate(props);
+
+    const type = this.get("__type"),
+      store = this.get("store"),
+      adapter = store.adapterFor(type);
 
     const self = this;
-    self.set('isSaving', true);
-    return adapter.createRecord(store, type, props).then(function(res) {
-      if (!res) { throw "Received no data back from createRecord"; }
+    self.set("isSaving", true);
+    return adapter
+      .createRecord(store, type, props)
+      .then(function(res) {
+        if (!res) {
+          throw new Error("Received no data back from createRecord");
+        }
 
-      // We can get a response back without properties, for example
-      // when a post is queued.
-      if (res.payload) {
-        self.setProperties(self.__munge(res.payload));
-        self.set('__state', 'created');
-      }
+        // We can get a response back without properties, for example
+        // when a post is queued.
+        if (res.payload) {
+          self.setProperties(self.__munge(res.payload));
+          self.set("__state", "created");
+        }
 
-      res.target = self;
-      return res;
-    }).finally(() => this.set('isSaving', false));
+        res.target = self;
+        return res;
+      })
+      .finally(() => this.set("isSaving", false));
   },
 
   createProperties() {
-    throw "You must overwrite `createProperties()` before saving a record";
+    throw new Error(
+      "You must overwrite `createProperties()` before saving a record"
+    );
   },
 
   save(props) {
-    return this.get('isNew') ? this._saveNew(props) : this.update(props);
+    return this.get("isNew") ? this._saveNew(props) : this.update(props);
   },
 
   destroyRecord() {
-    const type = this.get('__type');
+    const type = this.get("__type");
     return this.store.destroyRecord(type, this);
   }
 });
 
 RestModel.reopenClass({
-
   // Overwrite and JSON will be passed through here before `create` and `update`
   munge(json) {
     return json;
@@ -81,7 +98,7 @@ RestModel.reopenClass({
     if (!args.store) {
       const container = Discourse.__container__;
       // Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
-      args.store = container.lookup('store:main');
+      args.store = container.lookup("service:store");
     }
 
     args.__munge = this.munge;

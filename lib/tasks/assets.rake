@@ -1,6 +1,7 @@
 task 'assets:precompile:before' do
 
   require 'uglifier'
+  require 'open3'
 
   unless %w{profile production}.include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
@@ -10,6 +11,10 @@ task 'assets:precompile:before' do
   # We use many .erbs that get out of date quickly, especially with plugins
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
+
+  # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
+  # is recompiled
+  Emoji.clear_cache
 
   if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
@@ -67,10 +72,10 @@ def assets_path
   "#{Rails.root}/public/assets"
 end
 
-def compress_node(from,to)
+def compress_node(from, to)
   to_path = "#{assets_path}/#{to}"
   assets = cdn_relative_path("/assets")
-  source_map_root = assets + ((d=File.dirname(from)) == "." ? "" : "/#{d}")
+  source_map_root = assets + ((d = File.dirname(from)) == "." ? "" : "/#{d}")
   source_map_url = cdn_path "/assets/#{to}.map"
 
   cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
@@ -85,17 +90,16 @@ def compress_node(from,to)
   result
 end
 
-def compress_ruby(from,to)
+def compress_ruby(from, to)
   data = File.read("#{assets_path}/#{from}")
 
   uglified, map = Uglifier.new(comments: :none,
-                               screw_ie8: true,
                                source_map: {
                                  filename: File.basename(from),
                                  output_filename: File.basename(to)
                                }
                               )
-                          .compile_with_map(data)
+    .compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
   File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
@@ -105,23 +109,44 @@ def compress_ruby(from,to)
 end
 
 def gzip(path)
-  STDERR.puts "gzip #{path}"
-  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
+  STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
+  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`.strip
+  raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+end
+
+if ENV['COMPRESS_BROTLI']&.to_i == 1
+  # different brotli versions use different parameters
+  ver_out, _ver_err, ver_status = Open3.capture3('brotli --version')
+  if !ver_status.success?
+    # old versions of brotli don't respond to --version
+    def brotli_command(path)
+      "brotli --quality 11 --input #{path} --output #{path}.br"
+    end
+  elsif ver_out >= "brotli 1.0.0"
+    def brotli_command(path)
+      "brotli -f --quality=11 #{path} --output=#{path}.br"
+    end
+  else
+    # not sure what to do here, not expecting this
+    raise "cannot determine brotli version"
+  end
 end
 
 def brotli(path)
   if ENV['COMPRESS_BROTLI']&.to_i == 1
-    STDERR.puts "brotli #{path}"
-    STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
-    STDERR.puts `chmod +r #{path}.br`
+    STDERR.puts brotli_command(path)
+    STDERR.puts `#{brotli_command(path)}`
+    raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+    STDERR.puts `chmod +r #{path}.br`.strip
+    raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   end
 end
 
-def compress(from,to)
+def compress(from, to)
   if $node_uglify
-    compress_node(from,to)
+    compress_node(from, to)
   else
-    compress_ruby(from,to)
+    compress_ruby(from, to)
   end
 end
 
@@ -144,29 +169,33 @@ task 'assets:precompile' => 'assets:precompile:before' do
     concurrent? do |proc|
       to_skip = Rails.configuration.assets.skip_minification || []
       manifest.files
-              .select{|k,v| k =~ /\.js$/}
-              .each do |file, info|
+        .select { |k, v| k =~ /\.js$/ }
+        .each do |file, info|
 
-          path = "#{assets_path}/#{file}"
+        path = "#{assets_path}/#{file}"
           _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
           _path = "#{assets_path}/#{_file}"
 
           if File.exists?(_path)
             STDERR.puts "Skipping: #{file} already compressed"
           else
-            STDERR.puts "Compressing: #{file}"
-
             proc.call do
+              start = Time.now
+              STDERR.puts "#{start} Compressing: #{file}"
+
               # We can specify some files to never minify
               unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
                 FileUtils.mv(path, _path)
-                compress(_file,file)
+                compress(_file, file)
               end
 
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
               brotli(path)
+
+              STDERR.puts "Done compressing #{file} : #{(Time.now - start).round(2)} secs"
+              STDERR.puts
             end
           end
       end

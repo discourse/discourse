@@ -8,10 +8,11 @@ describe I18n::Backend::DiscourseI18n do
 
   before do
     I18n.reload!
-    backend.store_translations(:en, :foo => 'Foo in :en', :bar => 'Bar in :en', :wat => "Hello %{count}")
-    backend.store_translations(:en, :items => {:one => 'one item', :other => "%{count} items" })
-    backend.store_translations(:de, :bar => 'Bar in :de')
-    backend.store_translations(:'de-AT', :baz => 'Baz in :de-AT')
+    backend.store_translations(:en, foo: 'Foo in :en', bar: 'Bar in :en', wat: "Hello %{count}")
+    backend.store_translations(:en, items: { one: 'one item', other: "%{count} items" })
+    backend.store_translations(:de, bar: 'Bar in :de')
+    backend.store_translations(:ru, baz: 'Baz in :ru')
+    backend.store_translations(:en, link: '[text](url)')
   end
 
   after do
@@ -27,11 +28,12 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   it 'can be searched by key or value' do
-    expect(backend.search(:en, 'fo')).to eq({'foo' => 'Foo in :en'})
-    expect(backend.search(:en, 'foo')).to eq({'foo' => 'Foo in :en' })
-    expect(backend.search(:en, 'Foo')).to eq({'foo' => 'Foo in :en' })
-    expect(backend.search(:en, 'hello')).to eq({'wat' => 'Hello %{count}' })
-    expect(backend.search(:en, 'items.one')).to eq({'items.one' => 'one item' })
+    expect(backend.search(:en, 'fo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'foo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'Foo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'hello')).to eq('wat' => 'Hello %{count}')
+    expect(backend.search(:en, 'items.one')).to eq('items.one' => 'one item')
+    expect(backend.search(:en, '](')).to eq('link' => '[text](url)')
   end
 
   it 'can return multiple results' do
@@ -41,9 +43,23 @@ describe I18n::Backend::DiscourseI18n do
     expect(results['items.other']).to eq('%{count} items')
   end
 
-  it 'uses fallback locales for searching' do
-    expect(backend.search(:de, 'bar')).to eq({'bar' => 'Bar in :de'})
-    expect(backend.search(:de, 'foo')).to eq({'foo' => 'Foo in :en'})
+  describe 'fallbacks' do
+    it 'uses fallback locales for searching' do
+      expect(backend.search(:de, 'bar')).to eq('bar' => 'Bar in :de')
+      expect(backend.search(:de, 'foo')).to eq('foo' => 'Foo in :en')
+    end
+
+    it 'uses fallback locales for translating' do
+      expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
+      expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
+    end
+
+    it 'uses default_locale as fallback when key exists' do
+      SiteSetting.default_locale = 'ru'
+      expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
+      expect(backend.translate(:de, 'baz')).to eq('Baz in :ru')
+      expect(backend.translate(:de, 'foo')).to eq('Foo in :en')
+    end
   end
 
   describe '#exists?' do
@@ -58,23 +74,23 @@ describe I18n::Backend::DiscourseI18n do
     it 'returns true when an existing key and an existing locale is given' do
       expect(backend.exists?(:en, :foo)).to eq(true)
       expect(backend.exists?(:de, :bar)).to eq(true)
-      expect(backend.exists?(:'de-AT', :baz)).to eq(true)
+      expect(backend.exists?(:ru, :baz)).to eq(true)
     end
 
     it 'returns false when a non-existing key and an existing locale is given' do
       expect(backend.exists?(:en, :bogus)).to eq(false)
       expect(backend.exists?(:de, :bogus)).to eq(false)
-      expect(backend.exists?(:'de-AT', :bogus)).to eq(false)
+      expect(backend.exists?(:ru, :bogus)).to eq(false)
     end
 
     it 'returns true when a key is given which is missing from the given locale and exists in a fallback locale' do
       expect(backend.exists?(:de, :foo)).to eq(true)
-      expect(backend.exists?(:'de-AT', :foo)).to eq(true)
+      expect(backend.exists?(:ru, :foo)).to eq(true)
     end
 
     it 'returns true when a key is given which is missing from the given locale and all its fallback locales' do
       expect(backend.exists?(:de, :baz)).to eq(false)
-      expect(backend.exists?(:'de-AT', :bogus)).to eq(false)
+      expect(backend.exists?(:ru, :bogus)).to eq(false)
     end
   end
 
@@ -98,9 +114,11 @@ describe I18n::Backend::DiscourseI18n do
 
     it "can be searched" do
       TranslationOverride.upsert!('en', 'wat', 'Overwritten value')
-      expect(I18n.search('wat', backend: backend)).to eq({'wat' => 'Overwritten value'})
-      expect(I18n.search('Overwritten', backend: backend)).to eq({'wat' => 'Overwritten value'})
-      expect(I18n.search('Hello', backend: backend)).to eq({})
+      expect(I18n.search('wat', backend: backend)).to eq('wat' => 'Overwritten value')
+      expect(I18n.search('Overwritten', backend: backend)).to eq('wat' => 'Overwritten value')
+
+      TranslationOverride.upsert!('en', 'wat', 'Overwritten with (parentheses)')
+      expect(I18n.search('Overwritten with (', backend: backend)).to eq('wat' => 'Overwritten with (parentheses)')
     end
 
     it 'supports disabling' do
@@ -147,7 +165,36 @@ describe I18n::Backend::DiscourseI18n do
       expect(I18n.translate('keys.magic', count: 2)).to eq("no magic keys")
     end
 
-    it 'supports ActiveModel::Naming#human' do
+    it "returns the overriden text when falling back" do
+      TranslationOverride.upsert!('en', 'got', "summer")
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got')).to eq('summer')
+      expect(I18n.with_locale(:zh_TW) { I18n.translate('got') }).to eq('summer')
+
+      TranslationOverride.upsert!('en', 'throne', "%{title} is the new queen")
+      I18n.backend.store_translations(:en, throne: "%{title} is the new king")
+
+      expect(I18n.t('throne', title: 'snow')).to eq('snow is the new queen')
+
+      expect(I18n.with_locale(:en) { I18n.t('throne', title: 'snow') })
+        .to eq('snow is the new queen')
+    end
+
+    it "returns override if it exists before falling back" do
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('winter')
+
+      TranslationOverride.upsert!('ru', 'got', "summer")
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('summer')
+    end
+
+    it 'does not affect ActiveModel::Naming#human' do
       Fish = Class.new(ActiveRecord::Base)
 
       TranslationOverride.upsert!('en', 'fish', "fake fish")

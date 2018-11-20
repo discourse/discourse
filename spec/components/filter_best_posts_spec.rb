@@ -10,9 +10,9 @@ describe FilterBestPosts do
 
   let(:topic_view) { TopicView.new(topic.id, coding_horror) }
 
-  let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1 )}
-  let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}
-  let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
+  let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
+  let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
+  let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
@@ -46,13 +46,11 @@ describe FilterBestPosts do
       expect(best.posts.count).to eq(0)
     end
 
-
     it "should filter out the posts with a score that is too low" do
 
       best = FilterBestPosts.new(topic, @filtered_posts, 99, min_score: 99)
       expect(best.posts.count).to eq(0)
     end
-
 
     it "should filter out everything if min replies not met" do
       best = FilterBestPosts.new(topic, @filtered_posts, 99, min_replies: 99)

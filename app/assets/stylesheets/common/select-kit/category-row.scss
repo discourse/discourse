@@ -1,0 +1,25 @@
+.select-kit {
+  .category-row {
+    .category-status {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 100%;
+      -webkit-box-flex: 0;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+    }
+    .category-desc {
+      max-width: 100%; // needed for IE11
+    }
+    .category-status {
+      .badge-wrapper.box {
+        margin-bottom: 1px;
+        margin-top: 1px;
+      }
+    }
+    .topic-count {
+      white-space: nowrap;
+    }
+  }
+}

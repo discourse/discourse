@@ -1,21 +1,19 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
-
   .modal-inner-container {
-    min-width: 960px;
-    min-height: 500px;
+    max-width: 960px;
+  }
+  .modal-body {
+    height: 70vh;
   }
   #revision-controls {
-    float: left;
-    padding-right: 5px;
-
     .btn[disabled] {
       cursor: not-allowed;
-      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+      background-color: $primary-low;
     }
     .btn-danger[disabled] {
-      background-color: dark-light-diff($danger, $secondary, 30%, -60%);
+      background-color: $danger-medium;
     }
   }
   #display-modes {
@@ -24,19 +22,15 @@
     float: right;
 
     .btn {
-      background-color:inherit;
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      background-color: inherit;
+      color: blend-primary-secondary(50%);
     }
     .btn-primary {
       color: $primary;
       font-weight: bold;
     }
   }
-  #revision-details {
-    padding: 5px;
-    margin-top: 10px;
-    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  }
+
   #revisions {
     word-wrap: break-word;
     table {
@@ -52,7 +46,7 @@
   }
   .markdown {
     font-family: monospace;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -64,9 +58,11 @@
       white-space: pre-wrap;
     }
   }
-  .span8, .markdown {
+  .revision-content,
+  .markdown {
     img {
-      max-width: 400px;
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
   .modal-header {

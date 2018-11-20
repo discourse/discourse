@@ -1,10 +1,22 @@
-require "open-uri"
 require "final_destination"
+require "mini_mime"
+require "open-uri"
 
 class FileHelper
 
+  def self.log(log_level, message)
+    Rails.logger.public_send(
+      log_level,
+      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+    )
+  end
+
   def self.is_image?(filename)
     filename =~ images_regexp
+  end
+
+  class FakeIO
+    attr_accessor :status
   end
 
   def self.download(url,
@@ -12,31 +24,80 @@ class FileHelper
                     tmp_file_name:,
                     follow_redirect: false,
                     read_timeout: 5,
-                    skip_rate_limit: false)
+                    skip_rate_limit: false,
+                    verbose: false,
+                    retain_on_max_file_size_exceeded: false)
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = FinalDestination.new(
+    tmp = nil
+
+    fd = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
-      skip_rate_limit: skip_rate_limit
-    ).resolve
-    return unless uri.present?
+      skip_rate_limit: skip_rate_limit,
+      verbose: verbose
+    )
 
-    extension = File.extname(uri.path)
-    tmp = Tempfile.new([tmp_file_name, extension])
+    fd.get do |response, chunk, uri|
+      if tmp.nil?
+        # error handling
+        if uri.blank?
+          if response.code.to_i >= 400
+            # attempt error API compatibility
+            io = FakeIO.new
+            io.status = [response.code, ""]
+            raise OpenURI::HTTPError.new("#{response.code} Error", io)
+          else
+            log(:error, "FinalDestination did not work for: #{url}") if verbose
+            throw :done
+          end
+        end
 
-    File.open(tmp.path, "wb") do |f|
-      downloaded = uri.open("rb", read_timeout: read_timeout)
-      while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
-        f.write(data)
+        if response.content_type.present?
+          ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
+          ext = "jpg" if ext == "jpe"
+          tmp_file_ext = "." + ext if ext.present?
+        end
+
+        tmp_file_ext ||= File.extname(uri.path)
+        tmp = Tempfile.new([tmp_file_name, tmp_file_ext])
+        tmp.binmode
       end
-      # tiny files are StringIO, no close! on them
-      downloaded.try(:close!) rescue nil
+
+      tmp.write(chunk)
+
+      if tmp.size > max_file_size
+        unless retain_on_max_file_size_exceeded
+          tmp.close
+          tmp = nil
+        end
+
+        throw :done
+      end
     end
 
+    tmp&.rewind
     tmp
+  end
+
+  def self.optimize_image!(filename)
+    ImageOptim.new(
+      # GLOBAL
+      timeout: 15,
+      skip_missing_workers: true,
+      # PNG
+      optipng: { level: 2, strip: SiteSetting.strip_image_metadata },
+      advpng: false,
+      pngcrush: false,
+      pngout: false,
+      pngquant: false,
+      # JPG
+      jpegoptim: { strip: SiteSetting.strip_image_metadata ? "all" : "none" },
+      jpegtran: false,
+      jpegrecompress: false,
+    ).optimize_image!(filename)
   end
 
   private

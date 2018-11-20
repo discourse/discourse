@@ -22,7 +22,7 @@
   {{#if showMore}}
     <div class="radios">
       <div class="inputs">
-        {{input value=imageLink laceholder="http://example.com"}}
+        {{input value=imageLink placeholder="http://example.com"}}
         <span class="description">{{i18n 'upload_selector.image_link'}}</span>
       </div>
     </div>
@@ -42,6 +42,6 @@
 
 <div class="modal-footer">
   {{d-button action="upload" class='btn-primary' icon=uploadIcon label='upload'}}
-  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{d-modal-cancel close=(action "closeModal")}}
   {{#if remote}}<a {{action "toggleShowMore"}} class="pull-right">{{i18n 'show_more'}}</a>{{/if}}
 </div>

@@ -1,4 +1,4 @@
-class AddPostCountStatsColumnsToCategories < ActiveRecord::Migration
+class AddPostCountStatsColumnsToCategories < ActiveRecord::Migration[4.2]
   def change
     change_table :categories do |t|
       t.integer :posts_year

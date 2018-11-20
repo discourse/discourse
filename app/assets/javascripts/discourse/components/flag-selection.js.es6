@@ -1,17 +1,19 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { observes } from "ember-addons/ember-computed-decorators";
 
 // Mostly hacks because `flag.hbs` didn't use `radio-button`
 export default Ember.Component.extend({
   _selectRadio() {
-    this.$("input[type='radio']").prop('checked', false);
+    this.$("input[type='radio']").prop("checked", false);
 
-    const nameKey = this.get('nameKey');
-    if (!nameKey) { return; }
+    const nameKey = this.get("nameKey");
+    if (!nameKey) {
+      return;
+    }
 
-    this.$('#radio_' + nameKey).prop('checked', 'true');
+    this.$("#radio_" + nameKey).prop("checked", "true");
   },
 
-  @observes('nameKey')
+  @observes("nameKey")
   selectedChanged() {
     Ember.run.next(this, this._selectRadio);
   }

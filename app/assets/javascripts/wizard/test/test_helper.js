@@ -19,22 +19,31 @@
 //= require locales/en
 //= require fake_xml_http_request
 //= require route-recognizer
-//= require pretender
+//= require pretender/pretender
 //= require ./wizard-pretender
-
 
 // Trick JSHint into allow document.write
 var d = document;
-d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
-d.write('<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>');
+d.write(
+  '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
+);
+d.write(
+  "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
+);
 
 if (window.Logster) {
   Logster.enabled = false;
 } else {
   window.Logster = { enabled: false };
 }
+Ember.Test.adapter = window.QUnitAdapter.create();
 
-var createPretendServer = require('wizard/test/wizard-pretender', null, null, false).default;
+var createPretendServer = requirejs(
+  "wizard/test/wizard-pretender",
+  null,
+  null,
+  false
+).default;
 
 var server;
 QUnit.testStart(function() {
@@ -45,12 +54,12 @@ QUnit.testDone(function() {
   server.shutdown();
 });
 
-var _testApp = require('wizard/test/helpers/start-app').default();
-var _buildResolver = require('discourse-common/resolver').buildResolver;
-window.setResolver(_buildResolver('wizard').create({ namespace: _testApp }));
+var _testApp = requirejs("wizard/test/helpers/start-app").default();
+var _buildResolver = requirejs("discourse-common/resolver").buildResolver;
+window.setResolver(_buildResolver("wizard").create({ namespace: _testApp }));
 
 Object.keys(requirejs.entries).forEach(function(entry) {
-  if ((/\-test/).test(entry)) {
-    require(entry, null, null, true);
+  if (/\-test/.test(entry)) {
+    requirejs(entry, null, null, true);
   }
 });

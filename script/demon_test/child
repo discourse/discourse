@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+$parent_pid = ARGV[0].to_i
+
+puts "Hello from #{Process.pid} my parent is #{$parent_pid}"
+
+Thread.new do
+
+  def alive?(pid)
+    Process.kill(0, pid)
+    true
+  rescue
+    false
+  end
+
+  while true
+    begin
+      unless alive?($parent_pid)
+        STDERR.puts "Parent was terminated!"
+        Process.kill "TERM", Process.pid
+        sleep 10
+        Process.kill "KILL", Process.pid
+      end
+    rescue => e
+      STDERR.puts "URGENT monitoring thread had an exception #{e}"
+    end
+    sleep 1
+  end
+end
+
+sleep

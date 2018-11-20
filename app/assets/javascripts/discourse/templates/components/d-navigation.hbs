@@ -1,0 +1,28 @@
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories}}
+
+{{#if showCategoryAdmin}}
+  {{categories-admin-dropdown
+    create=createCategory
+    reorder=reorderCategories}}
+{{/if}}
+
+{{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+
+{{#if showCategoryNotifications}}
+  {{category-notifications-button value=category.notification_level category=category}}
+{{/if}}
+
+{{create-topic-button
+  canCreateTopic=canCreateTopic
+  action=createTopic
+  disabled=createTopicDisabled
+  label=createTopicLabel
+}}
+
+{{#if showCategoryEdit}}
+  {{d-button
+    class="btn-default edit-category"
+    action=editCategory
+    icon="wrench"
+    label="category.edit_long"}}
+{{/if}}

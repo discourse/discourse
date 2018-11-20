@@ -1,0 +1,21 @@
+.admin-report.post-edits {
+  .admin-report-table {
+    .report-table {
+      thead tr th.edit_reason,
+      tbody tr td.edit_reason {
+        width: auto;
+      }
+    }
+  }
+}
+
+.admin-report.trending-search {
+  .admin-report-table {
+    .report-table {
+      thead tr th.term,
+      tbody tr td.term {
+        width: 50%;
+      }
+    }
+  }
+}

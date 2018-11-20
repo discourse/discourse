@@ -46,7 +46,6 @@
   ```
 **/
 const Singleton = Ember.Mixin.create({
-
   current() {
     if (!this._current) {
       this._current = this.createCurrent();
@@ -67,9 +66,11 @@ const Singleton = Ember.Mixin.create({
   // Returns OR sets a property on the singleton instance.
   currentProp(property, value) {
     var instance = this.current();
-    if (!instance) { return; }
+    if (!instance) {
+      return;
+    }
 
-    if (typeof(value) !== "undefined") {
+    if (typeof value !== "undefined") {
       instance.set(property, value);
       return value;
     } else {

@@ -1,6 +1,13 @@
+# frozen_string_literal: true
+
+require_dependency 'enum'
+
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
+
+  cattr_accessor :preloaded_custom_field_names
+  self.preloaded_custom_field_names = Set.new
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
@@ -23,62 +30,125 @@ class Group < ActiveRecord::Base
   after_save :update_title
 
   after_save :enqueue_update_mentions_job,
-    if: Proc.new { |g| g.name_was && g.name_changed? }
+    if: Proc.new { |g| g.name_before_last_save && g.saved_change_to_name? }
 
   after_save :expire_cache
   after_destroy :expire_cache
+
+  after_commit :trigger_group_created_event, on: :create
+  after_commit :trigger_group_updated_event, on: :update
+  after_commit :trigger_group_destroyed_event, on: :destroy
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
   end
 
   validate :name_format_validator
-  validates_uniqueness_of :name, case_sensitive: false
+  validates :name, presence: true
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
+  validate :can_allow_membership_requests, if: :allow_membership_requests
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
+  validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
-    :everyone => 0,
-    :admins => 1,
-    :moderators => 2,
-    :staff => 3,
-    :trust_level_0 => 10,
-    :trust_level_1 => 11,
-    :trust_level_2 => 12,
-    :trust_level_3 => 13,
-    :trust_level_4 => 14
+    everyone: 0,
+    admins: 1,
+    moderators: 2,
+    staff: 3,
+    trust_level_0: 10,
+    trust_level_1: 11,
+    trust_level_2: 12,
+    trust_level_3: 13,
+    trust_level_4: 14
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
   STAFF_GROUPS = [:admins, :moderators, :staff]
 
   ALIAS_LEVELS = {
-    :nobody => 0,
-    :only_admins => 1,
-    :mods_and_admins => 2,
-    :members_mods_and_admins => 3,
-    :everyone => 99
+    nobody: 0,
+    only_admins: 1,
+    mods_and_admins: 2,
+    members_mods_and_admins: 3,
+    everyone: 99
   }
 
-  validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
+  def self.visibility_levels
+    @visibility_levels = Enum.new(
+      public: 0,
+      members: 1,
+      staff: 2,
+      owners: 3
+    )
+  end
 
-  scope :visible_groups, ->(user) {
-    groups = Group.order(name: :asc).where("groups.id > 0")
+  validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
+  validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-    if !user || !user.admin
-      owner_group_ids = GroupUser.where(user: user, owner: true).pluck(:group_id)
+  scope :visible_groups, Proc.new { |user, order|
+    groups = Group.order(order || "name ASC").where("groups.id > 0")
 
-      groups = groups.where("
-        (groups.automatic = false AND groups.visible = true) OR groups.id IN (?)
-      ", owner_group_ids)
+    unless user&.admin
+      sql = <<~SQL
+        groups.id IN (
+          SELECT g.id FROM groups g WHERE g.visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id
+          WHERE g.visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          LEFT JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :owners
+
+        )
+      SQL
+
+      groups = groups.where(
+        sql,
+        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      )
+
     end
 
     groups
   }
 
-  scope :mentionable, lambda {|user|
+  scope :mentionable, lambda { |user|
 
+    where("mentionable_level in (:levels) OR
+          (
+            mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: alias_levels(user), user_id: user && user.id)
+  }
+
+  scope :messageable, lambda { |user|
+
+    where("messageable_level in (:levels) OR
+          (
+            messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: alias_levels(user), user_id: user && user.id)
+  }
+
+  def self.alias_levels(user)
     levels = [ALIAS_LEVELS[:everyone]]
 
     if user && user.admin?
@@ -92,12 +162,8 @@ class Group < ActiveRecord::Base
                 ALIAS_LEVELS[:members_mods_and_admins]]
     end
 
-    where("alias_level in (:levels) OR
-          (
-            alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-            SELECT group_id FROM group_users WHERE user_id = :user_id)
-          )", levels: levels, user_id: user && user.id )
-  }
+    levels
+  end
 
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
@@ -124,66 +190,58 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def posts_for(guardian, before_post_id=nil)
+  def posts_for(guardian, opts = nil)
+    opts ||= {}
     user_ids = group_users.map { |gu| gu.user_id }
     result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where(user_id: user_ids)
-                 .where('topics.archetype <> ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
+      .references(:posts, :topics, :category)
+      .where(user_id: user_ids)
+      .where('topics.archetype <> ?', Archetype.private_message)
+      .where('topics.visible')
+      .where(post_type: Post.types[:regular])
+
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def messages_for(guardian, before_post_id=nil)
+  def messages_for(guardian, opts = nil)
+    opts ||= {}
+
     result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype = ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
+      .references(:posts, :topics, :category)
+      .where('topics.archetype = ?', Archetype.private_message)
+      .where(post_type: Post.types[:regular])
+      .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
+
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def mentioned_posts_for(guardian, before_post_id=nil)
+  def mentioned_posts_for(guardian, opts = nil)
+    opts ||= {}
     result = Post.joins(:group_mentions)
-                 .includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype <> ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('group_mentions.group_id = ?', self.id)
+      .includes(:user, :topic, topic: :category)
+      .references(:posts, :topics, :category)
+      .where('topics.archetype <> ?', Archetype.private_message)
+      .where(post_type: Post.types[:regular])
+      .where('group_mentions.group_id = ?', self.id)
+
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
-    result.order('posts.created_at desc')
-  end
-
-  def messages_for(guardian, before_post_id=nil)
-    result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype = ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
-
-    result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
-    result.order('posts.created_at desc')
-  end
-
-  def mentioned_posts_for(guardian, before_post_id=nil)
-    result = Post.joins(:group_mentions)
-                 .includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype <> ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('group_mentions.group_id = ?', self.id)
-
-    result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
@@ -196,7 +254,12 @@ class Group < ActiveRecord::Base
 
     unless group = self.lookup_group(name)
       group = Group.new(name: name.to_s, automatic: true)
-      group.default_notification_level = 2 if AUTO_GROUPS[:moderators] == id
+
+      if AUTO_GROUPS[:moderators] == id
+        group.default_notification_level = 2
+        group.messageable_level = ALIAS_LEVELS[:everyone]
+      end
+
       group.id = id
       group.save!
     end
@@ -205,34 +268,35 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}").downcase
     validator = UsernameValidator.new(localized_name)
 
-    group.name =
-      if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
-        localized_name
-      else
-        name
-      end
+    if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
+      group.name = localized_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
-    if name == :everyone
-      group.visible = false
+    case name
+    when :everyone
+      group.visibility_level = Group.visibility_levels[:owners]
       group.save!
       return group
+    when :moderators
+      group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
     # Remove people from groups they don't belong in.
-    remove_subquery = case name
-                      when :admins
-                        "SELECT id FROM users WHERE NOT admin"
-                      when :moderators
-                        "SELECT id FROM users WHERE NOT moderator"
-                      when :staff
-                        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
-                      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                        "SELECT id FROM users WHERE trust_level < #{id - 10}"
-                      end
+    remove_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
+      when :moderators
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
+      when :staff
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
+      end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       DELETE FROM group_users
             USING (#{remove_subquery}) X
             WHERE group_id = #{group.id}
@@ -240,20 +304,21 @@ class Group < ActiveRecord::Base
     SQL
 
     # Add people to groups
-    insert_subquery = case name
-                      when :admins
-                        "SELECT id FROM users WHERE admin"
-                      when :moderators
-                        "SELECT id FROM users WHERE moderator"
-                      when :staff
-                        "SELECT id FROM users WHERE moderator OR admin"
-                      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
-                      when :trust_level_0
-                        "SELECT id FROM users"
-                      end
+    insert_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE id > 0 AND admin"
+      when :moderators
+        "SELECT id FROM users WHERE id > 0 AND moderator"
+      when :staff
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
+      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
+      when :trust_level_0
+        "SELECT id FROM users WHERE id > 0"
+      end
 
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       INSERT INTO group_users (group_id, user_id, created_at, updated_at)
            SELECT #{group.id}, X.id, now(), now()
              FROM group_users
@@ -272,10 +337,11 @@ class Group < ActiveRecord::Base
   def self.ensure_consistency!
     reset_all_counters!
     refresh_automatic_groups!
+    refresh_has_messages!
   end
 
   def self.reset_all_counters!
-    exec_sql <<-SQL
+    DB.exec <<-SQL
       WITH X AS (
           SELECT group_id
                , COUNT(user_id) users
@@ -295,6 +361,18 @@ class Group < ActiveRecord::Base
     args.each { |group| refresh_automatic_group!(group) }
   end
 
+  def self.refresh_has_messages!
+    DB.exec <<-SQL
+      UPDATE groups g SET has_messages = false
+      WHERE NOT EXISTS (SELECT tg.id
+                          FROM topic_allowed_groups tg
+                    INNER JOIN topics t ON t.id = tg.topic_id
+                         WHERE tg.group_id = g.id
+                           AND t.deleted_at IS NULL)
+      AND g.has_messages = true
+    SQL
+  end
+
   def self.ensure_automatic_groups!
     AUTO_GROUPS.each_key do |name|
       refresh_automatic_group!(name) unless lookup_group(name)
@@ -305,8 +383,10 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_group(name)
-    Group.where(visible: true).where("name ILIKE :term_like", term_like: "#{name}%")
+  def self.search_groups(name, groups: nil)
+    (groups || Group).where(
+      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
+    )
   end
 
   def self.lookup_group(name)
@@ -320,22 +400,19 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.lookup_group_ids(opts)
-    if group_ids = opts[:group_ids]
-      group_ids = group_ids.split(",").map(&:to_i)
-      group_ids = Group.where(id: group_ids).pluck(:id)
+  def self.lookup_groups(group_ids: [], group_names: [])
+    if group_ids.present?
+      group_ids = group_ids.split(",")
+      group_ids.map!(&:to_i)
+      groups = Group.where(id: group_ids) if group_ids.present?
     end
 
-    group_ids ||= []
-
-    if group_names = opts[:group_names]
+    if group_names.present?
       group_names = group_names.split(",")
-      if group_names.present?
-        group_ids += Group.where(name: group_names).pluck(:id)
-      end
+      groups = (groups || Group).where(name: group_names) if group_names.present?
     end
 
-    group_ids
+    groups || []
   end
 
   def self.desired_trust_level_groups(trust_level)
@@ -362,6 +439,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # given something that might be a group name, id, or record, return the group id
+  def self.group_id_from_param(group_param)
+    return group_param.id if group_param.is_a?(Group)
+    return group_param if group_param.is_a?(Integer)
+
+    # subtle, using Group[] ensures the group exists in the DB
+    Group[group_param.to_sym].id
+  end
+
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
   end
@@ -373,11 +459,11 @@ class Group < ActiveRecord::Base
     additions = expected - current
     deletions = current - expected
 
-    map = Hash[*User.where(username: additions+deletions)
-                 .select('id,username')
-                 .map{|u| [u.username,u.id]}.flatten]
+    map = Hash[*User.where(username: additions + deletions)
+      .select('id,username')
+      .map { |u| [u.username, u.id] }.flatten]
 
-    deletions = Set.new(deletions.map{|d| map[d]})
+    deletions = Set.new(deletions.map { |d| map[d] })
 
     @deletions = []
     group_users.each do |gu|
@@ -394,8 +480,19 @@ class Group < ActiveRecord::Base
     users.pluck(:username).join(",")
   end
 
+  PUBLISH_CATEGORIES_LIMIT = 10
+
   def add(user)
     self.users.push(user) unless self.users.include?(user)
+
+    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
+      MessageBus.publish('/categories', {
+        categories: ActiveModel::ArraySerializer.new(self.categories).as_json
+      }, user_ids: [user.id])
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
+
     self
   end
 
@@ -406,9 +503,9 @@ class Group < ActiveRecord::Base
 
   def add_owner(user)
     if group_user = self.group_users.find_by(user: user)
-      group_user.update_attributes!(owner: true) if !group_user.owner
+      group_user.update!(owner: true) if !group_user.owner
     else
-      GroupUser.create!(user: user, group: self, owner: true)
+      self.group_users.create!(user: user, owner: true)
     end
   end
 
@@ -417,126 +514,224 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids)
-    if user_ids.present?
-      Group.exec_sql("INSERT INTO group_users
-                                  (group_id, user_id, created_at, updated_at)
-                     SELECT #{self.id},
-                            u.id,
-                            CURRENT_TIMESTAMP,
-                            CURRENT_TIMESTAMP
-                     FROM users AS u
-                     WHERE u.id IN (#{user_ids.join(', ')})
-                       AND NOT EXISTS(SELECT 1 FROM group_users AS gu
-                                      WHERE gu.user_id = u.id AND
-                                            gu.group_id = #{self.id})")
+    return unless user_ids.present?
+
+    Group.transaction do
+      sql = <<~SQL
+      INSERT INTO group_users
+        (group_id, user_id, created_at, updated_at)
+      SELECT
+        #{self.id},
+        u.id,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      FROM users AS u
+      WHERE u.id IN (:user_ids)
+      AND NOT EXISTS (
+        SELECT 1 FROM group_users AS gu
+        WHERE gu.user_id = u.id AND
+        gu.group_id = :group_id
+      )
+      SQL
+
+      DB.exec(sql, group_id: self.id, user_ids: user_ids)
+
+      user_attributes = {}
 
       if self.primary_group?
-        User.where(id: user_ids).update_all(primary_group_id: self.id)
+        user_attributes[:primary_group_id] = self.id
       end
 
       if self.title.present?
-        User.where(id: user_ids).update_all(title: self.title)
+        user_attributes[:title] = self.title
       end
 
-      if self.grant_trust_level.present?
-        Jobs.enqueue(:bulk_grant_trust_level, user_ids: user_ids, trust_level: self.grant_trust_level)
+      if user_attributes.present?
+        User.where(id: user_ids).update_all(user_attributes)
       end
+
+      # update group user count
+      DB.exec <<~SQL
+        UPDATE groups g
+        SET user_count =
+          (SELECT COUNT(gu.user_id)
+           FROM group_users gu
+           WHERE gu.group_id = g.id)
+        WHERE g.id = #{self.id};
+      SQL
     end
-    true
+
+    if self.grant_trust_level.present?
+      Jobs.enqueue(:bulk_grant_trust_level,
+        user_ids: user_ids,
+        trust_level: self.grant_trust_level
+      )
+    end
+
+    self
   end
 
   def staff?
     STAFF_GROUPS.include?(self.name.to_sym)
   end
 
+  def self.member_of(groups, user)
+    groups.joins(
+      "LEFT JOIN group_users gu ON gu.group_id = groups.id
+    ").where("gu.user_id = ?", user.id)
+  end
+
+  def self.owner_of(groups, user)
+    self.member_of(groups, user).where("gu.owner")
+  end
+
+  %i{
+    group_created
+    group_updated
+    group_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
+  end
+
   protected
 
-    def name_format_validator
-      UsernameValidator.perform_validation(self, 'name')
+  def name_format_validator
+
+    return if !name_changed?
+
+    # avoid strip! here, it works now
+    # but may not continue to work long term, especially
+    # once we start returning frozen strings
+    if self.name != (stripped = self.name.strip)
+      self.name = stripped
     end
 
-    def automatic_membership_email_domains_format_validator
-      return if self.automatic_membership_email_domains.blank?
+    UsernameValidator.perform_validation(self, 'name') || begin
+      name_lower = self.name.downcase
 
-      domains = self.automatic_membership_email_domains.split("|")
-      domains.each do |domain|
-        domain.sub!(/^https?:\/\//, '')
-        domain.sub!(/\/.*$/, '')
-        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
-      end
-      self.automatic_membership_email_domains = domains.join("|")
-    end
+      if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
 
-    # hack around AR
-    def destroy_deletions
-      if @deletions
-        @deletions.each do |gu|
-          gu.destroy
-          User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
+        existing = DB.exec(
+          User::USERNAME_EXISTS_SQL, username: name_lower
+        ) > 0
+
+        if existing
+          errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
         end
       end
-      @deletions = nil
     end
+  end
 
-    def automatic_group_membership
-      if self.automatic_membership_retroactive
-        Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+  def automatic_membership_email_domains_format_validator
+    return if self.automatic_membership_email_domains.blank?
+
+    domains = self.automatic_membership_email_domains.split("|")
+    domains.each do |domain|
+      domain.sub!(/^https?:\/\//, '')
+      domain.sub!(/\/.*$/, '')
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+    end
+    self.automatic_membership_email_domains = domains.join("|")
+  end
+
+  # hack around AR
+  def destroy_deletions
+    if @deletions
+      @deletions.each do |gu|
+        gu.destroy
+        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
       end
     end
+    @deletions = nil
+  end
 
-    def update_title
-      return if new_record? && !self.title.present?
-
-      if self.title_changed?
-        sql = <<-SQL.squish
-          UPDATE users
-             SET title = :title
-           WHERE (title = :title_was OR title = '' OR title IS NULL)
-             AND COALESCE(title,'') <> COALESCE(:title,'')
-             AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
-        SQL
-
-        self.class.exec_sql(sql, title: title, title_was: title_was, id: id)
-      end
+  def automatic_group_membership
+    if self.automatic_membership_retroactive
+      Jobs.enqueue(:automatic_group_membership, group_id: self.id)
     end
+  end
 
-    def update_primary_group
-      return if new_record? && !self.primary_group?
+  def update_title
+    return if new_record? && !self.title.present?
 
-      if self.primary_group_changed?
-        sql = <<SQL
+    if self.saved_change_to_title?
+      sql = <<~SQL
+        UPDATE users
+           SET title = :title
+         WHERE (title = :title_was OR title = '' OR title IS NULL)
+           AND COALESCE(title,'') <> COALESCE(:title,'')
+           AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
+      SQL
+
+      DB.exec(sql, title: title, title_was: title_before_last_save, id: id)
+    end
+  end
+
+  def update_primary_group
+    return if new_record? && !self.primary_group?
+
+    if self.saved_change_to_primary_group?
+      sql = <<~SQL
         UPDATE users
         /*set*/
         /*where*/
-SQL
+      SQL
 
-        builder = SqlBuilder.new(sql)
-        builder.where("
-              id IN (
-                SELECT user_id
-                FROM group_users
-                WHERE group_id = :id
-              )", id: id)
+      builder = DB.build(sql)
+      builder.where(<<~SQL, id: id)
+        id IN (
+          SELECT user_id
+          FROM group_users
+          WHERE group_id = :id
+        )
+      SQL
 
-        if primary_group
-          builder.set("primary_group_id = :id")
-        else
-          builder.set("primary_group_id = NULL")
-          builder.where("primary_group_id = :id")
-        end
-
-        builder.exec
+      if primary_group
+        builder.set("primary_group_id = :id")
+      else
+        builder.set("primary_group_id = NULL")
+        builder.where("primary_group_id = :id")
       end
+
+      builder.exec
     end
+  end
 
   private
 
-    def enqueue_update_mentions_job
-      Jobs.enqueue(:update_group_mentions,
-        previous_name: self.name_was,
-        group_id: self.id
-      )
+  def validate_grant_trust_level
+    unless TrustLevel.valid?(self.grant_trust_level)
+      self.errors.add(:base, I18n.t(
+        'groups.errors.grant_trust_level_not_valid',
+        trust_level: self.grant_trust_level
+      ))
     end
+  end
+
+  def can_allow_membership_requests
+    valid = true
+
+    valid =
+      if self.persisted?
+        self.group_users.where(owner: true).exists?
+      else
+        self.group_users.any?(&:owner)
+      end
+
+    if !valid
+      self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
+    end
+  end
+
+  def enqueue_update_mentions_job
+    Jobs.enqueue(:update_group_mentions,
+      previous_name: self.name_before_last_save,
+      group_id: self.id
+    )
+  end
 end
 
 # == Schema Information
@@ -549,8 +744,6 @@ end
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
-#  alias_level                        :integer          default(0)
-#  visible                            :boolean          default(TRUE), not null
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
@@ -563,10 +756,15 @@ end
 #  flair_color                        :string
 #  bio_raw                            :text
 #  bio_cooked                         :text
-#  public                             :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
+#  visibility_level                   :integer          default(0), not null
+#  public_exit                        :boolean          default(FALSE), not null
+#  public_admission                   :boolean          default(FALSE), not null
+#  membership_request_template        :text
+#  messageable_level                  :integer          default(0)
+#  mentionable_level                  :integer          default(0)
 #
 # Indexes
 #

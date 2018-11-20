@@ -1,0 +1,76 @@
+<section class="user-preferences second-factor-backup-preferences">
+  <form class="form-horizontal">
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n "user.second_factor_backup.title"}}</h3>
+        {{#if backupEnabled}}
+          <p>{{{i18n "user.second_factor_backup.remaining_codes" count=remainingCodes}}}</p>
+        {{/if}}
+      </div>
+      <div class="controls">
+        {{#if successMessage}}
+          <div class="alert alert-success">
+            {{successMessage}}
+          </div>
+        {{/if}}
+
+        {{#if errorMessage}}
+          <div class="alert alert-error">
+            {{errorMessage}}
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
+    <div class="control-group">
+      <div class="controls">
+        {{second-factor-input
+          value=secondFactorToken
+          maxlength=6
+          inputId="second-factor-token"}}
+
+        <div class='instructions'>
+          {{i18n "user.second_factor.disable_description"}}
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <div class="actions">
+            {{d-button
+              action="generateSecondFactorCodes"
+              class="btn btn-primary"
+              disabled=isDisabledGenerateBackupCodeBtn
+              label=generateBackupCodeBtnLabel}}
+          {{#if backupEnabled}}
+            {{d-button
+              action="disableSecondFactorBackup"
+              class="btn btn-danger"
+              disabled=isDisabledDisableBackupCodeBtn
+              label="user.second_factor_backup.disable"}}
+          {{/if}}
+        </div>
+
+        {{#conditional-loading-section isLoading=loading}}
+          {{#if backupCodes}}
+            <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
+
+            <p>
+              {{i18n "user.second_factor_backup.codes.description"}}
+            </p>
+
+            {{backup-codes
+              copyBackupCode=(action "copyBackupCode")
+              backupCodes=backupCodes}}
+
+            {{#link-to "preferences.account" model.username}}
+              {{i18n "go_back"}}
+            {{/link-to}}
+          {{/if}}
+        {{/conditional-loading-section}}
+      </div>
+    </div>
+  </form>
+</section>

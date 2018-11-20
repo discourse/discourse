@@ -9,9 +9,9 @@
       // This id must be present in the `share_links` site setting too
       id: 'twitter',
 
-      // The icon that will be displayed, choose between font awesome class name `faIcon` and custom HTML `htmlIcon`.
-      // When both provided, prefer `faIcon`
-      faIcon: 'fa-twitter-square'
+      // The icon that will be displayed, choose between icon name `icon` and custom HTML `htmlIcon`.
+      // When both provided, prefer `icon`
+      icon: 'twitter-square'
       htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
@@ -26,14 +26,37 @@
   ```
 **/
 
-var _sources = {};
+let _sources = {};
+let _customSharingIds = [];
 
 export default {
+  // allows to by pass site settings and add a sharing id through plugin api
+  // useful for theme components for example when only few users want to add
+  // sharing to a specific third party
+  addSharingId(id) {
+    _customSharingIds.push(id);
+  },
+
   addSource(source) {
+    // backwards compatibility for plugins
+    if (source.faIcon) {
+      source.icon = source.faIcon.replace("fa-", "");
+      delete source.faIcon;
+    }
+
     _sources[source.id] = source;
   },
 
-  activeSources(linksSetting) {
-    return linksSetting.split('|').map(s => _sources[s]).compact();
+  activeSources(linksSetting = "") {
+    return linksSetting
+      .split("|")
+      .concat(_customSharingIds)
+      .map(s => _sources[s])
+      .compact();
+  },
+
+  _reset() {
+    _sources = {};
+    _customSharingIds = [];
   }
 };

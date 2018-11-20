@@ -1,0 +1,72 @@
+{{#if visible}}
+  <div class="card-content">
+    <div class="group-card-avatar">
+      <a href={{groupPath}} {{action "showGroup"}} class="card-huge-avatar">
+        {{avatar-flair
+          flairURL=group.flair_url
+          flairBgColor=group.flair_bg_color
+          flairColor=group.flair_color
+          groupName=group.name}}
+      </a>
+    </div>
+
+    <div class="names">
+      <span>
+        <h1 class="{{ group.name }}">
+          <a href={{groupPath}} {{action "showGroup"}}>{{ group.name }}</a>
+        </h1>
+        {{#if group.full_name}}
+          <h2 class='full-name'>{{group.full_name}}</h2>
+        {{else}}
+          <h2 class='username'>{{group.name}}</h2>
+        {{/if}}
+      </span>
+    </div>
+
+    <div class="usercard-controls group-details-button">
+      {{group-membership-button
+        model=group
+        showLogin='showLogin'}}
+
+      {{#if group.messageable}}
+        {{d-button
+          action="messageGroup"
+          class="btn-primary group-message-button inline"
+          icon="envelope"
+          label="groups.message"}}
+      {{/if}}
+    </div>
+
+    {{#if group.bio_cooked}}<div class='bio'>{{{group.bio_cooked}}}</div>{{/if}}
+
+    <div class="metadata">
+      <h3>
+        <span class="desc">
+          {{i18n 'groups.user_count'}}
+        </span>
+        {{ group.user_count }}
+      </h3>
+      <h3>
+        {{#if group.is_group_owner_display}}
+
+            {{i18n "groups.index.is_group_owner"}}
+        {{else if group.is_group_user}}
+
+            {{i18n "groups.index.is_group_user"}}
+        {{/if}}
+      </h3>
+    </div>
+    {{#if group.members}}
+    <div class="members metadata">
+      <span>
+        {{#each group.members as |user|}}
+          <a href={{user.path}} {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
+        {{/each}}
+        {{#if showMoreMembers}}
+          <a href={{groupPath}} {{action "showGroup"}}>+{{ moreMembersCount }} {{i18n "more"}}</a>
+        {{/if}}
+      </span>
+    </div>
+    {{/if}}
+  </div>
+{{/if}}

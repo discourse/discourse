@@ -4,7 +4,7 @@ require_dependency 'admin_confirmation'
 
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :fetch_user, only: [:suspend,
+  before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
                                     :refresh_browsers,
                                     :log_out,
@@ -15,8 +15,8 @@ class Admin::UsersController < Admin::AdminController
                                     :approve,
                                     :activate,
                                     :deactivate,
-                                    :block,
-                                    :unblock,
+                                    :silence,
+                                    :unsilence,
                                     :trust_level,
                                     :trust_level_lock,
                                     :add_group,
@@ -25,7 +25,8 @@ class Admin::UsersController < Admin::AdminController
                                     :generate_api_key,
                                     :revoke_api_key,
                                     :anonymize,
-                                    :reset_bounce_score]
+                                    :reset_bounce_score,
+                                    :disable_second_factor]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -45,21 +46,107 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def delete_all_posts
-    @user = User.find_by(id: params[:user_id])
-    @user.delete_all_posts!(guardian)
-    # staff action logs will have an entry for each post
-    render nothing: true
+    hijack do
+      user = User.find_by(id: params[:user_id])
+      user.delete_all_posts!(guardian)
+      # staff action logs will have an entry for each post
+      render body: nil
+    end
+  end
+
+  # DELETE action to delete penalty history for a user
+  def penalty_history
+
+    # We don't delete any history, we merely remove the action type
+    # with a removed type. It can still be viewed in the logs but
+    # will not affect TL3 promotions.
+    sql = <<~SQL
+      UPDATE user_histories
+      SET action = CASE
+        WHEN action = :silence_user THEN :removed_silence_user
+        WHEN action = :unsilence_user THEN :removed_unsilence_user
+        WHEN action = :suspend_user THEN :removed_suspend_user
+        WHEN action = :unsuspend_user THEN :removed_unsuspend_user
+      END
+      WHERE target_user_id = :user_id
+        AND action IN (
+          :silence_user,
+          :suspend_user,
+          :unsilence_user,
+          :unsuspend_user
+        )
+    SQL
+
+    DB.exec(
+      sql,
+      UserHistory.actions.slice(
+        :silence_user,
+        :suspend_user,
+        :unsilence_user,
+        :unsuspend_user,
+        :removed_silence_user,
+        :removed_unsilence_user,
+        :removed_suspend_user,
+        :removed_unsuspend_user
+      ).merge(user_id: params[:user_id].to_i)
+    )
+
+    render json: success_json
   end
 
   def suspend
     guardian.ensure_can_suspend!(@user)
-    @user.suspended_till = params[:duration].to_i.days.from_now
+    @user.suspended_till = params[:suspend_until]
     @user.suspended_at = DateTime.now
-    @user.save!
-    @user.revoke_api_key
-    StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
+
+    message = params[:message]
+
+    user_history = nil
+
+    User.transaction do
+      @user.save!
+      @user.revoke_api_key
+
+      user_history = StaffActionLogger.new(current_user).log_user_suspend(
+        @user,
+        params[:reason],
+        message: message,
+        post_id: params[:post_id]
+      )
+    end
     @user.logged_out
-    render nothing: true
+
+    if message.present?
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_suspended,
+        user_id: @user.id,
+        user_history_id: user_history.id
+      )
+    end
+
+    DiscourseEvent.trigger(
+      :user_suspended,
+      user: @user,
+      reason: params[:reason],
+      message: message,
+      user_history: user_history,
+      post_id: params[:post_id],
+      suspended_till: params[:suspend_until],
+      suspended_at: DateTime.now
+    )
+
+    perform_post_action
+
+    render_json_dump(
+      suspension: {
+        suspended: true,
+        suspend_reason: params[:reason],
+        full_suspend_reason: user_history.try(:details),
+        suspended_till: @user.suspended_till,
+        suspended_at: @user.suspended_at
+      }
+    )
   end
 
   def unsuspend
@@ -68,7 +155,12 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_at = nil
     @user.save!
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
-    render nothing: true
+
+    render_json_dump(
+      suspension: {
+        suspended: false
+      }
+    )
   end
 
   def log_out
@@ -77,20 +169,20 @@ class Admin::UsersController < Admin::AdminController
       @user.logged_out
       render json: success_json
     else
-      render json: {error: I18n.t('admin_js.admin.users.id_not_found')}, status: 404
+      render json: { error: I18n.t('admin_js.admin.users.id_not_found') }, status: 404
     end
   end
 
   def refresh_browsers
     refresh_browser @user
-    render nothing: true
+    render body: nil
   end
 
   def revoke_admin
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render nothing: true
+    render body: nil
   end
 
   def generate_api_key
@@ -100,7 +192,7 @@ class Admin::UsersController < Admin::AdminController
 
   def revoke_api_key
     @user.revoke_api_key
-    render nothing: true
+    render body: nil
   end
 
   def grant_admin
@@ -112,7 +204,7 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_moderation!(@user)
     @user.revoke_moderation!
     StaffActionLogger.new(current_user).log_revoke_moderation(@user)
-    render nothing: true
+    render body: nil
   end
 
   def grant_moderation
@@ -129,40 +221,50 @@ class Admin::UsersController < Admin::AdminController
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
 
-    render nothing: true
+    render body: nil
   end
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
+
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
-    render nothing: true
+
+    render body: nil
   end
 
   def primary_group
-    group = Group.find(params[:primary_group_id].to_i)
     guardian.ensure_can_change_primary_group!(@user)
-    if group.users.include?(@user)
-      @user.primary_group_id = params[:primary_group_id]
-      @user.save!
+
+    if params[:primary_group_id].present?
+      primary_group_id = params[:primary_group_id].to_i
+      if group = Group.find(primary_group_id)
+        if group.user_ids.include?(@user.id)
+          @user.primary_group_id = primary_group_id
+        end
+      end
+    else
+      @user.primary_group_id = nil
     end
-    render nothing: true
+
+    @user.save!
+
+    render body: nil
   end
 
   def trust_level
     guardian.ensure_can_change_trust_level!(@user)
     level = params[:level].to_i
 
-
-    if !@user.trust_level_locked && [0,1,2].include?(level) && Promotion.send("tl#{level+1}_met?", @user)
-      @user.trust_level_locked = true
-      @user.save
-    end
-
-    if !@user.trust_level_locked && level == 3 && Promotion.tl3_lost?(@user)
-      @user.trust_level_locked = true
-      @user.save
+    if @user.manual_locked_trust_level.nil?
+      if [0, 1, 2].include?(level) && Promotion.send("tl#{level + 1}_met?", @user)
+        @user.manual_locked_trust_level = level
+        @user.save
+      elsif level == 3 && Promotion.tl3_lost?(@user)
+        @user.manual_locked_trust_level = level
+        @user.save
+      end
     end
 
     @user.change_trust_level!(level, log_action_for: current_user)
@@ -180,38 +282,32 @@ class Admin::UsersController < Admin::AdminController
       return render_json_error I18n.t('errors.invalid_boolean')
     end
 
-    @user.trust_level_locked = new_lock == "true"
+    @user.manual_locked_trust_level = (new_lock == "true") ? @user.trust_level : nil
     @user.save
 
     StaffActionLogger.new(current_user).log_lock_trust_level(@user)
+    Promotion.recalculate(@user, current_user)
 
-    unless @user.trust_level_locked
-      p = Promotion.new(@user)
-      2.times{ p.review }
-      p.review_tl2
-      if @user.trust_level == 3 && Promotion.tl3_lost?(@user)
-        @user.change_trust_level!(2, log_action_for: current_user)
-      end
-    end
-
-    render nothing: true
+    render body: nil
   end
 
   def approve
     guardian.ensure_can_approve!(@user)
     @user.approve(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def approve_bulk
     User.where(id: params[:users]).each do |u|
       u.approve(current_user) if guardian.can_approve?(u)
     end
-    render nothing: true
+    render body: nil
   end
 
   def activate
     guardian.ensure_can_activate!(@user)
+    # ensure there is an active email token
+    @user.email_tokens.create(email: @user.email) unless @user.email_tokens.active.exists?
     @user.activate
     StaffActionLogger.new(current_user).log_user_activate(@user, I18n.t('user.activated_by_staff'))
     render json: success_json
@@ -220,21 +316,58 @@ class Admin::UsersController < Admin::AdminController
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
-    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
+    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
     refresh_browser @user
-    render nothing: true
+    render body: nil
   end
 
-  def block
-    guardian.ensure_can_block_user! @user
-    UserBlocker.block(@user, current_user, keep_posts: true)
-    render nothing: true
+  def silence
+    guardian.ensure_can_silence_user! @user
+
+    message = params[:message]
+
+    silencer = UserSilencer.new(
+      @user,
+      current_user,
+      silenced_till: params[:silenced_till],
+      reason: params[:reason],
+      message_body: message,
+      keep_posts: true,
+      post_id: params[:post_id]
+    )
+    if silencer.silence && message.present?
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_silenced,
+        user_id: @user.id,
+        user_history_id: silencer.user_history.id
+      )
+    end
+    perform_post_action
+
+    render_json_dump(
+      silence: {
+        silenced: true,
+        silence_reason: silencer.user_history.try(:details),
+        silenced_till: @user.silenced_till,
+        silenced_at: @user.silenced_at,
+        silenced_by: BasicUserSerializer.new(current_user, root: false).as_json
+      }
+    )
   end
 
-  def unblock
-    guardian.ensure_can_unblock_user! @user
-    UserBlocker.unblock(@user, current_user)
-    render nothing: true
+  def unsilence
+    guardian.ensure_can_unsilence_user! @user
+    UserSilencer.unsilence(@user, current_user)
+
+    render_json_dump(
+      unsilence: {
+        silenced: false,
+        silence_reason: nil,
+        silenced_till: nil,
+        silenced_at: nil
+      }
+    )
   end
 
   def reject_bulk
@@ -242,7 +375,7 @@ class Admin::UsersController < Admin::AdminController
     d = UserDestroyer.new(current_user)
 
     User.where(id: params[:users]).each do |u|
-      success_count += 1 if guardian.can_delete_user?(u) and d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
+      success_count += 1 if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
     end
 
     render json: {
@@ -251,21 +384,46 @@ class Admin::UsersController < Admin::AdminController
     }
   end
 
+  def disable_second_factor
+    guardian.ensure_can_disable_second_factor!(@user)
+    user_second_factor = @user.user_second_factors
+    raise Discourse::InvalidParameters unless !user_second_factor.empty?
+
+    user_second_factor.destroy_all
+    StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: @user.id
+    )
+
+    render json: success_json
+  end
+
   def destroy
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
-    begin
-      options = params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-      if UserDestroyer.new(current_user).destroy(user, options)
-        render json: { deleted: true }
-      else
+
+    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+
+    hijack do
+      begin
+        if UserDestroyer.new(current_user).destroy(user, options)
+          render json: { deleted: true }
+        else
+          render json: {
+            deleted: false,
+            user: AdminDetailedUserSerializer.new(user, root: false).as_json
+          }
+        end
+      rescue UserDestroyer::PostsExistError
         render json: {
           deleted: false,
-          user: AdminDetailedUserSerializer.new(user, root: false).as_json
-        }
+          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
+        }, status: 403
       end
-    rescue UserDestroyer::PostsExistError
-      raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
   end
 
@@ -280,13 +438,19 @@ class Admin::UsersController < Admin::AdminController
     ip = params[:ip]
 
     # should we cache results in redis?
-    location = Excon.get("http://ipinfo.io/#{ip}/json", read_timeout: 30, connect_timeout: 30).body rescue nil
+    begin
+      location = Excon.get(
+        "https://ipinfo.io/#{ip}/json",
+        read_timeout: 10, connect_timeout: 10
+      )&.body
+    rescue Excon::Error
+    end
 
     render json: location
   end
 
   def sync_sso
-    return render nothing: true, status: 404 unless SiteSetting.enable_sso
+    return render body: nil, status: 404 unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
 
@@ -304,10 +468,17 @@ class Admin::UsersController < Admin::AdminController
     params.require(:order)
 
     user_destroyer = UserDestroyer.new(current_user)
-    options = { delete_posts: true, block_email: true, block_urls: true, block_ip: true, delete_as_spammer: true }
+    options = {
+      delete_posts: true,
+      block_email: true,
+      block_urls: true,
+      block_ip: true,
+      delete_as_spammer: true,
+      context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: params[:ip])
+    }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
-      user_destroyer.destroy(user, options) rescue nil
+      user_destroyer.destroy(user, options)
     end
 
     render json: success_json
@@ -339,12 +510,12 @@ class Admin::UsersController < Admin::AdminController
     user.save!
     user.grant_admin!
     user.change_trust_level!(4)
-    user.email_tokens.update_all  confirmed: true
+    user.email_tokens.update_all confirmed: true
 
     email_token = user.email_tokens.create(email: user.email)
 
     unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue( :critical_user_email,
+      Jobs.enqueue(:critical_user_email,
                     type: :account_created,
                     user_id: user.id,
                     email_token: email_token.token)
@@ -373,12 +544,34 @@ class Admin::UsersController < Admin::AdminController
 
   private
 
-    def fetch_user
-      @user = User.find_by(id: params[:user_id])
-    end
+  def perform_post_action
+    return unless params[:post_id].present? &&
+      params[:post_action].present?
 
-    def refresh_browser(user)
-      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+    if post = Post.where(id: params[:post_id]).first
+      case params[:post_action]
+      when 'delete'
+        PostDestroyer.new(current_user, post).destroy
+      when 'edit'
+        revisor = PostRevisor.new(post)
+
+        # Take what the moderator edited in as gospel
+        revisor.revise!(
+          current_user,
+          { raw:  params[:post_edit] },
+          skip_validations: true,
+          skip_revision: true
+        )
+      end
     end
+  end
+
+  def fetch_user
+    @user = User.find_by(id: params[:user_id])
+  end
+
+  def refresh_browser(user)
+    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+  end
 
 end

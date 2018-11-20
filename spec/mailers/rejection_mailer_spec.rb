@@ -6,7 +6,7 @@ describe RejectionMailer do
 
     context 'sends rejection email' do
       let (:user) { Fabricate(:user) }
-      let (:template_args) { {former_title: "Mail Subject", destination: user.email, site_name: SiteSetting.title} }
+      let (:template_args) { { former_title: "Mail Subject", destination: user.email, site_name: SiteSetting.title } }
       let (:reject_mail) { RejectionMailer.send_rejection("email_reject_topic_not_found", user.email, template_args) }
 
       it 'renders the senders email' do

@@ -1,0 +1,26 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fa_IR:
+  js:
+    discourse_local_dates:
+      title: افزودن تاریخ
+      create:
+        modal_title: افزودن تاریخ
+        modal_subtitle: "ما تاریخ و زمان را به شکل خودکار به منطقه زمانی محلی بیننده تبدیل می کنیم."
+        form:
+          insert: درج کردن
+          advanced_mode: حالت پیشرفته
+          simple_mode: حالت ساده
+          format_description: "فرمت مورد استفاده نمایش تاریخ به کاربر. برای نمایش منطقه زمانی کاربر در کلمات از \"T\\Z\\\" استفاده کنید (برای مثال Europe/Paris)"
+          timezones_title: نمایش منطقه زمانی
+          recurring_title: همروندی
+          recurring_none: بدون همروندی
+          invalid_date: تاریخ نامعتبر. مطمئن شوید تاریخ و زمان درست هستند.
+          date_title: تاریخ
+          time_title: زمان
+          format_title: فرمت تاریخ

@@ -1,0 +1,24 @@
+<aside class="onebox">
+  <article class="onebox-body user-onebox">
+    {{{avatar}}}
+    <h3><a href="{{original_url}}">{{{username}}}</a></h3>
+    <div>
+      {{#name}}
+        <span class="full-name">{{name}}</span>
+      {{/name}}
+      {{#location}}
+        <span class="location"><i class="fa fa-map-marker d-icon d-icon-map-marker"></i>{{{location}}}</span>
+      {{/location}}
+      {{#website}}
+        <span>
+          <i class="fa fa-globe d-icon d-icon-globe"></i><a href="{{website}}">{{{website_name}}}</a>
+        </span>
+      {{/website}}
+    </div>
+    {{#bio}}
+      <p>{{{bio}}}</p>
+    {{/bio}}
+    <span>{{joined}} {{created_at}}</span>
+  </article>
+  <div style="clear: both"></div>
+</aside>

@@ -1,4 +1,4 @@
-class IndexTopicsForFrontPage < ActiveRecord::Migration
+class IndexTopicsForFrontPage < ActiveRecord::Migration[4.2]
   def change
     add_index :topics, [:deleted_at, :visible, :archetype, :id]
     # covering index for join

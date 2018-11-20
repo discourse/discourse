@@ -11,17 +11,17 @@ class TextSentinel
 
   ENTROPY_SCALE ||= 0.7
 
-  def initialize(text, opts=nil)
+  def initialize(text, opts = nil)
     @opts = opts || {}
     @text = text.to_s.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
   end
 
-  def self.body_sentinel(text, opts={})
+  def self.body_sentinel(text, opts = {})
     entropy = SiteSetting.body_min_entropy
     if opts[:private_message]
-      scale_entropy = SiteSetting.min_private_message_post_length.to_f / SiteSetting.min_post_length.to_f
+      scale_entropy = SiteSetting.min_personal_message_post_length.to_f / SiteSetting.min_post_length.to_f
       entropy = (entropy * scale_entropy).to_i
-      entropy = (SiteSetting.min_private_message_post_length.to_f * ENTROPY_SCALE).to_i if entropy > SiteSetting.min_private_message_post_length
+      entropy = (SiteSetting.min_personal_message_post_length.to_f * ENTROPY_SCALE).to_i if entropy > SiteSetting.min_personal_message_post_length
     else
       entropy = (SiteSetting.min_post_length.to_f * ENTROPY_SCALE).to_i if entropy > SiteSetting.min_post_length
     end
@@ -41,7 +41,7 @@ class TextSentinel
   # Non-ASCII characters are weighted heavier since they contain more "information"
   def entropy
     chars = @text.to_s.strip.split('')
-    @entropy ||= chars.pack('M*'*chars.size).gsub("\n",'').split('=').uniq.size
+    @entropy ||= chars.pack('M*' * chars.size).gsub("\n", '').split('=').uniq.size
   end
 
   def valid?
@@ -73,7 +73,6 @@ class TextSentinel
     # Don't allow super long words if there is a word length maximum
     @opts[:max_word_length].blank? || @text.split(/\s|\/|-|\.|:/).map(&:size).max <= @opts[:max_word_length]
   end
-
 
   def seems_quiet?
     # We don't allow all upper case content

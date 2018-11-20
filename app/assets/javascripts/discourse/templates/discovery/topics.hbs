@@ -8,9 +8,20 @@
       <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}><i class="fa fa-check"></i> {{i18n 'topics.bulk.dismiss_new'}}</button>
+    <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}>{{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
   </div>
+{{/if}}
+
+{{#if model.sharedDrafts}}
+  {{topic-list
+    class="shared-drafts"
+    listTitle="shared_drafts.title"
+    top=top
+    hideCategory="true"
+    category=category
+    topics=model.sharedDrafts
+    discoveryList=true}}
 {{/if}}
 
 {{bulk-select-button selected=selected action="refresh" category=category}}
@@ -24,32 +35,33 @@
     {{#if topicTrackingState.hasIncoming}}
       <div class="show-more {{if hasTopics 'has-topics'}}">
         <div class='alert alert-info clickable' {{action "showInserted"}}>
-          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-          {{i18n 'click_to_show'}}
+          <a tabindex="0" href="" {{action "showInserted"}}>
+            {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+          </a>
         </div>
       </div>
     {{/if}}
   {{/if}}
 
   {{#if hasTopics}}
-      {{topic-list
-          highlightLastVisited=true
-          top=top
-          showTopicPostBadges=showTopicPostBadges
-          showPosters=true
-          currentUser=currentUser
-          canBulkSelect=canBulkSelect
-          changeSort="changeSort"
-          toggleBulkSelect="toggleBulkSelect"
-          hideCategory=model.hideCategory
-          order=order
-          ascending=ascending
-          bulkSelectEnabled=bulkSelectEnabled
-          selected=selected
-          expandGloballyPinned=expandGloballyPinned
-          expandAllPinned=expandAllPinned
-          category=category
-          topics=model.topics}}
+    {{topic-list
+      highlightLastVisited=true
+      top=top
+      showTopicPostBadges=showTopicPostBadges
+      showPosters=true
+      canBulkSelect=canBulkSelect
+      changeSort="changeSort"
+      toggleBulkSelect="toggleBulkSelect"
+      hideCategory=model.hideCategory
+      order=order
+      ascending=ascending
+      bulkSelectEnabled=bulkSelectEnabled
+      selected=selected
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      category=category
+      topics=model.topics
+      discoveryList=true}}
   {{/if}}
 {{/discovery-topics-list}}
 
@@ -60,31 +72,20 @@
       <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}><i class="fa fa-check"></i> {{i18n 'topics.bulk.dismiss_new'}}</button>
+      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}>
+        {{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
 
-    {{#if latest}}
-      <div class="education">
-        {{{footerEducation}}}
-      </div>
-      <h3>
-        {{footerMessage}}
-        {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
-      </h3>
-    {{else}}
-      {{#if top}}
-        <h3>
-          {{#link-to "discovery.categories"}}{{i18n 'topic.browse_all_categories'}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}} {{i18n 'or'}} {{i18n 'filters.top.other_periods'}}
+    {{#footer-message education=footerEducation message=footerMessage}}
+      {{#if latest}}
+        {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>.{{/if}}
+      {{else if top}}
+        {{#link-to "discovery.categories"}}{{i18n 'topic.browse_all_categories'}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}} {{i18n 'or'}} {{i18n 'filters.top.other_periods'}}.
         {{top-period-buttons period=period action="changePeriod"}}
-        </h3>
       {{else}}
-        <div class="education">
-            {{{footerEducation}}}
-        </div>
-        <h3>
-          {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}
-        </h3>
+        {{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}.
       {{/if}}
-    {{/if}}
+    {{/footer-message}}
+
   {{/if}}
 </footer>

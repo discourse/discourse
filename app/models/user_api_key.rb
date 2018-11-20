@@ -6,7 +6,13 @@ class UserApiKey < ActiveRecord::Base
     message_bus: [[:post, 'message_bus']],
     push: nil,
     notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
-    session_info: [[:get, 'session#current'], [:get, 'users#topic_tracking_state']]
+    session_info: [
+      [:get, 'session#current'],
+      [:get, 'users#topic_tracking_state'],
+      [:get, 'list#unread'],
+      [:get, 'list#new'],
+      [:get, 'list#latest']
+    ]
   }
 
   belongs_to :user
@@ -30,7 +36,7 @@ class UserApiKey < ActiveRecord::Base
     # not a rails route, special handling
     return true if action == "message_bus" && env["PATH_INFO"] =~ /^\/message-bus\/.*\/poll/
 
-    params  = env['action_dispatch.request.path_parameters']
+    params = env['action_dispatch.request.path_parameters']
 
     return false unless params
 
@@ -70,10 +76,11 @@ end
 #  key              :string           not null
 #  application_name :string           not null
 #  push_url         :string
-#  created_at       :datetime
-#  updated_at       :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #  revoked_at       :datetime
 #  scopes           :text             default([]), not null, is an Array
+#  last_used_at     :datetime         not null
 #
 # Indexes
 #

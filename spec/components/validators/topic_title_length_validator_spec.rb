@@ -7,8 +7,8 @@ describe TopicTitleLengthValidator do
 
   # simulate Rails behavior (singleton)
   def validate
-    @validator ||= TopicTitleLengthValidator.new({ attributes: :title })
-    @validator.validate_each(record,:title,record.title)
+    @validator ||= TopicTitleLengthValidator.new(attributes: :title)
+    @validator.validate_each(record, :title, record.title)
   end
 
   shared_examples "validating any topic title" do
@@ -39,7 +39,7 @@ describe TopicTitleLengthValidator do
       validate
       expect(record.errors[:title]).to_not be_present
 
-      SiteSetting.stubs(:min_topic_title_length).returns(2)
+      SiteSetting.min_topic_title_length = 2
 
       record.title = 'aaa'
       validate
@@ -52,14 +52,14 @@ describe TopicTitleLengthValidator do
   describe 'private message' do
     let(:record) { Fabricate.build(:private_message_topic) }
 
-    it 'adds an error when topic title is shorter than SiteSetting.min_private_message_title_length' do
-      record.title = 'a' * (SiteSetting.min_private_message_title_length - 1)
+    it 'adds an error when topic title is shorter than SiteSetting.min_personal_message_title_length' do
+      record.title = 'a' * (SiteSetting.min_personal_message_title_length - 1)
       validate
       expect(record.errors[:title]).to be_present
     end
 
     it 'does not add an error when topic title is shorter than SiteSetting.min_topic_title_length' do
-      record.title = 'a' * (SiteSetting.min_private_message_title_length)
+      record.title = 'a' * (SiteSetting.min_personal_message_title_length)
       validate
       expect(record.errors[:title]).to_not be_present
     end

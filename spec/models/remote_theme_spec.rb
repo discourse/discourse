@@ -18,10 +18,8 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(options = {})
-      options[:love] ||= "FAFAFA"
-
-<<JSON
+    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing")
+      <<~JSON
         {
           "name": "awesome theme",
           "about_url": "https://www.site.com/about",
@@ -38,12 +36,12 @@ describe RemoteTheme do
             "name": "sam"
           },
           "color_schemes": {
-            "Amazing": {
-              "love": "#{options[:love]}"
+            "#{color_scheme_name}": {
+              "love": "#{love_color}"
             }
           }
         }
-JSON
+      JSON
     end
 
     let :scss_data do
@@ -58,6 +56,7 @@ JSON
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
         "assets/awesome.woff2" => "FAKE FONT",
+        "settings.yaml" => "boolean_setting: true"
       )
     end
 
@@ -81,9 +80,9 @@ JSON
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
 
-      expect(@theme.theme_fields.length).to eq(6)
+      expect(@theme.theme_fields.length).to eq(7)
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
@@ -93,7 +92,12 @@ JSON
       expect(mapped["0-font"]).to eq("")
       expect(mapped["0-name"]).to eq("sam")
 
-      expect(mapped.length).to eq(6)
+      expect(mapped["3-yaml"]).to eq("boolean_setting: true")
+
+      expect(mapped.length).to eq(7)
+
+      expect(@theme.settings.length).to eq(1)
+      expect(@theme.settings.first.value).to eq(true)
 
       expect(remote.remote_updated_at).to eq(time)
 
@@ -102,10 +106,13 @@ JSON
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
 
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
-      File.write("#{initial_repo}/about.json", about_json(love: "EAEAEA"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA"))
 
+      File.write("#{initial_repo}/settings.yml", "integer_setting: 32")
+      `cd #{initial_repo} && git add settings.yml`
+
+      File.delete("#{initial_repo}/settings.yaml")
       `cd #{initial_repo} && git commit -am "update"`
-
 
       time = Time.new('2001')
       freeze_time time
@@ -113,7 +120,6 @@ JSON
       remote.update_remote_version
       expect(remote.commits_behind).to eq(1)
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
-
 
       remote.update_from_remote
       @theme.save
@@ -123,12 +129,74 @@ JSON
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       expect(mapped["0-header"]).to eq("I AM UPDATED")
       expect(mapped["1-scss"]).to eq(scss_data)
+
+      expect(@theme.settings.length).to eq(1)
+      expect(@theme.settings.first.value).to eq(32)
+
       expect(remote.remote_updated_at).to eq(time)
 
+      # It should be able to remove old colors as well
+      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))
+      `cd #{initial_repo} && git commit -am "update"`
+
+      remote.update_from_remote
+      @theme.save
+      @theme.reload
+
+      scheme_count = ColorScheme.where(theme_id: @theme.id).count
+      expect(scheme_count).to eq(1)
+    end
+  end
+
+  let(:github_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://github.com/org/testtheme.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 2
+    )
+  end
+
+  let(:gitlab_repo) do
+    RemoteTheme.create!(
+      remote_url: "https://gitlab.com/org/repo.git",
+      local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
+      remote_version: "21122230dbfed804067849393c3332083ddd0c07",
+      commits_behind: 5
+    )
+  end
+
+  context "#github_diff_link" do
+    it "is blank for non-github repos" do
+      expect(gitlab_repo.github_diff_link).to be_blank
+    end
+
+    it "returns URL for comparing between local_version and remote_version" do
+      expect(github_repo.github_diff_link).to eq(
+        "https://github.com/org/testtheme/compare/#{github_repo.local_version}...#{github_repo.remote_version}"
+      )
+    end
+
+    it "is blank when theme is up-to-date" do
+      github_repo.update!(local_version: github_repo.remote_version, commits_behind: 0)
+      expect(github_repo.reload.github_diff_link).to be_blank
+    end
+  end
+
+  context ".out_of_date_themes" do
+    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
+    let!(:theme) { Fabricate(:theme, remote_theme: remote) }
+
+    it "finds out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      expect(described_class.out_of_date_themes).to eq([[theme.name, theme.id]])
+
+      remote.update!(local_version: "new version", commits_behind: 0)
+      expect(described_class.out_of_date_themes).to eq([])
     end
   end
 end

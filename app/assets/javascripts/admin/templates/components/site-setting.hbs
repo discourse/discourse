@@ -2,7 +2,7 @@
    <h3>{{unbound settingName}}</h3>
 </div>
 <div class="setting-value">
-  {{component componentName setting=setting value=buffered.value validationMessage=validationMessage}}
+  {{component componentName setting=setting value=buffered.value validationMessage=validationMessage preview=preview isSecret=isSecret}}
 </div>
 {{#if dirty}}
   <div class='setting-controls'>
@@ -10,5 +10,8 @@
     {{d-button class="cancel" action="cancel" icon="times"}}
   </div>
 {{else if setting.overridden}}
-  {{d-button action="resetDefault" icon="undo" label="admin.site_settings.reset"}}
+  {{#if setting.secret}}
+    {{d-button action="toggleSecret" icon="eye-slash"}}
+  {{/if}}
+  {{d-button class="undo" action="resetDefault" icon="undo" label="admin.settings.reset"}}
 {{/if}}

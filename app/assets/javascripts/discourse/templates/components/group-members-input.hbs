@@ -1,23 +1,30 @@
-<label>{{i18n 'groups.members'}} ({{model.user_count}})</label>
-<div>
-  <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
-  {{currentPage}}/{{totalPages}}
-  <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
-</div>
-<div class="ac-wrap clearfix">
-  {{#each model.members as |member|}}
-    {{group-member member=member automatic=model.automatic removeAction="removeMember"}}
-  {{/each}}
-</div>
+<label>{{i18n 'groups.members.title'}} ({{model.user_count}})</label>
+
+{{#if model.members}}
+  <div>
+    <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{d-icon "fast-backward"}}</a>
+    {{currentPage}}/{{totalPages}}
+    <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{d-icon "fast-forward"}}</a>
+  </div>
+  <div class="ac-wrap clearfix">
+    {{#each model.members as |member|}}
+      {{group-member member=member automatic=model.automatic removeAction="removeMember"}}
+    {{/each}}
+  </div>
+{{/if}}
 
 {{#unless model.automatic}}
   <div class="group-members-input-selector">
-    {{user-selector usernames=model.usernames}}
+    {{user-selector usernames=model.usernames
+          placeholderKey="groups.selector_placeholder"
+          id="member-selector"}}
 
-    {{d-button action="addMembers"
-        class="add"
-        icon="plus"
-        disabled=disableAddButton
-        label="groups.edit.add_members"}}
+    {{#if addButton}}
+      {{d-button action="addMembers"
+          class="add"
+          icon="plus"
+          disabled=disableAddButton
+          label="groups.manage.add_members"}}
+    {{/if}}
   </div>
 {{/unless}}

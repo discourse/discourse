@@ -7,7 +7,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:user) { Fabricate(:user) }
 
   let(:topic) do
-    Fabricate(:private_message_topic, first_post: first_post,
+    Fabricate(:private_message_topic,
+      first_post: first_post,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
@@ -24,6 +25,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -83,12 +85,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         new_post = Post.last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => topic.id,
-          "state" => "tutorial_bookmark",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("topic_id" => topic.id,
+                                               "state" => "tutorial_bookmark",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s)
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to eq(topic.id)
@@ -111,12 +111,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         new_post = Post.last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => new_post.topic.id,
-          "state" => "tutorial_bookmark",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("topic_id" => new_post.topic.id,
+                                               "state" => "tutorial_bookmark",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s)
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to_not eq(topic.id)
@@ -215,9 +213,25 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
         end
 
+        describe 'when rate_limit_new_user_create_post site setting is disabled' do
+          before do
+            SiteSetting.rate_limit_new_user_create_post = 0
+          end
+
+          it 'should create the right reply' do
+            narrative.input(:reply, user, post: post)
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              'discourse_narrative_bot.new_user_narrative.bookmark.not_found',
+              base_uri: ''
+            ))
+          end
+        end
+
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger}")
+            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -290,7 +304,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       describe 'when user replies to the topic' do
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: skip_trigger)
+            post.update!(raw: skip_trigger.upcase)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -302,23 +316,47 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
           end
         end
-      end
 
-      it 'should create the right reply' do
-        post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
+        describe 'when emoji is disabled' do
+          before do
+            SiteSetting.enable_emoji = false
+          end
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
+          it 'should create the right reply' do
+            post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
 
-        expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
+            narrative.input(:reply, user, post: post)
+            new_post = Post.last
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: '')}
-        RAW
+            expected_raw = <<~RAW
+              #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
 
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
+              #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.instructions',
+                discobot_username: discobot_user.username, base_uri: ''
+              )}
+            RAW
+
+            expect(new_post.raw).to eq(expected_raw.chomp)
+            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
+          end
+        end
+
+        it 'should create the right reply' do
+          post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
+
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
+
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
+
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: '')}
+          RAW
+
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
+        end
       end
     end
 
@@ -363,6 +401,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
           end
+
+          describe 'when allow_flagging_staff is false' do
+            it 'should go to the right state' do
+              SiteSetting.allow_flagging_staff = false
+              post.update!(raw: skip_trigger)
+
+              DiscourseNarrativeBot::TrackSelector.new(
+                :reply,
+                user,
+                post_id: post.id
+              ).select
+
+              expect(narrative.get_data(user)[:state].to_sym)
+                .to eq(:tutorial_search)
+            end
+          end
         end
       end
 
@@ -375,7 +429,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.images.not_found',
-            image_url: "#{Discourse.base_url}/images/dog-walk.gif", base_uri: ''
+            image_url: "#{Discourse.base_url}/plugins/discourse-narrative-bot/images/dog-walk.gif", base_uri: ''
           ))
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
@@ -416,7 +470,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         expect(Post.last.raw).to eq(I18n.t(
           'discourse_narrative_bot.new_user_narrative.images.not_found',
-          image_url: "#{Discourse.base_url}/images/dog-walk.gif",
+          image_url: "#{Discourse.base_url}/plugins/discourse-narrative-bot/images/dog-walk.gif",
           base_uri: ''
         ))
 
@@ -582,28 +636,28 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             new_post = Post.last
 
-            expect(new_post.raw).to include("/forum/images")
+            expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
           end
         end
-      end
 
-      it 'should create the right reply' do
-        post.update!(
-          raw: '[quote="#{post.user}, post:#{post.post_number}, topic:#{topic.id}"]\n:monkey: :fries:\n[/quote]'
-        )
+        it 'should create the right reply' do
+          post.update!(
+            raw: "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]"
+          )
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
 
-        expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply', base_uri: '')}
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: '')}
-        RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: '')}
+          RAW
 
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
+        end
       end
     end
 
@@ -649,6 +703,23 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
           end
+        end
+      end
+
+      describe 'when user mentions is disabled' do
+        before do
+          SiteSetting.enable_mentions = false
+        end
+
+        it 'should skip the mention tutorial step' do
+          post.update!(
+            raw: ':monkey: :fries:'
+          )
+
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
         end
       end
 
@@ -889,7 +960,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
           end.to change { Post.count }.by(2)
 
-          new_post = Post.offset(1).last
+          new_post = topic.ordered_posts.last(2).first
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.search.reply',
@@ -898,14 +969,15 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(first_post.reload.raw).to eq('Hello world')
 
-          expect(narrative.get_data(user)).to include({
+          expect(narrative.get_data(user)).to include(
             "state" => "end",
             "topic_id" => new_post.topic_id,
-            "track" => described_class.to_s,
-          })
+            "track" => described_class.to_s
+          )
 
-          expect(user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?)
-            .to eq(true)
+          expect(user.badges.where(
+            name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+          ).to eq(true)
         end
       end
     end

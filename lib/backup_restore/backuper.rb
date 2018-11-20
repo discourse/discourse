@@ -1,9 +1,11 @@
+require 'disk_space'
+
 module BackupRestore
 
   class Backuper
     attr_reader :success
 
-    def initialize(user_id, opts={})
+    def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
@@ -55,11 +57,11 @@ module BackupRestore
       begin
         notify_user
         remove_old
+        clean_up
       rescue => ex
         Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
       end
 
-      clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
@@ -230,7 +232,7 @@ module BackupRestore
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
             failure_message: "Failed to archive uploads."
           )
         else
@@ -259,9 +261,15 @@ module BackupRestore
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
-      SystemMessage.create_from_system_user(@user, status,
+      post = SystemMessage.create_from_system_user(@user, status,
         logs: Discourse::Utils.pretty_logs(@logs)
       )
+
+      if !@success && @user.id == Discourse::SYSTEM_USER_ID
+        post.topic.invite_group(@user, Group[:admins])
+      end
+
+      post
     end
 
     def clean_up
@@ -270,12 +278,18 @@ module BackupRestore
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
+      refresh_disk_space
       log "Finished!"
+    end
+
+    def refresh_disk_space
+      log "Refreshing disk cache..."
+      DiskSpace.reset_cached_stats
     end
 
     def remove_tar_leftovers
       log "Removing '.tar' leftovers..."
-      system('rm', '-f', "#{@archive_directory}/*.tar")
+      Dir["#{@archive_directory}/*.tar"].each { |filename| File.delete(filename) }
     end
 
     def remove_tmp_directory
@@ -310,8 +324,8 @@ module BackupRestore
 
     def log(message)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message) rescue nil
-      publish_log(message, timestamp) rescue nil
+      puts(message)
+      publish_log(message, timestamp)
       save_log(message, timestamp)
     end
 

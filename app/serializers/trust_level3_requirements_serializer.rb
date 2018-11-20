@@ -1,4 +1,9 @@
+require_dependency 'penalty_counts_serializer'
+
 class TrustLevel3RequirementsSerializer < ApplicationSerializer
+
+  has_one :penalty_counts, embed: :object, serializer: PenaltyCountsSerializer
+
   attributes :time_period,
              :requirements_met,
              :requirements_lost,

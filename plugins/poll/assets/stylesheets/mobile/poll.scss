@@ -1,13 +1,30 @@
 div.poll {
   .poll-buttons {
-    padding: 0 5px 5px 5px;
+    padding: 0.5em 1.25em 1em 1.25em;
 
     button {
-      margin: 4px 2px;
+      margin: 0.25em;
     }
   }
 
   .poll-info {
-    .info-text:before {content:"\00a0";} // nbsp
+    padding: 0.5em 1.25em 0 1.25em;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid $primary-low;
+    .info-text {
+      display: inline;
+      margin: 0 0.5em 0.25em 0;
+    }
+    .info-number {
+      font-size: $font-up-6;
+    }
+    p {
+      margin: 0;
+      width: 100%;
+    }
+    .info-label:before {
+      content: "\00a0"; //nbsp
+    }
   }
 }

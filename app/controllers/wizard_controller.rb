@@ -2,11 +2,11 @@ require_dependency 'wizard'
 require_dependency 'wizard/builder'
 
 class WizardController < ApplicationController
-  before_filter :ensure_wizard_enabled, only: [:index]
-  before_filter :ensure_logged_in
-  before_filter :ensure_admin
+  requires_login except: [:qunit]
 
-  skip_before_filter :check_xhr, :preload_json
+  before_action :ensure_admin, except: [:qunit]
+  before_action :ensure_wizard_enabled, only: [:index]
+  skip_before_action :check_xhr, :preload_json
 
   layout false
 
@@ -21,6 +21,7 @@ class WizardController < ApplicationController
   end
 
   def qunit
+    raise Discourse::InvalidAccess.new if Rails.env.production?
   end
 
 end

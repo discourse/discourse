@@ -1,4 +1,4 @@
-class CreateWebHookEvents < ActiveRecord::Migration
+class CreateWebHookEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :web_hook_events do |t|
       t.belongs_to :web_hook, null: false, index: true
@@ -9,7 +9,7 @@ class CreateWebHookEvents < ActiveRecord::Migration
       t.text       :response_body
       t.integer    :duration, default: 0
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

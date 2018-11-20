@@ -10,7 +10,7 @@ class PostRevision < ActiveRecord::Base
 
   def self.ensure_consistency!
     # 1 - fix the numbers
-    PostRevision.exec_sql <<-SQL
+    DB.exec <<-SQL
       UPDATE post_revisions
          SET number = pr.rank
         FROM (SELECT id, 1 + ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY number, created_at, updated_at) AS rank FROM post_revisions) AS pr
@@ -19,7 +19,7 @@ class PostRevision < ActiveRecord::Base
     SQL
 
     # 2 - fix the versions on the posts
-    PostRevision.exec_sql <<-SQL
+    DB.exec <<-SQL
       UPDATE posts
          SET version = 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id),
              public_version = 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')

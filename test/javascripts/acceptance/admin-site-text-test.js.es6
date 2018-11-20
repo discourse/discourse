@@ -2,53 +2,44 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - Site Texts", { loggedIn: true });
 
-test("search for a key", () => {
-  visit("/admin/customize/site_texts");
+QUnit.test("search for a key", async assert => {
+  await visit("/admin/customize/site_texts");
 
-  fillIn('.site-text-search', 'Test');
-  andThen(() => {
-    ok(exists('.site-text'));
-    ok(exists(".site-text:not(.overridden)"));
-    ok(exists('.site-text.overridden'));
-  });
+  await fillIn(".site-text-search", "Test");
 
+  assert.ok(exists(".site-text"));
+  assert.ok(exists(".site-text:not(.overridden)"));
+  assert.ok(exists(".site-text.overridden"));
 
   // Only show overridden
-  click('.extra-options input');
-  andThen(() => {
-    ok(!exists(".site-text:not(.overridden)"));
-    ok(exists('.site-text.overridden'));
-  });
+  await click(".extra-options input");
+
+  assert.ok(!exists(".site-text:not(.overridden)"));
+  assert.ok(exists(".site-text.overridden"));
 });
 
+QUnit.test("edit and revert a site text by key", async assert => {
+  await visit("/admin/customize/site_texts/site.test");
 
-test("edit and revert a site text by key", () => {
-  visit("/admin/customize/site_texts/site.test");
-  andThen(() => {
-    equal(find('.title h3').text(), 'site.test');
-    ok(!exists('.save-messages .saved'));
-    ok(!exists('.save-messages .saved'));
-    ok(!exists('.revert-site-text'));
-  });
+  assert.equal(find(".title h3").text(), "site.test");
+  assert.ok(!exists(".save-messages .saved"));
+  assert.ok(!exists(".save-messages .saved"));
+  assert.ok(!exists(".revert-site-text"));
 
   // Change the value
-  fillIn('.site-text-value', 'New Test Value');
-  click(".save-changes");
+  await fillIn(".site-text-value", "New Test Value");
+  await click(".save-changes");
 
-  andThen(() => {
-    ok(exists('.save-messages .saved'));
-    ok(exists('.revert-site-text'));
-  });
+  assert.ok(exists(".save-messages .saved"));
+  assert.ok(exists(".revert-site-text"));
 
   // Revert the changes
-  click('.revert-site-text');
-  andThen(() => {
-    ok(exists('.bootbox.modal'));
-  });
-  click('.bootbox.modal .btn-primary');
+  await click(".revert-site-text");
 
-  andThen(() => {
-    ok(!exists('.save-messages .saved'));
-    ok(!exists('.revert-site-text'));
-  });
+  assert.ok(exists(".bootbox.modal"));
+
+  await click(".bootbox.modal .btn-primary");
+
+  assert.ok(!exists(".save-messages .saved"));
+  assert.ok(!exists(".revert-site-text"));
 });

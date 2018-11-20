@@ -1,12 +1,12 @@
-import { ajax } from 'discourse/lib/ajax';
-import Badge from 'discourse/models/badge';
-import BadgeGrouping from 'discourse/models/badge-grouping';
+import { ajax } from "discourse/lib/ajax";
+import Badge from "discourse/models/badge";
+import BadgeGrouping from "discourse/models/badge-grouping";
 
 export default Discourse.Route.extend({
   _json: null,
 
   model() {
-    return ajax('/admin/badges.json').then(json => {
+    return ajax("/admin/badges.json").then(json => {
       this._json = json;
       return Badge.createFromJson(json);
     });
@@ -17,8 +17,11 @@ export default Discourse.Route.extend({
     const badgeTriggers = [];
     const badgeGroupings = [];
 
-    _.each(json.admin_badges.triggers,function(v,k){
-      badgeTriggers.push({id: v, name: I18n.t('admin.badges.trigger_type.'+k)});
+    _.each(json.admin_badges.triggers, function(v, k) {
+      badgeTriggers.push({
+        id: v,
+        name: I18n.t("admin.badges.trigger_type." + k)
+      });
     });
 
     json.badge_groupings.forEach(function(badgeGroupingJson) {

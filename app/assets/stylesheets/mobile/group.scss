@@ -3,11 +3,11 @@
 }
 
 .group-header {
-  margin: 0px;
+  margin: 0;
 }
 
 .group-name {
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
 }
 
 .group-nav {
@@ -19,21 +19,24 @@
 }
 
 .group-nav.mobile-nav {
-  margin-bottom: 15px;
   float: left;
 }
 
-.group-activity {
+.group-activity,
+.group-manage {
   position: relative;
 }
 
-.group-activity-nav.mobile-nav {
-  position: absolute;
-  right: 0px;
-  top: -55px;
+.group-navigation {
+  &.mobile-nav {
+    position: absolute;
+    right: 0;
+    top: -51px;
+  }
 }
 
-.group-activity-outlet {
+.group-activity-outlet,
+.group-messages-outlet {
   float: none;
 }
 
@@ -44,27 +47,61 @@
 
   .group-flair-inputs {
     .group-flair-right {
-      margin: 0px
+      margin: 0;
     }
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 130%;
 }
 
-table.group-members {
-  th {
-    text-align: center;
-  }
+.group-members {
+  .group-member {
+    border-top: 1px solid $primary-low;
 
-  tr {
     .user-info {
-      width: auto;
+      margin: 0;
+      padding: 0.5em;
+      width: 98%;
     }
 
-    td {
-      padding-left: 0.5em;
+    .btn-group {
+      margin-top: 0;
+    }
+
+    .group-member-info {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+
+      label {
+        margin-bottom: 0;
+        font-weight: bold;
+        display: inline-block;
+      }
     }
   }
+}
+
+.group-outlet {
+  .group-username-filter {
+    position: absolute;
+    right: 0px;
+    top: -42px;
+    height: 27px;
+    margin-bottom: 0px;
+  }
+
+  .group-members-manage {
+    width: 100%;
+    text-align: right;
+  }
+
+  .group-members-dropdown,
+  .group-members-add {
+    margin: 5px 0px;
+  }
+}
+
+.group-add-members-btn {
+  margin-bottom: 10px;
 }

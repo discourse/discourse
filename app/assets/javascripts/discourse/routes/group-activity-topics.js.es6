@@ -1,3 +1,11 @@
-import { buildGroupPage } from 'discourse/routes/group-activity-posts';
+export default Discourse.Route.extend({
+  titleToken() {
+    return I18n.t(`groups.topics`);
+  },
 
-export default buildGroupPage('topics');
+  model() {
+    return this.store.findFiltered("topicList", {
+      filter: `topics/groups/${this.modelFor("group").get("name")}`
+    });
+  }
+});

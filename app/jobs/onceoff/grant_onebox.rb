@@ -8,11 +8,11 @@ module Jobs
       to_award = {}
 
       Post.secured(Guardian.new)
-          .select(:id, :created_at, :raw, :user_id)
-          .visible
-          .public_posts
-          .where("raw LIKE '%http%'")
-          .find_in_batches do |group|
+        .select(:id, :created_at, :raw, :user_id)
+        .visible
+        .public_posts
+        .where("raw LIKE '%http%'")
+        .find_in_batches do |group|
         group.each do |p|
           begin
             # Note we can't use `p.cooked` here because oneboxes have been cooked out

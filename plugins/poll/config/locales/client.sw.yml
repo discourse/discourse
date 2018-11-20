@@ -1,0 +1,76 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  js:
+    poll:
+      voters:
+        one: "wapiga kura"
+        other: "wapiga kura"
+      total_votes:
+        one: "jumla ya kura"
+        other: "jumla ya kura"
+      average_rating: "Wastani wa tathmini:<strong>%{average}</strong>"
+      public:
+        title: "Kura sio za umma."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Chagua angalau chaguo <strong>1</strong>"
+            other: "Chagua angalau machaguo <strong>%{count}</strong>."
+          up_to_max_options:
+            one: "Chagua mpaka chaguo <strong>1</strong>"
+            other: "Chagua mpaka machaguo <strong>%{count}</strong>"
+          x_options:
+            one: "Chagua chaguo <strong>1</strong>"
+            other: "Chagua machaguo <strong>%{count}</strong>"
+          between_min_and_max_options: "Chagua kati ya <strong>%{min}</strong> mpaka <strong>%{max}</strong>"
+      cast-votes:
+        title: "Piga kura zako"
+        label: "Piga kura sasa!"
+      show-results:
+        title: "Onyesha matokeo ya uchaguzi"
+        label: "Onyesha matokeo"
+      hide-results:
+        title: "Rudi kwenye kura zako"
+        label: "Ficha matokeo"
+      open:
+        title: "Fungua uchaguzi"
+        label: "Fungua"
+        confirm: "Unauhakika unataka kufungua uchaguzi huu?"
+      close:
+        title: "Funga uchaguzi"
+        label: "Funga"
+        confirm: "Unauhakika unataka kufunga uchaguzi huu?"
+      automatic_close:
+        closes_in: "karibu katika<strong>%{timeLeft}</strong>"
+        age: "imefungwa <strong>%{age}</strong>"
+      error_while_toggling_status: "Samahani kulikuwa na hitilafu kwenye kubadilisha hali ya uchaguzi huu."
+      error_while_casting_votes: "Samahani kulikuwa na hitilafu kwenye kupiga kura."
+      error_while_fetching_voters: "Samahani kulikuwa na hitilafu kwenye kuonyesha wapiga kura."
+      ui_builder:
+        title: Jenga uchaguzi
+        insert: Ingiza uchaguzi
+        help:
+          options_count: Weka angalau machaguo mawili
+          invalid_values: Kiwango cha chini lazima kiwe kidogo kuliko kiwango cha juu.
+          min_step_value: Kiasi cha Kipimo cha chini ni 1
+        poll_type:
+          label: Aina
+          regular: Chaguo Moja
+          multiple: Machaguo Mengi
+          number: Thaminisha kwa kutumia namba
+        poll_config:
+          max: Kiwango cha juu
+          min: Kiwango cha chini
+          step: Hatua
+        poll_public:
+          label: Onyesha waliopiga kura
+        poll_options:
+          label: Weka chaguo moja kwa kila mstari
+        automatic_close:
+          label: funga maoni moja kwa moja

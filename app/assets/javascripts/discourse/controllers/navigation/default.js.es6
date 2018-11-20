@@ -1,19 +1,8 @@
-import computed from "ember-addons/ember-computed-decorators";
-
 export default Ember.Controller.extend({
   discovery: Ember.inject.controller(),
-  discoveryTopics: Ember.inject.controller('discovery/topics'),
+  discoveryTopics: Ember.inject.controller("discovery/topics"),
 
-  @computed()
-  categories() {
-    return Discourse.Category.list();
-  },
-
-  @computed("filterMode")
-  navItems(filterMode) {
-    // we don't want to show the period in the navigation bar since it's in a dropdown
-    if (filterMode.indexOf("top/") === 0) { filterMode = filterMode.replace("top/", ""); }
-    return Discourse.NavItem.buildList(null, { filterMode });
-  }
-
+  draft: function() {
+    return this.get("discoveryTopics.model.draft");
+  }.property("discoveryTopics.model", "discoveryTopics.model.draft")
 });

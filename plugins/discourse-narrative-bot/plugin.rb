@@ -1,18 +1,22 @@
 # name: discourse-narrative-bot
 # about: Introduces staff to Discourse
-# version: 0.0.1
-# authors: Nick Sahler (@nicksahler)
+# version: 1.0
+# authors: Nick Sahler, Alan Tan
+# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
+hide_plugin if self.respond_to?(:hide_plugin)
 
-if Rails.env.development?
-  Rails.application.config.before_initialize do |app|
-    app.middleware.insert_before(
-      ::ActionDispatch::Static,
-      ::ActionDispatch::Static,
-      Rails.root.join("plugins/discourse-narrative-bot/public").to_s
-    )
-  end
+if Rails.env == "development"
+  # workaround, teach reloader to reload jobs
+  # if we do not do this then
+  #
+  # 1. on reload rails goes and undefines Jobs::Base
+  # 2. as a side effect this undefines Jobs::BotInput
+  # 3. we have a post_edited hook that queues a job for bot input
+  # 4. if you are not running sidekiq in dev every time you save a post it will trigger it
+  # 5. but the constant can not be autoloaded
+  Rails.configuration.autoload_paths << File.expand_path('../autoload', __FILE__)
 end
 
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
@@ -23,11 +27,12 @@ after_initialize do
   Mime::Type.register "image/svg+xml", :svg
 
   [
-    '../jobs/bot_input.rb',
-    '../jobs/narrative_timeout.rb',
-    '../jobs/narrative_init.rb',
-    '../jobs/send_default_welcome_message.rb',
-    '../jobs/onceoff/grant_badges.rb',
+    '../autoload/jobs/bot_input.rb',
+    '../autoload/jobs/narrative_timeout.rb',
+    '../autoload/jobs/narrative_init.rb',
+    '../autoload/jobs/send_default_welcome_message.rb',
+    '../autoload/jobs/onceoff/grant_badges.rb',
+    '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
     '../lib/discourse_narrative_bot/base.rb',
     '../lib/discourse_narrative_bot/new_user_narrative.rb',
@@ -41,7 +46,9 @@ after_initialize do
   ].each { |path| load File.expand_path(path, __FILE__) }
 
   # Disable welcome message because that is what the bot is supposed to replace.
-  SiteSetting.send_welcome_message = false
+  SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
+
+  require_dependency 'plugin_store'
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
@@ -49,13 +56,6 @@ after_initialize do
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
       isolate_namespace DiscourseNarrativeBot
-
-      if Rails.env.production?
-        Dir[Rails.root.join("plugins/discourse-narrative-bot/public/images/*")].each do |src|
-          dest = Rails.root.join("public/images/#{File.basename(src)}")
-          File.symlink(src, dest) if !File.exists?(dest)
-        end
-      end
     end
 
     class Store
@@ -74,15 +74,20 @@ after_initialize do
 
     class CertificatesController < ::ApplicationController
       layout :false
-      skip_before_filter :check_xhr
+      skip_before_action :check_xhr
+      requires_login
 
       def generate
-        raise Discourse::InvalidParameters.new('user_id must be present') unless params[:user_id]&.present?
+        unless params[:user_id]&.present?
+          raise Discourse::InvalidParameters.new('user_id must be present')
+        end
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
 
-        raise Discourse::InvalidParameters.new('date must be present') unless params[:date]&.present?
+        unless params[:date]&.present?
+          raise Discourse::InvalidParameters.new('date must be present')
+        end
 
         generator = CertificateGenerator.new(user, params[:date])
 
@@ -95,7 +100,7 @@ after_initialize do
           end
 
         respond_to do |format|
-          format.svg { render inline: svg}
+          format.svg { render inline: svg }
         end
       end
     end
@@ -114,6 +119,22 @@ after_initialize do
   end
 
   self.add_model_callback(User, :after_commit, on: :create) do
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0
+      self.enqueue_bot_welcome_post
+    end
+  end
+
+  self.on(:user_first_logged_in) do |user|
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
+      user.enqueue_bot_welcome_post
+    end
+  end
+
+  self.on(:user_unstaged) do |user|
+    user.enqueue_bot_welcome_post
+  end
+
+  self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
     delay = SiteSetting.discourse_narrative_bot_welcome_post_delay
@@ -186,7 +207,7 @@ after_initialize do
     if self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types.values
+        when *PostActionType.flag_types_without_custom.values
           :flag
         when PostActionType.types[:like]
           :like

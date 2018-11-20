@@ -1,14 +1,18 @@
-import { ajax } from 'discourse/lib/ajax';
+import { ajax } from "discourse/lib/ajax";
+import AdminUser from "admin/models/admin-user";
+import copyText from "discourse/lib/copy-text";
 
 export default Ember.Component.extend({
   classNames: ["ip-lookup"],
 
-  city: function () {
+  city: function() {
     return [
       this.get("location.city"),
       this.get("location.region"),
       this.get("location.country")
-    ].filter(Boolean).join(", ");
+    ]
+      .filter(Boolean)
+      .join(", ");
   }.property("location.{city,region,country}"),
 
   otherAccountsToDelete: function() {
@@ -19,14 +23,14 @@ export default Ember.Component.extend({
   }.property("other_accounts", "totalOthersWithSameIP"),
 
   actions: {
-    lookup: function () {
+    lookup: function() {
       var self = this;
       this.set("show", true);
 
       if (!this.get("location")) {
         ajax("/admin/users/ip-info", {
           data: { ip: this.get("ip") }
-        }).then(function (location) {
+        }).then(function(location) {
           self.set("location", Em.Object.create(location));
         });
       }
@@ -35,51 +39,92 @@ export default Ember.Component.extend({
         this.set("otherAccountsLoading", true);
 
         var data = {
-          "ip": this.get("ip"),
-          "exclude": this.get("userId"),
-          "order": "trust_level DESC"
+          ip: this.get("ip"),
+          exclude: this.get("userId"),
+          order: "trust_level DESC"
         };
 
-        ajax("/admin/users/total-others-with-same-ip", { data }).then(function (result) {
+        ajax("/admin/users/total-others-with-same-ip", { data }).then(function(
+          result
+        ) {
           self.set("totalOthersWithSameIP", result.total);
         });
 
-        const AdminUser = require('admin/models/admin-user').default;
-        AdminUser.findAll("active", data).then(function (users) {
+        AdminUser.findAll("active", data).then(function(users) {
           self.setProperties({
             other_accounts: users,
-            otherAccountsLoading: false,
+            otherAccountsLoading: false
           });
         });
       }
     },
 
-    hide: function () {
+    hide: function() {
       this.set("show", false);
+    },
+
+    copy: function() {
+      let text = `IP: ${this.get("ip")}\n`;
+      const location = this.get("location");
+      if (location) {
+        if (location.hostname) {
+          text += `${I18n.t("ip_lookup.hostname")}: ${location.hostname}\n`;
+        }
+
+        text += I18n.t("ip_lookup.location");
+        if (location.loc) {
+          text += `: ${location.loc} ${this.get("city")}\n`;
+        } else {
+          text += `: ${I18n.t("ip_lookup.location_not_found")}\n`;
+        }
+
+        if (location.org) {
+          text += I18n.t("ip_lookup.organisation");
+          text += `: ${location.org}\n`;
+        }
+
+        if (location.phone) {
+          text += I18n.t("ip_lookup.phone");
+          text += `: ${location.phone}\n`;
+        }
+      }
+      const copyRange = $('<p id="copy-range"></p>');
+      copyRange.html(text.trim().replace("\n", "<br>"));
+      $(document.body).append(copyRange);
+      if (copyText(text, copyRange[0])) {
+        this.set("copied", true);
+        Ember.run.later(() => this.set("copied", false), 2000);
+      }
+      copyRange.remove();
     },
 
     deleteOtherAccounts: function() {
       var self = this;
-      bootbox.confirm(I18n.t("ip_lookup.confirm_delete_other_accounts"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
-        if (confirmed) {
-          self.setProperties({
-            other_accounts: null,
-            otherAccountsLoading: true,
-            totalOthersWithSameIP: null
-          });
+      bootbox.confirm(
+        I18n.t("ip_lookup.confirm_delete_other_accounts"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            self.setProperties({
+              other_accounts: null,
+              otherAccountsLoading: true,
+              totalOthersWithSameIP: null
+            });
 
-          ajax("/admin/users/delete-others-with-same-ip.json", {
-            type: "DELETE",
-            data: {
-              "ip": self.get("ip"),
-              "exclude": self.get("userId"),
-              "order": "trust_level DESC"
-            }
-          }).then(function() {
-            self.send("lookup");
-          });
+            ajax("/admin/users/delete-others-with-same-ip.json", {
+              type: "DELETE",
+              data: {
+                ip: self.get("ip"),
+                exclude: self.get("userId"),
+                order: "trust_level DESC"
+              }
+            }).then(function() {
+              self.send("lookup");
+            });
+          }
         }
-      });
+      );
     }
   }
 });

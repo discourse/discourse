@@ -1,41 +1,24 @@
-import { ajax } from 'discourse/lib/ajax';
+import { ajax } from "discourse/lib/ajax";
 const EmailPreview = Discourse.Model.extend({});
 
+export function oneWeekAgo() {
+  return moment()
+    .locale("en")
+    .subtract(7, "days")
+    .format("YYYY-MM-DD");
+}
+
 EmailPreview.reopenClass({
-  findDigest: function(lastSeenAt, username) {
-
-    if (Em.isEmpty(lastSeenAt)) {
-      lastSeenAt = this.oneWeekAgo();
-    }
-
-    if (Em.isEmpty(username)) {
-      username = Discourse.User.current().username;
-    }
-
+  findDigest(username, lastSeenAt) {
     return ajax("/admin/email/preview-digest.json", {
-      data: { last_seen_at: lastSeenAt, username: username }
-    }).then(function (result) {
-      return EmailPreview.create(result);
-    });
+      data: { last_seen_at: lastSeenAt || oneWeekAgo(), username }
+    }).then(result => EmailPreview.create(result));
   },
 
-  sendDigest: function(lastSeenAt, username, email) {
-    if (Em.isEmpty(lastSeenAt)) {
-      lastSeenAt = this.oneWeekAgo();
-    }
-
-    if (Em.isEmpty(username)) {
-      username = Discourse.User.current().username;
-    }
-
+  sendDigest(username, lastSeenAt, email) {
     return ajax("/admin/email/send-digest.json", {
-      data: { last_seen_at: lastSeenAt, username: username, email: email }
+      data: { last_seen_at: lastSeenAt || oneWeekAgo(), username, email }
     });
-  },
-
-  oneWeekAgo() {
-    const en = moment().locale('en');
-    return en.subtract(7, 'days').format('YYYY-MM-DD');
   }
 });
 

@@ -74,6 +74,9 @@ describe TagUser do
     let(:tracked_tag) { Fabricate(:tag) }
 
     context "with some tag notification settings" do
+      before do
+        SiteSetting.queue_jobs = false
+      end
 
       let :watched_post do
         TagUser.create!(user: user, tag: watched_tag, notification_level: TagUser.notification_levels[:watching])
@@ -141,11 +144,9 @@ describe TagUser do
         TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 1)
         expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
 
-
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), [watched_tag.name])
         post.topic.save!
         expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
-
 
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), [])
         post.topic.save!
@@ -158,7 +159,7 @@ describe TagUser do
         staff = Fabricate(:admin)
         topic = create_post.topic
 
-        SiteSetting.staff_tags = "foo"
+        create_staff_tags(['foo'])
 
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["foo"])
         expect(result).to eq(false)

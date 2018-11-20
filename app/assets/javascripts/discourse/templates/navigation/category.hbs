@@ -1,40 +1,26 @@
-{{add-category-class category=category}}
+{{#d-section class="navigation-container"}}
+  {{add-category-class category=category}}
 
-<section class='category-heading'>
-  {{#if category.uploaded_logo.url}}
-    {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
-    {{#if category.description}}
-        <div class='category-description'>
-            {{{category.description}}}
-        </div>
+  <section class='category-heading'>
+    {{#if category.uploaded_logo.url}}
+      {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
+      {{#if category.description}}
+        <p>{{{dir-span category.description}}}</p>
+      {{/if}}
     {{/if}}
-  {{/if}}
-</section>
+  </section>
 
-<div class='category-navigation'>
-  {{bread-crumbs categories=categories
-                 category=category
-                 noSubcategories=noSubcategories
-                 hideSubcategories=showingSubcategoryList}}
+  <div class='category-navigation'>
+    {{d-navigation
+      category=category
+      filterMode=filterMode
+      noSubcategories=noSubcategories
+      canCreateTopic=canCreateTopic
+      createTopic=(route-action "createTopic")
+      createTopicDisabled=cannotCreateTopicOnCategory
+      hasDraft=draft
+      editCategory=(route-action "editCategory" category)}}
 
-  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
-
-  {{#if currentUser}}
-    {{category-notifications-button category=category}}
-  {{/if}}
-
-  {{#if canCreateTopic}}
-    {{d-button  id="create-topic"
-                class="btn-default"
-                action="createTopic"
-                icon="plus"
-                label="topic.create"
-                disabled=cannotCreateTopicOnCategory}}
-  {{/if}}
-
-  {{#if canEditCategory}}
-    {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
-  {{/if}}
-
-  {{plugin-outlet name="category-navigation" args=(hash category=category)}}
-</div>
+    {{plugin-outlet name="category-navigation" args=(hash category=category)}}
+  </div>
+{{/d-section}}

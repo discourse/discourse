@@ -1,0 +1,1049 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [~, Január, Február, Március, Április, Május, Június, Július, Augusztus, Szeptember, Október, November, December]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+    am: "de."
+    pm: "du."
+  title: "Discourse"
+  topics: "Témák"
+  posts: "Bejegyzések"
+  loading: "Töltés"
+  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> által működtetve, legjobb megtekintés JavaScript engedélyezésével '
+  log_in: "Bejelentkezés"
+  submit: "Beküldés"
+  purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált account"
+  disable_remote_images_download_reason: "A távoli képletöltés ki lett kapcsolva, mivel nem áll rendelkezésre tárhely."
+  anonymous: "Anonim"
+  remove_posts_deleted_by_author: "Szerző által törölve"
+  themes:
+    bad_color_scheme: "Nem lehet az oldal stílust frissíteni, érvénytelen szín séma."
+    other_error: "Hiba történt az oldal stílusának frissítése közben"
+    error_importing: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
+    settings_errors:
+      invalid_yaml: "Az adott YAML érvénytelen."
+      default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
+      number_value_not_valid_min_max: "%{min} és %{max} között kell lennie."
+  emails:
+    incoming:
+      default_subject: "Ennek a témának címre van szüksége"
+      show_trimmed_content: "Levágott tartalom mutatása"
+      no_subject: "(nincs tárgy)"
+      no_body: "(nincs törzs)"
+      errors:
+        empty_email_error: "Akkor fordul elő, amikor a nyers email, amit kaptunk, üres volt."
+        no_body_detected_error: "Történik, amikor nem tudtunk kivonatolni egy törzset és nem voltak csatolmányok."
+        inactive_user_error: "Történik, ha a feladó nem aktív."
+        bad_destination_address: "Történik, ha a To/Cc/Bcc mezőkben lévő email címek egyike sem illeszkedik a beállított beérkező e-mail címhez."
+        strangers_not_allowed_error: "Történik, ha egy felhasználó megpróbált létrehozni egy új témát egy kategóriában, amelynek nem tagja."
+      unrecognized_error: "Ismeretlen hiba"
+  errors: &errors
+    format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>:%{message}'
+    messages:
+      too_long_validation: "limitálva %{max} karakterre; megadott karakterek száma: %{length}."
+      invalid_boolean: "Érvénytelen logikai érték."
+      taken: "már foglalt"
+      accepted: elfogadva kell lennie
+      blank: nem lehet üres
+      present: üres kell hogy legyen
+      confirmation: "nem egyezik %{attribute}"
+      empty: nem lehet üres
+      equal_to: "meg kell egyeznie az alábbival: %{count}"
+      even: "páros szám kell, hogy legyen"
+      exclusion: foglalt
+      greater_than: "nagyobbnak kell lenni, mint %{count} "
+      greater_than_or_equal_to: "nagyobbnak vagy egyenlőnek kell lennie, mint %{count}"
+      has_already_been_used: "már használatban van"
+      inclusion: nincs benne a listában
+      invalid: érvénytelen
+      contains_censored_words: "tartalmazza a következő nem engedélyezett szavakat: %{censored_words}"
+      less_than: "kevesebbnek kell lenni, mint %{count}"
+      less_than_or_equal_to: "kisebbnek vagy egyenlőnek kell lennie, mint %{count}"
+      not_a_number: ez nem szám
+      not_an_integer: Az értéknek egész számnak kell lennie
+      odd: "páratlan szám kell, hogy legyen"
+      record_invalid: 'Érvényesítés sikertelen: %{error}'
+      max_emojis: "nem lehet több mint %{max_emojis_count} emoji"
+      restrict_dependent_destroy:
+        one: "Nem lehet törölni rekordot, mert egy függő %{rekord} létezik"
+        many: "Nem lehet törölni rekordot, mert függő %{rekord} léteznek"
+      too_long:
+        one: túl hosszú (legfeljebb 1 karakter lehet)
+        other: túl hosszú (legfeljebb %{count} karakter lehet)
+      too_short:
+        one: túl rövid (minimum 1 karakter)
+        other: túl rövid (minimum %{count} karakter)
+      wrong_length:
+        one: nem megfelelő hosszúságú. (1 karakter szükséges)
+        other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
+      other_than: "nem lehet %{count}"
+    template:
+      body: 'Problémák vannak az alábbi mezőkkel:'
+    embed:
+      load_from_remote: "Hiba történt a bejegyzés betöltése során!"
+    site_settings:
+      min_username_length_exists: "Nem lehet a legrövidebb felhasználói névnél rövidebb minimum felhasználói név hosszúságot beállítani."
+      min_username_length_range: "Nem lehet a maximum értéknél nagyobb minimum értéket beállítani."
+      max_username_length_exists: "Nem lehet a leghosszabb felhasználói névnél rövidebb maximum felhasználói név hosszúságot beállítani."
+      max_username_length_range: "Nem lehet a minimum értéknél kisebb maximum értéket beállítani."
+      default_categories_already_selected: "Nem lehet olyan kategóriát kiválasztani ami másik listában már használva van."
+      s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba amíg nincs megadva a 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
+  invite:
+    not_found: "Meghívási tokened nem érvényes. Kérlek vedd fel a kapcsolatot az oldal adminisztrátorával."
+  backup:
+    operation_already_running: "Egy művelet jelenleg is fut. Nem tudunk újat indítani jelenleg."
+    backup_file_should_be_tar_gz: "A biztonsági mentésnek .tar.gz formátumúnak kell lennie."
+    not_enough_space_on_disk: "Nincs elég hely a lemezen, hogy feltöltsük ezt a biztonsági mentést."
+    invalid_filename: "A mentési fájlnév érvénytelen karaktereket tartalmaz. Érvényes karakterek a-z 0-9 .  -  _."
+  not_logged_in: "Be kell jelentkezned, hogy ezt megtehesd."
+  not_found: "A kért hivatkozás vagy forrás nem található."
+  invalid_access: "Nincs engedélyed a kért forrás megtekintéséhez."
+  authenticator_not_found: "Azonosítási mód nem létezik, vagy ki lett kapcsolva."
+  read_only_mode_enabled: "Ez a weboldal írásvédett módban van. Az interakciók le vannak tiltva."
+  reading_time: "Olvasási Idő"
+  likes: "Lájkok"
+  too_many_replies:
+    one: "Sajnáljuk, de az új felhasználók ideiglenesen csak 1 választ küldhetnek ugyanabba a témába."
+    other: "Sajnáljuk, de az új felhasználók ideiglenesen csak %{replies} választ küldhetnek ugyanabba a témába."
+  embed:
+    start_discussion: "Csevegés indítása"
+    continue: "Csevegés folytatása"
+    referer: "Hivatkozó:"
+    more_replies:
+      one: "és 1 további válasz"
+      other: "és %{count} további válasz"
+    loading: "Csevegés betöltése..."
+    permalink: "Közvetlen link"
+    imported_from: "Ez egy társ beszélgetés, az eredeti topic itt található: %{link}"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 válasz"
+      other: "%{count} válasz"
+  no_mentions_allowed: "Sajnáljuk, de nem említhetsz meg más felhasználókat."
+  too_many_mentions:
+    one: "Sajnáljuk, de csak egy felhasználót említhetsz meg ebben a bejegyzésben."
+    other: "Sajnáljuk, de csak %{count} számú felhasználót említhetsz meg ebben a bejegyzésben."
+  no_mentions_allowed_newuser: "Sajnáljuk, de az új felhasználók nem említhetnek meg más felhasználókat."
+  too_many_mentions_newuser:
+    one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
+    other: "Sajnáljuk, de az új felhasználók csak %{count} számú felhasználót említhetnek meg."
+  no_images_allowed_trust: "Sajnáljuk, de nem tudsz képeket rakni a bejegyzésbe"
+  no_images_allowed: "Sajnáljuk, de az új felhasználók nem tehetnek képeket a bejegyzésbe."
+  too_many_images:
+    one: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
+    other: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
+  no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak csatolmányokat a bejegyzéseikbe."
+  too_many_attachments:
+    one: "Sajnáljuk, de az új felhasználók csak %{count} csatolmányt adhatnak a bejegyzéseikbe."
+    other: "Sajnáljuk, de az új felhasználók csak %{count} csatolmányt adhatnak a bejegyzéseikbe."
+  no_links_allowed: "Sajnáljuk, de az új felhasználók nem tehetnek hivatkozásokat a bejegyzéseikbe."
+  too_many_links:
+    one: "Sajnáljuk, de az új felhasználók csak %{count} hivatkozást tehetnek a bejegyzéseikbe."
+    other: "Sajnáljuk, de az új felhasználók csak %{count} hivatkozást tehetnek a bejegyzéseikbe."
+  spamming_host: "Sajnáljuk, nem küldhetsz linket ennek a hostnak."
+  user_is_suspended: "A felfüggesztett felhasználók nem hozhatnak létre új bejegyzést."
+  topic_not_found: "Valami elromlott. Talán ezt a téma lezárták vagy törölték, miközben nézted?"
+  just_posted_that: "túl hasonló ahhoz, amit legutóbb megosztottál"
+  invalid_characters: "érvénytelen karaktereket tartalmaz"
+  next_page: "következő oldal →"
+  prev_page: "← előző oldal"
+  page_num: "%{num}. oldal"
+  home_title: "Kezdőlap"
+  topics_in_category: "Témák a '%{category}' kategóriában"
+  rss_posts_in_topic: "A '%{topic}' RSS feed-je"
+  rss_topics_in_category: "A '%{category}' témáinak az RSS feed-je"
+  author_wrote: "%{author} írta:"
+  num_posts: "Bejegyzések:"
+  num_participants: "Résztvevők:"
+  read_full_topic: "Teljes téma elolvasása"
+  private_message_abbrev: "Üzenet"
+  rss_description:
+    latest: "Legutóbbi témák"
+    hot: "Legnépszerűbb témák"
+    top: "Top témák"
+    top_yearly: "Éves top témák"
+    top_quarterly: "3 havi top témák"
+    top_monthly: "Havi top témák"
+    top_weekly: "Heti top témák"
+    top_daily: "Napi top témák"
+    posts: "Legújabb bejegyzések"
+    private_posts: "Legutóbbi személyes üzenetek"
+    group_posts: "Legújabb bejegyzések %{group_name}-ból"
+    group_mentions: "Legújabb megemlítések %{group_name}-ból"
+    user_posts: "Legújabb bejegyzések @%{username} felhasználótól."
+    user_topics: "Legújabb témák @%{username} felhasználótól."
+    tag: "Megjelölt témák"
+  too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
+  revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
+  excerpt_image: "kép"
+  queue:
+    delete_reason: "Törölve lett a moderátori sor által"
+    not_found: "Bejegyzés nem található vagy frissítve lett."
+  groups:
+    errors:
+      can_not_modify_automatic: "Nem módosíthasz automata csoportot"
+      invalid_domain: "'%{domain}' nem érvényes domain."
+      invalid_incoming_email: "'%{email}' nem érvényes email cím."
+      email_already_used_in_group: "'%{email}' már használva van a '%{group_name}' csoport által."
+      email_already_used_in_category: "'%{email}' már használva van a '%{category_name}' kategória által."
+    default_names:
+      everyone: "mindenki"
+      admins: "adminisztrátorok"
+      moderators: "moderátorok"
+      staff: "személyzet"
+      trust_level_0: "bizalom_szint_0"
+      trust_level_1: "bizalom_szint_1"
+      trust_level_2: "bizalom_szint_2"
+      trust_level_3: "bizalom_szint_3"
+      trust_level_4: "bizalom_szint_4"
+  education:
+    until_posts:
+      one: "1 bejegyzés"
+      other: "%{count} bejegyzés"
+  activerecord:
+    attributes:
+      category:
+        name: "Kategória neve"
+      topic:
+        title: 'Cím'
+      post:
+        raw: "Test"
+      user_profile:
+        bio_raw: "Bemutatkozás"
+    errors:
+      <<: *errors
+      models:
+        topic:
+          attributes:
+            base:
+              too_many_users: "Egyszerre csak egy felhasználónak küldhetsz figyelmeztetést."
+              no_user_selected: "Érvényes felhasználót kell választanod."
+        user:
+          attributes:
+            password:
+              common: "egy a 10000 leggyakoribb jelszó közül. Arra kérünk, hogy használj egy biztonságosabb jelszót!"
+              same_as_username: "azonos a felhasználói neveddel. Használj biztonságosabb jelszót!"
+              same_as_email: "azonos az email címeddel. Használj biztonságosabb jelszót!"
+              same_as_current: "azonos a jelenlegi jelszavaddal."
+            ip_address:
+              signup_not_allowed: "Feliratkozás nem lehetséges erről a fiókról."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "egy érvénytelen szín"
+  vip_category_name: "Társalgó"
+  vip_category_description: "A kategória csak 3, vagy magasabb bizalmi szinttel rendelkező tagok számára érhető el."
+  meta_category_name: "Visszajelzés"
+  meta_category_description: "Beszélgetés erről az oldalról, a szervezetéről, arról hogy hogyan működés és hogyan tudnánk jobbá tenni."
+  staff_category_name: "Személyzet"
+  staff_category_description: "Privát kategória a személyzet számára. Ezeket a témákat csak adminok és moderátorok látják."
+  lounge_welcome:
+    title: "Üdv a társalgóban"
+  category:
+    topic_prefix: "A %{category} kategóriáról"
+    errors:
+      not_found: "Kategória nem található!"
+      uncategorized_parent: "Nem kategorizált elem nem rendelkezhet szülő kategóriával"
+      self_parent: "Az alkategória nem tartozhat önmaga alá"
+      invalid_email_in: "'%{email}' nem érvényes email cím."
+      email_already_used_in_group: "'%{email}' már használva van a '%{group_name}' csoport által."
+      email_already_used_in_category: "'%{email}' már használva van a '%{category_name}' kategória által."
+    cannot_delete:
+      uncategorized: "Nem kategorizált elemet nem lehet törrölni"
+      has_subcategories: "Nem lehet kitörölni ezt a kategóriát, mert vannak alkategóriái."
+      topic_exists_no_oldest: "Nem lehet törölni ezt a kategóriát, mert benne a témák száma %{count}."
+    uncategorized_description: "Témák, amelyeknek nincs szükségük kategóriára, vagy nem férnek bele semmilyen más létező kategóriába."
+  trust_levels:
+    newuser:
+      title: "új felhasználó"
+    basic:
+      title: "egyszerű felhasználó"
+    member:
+      title: "tag"
+    regular:
+      title: "általános"
+    leader:
+      title: "vezető"
+  post:
+    image_placeholder:
+      broken: "A kép törött"
+  rate_limiter:
+    slow_down: "Túl sokszor hajtottad már végre ezt a müveletet, kérlek próbáld újra később."
+    too_many_requests: "Túl sokszor hajtottad már végre ezt a müveletet, kérlek várj %{time_left} mielőtt újra próbálnád."
+    hours:
+      one: "1 óra"
+      other: "%{count} óra"
+    minutes:
+      one: "1 perc"
+      other: "%{count} perc"
+    seconds:
+      one: "1 másodperc"
+      other: "%{count} másodperc"
+    short_time: "néhány másodperc"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1p"
+      less_than_x_seconds:
+        one: "< 1mp"
+        other: "< %{count}mp"
+      x_seconds:
+        one: "1mp"
+        other: "%{count}mp"
+      less_than_x_minutes:
+        one: "< 1p"
+        other: "< %{count}p"
+      x_minutes:
+        one: "1p"
+        other: "%{count}p"
+      about_x_hours:
+        one: "1ó"
+        other: "%{count}ó"
+      x_days:
+        one: "1n"
+        other: "%{count}n"
+      about_x_months:
+        one: "1hó"
+        other: "%{count}hó"
+      x_months:
+        one: "1hó"
+        other: "%{count}hó"
+      about_x_years:
+        one: "1év"
+        other: "%{count}év"
+      over_x_years:
+        one: "> 1év"
+        other: "> %{count}év"
+      almost_x_years:
+        one: "1év"
+        other: "%{count}év"
+    distance_in_words_verbose:
+      half_a_minute: "éppen most"
+      less_than_x_seconds:
+        one: "éppen most"
+        other: "éppen most"
+      x_seconds:
+        one: "1 másodperce"
+        other: "%{count} másodperce"
+      less_than_x_minutes:
+        one: "kevesebb, mint 1 perce"
+        other: "kevesebb, mint %{count} perce"
+      x_minutes:
+        one: "1 perce"
+        other: "%{count} perce"
+      about_x_hours:
+        one: "1 órája"
+        other: "%{count} órája"
+      x_days:
+        one: "1 napja"
+        other: "%{count} napja"
+      about_x_months:
+        one: "kb. 1 hónapja"
+        other: "kb. %{count} hónapja"
+      x_months:
+        one: "1 hónapja"
+        other: "%{count} hónapja"
+      about_x_years:
+        one: "kb. 1 éve"
+        other: "kb. %{count} éve"
+      over_x_years:
+        one: "több, mint 1 éve"
+        other: "több, mint %{count} éve"
+      almost_x_years:
+        one: "majdnem 1 éve"
+        other: "majdnem %{count} éve"
+  password_reset:
+    no_token: "Sajnos a jelszómódosítás link túl régi. Ahhoz, hogy egy új linket kapjál, válaszd ki a Bejelentkezés gombot és használd az 'Elfelejtettem a jelszót' opciót."
+    choose_new: "Válassz egy új jelszót"
+    choose: "Válassz egy jelszót"
+    update: 'Jelszó frissítése'
+    save: 'Jelszó beállítása'
+    title: 'Jelszó visszaállítása'
+    success: "Sikeresen megváltoztattad a jelszavadat és bejelentkeztél!"
+    success_unapproved: "Sikeresen megváltoztattad a jelszavadat!"
+  email_login:
+    title: "Email bejelentkezés"
+  change_email:
+    confirmed: "Az email címed frissítve lett!"
+    please_continue: "Tovább a %{site_name}-ra"
+    error: "Hiba az email cím változtatásánál. Lehet hogy már használatban van?"
+    authorizing_old:
+      title: "Köszönjük hogy megerősítetted az email címedet."
+  activation:
+    action: "Kattints ide hogy aktiváld a felhasználói fiókodat."
+    already_done: "Sajnáljuk, ez a fiók megerősítési hivatkozás már érvénytelen! Lehet, hogy a fiókod már aktiválva van?"
+    please_continue: "Fiókodat aktiváltuk, most visszairányítunk a kezdőoldalra."
+    continue_button: "Tovább a %{site_name}-ra"
+    welcome_to: "Üdv a %{site_name}-on!"
+    admin_confirm:
+      title: "Adminisztrátori Fiók Megerősítése"
+      grant: "Adminisztrátori Hozzáférés Adása"
+      back_to: "Vissza %{title}"
+  post_action_types:
+    off_topic:
+      title: 'Off-Topik'
+      long_form: 'megjelölve mint off-topic'
+    spam:
+      title: 'Szemét'
+      long_form: 'spamnek jelölve'
+      email_title: '"%{title}" spam-nek jelölve'
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: 'Alkalmatlan'
+      long_form: 'nem a témába tartozónak jelölve'
+    notify_user:
+      email_title: 'A bejegyzésed itt "%{title}"'
+    notify_moderators:
+      title: "Valami más"
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: 'Könyvjelző'
+      description: 'Bejegyzés hozzáadása a könyvjelzőkhöz'
+      short_description: 'Bejegyzés hozzáadása a könyvjelzőkhöz'
+      long_form: 'a bejegyzés hozzáadva a könyvjelzőkhöz'
+    like:
+      title: 'Kedvel'
+      description: 'Bejegyzés kedvelése'
+      short_description: 'Bejegyzés kedvelése'
+      long_form: 'kedvelve'
+  user_activity:
+    no_default:
+      self: "Nincsenek tevékenységek."
+      others: "Nincs tevékenység."
+    no_bookmarks:
+      others: "Nincsenek könyvjelzők."
+    no_likes_given:
+      others: "Nincsenek kedvelt bejegyzések."
+    no_replies:
+      others: "Nincsenek válaszok."
+  topic_flag_types:
+    spam:
+      title: 'Szemét'
+      long_form: 'szemétnek jelölte ezt'
+      short_description: 'Ez egy hirdetés'
+    inappropriate:
+      title: 'Alkalmatlan'
+    notify_moderators:
+      title: "Valami más"
+      email_title: 'A következő témakör "%{title}" moderátori figyelmet igényel'
+      email_body: "%{link}\n\n%{message}"
+  archetypes:
+    regular:
+      title: "Általános téma"
+    banner:
+      title: "Kiemelt Téma"
+  unsubscribed:
+    title: "Leiratkozott!"
+  unsubscribe:
+    title: "Leiratkozás"
+    log_out: "Kijelentkezés"
+  user_api_key:
+    authorize: "Engedélyezés"
+    read: "olvasható"
+    read_write: "olvasható/írható"
+  reports:
+    default:
+      labels:
+        percent: Százalék
+        day: Nap
+    post_edits:
+      labels:
+        post: Bejegyzés
+        editor: Szerkesztő
+        author: Szerző
+        edit_reason: Indok
+    visits:
+      title: "Felhasználói látogatások"
+      xaxis: "Nap"
+      yaxis: "Látogatások száma"
+    signups:
+      title: "Feliratkozások"
+      xaxis: "Nap"
+      yaxis: "Feliratkozások száma"
+    new_contributors:
+      xaxis: "Nap"
+    dau_by_mau:
+      xaxis: "Nap"
+    daily_engaged_users:
+      xaxis: "Nap"
+    profile_views:
+      title: "Felhasználói Profil Megtekintések"
+      xaxis: "Nap"
+      yaxis: "Felhasználói profil megtekintések száma"
+    topics:
+      title: "Témák"
+      xaxis: "Nap"
+      yaxis: "Új témák száma"
+    posts:
+      title: "Bejegyzések"
+      xaxis: "Nap"
+      yaxis: "Új bejegyzések száma"
+    likes:
+      title: "Kedvelések"
+      xaxis: "Nap"
+      yaxis: "Új kedvelések száma"
+    flags:
+      title: "Jelölések"
+      xaxis: "Nap"
+      yaxis: "Jelölések száma"
+    bookmarks:
+      title: "Könyvjelzők"
+      xaxis: "Nap"
+      yaxis: "Új könyvjelzők száma"
+    starred:
+      title: "Csillagozott"
+      xaxis: "Nap"
+      yaxis: "Új csillagozott témák száma"
+    users_by_trust_level:
+      title: "Felhasználok láma bizalmi szintenként"
+      xaxis: "Bizalmi szint"
+      yaxis: "Felhasználók száma"
+      labels:
+        level: Szint
+    trending_search:
+      labels:
+        searches: Keresések
+    emails:
+      title: "Kiküldött levelek"
+      xaxis: "Nap"
+      yaxis: "Levelek száma"
+    user_to_user_private_messages:
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    system_private_messages:
+      title: "Rendszer"
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    moderator_warning_private_messages:
+      title: "Moderátori figyelmeztetés"
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    notify_moderators_private_messages:
+      title: "Moderátorok értesítése"
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    notify_user_private_messages:
+      title: "Felhasználó értesítése"
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    top_referrers:
+      xaxis: "Felhasználó"
+      num_clicks: "Kattintások"
+      num_topics: "Témák"
+    top_traffic_sources:
+      xaxis: "Domain"
+      num_clicks: "Kattintások"
+      num_topics: "Témák"
+      num_users: "Felhasználók"
+      labels:
+        domain: Domain
+        num_clicks: Kattintások
+        num_topics: Témák
+    top_referred_topics:
+      title: "Legtöbbet Hivatkozott Témák"
+      labels:
+        num_clicks: "Kattintások"
+        topic: "Témák"
+    page_view_anon_reqs:
+      title: "Névtelen"
+      xaxis: "Nap"
+    page_view_logged_in_reqs:
+      title: "Bejelentkezve"
+      xaxis: "Nap"
+    page_view_crawler_reqs:
+      title: "Kereső Robotok"
+      xaxis: "Nap"
+    page_view_total_reqs:
+      title: "Oldalmegtekintések"
+      xaxis: "Nap"
+      yaxis: "Összes Oldalmegtekintés"
+    page_view_logged_in_mobile_reqs:
+      title: "Bejelentkezett Oldalmegtekintések"
+      xaxis: "Nap"
+      yaxis: "Mobilos Bejelentkezett Oldalmegtekintések"
+    page_view_anon_mobile_reqs:
+      xaxis: "Nap"
+    http_background_reqs:
+      title: "Háttér"
+      xaxis: "Nap"
+    http_2xx_reqs:
+      title: "Állapot 2xx (OK)"
+      xaxis: "Nap"
+      yaxis: "Sikeres kérések (Állapot 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Átirányítás)"
+      xaxis: "Nap"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Kliens Hiba)"
+      xaxis: "Nap"
+      yaxis: "Kliens Hibák (Állapot 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Szerver Hiba)"
+      xaxis: "Nap"
+      yaxis: "Szerver Hibák (Állapot 5xx)"
+    http_total_reqs:
+      title: "Összes"
+      xaxis: "Nap"
+      yaxis: "Összes kérés"
+    time_to_first_response:
+      title: "Első válasz ideje"
+      xaxis: "Nap"
+      yaxis: "Átlagos idő (óra)"
+    topics_with_no_response:
+      title: "Témák hozzászólás nélkül"
+      xaxis: "Nap"
+      yaxis: "Összes"
+    mobile_visits:
+      xaxis: "Nap"
+      yaxis: "Látogatások száma"
+    web_crawlers:
+      labels:
+        user_agent: "User Agent"
+        page_views: "Oldalmegtekintések"
+  dashboard:
+    rails_env_warning: "A szerver jelenleg %{env} módban fut."
+    host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
+    gc_warning: 'A szerver az alapértelmezett ruby memóriakezelést használja, ami nem a legoptimálisabb teljesítmény szempontjából. Olvasd el ezt a teljesítmény fokozásáról: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    memory_warning: 'A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott.'
+  site_settings:
+    allow_moderators_to_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
+    enable_badges: "A jelvény-rendszer engedélyezése"
+    min_password_length: "Minimum jelszó hossz."
+    block_common_passwords: "A 10,000 leggyakoribb jelszó tiltása."
+    reply_by_email_enabled: "E-mail válaszok engedélyezése."
+    enable_emoji: "Emoji-k engedélyezése"
+    errors:
+      invalid_email: "Érvénytelen e-mail cím."
+      invalid_username: "Nincs ilyen nevű felhasználó."
+      invalid_integer_min_max: "Az értéknek %{min} és %{max} között kell lennie."
+      invalid_integer_min: "Az érték nem lehet kisebn, mint %{min}."
+      invalid_integer_max: "Az érték nem lehet nagyobb, mint %{max}."
+      invalid_integer: "Az értéknek egész számnak kell lennie."
+      regex_mismatch: "Az érték nem felel meg az elvárt formának."
+      invalid_string: "Érvénytelen érték."
+      invalid_string_min_max: "%{min} és %{max} között kell lennie a karakterek számának."
+      invalid_string_min: "Nem lehet rövidebb, mint %{min} karakter."
+      invalid_string_max: "Nem lehet hosszabb, mint %{max} karakter."
+  search:
+    within_post: "#%{post_number}, általa: %{username}"
+    types:
+      category: 'Kategóriák'
+      topic: 'Eredmények'
+      user: 'Felhasználók'
+  original_poster: "Eredeti szerző"
+  most_posts: "Legtöbb bejegyzés"
+  most_recent_poster: "Legutóbbi szerzők"
+  frequent_poster: "Gyakori szerzők"
+  redirected_to_top_reasons:
+    new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
+    not_seen_in_a_month: "Üdv újra itt! Régóta nem láttunk. Ezek a legnépszerűbb témakörök, mióta nem látogattad az oldalt."
+  topic_statuses:
+    archived_enabled: "Ez a témakör jelenleg archíválva van. Be lett fagyasztva, szóval nem lehet megváltoztatni semmilyen módon."
+    archived_disabled: "Ez a topik jelenleg nincs archíválva. Már nincs befagyasztva, így lehet rajta változtatni."
+    closed_enabled: "A témakör le van zárva. Nem lehet mostantól válaszolni rá."
+    closed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
+  login:
+    not_approved: "Még nem fogadták el a regisztrációs kérelmedet! Értesítve leszel, amint bejelentkezhetsz."
+    incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
+    wait_approval: "Köszönjük, hogy regisztráltál! Értesíteni fogunk, amint elfogadták a kérelmedet."
+    active: "A fiókodat aktiváltuk és készen áll a használatra!"
+    suspended: "Nem jelentkezhetsz be eddig: %{date}."
+    suspended_with_reason: "A fiók felfüggesztve %{date} -ig: %{reason}"
+    errors: "%{errors}"
+    something_already_taken: "Valami félrecsúszott. Talán a felhasználónév vagy az e-mail cím már regisztrálva van. Próbáld meg az elfelejtett jelszó részt."
+    omniauth_error_unknown: "Valamiért nem sikerült bejelentkezned. Kérünk próbáld újra!"
+    new_registrations_disabled: "Az új fiókok létrehozása nem engedélyezett jelenleg."
+    password_too_long: "A jelszavak 200 karakter hosszúságúra vannak limitálva."
+    reserved_username: "Ez a felhasználónév nem engedélyezett."
+    missing_user_field: "Nem töltötted ki az összes felhasználói mezőt"
+    click_to_continue: "Kattints ide a folytatáshoz."
+  user:
+    username:
+      short: "nem lehet rövidebb, mint %{min} karakter"
+      long: "nem lehet hosszabb, mint %{max} karakter"
+      unique: "egyedi kell, hogy legyen"
+      blank: "megadása kötelező"
+      must_begin_with_alphanumeric_or_underscore: "betűvel, számmal vagy aláhúzással kell kezdődni."
+      must_end_with_alphanumeric: "betűvel vagy számmal kell, hogy végződjön."
+    email:
+      blocked: "nincs engedélyezve."
+  flags_dispositions:
+    disagreed: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
+    deferred: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
+    deferred_and_deleted: "Köszönjük, hogy jelezted felénk! Eltávolítottuk a bejegyzést!"
+  system_messages:
+    welcome_user:
+      subject_template: "Üdvözlünk a %{site_name} oldalán!"
+    welcome_invite:
+      subject_template: "Üdvözlünk a %{site_name} oldalán!"
+    backup_succeeded:
+      subject_template: "Sikeresen befejeződött a biztonsági mentés"
+    backup_failed:
+      title: "Sikertelen biztonsági mentés"
+      subject_template: "Sikertelen biztonsági mentés"
+    restore_succeeded:
+      subject_template: "Sikeresen befejeződött a visszaállítás"
+    restore_failed:
+      title: "Sikertelen visszaállítás"
+      subject_template: "Sikertelen visszaállítás"
+    bulk_invite_succeeded:
+      subject_template: "Sikeresen végbement a csoportos felhasználó-meghívás"
+      text_body_template: "Sikeresen végbement a csoportos felhasználó-meghívás! %{sent} meghívó lett kiküldve."
+    bulk_invite_failed:
+      subject_template: "Hiba lépett fel a csoportos felhasználó-meghívás folyamán"
+    csv_export_failed:
+      title: "CSV exportálás sikertelen"
+      subject_template: "Az adatok exportálása sikertelen"
+    download_remote_images_disabled:
+      subject_template: "A távoli képek letöltése le lett tiltva"
+      text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mivel elértük az erre szánt `download_remote_image_threshold` tárhelylimitet."
+  subject_re: "Re: "
+  subject_pm: "[Privát Üzenet]"
+  user_notifications:
+    previous_discussion: "Régebbi válaszok"
+    in_reply_to: "Válasz"
+    unsubscribe:
+      title: "Leiratkozás"
+      description: "Nem szeretné ezeket az e-maileket megkapni? Nem probléma! Kattints ide és iratkozzon le azonnal:"
+    posted_by: "Beküldve %{username} által, ekkor: %{post_date}"
+    pm_participants: "Résztvevők: %{participants}"
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+    account_exists:
+      subject_template: "[%{email_prefix}] A fiók már létezik"
+    digest:
+      why: "Egy kis összefoglaló az oldalról - %{site_link} -, hogy mik történtek a legutóbbi látogatásod - %{last_seen_at} - óta"
+      since_last_visit: "Utolsó látogatásod óta"
+      new_topics: "Új témák"
+      unread_messages: "Olvasatlan üzenetek"
+      unread_notifications: "Olvasatlan értesítések"
+      liked_received: "Kapott kedvelések"
+      new_posts: "Új bejegyzések"
+      new_users: "Új felhasználók"
+      popular_topics: "Népszerű témák"
+      follow_topic: "Téma követése"
+      join_the_discussion: "Tovább"
+      popular_posts: "Népszerű bejegyzések"
+      subject_template: "[%{email_prefix}] Összefoglaló"
+      your_email_settings: "email beállításaid"
+      click_here: "kattints ide"
+      from: "%{site_name} összefoglaló"
+    forgot_password:
+      title: "Elfelejtett jelszó"
+      subject_template: "[%{email_prefix}] Jelszó visszaállítás"
+    admin_login:
+      subject_template: "[%{email_prefix}] Bejelentkezés"
+    signup:
+      title: "Feliratkozás"
+  page_not_found:
+    popular_topics: "Népszerű"
+    recent_topics: "Friss"
+    see_more: "Több"
+    search_title: "Keresés az oldalon"
+  deleted: 'törölt'
+  image: "kép"
+  upload:
+    images:
+      size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehetséges hogy megsérült?"
+  color_schemes:
+    light: "Light Scheme"
+    dark: "Dark Scheme"
+    neutral: "Neutral Scheme"
+    grey_amber: "Grey Amber Scheme"
+    shades_of_blue: "Shades of Blue Scheme"
+    latte: "Latte Scheme"
+    summer: "Summer Scheme"
+    dark_rose: "Dark Rose Scheme"
+    default_theme_name: "Light"
+    light_theme_name: "Light"
+    dark_theme_name: "Dark"
+    neutral_theme_name: "Neutral"
+    grey_amber_theme_name: "Grey Amber"
+    shades_of_blue_theme_name: "Shades of Blue"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Summer"
+    dark_rose_theme_name: "Dark Rose"
+  about: "About"
+  guidelines: "Irányelvek"
+  privacy: "Adatvédelem"
+  csv_export:
+    boolean_yes: "Igen"
+    boolean_no: "Nem"
+  guidelines_topic:
+    title: "GYIK/Irányelvek"
+  tos_topic:
+    title: "Szolgáltatási feltételek"
+  privacy_topic:
+    title: "Adatvédelmi szabályzat"
+  badges:
+    member:
+      name: Tag
+    regular:
+      name: Általános
+    leader:
+      name: Vezető
+    welcome:
+      name: Üdvözöllek
+    reader:
+      name: Olvasó
+    thank_you:
+      name: Köszönöm
+    first_emoji:
+      name: Első Emoji
+    first_mention:
+      name: Első Megemlítés
+  admin_login:
+    errors:
+      unknown_email_address: "Ismertlen email cím"
+      invalid_token: "Érvénytelen token."
+    email_input: "Adminisztrátor Email"
+    submit_button: "Email küldése"
+  tags:
+    title: "Címkék"
+    minimum_required_tags: "Választanod kell legalább %{count} címkét."
+  rss_by_tag: "Téma meg lett jelölve %{tag}"
+  finish_installation:
+    congratulations: "Gratulálunk, telepítetted a Discourse-t!"
+    register:
+      button: "Regisztrálás"
+      title: "Adminisztrátor Fiók Regisztrálása"
+    confirm_email:
+      title: "Erősítsd meg az Emailed"
+    resend_email:
+      title: "Aktiváló Email Újraküldése"
+  wizard:
+    step:
+      forum_title:
+        title: "Név"
+      introduction:
+        title: "Bemutatkozás"
+      privacy:
+        title: "Hozzáférés"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Nyilvános"
+              restricted:
+                label: "Privát"
+      contact:
+        title: "Kapcsolat"
+        fields:
+          contact_email:
+            label: "Email"
+            placeholder: "name@example.com"
+          contact_url:
+            label: "Weboldal"
+            placeholder: "http://www.example.com/contact-us"
+          site_contact:
+            label: "Automatikus Üzenetek"
+      corporate:
+        title: "Szervezet"
+        fields:
+          company_short_name:
+            label: "Cég Neve (rövid)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Cég Neve (teljes)"
+            placeholder: "Initech, Inc."
+          company_domain:
+            label: "Cég Domain Neve"
+            placeholder: "initech.com"
+      colors:
+        title: "Téma"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "Simple Light"
+              dark:
+                label: "Simple Dark"
+      logos:
+        title: "Logók"
+        fields:
+          logo_url:
+            label: "Elsődleges logó"
+          logo_small_url:
+            label: "Kompakt logó"
+      icons:
+        title: "Ikonok"
+        fields:
+          favicon_url:
+            label: "Kicsi ikon"
+          apple_touch_icon_url:
+            label: "Nagy ikon"
+      homepage:
+        title: "Főoldal"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Legutóbbi témák"
+              categories_only:
+                label: "Csak kategóriák"
+              categories_with_featured_topics:
+                label: "Kategóriák kiemelt témákkal"
+              categories_and_latest_topics:
+                label: "Kategóriák és legutóbbi témák"
+              categories_and_top_topics:
+                label: "Kategóriák és top témák"
+      emoji:
+        title: "Emoji"
+      invites:
+        title: "Személyzet meghívása"
+      finished:
+        title: "A Discourse készen áll!"
+  joined: "Csatlakozott"
+  discourse_push_notifications:
+    popup:
+      confirm_title: 'Értesítések bekapcsolva - %{site_title}'
+      confirm_body: 'Siker! Értesítések engedélyezve.'
+  staff_action_logs:
+    not_found: "nem található"
+    unknown: "ismeretlen"
+    user_merged: "%{username} össze lett vonva ezzel a fiókkal"

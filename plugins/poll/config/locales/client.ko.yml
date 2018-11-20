@@ -18,7 +18,12 @@ ko:
       multiple:
         help:
           at_least_min_options:
-            other: "최소 <strong>%{count}</strong>개의 옵션을 선택해야합니다."
+            other: "최소 <strong>%{count}</strong>개의 선택지를 택해야 합니다."
+          up_to_max_options:
+            other: "최대 <strong>%{count}</strong> 개까지 선택지를 고를 수 있습니다"
+          x_options:
+            other: "<strong>%{count}</strong> 개의 선택지를 고르세요"
+          between_min_and_max_options: "최소 <strong>%{min}</strong>개에서 최대 <strong>%{max}</strong>개까지 선택 가능합니다."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"
@@ -36,3 +41,25 @@ ko:
         title: "투표 닫기"
         label: "닫기"
         confirm: "정말 이 투표를 닫으시겠어요?"
+      error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."
+      error_while_casting_votes: "죄송합니다. 투표를 하는 도중 에러가 발생하였습니다."
+      error_while_fetching_voters: "죄송합니다. 투표한 사람을 표시하는 도중 에러가 발생하였습니다."
+      ui_builder:
+        title: 투표 만들기
+        insert: 투표 삽입하기
+        help:
+          options_count: 최소 2가지 이상의 선택지를 입력하세요
+          invalid_values: 최소값은 최대값보다는 작아야 합니다.
+        poll_type:
+          label: 유형
+          regular: 단일 선택
+          multiple: 복수 선택
+          number: 점수 매기기
+        poll_config:
+          max: 최대
+          min: 최소
+          step: 단계
+        poll_public:
+          label: 투표한 사람 보기
+        poll_options:
+          label: 투표 선택지는 한줄에 하나씩 입력하세요

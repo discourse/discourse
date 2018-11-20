@@ -46,6 +46,9 @@ pt_BR:
         title: "Fechar a enquete"
         label: "Fechar"
         confirm: "Você tem certeza que deseja fechar essa enquete?"
+      automatic_close:
+        closes_in: "fecha em<strong>%{timeLeft}</strong>"
+        age: "fechado <strong>%{age}</strong>"
       error_while_toggling_status: "Desculpe, houve um erro ao mudar a situação da enquete.."
       error_while_casting_votes: "Desculpe, houve um erro ao votar."
       error_while_fetching_voters: "Desculpe, houve um erro ao mostrar os votantes."
@@ -55,6 +58,7 @@ pt_BR:
         help:
           options_count: Enquetes devem ter no mínimo 2 opções
           invalid_values: O menor valor valor deve ser menor que o valor máximo.
+          min_step_value: O valor mínimo do passo é 1
         poll_type:
           label: Tipo
           regular: Única escolha
@@ -68,3 +72,5 @@ pt_BR:
           label: Exibir votantes
         poll_options:
           label: Insira uma resposta por linha
+        automatic_close:
+          label: Fechar automaticamente a votação

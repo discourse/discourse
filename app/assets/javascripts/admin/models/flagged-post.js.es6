@@ -1,176 +1,163 @@
-import { ajax } from 'discourse/lib/ajax';
-import AdminUser from 'admin/models/admin-user';
-import Topic from 'discourse/models/topic';
-import Post from 'discourse/models/post';
+import { ajax } from "discourse/lib/ajax";
+import Post from "discourse/models/post";
+import computed from "ember-addons/ember-computed-decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
-
-const FlaggedPost = Post.extend({
-
-  summary: function () {
+export default Post.extend({
+  @computed
+  summary() {
     return _(this.post_actions)
-      .groupBy(function (a) { return a.post_action_type_id; })
-      .map(function (v,k) { return I18n.t('admin.flags.summary.action_type_' + k, { count: v.length }); })
-      .join(',');
-  }.property(),
-
-  flaggers: function () {
-    var self = this;
-    var flaggers = [];
-
-    _.each(this.post_actions, function (postAction) {
-      flaggers.push({
-        user: self.userLookup[postAction.user_id],
-        topic: self.topicLookup[postAction.topic_id],
-        flagType: I18n.t('admin.flags.summary.action_type_' + postAction.post_action_type_id, { count: 1 }),
-        flaggedAt: postAction.created_at,
-        disposedBy: postAction.disposed_by_id ? self.userLookup[postAction.disposed_by_id] : null,
-        disposedAt: postAction.disposed_at,
-        dispositionIcon: self.dispositionIcon(postAction.disposition),
-        tookAction: postAction.staff_took_action
-      });
-    });
-
-    return flaggers;
-  }.property(),
-
-  dispositionIcon: function (disposition) {
-    if (!disposition) { return null; }
-    var icon, title = I18n.t('admin.flags.dispositions.' + disposition);
-    switch (disposition) {
-      case "deferred": { icon = "fa-external-link"; break; }
-      case "agreed": { icon = "fa-thumbs-o-up"; break; }
-      case "disagreed": { icon = "fa-thumbs-o-down"; break; }
-    }
-    return "<i class='fa " + icon + "' title='" + title + "'></i>";
+      .groupBy(function(a) {
+        return a.post_action_type_id;
+      })
+      .map(function(v, k) {
+        return I18n.t("admin.flags.summary.action_type_" + k, {
+          count: v.length
+        });
+      })
+      .join(",");
   },
 
-  wasEdited: function () {
-    if (Ember.isEmpty(this.get("last_revised_at"))) { return false; }
-    var lastRevisedAt = Date.parse(this.get("last_revised_at"));
-    return _.some(this.get("post_actions"), function (postAction) {
+  @computed("last_revised_at", "post_actions.@each.created_at")
+  wasEdited(lastRevisedAt) {
+    if (Ember.isEmpty(this.get("last_revised_at"))) {
+      return false;
+    }
+    lastRevisedAt = Date.parse(lastRevisedAt);
+    return _.some(this.get("post_actions"), function(postAction) {
       return Date.parse(postAction.created_at) < lastRevisedAt;
     });
-  }.property("last_revised_at", "post_actions.@each.created_at"),
+  },
 
-  conversations: function () {
-    var self = this;
-    var conversations = [];
+  @computed("post_actions")
+  hasDisposedBy() {
+    return this.get("post_actions").some(action => action.disposed_by);
+  },
 
-    _.each(this.post_actions, function (postAction) {
-      if (postAction.conversation) {
-        var conversation = {
-          permalink: postAction.permalink,
-          hasMore: postAction.conversation.has_more,
-          response: {
-            excerpt: postAction.conversation.response.excerpt,
-            user: self.userLookup[postAction.conversation.response.user_id]
-          }
-        };
+  @computed("post_actions.@each.name_key")
+  flaggedForSpam() {
+    return this.get("post_actions").every(action => action.name_key === "spam");
+  },
 
-        if (postAction.conversation.reply) {
-          conversation["reply"] = {
-            excerpt: postAction.conversation.reply.excerpt,
-            user: self.userLookup[postAction.conversation.reply.user_id]
-          };
-        }
-
-        conversations.push(conversation);
-      }
+  @computed("post_actions.@each.targets_topic")
+  topicFlagged() {
+    return _.any(this.get("post_actions"), function(action) {
+      return action.targets_topic;
     });
+  },
 
-    return conversations;
-  }.property(),
+  @computed("post_actions.@each.targets_topic")
+  postAuthorFlagged() {
+    return _.any(this.get("post_actions"), function(action) {
+      return !action.targets_topic;
+    });
+  },
 
-  user: function() {
-    return this.userLookup[this.user_id];
-  }.property(),
+  @computed("flaggedForSpam")
+  canDeleteAsSpammer(flaggedForSpam) {
+    return (
+      flaggedForSpam &&
+      this.get("user.can_delete_all_posts") &&
+      this.get("user.can_be_deleted")
+    );
+  },
 
-  topic: function () {
-    return this.topicLookup[this.topic_id];
-  }.property(),
-
-  flaggedForSpam: function() {
-    return !_.every(this.get('post_actions'), function(action) { return action.name_key !== 'spam'; });
-  }.property('post_actions.@each.name_key'),
-
-  topicFlagged: function() {
-    return _.any(this.get('post_actions'), function(action) { return action.targets_topic; });
-  }.property('post_actions.@each.targets_topic'),
-
-  postAuthorFlagged: function() {
-    return _.any(this.get('post_actions'), function(action) { return !action.targets_topic; });
-  }.property('post_actions.@each.targets_topic'),
-
-  canDeleteAsSpammer: function() {
-    return Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted');
-  }.property('flaggedForSpam'),
-
-  deletePost: function() {
-    if (this.get('post_number') === 1) {
-      return ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
+  deletePost() {
+    if (this.get("post_number") === 1) {
+      return ajax("/t/" + this.topic_id, { type: "DELETE", cache: false });
     } else {
-      return ajax('/posts/' + this.id, { type: 'DELETE', cache: false });
+      return ajax("/posts/" + this.id, { type: "DELETE", cache: false });
     }
   },
 
-  disagreeFlags: function () {
-    return ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
+  disagreeFlags() {
+    return ajax("/admin/flags/disagree/" + this.id, {
+      type: "POST",
+      cache: false
+    }).catch(popupAjaxError);
   },
 
-  deferFlags: function (deletePost) {
-    return ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } });
+  deferFlags(deletePost) {
+    const action = () => {
+      return ajax("/admin/flags/defer/" + this.id, {
+        type: "POST",
+        cache: false,
+        data: { delete_post: deletePost }
+      });
+    };
+
+    if (deletePost && this._hasDeletableReplies()) {
+      return this._actOnFlagAndDeleteReplies(action);
+    } else {
+      return action().catch(popupAjaxError);
+    }
   },
 
-  agreeFlags: function (actionOnPost) {
-    return ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } });
+  agreeFlags(actionOnPost) {
+    const action = () => {
+      return ajax("/admin/flags/agree/" + this.id, {
+        type: "POST",
+        cache: false,
+        data: { action_on_post: actionOnPost }
+      });
+    };
+
+    if (actionOnPost === "delete" && this._hasDeletableReplies()) {
+      return this._actOnFlagAndDeleteReplies(action);
+    } else {
+      return action().catch(popupAjaxError);
+    }
   },
 
-  postHidden: Em.computed.alias('hidden'),
+  _hasDeletableReplies() {
+    return this.get("post_number") > 1 && this.get("reply_count") > 0;
+  },
 
-  extraClasses: function() {
-    var classes = [];
-    if (this.get('hidden')) { classes.push('hidden-post'); }
-    if (this.get('deleted')) { classes.push('deleted'); }
-    return classes.join(' ');
-  }.property(),
+  _actOnFlagAndDeleteReplies(action) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      return ajax(`/posts/${this.id}/reply-ids/all.json`)
+        .then(replies => {
+          const buttons = [];
 
-  deleted: Em.computed.or('deleted_at', 'topic_deleted_at')
+          buttons.push({
+            label: I18n.t("no_value"),
+            callback() {
+              action()
+                .then(resolve)
+                .catch(error => {
+                  popupAjaxError(error);
+                  reject();
+                });
+            }
+          });
 
-});
+          buttons.push({
+            label: I18n.t("yes_value"),
+            class: "btn-danger",
+            callback() {
+              Post.deleteMany(replies.map(r => r.id))
+                .then(action)
+                .then(resolve)
+                .catch(error => {
+                  popupAjaxError(error);
+                  reject();
+                });
+            }
+          });
 
-FlaggedPost.reopenClass({
-  findAll: function (filter, offset) {
-    offset = offset || 0;
-
-    var result = Em.A();
-    result.set('loading', true);
-
-    return ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function (data) {
-      // users
-      var userLookup = {};
-      _.each(data.users, function (user) {
-        userLookup[user.id] = AdminUser.create(user);
-      });
-
-      // topics
-      var topicLookup = {};
-      _.each(data.topics, function (topic) {
-        topicLookup[topic.id] = Topic.create(topic);
-      });
-
-      // posts
-      _.each(data.posts, function (post) {
-        var f = FlaggedPost.create(post);
-        f.userLookup = userLookup;
-        f.topicLookup = topicLookup;
-        result.pushObject(f);
-      });
-
-      result.set('loading', false);
-
-      return result;
+          bootbox.dialog(
+            I18n.t("admin.flags.delete_replies", { count: replies.length }),
+            buttons
+          );
+        })
+        .catch(error => {
+          popupAjaxError(error);
+          reject();
+        });
     });
-  }
-});
+  },
 
-export default FlaggedPost;
+  postHidden: Ember.computed.alias("hidden"),
+
+  deleted: Ember.computed.or("deleted_at", "topic_deleted_at")
+});

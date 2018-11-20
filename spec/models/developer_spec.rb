@@ -17,4 +17,3 @@ describe Developer do
     expect(guardian.is_developer?).to eq(true)
   end
 end
-

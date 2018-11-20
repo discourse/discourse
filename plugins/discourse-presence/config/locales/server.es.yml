@@ -1,0 +1,11 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+es:
+  site_settings:
+    presence_enabled: '¿Mostrar usuarios que estén respondiendo al tema, o editando el post actual?'
+    presence_max_users_shown: 'Número máximo de usuarios mostrados.'

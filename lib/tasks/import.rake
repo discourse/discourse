@@ -19,6 +19,7 @@ task "import:ensure_consistency" => :environment do
   update_categories
   update_users
   update_groups
+  update_tag_stats
 
   log "Done!"
 end
@@ -28,7 +29,7 @@ MS_SPEND_CREATING_POST ||= 5000
 def insert_post_timings
   log "Inserting post timings..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO post_timings (topic_id, post_number, user_id, msecs)
          SELECT topic_id, post_number, user_id, #{MS_SPEND_CREATING_POST}
            FROM posts
@@ -40,7 +41,7 @@ end
 def insert_post_replies
   log "Inserting post replies..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO post_replies (post_id, reply_id, created_at, updated_at)
          SELECT p2.id, p.id, p.created_at, p.created_at
            FROM posts p
@@ -52,7 +53,7 @@ end
 def insert_topic_users
   log "Inserting topic users..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, highest_seen_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
          SELECT user_id, topic_id, 't' , MAX(post_number), MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * #{MS_SPEND_CREATING_POST}
            FROM posts
@@ -65,7 +66,7 @@ end
 def insert_topic_views
   log "Inserting topic views..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH X AS (
           SELECT topic_id, user_id, DATE(p.created_at) posted_at
             FROM posts p
@@ -85,7 +86,7 @@ end
 def insert_user_actions
   log "Inserting user actions for NEW_TOPIC = 4..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
          SELECT 4, p.user_id, topic_id, p.id, p.user_id, p.created_at, p.created_at
            FROM posts p
@@ -99,7 +100,7 @@ def insert_user_actions
 
   log "Inserting user actions for REPLY = 5..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
          SELECT 5, p.user_id, topic_id, p.id, p.user_id, p.created_at, p.created_at
            FROM posts p
@@ -113,7 +114,7 @@ def insert_user_actions
 
   log "Inserting user actions for RESPONSE = 6..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
          SELECT 6, p.user_id, p.topic_id, p.id, p2.user_id, p.created_at, p.created_at
            FROM posts p
@@ -136,7 +137,7 @@ end
 def insert_user_options
   log "Inserting user options..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_options (
                   user_id,
                   email_always,
@@ -164,7 +165,7 @@ def insert_user_options
                   , #{SiteSetting.default_email_mailing_list_mode}
                   , #{SiteSetting.default_email_mailing_list_mode_frequency}
                   , #{SiteSetting.default_email_direct}
-                  , #{SiteSetting.default_email_private_messages}
+                  , #{SiteSetting.default_email_personal_messages}
                   , #{SiteSetting.default_email_previous_replies}
                   , #{SiteSetting.default_email_in_reply_to}
                   , #{SiteSetting.default_email_digest_frequency.to_i > 0}
@@ -188,7 +189,7 @@ end
 def insert_user_stats
   log "Inserting user stats..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_stats (user_id, new_since)
          SELECT id, created_at
            FROM users
@@ -199,7 +200,7 @@ end
 def insert_user_visits
   log "Inserting user visits..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO user_visits (user_id, visited_at, posts_read)
          SELECT user_id, DATE(created_at), COUNT(*)
            FROM posts
@@ -212,7 +213,7 @@ end
 def insert_draft_sequences
   log "Inserting draft sequences..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     INSERT INTO draft_sequences (user_id, draft_key, sequence)
          SELECT user_id, CONCAT('#{Draft::EXISTING_TOPIC}', id), 1
            FROM topics
@@ -225,7 +226,10 @@ end
 def update_user_stats
   log "Updating user stats..."
 
-  exec_sql <<-SQL
+  # TODO: topic_count is counting all topics you replied in as if you started the topic.
+  # TODO: post_count is counting first posts.
+  # TODO: topic_reply_count is never used, and is counting PMs here.
+  DB.exec <<-SQL
     WITH X AS (
       SELECT p.user_id
            , COUNT(p.id) posts
@@ -282,7 +286,7 @@ end
 def update_posts
   log "Updating posts..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH Y AS (
       SELECT post_id, COUNT(*) replies FROM post_replies GROUP BY post_id
     )
@@ -292,7 +296,6 @@ def update_posts
      WHERE posts.id = Y.post_id
        AND reply_count <> Y.replies
   SQL
-
 
   # -- TODO: ensure this is how this works!
   # WITH X AS (
@@ -310,7 +313,7 @@ end
 def update_topics
   log "Updating topics..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH X AS (
       SELECT topic_id
            , COUNT(*) posts
@@ -350,7 +353,7 @@ end
 def update_categories
   log "Updating categories..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH X AS (
         SELECT category_id
              , MAX(p.id) post_id
@@ -382,7 +385,7 @@ end
 def update_users
   log "Updating users..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH X AS (
         SELECT user_id
              , MIN(created_at) min_created_at
@@ -406,7 +409,7 @@ end
 def update_groups
   log "Updating groups..."
 
-  exec_sql <<-SQL
+  DB.exec <<-SQL
     WITH X AS (
         SELECT group_id, COUNT(*) count
           FROM group_users
@@ -420,12 +423,88 @@ def update_groups
   SQL
 end
 
+def update_tag_stats
+  Tag.ensure_consistency!
+end
+
 def log(message)
   puts "[#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
-def exec_sql(sql)
-  ActiveRecord::Base.transaction do
-    ActiveRecord::Base.exec_sql(sql)
+task "import:create_phpbb_permalinks" => :environment do
+  log 'Creating Permalinks...'
+
+  # /[^\/]+\/.*-t(\d+).html/
+  SiteSetting.permalink_normalizations = '/[^\/]+\/.*-t(\d+).html/thread/\1'
+
+  Topic.listable_topics.find_each do |topic|
+    tcf = topic.custom_fields
+    if tcf && tcf["import_id"]
+      Permalink.create(url: "thread/#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    end
   end
+
+  log "Done!"
+end
+
+task "import:remap_old_phpbb_permalinks" => :environment do
+  log 'Remapping Permalinks...'
+
+  i = 0
+  Post.where("raw LIKE ?", "%discussions.example.com%").each do |p|
+    begin
+      new_raw = p.raw.dup
+      # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
+      new_raw.gsub!(/\((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)/) do
+        normalized_url = Permalink.normalize_url($1)
+        permalink = Permalink.find_by_url(normalized_url) rescue nil
+        if permalink && permalink.target_url
+          "(#{permalink.target_url})"
+        else
+          "(#{$1})"
+        end
+      end
+
+      if new_raw != p.raw
+        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
+        putc "."
+        i += 1
+      end
+    rescue
+      # skip
+    end
+  end
+
+  log "Done! #{i} posts remapped."
+end
+
+task "import:create_vbulletin_permalinks" => :environment do
+  log 'Creating Permalinks...'
+
+  # /showthread.php\?t=(\d+).*/
+  SiteSetting.permalink_normalizations = '/showthread.php\?t=(\d+).*/showthread.php?t=\1'
+
+  Topic.listable_topics.find_each do |topic|
+    tcf = topic.custom_fields
+    if tcf && tcf["import_id"]
+      Permalink.create(url: "showthread.php?t=#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    end
+  end
+
+  Category.find_each do |cat|
+    ccf = cat.custom_fields
+    if ccf && ccf["import_id"]
+      Permalink.create(url: "forumdisplay.php?f=#{ccf["import_id"]}", category_id: cat.id) rescue nil
+    end
+  end
+
+  log "Done!"
+end
+
+desc 'Import existing exported file'
+task 'import:file', [:file_name] => [:environment] do |_, args|
+  require "import_export/import_export"
+
+  ImportExport.import(args[:file_name])
+  puts "", "Done", ""
 end

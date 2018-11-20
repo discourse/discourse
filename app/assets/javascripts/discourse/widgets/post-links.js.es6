@@ -1,11 +1,11 @@
-import { iconNode } from 'discourse/helpers/fa-icon-node';
-import { createWidget } from 'discourse/widgets/widget';
-import { h } from 'virtual-dom';
-import { replaceEmoji } from 'discourse/widgets/emoji';
+import { iconNode } from "discourse-common/lib/icon-library";
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { replaceEmoji } from "discourse/widgets/emoji";
 
-export default createWidget('post-links', {
-  tagName: 'div.post-links-container',
-  buildKey: (attrs) => `post-links-${attrs.id}`,
+export default createWidget("post-links", {
+  tagName: "div.post-links-container",
+  buildKey: attrs => `post-links-${attrs.id}`,
 
   defaultState() {
     return { collapsed: true };
@@ -14,14 +14,21 @@ export default createWidget('post-links', {
   linkHtml(link) {
     const linkBody = replaceEmoji(link.title);
     if (link.clicks) {
-      linkBody.push(h('span.badge.badge-notification.clicks', link.clicks.toString()));
+      linkBody.push(
+        h("span.badge.badge-notification.clicks", link.clicks.toString())
+      );
     }
 
-    return h('li',
-      h('a.track-link', {
-        className: 'inbound',
-        attributes: { href: link.url }
-      }, [iconNode('link'), linkBody])
+    return h(
+      "li",
+      h(
+        "a.track-link",
+        {
+          className: "inbound",
+          attributes: { href: link.url }
+        },
+        [iconNode("link"), linkBody]
+      )
     );
   },
 
@@ -33,11 +40,13 @@ export default createWidget('post-links', {
 
     // only show incoming
     const links = _(this.attrs.links)
-                      .filter(l => l.reflection)
-                      .uniq(true, l => l.title)
-                      .value();
+      .filter(l => l.reflection)
+      .uniq(true, l => l.title)
+      .value();
 
-    if (links.length === 0) { return; }
+    if (links.length === 0) {
+      return;
+    }
 
     const result = [];
 
@@ -51,18 +60,23 @@ export default createWidget('post-links', {
       }
       // 'show more' link
       if (links.length > max) {
-        result.push(h('li', this.attach('link', {
-          labelCount: 'post_links.title',
-          title: 'post_links.about',
-          count: links.length - max,
-          action: 'expandLinks',
-          className: 'expand-links'
-        })));
+        result.push(
+          h(
+            "li",
+            this.attach("link", {
+              labelCount: "post_links.title",
+              title: "post_links.about",
+              count: links.length - max,
+              action: "expandLinks",
+              className: "expand-links"
+            })
+          )
+        );
       }
     }
 
     if (result.length) {
-      return h('ul.post-links', result);
+      return h("ul.post-links", result);
     }
   },
 

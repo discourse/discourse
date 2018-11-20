@@ -12,7 +12,7 @@ export default function(percentages) {
     // and increase the corresponding item in the percentages array by 1
     let greatest = 0;
     let index = 0;
-    for (let j=0; j < decimals.length; j++) {
+    for (let j = 0; j < decimals.length; j++) {
       if (decimals[j] > greatest) {
         index = j;
         greatest = decimals[j];
@@ -25,5 +25,4 @@ export default function(percentages) {
   }
 
   return percentages.map(p => Math.floor(p));
-};
-
+}

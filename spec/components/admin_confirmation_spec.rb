@@ -51,4 +51,3 @@ describe AdminConfirmation do
   end
 
 end
-

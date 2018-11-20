@@ -1,4 +1,4 @@
-class AddSiteIdToUsers < ActiveRecord::Migration
+class AddSiteIdToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :site_id, :integer
     add_column :users, :bio, :text

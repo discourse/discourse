@@ -30,9 +30,10 @@ module ImportScripts::PhpBB3
 
     def count_anonymous_users
       count(<<-SQL)
-        SELECT COUNT(DISTINCT post_username) AS count
-        FROM #{@table_prefix}posts
-        WHERE post_username <> ''
+        SELECT COUNT(DISTINCT p.post_username) AS count
+        FROM #{@table_prefix}posts p
+          JOIN #{@table_prefix}users u ON (p.poster_id = u.user_id)
+        WHERE p.post_username <> '' AND u.user_type = #{Constants::USER_TYPE_IGNORE}
       SQL
     end
 
@@ -40,11 +41,12 @@ module ImportScripts::PhpBB3
       last_username = escape(last_username)
 
       query(<<-SQL, :post_username)
-        SELECT post_username, MIN(post_time) AS first_post_time
-        FROM #{@table_prefix}posts
-        WHERE post_username > '#{last_username}'
-        GROUP BY post_username
-        ORDER BY post_username
+        SELECT p.post_username, MIN(p.post_time) AS first_post_time
+        FROM #{@table_prefix}posts p
+          JOIN #{@table_prefix}users u ON (p.poster_id = u.user_id)
+        WHERE p.post_username > '#{last_username}' AND u.user_type = #{Constants::USER_TYPE_IGNORE}
+        GROUP BY p.post_username
+        ORDER BY p.post_username
         LIMIT #{@batch_size}
       SQL
     end
@@ -73,11 +75,13 @@ module ImportScripts::PhpBB3
     def fetch_posts(last_post_id)
       query(<<-SQL, :post_id)
         SELECT p.post_id, p.topic_id, t.forum_id, t.topic_title, t.topic_first_post_id, p.poster_id,
-          p.post_text, p.post_time, p.post_username, t.topic_status, t.topic_type, t.poll_title,
+          p.post_text, p.post_time, t.topic_status, t.topic_type, t.poll_title, t.topic_views,
           CASE WHEN t.poll_length > 0 THEN t.poll_start + t.poll_length ELSE NULL END AS poll_end,
-          t.poll_max_options, p.post_attachment
+          t.poll_max_options, p.post_attachment, p.poster_ip,
+          CASE WHEN u.user_type = #{Constants::USER_TYPE_IGNORE} THEN p.post_username ELSE NULL END post_username
         FROM #{@table_prefix}posts p
           JOIN #{@table_prefix}topics t ON (p.topic_id = t.topic_id)
+          JOIN #{@table_prefix}users u ON (p.poster_id = u.user_id)
         WHERE p.post_id > #{last_post_id}
         ORDER BY p.post_id
         LIMIT #{@batch_size}

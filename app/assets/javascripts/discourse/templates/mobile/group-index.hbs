@@ -1,0 +1,57 @@
+{{text-field value=filterInput
+    placeholderKey=filterPlaceholder
+    class="group-username-filter no-blur"}}
+
+<div class="group-members-manage">
+  {{#if canManageGroup}}
+    {{#if currentUser.admin}}
+      {{group-members-dropdown
+          showAddMembersModal="showAddMembersModal"
+          showBulkAddModal="showBulkAddModal"}}
+    {{else}}
+      {{d-button
+          icon="plus"
+          label="groups.add_members.title"
+          class="group-members-add"
+          action="showAddMembersModal"}}
+    {{/if}}
+  {{/if}}
+</div>
+
+{{#if hasMembers}}
+  {{#load-more selector=".group-members .user-info" action="loadMore"}}
+    <div class="group-members">
+      {{#each model.members as |user|}}
+        <div class="group-member">
+          {{#user-info user=user skipName=skipName}}
+            {{#if user.owner}}<strong class="group-owner-label">{{i18n "groups.owner"}}</strong>{{/if}}
+
+            <div class="group-member-info">
+              <label>{{i18n "last_post"}}</label>
+              <span class="text">{{bound-date user.last_posted_at}}</span>
+            </div>
+
+            <div class="group-member-info">
+              <label>{{i18n "last_seen"}}</label>
+              <span class="text">{{bound-date user.last_seen_at}}</span>
+            </div>
+
+            {{#if canManageGroup}}
+              {{group-member-dropdown
+                  removeMember="removeMember"
+                  makeOwner="makeOwner"
+                  removeOwner="removeOwner"
+                  member=user}}
+            {{/if}}
+          {{/user-info}}
+        </div>
+      {{/each}}
+    </div>
+  {{/load-more}}
+
+  {{conditional-loading-spinner condition=loading}}
+{{else}}
+  <br>
+
+  <div>{{i18n "groups.empty.members"}}</div>
+{{/if}}

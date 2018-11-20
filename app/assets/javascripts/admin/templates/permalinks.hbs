@@ -7,46 +7,44 @@
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}
-    <div class='table admin-logs-table permalinks'>
-      <div class="heading-container">
-        <div class="col heading first url">{{i18n 'admin.permalink.url'}}</div>
-        <div class="col heading topic">{{i18n 'admin.permalink.topic_title'}}</div>
-        <div class="col heading post">{{i18n 'admin.permalink.post_title'}}</div>
-        <div class="col heading category">{{i18n 'admin.permalink.category_title'}}</div>
-        <div class="col heading external_url">{{i18n 'admin.permalink.external_url'}}</div>
-        <div class="col heading actions"></div>
-        <div class="clearfix"></div>
-      </div>
+    <table class='admin-logs-table permalinks grid'>
+      <thead class="heading-container">
+        <th class="col heading first url">{{i18n 'admin.permalink.url'}}</th>
+        <th class="col heading topic">{{i18n 'admin.permalink.topic_title'}}</th>
+        <th class="col heading post">{{i18n 'admin.permalink.post_title'}}</th>
+        <th class="col heading category">{{i18n 'admin.permalink.category_title'}}</th>
+        <th class="col heading external_url">{{i18n 'admin.permalink.external_url'}}</th>
+        <th class="col heading actions"></th>
+      </thead>
       {{#each model as |pl|}}
-        <div class="admin-list-item">
-          <div class="col first url">{{pl.url}}</div>
-          <div class="col topic">
+        <tr class="admin-list-item">
+          <td class="col first url">{{pl.url}}</td>
+          <td class="col topic">
             {{#if pl.topic_id}}
               <a href='{{unbound pl.topic_url}}'>{{pl.topic_title}}</a>
             {{/if}}
-          </div>
-          <div class="col post">
+          </td>
+          <td class="col post">
             {{#if pl.post_id}}
               <a href='{{unbound pl.post_url}}'>#{{pl.post_number}} {{pl.post_topic_title}}</a>
             {{/if}}
-          </div>
-          <div class="col category">
+          </td>
+          <td class="col category">
             {{#if pl.category_id}}
               <a href='{{unbound pl.category_url}}'>{{pl.category_name}}</a>
             {{/if}}
-          </div>
-          <div class="col external_url">
+          </td>
+          <td class="col external_url">
             {{#if pl.external_url}}
               <a href='{{unbound pl.external_url}}'>{{pl.external_url}}</a>
             {{/if}}
-          </div>
-          <div class="col action">
+          </td>
+          <td class="col action">
             {{d-button action="destroy" actionParam=pl icon="trash-o" class="btn-danger"}}
-          </div>
-          <div class="clearfix"></div>
-        </div>
+          </td>
+        </tr>
       {{/each}}
-    </div>
+    </table>
   {{else}}
     {{i18n 'search.no_results'}}
   {{/if}}

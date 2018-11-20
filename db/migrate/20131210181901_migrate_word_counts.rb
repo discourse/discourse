@@ -1,8 +1,8 @@
-class MigrateWordCounts < ActiveRecord::Migration
+class MigrateWordCounts < ActiveRecord::Migration[4.2]
   disable_ddl_transaction!
 
   def up
-    post_ids = execute("SELECT id FROM posts WHERE word_count IS NULL LIMIT 500").map {|r| r['id'].to_i }
+    post_ids = execute("SELECT id FROM posts WHERE word_count IS NULL LIMIT 500").map { |r| r['id'].to_i }
     while post_ids.length > 0
       3.times do
         begin
@@ -12,10 +12,10 @@ class MigrateWordCounts < ActiveRecord::Migration
           # Deadlock. Try again, up to 3 times.
         end
       end
-      post_ids = execute("SELECT id FROM posts WHERE word_count IS NULL LIMIT 500").map {|r| r['id'].to_i }
+      post_ids = execute("SELECT id FROM posts WHERE word_count IS NULL LIMIT 500").map { |r| r['id'].to_i }
     end
 
-    topic_ids = execute("SELECT id FROM topics WHERE word_count IS NULL LIMIT 500").map {|r| r['id'].to_i }
+    topic_ids = execute("SELECT id FROM topics WHERE word_count IS NULL LIMIT 500").map { |r| r['id'].to_i }
     while topic_ids.length > 0
       3.times do
         begin
@@ -25,7 +25,7 @@ class MigrateWordCounts < ActiveRecord::Migration
           # Deadlock. Try again, up to 3 times.
         end
       end
-      topic_ids = execute("SELECT id FROM topics WHERE word_count IS NULL LIMIT 500").map {|r| r['id'].to_i }
+      topic_ids = execute("SELECT id FROM topics WHERE word_count IS NULL LIMIT 500").map { |r| r['id'].to_i }
     end
 
   end

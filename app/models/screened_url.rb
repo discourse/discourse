@@ -21,7 +21,7 @@ class ScreenedUrl < ActiveRecord::Base
     self.domain = self.domain.downcase.sub(/^www\./, '') if self.domain
   end
 
-  def self.watch(url, domain, opts={})
+  def self.watch(url, domain, opts = {})
     find_match(url) || create(opts.slice(:action_type, :ip_address).merge(url: url, domain: domain))
   end
 

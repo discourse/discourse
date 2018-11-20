@@ -1,0 +1,71 @@
+# encoding: utf-8
+# This file contains content for the i18n transliteration map from
+# Russian Cyrillic to ASCII (ISO-9:1995 / GOST 7.79-2000, table B)
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+bg:
+  i18n:
+    transliterate:
+      rule:
+        А: A
+        а: a
+        Б: B
+        б: b
+        В: V
+        в: v
+        Г: G
+        г: g
+        Д: D
+        д: d
+        Е: E
+        е: e
+        Ж: Zh
+        ж: zh
+        З: Z
+        з: z
+        И: I
+        и: i
+        Й: J
+        й: j
+        К: K
+        к: k
+        Л: L
+        л: l
+        М: M
+        м: m
+        Н: N
+        н: n
+        О: O
+        о: o
+        П: P
+        п: p
+        Р: R
+        р: r
+        С: S
+        с: s
+        Т: T
+        т: t
+        У: U
+        у: u
+        Ф: F
+        ф: f
+        Х: H
+        х: h
+        Ц: C
+        ц: c
+        Ч: Ch
+        ч: ch
+        Ш: Sh
+        ш: sh
+        Щ: Sht
+        щ: sht
+        Ъ: y
+        ъ: y
+        Ь: y
+        ь: y
+        Ю: Yu
+        ю: yu
+        Я: Ya
+        я: ya

@@ -17,10 +17,10 @@ module Jobs
 
     def execute(args)
       # Feature topics in categories
-      CategoryFeaturedTopic.feature_topics
+      CategoryFeaturedTopic.feature_topics(batched: true)
 
       # Update the scores of posts
-      args = {min_topic_age: 1.day.ago}
+      args = { min_topic_age: 1.day.ago }
       args[:max_topic_length] = 500 unless self.class.should_update_long_topics?
       ScoreCalculator.new.calculate(args)
 
@@ -48,6 +48,8 @@ module Jobs
       if last_new_topic
         SiteSetting.min_new_topics_time = last_new_topic.created_at.to_i
       end
+
+      Category.auto_bump_topic!
 
       nil
     end

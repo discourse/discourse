@@ -19,5 +19,4 @@ export default Em.Component.extend(UploadMixin, {
     this.set("name", null);
     this.sendAction("done", upload);
   }
-
 });

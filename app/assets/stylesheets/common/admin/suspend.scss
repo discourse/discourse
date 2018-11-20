@@ -1,0 +1,34 @@
+.suspend-user-modal {
+  .until-controls {
+    margin-bottom: 1em;
+  }
+
+  .suspend-reason {
+    width: 100%;
+  }
+
+  .suspend-reason-label,
+  .suspend-message-label {
+    margin-bottom: 0.5em;
+  }
+
+  .textarea,
+  input[type="text"] {
+    box-sizing: border-box;
+    height: 2.5em;
+  }
+
+  .inline-spinner {
+    float: right;
+  }
+}
+
+.modal-body {
+  .penalty-post-edit {
+    margin-top: 1em;
+
+    textarea {
+      height: 10em;
+    }
+  }
+}

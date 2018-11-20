@@ -24,7 +24,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :num_featured_topics,
              :default_view,
              :subcategory_list_style,
-             :default_top_period
+             :default_top_period,
+             :minimum_required_tags,
+             :navigate_to_first_post_after_read
 
   has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
   has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer

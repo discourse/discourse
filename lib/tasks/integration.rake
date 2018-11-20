@@ -38,7 +38,6 @@ task 'integration:create_fixtures' => :environment do
 
 end
 
-
 def fake_xhr(url)
   uri = URI(url)
 

@@ -1,33 +1,25 @@
-<table>
-  <tbody>
-    <tr data-topic-id={{topic.id}} class="{{if topic.archived 'archived'}}">
-      <td class="topic-poster">
-        {{#with topic.lastPoster as |lastPoster|}}
-          {{#user-link user=lastPoster}}
-            {{avatar lastPoster imageSize="large"}}
-          {{/user-link}}
-        {{/with}}
-      </td>
-      <td class="main-link">
-        <tr>
-          {{raw "topic-status" topic=topic}}
-          {{topic-link topic}}
-          {{#if topic.featured_link}}
-            {{topic-featured-link topic}}
-          {{/if}}
-          {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
-        </tr>
-        <tr>
-          {{category-link topic.category}}
-          {{discourse-tags topic mode="list"}}
-        </tr>
-      </td>
-      <td class="topic-stats">
-        {{raw "list/posts-count-column" topic=topic tagName="div"}}
-        <div class="topic-last-activity">
-          <a href="{{topic.lastPostUrl}}" title="{{topic.bumpedAtTitle}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class='topic-poster'>
+  {{#user-link user=topic.lastPoster}}
+    {{avatar topic.lastPoster imageSize="large"}}
+  {{/user-link}}
+</div>
+<div class='main-link'>
+  <div class='top-row'>
+    {{raw "topic-status" topic=topic}}
+    {{topic-link topic}}
+    {{#if topic.featured_link}}
+      {{topic-featured-link topic}}
+    {{/if}}
+    {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+  </div>
+  <div class='bottom-row'>
+    {{category-link topic.category}}
+    {{discourse-tags topic mode="list"}}
+  </div>
+</div>
+<div class='topic-stats'>
+  {{raw "list/posts-count-column" topic=topic tagName="div"}}
+  <div class="topic-last-activity">
+    <a href="{{topic.lastPostUrl}}" title="{{topic.bumpedAtTitle}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
+  </div>
+</div>

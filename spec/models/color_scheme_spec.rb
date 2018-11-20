@@ -2,23 +2,23 @@ require 'rails_helper'
 
 describe ColorScheme do
 
-  let(:valid_params) { {name: "Best Colors Evar", colors: valid_colors} }
+  let(:valid_params) { { name: "Best Colors Evar", colors: valid_colors } }
   let(:valid_colors) { [
-    {name: '$primary_background_color', hex: 'FFBB00'},
-    {name: '$secondary_background_color', hex: '888888'}
+    { name: '$primary_background_color', hex: 'FFBB00' },
+    { name: '$secondary_background_color', hex: '888888' }
   ]}
 
   it "correctly invalidates theme css when changed" do
     scheme = ColorScheme.create_from_base(name: 'Bob')
-    theme = Theme.new(name: 'Amazing Theme', color_scheme_id: scheme.id, user_id: -1)
+    theme = Fabricate(:theme, color_scheme_id: scheme.id)
     theme.set_field(name: :scss, target: :desktop, value: '.bob {color: $primary;}')
     theme.save!
 
-    href = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.key)
+    href = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
 
     ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'bbb' }])
 
-    href2 = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.key)
+    href2 = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
 
     expect(href).not_to eq(href2)
   end
@@ -35,22 +35,22 @@ describe ColorScheme do
   end
 
   describe "create_from_base" do
-    let(:base_colors) { {first_one: 'AAAAAA', second_one: '333333', third_one: 'BEEBEE'} }
+    let(:base_colors) { { first_one: 'AAAAAA', second_one: '333333', third_one: 'BEEBEE' } }
     let!(:base) { Fabricate(:color_scheme, name: 'Base', color_scheme_colors: [
                     Fabricate(:color_scheme_color, name: 'first_one',  hex: base_colors[:first_one]),
                     Fabricate(:color_scheme_color, name: 'second_one', hex: base_colors[:second_one]),
                     Fabricate(:color_scheme_color, name: 'third_one', hex: base_colors[:third_one])]) }
 
     before do
-       ColorScheme.stubs(:base).returns(base)
+      ColorScheme.stubs(:base).returns(base)
     end
 
     it "creates a new color scheme" do
-      c = described_class.create_from_base(name: 'Yellow', colors: {first_one: 'FFFF00', third_one: 'F00D33'})
+      c = described_class.create_from_base(name: 'Yellow', colors: { first_one: 'FFFF00', third_one: 'F00D33' })
       expect(c.colors.size).to eq base_colors.size
-      first  = c.colors.find {|x| x.name == 'first_one'}
-      second = c.colors.find {|x| x.name == 'second_one'}
-      third  = c.colors.find {|x| x.name == 'third_one'}
+      first  = c.colors.find { |x| x.name == 'first_one' }
+      second = c.colors.find { |x| x.name == 'second_one' }
+      third  = c.colors.find { |x| x.name == 'third_one' }
       expect(first.hex).to eq 'FFFF00'
       expect(second.hex).to eq base_colors[:second_one]
       expect(third.hex).to eq 'F00D33'
@@ -62,11 +62,11 @@ describe ColorScheme do
       end
 
       it "returns nil for a missing attribute" do
-        expect(described_class.hex_for_name('undefined')).to eq nil
+        expect(ColorScheme.hex_for_name('undefined')).to eq nil
       end
 
       it "returns the base color for an attribute" do
-        expect(described_class.hex_for_name('second_one')).to eq base_colors[:second_one]
+        expect(ColorScheme.hex_for_name('second_one')).to eq base_colors[:second_one]
       end
     end
   end

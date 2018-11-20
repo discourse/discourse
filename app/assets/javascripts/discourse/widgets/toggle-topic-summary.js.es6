@@ -1,17 +1,22 @@
-import RawHtml from 'discourse/widgets/raw-html';
-import { createWidget } from 'discourse/widgets/widget';
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
 
-createWidget('toggle-summary-description', {
+createWidget("toggle-summary-description", {
   description(attrs) {
     if (attrs.topicSummaryEnabled) {
-      return I18n.t('summary.enabled_description');
+      return I18n.t("summary.enabled_description");
     }
 
     if (attrs.topicWordCount) {
-      const readingTime = Math.floor(attrs.topicWordCount / this.siteSettings.read_time_word_count);
-      return I18n.t('summary.description_time', { replyCount: attrs.topicReplyCount, readingTime });
+      const readingTime = Math.floor(
+        attrs.topicWordCount / this.siteSettings.read_time_word_count
+      );
+      return I18n.t("summary.description_time", {
+        replyCount: attrs.topicReplyCount,
+        readingTime
+      });
     }
-    return I18n.t('summary.description', { replyCount: attrs.topicReplyCount });
+    return I18n.t("summary.description", { replyCount: attrs.topicReplyCount });
   },
 
   html(attrs) {
@@ -20,14 +25,16 @@ createWidget('toggle-summary-description', {
   }
 });
 
-export default createWidget('toggle-topic-summary', {
-  tagName: 'section.information.toggle-summary',
+export default createWidget("toggle-topic-summary", {
+  tagName: "section.information.toggle-summary",
   html(attrs) {
-    return [ this.attach('toggle-summary-description', attrs),
-             this.attach('button', {
-               className: 'btn btn-primary',
-               label: attrs.topicSummaryEnabled ? 'summary.disable' : 'summary.enable',
-               action: 'toggleSummary'
-             }) ];
+    return [
+      this.attach("toggle-summary-description", attrs),
+      this.attach("button", {
+        className: "btn btn-primary",
+        label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
+        action: "toggleSummary"
+      })
+    ];
   }
 });

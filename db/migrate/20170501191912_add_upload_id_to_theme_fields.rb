@@ -1,4 +1,4 @@
-class AddUploadIdToThemeFields < ActiveRecord::Migration
+class AddUploadIdToThemeFields < ActiveRecord::Migration[4.2]
   def up
     remove_index :theme_fields, [:theme_id, :target, :name]
     rename_column :theme_fields, :target, :target_id

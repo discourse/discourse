@@ -1,14 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
+
 acceptance("User Card");
 
-test("card", () => {
-  visit('/');
+QUnit.test("user card", async assert => {
+  await visit("/");
+  assert.ok(invisible("#user-card"), "user card is invisible by default");
 
-  ok(invisible('#user-card'), 'user card is invisible by default');
-  click('a[data-user-card=eviltrout]:first');
-
-  andThen(() => {
-    ok(visible('#user-card'), 'card should appear');
-  });
-
+  await click("a[data-user-card=eviltrout]:first");
+  assert.ok(visible("#user-card"), "card should appear");
 });

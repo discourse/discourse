@@ -1,0 +1,79 @@
+// Common styles for "user-info" component
+.user-info {
+  display: inline-block;
+  clear: both;
+  margin-bottom: 1em;
+
+  .user-image {
+    float: left;
+    padding-right: 4px;
+  }
+
+  .user-detail {
+    float: left;
+    width: 70%;
+    padding-left: 5px;
+    @media screen and (max-width: 600px) {
+      font-size: $font-down-1;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .username a {
+      font-weight: bold;
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
+
+    .name {
+      margin-left: 5px;
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
+
+    .title {
+      margin-top: 3px;
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
+  }
+
+  &.small {
+    width: 333px;
+    @media screen and (max-width: $small-width) {
+      width: auto;
+      display: flex;
+    }
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  &.medium {
+    min-height: 60px;
+
+    .username,
+    .name {
+      display: block;
+    }
+
+    .name {
+      margin-left: 0;
+    }
+
+    &.badge-info {
+      min-height: 80px;
+      min-width: 250px;
+
+      .granted-on {
+        color: dark-light-choose($primary-medium, $secondary-medium);
+      }
+
+      .post-link {
+        display: block;
+        margin-top: 0.2em;
+      }
+    }
+  }
+}

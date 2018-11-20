@@ -31,7 +31,7 @@
         <link><%= post_url %></link>
         <pubDate><%= post.created_at.rfc2822 %></pubDate>
         <guid isPermaLink="false"><%= Discourse.current_hostname %>-post-<%= post.topic_id %>-<%= post.post_number %></guid>
-        <source url="<%= @topic_view.absolute_url %>.rss"><%= @topic_view.title %></source>
+        <source url="<%= topic_url %>.rss"><%= @topic_view.title %></source>
       </item>
     <% end %>
   </channel>

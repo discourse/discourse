@@ -8,18 +8,20 @@ export const queryParams = {
   max_posts: { replace: true, refreshModel: true },
   q: { replace: true, refreshModel: true },
   tags: { replace: true },
-  before: { replace: true, refreshModel: true},
-  bumped_before: { replace: true, refreshModel: true}
+  before: { replace: true, refreshModel: true },
+  bumped_before: { replace: true, refreshModel: true }
 };
 
 // Basic controller options
 const controllerOpts = {
-  discoveryTopics: Ember.inject.controller('discovery/topics'),
-  queryParams: Object.keys(queryParams),
+  discoveryTopics: Ember.inject.controller("discovery/topics"),
+  queryParams: Object.keys(queryParams)
 };
 
 // Aliases for the values
-controllerOpts.queryParams.forEach(p => controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`));
+controllerOpts.queryParams.forEach(
+  p => (controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`))
+);
 
 const Controller = Ember.Controller.extend(controllerOpts);
 

@@ -1,19 +1,32 @@
-import { ajax } from 'discourse/lib/ajax';
-import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
-import Composer from 'discourse/models/composer';
-import PreloadStore from 'preload-store';
-import { getTransient, setTransient } from 'discourse/lib/page-tracker';
-import { getOwner } from 'discourse-common/lib/get-owner';
+import { ajax } from "discourse/lib/ajax";
+import {
+  translateResults,
+  getSearchKey,
+  isValidSearchTerm
+} from "discourse/lib/search";
+import PreloadStore from "preload-store";
+import { getTransient, setTransient } from "discourse/lib/page-tracker";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Discourse.Route.extend({
-  queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
+  queryParams: {
+    q: {},
+    expanded: false,
+    context_id: {},
+    context: {},
+    skip_context: {}
+  },
 
   titleToken() {
-    return I18n.t('search.results_page');
+    return I18n.t("search.results_page", {
+      term: escapeExpression(
+        this.controllerFor("full-page-search").get("searchTerm")
+      )
+    });
   },
 
   model(params) {
-    const cached = getTransient('lastSearch');
+    const cached = getTransient("lastSearch");
     var args = { q: params.q };
     if (params.context_id && !args.skip_context) {
       args.search_context = {
@@ -26,7 +39,7 @@ export default Discourse.Route.extend({
 
     if (cached && cached.data.searchKey === searchKey) {
       // extend expiry
-      setTransient('lastSearch', { searchKey, model: cached.data.model }, 5);
+      setTransient("lastSearch", { searchKey, model: cached.data.model }, 5);
       return cached.data.model;
     }
 
@@ -37,8 +50,13 @@ export default Discourse.Route.extend({
         return null;
       }
     }).then(results => {
-      const model = (results && translateResults(results)) || {};
-      setTransient('lastSearch', { searchKey, model }, 5);
+      const grouped_search_result = results
+        ? results.grouped_search_result
+        : {};
+      const model = (results && translateResults(results)) || {
+        grouped_search_result
+      };
+      setTransient("lastSearch", { searchKey, model }, 5);
       return model;
     });
   },
@@ -47,18 +65,6 @@ export default Discourse.Route.extend({
     didTransition() {
       this.controllerFor("full-page-search")._showFooter();
       return true;
-    },
-
-    createTopic(searchTerm) {
-      let category;
-      if (searchTerm.indexOf("category:")) {
-        const match =  searchTerm.match(/category:(\S*)/);
-        if (match && match[1]) {
-          category = match[1];
-        }
-      }
-      getOwner(this).lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
     }
   }
-
 });

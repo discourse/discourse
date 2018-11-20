@@ -1,37 +1,17 @@
 class EmailLogSerializer < ApplicationSerializer
+  include EmailLogsMixin
 
-  attributes :id,
-             :reply_key,
-             :to_address,
-             :email_type,
-             :user_id,
-             :created_at,
-             :skipped,
-             :skipped_reason,
-             :post_url,
-             :post_description,
+  attributes :reply_key,
              :bounced
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
-  def include_skipped_reason?
-    object.skipped
+  def include_reply_key?
+    reply_keys = @options[:reply_keys]
+    reply_keys.present? && reply_keys[[object.post_id, object.user_id]]
   end
 
-  def post_url
-    object.post.url
+  def reply_key
+    @options[:reply_keys][[object.post_id, object.user_id]].delete("-")
   end
-
-  def include_post_url?
-    object.post.present?
-  end
-
-  def include_post_description?
-    object.post.present? && object.post.topic.present?
-  end
-
-  def post_description
-    "#{object.post.topic.title} ##{object.post.post_number}"
-  end
-
 end

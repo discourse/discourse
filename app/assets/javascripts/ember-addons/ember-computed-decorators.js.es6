@@ -1,6 +1,6 @@
-import handleDescriptor from './utils/handle-descriptor';
-import isDescriptor from './utils/is-descriptor';
-import extractValue from './utils/extract-value';
+import handleDescriptor from "./utils/handle-descriptor";
+import isDescriptor from "./utils/is-descriptor";
+import extractValue from "./utils/extract-value";
 
 export default function computedDecorator(...params) {
   // determine if user called as @computed('blah', 'blah') or @computed
@@ -15,22 +15,25 @@ export default function computedDecorator(...params) {
 
 export function readOnly(target, name, desc) {
   return {
-    writable:     false,
-    enumerable:   desc.enumerable,
+    writable: false,
+    enumerable: desc.enumerable,
     configurable: desc.configurable,
-    initializer:  function() {
+    initializer: function() {
       var value = extractValue(desc);
       return value.readOnly();
     }
   };
 }
 
-import decoratorAlias from './decorator-alias';
+import decoratorAlias from "./decorator-alias";
 
-export var on = decoratorAlias(Ember.on, 'Can not `on` without event names');
-export var observes = decoratorAlias(Ember.observer, 'Can not `observe` without property names');
+export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
+export var observes = decoratorAlias(
+  Ember.observer,
+  "Can not `observe` without property names"
+);
 
-import macroAlias from './macro-alias';
+import macroAlias from "./macro-alias";
 
 export var alias = macroAlias(Ember.computed.alias);
 export var and = macroAlias(Ember.computed.and);
@@ -54,7 +57,6 @@ export var not = macroAlias(Ember.computed.not);
 export var notEmpty = macroAlias(Ember.computed.notEmpty);
 export var oneWay = macroAlias(Ember.computed.oneWay);
 export var or = macroAlias(Ember.computed.or);
-export var readOnly = macroAlias(Ember.computed.readOnly);
 export var reads = macroAlias(Ember.computed.reads);
 export var setDiff = macroAlias(Ember.computed.setDiff);
 export var sort = macroAlias(Ember.computed.sort);

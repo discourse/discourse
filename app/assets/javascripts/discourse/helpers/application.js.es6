@@ -1,24 +1,33 @@
-import { registerUnbound } from 'discourse-common/lib/helpers';
-import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
+import { registerUnbound } from "discourse-common/lib/helpers";
+import {
+  longDate,
+  autoUpdatingRelativeAge,
+  number
+} from "discourse/lib/formatter";
 
 const safe = Handlebars.SafeString;
 
-registerUnbound('raw-date', dt => longDate(new Date(dt)));
+registerUnbound("raw-date", dt => longDate(new Date(dt)));
 
-registerUnbound('age-with-tooltip', dt => new safe(autoUpdatingRelativeAge(new Date(dt), {title: true})));
+registerUnbound(
+  "age-with-tooltip",
+  dt => new safe(autoUpdatingRelativeAge(new Date(dt), { title: true }))
+);
 
-registerUnbound('number', (orig, params) => {
-  orig = parseInt(orig, 10);
-  if (isNaN(orig)) { orig = 0; }
+registerUnbound("number", (orig, params) => {
+  orig = Math.round(parseFloat(orig));
+  if (isNaN(orig)) {
+    orig = 0;
+  }
 
   let title = I18n.toNumber(orig, { precision: 0 });
   if (params.numberKey) {
     title = I18n.t(params.numberKey, { number: title, count: parseInt(orig) });
   }
 
-  let classNames = 'number';
-  if (params['class']) {
-    classNames += ' ' + params['class'];
+  let classNames = "number";
+  if (params["class"]) {
+    classNames += " " + params["class"];
   }
 
   let result = "<span class='" + classNames + "'";

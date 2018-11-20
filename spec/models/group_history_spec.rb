@@ -21,7 +21,7 @@ RSpec.describe GroupHistory do
 
       expect(described_class.with_filters(
         group_history.group,
-        { :action => GroupHistory.actions[3]}
+        action: GroupHistory.actions[3]
       )).to eq([other_group_history])
     end
 
@@ -39,7 +39,7 @@ RSpec.describe GroupHistory do
       other_group_history.update_attributes!(subject: "test")
 
       expect(described_class.with_filters(group_history.group,
-        :action => GroupHistory.actions[3], subject: 'test'
+        action: GroupHistory.actions[3], subject: 'test'
       )).to eq([other_group_history])
     end
 

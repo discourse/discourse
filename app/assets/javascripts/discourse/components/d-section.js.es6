@@ -1,23 +1,23 @@
-import { scrollTop } from 'discourse/mixins/scroll-top';
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 // Can add a body class from within a component, also will scroll to the top automatically.
 export default Ember.Component.extend({
-  tagName: 'section',
+  tagName: "section",
 
   didInsertElement() {
     this._super();
 
-    const pageClass = this.get('pageClass');
+    const pageClass = this.get("pageClass");
     if (pageClass) {
-      $('body').addClass(`${pageClass}-page`);
+      $("body").addClass(`${pageClass}-page`);
     }
 
-    const bodyClass = this.get('bodyClass');
+    const bodyClass = this.get("bodyClass");
     if (bodyClass) {
-      $('body').addClass(bodyClass);
+      $("body").addClass(bodyClass);
     }
 
-    if (this.get('scrollTop') === "false") {
+    if (this.get("scrollTop") === "false") {
       return;
     }
 
@@ -26,14 +26,14 @@ export default Ember.Component.extend({
 
   willDestroyElement() {
     this._super();
-    const pageClass = this.get('pageClass');
+    const pageClass = this.get("pageClass");
     if (pageClass) {
-      $('body').removeClass(`${pageClass}-page`);
+      $("body").removeClass(`${pageClass}-page`);
     }
 
-    const bodyClass = this.get('bodyClass');
+    const bodyClass = this.get("bodyClass");
     if (bodyClass) {
-      $('body').removeClass(bodyClass);
+      $("body").removeClass(bodyClass);
     }
   }
 });

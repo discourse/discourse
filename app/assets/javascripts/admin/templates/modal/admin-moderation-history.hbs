@@ -1,0 +1,23 @@
+{{#d-modal-body title="admin.flags.moderation_history"}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if history}}
+      <table class='moderation-history'>
+        <tr>
+          <th>{{i18n "admin.logs.created_at"}}</th>
+          <th>{{i18n "admin.logs.action"}}</th>
+          <th>{{i18n "admin.moderation_history.performed_by"}}</th>
+        </tr>
+        {{#each history as |item|}}
+          {{moderation-history-item item=item}}
+        {{/each}}
+      </table>
+    {{else}}
+      <div class='no-results'>
+        {{i18n "admin.moderation_history.no_results"}}
+      </div>
+    {{/if}}
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}
+<div class="modal-footer">
+  {{d-button action=(action "closeModal") label="close"}}
+</div>

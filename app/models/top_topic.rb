@@ -16,7 +16,7 @@ class TopTopic < ActiveRecord::Base
 
   # We don't have to refresh these as often
   def self.refresh_older!
-    older_periods = periods - [:daily,:all]
+    older_periods = periods - [:daily, :all]
 
     transaction do
       older_periods.each do |period|
@@ -31,7 +31,6 @@ class TopTopic < ActiveRecord::Base
     refresh_daily!
     refresh_older!
   end
-
 
   def self.periods
     @@periods ||= [:all, :yearly, :quarterly, :monthly, :weekly, :daily].freeze
@@ -60,7 +59,7 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.remove_invisible_topics
-    exec_sql("WITH category_definition_topic_ids AS (
+    DB.exec("WITH category_definition_topic_ids AS (
                   SELECT COALESCE(topic_id, 0) AS id FROM categories
                 ), invisible_topic_ids AS (
                   SELECT id
@@ -77,7 +76,7 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.add_new_visible_topics
-    exec_sql("WITH category_definition_topic_ids AS (
+    DB.exec("WITH category_definition_topic_ids AS (
                   SELECT COALESCE(topic_id, 0) AS id FROM categories
                 ), visible_topics AS (
                 SELECT t.id
@@ -168,7 +167,7 @@ class TopTopic < ActiveRecord::Base
       time_filter = "topics.created_at < :from"
     end
 
-    sql = <<-SQL
+    sql = <<~SQL
         WITH top AS (
           SELECT CASE
                    WHEN #{time_filter} THEN 0
@@ -198,21 +197,21 @@ class TopTopic < ActiveRecord::Base
           AND #{period}_score <> top.score
     SQL
 
-    exec_sql(sql, from: start_of(period))
+    DB.exec(sql, from: start_of(period))
   end
 
   def self.start_of(period)
     case period
-      when :yearly    then 1.year.ago
-      when :monthly   then 1.month.ago
-      when :quarterly then 3.months.ago
-      when :weekly    then 1.week.ago
-      when :daily     then 1.day.ago
+    when :yearly    then 1.year.ago
+    when :monthly   then 1.month.ago
+    when :quarterly then 3.months.ago
+    when :weekly    then 1.week.ago
+    when :daily     then 1.day.ago
     end
   end
 
   def self.update_top_topics(period, sort, inner_join)
-    exec_sql("UPDATE top_topics
+    DB.exec("UPDATE top_topics
                 SET #{period}_#{sort}_count = c.count
                 FROM top_topics tt
                 INNER JOIN (#{inner_join}) c ON tt.topic_id = c.topic_id

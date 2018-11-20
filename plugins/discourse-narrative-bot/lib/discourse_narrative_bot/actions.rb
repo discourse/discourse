@@ -32,22 +32,23 @@ module DiscourseNarrativeBot
 
     def reset_rate_limits(post)
       user = post.user
-      data = DiscourseNarrativeBot::Store.get(user.id.to_s)
 
+      duration =
+        if user && user.new_user?
+          SiteSetting.rate_limit_new_user_create_post
+        else
+          SiteSetting.rate_limit_create_post
+        end
+
+      return unless duration > 0
+
+      data = DiscourseNarrativeBot::Store.get(user.id.to_s)
       return unless data
 
       key = "#{DiscourseNarrativeBot::PLUGIN_NAME}:reset-rate-limit:#{post.topic_id}:#{data['state']}"
 
       if !(count = $redis.get(key))
         count = 0
-
-        duration =
-          if user && user.new_user?
-            SiteSetting.rate_limit_new_user_create_post
-          else
-            SiteSetting.rate_limit_create_post
-          end
-
         $redis.setex(key, duration, count)
       end
 

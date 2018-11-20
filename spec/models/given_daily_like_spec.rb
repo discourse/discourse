@@ -21,28 +21,27 @@ describe GivenDailyLike do
     it 'can be incremented and decremented' do
       SiteSetting.max_likes_per_day = 2
 
-      Timecop.freeze(Date.today) do
-        dt = Date.today
+      dt = Date.today
+      freeze_time dt
 
-        expect(value_for(user.id, dt)).to eq(0)
-        expect(limit_reached_for(user.id, dt)).to eq(false)
+      expect(value_for(user.id, dt)).to eq(0)
+      expect(limit_reached_for(user.id, dt)).to eq(false)
 
-        GivenDailyLike.increment_for(user.id)
-        expect(value_for(user.id, dt)).to eq(1)
-        expect(limit_reached_for(user.id, dt)).to eq(false)
+      GivenDailyLike.increment_for(user.id)
+      expect(value_for(user.id, dt)).to eq(1)
+      expect(limit_reached_for(user.id, dt)).to eq(false)
 
-        GivenDailyLike.increment_for(user.id)
-        expect(value_for(user.id, dt)).to eq(2)
-        expect(limit_reached_for(user.id, dt)).to eq(true)
+      GivenDailyLike.increment_for(user.id)
+      expect(value_for(user.id, dt)).to eq(2)
+      expect(limit_reached_for(user.id, dt)).to eq(true)
 
-        GivenDailyLike.decrement_for(user.id)
-        expect(value_for(user.id, dt)).to eq(1)
-        expect(limit_reached_for(user.id, dt)).to eq(false)
+      GivenDailyLike.decrement_for(user.id)
+      expect(value_for(user.id, dt)).to eq(1)
+      expect(limit_reached_for(user.id, dt)).to eq(false)
 
-        GivenDailyLike.decrement_for(user.id)
-        expect(value_for(user.id, dt)).to eq(0)
-        expect(limit_reached_for(user.id, dt)).to eq(false)
-      end
+      GivenDailyLike.decrement_for(user.id)
+      expect(value_for(user.id, dt)).to eq(0)
+      expect(limit_reached_for(user.id, dt)).to eq(false)
     end
 
   end

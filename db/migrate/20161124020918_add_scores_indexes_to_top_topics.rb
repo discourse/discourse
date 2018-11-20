@@ -1,4 +1,4 @@
-class AddScoresIndexesToTopTopics < ActiveRecord::Migration
+class AddScoresIndexesToTopTopics < ActiveRecord::Migration[4.2]
   def change
     add_index :top_topics, :daily_score
     add_index :top_topics, :weekly_score

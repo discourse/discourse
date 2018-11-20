@@ -176,11 +176,11 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           last_posted_at: user['last_posted_at'],
           moderator: @moderator_group_id.include?(user['group_id']),
           admin: @admin_group_id.include?(user['group_id']),
-          website: (user['website'] and user['website'].include?('.')) ? user['website'].strip : ( user['qq'] and user['qq'].strip == user['qq'].strip.to_i and user['qq'].strip.to_i > 10000 ) ? 'http://user.qzone.qq.com/' + user['qq'].strip : nil,
-          bio_raw: first_exists((user['bio'] and CGI.unescapeHTML(user['bio'])), user['sightml'], user['spacenote']).strip[0,3000],
-          location: first_exists(user['address'], (!user['resideprovince'].blank? ? [user['resideprovince'],  user['residecity'], user['residedist'], user['residecommunity']] : [user['birthprovince'],  user['birthcity'], user['birthdist'], user['birthcommunity']]).reject{|location|location.blank?}.join(' ')),
+          website: (user['website'] && user['website'].include?('.')) ? user['website'].strip : (user['qq'] && user['qq'].strip == (user['qq'].strip.to_i) && user['qq'].strip.to_i > (10000)) ? 'http://user.qzone.qq.com/' + user['qq'].strip : nil,
+          bio_raw: first_exists((user['bio'] && CGI.unescapeHTML(user['bio'])), user['sightml'], user['spacenote']).strip[0, 3000],
+          location: first_exists(user['address'], (!user['resideprovince'].blank? ? [user['resideprovince'],  user['residecity'], user['residedist'], user['residecommunity']] : [user['birthprovince'],  user['birthcity'], user['birthdist'], user['birthcommunity']]).reject { |location|location.blank? }.join(' ')),
           post_create_action: lambda do |newmember|
-            if user['avatar_exists'] == 1 and newmember.uploaded_avatar_id.blank?
+            if user['avatar_exists'] == (1) && newmember.uploaded_avatar_id.blank?
               path, filename = discuzx_avatar_fullpath(user['id'])
               if path
                 begin
@@ -199,7 +199,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                 end
               end
             end
-            if !user['spacecss'].blank? and newmember.user_profile.profile_background.blank?
+            if !user['spacecss'].blank? && newmember.user_profile.profile_background.blank?
               # profile background
               if matched = user['spacecss'].match(/body\s*{[^}]*url\('?(.+?)'?\)/i)
                 body_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
@@ -234,7 +234,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
             # we don't send email to the unconfirmed user
             newmember.update(email_digests: user['email_confirmed'] == 1) if newmember.email_digests
-            newmember.update(name: '') if !newmember.name.blank? and newmember.name == newmember.username
+            newmember.update(name: '') if !newmember.name.blank? && newmember.name == (newmember.username)
           end
         }
       end
@@ -259,10 +259,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
     max_position = Category.all.max_by(&:position).position
     create_categories(results) do |row|
-      next if row['type'] == 'group' or row['status'] == 2 # or row['status'].to_i == 3 # 如果不想导入群组，取消注释
+      next if row['type'] == ('group') || row['status'] == (2) # or row['status'].to_i == 3 # 如果不想导入群组，取消注释
       extra = PHP.unserialize(row['extra']) if !row['extra'].blank?
-      if extra and !extra["namecolor"].blank?
-        color = extra["namecolor"][1,6]
+      if extra && !extra["namecolor"].blank?
+        color = extra["namecolor"][1, 6]
       end
 
       Category.all.max_by(&:position).position
@@ -273,7 +273,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         description: row['description'],
         position: row['position'].to_i + max_position,
         color: color,
-        suppress_from_homepage: (row['status'] == 0 or row['status'] == 3),
+        suppress_from_latest: (row['status'] == (0) || row['status'] == (3)),
         post_create_action: lambda do |category|
           if slug = @category_slug[row['id']]
             category.update(slug: slug)
@@ -289,7 +289,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
             if upload
               category.logo_url = upload.url
               # FIXME: I don't know how to get '/shared' by script. May change to Rails.root
-              category.color = Miro::DominantColors.new(File.join('/shared', category.logo_url)).to_hex.first[1,6] if !color
+              category.color = Miro::DominantColors.new(File.join('/shared', category.logo_url)).to_hex.first[1, 6] if !color
               category.save!
             end
           end
@@ -332,10 +332,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
              LIMIT #{BATCH_SIZE}
             OFFSET #{offset};
           ")
-          # u.status != -1 AND u.groupid != 4 AND u.groupid != 5 用户未被锁定、禁访或禁言。在现实中的 Discuz 论坛，禁止的用户通常是广告机或驱逐的用户，这些不需要导入。
+      # u.status != -1 AND u.groupid != 4 AND u.groupid != 5 用户未被锁定、禁访或禁言。在现实中的 Discuz 论坛，禁止的用户通常是广告机或驱逐的用户，这些不需要导入。
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| p["id"].to_i}
+      next if all_records_exist? :posts, results.map { |p| p["id"].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
@@ -364,7 +364,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
             if results.empty?
               puts "WARNING: can't find poll options for topic #{m['topic_id']}, skip poll"
             else
-              mapped[:raw].prepend "[poll#{poll['multiple'] ? ' type=multiple' : ''}#{poll['maxchoices'] > 0 ? " max=#{poll['maxchoices']}" : ''}]\n#{results.map{|option|'- ' + option['polloption']}.join("\n")}\n[/poll]\n"
+              mapped[:raw].prepend "[poll#{poll['multiple'] ? ' type=multiple' : ''}#{poll['maxchoices'] > 0 ? " max=#{poll['maxchoices']}" : ''}]\n#{results.map { |option|'- ' + option['polloption'] }.join("\n")}\n[/poll]\n"
             end
           end
         else
@@ -393,12 +393,12 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         end
 
         if m['status'] & 1 == 1 || mapped[:raw].blank?
-          mapped[:post_create_action] = lambda do |post|
-            PostDestroyer.new(Discourse.system_user, post).perform_delete
+          mapped[:post_create_action] = lambda do |action_post|
+            PostDestroyer.new(Discourse.system_user, action_post).perform_delete
           end
         elsif (m['status'] & 2) >> 1 == 1 # waiting for approve
-          mapped[:post_create_action] = lambda do |post|
-            PostAction.act(Discourse.system_user, post, 6, {take_action: false})
+          mapped[:post_create_action] = lambda do |action_post|
+            PostAction.act(Discourse.system_user, action_post, 6, take_action: false)
           end
         end
         skip ? nil : mapped
@@ -423,7 +423,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
       break if results.size < 1
 
-       # next if all_records_exist?
+      # next if all_records_exist?
 
       create_bookmarks(results, total: total_count, offset: offset) do |row|
         {
@@ -433,7 +433,6 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       end
     end
   end
-
 
   def import_private_messages
     puts '', 'creating private messages'
@@ -494,7 +493,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                 SELECT plid thread_id, uid user_id
                   FROM #{table_name 'ucenter_pm_members'}
                  WHERE plid = #{m['thread_id']};
-              ").map {|r| r['user_id']}.uniq
+              ").map { |r| r['user_id'] }.uniq
 
           mapped[:target_usernames] = import_user_ids.map! do |import_user_id|
             import_user_id.to_s == m['user_id'].to_s ? nil : User.find_by(id: user_id_from_imported_user_id(import_user_id)).try(:username)
@@ -587,7 +586,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     s.gsub!(/\[img[^\]]*\]https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)\[\/img\]/i, '[x-attach]\1[/x-attach]') # dont convert attachment
     s.gsub!(/<img[^>]*src="https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)".*?>/i, '[x-attach]\1[/x-attach]') # dont convert attachment
     s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/blog\/(.*)\[\/img\]/i, '[x-attach]../blog/\1[/x-attach]') # 私货
-    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/ucenter\/avatar.php\?uid=(\d+)[^\]]*\[\/img\]/i) { "[x-attach]#{discuzx_avatar_fullpath($1,false)[0]}[/x-attach]" } # 私货
+    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/ucenter\/avatar.php\?uid=(\d+)[^\]]*\[\/img\]/i) { "[x-attach]#{discuzx_avatar_fullpath($1, false)[0]}[/x-attach]" } # 私货
     s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
     s.gsub!(/\[img\]([^\]]*)\[\/img\]/i, '<img src="\1">')
 
@@ -671,7 +670,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # @someone without the url
     s.gsub!(/@\[url=[^\[\]]*?\](\S*)\[\/url\]/i, '@\1')
 
-    s.scan(/http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/[^\[\]\s]*/) {|link|puts "WARNING: post #{import_id} can't replace internal url #{link}"}
+    s.scan(/http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/[^\[\]\s]*/) { |link|puts "WARNING: post #{import_id} can't replace internal url #{link}" }
 
     s.strip
   end
@@ -785,7 +784,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           FROM #{table_name 'forum_attachment'}
           WHERE pid = #{post.custom_fields['import_id']}"
       if !inline_attachments.empty?
-          sql << " AND aid NOT IN (#{inline_attachments.join(',')})"
+        sql << " AND aid NOT IN (#{inline_attachments.join(',')})"
       end
 
       results = mysql_query(sql)
@@ -805,7 +804,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: '从 Discuz 中导入附件' })
+        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: '从 Discuz 中导入附件')
       end
 
       success_count += 1
@@ -818,7 +817,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   end
 
   # Create the full path to the discuz avatar specified from user id
-  def discuzx_avatar_fullpath(user_id, absolute=true)
+  def discuzx_avatar_fullpath(user_id, absolute = true)
     padded_id = user_id.to_s.rjust(9, '0')
 
     part_1 = padded_id[0..2]
@@ -945,7 +944,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   end
 
   def first_exists(*items)
-    items.find{|item|!item.blank?} || ''
+    items.find { |item|!item.blank? } || ''
   end
 
   def mysql_query(sql)

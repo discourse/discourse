@@ -1,9 +1,131 @@
 require 'rails_helper'
 
 describe OptimizedImage do
-
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
+
+  unless ENV["TRAVIS"]
+    describe '.crop' do
+      it 'should work correctly' do
+        tmp_path = "/tmp/cropped.png"
+
+        begin
+          OptimizedImage.crop(
+            "#{Rails.root}/spec/fixtures/images/logo.png",
+            tmp_path,
+            5,
+            5
+          )
+
+          expect(File.read(tmp_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/cropped.png")
+          )
+        ensure
+          File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+    end
+
+    describe '.resize' do
+      it 'should work correctly when extension is bad' do
+
+        original_path = Dir::Tmpname.create(['origin', '.bin']) { nil }
+
+        begin
+          FileUtils.cp "#{Rails.root}/spec/fixtures/images/logo.png", original_path
+
+          # we use "filename" to get the correct extension here, it is more important
+          # then any other param
+
+          OptimizedImage.resize(
+            original_path,
+            original_path,
+            5,
+            5,
+            filename: "test.png"
+          )
+
+          expect(File.read(original_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
+          )
+        ensure
+          File.delete(original_path) if File.exists?(original_path)
+        end
+      end
+
+      it 'should work correctly' do
+
+        file = File.open("#{Rails.root}/spec/fixtures/images/resized.png")
+        upload = UploadCreator.new(file, "test.bin").create_for(-1)
+
+        expect(upload.filesize).to eq(199)
+
+        expect(upload.width).to eq(5)
+        expect(upload.height).to eq(5)
+
+        upload.create_thumbnail!(10, 10)
+        thumb = upload.thumbnail(10, 10)
+
+        expect(thumb.width).to eq(10)
+        expect(thumb.height).to eq(10)
+
+        # very image magic specific so fudge here
+        expect(thumb.filesize).to be > 200
+
+        # this size is based off original upload
+        # it is the size we render, by default, in the post
+        expect(upload.thumbnail_width).to eq(5)
+        expect(upload.thumbnail_height).to eq(5)
+
+        # lets ensure we can rebuild the filesize
+        thumb.update_columns(filesize: nil)
+        thumb = OptimizedImage.find(thumb.id)
+
+        # attempts to auto correct
+        expect(thumb.filesize).to be > 200
+      end
+
+      describe 'when an svg with a href is masked as a png' do
+        it 'should not trigger the external request' do
+          tmp_path = "/tmp/resized.png"
+
+          begin
+            expect do
+              OptimizedImage.resize(
+                "#{Rails.root}/spec/fixtures/images/svg.png",
+                tmp_path,
+                5,
+                5,
+                raise_on_error: true
+              )
+            end.to raise_error(RuntimeError, /improper image header/)
+          ensure
+            File.delete(tmp_path) if File.exists?(tmp_path)
+          end
+        end
+      end
+    end
+
+    describe '.downsize' do
+      it 'should work correctly' do
+        tmp_path = "/tmp/downsized.png"
+
+        begin
+          OptimizedImage.downsize(
+            "#{Rails.root}/spec/fixtures/images/logo.png",
+            tmp_path,
+            "100x100\>"
+          )
+
+          expect(File.read(tmp_path)).to eq(
+            File.read("#{Rails.root}/spec/fixtures/images/downsized.png")
+          )
+        ensure
+          File.delete(tmp_path) if File.exists?(tmp_path)
+        end
+      end
+    end
+  end
 
   describe ".safe_path?" do
 
@@ -30,7 +152,7 @@ describe OptimizedImage do
       }.not_to raise_error
     end
 
-    it "raises nothing on paths" do
+    it "raises InvalidAccess error on paths" do
       expect {
         OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png")
       }.to raise_error(Discourse::InvalidAccess)

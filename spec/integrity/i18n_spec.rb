@@ -36,7 +36,6 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
-
 describe "i18n integrity checks" do
 
   it 'has an i18n key for each Trust Levels' do
@@ -56,6 +55,16 @@ describe "i18n integrity checks" do
     Badge.where(system: true).each do |b|
       expect(b.long_description).to be_present
       expect(b.description).to be_present
+    end
+  end
+
+  Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
+    it "does not contain invalid interpolation keys for '#{path}'" do
+      matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
+      matches.flatten!
+      matches.compact!
+      matches.uniq!
+      expect(matches).to eq([])
     end
   end
 

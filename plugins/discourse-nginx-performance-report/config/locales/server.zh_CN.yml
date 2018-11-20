@@ -1,0 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+zh_CN:
+  site_settings:
+    daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到管理人员才能看到的主题"

@@ -10,4 +10,4 @@ sk:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Začnite s novým používateľským návodom pre všetkých nových používateľov"
-        welcome_message: "Pošlite všetkým nových používateľom uvítaciu správu s rýchlym sprievodcom"
+        welcome_message: "Pošlite všetkým novým používateľom uvítaciu správu s rýchlym sprievodcom"

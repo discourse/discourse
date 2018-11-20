@@ -7,7 +7,7 @@ class TestQuandoraApi < Minitest::Test
 
   DEBUG = false
 
-  def initialize args
+  def initialize(args)
     config = YAML::load_file(File.join(__dir__, 'config.yml'))
     @domain = config['domain']
     @username = config['username']
@@ -52,7 +52,7 @@ class TestQuandoraApi < Minitest::Test
   end
 
   def test_get_question_has_expected_structure
-    question = @quandora.get_question @question_id 
+    question = @quandora.get_question @question_id
     expected = JSON.parse(QUESTION)['data']
     check_keys expected, question
 
@@ -71,14 +71,14 @@ class TestQuandoraApi < Minitest::Test
 
   private
 
-  def check_keys expected, actual
+  def check_keys(expected, actual)
     msg = "### caller[0]:\nKey not found in actual keys: #{actual.keys}\n"
     expected.keys.each do |k|
       assert (actual.keys.include? k), "#{k}"
     end
   end
 
-  def debug message, show=false
+  def debug(message, show = false)
     if show || DEBUG
       puts '### ' + caller[0]
       puts ''

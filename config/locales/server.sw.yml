@@ -1,0 +1,2391 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  dates:
+    short_date_no_year: "S MMM"
+    short_date: "S MMM, MMMM"
+    long_date: "MMMM S, MMM s:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%M"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [~, Mwezi wa kwanza, Mwezi wa pili, Mwezi wa tatu, Mwezi wa nne, Mwezi wa tano, Mwezi wa sita, Mwezi wa saba, Mwezi wa nane, Mwezi wa tisa, Mwezi wa kumi, Mwezi wa kumi na moja, Mwezi wa kumi na mbili]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+    am: "Asubuhi"
+    pm: "jioni "
+  title: "Discourse"
+  topics: "Mada"
+  posts: "machapisho"
+  loading: "Inapakuliwa"
+  powered_by_html: 'Imetengenezwa na <a href="https://www.discourse.org">Discourse</a>, inaonekana vizuri ukiruhusu JavaScript'
+  log_in: "Ingia"
+  submit: "Wasilisha"
+  purge_reason: "Roboti ameifuta kwa sababu haishughulikiwi, akaunti mkondoni haiko hewani"
+  disable_remote_images_download_reason: "Upakiaji wa picha kutoka sehemu nyingine umesitishwa kwa sababu hakuna nafasi ya kutosha"
+  anonymous: "Mtumiaji Asiyejulikana"
+  remove_posts_deleted_by_author: "Imefutwa na Mwandishi"
+  redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
+  themes:
+    bad_color_scheme: "Hauwezi kusasisha mandhari, mpango wa rangi batili"
+    other_error: "Tatizo limetokea kwenye kusasisha mandhari"
+    error_importing: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
+    settings_errors:
+      invalid_yaml: "YAML iliyowekwa ni batili."
+      data_type_not_a_number: "Aina ya mpangilio `%{name}` hauruhusiwi. Aina zinazoruhusiwa ni `namba kamili`, `bool`, `orodha` na `enum`"
+      name_too_long: "Kuna mpangilio wenye jina lefu sana. Kiwango cha juu cha urefu ni 255"
+      default_value_missing: "Mpangilio wa `%{name}` hauna thamani"
+      default_out_range: "Mpangilio `%{name}` chaguo-msingi haupo kwenye namba zilizotajwa."
+      number_value_not_valid: "Namba uliyoiandika haipo kwenye eneo linaloruhusiwa."
+      number_value_not_valid_min_max: "Lazima iwe kati ya %{min} na %{max}."
+      number_value_not_valid_min: "Lazima iwe na ukubwa wa au zaidi ya %{min}."
+      number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
+      string_value_not_valid_min_max: "Herufi lazima ziwe kati ya %{min} na %{max}"
+      string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
+      string_value_not_valid_max: "Isizidi maneno  %{max}."
+  emails:
+    incoming:
+      default_subject: "Hii mada inaitaji kichwa cha maneno"
+      show_trimmed_content: "Onyesha taarifa zilizopunguzwa"
+      maximum_staged_user_per_email_reached: "Umefika kiwango cha juu cha watumiaji waliotengenezwa kwa kila barua pepe."
+      no_subject: "(hakuna somo)"
+      no_body: "(hakuna kiwiliwili cha ujumbe)"
+      errors:
+        empty_email_error: "Inatokea kama ujumbe uliotumwa ulikuwa hauna taarifa."
+        no_message_id_error: "Inatokea kama ujumbe hauna 'Utambulisho wa Ujumbe'."
+        no_body_detected_error: "Inatokea kama hatuwezi kusoma taarifa na hakuna vitu vilivyo ambatananishwa."
+        no_sender_detected_error: "Inatokea tukishindwa kupata barua pepe halali kutoka kwenye sehemu uliyoandika barua pepe."
+        inactive_user_error: "Inatokea kama mtumiaji hayuko hewani."
+        silenced_user_error: "Inatokea mtumaji akiwa amenyamazishwa."
+        bad_destination_address: "Inatokea kama hakuna barua pepe kwenye nafasi za Kwenda/Cc/Bcc haziendani na barua pepe inayoingia."
+        strangers_not_allowed_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambayo sio mwanyamachama."
+        insufficient_trust_level_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambacho hana kiwango cha uaminifu."
+        reply_user_not_matching_error: "Inatokea kama jibu limetoka kwenye barua pepe tofauti na barua pepe iliyopokea taarifa."
+        topic_not_found_error: "Inatokea jibu likiandikwa lakina mada inayoongelewa ikiwa imefutwa."
+        topic_closed_error: "Inatokea kama jibu limekuja lakini mada inayoongelewa imefungwa."
+        bounced_email_error: "Barua pepe ni ripoti ya barua pepe iliyoshindwa kufika."
+        screened_email_error: "Inatokea kama barua pepe ya mtumaji imezuiwa."
+        unsubscribe_not_allowed: "Inatokea kama kujiengua kupitia barua pepe hakuruhusiwi kwa mtumiaji huyu."
+        email_not_allowed: "Inatokea kama barua pepe imewekwa kwenye orodha ya kukubaliwa au kukataliwa."
+      unrecognized_error: "Tatizo lilisoeleweka"
+  errors: &errors
+    format: '%{attribute}%{message}'
+    format_with_full_message: '<b>%{attribute} </b>: %{message}'
+    messages:
+      too_long_validation: "Unaruhusiwa kuandika herufi%{max}; umeandika %{length}"
+      taken: "imekwisha chukuliwa"
+      accepted: lazima ikubaliwe
+      blank: haiwezi kubaki wazi
+      present: lazima iwe wazi
+      confirmation: "haiendani na %{attribute}"
+      empty: haiwezi kuachwa wazi
+      equal_to: "lazima iwe sawa na %{count}"
+      even: lazima ziwe sawa
+      exclusion: imehifadhiwa
+      greater_than: "izidi %{count}"
+      greater_than_or_equal_to: "izidi au iwe sawa na %{count}"
+      has_already_been_used: "imeshatumika"
+      inclusion: haijaorodheshwa
+      invalid: ni batili
+      is_invalid: "haieleweki vizuri, je hii sentensi iko kamili?"
+      contains_censored_words: "ina maneno yafuatayo ambayo hayaruhusiwi: %{censored_words}"
+      less_than: "lazima iwe chini ya %{count}"
+      less_than_or_equal_to: "lazima iwe chini ya au sawa na %{count}"
+      not_a_number: sio namba
+      not_an_integer: lazima iwe namba
+      odd: lazima igawanyike kwa mbili
+      record_invalid: 'Uthibitisho umeshindikana: %{errors}'
+      max_emojis: "hauwezi ukawa na emoji, vikatuni vya kuonyesha hisia zaidi ya %{max_emojis_count}"
+      ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
+      restrict_dependent_destroy:
+        one: "Hauwezi kufuta kumbukumbu kwa sababu %{record}inayoitegemea ipo"
+        many: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
+      other_than: "lazima iwe nyingine zaidi ya %{count}"
+    template:
+      body: 'Matatizo yametokea kwenye sehemu zifuatazo:'
+    embed:
+      load_from_remote: "Hitilafu imetokea wakati wa kupakua taarifa."
+    site_settings:
+      min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
+      max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
+      default_categories_already_selected: "Hauwezi kuchagua kikundi kinachotumika kwenye orodha nyingine."
+    conflicting_google_user_id: 'Utambulisho wa Akaunti ya Google imebadilishwa; msaidizi ataipitia kwa ajili ya sababu za ulinzi. Tafadhali wasiliana na msaidizi na waonyeshe <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+  activemodel:
+    errors:
+      <<: *errors
+  invite:
+    not_found: "Mwaliko wako sio sahihi. Tafadhali wasiliana na msimazi wa tovuti."
+    user_exists: "Hakuna haja ya kumualika <b>%{email}</b>, tayaru wana <a href='/u/%{username}/summary'>miliki akaunti!</a>"
+  bulk_invite:
+    file_should_be_csv: "Faili unalopakia inabidi liwe na csv umbizo "
+    error: "Tatizo limetokea wakati wa kupakia faili. Tafadhali jaribu tena."
+  topic_invite:
+    user_exists: "Samahani, mtumiaji huyo alikaribishwa. Unaweza kualika mtumiaji kwenye mada mara moja."
+  backup:
+    operation_already_running: "Kuna operesheni inayoendelea. Hauwezi kuanzisha kazi mpya sasa."
+    backup_file_should_be_tar_gz: "Faili la chelezo inabidi lihifadhiwe kwenye nyaraka za .tar.gz."
+    not_enough_space_on_disk: "Hakuna nafasi ya kutosha kupakia chelezo hichi."
+    invalid_filename: "Faili la chelezo lina herufi batili. Herufi sahihi ni a-z 0-9 . - _"
+  invalid_params: "Umeandika kipengele batili kwenye ombi: %{message}"
+  not_logged_in: "Unahitaji uwe umeingia kufanya hivyo."
+  invalid_access: "Hauna ruhusa kuona rasilimali uliyoomba kuona."
+  invalid_api_credentials: "Hauruhusiwi kufikia raslimali uliyoomba. Ufunguo wa API ni batili"
+  read_only_mode_enabled: "Unaweza kusoma tu kwenye tovuti. Majadiliano yamesitishwa."
+  reading_time: "Mda wa kusoma"
+  likes: "Upendo"
+  embed:
+    start_discussion: "Anzisha Majadiliano"
+    continue: "Endelea Kujadiliana"
+    error: "Hitilafu ya Uambatanishi"
+    loading: "Inapakua Majadiliano..."
+    permalink: "Kiungo cha mtandao cha Mda Mrefu"
+    in_reply_to: "▶ %{username}"
+  no_mentions_allowed: "Samahani, hauwezi kutaja watumiaji wengine."
+  no_mentions_allowed_newuser: "Samahani, watumiaji wapya hawawezi kutaja watumiaji wengine."
+  no_images_allowed_trust: "Samahani, hauwezi kuweka picha ndani ya chapisho"
+  no_images_allowed: "Samahani watumiaji wapya hawawezi kuweka picha kwenye machapisho."
+  no_attachments_allowed: "Samahani watumiaji wapya hawawezi kuambatanisha picha, sauti, video au dokument kwenye machapisho."
+  no_links_allowed: "Samahani watumiaji wapya hawawezi kuweka viungo kwenye machapisho."
+  links_require_trust: "Samahani, hauwezi kuweka viungo kwenye machapisho yako."
+  contains_blocked_words: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
+  spamming_host: "Samahani hauwezi kuchapisha kiungo kwenye computer hiyo."
+  user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
+  topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
+  not_accepting_pms: "Samahani, %{username}haikubali jumbe kwa sasa"
+  max_pm_recepients: "Samahani, unaweza tuma jumbe kwa kiwango cha %{recipients_limit}kwa wapokeaji"
+  just_posted_that: "inalingana  na chapisho ulilotuma hivi karibuni"
+  invalid_characters: "ina herufi batili"
+  is_invalid: "haieleweki, je hii sentensi iko kamili?"
+  next_page: "Ukurasa ujao →"
+  prev_page: "← ukurasa uliopita"
+  page_num: "Karatasi ya %{num}"
+  home_title: "Nyumbani"
+  topics_in_category: "Mada ndani ya kategoria '%{category}'"
+  rss_posts_in_topic: "Mlisho wavuti wa '%{topic}'"
+  rss_topics_in_category: "Mlisho wavuti wa mada za kategoria '%{category}'"
+  author_wrote: "%{author} ameandika:"
+  num_posts: "Machapisho:"
+  num_participants: "Mshiriki:"
+  read_full_topic: "Soma mada yote"
+  private_message_abbrev: "Msg"
+  rss_description:
+    latest: "Mada za hivi karibuni"
+    hot: "Mada kali"
+    top: "Mada za juu"
+    top_all: "Mada za juu Mda Wote"
+    top_yearly: "Mada za Juu za Kila Mwaka"
+    top_quarterly: "Mada za juu za Robo Mwaka"
+    top_monthly: "Mada za juu za Mwezi"
+    top_weekly: "Mada za juu za wiki"
+    top_daily: "Mada za juu za siku"
+    posts: "Machapisho Mapya"
+    private_posts: "Ujumbe binafsi wa hiki karibuni"
+    group_posts: "Machapisho Mapya kutoka %{group_name}"
+    group_mentions: "%{group_name}imetaja hivi karibuni"
+    user_posts: "Machapisho mapya kutoka kwa @%{username}"
+    user_topics: "Mada za hivi karibuni za @%{username}"
+    tag: "Mada zilizotajwa"
+    badge: "%{display_name} beji kwenye %{site_title}"
+  too_late_to_edit: "Chapisho lilitengenezwa kitambo sana. Haiwezi kufanyiwa uhariri au kufutwa."
+  revert_version_same: "Toleo la sasa ni sawa na toleo unalo jaribu kurudisha."
+  excerpt_image: "Picha"
+  queue:
+    not_found: "Chapisho halijaonwa au limesasishwa."
+  groups:
+    errors:
+      grant_trust_level_not_valid: "'%{trust_level}' sio kiwango cha uaminifu."
+      can_not_modify_automatic: "Hauwezi kutohoa kikundi kilicho-otomatiki"
+      invalid_domain: "'%{domain}'  ni kikoa batili"
+      invalid_incoming_email: "'%{email}' ni barua pepe batili."
+      email_already_used_in_group: "'%{email}' tayari inatumika kwenye kikundi '%{group_name}'."
+      email_already_used_in_category: "'%{email}' tayari inatumika kwenye kategoria '%{group_name}'."
+      cant_allow_membership_requests: "Hauwezi kuruhusu ombi la uanachama kwenye kikundi ambacho hakina wamiliki wowote."
+    default_names:
+      everyone: "kila mtu"
+      admins: "viongozi"
+      moderators: "wasimamizi"
+      staff: "wasaidizi"
+      trust_level_0: "kiwango_cha_uaminifu_0"
+      trust_level_1: "kiwango_cha_uaminifu_1"
+      trust_level_2: "kiwango_cha_uaminifu_2"
+      trust_level_3: "kiwango_cha_uaminifu_3"
+      trust_level_4: "kiwango_cha_uaminifu_4"
+    request_membership_pm:
+      title: "Ombi la Uanachama wa @%{group_name}"
+  education:
+    'new-topic': |
+      Karibu kwenye %{site_name} &mdash; **asante kwa kuanzisha majadiliano mapya!**
+
+      - Je kichwa cha habari ni kizuri ukikisoma kwa sauti? Je Muhtasari ni nzuri?
+
+      - Nani angependa kusoma hiki? Kwa nini ni muhimu? Unategemea upate majibu ya aina gani?
+
+      - Tumia maneno ambayo yanatumika mara kwa mara kwenye mada zako ili watu wengine waweze *kupata* ulichoandika. Kuweka mada yako pamoja na zingine zinazoendana na yako, chagua kategoria.
+
+      Kwa taarifa zaidi, [angalia mwongozo wa jamii yetu](/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} ya kwanza tu.
+    'new-reply': |
+      Karibu kwenye %{site_name} &mdash; **asante kwa kuchangia!**
+
+      - Jibu lako linaendeleza majadiliano kwa njia moja au nyingine?
+
+      - Kuwa mstaarabu na wanachama wenzako.
+
+      - Ukosoaji Unaendeleza unakaribishwa, ila kosoa *fikra au wazo*, sio watu.
+
+      Kwa mengine zaidi, [angalia mwongozo wa jamii](/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} tu.
+    avatar: |2
+       ### Unaonaje ukiongeza picha kwenye akaunti yako?
+
+      Umechapisha mada na majibu machache, lakini picha ya umbo lako sio ya kipekee kama wewe - ni herufi tu.
+
+      Je umefikiria kuhusu **[kutembelea umbo lako la mtumiaji](%{profile_path})** na kupakia picha inayokuwakilisha wewe?
+
+      Ni rahisi na kufuatilia majadiliano na kuona watu wengi kwenye maongezi  kama kila mtu anapicha ya kipekee ya umbo!
+    sequential_replies: |
+      ### Kujibu machapisho mengi kwa wakati mmoja
+
+      Badala ya kujibu mada kwa mara kadhaa kwa wakati mmoja, unaweza kutuma jibu moja lenye nukulu kutoka kwenye machapisho yaliyopita au @kumbukumbu la jina.
+
+      Unaweza kuhariri machapisho yaliyopita kuongeza nukulu kwa kufanya yafuatayo, bainisha nakala na chagua kitufe cha <b>nukulu jibu</b>kitakachotokea.
+
+      Ni rahisi kwa watu wote kusoma mada ambazo zina majibu machache ukilinganisha na majibu madogo, mafupi na ya kibinafsi.
+    dominating_topic: |
+      ### Ruhusu wengine wajiunge kwenye maongezi
+
+      Mada hii ni muhimu kwako &ndash; umechapisha zaidi ya %{percent}% ya majibu hapa.
+
+      Una uhakika unatoa mda wa kutosha kwa watu wengine kutoa maoni yao, pia?
+    get_a_room: |
+      ### Fikia kujibu kwa watu wengi
+
+      Umejibu mara %{count} kwenye @%{reply_username} kwenye mada hii.
+
+      Umefikiria kuhusu kujibu watu *wengine* kwenye majadiliano, pia? Majadiliano mazuri yanashirikisha sauti na mtazamo mwingi.
+
+      Kama ungependa, kuendelea na maongezi yako na mtumiaji huyu kwa krefu, [watumie ujumbe binafsi](/u/%{reply_username}).
+    too_many_replies: |
+      ### Umefika kiwango cha juu cha kujibu kwenye mada hii
+
+      Tunaomba radhi, lakini watumiaji wapya wana vizuizi vya mda mfupi vya majibu %{newuser_max_replies_per_topic} kwenye mada moja.
+
+      Badala ya kuongeza jibu lingine, unaweza kuhariri majibu uliyochapisha, au kutembelea mada zingine.
+    reviving_old_topic: |
+      ### Rudisha mada hii?
+
+      Jibu la mwisho la mada hii lilikuwa **%{time_ago}**. Jibu lako litafanya mada ipande orodha na mtu yoyote aliyehusika kwenye maongezi.
+
+      Una uhakika unataka kuendelea na maongezi ya mda?
+  activerecord:
+    attributes:
+      category:
+        name: "Jina la Kategoria"
+      topic:
+        title: 'Kichwa cha Habari'
+      post:
+        raw: "Mwili"
+      user_profile:
+        bio_raw: "Kuhusu Mimi"
+    errors:
+      <<: *errors
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "Maonyo yanaweza kutolewa kwenye ujumbe binafsi tu."
+              too_many_users: "Unaweza kutuma maonyo kwa mtumiaji mmoja kwa wakati mmoja."
+              cant_send_pm: "Samahani, hauwezi kutuma ujumbe binafsi kwa mtumiaji huyo."
+              no_user_selected: "Chagua mtumiaji halali."
+              reply_by_email_disabled: "Kujibu kupitia barua pepe kumesitishwa."
+              target_user_not_found: "Mtumiaji mmoja unaejaribu kumtumia ujumbe hajapatikana."
+            featured_link:
+              invalid: "ni batili. Anwani inahitaji kuwa na http:// or https://."
+              invalid_category: "haiwezi kufanyiwa uhariri kwenye kategoria hii."
+        user:
+          attributes:
+            password:
+              common: "ni moja kati ya nywila 10000 zinazotumika sana. Tafadhali tumia nywila iliyo salama zaidi."
+              same_as_username: "ni sawa na jina la mtumiaji. Labda tumia nywila iliyo salama zaidi."
+              same_as_email: "ni sawa na barua pepe yako. Labda tumia nywila iliyo salama zaidi."
+              same_as_current: "ni sawa na nywila unayotumia sasa."
+              unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
+            ip_address:
+              signup_not_allowed: "Hauruhusiwi kujiunga kupitia akaunti hii."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Ukabidhi wa barua pepe ya msingi kwa mtu mwingine hairuhusiwi."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "ni rangi batili"
+        post_reply:
+          base:
+            different_topic: "Chapisho na jibu lazima ziwe kwenye mada moja."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "Anwani ya mtandao ni batili. Anwani inahitaji kuwa na http:// or https://. Na wazi hairuhusiwi."
+        custom_emoji:
+          attributes:
+            name:
+              taken: tayari inatumika kwenye ishara nyingine
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "lazima iwe siku ya baadae."
+        watched_word:
+          attributes:
+            word:
+              too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
+  user_profile:
+    no_info_me: "<div class='missing-profile'>nafasi ya Kuhusu Mimi iko wazi,<a href='/u/%{username_lower}/preferences/about-me'>ungependa kuijaza?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} hajaandika chochote kwenye sehemu ya Kuhusu Mimi kwenye maelezo mafupi yao</div>"
+  vip_category_name: "Majilisi"
+  vip_category_description: "Kategoria ya wanachama wa kiwango cha 3 cha uaminifu au zaidi."
+  meta_category_name: "Majibu ya Mtandao"
+  meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
+  staff_category_name: "Wasaidizi"
+  staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
+  assets_topic_title: "Vifaa kwa ajili ya kutengeneza tovuti"
+  discourse_welcome_topic:
+    title: "Karibu kwenye Discourse"
+  lounge_welcome:
+    title: "Karibu  kwenye Majilisi"
+  category:
+    topic_prefix: "Kuhusu kategoria %{category}"
+    errors:
+      not_found: "Kategoria haijapatikana!"
+      uncategorized_parent: "Haiwezi kuwekwa kwenye kategoria "
+      self_parent: "Kategoria mtoto haiwezi kuwa mzazi yenyewe"
+      depth: "Hauwezi kuweka kategoria mtoto chini ya nyingine"
+      invalid_email_in: "'%{email}' ni barua pepe batili."
+      email_already_used_in_group: "'%{email}' tayari inatumika kwenye kikundi '%{group_name}'."
+      email_already_used_in_category: "'%{email}' tayari inatumika kwenye kategoria '%{group_name}'."
+      description_incomplete: "Chapisho la maelezo kwenye kategoria lazima ziwe na aya moja au zaidi."
+    cannot_delete:
+      uncategorized: "Hauwezi Kufuta Mada Ambazo Hazina Kategoria"
+      has_subcategories: "Hauwezi kufuta kategoria kwa sababu ina kategoria zingine."
+      topic_exists_no_oldest: "Hauwezi kufuta kategoria hii  kwa sababu ina idadi ya mada %{count}."
+    uncategorized_description: "Mada ambazo hazina kategoria, au haziwezi kuwekwa kwenye kategoria zingine."
+  trust_levels:
+    newuser:
+      title: "mtumiaji mpya"
+    basic:
+      title: "mtumiaji wa kawaida"
+    member:
+      title: "mwanachama"
+    regular:
+      title: "kawaida"
+    leader:
+      title: "kiongozi"
+    change_failed_explanation: "Ulijaribu kumshusha daraja %{user_name} kwenda '%{new_trust_level}'. Lakini kiwango chake cha uaminifu tayari ni '%{current_trust_level}'. %{user_name} atabaki kwenye '%{current_trust_level}' - kama unataka kumshusha daraja loki kiwango cha uaminifu kwanza."
+  post:
+    image_placeholder:
+      broken: "Picha ina matatizo"
+  rate_limiter:
+    slow_down: "Umefanya kitendo hiki mara nyingi sana, tafadhali jaribu tena baadae."
+    too_many_requests: "Umefanya kitendo hiki mara nyingi sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+    by_type:
+      first_day_replies_per_day: "Umefika kiwango cha juu cha majibu mtumiaji mpya anaweza kutengeneza ndani ya siku yake ya kwanza. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      first_day_topics_per_day: "Umefika kiwango cha juu cha mada mtumiaji mpya anaweza kutengeneza ndani ya siku yake ya kwanza. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      create_topic: "Unatengeneza machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      create_post: "Unajibu machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      delete_post: "Unafuta machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      public_group_membership: "Unajiunga/kuacha vikundi kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      topics_per_day: "Umefika kiwango cha juu cha kutengeneza mada mpya. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      pms_per_day: "Umefika kiwango cha juu cha ujumbe. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      create_like: "Umefika kiwango cha juu cha upendo. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      create_bookmark: "Umefika kiwango cha juu cha mialamisho. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      edit_post: "Umefika kiwango cha juu cha uhariri. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      live_post_counts: "Unaomba idadi ya chapisho zilizo hewani kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      unsubscribe_via_email: "Umefika kiwango cha juu cha kujitoa kupitia barua pepe. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+      topic_invitations_per_day: "Umefika kiwango cha juu cha kualika watu kwenye mada. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1d"
+    distance_in_words_verbose:
+      half_a_minute: "sasa hivi"
+  password_reset:
+    no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
+    choose_new: "Chagua nywila"
+    choose: "Chagua nywila"
+    update: 'Sasisha Nywila'
+    save: 'Seti Nywila'
+    title: 'Weka Upya Nywila'
+    success: "Umebadilisha nywila yako kwa mafanikio na sasa umeingia."
+    success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
+  email_login:
+    invalid_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
+    title: "Ingia kupitia barua pepe"
+  change_email:
+    confirmed: "Barua pepe yako imesasishwa."
+    please_continue: "Endelea kwenye %{site_name}"
+    error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
+    error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
+    already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
+    authorizing_old:
+      title: "Asante kwa kuthibitisha barua pepe yako"
+      description: "Tunakutumia barua pepe mpya ya kuthibitisha."
+  activation:
+    action: "Bonyeza hapa kuanzisha akkaunti yako"
+    already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
+    please_continue: "Akaunti yako imethibitishwa; utapelekwa kwenye ukurasa wa nyumbani."
+    continue_button: "Endelea kwenye %{site_name}"
+    welcome_to: "Karibu kwenye %{site_name}"
+    approval_required: "Msimamizi lazima aipe kibali akaunti yako mpya kabla haujaanza kutumia jukwaa. Utatumiwa barua pepe akaunti yako ikipata kibali!"
+    missing_session: "Tumeshindwa kuona kama akaunti yako ilitengenezwa, tafadhali akikisha cookies zimeruhusiwa."
+    activated: "Samahani, akaunti hii imeshaanzishwa."
+    admin_confirm:
+      title: "Thibitisha Akaunti ya Kiongozi"
+      description: "Una uhakika unataka <b>%{target_username}</b>kuwa msimamizi?"
+      grant: "Toa ufikivu wa Kiongozi"
+      complete: "<b>%{target_username}</b>ni msimamizi."
+      back_to: "Rudi  kwenye %{title}"
+  post_action_types:
+    off_topic:
+      title: 'Mada Isiyohusika'
+      description: 'Mada hii sio muhimu kwenye majadiliano kama kichwa na chapisho la kwanza linavyoongelea, na inabidi ihamishwe kwenda sehemu nyingine.'
+      short_description: 'Haina umuhimu kwenye majadiliano'
+      long_form: 'imeripotiwa kama haihusiki '
+    spam:
+      title: 'Barua Taka'
+      description: 'Hili ni tangazo, au uharibifu. Sio muhimu kwenye mada ya sasa.'
+      short_description: 'Hili ni tangazo au uharibifu'
+      long_form: 'ameripoti hii kuwa barua taka'
+      email_title: '"%{title}" imeripotiwa kuwa barua taka'
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: 'Haifai'
+      description: 'Chapisho hili lina maandishi ambayo mtu mwenye akili timamu anaweza kuona ni matusi, ubaguzi, au kukiuka <a href="/guidelines">mwongozo wa jumuiya</a>.'
+      short_description: 'Ukiukaji wa <a href="/guidelines">miongozo ya jukwaa letu</a>'
+      long_form: 'imeripotiwa kuwa haiko sawa'
+    notify_user:
+      title: 'Mtumie @{{username}} ujumbe'
+      description: 'Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao.'
+      short_description: 'Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao.'
+      long_form: 'mtumiaji aliepokea ujumbe'
+      email_title: 'Chapisho lako ndani ya "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: "Kitu Kingine"
+      description: 'Chapisho hili linahitaji kupitiwa na msaidizi kwa sababu ambayo haijaandikwa juu.'
+      short_description: 'Inahitaji kupitiwa na msaidizi kwa sababu nyingine'
+      long_form: 'imeripotiwa ili ipitiwe na msaidizi'
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: 'Alamisha'
+      description: 'Alamisha chapisho hili'
+      short_description: 'Alamisha chapisho hili'
+      long_form: 'chapisho hili lilialamishwa'
+    like:
+      title: 'Penda'
+      description: 'Penda chapisho hili'
+      short_description: 'Penda chapisho hili'
+      long_form: 'ameipenda hii'
+  user_activity:
+    no_default:
+      self: "Bado hauna shughuli."
+      others: "Hakuna shughuli."
+    no_bookmarks:
+      others: "Hakuna mialamisho."
+    no_likes_given:
+      self: "Haujapenda machapisho yoyote."
+      others: "Hakuna machapisho yaliyopendwa."
+    no_replies:
+      self: "Haujajibu machapisho yoyote."
+      others: "Hakuna majibu."
+  topic_flag_types:
+    spam:
+      title: 'Barua Taka'
+      description: 'Hii mada ni tangazo. Sio muhimu kwenye tovuti hii, lakini inalenga kuhusu biashara.'
+      long_form: 'imeripotiwa kama barua taka'
+    inappropriate:
+      title: 'Haifai'
+      description: 'Mada hii ina maandishi ambayo mtu mwenye akili timamu anaweza kuona ni matusi, ubaguzi, au kukiuka <a href="/guidelines">mwongozo wa jumuiya</a>.'
+      long_form: 'imeripotiwa kuwa haiko sawa'
+    notify_moderators:
+      title: "Kitu Kingine"
+      description: 'Mada hii inahitaji kupitiwa na msaidizi kwa sababu za <a href="/guidelines">mwongozo</a>, <a href="%{tos_url}">TOS</a>, au kwa sababu nyingine ambayo haijaorodheshwa.'
+      long_form: 'imeripotiwa na itapitiwa na msimamizi'
+      email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>Chapisho lako limeripotiwa na jumuiya. Tafadhali <a href="%{path}">ona ujumbe wako</a>.</p>'
+    user_must_edit: '<p>Chapisho lako limeripotiwa na jumuiya na limefichwa kwa sasa.</p> '
+  archetypes:
+    regular:
+      title: "Mada ya Kawaida"
+    banner:
+      title: "Mada ya Bango"
+      message:
+        make: "Mada hii sasa ni bango. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
+        remove: "Mada hii sio bango tena. Haitatokea tena juu ya kila ukurasa."
+  unsubscribed:
+    title: "Ametolewa!"
+    description: "<b>%{email}</b> amejitoa. Kubadilisha mipangilio ya barua pepe <a href='%{url}'>tembelea mapendekezo yako ya mtumiaji</a>."
+    topic_description: "Kuendelea kupata taarifa za %{link}, tumia kidhibiti  cha taarifa kilichopo chini au kulia kwa mada."
+    private_topic_description: "Kuendelea kupata taarifa, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
+  unsubscribe:
+    title: "Jiengua"
+    stop_watching_topic: "Acha kuangalia mada hii, %{link}"
+    mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
+    unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
+    disable_digest_emails: "Acha kunitumia muhtasari wa barua pepe"
+    all: "Usinitumie barua yoyote kutoka %{sitename}"
+    different_user_description: "Umeingia kama mtu mwingine tofauti na mtu tuliyemtumia barua pepe. Tafadhali toka, au  ingia kwenye hali-tumizi ya mtu asiyejulikana, na jaribu tena."
+    not_found_description: "Samahani hatujaona kujiengua. Inawezekana kiungo kwenye barua pepe yako kimepita mda?"
+    log_out: "Toka"
+  user_api_key:
+    title: "Idhini ufikivu wa programu-tumizi"
+    authorize: "Idhini"
+    read: "soma"
+    read_write: "soma/andika"
+    description: "\"%{application_name}\" anaomba ufikivu ufuatao kwenye akaunti yako:"
+    no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
+    scopes:
+      message_bus: "Masashisho yaliyo hai"
+      notifications: "Soma na futa taarifa"
+      session_info: "Soma taarifa za kipindi cha mtumiaji"
+      read: "Soma zote"
+      write: "Andika zote"
+  reports:
+    visits:
+      title: "Mtumiaji Ametembelea"
+      xaxis: "Siku"
+      yaxis: "Idadi ya utembeleaji"
+    signups:
+      xaxis: "Siku"
+      description: "Akaunti mpya zilizosajiliwa katika kipindi hiki"
+    new_contributors:
+      title: "Wachangiaji Wapya"
+      xaxis: "Siku"
+      yaxis: "Idadi ya wachangiaji wapya"
+    profile_views:
+      title: "Umbo la Mtumiaji Limetembelewa"
+      xaxis: "Siku"
+      yaxis: "Idadi ya maumbo ya watumiaji yaliyoangaliwa"
+    topics:
+      title: "Mada"
+      xaxis: "Siku"
+      yaxis: "Idadi ya mada mpya"
+      description: "Mada mpya zilizotengenezwa katika kipindi hiki"
+    posts:
+      title: "Machapisho"
+      xaxis: "Siku"
+      yaxis: "Namba ya machapisho mapya"
+      description: "Machapisho mapya yaliyotengenezwa kwenye kipindi hiki"
+    likes:
+      title: "Upendo"
+      xaxis: "Siku"
+      yaxis: "Idadi ya upendo mpya"
+    flags:
+      title: "Bendera"
+      xaxis: "Siku"
+      yaxis: "Idadi ya bendera"
+    bookmarks:
+      title: "Mialamisho"
+      xaxis: "Siku"
+      yaxis: "Idadi ya mialamisho mapya"
+    starred:
+      title: "Wekewa nyota"
+      xaxis: "Siku"
+      yaxis: "Idadi ya mada mpya zenye nyota"
+    users_by_trust_level:
+      title: "Watumiaji kwenye Kila Kiwango cha Uaminifu"
+      xaxis: "Kiwango cha Uaminifu"
+      yaxis: "Idadi ya Watumiaji"
+    users_by_type:
+      title: "Watumiaji wa kila aina"
+      xaxis: "Aina"
+      yaxis: "Idadi ya Watumiaji"
+      xaxis_labels:
+        admin: Kiongozi
+        moderator: Msimamizi
+        suspended: Alisitishwa
+        silenced: Amenyamazishwa
+    trending_search:
+      title: Utafiti maarufu
+      labels:
+        term: Neno
+        searches: Utafiti
+    emails:
+      title: "Barua pepe zilizotumwa"
+      xaxis: "Siku"
+      yaxis: "Idadi ya barua pepe"
+    user_to_user_private_messages:
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    user_to_user_private_messages_with_replies:
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    system_private_messages:
+      title: "Mfumo"
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    moderator_warning_private_messages:
+      title: "Onyo kwa Msimamizi"
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    notify_moderators_private_messages:
+      title: "Wajulishe Wasimamizi"
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    notify_user_private_messages:
+      title: "Mjulishe Mtumiaji"
+      xaxis: "Siku"
+      yaxis: "Idadi ya ujumbe"
+    top_referrers:
+      title: "Warejeshaji wa Juu"
+      xaxis: "Mtumiaji"
+      num_clicks: "Imebonyezwa"
+      num_topics: "Mada"
+    top_traffic_sources:
+      title: "Chanzo cha Msongamano Kwenye Mtandao"
+      xaxis: "Kikoa"
+      num_clicks: "Imebonyezwa"
+      num_topics: "Mada"
+      num_users: "Watumiaji"
+    top_referred_topics:
+      title: "Mada za Juu za Kurejesha"
+    page_view_anon_reqs:
+      title: "Asiyejulikana"
+      xaxis: "Siku"
+      yaxis: "Ukurasa umeonwa na Wasiojulikana Mara"
+    page_view_logged_in_reqs:
+      title: "Ameingia"
+      xaxis: "Siku"
+    page_view_crawler_reqs:
+      title: "Vidudu vya Kuchunza Mitandao"
+      xaxis: "Siku"
+    page_view_total_reqs:
+      xaxis: "Siku"
+      yaxis: "Karatasi imeonwa Mara"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Siku"
+      yaxis: "Karatasi imeonwa Kupitia Kifaa cha kiganjani"
+    page_view_anon_mobile_reqs:
+      xaxis: "Siku"
+    http_background_reqs:
+      title: "Mandharinyuma"
+      xaxis: "Siku"
+    http_2xx_reqs:
+      title: "Hali 2xx (SAWA)"
+      xaxis: "Siku"
+      yaxis: "Maombi yamekubaliwa (Hali 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Badilisha)"
+      xaxis: "Siku"
+      yaxis: "Badilisha Maombi (Hali 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx ( Hitilafu la Mteja)"
+      xaxis: "Siku"
+      yaxis: "Hitilafu ya Wateja (Hali 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Hitilafu ya Seva)"
+      xaxis: "Siku"
+      yaxis: "Hitilafu za Seva (Hali 5xx)"
+    http_total_reqs:
+      title: "Jumla"
+      xaxis: "Siku"
+      yaxis: "Jumla ya Maombi"
+    time_to_first_response:
+      title: "Mda wa kupata jibu la kwanza"
+      xaxis: "Siku"
+      yaxis: "Wastani wa Mda (Saa)"
+    topics_with_no_response:
+      title: "Mada ambazo hazina majibu"
+      xaxis: "Siku"
+      yaxis: "Jumla"
+    mobile_visits:
+      xaxis: "Siku"
+      yaxis: "Namba ya watu waliyotembelea"
+    web_crawlers:
+      title: "Vidudu vya kuchunza mitandao vina maombi"
+  dashboard:
+    rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
+    host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."
+    gc_warning: 'Seva yako inatumia ruby garbage collection parameters, ambayo haiwezi kukupa utendaji mzuri. Soma mada kuhusiana na kufanya utendaji uwe vizuri: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>'
+    sidekiq_warning: 'Sidekiq haifanyi kazi. Shughuli nyingi kama kutuma barua pepe, zinashughulikiwa na sidekiq. Tafadhali hakikisha kuwa mfumo wa sidekiq unafanya kazi. <a href="https://github.com/mperham/sidekiq" target="_blank">Jifunza kuhusu Sidekiq hapa</a>.'
+    queue_size_warning: 'Namba za kazi zilizopangwa ni %{queue_size}, ambazo ni nyingi. Hii inaweza kusababishwa na tatizo na m(i)fumo wa Sidekiq, au inabidi uongeze wafanyakazi wa Sidekiq.'
+    memory_warning: 'Seva yako inatumia chini ya GB 1 ya kumbukumbu. Tunakushauri utumie kumbukumbu zaidi ya GB 1.'
+    google_oauth2_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia  Google OAuth2 (enable_google_oauth2_logins), lakini taarifa za  client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings"> Mipangilio ya Tovuti </a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> Tembelea mwongozo kwa taarifa zaidi</a>.'
+    facebook_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Facebook (enable_facebook_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
+    twitter_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Twitter (enable_twitter_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
+    github_config_warning: 'Seva inaruhusu watu kujiunga au kuingia kwa kutumia Github (enable_github_logins), lakini taarifa za client id and client secret hazijaandikwa. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Tembelea mwongozo kwa taarifa zaidi</a>.'
+    s3_config_warning: 'Seva imeruhusiwa kupakia mafile kwenye s3, lakini kuna mipangilio ambayo haina taarifa: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, au s3_upload_bucket. Nenda kwenye <a href="/admin/site_settings"> Mipangilio ya Tovuti</a>na sasisha mipangilio.<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Tembelea "Jinsi ya kuwezesha upakiaji wa picha kwenye S3?" kwa ajili ya taarifa zaidi</a>.'
+    s3_backup_config_warning: 'Seva imeruhusiwa kupakia chelezo kwenye s3, lakini kuna mipangilio ambayo haina taarifa: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, au s3_upload_bucket. Nenda kwenye <a href="/admin/site_settings">Mipangilio ya Tovuti</a> na sasisha mipangilio. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Tembelea "Jinsi ya kuwezesha upakiaji wa picha kwenye S3?" kwa ajili ya taarifa zaidi</a>.'
+    image_magick_warning: 'Seva imesanidiwa kutengeneza vijipicha vya picha kubwa, lakini ImageMagick haijasanikisha. Sanikisha ImageMagick kwa kutumia paketi meneja au <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pakua toleo jipya</a>.'
+    failing_emails_warning: 'Kuna kazi %{num_failed_jobs} za barua pepe ambazo zimeshindwa. Angalia file la app.yml na hakikisha mipangilio ya seva za barua ziko sawa. <a href="/sidekiq/retries" target="_blank">Ona kazi zilizoshindwa ndani ya Sidekiq</a>.'
+    missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
+    bad_favicon_url: "Ishara unayoipenda imeshindwa kuonekana. Angalia mipangilio ya favicon_url ndani ya <a href='/admin/site_settings'>Mipangilio ya Tovuti</a>."
+    force_https_warning: "Tovuti yako inatumia SSL. Lakini `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
+  site_settings:
+    censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
+    default_locale: "Lugha ya Discourse"
+    allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
+    support_mixed_text_direction: "ruhusu mchanganyiko wa mwelekeo wa maneno wa kushoto-kwenda-kulia na kulia-kwenda-kushoto"
+    min_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa"
+    min_first_post_length: "Kiwango cha chini cha herufi za chapisho la kwanza (mwili wa mada) zinazokubaliwa"
+    min_personal_message_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa kwenye ujumbe"
+    max_post_length: "Kiwango cha juu cha herufi za chapisho zinazokubaliwa"
+    topic_featured_link_enabled: "Ruhusu uchapishaji wa kiungo pamoja na mada."
+    show_topic_featured_link_in_digest: "Onyesha kiungo cha mada kwenye barua pepe."
+    min_topic_title_length: "Kichwa cha mada kinatakiwa kuwa na zaidi ya herufi"
+    max_emojis_in_title: "Kiwango cha juu cha emojis zinazoruhusiwa kwenye kichwa cha mada"
+    min_search_term_length: "Kiwango cha chini cha herufi za neno linalotafutwa"
+    search_prefer_recent_posts: "Iwapo upekuzi wa jukwaa  ni kokotevu, chaguo hili litajaribu farihisi ya machapisho ya karibuni"
+    search_recent_posts_size: "Machapisho mangapi ya hivi karibuni yabaki kwenye kielezo"
+    log_search_queries: "hifadhi utafiti wa watumiaji"
+    search_query_log_max_size: "Kiwango cha juu cha utafiti kuhifadhiwa"
+    allow_uncategorized_topics: "Ruhusu mada zitengenezwe bila kategoria. ONYO: Kama kuna mada ambazo hazina kategoria, itakubidi uziweke kwenye kategoria kabla ya kuzima hii."
+    allow_duplicate_topic_titles: "Ruhusu mada zenye vichwa vya habari vinavyofanana au vinavyojirudia."
+    unique_posts_mins: "Dakika ngapi zipite kabla mtumiaji ajachapisha mada yenye maandishi yale yale tena."
+    educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
+    title: "jina kwenye tovuti, kama linalotumika kwenye kichwa cha lebo."
+    site_description: "Elezea tovuti hii kwenye sentensi moja, kama ilivyo kwenye maelezo ya lebo ya meta"
+    contact_email: "Barua pepe ya mtu muhimu anayesimamia tovuti hii. Inatumika kwa ajili ya taarifa muhimu sana, na kwa ajili ya mawasiliano muhimu /kuhusiana"
+    contact_url: "Anwani ya mawasiliano ya tovuti. Itatumika kwenye /kuhusu fomu ya mawasiliano kwa ajili ya dharura."
+    download_remote_images_max_days_old: "Usipakue picha kutoka ufikivu kutoka mbali kwa ajili ya machapisho ambayo ni zaidi ya siku n."
+    editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
+    staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
+    edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
+    delete_removed_posts_after: "Machapisho yaliyofutwa na mwandishi yataondolewa baada ya masaa (n). Kama ikiwaset kwenye 0, machapisho yataondolewa hapo hapo."
+    max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
+    max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
+    add_rel_nofollow_to_user_content: "Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: \"rake machapishi:rebake\""
+    onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
+    inline_onebox_domains_whitelist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
+    summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
+    summary_posts_required: "Kiwango cha chini cha machapisho ndani ya mada kabla 'Fupisha Mada' haijaonyeshwa"
+    summary_likes_required: "Kiwango cha chini cha likes ndani ya mada kabla 'Mada kufupishwa' haijaruhusiwa"
+    summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
+    summary_max_results: "Kiwango cha juu cha machapisho zinazoonyeshwa kutoka kwa 'Muhtasari wa Hii Mada'"
+    enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
+    enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
+    notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
+    enable_markdown_linkify: "Otomatikali maneno yanayofanana na kiungo ni kiungo: www.site.com na http://site.com zitakuwa viungo otomatikali."
+    markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali  ni  viungo."
+    post_undo_action_window_mins: "Dakika watumiaji wanaruhusiwa kutendua vitendo vya hivi karibuni kwenye chapisho (kupenda, bendera, etc)."
+    must_approve_users: "Wasaidizi lazima wathibitishe akaunti zote mpya za watumiaji kabla hawajaruhusiwa kufikia tovuti. ONYO: ukiruhusu hii kwenye tovuti iliyo hewani, itasitisha ufikivu wa watumiaji ambao sio wasaidizi!"
+    pending_users_reminder_delay: "Wajulishe wasimamizi kama watumiaji wapya wamekuwa wanasubiria kibali kwa mda zaidi ya masaa haya. Seti -1 kusitisha taarifa."
+    maximum_session_age: "mtumiaji ataendelea kuwa ndani kwa masaa n toka mara ya mwisho alipotembelea"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) inafuatilia kodi kodi, mfano: UA-12345678-9; tembelea http://google.com/analytics"
+    allow_moderators_to_create_categories: "Waruhusu wasimamizi watengeneze mada mpya"
+    site_contact_username: "Jina la msaidizi lililo sahihi litakalotuma ujumbe otomatikali. Kama ikiachwa wazi chaguo-msingi la akaunti ya mfumo litatumika."
+    send_welcome_message: "Watumie watumiaji wapya ujumbe wa kuwakaribisha na muongozo mfupi wa kuanzia."
+    topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
+    topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
+    redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
+    top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
+    show_email_on_profile: "Onyesha barua pepe za mtumiaji kwenye umbo lao (wataona wao na wasaidizi)"
+    email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
+    enable_badges: "Ruhusu mfumo wa beji"
+    enable_whispers: "Ruhusu mawasiliano binafsi kati ya wasaidizi ndani ya mada."
+    new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
+    invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
+    invite_only: "Usajili wa umma umesitishwa, watumiaji wapya inabidi waalikwe na wasaidizi."
+    min_password_length: "Kiwango cha chini cha urefu wa nywila"
+    min_admin_password_length: "Kiwango cha chini cha urefu wa nywila ya Kiongozi."
+    password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
+    block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."
+    enable_sso: "Ruhusu uingiaji kwa kupitia tovuti ya nje (ONYO: BARUA PEPE ZA WATUMIAJI *LAZIMA* ZITHIBITISHWE NA TOVUTI YA NJE!)"
+    enable_local_logins_via_email: "Ruhusu watumiaji kuomba kuingia kupitia kiungo ambacho kitatumwa kupitia barua pepe."
+    allow_new_registrations: "Ruhusu usajili wa watumiaji wapya. Ondoa hii kusitisha mtu yoyote kutengeneza akaunti mpya."
+    enable_signup_cta: "Onyesha ilani kwa watumiaji wasiojulikana itakayowaambia watengeneze akaunti."
+    enable_yahoo_logins: "Ruhusu  Uhalalishaji wa Yahoo"
+    google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
+    google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
+    enable_twitter_logins: "Ruhusu Uhalalishaji wa Twitter, inahitaji twitter_consumer_key na twitter_consumer_secret"
+    twitter_consumer_key: "Ufunguo wa Mtumiaji kwa ajili ya Uhalalishaji wa Twitter, umesajiliwa kwenye https://apps.twitter.com/"
+    twitter_consumer_secret: "Ufunguo wa siri kwa ajili ya Uhalalishaji wa Twitter, umesajiliwa kwenye https://apps.twitter.com/"
+    enable_instagram_logins: "Ruhusu Uhalalishaji wa Instagram, inahitaji instagram_consumer_key na instagram_consumer_secret"
+    instagram_consumer_key: "Ufunguo wa uhalalishaji wa Mtumiaji kupitia Instagram"
+    instagram_consumer_secret: "Uhalalishaji wa Siri wa Mtumiaji kupitia Instagram"
+    enable_facebook_logins: "Ruhusu Uhalalishaji wa Facebook, inahitaji facebook_app_id na facebook_app_secret"
+    facebook_app_id: "Utambulisho wa Progamu-Jalizi kwa ajili ya Uhalalishaji wa Facebook, umesajiliwa kwenye https://developers.facebook.com/apps"
+    facebook_app_secret: "Ufunguo wa siri wa kibali kwa ajili ya Uhalalishaji wa Facebook, umesajiliwa kwenye https://developers.facebook.com/apps"
+    enable_github_logins: "Ruhusu Uhalalishaji wa Github, inahitaji github_client_id and github_client_secret"
+    github_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Uhalalishaji wa Github, umesajiliwa kwenye https://github.com/settings/applications"
+    github_client_secret: "Utambulisho wa Siri wa Mtumiaji kwa ajili ya Uhalalishaji wa Github, umesajiliwa kwenye https://github.com/settings/applications"
+    readonly_mode_during_backup: "Ruhusu hali-tumizi ya usomaji tu kipindi cha chelezo"
+    enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
+    allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
+    maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
+    backup_frequency: "idadi ya siku kati ya machelezo."
+    rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
+    rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
+    rate_limit_new_user_create_topic: "Baada ya kutengeneza mada, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
+    rate_limit_new_user_create_post: "Baada ya kuchapisha, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
+    max_likes_per_day: "Kiwango cha juu cha upendo kwa kila mtumiaji kwa siku."
+    max_flags_per_day: "Kiwango cha juu cha bendera kwa kila mtumiaji kwa siku."
+    max_bookmarks_per_day: "Kiwango cha juu cha mialamisho kwa kila mtumiaji kwa siku."
+    max_edits_per_day: "Kiwango cha juu cha uhariri kwa kila mtumiaji kwa siku."
+    max_topics_per_day: "Kiwango cha juu cha mada mtumiaji anaweza kutengeneza kwa siku."
+    max_personal_messages_per_day: "Kiwango cha juu cha ujumbe mtumiaji anaweza kutengeneza na kutuma kwa siku."
+    max_invites_per_day: "Kiwango cha juu cha mialiko mtumiaji anaweza kutuma kwa siku."
+    max_topic_invitations_per_day: "Kiwango cha juu cha mialiko ya mada mtumiaji anaweza kutuma kwa siku."
+    max_logins_per_ip_per_hour: "Kiwango cha juu cha uingiaji mtumiaji anaruhusiwa kuendana na anwani yake ya mtandao kila saa"
+    max_logins_per_ip_per_minute: "Kiwango cha juu cha uingiaji mtumiaji anaruhusiwa kuendana na anwani yake ya mtandao kila dakika"
+    alert_admins_if_errors_per_minute: "Idadi ya hitilafu kila dakika itakayomfanya kiongozi apate taarifa. Namba ya 0 inasitisha kipengele hichi. NOTI: inahitaji uanzishaji upya."
+    alert_admins_if_errors_per_hour: "Idadi ya hitilafu kila saa itakayomfanya kiongozi apate taarifa. Namba ya 0 inasitisha kipengele hichi. NOTI: inahitaji uanzishaji upya."
+    categories_topics: "Idadi ya mada kuonyeshwa ndani ya ukurasa wa /kategoria."
+    suggested_topics: "Idadi ya mada zilizo chini ya mada watumiaji wanazo shauriwa kutembelea. "
+    limit_suggested_to_category: "Onyesha mada pekee kutoka kwenye kategoria za hivi karibuni ndani ya mada wanazo shauriwa kutembelea."
+    suggested_topics_max_days_old: "Mada wanazo shauriwa kutembelea ziwe na umri wa siku n."
+    allow_staff_to_upload_any_file_in_pm: "Waruhusu wafanyakazi kupakia  mafaili kwenye PM"
+    default_invitee_trust_level: "Chaguo-msingi la Kiwango cha Uaminifu (0-4) kwa watumiaji walioalikwa."
+    default_trust_level: "Chaguo-msingi la Kiwango cha Uaminifu (0-4) kwa watumiaji wapya. ONYO! Ukibadilisha hii utajiweka kwenye hatari ya kupata barua au ujumbe taka."
+    tl1_requires_topics_entered: "Mada ngapi inabidi ziandikwe na mtumiaji kabla ya kupanda cheo kufika kiwango cha uaminifu cha 1."
+    tl1_requires_read_posts: "Mtumiaji Mpya inabidi asome machapisho mangapi kabla ya kufika daraja la 1 la uaminifu."
+    tl1_requires_time_spent_mins: "Mtumiaji Mpya inabidi asome machapisho kwa mda gani kabla ya kufika daraja la 1 la uaminifu."
+    tl2_requires_topics_entered: "Mada ngapi inabidi ziandikwe na mtumiaji kabla ya kupanda cheo kufika kiwango cha uaminifu cha 2."
+    tl2_requires_read_posts: "Mtumiaji Mpya inabidi asome machapisho mangapi kabla ya kufika daraja la 2 la uaminifu."
+    tl2_requires_time_spent_mins: "Mtumiaji Mpya inabidi asome machapisho kwa mda gani kabla ya kufika daraja la 2 la uaminifu."
+    tl2_requires_days_visited: "Siku ngapi lazima zipite kabla mtumiaji hajapanda cheo kufika kiwango cha 2 cha uaminifu."
+    tl2_requires_likes_received: "Mada ngapi inabidi ziandikwe na mtumiaji kabla ya kupanda cheo kufika kiwango cha 2 cha uaminifu."
+    tl2_requires_likes_given: "Mtumiaji inabidi atoe upendo mngapi kabla ya kupanda cheo kufika kiwango cha 2 cha uaminifu."
+    tl2_requires_topic_reply_count: "Mada ngapi inabidi zijiibiwe na mtumiaji kabla ya kupanda cheo kufika kiwango cha 2 cha uaminifu."
+    tl3_time_period: "Kiwango cha 3 cha uaminifu kipindi cha mda (siku)"
+    tl3_requires_days_visited: "Kiwango "
+    tl3_requires_posts_read: "Asilimia ya machapisho yaliyotengenezwa ndani ya siku  (mda wa kiwango cha 3 cha uaminifu)  ambazo mtumiaji anahitaji kuangalia kabla ya kufika kiwango cha 3 (0 mpaka 100)"
+    tl3_requires_posts_read_cap: "Kiwango cha juu cha machapisho yanayotakiwa kusomwa ndani ya siku (mda wa kiwango cha 3 cha uaminifu)."
+    tl3_requires_topics_viewed_all_time: "Kiwango cha chini cha machapisho yanayotakiwa kuangaliwa na mtumiaji ili afuzu kiwango cha 3 cha uaminifu."
+    tl3_requires_posts_read_all_time: "Kiwango cha chini cha machapisho yanayotakiwa kufuzu kiwango cha 3 cha uaminifu."
+    tl3_requires_max_flagged: "Mtumiaji lazima asiwe na machapisho x yaliyopewa bendera na watumiaji x tofauti ndani ya siku (mda wa kiwango cha 3 cha uaminifu) kufuzu kiwango cha tatu cha uaminifu, ambapo x ni namba ya mpangalio. (0 na juu)"
+    tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
+    tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
+    tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
+    trusted_users_can_edit_others: "Ruhusu watumiaji wenye viwango vya juu vya uaminifu kuhariri maandishi ya watumiaji wengine"
+    min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
+    allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
+    min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
+    min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
+    min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
+    min_trust_to_send_messages: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kuandika ujumbe mpya binafsi."
+    min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
+    min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
+    min_trust_to_post_images: "Kiwango cha chini cha uaminifu kinachohitajika kuweka picha kwenye chapisho"
+    newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."
+    newuser_max_images: "Picha ngapi mtumiaji mpya anaweza kuweka kwenye chapisho."
+    newuser_max_attachments: "Viambatanisho vingapi mtumiaji mpya anaweza kuweka kwenye chapisho."
+    newuser_max_mentions_per_post: "Namba ya taarifa za @jina mtumiaji mpya anaweza kutumia kwenye chapisho."
+    newuser_max_replies_per_topic: "Namba ya majibu mtumiaji mpya anaruhusiwa kuandika kwenye mada moja mpaka mtu atakapomjibu"
+    max_mentions_per_post: "Namba ya taarifa za @jina mtumiaji yoyote anaweza kutumia kwenye chapisho."
+    enable_mentions: "Waruhusu watumiaji waweze kutaja watumiaji wengine."
+    email_time_window_mins: "Subiri dakika (n) kabla ya kutuma barua pepe zenye taarifa, kuwapa mda watumiaji nafasi ya kuhariri na kumalizia machapisho yao."
+    personal_email_time_window_seconds: "Subiria sekunde (n) kabla ya kutuma ujumbe binafsi barua pepe za taarifa, kuwapa watumiaji nafasi kuhariri na kumalizia ujumbe wao."
+    title_max_word_length: "Kiwango cha juu cha urefu wa neno, kwenye herufi, kwenye kichwa cha mada inachoruhusiwa."
+    allow_uppercase_posts: "Ruhusu herufi kubwa kwenye kichwa cha mada au mwili wa chapisho."
+    topic_views_heat_low: "Baada ya kuangaliwa na namba fulani ya watu, namba ya watu walioiangalia itaangaza kwa kiasi kidogo."
+    topic_views_heat_medium: "Baada ya kuangaliwa na namba fulani ya watu, namba ya watu walioiangalia itaangaza kwa wastani."
+    topic_views_heat_high: "Baada ya kuangaliwa na namba fulani ya watu, namba ya watu walioiangalia itaangaza kwa kiasi kikubwa."
+    cold_age_days_low: "Baada ya siku nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
+    cold_age_days_medium: "Baada ya siku nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
+    cold_age_days_high: "Baada ya siku hizi nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
+    newuser_spam_host_threshold: "Mara ngapi mtumiaji mpya anaweza kuchapisha kiungo kwenye komputa mwenyeji ndani ya machapisho ya `newuser_spam_host_threshold` kabla ya taarifa kuitwa barua taka."
+    white_listed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
+    topic_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
+    user_profile_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
+    max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."
+    num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
+    auto_silence_fast_typers_max_trust_level: "Kiwango cha  juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
+    auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
+    flags_default_topics: "Onyesha mada zilizoripotiwa kama chaguo-msingi upande wa kiongozi"
+    reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
+    private_email: "Usiweke ndani maandishi ya machapisho au mada kwenye barua pepe kwa ajili ya ulinzi zaidi."
+    delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
+    digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
+    digest_posts: "Kiwango cha juu cha machapisho kitakacho onyeshwa kwenye muhtasari ya barua pepe."
+    digest_other_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa ndani ya 'Mada na kategoria mpya ' kwenye muhtasari wa barua pepe."
+    suppress_digest_email_after_days: "Husuru muhtasari wa barua pepe kwa watumiaji ambao hawajaonekana kwenye tovuti zaidi ya siku (n)"
+    digest_suppress_categories: "Husuru kategoria hizi kutokea kwenye muhtasari wa barua pepe."
+    disable_digest_emails: "Sitisha muhtasari wa barua pepe za watumiaji wote."
+    sequential_replies_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kabla ya kukumbushwa kuwa ameandika majibu mengi yanayofuatana."
+    get_a_room_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwa mtu mmoja kwenye mada moja kabla ya kupata onyo."
+    dominating_topic_minimum_percent: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwenye mada kabla ya kukumbushwa kuwa anamiliki mada sana."
+    native_app_install_banner: "Waulize wageni wa mara kwa mara kusanikisha Discourse programu-tumizi."
+    auto_handle_queued_age: "Shughulikia rekodi zinazosubirishwa baada ya siku hizi. Bendera zitapuuzwa . Machapisho kwenye foleni na watumiaji watakataliwa. Weka namba 0 kusitisha hiki kipengele."
+    display_name_on_posts: "Onyesha jina lote kwenye machapisho zaidi ya @jinalamtumiaji"
+    show_time_gap_days: "Kama machapisho mawili yametengenezwa baada ya siku hizi kupita, onyesha utofauti wa mda kwenye mada."
+    short_progress_text_threshold: "Baada ya namba za machapisho kupita namba hii,  indiketa ya maendeleo kijaonyesha namba ya machapisho ya karibuni tu. Ukibadilisha upana wa indiketa ya maendeleo, itabidi ubadilishe hii namba."
+    embed_truncate: "Fupisha machapisho yaliyo ambatanishwa."
+    embed_support_markdown: "Ruhusu umbizo wa Markdown kwa ajili ya machapisho yaliyoambatanishwa."
+    embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
+    embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."
+    show_create_topics_notice: "Kama tovuti ina machapisho chini ya 5, onyesha notisi kuwaambia viongozi kutengeneza mada mpya."
+    delete_drafts_older_than_n_days: Futa mswadajaribio zenye umri zaidi ya siku (n).
+    enable_emoji: "Ruhusu ishara"
+    emoji_set: "Ungependa ishara yako iwe vipi?"
+    approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
+    approve_unless_trust_level: "Namba za machapisho kutoka kwa mtumiaji mwenye kiwango hichi cha uaminifu lazima zipate kibali"
+    approve_new_topics_unless_trust_level: "Mada mpya za watumiaji wenge kiwango cha chini cha uaminifu lazima zipate kibali"
+    approve_unless_staged: "Mada na machapisho kwa ajili ya watumiaji waliokuwa staged lazima zipate kibali"
+    notify_about_queued_posts_after: "Kama kuna machapisho ambayo yamekuwa yanasubirishwa kwa zaidi ya masaa haya, tuma taarifa kwa wasimamizi wote. Andika 0 kuzima hizi taarifa."
+    auto_close_topics_post_count: "Idadi ya juu ya machapisho yanayoruhusiwa kwenye mada kabla haijafungwa (0 kuzima)"
+    max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
+    default_email_digest_frequency: "Mara ngapi watumiaji watapata muhtasari wa barua pepe kama chaguo-msingi."
+    default_include_tl0_in_digests: "Tia ndani machapisho ya watumiaji wapya kwenye muhtasari wa barua pepe kama chapio-msingi. Watumiaji wanaweza kubadilisha hii kwenye mapendekezo yao."
+    default_email_personal_messages: "tuma barua pepe mtumiaji akitumiwa ujumbe kama chaguo-msingi."
+    default_email_direct: "tuma barua pepe mtu akinukulu/kujibu kwa/akitaja au mualika mtumiaji kama chaguo-msingi."
+    default_email_mailing_list_mode: "Tuma barua pepe kwa ajili ya kila chapisho jipya kama chaguo-msingi."
+    default_email_always: "Tuma taarifa kwa njia ya barua pepe hata kama mtumiaji ni amilifu kama chaguo-msingi."
+    default_email_previous_replies: "Weka ndani majibu ya awali kwenye barua pepe kama chaguo-msingi"
+    default_other_enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza kama chaguo-msingi."
+    default_other_disable_jump_reply: "Usifikie chapisho la mtumiaji baada ya kujibiwa kama chaguo-msingi."
+    default_other_like_notification_frequency: "Wajulishe watumiaji kuhusu upendo kama chaguo-msingi"
+    default_topics_automatic_unpin: "Otomatikali ondoa mada zilizobandikwa mtumiaji akifika mwisho wa ukurasa kama chaguo-msingi."
+    default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
+    default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
+    default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
+    max_api_keys_per_user: "Kiwango cha juu cha funguo za API za mtumiaji kwa kila mtumiaji"
+    min_trust_level_for_user_api_key: "Kiwango cha uaminifu kinachohitajika kutengeneza funguo za API za mtumiaji"
+    tagging_enabled: "Ruhusu lebo kwenye mada?"
+    min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
+    max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
+    max_tag_length: "kiwango cha juu cha herufi zinazoweza kutumika kwenye lebo."
+    max_tag_search_results: "Utafutaji wa lebo, utaonyesha kiwango hiki cha juu cha majibu."
+    tags_listed_by_group: "Orodhesha lebo kwenye kikundi cha lebo ndani ya ukurasa wa Lebo (/lebo)."
+    allow_staff_to_tag_pms: "Ruhusu wasaidizi walebo ujumbe wowote binafsi"
+    min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
+    suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
+    remove_muted_tags_from_latest: "Usionyeshe mada zenye lebo za kunyamazishwa kwenye orodha ya mada za hivi karibuni."
+    company_short_name: "Jina la Kampuni (fupi)"
+    company_full_name: "Jina la Kampuni (lote)"
+    company_domain: "Kikoa cha Kampuni"
+    errors:
+      invalid_email: "Barua pepe batili."
+      invalid_username: "Hakuna mtumiaji mwenye hilo jina."
+      invalid_integer_min_max: "Namba lazima ziwe kati ya %{min}na %{max}"
+      invalid_integer_min: "Namba lazima iwe %{min}au zaidi."
+      invalid_integer_max: "Namba haiwezi kuwa zaidi ya %{max}"
+      invalid_integer: "Namba lazima iwe namba kamili."
+      must_include_latest: "Menyu ya juu itaweka kichupo cha 'hivi karibuni'."
+      invalid_string: "Namba batili."
+      invalid_string_min_max: "Lazima iwe kati ya herufi %{min} na %{max}."
+      invalid_string_min: "Lazima iwe na herufi%{min}au zaidi."
+      invalid_string_max: "Lazima iwe chini ya herufi %{max}. "
+      reply_by_email_address_is_empty: "Lazima uweke 'jibu kupitia barua pepe' kabla ya kuruhusu jibu kupitia barua pepe."
+      enable_sso_disabled: "Kwanza ruhusu 'ruhusu sso' kabla ya kuruhusu mpangilio huu."
+      staged_users_disabled: "Kwanza ruhusu 'watumiaji walio staged' kabla ya kuruhusu mpangilio huu."
+      reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
+      sso_url_is_empty: "Kwanza ruhusu 'sso url' kabla ya kuruhusu mpangilio huu."
+      enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
+  search:
+    within_post: "#%{post_number} za %{username}"
+    types:
+      category: 'Kategoria'
+      topic: 'Majibu'
+      user: 'Watumiaji'
+    results_page: "Majibu ya utafiti ya '%{term}'"
+  sso:
+    login_error: "Hitilafu Wakati wa Kuingia."
+    not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
+    account_not_approved: "Akaunti yako inasubiria kuthibitishwa. Utapata taarifa kwa barua pepe ukithibitishwa."
+    unknown_error: "Kuna tatizo na akaunti yako. Tafadhali wasiliana na msimamizi wa tovuti."
+    timeout_expired: "Mda wa kuwa ndani ya akaunti yako umeisha, tafadhali jaribu kuingia tena."
+    no_email: "Hakuna barua pepe iliyoandikwa. Tafadhali wasiliana na msimamizi wa tovuti."
+    email_error: "Akaunti haijaweza kusajiliwa na barua pepe<b>%{email}</b>Tafadhali wasiliana na msimamizi wa tovuti."
+  original_poster: "Muandishi wa Kwanza"
+  most_posts: "Machapisho Mengi"
+  most_recent_poster: "Mwandishi wa hivi karibuni"
+  frequent_poster: "Mwandishi wa mara kwa mara"
+  redirected_to_top_reasons:
+    new_user: "Karibu kwenye jumuiya yetu! Hizi ni mada maarufu za hivi karibuni."
+    not_seen_in_a_month: "Karibu tena! Hatujakuona kwa mda sasa. Tunatumaini unaendelea vizuri. Hizi ni mada maarufu za hivi karibuni toka kipindi ulivyokua mbali na sisi."
+  merge_posts:
+    errors:
+      different_topics: "Machapisho kutoka mada tofauti hayawezi kuunganishwa."
+      different_users: "Machapisho kutoka watumiaji tofauti hayawezi kuunganishwa."
+  topic_statuses:
+    archived_enabled: "Mada hii ni nyaraka. Imesimamishwa na haiwezi kubadilishwa."
+    archived_disabled: "Mada hii sio nyaraka. Haijasimamishwa na inaweza kubadilishwa."
+    closed_enabled: "Mada hii imefungwa. Majibu mapya hayaruhusiwi."
+    closed_disabled: "Hii mada imefunguliwa. Majibu mapya yanaruhusiwa."
+    autoclosed_disabled: "Mada hii imefunguliwa. Majibu mapya yanaruhusiwa."
+    autoclosed_disabled_lastpost: "Hii mada iko wazi. Majibu mapya yanakaribishwa."
+    pinned_enabled: "Mada hii imebandikwa. Itatokea juu ya kategoria yake mpaka itakapobanduliwa na msaidizi, au mtumiaji mwenyewe."
+    pinned_disabled: "Mada hii imebanduliwa. Haitatokea juu ya kategoria yake. "
+    pinned_globally_enabled: "Mada hii imebandikwa. Itatokea juu ya kategoria yake na kategoria zingine mpaka itakapobanduliwa na msaidizi, au mtumiaji mwenyewe."
+    pinned_globally_disabled: "Mada hii imebanduliwa. Haitatokea juu ya kategoria yake. "
+    visible_enabled: "Mada hii imeorodheshwa. Itaonyeshwa juu ya orodha za mada."
+    visible_disabled: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa juu ya orodha za mada.Njia pekee ya kuona hii mada ni kwa kupitia kiungo chake."
+    auto_deleted_by_timer: "Imefutwa na saa."
+  login:
+    not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
+    incorrect_username_email_or_password: "Jina la mtumiaji, barua pepe au nywila imekosewa"
+    incorrect_password: "Nywila sio sahihi"
+    wait_approval: "Asante kwa kujiunga. Tutakutumia ujumbe akaunti yako ikithibitishwa."
+    active: "Akaunti yako imeanzishwa na iko tayari kutumika."
+    activate_email: "<p>Bado kidogo tu kumaliza! Tumekutumia barua pepe ya uanzisho kwenye <b>%{email}</b>. Tafadhali fuatiia maelezo kwenye barua pepe kuanzisha akaunti yako.</p><p>Kama haijafika, angalia folda la barua taka au spam.</p>"
+    not_activated: "Bado hauwezi kuingia. Tumekutumia barua pepe ya uanzisho. Tafadhali fuatilia maelezo kwenye barua pepe kuanzisha akaunti yako."
+    not_allowed_from_ip_address: "Hauwezi kuingia kama%{username} kupitia anwani hiyo ya mtandao."
+    admin_not_allowed_from_ip_address: "Hauwezi kuingia kama kiongozi kupitia anwani hiyo ya mtandao."
+    suspended: "Hauwezi kuingia mpaka %{date}."
+    suspended_with_reason: "Akaunti imesitishwa mpaka %{date}:%{reason}"
+    errors: "%{errors}"
+    not_available: "Haipatikani. Jaribu %{suggestion}?"
+    something_already_taken: "Tatizo limetokea, labda jina la mtumiaji au barua pepe imesajiliwa tayari. Jaribu kiungo cha kusahau nywila."
+    omniauth_error: "Samahani, tatizo limetokea wakati wa kuthibitisha akaunti yako. Labda haujatoa kibali ya kuthibitisha?"
+    omniauth_error_unknown: "Tatizo limetokea kwenye mfumo wa kuingia, tafadhali jaribu tena."
+    authenticator_error_no_valid_email: "Barua pepe zinazoendana na %{account}haziruhusiwi. Itakubidi usanidi akaunti yako kupitia barua pepe nyingine."
+    new_registrations_disabled: "Usajili wa akaunti mpya hauruhusiwi kwa sasa."
+    password_too_long: "Nywila haziruhusiwi kuwa na herufi zaidi  ya 200."
+    email_too_long: "Barua pepe uliandika ni ndefu sana. Majina ya boxi la ujumbe hayatakiwi  kuwa zaidi ya herufi 254, na majina ya kikoa hayaruhusiwi kuwa zaidi ya herufi 253."
+    reserved_username: "Hilo jina la mtumiaji haliruhusiwi."
+    missing_user_field: "Haujajaza sehemu zote za mtumiaji"
+    auth_complete: "Uthibitisho umekamilika."
+    click_to_continue: "Bofya hapa kuendelea."
+    already_logged_in: "Inaonekana kuwa unajaribu kukubali mualiko kwa ajili ya mtumiaji mwingine.  Kama wewe sio %{current_user}, tafadhali toka nje ya akaunti yako alafu jaribu kuingia tena."
+    second_factor_title: "Uthibitisho wa Vipengele Viwili"
+    second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
+  user:
+    deactivated: "Imesitishwa kwa sababu barua pepe nyingi hazifikii '%{email}'."
+    deactivated_by_staff: "Imesitishwa na msimamizi"
+    activated_by_staff: "Imeanzishwa na msaidizi"
+    new_user_typed_too_fast: "Mtumiaji mpya amechapa kwa haraka sana"
+    username:
+      short: "lazima ziwe herufi %{min} au zaidi"
+      long: "isizidi herufi %{max}"
+      characters: "lazima ziwe namba, herufi, deshi, na mistari chini pekee"
+      unique: "lazima iwe ya kipekee"
+      blank: "lazima iwepo"
+      must_begin_with_alphanumeric_or_underscore: "lazima ianze na herufi, namba au mstari chini pekee"
+      must_end_with_alphanumeric: "lazima iishe na herufi au namba"
+      must_not_end_with_confusing_suffix: "haiwezi kuishia na kiambishi tamati kisichoeleweka kama .json au .png etc"
+    email:
+      not_allowed: "hairuhusiwi kutoka kwa mtoaji barua pepe. Tafadhali tumia barua pepe nyingine."
+      blocked: "hairuhusiwi."
+      revoked: "hatutatuma barua pepe kwenda kwa '%{email}' mpaka %{date}."
+    ip_address:
+      blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
+      max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
+    website:
+      domain_not_allowed: "Tovuti ni batili.  Vikoa vinavyoruhusiwa ni: %{domains}"
+    auto_rejected: "Imekataliwa otomatikali kwa sababu ya umri. Ona mpangilio wa tovuti wa auto_handle_queued_age"
+    destroy_reasons:
+      same_ip_address: "Anwani ya mtandao (%{ip_address}) ni sawa na ya watumiaji wengine."
+  unsubscribe_mailer:
+    title: "Ondoa Mtumaji wa Barua"
+    subject_template: "Thibitisha kuwa hautaki kupokea tena sasisha za barua pepe kutoka kwa %{site_title}"
+    text_body_template: |
+      Kuna mtu (labda wewe?) aliyeomba kutokupokea tena sasisha za barua pepe kutoka kwa %{site_domain_name} kwenda kwenye anwani hii.
+      Kama ungependa kuthibitisha hili, tafadhali bofya kiungo hiki:
+
+      %{confirm_unsubscribe_link}
+
+
+      Kama ungependa kuendelea kupokea sasisha za barua pepe, unaweza kupuuzia barua pepe hii.
+  invite_mailer:
+    title: "Mualike Mtuma Barua"
+    subject_template: "%{inviter_name} amekualika kwenye '%{topic_title}' iliyo ndani ya %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} amekukaribisha kwenye majadiliano
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      kwenye
+
+      > %{site_title} -- %{site_description}
+
+      Kama umevutiwa, bofya kiungo hapo chini:
+
+      %{invite_link}
+  custom_invite_mailer:
+    subject_template: "%{inviter_name} amekualika kwenye '%{topic_title}' iliyo ndani ya %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} amekualika kwenye majadiliano
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      kwenye
+
+      > %{site_title} -- %{site_description}
+
+      Ameambatanisha noti hii
+
+      >%{user_custom_message}
+
+      Kama umevutiwa, bofya kiungo hapo chini:
+
+      %{invite_link}
+  invite_forum_mailer:
+    subject_template: "%{inviter_name} amekualika ujiunge %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} amekukaribisha ujiunge kwenye
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Kama umevutiwa, bofya kiungo hapo chini:
+
+      %{invite_link}
+  custom_invite_forum_mailer:
+    subject_template: "%{inviter_name} amekualika ujiunge %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} amekualika ujiunge
+
+      > **%{site_title}**
+      >
+      >  %{site_description}
+
+      Ameambatanisha noti hii
+
+      >%{user_custom_message}
+
+      Kama umevutiwa, bofya kiungo hapo chini:
+
+      %{invite_link}
+  invite_password_instructions:
+    title: "Maelezo ya Nywila Mualiko"
+    subject_template: "Seti nywila kwa ajili ya akaunti yako %{site_name}"
+    text_body_template: |
+      Asante kwa kukubali mualiko wa %{site_name} -- karibu!
+
+      Bofya kiungo hiki kuchagua nywila yako sasa hivi:
+      %{base_url}/u/nywila-reset/%{email_token}
+
+      (Kama kiungo kilichopo juu kimeisha mda, chagua "Nimesahau nywila yangu" wakati wa kuingia kwa kutumia barua pepe yako.)
+  download_backup_mailer:
+    subject_template: "[%{email_prefix}] Chelezo  cha Tovuti Upakuajii"
+    text_body_template: |
+      [Chelezo cha tovuti upakuaji] uliyoomba (%{backup_file_path}).
+
+      Tumekutumia  kiungo cha upakuaji kwenye barua pepe iliyo halali sababu ya ulinzi.
+
+      (Kama *hauku* omba upakuaji huu, itakubidi uwe na wasiwasi sana - kuna mtu ana ufikivu wa kiongozi kwenye tovuti yako.)
+  admin_confirmation_mailer:
+    title: "Uthibitisho wa Kiongozi"
+    subject_template: "[%{email_prefix}] Thibitisha akaunti mpya ya Kiongozi"
+    text_body_template: |
+      Tafadhali thibitisha kuwa ungependa kumuongeza **%{target_username}** kama msimazi wa jukwaa lako.
+
+      [Thibitisha Akaunti ya Msimamizi](%{admin_confirm_url})
+  test_mailer:
+    subject_template: "[%{email_prefix}] Majaribio ya Kuwasilisha Barua Pepe"
+  new_version_mailer:
+    text_body_template: |
+      Furaha tele, kuna toleo jipya la [Discourse](http://www.discourse.org)!
+
+      Toleo lako: %{installed_version}
+      Toleo jipya: **%{new_version}**
+
+      -Boresha kupitia njia rahisi **[bofya-mara moja kuboresha kupitia kivinjari](%{base_url}/kiongozi/boresha)**
+
+      - Ona kipi ni kipya kwenye [madokezo yaliotolewa](https://meta.discourse.org/tags/release-notes) au angalia [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Tembelea [meta.discourse.org](https://meta.discourse.org) kwa ajili ya habari, majadiliano, na msaada wa Discourse
+  new_version_mailer_with_notes:
+    subject_template: "[%{email_prefix}] sasisho linapatikana"
+    text_body_template: |
+      Furaha tele, kuna toleo jipya la [Discourse](http://www.discourse.org)!
+
+      Toleo lako: %{installed_version}
+      Toleo jipya: **%{new_version}**
+
+      -Boresha kupitia njia rahisi **[bofya-mara moja kuboresha kupitia kivinjari](%{base_url}/kiongozi/boresha)**
+
+      - Ona kipi ni kipya kwenye [madokezo yaliotolewa](https://meta.discourse.org/tags/release-notes) au angalia [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Tembelea [meta.discourse.org](https://meta.discourse.org) kwa ajili ya habari, majadiliano, na msaada wa Discourse
+      ###Madokezo yaliyotolewa
+
+      %{notes}
+  flag_reasons:
+    off_topic: "Mada yako imeripotiwa kuwa **haihusiki**: jumuiya inaona kuwa haiko sawa kuwa mada, kulingana na kichwa cha habari na chapisho lake la kwanza."
+    inappropriate: "Chapisho hili limeripotiwa kuwa **halifai**: jumuiya inaona kuwa ni matusi, ubaguzi, au inakauka [mwongozo wa jumuiya](/mwongozo)."
+    spam: "Chapisho lako limeripotiwa kuwa ni **taka**: jumuiya inaona kuwa ni tangazo, kitu ambacho kinatanganaza badala ya kuwa muhimu au na faida kwenye mada kama ilivyotarajiwa."
+    notify_moderators: "Chapisho lako limeripotiwa **kupitiwa na msimamizi**: jukwaa limeona kuwa kuna kitu kuhusu chapisho lako kinachohitaji kupitiwa na msaidizi."
+  flags_dispositions:
+    agreed: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tunaifuatilia."
+    agreed_and_deleted: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tumeondoa chapisho."
+    disagreed: "Asante kwa kutujulisha. Tutaifuatilia."
+    deferred: "Asante kwa kutujulisha. Tutaifuatilia."
+    deferred_and_deleted: "Asante kwa kutujulisha. Tumeondoa chapisho."
+  system_messages:
+    private_topic_title: "Mada #%{id}"
+    contents_hidden: "Tafadhali tembelea chapisho kuona taarifa zake."
+    post_hidden:
+      title: "Chapisho Limefichwa"
+      subject_template: "Chapisho limefichwa sababu ya ripoti nyingi za jumuiya"
+      text_body_template: |
+        Habari,
+
+        Ujumbe huu ni otomatiki kutoka kwa %{site_name} kukujulisha kuwa chapisho lako limefichwa.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Wanachama wengi kwenye jumuiya wameripoti chapisho hili kabla ya kufichwa, kwa hiyo gikiria vizuri kabla ya kusahihisha chapisho lako. **Unaweza kuhariri chapisho baada ya dakika %{edit_delay}, na chapisho litarejeshwa.**
+
+        Kama chapisho likifichwa tena, litabaki kwenye maficho mpaka msaidizi akilipitia.
+
+        Kwa maelezo zaidi, tafadhali pitia [mwongozo wa jumuiya](%{base_url}/mwongozo).
+    post_hidden_again:
+      title: "Chapisho Limefichwa tena"
+      subject_template: "Chapisho limefichwa sababu ya ripoti nyingi za jumuiya, msaidizi amejulishwa"
+      text_body_template: |
+        Habari,
+
+        Ujumbe huu ni otomatiki kutoka kwa %{site_name} kukujulisha kuwa chapisho lako limefichwa tena.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Wanachama wengi kwenye jumuiya wameripoti chapisho hili kabla ya kufichwa. **Kwa vile chapisho limefichwa zaidi ya mara moja, chapisho litabaki kwenye maficho mpaka  litakapopitiwa na msaidizi.**
+
+        Kwa maelezo zaidi, tafadhali pitia [mwongozo wa jumuiya](%{base_url}/mwongozo).
+    welcome_user:
+      title: "Karibu Mtumiaji"
+      subject_template: "Karibu kwenye %{site_name}!"
+      text_body_template: |
+        Asante kwa jujiunga %{site_name}, na karibu!
+
+        %{new_user_tips}
+
+        Mda wote Tunaamini kwenye [jumuiya ya ustaarabu na mwenendo mzuri](%{base_url}/muongozo).
+        Karibu Sana!
+    welcome_invite:
+      title: "Muaiko wa Ukaribisho"
+      subject_template: "Karibu kwenye %{site_name}!"
+      text_body_template: |
+        Asante kwa kukubali mualiko kutoka kwa %{site_name} -- karibu!
+
+        - Tumetengeneza akaunti hii mpya**%{username}** kwa ajili yako. Badilisha jina au nywila yako kwa kutembelea [umbo lako la mtumiaji][mapendekezo].
+
+        - Ukiingia, tafadhali **tumia barua pepe uliyotumia kwenye mualiko** -- au la tutashindwa kukutambua!
+
+        %{new_user_tips}
+        Tuna amini kwenye [jumuiya yenye tabia ya kistaarabu](%{base_url}/mwongozo) mda wote.
+
+        Kila la kheri!
+
+        [mapendekezo]: %{user_preferences_url}
+    backup_succeeded:
+      title: "Chelezo Imefanikiwa"
+      subject_template: "Chelezo imefanikiwa kumaliza"
+      text_body_template: |
+        Chelezo imemaliza kwa mafanikio.
+
+        Tembelea [kiongozi>eneo la chelezo](%{base_url}/kiongozi/machelezo) kupakua chelezo chako jipya.
+
+        Batli hii hapa:
+
+        ````neno
+        %{logs}
+        ````
+    backup_failed:
+      title: "Chelezo Imeshindikana"
+      subject_template: "Chelezo imeshindikana"
+      text_body_template: |
+        Urejeshaji umeshindikana.
+
+        Batli hii hapa:
+
+        ```neno
+        %{logs}
+        ```
+    restore_succeeded:
+      title: "Urejeshaji Umefanikiwa"
+      subject_template: "Urejeshaji umalizika kwa mafanikio"
+      text_body_template: |
+        Urejeshaji umefanikiwa.
+
+        Batli hii hapa:
+
+        ```neno
+        %{logs}
+        ```
+    restore_failed:
+      title: "Urejeshaji Umeshindikana"
+      subject_template: "Urejeshaji umeshindikana"
+      text_body_template: |
+        Urejeshaji umeshindikana.
+
+        Batli hii hapa:
+
+        ```neno
+        %{logs}
+        ```
+    bulk_invite_succeeded:
+      title: "Mualiko wa Watumiaji Wengi Umefanikiwa"
+      subject_template: "Mualiko wa Watumiaji Wengi umefanikiwa"
+      text_body_template: "Mualiko wa Watumiaji Wengi wa faili umefanyiwa uchakataji, mialiko %{sent} imetumwa."
+    bulk_invite_failed:
+      title: "Mualiko wa Watumiaji Wengi Umeshindikana"
+      subject_template: "Mualiko wa Watumiaji Wengi umepata hitilafu"
+      text_body_template: |
+        Faili la mialiko ya watu limepitia mfumo, mialiko %{sent} imetumwa ikiwa na (h)itilafu %{failed}.
+
+        Batli hii hapa:
+
+        ```neno
+        %{logs}
+        ```
+    csv_export_succeeded:
+      title: "Uhamishaji wa CSV Umefanikiwa"
+      text_body_template: |
+        Uhamishaji wa taarifa umemalizika kwa mafanikio! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a>(%{file_size})
+
+        kiungo cha upakuaji kitakuwa sahihi kwa masaa 48.
+
+        Taarifa hizi zimewekwa kwenye nyaraka ya gzip. Kama nyaraka haitajifungua yenyewe ukiifungua, tunakushauri utumie: http://www.gzip.org/#faq4
+    csv_export_failed:
+      title: "Uhamishaji wa CSV Umeshindikana"
+      subject_template: "Uhamishaji wa taarifa umeshindikana"
+      text_body_template: "Tunaomba radhi, lakini uhamishaji wa taarifa umeshindikana. Tafadhali angalia batli au [wasiliana na msaidizi](%{base_url}/kuhusu)."
+    email_reject_insufficient_trust_level:
+      title: "Barua Pepe Imekataliwa Hauna Kiwango Kinachohitajika cha Uaminifu"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hauna Kiwango Kinachohitajika cha Uaminifu"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Akaunti yako haina kiwango cha uaminifu kinachohitajika kuchapisha mada mpya kwenda kwenye barua pepe hii. Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_user_not_found:
+      title: "Barua Pepe Kataza Mtumiaji Hajapatikana"
+      subject_template: "[%{email_prefix}] Tatizo na Barua Pepe -- Mtumiaji Hajapatikana"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Jibu lako limetumwa kwa kutumia barua pepe tusioijua. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_screened_email:
+      title: "Barua Pepe Kataza Barua Pepe Hairuhusiwi "
+      subject_template: "[%{email_prefix}] Issue ya Barua Pepe -- Barua Pepe Imezuiliwa"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Jibu lako limetumwa kwa kutumia barua pepe iliyozuiliwa. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_not_allowed_email:
+      title: "Barua Pepe Kataza Barua Pepe Hairuhusiwi "
+      subject_template: "[%{email_prefix}] Tatizo la Barua -- Barua Pepe Imezuiliwa"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Jibu lako limetumwa kwa kutumia barua pepe iliyozuiliwa. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_inactive_user:
+      title: "Barua Pepe Kataa Mtumiaji Asiyetembelea Tovuti"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Mtumiaji Asiyetembelea Tovuti"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Akaunti yako haijaanzishwa. Tafadhali anzisha akaunti yako kabla ya kutuma barua pepe. Kuanzisha, angalia barua pepe yako utakuta ujumbe kutoka kwetu wenye kiungo cha kuanzisha akaunti yako.
+    email_reject_silenced_user:
+      title: "Barua Pepe Kataa Mtumiaji Aliyenyamazishwa"
+      subject_template: "[%{email_prefix}] Issue ya Barua Pepe -- Mtumiaji Aliyenyamazishwa"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Akaunti yako ambayo imeshirikishwa na barua pepe hii imenyamazishwa.
+    email_reject_reply_user_not_matching:
+      title: "Barua Pepe Kataa Mtumiaji Haendani"
+      subject_template: "[%{email_prefix}] Tatizo a Barua Pepe -- Anwani ya Jibu Haikutegemewa"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Jibu lako limetumwa kwa kutumia barua pepe tofauti ambayo hatukuitegemea, kwa hiyo hatuna uhakika kuwa ni mtu mmoja. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_no_account:
+      title: "Barua Pepe Kataza Akaunti Haipo"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Akaunti Haijulikani"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Jibu lako limetumwa kwa kutumia barua pepe iliyojulikana. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_empty:
+      title: "Barua Pepe Kataa Wazi"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hakuna Maandishi"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Hatujaona maandishi ya majibu kwenye barua pepe yako.
+
+        Kama unapata hii barua na uli_weka_jibu, jaribu tena kwa kutumia umbizo mrahisi zaidi.
+    email_reject_parsing:
+      title: "Barua Pepe Kataa Changanua"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Maandashi Hayatambuliki"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Hatujaona maandishi ya majibu kwenye barua pepe yako.**Hakikisha jibu lako lipo juu ya barua pepe** --mfumo wetu hauwezi kushughulikia majibu yaliyo ndani ya mistari.
+    email_reject_invalid_access:
+      title: "Barua Pepe Kataa Ufikivu Batili"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Ufikivu Batili"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Akaunti yako haina haki inayohitajika kuchapisha mada mpya kwenda kwenye barua pepe hii. Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_strangers_not_allowed:
+      title: "Barua Pepe Kataa Wageni Hawaruhusiwi"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Ufikivu Batili"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Kategoria uliyoitumia  barua pepe hii inakubali majibu kutoka kwa watumiaji na barua pepe zilizosajiliwa tu. Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_invalid_post:
+      title: "Barua Pepe Kataa Chapisho Batili"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- hitilafu ya Uchapishaji"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Kati ya vitu vilivyosababisha ni: umbizo wa hali ya juu, ujumbe ni mkubwa sana, ujumbe ni mdogo sana. Tafadhali jaribu tena, au chapisha kupitia tovuti kama tatizo likiendelea.
+    email_reject_invalid_post_specified:
+      title: "Barua Pepe Kataa Chapisho Batili"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hitilafu ya Uchapishaji"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+        Sababu:
+
+        %{post_error}
+
+        Kama unaweza kurekebisha tatizo hili, tafadhali jaribu tena.
+    email_reject_invalid_post_action:
+      title: "Barua Pepe Kataa Kitendo cha Chapisho Batili"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Kitendo Batili cha Chapisho"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Kitendo cha Chapisho hakijatambuliwa. Tafadhali jaribu tena, au chapisha kupitia tovuti kama tatizo likiendelea.
+    email_reject_reply_key:
+      title: "Barua Pepe Kataa Ufunguo wa Jibu"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Ufunguo wa Jibu Usiojulikana"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Ufunguo wa jibu kwenye barua pepe ni batili au haujulikani, tumeshindwa kujua unamjibu nani.[wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_bad_destination_address:
+      title: "Barua Pepe Kataa Anwani ya Mpokeaji Sio Sawa"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Haijulikani Inapoenda: Anwani"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Barua pepe zote za kupokea ujumbe hazijulikani, au Utambulisho wa Kichwa cha Ujumbe kwenye barua pepe umebadilishwa. Tafadhali hakikisha unatuma kwenda kwa barua pepe zilizotolewa na wasaidizi wetu.
+    email_reject_topic_not_found:
+      title: "Barua Pepe Kataza Mada Hajapatikana"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Mada Haijapatikana"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Mada uliyojibu haipo tena -- labda imefutwa? Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_topic_closed:
+      title: "Barua Pepe Kataza Mada Imefungwa"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Mada Imefungwa"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Mada uliyoitumia barua pepe hii imefungwa na haikubali tena majibu. Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_auto_generated:
+      title: "Barua Pepe Kataza Akaunti Imejitengeneza"
+      subject_template: "[%{email_prefix}] Tatizo a Barua Pepe -- Jibu Limejitengeneza"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Barua pepe yako imepewa alama ya ''kujitengeneza'', kwa hiyo otomatikali ilitengenezwa na kompyuta badala ya kuchapishwa na binadamu; haturuhusu aina hizo za barua pepe. Kama unaamini hii ni hitilafu, [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_reject_unrecognized_error:
+      title: "Barua Pepe Kataza Hitilafu Lilisojulikana"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hitilafu Lilisojulikana"
+      text_body_template: |
+        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination}  (jina la %{former_title}) haujafika.
+
+        Hitilafu Isiyojulikana limetokea kwenye mchakato wa barua pepe yako na haijachapishwa. Tafadhali, jaribu tena, au [wasiliana na msaidizi](%{base_url}/kuhusu).
+    email_error_notification:
+      title: "Hitilafu ya Taarifa za Barua Pepe"
+      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Tatizo la Uhalalishaji wa POP"
+      text_body_template: |
+        Kwa bahati mbaya, hitilafu ya uthibitisho limetokea wakati wa kupata barua kutoka kwenye seva ya POP.
+
+        Tafadhali hakikisha umesanidi taarifa za POP [mipangilio ya tovuti](%{base_url}/admin/site_settings/category/email).
+
+        Kama kuna sehemu nyingine yenye akaunti ya barua pepe ya POP, itabidi uingie kwenye tovuti hiyo na kuangalia mipangilio.
+    too_many_spam_flags:
+      title: "Bendera Nyingi Sana za Taka"
+      subject_template: "Akaunti mpya inasubirishwa"
+    too_many_tl3_flags:
+      title: "Bendera Nyingi za Kiwango cha Uaminifu cha 3"
+      subject_template: "Akaunti mpya inasubirishwa"
+      text_body_template: |
+        Habari,
+
+        Ujumbe huu ni otomatiki kutoka %{site_name} kukujulisha kuwa akaunti yako imesimamishwa kwa mda kwa sababu ya ripoti nyingi kutoka kwenye jumuiya.
+
+        Kama kujihadhari, akaunti yako imenyamazishwa na haitaweza kutengeneza majibu au  mada mpaka  msaidizi atakapo kagua akaunti yako. Tunaomba radhi kwa usumbufu utakao tokea.
+
+        Kwa usaidizi zaidi, tembelea [mwongozo wa jumuiya](%{base_url}/mwongozo).
+    silenced_by_staff:
+      title: "Imenyamazishwa na Msaidizi"
+      subject_template: "Akaunti imesimamishwa kwa mda"
+      text_body_template: |
+        Habari,
+
+        Huu ni ujumbe wa roboti kutoka kwa %{site_name} kukujulisha kuwa akaunti yako imesitishwa kwa mda kama tahadhari.
+
+        Tafadhali endelea kuvinjari, lakini hautaweza kujibu au kutengeneza mada mpaka [msaidizi](%{base_url}/kuhusu) akikagua machapisho yako ya hivi karibuni. Tunaomba radhi kwa usumbufu utakao tokea.
+
+        Kwa mwongozo zaidi, tembelea [mwongozo wa jukwaa](%{base_url}/mwongozo).
+    user_automatically_silenced:
+      title: "Mtumiaji Amenyamazishwa"
+      subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
+      text_body_template: |
+        Ujumbe huu ni otomatiki.
+
+        Mtumiaji mpya [%{username}](%{user_url}) alinyamazishwa kwa sababu watumiaji wengi wameripoti (ma)chapisho ya %{username}.
+
+        Tafadhali [kagua ripoti](%{base_url}/admin/flags), Kama %{username} alinyamazishwa kimakosa, bonyeza kitufe cha kuondoa ukimya kwenye [ukurasa wa kiongozi kwa ajili ya mtumiaji](%{user_url}).
+
+        Kizingiti hiki kinaweza kubadilishwa kwenye mipangilio ya `nyamazisha_mtumiaji_mpya` kwenye tovuti.
+    spam_post_blocked:
+      title: "Chapisho Taka Limezuiliwa"
+      subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"
+      text_body_template: |
+        Huu ni ujumbe kutoka kwa roboti.
+
+        Mtumiaji mpya [%{username}](%{user_url}) amejaribu kuandika maandishi mapya mengi yenye viungo kwenda kwa %{domains}, lakini zimezuiliwa kukwepa barua taka. Bado mtumiaji anaweza kutengeneza machapisho ambayo hayana viungo kwenda kwa %{domains}.
+
+        Tafadhali [kagua mtumiaji](%{user_url}).
+
+        Tohoa kwa kupitia `newuser_spam_host_threshold` na `white_listed_spam_host_domains` mipangilio ya tovuti.
+    unsilenced:
+      title: "Hajanyamazishwa Tena"
+      subject_template: "Akaunti haijasimamishwa tena"
+      text_body_template: |
+        Habari,
+
+        Huu ni ujumbe kutoka kwa %{site_name}kukujulisha kuwa akaunti yako haijasimamishwa tena baada ya kukaguliwa na msaidizi.
+
+        Unaweza kuandika majibu na mada tena. Asante kwa uvumilivu wako.
+    pending_users_reminder:
+      title: "Ukumbusho wa Watumiaji Waliosubirishwa"
+      text_body_template: |
+        Kuna watumiaji wapya waliojiunga wanaosubiria kupata kibali (au kukataliwa) kabla hawajafikia jumuia hii.
+
+        [Tafadhali kagua kwenye upande wa kiongozi](%{base_url}/admin/users/list/pending).
+    dashboard_problems:
+      title: "Matatizo ya Ubao"
+      subject_template: "Matatizo yamepatikana"
+      text_body_template: |
+        Kuna matatizo yameripotiwa kwenye ubao wa kiongozi.
+
+        [Tafadhali kagua na tatua](%{base_url}/kiongozi).
+    new_user_of_the_month:
+      title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
+      subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"
+      text_body_template: |
+        Hongera, umepata tunzo ya **Mtumiaji Mpya wa Mwezi wa %{month_year}**. :trophy:
+
+        Tunzo hii inatolewa kwa watumiaji wawili wapya kila mwezi, na itaendelea kuonekana kwenye [kurasa ya beji](%{url}).
+
+        Kwa haraka sana, umekuwa mwanachama muhimu sana kwenye jumuia yetu. Asante sana kwa kujiunga, na endelea kufanya kazi nzuri!
+    queued_posts_reminder:
+      title: "Ukumbusho wa Machapisho Yalipangwa"
+      text_body_template: |
+        Habari,
+
+        Machapisho kutoka kwa mtumiaji mpya yamesimamishwa kwa ajili ya ukaguzi na yanasubiria kukaguliwa. [Thibitisha au Kataa hapa](%{base_url}/subirishwa-machapisho).
+  unsubscribe_link: |
+    Kujitoa kwenye barua pepe hizi, [bofya hapa](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Kujitoa kwenye hizi barua pepe, [bofya hapa](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Unapokea hii kwa sababu uliruhusu orodha ya hali-tumizi ya barua pepe.
+
+    Kujiondoa ili usipokee barua hizi, [bofya hapa](%{unsubscribe_url}).
+  subject_re: "Re: "
+  subject_pm: "[PM] "
+  user_notifications:
+    previous_discussion: "Majibu Yaliyopita"
+    in_reply_to: "Jibu Kuendana Na"
+    unsubscribe:
+      title: "Jitoe"
+      description: "Hautaki kupata hizi barua pepe? Hamna tatizo! Bofya hapa chini kujitoa mara moja:"
+    reply_by_email: "[Tembelea Mada](%{base_url}%{url}) au jibu barua pepe hii kutoa maoni."
+    only_reply_by_email: "Jibu barua pepe hii kutoa maoni."
+    visit_link_to_respond: "[Tembelea Mada](%{base_url}%{url}) kutoa maoni."
+    posted_by: "Imeandikwa na %{username}tarehe %{post_date}"
+    invited_group_to_private_message_body: |
+      %{username} amekaribishwa @%{group_name} kwenye ujumbe
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      kwenye
+
+      > %{site_title} -- %{site_description}
+    invited_to_private_message_body: |
+      %{username} amekukaribisha kwenye ujumbe
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      kwenye
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} amekukaribisha kwenye majadiliano
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      kwenye
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      title: "Mtumiaji Amekaribishwa kwenye PM"
+      subject_template: "[%{email_prefix}] %{username} amemkaribisha @%{group_name} kwenye ujumbe '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      title: "Mtumiaji Amekaribishwa kwenye PM"
+      subject_template: "[%{email_prefix}] %{username}  amekukaribisha kwenye ujumbe '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{email_prefix}] %{username}  amekukaribisha kwenye ujumbe '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      title: "Mtumiaji Amekaribishwa kwenye Mada"
+      subject_template: "[%{email_prefix}] %{username} amekukaribisha kwenye '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      title: "Mtumiaji Amejibu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      title: "Mtumiaji Amejibu PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      title: "Mtumiaji Amenukulu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      title: "Mtumiaji Ameungwa"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      title: "Mtumiaji Ametajwa"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      title: "Kikundi cha Watumiaji Kimetajwa"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      title: "Mtumiaji Amechapisha"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      title: "Mtumiaji Anaangalia Chapisho la Kwanza"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      title: "Mtumiaji Amechapisha PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+          %{message}
+    account_suspended:
+      title: "Akaunti Imesimamishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
+      text_body_template: |
+        Umesimamishwa kwenye jumuia mpaka %{suspended_till}
+
+        %{reason}
+
+        %{message}
+    account_silenced:
+      title: "Akaunti imenyamazishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
+      text_body_template: |
+        Umenyamazishwa kwenye jumuia mpaka %{silenced_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "Akaunti tayari ipo"
+      subject_template: "[%{email_prefix}] Akaunti tayari ipo"
+      text_body_template: |
+        Umejaribu kutengeneza akaunti kwenye %{site_name}, au umejaribu kubadilisha barua pepe ya akaunti kuwa %{email}. Lakini, hiyo akaunti ya %{email} tayari ipo.
+
+        Kama umesahau nywila yako, [weka upya sasa hivi](%{base_url}/nywila-reset).
+
+        Kama haujajaribu kutengeneza akaunti ya %{email} au kujaribu kubadilisha barua pepe yako, usijali - unaweza kupuuzia ujumbe huu.
+
+        Kama una maswali yoyote, [wasiliana na wasaidizi wetu](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Uthibitisho wa Pili umesitishwa"
+      subject_template: "Uhalalalishaji wa Viwango Viwili umesitishwa [%{email_prefix}]"
+      text_body_template: |
+        Njia mbili za uthibitisho zimesitishwa kwenye akaunti yako iliyopo %{site_name}. Unaweza kutumia nywila tu kuingia; kodi zaidi ya uthibitisho haihitajiki tna.
+
+        Kama haukuchagua usitisho, kuna mtu atakuwa amepenya na kuingia kwenye akaunti yako.
+
+        Kama una swali lolote, [wasiliana na wasaidizi wetu](%{base_url}/kuhusu).
+    digest:
+      why: "Muhtasari Mfupi wa %{site_link} toka mara ya mwisho ulivyotembelea %{last_seen_at}"
+      since_last_visit: "Kutoka mara ya mwisho ulivyotembelea"
+      new_topics: "Mada Mpya"
+      unread_messages: "Ujumbe ambao Haujasomwa"
+      unread_notifications: "Taarifa ambazo Hazijasomwa"
+      liked_received: "Upendo Uliopokelewa"
+      new_posts: "Machapisho Mapya"
+      new_users: "Watumiaji Wapya"
+      popular_topics: "Mada Maarufu"
+      follow_topic: "Fuatilia mada"
+      join_the_discussion: "Soma Zaidi"
+      popular_posts: "Machapisho Maarufu"
+      more_new: "Mpya kwako"
+      subject_template: "Muhtasari wa [%{email_prefix}]"
+      unsubscribe: "Muhtasari huu umetumwa kutoka kwa %{site_link} kama hatujakuona kwa mda fulani. Badilisha %{email_preferences_link}, au %{unsubscribe_link} kujiengua."
+      your_email_settings: "mipangilio yako ya barua pepe"
+      click_here: "bofya hapa"
+      from: "Muhtasari wa %{site_name}"
+      preheader: "Muhtasari mfupi toka mara ya mwisho ulivyotembelea %{last_seen_at}"
+    forgot_password:
+      title: "Nimesahau Nywila"
+      subject_template: "Weka Upya Nywila [%{email_prefix}]"
+      text_body_template: |
+        Kuna mtu ameomba kuweka upya nywila yako kwenye [%{site_name}](%{base_url}).
+
+        Kama sio wewe, unaweza kupuuzia hii barua pepe.
+
+        Bofya kwenye kiungo kuchagua nywila mpya:
+        %{base_url}/u/nywila-wekaupya/%{email_token}
+    email_login:
+      title: "Ingia kupitia kiungo"
+      subject_template: "Ingia kupitia kiungo [%{email_prefix}] "
+      text_body_template: |
+        Hiki ni kiungo cha kuingia kwenye [%{site_name}](%{base_url}).
+
+        Kama haukuomba hiki kiungo, unaweza kupuuzia hii barua pepe.
+
+        Bofya kiungo kifuatacho kuingia:
+        %{base_url}/session/email-login/%{email_token}
+    set_password:
+      title: "Tengeneza Nywila"
+      subject_template: "Weka Nywila [%{email_prefix}]"
+      text_body_template: |
+        Mtu anataka kutengeneza nywila ya akaunti yako[%{site_name}](%{base_url}). Au unaweza kuingia kwa kutumia njia nyingine (Google, Facebook au njia nyingine) kupitia barua pepe iliyothibitishwa.
+
+        Kama haujaanzisha ombi hili, unaweza kupuuzia barua pepe hii.
+
+        Bofya kiungo kifuatacho kuingia:
+        %{base_url}/u/admin-kuingia/%{email_token}
+    admin_login:
+      title: "Ingia Kiongozi"
+      subject_template: "[%{email_prefix}] Ingia"
+      text_body_template: |
+        Mtu anataka kuingia kwenye akaunti yako kwenye [%{site_name}](%{base_url}).
+
+        Kama haujaanzisha ombi hili, unaweza kupuuzia barua pepe hii.
+
+        Bofya kiungo kifuatacho kuingia:
+        %{base_url}/u/admin-kuingia/%{email_token}
+    account_created:
+      title: "Akaunti Imetengenezwa"
+      subject_template: "[%{email_prefix}] Akaunti Yako Mpya"
+      text_body_template: |
+        Akaunti yako mpya imetengenezwa kwa ajili yako kwenye %{site_name}
+
+        Bofya kiungo kifuatacho kuchagua nywila kwa ajili ya akaunti yako mpya:
+        %{base_url}/u/nywila-reset/%{email_token}
+    confirm_new_email:
+      title: "Thibitisha Barua Pepe Mpya"
+      subject_template: "[%{email_prefix}] Thibitisha barua pepe mpya"
+      text_body_template: |
+        Thibitisha barua pepe yako kwenye %{site_name} kwa kubofya kiungo kifuatacho:
+
+        %{base_url}/u/authorize-baruapepe/%{email_token}
+    confirm_old_email:
+      title: "Thibitisha Barua pepe ya Zamani"
+      subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
+      text_body_template: |
+        Kabla hatujabadilisha barua pepe yako, tunahitaji kuthibitisha kuwa unamiliki
+        barua pepe yako ya sasa. Baada ya kumaliza hatua hii, tutathibitisha
+        barua pepe yako mpya.
+
+        Thibitisha barua pepe yako ya sasa kwenye %{site_name} kwa kubonyeza kiungo kifuatacho:
+
+        %{base_url}/u/authorize-barua pepe/%{email_token}
+    notify_old_email:
+      title: "Ijulishe Barua Pepe ya Zamani"
+      subject_template: "[%{email_prefix}] Barua pepe yako imebadilishwa"
+      text_body_template: |
+        Huu ni ujumbe kutoka kwa roboti kukujulisha kuwa barua pepe yako ya
+        %{site_name} imebadilishwa. Kama imefanywa kimakosa, wasiliana na
+        msimazi wa tovuti.
+
+        Barua pepe yako imebadilishwa kuwa:
+
+        %{new_email}
+    signup_after_approval:
+      title: "Kujiunga Baada ya Kupata Kibali"
+      subject_template: "Umepata kibali kwenye %{site_name}!"
+      text_body_template: |
+        Karibu kwenye %{site_name}!
+
+        Msaidizi amethibitisha akaunti yako kwenye %{site_name}.
+
+        Unaweza kuingia kwenye akaunti yako kupitia:
+        %{base_url}
+
+        Kama kiungo hakiwezi  kubonyezwa, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao ndani ya kivinjari.
+
+        %{new_user_tips}
+
+        Tuamini [utaonyesha tabia ya kistaarabu kwenye jumuia hii](%{base_url}/muongozo) mda wote.
+
+        Tunakutakia mda mwema na sisi!
+    signup:
+      title: "Jiunge"
+      subject_template: "[%{email_prefix}] Thibitisha akaunti mpya"
+      text_body_template: |
+        Karibu kwenye %{site_name}!
+
+        Bofya kiungo kifuatacho kuthibitisha na anzisha akaunti mpya:
+        %{base_url}/u/activate-akaunti/%{email_token}
+
+        Kama kiungo cha juu hakibonyezeki, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao kwenye kivinjari.
+  page_not_found:
+    title: "Samahani! Ukurasa huu haupo au ni wa siri."
+    popular_topics: "Maarufu"
+    recent_topics: "Hivi Karibuni"
+    see_more: "Zaidi"
+    search_title: "Tafuta tovuti hii"
+  offline:
+    title: "Haiwezi kupakia programu-tumizi"
+    offline_page_message: "Inaonekana kuwa hauko hewani! Tafadhali angalia muunganisho wa mtandao na jaribu tena."
+  login_required:
+    welcome_message: |
+      ## [Karibu kwenye %{title}](#karibu)
+      Akaunti inahitajika. Tafadhali tengeneza akaunti au ingia kuendelea.
+  deleted: 'imefutwa'
+  image: "picha"
+  upload:
+    unauthorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: %{authorized_extensions})."
+    pasted_image_filename: "Picha Iliyobandikwa"
+    store_failure: "Tumeshindwa kutunza upakiaji #%{upload_id} wa mtumiaji #%{user_id}."
+    file_missing: "Samahani, inabidi uweke faili la kupakiwa."
+    empty: "Samahani, ila faili uliloweka halina kitu."
+    png_to_jpg_conversion_failure_message: "Hitilafu imetokea wakati wa kubadilisha kutoka PNG kwenda JPG."
+    attachments:
+      too_large: "Samahani, faili unalojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb})."
+    images:
+      too_large: "Samahani, picha unayojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb}),tafadhali badilisha ukubwa na jaribu tena."
+      larger_than_x_megapixels: "Samahani, picha unayojaribu kupakia ni kubwa sana (kipimo cha juu ni %{max_image_megapixels} - megapixels),t afadhali badilisha ukubwa na jaribu tena."
+      size_not_found: "Samahani ila hatujaweza kujua kipimo cha picha. Labda picha yako ina tatizo?"
+    placeholders:
+      too_large: "(picha kubwa zaidi ya KB %{max_size_kb})"
+  avatar:
+    missing: "Samahani, tumeshindwa kuona picha inayoendana na barua pepe hiyo. Unaweza kuipakia tena?"
+  flag_reason:
+    sockpuppet: "Mtumiaji mpya ametengeneza mada, na mtumiaji mpya mwenye anwani ya mtandao hiyo hiyo (%{ip_address}) amejibu. Angalia mpangilio wa tovuti <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa (%{domain}). Tembelea <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
+  color_schemes:
+    light_theme_name: "Hafifu"
+    dark_theme_name: "Nyeusi"
+  about: "Kuhusu"
+  guidelines: "Miongozo"
+  privacy: "Siri"
+  edit_this_page: "Hariri ukurasa huu"
+  csv_export:
+    boolean_yes: "Ndiyo"
+    boolean_no: "Hapana"
+  static_topic_first_reply: |
+    Hariri chapisho la kwanza la mada hii kubadilisha maandishi ya ukurasa %{page_name}.
+  guidelines_topic:
+    title: "Maswali ya Mara kwa Mara/Muongozo"
+    body: |
+      <a name="civilized"></a>##
+
+      [Hii ni Sehemu ya Kistaarabu kwa ajili ya Majadiliano ya Umma](#ustaarabu)
+
+      Tafadhali onyesha heshima kama unavyojiheshimu ukiwa kwenye jumuiya ya watu wengi. Sisi pia ni raslimali ya jumuiya &mdash; sehemu ya kusambaza ujuzi, maarifa na vivutio kupitia majadiliano yanayoendelea.
+
+      Kanuni hizi sio ngumu na ni za haraka, ni miongozo kusaidia maamuzi ya kibinadamu kwenye jumuiya na kuweka mazingira kuwa  mazuri kwa ajili ya majadiliano ya kistaarabu ya discourse.
+
+      <a name="improve"></a>
+
+      ##[Boresha Mazungumzo](#boresha)
+
+      Tusaidie kuhahikisha hii ni sehemu nzuri kwa ajili ya mazungumzo kwa kujitahidi kuboresha mazungumzo, kwa njia moja au nyingine, hata kama ni kidogo sana. Kama hauna uhakika kuwa chapisho lako linaongeza kitu chochote, fikiria  vizuri na jaribu tena kuchapisha.
+
+      Mada zinazozungumzwa hapa ni muhimu kwetu sisi, na tunataka na wewe ufanye kuwa ni muhimu kwako pia. Heshimu mada na watu wanajadiliana,  hata kama haukubaliani na wanachokisema.
+
+      Njia moja ya kuboresha mazungumzo ni kugundua yale ambayo tayari yanaendelea. Tumia mda kupitia mada hapa kabla ya kujibu au kuanzisha za kwako, na utakuwa na fursa za kukutana na wale ambao wanavutiwa na vitu sawa na wewe.
+
+      <a name="agreeable"></a>
+
+      ## [Kubali, hata kama Unakataa](#kubali)
+
+      Unaweza kutaka kujibu kwa kukataa. Hiyo ni sawa. Kumbuka _kuchambua mawazo, sio watu_. Tafadhali epuka:
+
+      *Kuita watu-majina
+      *kushambulia tabia, rangi, jinsia, urefu, ufupi, umbo na vinginevyo
+      * Kujibu kuendana na toni badala ya maandishi yaliondikwa
+      *Kujibu bila kufikiria kwa sababu ya hasira
+
+      Badala yake andika majibu yenye busara, hekima na heshima  ambayo yataboresha mazungumzo.
+
+      <a name="participate"></a>
+
+      ##[Ushirikiano Wako ni Muhimu](#shiriki)
+
+      Mazungumzo tunayoyafanya hapa ndio yatakayoonwa na mtumiaji mpya. Tusaidie kuathiri siku za baadae za jumuiya yetu, kwa kuchagua kushiriki kwenye majadiliano ambayo yanafanya jumuiya iwe sehemu ya kuvuita &mdash; na epuka na zile mbaya.
+
+      Discourse inatoa vifaa vinavyosaidia jumuiya kujua ushiriki mzuri sana (na mbaya): mialamisho, upendo, bendera, majibu, uhariri, na vinginevyo. Tumia vifaa hivi kuboresha uzoefu wako na wa wengine. Tuiache jumuiya yetu ikiwa vizuri zaidi ya tulivyoikuta.
+
+      <a name="flag-problems"></a>
+
+      ## [Ukiona tatizo, Ripoti kwa kubonyeza Bendera](#ripoti-matatizo)
+
+      Wasimamizi wana mamlaka ya kipekee; kama wewe, wana wajibu wa jumuiya hii. Kwa msaada, wasimamizi wanaweza kuwa wasahalisha wa jumuiya, sio tu mapolisi na walinzi.
+
+      Ukiona kitu kibaya kimeandikwa, usijibu. Itaendeleza tabia mbaya, itatumia nguzu yako na kupoteza mda wa kila mtu._Bonyeza tu Bendera_. Kama bendera nyingi zitabonyezwa, kitendo kitafanyika, kama sio otomatikali, msimamizi ataingilia kati.
+
+      Ili kuhakikisha jumuiya ipo vizuri, wasimamizi wana uwezo wa kuondoa au kufuta maandishi na akaunti ya mtumiaji mda wowote. Wasimamizi hawahakiki machapisho mapya; wasimamizi na wasaidizi wa tovuti hawana majukumu yoyote juu ya maandishi yanayochapishwa na wanajumuiya.
+
+      <a name="be-civil"></a>
+
+      ## [Kuwa Mstaarabu Mda Wote] (#kuwa-mstaarabu)
+
+      Hakuna kitu kinachoharibu mazungumzo yenye afya kama jeuri:
+
+      Kuwa mstaarabu. Usichapishe kitu chochote ambacho mtumiaji mwenye akili timamu atakiona kuwa kina matusi, kukejeli, kukera au kuchochea matatizo.
+      * Usichapishe vitu vichafu au ngono
+      * Jiheshimu na heshimu wengine. Usisumbue au kusababisha huzuni, usijifanye kuwa mtu mwingine, au kuchapisha kwa umma taarifa binafsi za watu wengine.
+      *Heshimu jumuiya yetu. Usichapishe taarifa taka au kuchafua jumuiya .
+
+      Haya siyo maneno pekee na maelezo yake &mdash; epuka _kuonyesha_ kitu chochote kinachoendana na hivi. Kama hauna uhakika, jiulize ungejisikiaje kama chapisho lako likitokea kwenye ukurasa wa kwanza wa gazeti. Hakikisha lugha, viungo, na picha ni safi kuonwa na familia na marafiki.
+
+      <a name="keep-tidy"></a>
+
+      ## [Hakikisha ni Maridadi](#hakikisha-maridadi)
+
+      Jitahidi kuweka vitu sehemu vinavyotakiwa kuwepo, ili tuweze kutumia mda mwingi tukijadiliana badala ya kusafisha. Kwa hiyo:
+
+      Usikosee na kuanzisha mada kwenye kategoria nyingine badala ya kategoria sawa.
+      *Usiandike chapisho moja  kwenye mada nyingi.
+      *Usichapishe majibu ambayo hayana maneno.
+      *Usibadilishe mada kwa kuibadilisha katikati.
+      *Usiweke sahihi kwenye machapisho yako &mdash; kila chapisho lina taarifa zako za umbo ambazo zimeambatanishwa.
+
+      Badala ya kuchapisha "+1" au "Nimekubali", tumia kitufe cha upendo. Badala ya kuifanya mada iende njia nyingine kabisa, tumia Jibu  kama Kiungo cha Mada.
+
+      <a name="stealing"></a>
+
+      ## [Chapisha Vitu Vyako tu](#kuiba)
+
+      Hautachapisha kitu chochote abacho kina milikiwa na mtu mwingine bila ruhusa yake. Hautachapisha maelezo ya, kiungo kwenda, au njia ya kuiba haki za uvumbuzi (programu, filamu, sauti, picha), au kuvunja sheria yoyote nyingine.
+
+      <a name="power"></a>
+
+      ## [Inaendeshwa na Wewe](#endeshwa)
+
+      Tovuti hii inaendeshwa na [wasaidizi binafsi](/kuhusu) na *wewe*, jumuiya. Kama una swali lolote kuhusu jinsi vitu vinavyofanya kazi hapa, tengeneza mada mpya ndani ya [kategoria ya maoni ya tovuti](/c/tovuti-maoni) na tutajadiliana! Kama kuna kitu cha wasiwasi au muhimu sana ambacho kinahitaji ufumbuzi wa haraka sana, hakiwezi kujibiwa kwa kubonyeza bendera au mada, wasiliana nasi kupitia [ukurasa wa wasaidizi](/kuhusu).
+
+      <a name="tos"></a>
+
+      ## [Sheria na Masharti](#tos)
+
+      Ndio, sheria hinikiza, ila inabidi tujilinde &ndash; na watumiaji wenye tabia mbaya. Tuna [Sheria na Masharti](/tos) yanayoelezea tabia yako (na yetu) na haki za maandishi, faragha, na sheria. Kutumia huduma hizi, inabidi ukubaliane na [TOS](/tos) zetu.
+  badges:
+    editor:
+      name: Mhariri
+      description: Uhariri wa chapisho la kwanza
+    basic_user:
+      name: Kawaida
+    member:
+      name: Mwanachama
+    regular:
+      name: Kawaida
+    leader:
+      name: Kiongozi
+    welcome:
+      name: Karibu
+      description: Pokea upendo
+    autobiographer:
+      name: Muandishi wa maisha ya mtu
+      description: "Amejaza <a href=\"%{base_uri}/my/preferences/profile\">maandishi mafupi</a>ya mtu"
+    anniversary:
+      name: Siku ya kumbukumbu
+      description: "Mwanachama kwa mwaka mmoja, amechapisha mara moja"
+    nice_post:
+      name: Jibu Zuri
+      description: Umepokea upendo 10 kwenye jibu
+    good_post:
+      name: Jibu Zuri
+      description: Umepokea upendo 25 kwenye jibu
+    great_post:
+      name: Jibu Zuri
+      description: Umepokea upendo 50 kwenye jibu
+    nice_topic:
+      name: Mada Nzuri
+      description: Umepokea upendo 10 kwenye mada
+    good_topic:
+      name: Mada Nzuri
+      description: Umepokea upendo 25 kwenye mada
+    great_topic:
+      name: Mada Nzuri
+      description: Umepokea upendo 50 kwenye mada
+    nice_share:
+      name: Gawiza Zuri
+      description: Gawizo la chapisho kwa watumiaji 25 wa kipekee
+      long_description: |
+        Beji hii inatolewa gawizo la kiungo kikibonyezwa na watu 25 kutoka nje.  Asante kwa kusambaza neno kuhusu majadiliano, na jumuiya yetu!
+    good_share:
+      name: Gawizo Zuri
+      description: Gawizo la chapisho kwa watu 300 wa kipekee
+    great_share:
+      name: Gawiza Zuri
+      description: Gawizo la chapisho kwa watu 1000 wa kipekee
+    first_like:
+      name: Upendo wa Kwanza
+      description: Amependa chapisho
+      long_description: |
+        Beji hii inatolewa ukipenda chapisho kwa kutumia kitufe cha :heart:. Kuonyesha upendo wa machapisho ni njia moja ya kuonyesha wanachama wenzako kuwa machapisho yao ni mazuri, muhimu, yanavutia, au yamekufurahisha. Endelea kutoa upendo!
+    first_flag:
+      name: Bendera ya Kwanza
+      description: Chapisho limeripotiwa
+    promoter:
+      name: Mpambe
+      description: Mtumiaji amekaribishwa
+      long_description: |
+        Beji hii inatolewa ukimkaribisha mtu ajiunge na jumuiya kupitia kitufe cha mualiko kwenye ukurasa wakoo, au chini ya mada. Ukaribishaji wa marafiki ambao wanaweza kuvutiwa na majadiliano ni njia nzuri ya kuwajulisha watu wapya kuhusu jumuiya yetu, kwa hiyo asante!
+    campaigner:
+      name: Mwanaharakati
+      description: Watumiaji 3 wa kawaida wamekaribishwa
+    champion:
+      name: Mshindi
+      description: Wanachama 5 wamekaribishwa
+    first_share:
+      name: Gawizo la Kwanza
+      description: Chapisho lililogawizwa
+      long_description: |
+        Beji hii inatolewa mara ya kwanza ukisambaza kiungo chenye jibu au mada kwa kutumia kitufe cha kusambaza. Usambazaji wa viungo ni njia nzuri ya kuonyesha dunia majadiliano yanayovutia na kusaidia kwenye ukuzaji wa jumuiya.
+    first_link:
+      name: Kiungo cha Kwanza
+      description: kiungo kimeongezwa kwenye mada nyingine
+      long_description: |
+        Beji hii inatolewa mara ya kwanza ukiongeza kiungo kwenye mada nyingine. Kitendo hicho kinasaidia wasomaji wengine waone mazungumzo ya kuvutia, kwa kuwaonyesha muunganisho kati ya mada kwenye njia zote. Endelea kuunga!
+    first_quote:
+      name: Nukulu ya Kwanza
+      description: Chapisho lina nukulu
+    read_guidelines:
+      name: Soma Muongozo
+      description: "Soma <a href=\"%{base_uri}/guidelines\">muongozo wa jumuiya</a>"
+    reader:
+      name: Msomaji
+      description: Soma kila jibu kwenye mada lenye majibu zaidi ya 100
+    popular_link:
+      name: Kiungo Maarufu
+      description: Amechapisha kiungo cha nje chenye upendo 50
+    hot_link:
+      name: Kiungo Maarufu Sana
+      description: Amechapisha kiungo cha nje chenye upendo 300
+    famous_link:
+      name: Kiungo Kinachojulikana Sana
+      description: Amechapisha kiungo cha nje kilichobonyezwa mara 1000
+    appreciated:
+      name: Imepewa  Shukuru
+      description: Umepata upendo mmoja 1 kwenye machapisho 20
+      long_description: |
+        Hii beji inatolewa ukipata upendo mmoja au zaidi kwenye machapisho 20 tofauti. Jukwaa linafurahia mchango wako kwenye majadiliano hapa!
+    respected:
+      name: Imepewa Heshima
+      description: Umepata upendo 2 kwenye machapisho 100
+      long_description: |
+        Hii beji inatolewa ukipata upendo 2 au zaidi kwenye machapisho 100 tofauti. Jukwaa linaanza kuheshimu mchango wako kwenye majadiliano hapa!
+    admired:
+      name: Imesifiwa
+      description: Umepata upendo 5 kwenye machapisho 300
+      long_description: |
+        Hii beji inatolewa ukipata upendo 5 au zaidi kwenye machapisho 300 tofauti. Jukwaa linasifu na kuheshimu mchango wako mkubwa kwenye majadiliano hapa!
+    out_of_love:
+      name: Haina Upendo
+      description: Umetumia upendo 50 ndani ya siku moja
+      long_description: |
+        Hii bei inatolewa ukitumia upendo wako 50 wa siku. Kumbuka kuchukua mda na kupenda machapisho unayoyafurahia na kushukuru, vitendo hivi vinatia moyo wengine kwenye jukwaa kutengeneza majadiliano mengine mazuri zaidi ya baadae.
+    higher_love:
+      name: Upendo wa Hali ya Juu
+      description: Umetumia upendo 50 mara 5 ndani ya siku moja
+      long_description: |
+        Hii beji inatolewa ukitumia upendo wako 50 mara 5 kwa siku. Asante kwa kuchukua mda kuchochea maongezi mazuri kila siku!
+    crazy_in_love:
+      name: Imejaa Upendo
+      description: Umetumia upendo 50 mara 20 ndani ya siku moja
+    thank_you:
+      name: Asante
+      description: ana upendo 20 kwenye machapisho na ametoa upendo 10
+      long_description: |
+        Beji hii inatolewa ukipata upendo 20 kwenye chapisho na ukitoa upendo 10 au zaidi. Mtu akipenda machapisho yako, ni vizuri na wewe ukipenda machapisho yao pia.
+    gives_back:
+      name: Toa Tena
+      description: ana upendo 100 kwenye machapisho na ametoa upendo 100
+      long_description: |
+        Beji hii inatolewa ukipata upendo 100 kwenye chapisho na ukitoa upendo 100 au zaidi. Asante kwa ushirikiano wako!
+    empathetic:
+      name: Huruma na Uelewa
+      description: ana upendo 500 kwenye machapisho na ametoa upendo 1000
+    first_emoji:
+      name: Emoji ya Kwanza
+      description: Umetumia Emoji kwenye Chapisho
+      long_description: |
+        Beji hii inatolewa mara ya kwanza ukiongeza Emoji kwenye chapisho lako :thumbsup:. Emoji inasaidia kuonyesha hisia kwenye machapisho yako, kuanzia furaha :smiley: mpaka huzuni :anguished: mpaka hasira :angry: na kila kitu katikati :sunglasses:. Andika tu : (nukta mbili) au bonyeza kitufe cha mwambaa zana za Emoji iliyopo kwenye sehemu ya kuhariri kuchagua kati ya machaguo mia moja na zaidi :ok_hand:
+    first_mention:
+      name: Kutajwa kwa Mara ya Kwanza
+      description: Amemtaja mtumiaji ndani ya chapisho
+    first_onebox:
+      name: Onebox ya Kwanza
+      description: Chapisha kiungo kilichokuwa onebox
+    first_reply_by_email:
+      name: Jibu la Kwanza Kupitia Barua Pepe
+      description: Amejibu chapisho kupitia barua pepe
+      long_description: |
+        Beji hii inatolewa mara ya kwanza ukijibu chapisho kupitia barua pepe :barua pepe:
+    new_user_of_the_month:
+      name: "Mtumiaji Mpya wa Mwezi"
+      description: Mchango Bora Sana ndani ya mwezi wao wa kwanza
+      long_description: |
+        Beji hii inatolewa kwa watumiaji wawili wapya kila mwezi kuwapongeza kwa mchango wao, inapimwa kulingana na machapisho mangapi yalipendwa, na nani.
+    enthusiast:
+      name: Mwenye Motisha
+      description: Ametembelea siku 10
+    aficionado:
+      name: Aficionado
+      description: Ametembelea siku 100
+    devotee:
+      name: Mshiriki
+      description: Ametembelea siku 365
+    badge_title_metadata: "beji %{display_name} kwenye %{site_title} "
+  admin_login:
+    success: "Barua Pepe Imetumwa"
+    errors:
+      unknown_email_address: "Barua pepe isiyojulikana."
+    email_input: "Barua Pepe ya Kiongozi"
+    submit_button: "Tuma Barua Pepe"
+  performance_report:
+    initial_post_raw: mada hii ina ripoti za utendaji wa tovuti yako.
+    initial_topic_title: Ripoti za Utendaji wa Tovuti
+  tags:
+    title: "Lebo"
+    staff_tag_disallowed: "lebo ya \"%{tag}\" inatumiwa na wasaidizi pekee."
+    staff_tag_remove_disallowed: "lebo ya \"%{tag}\" inaweza kuondolewa na wasaidizi tu."
+    minimum_required_tags: "Chagua lebo %{count} au zaidi."
+  rss_by_tag: "Mada zenye lebo %{tag}"
+  finish_installation:
+    congratulations: "Hongera, umesakinisha Discourse!"
+    register:
+      button: "Jisajili"
+      title: "Sajili Akaunti ya Kiongozi"
+      help: "sajili akaunti mpya kuanza"
+    confirm_email:
+      title: "Thibitisha Barua pepe yako"
+      message: "<p>Tumekutumia barua pepe ya uanzisho kwenye <b>%{email}</b>. Tafadhali fuatiia maelezo kwenye barua pepe kuanzisha akaunti yako.</p><p>Kama haijafika, hakikisha umeandika barua pepe sawa kwenye Discourse yako na angalia folda la barua taka au spam.</p>"
+    resend_email:
+      title: "Tuma Tena Barua Pepe ya Uanzisho"
+      message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
+  safe_mode:
+    no_customizations: "Sitisha dhima ya sasa"
+    only_official: "Sitisha programu-jalizi zisizo rasmi"
+    no_plugins: "Sitisha programu-jalizi zote"
+    enter: "Ingia Hali-tumizi iliyo salama"
+  wizard:
+    title: "Mpangilio wa Discourse"
+    step:
+      locale:
+        title: "Karibu kwenye Discourse yako!"
+        fields:
+          default_locale:
+            description: "Lugha ipi ni chaguo-msingi ya jumuia yako?"
+      forum_title:
+        title: "Jina"
+        description: "Jina lako ni ishara ya kwanza kuonwa kutoka mbali, kitu cha <i>kwanza</i>kuonwa kuhusiana na jamii yako. Jina na cheo chako vinasema nini kuhusiana na jumuia yako?"
+        fields:
+          title:
+            label: "Jina la Jumuia"
+            placeholder: "Sehemu ya Jeni ya Kuburudika"
+          site_description:
+            label: "Elezea jamii yako ndani ya sentensi moja"
+            placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
+      introduction:
+        title: "Utambulisho"
+        fields:
+          welcome:
+            label: "Mada ya Kukaribisha"
+            description: "<p>Unawezaje kuelezea jamii yako kwa mtu usiyemjua kwenye lifti ndani ya dakika 1?</p><ul><li>Majadiliano ni ya nani?</li><li>Nitakutana na nini?</li><li>Kwa nini nitembelee?</li></ul><p>Mada ya kukaribisha ni kitu cha kwanza kitakachosomwa na waalikwa wapya. Ifikirie kama <b>ankra moja</b>'msemo mfupi' au 'kauli ya vitu vya kutimizwa'.</p>"
+            one_paragraph: "Tafadhali hakikisha ujumbe wa kukaribisha ni aya moja."
+      privacy:
+        title: "Kufikia"
+        description: "<p>Je jamii yako inapatikana kwa kila mtu, au ni kwa wanachama, mualiko, au uthibitisho? Kama ungependa, unaweza kuseti vitu viwe  binafsi, kama ya kuonyesha kwa umma baadae. </p><p>Unaweza kutuma mialiko kutoka kwenye mada, au kutoka kwenye ukurasa binafsi wa mtumiaji, pia.</p>"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Umma"
+                description: "Mtu yoyote  anaweza kuifikia jamii hii na kujiunga."
+              restricted:
+                label: "Binafsi"
+                description: "Watu pekee waliopata mualiko au kuthibitishwa wanaweza kuona jamii"
+      contact:
+        title: "Wasiliana"
+        fields:
+          contact_email:
+            label: "Tuma Ujumbe"
+            placeholder: "jina@mfano.com"
+            description: "Barua pepe ya mtu au kikundi anayesimamia jumuiya hii. Inatumika kwa ajili ya taarifa muhimu sana, mfano ripoti ambazo hazijashughulikiwa, masasisho ya ulinzi, na <a href='/about' target='_blank'>ukurasa kuhusu wewe</a> kwa ajili ya mawasiliano muhimu /kuhusiana"
+          contact_url:
+            label: "Ukurasa wa Tovuti"
+            placeholder: "http://www.example.com/contact-us"
+            description: "Ukurasa wa mawasiliano wa shirika lako. Utaonyeshwa kwenye <a href='/about' target='_blank'>kurasa wa kuhusu wewe</a>."
+          site_contact:
+            label: "Ujumbe uliotomatiki"
+            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
+      corporate:
+        title: "Shirika"
+        fields:
+          company_short_name:
+            label: "Jina la Kampuni (fupi)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Jina la Kampuni (lote)"
+            placeholder: "Initech, Inc."
+          company_domain:
+            label: "Jina la Kikoa cha Kampuni"
+            placeholder: "initech.com"
+      colors:
+        title: "Mandhari"
+      logos:
+        title: "Nembo"
+        fields:
+          logo_url:
+            label: "Nembo Msingi"
+      icons:
+        title: "Ikoni"
+        fields:
+          favicon_url:
+            label: "Ikoni Ndogo"
+          apple_touch_icon_url:
+            label: "Ikoni Kubwa"
+      homepage:
+        description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
+        title: "Ukurasa mkuu"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Mada za hivi Karibuni"
+      emoji:
+        title: "Emoji"
+      invites:
+        title: "Alika Wasaidizi"
+        description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
+      finished:
+        title: "Discourse yako iko Tayari!"
+        description: |
+          <p>Kama unataka kubadilisha mipangilio hii, tembelea <a href='/admin' target='_blank'>kifungu cha kiongozi</a>; utaiona pembeni ya ikoni ya spana kwenye menyu ya tovuti.</p>
+          <p>Kila la kheri<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>kwenye ujengaji wa jumuiya yako mpya!</a></p>
+  search_logs:
+    graph_title: "Idadi ya Utafiti"
+  joined: "Alijiunga"

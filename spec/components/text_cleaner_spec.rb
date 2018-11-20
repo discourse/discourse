@@ -159,6 +159,11 @@ describe TextCleaner do
       expect(TextCleaner.clean_title(" \t Hello there \n ")).to eq("Hello there")
     end
 
+    it "strips zero width spaces" do
+      expect(TextCleaner.clean_title("Hello​ ​there")).to eq("Hello there")
+      expect(TextCleaner.clean_title("Hello​ ​there").length).to eq(11)
+    end
+
     context "title_prettify site setting is enabled" do
 
       before { SiteSetting.title_prettify = true }
@@ -189,6 +194,10 @@ describe TextCleaner do
 
       it "replaces all upper case unicode text with regular unicode case letters" do
         expect(TextCleaner.clean_title("INVESTIGAÇÃO POLÍTICA NA CÂMARA")).to eq("Investigação política na câmara")
+      end
+
+      it "doesn't downcase text if only one word is upcase in a non-ascii alphabet" do
+        expect(TextCleaner.clean_title("«Эта неделя в EVE»")).to eq("«Эта неделя в EVE»")
       end
 
       it "capitalizes first unicode letter" do

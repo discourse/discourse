@@ -1,0 +1,21 @@
+<div class='reason-controls'>
+  <label>
+    <div class='silence-reason-label'>
+      {{{i18n 'admin.user.silence_reason_label'}}}
+    </div>
+    </label>
+    {{text-field
+      value=reason
+      class="silence-reason"
+      placeholderKey="admin.user.silence_reason_placeholder"}}
+</div>
+
+<label>
+  <div class='silence-message-label'>
+    {{i18n "admin.user.silence_message"}}
+  </div>
+</label>
+{{textarea
+  value=message
+  class="silence-message"
+  placeholder=(i18n "admin.user.silence_message_placeholder")}}

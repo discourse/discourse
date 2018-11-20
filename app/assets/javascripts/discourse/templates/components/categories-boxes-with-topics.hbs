@@ -9,8 +9,9 @@
 
           <h3>
             {{#if c.read_restricted}}
-              {{fa-icon 'lock'}}
+              {{d-icon 'lock'}}
             {{/if}}
+            {{category-title-before category=c}}
             {{c.name}}
           </h3>
         </a>

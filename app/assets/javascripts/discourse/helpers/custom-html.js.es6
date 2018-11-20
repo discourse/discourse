@@ -1,4 +1,4 @@
-import PreloadStore from 'preload-store';
+import PreloadStore from "preload-store";
 
 let _customizations = {};
 

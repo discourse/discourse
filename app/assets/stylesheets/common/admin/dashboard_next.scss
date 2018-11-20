@@ -1,0 +1,473 @@
+.admin-reports,
+.dashboard-next {
+  &.admin-contents {
+    margin: 10px 0 0 0;
+  }
+}
+
+.dashboard-next {
+  .section-top {
+    margin-bottom: 0.5em;
+  }
+
+  .navigation {
+    display: flex;
+    margin: 0 0 2.5em 0;
+    border-bottom: 1px solid $primary-low-mid;
+
+    .navigation-item {
+      display: inline;
+      &:hover {
+        background: $primary-very-low;
+      }
+    }
+
+    .navigation-link {
+      display: block;
+      font-weight: bold;
+      padding: 0.6em 1em 0.5em 1em;
+    }
+  }
+
+  @mixin active-navigation-item {
+    .navigation-link {
+      border-bottom: 0.4em solid $tertiary;
+    }
+  }
+
+  &.dashboard-next-moderation .navigation-item.moderation {
+    @include active-navigation-item;
+  }
+
+  &.general .navigation-item.general {
+    @include active-navigation-item;
+  }
+
+  .sections {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-columns {
+    display: flex;
+    justify-content: space-between;
+
+    @include breakpoint(medium) {
+      flex-direction: column;
+    }
+
+    .section-column {
+      min-width: calc(50% - 0.5em);
+      max-width: 100%;
+
+      &:last-child {
+        margin-left: 0.5em;
+      }
+
+      &:first-child {
+        margin-right: 0.5em;
+      }
+
+      @include breakpoint(medium) {
+        min-width: 100%;
+
+        &:last-child {
+          order: 1;
+        }
+
+        &:first-child {
+          order: 2;
+        }
+      }
+    }
+
+    @include breakpoint(medium) {
+      .section-column:last-child,
+      .section-column:first-child {
+        margin: 0;
+      }
+    }
+  }
+
+  .section {
+    .section-title {
+      h2 {
+        margin: 0 0.5em 0 0;
+
+        a {
+          color: $primary;
+        }
+      }
+
+      display: flex;
+      @media screen and (max-width: 400px) {
+        flex-wrap: wrap;
+      }
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $primary-low;
+      margin-bottom: 0.5em;
+      padding-bottom: 0.5em;
+    }
+
+    .section-body {
+      padding: 1em 0 0;
+      > p {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .admin-report .header {
+    border: 0;
+    padding: 0;
+    margin-bottom: 1em;
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+
+    .admin-report {
+      grid-column: span 4;
+    }
+
+    @include breakpoint(medium) {
+      .admin-report {
+        grid-column: span 12;
+      }
+    }
+
+    .chart-canvas-container {
+      position: relative;
+      margin-left: -5px;
+    }
+
+    .chart-canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .misc {
+    display: flex;
+    border: 1px solid $primary-low;
+
+    .durability,
+    .last-dashboard-update {
+      flex: 1 1 50%;
+      box-sizing: border-box;
+      margin: 1em 0;
+      padding: 0 1em;
+    }
+
+    .durability {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      border-right: 1px solid $primary-low;
+
+      .backups,
+      .uploads {
+        flex: 1 1 100%;
+      }
+
+      .uploads p:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .durability-title {
+        text-transform: capitalize;
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      flex-wrap: wrap;
+      .durability,
+      .last-dashboard-update {
+        flex: 1 1 100%;
+        text-align: left;
+      }
+      .last-dashboard-update {
+        display: block;
+        margin: 0 20px 20px 20px;
+        padding: 20px 0 0 0;
+        border-top: 1px solid $primary-low;
+        border-left: none;
+      }
+    }
+    .last-dashboard-update {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      div {
+        align-self: center;
+        h4 {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .top-referred-topics {
+    margin-bottom: 1.5em;
+  }
+
+  .top-referred-topics,
+  .trending-search {
+    th:first-of-type {
+      text-align: left;
+    }
+  }
+
+  .section {
+    .period-chooser .period-chooser-header {
+      .selected-name,
+      .d-icon {
+        font-size: $font-up-1;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  .dashboard-problems {
+    margin-bottom: 2.5em;
+
+    .d-icon-exclamation-triangle {
+      color: $danger;
+    }
+
+    .actions {
+      margin: 0;
+    }
+  }
+}
+
+.counters-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  .counters-header {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
+    border: 1px solid $primary-low;
+    border-bottom: 0;
+    font-weight: 700;
+    text-align: right;
+    align-items: center;
+    padding: 0.65em 0.25em;
+  }
+
+  .admin-report .main {
+    border: 1px solid $primary-low;
+
+    &:hover {
+      background-color: $primary-very-low;
+    }
+  }
+
+  .admin-report:not(:last-child) {
+    .main {
+      border-bottom: 0;
+    }
+
+    .conditional-loading-section.is-loading {
+      border-bottom: 0;
+    }
+  }
+
+  .admin-report .conditional-loading-section.is-loading {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em 0.25em;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border: 1px solid $primary-low;
+
+    .title {
+      font-size: $font-0;
+    }
+
+    .spinner {
+      margin: 0;
+      width: 8px;
+      height: 8px;
+      margin-left: 0.5em;
+    }
+  }
+
+  .admin-report .main .report-alert {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em 0.25em;
+    align-items: center;
+    text-align: left;
+    border: 0;
+
+    &:hover {
+      background-color: $primary-very-low;
+    }
+
+    .d-icon {
+      font-size: $font-up-1;
+      margin: 0 0.25em 0 0;
+      color: $primary-low-mid;
+    }
+  }
+}
+
+.activity-metrics {
+  margin-bottom: 1.5em;
+}
+
+.user-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: column;
+
+  .dashboard-inline-table {
+    //  and "hides" margin when the item spans 100% width
+    flex: 1 0 auto;
+    max-width: 95%;
+  }
+  .table-cell {
+    display: flex;
+    flex: 0 1 auto;
+    margin: 0 10px 5px 0;
+    border: 1px solid $primary-low;
+    border-radius: 10px;
+    .label {
+      display: flex;
+      align-items: center;
+      color: $primary;
+      background: $primary-very-low;
+      justify-content: center;
+      border-radius: 9px 0 0 9px;
+      padding: 0 5px 0 8px;
+
+      .d-icon {
+        margin-right: 5px;
+        font-size: $font-down-1;
+      }
+    }
+
+    .value {
+      padding: 0 8px 0 5px;
+    }
+    &.user-newuser {
+      .label {
+        color: $primary-high;
+      }
+    }
+    &.user-basic,
+    &.user-member {
+      border-color: $bronze;
+      .label {
+        border-color: $bronze;
+        background: $bronze;
+        color: $secondary;
+      }
+    }
+    &.user-regular {
+      border-color: $silver;
+      .label {
+        border-color: $silver;
+        background: $silver;
+        color: $secondary;
+      }
+    }
+    &.user-leader {
+      border-color: $gold;
+      .label {
+        background: $gold;
+        border-color: $gold;
+        color: $secondary;
+      }
+    }
+  }
+}
+
+.rtl .dashboard-next {
+  .section-column {
+    &:last-child {
+      margin-right: 1em;
+      margin-left: 0;
+    }
+
+    &:first-child {
+      margin-left: 1em;
+      margin-right: 0;
+    }
+  }
+
+  .user-metrics .table-cell {
+    margin: 0 0 5px 10px;
+  }
+
+  .table-cell {
+    .label {
+      border-radius: 0 9px 9px 0;
+
+      .d-icon {
+        margin-right: 0;
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.users-by-trust-level,
+.users-by-type {
+  margin-bottom: 1.5em;
+}
+
+.community-health.section {
+  margin-bottom: 1.5em;
+}
+
+.dashboard-next-moderation {
+  .admin-dashboard-moderation-top {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+  }
+
+  .section-body {
+    margin-bottom: 1em;
+  }
+
+  .main-section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+
+    > * {
+      grid-column: span 12;
+    }
+
+    .admin-dashboard-moderation-bottom-outlet {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-column-gap: 1em;
+      grid-row-gap: 1em;
+    }
+  }
+
+  .admin-report.flags-status {
+    grid-column: span 12;
+  }
+
+  .admin-report.post-edits {
+    grid-column: span 12;
+  }
+}

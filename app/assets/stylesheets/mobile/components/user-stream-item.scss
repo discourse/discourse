@@ -1,0 +1,35 @@
+// Mobile styles for "user-stream-item" component
+.user-stream {
+  // DEPRECATION:
+  // The ".item" class should be eventually removed because it's too generic.
+  // Once ".item" has been removed, ".user-stream-item" can replace
+  // ".user-stream" as the top-level selector on this file as all other
+  // selectors below are its children
+  .item,
+  .user-stream-item {
+    padding: 20px 0 15px 0;
+  }
+
+  .name {
+    vertical-align: middle;
+  }
+
+  .notification {
+    &.unread {
+      background-color: dark-light-choose(
+        $tertiary-low,
+        srgb-scale($tertiary, $secondary, 15%)
+      );
+    }
+  }
+
+  .group-member-info {
+    .name {
+      vertical-align: inherit;
+    }
+  }
+
+  .topic-statuses {
+    float: left;
+  }
+}

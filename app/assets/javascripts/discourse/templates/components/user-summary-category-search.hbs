@@ -1,0 +1,7 @@
+{{#if count}}
+  {{#link-to 'full-page-search' (query-params q=searchParams)}}
+    {{count}}
+  {{/link-to}}
+{{else}}
+  &ndash;
+{{/if}}

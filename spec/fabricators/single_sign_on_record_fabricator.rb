@@ -5,5 +5,3 @@ Fabricator(:single_sign_on_record) do
   external_email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
   last_payload { sequence(:last_payload) { |i| "nonce=#{i}1870a940bbcbb46f06880ed338d58a07&name=" } }
 end
-
-

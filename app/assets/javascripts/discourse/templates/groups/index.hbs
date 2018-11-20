@@ -1,0 +1,99 @@
+{{#d-section pageClass="groups"}}
+  <div class="groups-header">
+    {{#if currentUser.admin}}
+      {{d-button action="new"
+          class="groups-header-new pull-right"
+          icon="plus"
+          label="admin.groups.new.title"}}
+    {{/if}}
+
+    <div class="groups-header-filters">
+      {{text-field value=filterInput
+          placeholderKey="groups.index.all"
+          class="groups-header-filters-name no-blur"}}
+
+      {{combo-box value=type
+                  content=types
+                  clearable=true
+                  allowAutoSelectFirst=false
+                  noneLabel="groups.index.filter"
+                  class="groups-header-filters-type"}}
+    </div>
+  </div>
+
+  {{#if model}}
+    {{#conditional-loading-spinner condition=model.loading}}
+      {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
+        <div class='container'>
+          <table class="groups-table">
+            <thead>
+              <tr>
+                {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
+                {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+                <th>{{i18n "groups.index.group_type"}}</th>
+                <th>{{i18n "groups.membership"}}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {{#each model as |group|}}
+                <tr class="groups-table-row">
+                  <td class="groups-info">
+                    {{#link-to "group.members" group.name}}
+                      {{#if group.flair_url}}
+                        <span class='group-avatar-flair'>
+                          {{avatar-flair
+                            flairURL=group.flair_url
+                            flairBgColor=group.flair_bg_color
+                            flairColor=group.flair_color
+                            groupName=group.name}}
+                        </span>
+                      {{/if}}
+
+                      {{groups-info group=group}}
+                    {{/link-to}}
+                  </td>
+
+                  <td class="groups-user-count">{{group.user_count}}</td>
+
+                  <td class="groups-table-type">
+                    {{#if group.public_admission}}
+                      {{i18n 'groups.index.public'}}
+                    {{else if group.isPrivate}}
+                      {{d-icon "eye-slash"}}
+                      {{i18n 'groups.index.private'}}
+                    {{else}}
+                      {{#if group.automatic}}
+                        {{i18n 'groups.index.automatic'}}
+                      {{else}}
+                        {{i18n 'groups.index.closed'}}
+                      {{/if}}
+                    {{/if}}
+                  </td>
+
+                  <td class="groups-table-membership">
+                    {{#if group.is_group_owner}}
+                      <span>
+                        {{i18n "groups.index.is_group_owner"}}
+                      </span>
+                    {{else if group.is_group_user}}
+                      <span>
+                        {{i18n "groups.index.is_group_user"}}
+                      </span>
+                    {{/if}}
+
+                    {{group-membership-button model=group showLogin='showLogin'}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/load-more}}
+
+      {{conditional-loading-spinner condition=model.loadingMore}}
+    {{/conditional-loading-spinner}}
+  {{else}}
+    <p>{{i18n "groups.index.empty"}}</p>
+  {{/if}}
+{{/d-section}}

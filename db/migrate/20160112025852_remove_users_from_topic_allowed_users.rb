@@ -1,4 +1,4 @@
-class RemoveUsersFromTopicAllowedUsers < ActiveRecord::Migration
+class RemoveUsersFromTopicAllowedUsers < ActiveRecord::Migration[4.2]
 
   # historically we added admins automatically to a message if they
   # responded, despite them being in the group the message is targetted at

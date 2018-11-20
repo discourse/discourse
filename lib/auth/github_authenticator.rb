@@ -6,6 +6,26 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     "github"
   end
 
+  def enabled?
+    SiteSetting.enable_github_logins
+  end
+
+  def description_for_user(user)
+    info = GithubUserInfo.find_by(user_id: user.id)
+    info&.screen_name || ""
+  end
+
+  def can_revoke?
+    true
+  end
+
+  def revoke(user, skip_remote: false)
+    info = GithubUserInfo.find_by(user_id: user.id)
+    raise Discourse::NotFound if info.nil?
+    info.destroy!
+    true
+  end
+
   class GithubEmailChecker
     include ::HasErrors
 
@@ -21,7 +41,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
   end
 
-  def after_authenticate(auth_token)
+  def after_authenticate(auth_token, existing_account: nil)
     result = Auth::Result.new
 
     data = auth_token[:info]
@@ -37,20 +57,27 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
     user_info = GithubUserInfo.find_by(github_user_id: github_user_id)
 
+    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+      user_info.destroy! if user_info
+      user_info = GithubUserInfo.create(
+        user_id: existing_account.id,
+        screen_name: screen_name,
+        github_user_id: github_user_id
+        )
+    end
+
     if user_info
       # If there's existing user info with the given GitHub ID, that's all we
       # need to know.
       user = user_info.user
-      result.email = data[:email],
-      result.email_valid = !!data[:email_verified]
+      result.email = data[:email]
+      result.email_valid = data[:email].present?
     else
       # Potentially use *any* of the emails from GitHub to find a match or
       # register a new user, with preference given to the primary email.
       all_emails = Array.new(auth_token[:extra][:all_emails])
-      all_emails.unshift({
-          :email => data[:email],
-          :verified => !!data[:email_verified]
-      })
+      primary = all_emails.detect { |email| email[:primary] && email[:verified] }
+      all_emails.unshift(primary) if primary.present?
 
       # Only consider verified emails to match an existing user.  We don't want
       # someone to be able to create a GitHub account with an unverified email
@@ -93,6 +120,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       end
     end
 
+    retrieve_avatar(user, data)
+
     result.user = user
     result
   end
@@ -104,16 +133,25 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       screen_name: data[:github_screen_name],
       github_user_id: data[:github_user_id]
     )
-  end
 
+    retrieve_avatar(user, data)
+  end
 
   def register_middleware(omniauth)
     omniauth.provider :github,
-           :setup => lambda { |env|
-              strategy = env["omniauth.strategy"]
+           setup: lambda { |env|
+             strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.github_client_id
               strategy.options[:client_secret] = SiteSetting.github_client_secret
            },
-           :scope => "user:email"
+           scope: "user:email"
+  end
+
+  private
+
+  def retrieve_avatar(user, data)
+    return unless data[:image].present? && user && user.user_avatar&.custom_upload_id.blank?
+
+    Jobs.enqueue(:download_avatar_from_url, url: data[:image], user_id: user.id, override_gravatar: false)
   end
 end

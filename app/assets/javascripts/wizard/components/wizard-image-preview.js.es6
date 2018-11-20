@@ -1,3 +1,3 @@
 export default Ember.Component.extend({
-  classNameBindings: [':wizard-image-preview', 'fieldClass']
+  classNameBindings: [":wizard-image-preview", "fieldClass"]
 });

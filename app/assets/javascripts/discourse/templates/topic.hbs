@@ -6,91 +6,102 @@
     </div>
   {{/if}}
 
+  {{#if showSharedDraftControls}}
+    {{shared-draft-controls topic=model}}
+  {{/if}}
+
   {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
-      <div id="topic-title">
-        <div class="container">
+      {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
+        {{#if editingTopic}}
+          <div class="edit-topic-title">
+          {{#if model.isPrivateMessage}}
+            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+          {{/if}}
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+            {{#if showCategoryChooser}}
+              {{category-chooser class="small" value=buffered.category_id}}
+            {{/if}}
 
-          <div class="title-wrapper">
-            {{#if editingTopic}}
-              {{#if model.isPrivateMessage}}
-                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{/if}}
+            {{#if canEditTags}}
+              {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
+            {{/if}}
 
-              {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-              {{#if showCategoryChooser}}
-                <br>
-                {{category-chooser valueAttribute="id" value=buffered.category_id}}
-              {{/if}}
-
-              {{#if canEditTags}}
-                <br>
-                {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
-              {{/if}}
-
-              {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
-
-              <br>
+            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+            <div class="edit-controls">
               {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
               {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
-            {{else}}
-              <h1>
-                {{#unless model.is_warning}}
-                  <a href={{pmPath}}>
-                    <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-                  </a>
-                {{/unless}}
 
-                {{#if model.details.loaded}}
-                  {{topic-status topic=model}}
-                  <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
-                    {{{model.fancyTitle}}}
-                  </a>
-                {{/if}}
-
-                {{#if model.details.can_edit}}
-                  <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
-                {{/if}}
-              </h1>
-
-              {{#unless model.isPrivateMessage}}
-                {{topic-category topic=model class="topic-category"}}
-              {{/unless}}
-            {{/if}}
+              {{#if canRemoveTopicFeaturedLink}}
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                  {{d-icon "times-circle"}}
+                  {{featuredLinkDomain}}
+                </a>
+              {{/if}}
+            </div>
           </div>
-          {{plugin-outlet name="topic-title" args=(hash model=model)}}
-        </div>
-      </div>
+
+        {{else}}
+          <h1>
+            {{#unless model.is_warning}}
+              {{#if siteSettings.enable_personal_messages}}
+                <a href={{pmPath}}>
+                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                </a>
+              {{else}}
+                <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+              {{/if}}
+            {{/unless}}
+
+            {{#if model.details.loaded}}
+              {{topic-status topic=model}}
+              <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
+                {{{model.fancyTitle}}}
+              </a>
+            {{/if}}
+
+            {{#if model.details.can_edit}}
+              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{d-icon "pencil"}}</a>
+            {{/if}}
+          </h1>
+
+          {{topic-category topic=model class="topic-category"}}
+        {{/if}}
+      {{/topic-title}}
     {{/if}}
+
 
     <div class="container posts">
       <div class='selected-posts {{unless multiSelect 'hidden'}}'>
         {{partial "selected-posts"}}
       </div>
 
-      {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
-        {{#if info.renderAdminMenuButton}}
-          {{topic-admin-menu-button
-            topic=model
-            fixed="true"
-            toggleMultiSelect=(action "toggleMultiSelect")
-            deleteTopic=(action "deleteTopic")
-            recoverTopic=(action "recoverTopic")
-            toggleClosed=(action "toggleClosed")
-            toggleArchived=(action "toggleArchived")
-            toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
-            convertToPublicTopic=(action "convertToPublicTopic")
-            convertToPrivateMessage=(action "convertToPrivateMessage")}}
-        {{/if}}
-
+      {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
+          {{#if info.renderAdminMenuButton}}
+            {{topic-admin-menu-button
+              topic=model
+              fixed="true"
+              toggleMultiSelect=(action "toggleMultiSelect")
+              hideMultiSelect=(action "hideMultiSelect")
+              deleteTopic=(action "deleteTopic")
+              recoverTopic=(action "recoverTopic")
+              toggleClosed=(action "toggleClosed")
+              toggleArchived=(action "toggleArchived")
+              toggleVisibility=(action "toggleVisibility")
+              showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+              showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+              showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+              resetBumpDate=(action "resetBumpDate")
+              convertToPublicTopic=(action "convertToPublicTopic")
+              convertToPrivateMessage=(action "convertToPrivateMessage")}}
+          {{/if}}
+
           {{topic-timeline
             topic=model
+            notificationLevel=model.details.notification_level
             prevEvent=info.prevEvent
             fullscreen=info.topicProgressExpanded
             enteredIndex=enteredIndex
@@ -102,6 +113,7 @@
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
             toggleMultiSelect=(action "toggleMultiSelect")
+            hideMultiSelect=(action "hideMultiSelect")
             deleteTopic=(action "deleteTopic")
             recoverTopic=(action "recoverTopic")
             toggleClosed=(action "toggleClosed")
@@ -110,14 +122,35 @@
             showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
             showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
             showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+            resetBumpDate=(action "resetBumpDate")
             convertToPublicTopic=(action "convertToPublicTopic")
             convertToPrivateMessage=(action "convertToPrivateMessage")}}
         {{else}}
-          {{topic-progress
+          {{#topic-progress
             prevEvent=info.prevEvent
             topic=model
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
+            {{#if info.renderAdminMenuButton}}
+              {{topic-admin-menu-button
+                topic=model
+                openUpwards="true"
+                rightSide="true"
+                toggleMultiSelect=(action "toggleMultiSelect")
+                hideMultiSelect=(action "hideMultiSelect")
+                deleteTopic=(action "deleteTopic")
+                recoverTopic=(action "recoverTopic")
+                toggleClosed=(action "toggleClosed")
+                toggleArchived=(action "toggleArchived")
+                toggleVisibility=(action "toggleVisibility")
+                showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+                showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+                showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                resetBumpDate=(action "resetBumpDate")
+                convertToPublicTopic=(action "convertToPublicTopic")
+                convertToPrivateMessage=(action "convertToPrivateMessage")}}
+            {{/if}}
+          {{/topic-progress}}
         {{/if}}
       {{/topic-navigation}}
 
@@ -150,6 +183,9 @@
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
@@ -161,8 +197,9 @@
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
                 bottomVisibleChanged=(action "bottomVisibleChanged")
-                selectPost=(action "toggledSelectedPost")
-                selectReplies=(action "toggledSelectedPostReplies")
+                togglePostSelection=(action "togglePostSelection")
+                selectReplies=(action "selectReplies")
+                selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")}}
             {{/unless}}
@@ -174,7 +211,29 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
+              {{#if model.pending_posts_count}}
+                <div class="has-pending-posts">
+                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+
+                  {{#if currentUser.show_queued_posts}}
+                    {{#link-to "queued-posts"}}
+                      {{d-icon "check"}}
+                      {{i18n "queue.view_pending"}}
+                    {{/link-to}}
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              {{#if model.private_topic_timer.execute_at}}
+                {{topic-timer-info
+                    topicClosed=model.closed
+                    statusType=model.private_topic_timer.status_type
+                    executeAt=model.private_topic_timer.execute_at
+                    duration=model.private_topic_timer.duration}}
+              {{/if}}
+
               {{topic-timer-info
+                  topicClosed=model.closed
                   statusType=model.topic_timer.status_type
                   executeAt=model.topic_timer.execute_at
                   basedOnLastPost=model.topic_timer.based_on_last_post
@@ -186,9 +245,12 @@
                 {{signup-cta}}
               {{else}}
                 {{#if currentUser}}
+                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")
+                    hideMultiSelect=(action "hideMultiSelect")
                     deleteTopic=(action "deleteTopic")
                     recoverTopic=(action "recoverTopic")
                     toggleClosed=(action "toggleClosed")
@@ -197,32 +259,21 @@
                     showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
                     showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
                     showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                    resetBumpDate=(action "resetBumpDate")
                     convertToPublicTopic=(action "convertToPublicTopic")
                     convertToPrivateMessage=(action "convertToPrivateMessage")
                     toggleBookmark=(action "toggleBookmark")
                     showFlagTopic=(action "topicRouteAction" "showFlagTopic")
                     showInvite=(action "topicRouteAction" "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
+                    editFirstPost=(action "editFirstPost")
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}
-                  <div id="topic-footer-button">
+                  <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action="showLogin" label="topic.reply.title"}}
                   </div>
                 {{/if}}
-              {{/if}}
-
-              {{#if model.pending_posts_count}}
-                <div class="has-pending-posts">
-                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
-
-                  {{#if currentUser.show_queued_posts}}
-                    {{#link-to "queued-posts"}}
-                      {{fa-icon "check"}}
-                      {{i18n "queue.view_pending"}}
-                    {{/link-to}}
-                  {{/if}}
-                </div>
               {{/if}}
 
               {{#if showSelectedPostsAtBottom}}
@@ -233,22 +284,9 @@
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
-              {{#if model.details.suggested_topics.length}}
-                <div id="suggested-topics">
-                  <h3>{{{suggestedTitle}}}</h3>
-                  <div class="topics">
-                    {{#if model.isPrivateMessage}}
-                      {{basic-topic-list hideCategory="true"
-                                         showPosters="true"
-                                         topics=model.details.suggested_topics}}
-                    {{else}}
-                      {{basic-topic-list topics=model.details.suggested_topics}}
-                    {{/if}}
-                  </div>
-                  <h3>{{{browseMoreMessage}}}</h3>
-                </div>
+              {{#if model.suggestedTopics.length}}
+                {{suggested-topics topic=model}}
               {{/if}}
-
             {{/if}}
           {{/conditional-loading-spinner}}
 

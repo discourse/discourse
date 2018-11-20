@@ -1,0 +1,41 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hu:
+  site_settings:
+    disable_discourse_narrative_bot_welcome_post: "A Discourse alámondó bot üdvözlő üzenetének kikapcsolása"
+    discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse alámondó bot figyelmen kívül hagyjon"
+    discourse_narrative_bot_disable_public_replies: "A Discourse alámondó bot nyilvános válaszainak kikapcsolása"
+    discourse_narrative_bot_welcome_post_type: "A Discourse mesélő bot üdvözlő üzeneteinek kiküldendő típusai"
+    discourse_narrative_bot_welcome_post_delay: "Várj (n) másodpercet a Discourse mesélő bot üdvözlő üzenetének kiküldése előtt."
+  badges:
+    certified:
+      name: Hitelesített
+      description: "Teljesítette az új felhasználók eligazítását"
+      long_description: |
+        Ezt a jelvényt az új felhasználók interaktív eligazításának sikeres teljesítéséért adjuk. Kezdeményező voltál és megtanultad a beszélgetés alapvető eszközeit, és ezzel hitelesített lettél!
+    licensed:
+      name: Licenszelt
+  discourse_narrative_bot:
+    quote:
+      trigger: "idézet"
+      '1':
+        quote: "Minden nehézség közepében lehetőség rejtőzik"
+      '3':
+        quote: "Ne azért sírj, mert vége van, mosolyogj azért, mert megtörtént."
+    magic_8_ball:
+      answers:
+        '3': "Kétségtelenül"
+        '7': "Leginkább"
+        '9': "Igen"
+        '12': "Kérdezd meg később"
+        '17': "A válaszom nem."
+    track_selector:
+      reset_trigger: 'start'
+      skip_trigger: 'átugrás'
+    new_user_narrative:
+      reset_trigger: "új felhasználó"

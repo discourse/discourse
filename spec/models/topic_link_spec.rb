@@ -20,32 +20,29 @@ describe TopicLink do
 
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}",
-                              topic_id: topic.id,
-                              link_topic_id: topic.id)
+                        topic_id: topic.id,
+                        link_topic_id: topic.id)
     expect(ftl.valid?).to eq(false)
   end
 
   describe 'external links' do
     before do
-      post = Fabricate(:post, raw: "
-http://a.com/
-http://b.com/b
-http://#{'a'*200}.com/invalid
-http://b.com/#{'a'*500}
-                        ", user: user, topic: topic)
+      post = Fabricate(:post, raw: <<~RAW, user: user, topic: topic)
+        http://a.com/
+        https://b.com/b
+        http://#{'a' * 200}.com/invalid
+        //b.com/#{'a' * 500}
+      RAW
 
       TopicLink.extract_from(post)
     end
 
     it 'works' do
-      # has the forum topic links
-      expect(topic.topic_links.count).to eq(3)
-
-      # works with markdown links
-      expect(topic.topic_links.exists?(url: "http://a.com/")).to eq(true)
-
-      #works with markdown links followed by a period
-      expect(topic.topic_links.exists?(url: "http://b.com/b")).to eq(true)
+      expect(topic.topic_links.pluck(:url)).to contain_exactly(
+        "http://a.com/",
+        "https://b.com/b",
+        "//b.com/#{'a' * 500}"[0...TopicLink.max_url_length]
+      )
     end
 
   end
@@ -72,7 +69,6 @@ http://b.com/#{'a'*500}
       # should be the canonical URL
       expect(link.url).to eq(url)
     end
-
 
     context 'topic link' do
 
@@ -131,8 +127,8 @@ http://b.com/#{'a'*500}
         TopicLink.extract_from(linked_post)
         expect(topic.topic_links.first.url).to eq(url)
 
-        linked_post.revise(post.user, { raw: "no more linkies https://eviltrout.com" })
-        expect(other_topic.topic_links.where(link_post_id: linked_post.id)).to be_blank
+        linked_post.revise(post.user, raw: "no more linkies https://eviltrout.com")
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id)).to be_blank
       end
     end
 
@@ -170,6 +166,14 @@ http://b.com/#{'a'*500}
       end
     end
 
+    context "email address" do
+      it "does not extract a link" do
+        post = topic.posts.create(user: user, raw: "Valid email: foo@bar.com\n\nInvalid email: rfc822;name@domain.com")
+        TopicLink.extract_from(post)
+        expect(topic.topic_links).to be_blank
+      end
+    end
+
     context "mail link" do
       let(:post) { topic.posts.create(user: user, raw: "[email]bar@example.com[/email]") }
 
@@ -193,7 +197,7 @@ http://b.com/#{'a'*500}
     end
 
     context "link to a local attachments" do
-      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb">ruby.rb</a>') }
+      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb?foo=bar">ruby.rb</a>') }
 
       it "extracts the link" do
         TopicLink.extract_from(post)
@@ -203,9 +207,11 @@ http://b.com/#{'a'*500}
         # is set to internal
         expect(link).to be_internal
         # has the correct url
-        expect(link.url).to eq("/uploads/default/208/87bb3d8428eb4783.rb")
+        expect(link.url).to eq("/uploads/default/208/87bb3d8428eb4783.rb?foo=bar")
         # should not be the reflection
         expect(link).not_to be_reflection
+        # should have file extension
+        expect(link.extension).to eq('rb')
       end
 
     end
@@ -224,10 +230,11 @@ http://b.com/#{'a'*500}
         expect(link.url).to eq("//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb")
         # should not be the reflection
         expect(link).not_to be_reflection
+        # should have file extension
+        expect(link.extension).to eq('rb')
       end
 
     end
-
   end
 
   describe 'internal link from pm' do
@@ -246,6 +253,21 @@ http://b.com/#{'a'*500}
       expect(pm.topic_links.first).not_to eq(nil)
     end
 
+  end
+
+  describe 'internal link from unlisted topic' do
+    it 'works' do
+      unlisted_topic = Fabricate(:topic, user: user, visible: false)
+      url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
+
+      unlisted_topic.posts.create(user: user, raw: 'initial post')
+      linked_post = unlisted_topic.posts.create(user: user, raw: "Link to another topic: #{url}")
+
+      TopicLink.extract_from(linked_post)
+
+      expect(topic.topic_links.first).to eq(nil)
+      expect(unlisted_topic.topic_links.first).not_to eq(nil)
+    end
   end
 
   describe 'internal link with non-standard port' do
@@ -296,16 +318,20 @@ http://b.com/#{'a'*500}
 
       it 'has the correct results' do
         TopicLink.extract_from(post)
-        topic_link = post.topic.topic_links.first
-        TopicLinkClick.create(topic_link: topic_link, ip_address: '192.168.1.1')
+        topic_link_first = post.topic.topic_links.first
+        TopicLinkClick.create!(topic_link: topic_link_first, ip_address: '192.168.1.1')
+        TopicLinkClick.create!(topic_link: topic_link_first, ip_address: '192.168.1.2')
+        topic_link_second = post.topic.topic_links.second
+        TopicLinkClick.create!(topic_link: topic_link_second, ip_address: '192.168.1.1')
 
         expect(counts_for[post.id]).to be_present
-        expect(counts_for[post.id].find {|l| l[:url] == 'http://google.com'}[:clicks]).to eq(0)
-        expect(counts_for[post.id].first[:clicks]).to eq(1)
+        expect(counts_for[post.id].first[:clicks]).to eq(2)
+        expect(counts_for[post.id].second[:clicks]).to eq(1)
 
         array = TopicLink.topic_map(Guardian.new, post.topic_id)
-        expect(array.length).to eq(6)
-        expect(array[0]["clicks"]).to eq("1")
+        expect(array.length).to eq(2)
+        expect(array[0].clicks).to eq(2)
+        expect(array[1].clicks).to eq(1)
       end
 
       it 'secures internal links correctly' do
@@ -315,11 +341,12 @@ http://b.com/#{'a'*500}
         url = "http://#{test_uri.host}/t/topic-slug/#{secret_topic.id}"
         post = Fabricate(:post, raw: "hello test topic #{url}")
         TopicLink.extract_from(post)
+        TopicLinkClick.create!(topic_link: post.topic.topic_links.first, ip_address: '192.168.1.1')
 
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(1)
         expect(TopicLink.counts_for(Guardian.new, post.topic, [post]).length).to eq(1)
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         admin = Fabricate(:admin)
@@ -331,6 +358,13 @@ http://b.com/#{'a'*500}
         expect(TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length).to eq(1)
       end
 
+      it 'does not include links from whisper' do
+        url = "https://blog.codinghorror.com/hacker-hack-thyself/"
+        post = Fabricate(:post, raw: "whisper post... #{url}", post_type: Post.types[:whisper])
+        TopicLink.extract_from(post)
+
+        expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
+      end
     end
 
     describe ".duplicate_lookup" do
@@ -356,6 +390,11 @@ http://b.com/#{'a'*500}
         result = TopicLink.duplicate_lookup(post.topic)
         expect(result).to eq({})
       end
+    end
+
+    it "works with invalid link target" do
+      post = Fabricate(:post, raw: '<a href="http:geturl">http:geturl</a>', user: user, topic: topic, cook_method: Post.cook_methods[:raw_html])
+      expect { TopicLink.extract_from(post) }.to_not raise_error
     end
   end
 

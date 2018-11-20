@@ -1,7 +1,6 @@
-import IncomingEmail from 'admin/models/incoming-email';
+import IncomingEmail from "admin/models/incoming-email";
 
 export default Discourse.Route.extend({
-
   model() {
     return IncomingEmail.findAll({ status: this.get("status") });
   },
@@ -10,5 +9,4 @@ export default Discourse.Route.extend({
     controller.set("model", model);
     controller.set("filter", { status: this.get("status") });
   }
-
 });

@@ -1,11 +1,11 @@
-import { ajax } from 'discourse/lib/ajax';
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import { categoryLinkHTML } from 'discourse/helpers/category-link';
-import computed from 'ember-addons/ember-computed-decorators';
-import InputValidation from 'discourse/models/input-validation';
+import { ajax } from "discourse/lib/ajax";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
+import computed from "ember-addons/ember-computed-decorators";
+import InputValidation from "discourse/models/input-validation";
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  topicController: Ember.inject.controller('topic'),
+  topicController: Ember.inject.controller("topic"),
 
   loading: true,
   pinnedInCategoryCount: 0,
@@ -17,7 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       "model.pinnedInCategoryUntil": null,
       "model.pinnedGloballyUntil": null,
       pinInCategoryTipShownAt: false,
-      pinGloballyTipShownAt: false,
+      pinGloballyTipShownAt: false
     });
   },
 
@@ -31,7 +31,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     let name = "topic.feature_topic.unpin";
     if (pinnedGlobally) name += "_globally";
     if (moment(pinnedUntil) > moment()) name += "_until";
-    const until =  moment(pinnedUntil).format("LL");
+    const until = moment(pinnedUntil).format("LL");
 
     return I18n.t(name, { categoryLink, until });
   },
@@ -43,7 +43,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("categoryLink", "pinnedInCategoryCount")
   alreadyPinnedMessage(categoryLink, count) {
-    const key = count === 0 ? "topic.feature_topic.not_pinned" : "topic.feature_topic.already_pinned";
+    const key =
+      count === 0
+        ? "topic.feature_topic.not_pinned"
+        : "topic.feature_topic.already_pinned";
     return I18n.t(key, { categoryLink, count });
   },
 
@@ -70,14 +73,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("pinDisabled")
   pinInCategoryValidation(pinDisabled) {
     if (pinDisabled) {
-      return InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+      return InputValidation.create({
+        failed: true,
+        reason: I18n.t("topic.feature_topic.pin_validation")
+      });
     }
   },
 
   @computed("pinGloballyDisabled")
   pinGloballyValidation(pinGloballyDisabled) {
     if (pinGloballyDisabled) {
-      return InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+      return InputValidation.create({
+        failed: true,
+        reason: I18n.t("topic.feature_topic.pin_validation")
+      });
     }
   },
 
@@ -94,15 +103,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     return ajax("/topics/feature_stats.json", {
       data: { category_id: this.get("model.category.id") }
-    }).then(result => {
-      if (result) {
-        this.setProperties({
-          pinnedInCategoryCount: result.pinned_in_category_count,
-          pinnedGloballyCount: result.pinned_globally_count,
-          bannerCount: result.banner_count,
-        });
-      }
-    }).finally(() => this.set("loading", false));
+    })
+      .then(result => {
+        if (result) {
+          this.setProperties({
+            pinnedInCategoryCount: result.pinned_in_category_count,
+            pinnedGloballyCount: result.pinned_globally_count,
+            bannerCount: result.banner_count
+          });
+        }
+      })
+      .finally(() => this.set("loading", false));
   },
 
   _forwardAction(name) {
@@ -119,7 +130,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         I18n.t("topic.feature_topic.confirm_" + name, { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => confirmed ? this._forwardAction(action) : this.send("reopenModal")
+        confirmed =>
+          confirmed ? this._forwardAction(action) : this.send("reopenModal")
       );
     }
   },
@@ -137,14 +149,22 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if (this.get("pinGloballyDisabled")) {
         this.set("pinGloballyTipShownAt", Date.now());
       } else {
-        this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally");
+        this._confirmBeforePinning(
+          this.get("pinnedGloballyCount"),
+          "pin_globally",
+          "pinGlobally"
+        );
       }
     },
 
-
-    unpin() { this._forwardAction("togglePinned"); },
-    makeBanner() { this._forwardAction("makeBanner"); },
-    removeBanner() { this._forwardAction("removeBanner"); },
+    unpin() {
+      this._forwardAction("togglePinned");
+    },
+    makeBanner() {
+      this._forwardAction("makeBanner");
+    },
+    removeBanner() {
+      this._forwardAction("removeBanner");
+    }
   }
-
 });

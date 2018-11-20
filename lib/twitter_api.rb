@@ -2,10 +2,11 @@
 class TwitterApi
 
   class << self
+    include ActionView::Helpers::NumberHelper
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
-      if entities = tweet["entities"] and urls = entities["urls"]
+      if (entities = tweet["entities"]) && (urls = entities["urls"])
         urls.each do |url|
           text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
         end
@@ -16,23 +17,24 @@ class TwitterApi
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
       if tweet['extended_entities'] && media = tweet['extended_entities']['media']
-        result << "<div class='tweet-images'>"
         media.each do |m|
           if m['type'] == 'photo'
             if large = m['sizes']['large']
-              result << "<img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'>"
+              result << "<div class='tweet-images'><img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'></div>"
             end
           elsif m['type'] == 'video'
             if large = m['sizes']['large']
-              result << "<iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe>"
+              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0' allowfullscreen></iframe></div>"
             end
           end
         end
-        result << "</div>"
-
       end
 
       result
+    end
+
+    def prettify_number(count)
+      number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
     end
 
     def user_timeline(screen_name)
@@ -56,28 +58,28 @@ class TwitterApi
     protected
 
     def link_handles_in(text)
-      text.scan(/\s@(\w+)/).flatten.uniq.each do |handle|
-        text.gsub!("@#{handle}", [
-          "<a href='https://twitter.com/#{handle}' target='_blank'>",
+      text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
+        text.gsub!(/(?:^|\s)@#{handle}/, [
+          " <a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def link_hashtags_in(text)
-      text.scan(/\s#(\w+)/).flatten.uniq.each do |hashtag|
-        text.gsub!("##{hashtag}", [
-          "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
+      text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
+        text.gsub!(/(?:^|\s)##{hashtag}/, [
+          " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
           "target='_blank'>",
             "##{hashtag}",
           "</a>"
         ].join)
       end
 
-      text
+      text.strip
     end
 
     def user_timeline_uri_for(screen_name)
@@ -124,7 +126,6 @@ class TwitterApi
     def auth_uri
       URI.parse "#{BASE_URL}/oauth2/token"
     end
-
 
     def http(uri)
       Net::HTTP.new(uri.host, uri.port).tap { |http| http.use_ssl = true }

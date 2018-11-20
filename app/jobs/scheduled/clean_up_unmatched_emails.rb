@@ -7,8 +7,8 @@ module Jobs
       last_match_threshold = SiteSetting.max_age_unmatched_emails.days.ago
 
       ScreenedEmail.where(action_type: ScreenedEmail.actions[:block])
-                   .where("last_match_at < ?", last_match_threshold)
-                   .destroy_all
+        .where("last_match_at < ?", last_match_threshold)
+        .destroy_all
     end
 
   end

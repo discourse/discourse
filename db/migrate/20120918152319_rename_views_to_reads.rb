@@ -1,4 +1,4 @@
-class RenameViewsToReads < ActiveRecord::Migration
+class RenameViewsToReads < ActiveRecord::Migration[4.2]
   def up
     rename_column :posts, :views, :reads
   end

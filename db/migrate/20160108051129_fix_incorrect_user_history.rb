@@ -1,4 +1,4 @@
-class FixIncorrectUserHistory < ActiveRecord::Migration
+class FixIncorrectUserHistory < ActiveRecord::Migration[4.2]
   def up
     # see https://meta.discourse.org/t/old-user-suspension-reasons-have-gone-missing/3730
     # we had a window of 21 days where all user history records with action > 5 were off by one
@@ -6,7 +6,6 @@ class FixIncorrectUserHistory < ActiveRecord::Migration
     # to correct we are doing this https://meta.discourse.org/t/enums-that-are-used-in-tables-need-to-be-stable/37622
     #
     # This migration hunts for date stuff started going wrong and date it started being good and corrects the data
-
 
     # this is a :auto_trust_level_change mislabled as :check_email
     # impersonate that was actually delete topic

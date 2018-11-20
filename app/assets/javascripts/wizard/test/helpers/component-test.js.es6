@@ -1,5 +1,4 @@
-import initializer from 'wizard/initializers/load-helpers';
-
+import initializer from "wizard/initializers/load-helpers";
 
 export function componentTest(name, opts) {
   opts = opts || {};
@@ -7,8 +6,8 @@ export function componentTest(name, opts) {
   test(name, function(assert) {
     initializer.initialize(this.registry);
 
-    if (opts.setup) {
-      opts.setup.call(this);
+    if (opts.beforeEach) {
+      opts.beforeEach.call(this);
     }
 
     andThen(() => this.render(opts.template));

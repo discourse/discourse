@@ -7,7 +7,7 @@ export default function(text, element) {
     // Chrome: This only returns true within a user gesture.
     // Chrome: queryCommandEnabled() only returns true if a selection is
     //   present, so we use queryCommandSupported() instead for the fail-fast.
-    if (document.queryCommandSupported('copy')) {
+    if (document.queryCommandSupported("copy")) {
       supported = true;
     }
   } catch (e) {

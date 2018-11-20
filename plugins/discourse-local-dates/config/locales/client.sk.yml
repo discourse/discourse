@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sk:
+  js:
+    discourse_local_dates:
+      title: Vložiť dátum
+      create:
+        modal_title: Vložiť dátum
+        modal_subtitle: "Dátum a čas automaticky skonvertujeme do miestneho časového pásma diváka."
+        form:
+          insert: Vložiť
+          advanced_mode: Pokročilý režim
+          simple_mode: Jednoduchý režim
+          format_description: "Formát použitý na zobrazenie dátumu používateľovi. Použite \"\\T\\Z\" na zobrazenie časového pásma používateľa slovami (Európa/Paríž)"
+          timezones_title: Časové pásma na zobrazenie
+          timezones_description: Časové pásma sa použijú na zobrazenie dátumov v náhľade a núdzových situáciách.
+          recurring_title: Opakovanie
+          recurring_description: "Definujte opakovanie udalosti. Môžete tiež manuálne upraviť opakovanú možnosť generovanú formulárom a použiť jeden z nasledujúcich kľúčov: roky, štvrťroky, mesiace, týždne, dni, hodiny, minúty, sekundy, milisekundy."
+          recurring_none: Žiadna opakovaná udalosť
+          invalid_date: Neplatný dátum, uistite sa, že dátum a čas sú správne
+          date_title: Dátum
+          time_title: Čas
+          format_title: Formát dátumu

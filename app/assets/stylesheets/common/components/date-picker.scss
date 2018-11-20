@@ -1,5 +1,6 @@
 .pika-table {
-  th, td {
+  th,
+  td {
     padding: 0 !important;
     border-top: none !important;
     border-bottom: none !important;
@@ -7,8 +8,8 @@
 }
 
 .date-picker-wrapper {
-  display: inline-block;
   position: relative;
+  display: inline-block;
 }
 
 .date-picker {

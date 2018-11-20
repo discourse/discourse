@@ -1,4 +1,4 @@
-class ViewsToTopicViews < ActiveRecord::Migration
+class ViewsToTopicViews < ActiveRecord::Migration[4.2]
   def change
     remove_column :views, :parent_type
     rename_column :views, :parent_id, :topic_id

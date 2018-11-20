@@ -1,22 +1,30 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  classNames: ['embed-setting'],
+  classNames: ["embed-setting"],
 
-  @computed('field')
-  inputId(field) { return field.dasherize(); },
+  @computed("field")
+  inputId(field) {
+    return field.dasherize();
+  },
 
-  @computed('field')
-  translationKey(field) { return `admin.embedding.${field}`; },
+  @computed("field")
+  translationKey(field) {
+    return `admin.embedding.${field}`;
+  },
 
-  @computed('type')
-  isCheckbox(type) { return type === "checkbox"; },
+  @computed("type")
+  isCheckbox(type) {
+    return type === "checkbox";
+  },
 
-  @computed('value')
+  @computed("value")
   checked: {
-    get(value) { return !!value; },
+    get(value) {
+      return !!value;
+    },
     set(value) {
-      this.set('value', value);
+      this.set("value", value);
       return value;
     }
   }

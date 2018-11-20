@@ -1,13 +1,12 @@
+import highlightText from "discourse/lib/highlight-text";
+
 export default Ember.Component.extend({
-  tagName: 'span',
+  tagName: "span",
 
   _highlightOnInsert: function() {
-    const term = this.get('highlight');
-    const self = this;
-
-    if(!_.isEmpty(term)) {
-      self.$().highlight(term.split(/\s+/), {className: 'search-highlight'});
-    }
-  }.observes('highlight').on('didInsertElement')
-
+    const term = this.get("highlight");
+    highlightText(this.$(), term);
+  }
+    .observes("highlight")
+    .on("didInsertElement")
 });

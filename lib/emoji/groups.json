@@ -1,0 +1,6259 @@
+[
+  {
+    "name": "people",
+    "fullname": "People",
+    "tabicon": "grinning",
+    "icons": [
+      {
+        "name": "grinning",
+        "diversity": false
+      },
+      {
+        "name": "grin",
+        "diversity": false
+      },
+      {
+        "name": "joy",
+        "diversity": false
+      },
+      {
+        "name": "rofl",
+        "diversity": false
+      },
+      {
+        "name": "smiley",
+        "diversity": false
+      },
+      {
+        "name": "smile",
+        "diversity": false
+      },
+      {
+        "name": "sweat_smile",
+        "diversity": false
+      },
+      {
+        "name": "laughing",
+        "diversity": false
+      },
+      {
+        "name": "wink",
+        "diversity": false
+      },
+      {
+        "name": "blush",
+        "diversity": false
+      },
+      {
+        "name": "yum",
+        "diversity": false
+      },
+      {
+        "name": "sunglasses",
+        "diversity": false
+      },
+      {
+        "name": "heart_eyes",
+        "diversity": false
+      },
+      {
+        "name": "kissing_heart",
+        "diversity": false
+      },
+      {
+        "name": "smiling_face_with_three_hearts",
+        "diversity": false
+      },
+      {
+        "name": "kissing",
+        "diversity": false
+      },
+      {
+        "name": "kissing_smiling_eyes",
+        "diversity": false
+      },
+      {
+        "name": "kissing_closed_eyes",
+        "diversity": false
+      },
+      {
+        "name": "relaxed",
+        "diversity": false
+      },
+      {
+        "name": "slightly_smiling_face",
+        "diversity": false
+      },
+      {
+        "name": "hugs",
+        "diversity": false
+      },
+      {
+        "name": "star_struck",
+        "diversity": false
+      },
+      {
+        "name": "thinking",
+        "diversity": false
+      },
+      {
+        "name": "face_with_raised_eyebrow",
+        "diversity": false
+      },
+      {
+        "name": "neutral_face",
+        "diversity": false
+      },
+      {
+        "name": "expressionless",
+        "diversity": false
+      },
+      {
+        "name": "no_mouth",
+        "diversity": false
+      },
+      {
+        "name": "roll_eyes",
+        "diversity": false
+      },
+      {
+        "name": "smirk",
+        "diversity": false
+      },
+      {
+        "name": "persevere",
+        "diversity": false
+      },
+      {
+        "name": "disappointed_relieved",
+        "diversity": false
+      },
+      {
+        "name": "open_mouth",
+        "diversity": false
+      },
+      {
+        "name": "zipper_mouth_face",
+        "diversity": false
+      },
+      {
+        "name": "hushed",
+        "diversity": false
+      },
+      {
+        "name": "sleepy",
+        "diversity": false
+      },
+      {
+        "name": "tired_face",
+        "diversity": false
+      },
+      {
+        "name": "sleeping",
+        "diversity": false
+      },
+      {
+        "name": "relieved",
+        "diversity": false
+      },
+      {
+        "name": "stuck_out_tongue",
+        "diversity": false
+      },
+      {
+        "name": "stuck_out_tongue_winking_eye",
+        "diversity": false
+      },
+      {
+        "name": "stuck_out_tongue_closed_eyes",
+        "diversity": false
+      },
+      {
+        "name": "drooling_face",
+        "diversity": false
+      },
+      {
+        "name": "unamused",
+        "diversity": false
+      },
+      {
+        "name": "sweat",
+        "diversity": false
+      },
+      {
+        "name": "pensive",
+        "diversity": false
+      },
+      {
+        "name": "confused",
+        "diversity": false
+      },
+      {
+        "name": "upside_down_face",
+        "diversity": false
+      },
+      {
+        "name": "money_mouth_face",
+        "diversity": false
+      },
+      {
+        "name": "astonished",
+        "diversity": false
+      },
+      {
+        "name": "frowning_face",
+        "diversity": false
+      },
+      {
+        "name": "slightly_frowning_face",
+        "diversity": false
+      },
+      {
+        "name": "confounded",
+        "diversity": false
+      },
+      {
+        "name": "disappointed",
+        "diversity": false
+      },
+      {
+        "name": "worried",
+        "diversity": false
+      },
+      {
+        "name": "triumph",
+        "diversity": false
+      },
+      {
+        "name": "cry",
+        "diversity": false
+      },
+      {
+        "name": "sob",
+        "diversity": false
+      },
+      {
+        "name": "frowning",
+        "diversity": false
+      },
+      {
+        "name": "anguished",
+        "diversity": false
+      },
+      {
+        "name": "fearful",
+        "diversity": false
+      },
+      {
+        "name": "weary",
+        "diversity": false
+      },
+      {
+        "name": "exploding_head",
+        "diversity": false
+      },
+      {
+        "name": "grimacing",
+        "diversity": false
+      },
+      {
+        "name": "cold_sweat",
+        "diversity": false
+      },
+      {
+        "name": "scream",
+        "diversity": false
+      },
+      {
+        "name": "hot_face",
+        "diversity": false
+      },
+      {
+        "name": "cold_face",
+        "diversity": false
+      },
+      {
+        "name": "flushed",
+        "diversity": false
+      },
+      {
+        "name": "crazy_face",
+        "diversity": false
+      },
+      {
+        "name": "dizzy_face",
+        "diversity": false
+      },
+      {
+        "name": "rage",
+        "diversity": false
+      },
+      {
+        "name": "angry",
+        "diversity": false
+      },
+      {
+        "name": "face_with_symbols_over_mouth",
+        "diversity": false
+      },
+      {
+        "name": "mask",
+        "diversity": false
+      },
+      {
+        "name": "face_with_thermometer",
+        "diversity": false
+      },
+      {
+        "name": "face_with_head_bandage",
+        "diversity": false
+      },
+      {
+        "name": "nauseated_face",
+        "diversity": false
+      },
+      {
+        "name": "face_vomiting",
+        "diversity": false
+      },
+      {
+        "name": "sneezing_face",
+        "diversity": false
+      },
+      {
+        "name": "innocent",
+        "diversity": false
+      },
+      {
+        "name": "cowboy_hat_face",
+        "diversity": false
+      },
+      {
+        "name": "partying_face",
+        "diversity": false
+      },
+      {
+        "name": "woozy_face",
+        "diversity": false
+      },
+      {
+        "name": "pleading_face",
+        "diversity": false
+      },
+      {
+        "name": "lying_face",
+        "diversity": false
+      },
+      {
+        "name": "shushing_face",
+        "diversity": false
+      },
+      {
+        "name": "face_with_hand_over_mouth",
+        "diversity": false
+      },
+      {
+        "name": "face_with_monocle",
+        "diversity": false
+      },
+      {
+        "name": "nerd_face",
+        "diversity": false
+      },
+      {
+        "name": "smiling_imp",
+        "diversity": false
+      },
+      {
+        "name": "imp",
+        "diversity": false
+      },
+      {
+        "name": "clown_face",
+        "diversity": false
+      },
+      {
+        "name": "japanese_ogre",
+        "diversity": false
+      },
+      {
+        "name": "japanese_goblin",
+        "diversity": false
+      },
+      {
+        "name": "skull",
+        "diversity": false
+      },
+      {
+        "name": "skull_and_crossbones",
+        "diversity": false
+      },
+      {
+        "name": "ghost",
+        "diversity": false
+      },
+      {
+        "name": "alien",
+        "diversity": false
+      },
+      {
+        "name": "space_invader",
+        "diversity": false
+      },
+      {
+        "name": "robot",
+        "diversity": false
+      },
+      {
+        "name": "poop",
+        "diversity": false
+      },
+      {
+        "name": "smiley_cat",
+        "diversity": false
+      },
+      {
+        "name": "smile_cat",
+        "diversity": false
+      },
+      {
+        "name": "joy_cat",
+        "diversity": false
+      },
+      {
+        "name": "heart_eyes_cat",
+        "diversity": false
+      },
+      {
+        "name": "smirk_cat",
+        "diversity": false
+      },
+      {
+        "name": "kissing_cat",
+        "diversity": false
+      },
+      {
+        "name": "scream_cat",
+        "diversity": false
+      },
+      {
+        "name": "crying_cat_face",
+        "diversity": false
+      },
+      {
+        "name": "pouting_cat",
+        "diversity": false
+      },
+      {
+        "name": "see_no_evil",
+        "diversity": false
+      },
+      {
+        "name": "hear_no_evil",
+        "diversity": false
+      },
+      {
+        "name": "speak_no_evil",
+        "diversity": false
+      },
+      {
+        "name": "baby",
+        "diversity": true
+      },
+      {
+        "name": "child",
+        "diversity": true
+      },
+      {
+        "name": "boy",
+        "diversity": true
+      },
+      {
+        "name": "girl",
+        "diversity": true
+      },
+      {
+        "name": "adult",
+        "diversity": true
+      },
+      {
+        "name": "blonde_man",
+        "diversity": true
+      },
+      {
+        "name": "man",
+        "diversity": true
+      },
+      {
+        "name": "man_red_haired",
+        "diversity": false
+      },
+      {
+        "name": "man_curly_haired",
+        "diversity": false
+      },
+      {
+        "name": "man_white_haired",
+        "diversity": false
+      },
+      {
+        "name": "man_bald",
+        "diversity": false
+      },
+      {
+        "name": "bearded_person",
+        "diversity": true
+      },
+      {
+        "name": "woman",
+        "diversity": true
+      },
+      {
+        "name": "blonde_woman",
+        "diversity": true
+      },
+      {
+        "name": "woman_red_haired",
+        "diversity": false
+      },
+      {
+        "name": "woman_curly_haired",
+        "diversity": false
+      },
+      {
+        "name": "woman_white_haired",
+        "diversity": false
+      },
+      {
+        "name": "woman_bald",
+        "diversity": false
+      },
+      {
+        "name": "older_adult",
+        "diversity": true
+      },
+      {
+        "name": "older_man",
+        "diversity": true
+      },
+      {
+        "name": "older_woman",
+        "diversity": true
+      },
+      {
+        "name": "man_health_worker",
+        "diversity": true
+      },
+      {
+        "name": "woman_health_worker",
+        "diversity": true
+      },
+      {
+        "name": "man_student",
+        "diversity": true
+      },
+      {
+        "name": "woman_student",
+        "diversity": true
+      },
+      {
+        "name": "man_teacher",
+        "diversity": true
+      },
+      {
+        "name": "woman_teacher",
+        "diversity": true
+      },
+      {
+        "name": "man_judge",
+        "diversity": true
+      },
+      {
+        "name": "woman_judge",
+        "diversity": true
+      },
+      {
+        "name": "man_farmer",
+        "diversity": true
+      },
+      {
+        "name": "woman_farmer",
+        "diversity": true
+      },
+      {
+        "name": "man_cook",
+        "diversity": true
+      },
+      {
+        "name": "woman_cook",
+        "diversity": true
+      },
+      {
+        "name": "man_mechanic",
+        "diversity": true
+      },
+      {
+        "name": "woman_mechanic",
+        "diversity": true
+      },
+      {
+        "name": "man_factory_worker",
+        "diversity": true
+      },
+      {
+        "name": "woman_factory_worker",
+        "diversity": true
+      },
+      {
+        "name": "man_office_worker",
+        "diversity": true
+      },
+      {
+        "name": "woman_office_worker",
+        "diversity": true
+      },
+      {
+        "name": "man_scientist",
+        "diversity": true
+      },
+      {
+        "name": "woman_scientist",
+        "diversity": true
+      },
+      {
+        "name": "man_technologist",
+        "diversity": true
+      },
+      {
+        "name": "woman_technologist",
+        "diversity": true
+      },
+      {
+        "name": "man_singer",
+        "diversity": true
+      },
+      {
+        "name": "woman_singer",
+        "diversity": true
+      },
+      {
+        "name": "man_artist",
+        "diversity": true
+      },
+      {
+        "name": "woman_artist",
+        "diversity": true
+      },
+      {
+        "name": "man_pilot",
+        "diversity": true
+      },
+      {
+        "name": "woman_pilot",
+        "diversity": true
+      },
+      {
+        "name": "man_astronaut",
+        "diversity": true
+      },
+      {
+        "name": "woman_astronaut",
+        "diversity": true
+      },
+      {
+        "name": "man_firefighter",
+        "diversity": true
+      },
+      {
+        "name": "woman_firefighter",
+        "diversity": true
+      },
+      {
+        "name": "policeman",
+        "diversity": true
+      },
+      {
+        "name": "policewoman",
+        "diversity": true
+      },
+      {
+        "name": "male_detective",
+        "diversity": true
+      },
+      {
+        "name": "female_detective",
+        "diversity": false
+      },
+      {
+        "name": "guardsman",
+        "diversity": true
+      },
+      {
+        "name": "guardswoman",
+        "diversity": true
+      },
+      {
+        "name": "construction_worker_man",
+        "diversity": true
+      },
+      {
+        "name": "construction_worker_woman",
+        "diversity": true
+      },
+      {
+        "name": "prince",
+        "diversity": true
+      },
+      {
+        "name": "princess",
+        "diversity": true
+      },
+      {
+        "name": "man_with_turban",
+        "diversity": true
+      },
+      {
+        "name": "woman_with_turban",
+        "diversity": true
+      },
+      {
+        "name": "man_with_gua_pi_mao",
+        "diversity": true
+      },
+      {
+        "name": "woman_with_headscarf",
+        "diversity": true
+      },
+      {
+        "name": "man_in_tuxedo",
+        "diversity": true
+      },
+      {
+        "name": "bride_with_veil",
+        "diversity": true
+      },
+      {
+        "name": "pregnant_woman",
+        "diversity": true
+      },
+      {
+        "name": "breast_feeding",
+        "diversity": true
+      },
+      {
+        "name": "angel",
+        "diversity": true
+      },
+      {
+        "name": "santa",
+        "diversity": true
+      },
+      {
+        "name": "mrs_claus",
+        "diversity": true
+      },
+      {
+        "name": "superhero",
+        "diversity": false
+      },
+      {
+        "name": "man_superhero",
+        "diversity": false
+      },
+      {
+        "name": "woman_superhero",
+        "diversity": false
+      },
+      {
+        "name": "supervillain",
+        "diversity": false
+      },
+      {
+        "name": "man_supervillain",
+        "diversity": false
+      },
+      {
+        "name": "woman_supervillain",
+        "diversity": false
+      },
+      {
+        "name": "mage",
+        "diversity": true
+      },
+      {
+        "name": "woman_mage",
+        "diversity": true
+      },
+      {
+        "name": "fairy",
+        "diversity": true
+      },
+      {
+        "name": "vampire",
+        "diversity": true
+      },
+      {
+        "name": "mermaid",
+        "diversity": true
+      },
+      {
+        "name": "merman",
+        "diversity": true
+      },
+      {
+        "name": "elf",
+        "diversity": true
+      },
+      {
+        "name": "genie",
+        "diversity": false
+      },
+      {
+        "name": "woman_genie",
+        "diversity": false
+      },
+      {
+        "name": "zombie",
+        "diversity": false
+      },
+      {
+        "name": "woman_zombie",
+        "diversity": false
+      },
+      {
+        "name": "frowning_woman",
+        "diversity": true
+      },
+      {
+        "name": "frowning_man",
+        "diversity": true
+      },
+      {
+        "name": "pouting_woman",
+        "diversity": true
+      },
+      {
+        "name": "pouting_man",
+        "diversity": true
+      },
+      {
+        "name": "no_good_woman",
+        "diversity": true
+      },
+      {
+        "name": "no_good_man",
+        "diversity": true
+      },
+      {
+        "name": "ok_woman",
+        "diversity": true
+      },
+      {
+        "name": "ok_man",
+        "diversity": true
+      },
+      {
+        "name": "tipping_hand_woman",
+        "diversity": true
+      },
+      {
+        "name": "tipping_hand_man",
+        "diversity": true
+      },
+      {
+        "name": "raising_hand_woman",
+        "diversity": true
+      },
+      {
+        "name": "raising_hand_man",
+        "diversity": true
+      },
+      {
+        "name": "bowing_man",
+        "diversity": true
+      },
+      {
+        "name": "bowing_woman",
+        "diversity": true
+      },
+      {
+        "name": "man_facepalming",
+        "diversity": true
+      },
+      {
+        "name": "woman_facepalming",
+        "diversity": true
+      },
+      {
+        "name": "man_shrugging",
+        "diversity": true
+      },
+      {
+        "name": "woman_shrugging",
+        "diversity": true
+      },
+      {
+        "name": "couple",
+        "diversity": false
+      },
+      {
+        "name": "two_men_holding_hands",
+        "diversity": false
+      },
+      {
+        "name": "two_women_holding_hands",
+        "diversity": false
+      },
+      {
+        "name": "couplekiss_man_woman",
+        "diversity": false
+      },
+      {
+        "name": "couplekiss_man_man",
+        "diversity": false
+      },
+      {
+        "name": "couplekiss_woman_woman",
+        "diversity": false
+      },
+      {
+        "name": "couple_with_heart_woman_man",
+        "diversity": false
+      },
+      {
+        "name": "couple_with_heart_man_man",
+        "diversity": false
+      },
+      {
+        "name": "couple_with_heart_woman_woman",
+        "diversity": false
+      },
+      {
+        "name": "family_man_woman_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_woman_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_man_woman_girl_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_woman_boy_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_woman_girl_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_man_man_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_man_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_man_man_girl_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_man_boy_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_man_girl_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_woman_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_woman_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_woman_girl_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_woman_boy_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_woman_girl_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_man_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_boy_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_man_girl_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_man_girl_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_boy_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_girl",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_girl_boy",
+        "diversity": false
+      },
+      {
+        "name": "family_woman_girl_girl",
+        "diversity": false
+      },
+      {
+        "name": "selfie",
+        "diversity": true
+      },
+      {
+        "name": "muscle",
+        "diversity": true
+      },
+      {
+        "name": "leg",
+        "diversity": false
+      },
+      {
+        "name": "foot",
+        "diversity": false
+      },
+      {
+        "name": "point_left",
+        "diversity": true
+      },
+      {
+        "name": "point_right",
+        "diversity": true
+      },
+      {
+        "name": "point_up",
+        "diversity": true
+      },
+      {
+        "name": "point_up_2",
+        "diversity": true
+      },
+      {
+        "name": "fu",
+        "diversity": true
+      },
+      {
+        "name": "point_down",
+        "diversity": true
+      },
+      {
+        "name": "v",
+        "diversity": true
+      },
+      {
+        "name": "crossed_fingers",
+        "diversity": true
+      },
+      {
+        "name": "vulcan_salute",
+        "diversity": true
+      },
+      {
+        "name": "metal",
+        "diversity": true
+      },
+      {
+        "name": "call_me_hand",
+        "diversity": true
+      },
+      {
+        "name": "raised_hand_with_fingers_splayed",
+        "diversity": true
+      },
+      {
+        "name": "raised_hand",
+        "diversity": true
+      },
+      {
+        "name": "ok_hand",
+        "diversity": true
+      },
+      {
+        "name": "+1",
+        "diversity": true
+      },
+      {
+        "name": "-1",
+        "diversity": true
+      },
+      {
+        "name": "fist",
+        "diversity": true
+      },
+      {
+        "name": "facepunch",
+        "diversity": true
+      },
+      {
+        "name": "fist_left",
+        "diversity": true
+      },
+      {
+        "name": "fist_right",
+        "diversity": true
+      },
+      {
+        "name": "raised_back_of_hand",
+        "diversity": true
+      },
+      {
+        "name": "wave",
+        "diversity": true
+      },
+      {
+        "name": "love_you_gesture",
+        "diversity": true
+      },
+      {
+        "name": "writing_hand",
+        "diversity": true
+      },
+      {
+        "name": "clap",
+        "diversity": true
+      },
+      {
+        "name": "open_hands",
+        "diversity": true
+      },
+      {
+        "name": "raised_hands",
+        "diversity": true
+      },
+      {
+        "name": "palms_up_together",
+        "diversity": true
+      },
+      {
+        "name": "pray",
+        "diversity": true
+      },
+      {
+        "name": "handshake",
+        "diversity": false
+      },
+      {
+        "name": "nail_care",
+        "diversity": true
+      },
+      {
+        "name": "ear",
+        "diversity": true
+      },
+      {
+        "name": "nose",
+        "diversity": true
+      },
+      {
+        "name": "footprints",
+        "diversity": false
+      },
+      {
+        "name": "eyes",
+        "diversity": false
+      },
+      {
+        "name": "eye",
+        "diversity": false
+      },
+      {
+        "name": "brain",
+        "diversity": false
+      },
+      {
+        "name": "bone",
+        "diversity": false
+      },
+      {
+        "name": "tooth",
+        "diversity": false
+      },
+      {
+        "name": "tongue",
+        "diversity": false
+      },
+      {
+        "name": "lips",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "nature",
+    "fullname": "Nature",
+    "tabicon": "evergreen_tree",
+    "icons": [
+      {
+        "name": "monkey_face",
+        "diversity": false
+      },
+      {
+        "name": "monkey",
+        "diversity": false
+      },
+      {
+        "name": "gorilla",
+        "diversity": false
+      },
+      {
+        "name": "dog",
+        "diversity": false
+      },
+      {
+        "name": "dog2",
+        "diversity": false
+      },
+      {
+        "name": "poodle",
+        "diversity": false
+      },
+      {
+        "name": "wolf",
+        "diversity": false
+      },
+      {
+        "name": "fox_face",
+        "diversity": false
+      },
+      {
+        "name": "raccoon",
+        "diversity": false
+      },
+      {
+        "name": "cat",
+        "diversity": false
+      },
+      {
+        "name": "cat2",
+        "diversity": false
+      },
+      {
+        "name": "lion",
+        "diversity": false
+      },
+      {
+        "name": "tiger",
+        "diversity": false
+      },
+      {
+        "name": "tiger2",
+        "diversity": false
+      },
+      {
+        "name": "leopard",
+        "diversity": false
+      },
+      {
+        "name": "horse",
+        "diversity": false
+      },
+      {
+        "name": "racehorse",
+        "diversity": false
+      },
+      {
+        "name": "unicorn",
+        "diversity": false
+      },
+      {
+        "name": "zebra",
+        "diversity": false
+      },
+      {
+        "name": "deer",
+        "diversity": false
+      },
+      {
+        "name": "cow",
+        "diversity": false
+      },
+      {
+        "name": "ox",
+        "diversity": false
+      },
+      {
+        "name": "water_buffalo",
+        "diversity": false
+      },
+      {
+        "name": "cow2",
+        "diversity": false
+      },
+      {
+        "name": "pig",
+        "diversity": false
+      },
+      {
+        "name": "pig2",
+        "diversity": false
+      },
+      {
+        "name": "boar",
+        "diversity": false
+      },
+      {
+        "name": "pig_nose",
+        "diversity": false
+      },
+      {
+        "name": "ram",
+        "diversity": false
+      },
+      {
+        "name": "sheep",
+        "diversity": false
+      },
+      {
+        "name": "goat",
+        "diversity": false
+      },
+      {
+        "name": "dromedary_camel",
+        "diversity": false
+      },
+      {
+        "name": "camel",
+        "diversity": false
+      },
+      {
+        "name": "llama",
+        "diversity": false
+      },
+      {
+        "name": "giraffe",
+        "diversity": false
+      },
+      {
+        "name": "elephant",
+        "diversity": false
+      },
+      {
+        "name": "rhinoceros",
+        "diversity": false
+      },
+      {
+        "name": "hippopotamus",
+        "diversity": false
+      },
+      {
+        "name": "mouse",
+        "diversity": false
+      },
+      {
+        "name": "mouse2",
+        "diversity": false
+      },
+      {
+        "name": "rat",
+        "diversity": false
+      },
+      {
+        "name": "hamster",
+        "diversity": false
+      },
+      {
+        "name": "rabbit",
+        "diversity": false
+      },
+      {
+        "name": "rabbit2",
+        "diversity": false
+      },
+      {
+        "name": "chipmunk",
+        "diversity": false
+      },
+      {
+        "name": "hedgehog",
+        "diversity": false
+      },
+      {
+        "name": "bat",
+        "diversity": false
+      },
+      {
+        "name": "bear",
+        "diversity": false
+      },
+      {
+        "name": "koala",
+        "diversity": false
+      },
+      {
+        "name": "panda_face",
+        "diversity": false
+      },
+      {
+        "name": "kangaroo",
+        "diversity": false
+      },
+      {
+        "name": "badger",
+        "diversity": false
+      },
+      {
+        "name": "paw_prints",
+        "diversity": false
+      },
+      {
+        "name": "turkey",
+        "diversity": false
+      },
+      {
+        "name": "chicken",
+        "diversity": false
+      },
+      {
+        "name": "rooster",
+        "diversity": false
+      },
+      {
+        "name": "hatching_chick",
+        "diversity": false
+      },
+      {
+        "name": "baby_chick",
+        "diversity": false
+      },
+      {
+        "name": "hatched_chick",
+        "diversity": false
+      },
+      {
+        "name": "bird",
+        "diversity": false
+      },
+      {
+        "name": "penguin",
+        "diversity": false
+      },
+      {
+        "name": "dove",
+        "diversity": false
+      },
+      {
+        "name": "eagle",
+        "diversity": false
+      },
+      {
+        "name": "duck",
+        "diversity": false
+      },
+      {
+        "name": "swan",
+        "diversity": false
+      },
+      {
+        "name": "owl",
+        "diversity": false
+      },
+      {
+        "name": "peacock",
+        "diversity": false
+      },
+      {
+        "name": "parrot",
+        "diversity": false
+      },
+      {
+        "name": "frog",
+        "diversity": false
+      },
+      {
+        "name": "crocodile",
+        "diversity": false
+      },
+      {
+        "name": "turtle",
+        "diversity": false
+      },
+      {
+        "name": "lizard",
+        "diversity": false
+      },
+      {
+        "name": "snake",
+        "diversity": false
+      },
+      {
+        "name": "dragon_face",
+        "diversity": false
+      },
+      {
+        "name": "dragon",
+        "diversity": false
+      },
+      {
+        "name": "sauropod",
+        "diversity": false
+      },
+      {
+        "name": "t_rex",
+        "diversity": false
+      },
+      {
+        "name": "whale",
+        "diversity": false
+      },
+      {
+        "name": "whale2",
+        "diversity": false
+      },
+      {
+        "name": "dolphin",
+        "diversity": false
+      },
+      {
+        "name": "fish",
+        "diversity": false
+      },
+      {
+        "name": "tropical_fish",
+        "diversity": false
+      },
+      {
+        "name": "blowfish",
+        "diversity": false
+      },
+      {
+        "name": "shark",
+        "diversity": false
+      },
+      {
+        "name": "octopus",
+        "diversity": false
+      },
+      {
+        "name": "shell",
+        "diversity": false
+      },
+      {
+        "name": "snail",
+        "diversity": false
+      },
+      {
+        "name": "butterfly",
+        "diversity": false
+      },
+      {
+        "name": "bug",
+        "diversity": false
+      },
+      {
+        "name": "ant",
+        "diversity": false
+      },
+      {
+        "name": "honeybee",
+        "diversity": false
+      },
+      {
+        "name": "beetle",
+        "diversity": false
+      },
+      {
+        "name": "cricket",
+        "diversity": false
+      },
+      {
+        "name": "spider",
+        "diversity": false
+      },
+      {
+        "name": "spider_web",
+        "diversity": false
+      },
+      {
+        "name": "scorpion",
+        "diversity": false
+      },
+      {
+        "name": "mosquito",
+        "diversity": false
+      },
+      {
+        "name": "microbe",
+        "diversity": false
+      },
+      {
+        "name": "bouquet",
+        "diversity": false
+      },
+      {
+        "name": "cherry_blossom",
+        "diversity": false
+      },
+      {
+        "name": "white_flower",
+        "diversity": false
+      },
+      {
+        "name": "rosette",
+        "diversity": false
+      },
+      {
+        "name": "rose",
+        "diversity": false
+      },
+      {
+        "name": "wilted_flower",
+        "diversity": false
+      },
+      {
+        "name": "hibiscus",
+        "diversity": false
+      },
+      {
+        "name": "sunflower",
+        "diversity": false
+      },
+      {
+        "name": "blossom",
+        "diversity": false
+      },
+      {
+        "name": "tulip",
+        "diversity": false
+      },
+      {
+        "name": "seedling",
+        "diversity": false
+      },
+      {
+        "name": "evergreen_tree",
+        "diversity": false
+      },
+      {
+        "name": "deciduous_tree",
+        "diversity": false
+      },
+      {
+        "name": "palm_tree",
+        "diversity": false
+      },
+      {
+        "name": "cactus",
+        "diversity": false
+      },
+      {
+        "name": "ear_of_rice",
+        "diversity": false
+      },
+      {
+        "name": "herb",
+        "diversity": false
+      },
+      {
+        "name": "shamrock",
+        "diversity": false
+      },
+      {
+        "name": "four_leaf_clover",
+        "diversity": false
+      },
+      {
+        "name": "maple_leaf",
+        "diversity": false
+      },
+      {
+        "name": "fallen_leaf",
+        "diversity": false
+      },
+      {
+        "name": "leaves",
+        "diversity": false
+      },
+      {
+        "name": "new_moon",
+        "diversity": false
+      },
+      {
+        "name": "waxing_crescent_moon",
+        "diversity": false
+      },
+      {
+        "name": "first_quarter_moon",
+        "diversity": false
+      },
+      {
+        "name": "waxing_gibbous_moon",
+        "diversity": false
+      },
+      {
+        "name": "full_moon",
+        "diversity": false
+      },
+      {
+        "name": "waning_gibbous_moon",
+        "diversity": false
+      },
+      {
+        "name": "last_quarter_moon",
+        "diversity": false
+      },
+      {
+        "name": "waning_crescent_moon",
+        "diversity": false
+      },
+      {
+        "name": "crescent_moon",
+        "diversity": false
+      },
+      {
+        "name": "new_moon_with_face",
+        "diversity": false
+      },
+      {
+        "name": "first_quarter_moon_with_face",
+        "diversity": false
+      },
+      {
+        "name": "last_quarter_moon_with_face",
+        "diversity": false
+      },
+      {
+        "name": "thermometer",
+        "diversity": false
+      },
+      {
+        "name": "sunny",
+        "diversity": false
+      },
+      {
+        "name": "full_moon_with_face",
+        "diversity": false
+      },
+      {
+        "name": "sun_with_face",
+        "diversity": false
+      },
+      {
+        "name": "star",
+        "diversity": false
+      },
+      {
+        "name": "star2",
+        "diversity": false
+      },
+      {
+        "name": "stars",
+        "diversity": false
+      },
+      {
+        "name": "cloud",
+        "diversity": false
+      },
+      {
+        "name": "partly_sunny",
+        "diversity": false
+      },
+      {
+        "name": "cloud_with_lightning_and_rain",
+        "diversity": false
+      },
+      {
+        "name": "sun_behind_small_cloud",
+        "diversity": false
+      },
+      {
+        "name": "sun_behind_large_cloud",
+        "diversity": false
+      },
+      {
+        "name": "sun_behind_rain_cloud",
+        "diversity": false
+      },
+      {
+        "name": "cloud_with_rain",
+        "diversity": false
+      },
+      {
+        "name": "cloud_with_snow",
+        "diversity": false
+      },
+      {
+        "name": "cloud_with_lightning",
+        "diversity": false
+      },
+      {
+        "name": "tornado",
+        "diversity": false
+      },
+      {
+        "name": "fog",
+        "diversity": false
+      },
+      {
+        "name": "wind_face",
+        "diversity": false
+      },
+      {
+        "name": "cyclone",
+        "diversity": false
+      },
+      {
+        "name": "rainbow",
+        "diversity": false
+      },
+      {
+        "name": "closed_umbrella",
+        "diversity": false
+      },
+      {
+        "name": "open_umbrella",
+        "diversity": false
+      },
+      {
+        "name": "umbrella",
+        "diversity": false
+      },
+      {
+        "name": "parasol_on_ground",
+        "diversity": false
+      },
+      {
+        "name": "zap",
+        "diversity": false
+      },
+      {
+        "name": "snowflake",
+        "diversity": false
+      },
+      {
+        "name": "snowman_with_snow",
+        "diversity": false
+      },
+      {
+        "name": "snowman",
+        "diversity": false
+      },
+      {
+        "name": "comet",
+        "diversity": false
+      },
+      {
+        "name": "fire",
+        "diversity": false
+      },
+      {
+        "name": "droplet",
+        "diversity": false
+      },
+      {
+        "name": "ocean",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "food",
+    "fullname": "Food & Drink",
+    "tabicon": "hamburger",
+    "icons": [
+      {
+        "name": "grapes",
+        "diversity": false
+      },
+      {
+        "name": "melon",
+        "diversity": false
+      },
+      {
+        "name": "watermelon",
+        "diversity": false
+      },
+      {
+        "name": "tangerine",
+        "diversity": false
+      },
+      {
+        "name": "lemon",
+        "diversity": false
+      },
+      {
+        "name": "banana",
+        "diversity": false
+      },
+      {
+        "name": "pineapple",
+        "diversity": false
+      },
+      {
+        "name": "mango",
+        "diversity": false
+      },
+      {
+        "name": "apple",
+        "diversity": false
+      },
+      {
+        "name": "green_apple",
+        "diversity": false
+      },
+      {
+        "name": "pear",
+        "diversity": false
+      },
+      {
+        "name": "peach",
+        "diversity": false
+      },
+      {
+        "name": "cherries",
+        "diversity": false
+      },
+      {
+        "name": "strawberry",
+        "diversity": false
+      },
+      {
+        "name": "kiwi_fruit",
+        "diversity": false
+      },
+      {
+        "name": "tomato",
+        "diversity": false
+      },
+      {
+        "name": "coconut",
+        "diversity": false
+      },
+      {
+        "name": "avocado",
+        "diversity": false
+      },
+      {
+        "name": "eggplant",
+        "diversity": false
+      },
+      {
+        "name": "potato",
+        "diversity": false
+      },
+      {
+        "name": "carrot",
+        "diversity": false
+      },
+      {
+        "name": "corn",
+        "diversity": false
+      },
+      {
+        "name": "hot_pepper",
+        "diversity": false
+      },
+      {
+        "name": "cucumber",
+        "diversity": false
+      },
+      {
+        "name": "leafy_green",
+        "diversity": false
+      },
+      {
+        "name": "broccoli",
+        "diversity": false
+      },
+      {
+        "name": "mushroom",
+        "diversity": false
+      },
+      {
+        "name": "peanuts",
+        "diversity": false
+      },
+      {
+        "name": "chestnut",
+        "diversity": false
+      },
+      {
+        "name": "bread",
+        "diversity": false
+      },
+      {
+        "name": "croissant",
+        "diversity": false
+      },
+      {
+        "name": "baguette_bread",
+        "diversity": false
+      },
+      {
+        "name": "pretzel",
+        "diversity": false
+      },
+      {
+        "name": "bagel",
+        "diversity": false
+      },
+      {
+        "name": "pancakes",
+        "diversity": false
+      },
+      {
+        "name": "cheese",
+        "diversity": false
+      },
+      {
+        "name": "meat_on_bone",
+        "diversity": false
+      },
+      {
+        "name": "poultry_leg",
+        "diversity": false
+      },
+      {
+        "name": "cut_of_meat",
+        "diversity": false
+      },
+      {
+        "name": "bacon",
+        "diversity": false
+      },
+      {
+        "name": "hamburger",
+        "diversity": false
+      },
+      {
+        "name": "fries",
+        "diversity": false
+      },
+      {
+        "name": "pizza",
+        "diversity": false
+      },
+      {
+        "name": "hotdog",
+        "diversity": false
+      },
+      {
+        "name": "sandwich",
+        "diversity": false
+      },
+      {
+        "name": "taco",
+        "diversity": false
+      },
+      {
+        "name": "burrito",
+        "diversity": false
+      },
+      {
+        "name": "stuffed_flatbread",
+        "diversity": false
+      },
+      {
+        "name": "egg",
+        "diversity": false
+      },
+      {
+        "name": "fried_egg",
+        "diversity": false
+      },
+      {
+        "name": "shallow_pan_of_food",
+        "diversity": false
+      },
+      {
+        "name": "stew",
+        "diversity": false
+      },
+      {
+        "name": "bowl_with_spoon",
+        "diversity": false
+      },
+      {
+        "name": "green_salad",
+        "diversity": false
+      },
+      {
+        "name": "popcorn",
+        "diversity": false
+      },
+      {
+        "name": "salt",
+        "diversity": false
+      },
+      {
+        "name": "canned_food",
+        "diversity": false
+      },
+      {
+        "name": "bento",
+        "diversity": false
+      },
+      {
+        "name": "rice_cracker",
+        "diversity": false
+      },
+      {
+        "name": "rice_ball",
+        "diversity": false
+      },
+      {
+        "name": "rice",
+        "diversity": false
+      },
+      {
+        "name": "curry",
+        "diversity": false
+      },
+      {
+        "name": "ramen",
+        "diversity": false
+      },
+      {
+        "name": "spaghetti",
+        "diversity": false
+      },
+      {
+        "name": "sweet_potato",
+        "diversity": false
+      },
+      {
+        "name": "oden",
+        "diversity": false
+      },
+      {
+        "name": "sushi",
+        "diversity": false
+      },
+      {
+        "name": "fried_shrimp",
+        "diversity": false
+      },
+      {
+        "name": "fish_cake",
+        "diversity": false
+      },
+      {
+        "name": "moon_cake",
+        "diversity": false
+      },
+      {
+        "name": "dango",
+        "diversity": false
+      },
+      {
+        "name": "dumpling",
+        "diversity": false
+      },
+      {
+        "name": "fortune_cookie",
+        "diversity": false
+      },
+      {
+        "name": "takeout_box",
+        "diversity": false
+      },
+      {
+        "name": "icecream",
+        "diversity": false
+      },
+      {
+        "name": "shaved_ice",
+        "diversity": false
+      },
+      {
+        "name": "ice_cream",
+        "diversity": false
+      },
+      {
+        "name": "doughnut",
+        "diversity": false
+      },
+      {
+        "name": "cookie",
+        "diversity": false
+      },
+      {
+        "name": "birthday",
+        "diversity": false
+      },
+      {
+        "name": "cake",
+        "diversity": false
+      },
+      {
+        "name": "cupcake",
+        "diversity": false
+      },
+      {
+        "name": "pie",
+        "diversity": false
+      },
+      {
+        "name": "chocolate_bar",
+        "diversity": false
+      },
+      {
+        "name": "candy",
+        "diversity": false
+      },
+      {
+        "name": "lollipop",
+        "diversity": false
+      },
+      {
+        "name": "custard",
+        "diversity": false
+      },
+      {
+        "name": "honey_pot",
+        "diversity": false
+      },
+      {
+        "name": "baby_bottle",
+        "diversity": false
+      },
+      {
+        "name": "milk_glass",
+        "diversity": false
+      },
+      {
+        "name": "coffee",
+        "diversity": false
+      },
+      {
+        "name": "tea",
+        "diversity": false
+      },
+      {
+        "name": "sake",
+        "diversity": false
+      },
+      {
+        "name": "champagne",
+        "diversity": false
+      },
+      {
+        "name": "wine_glass",
+        "diversity": false
+      },
+      {
+        "name": "cocktail",
+        "diversity": false
+      },
+      {
+        "name": "tropical_drink",
+        "diversity": false
+      },
+      {
+        "name": "beer",
+        "diversity": false
+      },
+      {
+        "name": "beers",
+        "diversity": false
+      },
+      {
+        "name": "clinking_glasses",
+        "diversity": false
+      },
+      {
+        "name": "tumbler_glass",
+        "diversity": false
+      },
+      {
+        "name": "cup_with_straw",
+        "diversity": false
+      },
+      {
+        "name": "chopsticks",
+        "diversity": false
+      },
+      {
+        "name": "plate_with_cutlery",
+        "diversity": false
+      },
+      {
+        "name": "fork_and_knife",
+        "diversity": false
+      },
+      {
+        "name": "spoon",
+        "diversity": false
+      },
+      {
+        "name": "hocho",
+        "diversity": false
+      },
+      {
+        "name": "amphora",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "celebration",
+    "fullname": "Celebration",
+    "tabicon": "gift",
+    "icons": [
+      {
+        "name": "jack_o_lantern",
+        "diversity": false
+      },
+      {
+        "name": "christmas_tree",
+        "diversity": false
+      },
+      {
+        "name": "fireworks",
+        "diversity": false
+      },
+      {
+        "name": "sparkler",
+        "diversity": false
+      },
+      {
+        "name": "firecracker",
+        "diversity": false
+      },
+      {
+        "name": "sparkles",
+        "diversity": false
+      },
+      {
+        "name": "balloon",
+        "diversity": false
+      },
+      {
+        "name": "tada",
+        "diversity": false
+      },
+      {
+        "name": "confetti_ball",
+        "diversity": false
+      },
+      {
+        "name": "tanabata_tree",
+        "diversity": false
+      },
+      {
+        "name": "bamboo",
+        "diversity": false
+      },
+      {
+        "name": "dolls",
+        "diversity": false
+      },
+      {
+        "name": "flags",
+        "diversity": false
+      },
+      {
+        "name": "wind_chime",
+        "diversity": false
+      },
+      {
+        "name": "rice_scene",
+        "diversity": false
+      },
+      {
+        "name": "red_gift_envelope",
+        "diversity": false
+      },
+      {
+        "name": "ribbon",
+        "diversity": false
+      },
+      {
+        "name": "gift",
+        "diversity": false
+      },
+      {
+        "name": "reminder_ribbon",
+        "diversity": false
+      },
+      {
+        "name": "tickets",
+        "diversity": false
+      },
+      {
+        "name": "ticket",
+        "diversity": false
+      },
+      {
+        "name": "kiss",
+        "diversity": false
+      },
+      {
+        "name": "cupid",
+        "diversity": false
+      },
+      {
+        "name": "gift_heart",
+        "diversity": false
+      },
+      {
+        "name": "sparkling_heart",
+        "diversity": false
+      },
+      {
+        "name": "heartpulse",
+        "diversity": false
+      },
+      {
+        "name": "heartbeat",
+        "diversity": false
+      },
+      {
+        "name": "revolving_hearts",
+        "diversity": false
+      },
+      {
+        "name": "two_hearts",
+        "diversity": false
+      },
+      {
+        "name": "love_letter",
+        "diversity": false
+      },
+      {
+        "name": "heavy_heart_exclamation",
+        "diversity": false
+      },
+      {
+        "name": "broken_heart",
+        "diversity": false
+      },
+      {
+        "name": "heart",
+        "diversity": false
+      },
+      {
+        "name": "orange_heart",
+        "diversity": false
+      },
+      {
+        "name": "yellow_heart",
+        "diversity": false
+      },
+      {
+        "name": "green_heart",
+        "diversity": false
+      },
+      {
+        "name": "blue_heart",
+        "diversity": false
+      },
+      {
+        "name": "purple_heart",
+        "diversity": false
+      },
+      {
+        "name": "black_heart",
+        "diversity": false
+      },
+      {
+        "name": "heart_decoration",
+        "diversity": false
+      },
+      {
+        "name": "zzz",
+        "diversity": false
+      },
+      {
+        "name": "anger",
+        "diversity": false
+      },
+      {
+        "name": "bomb",
+        "diversity": false
+      },
+      {
+        "name": "boom",
+        "diversity": false
+      },
+      {
+        "name": "sweat_drops",
+        "diversity": false
+      },
+      {
+        "name": "dash",
+        "diversity": false
+      },
+      {
+        "name": "dizzy",
+        "diversity": false
+      },
+      {
+        "name": "speech_balloon",
+        "diversity": false
+      },
+      {
+        "name": "left_speech_bubble",
+        "diversity": false
+      },
+      {
+        "name": "right_anger_bubble",
+        "diversity": false
+      },
+      {
+        "name": "thought_balloon",
+        "diversity": false
+      },
+      {
+        "name": "hole",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "activity",
+    "fullname": "Activities",
+    "tabicon": "soccer",
+    "icons": [
+      {
+        "name": "massage_woman",
+        "diversity": true
+      },
+      {
+        "name": "massage_man",
+        "diversity": true
+      },
+      {
+        "name": "haircut_woman",
+        "diversity": true
+      },
+      {
+        "name": "haircut_man",
+        "diversity": true
+      },
+      {
+        "name": "walking_man",
+        "diversity": true
+      },
+      {
+        "name": "walking_woman",
+        "diversity": true
+      },
+      {
+        "name": "running_man",
+        "diversity": true
+      },
+      {
+        "name": "running_woman",
+        "diversity": true
+      },
+      {
+        "name": "dancer",
+        "diversity": true
+      },
+      {
+        "name": "man_dancing",
+        "diversity": true
+      },
+      {
+        "name": "dancing_women",
+        "diversity": false
+      },
+      {
+        "name": "dancing_men",
+        "diversity": false
+      },
+      {
+        "name": "person_in_steamy_room",
+        "diversity": true
+      },
+      {
+        "name": "woman_in_steamy_room",
+        "diversity": true
+      },
+      {
+        "name": "person_climbing",
+        "diversity": true
+      },
+      {
+        "name": "woman_climbing",
+        "diversity": true
+      },
+      {
+        "name": "person_in_lotus_position",
+        "diversity": true
+      },
+      {
+        "name": "woman_in_lotus_position",
+        "diversity": true
+      },
+      {
+        "name": "bath",
+        "diversity": true
+      },
+      {
+        "name": "sleeping_bed",
+        "diversity": true
+      },
+      {
+        "name": "business_suit_levitating",
+        "diversity": true
+      },
+      {
+        "name": "speaking_head",
+        "diversity": false
+      },
+      {
+        "name": "bust_in_silhouette",
+        "diversity": false
+      },
+      {
+        "name": "busts_in_silhouette",
+        "diversity": false
+      },
+      {
+        "name": "person_fencing",
+        "diversity": false
+      },
+      {
+        "name": "horse_racing",
+        "diversity": true
+      },
+      {
+        "name": "skier",
+        "diversity": false
+      },
+      {
+        "name": "snowboarder",
+        "diversity": true
+      },
+      {
+        "name": "golfing_man",
+        "diversity": true
+      },
+      {
+        "name": "golfing_woman",
+        "diversity": false
+      },
+      {
+        "name": "surfing_man",
+        "diversity": true
+      },
+      {
+        "name": "surfing_woman",
+        "diversity": true
+      },
+      {
+        "name": "rowing_man",
+        "diversity": true
+      },
+      {
+        "name": "rowing_woman",
+        "diversity": true
+      },
+      {
+        "name": "swimming_man",
+        "diversity": true
+      },
+      {
+        "name": "swimming_woman",
+        "diversity": true
+      },
+      {
+        "name": "basketball_man",
+        "diversity": true
+      },
+      {
+        "name": "basketball_woman",
+        "diversity": false
+      },
+      {
+        "name": "weight_lifting_man",
+        "diversity": true
+      },
+      {
+        "name": "weight_lifting_woman",
+        "diversity": false
+      },
+      {
+        "name": "biking_man",
+        "diversity": true
+      },
+      {
+        "name": "biking_woman",
+        "diversity": true
+      },
+      {
+        "name": "mountain_biking_man",
+        "diversity": true
+      },
+      {
+        "name": "mountain_biking_woman",
+        "diversity": true
+      },
+      {
+        "name": "racing_car",
+        "diversity": false
+      },
+      {
+        "name": "motorcycle",
+        "diversity": false
+      },
+      {
+        "name": "man_cartwheeling",
+        "diversity": true
+      },
+      {
+        "name": "woman_cartwheeling",
+        "diversity": true
+      },
+      {
+        "name": "men_wrestling",
+        "diversity": false
+      },
+      {
+        "name": "women_wrestling",
+        "diversity": false
+      },
+      {
+        "name": "man_playing_water_polo",
+        "diversity": true
+      },
+      {
+        "name": "woman_playing_water_polo",
+        "diversity": true
+      },
+      {
+        "name": "man_playing_handball",
+        "diversity": true
+      },
+      {
+        "name": "woman_playing_handball",
+        "diversity": true
+      },
+      {
+        "name": "man_juggling",
+        "diversity": true
+      },
+      {
+        "name": "woman_juggling",
+        "diversity": true
+      },
+      {
+        "name": "soccer",
+        "diversity": false
+      },
+      {
+        "name": "baseball",
+        "diversity": false
+      },
+      {
+        "name": "softball",
+        "diversity": false
+      },
+      {
+        "name": "basketball",
+        "diversity": false
+      },
+      {
+        "name": "volleyball",
+        "diversity": false
+      },
+      {
+        "name": "football",
+        "diversity": false
+      },
+      {
+        "name": "rugby_football",
+        "diversity": false
+      },
+      {
+        "name": "tennis",
+        "diversity": false
+      },
+      {
+        "name": "flying_disc",
+        "diversity": false
+      },
+      {
+        "name": "bowling",
+        "diversity": false
+      },
+      {
+        "name": "cricket_bat_and_ball",
+        "diversity": false
+      },
+      {
+        "name": "field_hockey",
+        "diversity": false
+      },
+      {
+        "name": "ice_hockey",
+        "diversity": false
+      },
+      {
+        "name": "lacrosse",
+        "diversity": false
+      },
+      {
+        "name": "ping_pong",
+        "diversity": false
+      },
+      {
+        "name": "badminton",
+        "diversity": false
+      },
+      {
+        "name": "boxing_glove",
+        "diversity": false
+      },
+      {
+        "name": "martial_arts_uniform",
+        "diversity": false
+      },
+      {
+        "name": "goal_net",
+        "diversity": false
+      },
+      {
+        "name": "golf",
+        "diversity": false
+      },
+      {
+        "name": "ice_skate",
+        "diversity": false
+      },
+      {
+        "name": "fishing_pole_and_fish",
+        "diversity": false
+      },
+      {
+        "name": "running_shirt_with_sash",
+        "diversity": false
+      },
+      {
+        "name": "ski",
+        "diversity": false
+      },
+      {
+        "name": "sled",
+        "diversity": false
+      },
+      {
+        "name": "curling_stone",
+        "diversity": false
+      },
+      {
+        "name": "dart",
+        "diversity": false
+      },
+      {
+        "name": "8ball",
+        "diversity": false
+      },
+      {
+        "name": "crystal_ball",
+        "diversity": false
+      },
+      {
+        "name": "nazar_amulet",
+        "diversity": false
+      },
+      {
+        "name": "video_game",
+        "diversity": false
+      },
+      {
+        "name": "joystick",
+        "diversity": false
+      },
+      {
+        "name": "slot_machine",
+        "diversity": false
+      },
+      {
+        "name": "game_die",
+        "diversity": false
+      },
+      {
+        "name": "jigsaw",
+        "diversity": false
+      },
+      {
+        "name": "teddy_bear",
+        "diversity": false
+      },
+      {
+        "name": "spades",
+        "diversity": false
+      },
+      {
+        "name": "hearts",
+        "diversity": false
+      },
+      {
+        "name": "diamonds",
+        "diversity": false
+      },
+      {
+        "name": "clubs",
+        "diversity": false
+      },
+      {
+        "name": "chess_pawn",
+        "diversity": false
+      },
+      {
+        "name": "black_joker",
+        "diversity": false
+      },
+      {
+        "name": "mahjong",
+        "diversity": false
+      },
+      {
+        "name": "flower_playing_cards",
+        "diversity": false
+      },
+      {
+        "name": "musical_score",
+        "diversity": false
+      },
+      {
+        "name": "musical_note",
+        "diversity": false
+      },
+      {
+        "name": "notes",
+        "diversity": false
+      },
+      {
+        "name": "studio_microphone",
+        "diversity": false
+      },
+      {
+        "name": "level_slider",
+        "diversity": false
+      },
+      {
+        "name": "control_knobs",
+        "diversity": false
+      },
+      {
+        "name": "microphone",
+        "diversity": false
+      },
+      {
+        "name": "headphones",
+        "diversity": false
+      },
+      {
+        "name": "radio",
+        "diversity": false
+      },
+      {
+        "name": "saxophone",
+        "diversity": false
+      },
+      {
+        "name": "guitar",
+        "diversity": false
+      },
+      {
+        "name": "musical_keyboard",
+        "diversity": false
+      },
+      {
+        "name": "trumpet",
+        "diversity": false
+      },
+      {
+        "name": "violin",
+        "diversity": false
+      },
+      {
+        "name": "drum",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "travel",
+    "fullname": "Travel & Places",
+    "tabicon": "airplane",
+    "icons": [
+      {
+        "name": "earth_africa",
+        "diversity": false
+      },
+      {
+        "name": "earth_americas",
+        "diversity": false
+      },
+      {
+        "name": "earth_asia",
+        "diversity": false
+      },
+      {
+        "name": "globe_with_meridians",
+        "diversity": false
+      },
+      {
+        "name": "world_map",
+        "diversity": false
+      },
+      {
+        "name": "japan",
+        "diversity": false
+      },
+      {
+        "name": "compass",
+        "diversity": false
+      },
+      {
+        "name": "mountain_snow",
+        "diversity": false
+      },
+      {
+        "name": "mountain",
+        "diversity": false
+      },
+      {
+        "name": "volcano",
+        "diversity": false
+      },
+      {
+        "name": "mount_fuji",
+        "diversity": false
+      },
+      {
+        "name": "camping",
+        "diversity": false
+      },
+      {
+        "name": "beach_umbrella",
+        "diversity": false
+      },
+      {
+        "name": "desert",
+        "diversity": false
+      },
+      {
+        "name": "desert_island",
+        "diversity": false
+      },
+      {
+        "name": "national_park",
+        "diversity": false
+      },
+      {
+        "name": "stadium",
+        "diversity": false
+      },
+      {
+        "name": "classical_building",
+        "diversity": false
+      },
+      {
+        "name": "building_construction",
+        "diversity": false
+      },
+      {
+        "name": "brick",
+        "diversity": false
+      },
+      {
+        "name": "houses",
+        "diversity": false
+      },
+      {
+        "name": "derelict_house",
+        "diversity": false
+      },
+      {
+        "name": "house",
+        "diversity": false
+      },
+      {
+        "name": "house_with_garden",
+        "diversity": false
+      },
+      {
+        "name": "office",
+        "diversity": false
+      },
+      {
+        "name": "post_office",
+        "diversity": false
+      },
+      {
+        "name": "european_post_office",
+        "diversity": false
+      },
+      {
+        "name": "hospital",
+        "diversity": false
+      },
+      {
+        "name": "bank",
+        "diversity": false
+      },
+      {
+        "name": "hotel",
+        "diversity": false
+      },
+      {
+        "name": "love_hotel",
+        "diversity": false
+      },
+      {
+        "name": "convenience_store",
+        "diversity": false
+      },
+      {
+        "name": "school",
+        "diversity": false
+      },
+      {
+        "name": "department_store",
+        "diversity": false
+      },
+      {
+        "name": "factory",
+        "diversity": false
+      },
+      {
+        "name": "japanese_castle",
+        "diversity": false
+      },
+      {
+        "name": "european_castle",
+        "diversity": false
+      },
+      {
+        "name": "wedding",
+        "diversity": false
+      },
+      {
+        "name": "tokyo_tower",
+        "diversity": false
+      },
+      {
+        "name": "statue_of_liberty",
+        "diversity": false
+      },
+      {
+        "name": "church",
+        "diversity": false
+      },
+      {
+        "name": "mosque",
+        "diversity": false
+      },
+      {
+        "name": "synagogue",
+        "diversity": false
+      },
+      {
+        "name": "shinto_shrine",
+        "diversity": false
+      },
+      {
+        "name": "kaaba",
+        "diversity": false
+      },
+      {
+        "name": "fountain",
+        "diversity": false
+      },
+      {
+        "name": "tent",
+        "diversity": false
+      },
+      {
+        "name": "foggy",
+        "diversity": false
+      },
+      {
+        "name": "night_with_stars",
+        "diversity": false
+      },
+      {
+        "name": "cityscape",
+        "diversity": false
+      },
+      {
+        "name": "sunrise_over_mountains",
+        "diversity": false
+      },
+      {
+        "name": "sunrise",
+        "diversity": false
+      },
+      {
+        "name": "city_sunset",
+        "diversity": false
+      },
+      {
+        "name": "city_sunrise",
+        "diversity": false
+      },
+      {
+        "name": "bridge_at_night",
+        "diversity": false
+      },
+      {
+        "name": "hotsprings",
+        "diversity": false
+      },
+      {
+        "name": "milky_way",
+        "diversity": false
+      },
+      {
+        "name": "carousel_horse",
+        "diversity": false
+      },
+      {
+        "name": "ferris_wheel",
+        "diversity": false
+      },
+      {
+        "name": "roller_coaster",
+        "diversity": false
+      },
+      {
+        "name": "barber",
+        "diversity": false
+      },
+      {
+        "name": "circus_tent",
+        "diversity": false
+      },
+      {
+        "name": "steam_locomotive",
+        "diversity": false
+      },
+      {
+        "name": "railway_car",
+        "diversity": false
+      },
+      {
+        "name": "bullettrain_side",
+        "diversity": false
+      },
+      {
+        "name": "bullettrain_front",
+        "diversity": false
+      },
+      {
+        "name": "train2",
+        "diversity": false
+      },
+      {
+        "name": "metro",
+        "diversity": false
+      },
+      {
+        "name": "light_rail",
+        "diversity": false
+      },
+      {
+        "name": "station",
+        "diversity": false
+      },
+      {
+        "name": "tram",
+        "diversity": false
+      },
+      {
+        "name": "monorail",
+        "diversity": false
+      },
+      {
+        "name": "mountain_railway",
+        "diversity": false
+      },
+      {
+        "name": "train",
+        "diversity": false
+      },
+      {
+        "name": "bus",
+        "diversity": false
+      },
+      {
+        "name": "oncoming_bus",
+        "diversity": false
+      },
+      {
+        "name": "trolleybus",
+        "diversity": false
+      },
+      {
+        "name": "minibus",
+        "diversity": false
+      },
+      {
+        "name": "ambulance",
+        "diversity": false
+      },
+      {
+        "name": "fire_engine",
+        "diversity": false
+      },
+      {
+        "name": "police_car",
+        "diversity": false
+      },
+      {
+        "name": "oncoming_police_car",
+        "diversity": false
+      },
+      {
+        "name": "taxi",
+        "diversity": false
+      },
+      {
+        "name": "oncoming_taxi",
+        "diversity": false
+      },
+      {
+        "name": "red_car",
+        "diversity": false
+      },
+      {
+        "name": "oncoming_automobile",
+        "diversity": false
+      },
+      {
+        "name": "blue_car",
+        "diversity": false
+      },
+      {
+        "name": "truck",
+        "diversity": false
+      },
+      {
+        "name": "articulated_lorry",
+        "diversity": false
+      },
+      {
+        "name": "tractor",
+        "diversity": false
+      },
+      {
+        "name": "bike",
+        "diversity": false
+      },
+      {
+        "name": "kick_scooter",
+        "diversity": false
+      },
+      {
+        "name": "skateboard",
+        "diversity": false
+      },
+      {
+        "name": "motor_scooter",
+        "diversity": false
+      },
+      {
+        "name": "busstop",
+        "diversity": false
+      },
+      {
+        "name": "motorway",
+        "diversity": false
+      },
+      {
+        "name": "railway_track",
+        "diversity": false
+      },
+      {
+        "name": "oil_drum",
+        "diversity": false
+      },
+      {
+        "name": "fuelpump",
+        "diversity": false
+      },
+      {
+        "name": "rotating_light",
+        "diversity": false
+      },
+      {
+        "name": "traffic_light",
+        "diversity": false
+      },
+      {
+        "name": "vertical_traffic_light",
+        "diversity": false
+      },
+      {
+        "name": "stop_sign",
+        "diversity": false
+      },
+      {
+        "name": "construction",
+        "diversity": false
+      },
+      {
+        "name": "anchor",
+        "diversity": false
+      },
+      {
+        "name": "sailboat",
+        "diversity": false
+      },
+      {
+        "name": "canoe",
+        "diversity": false
+      },
+      {
+        "name": "speedboat",
+        "diversity": false
+      },
+      {
+        "name": "passenger_ship",
+        "diversity": false
+      },
+      {
+        "name": "ferry",
+        "diversity": false
+      },
+      {
+        "name": "motor_boat",
+        "diversity": false
+      },
+      {
+        "name": "ship",
+        "diversity": false
+      },
+      {
+        "name": "airplane",
+        "diversity": false
+      },
+      {
+        "name": "small_airplane",
+        "diversity": false
+      },
+      {
+        "name": "flight_departure",
+        "diversity": false
+      },
+      {
+        "name": "flight_arrival",
+        "diversity": false
+      },
+      {
+        "name": "seat",
+        "diversity": false
+      },
+      {
+        "name": "helicopter",
+        "diversity": false
+      },
+      {
+        "name": "suspension_railway",
+        "diversity": false
+      },
+      {
+        "name": "mountain_cableway",
+        "diversity": false
+      },
+      {
+        "name": "aerial_tramway",
+        "diversity": false
+      },
+      {
+        "name": "artificial_satellite",
+        "diversity": false
+      },
+      {
+        "name": "rocket",
+        "diversity": false
+      },
+      {
+        "name": "flying_saucer",
+        "diversity": false
+      },
+      {
+        "name": "bellhop_bell",
+        "diversity": false
+      },
+      {
+        "name": "luggage",
+        "diversity": false
+      },
+      {
+        "name": "checkered_flag",
+        "diversity": false
+      },
+      {
+        "name": "triangular_flag_on_post",
+        "diversity": false
+      },
+      {
+        "name": "crossed_flags",
+        "diversity": false
+      },
+      {
+        "name": "black_flag",
+        "diversity": false
+      },
+      {
+        "name": "white_flag",
+        "diversity": false
+      },
+      {
+        "name": "rainbow_flag",
+        "diversity": false
+      },
+      {
+        "name": "pirate_flag",
+        "diversity": false
+      },
+      {
+        "name": "ascension_island",
+        "diversity": false
+      },
+      {
+        "name": "andorra",
+        "diversity": false
+      },
+      {
+        "name": "united_arab_emirates",
+        "diversity": false
+      },
+      {
+        "name": "afghanistan",
+        "diversity": false
+      },
+      {
+        "name": "antigua_barbuda",
+        "diversity": false
+      },
+      {
+        "name": "anguilla",
+        "diversity": false
+      },
+      {
+        "name": "albania",
+        "diversity": false
+      },
+      {
+        "name": "armenia",
+        "diversity": false
+      },
+      {
+        "name": "angola",
+        "diversity": false
+      },
+      {
+        "name": "antarctica",
+        "diversity": false
+      },
+      {
+        "name": "argentina",
+        "diversity": false
+      },
+      {
+        "name": "american_samoa",
+        "diversity": false
+      },
+      {
+        "name": "austria",
+        "diversity": false
+      },
+      {
+        "name": "australia",
+        "diversity": false
+      },
+      {
+        "name": "aruba",
+        "diversity": false
+      },
+      {
+        "name": "aland_islands",
+        "diversity": false
+      },
+      {
+        "name": "azerbaijan",
+        "diversity": false
+      },
+      {
+        "name": "bosnia_herzegovina",
+        "diversity": false
+      },
+      {
+        "name": "barbados",
+        "diversity": false
+      },
+      {
+        "name": "bangladesh",
+        "diversity": false
+      },
+      {
+        "name": "belgium",
+        "diversity": false
+      },
+      {
+        "name": "burkina_faso",
+        "diversity": false
+      },
+      {
+        "name": "bulgaria",
+        "diversity": false
+      },
+      {
+        "name": "bahrain",
+        "diversity": false
+      },
+      {
+        "name": "burundi",
+        "diversity": false
+      },
+      {
+        "name": "benin",
+        "diversity": false
+      },
+      {
+        "name": "st_barthelemy",
+        "diversity": false
+      },
+      {
+        "name": "bermuda",
+        "diversity": false
+      },
+      {
+        "name": "brunei",
+        "diversity": false
+      },
+      {
+        "name": "bolivia",
+        "diversity": false
+      },
+      {
+        "name": "caribbean_netherlands",
+        "diversity": false
+      },
+      {
+        "name": "brazil",
+        "diversity": false
+      },
+      {
+        "name": "bahamas",
+        "diversity": false
+      },
+      {
+        "name": "bhutan",
+        "diversity": false
+      },
+      {
+        "name": "bouvet_island",
+        "diversity": false
+      },
+      {
+        "name": "botswana",
+        "diversity": false
+      },
+      {
+        "name": "belarus",
+        "diversity": false
+      },
+      {
+        "name": "belize",
+        "diversity": false
+      },
+      {
+        "name": "canada",
+        "diversity": false
+      },
+      {
+        "name": "cocos_islands",
+        "diversity": false
+      },
+      {
+        "name": "congo_kinshasa",
+        "diversity": false
+      },
+      {
+        "name": "central_african_republic",
+        "diversity": false
+      },
+      {
+        "name": "congo_brazzaville",
+        "diversity": false
+      },
+      {
+        "name": "switzerland",
+        "diversity": false
+      },
+      {
+        "name": "cote_divoire",
+        "diversity": false
+      },
+      {
+        "name": "cook_islands",
+        "diversity": false
+      },
+      {
+        "name": "chile",
+        "diversity": false
+      },
+      {
+        "name": "cameroon",
+        "diversity": false
+      },
+      {
+        "name": "cn",
+        "diversity": false
+      },
+      {
+        "name": "colombia",
+        "diversity": false
+      },
+      {
+        "name": "clipperton_island",
+        "diversity": false
+      },
+      {
+        "name": "costa_rica",
+        "diversity": false
+      },
+      {
+        "name": "cuba",
+        "diversity": false
+      },
+      {
+        "name": "cape_verde",
+        "diversity": false
+      },
+      {
+        "name": "curacao",
+        "diversity": false
+      },
+      {
+        "name": "christmas_island",
+        "diversity": false
+      },
+      {
+        "name": "cyprus",
+        "diversity": false
+      },
+      {
+        "name": "czech_republic",
+        "diversity": false
+      },
+      {
+        "name": "de",
+        "diversity": false
+      },
+      {
+        "name": "diego_garcia",
+        "diversity": false
+      },
+      {
+        "name": "djibouti",
+        "diversity": false
+      },
+      {
+        "name": "denmark",
+        "diversity": false
+      },
+      {
+        "name": "dominica",
+        "diversity": false
+      },
+      {
+        "name": "dominican_republic",
+        "diversity": false
+      },
+      {
+        "name": "algeria",
+        "diversity": false
+      },
+      {
+        "name": "ceuta_and_melilla",
+        "diversity": false
+      },
+      {
+        "name": "ecuador",
+        "diversity": false
+      },
+      {
+        "name": "estonia",
+        "diversity": false
+      },
+      {
+        "name": "egypt",
+        "diversity": false
+      },
+      {
+        "name": "western_sahara",
+        "diversity": false
+      },
+      {
+        "name": "eritrea",
+        "diversity": false
+      },
+      {
+        "name": "es",
+        "diversity": false
+      },
+      {
+        "name": "ethiopia",
+        "diversity": false
+      },
+      {
+        "name": "eu",
+        "diversity": false
+      },
+      {
+        "name": "finland",
+        "diversity": false
+      },
+      {
+        "name": "fiji",
+        "diversity": false
+      },
+      {
+        "name": "falkland_islands",
+        "diversity": false
+      },
+      {
+        "name": "micronesia",
+        "diversity": false
+      },
+      {
+        "name": "faroe_islands",
+        "diversity": false
+      },
+      {
+        "name": "fr",
+        "diversity": false
+      },
+      {
+        "name": "gabon",
+        "diversity": false
+      },
+      {
+        "name": "uk",
+        "diversity": false
+      },
+      {
+        "name": "grenada",
+        "diversity": false
+      },
+      {
+        "name": "georgia",
+        "diversity": false
+      },
+      {
+        "name": "french_guiana",
+        "diversity": false
+      },
+      {
+        "name": "guernsey",
+        "diversity": false
+      },
+      {
+        "name": "ghana",
+        "diversity": false
+      },
+      {
+        "name": "gibraltar",
+        "diversity": false
+      },
+      {
+        "name": "greenland",
+        "diversity": false
+      },
+      {
+        "name": "gambia",
+        "diversity": false
+      },
+      {
+        "name": "guinea",
+        "diversity": false
+      },
+      {
+        "name": "guadeloupe",
+        "diversity": false
+      },
+      {
+        "name": "equatorial_guinea",
+        "diversity": false
+      },
+      {
+        "name": "greece",
+        "diversity": false
+      },
+      {
+        "name": "south_georgia_south_sandwich_islands",
+        "diversity": false
+      },
+      {
+        "name": "guatemala",
+        "diversity": false
+      },
+      {
+        "name": "guam",
+        "diversity": false
+      },
+      {
+        "name": "guinea_bissau",
+        "diversity": false
+      },
+      {
+        "name": "guyana",
+        "diversity": false
+      },
+      {
+        "name": "hong_kong",
+        "diversity": false
+      },
+      {
+        "name": "heard_and_mc_donald_islands",
+        "diversity": false
+      },
+      {
+        "name": "honduras",
+        "diversity": false
+      },
+      {
+        "name": "croatia",
+        "diversity": false
+      },
+      {
+        "name": "haiti",
+        "diversity": false
+      },
+      {
+        "name": "hungary",
+        "diversity": false
+      },
+      {
+        "name": "canary_islands",
+        "diversity": false
+      },
+      {
+        "name": "indonesia",
+        "diversity": false
+      },
+      {
+        "name": "ireland",
+        "diversity": false
+      },
+      {
+        "name": "israel",
+        "diversity": false
+      },
+      {
+        "name": "isle_of_man",
+        "diversity": false
+      },
+      {
+        "name": "india",
+        "diversity": false
+      },
+      {
+        "name": "british_indian_ocean_territory",
+        "diversity": false
+      },
+      {
+        "name": "iraq",
+        "diversity": false
+      },
+      {
+        "name": "iran",
+        "diversity": false
+      },
+      {
+        "name": "iceland",
+        "diversity": false
+      },
+      {
+        "name": "it",
+        "diversity": false
+      },
+      {
+        "name": "jersey",
+        "diversity": false
+      },
+      {
+        "name": "jamaica",
+        "diversity": false
+      },
+      {
+        "name": "jordan",
+        "diversity": false
+      },
+      {
+        "name": "jp",
+        "diversity": false
+      },
+      {
+        "name": "kenya",
+        "diversity": false
+      },
+      {
+        "name": "kyrgyzstan",
+        "diversity": false
+      },
+      {
+        "name": "cambodia",
+        "diversity": false
+      },
+      {
+        "name": "kiribati",
+        "diversity": false
+      },
+      {
+        "name": "comoros",
+        "diversity": false
+      },
+      {
+        "name": "st_kitts_nevis",
+        "diversity": false
+      },
+      {
+        "name": "north_korea",
+        "diversity": false
+      },
+      {
+        "name": "kr",
+        "diversity": false
+      },
+      {
+        "name": "kuwait",
+        "diversity": false
+      },
+      {
+        "name": "cayman_islands",
+        "diversity": false
+      },
+      {
+        "name": "kazakhstan",
+        "diversity": false
+      },
+      {
+        "name": "laos",
+        "diversity": false
+      },
+      {
+        "name": "lebanon",
+        "diversity": false
+      },
+      {
+        "name": "st_lucia",
+        "diversity": false
+      },
+      {
+        "name": "liechtenstein",
+        "diversity": false
+      },
+      {
+        "name": "sri_lanka",
+        "diversity": false
+      },
+      {
+        "name": "liberia",
+        "diversity": false
+      },
+      {
+        "name": "lesotho",
+        "diversity": false
+      },
+      {
+        "name": "lithuania",
+        "diversity": false
+      },
+      {
+        "name": "luxembourg",
+        "diversity": false
+      },
+      {
+        "name": "latvia",
+        "diversity": false
+      },
+      {
+        "name": "libya",
+        "diversity": false
+      },
+      {
+        "name": "morocco",
+        "diversity": false
+      },
+      {
+        "name": "monaco",
+        "diversity": false
+      },
+      {
+        "name": "moldova",
+        "diversity": false
+      },
+      {
+        "name": "montenegro",
+        "diversity": false
+      },
+      {
+        "name": "st_martin",
+        "diversity": false
+      },
+      {
+        "name": "madagascar",
+        "diversity": false
+      },
+      {
+        "name": "marshall_islands",
+        "diversity": false
+      },
+      {
+        "name": "macedonia",
+        "diversity": false
+      },
+      {
+        "name": "mali",
+        "diversity": false
+      },
+      {
+        "name": "myanmar",
+        "diversity": false
+      },
+      {
+        "name": "mongolia",
+        "diversity": false
+      },
+      {
+        "name": "macau",
+        "diversity": false
+      },
+      {
+        "name": "northern_mariana_islands",
+        "diversity": false
+      },
+      {
+        "name": "martinique",
+        "diversity": false
+      },
+      {
+        "name": "mauritania",
+        "diversity": false
+      },
+      {
+        "name": "montserrat",
+        "diversity": false
+      },
+      {
+        "name": "malta",
+        "diversity": false
+      },
+      {
+        "name": "mauritius",
+        "diversity": false
+      },
+      {
+        "name": "maldives",
+        "diversity": false
+      },
+      {
+        "name": "malawi",
+        "diversity": false
+      },
+      {
+        "name": "mexico",
+        "diversity": false
+      },
+      {
+        "name": "malaysia",
+        "diversity": false
+      },
+      {
+        "name": "mozambique",
+        "diversity": false
+      },
+      {
+        "name": "namibia",
+        "diversity": false
+      },
+      {
+        "name": "new_caledonia",
+        "diversity": false
+      },
+      {
+        "name": "niger",
+        "diversity": false
+      },
+      {
+        "name": "norfolk_island",
+        "diversity": false
+      },
+      {
+        "name": "nigeria",
+        "diversity": false
+      },
+      {
+        "name": "nicaragua",
+        "diversity": false
+      },
+      {
+        "name": "netherlands",
+        "diversity": false
+      },
+      {
+        "name": "norway",
+        "diversity": false
+      },
+      {
+        "name": "nepal",
+        "diversity": false
+      },
+      {
+        "name": "nauru",
+        "diversity": false
+      },
+      {
+        "name": "niue",
+        "diversity": false
+      },
+      {
+        "name": "new_zealand",
+        "diversity": false
+      },
+      {
+        "name": "oman",
+        "diversity": false
+      },
+      {
+        "name": "panama",
+        "diversity": false
+      },
+      {
+        "name": "peru",
+        "diversity": false
+      },
+      {
+        "name": "french_polynesia",
+        "diversity": false
+      },
+      {
+        "name": "papua_new_guinea",
+        "diversity": false
+      },
+      {
+        "name": "philippines",
+        "diversity": false
+      },
+      {
+        "name": "pakistan",
+        "diversity": false
+      },
+      {
+        "name": "poland",
+        "diversity": false
+      },
+      {
+        "name": "st_pierre_miquelon",
+        "diversity": false
+      },
+      {
+        "name": "pitcairn_islands",
+        "diversity": false
+      },
+      {
+        "name": "puerto_rico",
+        "diversity": false
+      },
+      {
+        "name": "palestinian_territories",
+        "diversity": false
+      },
+      {
+        "name": "portugal",
+        "diversity": false
+      },
+      {
+        "name": "palau",
+        "diversity": false
+      },
+      {
+        "name": "paraguay",
+        "diversity": false
+      },
+      {
+        "name": "qatar",
+        "diversity": false
+      },
+      {
+        "name": "reunion",
+        "diversity": false
+      },
+      {
+        "name": "romania",
+        "diversity": false
+      },
+      {
+        "name": "serbia",
+        "diversity": false
+      },
+      {
+        "name": "ru",
+        "diversity": false
+      },
+      {
+        "name": "rwanda",
+        "diversity": false
+      },
+      {
+        "name": "saudi_arabia",
+        "diversity": false
+      },
+      {
+        "name": "solomon_islands",
+        "diversity": false
+      },
+      {
+        "name": "seychelles",
+        "diversity": false
+      },
+      {
+        "name": "sudan",
+        "diversity": false
+      },
+      {
+        "name": "sweden",
+        "diversity": false
+      },
+      {
+        "name": "singapore",
+        "diversity": false
+      },
+      {
+        "name": "st_helena",
+        "diversity": false
+      },
+      {
+        "name": "slovenia",
+        "diversity": false
+      },
+      {
+        "name": "svalbard_and_jan_mayen",
+        "diversity": false
+      },
+      {
+        "name": "slovakia",
+        "diversity": false
+      },
+      {
+        "name": "sierra_leone",
+        "diversity": false
+      },
+      {
+        "name": "san_marino",
+        "diversity": false
+      },
+      {
+        "name": "senegal",
+        "diversity": false
+      },
+      {
+        "name": "somalia",
+        "diversity": false
+      },
+      {
+        "name": "suriname",
+        "diversity": false
+      },
+      {
+        "name": "south_sudan",
+        "diversity": false
+      },
+      {
+        "name": "sao_tome_principe",
+        "diversity": false
+      },
+      {
+        "name": "el_salvador",
+        "diversity": false
+      },
+      {
+        "name": "sint_maarten",
+        "diversity": false
+      },
+      {
+        "name": "syria",
+        "diversity": false
+      },
+      {
+        "name": "swaziland",
+        "diversity": false
+      },
+      {
+        "name": "tristan_da_cunha",
+        "diversity": false
+      },
+      {
+        "name": "turks_caicos_islands",
+        "diversity": false
+      },
+      {
+        "name": "chad",
+        "diversity": false
+      },
+      {
+        "name": "french_southern_territories",
+        "diversity": false
+      },
+      {
+        "name": "togo",
+        "diversity": false
+      },
+      {
+        "name": "thailand",
+        "diversity": false
+      },
+      {
+        "name": "tajikistan",
+        "diversity": false
+      },
+      {
+        "name": "tokelau",
+        "diversity": false
+      },
+      {
+        "name": "timor_leste",
+        "diversity": false
+      },
+      {
+        "name": "turkmenistan",
+        "diversity": false
+      },
+      {
+        "name": "tunisia",
+        "diversity": false
+      },
+      {
+        "name": "tonga",
+        "diversity": false
+      },
+      {
+        "name": "tr",
+        "diversity": false
+      },
+      {
+        "name": "trinidad_tobago",
+        "diversity": false
+      },
+      {
+        "name": "tuvalu",
+        "diversity": false
+      },
+      {
+        "name": "taiwan",
+        "diversity": false
+      },
+      {
+        "name": "tanzania",
+        "diversity": false
+      },
+      {
+        "name": "ukraine",
+        "diversity": false
+      },
+      {
+        "name": "uganda",
+        "diversity": false
+      },
+      {
+        "name": "us_outlying_islands",
+        "diversity": false
+      },
+      {
+        "name": "united_nations",
+        "diversity": false
+      },
+      {
+        "name": "us",
+        "diversity": false
+      },
+      {
+        "name": "uruguay",
+        "diversity": false
+      },
+      {
+        "name": "uzbekistan",
+        "diversity": false
+      },
+      {
+        "name": "vatican_city",
+        "diversity": false
+      },
+      {
+        "name": "st_vincent_grenadines",
+        "diversity": false
+      },
+      {
+        "name": "venezuela",
+        "diversity": false
+      },
+      {
+        "name": "british_virgin_islands",
+        "diversity": false
+      },
+      {
+        "name": "us_virgin_islands",
+        "diversity": false
+      },
+      {
+        "name": "vietnam",
+        "diversity": false
+      },
+      {
+        "name": "vanuatu",
+        "diversity": false
+      },
+      {
+        "name": "wallis_futuna",
+        "diversity": false
+      },
+      {
+        "name": "samoa",
+        "diversity": false
+      },
+      {
+        "name": "kosovo",
+        "diversity": false
+      },
+      {
+        "name": "yemen",
+        "diversity": false
+      },
+      {
+        "name": "mayotte",
+        "diversity": false
+      },
+      {
+        "name": "south_africa",
+        "diversity": false
+      },
+      {
+        "name": "zambia",
+        "diversity": false
+      },
+      {
+        "name": "zimbabwe",
+        "diversity": false
+      }
+    ]
+  },
+  {
+    "name": "objects",
+    "fullname": "Objects & Symbols",
+    "tabicon": "eyeglasses",
+    "icons": [
+      {
+        "name": "eyeglasses",
+        "diversity": false
+      },
+      {
+        "name": "dark_sunglasses",
+        "diversity": false
+      },
+      {
+        "name": "goggles",
+        "diversity": false
+      },
+      {
+        "name": "lab_coat",
+        "diversity": false
+      },
+      {
+        "name": "necktie",
+        "diversity": false
+      },
+      {
+        "name": "tshirt",
+        "diversity": false
+      },
+      {
+        "name": "jeans",
+        "diversity": false
+      },
+      {
+        "name": "scarf",
+        "diversity": false
+      },
+      {
+        "name": "gloves",
+        "diversity": false
+      },
+      {
+        "name": "coat",
+        "diversity": false
+      },
+      {
+        "name": "socks",
+        "diversity": false
+      },
+      {
+        "name": "dress",
+        "diversity": false
+      },
+      {
+        "name": "kimono",
+        "diversity": false
+      },
+      {
+        "name": "bikini",
+        "diversity": false
+      },
+      {
+        "name": "womans_clothes",
+        "diversity": false
+      },
+      {
+        "name": "purse",
+        "diversity": false
+      },
+      {
+        "name": "handbag",
+        "diversity": false
+      },
+      {
+        "name": "pouch",
+        "diversity": false
+      },
+      {
+        "name": "shopping",
+        "diversity": false
+      },
+      {
+        "name": "school_satchel",
+        "diversity": false
+      },
+      {
+        "name": "mans_shoe",
+        "diversity": false
+      },
+      {
+        "name": "athletic_shoe",
+        "diversity": false
+      },
+      {
+        "name": "hiking_boot",
+        "diversity": false
+      },
+      {
+        "name": "flat_shoe",
+        "diversity": false
+      },
+      {
+        "name": "high_heel",
+        "diversity": false
+      },
+      {
+        "name": "sandal",
+        "diversity": false
+      },
+      {
+        "name": "boot",
+        "diversity": false
+      },
+      {
+        "name": "crown",
+        "diversity": false
+      },
+      {
+        "name": "womans_hat",
+        "diversity": false
+      },
+      {
+        "name": "tophat",
+        "diversity": false
+      },
+      {
+        "name": "mortar_board",
+        "diversity": false
+      },
+      {
+        "name": "billed_cap",
+        "diversity": false
+      },
+      {
+        "name": "rescue_worker_helmet",
+        "diversity": false
+      },
+      {
+        "name": "prayer_beads",
+        "diversity": false
+      },
+      {
+        "name": "lipstick",
+        "diversity": false
+      },
+      {
+        "name": "ring",
+        "diversity": false
+      },
+      {
+        "name": "gem",
+        "diversity": false
+      },
+      {
+        "name": "medal_military",
+        "diversity": false
+      },
+      {
+        "name": "trophy",
+        "diversity": false
+      },
+      {
+        "name": "medal_sports",
+        "diversity": false
+      },
+      {
+        "name": "1st_place_medal",
+        "diversity": false
+      },
+      {
+        "name": "2nd_place_medal",
+        "diversity": false
+      },
+      {
+        "name": "3rd_place_medal",
+        "diversity": false
+      },
+      {
+        "name": "mute",
+        "diversity": false
+      },
+      {
+        "name": "speaker",
+        "diversity": false
+      },
+      {
+        "name": "sound",
+        "diversity": false
+      },
+      {
+        "name": "loud_sound",
+        "diversity": false
+      },
+      {
+        "name": "loudspeaker",
+        "diversity": false
+      },
+      {
+        "name": "mega",
+        "diversity": false
+      },
+      {
+        "name": "postal_horn",
+        "diversity": false
+      },
+      {
+        "name": "bell",
+        "diversity": false
+      },
+      {
+        "name": "no_bell",
+        "diversity": false
+      },
+      {
+        "name": "iphone",
+        "diversity": false
+      },
+      {
+        "name": "calling",
+        "diversity": false
+      },
+      {
+        "name": "phone",
+        "diversity": false
+      },
+      {
+        "name": "telephone_receiver",
+        "diversity": false
+      },
+      {
+        "name": "pager",
+        "diversity": false
+      },
+      {
+        "name": "fax",
+        "diversity": false
+      },
+      {
+        "name": "battery",
+        "diversity": false
+      },
+      {
+        "name": "electric_plug",
+        "diversity": false
+      },
+      {
+        "name": "computer",
+        "diversity": false
+      },
+      {
+        "name": "desktop_computer",
+        "diversity": false
+      },
+      {
+        "name": "printer",
+        "diversity": false
+      },
+      {
+        "name": "keyboard",
+        "diversity": false
+      },
+      {
+        "name": "computer_mouse",
+        "diversity": false
+      },
+      {
+        "name": "trackball",
+        "diversity": false
+      },
+      {
+        "name": "minidisc",
+        "diversity": false
+      },
+      {
+        "name": "floppy_disk",
+        "diversity": false
+      },
+      {
+        "name": "cd",
+        "diversity": false
+      },
+      {
+        "name": "dvd",
+        "diversity": false
+      },
+      {
+        "name": "abacus",
+        "diversity": false
+      },
+      {
+        "name": "movie_camera",
+        "diversity": false
+      },
+      {
+        "name": "film_strip",
+        "diversity": false
+      },
+      {
+        "name": "film_projector",
+        "diversity": false
+      },
+      {
+        "name": "clapper",
+        "diversity": false
+      },
+      {
+        "name": "tv",
+        "diversity": false
+      },
+      {
+        "name": "camera",
+        "diversity": false
+      },
+      {
+        "name": "camera_flash",
+        "diversity": false
+      },
+      {
+        "name": "video_camera",
+        "diversity": false
+      },
+      {
+        "name": "vhs",
+        "diversity": false
+      },
+      {
+        "name": "mag",
+        "diversity": false
+      },
+      {
+        "name": "mag_right",
+        "diversity": false
+      },
+      {
+        "name": "candle",
+        "diversity": false
+      },
+      {
+        "name": "bulb",
+        "diversity": false
+      },
+      {
+        "name": "flashlight",
+        "diversity": false
+      },
+      {
+        "name": "izakaya_lantern",
+        "diversity": false
+      },
+      {
+        "name": "notebook_with_decorative_cover",
+        "diversity": false
+      },
+      {
+        "name": "closed_book",
+        "diversity": false
+      },
+      {
+        "name": "open_book",
+        "diversity": false
+      },
+      {
+        "name": "green_book",
+        "diversity": false
+      },
+      {
+        "name": "blue_book",
+        "diversity": false
+      },
+      {
+        "name": "orange_book",
+        "diversity": false
+      },
+      {
+        "name": "books",
+        "diversity": false
+      },
+      {
+        "name": "notebook",
+        "diversity": false
+      },
+      {
+        "name": "ledger",
+        "diversity": false
+      },
+      {
+        "name": "page_with_curl",
+        "diversity": false
+      },
+      {
+        "name": "scroll",
+        "diversity": false
+      },
+      {
+        "name": "page_facing_up",
+        "diversity": false
+      },
+      {
+        "name": "newspaper",
+        "diversity": false
+      },
+      {
+        "name": "newspaper_roll",
+        "diversity": false
+      },
+      {
+        "name": "bookmark_tabs",
+        "diversity": false
+      },
+      {
+        "name": "bookmark",
+        "diversity": false
+      },
+      {
+        "name": "label",
+        "diversity": false
+      },
+      {
+        "name": "moneybag",
+        "diversity": false
+      },
+      {
+        "name": "yen",
+        "diversity": false
+      },
+      {
+        "name": "dollar",
+        "diversity": false
+      },
+      {
+        "name": "euro",
+        "diversity": false
+      },
+      {
+        "name": "pound",
+        "diversity": false
+      },
+      {
+        "name": "money_with_wings",
+        "diversity": false
+      },
+      {
+        "name": "credit_card",
+        "diversity": false
+      },
+      {
+        "name": "receipt",
+        "diversity": false
+      },
+      {
+        "name": "chart",
+        "diversity": false
+      },
+      {
+        "name": "currency_exchange",
+        "diversity": false
+      },
+      {
+        "name": "heavy_dollar_sign",
+        "diversity": false
+      },
+      {
+        "name": "email",
+        "diversity": false
+      },
+      {
+        "name": "e-mail",
+        "diversity": false
+      },
+      {
+        "name": "incoming_envelope",
+        "diversity": false
+      },
+      {
+        "name": "envelope_with_arrow",
+        "diversity": false
+      },
+      {
+        "name": "outbox_tray",
+        "diversity": false
+      },
+      {
+        "name": "inbox_tray",
+        "diversity": false
+      },
+      {
+        "name": "package",
+        "diversity": false
+      },
+      {
+        "name": "mailbox",
+        "diversity": false
+      },
+      {
+        "name": "mailbox_closed",
+        "diversity": false
+      },
+      {
+        "name": "mailbox_with_mail",
+        "diversity": false
+      },
+      {
+        "name": "mailbox_with_no_mail",
+        "diversity": false
+      },
+      {
+        "name": "postbox",
+        "diversity": false
+      },
+      {
+        "name": "ballot_box",
+        "diversity": false
+      },
+      {
+        "name": "pencil2",
+        "diversity": false
+      },
+      {
+        "name": "black_nib",
+        "diversity": false
+      },
+      {
+        "name": "fountain_pen",
+        "diversity": false
+      },
+      {
+        "name": "pen",
+        "diversity": false
+      },
+      {
+        "name": "paintbrush",
+        "diversity": false
+      },
+      {
+        "name": "crayon",
+        "diversity": false
+      },
+      {
+        "name": "memo",
+        "diversity": false
+      },
+      {
+        "name": "briefcase",
+        "diversity": false
+      },
+      {
+        "name": "file_folder",
+        "diversity": false
+      },
+      {
+        "name": "open_file_folder",
+        "diversity": false
+      },
+      {
+        "name": "card_index_dividers",
+        "diversity": false
+      },
+      {
+        "name": "date",
+        "diversity": false
+      },
+      {
+        "name": "calendar",
+        "diversity": false
+      },
+      {
+        "name": "spiral_notepad",
+        "diversity": false
+      },
+      {
+        "name": "spiral_calendar",
+        "diversity": false
+      },
+      {
+        "name": "card_index",
+        "diversity": false
+      },
+      {
+        "name": "chart_with_upwards_trend",
+        "diversity": false
+      },
+      {
+        "name": "chart_with_downwards_trend",
+        "diversity": false
+      },
+      {
+        "name": "bar_chart",
+        "diversity": false
+      },
+      {
+        "name": "clipboard",
+        "diversity": false
+      },
+      {
+        "name": "pushpin",
+        "diversity": false
+      },
+      {
+        "name": "round_pushpin",
+        "diversity": false
+      },
+      {
+        "name": "paperclip",
+        "diversity": false
+      },
+      {
+        "name": "paperclips",
+        "diversity": false
+      },
+      {
+        "name": "straight_ruler",
+        "diversity": false
+      },
+      {
+        "name": "triangular_ruler",
+        "diversity": false
+      },
+      {
+        "name": "scissors",
+        "diversity": false
+      },
+      {
+        "name": "card_file_box",
+        "diversity": false
+      },
+      {
+        "name": "file_cabinet",
+        "diversity": false
+      },
+      {
+        "name": "wastebasket",
+        "diversity": false
+      },
+      {
+        "name": "lock",
+        "diversity": false
+      },
+      {
+        "name": "unlock",
+        "diversity": false
+      },
+      {
+        "name": "lock_with_ink_pen",
+        "diversity": false
+      },
+      {
+        "name": "closed_lock_with_key",
+        "diversity": false
+      },
+      {
+        "name": "key",
+        "diversity": false
+      },
+      {
+        "name": "old_key",
+        "diversity": false
+      },
+      {
+        "name": "hammer",
+        "diversity": false
+      },
+      {
+        "name": "pick",
+        "diversity": false
+      },
+      {
+        "name": "hammer_and_pick",
+        "diversity": false
+      },
+      {
+        "name": "hammer_and_wrench",
+        "diversity": false
+      },
+      {
+        "name": "dagger",
+        "diversity": false
+      },
+      {
+        "name": "crossed_swords",
+        "diversity": false
+      },
+      {
+        "name": "gun",
+        "diversity": false
+      },
+      {
+        "name": "bow_and_arrow",
+        "diversity": false
+      },
+      {
+        "name": "shield",
+        "diversity": false
+      },
+      {
+        "name": "wrench",
+        "diversity": false
+      },
+      {
+        "name": "nut_and_bolt",
+        "diversity": false
+      },
+      {
+        "name": "gear",
+        "diversity": false
+      },
+      {
+        "name": "clamp",
+        "diversity": false
+      },
+      {
+        "name": "balance_scale",
+        "diversity": false
+      },
+      {
+        "name": "link",
+        "diversity": false
+      },
+      {
+        "name": "chains",
+        "diversity": false
+      },
+      {
+        "name": "toolbox",
+        "diversity": false
+      },
+      {
+        "name": "magnet",
+        "diversity": false
+      },
+      {
+        "name": "syringe",
+        "diversity": false
+      },
+      {
+        "name": "pill",
+        "diversity": false
+      },
+      {
+        "name": "smoking",
+        "diversity": false
+      },
+      {
+        "name": "coffin",
+        "diversity": false
+      },
+      {
+        "name": "funeral_urn",
+        "diversity": false
+      },
+      {
+        "name": "moyai",
+        "diversity": false
+      },
+      {
+        "name": "atm",
+        "diversity": false
+      },
+      {
+        "name": "put_litter_in_its_place",
+        "diversity": false
+      },
+      {
+        "name": "potable_water",
+        "diversity": false
+      },
+      {
+        "name": "wheelchair",
+        "diversity": false
+      },
+      {
+        "name": "mens",
+        "diversity": false
+      },
+      {
+        "name": "womens",
+        "diversity": false
+      },
+      {
+        "name": "restroom",
+        "diversity": false
+      },
+      {
+        "name": "baby_symbol",
+        "diversity": false
+      },
+      {
+        "name": "wc",
+        "diversity": false
+      },
+      {
+        "name": "passport_control",
+        "diversity": false
+      },
+      {
+        "name": "customs",
+        "diversity": false
+      },
+      {
+        "name": "baggage_claim",
+        "diversity": false
+      },
+      {
+        "name": "left_luggage",
+        "diversity": false
+      },
+      {
+        "name": "warning",
+        "diversity": false
+      },
+      {
+        "name": "children_crossing",
+        "diversity": false
+      },
+      {
+        "name": "no_entry",
+        "diversity": false
+      },
+      {
+        "name": "no_entry_sign",
+        "diversity": false
+      },
+      {
+        "name": "no_bicycles",
+        "diversity": false
+      },
+      {
+        "name": "no_smoking",
+        "diversity": false
+      },
+      {
+        "name": "do_not_litter",
+        "diversity": false
+      },
+      {
+        "name": "non-potable_water",
+        "diversity": false
+      },
+      {
+        "name": "no_pedestrians",
+        "diversity": false
+      },
+      {
+        "name": "no_mobile_phones",
+        "diversity": false
+      },
+      {
+        "name": "underage",
+        "diversity": false
+      },
+      {
+        "name": "radioactive",
+        "diversity": false
+      },
+      {
+        "name": "biohazard",
+        "diversity": false
+      },
+      {
+        "name": "arrow_up",
+        "diversity": false
+      },
+      {
+        "name": "arrow_upper_right",
+        "diversity": false
+      },
+      {
+        "name": "arrow_right",
+        "diversity": false
+      },
+      {
+        "name": "arrow_lower_right",
+        "diversity": false
+      },
+      {
+        "name": "arrow_down",
+        "diversity": false
+      },
+      {
+        "name": "arrow_lower_left",
+        "diversity": false
+      },
+      {
+        "name": "arrow_left",
+        "diversity": false
+      },
+      {
+        "name": "arrow_upper_left",
+        "diversity": false
+      },
+      {
+        "name": "arrow_up_down",
+        "diversity": false
+      },
+      {
+        "name": "left_right_arrow",
+        "diversity": false
+      },
+      {
+        "name": "leftwards_arrow_with_hook",
+        "diversity": false
+      },
+      {
+        "name": "arrow_right_hook",
+        "diversity": false
+      },
+      {
+        "name": "arrow_heading_up",
+        "diversity": false
+      },
+      {
+        "name": "arrow_heading_down",
+        "diversity": false
+      },
+      {
+        "name": "arrows_clockwise",
+        "diversity": false
+      },
+      {
+        "name": "arrows_counterclockwise",
+        "diversity": false
+      },
+      {
+        "name": "back",
+        "diversity": false
+      },
+      {
+        "name": "end",
+        "diversity": false
+      },
+      {
+        "name": "on",
+        "diversity": false
+      },
+      {
+        "name": "soon",
+        "diversity": false
+      },
+      {
+        "name": "top",
+        "diversity": false
+      },
+      {
+        "name": "place_of_worship",
+        "diversity": false
+      },
+      {
+        "name": "atom_symbol",
+        "diversity": false
+      },
+      {
+        "name": "om",
+        "diversity": false
+      },
+      {
+        "name": "star_of_david",
+        "diversity": false
+      },
+      {
+        "name": "wheel_of_dharma",
+        "diversity": false
+      },
+      {
+        "name": "yin_yang",
+        "diversity": false
+      },
+      {
+        "name": "latin_cross",
+        "diversity": false
+      },
+      {
+        "name": "orthodox_cross",
+        "diversity": false
+      },
+      {
+        "name": "star_and_crescent",
+        "diversity": false
+      },
+      {
+        "name": "peace_symbol",
+        "diversity": false
+      },
+      {
+        "name": "menorah",
+        "diversity": false
+      },
+      {
+        "name": "six_pointed_star",
+        "diversity": false
+      },
+      {
+        "name": "aries",
+        "diversity": false
+      },
+      {
+        "name": "taurus",
+        "diversity": false
+      },
+      {
+        "name": "gemini",
+        "diversity": false
+      },
+      {
+        "name": "cancer",
+        "diversity": false
+      },
+      {
+        "name": "leo",
+        "diversity": false
+      },
+      {
+        "name": "virgo",
+        "diversity": false
+      },
+      {
+        "name": "libra",
+        "diversity": false
+      },
+      {
+        "name": "scorpius",
+        "diversity": false
+      },
+      {
+        "name": "sagittarius",
+        "diversity": false
+      },
+      {
+        "name": "capricorn",
+        "diversity": false
+      },
+      {
+        "name": "aquarius",
+        "diversity": false
+      },
+      {
+        "name": "pisces",
+        "diversity": false
+      },
+      {
+        "name": "ophiuchus",
+        "diversity": false
+      },
+      {
+        "name": "twisted_rightwards_arrows",
+        "diversity": false
+      },
+      {
+        "name": "repeat",
+        "diversity": false
+      },
+      {
+        "name": "repeat_one",
+        "diversity": false
+      },
+      {
+        "name": "arrow_forward",
+        "diversity": false
+      },
+      {
+        "name": "fast_forward",
+        "diversity": false
+      },
+      {
+        "name": "next_track_button",
+        "diversity": false
+      },
+      {
+        "name": "play_or_pause_button",
+        "diversity": false
+      },
+      {
+        "name": "arrow_backward",
+        "diversity": false
+      },
+      {
+        "name": "rewind",
+        "diversity": false
+      },
+      {
+        "name": "previous_track_button",
+        "diversity": false
+      },
+      {
+        "name": "arrow_up_small",
+        "diversity": false
+      },
+      {
+        "name": "arrow_double_up",
+        "diversity": false
+      },
+      {
+        "name": "arrow_down_small",
+        "diversity": false
+      },
+      {
+        "name": "arrow_double_down",
+        "diversity": false
+      },
+      {
+        "name": "pause_button",
+        "diversity": false
+      },
+      {
+        "name": "stop_button",
+        "diversity": false
+      },
+      {
+        "name": "record_button",
+        "diversity": false
+      },
+      {
+        "name": "cinema",
+        "diversity": false
+      },
+      {
+        "name": "low_brightness",
+        "diversity": false
+      },
+      {
+        "name": "high_brightness",
+        "diversity": false
+      },
+      {
+        "name": "signal_strength",
+        "diversity": false
+      },
+      {
+        "name": "vibration_mode",
+        "diversity": false
+      },
+      {
+        "name": "mobile_phone_off",
+        "diversity": false
+      },
+      {
+        "name": "infinity",
+        "diversity": false
+      },
+      {
+        "name": "recycle",
+        "diversity": false
+      },
+      {
+        "name": "fleur_de_lis",
+        "diversity": false
+      },
+      {
+        "name": "trident",
+        "diversity": false
+      },
+      {
+        "name": "name_badge",
+        "diversity": false
+      },
+      {
+        "name": "beginner",
+        "diversity": false
+      },
+      {
+        "name": "o",
+        "diversity": false
+      },
+      {
+        "name": "white_check_mark",
+        "diversity": false
+      },
+      {
+        "name": "ballot_box_with_check",
+        "diversity": false
+      },
+      {
+        "name": "heavy_check_mark",
+        "diversity": false
+      },
+      {
+        "name": "heavy_multiplication_x",
+        "diversity": false
+      },
+      {
+        "name": "x",
+        "diversity": false
+      },
+      {
+        "name": "negative_squared_cross_mark",
+        "diversity": false
+      },
+      {
+        "name": "heavy_plus_sign",
+        "diversity": false
+      },
+      {
+        "name": "heavy_minus_sign",
+        "diversity": false
+      },
+      {
+        "name": "heavy_division_sign",
+        "diversity": false
+      },
+      {
+        "name": "curly_loop",
+        "diversity": false
+      },
+      {
+        "name": "loop",
+        "diversity": false
+      },
+      {
+        "name": "part_alternation_mark",
+        "diversity": false
+      },
+      {
+        "name": "eight_spoked_asterisk",
+        "diversity": false
+      },
+      {
+        "name": "eight_pointed_black_star",
+        "diversity": false
+      },
+      {
+        "name": "sparkle",
+        "diversity": false
+      },
+      {
+        "name": "bangbang",
+        "diversity": false
+      },
+      {
+        "name": "interrobang",
+        "diversity": false
+      },
+      {
+        "name": "question",
+        "diversity": false
+      },
+      {
+        "name": "grey_question",
+        "diversity": false
+      },
+      {
+        "name": "grey_exclamation",
+        "diversity": false
+      },
+      {
+        "name": "exclamation",
+        "diversity": false
+      },
+      {
+        "name": "wavy_dash",
+        "diversity": false
+      },
+      {
+        "name": "copyright",
+        "diversity": false
+      },
+      {
+        "name": "registered",
+        "diversity": false
+      },
+      {
+        "name": "tm",
+        "diversity": false
+      },
+      {
+        "name": "hash",
+        "diversity": false
+      },
+      {
+        "name": "asterisk",
+        "diversity": false
+      },
+      {
+        "name": "zero",
+        "diversity": false
+      },
+      {
+        "name": "one",
+        "diversity": false
+      },
+      {
+        "name": "two",
+        "diversity": false
+      },
+      {
+        "name": "three",
+        "diversity": false
+      },
+      {
+        "name": "four",
+        "diversity": false
+      },
+      {
+        "name": "five",
+        "diversity": false
+      },
+      {
+        "name": "six",
+        "diversity": false
+      },
+      {
+        "name": "seven",
+        "diversity": false
+      },
+      {
+        "name": "eight",
+        "diversity": false
+      },
+      {
+        "name": "nine",
+        "diversity": false
+      },
+      {
+        "name": "keycap_ten",
+        "diversity": false
+      },
+      {
+        "name": "100",
+        "diversity": false
+      },
+      {
+        "name": "capital_abcd",
+        "diversity": false
+      },
+      {
+        "name": "abcd",
+        "diversity": false
+      },
+      {
+        "name": "1234",
+        "diversity": false
+      },
+      {
+        "name": "symbols",
+        "diversity": false
+      },
+      {
+        "name": "abc",
+        "diversity": false
+      },
+      {
+        "name": "a",
+        "diversity": false
+      },
+      {
+        "name": "ab",
+        "diversity": false
+      },
+      {
+        "name": "b",
+        "diversity": false
+      },
+      {
+        "name": "cl",
+        "diversity": false
+      },
+      {
+        "name": "cool",
+        "diversity": false
+      },
+      {
+        "name": "free",
+        "diversity": false
+      },
+      {
+        "name": "information_source",
+        "diversity": false
+      },
+      {
+        "name": "id",
+        "diversity": false
+      },
+      {
+        "name": "m",
+        "diversity": false
+      },
+      {
+        "name": "new",
+        "diversity": false
+      },
+      {
+        "name": "ng",
+        "diversity": false
+      },
+      {
+        "name": "o2",
+        "diversity": false
+      },
+      {
+        "name": "ok",
+        "diversity": false
+      },
+      {
+        "name": "parking",
+        "diversity": false
+      },
+      {
+        "name": "sos",
+        "diversity": false
+      },
+      {
+        "name": "up",
+        "diversity": false
+      },
+      {
+        "name": "vs",
+        "diversity": false
+      },
+      {
+        "name": "koko",
+        "diversity": false
+      },
+      {
+        "name": "sa",
+        "diversity": false
+      },
+      {
+        "name": "u6708",
+        "diversity": false
+      },
+      {
+        "name": "u6709",
+        "diversity": false
+      },
+      {
+        "name": "u6307",
+        "diversity": false
+      },
+      {
+        "name": "ideograph_advantage",
+        "diversity": false
+      },
+      {
+        "name": "u5272",
+        "diversity": false
+      },
+      {
+        "name": "u7121",
+        "diversity": false
+      },
+      {
+        "name": "u7981",
+        "diversity": false
+      },
+      {
+        "name": "accept",
+        "diversity": false
+      },
+      {
+        "name": "u7533",
+        "diversity": false
+      },
+      {
+        "name": "u5408",
+        "diversity": false
+      },
+      {
+        "name": "u7a7a",
+        "diversity": false
+      },
+      {
+        "name": "congratulations",
+        "diversity": false
+      },
+      {
+        "name": "secret",
+        "diversity": false
+      },
+      {
+        "name": "u55b6",
+        "diversity": false
+      },
+      {
+        "name": "u6e80",
+        "diversity": false
+      },
+      {
+        "name": "red_circle",
+        "diversity": false
+      },
+      {
+        "name": "large_blue_circle",
+        "diversity": false
+      },
+      {
+        "name": "white_circle",
+        "diversity": false
+      },
+      {
+        "name": "black_circle",
+        "diversity": false
+      },
+      {
+        "name": "white_large_square",
+        "diversity": false
+      },
+      {
+        "name": "black_large_square",
+        "diversity": false
+      },
+      {
+        "name": "black_medium_square",
+        "diversity": false
+      },
+      {
+        "name": "white_medium_square",
+        "diversity": false
+      },
+      {
+        "name": "white_medium_small_square",
+        "diversity": false
+      },
+      {
+        "name": "black_medium_small_square",
+        "diversity": false
+      },
+      {
+        "name": "white_small_square",
+        "diversity": false
+      },
+      {
+        "name": "black_small_square",
+        "diversity": false
+      },
+      {
+        "name": "large_orange_diamond",
+        "diversity": false
+      },
+      {
+        "name": "large_blue_diamond",
+        "diversity": false
+      },
+      {
+        "name": "small_orange_diamond",
+        "diversity": false
+      },
+      {
+        "name": "small_blue_diamond",
+        "diversity": false
+      },
+      {
+        "name": "small_red_triangle",
+        "diversity": false
+      },
+      {
+        "name": "small_red_triangle_down",
+        "diversity": false
+      },
+      {
+        "name": "diamond_shape_with_a_dot_inside",
+        "diversity": false
+      },
+      {
+        "name": "radio_button",
+        "diversity": false
+      },
+      {
+        "name": "black_square_button",
+        "diversity": false
+      },
+      {
+        "name": "white_square_button",
+        "diversity": false
+      },
+      {
+        "name": "hourglass",
+        "diversity": false
+      },
+      {
+        "name": "hourglass_flowing_sand",
+        "diversity": false
+      },
+      {
+        "name": "watch",
+        "diversity": false
+      },
+      {
+        "name": "alarm_clock",
+        "diversity": false
+      },
+      {
+        "name": "stopwatch",
+        "diversity": false
+      },
+      {
+        "name": "timer_clock",
+        "diversity": false
+      },
+      {
+        "name": "mantelpiece_clock",
+        "diversity": false
+      },
+      {
+        "name": "clock12",
+        "diversity": false
+      },
+      {
+        "name": "clock1230",
+        "diversity": false
+      },
+      {
+        "name": "clock1",
+        "diversity": false
+      },
+      {
+        "name": "clock130",
+        "diversity": false
+      },
+      {
+        "name": "clock2",
+        "diversity": false
+      },
+      {
+        "name": "clock230",
+        "diversity": false
+      },
+      {
+        "name": "clock3",
+        "diversity": false
+      },
+      {
+        "name": "clock330",
+        "diversity": false
+      },
+      {
+        "name": "clock4",
+        "diversity": false
+      },
+      {
+        "name": "clock430",
+        "diversity": false
+      },
+      {
+        "name": "clock5",
+        "diversity": false
+      },
+      {
+        "name": "clock530",
+        "diversity": false
+      },
+      {
+        "name": "clock6",
+        "diversity": false
+      },
+      {
+        "name": "clock630",
+        "diversity": false
+      },
+      {
+        "name": "clock7",
+        "diversity": false
+      },
+      {
+        "name": "clock730",
+        "diversity": false
+      },
+      {
+        "name": "clock8",
+        "diversity": false
+      },
+      {
+        "name": "clock830",
+        "diversity": false
+      },
+      {
+        "name": "clock9",
+        "diversity": false
+      },
+      {
+        "name": "clock930",
+        "diversity": false
+      },
+      {
+        "name": "clock10",
+        "diversity": false
+      },
+      {
+        "name": "clock1030",
+        "diversity": false
+      },
+      {
+        "name": "clock11",
+        "diversity": false
+      },
+      {
+        "name": "clock1130",
+        "diversity": false
+      }
+    ]
+  }
+]

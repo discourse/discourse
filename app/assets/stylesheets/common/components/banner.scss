@@ -4,11 +4,9 @@
 
 #banner {
   padding: 10px;
-  border-radius: 5px;
-  background: scale-color($tertiary, $lightness: 90%);
-  box-shadow: 0 1px 2px scale-color($tertiary, $lightness: 70%);
-  color: darken($tertiary, 45%);
-  z-index: 1001;
+  background: $tertiary-low;
+  color: $primary;
+  z-index: z("base") + 1;
   overflow: auto;
 
   &.overlay {
@@ -16,9 +14,9 @@
   }
 
   .close {
-    font-size: 1.786em;
+    font-size: $font-up-4;
     margin-top: -5px;
-    color: scale-color($tertiary, $lightness: 70%);
+    color: dark-light-choose($primary-low-mid, $secondary-medium);
     padding-left: 5px;
     float: right;
   }

@@ -1,6 +1,6 @@
 export default Ember.Route.extend({
   model() {
-    return this.store.findAll('web-hook');
+    return this.store.findAll("web-hook");
   },
 
   setupController(controller, model) {

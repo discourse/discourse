@@ -1,6 +1,6 @@
 # Check that the app is configured correctly. Raise some helpful errors if something is wrong.
 
-if defined?(Rails::Server) and Rails.env.production? # Only run these checks when starting up a production server
+if defined?(Rails::Server) && Rails.env.production? # Only run these checks when starting up a production server
 
   if ['localhost', 'production.localhost'].include?(Discourse.current_hostname)
     puts <<END
@@ -16,7 +16,7 @@ END
     raise "Invalid host_names in database.yml"
   end
 
-  if !Dir.glob(File.join(Rails.root,'public','assets','application*.js')).present?
+  if !Dir.glob(File.join(Rails.root, 'public', 'assets', 'application*.js')).present?
     puts <<END
 
       Assets have not been precompiled. Please run the following command

@@ -1,0 +1,17 @@
+{{#if flaggedPosts}}
+  {{#load-more selector=".flagged-post" action=(action "loadMore")}}
+    <div class='flagged-posts'>
+      {{#each flaggedPosts as |flaggedPost|}}
+        {{flagged-post
+          flaggedPost=flaggedPost
+          filter=filter
+          topic=topic
+          showResolvedBy=showResolvedBy
+          removePost=(action "removePost" flaggedPost)
+          hideTitle=topic}}
+      {{/each}}
+    </div>
+  {{/load-more}}
+{{else}}
+  <p>{{i18n 'admin.flags.no_results'}}</p>
+{{/if}}

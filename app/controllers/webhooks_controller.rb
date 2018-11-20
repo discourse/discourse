@@ -54,7 +54,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def mailjet
@@ -71,14 +71,14 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def mandrill
     events = params["mandrill_events"]
     events.each do |event|
-      message_id = event["msg"]["metadata"]["message_id"] rescue nil
-      to_address = event["msg"]["email"] rescue nil
+      message_id = event.dig("msg", "metadata", "message_id")
+      to_address = event.dig("msg", "email")
 
       case event["event"]
       when "hard_bounce"
@@ -88,18 +88,18 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def sparkpost
     events = params["_json"] || [params]
     events.each do |event|
-      message_event = event["msys"]["message_event"] rescue nil
+      message_event = event.dig("msys", "message_event")
       next unless message_event
 
-      message_id   = message_event["rcpt_meta"]["message_id"] rescue nil
-      to_address   = message_event["rcpt_to"]                 rescue nil
-      bounce_class = message_event["bounce_class"]            rescue nil
+      message_id   = message_event.dig("rcpt_meta", "message_id")
+      to_address   = message_event["rcpt_to"]
+      bounce_class = message_event["bounce_class"]
       next unless bounce_class
 
       bounce_class = bounce_class.to_i
@@ -114,35 +114,35 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   private
 
-    def mailgun_failure
-      render nothing: true, status: 406
-    end
+  def mailgun_failure
+    render body: nil, status: 406
+  end
 
-    def mailgun_success
-      render nothing: true, status: 200
-    end
+  def mailgun_success
+    render body: nil, status: 200
+  end
 
-    def mailgun_verify(timestamp, token, signature)
-      digest = OpenSSL::Digest::SHA256.new
-      data = "#{timestamp}#{token}"
-      signature == OpenSSL::HMAC.hexdigest(digest, SiteSetting.mailgun_api_key, data)
-    end
+  def mailgun_verify(timestamp, token, signature)
+    digest = OpenSSL::Digest::SHA256.new
+    data = "#{timestamp}#{token}"
+    signature == OpenSSL::HMAC.hexdigest(digest, SiteSetting.mailgun_api_key, data)
+  end
 
-    def process_bounce(message_id, to_address, bounce_score)
-      return if message_id.blank? || to_address.blank?
+  def process_bounce(message_id, to_address, bounce_score)
+    return if message_id.blank? || to_address.blank?
 
-      email_log = EmailLog.find_by(message_id: message_id, to_address: to_address)
-      return if email_log.nil?
+    email_log = EmailLog.find_by(message_id: message_id, to_address: to_address)
+    return if email_log.nil?
 
-      email_log.update_columns(bounced: true)
-      return if email_log.user.nil? || email_log.user.email.blank?
+    email_log.update_columns(bounced: true)
+    return if email_log.user.nil? || email_log.user.email.blank?
 
-      Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
-    end
+    Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
+  end
 
 end

@@ -1,4 +1,4 @@
-class AddDaysVisitedToUsers < ActiveRecord::Migration
+class AddDaysVisitedToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :days_visited, :integer, null: false, default: 0
 

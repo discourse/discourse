@@ -1,10 +1,10 @@
-# Developing under OS X Without Vagrant
+# Developing under OS X
 
 These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](DEVELOPER-ADVANCED.md)**.
 
 OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](http://discourse.org)** in your native environment. These instructions should get you there.
 
-Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.0 using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
+Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.4+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
 ## Quick Setup
 
@@ -76,11 +76,11 @@ If you do already have RVM installed, this should make sure everything is up to 
     # If autolibs is set to 0-2, it will give an error for things that are missing, instead.
     rvm requirements
 
-Either way, you'll now want to install the 'turbo' version of Ruby 2.0.
+Either way, you'll now want to install Ruby 2.4+ (we recommend 2.4.4 or higher).
 
     # Now, install Ruby
-    rvm install 2.0.0-turbo
-    rvm use 2.0.0-turbo --default # Careful with this if you're already developing Ruby
+    rvm install 2.4.4
+    rvm use 2.4.4 --default # Careful with this if you're already developing Ruby
 
 ## Git
 
@@ -114,7 +114,7 @@ unix_socket_directories = '/var/pgsql_socket'   # comma-separated list of direct
 #and
 unix_socket_permissions = 0777  # begin with 0 to use octal notation
 ```
-Then create the '/var/pgsql/' folder and set up the appropriate permission in your bash (this requires admin access)
+Then create the '/var/pgsql_socket/' folder and set up the appropriate permission in your bash (this requires admin access)
 ```
 sudo mkdir /var/pgsql_socket
 sudo chmod 770 /var/pgsql_socket
@@ -182,11 +182,11 @@ You should not need to alter `/usr/local/var/postgres/pg_hba.conf`
 
 That's about it.
 
-## PhantomJS
+## Google Chrome 59+
 
-Homebrew loves you.
+Chrome is used for running QUnit tests in headless mode.
 
-    brew install phantomjs
+Download from https://www.google.com/chrome/index.html
 
 ## ImageMagick
 
@@ -229,23 +229,14 @@ config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
 outbound email and you can verify what is being sent.
 
-## Additional Setup Tasks
+## Additional Image Tooling
 
 In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
-brew install gifsicle jpegoptim optipng
+brew install gifsicle jpegoptim optipng jhead
 npm install -g svgo
-```
-
-Install jhead
-
-```sh
-curl "http://www.sentex.net/~mwandel/jhead/jhead-2.97.tar.gz" | tar xzf -
-cd jhead-2.97
-make
-make install
 ```
 
 ## Setting up your Discourse
@@ -266,10 +257,13 @@ bundle install
 
 ### Prepare your database
 ```sh
-rake db:create
-rake db:migrate
-rake db:test:prepare
-rake db:seed_fu
+# run this if there was a pre-existing database
+bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:drop
+
+# time to create the database and run migrations
+bundle exec rake db:create db:migrate
+RAILS_ENV=test bundle exec rake db:create db:migrate
 ```
 
 ## Now, test it out!

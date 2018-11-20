@@ -1,20 +1,11 @@
-<html>
-  <head>
-    <%= render partial: "layouts/head" %>
-    <%= render partial: "common/special_font_face" %>
-    <%= render partial: "common/discourse_stylesheet" %>
-  </head>
-  <body>
-    <div id="simple-container">
-      <%if flash[:error].present? %>
-        <div class='alert alert-error'>
-          <%=flash[:error]%>
-        </div>
-      <%else%>
-        <div class='alert alert-error'>
-          <%= t 'login.omniauth_error_unknown' %>
-        </div>
-      <%end%>
+<div id="simple-container">
+  <%if flash[:error].present? %>
+    <div class='alert alert-error'>
+      <%=flash[:error]%>
     </div>
-  </body>
-</html>
+  <%else%>
+    <div class='alert alert-error'>
+      <%= t 'login.omniauth_error_unknown' %>
+    </div>
+  <%end%>
+</div>

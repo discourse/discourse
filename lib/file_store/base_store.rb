@@ -95,7 +95,16 @@ module FileStore
     end
 
     def get_path_for_upload(upload)
-      get_path_for("original".freeze, upload.id, upload.sha1, upload.extension)
+      extension =
+        if upload.extension
+          ".#{upload.extension}"
+        else
+          # Maintain backward compatibility before Jobs::MigrateUploadExtensions
+          # runs
+          File.extname(upload.original_filename)
+        end
+
+      get_path_for("original".freeze, upload.id, upload.sha1, extension)
     end
 
     def get_path_for_optimized_image(optimized_image)
@@ -119,10 +128,10 @@ module FileStore
     def cache_file(file, filename)
       path = get_cache_path_for(filename)
       dir = File.dirname(path)
-      FileUtils.mkdir_p(dir) unless Dir[dir].present?
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
+      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f`
     end
 
     private

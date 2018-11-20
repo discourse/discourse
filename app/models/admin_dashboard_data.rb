@@ -21,6 +21,7 @@ class AdminDashboardData
 
   PRIVATE_MESSAGE_REPORTS ||= [
     'user_to_user_private_messages',
+    'user_to_user_private_messages_with_replies',
     'system_private_messages',
     'notify_moderators_private_messages',
     'notify_user_private_messages',
@@ -31,13 +32,17 @@ class AdminDashboardData
 
   USER_REPORTS ||= ['users_by_trust_level']
 
-  MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select {|r| r =~ /mobile/}.map { |r| r + "_reqs" }
+  MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select { |r| r =~ /mobile/ }.map { |r| r + "_reqs" }
 
   def self.add_problem_check(*syms, &blk)
     @problem_syms.push(*syms) if syms
     @problem_blocks << blk if blk
   end
   class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
+
+  def initialize(opts = {})
+    @opts = opts
+  end
 
   def problems
     problems = []
@@ -90,13 +95,14 @@ class AdminDashboardData
       'dashboard.poll_pop3_auth_error'
     ]
 
-    add_problem_check :rails_env_check, :host_names_check,
+    add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration, :email_polling_errored_recently
+                      :pop3_polling_configuration, :email_polling_errored_recently,
+                      :out_of_date_themes
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -112,15 +118,15 @@ class AdminDashboardData
     'dash-stats'
   end
 
-  def self.fetch_problems
-    AdminDashboardData.new.problems
+  def self.fetch_problems(opts = {})
+    AdminDashboardData.new(opts).problems
   end
 
   def self.problem_message_check(i18n_key)
     $redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key) : nil
   end
 
-  def self.add_problem_message(i18n_key, expire_seconds=nil)
+  def self.add_problem_message(i18n_key, expire_seconds = nil)
     if expire_seconds.to_i > 0
       $redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
     else
@@ -147,7 +153,7 @@ class AdminDashboardData
       admins: User.admins.count,
       moderators: User.moderators.count,
       suspended: User.suspended.count,
-      blocked: User.blocked.count,
+      silenced: User.silenced.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
       top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json,
@@ -198,10 +204,13 @@ class AdminDashboardData
   end
 
   def s3_config_check
-    bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
+    # if set via global setting it is validated during the `use_s3?` call
+    if !GlobalSetting.use_s3?
+      bad_keys = (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) && !SiteSetting.s3_use_iam_profile
 
-    return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
-    return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+      return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
+      return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups && (bad_keys || SiteSetting.s3_backup_bucket.blank?)
+    end
     nil
   end
 
@@ -234,4 +243,21 @@ class AdminDashboardData
     I18n.t('dashboard.missing_mailgun_api_key')
   end
 
+  def force_https_check
+    return unless @opts[:check_force_https]
+    I18n.t('dashboard.force_https_warning') unless SiteSetting.force_https
+  end
+
+  def out_of_date_themes
+    old_themes = RemoteTheme.out_of_date_themes
+    return unless old_themes.present?
+
+    html = old_themes.map do |name, id|
+      "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+    end.join("\n")
+
+    message = I18n.t("dashboard.out_of_date_themes")
+    message += "<ul>#{html}</ul>"
+    message
+  end
 end

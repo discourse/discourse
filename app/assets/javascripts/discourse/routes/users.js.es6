@@ -3,7 +3,9 @@ export default Discourse.Route.extend({
     period: { refreshModel: true },
     order: { refreshModel: true },
     asc: { refreshModel: true },
-    name: { refreshModel: true, replace: true }
+    name: { refreshModel: true, replace: true },
+    group: { refreshModel: true },
+    exclude_usernames: { refreshModel: true }
   },
 
   refreshQueryWithoutTransition: true,
@@ -18,7 +20,9 @@ export default Discourse.Route.extend({
         period: "weekly",
         order: "likes_received",
         asc: null,
-        name: ""
+        name: "",
+        group: null,
+        exclude_usernames: null
       });
     }
   },
@@ -37,7 +41,11 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     const params = this._params;
-    controller.setProperties({ model, period: params.period, nameInput: params.name });
+    controller.setProperties({
+      model,
+      period: params.period,
+      nameInput: params.name
+    });
   },
 
   actions: {

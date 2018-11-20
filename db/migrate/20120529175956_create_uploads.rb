@@ -1,4 +1,4 @@
-class CreateUploads < ActiveRecord::Migration
+class CreateUploads < ActiveRecord::Migration[4.2]
   def change
     create_table :uploads do |t|
       t.integer :user_id, null: false
@@ -8,7 +8,7 @@ class CreateUploads < ActiveRecord::Migration
       t.integer :width, null: true
       t.integer :height, null: true
       t.string  :url, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :uploads, :forum_thread_id

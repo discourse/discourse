@@ -1,26 +1,16 @@
-import { WidgetClickHook,
-         WidgetClickOutsideHook,
-         WidgetKeyUpHook,
-         WidgetKeyDownHook,
-         WidgetDragHook } from 'discourse/widgets/hooks';
-import { h } from 'virtual-dom';
-import DecoratorHelper from 'discourse/widgets/decorator-helper';
+import {
+  WidgetClickHook,
+  WidgetClickOutsideHook,
+  WidgetKeyUpHook,
+  WidgetKeyDownHook,
+  WidgetDragHook
+} from "discourse/widgets/hooks";
+import { h } from "virtual-dom";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
 
-function emptyContent() { }
+function emptyContent() {}
 
 const _registry = {};
-let _dirty = {};
-
-export function keyDirty(key, options) {
-  options = options || {};
-  options.dirty = true;
-
-  _dirty[key] = options;
-}
-
-export function renderedKey(key) {
-  delete _dirty[key];
-}
 
 export function queryRegistry(name) {
   return _registry[name];
@@ -44,6 +34,10 @@ export function applyDecorators(widget, type, attrs, state) {
   return [];
 }
 
+export function resetDecorators() {
+  Object.keys(_decorators).forEach(key => delete _decorators[key]);
+}
+
 const _customSettings = {};
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};
@@ -55,15 +49,17 @@ function drawWidget(builder, attrs, state) {
 
   if (this.buildClasses) {
     let classes = this.buildClasses(attrs, state) || [];
-    if (!Array.isArray(classes)) { classes = [classes]; }
+    if (!Array.isArray(classes)) {
+      classes = [classes];
+    }
 
-    const customClasses = applyDecorators(this, 'classNames', attrs, state);
+    const customClasses = applyDecorators(this, "classNames", attrs, state);
     if (customClasses && customClasses.length) {
       classes = classes.concat(customClasses);
     }
 
     if (classes.length) {
-      properties.className = classes.join(' ');
+      properties.className = classes.join(" ");
     }
   }
   if (this.buildId) {
@@ -75,42 +71,44 @@ function drawWidget(builder, attrs, state) {
   }
 
   if (this.keyUp) {
-    properties['widget-key-up'] = new WidgetKeyUpHook(this);
+    properties["widget-key-up"] = new WidgetKeyUpHook(this);
   }
 
   if (this.keyDown) {
-    properties['widget-key-down'] = new WidgetKeyDownHook(this);
+    properties["widget-key-down"] = new WidgetKeyDownHook(this);
   }
 
   if (this.clickOutside) {
-    properties['widget-click-outside'] = new WidgetClickOutsideHook(this);
+    properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
   }
   if (this.click) {
-    properties['widget-click'] = new WidgetClickHook(this);
+    properties["widget-click"] = new WidgetClickHook(this);
   }
   if (this.drag) {
-    properties['widget-drag'] = new WidgetDragHook(this);
+    properties["widget-drag"] = new WidgetDragHook(this);
   }
 
-  const attributes = properties['attributes'] || {};
+  const attributes = properties["attributes"] || {};
   properties.attributes = attributes;
 
   if (this.title) {
-    if (typeof this.title === 'function') {
+    if (typeof this.title === "function") {
       attributes.title = this.title(attrs, state);
     } else {
       attributes.title = I18n.t(this.title);
     }
   }
 
+  this.transformed = this.transform(this.attrs, this.state);
+
   let contents = this.html(attrs, state);
   if (this.name) {
-    const beforeContents = applyDecorators(this, 'before', attrs, state) || [];
-    const afterContents = applyDecorators(this, 'after', attrs, state) || [];
+    const beforeContents = applyDecorators(this, "before", attrs, state) || [];
+    const afterContents = applyDecorators(this, "after", attrs, state) || [];
     contents = beforeContents.concat(contents).concat(afterContents);
   }
 
-  return h(this.tagName || 'div', properties, contents);
+  return h(this.tagName || "div", properties, contents);
 }
 
 export function createWidget(name, opts) {
@@ -124,7 +122,11 @@ export function createWidget(name, opts) {
   opts.html = opts.html || emptyContent;
   opts.draw = drawWidget;
 
-  Object.keys(opts).forEach(k => result.prototype[k] = opts[k]);
+  if (opts.template) {
+    opts.html = opts.template;
+  }
+
+  Object.keys(opts).forEach(k => (result.prototype[k] = opts[k]));
   return result;
 }
 
@@ -135,7 +137,25 @@ export function reopenWidget(name, opts) {
     return;
   }
 
-  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
+  if (opts.template) {
+    opts.html = opts.template;
+  }
+
+  Object.keys(opts).forEach(k => {
+    let old = existing.prototype[k];
+
+    if (old) {
+      // Add support for `this._super()` to reopened widgets if the prototype exists in the
+      // base object
+      existing.prototype[k] = function(...args) {
+        let ctx = Object.create(this);
+        ctx._super = (...superArgs) => old.apply(this, superArgs);
+        return opts[k].apply(ctx, args);
+      };
+    } else {
+      existing.prototype[k] = opts[k];
+    }
+  });
   return existing;
 }
 
@@ -146,34 +166,39 @@ export default class Widget {
     this.mergeState = opts.state;
     this.model = opts.model;
     this.register = register;
+    this.dirtyKeys = opts.dirtyKeys;
 
     register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
-    this.site = register.lookup('site:main');
-    this.siteSettings = register.lookup('site-settings:main');
-    this.currentUser = register.lookup('current-user:main');
-    this.capabilities = register.lookup('capabilities:main');
-    this.store = register.lookup('store:main');
-    this.appEvents = register.lookup('app-events:main');
-    this.keyValueStore = register.lookup('key-value-store:main');
+    this.site = register.lookup("site:main");
+    this.siteSettings = register.lookup("site-settings:main");
+    this.currentUser = register.lookup("current-user:main");
+    this.capabilities = register.lookup("capabilities:main");
+    this.store = register.lookup("service:store");
+    this.appEvents = register.lookup("app-events:main");
+    this.keyValueStore = register.lookup("key-value-store:main");
 
     // Helps debug widgets
     if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        throw `defaultState must return an object`;
+        throw new Error(`defaultState must return an object`);
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        throw `you need a key when using state in ${this.name}`;
+        throw new Error(`you need a key when using state in ${this.name}`);
       }
     }
 
     if (this.name) {
       const custom = _customSettings[this.name];
       if (custom) {
-        Object.keys(custom).forEach(k => this.settings[k] = custom[k]);
+        Object.keys(custom).forEach(k => (this.settings[k] = custom[k]));
       }
     }
+  }
+
+  transform() {
+    return {};
   }
 
   defaultState() {
@@ -181,10 +206,12 @@ export default class Widget {
   }
 
   destroy() {
-    console.log('destroy called');
+    console.log("destroy called");
   }
 
   render(prev) {
+    const { dirtyKeys } = this;
+
     if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
@@ -197,16 +224,16 @@ export default class Widget {
     }
 
     if (prev) {
-      const dirtyOpts = _dirty[prev.key] || { dirty: false };
+      const dirtyOpts = dirtyKeys.optionsFor(prev.key);
 
       if (prev.shadowTree) {
         this.shadowTree = true;
-        if (!dirtyOpts.dirty && !_dirty['*']) {
+        if (!dirtyOpts.dirty && !dirtyKeys.allDirty()) {
           return prev.vnode;
         }
       }
       if (prev.key) {
-        renderedKey(prev.key);
+        dirtyKeys.renderedKey(prev.key);
       }
 
       const refreshAction = dirtyOpts.onRefresh;
@@ -230,7 +257,7 @@ export default class Widget {
   }
 
   _findView() {
-    const widget = this._findAncestorWithProperty('_emberView');
+    const widget = this._findAncestorWithProperty("_emberView");
     if (widget) {
       return widget._emberView;
     }
@@ -245,14 +272,18 @@ export default class Widget {
         return;
       }
       WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
+      if (WidgetClass && WidgetClass.class) {
+        WidgetClass = WidgetClass.class;
+      }
     }
 
     if (WidgetClass) {
       const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
+      result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw `Couldn't find ${widgetName} factory`;
+      throw new Error(`Couldn't find ${widgetName} factory`);
     }
   }
 
@@ -260,7 +291,7 @@ export default class Widget {
     let widget = this;
     while (widget) {
       if (widget.shadowTree) {
-        keyDirty(widget.key);
+        this.dirtyKeys.keyDirty(widget.key);
       }
 
       const rerenderable = widget._rerenderable;
@@ -287,7 +318,7 @@ export default class Widget {
         view.sendAction(method, param);
         promise = Ember.RSVP.resolve();
       } else {
-        const target = view.get('targetObject');
+        const target = view.get("targetObject") || view;
         promise = method.call(target, param);
         if (!promise || !promise.then) {
           promise = Ember.RSVP.resolve(promise);
@@ -299,7 +330,7 @@ export default class Widget {
   }
 
   findAncestorModel() {
-    const modelWidget = this._findAncestorWithProperty('model');
+    const modelWidget = this._findAncestorWithProperty("model");
     if (modelWidget) {
       return modelWidget.model;
     }
@@ -337,4 +368,4 @@ export default class Widget {
   }
 }
 
-Widget.prototype.type = 'Thunk';
+Widget.prototype.type = "Thunk";

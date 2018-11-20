@@ -1,4 +1,4 @@
-class FixCategoriesConstraint < ActiveRecord::Migration
+class FixCategoriesConstraint < ActiveRecord::Migration[4.2]
   def change
     remove_index :categories, name: 'index_categories_on_parent_category_id_and_name'
 

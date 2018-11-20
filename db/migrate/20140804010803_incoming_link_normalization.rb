@@ -1,4 +1,4 @@
-class IncomingLinkNormalization < ActiveRecord::Migration
+class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
   def up
     remove_column :incoming_links, :post_number
     remove_column :incoming_links, :domain
@@ -36,7 +36,6 @@ class IncomingLinkNormalization < ActiveRecord::Migration
             ) X
           WHERE a[2] IS NOT NULL"
 
-
     execute "UPDATE incoming_links l
     SET incoming_referer_id = r.id
     FROM incoming_referers r
@@ -58,7 +57,6 @@ class IncomingLinkNormalization < ActiveRecord::Migration
     SET incoming_domain_id = d.id
     FROM incoming_domains d
     WHERE d.name = l.domain AND d.https = l.https AND d.port = l.port"
-
 
     remove_column :incoming_referers, :domain
     remove_column :incoming_referers, :port

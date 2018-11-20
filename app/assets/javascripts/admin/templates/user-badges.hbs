@@ -1,28 +1,28 @@
 <div class='admin-controls'>
-  <div class='span15'>
+  <nav>
     <ul class='nav nav-pills'>
-      <li>{{#link-to 'adminUser' user}}<i class="fa fa-caret-left"></i> &nbsp;{{user.username}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUser' user}}{{d-icon "caret-left"}} &nbsp;{{user.username}}{{/link-to}}</li>
     </ul>
-  </div>
+  </nav>
 </div>
 
 {{#conditional-loading-spinner condition=loading}}
   <div class='admin-container user-badges'>
     <h2>{{i18n 'admin.badges.grant_badge'}}</h2>
     <br>
-    {{#if noBadges}}
+    {{#if noGrantableBadges}}
       <p>{{i18n 'admin.badges.no_badges'}}</p>
     {{else}}
     <form class="form-horizontal">
       <div>
       <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box valueAttribute="id" value=selectedBadgeId content=grantableBadges nameProperty="name"}}
+      {{combo-box filterable=true value=selectedBadgeId content=grantableBadges}}
       </div>
       <label>
       <label>{{i18n 'admin.badges.reason'}}</label>
       {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
       </label>
-      <button class='btn btn-primary' {{action "grantBadge" selectedBadgeId}}>{{i18n 'admin.badges.grant'}}</button>
+      <button class='btn btn-primary' {{action "grantBadge"}}>{{i18n 'admin.badges.grant'}}</button>
     </form>
     {{/if}}
 

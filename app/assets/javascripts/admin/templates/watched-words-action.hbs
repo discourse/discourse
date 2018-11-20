@@ -1,0 +1,28 @@
+<h2>{{model.name}}</h2>
+
+<p class="about">{{actionDescription}}</p>
+
+<div class="watched-word-controls">
+{{watched-word-form
+  actionKey=actionNameKey
+  action="recordAdded"
+  filteredContent=filteredContent
+  regularExpressions=adminWatchedWords.regularExpressions}}
+
+{{watched-word-uploader uploading=uploading actionKey=actionNameKey done="uploadComplete"}}
+</div>
+<div>
+  <label class="show-words-checkbox">
+    {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
+    {{i18n 'admin.watched_words.show_words'}}
+  </label>
+</div>
+<div class="watched-words-list">
+  {{#if showWordsList}}
+    {{#each filteredContent as |word| }}
+      <div class="watched-word-box">{{admin-watched-word word=word action="recordRemoved"}}</div>
+    {{/each}}
+  {{else}}
+    {{i18n 'admin.watched_words.word_count' count=wordCount}}
+  {{/if}}
+</div>

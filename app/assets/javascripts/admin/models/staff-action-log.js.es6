@@ -1,50 +1,86 @@
-import { ajax } from 'discourse/lib/ajax';
-import AdminUser from 'admin/models/admin-user';
-import { escapeExpression } from 'discourse/lib/utilities';
+import computed from "ember-addons/ember-computed-decorators";
+import { ajax } from "discourse/lib/ajax";
+import AdminUser from "admin/models/admin-user";
+import { escapeExpression } from "discourse/lib/utilities";
+
+function format(label, value, escape = true) {
+  return value
+    ? `<b>${I18n.t(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    : "";
+}
 
 const StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
 
-  actionName: function() {
-    return I18n.t("admin.logs.staff_actions.actions." + this.get('action_name'));
-  }.property('action_name'),
-
-  formattedDetails: function() {
-    var formatted = "";
-    formatted += this.format('email', 'email');
-    formatted += this.format('admin.logs.ip_address', 'ip_address');
-    formatted += this.format('admin.logs.topic_id', 'topic_id');
-    formatted += this.format('admin.logs.post_id', 'post_id');
-    formatted += this.format('admin.logs.category_id', 'category_id');
-    if (!this.get('useCustomModalForDetails')) {
-      formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
-      formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
-    }
-    if (!this.get('useModalForDetails')) {
-      if (this.get('details')) formatted += escapeExpression(this.get('details')) + '<br/>';
-    }
-    return formatted;
-  }.property('ip_address', 'email', 'topic_id', 'post_id', 'category_id'),
-
-  format: function(label, propertyName) {
-    if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + escapeExpression(this.get(propertyName)) + '<br/>');
-    } else {
-      return '';
-    }
+  @computed("action_name")
+  actionName(actionName) {
+    return I18n.t(`admin.logs.staff_actions.actions.${actionName}`);
   },
 
-  useModalForDetails: function() {
-    return (this.get('details') && this.get('details').length > 100);
-  }.property('action_name'),
+  @computed(
+    "email",
+    "ip_address",
+    "topic_id",
+    "post_id",
+    "category_id",
+    "new_value",
+    "previous_value",
+    "details",
+    "useCustomModalForDetails",
+    "useModalForDetails"
+  )
+  formattedDetails(
+    email,
+    ipAddress,
+    topicId,
+    postId,
+    categoryId,
+    newValue,
+    previousValue,
+    details,
+    useCustomModalForDetails,
+    useModalForDetails
+  ) {
+    const postLink = postId
+      ? `<a href data-link-post-id="${postId}">${postId}</a>`
+      : null;
 
-  useCustomModalForDetails: function() {
-    return _.contains(['change_theme', 'delete_theme'], this.get('action_name'));
-  }.property('action_name')
+    let lines = [
+      format("email", email),
+      format("admin.logs.ip_address", ipAddress),
+      format("admin.logs.topic_id", topicId),
+      format("admin.logs.post_id", postLink, false),
+      format("admin.logs.category_id", categoryId)
+    ];
+
+    if (!useCustomModalForDetails) {
+      lines.push(format("admin.logs.staff_actions.new_value", newValue));
+      lines.push(
+        format("admin.logs.staff_actions.previous_value", previousValue)
+      );
+    }
+
+    if (!useModalForDetails && details) {
+      lines = [...lines, ...escapeExpression(details).split("\n")];
+    }
+
+    const formatted = lines.filter(l => l.length > 0).join("<br/>");
+    return formatted.length > 0 ? formatted + "<br/>" : "";
+  },
+
+  @computed("details")
+  useModalForDetails(details) {
+    return details && details.length > 100;
+  },
+
+  @computed("action_name")
+  useCustomModalForDetails(actionName) {
+    return ["change_theme", "delete_theme"].includes(actionName);
+  }
 });
 
 StaffActionLog.reopenClass({
-  create: function(attrs) {
+  create(attrs) {
     attrs = attrs || {};
 
     if (attrs.acting_user) {
@@ -56,13 +92,13 @@ StaffActionLog.reopenClass({
     return this._super(attrs);
   },
 
-  findAll: function(filters) {
-    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then((data) => {
+  findAll(data) {
+    return ajax("/admin/logs/staff_action_logs.json", { data }).then(result => {
       return {
-        staff_action_logs: data.staff_action_logs.map(function(s) {
-          return StaffActionLog.create(s);
-        }),
-        user_history_actions: data.user_history_actions
+        staff_action_logs: result.staff_action_logs.map(s =>
+          StaffActionLog.create(s)
+        ),
+        user_history_actions: result.user_history_actions
       };
     });
   }

@@ -5,6 +5,29 @@
   <body>
     <% if @message %>
       <%= @message %>
+      <% if @error %><p><%= @error %></p><% end %>
+
+      <% if @second_factor_required %>
+        <div id="primary-second-factor-form">
+          <%=form_tag({}, method: :put) do %>
+            <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+            <%= render 'common/second_factor_text_field' %><br><br>
+            <%= submit_tag t('submit')%>
+          <% end %>
+        </div>
+
+         <%if @backup_codes_enabled%>
+          <div id="backup-second-factor-form" style="display: none">
+            <%= form_tag({}, method: :put) do%>
+              <%= label_tag(:second_factor_token, t("login.second_factor_backup_description")) %>
+              <%= render 'common/second_factor_backup_input' %><br><br>
+              <%= submit_tag(t("submit")) %>
+            <%end%>
+          </div>
+          <a href id="toggle-form"><%=t "login.second_factor_backup" %></a>
+          <%= render 'common/second_factor_form_script' %>
+        <%end%>
+      <% end %>
     <% else %>
       <%=form_tag({}, method: :put) do %>
         <%= label_tag(:email, t('admin_login.email_input')) %>

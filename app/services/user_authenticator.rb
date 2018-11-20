@@ -21,14 +21,28 @@ class UserAuthenticator
   end
 
   def finish
-    authenticator.after_create_account(@user, @session) if authenticator
+    if authenticator
+      authenticator.after_create_account(@user, @session)
+      confirm_email
+    end
     @session = nil
+  end
+
+  def email_valid?
+    @session && @session[:email_valid]
+  end
+
+  def authenticated?
+    @session && @session[:email]&.downcase == @user.email.downcase && @session[:email_valid].to_s == "true"
   end
 
   private
 
-  def authenticated?
-    @session && @session[:email] == @user.email && @session[:email_valid]
+  def confirm_email
+    if authenticated?
+      EmailToken.confirm(@user.email_tokens.first.token)
+      @user.set_automatic_groups
+    end
   end
 
   def authenticator

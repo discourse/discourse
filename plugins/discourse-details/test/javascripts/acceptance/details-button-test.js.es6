@@ -1,92 +1,133 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance('Details Button', { loggedIn: true });
+acceptance("Details Button", {
+  loggedIn: true,
+  beforeEach: function() {
+    clearPopupMenuOptionsCallback();
+  }
+});
 
-function findTextarea() {
-  return find(".d-editor-input")[0];
-}
+test("details button", async assert => {
+  const popupMenu = selectKit(".toolbar-popup-menu-options");
 
-test('details button', () => {
-  visit("/");
+  await visit("/");
+  await click("#create-topic");
 
-  click('#create-topic');
-  click('button.options');
-  click('.popup-menu .fa-caret-right');
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("insertDetails");
 
-  andThen(() => {
-    equal(
-      find(".d-editor-input").val(),
-      `[details=${I18n.t("composer.details_title")}]${I18n.t("composer.details_text")}[/details]`,
-      'it should contain the right output'
-    );
-  });
+  assert.equal(
+    find(".d-editor-input").val(),
+    `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
+      "composer.details_text"
+    )}\n[/details]\n`,
+    "it should contain the right output"
+  );
 
-  fillIn('.d-editor-input', "This is my title");
+  await fillIn(".d-editor-input", "This is my title");
 
-  andThen(() => {
-    const textarea = findTextarea();
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = textarea.value.length;
-  });
+  const textarea = find(".d-editor-input")[0];
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = textarea.value.length;
 
-  click('button.options');
-  click('.popup-menu .fa-caret-right');
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("insertDetails");
 
-  andThen(() => {
-    equal(
-      find(".d-editor-input").val(),
-      `[details=${I18n.t("composer.details_title")}]This is my title[/details]`,
-      'it should contain the right selected output'
-    );
+  assert.equal(
+    find(".d-editor-input").val(),
+    `\n[details="${I18n.t(
+      "composer.details_title"
+    )}"]\nThis is my title\n[/details]\n`,
+    "it should contain the right selected output"
+  );
 
-    const textarea = findTextarea();
-    equal(textarea.selectionStart, 17, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 33, 'it should end highlighting at the right position');
-  });
+  assert.equal(
+    textarea.selectionStart,
+    21,
+    "it should start highlighting at the right position"
+  );
+  assert.equal(
+    textarea.selectionEnd,
+    37,
+    "it should end highlighting at the right position"
+  );
 
-  fillIn('.d-editor-input', "Before some text in between After");
+  await fillIn(".d-editor-input", "Before some text in between After");
 
-  andThen(() => {
-    const textarea = findTextarea();
-    textarea.selectionStart = 7;
-    textarea.selectionEnd = 28;
-  });
+  textarea.selectionStart = 7;
+  textarea.selectionEnd = 28;
 
-  click('button.options');
-  click('.popup-menu .fa-caret-right');
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("insertDetails");
 
-  andThen(() => {
-    equal(
-      find(".d-editor-input").val(),
-      `Before [details=${I18n.t("composer.details_title")}]some text in between[/details] After`,
-      'it should contain the right output'
-    );
+  assert.equal(
+    find(".d-editor-input").val(),
+    `Before \n[details="${I18n.t(
+      "composer.details_title"
+    )}"]\nsome text in between\n[/details]\n After`,
+    "it should contain the right output"
+  );
 
-    const textarea = findTextarea();
-    equal(textarea.selectionStart, 24, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 44, 'it should end highlighting at the right position');
-  });
+  assert.equal(
+    textarea.selectionStart,
+    28,
+    "it should start highlighting at the right position"
+  );
+  assert.equal(
+    textarea.selectionEnd,
+    48,
+    "it should end highlighting at the right position"
+  );
 
-  fillIn('.d-editor-input', "Before\nsome text in between\nAfter");
+  await fillIn(".d-editor-input", "Before \nsome text in between\n After");
 
-  andThen(() => {
-    const textarea = findTextarea();
-    textarea.selectionStart = 7;
-    textarea.selectionEnd = 28;
-  });
+  textarea.selectionStart = 8;
+  textarea.selectionEnd = 29;
 
-  click('button.options');
-  click('.popup-menu .fa-caret-right');
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("insertDetails");
 
-  andThen(() => {
-    equal(
-      find(".d-editor-input").val(),
-      `Before\n[details=${I18n.t("composer.details_title")}]some text in between[/details]\nAfter`,
-      'it should contain the right output'
-    );
+  assert.equal(
+    find(".d-editor-input").val(),
+    `Before \n\n[details="${I18n.t(
+      "composer.details_title"
+    )}"]\nsome text in between\n[/details]\n\n After`,
+    "it should contain the right output"
+  );
 
-    const textarea = findTextarea();
-    equal(textarea.selectionStart, 24, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 44, 'it should end highlighting at the right position');
-  });
+  assert.equal(
+    textarea.selectionStart,
+    29,
+    "it should start highlighting at the right position"
+  );
+  assert.equal(
+    textarea.selectionEnd,
+    49,
+    "it should end highlighting at the right position"
+  );
+});
+
+test("details button surrounds all selected text in a single details block", async assert => {
+  const multilineInput = "first line\n\nsecond line\n\nthird line";
+  const popupMenu = selectKit(".toolbar-popup-menu-options");
+
+  await visit("/");
+  await click("#create-topic");
+  await fillIn(".d-editor-input", multilineInput);
+
+  const textarea = find(".d-editor-input")[0];
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = textarea.value.length;
+
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("insertDetails");
+
+  assert.equal(
+    find(".d-editor-input").val(),
+    `\n[details="${I18n.t(
+      "composer.details_title"
+    )}"]\n${multilineInput}\n[/details]\n`,
+    "it should contain the right output"
+  );
 });

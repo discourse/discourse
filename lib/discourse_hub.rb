@@ -1,12 +1,12 @@
-require_dependency 'rest_client'
 require_dependency 'version'
+require_dependency 'site_setting'
 
 module DiscourseHub
 
   STATS_FETCHED_AT_KEY = "stats_fetched_at"
 
   def self.version_check_payload
-    default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(Discourse.git_branch == "unknown" ? {} : {branch: Discourse.git_branch})
+    default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(Discourse.git_branch == "unknown" ? {} : { branch: Discourse.git_branch })
     default_payload.merge!(get_payload)
   end
 
@@ -18,34 +18,52 @@ module DiscourseHub
     $redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
   end
 
-  private
-
   def self.get_payload
     SiteSetting.share_anonymized_statistics && stats_fetched_at < 7.days.ago ? About.fetch_cached_stats.symbolize_keys : {}
   end
 
-  def self.get(rel_url, params={})
+  def self.get(rel_url, params = {})
     singular_action :get, rel_url, params
   end
 
-  def self.post(rel_url, params={})
+  def self.post(rel_url, params = {})
     collection_action :post, rel_url, params
   end
 
-  def self.put(rel_url, params={})
+  def self.put(rel_url, params = {})
     collection_action :put, rel_url, params
   end
 
-  def self.delete(rel_url, params={})
+  def self.delete(rel_url, params = {})
     singular_action :delete, rel_url, params
   end
 
-  def self.singular_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {params: params, accept: accepts, referer: referer } )
+  def self.singular_action(action, rel_url, params = {})
+    connect_opts = connect_opts(params)
+    JSON.parse(Excon.send(action,
+      "#{hub_base_url}#{rel_url}",
+      {
+        headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
+        query: params,
+        omit_default_port: true
+      }.merge(connect_opts)
+    ).body)
   end
 
-  def self.collection_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", params, content_type: :json, accept: accepts, referer: referer )
+  def self.collection_action(action, rel_url, params = {})
+    connect_opts = connect_opts(params)
+    JSON.parse(Excon.send(action,
+      "#{hub_base_url}#{rel_url}",
+      {
+        body: JSON[params],
+        headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/json" },
+        omit_default_port: true
+      }.merge(connect_opts)
+    ).body)
+  end
+
+  def self.connect_opts(params = {})
+    params.delete(:connect_opts)&.except(:body, :headers, :query) || {}
   end
 
   def self.hub_base_url
@@ -57,7 +75,7 @@ module DiscourseHub
   end
 
   def self.accepts
-    [:json, 'application/vnd.discoursehub.v1']
+    ['application/json', 'application/vnd.discoursehub.v1']
   end
 
   def self.referer

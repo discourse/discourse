@@ -1,4 +1,4 @@
-class CreatePostTimings < ActiveRecord::Migration
+class CreatePostTimings < ActiveRecord::Migration[4.2]
   def change
     create_table :post_timings do |t|
       t.integer :thread_id, null: false

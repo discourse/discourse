@@ -8,6 +8,7 @@ module ImportScripts::PhpBB3
       @lookup = lookup
       @database = database
       @smiley_processor = smiley_processor
+      @he = HTMLEntities.new
 
       @settings = settings
       @new_site_prefix = settings.new_site_prefix
@@ -25,7 +26,8 @@ module ImportScripts::PhpBB3
       process_smilies(text)
       process_links(text)
       process_lists(text)
-
+      process_code(text)
+      fix_markdown(text)
       text
     end
 
@@ -48,6 +50,9 @@ module ImportScripts::PhpBB3
       #   [url=https&#58;//google&#46;com:1qh1i7ky]click here[/url:1qh1i7ky]
       #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
       text.gsub!(/:(?:\w{8})\]/, ']')
+
+      # remove color tags
+      text.gsub!(/\[\/?color(=#[a-z0-9]*)?\]/i, "")
     end
 
     def bbcode_to_md(text)
@@ -110,11 +115,13 @@ module ImportScripts::PhpBB3
       # convert list tags to ul and list=1 tags to ol
       # list=a is not supported, so handle it like list=1
       # list=9 and list=x have the same result as list=1 and list=a
-      text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
-      text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi, '[ol]\1[/ol]')
+      text.gsub!(/\[list\](.*?)\[\/list:u\]/mi) do
+        $1.gsub(/\[\*\](.*?)\[\/\*:m\]\n*/mi) { "* #{$1}\n" }
+      end
 
-      # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
-      text.gsub!(/\[\*\](.*?)\[\/\*:m\]/mi, '[li]\1[/li]')
+      text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi) do
+        $1.gsub(/\[\*\](.*?)\[\/\*:m\]\n*/mi) { "1. #{$1}\n" }
+      end
     end
 
     # This replaces existing [attachment] BBCodes with the corresponding HTML tags for Discourse.
@@ -141,6 +148,18 @@ module ImportScripts::PhpBB3
 
       @long_internal_link_regexp = Regexp.new(%Q|<!-- l --><a(?:.+)href="#{link_regex}"(?:.*)</a><!-- l -->|, Regexp::IGNORECASE)
       @short_internal_link_regexp = Regexp.new(link_regex, Regexp::IGNORECASE)
+    end
+
+    def process_code(text)
+      text.gsub!(/<span class="syntax.*?>(.*?)<\/span>/) { "#{$1}" }
+      text.gsub!(/\[code(=[a-z]*)?\](.*?)\[\/code\]/i) { "[code]\n#{@he.decode($2)}\n[/code]" }
+      text.gsub!(/<br \/>/, "\n")
+      text
+    end
+
+    def fix_markdown(text)
+      text.gsub!(/(\n*\[\/?quote.*?\]\n*)/mi) { |q| "\n#{q.strip}\n" }
+      text
     end
   end
 end

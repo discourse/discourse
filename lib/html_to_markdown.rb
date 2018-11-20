@@ -3,16 +3,15 @@ require "nokogiri"
 class HtmlToMarkdown
 
   class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head="", body="", opened=false, markdown=""); super; end
+    def initialize(name, head = "", body = "", opened = false, markdown = ""); super; end
   end
 
-  def initialize(html, opts={})
+  def initialize(html, opts = {})
     @opts = opts || {}
     @doc = fix_span_elements(Nokogiri::HTML(html))
 
     remove_whitespaces!
   end
-
 
   # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
   def fix_span_elements(node)
@@ -20,7 +19,7 @@ class HtmlToMarkdown
       node.swap(node.children)
     end
 
-    node.children.each {|c| fix_span_elements(c)}
+    node.children.each { |c| fix_span_elements(c) }
     node
   end
 
@@ -76,11 +75,12 @@ class HtmlToMarkdown
     code = node.children.find { |c| c.name == "code" }
     code_class = code ? code["class"] : ""
     lang = code_class ? code_class[/lang-(\w+)/, 1] : ""
-    @stack << Block.new("pre")
-    @markdown << "```#{lang}\n"
+    pre = Block.new("pre")
+    pre.markdown = "```#{lang}\n"
+    @stack << pre
     traverse(node)
+    pre.markdown << "\n```\n"
     @markdown << format_block
-    @markdown << "```\n"
   end
 
   def visit_blockquote(node)
@@ -179,6 +179,7 @@ class HtmlToMarkdown
   end
 
   def visit_br(node)
+    return if node.previous_sibling.nil? && EMPHASIS.include?(node.parent.name)
     @stack[-1].markdown << "\n"
   end
 
@@ -186,26 +187,33 @@ class HtmlToMarkdown
     @stack[-1].markdown << "\n\n---\n\n"
   end
 
-  def visit_strong(node)
-    delimiter = node.text["*"] ? "__" : "**"
-    @stack[-1].markdown << delimiter
-    traverse(node)
-    @stack[-1].markdown << delimiter
+  EMPHASIS ||= %w{b strong i em}
+  EMPHASIS.each do |tag|
+    class_eval <<-RUBY
+      def visit_#{tag}(node)
+        return if node.text.empty?
+        return @stack[-1].markdown << " " if node.text.blank?
+        times = "#{tag}" == "i" || "#{tag}" == "em" ? 1 : 2
+        delimiter = (node.text["*"] ? "_" : "*") * times
+        @stack[-1].markdown << " " if node.text[0] == " "
+        @stack[-1].markdown << delimiter
+        traverse(node)
+        @stack[-1].markdown.chomp!
+        if @stack[-1].markdown[-1] == " "
+          @stack[-1].markdown.chomp!(" ")
+          append_space = true
+        end
+        @stack[-1].markdown << delimiter
+        @stack[-1].markdown << " " if append_space
+      end
+    RUBY
   end
-
-  alias :visit_b :visit_strong
-
-  def visit_em(node)
-    delimiter = node.text["*"] ? "_" : "*"
-    @stack[-1].markdown << delimiter
-    traverse(node)
-    @stack[-1].markdown << delimiter
-  end
-
-  alias :visit_i :visit_em
 
   def visit_text(node)
-    @stack[-1].markdown << node.text.gsub(/\s{2,}/, " ")
+    node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && EMPHASIS.include?(node.parent.name)
+    indent = node.text[/^\s+/] || ""
+    text = node.text.gsub(/^\s+/, "").gsub(/\s{2,}/, " ")
+    @stack[-1].markdown << [indent, text].join("")
   end
 
   def format_block

@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+pt_BR:
+  site_settings:
+    discourse_local_dates_enabled: "Habilitar recurso de datas locais de discursos. Isso adicionará suporte às datas do fuso horário local em postagens usando o elemento [date]."
+    discourse_local_dates_default_formats: "Formatos de data e hora usados ​​com frequência, consulte:<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Lista padrão de fusos horários, deve ser válida<a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

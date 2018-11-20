@@ -3,26 +3,23 @@ module DiscourseUpdates
   class << self
 
     def check_version
-      version_info = if updated_at.nil?
-        DiscourseVersionCheck.new(
-          installed_version: Discourse::VERSION::STRING,
-          installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
-          installed_describe: `git describe --dirty --match "v[0-9]*"`,
-          git_branch: Discourse.git_branch,
-          updated_at: nil
-        )
-      else
-        DiscourseVersionCheck.new(
+      attrs = {
+        installed_version: Discourse::VERSION::STRING,
+        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+        installed_describe: Discourse.full_version,
+        git_branch: Discourse.git_branch,
+        updated_at: updated_at,
+      }
+
+      unless updated_at.nil?
+        attrs.merge!(
           latest_version: latest_version,
           critical_updates: critical_updates_available?,
-          installed_version: Discourse::VERSION::STRING,
-          installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
-          installed_describe: `git describe --dirty --match "v[0-9]*"`,
-          missing_versions_count: missing_versions_count,
-          git_branch: Discourse.git_branch,
-          updated_at: updated_at
+          missing_versions_count: missing_versions_count
         )
       end
+
+      version_info = DiscourseVersionCheck.new(attrs)
 
       # replace -commit_count with +commit_count
       if version_info.installed_describe =~ /-(\d+)-/
@@ -30,20 +27,28 @@ module DiscourseUpdates
       end
 
       if SiteSetting.version_checks?
+        is_stale_data =
+          (version_info.missing_versions_count == 0 && version_info.latest_version != version_info.installed_version) ||
+          (version_info.missing_versions_count != 0 && version_info.latest_version == version_info.installed_version)
 
         # Handle cases when version check data is old so we report something that makes sense
+        if version_info.updated_at.nil? || # never performed a version check
+           last_installed_version != Discourse::VERSION::STRING || # upgraded since the last version check
+           is_stale_data
 
-        if (version_info.updated_at.nil? or  # never performed a version check
-            last_installed_version != Discourse::VERSION::STRING or  # upgraded since the last version check
-            (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version) or  # old data
-            (version_info.missing_versions_count != 0 and version_info.latest_version == version_info.installed_version))    # old data
           Jobs.enqueue(:version_check, all_sites: true)
           version_info.version_check_pending = true
+
           unless version_info.updated_at.nil?
             version_info.missing_versions_count = 0
             version_info.critical_updates = false
           end
         end
+
+        version_info.stale_data =
+          version_info.version_check_pending ||
+          (updated_at && updated_at < 48.hours.ago) ||
+          is_stale_data
       end
 
       version_info
@@ -92,7 +97,7 @@ module DiscourseUpdates
       if versions.present?
         # store the list in redis
         version_keys = []
-        versions[0,5].each do |v|
+        versions[0, 5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v['version']}"
           $redis.mapped_hmset key, v
           version_keys << key
@@ -107,7 +112,6 @@ module DiscourseUpdates
       keys = $redis.lrange(missing_versions_list_key, 0, 4) # max of 5 versions
       keys.present? ? keys.map { |k| $redis.hgetall(k) } : []
     end
-
 
     private
 

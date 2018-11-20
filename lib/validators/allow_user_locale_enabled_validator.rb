@@ -1,6 +1,6 @@
 class AllowUserLocaleEnabledValidator
 
-  def initialize(opts={})
+  def initialize(opts = {})
     @opts = opts
   end
 

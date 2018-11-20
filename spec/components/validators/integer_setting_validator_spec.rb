@@ -31,11 +31,11 @@ describe IntegerSettingValidator do
         expect(validator.valid_value?('0')).to eq(true)
       end
 
-      it "defaults max to 20000" do
-        expect(validator.valid_value?(20001)).to eq(false)
-        expect(validator.valid_value?('20001')).to eq(false)
-        expect(validator.valid_value?(20000)).to eq(true)
-        expect(validator.valid_value?('20000')).to eq(true)
+      it "defaults max to 2_000_000_000" do
+        expect(validator.valid_value?(2_000_000_001)).to eq(false)
+        expect(validator.valid_value?('2000000001')).to eq(false)
+        expect(validator.valid_value?(2_000_000_000)).to eq(true)
+        expect(validator.valid_value?('2000000000')).to eq(true)
       end
     end
 

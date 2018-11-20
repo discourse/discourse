@@ -7,5 +7,5 @@
 {{user-stat value=item.posts_read label="directory.posts_read"}}
 {{user-stat value=item.days_visited label="directory.days_visited"}}
 {{#if showTimeRead}}
-  <div class='time-read'>{{unbound item.time_read}}</div>
+  {{user-stat value=item.time_read label="directory.time_read" type="duration"}}
 {{/if}}

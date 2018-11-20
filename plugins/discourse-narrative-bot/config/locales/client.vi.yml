@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+vi:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Bật hướng dẫn cho tất cả người dùng mới"
+        welcome_message: "Gửi tin nhắn chào mừng cho tất cả thành viên mới kèm theo hướng dẫn bắt đầu."

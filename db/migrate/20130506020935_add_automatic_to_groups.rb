@@ -1,4 +1,4 @@
-class AddAutomaticToGroups < ActiveRecord::Migration
+class AddAutomaticToGroups < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :automatic, :boolean, default: false, null: false
 

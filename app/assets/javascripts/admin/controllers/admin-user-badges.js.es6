@@ -1,28 +1,34 @@
-import UserBadge from 'discourse/models/user-badge';
+import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(GrantBadgeController, {
   adminUser: Ember.inject.controller(),
-  user: Ember.computed.alias('adminUser.model'),
+  user: Ember.computed.alias("adminUser.model"),
+  userBadges: Ember.computed.alias("model"),
+  allBadges: Ember.computed.alias("badges"),
 
-  sortedBadges: Ember.computed.sort('model', 'badgeSortOrder'),
-  badgeSortOrder: ['granted_at:desc'],
+  sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
+  badgeSortOrder: ["granted_at:desc"],
 
-  groupedBadges: function(){
-    const allBadges = this.get('model');
+  groupedBadges: function() {
+    const allBadges = this.get("model");
 
     var grouped = _.groupBy(allBadges, badge => badge.badge_id);
 
     var expanded = [];
-    const expandedBadges = allBadges.get('expandedBadges');
+    const expandedBadges = allBadges.get("expandedBadges");
 
-    _(grouped).each(function(badges){
+    _(grouped).each(function(badges) {
       var lastGranted = badges[0].granted_at;
 
       _.each(badges, function(badge) {
-        lastGranted = lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
+        lastGranted =
+          lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
       });
 
-      if(badges.length===1 || _.include(expandedBadges, badges[0].badge.id)){
+      if (
+        badges.length === 1 ||
+        _.include(expandedBadges, badges[0].badge.id)
+      ) {
         _.each(badges, badge => expanded.push(badge));
         return;
       }
@@ -38,73 +44,55 @@ export default Ember.Controller.extend({
       expanded.push(result);
     });
 
-    return _(expanded).sortBy(group => group.granted_at).reverse().value();
-  }.property('model', 'model.[]', 'model.expandedBadges.[]'),
-
-  /**
-    Array of badges that have not been granted to this user.
-
-    @property grantableBadges
-    @type {Boolean}
-  **/
-  grantableBadges: function() {
-    var granted = {};
-    this.get('model').forEach(function(userBadge) {
-      granted[userBadge.get('badge_id')] = true;
-    });
-
-    var badges = [];
-    this.get('badges').forEach(function(badge) {
-      if (badge.get('enabled') && (badge.get('multiple_grant') || !granted[badge.get('id')])) {
-        badges.push(badge);
-      }
-    });
-
-    return _.sortBy(badges, badge => badge.get('name'));
-  }.property('badges.[]', 'model.[]'),
-
-  /**
-    Whether there are any badges that can be granted.
-
-    @property noBadges
-    @type {Boolean}
-  **/
-  noBadges: Em.computed.empty('grantableBadges'),
+    return _(expanded)
+      .sortBy(group => group.granted_at)
+      .reverse()
+      .value();
+  }.property("model", "model.[]", "model.expandedBadges.[]"),
 
   actions: {
-
-    expandGroup: function(userBadge){
-      const model = this.get('model');
-      model.set('expandedBadges', model.get('expandedBadges') || []);
-      model.get('expandedBadges').pushObject(userBadge.badge.id);
+    expandGroup: function(userBadge) {
+      const model = this.get("model");
+      model.set("expandedBadges", model.get("expandedBadges") || []);
+      model.get("expandedBadges").pushObject(userBadge.badge.id);
     },
 
-    grantBadge(badgeId) {
-      UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(userBadge => {
-        this.set('badgeReason', '');
-        this.get('model').pushObject(userBadge);
-        Ember.run.next(() => {
-          // Update the selected badge ID after the combobox has re-rendered.
-          const newSelectedBadge = this.get('grantableBadges')[0];
-          if (newSelectedBadge) {
-            this.set('selectedBadgeId', newSelectedBadge.get('id'));
-          }
-        });
-      }, function() {
-        // Failure
-        bootbox.alert(I18n.t('generic_error'));
-      });
+    grantBadge() {
+      this.grantBadge(
+        this.get("selectedBadgeId"),
+        this.get("user.username"),
+        this.get("badgeReason")
+      ).then(
+        () => {
+          this.set("badgeReason", "");
+          Ember.run.next(() => {
+            // Update the selected badge ID after the combobox has re-rendered.
+            const newSelectedBadge = this.get("grantableBadges")[0];
+            if (newSelectedBadge) {
+              this.set("selectedBadgeId", newSelectedBadge.get("id"));
+            }
+          });
+        },
+        function() {
+          // Failure
+          bootbox.alert(I18n.t("generic_error"));
+        }
+      );
     },
 
     revokeBadge(userBadge) {
-      return bootbox.confirm(I18n.t("admin.badges.revoke_confirm"), I18n.t("no_value"), I18n.t("yes_value"), result => {
-        if (result) {
-          userBadge.revoke().then(() => {
-            this.get('model').removeObject(userBadge);
-          });
+      return bootbox.confirm(
+        I18n.t("admin.badges.revoke_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        result => {
+          if (result) {
+            userBadge.revoke().then(() => {
+              this.get("model").removeObject(userBadge);
+            });
+          }
         }
-      });
+      );
     }
-
   }
 });

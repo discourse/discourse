@@ -7,12 +7,12 @@ module Jobs
       to_award = {}
 
       Post.select(:id, :created_at, :user_id)
-          .secured(Guardian.new)
-          .visible
-          .public_posts
-          .where(via_email: true)
-          .where("post_number > 1")
-          .find_in_batches do |group|
+        .secured(Guardian.new)
+        .visible
+        .public_posts
+        .where(via_email: true)
+        .where("post_number > 1")
+        .find_in_batches do |group|
         group.each do |p|
           to_award[p.user_id] ||= { post_id: p.id, created_at: p.created_at }
         end

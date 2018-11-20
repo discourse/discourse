@@ -1,6 +1,6 @@
 # Discourse Advanced Developer Install Guide
 
-This guide is aimed at advanced Rails developers who have installed their own Rails apps before. If you are new to Rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](VAGRANT.md)**.
+This guide is aimed at advanced Rails developers who have installed their own Rails apps before.
 
 Note: If you are developing on a Mac, you will probably want to look at [these instructions](DEVELOPMENT-OSX-NATIVE.md) as well.
 
@@ -19,29 +19,26 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     curl -sSL https://get.rvm.io | bash -s stable
     echo 'gem: --no-document' >> ~/.gemrc
 
-    # Logout and back in to activate RVM installation
+    # exit the terminal and open it again to activate RVM
 
-    rvm install 2.3.1
-    rvm --default use 2.3.1 # If this error out check https://rvm.io/integration/gnome-terminal
-    gem install bundler mailcatcher
-
+    rvm install 2.5.1
+    rvm --default use 2.5.1 # If this error out check https://rvm.io/integration/gnome-terminal
+    gem install bundler mailcatcher rake
 
     # Postgresql
-    sudo su postgres
-    createuser --createdb --superuser -Upostgres $(cat /tmp/username)
+    sudo -u postgres -i
+    createuser --superuser -Upostgres $(cat /tmp/username)
     psql -c "ALTER USER $(cat /tmp/username) WITH PASSWORD 'password';"
-    psql -c "create database discourse_development owner $(cat /tmp/username) encoding 'UTF8' TEMPLATE template0;"
-    psql -c "create database discourse_test        owner $(cat /tmp/username) encoding 'UTF8' TEMPLATE template0;"
-    psql -d discourse_development -c "CREATE EXTENSION hstore;"
-    psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
     exit
 
     # Node
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
-    # exit the terminal and open it again
-    nvm install 6.2.0
-    nvm alias default 6.2.0
-    npm install -g svgo phantomjs-prebuilt
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
+    # exit the terminal and open it again to activate NVM
+
+    nvm install node
+    nvm alias default node
+    npm install -g svgo
 
 
 If everything goes alright, let's clone Discourse and start hacking:
@@ -49,22 +46,35 @@ If everything goes alright, let's clone Discourse and start hacking:
     git clone https://github.com/discourse/discourse.git ~/discourse
     cd ~/discourse
     bundle install
-    bundle exec rake db:create db:migrate db:test:prepare
-    bundle exec rake autospec # CTRL + C to stop; Optional
-    bundle exec rails s -b 0.0.0.0 # Open browser on http://localhost:3000 and you should see Discourse
 
-Create a test account, and enable it with:
+    # run this if there was a pre-existing database
+    bundle exec rake db:drop
+    RAILS_ENV=test bundle exec rake db:drop
 
-    bundle exec rails c
-    u = User.find_by_id 1
-    u.activate
-    u.grant_admin!
-    exit
+    # time to create the database and run migrations
+    bundle exec rake db:create db:migrate
+    RAILS_ENV=test bundle exec rake db:create db:migrate
+
+    # run the specs (optional)
+    bundle exec rake autospec # CTRL + C to stop
+
+    # launch discourse
+    bundle exec rails s -b 0.0.0.0 # open browser on http://localhost:3000 and you should see Discourse
+
+Create an admin account with:
+
+    bundle exec rake admin:create
+
+If you ever need to recreate your database:
+
+    bundle exec rake db:drop db:create db:migrate
+    bundle exec rake admin:create
+    RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
 
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
-    ruby $(mailcatcher) # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
-    bundle exec sidekiq -q critical,low,default -d -l log/sidekiq.log # open http://localhost:3000/sidekiq to see the queue, stop with pkill -f sidekiq
+    mailcatcher # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
+    bundle exec sidekiq # open http://localhost:3000/sidekiq to see queues
     bundle exec rails server
 
 And happy hacking!

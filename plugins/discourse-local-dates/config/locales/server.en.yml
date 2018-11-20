@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    discourse_local_dates_enabled: "Enable the discourse-local-dates feature. This will add support to local timezone aware dates in posts using the [date] element."
+    discourse_local_dates_default_formats: "Frequently used date time formats, see: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Default list of timezones, must be a valid <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

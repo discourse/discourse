@@ -35,7 +35,7 @@ module ImportScripts::PhpBB3
 
     def get_poll_options(topic_id)
       rows = @database.fetch_poll_options(topic_id)
-      options_by_text = Hash.new { |h, k| h[k] = {ids: [], total_votes: 0, anonymous_votes: 0} }
+      options_by_text = Hash.new { |h, k| h[k] = { ids: [], total_votes: 0, anonymous_votes: 0 } }
 
       rows.each do |row|
         option_text = @text_processor.process_raw_text(row[:poll_option_text]).delete("\n")
@@ -100,7 +100,7 @@ module ImportScripts::PhpBB3
 
     # @param custom_fields [Hash]
     def add_poll_to_custom_fields(custom_fields, extracted_poll)
-      custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = {DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll}
+      custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = { DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll }
     end
 
     # @param custom_fields [Hash]

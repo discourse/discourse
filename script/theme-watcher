@@ -1,0 +1,185 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'pathname'
+require 'tempfile'
+require 'securerandom'
+require 'minitar'
+require 'zlib'
+require 'find'
+require 'net/http'
+require 'net/http/post/multipart'
+require 'uri'
+require 'listen'
+require 'json'
+
+# Work in progress theme watcher for Discourse
+#
+# Monitor a theme directory locally and automatically keep it in sync with Discourse
+
+def usage
+  puts "Usage: theme-watcher DIR SITE"
+  exit 1
+end
+
+WATCHER_SETTINGS_FILE = File.expand_path("~/.discourse-theme-watcher")
+
+$api_key = ENV['DISCOURSE_API_KEY']
+$dir = ARGV[0]
+$site = ARGV[1]
+$theme_id = nil
+
+if $site !~ /https?:\/\//i
+  $site = "http://#{$site}"
+end
+
+puts "Watching #{$dir} and uploading changes to #{$site}"
+
+if !$api_key && File.exist?(WATCHER_SETTINGS_FILE)
+  $api_key = File.read(WATCHER_SETTINGS_FILE).strip
+  puts "Using previously stored api key in #{WATCHER_SETTINGS_FILE}"
+end
+
+if !$api_key
+  puts "No API key found in DISCOURSE_API_KEY env var enter your API key: "
+  $api_key = STDIN.gets.strip
+  puts "Would you like me to store this API key in #{WATCHER_SETTINGS_FILE}? (Yes|No)"
+  answer = STDIN.gets.strip
+  if answer =~ /y(es)?/i
+    File.write WATCHER_SETTINGS_FILE, $api_key
+  end
+end
+
+if !File.exist?("#{$dir}/about.json")
+  puts "No about.json file found in #{dir}!"
+  puts
+  usage
+end
+
+def compress_dir(gzip, dir)
+  sgz = Zlib::GzipWriter.new(File.open(gzip, 'wb'))
+  tar = Archive::Tar::Minitar::Output.new(sgz)
+
+  Dir.chdir(dir + "/../") do
+    Find.find(File.basename(dir)) do |x|
+      Find.prune if File.basename(x)[0] == ?.
+      next if File.directory?(x)
+
+      Minitar.pack_file(x, tar)
+    end
+  end
+ensure
+  tar.close
+  sgz.close
+end
+
+def diagnose_errors(json)
+  count = 0
+  json["theme"]["theme_fields"].each do |row|
+    if (error = row["error"]) && error.length > 0
+      if count == 0
+        puts
+      end
+      count += 1
+      puts
+      puts "Error in #{row["target"]} #{row["name"]}: #{row["error"]}"
+      puts
+    end
+  end
+  count
+end
+
+def upload_theme_field(target: , name: , type_id: , value:)
+  args = {
+    theme: {
+      theme_fields: [{
+        name: name,
+        target: target,
+        type_id: type_id,
+        value: value
+      }]
+    }
+  }
+
+  uri = URI.parse($site + "/admin/themes/#{$theme_id}?api_key=#{$api_key}")
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  request = Net::HTTP::Put.new(uri.request_uri, 'Content-Type' => 'application/json')
+  request.body = args.to_json
+
+  http.start do |h|
+    response = h.request(request)
+    if response.code.to_i == 200
+      json = JSON.parse(response.body)
+      if diagnose_errors(json) == 0
+        puts "(done)"
+      end
+    else
+      puts "Error importing field status: #{response.code}"
+    end
+  end
+end
+
+def upload_full_theme(dir, site)
+  filename = "#{Pathname.new(Dir.tmpdir).realpath}/bundle_#{SecureRandom.hex}.tar.gz"
+  compress_dir(filename, dir)
+
+  # new full upload endpoint
+  uri = URI.parse(site + "/admin/themes/import.json?api_key=#{$api_key}")
+  http = Net::HTTP.new(uri.host, uri.port)
+  File.open(filename) do |tgz|
+
+    request = Net::HTTP::Post::Multipart.new(
+      uri.request_uri,
+      "bundle" => UploadIO.new(tgz, "application/tar+gzip", "bundle.tar.gz"),
+    )
+    response = http.request(request)
+    if response.code.to_i == 201
+      json = JSON.parse(response.body)
+      $theme_id = json["theme"]["id"]
+      if diagnose_errors(json) == 0
+        puts "(done)"
+      end
+    else
+      puts "Error importing theme status: #{response.code}"
+    end
+  end
+
+ensure
+  FileUtils.rm_f filename
+end
+
+print "Uploading theme: "
+upload_full_theme($dir, $site)
+
+def resolve_file(path)
+  dir_len = File.expand_path($dir).length
+  name = File.expand_path(path)[dir_len + 1..-1]
+
+  target, file = name.split("/")
+
+  if ["common", "desktop", "mobile"].include?(target)
+    if file = "#{target}.scss"
+      # a CSS file
+      return [target, "scss", 1]
+    end
+  end
+
+  nil
+end
+
+listener = Listen.to($dir) do |modified, added, removed|
+  if modified.length == 1 &&
+      added.length == 0 &&
+      removed.length == 0 &&
+      (target, name, type_id = resolve_file(modified[0]))
+    print "Updating #{target} #{name}: "
+    upload_theme_field(target: target, name: name, value: File.read(modified[0]), type_id: type_id)
+  else
+    print "Full re-sync is required, re-uploading theme: "
+    upload_full_theme($dir, $site)
+  end
+end
+
+listener.start
+sleep

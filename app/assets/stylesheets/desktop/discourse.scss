@@ -1,506 +1,379 @@
+// Desktop
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-@media all
-and (max-width : 570px) {
-  body {
-    min-width: 0;
-  }
-  .wrap,
-  .full-width {
-    min-width: 0;
-  }
+// Base Elements
+body.widget-dragging {
+  cursor: ns-resize;
 }
 
 header {
   margin-bottom: 15px;
 }
 
-body.widget-dragging {
-  cursor: ns-resize;
-}
-
-body {
-
-  .boxed {
-    height: 100%;
-    &.white {
-      background-color: $secondary;
-    }
-  }
-  #main {
-    a.star {
-      color: dark-light-diff($secondary, $primary, 80%, -20%);
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f005";
-      }
-      @include hover {
-        opacity: 0.6;
-      }
-
-      &:active {
-        opacity: 1;
-      }
-    }
-    img.avatar {
-      &.header {
-        width: 45px;
-        height: 45px;
-      }
-      &.medium {
-        width: 32px;
-        height: 32px;
-      }
-      &.small {
-        width: 25px;
-        height: 25px;
-      }
-      &.tiny {
-        width: 20px;
-        height: 20px;
-      }
-    }
-    .user-list {
-      .user {
-        padding-bottom: 5px;
-      }
-    }
-  }
-
-  $grippie-border-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 50%));
-
-  .grippie {
-    cursor: row-resize;
-    padding: 4px 0px;
-  }
-
-  .grippie:before {
-    content: '';
-    display: block;
-    width: 27px;
-    margin: auto;
-    border-top: 3px double $grippie-border-color;
-  }
+// Common classes
+.boxed {
+  height: 100%;
 }
 
 .topic-statuses {
   float: left;
   padding: 0;
+
   .topic-status {
     padding: 0 2px 0 0;
     margin: 0;
+    line-height: $line-height-small;
+
     i {
-        font-size: 1.071em;
-      }
+      font-size: $font-down-1;
+    }
   }
 
-  i.fa-envelope {
+  .d-icon-envelope {
     color: $danger;
   }
 }
 
-body {
-  .form-vertical input, .form-vertical textarea, .form-vertical select,  .form-vertical .input-prepend, .form-vertical .input-append {
-    display: inline-block;
-    margin-bottom: 0;
+.form-vertical {
+  .control-group {
+    margin-bottom: 24px;
   }
+}
 
-  .form-vertical {
-    .control-group {
-      margin-bottom: 24px;
-      &:before {
-        display: table;
-        content: "";
-      }
-      &:after {
-        display: table;
-        content: "";
-        clear: both;
-      }
-    }
-    .control-label {
-      font-weight: bold;
-      font-size: 1.2em;
-      line-height: 2;
-    }
-    .controls {
-      margin-left: 0;
+/***********************/
+/* bootstrap carryover */
+/***********************/
+code,
+pre {
+  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+}
+
+// this removes the unwanted top margin on a paragraph under a heading
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  + p {
+    margin-top: 0;
+  }
+}
+
+form {
+  margin: 0 0 18px;
+}
+
+label,
+input,
+button,
+select,
+textarea {
+  font-size: $font-0;
+  font-weight: normal;
+  line-height: $line-height-medium;
+}
+
+select,
+textarea {
+  display: inline-block;
+  padding: 4px;
+  margin-bottom: 9px;
+  font-size: $font-0;
+  line-height: $line-height-large;
+  color: $primary;
+}
+
+input,
+textarea {
+  width: 210px;
+}
+
+select,
+input[type="file"] {
+  line-height: $line-height-large;
+}
+
+select {
+  width: 220px;
+  &[multiple],
+  &[size] {
+    height: auto;
+  }
+}
+
+input,
+textarea {
+  margin-left: 0;
+}
+
+input {
+  &[type="radio"],
+  &[type="checkbox"] {
+    &[disabled],
+    &[readonly] {
+      background-color: transparent;
     }
   }
 }
 
-/* bootstrap carryover */
-
-
-body {
-
-  input, textarea, select {
-    color: $primary;
-  }
-
-  code, pre {
-    font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  }
-
-  /* page not found styles */
-  h1.page-not-found {
-    line-height: 30px;
-  }
-
-  .page-not-found {
-    margin: 20px 0 40px 0;
-  }
-
-  .page-not-found-search {
-    margin-top: 20px;
-  }
-
-  .popular-topics-title, .recent-topics-title {
-    margin-bottom: 10px;
-  }
-
-  .not-found-topic {
-    > a { margin-right: 10px; line-height: 2;}
-  }
-
-  .page-not-found-topics .span8 {
-    line-height: 1.5em;
-    margin-right: 20px;
-  }
-
-  // this removes the unwanted top margin on a paragraph under a heading
-  h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
-    margin-top:0px;
-  }
-
-
-  form {
-    margin: 0 0 18px;
-  }
-  label, input, button, select, textarea {
-    font-size: 0.929em;
-    font-weight: normal;
-    line-height: 18px;
-  }
-  input, button, select, textarea {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
-  select, textarea {
-    display: inline-block;
-    padding: 4px;
-    margin-bottom: 9px;
-    font-size: 0.929em;
-    line-height: 18px;
-    color: $primary;
-  }
-  input {
-    &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
-      display: inline-block;
-      height: 18px;
-      padding: 4px;
-      margin-bottom: 9px;
-      font-size: 0.929em;
-      line-height: 18px;
-      color: $primary;
-    }
-  }
-  input {
-    width: 210px;
-  }
-  textarea {
-    width: 210px;
-    height: auto;
-    background-color:$secondary;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-  }
-  input {
-    &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
-      background-color: $secondary;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-    }
-  }
-  textarea:focus {
-    border-color: $tertiary;
-    outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
-  }
-  input {
-    &[type="text"]:focus, &[type="password"]:focus, &[type="datetime"]:focus, &[type="datetime-local"]:focus, &[type="date"]:focus, &[type="month"]:focus, &[type="time"]:focus, &[type="week"]:focus, &[type="number"]:focus, &[type="email"]:focus, &[type="url"]:focus, &[type="search"]:focus, &[type="tel"]:focus, &[type="color"]:focus {
-      border-color: $tertiary;
-      outline: 0;
-      box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
-    }
-  }
-
-  select, input[type="file"] {
-    line-height: 28px;
-  }
-
-  select {
-    width: 220px;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    &[multiple], &[size] {
-      height: auto;
-    }
-  }
-
-  .input-xxlarge {
+.input {
+  &-xxlarge {
     width: 530px;
   }
-  input[class*="span"], select[class*="span"], textarea[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-  .input-append {
+
+  &-prepend,
+  &-append {
+    margin-bottom: 5px;
+
     input[class*="span"] {
       display: inline-block;
     }
-  }
-  .input-prepend {
-    input[class*="span"] {
+
+    input,
+    select {
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: middle;
+
+      &:focus {
+        z-index: z("base") + 1;
+      }
+    }
+
+    .add-on {
       display: inline-block;
+      width: auto;
+      height: 18px;
+      min-width: 16px;
+      padding: 4px 5px;
+      font-weight: normal;
+      line-height: $line-height-medium;
+      text-align: center;
+      vertical-align: middle;
+      background-color: $secondary;
+      border: 1px solid $primary-low;
+    }
+
+    .add-on,
+    .btn {
+      margin-left: -1px;
+      border-radius: 0;
+    }
+
+    .active {
+      background-color: $danger-medium;
+      border-color: $danger;
     }
   }
-  input, textarea {
-    margin-left: 0;
-  }
-  input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
-    cursor: not-allowed;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-    border-color: dark-light-diff($primary, $secondary, 90%, -60%);
-  }
-  input {
-    &[type="radio"][disabled], &[type="checkbox"][disabled], &[type="radio"][readonly], &[type="checkbox"][readonly] {
-      background-color: transparent;
+
+  &-prepend {
+    .add-on,
+    .btn {
+      margin-right: -1px;
+
+      &:first-child {
+        border-radius: 3px 0 0 3px;
+      }
     }
   }
-  .controls-dropdown {
-    margin-bottom: 10px;
+
+  &-append {
+    input,
+    select {
+      border-radius: 3px 0 0 3px;
+    }
+
+    .add-on,
+    .btn {
+      &:last-child {
+        border-radius: 0 3px 3px 0;
+      }
+    }
   }
-  .control-group {
-    margin-bottom: 9px;
-    &.warning {
-      > label {
-        color: $danger;
-      }
-      .checkbox, .radio, input, select, textarea {
-        color: $danger;
-        border-color: $danger;
-      }
-      .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
+}
+
+.input-prepend.input-append {
+  input,
+  select {
+    border-radius: 0;
+    background-color: $primary-low;
+    border-color: $primary-low;
+  }
+
+  .add-on,
+  .btn {
+    &:first-child {
+      margin-right: -1px;
+      border-radius: 3px 0 0 3px;
+    }
+  }
+
+  .add-on,
+  .btn {
+    &:last-child {
+      margin-left: -1px;
+      border-radius: 0 3px 3px 0;
+    }
+  }
+}
+
+.controls-dropdown {
+  margin-bottom: 10px;
+}
+
+.control-instructions {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+  font-size: 0.875rem;
+}
+
+.control-group {
+  margin-bottom: 9px;
+
+  &.warning,
+  &.error {
+    > label {
+      color: $danger;
+    }
+
+    .checkbox,
+    .radio,
+    input,
+    select,
+    textarea {
+      color: $danger;
+      border-color: $danger;
+
+      &:focus {
         border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
+        box-shadow: shadow("focus-danger");
       }
-      .input-prepend .add-on, .input-append .add-on {
+    }
+  }
+
+  &.warning {
+    .input-prepend,
+    .input-append {
+      .add-on {
         color: $danger;
         background-color: $danger;
         border-color: $danger;
       }
     }
-    &.error {
-      > label {
+  }
+
+  &.error {
+    .input-prepend,
+    .input-append {
+      .add-on {
         color: $danger;
-      }
-      .checkbox, .radio, input, select, textarea {
-        color: $danger;
-        border-color: $danger;
-      }
-      .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
-      }
-      .input-prepend .add-on, .input-append .add-on {
-        color: $danger;
-        background-color: scale-color($danger, $lightness: 30%);
+        background-color: $danger-medium;
         border-color: scale-color($danger, $lightness: -20%);
       }
     }
-    &.success {
-      > label {
-        color: $success;
-      }
-      .checkbox, .radio, input, select, textarea {
-        color: $success;
-        border-color: $success;
-      }
-      .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: $success;
-        box-shadow: 0 0 6px $success;
-      }
-      .input-prepend .add-on, .input-append .add-on {
-        color: $success;
-        background-color:  scale-color($success, $lightness: 90%);
-        border-color: $success;
-      }
-    }
-  }
-  input:focus:required:invalid, textarea:focus:required:invalid, select:focus:required:invalid {
-    color: $danger;
-    border-color: $danger;
-  }
-  input:focus:required:invalid:focus, textarea:focus:required:invalid:focus, select:focus:required:invalid:focus {
-    border-color: $danger;
-    box-shadow: 0 0 6px $danger;
   }
 
-  .input-prepend, .input-append {
-    margin-bottom: 5px;
-  }
-  .input-prepend input, .input-append input, .input-prepend select, .input-append select {
-    position: relative;
-    margin-bottom: 0;
-    vertical-align: middle;
-    border-radius: 0 3px 3px 0;
-  }
-  .input-prepend input:focus, .input-append input:focus, .input-prepend select:focus, .input-append select:focus {
-    z-index: 2;
-  }
-  .input-prepend .add-on, .input-append .add-on {
-    display: inline-block;
-    width: auto;
-    height: 18px;
-    min-width: 16px;
-    padding: 4px 5px;
-    font-weight: normal;
-    line-height: 18px;
-    text-align: center;
-    vertical-align: middle;
-    background-color: $secondary;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  }
-  .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
-    margin-left: -1px;
-    border-radius: 0;
-  }
-  .input-prepend .active, .input-append .active {
-    background-color: scale-color($danger, $lightness: 30%);
-    border-color: $danger;
-  }
-  .input-prepend {
-    .add-on, .btn {
-      margin-right: -1px;
+  &.success {
+    > label {
+      color: $success;
     }
-    .add-on:first-child, .btn:first-child {
-      border-radius: 3px 0 0 3px;
-    }
-  }
-  .input-append {
-    input, select {
-      border-radius: 3px 0 0 3px;
-    }
-    .add-on:last-child, .btn:last-child {
-      border-radius: 0 3px 3px 0;
-    }
-  }
-  .input-prepend.input-append {
-    input, select {
-      border-radius: 0;
-    }
-    .add-on:first-child, .btn:first-child {
-      margin-right: -1px;
-      border-radius: 3px 0 0 3px;
-    }
-    .add-on:last-child, .btn:last-child {
-      margin-left: -1px;
-      border-radius: 0 3px 3px 0;
-    }
-  }
 
-  .form-horizontal input, .form-horizontal textarea, .form-horizontal select,  .form-horizontal .input-prepend, .form-horizontal .input-append {
-    display: inline-block;
-    margin-bottom: 0;
+    .checkbox,
+    .radio,
+    input,
+    select,
+    textarea {
+      color: $success;
+      border-color: $success;
+
+      &:focus {
+        border-color: $success;
+        box-shadow: shadow("focus");
+      }
+    }
+
+    .input-prepend,
+    .input-append {
+      .add-on {
+        color: $success;
+        background-color: $success-low;
+        border-color: $success;
+      }
+    }
   }
-  .form-horizontal .hide {
+}
+
+.form-horizontal {
+  .hide {
     display: none;
   }
 
-  .form-horizontal {
-    .control-group {
-      margin-bottom: 18px;
-      &:before {
-        display: table;
-        content: "";
-      }
-      &:after {
-        display: table;
-        content: "";
-        clear: both;
-      }
-    }
-    .control-indent {
-      margin-left: 20px;
-      margin-bottom: 10px;
-    }
-    .control-label {
-      float: left;
-      width: 140px;
-      text-align: right;
-      font-weight: bold;
-    }
-    .controls {
-      margin-left: 160px;
-    }
+  input,
+  textarea,
+  select,
+  .input-prepend,
+  .input-append {
+    display: inline-block;
+    margin-bottom: 0;
   }
 
-  .bootbox.modal {
-    .modal-footer {
-      a.btn-primary {
-        color: $secondary;
-      }
+  .control-group {
+    @include clearfix;
+    margin-bottom: 18px;
+  }
+
+  .control-indent {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  .control-label {
+    margin: 6.5px;
+    float: left;
+    width: 140px;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  .controls {
+    margin-left: 160px;
+  }
+}
+
+.bootbox.modal {
+  .modal-footer {
+    a.btn-primary {
+      color: $secondary;
     }
   }
 }
 
 /* bootstrap columns */
-
-.row:before,
-.row:after {
-  display: table;
-  content: "";
-}
-.row:after {
-  clear: both;
+.row {
+  @include clearfix;
 }
 
-.span24 {
-  width: 1236px;
-  float: left;
+.offset {
+  &2 {
+    margin-left: 116px;
+  }
+
+  &1 {
+    margin-left: 64px;
+  }
 }
-.span15 {
-  /* intentionally no width set here, do not add one */
-  margin-left: 12px;
-  float: left;
-}
-.span13 {
-  width: 59.8198%;
-  float: left;
-}
-.span10 {
-  width: 508px;
-  float: left;
-}
-.span8 {
-  width: 404px;
-  float: left;
-}
-.span6 {
-  width: 27.027%;
-  float: left;
-}
-.span4 {
-  width: 196px;
-  margin-right: 12px;
-  float: left;
-}
-.offset2 {
-  margin-left: 116px;
-}
-.offset1 {
-  margin-left: 64px;
+
+// Media Queries
+@media all and (max-width: 570px) {
+  body {
+    min-width: 0;
+  }
+
+  .wrap,
+  .full-width {
+    min-width: 0;
+  }
 }

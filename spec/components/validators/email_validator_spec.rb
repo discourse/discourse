@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe EmailValidator do
 
-  let(:record) { }
-  let(:validator) { described_class.new({attributes: :email}) }
-  subject(:validate) { validator.validate_each(record,:email,record.email) }
+  let(:record) {}
+  let(:validator) { described_class.new(attributes: :email) }
+  subject(:validate) { validator.validate_each(record, :email, record.email) }
 
   def blocks?(email)
     user = Fabricate.build(:user, email: email)
@@ -21,14 +21,26 @@ describe EmailValidator do
     it "adds an error when email matches a blocked email" do
       ScreenedEmail.create!(email: 'sam@sam.com', action_type: ScreenedEmail.actions[:block])
       expect(blocks?('sam@sam.com')).to eq(true)
+      expect(blocks?('SAM@sam.com')).to eq(true)
     end
 
     it "blocks based on email_domains_blacklist" do
       SiteSetting.email_domains_blacklist = "email.com|mail.com|e-mail.com"
       expect(blocks?('sam@email.com')).to eq(true)
+      expect(blocks?('sam@EMAIL.com')).to eq(true)
       expect(blocks?('sam@bob.email.com')).to eq(true)
       expect(blocks?('sam@e-mail.com')).to eq(true)
       expect(blocks?('sam@googlemail.com')).to eq(false)
+    end
+
+    it "blocks based on email_domains_whitelist" do
+      SiteSetting.email_domains_whitelist = "googlemail.com|email.com"
+      expect(blocks?('sam@email.com')).to eq(false)
+      expect(blocks?('sam@EMAIL.com')).to eq(false)
+      expect(blocks?('sam@bob.email.com')).to eq(false)
+      expect(blocks?('sam@e-mail.com')).to eq(true)
+      expect(blocks?('sam@googlemail.com')).to eq(false)
+      expect(blocks?('sam@email.computers.are.evil.com')).to eq(true)
     end
   end
 

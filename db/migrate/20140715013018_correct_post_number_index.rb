@@ -1,4 +1,4 @@
-class CorrectPostNumberIndex < ActiveRecord::Migration
+class CorrectPostNumberIndex < ActiveRecord::Migration[4.2]
   def change
 
     begin

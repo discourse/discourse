@@ -1,16 +1,32 @@
 desc "Runs the qunit test suite"
 
-task "qunit:test", [:timeout] => :environment do |_, args|
-
+task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
   require "rack"
   require "socket"
+  require 'rbconfig'
 
-  unless %x{which phantomjs > /dev/null 2>&1}
-    abort "PhantomJS is not installed. Download from http://phantomjs.org"
+  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
+    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  else
+    google_chrome_cli = "google-chrome"
   end
 
+  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
+    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
+  end
+
+  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+    abort "Chrome 59 or higher is required to run tests in headless mode."
+  end
+
+  unless system("command -v yarn >/dev/null;")
+    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  end
+
+  system("yarn install --dev")
+
   # ensure we have this port available
-  def port_available? port
+  def port_available?(port)
     server = TCPServer.open port
     server.close
     true
@@ -26,41 +42,51 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
   unless pid = fork
     Discourse.after_fork
-    Rack::Server.start(:config => "config.ru",
-                       :AccessLog => [],
-                       :Port => port)
+    Rack::Server.start(config: "config.ru",
+                       AccessLog: [],
+                       Port: port)
     exit
   end
 
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
+    qunit_path = args[:qunit_path] || "/qunit"
+    cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
+    options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed) }
 
-    options = {}
-
-    %w{module filter}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
     end
 
     if args[:timeout].present?
       cmd += " #{args[:timeout]}"
     end
 
-    # wait for server to respond, will exception out on failure
-    tries = 0
-    begin
-      sh(cmd)
-    rescue
-      exit if ENV['RETRY'].present? && ENV['RETRY'] == 'false'
-      sleep 2
-      tries += 1
-      retry unless tries == 3
+    @now = Time.now
+    def elapsed
+      Time.now - @now
     end
+
+    # wait for server to accept connections
+    require 'net/http'
+    uri = URI("http://localhost:#{port}/assets/test_helper.js")
+    puts "Warming up Rails server"
+    begin
+      Net::HTTP.get(uri)
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout
+      sleep 1
+      retry unless elapsed() > 60
+      puts "Timed out. Can no connect to forked server!"
+      exit 1
+    end
+    puts "Rails server is warmed up"
+
+    sh(cmd)
 
     # A bit of a hack until we can figure this out on Travis
     tries = 0

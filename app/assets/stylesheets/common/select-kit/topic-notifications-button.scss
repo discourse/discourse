@@ -1,0 +1,38 @@
+#topic-footer-buttons {
+  .topic-notifications-button {
+    min-width: auto;
+    margin: 10px 0 15px 0;
+
+    .btn {
+      margin: 0;
+    }
+
+    .reason {
+      line-height: $line-height-medium;
+      margin: 0 0 0 10px;
+    }
+  }
+}
+
+.topic-notifications-button .topic-notifications-options {
+  min-width: auto;
+}
+
+.topic-notifications-button {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0;
+
+  .topic-notifications-options {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+  }
+}

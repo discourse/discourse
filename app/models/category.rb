@@ -1,11 +1,21 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 
 class Category < ActiveRecord::Base
-
+  include Searchable
   include Positionable
   include HasCustomFields
   include CategoryHashtag
   include AnonCacheInvalidator
+
+  REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
+  REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
+  NUM_AUTO_BUMP_DAILY = 'num_auto_bump_daily'
+
+  register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
+  register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
+  register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -23,16 +33,13 @@ class Category < ActiveRecord::Base
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
-  has_many :category_featured_users
-  has_many :featured_users, through: :category_featured_users, source: :user
-
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
   has_and_belongs_to_many :web_hooks
 
   validates :user_id, presence: true
-  validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
@@ -57,13 +64,17 @@ class Category < ActiveRecord::Base
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
+  after_destroy :remove_site_settings
 
   after_create :delete_category_permalink
 
-  after_update :rename_category_definition, if: :name_changed?
-  after_update :create_category_permalink, if: :slug_changed?
+  after_update :rename_category_definition, if: :saved_change_to_name?
+  after_update :create_category_permalink, if: :saved_change_to_slug?
 
-  has_one :category_search_data
+  after_commit :trigger_category_created_event, on: :create
+  after_commit :trigger_category_updated_event, on: :update
+  after_commit :trigger_category_destroyed_event, on: :destroy
+
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
@@ -72,11 +83,11 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
-
   scope :latest, -> { order('topic_count DESC') }
 
   scope :secured, -> (guardian = nil) {
     ids = guardian.secure_category_ids if guardian
+
     if ids.present?
       where("NOT categories.read_restricted OR categories.id IN (:cats)", cats: ids).references(:categories)
     else
@@ -109,10 +120,6 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
-  def self.last_updated_at
-    order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
-  end
-
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian.try(:is_admin?)
       all
@@ -141,19 +148,19 @@ class Category < ActiveRecord::Base
 
   def self.update_stats
     topics_with_post_count = Topic
-                              .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
-                              .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
-                              .group("topics.category_id")
-                              .visible.to_sql
+      .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+      .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
+      .group("topics.category_id")
+      .visible.to_sql
 
-    Category.exec_sql <<-SQL
-    UPDATE categories c
-       SET topic_count = x.topic_count,
-           post_count = x.post_count
-      FROM (#{topics_with_post_count}) x
-     WHERE x.category_id = c.id
-       AND (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
-SQL
+    DB.exec <<~SQL
+      UPDATE categories c
+         SET topic_count = x.topic_count,
+             post_count = x.post_count
+        FROM (#{topics_with_post_count}) x
+       WHERE x.category_id = c.id
+         AND (c.topic_count <> x.topic_count OR c.post_count <> x.post_count)
+    SQL
 
     # Yes, there are a lot of queries happening below.
     # Performing a lot of queries is actually faster than using one big update
@@ -183,13 +190,12 @@ SQL
     end
   end
 
-
   def visible_posts
     query = Post.joins(:topic)
-                .where(['topics.category_id = ?', self.id])
-                .where('topics.visible = true')
-                .where('posts.deleted_at IS NULL')
-                .where('posts.user_deleted = false')
+      .where(['topics.category_id = ?', self.id])
+      .where('topics.visible = true')
+      .where('posts.deleted_at IS NULL')
+      .where('posts.user_deleted = false')
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
@@ -202,10 +208,10 @@ SQL
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.ignore_category_auto_close = true
-    t.set_or_create_timer(TopicTimer.types[:close], nil)
+    t.delete_topic_timer(TopicTimer.types[:close])
     t.save!(validate: false)
     update_column(:topic_id, t.id)
-    t.posts.create(raw: post_template, user: user)
+    t.posts.create(raw: description || post_template, user: user)
   end
 
   def topic_url
@@ -257,11 +263,20 @@ SQL
 
   def publish_category
     group_ids = self.groups.pluck(:id) if self.read_restricted
-    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new([self]).as_json}, group_ids: group_ids)
+    MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+  end
+
+  def remove_site_settings
+    SiteSetting.all_settings.each do |s|
+      if s[:type] == 'category' && s[:value].to_i == self.id
+        SiteSetting.send("#{s[:setting]}=", '')
+      end
+    end
+
   end
 
   def publish_category_deletion
-    MessageBus.publish('/categories', {deleted_categories: [self.id]})
+    MessageBus.publish('/categories', deleted_categories: [self.id])
   end
 
   def parent_category_validator
@@ -306,7 +321,9 @@ SQL
   def permissions_params
     hash = {}
     category_groups.includes(:group).each do |category_group|
-      hash[category_group.group_name] = category_group.permission_type
+      if category_group.group.present?
+        hash[category_group.group_name] = category_group.permission_type
+      end
     end
     hash
   end
@@ -321,8 +338,115 @@ SQL
     end
   end
 
+  def self.resolve_permissions(permissions)
+    read_restricted = true
+
+    everyone = Group::AUTO_GROUPS[:everyone]
+    full = CategoryGroup.permission_types[:full]
+
+    mapped = permissions.map do |group, permission|
+      group_id = Group.group_id_from_param(group)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
+
+      [group_id, permission]
+    end
+
+    mapped.each do |group, permission|
+      if group == everyone && permission == full
+        return [false, []]
+      end
+
+      read_restricted = false if group == everyone
+    end
+
+    [read_restricted, mapped]
+  end
+
+  def require_topic_approval?
+    custom_fields[REQUIRE_TOPIC_APPROVAL]
+  end
+
+  def require_reply_approval?
+    custom_fields[REQUIRE_REPLY_APPROVAL]
+  end
+
+  def num_auto_bump_daily
+    custom_fields[NUM_AUTO_BUMP_DAILY]
+  end
+
+  def num_auto_bump_daily=(v)
+    custom_fields[NUM_AUTO_BUMP_DAILY] = v
+  end
+
+  def auto_bump_limiter
+    return nil if num_auto_bump_daily.to_i == 0
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86400 / num_auto_bump_daily.to_i)
+  end
+
+  def clear_auto_bump_cache!
+    auto_bump_limiter&.clear!
+  end
+
+  def self.auto_bump_topic!
+    bumped = false
+
+    auto_bumps = CategoryCustomField
+      .where(name: Category::NUM_AUTO_BUMP_DAILY)
+      .where('NULLIF(value, \'\')::int > 0')
+      .pluck(:category_id)
+
+    if (auto_bumps.length > 0)
+      auto_bumps.shuffle.each do |category_id|
+        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
+        break if bumped
+      end
+    end
+
+    bumped
+  end
+
+  # will automatically bump a single topic
+  # if number of automatically bumped topics is smaller than threshold
+  def auto_bump_topic!
+    return false if num_auto_bump_daily.to_i == 0
+
+    limiter = auto_bump_limiter
+    return false if !limiter.can_perform?
+
+    filters = []
+    DiscourseEvent.trigger(:filter_auto_bump_topics, self, filters)
+
+    relation = Topic
+
+    if filters.length > 0
+      filters.each do |filter|
+        relation = filter.call(relation)
+      end
+    end
+
+    topic = relation
+      .visible
+      .listable_topics
+      .where(category_id: self.id)
+      .where('id <> ?', self.topic_id)
+      .where('bumped_at < ?', 1.day.ago)
+      .where('pinned_at IS NULL AND NOT closed AND NOT archived')
+      .order('bumped_at ASC')
+      .limit(1)
+      .first
+
+    if topic
+      topic.add_small_action(Discourse.system_user, "autobumped", nil, bump: true)
+      limiter.performed!
+      true
+    else
+      false
+    end
+
+  end
+
   def allowed_tags=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, {unlimited: true})
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
 
   def allowed_tag_groups=(group_names)
@@ -360,50 +484,23 @@ SQL
 
   def update_latest
     latest_post_id = Post
-                        .order("posts.created_at desc")
-                        .where("NOT hidden")
-                        .joins("join topics on topics.id = topic_id")
-                        .where("topics.category_id = :id", id: self.id)
-                        .limit(1)
-                        .pluck("posts.id")
-                        .first
+      .order("posts.created_at desc")
+      .where("NOT hidden")
+      .joins("join topics on topics.id = topic_id")
+      .where("topics.category_id = :id", id: self.id)
+      .limit(1)
+      .pluck("posts.id")
+      .first
 
     latest_topic_id = Topic
-                        .order("topics.created_at desc")
-                        .where("visible")
-                        .where("topics.category_id = :id", id: self.id)
-                        .limit(1)
-                        .pluck("topics.id")
-                        .first
+      .order("topics.created_at desc")
+      .where("visible")
+      .where("topics.category_id = :id", id: self.id)
+      .limit(1)
+      .pluck("topics.id")
+      .first
 
     self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
-  end
-
-  def self.resolve_permissions(permissions)
-    read_restricted = true
-
-    everyone = Group::AUTO_GROUPS[:everyone]
-    full = CategoryGroup.permission_types[:full]
-
-    mapped = permissions.map do |group,permission|
-      group = group.id if group.is_a?(Group)
-
-      # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless group.is_a?(Integer)
-      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
-
-      [group, permission]
-    end
-
-    mapped.each do |group, permission|
-      if group == everyone && permission == full
-        return [false, []]
-      end
-
-      read_restricted = false if group == everyone
-    end
-
-    [read_restricted, mapped]
   end
 
   def self.query_parent_category(parent_slug)
@@ -412,8 +509,8 @@ SQL
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
   def self.find_by_email(email)
@@ -442,12 +539,10 @@ SQL
   def url
     url = @@url_cache[self.id]
     unless url
-      url = "#{Discourse.base_uri}/c"
+      url = +"#{Discourse.base_uri}/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
-      url.freeze
-
-      @@url_cache[self.id] = url
+      @@url_cache[self.id] = -url
     end
 
     url
@@ -460,7 +555,7 @@ SQL
   # If the name changes, try and update the category definition topic too if it's
   # an exact match
   def rename_category_definition
-    old_name = changed_attributes["name"]
+    old_name = saved_changes.transform_values(&:first)["name"]
     return unless topic.present?
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
@@ -468,7 +563,7 @@ SQL
   end
 
   def create_category_permalink
-    old_slug = changed_attributes["slug"]
+    old_slug = saved_changes.transform_values(&:first)["slug"]
     if self.parent_category
       url = "c/#{self.parent_category.slug}/#{old_slug}"
     else
@@ -499,7 +594,7 @@ SQL
     SearchIndexer.index(self)
   end
 
-  def self.find_by_slug(category_slug, parent_category_slug=nil)
+  def self.find_by_slug(category_slug, parent_category_slug = nil)
     if parent_category_slug
       parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).pluck(:id).first
       self.where(slug: category_slug, parent_category_id: parent_category_id).first
@@ -511,61 +606,75 @@ SQL
   def subcategory_list_includes_topics?
     subcategory_list_style.end_with?("with_featured_topics")
   end
+
+  %i{
+    category_created
+    category_updated
+    category_destroyed
+  }.each do |event|
+    define_method("trigger_#{event}_event") do
+      DiscourseEvent.trigger(event, self)
+      true
+    end
+  end
 end
 
 # == Schema Information
 #
 # Table name: categories
 #
-#  id                            :integer          not null, primary key
-#  name                          :string(50)       not null
-#  color                         :string(6)        default("AB9364"), not null
-#  topic_id                      :integer
-#  topic_count                   :integer          default(0), not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  user_id                       :integer          not null
-#  topics_year                   :integer          default(0)
-#  topics_month                  :integer          default(0)
-#  topics_week                   :integer          default(0)
-#  slug                          :string           not null
-#  description                   :text
-#  text_color                    :string(6)        default("FFFFFF"), not null
-#  read_restricted               :boolean          default(FALSE), not null
-#  auto_close_hours              :float
-#  post_count                    :integer          default(0), not null
-#  latest_post_id                :integer
-#  latest_topic_id               :integer
-#  position                      :integer
-#  parent_category_id            :integer
-#  posts_year                    :integer          default(0)
-#  posts_month                   :integer          default(0)
-#  posts_week                    :integer          default(0)
-#  email_in                      :string
-#  email_in_allow_strangers      :boolean          default(FALSE)
-#  topics_day                    :integer          default(0)
-#  posts_day                     :integer          default(0)
-#  allow_badges                  :boolean          default(TRUE), not null
-#  name_lower                    :string(50)       not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#  topic_template                :text
-#  suppress_from_homepage        :boolean          default(FALSE)
-#  contains_messages             :boolean
-#  sort_order                    :string
-#  sort_ascending                :boolean
-#  uploaded_logo_id              :integer
-#  uploaded_background_id        :integer
-#  topic_featured_link_allowed   :boolean          default(TRUE)
-#  all_topics_wiki               :boolean          default(FALSE), not null
-#  show_subcategory_list         :boolean          default(FALSE)
-#  num_featured_topics           :integer          default(3)
-#  default_view                  :string(50)
-#  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
-#  default_top_period            :string(20)       default("all")
+#  id                                :integer          not null, primary key
+#  name                              :string(50)       not null
+#  color                             :string(6)        default("0088CC"), not null
+#  topic_id                          :integer
+#  topic_count                       :integer          default(0), not null
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  user_id                           :integer          not null
+#  topics_year                       :integer          default(0)
+#  topics_month                      :integer          default(0)
+#  topics_week                       :integer          default(0)
+#  slug                              :string           not null
+#  description                       :text
+#  text_color                        :string(6)        default("FFFFFF"), not null
+#  read_restricted                   :boolean          default(FALSE), not null
+#  auto_close_hours                  :float
+#  post_count                        :integer          default(0), not null
+#  latest_post_id                    :integer
+#  latest_topic_id                   :integer
+#  position                          :integer
+#  parent_category_id                :integer
+#  posts_year                        :integer          default(0)
+#  posts_month                       :integer          default(0)
+#  posts_week                        :integer          default(0)
+#  email_in                          :string
+#  email_in_allow_strangers          :boolean          default(FALSE)
+#  topics_day                        :integer          default(0)
+#  posts_day                         :integer          default(0)
+#  allow_badges                      :boolean          default(TRUE), not null
+#  name_lower                        :string(50)       not null
+#  auto_close_based_on_last_post     :boolean          default(FALSE)
+#  topic_template                    :text
+#  contains_messages                 :boolean
+#  sort_order                        :string
+#  sort_ascending                    :boolean
+#  uploaded_logo_id                  :integer
+#  uploaded_background_id            :integer
+#  topic_featured_link_allowed       :boolean          default(TRUE)
+#  all_topics_wiki                   :boolean          default(FALSE), not null
+#  show_subcategory_list             :boolean          default(FALSE)
+#  num_featured_topics               :integer          default(3)
+#  default_view                      :string(50)
+#  subcategory_list_style            :string(50)       default("rows_with_featured_topics")
+#  default_top_period                :string(20)       default("all")
+#  mailinglist_mirror                :boolean          default(FALSE), not null
+#  suppress_from_latest              :boolean          default(FALSE)
+#  minimum_required_tags             :integer          default(0)
+#  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #
 # Indexes
 #
 #  index_categories_on_email_in     (email_in) UNIQUE
 #  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  (name) UNIQUE
+#  unique_index_categories_on_name  (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #

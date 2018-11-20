@@ -1,5 +1,5 @@
 class PrimaryGroupLookup
-  def initialize(user_ids=[])
+  def initialize(user_ids = [])
     @user_ids = user_ids.tap(&:compact!).tap(&:uniq!).tap(&:flatten!)
   end
 
@@ -20,13 +20,15 @@ class PrimaryGroupLookup
 
   def user_lookup_hash
     users_with_primary_group = User.where(id: @user_ids)
-        .where.not(primary_group_id: nil)
-        .select(:id, :primary_group_id)
+      .where.not(primary_group_id: nil)
+      .select(:id, :primary_group_id)
 
     group_lookup = {}
-    group_ids = users_with_primary_group.map(&:primary_group_id).compact
+    group_ids = users_with_primary_group.map(&:primary_group_id)
+    group_ids.uniq!
+
     Group.where(id: group_ids).select(self.class.lookup_columns)
-         .each { |g| group_lookup[g.id] = g }
+      .each { |g| group_lookup[g.id] = g }
 
     hash = {}
     users_with_primary_group.each do |u|

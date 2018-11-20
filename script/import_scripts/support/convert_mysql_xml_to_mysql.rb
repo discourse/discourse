@@ -11,7 +11,7 @@ class Saxy < Ox::Sax
   end
 
   def start_element(name)
-    @stack << {elem: name}
+    @stack << { elem: name }
   end
 
   def end_element(name)
@@ -39,7 +39,6 @@ class Convert < Saxy
     @skip_data = Set.new(opts[:skip_data])
     super()
   end
-
 
   def end_element(name)
     old = @stack.pop
@@ -71,10 +70,9 @@ class Convert < Saxy
 
     row = data[:row_data]
     col_names = row.keys.join(",")
-    vals = row.values.map{|v| "'#{v.gsub("'", "''").gsub('\\','\\\\\\')}'"}.join(",")
+    vals = row.values.map { |v| "'#{v.gsub("'", "''").gsub('\\', '\\\\\\')}'" }.join(",")
     puts "INSERT INTO #{name} (#{col_names}) VALUES (#{vals});"
   end
 end
 
 Ox.sax_parse(Convert.new(skip_data: ['metrics2', 'user_log']), File.open(ARGV[0]))
-

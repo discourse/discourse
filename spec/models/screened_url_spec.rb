@@ -5,7 +5,7 @@ describe ScreenedUrl do
   let(:url)    { 'http://shopppping.com/bad/drugz' }
   let(:domain) { 'shopppping.com' }
 
-  let(:valid_params) { {url: url, domain: domain} }
+  let(:valid_params) { { url: url, domain: domain } }
 
   describe "new record" do
     it "sets a default action_type" do

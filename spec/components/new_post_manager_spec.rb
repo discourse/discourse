@@ -115,6 +115,18 @@ describe NewPostManager do
       end
     end
 
+    context 'with staged moderation setting enabled' do
+      before do
+        SiteSetting.approve_unless_staged = true
+        topic.user.staged = true
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+
     context 'with a high trust level setting for new topics but post responds to existing topic' do
       before do
         SiteSetting.approve_new_topics_unless_trust_level = 4
@@ -151,16 +163,16 @@ describe NewPostManager do
     let(:default_handler) { NewPostManager.method(:default_handler) }
 
     it "adds in order by default" do
-      handler = ->{ nil }
+      handler = -> { nil }
 
       NewPostManager.add_handler(&handler)
       expect(NewPostManager.handlers).to eq([default_handler, handler])
     end
 
     it "can be added in high priority" do
-      a = ->{ nil }
-      b = ->{ nil }
-      c = ->{ nil }
+      a = -> { nil }
+      b = -> { nil }
+      c = -> { nil }
 
       NewPostManager.add_handler(100, &a)
       NewPostManager.add_handler(50, &b)
@@ -241,7 +253,6 @@ describe NewPostManager do
 
   end
 
-
   context "user needs approval?" do
 
     let :user do
@@ -251,25 +262,70 @@ describe NewPostManager do
       user
     end
 
-
-
-    it "handles user_needs_approval? correctly" do
+    it "handles post_needs_approval? correctly" do
       u = user
-      default = NewPostManager.new(u,{})
-      expect(NewPostManager.user_needs_approval?(default)).to eq(false)
+      default = NewPostManager.new(u, {})
+      expect(NewPostManager.post_needs_approval?(default)).to eq(false)
 
       with_check = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.user_needs_approval?(with_check)).to eq(true)
+      expect(NewPostManager.post_needs_approval?(with_check)).to eq(true)
 
       u.user_stat.post_count = 1
       with_check_and_post = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.user_needs_approval?(with_check_and_post)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(false)
 
       u.user_stat.post_count = 0
       u.trust_level = 1
       with_check_tl1 = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.user_needs_approval?(with_check_tl1)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_tl1)).to eq(false)
     end
   end
 
+  context 'when posting in the category requires approval' do
+    let(:user) { Fabricate(:user) }
+    let(:category) { Fabricate(:category) }
+
+    context 'when new topics require approval' do
+      before do
+        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.save
+      end
+
+      it 'enqueues new topics' do
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new topic',
+          title: "Let's start a new topic!",
+          category: category.id
+        )
+
+        expect(manager.perform.action).to eq(:enqueued)
+      end
+    end
+
+    context 'when new posts require approval' do
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        category.save
+      end
+
+      it 'enqueues new posts' do
+        manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
+        expect(manager.perform.action).to eq(:enqueued)
+      end
+
+      it "doesn't blow up with invalid topic_id" do
+        expect do
+          manager = NewPostManager.new(
+            user,
+            raw: 'this is a new topic',
+            topic_id: 97546
+          )
+          expect(manager.perform.action).to eq(:create_post)
+        end.not_to raise_error
+      end
+    end
+  end
 end

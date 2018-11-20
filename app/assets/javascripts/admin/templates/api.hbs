@@ -1,10 +1,8 @@
-<div class="api">
-  {{#admin-nav}}
-    {{nav-item route='adminApiKeys' label='admin.api.title'}}
-    {{nav-item route='adminWebHooks' label='admin.web_hooks.title'}}
-  {{/admin-nav}}
+{{#admin-nav}}
+  {{nav-item route='adminApiKeys' label='admin.api.title'}}
+  {{nav-item route='adminWebHooks' label='admin.web_hooks.title'}}
+{{/admin-nav}}
 
-  <div class="admin-container">
-    {{outlet}}
-  </div>
+<div class="admin-container">
+  {{outlet}}
 </div>

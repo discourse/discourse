@@ -60,6 +60,28 @@ describe Search do
 
   end
 
+  it 'strips zero-width characters from search terms' do
+    term = "\u0063\u0061\u0070\u0079\u200b\u200c\u200d\ufeff\u0062\u0061\u0072\u0061".encode("UTF-8")
+
+    expect(term == 'capybara').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('capybara')
+    expect(search.clean_term).to eq('capybara')
+  end
+
+  it 'replaces curly quotes to regular quotes in search terms' do
+    term = '“discourse”'
+
+    expect(term == '"discourse"').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('"discourse"')
+    expect(search.clean_term).to eq('"discourse"')
+  end
+
   it 'does not search when the search term is too small' do
     search = Search.new('evil', min_search_term_length: 5)
     search.execute
@@ -110,7 +132,7 @@ describe Search do
     end
 
     context 'hiding user profiles' do
-      before { SiteSetting.stubs(:hide_user_profiles_from_public).returns(true) }
+      before { SiteSetting.hide_user_profiles_from_public = true }
 
       it 'returns no result for anon' do
         expect(result.users.length).to eq(0)
@@ -155,12 +177,10 @@ describe Search do
     let(:reply) { Fabricate(:post, topic: topic,
                                    raw: 'hello from mars, we just landed') }
 
-
-
     it 'searches correctly' do
 
       expect do
-       Search.execute('mars', type_filter: 'private_messages')
+        Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
 
       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
@@ -171,7 +191,6 @@ describe Search do
                               guardian: Guardian.new(reply.user))
 
       expect(results.posts.length).to eq(1)
-
 
       results = Search.execute('mars',
                               search_context: topic,
@@ -188,7 +207,6 @@ describe Search do
 
       Fabricate(:topic, category_id: nil, archetype: 'private_message')
       Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
-
 
       # admin can search everything with correct context
       results = Search.execute('mars',
@@ -224,8 +242,7 @@ describe Search do
 
   context 'topics' do
     let(:post) { Fabricate(:post) }
-    let(:topic) { post.topic}
-
+    let(:topic) { post.topic }
 
     context 'search within topic' do
 
@@ -234,7 +251,6 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
-
         topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
@@ -243,8 +259,7 @@ describe Search do
 
         post1 = new_post('this is the other post I am posting', topic)
         post2 = new_post('this is my first post I am posting', topic)
-        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds
-                         with more stuff bla bla', topic)
+        post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla', topic)
         post4 = new_post('this is my fourth post I am posting', topic)
 
         # update posts_count
@@ -262,6 +277,13 @@ describe Search do
 
         # phrase search works as expected
         results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
+      end
+
+      it "works for unlisted topics" do
+        topic.update_attributes(visible: false)
+        _post = new_post('discourse is awesome', topic)
+        results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
       end
     end
@@ -290,6 +312,16 @@ describe Search do
       end
     end
 
+    context 'searching for quoted title' do
+      it "can find quoted title" do
+        create_post(raw: "this is the raw body", title: "I am a title yeah")
+        result = Search.execute('"a title yeah"')
+
+        expect(result.posts.length).to eq(1)
+      end
+
+    end
+
     context "search for a topic by id" do
       let(:result) { Search.execute(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1) }
 
@@ -300,7 +332,7 @@ describe Search do
     end
 
     context "search for a topic by url" do
-      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')}
+      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic') }
 
       it 'returns the topic' do
         expect(result.posts.length).to eq(1)
@@ -320,7 +352,7 @@ describe Search do
         topic.category_id = category.id
         topic.save
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         expect(result(nil).posts).not_to be_present
@@ -334,11 +366,11 @@ describe Search do
 
   context 'cyrillic topic' do
     let!(:cyrillic_topic) { Fabricate(:topic) do
-                                                user
+                              user
                                                 title { sequence(:title) { |i| "Тестовая запись #{i}" } }
-                                              end
+                            end
     }
-    let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
+    let!(:post) { Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user) }
     let(:result) { Search.execute('запись') }
 
     it 'finds something when given cyrillic query' do
@@ -369,12 +401,75 @@ describe Search do
 
   end
 
+  context 'tags' do
+    def search
+      Search.execute(tag.name)
+    end
+
+    let!(:tag) { Fabricate(:tag) }
+    let(:tag_group) { Fabricate(:tag_group) }
+    let(:category) { Fabricate(:category) }
+
+    context 'post searching' do
+      it 'can find posts with tags' do
+        SiteSetting.tagging_enabled = true
+
+        post = Fabricate(:post, raw: 'I am special post')
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name])
+        post.topic.save
+
+        # we got to make this index (it is deferred)
+        Jobs::ReindexSearch.new.rebuild_problem_posts
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(1)
+
+        SiteSetting.tagging_enabled = false
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(0)
+      end
+    end
+
+    context 'tagging is disabled' do
+      before { SiteSetting.tagging_enabled = false }
+
+      it 'does not include tags' do
+        expect(search.tags).to_not be_present
+      end
+    end
+
+    context 'tagging is enabled' do
+      before { SiteSetting.tagging_enabled = true }
+
+      it 'returns the tag in the result' do
+        expect(search.tags).to eq([tag])
+      end
+
+      it 'shows staff tags' do
+        create_staff_tags(["#{tag.name}9"])
+
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+        expect(search.tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+      end
+
+      it 'includes category-restricted tags' do
+        category_tag = Fabricate(:tag, name: "#{tag.name}9")
+        tag_group.tags = [category_tag]
+        category.set_permissions(admins: :full)
+        category.allowed_tag_groups = [tag_group.name]
+        category.save!
+
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, category_tag)
+        expect(search.tags).to contain_exactly(tag, category_tag)
+      end
+    end
+  end
 
   context 'type_filter' do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
     let!(:category) { Fabricate(:category, name: 'amazing category', user: user) }
-
 
     context 'user filter' do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
@@ -424,22 +519,43 @@ describe Search do
       subcategory = Fabricate(:category, parent_category_id: category.id)
       sub_topic = Fabricate(:topic, category: subcategory)
 
-      post = Fabricate(:post, topic: topic, user: topic.user )
-      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user )
-      sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user )
+      post = Fabricate(:post, topic: topic, user: topic.user)
+      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user)
+      sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user)
 
       search = Search.execute('hello', search_context: category)
-      expect(search.posts.map(&:id).sort).to eq([post.id,sub_post.id].sort)
+      expect(search.posts.map(&:id).sort).to eq([post.id, sub_post.id].sort)
       expect(search.posts.length).to eq(2)
     end
 
   end
 
   describe 'Chinese search' do
-    it 'splits English / Chinese' do
+    let(:sentence) { 'Discourse中国的基础设施网络正在组装' }
+    let(:sentence_t) { 'Discourse太平山森林遊樂區' }
+
+    it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
-      data = Search.prepare_data('Discourse社区指南').split(' ')
-      expect(data).to eq(['Discourse', '社区','指南'])
+      data = Search.prepare_data(sentence).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_CN'
+      data = Search.prepare_data(sentence, :index).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits English / Traditional Chinese and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t).split(' ')
+      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t, :index).split(' ')
+      expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 
     it 'finds chinese topic based on title' do
@@ -628,6 +744,17 @@ describe Search do
 
     end
 
+    it 'can find posts with images' do
+      post_uploaded = Fabricate(:post_with_uploaded_image)
+      post_with_image_urls = Fabricate(:post_with_image_urls)
+      Fabricate(:post)
+
+      CookedPostProcessor.new(post_uploaded).update_post_image
+      CookedPostProcessor.new(post_with_image_urls).update_post_image
+
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
+    end
+
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
       post1 = Fabricate(:post, topic: topic1)
@@ -667,6 +794,12 @@ describe Search do
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
     end
 
+    it 'can tokanize website names correctly' do
+      post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
+      expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
+    end
+
     it 'supports category slug and tags' do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
@@ -689,19 +822,96 @@ describe Search do
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
 
       # tags
-      topic.tags = [Fabricate(:tag, name: 'alpha')]
+      topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет')]
       expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #привет').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
-    it "can find with tag" do
-      topic1 = Fabricate(:topic, title: 'Could not, would not, on a boat')
-      topic1.tags = [Fabricate(:tag, name: 'eggs'), Fabricate(:tag, name: 'ham')]
-      Fabricate(:post, topic: topic1)
-      post2 = Fabricate(:post, topic: topic1, raw: "It probably doesn't help that they're green...")
+    it 'correctly handles #symbol when no tag or category match' do
+      Fabricate(:post, raw: 'testing #1 #9998')
+      results = Search.new('testing #1').execute
+      expect(results.posts.length).to eq(1)
 
-      expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])
-      expect(Search.execute('green tags:plants').posts.size).to eq(0)
+      results = Search.new('#9998').execute
+      expect(results.posts.length).to eq(1)
+
+      results = Search.new('#777').execute
+      expect(results.posts.length).to eq(0)
+
+      results = Search.new('xxx #:').execute
+      expect(results.posts.length).to eq(0)
+    end
+
+    context 'tags' do
+      let(:tag1) { Fabricate(:tag, name: 'lunch') }
+      let(:tag2) { Fabricate(:tag, name: 'eggs') }
+      let(:tag3) { Fabricate(:tag, name: 'sandwiches') }
+      let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
+      let(:topic2) { Fabricate(:topic, tags: [tag2]) }
+      let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      let(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
+      let(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
+      let!(:post1) { Fabricate(:post, topic: topic1) }
+      let!(:post2) { Fabricate(:post, topic: topic2) }
+      let!(:post3) { Fabricate(:post, topic: topic3) }
+      let!(:post4) { Fabricate(:post, topic: topic4) }
+      let!(:post5) { Fabricate(:post, topic: topic5) }
+
+      it 'can find posts with tag' do
+        post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
+
+        expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post4.id])
+        expect(Search.execute('tags:plants').posts.size).to eq(0)
+      end
+
+      it 'can find posts with non-latin tag' do
+        topic = Fabricate(:topic)
+        topic.tags = [Fabricate(:tag, name: 'さようなら')]
+        post = Fabricate(:post, raw: 'Testing post', topic: topic)
+
+        expect(Search.execute('tags:さようなら').posts.map(&:id)).to eq([post.id])
+      end
+
+      it 'can find posts with any tag from multiple tags' do
+        Fabricate(:post)
+
+        expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id, post4.id, post5.id].sort)
+      end
+
+      it 'can find posts which contains all provided tags' do
+        expect(Search.execute('tags:lunch+eggs+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
+        expect(Search.execute('tags:eggs+lunch+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
+      end
+
+      it 'can find posts which contains provided tags and does not contain selected ones' do
+        expect(Search.execute('tags:eggs -tags:lunch').posts)
+          .to contain_exactly(post1, post2, post5)
+
+        expect(Search.execute('tags:eggs -tags:lunch+sandwiches').posts)
+          .to contain_exactly(post1, post2, post3, post5)
+
+        expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts)
+          .to contain_exactly(post1, post2)
+      end
+    end
+
+    it "can find posts which contains filetypes" do
+      post1 = Fabricate(:post,
+                        raw: "http://example.com/image.png")
+      post2 = Fabricate(:post,
+                         raw: "Discourse logo\n"\
+                              "http://example.com/logo.png\n"\
+                              "http://example.com/vector_image.svg")
+      post_with_upload = Fabricate(:post, uploads: [Fabricate(:upload)])
+      Fabricate(:post)
+
+      TopicLink.extract_from(post1)
+      TopicLink.extract_from(post2)
+
+      expect(Search.execute('filetype:svg').posts).to eq([post2])
+      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
+      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
     end
   end
 
@@ -709,8 +919,8 @@ describe Search do
     str = " grigio:babel deprecated? "
     str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
-    ts_query = Search.ts_query(str, "simple")
-    Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
+    ts_query = Search.ts_query(term: str, ts_config: "simple")
+    DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
   context '#word_to_date' do
@@ -725,7 +935,6 @@ describe Search do
       expect(Search.word_to_date('deC')).to eq(Time.zone.parse('2000-12-01'))
       expect(Search.word_to_date('january')).to eq(Time.zone.parse('2001-01-01'))
       expect(Search.word_to_date('jan')).to eq(Time.zone.parse('2001-01-01'))
-
 
       expect(Search.word_to_date('100')).to eq(time.beginning_of_day.days_ago(100))
 
@@ -757,6 +966,94 @@ describe Search do
 
       expect(Search.min_post_id_no_cache).to eq(p2.id)
     end
+  end
+
+  context "search_log_id" do
+    it "returns an id when the search succeeds" do
+      s = Search.new(
+        'indiana jones',
+        search_type: :header,
+        ip_address: '127.0.0.1'
+      )
+      results = s.execute
+      expect(results.search_log_id).to be_present
+    end
+
+    it "does not log search if search_type is not present" do
+      s = Search.new('foo bar', ip_address: '127.0.0.1')
+      results = s.execute
+      expect(results.search_log_id).not_to be_present
+    end
+  end
+
+  context 'in:title' do
+    it 'allows for search in title' do
+      topic = Fabricate(:topic, title: 'I am testing a title search')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+
+      results = Search.execute('title in:title')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('first in:title')
+      expect(results.posts.length).to eq(0)
+    end
+  end
+
+  context 'diacritics' do
+    let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }
+
+    it ('allows strips correctly') do
+      results = Search.execute('hello', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      # TODO when we add diacritic support we should return 1 here
+      results = Search.execute('regis', type_filter: 'topic')
+      expect(results.posts.length).to eq(0)
+
+      results = Search.execute('Régis', type_filter: 'topic', include_blurbs: true)
+      expect(results.posts.length).to eq(1)
+
+      # this is a test we got to keep working
+      expect(results.blurb(results.posts.first)).to include('Régis')
+
+      results = Search.execute('สวัสดี', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+    end
+  end
+
+  context 'pagination' do
+    let(:number_of_results) { 2 }
+    let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello') }
+    let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello') }
+    let!(:post3) { Fabricate(:post, raw: 'hello hello hello') }
+    let!(:post4) { Fabricate(:post, raw: 'hello hello') }
+    let!(:post5) { Fabricate(:post, raw: 'hello') }
+    before do
+      Search.stubs(:per_filter).returns(number_of_results)
+    end
+
+    it 'returns more results flag' do
+      results = Search.execute('hello', type_filter: 'topic')
+      results2 = Search.execute('hello', type_filter: 'topic', page: 2)
+
+      expect(results.posts.length).to eq(number_of_results)
+      expect(results.posts.map(&:id)).to eq([post1.id, post2.id])
+      expect(results.more_full_page_results).to eq(true)
+      expect(results2.posts.length).to eq(number_of_results)
+      expect(results2.posts.map(&:id)).to eq([post3.id, post4.id])
+      expect(results2.more_full_page_results).to eq(true)
+    end
+
+    it 'correctly search with page parameter' do
+      search = Search.new('hello', type_filter: 'topic', page: 3)
+      results = search.execute
+
+      expect(search.offset).to eq(2 * number_of_results)
+      expect(results.posts.length).to eq(1)
+      expect(results.posts).to eq([post5])
+      expect(results.more_full_page_results).to eq(nil)
+    end
+
   end
 
 end

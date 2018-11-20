@@ -1,4 +1,4 @@
-class AddIsQuoteToTopicLinks < ActiveRecord::Migration
+class AddIsQuoteToTopicLinks < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_links, :quote, :boolean, default: false, null: false
 

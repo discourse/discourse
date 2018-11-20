@@ -1,4 +1,4 @@
-class RemoveOpacityFromColorSchemeColors < ActiveRecord::Migration
+class RemoveOpacityFromColorSchemeColors < ActiveRecord::Migration[4.2]
   def up
     remove_column :color_scheme_colors, :opacity
   end

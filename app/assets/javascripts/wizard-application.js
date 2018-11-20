@@ -3,6 +3,8 @@
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
 //= require_tree ./discourse-common
+//= require i18n-patches
+//= require_tree ./select-kit
 //= require wizard/router
 //= require wizard/wizard
 //= require_tree ./wizard/templates

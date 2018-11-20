@@ -1,0 +1,17 @@
+.select-kit {
+  &.combo-box {
+    &.category-drop {
+      .category-drop-header {
+        font-size: $font-0;
+
+        .d-icon {
+          font-size: $font-0;
+        }
+      }
+
+      .select-kit-row {
+        font-weight: normal;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 unless Rails.env.test?
   staff = Category.find_by(id: SiteSetting.staff_category_id)
-  if staff and !staff.group_ids.include?(Group[:staff].id)
+  if staff && !staff.group_ids.include?(Group[:staff].id)
 
     # Add permissions and a description to the Staff category.
 
@@ -33,7 +33,7 @@ unless Rails.env.test?
         end
 
         # Reset topic count because we don't count the description topic
-        Category.exec_sql "UPDATE categories SET topic_count = 0 WHERE id = #{staff.id}"
+        DB.exec "UPDATE categories SET topic_count = 0 WHERE id = #{staff.id}"
       end
     end
   end

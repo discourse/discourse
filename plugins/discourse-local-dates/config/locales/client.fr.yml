@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fr:
+  js:
+    discourse_local_dates:
+      title: Insérer date
+      create:
+        modal_title: Insérer date
+        modal_subtitle: "Nous convertirons automatiquement la date et l'heure dans le fuseau horaire local de l'utilisateur."
+        form:
+          insert: Insérer
+          advanced_mode: Mode avancé
+          simple_mode: Mode simple
+          format_description: "Format utilisé pour afficher la date pour l'utilisateur. Utiliser \"\\T\\Z\" pour afficher le fuseaux horaire de l'utilisateur en toutes lettres (Europe/Paris)"
+          timezones_title: Fuseaux horaires à afficher
+          timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en aperçu et en mode recours.
+          recurring_title: Périodicité
+          recurring_description: "Définir la périodicité d'un événement. Vous pouvez aussi modifier manuellement l'option de périodicité générée par le formulaire et utiliser une des clefs suivantes: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds. "
+          recurring_none: Pas de périodicité
+          invalid_date: Date invalide, contrôler que la date et l'heure sont correctes
+          date_title: Date
+          time_title: Time
+          format_title: Format de date

@@ -1,0 +1,56 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+th:
+  js:
+    poll:
+      voters:
+        other: "ผู้โหวต"
+      total_votes:
+        other: "คะแนนโหวตทั้งหมด"
+      average_rating: "คะแนนเฉลี่ย: <strong>%{average}</strong>"
+      public:
+        title: "การโหวตเป็นสาธารณะ"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "เลือกอย่างน้อย<strong>%{count}</strong>ตัวเลือก"
+          up_to_max_options:
+            other: "เลือกได้ถึง<strong>%{count}</strong>ตัวเลือก"
+          x_options:
+            other: "เลือก<strong>%{count}</strong>ตัวเลือก"
+          between_min_and_max_options: "เลือกระหว่าง<strong>%{min}</strong>และ<strong>%{max}</strong>ตัวเลือก"
+      cast-votes:
+        title: "โหวต"
+        label: "โหวตเดี๋ยวนี้"
+      show-results:
+        title: "แสดงผลโหวต"
+        label: "แสดงผล"
+      hide-results:
+        title: "กลับสู่การโหวต"
+        label: "ซ่อนผล"
+      open:
+        title: "เปิดโพล"
+        label: "เปิด"
+        confirm: "คุณแน่ใจหรือไม่ที่จะเปิดโพลนี้"
+      close:
+        title: "ปิดโพล"
+        label: "ปิด"
+        confirm: "คุณแน่ใจหรือไม่ที่จะปิดโพลนี้"
+      error_while_toggling_status: "ขออภัย มีข้อผิดพลาดในการแสดงสถานะของโพล"
+      error_while_casting_votes: "ขออภัย มีข้อผิดพลาดในการโหวต"
+      error_while_fetching_voters: "ขออภัย มีข้อผิดพลาดในการแสดงผู้โหวต"
+      ui_builder:
+        title: สร้างโพล
+        insert: แทรกโพล
+        help:
+          options_count: ใส่อย่างน้อย 2 ตัวเลือก
+          invalid_values: ค่าต่ำสุดต้องน้อยกว่าค่าสูงสุด
+        poll_public:
+          label: แสดงรายชื่อผู้โหวต
+        poll_options:
+          label: ใส่ตัวเลือกบรรทัดละ 1 ตัวเลือก

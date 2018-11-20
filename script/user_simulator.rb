@@ -40,12 +40,10 @@ unless ["profile", "development"].include? Rails.env
   exit
 end
 
-
 user = User.find(user_id)
 last_topics = Topic.order('id desc').limit(10).pluck(:id)
 
 puts "Simulating activity for user id #{user.id}: #{user.name}"
-
 
 while true
   puts "Creating a random topic"

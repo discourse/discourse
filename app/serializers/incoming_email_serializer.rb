@@ -29,4 +29,8 @@ class IncomingEmailSerializer < ApplicationSerializer
     object.cc_addresses.split(";")
   end
 
+  def error
+    @object.error.presence || I18n.t("emails.incoming.unrecognized_error")
+  end
+
 end

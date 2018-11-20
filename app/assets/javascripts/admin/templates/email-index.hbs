@@ -19,9 +19,9 @@
   <div class='controls'>
     {{text-field value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
   </div>
-  <div class='span10 controls'>
+  <div class='controls'>
     <button class='btn btn-primary' {{action "sendTestEmail"}} disabled={{sendTestEmailDisabled}}>{{i18n 'admin.email.send_test'}}</button>
-    {{#if sentTestEmail}}<span class='result-message'>{{i18n 'admin.email.sent_test'}}</span>{{/if}}
+    {{#if sentTestEmailMessage}}<span class='result-message'>{{sentTestEmailMessage}}</span>{{/if}}
   </div>
   {{/if}}
 </div>

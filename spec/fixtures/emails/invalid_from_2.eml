@@ -1,0 +1,12 @@
+Return-Path: <MAILER-DAEMON>
+Date: Fri, 25 Aug 2017 21:25:34 +0000 (UTC)
+From: MAILER-DAEMON (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: foo@example.com
+Message-Id: <12345@foo.bar.mail>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+This is a mail with an invalid from header that can't be fixed.
+It's missing the sender's email address.

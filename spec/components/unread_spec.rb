@@ -36,7 +36,6 @@ describe Unread do
     end
   end
 
-
   describe 'unread_posts' do
     it 'should have 0 unread posts if the user has seen all posts' do
       topic_user.last_read_post_number = 13

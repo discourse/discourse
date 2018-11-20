@@ -1,4 +1,4 @@
-class AddThemeRemoteFields < ActiveRecord::Migration
+class AddThemeRemoteFields < ActiveRecord::Migration[4.2]
   def change
     create_table :remote_themes do |t|
       t.string :remote_url, null: false
@@ -8,7 +8,7 @@ class AddThemeRemoteFields < ActiveRecord::Migration
       t.string :license_url
       t.integer :commits_behind
       t.datetime :remote_updated_at
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_column :themes, :remote_theme_id, :integer

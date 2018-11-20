@@ -1,0 +1,182 @@
+'use strict';
+
+// Incrementing CACHE_VERSION will kick off the install event and force previously cached
+// resources to be cached again.
+const CACHE_VERSION = 1;
+
+const CURRENT_CACHES = {
+  offline: 'offline-v' + CACHE_VERSION
+};
+
+const OFFLINE_URL = 'offline.html';
+
+function createCacheBustedRequest(url) {
+  var headers = new Headers({
+    'Discourse-Track-View': '0'
+  });
+
+  var request = new Request(url, {cache: 'reload', headers: headers});
+  // See https://fetch.spec.whatwg.org/#concept-request-mode
+  // This is not yet supported in Chrome as of M48, so we need to explicitly check to see
+  // if the cache: 'reload' option had any effect.
+  if ('cache' in request) {
+    return request;
+  }
+
+  // If {cache: 'reload'} didn't have any effect, append a cache-busting URL parameter instead.
+  var bustedUrl = new URL(url, self.location.href);
+  bustedUrl.search += (bustedUrl.search ? '&' : '') + 'cachebust=' + Date.now();
+  return new Request(bustedUrl, {headers: headers});
+}
+
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    // We can't use cache.add() here, since we want OFFLINE_URL to be the cache key, but
+    // the actual URL we end up requesting might include a cache-busting parameter.
+    fetch(createCacheBustedRequest(OFFLINE_URL)).then(function(response) {
+      return caches.open(CURRENT_CACHES.offline).then(function(cache) {
+        return cache.put(OFFLINE_URL, response);
+      });
+    }).then(function(cache) {
+      self.skipWaiting();
+    })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  // Delete all caches that aren't named in CURRENT_CACHES.
+  // While there is only one cache in this example, the same logic will handle the case where
+  // there are multiple versioned caches.
+  var expectedCacheNames = Object.keys(CURRENT_CACHES).map(function(key) {
+    return CURRENT_CACHES[key];
+  });
+
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (expectedCacheNames.indexOf(cacheName) === -1) {
+            // If this cache name isn't present in the array of "expected" cache names,
+            // then delete it.
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(function() {
+      self.clients.claim()
+    })
+  );
+});
+
+self.addEventListener('fetch', function(event) {
+  // Bypass service workers if this is a url with a token param
+  if(/\?.*token/i.test(event.request.url)) {
+    return;
+  }
+  // We only want to call event.respondWith() if this is a navigation request
+  // for an HTML page.
+  // request.mode of 'navigate' is unfortunately not supported in Chrome
+  // versions older than 49, so we need to include a less precise fallback,
+  // which checks for a GET request with an Accept: text/html header.
+  if (event.request.mode === 'navigate' ||
+      (event.request.method === 'GET' &&
+       event.request.headers.get('accept').includes('text/html'))) {
+    event.respondWith(
+      fetch(event.request).catch(function(error) {
+        // The catch is only triggered if fetch() throws an exception, which will most likely
+        // happen due to the server being unreachable.
+        // If fetch() returns a valid HTTP response with an response code in the 4xx or 5xx
+        // range, the catch() will NOT be called. If you need custom handling for 4xx or 5xx
+        // errors, see https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker/fallback-response
+        if (!navigator.onLine) {
+          return caches.match(OFFLINE_URL);
+        } else {
+          throw new Error(error);
+        }
+      })
+    );
+  }
+
+  // If our if() condition is false, then this fetch handler won't intercept the request.
+  // If there are any other fetch handlers registered, they will get a chance to call
+  // event.respondWith(). If no fetch handlers call event.respondWith(), the request will be
+  // handled by the browser as if there were no service worker involvement.
+});
+
+
+const idleThresholdTime = 1000 * 10; // 10 seconds
+var lastAction = -1;
+
+function isIdle() {
+  return lastAction + idleThresholdTime < Date.now();
+}
+
+function showNotification(title, body, icon, badge, tag, baseUrl, url) {
+  var notificationOptions = {
+    body: body,
+    icon: icon,
+    badge: badge,
+    data: { url: url, baseUrl: baseUrl },
+    tag: tag
+  }
+
+  return self.registration.showNotification(title, notificationOptions);
+}
+
+self.addEventListener('push', function(event) {
+  var payload = event.data.json();
+  if(!isIdle() && payload.hide_when_active) {
+    return false;
+  }
+
+  event.waitUntil(
+    self.registration.getNotifications({ tag: payload.tag }).then(function(notifications) {
+      if (notifications && notifications.length > 0) {
+        notifications.forEach(function(notification) {
+          notification.close();
+        });
+      }
+
+      return showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url);
+    })
+  );
+});
+
+self.addEventListener('notificationclick', function(event) {
+  // Android doesn't close the notification when you click on it
+  // See: http://crbug.com/463146
+  event.notification.close();
+  var url = event.notification.data.url;
+  var baseUrl = event.notification.data.baseUrl;
+
+  // This looks to see if the current window is already open and
+  // focuses if it is
+  event.waitUntil(
+    clients.matchAll({ type: "window" })
+      .then(function(clientList) {
+        var reusedClientWindow = clientList.some(function(client) {
+          if (client.url === baseUrl + url && 'focus' in client) {
+            client.focus();
+            return true;
+          }
+
+          if ('postMessage' in client && 'focus' in client) {
+            client.focus();
+            client.postMessage({ url: url });
+            return true;
+          }
+          return false;
+        });
+
+        if (!reusedClientWindow && clients.openWindow) return clients.openWindow(baseUrl + url);
+      })
+  );
+});
+
+self.addEventListener('message', function(event) {
+  if('lastAction' in event.data){
+    lastAction = event.data.lastAction;
+  }});
+<% DiscoursePluginRegistry.service_workers.each do |js| %>
+<%=raw "#{File.read(js)}" %>
+<% end %>

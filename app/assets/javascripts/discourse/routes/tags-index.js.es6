@@ -1,6 +1,22 @@
+import Tag from "discourse/models/tag";
+
 export default Discourse.Route.extend({
   model() {
-    return this.store.findAll('tag');
+    return this.store.findAll("tag").then(result => {
+      if (result.extras) {
+        if (result.extras.categories) {
+          result.extras.categories.forEach(category => {
+            category.tags = category.tags.map(t => Tag.create(t));
+          });
+        }
+        if (result.extras.tag_groups) {
+          result.extras.tag_groups.forEach(tagGroup => {
+            tagGroup.tags = tagGroup.tags.map(t => Tag.create(t));
+          });
+        }
+      }
+      return result;
+    });
   },
 
   titleToken() {
@@ -8,9 +24,11 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    this.controllerFor('tags.index').setProperties({
+    this.controllerFor("tags.index").setProperties({
       model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically ? ['id'] : ['count:desc', 'id']
+      sortProperties: this.siteSettings.tags_sort_alphabetically
+        ? ["id"]
+        : ["totalCount:desc", "id"]
     });
   },
 
@@ -21,7 +39,7 @@ export default Discourse.Route.extend({
     },
 
     showTagGroups() {
-      this.transitionTo('tagGroups');
+      this.transitionTo("tagGroups");
       return true;
     }
   }

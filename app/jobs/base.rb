@@ -1,5 +1,3 @@
-require 'scheduler/scheduler'
-
 module Jobs
 
   def self.queued
@@ -71,11 +69,11 @@ module Jobs
       ctx
     end
 
-    def self.delayed_perform(opts={})
+    def self.delayed_perform(opts = {})
       self.new.perform(opts)
     end
 
-    def execute(opts={})
+    def execute(opts = {})
       raise "Overwrite me!"
     end
 
@@ -114,7 +112,6 @@ module Jobs
         end
       end
 
-
       dbs =
         if opts[:current_site_id]
           [opts[:current_site_id]]
@@ -125,51 +122,37 @@ module Jobs
       exceptions = []
       dbs.each do |db|
         begin
-          thread_exception = {}
-          # NOTE: This looks odd, in fact it looks crazy but there is a reason
-          #  A bug in therubyracer means that under certain conditions running in a fiber
-          #  can cause the whole v8 context to corrupt so much that it will hang sidekiq
-          #
-          #  If you are brave and want to try to fix this either in celluloid or therubyracer, the repro is:
-          #
-          #  1. Create a big Discourse db: (you can start from script/profile_db_generator.rb)
-          #  2. Queue a ton of jobs, eg: User.pluck(:id).each{|id| Jobs.enqueue(:user_email, type: :digest, user_id: id)};
-          #  3. Run sidekiq
-          #
-          #  The issue only happens in Ruby 2.0 for some reason, you start getting V8::Error with no context
-          #
-          #  See: https://github.com/cowboyd/therubyracer/issues/206
-          #
-          #  The restricted stack space of fibers opens a bunch of risks up, by avoiding them altogether
-          #   we can mitigate giving up a very marginal amount of throughput
-          #
-          #  Ideally we could just tell sidekiq to avoid fibers
+          exception = {}
 
-          t = Thread.new do
+          RailsMultisite::ConnectionManagement.with_connection(db) do
             begin
-              RailsMultisite::ConnectionManagement.establish_connection(db: db)
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
+                logster_env = {}
+                Logster.add_to_env(logster_env, :job, self.class.to_s)
+                Logster.add_to_env(logster_env, :db, db)
+                Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
+
                 execute(opts)
               rescue => e
-                thread_exception[:ex] = e
-                thread_exception[:other] = { problem_db: db }
+                exception[:ex] = e
+                exception[:other] = { problem_db: db }
               end
             rescue => e
-              thread_exception[:ex] = e
-              thread_exception[:message] = "While establishing database connection to #{db}"
-              thread_exception[:other] = { problem_db: db }
+              exception[:ex] = e
+              exception[:message] = "While establishing database connection to #{db}"
+              exception[:other] = { problem_db: db }
             ensure
-              ActiveRecord::Base.connection_handler.clear_active_connections!
               total_db_time += Instrumenter.stats.duration_ms
             end
           end
-          t.join
 
-          exceptions << thread_exception unless thread_exception.empty?
+          exceptions << exception unless exception.empty?
         end
       end
+
+      Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
@@ -195,15 +178,16 @@ module Jobs
   end
 
   class Scheduled < Base
-    extend Scheduler::Schedule
+    extend MiniScheduler::Schedule
 
     def perform(*args)
-      return if Discourse.readonly_mode?
-      super
+      if (Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+        super
+      end
     end
   end
 
-  def self.enqueue(job_name, opts={})
+  def self.enqueue(job_name, opts = {})
     klass = "Jobs::#{job_name.to_s.camelcase}".constantize
 
     # Unless we want to work on all sites
@@ -222,25 +206,31 @@ module Jobs
       # Otherwise execute the job right away
       opts.delete(:delay_for)
       opts[:sync_exec] = true
-      klass.new.perform(opts)
+      if Rails.env == "development"
+        Scheduler::Defer.later("job") do
+          klass.new.perform(opts)
+        end
+      else
+        klass.new.perform(opts)
+      end
     end
 
   end
 
-  def self.enqueue_in(secs, job_name, opts={})
+  def self.enqueue_in(secs, job_name, opts = {})
     enqueue(job_name, opts.merge!(delay_for: secs))
   end
 
-  def self.enqueue_at(datetime, job_name, opts={})
+  def self.enqueue_at(datetime, job_name, opts = {})
     secs = [(datetime - Time.zone.now).to_i, 0].max
     enqueue_in(secs, job_name, opts)
   end
 
-  def self.cancel_scheduled_job(job_name, opts={})
+  def self.cancel_scheduled_job(job_name, opts = {})
     scheduled_for(job_name, opts).each(&:delete)
   end
 
-  def self.scheduled_for(job_name, opts={})
+  def self.scheduled_for(job_name, opts = {})
     opts = opts.with_indifferent_access
     unless opts.delete(:all_sites)
       opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
@@ -265,6 +255,6 @@ module Jobs
   end
 end
 
-Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each {|file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each { |file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/regular/*.rb"].each { |file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each { |file| require_dependency file }

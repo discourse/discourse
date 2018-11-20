@@ -3,7 +3,8 @@ require_dependency "common_passwords/common_passwords"
 class PasswordValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
-    return unless record.password_required?
+    return unless record.password_validation_required?
+
     if value.nil?
       record.errors.add(attribute, :blank)
     elsif value.length < SiteSetting.min_admin_password_length && (record.admin? || is_developer?(record.email))

@@ -1,9 +1,10 @@
 unless Rails.env.test?
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)
-  if lounge and !lounge.group_ids.include?(Group[:trust_level_3].id)
+  if lounge && lounge.created_at == lounge.updated_at &&
+    !lounge.group_ids.include?(Group[:trust_level_3].id)
 
     # The category for users with trust level 3 has been created.
-    # Add permissions and a description to it.
+    # Add initial permissions and description. They can be changed later.
 
     Category.transaction do
       lounge.group_names = ['trust_level_3']
@@ -35,7 +36,7 @@ unless Rails.env.test?
         end
 
         # Reset topic count because we don't count the description topic
-        Category.exec_sql "UPDATE categories SET topic_count = 0 WHERE id = #{lounge.id}"
+        DB.exec "UPDATE categories SET topic_count = 0 WHERE id = #{lounge.id}"
       end
     end
   end

@@ -1,6 +1,24 @@
 .groups-page {
   h1 {
-    margin: 20px 0px;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+}
+
+.groups-header {
+  margin-bottom: 30px;
+}
+
+.groups-header-filters {
+  display: inline-block;
+
+  .groups-header-filters-type {
+    vertical-align: middle;
+  }
+
+  .groups-header-filters-name {
+    vertical-align: middle;
+    margin: 0;
   }
 }
 
@@ -8,21 +26,53 @@
   width: 100%;
 
   th {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    padding: 5px 0px;
+    border-bottom: 1px solid $primary-low;
+    padding: 0.5em;
     text-align: left;
   }
 
-  tr {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  .sortable {
+    &:hover {
+      background-color: $primary-low;
+      cursor: pointer;
+    }
+  }
 
+  tr {
     td {
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
-      padding: 0.8em 0;
+      padding: 0.8em;
+      color: $primary-medium;
+    }
+
+    td.groups-info {
+      width: 50%;
+    }
+
+    td.group-user-status {
+      i {
+        color: $primary;
+      }
     }
 
     td.groups-user-count {
-      font-size: 1.2em;
+      width: 17%;
+      font-size: $font-up-2;
+    }
+
+    td.groups-table-type {
+      width: 17%;
+      font-size: $font-up-1;
+    }
+
+    td.groups-table-membership {
+      .group-membership-button {
+        display: inline-block;
+      }
+
+      > span {
+        margin-right: 5px;
+        font-size: $font-up-1;
+      }
     }
   }
 
@@ -30,16 +80,16 @@
     .groups-info-name {
       font-weight: bold;
       color: $primary;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .groups-info-full-name {
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .groups-info-title {
-      font-size: 0.9em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      font-size: $font-down-1;
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
     span {

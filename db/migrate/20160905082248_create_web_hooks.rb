@@ -1,4 +1,4 @@
-class CreateWebHooks < ActiveRecord::Migration
+class CreateWebHooks < ActiveRecord::Migration[4.2]
   def change
     create_table :web_hooks do |t|
       t.string  :payload_url, null: false
@@ -10,7 +10,7 @@ class CreateWebHooks < ActiveRecord::Migration
       t.boolean :verify_certificate, default: true, null: false
       t.boolean :active, default: false, null: false
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

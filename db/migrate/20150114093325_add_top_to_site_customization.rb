@@ -1,4 +1,4 @@
-class AddTopToSiteCustomization < ActiveRecord::Migration
+class AddTopToSiteCustomization < ActiveRecord::Migration[4.2]
   def up
     add_column :site_customizations, :top, :text
     add_column :site_customizations, :mobile_top, :text

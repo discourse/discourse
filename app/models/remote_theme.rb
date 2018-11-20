@@ -1,22 +1,52 @@
-require_dependency 'git_importer'
+require_dependency 'theme_store/git_importer'
+require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
+  GITHUB_REGEXP = /^https?:\/\/github\.com\//
+  GITHUB_SSH_REGEXP = /^git@github\.com:/
+
   has_one :theme
 
-  def self.import_theme(url, user=Discourse.system_user)
-    importer = GitImporter.new(url)
+  def self.update_tgz_theme(filename, user: Discourse.system_user)
+    importer = ThemeStore::TgzImporter.new(filename)
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
-    theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+
+    theme = Theme.find_by(name: theme_info["name"])
+    theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+
+    remote_theme = new
+    remote_theme.theme = theme
+    remote_theme.remote_url = ""
+    remote_theme.update_from_remote(importer, skip_update: true)
+
+    theme.save!
+    theme
+  ensure
+    begin
+      importer.cleanup!
+    rescue => e
+      Rails.logger.warn("Failed cleanup remote path #{e}")
+    end
+  end
+
+  def self.import_theme(url, user = Discourse.system_user, private_key: nil)
+    importer = ThemeStore::GitImporter.new(url, private_key: private_key)
+    importer.import!
+
+    theme_info = JSON.parse(importer["about.json"])
+    component = [true, "true"].include?(theme_info["component"])
+    theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
 
     remote_theme = new
     theme.remote_theme = remote_theme
 
+    remote_theme.private_key = private_key
     remote_theme.remote_url = importer.url
     remote_theme.update_from_remote(importer)
 
@@ -30,20 +60,27 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
-  def update_remote_version
-    importer = GitImporter.new(remote_url)
-    importer.import!
-    self.updated_at = Time.zone.now
-    self.remote_version, self.commits_behind = importer.commits_since(remote_version)
+  def self.out_of_date_themes
+    self.joins("JOIN themes ON themes.remote_theme_id = remote_themes.id")
+      .where.not(remote_url: "")
+      .where("commits_behind > 0 OR remote_version <> local_version")
+      .pluck("themes.name", "themes.id")
   end
 
-  def update_from_remote(importer=nil)
+  def update_remote_version
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
+    importer.import!
+    self.updated_at = Time.zone.now
+    self.remote_version, self.commits_behind = importer.commits_since(local_version)
+  end
+
+  def update_from_remote(importer = nil, skip_update: false)
     return unless remote_url
     cleanup = false
 
     unless importer
       cleanup = true
-      importer = GitImporter.new(remote_url)
+      importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
       importer.import!
     end
 
@@ -70,12 +107,14 @@ class RemoteTheme < ActiveRecord::Base
       end
 
       theme.set_field(target: info["target"] || :common,
-                        name: name,
-                        value: info["value"],
-                        type: info["type"] || :theme_var)
+                      name: name,
+                      value: info["value"],
+                      type: info["type"] || :theme_var)
     end
 
     Theme.targets.keys.each do |target|
+      next if target == :settings
+
       ALLOWED_FIELDS.each do |field|
         lookup =
           if field == "scss"
@@ -91,14 +130,20 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
+    settings_yaml = importer["settings.yaml"] || importer["settings.yml"]
+    theme.set_field(target: :settings, name: "yaml", value: settings_yaml)
+
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]
-    self.remote_updated_at = Time.zone.now
-    self.remote_version = importer.version
-    self.local_version = importer.version
-    self.commits_behind = 0
 
-    update_theme_color_schemes(theme, theme_info["color_schemes"])
+    if !skip_update
+      self.remote_updated_at = Time.zone.now
+      self.remote_version = importer.version
+      self.local_version = importer.version
+      self.commits_behind = 0
+    end
+
+    update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
     self
   ensure
@@ -120,9 +165,10 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_theme_color_schemes(theme, schemes)
-    return if schemes.blank?
+    missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
 
-    schemes.each do |name, colors|
+    schemes&.each do |name, colors|
+      missing_scheme_names.delete(name)
       existing = theme.color_schemes.find_by(name: name)
       if existing
         existing.colors.each do |c|
@@ -140,6 +186,27 @@ class RemoteTheme < ActiveRecord::Base
         end
       end
     end
+
+    if missing_scheme_names.length > 0
+      ColorScheme.where(id: missing_scheme_names.values).delete_all
+      # we may have stuff pointed at the incorrect scheme?
+    end
+  end
+
+  def github_diff_link
+    if github_repo_url.present? && local_version != remote_version
+      "#{github_repo_url.gsub(/\.git$/, "")}/compare/#{local_version}...#{remote_version}"
+    end
+  end
+
+  def github_repo_url
+    url = remote_url.strip
+    return url if url.match?(GITHUB_REGEXP)
+
+    if url.match?(GITHUB_SSH_REGEXP)
+      org_repo = url.gsub(GITHUB_SSH_REGEXP, "")
+      "https://github.com/#{org_repo}"
+    end
   end
 end
 
@@ -155,6 +222,7 @@ end
 #  license_url       :string
 #  commits_behind    :integer
 #  remote_updated_at :datetime
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  private_key       :text
 #

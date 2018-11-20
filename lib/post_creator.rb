@@ -36,6 +36,7 @@ class PostCreator
   #                             wrap `PostCreator` in a transaction, as the sidekiq jobs could
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
+  #   hidden_reason_id        - Reason for hiding the post (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -52,6 +53,7 @@ class PostCreator
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
+  #     shared_draft          - Is the topic meant to be a shared draft
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -61,6 +63,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
     @guardian = opts[:guardian] if opts[:guardian]
 
     @spam = false
@@ -92,14 +95,36 @@ class PostCreator
       return false
     end
 
-    # Make sure none of the users have muted the creator
-    names = @opts[:target_usernames]
-    if names.present? && !skip_validations? && !@user.staff?
-      users = User.where(username: names.split(',').flatten).pluck(:id, :username).to_h
+    if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
+      names = @opts[:target_usernames].split(',')
 
-      MutedUser.where(user_id: users.keys, muted_user_id: @user.id).pluck(:user_id).each do |m|
+      # Make sure max_allowed_message_recipients setting is respected
+      max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
+
+      if names.length > max_allowed_message_recipients
+        errors[:base] << I18n.t(:max_pm_recepients,
+          recipients_limit: max_allowed_message_recipients
+        )
+
+        return false
+      end
+
+      # Make sure none of the users have muted the creator
+      users = User.where(username: names).pluck(:id, :username).to_h
+
+      User
+        .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+        .joins("LEFT JOIN muted_users ON muted_users.muted_user_id = #{@user.id.to_i}")
+        .where("user_options.user_id IS NOT NULL")
+        .where("
+          (user_options.user_id IN (:user_ids) AND NOT user_options.allow_private_messages) OR
+          muted_users.user_id IN (:user_ids)
+        ", user_ids: users.keys)
+        .pluck(:id).each do |m|
+
         errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
       end
+
       return false if errors[:base].present?
     end
 
@@ -108,7 +133,7 @@ class PostCreator
       return false unless skip_validations? || validate_child(topic_creator)
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
-      if (@topic.blank? || !guardian.can_create?(Post, @topic))
+      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors[:base] << I18n.t(:topic_not_found)
         return false
       end
@@ -148,6 +173,7 @@ class PostCreator
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
+        link_post_uploads
 
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
@@ -166,7 +192,7 @@ class PostCreator
       enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
-      trigger_after_events(@post)
+      trigger_after_events unless opts[:skip_events]
 
       auto_close unless @opts[:import_mode]
     end
@@ -182,7 +208,7 @@ class PostCreator
     create
 
     if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new("Failed to create post: #{self.errors.full_messages}")
+      raise ActiveRecord::RecordNotSaved.new(self.errors.full_messages.to_sentence)
     end
 
     @post
@@ -195,6 +221,11 @@ class PostCreator
       import_mode: @opts[:import_mode],
       post_alert_options: @opts[:post_alert_options]
     ).enqueue_jobs
+  end
+
+  def trigger_after_events
+    DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user) unless @opts[:topic_id]
+    DiscourseEvent.trigger(:post_created, @post, @opts, @user)
   end
 
   def self.track_post_stats
@@ -233,8 +264,8 @@ class PostCreator
     return unless post.reply_to_post_number.present?
 
     reply_info = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number)
-                     .select(:user_id, :post_type)
-                     .first
+      .select(:user_id, :post_type)
+      .first
 
     if reply_info.present?
       post.reply_to_user_id ||= reply_info.user_id
@@ -262,39 +293,50 @@ class PostCreator
     end
   end
 
-  def trigger_after_events(post)
-    DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
-    DiscourseEvent.trigger(:post_created, post, @opts, @user)
-  end
-
   def auto_close
-    if @post.topic.private_message? &&
-        !@post.topic.closed &&
+    topic = @post.topic
+    is_private_message = topic.private_message?
+    topic_posts_count = @post.topic.posts_count
+
+    if is_private_message &&
+        !topic.closed &&
         SiteSetting.auto_close_messages_post_count > 0 &&
-        SiteSetting.auto_close_messages_post_count <= @post.topic.posts_count
+        SiteSetting.auto_close_messages_post_count <= topic_posts_count
 
-      @post.topic.update_status(:closed, true, Discourse.system_user,
-          message: I18n.t('topic_statuses.autoclosed_message_max_posts', count: SiteSetting.auto_close_messages_post_count))
-
-    elsif !@post.topic.private_message? &&
-        !@post.topic.closed &&
+      @post.topic.update_status(
+        :closed, true, Discourse.system_user,
+        message: I18n.t(
+          'topic_statuses.autoclosed_message_max_posts',
+          count: SiteSetting.auto_close_messages_post_count
+        )
+      )
+    elsif !is_private_message &&
+        !topic.closed &&
         SiteSetting.auto_close_topics_post_count > 0 &&
-        SiteSetting.auto_close_topics_post_count <= @post.topic.posts_count
+        SiteSetting.auto_close_topics_post_count <= topic_posts_count
 
-      @post.topic.update_status(:closed, true, Discourse.system_user,
-          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_topics_post_count))
-
+      topic.update_status(
+        :closed, true, Discourse.system_user,
+        message: I18n.t(
+          'topic_statuses.autoclosed_topic_max_posts',
+          count: SiteSetting.auto_close_topics_post_count
+        )
+      )
     end
   end
 
   def transaction(&blk)
-    Post.transaction do
-      if new_topic?
+    if new_topic?
+      Post.transaction do
         blk.call
-      else
-        # we need to ensure post_number is monotonically increasing with no gaps
-        # so we serialize creation to avoid needing rollbacks
-        DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
+      end
+    else
+      # we need to ensure post_number is monotonically increasing with no gaps
+      # so we serialize creation to avoid needing rollbacks
+      DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}") do
+        Post.transaction do
+          blk.call
+        end
       end
     end
   end
@@ -308,13 +350,17 @@ class PostCreator
     rollback_from_errors!(embed) unless embed.save
   end
 
+  def link_post_uploads
+    @post.link_post_uploads
+  end
+
   def handle_spam
     if @spam
-      GroupMessage.create( Group[:moderators].name,
+      GroupMessage.create(Group[:moderators].name,
                            :spam_post_blocked,
-                           { user: @user,
-                             limit_once_per: 24.hours,
-                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
+                           user: @user,
+                           limit_once_per: 24.hours,
+                           message_params: { domains: @post.linked_hosts.keys.join(', ') })
     elsif @post && errors.blank? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
@@ -333,7 +379,7 @@ class PostCreator
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
       unless @topic.topic_allowed_groups.where('group_id IN (
                                               SELECT group_id FROM group_users where user_id = ?
-                                           )',@user.id).exists?
+                                           )', @user.id).exists?
         @topic.topic_allowed_users.create!(user_id: @user.id)
       end
     end
@@ -343,27 +389,15 @@ class PostCreator
     return unless @topic.private_message? && @topic.id
 
     UserArchivedMessage.where(topic_id: @topic.id).pluck(:user_id).each do |user_id|
-      UserArchivedMessage.move_to_inbox!(user_id, @topic.id)
+      UserArchivedMessage.move_to_inbox!(user_id, @topic)
     end
 
     GroupArchivedMessage.where(topic_id: @topic.id).pluck(:group_id).each do |group_id|
-      GroupArchivedMessage.move_to_inbox!(group_id, @topic.id)
+      GroupArchivedMessage.move_to_inbox!(group_id, @topic)
     end
   end
 
   private
-
-  # TODO: merge the similar function in TopicCreator and fix parameter naming for `category`
-  def find_category_id
-    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
-
-    category = if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-                 Category.find_by(id: @opts[:category])
-               else
-                 Category.find_by(name_lower: @opts[:category].try(:downcase))
-               end
-    category&.id
-  end
 
   def create_topic
     return if @topic
@@ -386,23 +420,28 @@ class PostCreator
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
-      attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
+      attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      @topic.update_attributes(attrs)
+      attrs[:updated_at] = Time.now
+      @topic.update_columns(attrs)
     end
   end
 
   def update_topic_auto_close
-    topic_timer = @topic.public_topic_timer
+    if @topic.closed?
+      @topic.delete_topic_timer(TopicTimer.types[:close])
+    else
+      topic_timer = @topic.public_topic_timer
 
-    if topic_timer &&
-       topic_timer.based_on_last_post &&
-       topic_timer.duration > 0
+      if topic_timer &&
+         topic_timer.based_on_last_post &&
+         topic_timer.duration > 0
 
-      @topic.set_or_create_timer(TopicTimer.types[:close],
-        topic_timer.duration,
-        based_on_last_post: topic_timer.based_on_last_post
-      )
+        @topic.set_or_create_timer(TopicTimer.types[:close],
+          topic_timer.duration,
+          based_on_last_post: topic_timer.based_on_last_post
+        )
+      end
     end
   end
 
@@ -424,6 +463,12 @@ class PostCreator
 
     if fields = @opts[:custom_fields]
       post.custom_fields = fields
+    end
+
+    if @opts[:hidden_reason_id].present?
+      post.hidden = true
+      post.hidden_at = Time.zone.now
+      post.hidden_reason_id = @opts[:hidden_reason_id]
     end
 
     @post = post
@@ -449,7 +494,7 @@ class PostCreator
     end
 
     unless @post.topic.private_message?
-      @user.user_stat.post_count += 1
+      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
     end
 
@@ -485,7 +530,6 @@ class PostCreator
                        last_read_post_number: @post.post_number,
                        highest_seen_post_number: @post.post_number)
 
-
       # assume it took us 5 seconds of reading time to make a post
       PostTiming.record_timing(topic_id: @post.topic_id,
                                user_id: @post.user_id,
@@ -495,12 +539,10 @@ class PostCreator
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
-    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:watching]
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:watching])
-    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:regular]
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:regular])
     else
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:tracking])
+      return if @topic.private_message?
+      notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
+      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end
   end
 

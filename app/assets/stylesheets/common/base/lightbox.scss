@@ -3,31 +3,34 @@
   display: inline-block;
 
   &:hover .meta {
-    opacity: 1;
-    transition: opacity .5s;
+    opacity: 0.9;
+    transition: opacity 0.5s;
   }
 }
 
 .lightbox-wrapper {
   display: inline-block;
-  &, * { outline: 0; }
+  &,
+  * {
+    outline: 0;
+  }
 }
 
 .meta {
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: dark-light-choose($secondary, $primary);
-  background: dark-light-choose($primary, lighten($secondary, 10%));
+  color: $secondary;
+  background: $primary;
   opacity: 0;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 
   span {
     float: left;
   }
 
   .filename {
-    margin: 5px;
+    margin: 6px 6px 2px 6px;
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -42,8 +45,8 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: dark-light-diff($primary, $secondary, 50%, -50%);
-    font-size: 1em;
+    color: $secondary-high;
+    font-size: $font-0;
   }
 
   .expand {
@@ -55,9 +58,4 @@
       content: "\F065";
     }
   }
-}
-
-// this should be removed once all the posts have been rebaked with the new lightboxes overlays
-.lightbox > span {
-  display: none;
 }

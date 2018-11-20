@@ -141,6 +141,7 @@ describe Invite do
     let(:inviter) { group_private_topic.user }
 
     before do
+      group.add_owner(inviter)
       @invite = group_private_topic.invite_by_email(inviter, iceking)
     end
 
@@ -152,6 +153,20 @@ describe Invite do
       it 'should not duplicate the groups' do
         expect(group_private_topic.invite_by_email(inviter, iceking)).to eq(@invite)
         expect(@invite.groups).to eq([group])
+      end
+    end
+
+    it 'verifies that inviter is authorized to invite user to a topic' do
+      tl2_user = Fabricate(:user, trust_level: 2)
+
+      invite = group_private_topic.invite_by_email(tl2_user, 'foo@bar.com')
+      expect(invite.groups.count).to eq(0)
+    end
+
+    context 'automatic groups' do
+      it 'should not add invited user to automatic groups' do
+        group.update!(automatic: true)
+        expect(group_private_topic.invite_by_email(Fabricate(:admin), iceking).groups.count).to eq(0)
       end
     end
   end
@@ -168,6 +183,16 @@ describe Invite do
       expect(topic.allowed_users.include?(coding_horror)).to eq(true)
     end
 
+  end
+
+  context 'a staged user' do
+    it 'creates an invite for a staged user' do
+      Fabricate(:staged, email: 'staged@account.com')
+      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
+
+      expect(invite).to be_valid
+      expect(invite.email).to eq('staged@account.com')
+    end
   end
 
   context '.redeem' do
@@ -245,7 +270,7 @@ describe Invite do
 
     context "invite trust levels" do
       it "returns the trust level in default_invitee_trust_level" do
-        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel[3])
+        SiteSetting.default_invitee_trust_level = TrustLevel[3]
         expect(invite.redeem.trust_level).to eq(TrustLevel[3])
       end
     end
@@ -253,7 +278,7 @@ describe Invite do
     context 'inviting when must_approve_users? is enabled' do
       it 'correctly activates accounts' do
         invite.invited_by = Fabricate(:admin)
-        SiteSetting.stubs(:must_approve_users).returns(true)
+        SiteSetting.must_approve_users = true
         user = invite.redeem
         expect(user.approved?).to eq(true)
       end
@@ -282,27 +307,9 @@ describe Invite do
           expect(invite).to be_redeemed
         end
 
-
         context 'again' do
-          context "without a passthrough" do
-            before do
-              SiteSetting.invite_passthrough_hours = 0
-            end
-
-            it 'will not redeem twice' do
-              expect(invite.redeem).to be_blank
-            end
-          end
-
-          context "with a passthrough" do
-            before do
-              SiteSetting.invite_passthrough_hours = 1
-            end
-
-            it 'will not redeem twice' do
-              expect(invite.redeem).to be_present
-              expect(invite.redeem.send_welcome_message).to eq(false)
-            end
+          it 'will not redeem twice' do
+            expect(invite.redeem).to be_blank
           end
         end
       end
@@ -312,9 +319,11 @@ describe Invite do
     context 'invited to topics' do
       let(:tl2_user) { Fabricate(:user, trust_level: 2) }
       let!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
-      let!(:invite) {
+
+      let!(:invite) do
         topic.invite(topic.user, 'jake@adventuretime.ooo')
-      }
+        Invite.find_by(invited_by_id: topic.user)
+      end
 
       context 'redeem topic invite' do
         it 'adds the user to the topic_users' do
@@ -393,8 +402,10 @@ describe Invite do
 
       invites = Invite.find_pending_invites_from(inviter)
 
-      expect(invites.size).to eq(1)
+      expect(invites.length).to eq(1)
       expect(invites.first).to eq pending_invite
+
+      expect(Invite.find_pending_invites_count(inviter)).to eq(1)
     end
   end
 
@@ -417,8 +428,10 @@ describe Invite do
 
       invites = Invite.find_redeemed_invites_from(inviter)
 
-      expect(invites.size).to eq(1)
+      expect(invites.length).to eq(1)
       expect(invites.first).to eq redeemed_invite
+
+      expect(Invite.find_redeemed_invites_count(inviter)).to eq(1)
     end
   end
 
@@ -465,23 +478,16 @@ describe Invite do
 
   end
 
-  describe '.redeem_from_token' do
-    let(:inviter) { Fabricate(:user) }
-    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
-    let(:user) { Fabricate(:user, email: invite.email) }
-
-    it 'redeems the invite from token' do
-      Invite.redeem_from_token(invite.invite_key, user.email)
-      invite.reload
-      expect(invite).to be_redeemed
+  describe '.rescind_all_invites_from' do
+    it 'removes all invites sent by a user' do
+      user = Fabricate(:user)
+      invite_1 = Fabricate(:invite, invited_by: user)
+      invite_2 = Fabricate(:invite, invited_by: user)
+      Invite.rescind_all_invites_from(user)
+      invite_1.reload
+      invite_2.reload
+      expect(invite_1.deleted_at).to be_present
+      expect(invite_2.deleted_at).to be_present
     end
-
-    it 'does not redeem the invite if token does not match' do
-      Invite.redeem_from_token("bae0071f995bb4b6f756e80b383778b5", user.email)
-      invite.reload
-      expect(invite).not_to be_redeemed
-    end
-
   end
-
 end

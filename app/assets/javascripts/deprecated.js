@@ -1,7 +1,4 @@
+// ensure Discourse is added as a global
 (function() {
-  var Discourse = require('discourse').default;
-
-  Discourse.dialect_deprecated = true;
-
-  window.Discourse = Discourse;
+  window.Discourse = requirejs('discourse').default;
 })();

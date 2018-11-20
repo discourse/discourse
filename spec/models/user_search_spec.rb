@@ -134,6 +134,9 @@ describe UserSearch do
     # don't return staged users
     results = search_for(staged.username)
     expect(results).to be_blank
+
+    results = search_for(staged.username, include_staged_users: true)
+    expect(results.first.username).to eq(staged.username)
   end
 
 end

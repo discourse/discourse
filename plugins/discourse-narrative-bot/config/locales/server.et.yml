@@ -5,4 +5,23 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-et: {}
+et:
+  badges:
+    licensed:
+      name: Litsenseeritud
+  discourse_narrative_bot:
+    quote:
+      trigger: "tsitaat"
+      '1':
+        author: "Albert Einstein"
+      '3':
+        author: "Dr. Seuss"
+    magic_8_ball:
+      answers:
+        '1': "See on kindel"
+        '3': "Kahtlemata"
+        '4': "Jah, kindlasti"
+        '5': "Võid sellele loota"
+        '7': "Tõenäoliselt"
+        '9': "Jah"
+        '12': "Küsi hiljem uuesti"

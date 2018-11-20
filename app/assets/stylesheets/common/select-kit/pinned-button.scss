@@ -1,0 +1,47 @@
+#topic-footer-buttons {
+  .pinned-button {
+    min-width: auto;
+    margin: 10px 0 5px 0;
+
+    &.is-hidden {
+      display: none;
+    }
+
+    .btn {
+      margin: 0;
+    }
+
+    .reason {
+      line-height: $line-height-medium;
+      margin: 0 0 0 10px;
+    }
+  }
+}
+
+.pinned-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0;
+  min-width: auto;
+
+  .pinned-options {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+  }
+
+  .pinned-options {
+    .select-kit-body {
+      min-width: unset;
+      max-width: unset;
+      width: 550px;
+    }
+  }
+}

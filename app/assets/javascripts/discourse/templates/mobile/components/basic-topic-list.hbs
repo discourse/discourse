@@ -1,9 +1,17 @@
 {{#conditional-loading-spinner condition=loading}}
+  {{#if hasIncoming}}
+  <div class="show-mores">
+    <div class='alert alert-info clickable' {{action "showInserted"}}>
+      {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
+    </div>
+  </div>
+  {{/if}}
+
   {{#if topics}}
     <table class="topic-list">
       <tbody>
       {{#each topics as |t|}}
-        <tr class="{{if t.archived 'archived'}}" data-topic-id={{t.id}}>
+        <tr class="topic-list-item {{if t.archived 'archived'}} {{if t.visited 'visited'}}" data-topic-id={{t.id}}>
           <td>
             <div class='main-link'>
               {{topic-status topic=t}}
@@ -28,6 +36,7 @@
             </div>
             <div class='clearfix'></div>
             <div class="topic-item-stats clearfix">
+              {{discourse-tags t mode="list" tagsForUser=tagsForUser}}
               <div class="pull-right">
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
                 <a href="{{t.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>

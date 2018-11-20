@@ -17,7 +17,7 @@ unless Rails.env.test?
         raise "Failed meta topic"
       end
 
-      meta.set_permissions(:everyone => :full)
+      meta.set_permissions(everyone: :full)
       meta.topic_id = post.topic.id
       unless meta.save
         puts meta.errors.full_messages
@@ -25,7 +25,7 @@ unless Rails.env.test?
       end
 
       # Reset topic count because we don't count the description topic
-      Category.exec_sql "UPDATE categories SET topic_count = 0 WHERE id = #{meta.id}"
+      DB.exec "UPDATE categories SET topic_count = 0 WHERE id = #{meta.id}"
     end
   end
 end

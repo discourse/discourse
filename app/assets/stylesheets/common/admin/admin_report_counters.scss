@@ -1,0 +1,70 @@
+.admin-report {
+  .admin-report-counters {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(32px, 1fr));
+    align-items: center;
+
+    .cell {
+      padding: 0.25em;
+      text-align: right;
+      white-space: nowrap;
+
+      &.title {
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .d-icon {
+          color: $primary-low-mid;
+          min-width: 14px;
+          text-align: center;
+        }
+
+        i {
+          margin: 0;
+        }
+      }
+
+      @media screen and (max-width: 400px) {
+        &.title .d-icon {
+          display: none;
+        }
+      }
+
+      .d-icon-minus {
+        color: $primary-medium;
+        font-size: $font-down-3;
+      }
+
+      &.high-trending-up,
+      &.trending-up {
+        i {
+          color: $success;
+        }
+      }
+      &.high-trending-down,
+      &.trending-down {
+        i {
+          color: $danger;
+        }
+      }
+    }
+  }
+}
+
+.rtl .counters-list .counters-header .counters-cell {
+  text-align: left;
+}
+
+.rtl .counters-list {
+  .cell {
+    text-align: left;
+
+    &.title {
+      text-align: right;
+    }
+  }
+}

@@ -13,10 +13,17 @@ ja:
       total_votes:
         other: "合計得票数"
       average_rating: "平均評価: <strong>%{average}</strong>."
+      public:
+        title: "投票は公開されています。"
       multiple:
         help:
+          at_least_min_options:
+            other: "少なくとも<strong>%{count}</strong>の選択肢を選んでください"
           up_to_max_options:
             other: "<strong>%{count}</strong>個まで選ぶことができます"
+          x_options:
+            other: "<strong>%{count}</strong>の選択肢を選んでください"
+          between_min_and_max_options: "<strong>%{min}</strong>から<strong>%{max}</strong>の選択肢を選んでください"
       cast-votes:
         title: "投票する"
         label: "投票する"
@@ -34,12 +41,26 @@ ja:
         title: "投票を締め切る"
         label: "投票を締め切る"
         confirm: "この投票を締め切ってもよろしいですか？"
+      error_while_toggling_status: "申し訳ありませんが、この投票のステータスを切り替える際にエラーが発生しました。"
+      error_while_casting_votes: "申し訳ありませんが、投票の際にエラーが発生しました。"
+      error_while_fetching_voters: "申し訳ありませんが、有権者を表示する際にエラーが発生しました。"
       ui_builder:
         title: 投票を作成
+        insert: 投票の挿入
+        help:
+          options_count: 少なくとも2つの選択肢を入力してください
+          invalid_values: 最小値は最大値より小さくなければなりません。
+          min_step_value: 最小ステップ単位は 1 です
         poll_type:
           label: タイプ
           regular: 一つだけ選択
           multiple: 複数選択
           number: 数字で評価
+        poll_config:
+          max: 最大
+          min: 最小
+          step: 間隔
         poll_public:
           label: 誰が投票したか表示する
+        poll_options:
+          label: 1行ごとに1つの選択肢を入力します

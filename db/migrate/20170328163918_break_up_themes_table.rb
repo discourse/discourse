@@ -1,4 +1,4 @@
-class BreakUpThemesTable < ActiveRecord::Migration
+class BreakUpThemesTable < ActiveRecord::Migration[4.2]
   def change
     create_table :theme_fields do |t|
       t.integer :theme_id, null: false
@@ -6,7 +6,7 @@ class BreakUpThemesTable < ActiveRecord::Migration
       t.string :name, null: false
       t.text :value, null: false
       t.text :value_baked
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :theme_fields, [:theme_id, :target, :name], unique: true

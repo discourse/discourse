@@ -10,8 +10,8 @@
         {{#user-link user=post.user}}
           {{post.user.username}}
         {{/user-link}}
-        {{#if post.user.blocked}}
-        <i class='fa fa-ban' title='{{i18n "user.blocked_tooltip"}}'></i>
+        {{#if post.user.silenced}}
+          {{d-icon "ban" title="user.silenced_tooltip"}}
         {{/if}}
       </span>
     </div>
@@ -20,23 +20,40 @@
     </div>
     <div class='clearfix'></div>
 
-    <span class='post-title'>
-      {{i18n "queue.topic"}}
-      {{#if post.topic}}
-        {{topic-link post.topic}}
-      {{else}}
-        {{post.post_options.title}}
-      {{/if}}
-      {{category-badge post.category}}
-    </span>
+    {{#if editTitleAndCategory}}
+      <span class="edit-title">
+        {{text-field value=buffered.title maxlength=siteSettings.max_topic_title_length}}
+      </span>
+      {{category-chooser value=buffered.category_id}}
+    {{else}}
+      <span class='post-title'>
+        {{i18n "queue.topic"}}
+        {{#if post.topic}}
+          {{topic-link post.topic}}
+        {{else}}
+          {{editables.title}}
+        {{/if}}
+        {{category-badge editables.category}}
+      </span>
+    {{/if}}
 
     <div class='body'>
       {{#if editing}}
         {{d-editor value=buffered.raw}}
       {{else}}
-        {{{cook-text post.raw}}}
+        {{cook-text editables.raw}}
       {{/if}}
     </div>
+
+    {{#if showTags}}
+      <div class="list-tags">
+        {{#each tags as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+      </div>
+    {{else if editTags}}
+      {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+    {{/if}}
 
     <div class='queue-controls'>
       {{#if editing}}

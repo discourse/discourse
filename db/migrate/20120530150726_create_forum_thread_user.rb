@@ -1,4 +1,4 @@
-class CreateForumThreadUser < ActiveRecord::Migration
+class CreateForumThreadUser < ActiveRecord::Migration[4.2]
   def up
     create_table :forum_thread_users, id: false do |t|
       t.integer  :user_id, null: false
@@ -6,7 +6,7 @@ class CreateForumThreadUser < ActiveRecord::Migration
       t.boolean  :starred, null: false, default: false
       t.boolean  :posted, null: false, default: false
       t.integer  :last_read_post_number, null: false, default: 1
-      t.timestamps
+      t.timestamps null: false
     end
 
     execute "DELETE FROM read_posts"
@@ -24,7 +24,7 @@ class CreateForumThreadUser < ActiveRecord::Migration
       t.integer  :parent_id, null: false
       t.string   :parent_type, limit: 50, null: false
       t.integer  :user_id, null: true
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :stars, [:parent_id, :parent_type, :user_id]
@@ -33,7 +33,7 @@ class CreateForumThreadUser < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.integer :forum_thread_id, null: false
       t.integer :post_number, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :last_read_posts, [:user_id, :forum_thread_id], unique: true

@@ -4,12 +4,11 @@
 
 .d-header {
   left: 0;
-  z-index: 1000;
   padding-top: 3px;
-  height: 60px;
-  .fa-home {
-    padding:8px;
-    font-size: 2.1em;
+  height: 4.2857em;
+  .d-icon-home {
+    padding: 8px;
+    font-size: $font-up-5;
   }
 
   .site-text-logo {
@@ -18,9 +17,10 @@
   }
 }
 
-@media all
-and (max-width : 570px) {
-  .extra-info-wrapper {display: none;}
+@media all and (max-width: 570px) {
+  .extra-info-wrapper {
+    display: none;
+  }
 }
 
 #main {
@@ -28,22 +28,24 @@ and (max-width : 570px) {
 }
 
 #main-outlet {
-  padding-top: 82px;
+  padding-top: 5.8572em;
 }
 
 .search-link .blurb {
-  color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
+  color: dark-light-choose($primary-high, $secondary-medium);
   display: block;
   word-wrap: break-word;
-  font-size: 11px;
-  line-height: 1.3em;
+  font-size: $font-down-2;
+  line-height: $line-height-large;
   .search-highlight {
-    color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+    color: dark-light-choose($primary-high, $secondary-low);
   }
 }
 
 header {
   #site-text-logo {
-    line-height: 40px;
+    font-size: $font-up-3;
+    margin-top: 0.4em;
+    line-height: $line-height-medium;
   }
 }

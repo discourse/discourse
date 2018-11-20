@@ -1,0 +1,33 @@
+.moderation-history {
+  width: 100%;
+  th {
+    text-align: left;
+  }
+  td.date {
+    padding-right: 1em;
+  }
+  td,
+  th {
+    padding-bottom: 0.5em;
+    vertical-align: top;
+  }
+  .history-item-action {
+    .action-details {
+      margin: 1em 0;
+      color: $primary-medium;
+      white-space: pre-wrap;
+      line-height: $line-height-small;
+      width: 300px;
+    }
+  }
+
+  .history-item-actor {
+    a {
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 0.5em;
+      }
+    }
+  }
+}

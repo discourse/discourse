@@ -1,16 +1,16 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  classNames: ['invite-list-user'],
+  classNames: ["invite-list-user"],
 
-  @computed('user.role')
+  @computed("user.role")
   roleName(role) {
-    return this.get('roles').findBy('id', role).label;
+    return this.get("roles").findBy("id", role).label;
   },
 
   actions: {
     removeUser(user) {
-      this.sendAction('removeUser', user);
+      this.sendAction("removeUser", user);
     }
   }
 });

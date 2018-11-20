@@ -28,4 +28,18 @@ describe Emoji do
     end
   end
 
+  describe '.lookup_unicode' do
+    it 'should return the emoji' do
+      expect(Emoji.lookup_unicode("blonde_man")).to eq("👱")
+    end
+
+    it 'should return an aliased emoji' do
+      expect(Emoji.lookup_unicode("anger_right")).to eq("🗯")
+    end
+
+    it 'should return a skin toned emoji' do
+      expect(Emoji.lookup_unicode("blonde_woman:t6")).to eq("👱🏿‍♀️")
+    end
+  end
+
 end

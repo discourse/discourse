@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+pt_BR:
+  js:
+    discourse_local_dates:
+      title: Inserir Data
+      create:
+        modal_title: Inserir data
+        modal_subtitle: " Converteremos automaticamente a data e o tempo para o fuso horário local do visitante."
+        form:
+          insert: Inserir
+          advanced_mode: Modo avançado.
+          simple_mode: Modo simples
+          format_description: "Formato usado para exibir a data para o usuário. Use \"\\ T \\ Z\" para exibir o fuso horário do usuário em palavras (Europa / Paris)"
+          timezones_title: Fuso horários para exibir
+          timezones_description: Os fusos horários serão usados ​​para exibir datas na visualização e no fallback.
+          recurring_title: Recorrência
+          recurring_description: "Defina a recorrência de um evento. Você também pode editar manualmente a opção recorrente gerada pelo formulário e usar uma das seguintes chaves: anos, trimestres, meses, semanas, dias, horas, minutos, segundos, milissegundos"
+          recurring_none: Sem recorrência
+          invalid_date: Data inválida, certifique-se de que data e tempo estão corretos
+          date_title: Data
+          time_title: Tempo
+          format_title: Formato de Data

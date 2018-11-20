@@ -1,9 +1,9 @@
 require "backup_restore/backup_restore"
-require "email_backup_token"
 
 class Admin::BackupsController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
+  before_action :ensure_backups_enabled
+  skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
   def index
     respond_to do |format|
@@ -47,12 +47,14 @@ class Admin::BackupsController < Admin::AdminController
 
   def email
     if backup = Backup[params.fetch(:id)]
-      token = EmailBackupToken.set(current_user.id)
-      download_url = "#{url_for(controller: 'backups', action: 'show')}?token=#{token}"
-      Jobs.enqueue(:download_backup_email, to_address: current_user.email, backup_file_path: download_url)
-      render nothing: true
+      Jobs.enqueue(:download_backup_email,
+        user_id: current_user.id,
+        backup_file_path: url_for(controller: 'backups', action: 'show')
+      )
+
+      render body: nil
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -68,9 +70,9 @@ class Admin::BackupsController < Admin::AdminController
       send_file backup.path
     else
       if @error
-        render layout: 'no_ember', status: 422
+        render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
       else
-        render nothing: true, status: 404
+        render body: nil, status: 404
       end
     end
   end
@@ -79,9 +81,9 @@ class Admin::BackupsController < Admin::AdminController
     if backup = Backup[params.fetch(:id)]
       StaffActionLogger.new(current_user).log_backup_destroy(backup)
       backup.remove
-      render nothing: true
+      render body: nil
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -97,7 +99,7 @@ class Admin::BackupsController < Admin::AdminController
       client_id: params.fetch(:client_id),
       publish_to_message_bus: true,
     }
-    SiteSetting.set_and_log(:disable_emails, true, current_user)
+    SiteSetting.set_and_log(:disable_emails, 'yes', current_user)
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
     render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
@@ -125,7 +127,7 @@ class Admin::BackupsController < Admin::AdminController
 
     StaffActionLogger.new(current_user).log_change_readonly_mode(enable)
 
-    render nothing: true
+    render body: nil
   end
 
   def check_backup_chunk
@@ -139,16 +141,16 @@ class Admin::BackupsController < Admin::AdminController
     # check chunk upload status
     status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
 
-    render nothing: true, status: status
+    render body: nil, status: status
   end
 
   def upload_backup_chunk
     filename   = params.fetch(:resumableFilename)
     total_size = params.fetch(:resumableTotalSize).to_i
 
-    return render status: 415, text: I18n.t("backup.backup_file_should_be_tar_gz") unless /\.(tar\.gz|t?gz)$/i =~ filename
-    return render status: 415, text: I18n.t("backup.not_enough_space_on_disk")     unless has_enough_space_on_disk?(total_size)
-    return render status: 415, text: I18n.t("backup.invalid_filename") unless !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
+    return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz") unless /\.(tar\.gz|t?gz)$/i =~ filename
+    return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk")     unless has_enough_space_on_disk?(total_size)
+    return render status: 415, plain: I18n.t("backup.invalid_filename") unless !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
 
     file               = params.fetch(:file)
     identifier         = params.fetch(:resumableIdentifier)
@@ -168,13 +170,17 @@ class Admin::BackupsController < Admin::AdminController
       Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
     end
 
-    render nothing: true
+    render body: nil
   end
 
   private
 
   def has_enough_space_on_disk?(size)
     `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
+  end
+
+  def ensure_backups_enabled
+    raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
   end
 
 end

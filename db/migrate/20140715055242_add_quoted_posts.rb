@@ -1,14 +1,13 @@
-class AddQuotedPosts < ActiveRecord::Migration
+class AddQuotedPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :quoted_posts do |t|
       t.integer :post_id, null: false
       t.integer :quoted_post_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :quoted_posts, [:post_id, :quoted_post_id], unique: true
     add_index :quoted_posts, [:quoted_post_id, :post_id], unique: true
-
 
     # NOTE this can be done in pg but too much of a headache
     id = 0
@@ -37,9 +36,8 @@ SQL
         topic_id = a['data-topic'].to_i
         post_number = a['data-post'].to_i
 
-        next if uniq[[topic_id,post_number]]
-        uniq[[topic_id,post_number]] = true
-
+        next if uniq[[topic_id, post_number]]
+        uniq[[topic_id, post_number]] = true
 
         execute "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
                  SELECT #{post_id}, id, created_at, updated_at

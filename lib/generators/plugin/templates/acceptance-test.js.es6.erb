@@ -1,0 +1,9 @@
+import { acceptance } from "helpers/qunit-helpers";
+
+acceptance("<%= name %>", { loggedIn: true });
+
+test("<%= name %> works", async assert => {
+  await visit("/admin/plugins/<%= dasherized_name %>");
+
+  assert.ok(false, "it shows the <%= name %> button");
+});

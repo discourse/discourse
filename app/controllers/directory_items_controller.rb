@@ -10,6 +10,14 @@ class DirectoryItemsController < ApplicationController
 
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
+    if params[:group]
+      result = result.includes(user: :groups).where(users: { groups: { name: params[:group] } })
+    end
+
+    if params[:exclude_usernames]
+      result = result.references(:user).where.not(users: { username: params[:exclude_usernames].split(",") })
+    end
+
     order = params[:order] || DirectoryItem.headings.first
     if DirectoryItem.headings.include?(order.to_sym)
       dir = params[:asc] ? 'ASC' : 'DESC'
@@ -23,10 +31,10 @@ class DirectoryItemsController < ApplicationController
 
     user_ids = nil
     if params[:name].present?
-      user_ids = UserSearch.new(params[:name]).search.pluck(:id)
+      user_ids = UserSearch.new(params[:name], include_staged_users: true).search.pluck(:id)
       if user_ids.present?
         # Add the current user if we have at least one other match
-        if current_user && result.dup.where(user_id: user_ids).count > 0
+        if current_user && result.dup.where(user_id: user_ids).exists?
           user_ids << current_user.id
         end
         result = result.where(user_id: user_ids)
@@ -47,13 +55,13 @@ class DirectoryItemsController < ApplicationController
     result_count = result.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
-    more_params = params.slice(:period, :order, :asc)
+    more_params = params.slice(:period, :order, :asc).permit!
     more_params[:page] = page + 1
 
     # Put yourself at the top of the first page
     if result.present? && current_user.present? && page == 0
 
-      position = result.index {|r| r.user_id == current_user.id }
+      position = result.index { |r| r.user_id == current_user.id }
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10

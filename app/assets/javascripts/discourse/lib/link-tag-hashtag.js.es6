@@ -1,13 +1,13 @@
-import { ajax } from 'discourse/lib/ajax';
-import { replaceSpan } from 'discourse/lib/category-hashtags';
-import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { ajax } from "discourse/lib/ajax";
+import { replaceSpan } from "discourse/lib/category-hashtags";
+import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 
 const validTagHashtags = {};
 const checkedTagHashtags = [];
-const testedClass = 'tag-hashtag-tested';
+const testedClass = "tag-hashtag-tested";
 
 function updateFound($hashtags, tagValues) {
-  Ember.run.schedule('afterRender', () => {
+  Ember.run.schedule("afterRender", () => {
     $hashtags.each((index, hashtag) => {
       const tagValue = tagValues[index];
       const link = validTagHashtags[tagValue];
@@ -28,11 +28,14 @@ export function linkSeenTagHashtags($elem) {
 
   if ($hashtags.length) {
     const tagValues = $hashtags.map((_, hashtag) => {
-      return $(hashtag).text().substr(1).replace(TAG_HASHTAG_POSTFIX, "");
+      return $(hashtag)
+        .text()
+        .substr(1)
+        .replace(TAG_HASHTAG_POSTFIX, "");
     });
 
     if (tagValues.length) {
-      _.uniq(tagValues).forEach((tagValue) => {
+      _.uniq(tagValues).forEach(tagValue => {
         if (checkedTagHashtags.indexOf(tagValue) === -1) unseen.push(tagValue);
       });
     }
@@ -40,14 +43,15 @@ export function linkSeenTagHashtags($elem) {
   }
 
   return unseen;
-};
+}
 
 export function fetchUnseenTagHashtags(tagValues) {
-  return ajax("/tags/check", { data: { tag_values: tagValues } })
-    .then((response) => {
-      response.valid.forEach((tag) => {
+  return ajax("/tags/check", { data: { tag_values: tagValues } }).then(
+    response => {
+      response.valid.forEach(tag => {
         validTagHashtags[tag.value] = tag.url;
       });
       checkedTagHashtags.push.apply(checkedTagHashtags, tagValues);
-    });
+    }
+  );
 }

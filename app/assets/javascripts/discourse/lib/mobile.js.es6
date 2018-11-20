@@ -1,4 +1,4 @@
-import deprecated from 'discourse-common/lib/deprecated';
+import deprecated from "discourse-common/lib/deprecated";
 
 let mobileForced = false;
 
@@ -8,26 +8,28 @@ const Mobile = {
   mobileView: false,
 
   init() {
-    const $html = $('html');
-    this.isMobileDevice = mobileForced || $html.hasClass('mobile-device');
-    this.mobileView = mobileForced || $html.hasClass('mobile-view');
+    const $html = $("html");
+    this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
+    this.mobileView = mobileForced || $html.hasClass("mobile-view");
 
-    if (Ember.testing || mobileForced) { return; }
+    if (Ember.testing || mobileForced) {
+      return;
+    }
 
-    try{
-      if (window.location.search.match(/mobile_view=1/)){
+    try {
+      if (window.location.search.match(/mobile_view=1/)) {
         localStorage.mobileView = true;
       }
-      if (window.location.search.match(/mobile_view=0/)){
+      if (window.location.search.match(/mobile_view=0/)) {
         localStorage.mobileView = false;
       }
       if (localStorage.mobileView) {
-        var savedValue = (localStorage.mobileView === 'true');
+        var savedValue = localStorage.mobileView === "true";
         if (savedValue !== this.mobileView) {
           this.reloadPage(savedValue);
         }
       }
-    } catch(err) {
+    } catch (err) {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
     }
@@ -50,14 +52,16 @@ const Mobile = {
       if (localStorage) {
         localStorage.mobileView = !this.mobileView;
       }
-    } catch(err) {
+    } catch (err) {
       // localStorage may be disabled, skip
     }
     this.reloadPage(!this.mobileView);
   },
 
   reloadPage(mobile) {
-    window.location.assign(window.location.pathname + '?mobile_view=' + (mobile ? '1' : '0'));
+    window.location.assign(
+      window.location.pathname + "?mobile_view=" + (mobile ? "1" : "0")
+    );
   }
 };
 
@@ -69,9 +73,11 @@ export function resetMobile() {
   mobileForced = false;
 }
 
-Object.defineProperty(Discourse, 'Mobile', {
+Object.defineProperty(Discourse, "Mobile", {
   get() {
-    deprecated("`Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
+    deprecated(
+      "`Discourse.Mobile` is deprecated, use `this.site.mobileView` instead"
+    );
     return Mobile;
   }
 });

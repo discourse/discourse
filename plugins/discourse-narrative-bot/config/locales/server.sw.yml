@@ -1,0 +1,424 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  site_settings:
+    disable_discourse_narrative_bot_welcome_post: "Sitisha Roboti wa Discourse kukaribisha watu na taarifa"
+    discourse_narrative_bot_ignored_usernames: "Majina ya watumiaji ambayo Roboti wa Discourse aya dharau"
+    discourse_narrative_bot_disable_public_replies: "Sitisha majibu ya umma ya roboti wa Discourse"
+    discourse_narrative_bot_welcome_post_type: "Aina ya ujumbe wa kukaribisha watu, roboti wa Discourse atatuma"
+    discourse_narrative_bot_welcome_post_delay: "Subiria sekunde (n) kabla ya kutuma ujumbe wa ukaribisho kutoka kwa Roboti wa Discourse."
+  badges:
+    certified:
+      name: Imethibitishwa
+      description: "Amepitia taarifa za utambulisho"
+      long_description: |
+        Utapata hii beji ukimaliza kuapitia taarifa za utambulisho. Umechukua mda kupitia taarifa za awali za majadiliano kwenye mtandao huu, na umethibitishwa kuwa mjuzi
+    licensed:
+      name: Imesajiliwa
+      description: "Umemaliza mafunzo yetu ya kiwango cha juu"
+      long_description: |
+        Hii beji inapewa kwa mtu aliyemaliza kupitia mafunzo yetu ya juu. Umepata mafunzo hayo ya juu kuhusu majadiliano - na sasa umethibitishwa!
+  discourse_narrative_bot:
+    bio: "Habari, mimi sio mtu bali ni roboti. Ningependa nikufundishe kuhusu hii tovuti. Kuwasiliana na mimi, nitumie ujumbe au nitaje **@%{discobot_username}** popote."
+    timeout:
+      message: |-
+        Habari @%{username}, nakujulia hali kwa sababu sijakuona nina mda
+
+        - Kuendelea, nijibu mda wowote.
+
+        - Ukipenda kuruka hii hatua, sema `%{skip_trigger}`.
+
+        - Kuanza upya, sema '%{reset_trigger}`.
+
+        Kama unaona hakuna umuhimu, ni sawa tu. Mimi ni roboti. Hautaumiza hisia zangu. :sob:
+    dice:
+      trigger: "zungusha"
+      not_enough_dice: |-
+        Nina dadu %{num_of_dice}. [Aibu]  (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), najua!
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "nukulu"
+      '1':
+        quote: "Katikati ya kila ugumu kuna fursa"
+        author: "Albert Einstein"
+      '2':
+        quote: "Hakuna umuhimu wa kuwa na uhuru kama hakuna uhuru wa kufanya makosa."
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Usilie sababu imeisha, tabasamu kwa sababu ilitokea."
+        author: "Dr Seuss"
+      '4':
+        quote: "Ukitaka kitu kifanyike vizuri, fanya mwenyewe."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        quote: "Amini kuwa unaweza na utakuwa umemaliza nusu ya safari."
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "Maisha ni  kama sanduku la chocolate. Hauwezi kujua utapata nini."
+        author: "Mama yake na Forrest Gump"
+      '7':
+        quote: "Hiyo ni hatua moja kwa mtu, hatua kubwa kwa binadamu."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Kila siku fanya kitu ninachokutisha."
+        author: "Eleanor Roosevelt"
+      '9':
+        quote: "Makosa yanasemehewa, kama mtendaji yuko tayari kukiri."
+        author: "Bruce Lee"
+      '10':
+        quote: "Chochote ambacho akili ya binadamu inaweza kufikiria na kuamini, inaweza kukifanya."
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: 'Mali au Bahati'
+      answers:
+        '1': "Inawezekana"
+        '2': "Imeamuliwa kuwa hivyo"
+        '3': "Hakuna shaka"
+        '4': "Kweli kabisa"
+        '5': "Unaweza ukaiamini"
+        '6': "Kana ninavyoiona, ndio"
+        '7': "Inawezekana kuwa hivyo"
+        '8': "Outlook iko vizuri"
+        '9': "Ndio"
+        '10': "Ishara inaonekana kuwa ndio"
+        '11': "Jibu halipo vizuri jaribu tena"
+        '12': "Tafadhali, uliza tena baadae"
+        '13': "Afadhali kutokukwambia kwa sasa"
+        '14': "Haiwezi ikabashiri sasa hivi"
+        '15': "Kuwa makini na uliza tena"
+        '16': "Usiwe na hakika nacho"
+        '17': "Jibu langu ni hapana"
+        '18': "Ufuo wangu umesema hapana"
+        '19': "Outlook haiko vizuri"
+        '20': "Uhakika Kidogo Sana"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'mwanzo'
+      skip_trigger: 'ruka'
+      help_trigger: 'onyesha msaada'
+      random_mention:
+        reply: |-
+          Habari! kujua ninachoweza kufanya andika `@%{discobot_username}%{help_trigger}`.
+        tracks: |-
+          Kwa sasa najua kufanya vitu vifuatavyo:
+
+          `@%{discobot_username}%{reset_trigger}%{default_track}`
+          >Anzisha mazungumzo: %{tracks}
+        bot_actions: |-
+          `@%{discobot_username}%{dice_trigger} 2d6`
+          > :game_die: 3 ,6
+
+          `@%{discobot_username}%{quote_trigger}`
+          > :left_speech_bubble:_Fanya vitendo vya huruma na upendo, bila kutegemea tuzo, ukijua kuwa siku moja mtu atakufanyia hivyo pia_&mdash; Princess Diana
+
+          `@%{discobot_username}%{magic_8_ball_trigger}`
+          >mpira_fuwele: Unaweza ukautegemea
+      do_not_understand:
+        first_response: |-
+          Habari, asante kwa jibu lako!
+
+          Kwa bahati mbaya, mimi kama roboti sijatengenezwa vizuri sana, nimeshindwa kuelewa ulichokiandika. :frowning:
+        track_response: Unaweza kujaribu tena, au kama ungependa kuruka hatua hii, andika `%{skip_trigger}`. Kuanza upya, andika `%{reset_trigger}`.
+        second_response: |-
+          Oh, jamani. Bado Nashindwa kukuelewa. :anguished:
+
+          Mimi ni roboti tu, kama hautajali unaweza kuwasiliana na binadamu, tembelea [ukurasa wa mawasiliano](/kuhusu)
+
+          Kwa sasa, nitakaa pembeni.
+    new_user_narrative:
+      reset_trigger: "mtumiaji mpya"
+      cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
+      hello:
+        title: ":robot: Habari!"
+        message: |-
+          Asante kwa kujiunga na %{title}, na karibu!
+
+          - Mimi ni roboti, lakini [wasaidizi wetu](/kuhusu) nao wapo kwa ajili yako kama unahitaji kuongea na mtu/binadamu.
+
+          - Kwa ajili ya ulinzi na usalama, kuna vitu hautaweza kufanya kama mtumiaji mpya. Utapata uwezo (na [nembo](/nembo)) jinsi tutakavyozidi kukujua wewe.
+
+          - Tunaamini na kuheshimu [mwenendo mzuri wa kijamii](/miongozo) mda wote.
+      onebox:
+        instructions: |-
+          Baada ya hapo, je unaweza kunipa hivi viungo na mimi? Jibu na **kila kiungo kwenye mstari wake**, na itaongezeka kuonyesha muhtasari kuhusiana na hicho kiungo.
+
+          Kunakili kiungo, bonyeza bila kuachia kwenye simu yako ya mkononi, au bonyeza upande wa kulia wa puku ya komputa yako:
+
+          - https://en.wikipedia.org/wiki/Inherently_funny_word
+          - https://en.wikipedia.org/wiki/Death_by_coconut
+          - https://en.wikipedia.org/wiki/Calculator_spelling
+        reply: |-
+          Vizuri! Hii itafaa kwa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> viungo. Kumbuka, inabidi kiwe kwenye mstari mmoja _yenyewe_, bila maneno yoyote mbele, au nyuma yake.
+        not_found: |-
+          Samahani, Sijaona kiungo kwenye jibu lako! :cry:
+
+          Unaweza kuongeza kiungo, kwenye mstari wake pekee, kwenye jibu lako lipya?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        instructions: |-
+          Hii ni picha ya farasi:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Kama unaipenda (kwa nini usiipende!) bonyeza kitufe cha :moyo chini ya taarifa na nijulishe.
+
+          Je unaweza **kunijibu na picha?** Picha yoyote tu itafaa! Unaweza kuiweka, kuipakia au kuinakili na kuibandika hapa.
+        reply: |-
+          Picha nzuri -- Nimebonyeza kitufe cha :moyo: kuonyesha shukrani yangu kwako :heart_eyes_:
+        like_not_found: |-
+          Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
+        not_found: |-
+          Inaonekana haujaweka picha kwa hiyo nimechagua picha_na uhakika_utaipenda.
+
+          `%{image_url}`
+
+          Jaribu kuweka ya kwako mwenyewe baada ya hii, au bandika kiungo kimoja kwenye mstari pekee!
+      formatting:
+        instructions: |-
+          Unaweza **kukoza** au _italiki_kwenye jibu lako?
+
+          - andika `**koza**` au `_italiki_`
+
+          -au, bonyeza vitufe vya <kbd><b>B</b></kbd> au <kbd><i>I</i></kbd> kwenye sehemu ya kuandika
+        reply: |-
+          Kazi nzuri! HTML na BBCode zinaumbiza - kujifunza zaidi, [jaribu fundisho hili] (http://commonmark.org/help) :nerd:
+        not_found: |-
+          Sijaona mtindo kwenye jibu lako. :pencil2:
+
+          Unaweza ukajaribu tena? Bofya vitufe <kbd><b>B</b></kbd> koza au <kbd><i>I</i></kbd> italiki kwenye sehemu ya marekebisho kama ukikwama.
+      quoting:
+        instructions: |-
+          Unaweza kuninukulu mimi ukiwa unajibu, ili niweze kujusa sehemu gani unaijibu?
+
+          > Kama hii ni kahawa, naomba uniletee chai; kama hii ni chai, naomba uniletee kahawa.
+
+          > Faida moja ya kuongea mwenyewe, ni kuwa kuna mtu mmoja anakusikiliza.
+          >
+          > Kuna watu ambao wako vizuri na maneno, na kuna watu...oh, uh, sio kivile.
+
+          Chagua maneno yoyote &uarr; nukulu unayopendelea, na bonyeza kitufe cha **Nukulu** kitakacho tokea - au kifute cha **Jibu** chini kabisa ya hizi taariga.
+
+
+          Chini ya nukulu, andika neno moja au mawili kwa nini umechagua nukulu hiyo, kwa sababu ningependa kujua :thinking:
+        reply: |-
+          Umefanya vizuri, umechagua nukulu ninayoipenda pia! :left_speech_bubble:
+        not_found: |-
+          Inaonekana haukunikulu mimi kwenye jibu lako?
+
+          Chagua neno lotote kwenye taarifa yangu italeta kitufe cha<kbd>**Nukulu**</kbd>. Na ukibonyeza **Jibu** na maneno yoyote uliyoyachagua, itakubali pia! Unaweza kujaibu tena?
+      bookmark:
+        instructions: |-
+          Kama ukipenda kujifunza zaidi, chagua <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">chini na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **alamisha ujumbe huu binafsi**. Ukifanya hivyo, unaweza kupata :gift: baadae!
+        reply: |-
+          Vizuri! Sasa unaweza kurudi kwenye maongezi yetu binafsi mda wowote, kupitia [kichupo cha mialamisho kwenye umbo lako](%{profile_page_url}/activity/mialamisho). Chagua umbo lako iliyopo juu upande wa kulia &#8599;
+        not_found: |-
+          Nimeshindwa kuona mialamisho ya mada hii. Umeona alamisho yoyote kwenye kila chapisho? Tumia onyesha zaidi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuona vitendo zaidi kama vinahitajika.
+      emoji:
+        instructions: |-
+          Utakuwa umeona picha ndogo nilizotumia kwenye majibu yangu :blue_car::dash: hizo zinaitwa [emoji] (https://en.wikipedia.org/wiki/Emoji). Je unaweza **kuongeza emoji** kwenye jibu lako? Yoyote kati ya hizi zitafanya kazi:
+
+          - Andika `:) ;) :D :P :O`
+
+          - Andika nukta mbili <kbd>:</kbd>alafu malizia jina la emoji `:tada:`
+
+          - Bofya kitufe cha emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> ndani ya sehemu ya kuhariri, au kwenye kibodi ya kifaa cha kiganjani.
+        reply: |-
+          Hiyo ni :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          Mmmh, nimeshindwa kuona Emoji yoyote kwenye jibu lako? Jamani! :sob:
+
+          Jaribu  kuandika nukta mbili <kbd>:</kbd> kuchagua emojis, alafu andika herufi za kwanza unazotaka, kama `:bird:`
+
+          Au, bofya kitufe cha emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> kwenye sehemu ya kuhariri.
+
+          (Kama unatumia kifaa cha kiganjani, unaweza kuingiza Emoji kutoka kwenye kibodi yako, pia.)
+      mention:
+        instructions: |-
+          Kuna mida utapenda kupata ufikivu wa mtumiaji mwingine, hata kama ukiwa hauwajibu. Andika `@` alafu andika jina analotumia kuwataja.
+
+          Unaweza kutaja **`@%{discobot_username}`** kwenye jibu lako?
+        reply: |-
+          _Kuna mtu ametaja jina langu?_ :raised_hand: Nadhani umeniita! :wave: Haya, nimekuja! Asante kwa kunitaja. :ok_hand:
+        not_found: |-
+          Sioni jina langu popote :frowning: Unaweza ukajaribu kunitaja kama `@%{discobot_username}` tena?
+
+          (Ndio, jina langu ni _disco_, kama miziki ya miaka ya 1970. Ni[napenda kusherehekea!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          Tunapenda majadiliano yetu yawe ya kirafiki, na tunahitaji msaada wako [kuhakikisha kuwa vitu vipo kistaarabu au kiungwana](%{guidelines_url}). Kama ukiona tatizo lolote, tafadhali bonyeza bendera pembeni ya hiyo taarifa kumtujulisha mwandishi, au [wasaidizi wetu](%{about_url}), kujua kuhusiana na hilo tatizo.
+
+          > :imp: Nimeandika kitu ambacho hakifai
+
+          Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
+        reply: |-
+          [Wasaidizi](/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi siandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
+        not_found: |-
+          Jamani, taarifa yangu chafu nilioandika bado haijapewa bendera. :worried: Unaweza ukamjulisha mtu kuwa ni chafu kwa kutumia **flag**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Usisahau kutumia kitufe za zaidi<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuonyesha vitendo zaidi kwa ajili ya kila taarifa.
+      search:
+        instructions: |-
+          _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu
+
+          Jaribu kutafuta neno "capy&#8203;bara" kwenye hii mada
+        hidden_message: |-
+          Umepitwa vipi na capybara? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Umegundua umerudi ulipoanza? Shibisha capybara mwenye njaa kwa **kuandika `:herb` ishara** na utapelekwa mwisho.
+        reply: |-
+          Nina furaha kuwa umeiona :tada:
+
+          - Kwa utafiti wa ndani zaidi, nenda kwenye [utafiti wa karatasi yote](%{search_url}).
+
+          -Kufika sehemu yoyote kwenye majadiliano, jaribu kutumia mfululizo wa mada kulingana na mda uliopo mkono wa kulia (na chini, kwenye kifaa cha kiganjani).
+
+          -Kama una kibodi halisi :keyboard:, bonyeza <kbd>?</kbd>kuona njia za mkato za kibodi.
+        not_found: |-
+          Hmm...inaonekana kama kuna tatizo. Samahani Sana. Je ulikuwa unatafuta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> kuhusiana na **capy&#8203;bara**?
+      end:
+        message: |-
+          Asante kwa kubaki na mimi @ %{username}! amekutengenezea hiki, Nadhani unastahili:
+
+          %{certificate}
+
+          Ni hilo tu kwa sasa! Tembelea [**mada za majadiliano zilizoongelewa hivi karibuni**](/karibuni) au [**vikundi vya majadiliano**](/majadiliano). : sunglasses:
+          (Ukipenda kujifunza zaidi, nitumie ujumbe mfupi au andika `@%{discobot_username}` mda wowote!)
+      certificate:
+        alt: 'Shahada ya Mafanikio'
+    advanced_user_narrative:
+      reset_trigger: 'mtumiaji wa hali ya juu'
+      cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya wa hali ya juu"
+      title: ':arrow_up: Vipengele vya mtumiaji wa hali ya juu'
+      start_message: |-
+        Kama mtumiaji_wa_hali_ya_juu, umetembela [ukurasa wa mapendekezo](/my/mapendekezo) @%{username}? Kuna njia nyingi za kugeuza kukufaa, kama kuchagua mandhari nyeupe au nyeusi.
+
+        Anza kama upo tayari.
+      edit:
+        bot_created_post_raw: "@%{discobot_username} ni, kwa kirefu, roboti mjanja ninayemjua :wink:"
+        instructions: |-
+          Kila mtu anafanya makosa. Ila usijali, unaweza ukarekebisha makosa yako kwa huriri!
+
+          Unaweza kuanza kwa **kuhariri** chapisho nililo kutengenezea?
+        not_found: |-
+          Inaonekana kuwa hauja hariri [chapisho](%{url}) nililokutengenezea. Unaweza kujaribu tena?
+
+          Tumia ikoni <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> kuonyesha sehemu ya kuhariri.
+        reply: |-
+          Kazi nzuri!
+
+          Uhariri unaofanyika baada ya dakika 5 utatokea kama uhariri kwa umma, na ikoni ya penseli ndogo itatokea juu upande wa kulia ikiwa na namba ya sahihisho.
+      delete:
+        instructions: |-
+          Kama ukitaka kuondoa chapisho ulilotengeneza, unaweza kulifuta.
+
+          **Futa** chapisho lolote juu kwa kutumia kitendo cha **kufuta** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">. Usifute chapisho la kwanza!
+        not_found: |-
+          Sioni machapisho yaliyofichwa? Kumbuka<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">onyesha zaidi kuonyesha<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">vilivyofutwa.
+        reply: |-
+          Whoa! :boom:
+
+          Kuendeleza majadiliano, ufutaji hautatokea hapo hapo, chapisho litaondolewa baada ya mda fulani.
+      recover:
+        deleted_post_raw: 'Kwa nini @%{discobot_username} amefuta chapisho langu? :anguished:'
+        instructions: |-
+          Inaonekana kuwa nimefuta kimakosa chapisho langu jipya nililokutengenezea.
+
+          Unaweza kunisaidia na<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **kulirudisha**?
+        not_found: |-
+          Je unapata tatizo? Kumbuka <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">onyesha zaidi itaonyesha<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">kurudisha.
+        reply: |-
+          Asante kwa kutatua tatizo :wink:
+
+          Jua una masaa 24 kurudisha chapisho.
+      category_hashtag:
+        instructions: |-
+          Unajua unaweza kuongelea kategoria na lebo kwenye chapisho lako? Mfano, umeona kategoria %{category} hii?
+
+          Andika `#` katikati ya sentensi na chagua kategoria au lebo yoyote.
+        not_found: |-
+          Hmm, Sioni kategoria yoyote. Jua kuwa `#` haiwezi kuwa herufi ya kwanza. Unaweza kunakili kwenye jibu lako linalokuja?
+
+          ```neno
+          Ninaweza kutengeneza kiungo cha kategoria kupitia #
+          ```
+        reply: |-
+          Vizuri sana! Kumbuka hii inafanya kazi kwenye kategoria _na_lebo kama lebo zikiruhusiwa.
+      change_topic_notification_level:
+        instructions: |-
+          Kila mada ina kiwango cha ujulishaji. Inaanza na 'kawaida',  inamaanisha utajulishwa tu mtu akikuongelea.
+
+          Kama chaguo-msingi, kiwango cha ujulishaji kwa ajili ya ujumbe binafsi ipo kwenye kiwango cha juu cha 'kuangalia', ina maanisha kuwa utajulishwa kuhusu kila jibu jipya. Lakini unaweza kubadilisha kiwango hiki kwa ajili ya mada 'zinazoangaliwa', 'inayofuatiliwa' au 'kunyamazishwa'.
+
+          Tujaribu kubadilisha kiwango cha ujulishaji kwa ajili ya mada hii. Chini ya mada, utaona kitufe kinachosema una **angalia** mada hii. Unaweza kubadilisha kiwango cha ujulishaji kuwa **inafuatiliwa**?
+        not_found: |-
+          Inaonekana kuwa bado unaangalia :eyes: mada hii! Kama umeshindwa kuiona, kitufe cha kiwango cha kujulisha kinapatikana chini ya mada.
+        reply: |-
+          Kazi nzuri! Natumaini haujanyamazisha mada hii! kwa vile napenda kuongea sana saa zingine :grin:.
+
+          Ukijibu mada, au ukisoma zaidi ya dakika chache, itawekwa kwenye orodha ya mada 'zinazofuatiliwa'. Unaweza kubadilisha hii kwenye [mipangilio yako ya mtumiaji](/my/preferences).
+      poll:
+        instructions: |-
+          Unajua unaweza kuongeza uchaguzi kwenye chapisho lolote? Jaribu kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kwenye uhariri ku **tengeneza uchaguzi**
+        not_found: |-
+          Whoops! Hakuna uchaguzi kwenye jibu lako.
+
+          Tumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">kwenye sehemu ya kuhariri, au nakili na kubandika uchaguzi huu kwenye jibu lako lijalo:
+          ```neno
+          [uchaguzi]
+          * :cat:
+          * :dog:
+          [/uchaguzi]
+          ```
+        reply: |-
+          Habari, uchaguzi mzuri! Nimefanya vipi kwenye kukufundisha?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          Kuna mda ungependa **kuficha taarifa** kwenye majibu yako:
+
+          - Ukiwa unaongelea kuhusu sehemu nzuri za filamu au kipindi cha Runinga ambazo zinaweza kuwaharibia watu na kutowafanya watake kuangalia.
+
+          - Chapisho lako likiwa linahitaji taarifa nyingi kuweza kuelewa.
+
+          [taarifa=Chagua moja kati ya hizi kuona jinsi inavyofanya kazi!]
+          1. Chagua gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kwenye uhariri.
+          2. Chagua "Ficha Taarifa".
+          3. Hariri taarifa za muhtasari na andika machapisho yako.
+          [/taarifa]
+
+          Unaweza kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">kwenye uhariri kuongeza sehemu ya taarifa kwenye jibu lako lijalo?
+        not_found: |-
+          Umeshindwa kutengeneza widget ya maelezo? Jaribu kuongeza yafuatayo kwenye  jibu lako lifuatao:
+
+          ```neno
+          [maelezo=Nichague kupata maelezo]
+          Maelezo yako yako hapa
+          [/maelezo]
+          ```
+        reply: |-
+          Kazi nzuri - uwezo_wako_wa_kuona_vitu_kwa_undani ni mzuri sana!
+      end:
+        message: |-
+          Umepita kama _mtumiaji_wa_hali_ya_juu :bow:
+
+          %{certificate}
+
+          Nilikuwa na hivyo tu.
+
+          Kwa heri kwa sasa! Kama ukitaka kuongea na mimi tena, nitumie ujumbe mda wowote :sunglasses:
+      certificate:
+        alt: 'Shahada ya Mafanikio ya Mtumiaji wa Juu'

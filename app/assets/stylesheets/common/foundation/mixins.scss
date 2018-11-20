@@ -5,30 +5,20 @@
 // Media queries
 // --------------------------------------------------
 
+$breakpoints: (
+  mobile-small: 320px,
+  mobile: 550px,
+  tablet: 768px,
+  medium: 850px,
+  large: 1000px,
+  extra-large: 1140px
+);
 
-@mixin small-width {
-  @media all and (max-width: 850px) {
+@mixin breakpoint($bp, $rule: max-width, $type: screen) {
+  @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
     @content;
   }
 }
-
-@mixin medium-width {
-  @media all and (min-width: 1000px) and (max-width: 1139px) {
-    @content;
-  }
-}
-
-@mixin large-width {
-  @media all and (min-width: 1140px) {
-    @content;
-  }
-}
-
-@mixin mobile-portrait      { @media all and (max-width : 320px) { @content; } }
-@mixin not-mobile-portrait  { @media all and (min-width : 321px) { @content; } }
-@mixin mobile-landscape     { @media all and (min-width : 321px) and (max-width : 959px) { @content; } }
-@mixin not-tablet-landscape { @media all and (max-width : 959px) { @content; } }
-@mixin tablet-landscape     { @media all and (min-width : 960px) { @content; } }
 
 // CSS3 properties
 // --------------------------------------------------
@@ -36,29 +26,15 @@
 // Clearfix
 
 @mixin clearfix() {
-    &:before,
-    &:after {
-        content: "";
-        display: table;
-    }
-    &:after {
-        clear: both;
-    }
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
 }
-
-// Border radius
-
-@mixin border-radius-all($radius) {
-  border-radius: $radius;
-}
-
-// Box shadow
-
-@mixin box-shadow($shadow) {
-  box-shadow: $shadow;
-}
-
-// Linear gradient
 
 //noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
@@ -77,32 +53,36 @@
   }
 }
 
-@mixin visible {
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s;
-}
-
 //
 // --------------------------------------------------
 
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
-@mixin unselectable {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
+@mixin user-select($mode) {
+  -webkit-user-select: $mode;
+  -moz-user-select: $mode;
+  -ms-user-select: $mode;
 }
 
+@mixin unselectable {
+  @include user-select(none);
+}
 
 // Stuff we repeat
 @mixin post-aside {
-  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  border-left: 5px solid $primary-low;
   background-color: blend-primary-secondary(5%);
 }
 
 // We still need -webkit for latest iPhone and Safari
 @mixin transform($transforms) {
-	-webkit-transform: $transforms;
-            transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin appearance-none() {
+  // resets default browser styles
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }

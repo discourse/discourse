@@ -1,0 +1,115 @@
+<div class='flagged-post-details'>
+  <div class="flagged-post-avatar">
+    {{#if flaggedPost.postAuthorFlagged}}
+      {{#if flaggedPost.user}}
+        {{#link-to 'adminUser' flaggedPost.user.id flaggedPost.user.username}}
+          {{avatar flaggedPost.user imageSize="large"}}
+        {{/link-to}}
+        {{#if flaggedPost.wasEdited}}
+          <div class='edited-after'>
+            {{d-icon "pencil" title="admin.flags.was_edited"}}
+          </div>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+    {{#if canAct}}
+      {{#if flaggedPost.previous_flags_count}}
+        <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification previous-flagged-posts">{{flaggedPost.previous_flags_count}}</span>
+      {{/if}}
+    {{/if}}
+  </div>
+
+  <div class="flagged-post-contents">
+    <div class='flagged-post-user-details'>
+      <a class='username' href={{user.path}} data-user-card={{flaggedPost.user.username}}>{{format-username flaggedPost.user.username}}</a>
+      {{plugin-outlet
+        name="flagged-post-controls"
+        tagName=""
+        args=(hash flaggedPost=flaggedPost actableFilter=actableFilter topic=topic)}}
+    </div>
+
+    <div class='flagged-post-excerpt'>
+      {{#unless hideTitle}}
+        {{flagged-post-title flaggedPost=flaggedPost}}
+      {{/unless}}
+      {{#if flaggedPost.postAuthorFlagged}}
+        {{#if expanded}}
+          {{{flaggedPost.cooked}}}
+        {{else}}
+          <p>
+            {{{flaggedPost.excerpt}}}
+            <a href {{action "expand"}}>{{i18n "admin.flags.show_full"}}</a>
+          </p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{#if flaggedPost.topicFlagged}}
+      <div class='flagged-post-message'>
+        <span class='text'>{{{i18n 'admin.flags.topic_flagged'}}}</span>
+        <a href={{flaggedPost.url}} class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
+      </div>
+    {{/if}}
+
+    {{#each flaggedPost.conversations as |c|}}
+      <div class='flag-conversation'>
+        {{#if c.response}}
+          {{flagged-post-response response=c.response}}
+          {{#if c.reply}}
+            {{flagged-post-response response=c.reply hasMore=c.hasMore permalink=c.permalink}}
+          {{/if}}
+          <a href={{c.permalink}} class="btn reply-conversation btn-small">
+            {{d-icon "reply"}}
+            {{i18n "admin.flags.reply_message"}}
+          </a>
+        {{/if}}
+      </div>
+    {{/each}}
+
+    {{flag-user-lists flaggedPost=flaggedPost showResolvedBy=showResolvedBy}}
+
+    <div class='flagged-post-controls'>
+      {{#if canAct}}
+        {{admin-agree-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter") }}
+
+        {{#if flaggedPost.postHidden}}
+          {{d-button
+            title="admin.flags.disagree_flag_unhide_post_title"
+            class="disagree-flag"
+            action="disagree"
+            icon="thumbs-o-down"
+            label="admin.flags.disagree_flag_unhide_post"}}
+        {{else}}
+          {{d-button
+            title="admin.flags.disagree_flag_title"
+            class="disagree-flag"
+            action="disagree"
+            icon="thumbs-o-down"
+            label="admin.flags.disagree_flag"}}
+        {{/if}}
+
+        {{d-button
+          class="defer-flag"
+          title="admin.flags.ignore_flag_title"
+          action="defer"
+          icon="external-link"
+          label="admin.flags.ignore_flag"}}
+
+        {{admin-delete-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter")}}
+      {{/if}}
+
+      {{d-button
+        icon="list"
+        label="admin.flags.moderation_history"
+        action=(action "showModerationHistory")}}
+    </div>
+    {{plugin-outlet
+      name="flagged-post-below-controls"
+      tagName=""
+      args=(hash flaggedPost=flaggedPost canAct=canAct actableFilter=actableFilter)}}
+  </div>
+</div>

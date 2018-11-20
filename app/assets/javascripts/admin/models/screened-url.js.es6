@@ -1,8 +1,8 @@
-import { ajax } from 'discourse/lib/ajax';
+import { ajax } from "discourse/lib/ajax";
 const ScreenedUrl = Discourse.Model.extend({
   actionName: function() {
-    return I18n.t("admin.logs.screened_actions." + this.get('action'));
-  }.property('action')
+    return I18n.t("admin.logs.screened_actions." + this.get("action"));
+  }.property("action")
 });
 
 ScreenedUrl.reopenClass({

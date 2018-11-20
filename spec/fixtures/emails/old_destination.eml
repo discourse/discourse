@@ -1,0 +1,13 @@
+Return-Path: <staged@bar.com>
+From: Foo Bar <staged@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Cc: foofoo@bar.com
+Date: Fri, 15 Jan 2018 00:12:43 +0100
+Message-ID: <999@foo.bar.mail>
+In-Reply-To: <topic/424242/123456@test.localhost>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Subject: Some Old Post
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

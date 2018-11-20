@@ -7,7 +7,7 @@ class ComposerMessagesFinder
   end
 
   def self.check_methods
-    @check_methods ||= instance_methods.find_all {|m| m =~ /^check\_/}
+    @check_methods ||= instance_methods.find_all { |m| m =~ /^check\_/ }
   end
 
   def find
@@ -20,7 +20,7 @@ class ComposerMessagesFinder
 
   # Determines whether to show the user education text
   def check_education_message
-    return if @topic && @topic.archetype == Archetype.private_message
+    return if @topic&.private_message?
 
     if creating_topic?
       count = @user.created_topic_count
@@ -70,7 +70,7 @@ class ComposerMessagesFinder
     return if SiteSetting.disable_avatar_education_message || SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
 
     # If we got this far, log that we've nagged them about the avatar
-    UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id )
+    UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id)
 
     # Return the message
     {
@@ -84,21 +84,22 @@ class ComposerMessagesFinder
   def check_sequential_replies
     return unless educate_reply?(:notified_about_sequential_replies)
 
-    # Count the topics made by this user in the last day
+    # Count the posts made by this user in the last day
     recent_posts_user_ids = Post.where(topic_id: @details[:topic_id])
-                                .where("created_at > ?", 1.day.ago)
-                                .order('created_at desc')
-                                .limit(SiteSetting.sequential_replies_threshold)
-                                .pluck(:user_id)
+      .where("created_at > ?", 1.day.ago)
+      .where(post_type: Post.types[:regular])
+      .order('created_at desc')
+      .limit(SiteSetting.sequential_replies_threshold)
+      .pluck(:user_id)
 
     # Did we get back as many posts as we asked for, and are they all by the current user?
     return if recent_posts_user_ids.size != SiteSetting.sequential_replies_threshold ||
-              recent_posts_user_ids.detect {|u| u != @user.id }
+              recent_posts_user_ids.detect { |u| u != @user.id }
 
     # If we got this far, log that we've nagged them about the sequential replies
     UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies],
                         target_user_id: @user.id,
-                        topic_id: @details[:topic_id] )
+                        topic_id: @details[:topic_id])
 
     {
       id: 'sequential_replies',
@@ -149,7 +150,7 @@ class ComposerMessagesFinder
       order('created_at desc').
       limit(SiteSetting.get_a_room_threshold).
       pluck(:reply_to_user_id).
-      find_all {|uid| uid != @user.id && uid == reply_to_user_id}
+      find_all { |uid| uid != @user.id && uid == reply_to_user_id }
 
     return unless last_x_replies.size == SiteSetting.get_a_room_threshold
     return unless @topic.posts.count('distinct user_id') >= min_users_posted
@@ -187,26 +188,26 @@ class ComposerMessagesFinder
       templateName: 'education',
       wait_for_typing: false,
       extraClass: 'education-message',
-      body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - @topic.last_posted_at).round / 1.day))
+      body: PrettyText.cook(I18n.t('education.reviving_old_topic', time_ago: FreedomPatches::Rails4.time_ago_in_words(@topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose')))
     }
   end
 
   private
 
-    def educate_reply?(type)
-      replying? &&
-      @details[:topic_id] &&
-      (@topic.present? && !@topic.private_message?) &&
-      (@user.post_count >= SiteSetting.educate_until_posts) &&
-      !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
-    end
+  def educate_reply?(type)
+    replying? &&
+    @details[:topic_id] &&
+    (@topic.present? && !@topic.private_message?) &&
+    (@user.post_count >= SiteSetting.educate_until_posts) &&
+    !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
+  end
 
-    def creating_topic?
-      @details[:composer_action] == "createTopic"
-    end
+  def creating_topic?
+    @details[:composer_action] == "createTopic"
+  end
 
-    def replying?
-      @details[:composer_action] == "reply"
-    end
+  def replying?
+    @details[:composer_action] == "reply"
+  end
 
 end

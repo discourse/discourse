@@ -71,12 +71,16 @@ class Site
     end
   end
 
-  def suppressed_from_homepage_category_ids
-    categories.select { |c| c.suppress_from_homepage == true }.map(&:id)
+  def suppressed_from_latest_category_ids
+    categories.select { |c| c.suppress_from_latest == true }.map(&:id)
   end
 
   def archetypes
     Archetype.list.reject { |t| t.id == Archetype.private_message }
+  end
+
+  def auth_providers
+    Discourse.enabled_auth_providers
   end
 
   def self.json_for(guardian)
@@ -87,6 +91,9 @@ class Site
         filters: Discourse.filters.map(&:to_s),
         user_fields: UserField.all.map do |userfield|
           UserFieldSerializer.new(userfield, root: false, scope: guardian)
+        end,
+        auth_providers: Discourse.enabled_auth_providers.map do |provider|
+          AuthProviderSerializer.new(provider, root: false, scope: guardian)
         end
       }.to_json
     end
@@ -121,7 +128,7 @@ class Site
   def self.clear_anon_cache!
     # publishing forces the sequence up
     # the cache is validated based on the sequence
-    MessageBus.publish('/site_json','')
+    MessageBus.publish('/site_json', '')
   end
 
 end

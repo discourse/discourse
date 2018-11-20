@@ -1,5 +1,5 @@
 module PluginGem
-  def self.load(path, name, version, opts=nil)
+  def self.load(path, name, version, opts = nil)
     opts ||= {}
 
     gems_path = File.dirname(path) + "/gems/#{RUBY_VERSION}"
@@ -21,6 +21,7 @@ module PluginGem
       end
     else
       puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
+      puts "Looked for: #{spec_file}"
       exit(-1)
     end
   end

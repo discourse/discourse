@@ -13,7 +13,6 @@ describe HighlightJs do
     expect(bundle).not_to match(/applescript/)
   end
 
-
   it 'can get a version string' do
     version1 = HighlightJs.version("http|cpp")
     version2 = HighlightJs.version("rust|cpp|fake")

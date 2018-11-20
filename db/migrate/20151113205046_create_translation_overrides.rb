@@ -1,4 +1,4 @@
-class CreateTranslationOverrides < ActiveRecord::Migration
+class CreateTranslationOverrides < ActiveRecord::Migration[4.2]
   def change
     create_table :translation_overrides, force: true do |t|
       t.string :locale, length: 30, null: false

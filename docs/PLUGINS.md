@@ -3,6 +3,8 @@
 
 If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/c/plugin) at meta. This is the most up to date place for plugin discussion and listing.
 
+If you want to be safe, use only plugins on this list of [Official Plugins](https://github.com/discourse/discourse/blob/master/lib/plugin/metadata.rb): 
+
 ### Discourse Plugin Tutorials
 
 * [Part One: Getting Started](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515)

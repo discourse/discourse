@@ -1,10 +1,12 @@
-import Badge from 'discourse/models/badge';
-import PreloadStore from 'preload-store';
+import Badge from "discourse/models/badge";
+import PreloadStore from "preload-store";
 
 export default Discourse.Route.extend({
   model() {
     if (PreloadStore.get("badges")) {
-      return PreloadStore.getAndRemove("badges").then(json => Badge.createFromJson(json));
+      return PreloadStore.getAndRemove("badges").then(json =>
+        Badge.createFromJson(json)
+      );
     } else {
       return Badge.findAll({ onlyListable: true });
     }

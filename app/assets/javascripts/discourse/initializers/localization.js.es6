@@ -1,51 +1,43 @@
-import PreloadStore from 'preload-store';
+import PreloadStore from "preload-store";
 
 export default {
-  name: 'localization',
-  after: 'inject-objects',
+  name: "localization",
+  after: "inject-objects",
 
-  enableVerboseLocalization() {
-    let counter = 0;
-    let keys = {};
-    let t = I18n.t;
+  isVerboseLocalizationEnabled(container) {
+    const siteSettings = container.lookup("site-settings:main");
+    if (siteSettings.verbose_localization) return true;
 
-    I18n.noFallbacks = true;
-
-    I18n.t = I18n.translate = function(scope, value){
-      let current = keys[scope];
-      if (!current) {
-        current = keys[scope] = ++counter;
-        let message = "Translation #" + current + ": " + scope;
-        if (!_.isEmpty(value)) {
-          message += ", parameters: " + JSON.stringify(value);
-        }
-        Em.Logger.info(message);
-      }
-      return t.apply(I18n, [scope, value]) + " (#" + current + ")";
-    };
+    try {
+      return sessionStorage && sessionStorage.getItem("verbose_localization");
+    } catch (e) {
+      return false;
+    }
   },
 
   initialize(container) {
-    const siteSettings = container.lookup('site-settings:main');
-    if (siteSettings.verbose_localization) {
-      this.enableVerboseLocalization();
+    if (this.isVerboseLocalizationEnabled(container)) {
+      I18n.enableVerboseLocalization();
     }
 
     // Merge any overrides into our object
-    const overrides = PreloadStore.get('translationOverrides') || {};
+    const overrides = PreloadStore.get("translationOverrides") || {};
     Object.keys(overrides).forEach(k => {
       const v = overrides[k];
 
       // Special case: Message format keys are functions
       if (/_MF$/.test(k)) {
-        k = k.replace(/^[a-z_]*js\./, '');
-        I18n._compiledMFs[k] = new Function('transKey', `return (${v})(transKey);`);
+        k = k.replace(/^[a-z_]*js\./, "");
+        I18n._compiledMFs[k] = new Function(
+          "transKey",
+          `return (${v})(transKey);`
+        );
         return;
       }
 
-      k = k.replace('admin_js', 'js');
+      k = k.replace("admin_js", "js");
 
-      const segs = k.split('.');
+      const segs = k.split(".");
 
       let node = I18n.translations[I18n.locale];
       let i = 0;
@@ -55,8 +47,9 @@ export default {
         node = node[segs[i]];
       }
 
-      node[segs[segs.length-1]] = v;
-
+      if (typeof node === "object") {
+        node[segs[segs.length - 1]] = v;
+      }
     });
   }
 };

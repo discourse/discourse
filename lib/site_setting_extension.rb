@@ -1,16 +1,65 @@
-require_dependency 'enum'
+# frozen_string_literal: true
+
+require_dependency 'site_settings/deprecated_settings'
+require_dependency 'site_settings/type_supervisor'
+require_dependency 'site_settings/defaults_provider'
 require_dependency 'site_settings/db_provider'
-require 'site_setting_validations'
 
 module SiteSettingExtension
-  include SiteSettingValidations
+  include SiteSettings::DeprecatedSettings
 
-  # For plugins, so they can tell if a feature is supported
-  def supported_types
-    [:email, :username, :list, :enum]
+  # support default_locale being set via global settings
+  # this also adds support for testing the extension and global settings
+  # for site locale
+  def self.extended(klass)
+    if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+      klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
+    end
   end
 
-  # part 1 of refactor, centralizing the dependency here
+  # we need a default here to support defaults per locale
+  def default_locale=(val)
+    val = val.to_s
+    raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
+    if val != self.default_locale
+      add_override!(:default_locale, val)
+      refresh!
+      Discourse.request_refresh!
+    end
+  end
+
+  def default_locale?
+    true
+  end
+
+  # set up some sort of default so we can look stuff up
+  def default_locale
+    # note optimised cause this is called a lot so avoiding .presence which
+    # adds 2 method calls
+    locale = current[:default_locale]
+    if locale && !locale.blank?
+      locale
+    else
+      SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    end
+  end
+
+  def has_setting?(v)
+    defaults.has_setting?(v)
+  end
+
+  def supported_types
+    SiteSettings::TypeSupervisor.supported_types
+  end
+
+  def types
+    SiteSettings::TypeSupervisor.types
+  end
+
+  def listen_for_changes=(val)
+    @listen_for_changes = val
+  end
+
   def provider=(val)
     @provider = val
     refresh!
@@ -18,22 +67,6 @@ module SiteSettingExtension
 
   def provider
     @provider ||= SiteSettings::DbProvider.new(SiteSetting)
-  end
-
-  def types
-    @types ||= Enum.new(string: 1,
-                        time: 2,
-                        integer: 3,
-                        float: 4,
-                        bool: 5,
-                        null: 6,
-                        enum: 7,
-                        list: 8,
-                        url_list: 9,
-                        host_list: 10,
-                        category_list: 11,
-                        value_list: 12,
-                        regex: 13)
   end
 
   def mutex
@@ -46,23 +79,15 @@ module SiteSettingExtension
   end
 
   def defaults
-    @defaults ||= {}
+    @defaults ||= SiteSettings::DefaultsProvider.new(self)
+  end
+
+  def type_supervisor
+    @type_supervisor ||= SiteSettings::TypeSupervisor.new(defaults)
   end
 
   def categories
     @categories ||= {}
-  end
-
-  def enums
-    @enums ||= {}
-  end
-
-  def static_types
-    @static_types ||= {}
-  end
-
-  def choices
-    @choices ||= {}
   end
 
   def shadowed_settings
@@ -74,45 +99,38 @@ module SiteSettingExtension
   end
 
   def refresh_settings
-    @refresh_settings ||= []
+    @refresh_settings ||= [:default_locale]
   end
 
   def client_settings
-    @client_settings ||= []
+    @client_settings ||= [:default_locale]
   end
 
   def previews
     @previews ||= {}
   end
 
-  def validators
-    @validators ||= {}
+  def secret_settings
+    @secret_settings ||= []
   end
 
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
+
+    if name == :default_locale
+      raise Discourse::InvalidParameters.new("Other settings depend on default locale, you can not configure it like this")
+    end
+
+    shadowed_val = nil
+
     mutex.synchronize do
-      self.defaults[name] = default
+      defaults.load_setting(
+        name,
+        default,
+        opts.delete(:locale_default)
+      )
+
       categories[name] = opts[:category] || :uncategorized
-      current_value = current.has_key?(name) ? current[name] : default
-
-      if enum = opts[:enum]
-        enums[name] = enum.is_a?(String) ? enum.constantize : enum
-        opts[:type] ||= :enum
-      end
-
-      if new_choices = opts[:choices]
-
-        new_choices = eval(new_choices) if new_choices.is_a?(String)
-
-        choices.has_key?(name) ?
-          choices[name].concat(new_choices) :
-          choices[name] = new_choices
-      end
-
-      if type = opts[:type]
-        static_types[name.to_sym] = type.to_sym
-      end
 
       if opts[:hidden]
         hidden_settings << name
@@ -122,9 +140,9 @@ module SiteSettingExtension
         val = GlobalSetting.send(name)
 
         unless val.nil? || (val == ''.freeze)
+          shadowed_val = val
           hidden_settings << name
           shadowed_settings << name
-          current_value = val
         end
       end
 
@@ -132,31 +150,34 @@ module SiteSettingExtension
         refresh_settings << name
       end
 
+      if opts[:client]
+        client_settings << name.to_sym
+      end
+
       if opts[:preview]
         previews[name] = opts[:preview]
       end
 
-      opts[:validator] = opts[:validator].try(:constantize)
-      type = opts[:type] || get_data_type(name, defaults[name])
-
-      if validator_type = opts[:validator] || validator_for(type)
-        validators[name] = { class: validator_type, opts: opts }
+      if opts[:secret]
+        secret_settings << name
       end
 
-      current[name] = current_value
-      setup_methods(name)
-    end
-  end
+      type_supervisor.load_setting(
+        name,
+        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS)
+      )
 
-  # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil, opts = {})
-    setting(name, default, opts)
-    client_settings << name.to_sym
+      if !shadowed_val.nil?
+        setup_shadowed_methods(name, shadowed_val)
+      else
+        setup_methods(name)
+      end
+    end
   end
 
   def settings_hash
     result = {}
-    @defaults.each do |s, _|
+    defaults.all.keys.each do |s|
       result[s] = send(s).to_s
     end
     result
@@ -169,35 +190,41 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
+    MultiJson.dump(Hash[*@client_settings.map { |n| [n, self.send(n)] }.flatten])
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden=false)
-    @defaults
-      .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
+  def all_settings(include_hidden = false)
+
+    locale_setting_hash =
+    {
+      setting: 'default_locale',
+      default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
+      category: 'required',
+      description: description('default_locale'),
+      type: SiteSetting.types[SiteSetting.types[:enum]],
+      preview: nil,
+      value: self.default_locale,
+      valid_values: LocaleSiteSetting.values,
+      translate_names: LocaleSiteSetting.translate_names?
+    }
+
+    defaults.all(default_locale)
+      .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
-        value = send(s)
-        type = types[get_data_type(s, value)]
-        opts = {
-          setting: s,
-          description: description(s),
-          default: v.to_s,
-          type: type.to_s,
-          value: value.to_s,
-          category: categories[s],
-          preview: previews[s]
-        }
+      value = send(s)
+      opts = {
+        setting: s,
+        description: description(s),
+        default: defaults.get(s, default_locale).to_s,
+        value: value.to_s,
+        category: categories[s],
+        preview: previews[s],
+        secret: secret_settings.include?(s)
+      }.merge(type_supervisor.type_hash(s))
 
-        if type == :enum && enum_class(s)
-          opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?})
-        elsif type == :enum
-          opts.merge!({valid_values: choices[s].map{|c| {name: c, value: c}}, translate_names: false})
-        end
-
-        opts[:choices] = choices[s] if choices.has_key? s
-        opts
-      end
+      opts
+    end.unshift(locale_setting_hash)
   end
 
   def description(setting)
@@ -215,28 +242,30 @@ module SiteSettingExtension
   def refresh!
     mutex.synchronize do
       ensure_listen_for_changes
-      old = current
 
-      new_hash =  Hash[*(provider.all.map { |s|
-        [s.name.intern, convert(s.value, s.data_type, s.name)]
+      new_hash = Hash[*(defaults.db_all.map { |s|
+        [s.name.to_sym, type_supervisor.to_rb_value(s.name, s.value, s.data_type)]
       }.to_a.flatten)]
 
-      # add defaults, cause they are cached
-      new_hash = defaults.merge(new_hash)
+      defaults_view = defaults.all(new_hash[:default_locale])
+
+      # add locale default and defaults based on default_locale, cause they are cached
+      new_hash = defaults_view.merge!(new_hash)
 
       # add shadowed
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
-      changes, deletions = diff_hash(new_hash, old)
-
+      changes, deletions = diff_hash(new_hash, current)
       changes.each   { |name, val| current[name] = val }
-      deletions.each { |name, val| current[name] = defaults[name] }
+      deletions.each { |name, _|   current[name] = defaults_view[name] }
 
       clear_cache!
     end
   end
 
   def ensure_listen_for_changes
+    return if @listen_for_changes == false
+
     unless @subscribed
       MessageBus.subscribe("/site_settings") do |message|
         process_message(message)
@@ -275,102 +304,60 @@ module SiteSettingExtension
 
   def remove_override!(name)
     provider.destroy(name)
-    current[name] = defaults[name]
+    current[name] = defaults.get(name, default_locale)
     clear_cache!
   end
 
   def add_override!(name, val)
-    type = get_data_type(name, defaults[name.to_sym])
-
-    if type == types[:bool] && val != true && val != false
-      val = (val == "t" || val == "true") ? 't' : 'f'
-    end
-
-    if type == types[:integer] && !val.is_a?(Integer)
-      val = val.to_i
-    end
-
-    if type == types[:null] && val != ''
-      type = get_data_type(name, val)
-    end
-
-    if type == types[:enum]
-      val = val.to_i if defaults[name.to_sym].is_a?(Integer)
-      if enum_class(name)
-        raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
-      else
-        raise Discourse::InvalidParameters.new(:value) unless choices[name].include?(val)
-      end
-    end
-
-    if v = validators[name]
-      validator = v[:class].new(v[:opts])
-      unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters.new(validator.error_message)
-      end
-    end
-
-    if self.respond_to? "validate_#{name}"
-      send("validate_#{name}", val)
-    end
-
+    val, type = type_supervisor.to_db_value(name, val)
     provider.save(name, val, type)
-    current[name] = convert(val, type, name)
+    current[name] = type_supervisor.to_rb_value(name, val)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
 
   def notify_changed!
-    MessageBus.publish('/site_settings', {process: process_id})
+    MessageBus.publish('/site_settings', process: process_id)
   end
 
   def notify_clients!(name)
-    MessageBus.publish('/client_settings', {name: name, value: self.send(name)})
-  end
-
-  def has_setting?(name)
-    defaults.has_key?(name.to_sym) || defaults.has_key?("#{name}?".to_sym)
+    MessageBus.publish('/client_settings', name: name, value: self.send(name))
   end
 
   def requires_refresh?(name)
     refresh_settings.include?(name.to_sym)
   end
 
-  def is_valid_data?(name, value)
-    valid = true
-    type = get_data_type(name, defaults[name.to_sym])
-
-    if type == types[:integer]
-      # validate integer
-      valid = false unless value.to_i.is_a?(Integer)
-    end
-
-    valid
-  end
+  HOSTNAME_SETTINGS ||= %w{
+    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
+    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+  }
 
   def filter_value(name, value)
-    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
-      domain_array = []
-      value.split('|').each { |url| domain_array << get_hostname(url) }
-      value = domain_array.join("|")
+    if HOSTNAME_SETTINGS.include?(name)
+      value.split("|").map { |url| get_hostname(url) }.compact.uniq.join("|")
+    else
+      value
     end
-    value
   end
 
   def set(name, value)
-    if has_setting?(name) && is_valid_data?(name, value)
+    if has_setting?(name)
       value = filter_value(name, value)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
-      raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
+      raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
   end
 
-  def set_and_log(name, value, user=Discourse.system_user)
+  def set_and_log(name, value, user = Discourse.system_user)
     prev_value = send(name)
     set(name, value)
-    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
+    if has_setting?(name)
+      value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
+      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    end
   end
 
   protected
@@ -385,104 +372,43 @@ module SiteSettingExtension
     deletions = []
 
     new_hash.each do |name, value|
-      changes << [name,value] if !old.has_key?(name) || old[name] != value
+      changes << [name, value] if !old.has_key?(name) || old[name] != value
     end
 
-    old.each do |name,value|
-      deletions << [name,value] unless new_hash.has_key?(name)
+    old.each do |name, value|
+      deletions << [name, value] unless new_hash.has_key?(name)
     end
 
-    [changes,deletions]
+    [changes, deletions]
   end
 
-  def get_data_type(name, val)
-    return types[:null] if val.nil?
+  def setup_shadowed_methods(name, value)
+    clean_name = name.to_s.sub("?", "").to_sym
 
-    # Some types are just for validations like email.
-    # Only consider it valid if includes in `types`
-    if static_type = static_types[name.to_sym]
-      return types[static_type] if types.keys.include?(static_type)
+    define_singleton_method clean_name do
+      value
     end
 
-    case val
-    when String
-      types[:string]
-    when Integer
-      types[:integer]
-    when Float
-      types[:float]
-    when TrueClass, FalseClass
-      types[:bool]
-    else
-      raise ArgumentError.new :val
+    define_singleton_method "#{clean_name}?" do
+      value
     end
-  end
 
-  def convert(value, type, name)
-    case type
-    when types[:float]
-      value.to_f
-    when types[:integer]
-      value.to_i
-    when types[:bool]
-      value == true || value == "t" || value == "true"
-    when types[:null]
+    define_singleton_method "#{clean_name}=" do |val|
+      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!")
       nil
-    when types[:enum]
-      defaults[name.to_sym].is_a?(Integer) ? value.to_i : value
-    else
-      return value if types[type]
-      # Otherwise it's a type error
-      raise ArgumentError.new :type
     end
-  end
 
-  def validator_for(type_name)
-    @validator_mapping ||= {
-      'email'        => EmailSettingValidator,
-      'username'     => UsernameSettingValidator,
-      types[:integer] => IntegerSettingValidator,
-      types[:string] => StringSettingValidator,
-      'list' => StringSettingValidator,
-      'enum' => StringSettingValidator,
-      'regex' => RegexSettingValidator
-    }
-    @validator_mapping[type_name]
-  end
-
-  DEPRECATED_SETTINGS = [
-    ['use_https', 'force_https', '1.7']
-  ]
-
-  def setup_deprecated_methods
-    DEPRECATED_SETTINGS.each do |old_setting, new_setting, version|
-      define_singleton_method old_setting do
-        logger.warn("`SiteSetting.#{old_setting}` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}` instead")
-        self.public_send new_setting
-      end
-
-      define_singleton_method "#{old_setting}?" do
-        logger.warn("`SiteSetting.#{old_setting}?` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}?` instead")
-        self.public_send "#{new_setting}?"
-      end
-
-      define_singleton_method "#{old_setting}=" do |val|
-        logger.warn("`SiteSetting.#{old_setting}=` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}=` instead")
-        self.public_send "#{new_setting}=", val
-      end
-    end
   end
 
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
 
     define_singleton_method clean_name do
-      c = @containers[provider.current_site]
-      if c
-        c[name]
-      else
+      if (c = current[name]).nil?
         refresh!
         current[name]
+      else
+        c
       end
     end
 
@@ -495,16 +421,22 @@ module SiteSettingExtension
     end
   end
 
-  def enum_class(name)
-    enums[name]
-  end
-
   def get_hostname(url)
-    unless (URI.parse(url).scheme rescue nil).nil?
-      url = "http://#{url}" if URI.parse(url).scheme.nil?
-      url = URI.parse(url).host
+    url.strip!
+
+    host = begin
+      URI.parse(url)&.host
+    rescue URI::Error
+      nil
     end
-    url
+
+    host ||= begin
+      URI.parse("http://#{url}")&.host
+    rescue URI::Error
+      nil
+    end
+
+    host.presence || url
   end
 
   private

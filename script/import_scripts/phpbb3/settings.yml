@@ -11,8 +11,8 @@ database:
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
 
 import:
-  # Enable this option if you want to have a better conversion of BBCodes to Markdown.
-  # WARNING: This can slow down your import.
+  # WARNING: Do not activate this option unless you know what you are doing.
+  # It will probably break the BBCode to Markdown conversion and slows down your import.
   use_bbcode_to_md: false
 
   # This is the path to the root directory of your current phpBB installation (or a copy of it).

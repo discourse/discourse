@@ -1,153 +1,15 @@
-// styles that apply to the user page
-
-.user-preferences {
-  .control-group {
-    padding: 8px 36px 8px 8px;
-  }
-  textarea {
-    width: 530px;
-    height: 100px;
-  }
-  .static {
-    color: $primary;
-    margin-top: 5px;
-    margin-left: 5px;
-    display: inline-block;
-  }
-  .instructions {
-    color: $primary;
-    margin-top: 5px;
-  }
-  .category-controls {
-    padding-top: 8px;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $primary;
-  }
-  .warning {
-    @include border-radius-all(6px);
-    background-color: $danger;
-    padding: 5px 8px;
-    color: $primary;
-    width: 520px;
-  }
-
-  .controls-dropdown {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    padding-left: 5px;
-    select {
-      width: 280px;
+// Mobile styles for "/user" section
+.user-right {
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 20px;
     }
   }
-
-  .save-button {
-    width: 100%;
-    overflow: auto;
-    max-width: 200px;
-    button {
-      display: block;
-    }
-  }
-
-  .delete-account {
-    overflow: hidden;
-  }
-
-  .checkbox-label {
-    overflow: auto;
-    display: block;
-    width: 100%;
-    padding: 5px 8px;
-  }
-
-  textarea {width: 100%;}
-
-  .desktop-notifications button {
-    float: none;
-  }
-  .apps .controls button {
-    float: right;
-  }
-  .category-notifications .category-controls, .tag-notifications .tag-controls {
-    margin-top: 24px;
-  }
-}
-
-.profile-image {
-  height: 25px;
-  width: 100%;
-}
-
-
-.groups {
-  .group-link {
-    color: $tertiary;
-  }
-}
-
-.hasBackground .details {margin-top: 200px;
-}
-
-.user-preferences {
-  input.category-selector {
-  }
-
-  textarea {
-    height: 100px;
-  }
-
-  input[type=text] {
-    @include small-width {
-    }
-  }
-
-  .static {
-    color: $primary;
-    display: inline-block;
-  }
-  .instructions {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    margin-top: 5px;
-    margin-bottom: 10px;
-    font-size: 80%;
-    line-height: 1.4em;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $tertiary;
-  }
-  .warning {
-    background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
-    color: $secondary;
-  }
-
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
-}
-
-.user-navigation {
-  width: 100%;
-  margin-top: 20px;
-  min-height: 20px;
-
-  h3 {
-    color: $primary;
-    margin: 10px;
-  }
-
 }
 
 .user-main {
-
+  margin-top: 10px;
   table.group-members {
     width: 100%;
     p {
@@ -159,11 +21,11 @@
     th {
       padding: 0.5em;
       text-align: right;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid $primary-low;
     }
     td {
       padding: 0.5em;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid $primary-low;
       img {
         margin-right: 10px;
       }
@@ -183,11 +45,7 @@
     margin-top: 10px;
 
     .btn.right {
-      float: right
-    }
-
-    h2 {
-      margin-bottom: 10px;
+      float: right;
     }
 
     table {
@@ -196,114 +54,59 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        border-bottom: 1px solid $primary-low;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        border-bottom: 1px solid $primary-low;
       }
     }
   }
 
   .about {
     background: dark-light-diff($primary, $secondary, 0%, -75%) center;
-    width: 100%;
     margin-bottom: 10px;
-    overflow: hidden;
     color: $secondary;
 
+    &.no-background {
+      .profile-image {
+        display: none;
+      }
+    }
+
     .secondary {
-      background: dark-light-diff($primary, $secondary, 90%, -65%);
-      font-size: 0.929em;
-
-      .btn { padding: 3px 12px; }
-
-      dl dd {
-        margin: 0 15px 0 5px;
-        padding: 0;
-      }
-
-      dl dt {
-        display: inline-block;
-      }
-
       dl {
-        padding: 10px 15px;
-        margin: 0;
-      }
-
-      dd {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: $primary;
-      }
-
-      dt {
-        color: dark-light-diff($secondary, $primary, 50%, -40%);
-        margin: 0;
+        padding: 5px 0;
       }
     }
 
     .details {
-      padding: 15px 10px 4px 10px;
-      background: rgba($secondary, .85);
-
-      blockquote {
-        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
-        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
-      }
+      padding: 15px 5px 5px 5px;
 
       h1 {
-        font-size: 2.143em;
-        font-weight: normal;
-        margin: 10px 0 0 0;
+        margin: 0;
+        line-height: $line-height-small;
       }
 
       h2 {
-        font-size: 1.214em;
-        font-weight: normal;
-        margin-top: 10px;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      h3 {
-        font-weight: normal;
-        font-size: 1em;
-        margin: 5px 0;
-        i:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-
-      .groups {
-        margin-left: 10px;
-        display: inline;
-        }
-
-      img.avatar {
-        float: left;
-      }
-
-      .suspended {
-        color: $danger;
+        line-height: $line-height-medium;
       }
 
       .primary {
-        width: 100%;
-        position: relative;
-        float: left;
+        display: flex;
+        flex-wrap: wrap;
         color: $primary;
 
-        h1 {font-weight: bold;}
+        .avatar {
+          margin: 0 5px 10px 5px;
+        }
 
         .primary-textual {
-          float: left;
-          padding-left: 15px;
+          flex: 1 1 40%;
+          padding-left: 5px;
+          word-break: break-word;
           a[href] {
             color: $primary;
           }
@@ -311,244 +114,66 @@
 
         .bio {
           color: $primary;
-          max-height: 300px;
-          overflow: auto;
           max-width: 700px;
-
-          a[href] {
-            text-decoration: underline;
-          }
-
-          img {
-            max-width: 100%;
-          }
         }
+      }
+
+      .user-profile-avatar .avatar-flair {
+        right: 2px;
       }
     }
 
     .controls {
-      float: left;
-      padding-left: 15px;
+      order: 3;
+      flex: 1 1 25%;
+      margin-left: auto;
+
       ul {
-        list-style-type: none;
         margin: 0;
-      }
-      a {
-        padding: 5px 10px;
-        width: 120px;
-        margin-bottom: 10px;
-      }
-    }
-  }
-
-  .about.collapsed-info {
-    .controls {
-      margin-top: 0;
-
-    }
-
-    .staff-counters {
-      display: none;
-    }
-    .secondary { display: none; }
-
-    .profile-image {
-      height: 0;
-    }
-
-    .details {
-      padding: 12px 15px 2px 15px;
-      margin-top: 0;
-      background: rgba($secondary, .85);
-      .bio { display: none; }
-
-      .primary {
-        text-align: left;
-        margin-top: 0;
-        width: 100%;
-
-        .avatar {
-          float: left;
-          margin-right: 10px;
-          width: 45px;
-          height: 45px;
-        }
-
-        h1 {
-          font-size: 1.429em;
-        }
-
-        h2 {
-          font-size: 1.071em;
-          margin-top: 4px;
-        }
-
-        h3 {
-          display: none;
-        }
-      }
-    }
-  }
-
-
-  .user-stream {
-    .excerpt {
-      margin: 5px 0;
-      font-size: 0.929em;
-      word-wrap: break-word;
-      color: $primary;
-    }
-    .item.moderator-action {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
-    }
-    .item.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
-    }
-    .item.hidden {
-      display: block;
-      opacity: 0.4;
-    }
-    .item {
-      padding: 20px 0 15px 0;
-      background-color: $secondary;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
-    .type {
-      color: $primary;
-    }
-    span.name {
-      color: $primary;
-    }
-    .time, .delete-info {
-      display: block;
-      float: right;
-      color: lighten($primary, 40%);
-      font-size: 11px;
-    }
-    .delete-info i {
-      font-size: 1em;
-    }
-    .avatar-link {
-      float: left;
-      margin-right: 4px;
-    }
-    .title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .name {
-      font-size: 1em;
-      max-width: 400px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      vertical-align: middle;
-    }
-    .edit-reason {
-      background-color: scale-color($highlight, $lightness: 25%);
-      padding: 3px 5px 5px 5px;
-    }
-    .remove-bookmark {
-      float: right;
-      margin-top: -4px;
-    }
-    .notification {
-      &.unread {
-        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
       }
 
-      li { display: inline-block; }
-      p {
-        display: inline-block;
-        margin-left: 10px;
-        span {
-          color: $primary;
-        }
+      li {
+        display: flex;
+        flex: 1 1 auto;
+        margin: 0 5px;
       }
-      .time {
-        display: inline-block;
-        margin-left: 10px;
-        float: none;
-      }
-      // common/base/header.scss
-      .fa, .icon {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-size: 1.714em;
-      }
-    }
-    .group-member-info {
-      .name {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        vertical-align: inherit;
-      }
-      .title {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-    }
-    .topic-statuses {
-      float: left;
-    }
-  }
 
-  .staff-counters {
-    text-align: left;
-    background: $primary;
-    padding: 7px 0;
-    display: inline;
-    > div {
-      margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-        }
       span {
-        padding: 1px 5px;
-        border-radius: 10px;
+        flex: 0 1 100%;
+        margin: 0 5px;
+      }
+
+      .user-profile-controls-outlet {
+        margin: 0;
+        li {
+          margin: 0;
         }
+      }
 
+      a {
+        flex: 1 1 auto;
+        min-width: 120px;
+      }
     }
-    a {
-      color: $secondary;
-    }
-    .active {
-      font-weight: bold;
-    }
-  }
-  .pill {
-    border-radius: 15px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-  }
-  .helpful-flags {
-    background-color: green;
-  }
-  .flagged-posts {
-    background-color: #E49735;
-  }
-  .warnings-received {
-    background-color: #EC441B;
-  }
-  .deleted-posts {
-    background-color: #EC441B;
-  }
-  .suspensions {
-    background-color: #c22020;
-  }
 
-  .user-field.text {
-    padding-top: 18px;
+    &.collapsed-info {
+      .details {
+        .primary {
+          .primary-textual {
+            margin: 0 10px 5px 0;
+          }
+          .avatar {
+            margin: 0 5px 10px 5px;
+          }
+        }
+      }
+      .user-profile-avatar .avatar-flair {
+        bottom: 12px;
+      }
+    }
   }
 
   .user-field {
@@ -557,65 +182,102 @@
       text-align: left;
       font-weight: bold;
     }
-    .controls {
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-        float: auto;
-      }
-      .instructions {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 80%;
-        line-height: 1.4em;
-      }
-    }
-    clear: both;
-    margin-bottom: 10px;
   }
+}
+
+.profile-image {
+  height: 25px;
+  width: 100%;
+}
+
+.has-background .details {
+  margin-top: 200px;
+}
+
+.form-horizontal .control-group.category {
+  margin-top: 18px;
 }
 
 .paginated-topics-list {
   margin-top: 20px;
+}
 
-  .user-content {
-    width: 100%;
-    margin-top: 0;
+.stats-section {
+  li {
+    margin: 0 15px 10px 0;
+    padding: 0;
+    &.linked-stat {
+      a {
+        padding: 0;
+      }
+    }
   }
 }
 
-.user-archive {
-  display: inline-block;
-}
-
 // mobile fixups for badges
-
 .badge-card.medium {
-  width: 300px;
-}
-
-.show-badge-details {
-  margin-bottom: 1em;
+  width: 100%;
 }
 
 .user-badges {
   margin-bottom: 2em;
 }
 
-.show-badge-details .badge-grant-info {
-  display: none;
+.show-badge-details {
+  margin-bottom: 1em;
+
+  .badge-grant-info {
+    display: none;
+  }
 }
 
-.user-info.medium {
-  width: 300px;
-}
+.user-preferences {
+  .instructions {
+    margin-top: 5px;
+  }
 
-.user-info.medium .user-detail {
-  width: 240px;
-}
+  .category-controls {
+    padding-top: 8px;
+  }
 
-.user-info.medium .user-image {
-  width: auto;
+  .controls-dropdown {
+    margin-top: 10px;
+    margin-bottom: 15px;
+
+    select {
+      width: 280px;
+    }
+  }
+
+  .save-button {
+    width: 100%;
+    overflow: auto;
+    max-width: 200px;
+
+    button {
+      display: block;
+    }
+  }
+
+  .delete-account {
+    overflow: hidden;
+  }
+
+  .checkbox-label {
+    display: flex;
+    overflow: auto;
+    width: 100%;
+    padding: 5px 0;
+    input {
+      margin-right: 5px;
+      flex: 0 0 auto;
+    }
+  }
+
+  .desktop-notifications button {
+    float: none;
+  }
+  .apps .controls button {
+    float: right;
+  }
 }

@@ -4,10 +4,6 @@
   display: none;
 }
 
-.emoji-modal-wrapper {
-  display: none;
-}
-
-.emoji-modal {
-  position: relative;
+#reply-control {
+  transition-property: none !important;
 }

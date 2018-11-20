@@ -7,19 +7,19 @@ class UserActionCreator
     @disabled = false
   end
 
-  def self.log_notification(post, user, notification_type, acting_user_id=nil)
+  def self.log_notification(post, user, notification_type, acting_user_id = nil)
     return if @disabled
 
     action =
       case notification_type
-        when Notification.types[:quoted]
-          UserAction::QUOTE
-        when Notification.types[:replied]
-          UserAction::RESPONSE
-        when Notification.types[:mentioned]
-          UserAction::MENTION
-        when Notification.types[:edited]
-          UserAction::EDIT
+      when Notification.types[:quoted]
+        UserAction::QUOTE
+      when Notification.types[:replied]
+        UserAction::RESPONSE
+      when Notification.types[:mentioned]
+        UserAction::MENTION
+      when Notification.types[:edited]
+        UserAction::EDIT
       end
 
     # skip any invalid items, eg failed to save post and so on
@@ -85,13 +85,17 @@ class UserActionCreator
     return unless model.user_id
 
     row = {
-      action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
+      action_type: model.private_message? ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
       user_id: model.user_id,
       acting_user_id: model.user_id,
       target_topic_id: model.id,
       target_post_id: -1,
       created_at: model.created_at
     }
+
+    UserAction.remove_action!(row.merge(
+      action_type: model.private_message? ? UserAction::NEW_TOPIC : UserAction::NEW_PRIVATE_MESSAGE
+    ))
 
     rows = [row]
 

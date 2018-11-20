@@ -7,7 +7,6 @@
 @import "mobile/banner";
 @import "mobile/compose";
 @import "mobile/discourse";
-@import "mobile/faqs";
 @import "mobile/header";
 @import "mobile/login";
 @import "mobile/modal";
@@ -17,12 +16,23 @@
 @import "mobile/upload";
 @import "mobile/user";
 @import "mobile/history";
+@import "mobile/lightbox";
 @import "mobile/directory";
-@import "mobile/menu-panel";
 @import "mobile/search";
 @import "mobile/emoji";
 @import "mobile/ring";
 @import "mobile/group";
+@import "mobile/groups";
+@import "mobile/dashboard_next";
+@import "mobile/admin_reports";
+@import "mobile/admin_report";
+@import "mobile/admin_report_table";
+@import "mobile/admin_report_counters";
+
+// Import all component-specific files
+@import "mobile/components/*";
+
+@import "mobile/select-kit/*";
 
 /* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
 

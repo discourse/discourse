@@ -1,0 +1,6 @@
+{{#if template}}
+  {{{template}}}
+{{else}}
+  {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+  <span class="name">{{{label}}}</span>
+{{/if}}

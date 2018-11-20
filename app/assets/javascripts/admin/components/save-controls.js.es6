@@ -1,13 +1,13 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  classNames: ['controls'],
+  classNames: ["controls"],
 
-  buttonDisabled: Ember.computed.or('model.isSaving', 'saveDisabled'),
+  buttonDisabled: Ember.computed.or("model.isSaving", "saveDisabled"),
 
-  @computed('model.isSaving')
+  @computed("model.isSaving")
   savingText(saving) {
-    return saving ? 'saving' : 'save';
+    return saving ? "saving" : "save";
   },
 
   actions: {

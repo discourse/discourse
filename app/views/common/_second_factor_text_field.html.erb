@@ -1,0 +1,2 @@
+<%= text_field_tag(:second_factor_token, nil, autofocus: true, pattern: '[0-9]{6}', maxlength: 6, type: 'tel') %>
+<%= hidden_field_tag 'second_factor_method', '1' %>

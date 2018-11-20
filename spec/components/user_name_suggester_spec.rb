@@ -18,6 +18,10 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest(nil)).to eq(nil)
     end
 
+    it "doesn't raise an error on integer username" do
+      expect(UserNameSuggester.suggest(999)).to eq('999')
+    end
+
     it 'corrects weird characters' do
       expect(UserNameSuggester.suggest("Darth%^Vader")).to eq('Darth_Vader')
     end

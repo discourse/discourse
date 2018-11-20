@@ -1,42 +1,47 @@
-import { ajax } from 'discourse/lib/ajax';
-import Badge from 'discourse/models/badge';
+import { ajax } from "discourse/lib/ajax";
+import Badge from "discourse/models/badge";
 
 const UserBadge = Discourse.Model.extend({
   postUrl: function() {
-    if(this.get('topic_title')) {
-      return "/t/-/" + this.get('topic_id') + "/" + this.get('post_number');
+    if (this.get("topic_title")) {
+      return "/t/-/" + this.get("topic_id") + "/" + this.get("post_number");
     }
   }.property(), // avoid the extra bindings for now
 
   revoke() {
-    return ajax("/user_badges/" + this.get('id'), {
+    return ajax("/user_badges/" + this.get("id"), {
       type: "DELETE"
     });
   }
 });
 
 UserBadge.reopenClass({
-
   createFromJson: function(json) {
     // Create User objects.
-    if (json.users === undefined) { json.users = []; }
+    if (json.users === undefined) {
+      json.users = [];
+    }
     var users = {};
     json.users.forEach(function(userJson) {
       users[userJson.id] = Discourse.User.create(userJson);
     });
 
     // Create Topic objects.
-    if (json.topics === undefined) { json.topics = []; }
+    if (json.topics === undefined) {
+      json.topics = [];
+    }
     var topics = {};
     json.topics.forEach(function(topicJson) {
       topics[topicJson.id] = Discourse.Topic.create(topicJson);
     });
 
     // Create the badges.
-    if (json.badges === undefined) { json.badges = []; }
+    if (json.badges === undefined) {
+      json.badges = [];
+    }
     var badges = {};
     Badge.createFromJson(json).forEach(function(badge) {
-      badges[badge.get('id')] = badge;
+      badges[badge.get("id")] = badge;
     });
 
     // Create UserBadge object(s).
@@ -44,24 +49,26 @@ UserBadge.reopenClass({
     if ("user_badge" in json) {
       userBadges = [json.user_badge];
     } else {
-      userBadges = (json.user_badge_info && json.user_badge_info.user_badges) || json.user_badges;
+      userBadges =
+        (json.user_badge_info && json.user_badge_info.user_badges) ||
+        json.user_badges;
     }
 
     userBadges = userBadges.map(function(userBadgeJson) {
       var userBadge = UserBadge.create(userBadgeJson);
 
-      var grantedAtDate = Date.parse(userBadge.get('granted_at'));
-      userBadge.set('grantedAt', grantedAtDate);
+      var grantedAtDate = Date.parse(userBadge.get("granted_at"));
+      userBadge.set("grantedAt", grantedAtDate);
 
-      userBadge.set('badge', badges[userBadge.get('badge_id')]);
-      if (userBadge.get('user_id')) {
-        userBadge.set('user', users[userBadge.get('user_id')]);
+      userBadge.set("badge", badges[userBadge.get("badge_id")]);
+      if (userBadge.get("user_id")) {
+        userBadge.set("user", users[userBadge.get("user_id")]);
       }
-      if (userBadge.get('granted_by_id')) {
-        userBadge.set('granted_by', users[userBadge.get('granted_by_id')]);
+      if (userBadge.get("granted_by_id")) {
+        userBadge.set("granted_by", users[userBadge.get("granted_by_id")]);
       }
-      if (userBadge.get('topic_id')) {
-        userBadge.set('topic', topics[userBadge.get('topic_id')]);
+      if (userBadge.get("topic_id")) {
+        userBadge.set("topic", topics[userBadge.get("topic_id")]);
       }
       return userBadge;
     });
@@ -86,6 +93,9 @@ UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
   findByUsername: function(username, options) {
+    if (!username) {
+      return Em.RSVP.resolve([]);
+    }
     var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {
       url += "?grouped=true";
@@ -103,7 +113,9 @@ UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
   findByBadgeId: function(badgeId, options) {
-    if (!options) { options = {}; }
+    if (!options) {
+      options = {};
+    }
     options.badge_id = badgeId;
 
     return ajax("/user_badges.json", {

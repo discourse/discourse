@@ -4,19 +4,13 @@ describe Jobs::ToggleTopicClosed do
   let(:admin) { Fabricate(:admin) }
 
   let(:topic) do
-    Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin)]
-    )
-  end
-
-  before do
-    SiteSetting.queue_jobs = true
+    Fabricate(:topic_timer, user: admin).topic
   end
 
   it 'should be able to close a topic' do
     topic
 
-    Timecop.travel(1.hour.from_now) do
+    freeze_time(61.minutes.from_now) do
       described_class.new.execute(
         topic_timer_id: topic.public_topic_timer.id,
         state: true
@@ -25,25 +19,54 @@ describe Jobs::ToggleTopicClosed do
       expect(topic.reload.closed).to eq(true)
 
       expect(Post.last.raw).to eq(I18n.t(
-        'topic_statuses.autoclosed_enabled_minutes', count: 60
+        'topic_statuses.autoclosed_enabled_minutes', count: 61
       ))
     end
   end
 
-  it 'should be able to open a topic' do
-    topic.update!(closed: true)
+  describe 'opening a topic' do
+    it 'should be work' do
+      topic.update!(closed: true)
 
-    Timecop.travel(1.hour.from_now) do
-      described_class.new.execute(
-        topic_timer_id: topic.public_topic_timer.id,
-        state: false
-      )
+      freeze_time(61.minutes.from_now) do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: false
+        )
 
-      expect(topic.reload.closed).to eq(false)
+        expect(topic.reload.closed).to eq(false)
 
-      expect(Post.last.raw).to eq(I18n.t(
-        'topic_statuses.autoclosed_disabled_minutes', count: 60
-      ))
+        expect(Post.last.raw).to eq(I18n.t(
+          'topic_statuses.autoclosed_disabled_minutes', count: 61
+        ))
+      end
+    end
+
+    describe 'when category has auto close configured' do
+      let(:category) { Fabricate(:category, auto_close_hours: 5) }
+      let(:topic) { Fabricate(:topic, category: category, closed: true) }
+
+      it "should restore the category's auto close timer" do
+        Fabricate(:topic_timer,
+          status_type: TopicTimer.types[:open],
+          topic: topic,
+          user: admin
+        )
+
+        freeze_time(61.minutes.from_now) do
+          described_class.new.execute(
+            topic_timer_id: topic.public_topic_timer.id,
+            state: false
+          )
+
+          expect(topic.reload.closed).to eq(false)
+
+          topic_timer = topic.public_topic_timer
+
+          expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
+          expect(topic_timer.execute_at).to eq(5.hours.from_now)
+        end
+      end
     end
   end
 
@@ -62,9 +85,7 @@ describe Jobs::ToggleTopicClosed do
 
   describe 'when user is not authorized to close topics' do
     let(:topic) do
-      Fabricate(:topic,
-        topic_timers: [Fabricate(:topic_timer, execute_at: 2.hours.from_now)]
-      )
+      Fabricate(:topic_timer, execute_at: 2.hours.from_now).topic
     end
 
     it 'should not do anything' do

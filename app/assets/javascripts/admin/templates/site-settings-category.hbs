@@ -1,8 +1,11 @@
 {{#if filteredContent}}
   {{#d-section class="form-horizontal settings"}}
     {{#each filteredContent as |setting|}}
-      {{site-setting setting=setting saveAction="saveSetting"}}
+      {{site-setting setting=setting}}
     {{/each}}
+    {{#if category.hasMore}}
+      <p class="warning">{{i18n 'admin.site_settings.more_than_30_results'}}</p>
+    {{/if}}
   {{/d-section}}
 {{else}}
   <br/>

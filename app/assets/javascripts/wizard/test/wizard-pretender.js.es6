@@ -8,14 +8,13 @@ function parsePostData(query) {
     const firstSeg = decodeURIComponent(item[0]);
     const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
 
-    const val = decodeURIComponent(item[1]).replace(/\+/g, ' ');
+    const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
     if (m) {
       result[m[1]] = result[m[1]] || {};
       result[m[1]][m[2]] = val;
     } else {
       result[firstSeg] = val;
     }
-
   });
   return result;
 }
@@ -25,42 +24,47 @@ function response(code, obj) {
     obj = code;
     code = 200;
   }
-  return [code, {"Content-Type": "application/json"}, obj];
+  return [code, { "Content-Type": "application/json" }, obj];
 }
 
 export default function() {
   const server = new Pretender(function() {
-
-    this.get('/wizard.json', () => {
+    this.get("/wizard.json", () => {
       return response(200, {
         wizard: {
-          start: 'hello-world',
-          steps: [{
-            id: 'hello-world',
-            title: 'hello there',
-            index: 0,
-            description: 'hello!',
-            fields: [{ id: 'full_name',
-                       type: 'text',
-                       required: true,
-                       description: "Your name" }],
-            next: 'second-step'
-          },
-          {
-            id: 'second-step',
-            index: 1,
-            fields: [
-              { id: 'snack', type: 'dropdown', required: true },
-              { id: 'theme-preview', type: 'component' },
-              { id: 'an-image', type: 'image' }
-            ],
-            previous: 'hello-world'
-          }]
+          start: "hello-world",
+          steps: [
+            {
+              id: "hello-world",
+              title: "hello there",
+              index: 0,
+              description: "hello!",
+              fields: [
+                {
+                  id: "full_name",
+                  type: "text",
+                  required: true,
+                  description: "Your name"
+                }
+              ],
+              next: "second-step"
+            },
+            {
+              id: "second-step",
+              index: 1,
+              fields: [
+                { id: "snack", type: "dropdown", required: true },
+                { id: "theme-preview", type: "component" },
+                { id: "an-image", type: "image" }
+              ],
+              previous: "hello-world"
+            }
+          ]
         }
       });
     });
 
-    this.put('/wizard/steps/:id', request => {
+    this.put("/wizard/steps/:id", request => {
       const body = parsePostData(request.requestBody);
 
       if (body.fields.full_name === "Server Fail") {
@@ -73,7 +77,7 @@ export default function() {
     });
   });
 
-  server.prepareBody = function(body){
+  server.prepareBody = function(body) {
     if (body && typeof body === "object") {
       return JSON.stringify(body);
     }
@@ -81,7 +85,8 @@ export default function() {
   };
 
   server.unhandledRequest = function(verb, path) {
-    const error = 'Unhandled request in test environment: ' + path + ' (' + verb + ')';
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
     window.console.error(error);
     throw error;
   };

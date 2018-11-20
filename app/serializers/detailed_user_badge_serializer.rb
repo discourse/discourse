@@ -1,5 +1,5 @@
 class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
-  has_one :granted_by
+  has_one :granted_by, serializer: UserBadgeSerializer::UserSerializer
 
   attributes :post_number, :topic_id, :topic_title
 
@@ -9,7 +9,6 @@ class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
 
   alias :include_topic_id? :include_post_number?
   alias :include_topic_title? :include_post_number?
-
 
   def post_number
     object.post.post_number if object.post

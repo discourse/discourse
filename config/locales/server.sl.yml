@@ -1,0 +1,80 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sl:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "D MMMM, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [~, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+    am: "am"
+    pm: "pm"
+  title: "Discourse"
+  topics: "Teme"
+  loading: "Nalagam"
+  log_in: "Vpis"
+  errors: &errors
+    messages:
+      taken: "je že uporabljeno"
+      exclusion: je rezervirano
+      has_already_been_used: "je že v uporabi"
+      inclusion: ni vključeno na seznam
+      invalid: je neveljavno
+      less_than: "mora biti manj kot %{count}"
+      less_than_or_equal_to: "mora biti manj ali enako kot %{count}"
+      not_a_number: ni številka
+      not_an_integer: mora biti celo število
+      odd: mora biti liho število
+      too_long:
+        one: je predolgo (največ 1 znak)
+        two: je predolgo (največ 2 znaka)
+        few: je predolgo (največ %{count} znakov)
+        other: je predolgo (največ %{count} znakov)
+      too_short:
+        one: je prekratko (minimum je 1 znak)
+        two: je prekratko (minimum sta 2 znaka)
+        few: je prekratko (minimum je %{count} znakov)
+        other: je prekratko (minimum je %{count} znakov)
+  activemodel:
+    errors:
+      <<: *errors
+  reading_time: "Čas branja"
+  likes: "Všečki"
+  embed:
+    start_discussion: "Začni razpravo"
+    continue: "Nadaljuj razpravo"
+  next_page: "naslednja stran →"
+  prev_page: "← prejšnja stran"
+  page_num: "Stran %{num}"
+  home_title: "Domov"
+  author_wrote: "%{author} je napisal/a:"
+  num_participants: "Udeleženci:"
+  read_full_topic: "Preberi celo temo"
+  private_message_abbrev: "Msg"
+  rss_description:
+    latest: "Zadnje teme"
+  excerpt_image: "slika"
+  groups:
+    default_names:
+      everyone: "vsi"
+      admins: "administratorji"
+      moderators: "moderatorji"
+  activerecord:
+    errors:
+      <<: *errors
+  site_settings:
+    avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."

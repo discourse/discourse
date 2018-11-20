@@ -11,10 +11,12 @@ cs:
       voters:
         one: "hlasující"
         few: "hlasujících"
+        many: "hlasující"
         other: "hlasující"
       total_votes:
         one: "hlas celkem"
         few: "hlasy celkem"
+        many: "hlasů celkem"
         other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
       public:
@@ -24,28 +26,31 @@ cs:
           at_least_min_options:
             one: "Zvolte alespoň <strong>1</strong> možnost."
             few: "Zvolte alespoň <strong>%{count}</strong> možnosti."
+            many: "Zvolte alespoň <strong>%{count}</strong> možností."
             other: "Zvolte alespoň <strong>%{count}</strong> možností."
           up_to_max_options:
             one: "Zvolte maximálně <strong>1</strong> možnost."
             few: "Zvolte maximálně <strong>%{count}</strong> možnosti."
-            other: "Zvolte maximálně <strong>%{count}</strong> možností."
+            many: "Zvolte maximálně <strong>%{count}</strong> možností"
+            other: "Zvolte maximálně <strong>%{count}</strong> možností"
           x_options:
             one: "Zvolte <strong>1</strong> možnost."
             few: "Zvolte <strong>%{count}</strong> možnosti."
-            other: "Zvolte <strong>%{count}</strong> možností."
-          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi."
+            many: "Zvolte <strong>%{count}</strong> možností"
+            other: "Zvolte <strong>%{count}</strong> možností"
+          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi"
       cast-votes:
         title: "Hlasujte"
-        label: "Hlasovat!"
+        label: "Hlasovat nyní!"
       show-results:
-        title: "Zobraz výsledky hlasování"
+        title: "Zobrazit výsledky hlasování"
         label: "Ukaž výsledky"
       hide-results:
         title: "Zpět k hlasování"
-        label: "Schovej výsledky"
+        label: "Skrýt výsledky"
       open:
         title: "Otevřít hlasování"
-        label: "Otevři"
+        label: "Otevřít"
         confirm: "Opravdu chcete otevřít toto hlasování?"
       close:
         title: "Zavřít hlasování"
@@ -59,14 +64,16 @@ cs:
         insert: Vložit hlasování
         help:
           options_count: Zadejte alespoň 2 možnosti
+          invalid_values: Minimální hodnota musí být menší než maximální hodnota.
+          min_step_value: Minimální hodnota kroku je 1
         poll_type:
           label: Typ
           regular: Jedna možnost
           multiple: Více možností
           number: Číselné hodnocení
         poll_config:
-          max: Maximum
-          min: Minimum
+          max: Max
+          min: Min
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval

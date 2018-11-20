@@ -3,7 +3,6 @@ class BadgeType < ActiveRecord::Base
   Silver = 2
   Bronze = 3
 
-
   has_many :badges
   validates :name, presence: true, uniqueness: true
 end

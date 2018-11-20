@@ -1,4 +1,4 @@
-import ApiKey from 'admin/models/api-key';
+import ApiKey from "admin/models/api-key";
 
 export default Ember.Route.extend({
   model() {

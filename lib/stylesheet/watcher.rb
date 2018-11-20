@@ -3,15 +3,36 @@ require 'listen'
 module Stylesheet
   class Watcher
 
-    def self.watch(paths=nil)
+    def self.theme_id=(v)
+      @theme_id = v
+    end
+
+    def self.theme_id
+      if @theme_id.blank? && SiteSetting.default_theme_id != -1
+        @theme_id = SiteSetting.default_theme_id
+      end
+      @theme_id
+    end
+
+    def self.watch(paths = nil)
       watcher = new(paths)
       watcher.start
       watcher
     end
 
     def initialize(paths)
-      @paths = paths || ["app/assets/stylesheets", "plugins"]
+      @paths = paths || Watcher.default_paths
       @queue = Queue.new
+    end
+
+    def self.default_paths
+      return @default_paths if @default_paths
+
+      @default_paths = ["app/assets/stylesheets"]
+      Discourse.plugins.each do |p|
+        @default_paths << File.dirname(p.path).sub(Rails.root.to_s, '').sub(/^\//, '')
+      end
+      @default_paths
     end
 
     def start
@@ -26,15 +47,18 @@ module Stylesheet
         end
       end
 
-
       root = Rails.root.to_s
+
+      listener_opts = { ignore: /xxxx/ }
+      listener_opts[:force_polling] = true if ENV['FORCE_POLLING']
+
       @paths.each do |watch|
         Thread.new do
           begin
-            listener = Listen.to("#{root}/#{watch}", ignore: /xxxx/) do |modified, added, _|
+            listener = Listen.to("#{root}/#{watch}", listener_opts) do |modified, added, _|
               paths = [modified, added].flatten
               paths.compact!
-              paths.map!{|long| long[(root.length+1)..-1]}
+              paths.map! { |long| long[(root.length + 1)..-1] }
               process_change(paths)
             end
           rescue => e
@@ -55,9 +79,8 @@ module Stylesheet
       Stylesheet::Manager.cache.clear
 
       message = ["desktop", "mobile", "admin"].map do |name|
-        {target: name, new_href: Stylesheet::Manager.stylesheet_href(name.to_sym) , theme_key: SiteSetting.default_theme_key}
-      end
-
+        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+      end.flatten
       MessageBus.publish '/file-change', message
     end
 

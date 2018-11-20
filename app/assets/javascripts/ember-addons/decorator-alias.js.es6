@@ -1,4 +1,4 @@
-import extractValue from './utils/extract-value';
+import extractValue from "./utils/extract-value";
 
 export default function decoratorAlias(fn, errorMessage) {
   return function(...params) {

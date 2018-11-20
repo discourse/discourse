@@ -16,6 +16,7 @@ describe FileStore::S3Store do
     SiteSetting.s3_upload_bucket = "s3-upload-bucket"
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+    SiteSetting.enable_s3_uploads = true
   end
 
   shared_context 's3 helpers' do
@@ -30,7 +31,7 @@ describe FileStore::S3Store do
     let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
 
     before do
-      SiteSetting.s3_region ='us-west-1'
+      SiteSetting.s3_region = 'us-west-1'
     end
   end
 
@@ -40,14 +41,14 @@ describe FileStore::S3Store do
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_object = stub
 
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
         s3_object.expects(:upload_file)
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
-          "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
         )
       end
 
@@ -65,7 +66,7 @@ describe FileStore::S3Store do
           s3_object.expects(:upload_file)
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
           )
         end
       end
@@ -82,7 +83,7 @@ describe FileStore::S3Store do
         s3_object.expects(:upload_file)
 
         expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
-          "//s3-upload-bucket.s3-us-west-1.amazonaws.com/#{path}"
+          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
         )
       end
 
@@ -101,9 +102,36 @@ describe FileStore::S3Store do
           s3_object.expects(:upload_file)
 
           expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
-            "//s3-upload-bucket.s3-us-west-1.amazonaws.com/#{path}"
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
           )
         end
+      end
+    end
+  end
+
+  context 'copying files in S3' do
+    include_context "s3 helpers"
+
+    describe '#copy_file' do
+      it "copies the from in S3 with the right paths" do
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+
+        upload.update!(
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+        )
+
+        source = Discourse.store.get_path_for_upload(upload)
+        destination = Discourse.store.get_path_for_upload(upload).sub('.png', '.jpg')
+
+        s3_object = stub
+
+        s3_bucket.expects(:object).with(destination).returns(s3_object)
+
+        s3_object.expects(:copy_from).with(
+          copy_source: "s3-upload-bucket/#{source}"
+        )
+
+        store.copy_file(upload.url, source, destination)
       end
     end
   end
@@ -114,8 +142,8 @@ describe FileStore::S3Store do
     describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+        upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
@@ -133,8 +161,8 @@ describe FileStore::S3Store do
 
         it "removes the file from s3 with the right paths" do
           store.expects(:get_depth_for).with(upload.id).returns(0)
-          s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
@@ -150,14 +178,14 @@ describe FileStore::S3Store do
     describe "#remove_optimized_image" do
       let(:optimized_image) do
         Fabricate(:optimized_image,
-          url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/optimized/1X/#{upload.sha1}_1_100x200.png",
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/optimized/1X/#{upload.sha1}_1_100x200.png",
           upload: upload
         )
       end
 
       it "removes the file from s3 with the right paths" do
         store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
@@ -175,7 +203,7 @@ describe FileStore::S3Store do
 
         it "removes the file from s3 with the right paths" do
           store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
-          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
@@ -192,10 +220,11 @@ describe FileStore::S3Store do
   describe ".has_been_uploaded?" do
 
     it "identifies S3 uploads" do
-      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.amazonaws.com/1337.png")).to eq(true)
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/1337.png")).to eq(true)
     end
 
     it "does not match other s3 urls" do
+      expect(store.has_been_uploaded?("//s3-upload-bucket.s3.amazonaws.com/1337.png")).to eq(false)
       expect(store.has_been_uploaded?("//s3-upload-bucket.s3-us-east-1.amazonaws.com/1337.png")).to eq(false)
       expect(store.has_been_uploaded?("//s3.amazonaws.com/s3-upload-bucket/1337.png")).to eq(false)
       expect(store.has_been_uploaded?("//s4_upload_bucket.s3.amazonaws.com/1337.png")).to eq(false)
@@ -205,19 +234,21 @@ describe FileStore::S3Store do
 
   describe ".absolute_base_url" do
     it "returns a lowercase schemaless absolute url" do
-      expect(store.absolute_base_url).to eq("//s3-upload-bucket.s3.amazonaws.com")
+      expect(store.absolute_base_url).to eq("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com")
     end
 
     it "uses the proper endpoint" do
-      SiteSetting.stubs(:s3_region).returns("us-east-1")
-      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.amazonaws.com")
+      SiteSetting.s3_region = "us-east-1"
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("us-east-2")
-      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3-us-east-2.amazonaws.com")
+      SiteSetting.s3_region = "us-west-2"
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.dualstack.us-west-2.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("cn-north-1")
+      SiteSetting.s3_region = "cn-north-1"
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.cn-north-1.amazonaws.com.cn")
 
+      SiteSetting.s3_region = "cn-northwest-1"
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.cn-northwest-1.amazonaws.com.cn")
     end
 
   end
@@ -254,4 +285,22 @@ describe FileStore::S3Store do
       assert_path("https://hello", nil)
     end
   end
+
+  describe '.cdn_url' do
+
+    it 'supports subfolder' do
+      SiteSetting.s3_upload_bucket = 's3-upload-bucket/livechat'
+      SiteSetting.s3_cdn_url = 'https://rainbow.com'
+
+      # none of this should matter at all
+      # subfolder should not leak into uploads
+      global_setting :relative_url_root, '/community'
+      Discourse.stubs(:base_uri).returns("/community")
+
+      url = "//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/livechat/original/gif.png"
+
+      expect(store.cdn_url(url)).to eq("https://rainbow.com/original/gif.png")
+    end
+  end
+
 end

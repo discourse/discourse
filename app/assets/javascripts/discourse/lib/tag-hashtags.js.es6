@@ -1,1 +1,1 @@
-export const TAG_HASHTAG_POSTFIX = '::tag';
+export const TAG_HASHTAG_POSTFIX = "::tag";

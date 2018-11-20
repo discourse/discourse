@@ -1,0 +1,51 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bg:
+  js:
+    poll:
+      voters:
+        one: "гласуващ"
+        other: "Гласуващи "
+      total_votes:
+        one: "общ брой гласове"
+        other: "общо гласове"
+      average_rating: "Средна отценка: <strong>%{average}</strong>."
+      public:
+        title: "Гласуването е публично."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Избери поне <strong>%{count}</strong> отговора"
+            other: "Избери поне <strong>%{count}</strong> отговора"
+      cast-votes:
+        title: "Изчислете вашите гласове"
+        label: "Гласувай сега!"
+      show-results:
+        title: "Покажи резултатите от гласуването"
+        label: "Покажи резултатите"
+      hide-results:
+        title: "Обратно към вашите гласове"
+        label: "Скрий резултатите"
+      open:
+        title: "Отвори гласуването"
+        label: "Отвори"
+        confirm: "Сигурни ли сте, че искате да отворите гласуването ?"
+      close:
+        title: "Затвори гласуването"
+        label: "Затвори"
+        confirm: "Сигурни ли сте, че искате да затворите гласуването?"
+      error_while_toggling_status: "Съжаляваме, получи се грешка при превключване статуса на тази анкета."
+      error_while_casting_votes: "Получи се грешка при подаването на гласа ви."
+      error_while_fetching_voters: "Получи се грешка при показването на гласовете."
+      ui_builder:
+        poll_type:
+          label: Тип
+        poll_config:
+          max: Максимално
+          min: Минимално
+          step: Стъпка

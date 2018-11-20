@@ -27,7 +27,7 @@ class ImportScripts::Socialcast < ImportScripts::Base
     imported = 0
     total = count_files(MESSAGES_DIR)
     Dir.foreach(MESSAGES_DIR) do |filename|
-      next if filename == '.' or filename == '..'
+      next if filename == ('.') || filename == ('..')
       topics += 1
       message_json = File.read MESSAGES_DIR + '/' + filename
       message = SocialcastMessage.new(message_json)
@@ -46,7 +46,7 @@ class ImportScripts::Socialcast < ImportScripts::Base
     users = 0
     total = count_files(USERS_DIR)
     Dir.foreach(USERS_DIR) do |filename|
-      next if filename == '.' or filename == '..'
+      next if filename == ('.') || filename == ('..')
       user_json = File.read USERS_DIR + '/' + filename
       user = SocialcastUser.new(user_json).user
       create_user user, user[:id]
@@ -56,10 +56,10 @@ class ImportScripts::Socialcast < ImportScripts::Base
   end
 
   def count_files(path)
-    Dir.foreach(path).select {|f| f != '.' && f != '..'}.count
+    Dir.foreach(path).select { |f| f != '.' && f != '..' }.count
   end
 
-  def import_topic topic
+  def import_topic(topic)
     post = nil
     if post_id = post_id_from_imported_post_id(topic[:id])
       post = Post.find(post_id) # already imported this topic
@@ -77,13 +77,13 @@ class ImportScripts::Socialcast < ImportScripts::Base
     post
   end
 
-  def import_posts posts, topic_id
+  def import_posts(posts, topic_id)
     posts.each do |post|
       import_post post, topic_id
     end
   end
 
-  def import_post post, topic_id
+  def import_post(post, topic_id)
     return if post_id_from_imported_post_id(post[:id]) # already imported
     post[:topic_id] = topic_id
     post[:user_id] = user_id_from_imported_user_id(post[:author_id]) || -1
@@ -96,6 +96,6 @@ class ImportScripts::Socialcast < ImportScripts::Base
 
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::Socialcast.new.perform
 end

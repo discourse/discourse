@@ -7,7 +7,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
   let(:topic) do
     Fabricate(:private_message_topic, first_post: first_post,
-      topic_allowed_users: [
+                                      topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
       ]
@@ -22,6 +22,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    SiteSetting.queue_jobs = false
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -77,17 +78,15 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
-        new_post = Post.offset(1).last
+        new_post = topic.ordered_posts.last(2).first
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => topic.id,
-          "state" => "tutorial_edit",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s,
-          "tutorial_edit" => {
+        expect(narrative.get_data(user)).to eq("topic_id" => topic.id,
+                                               "state" => "tutorial_edit",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s,
+                                               "tutorial_edit" => {
             "post_id" => Post.last.id
-          }
-        })
+          })
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to eq(topic.id)
@@ -109,9 +108,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
-        new_post = Post.offset(1).last
+        new_post = Topic.last.ordered_posts.last(2).first
 
-        expect(narrative.get_data(user)).to eq({
+        expect(narrative.get_data(user)).to eq(
           "topic_id" => new_post.topic.id,
           "state" => "tutorial_edit",
           "last_post_id" => new_post.id,
@@ -119,7 +118,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           "tutorial_edit" => {
             "post_id" => Post.last.id
           }
-        })
+        )
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to_not eq(topic.id)
@@ -166,7 +165,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger}")
+            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -229,12 +228,12 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: skip_trigger)
+            post.update!(raw: skip_trigger.upcase)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.offset(1).last
+            new_post = topic.ordered_posts.last(2).first
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.advanced_user_narrative.recover.instructions', base_uri: '')
@@ -270,7 +269,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           RAW
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-          expect(Post.offset(1).last.raw).to eq(expected_raw.chomp)
+          expect(topic.ordered_posts.last(2).first.raw).to eq(expected_raw.chomp)
         end
 
         context 'when user is an admin' do
@@ -303,6 +302,30 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         )
       end
 
+      describe 'when posts are configured to be deleted immediately' do
+        before do
+          SiteSetting.delete_removed_posts_after = 0
+        end
+
+        it 'should set up the tutorial correctly' do
+          narrative.set_data(user,
+            state: :tutorial_delete,
+            topic_id: topic.id,
+            track: described_class.to_s
+          )
+
+          PostDestroyer.new(user, post).destroy
+
+          post = Post.last
+
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+
+          PostDestroyer.destroy_stubs
+
+          expect(post.reload).to be_present
+        end
+      end
+
       describe 'when user replies to the topic' do
         it 'should create the right reply' do
           narrative.set_data(user, narrative.get_data(user).merge(
@@ -324,7 +347,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
             parent_category = Fabricate(:category, name: 'a')
-            category = Fabricate(:category, parent_category: parent_category, name: 'b')
+            _category = Fabricate(:category, parent_category: parent_category, name: 'b')
 
             post.update!(raw: skip_trigger)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
@@ -358,7 +381,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       describe 'when user recovers a post in the right topic' do
         it 'should create the right reply' do
           parent_category = Fabricate(:category, name: 'a')
-          category = Fabricate(:category, parent_category: parent_category, name: 'b')
+          _category = Fabricate(:category, parent_category: parent_category, name: 'b')
           post
 
           PostDestroyer.new(user, post).destroy
@@ -522,6 +545,29 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
         end
       end
+
+      describe 'when poll is disabled' do
+        before do
+          SiteSetting.poll_enabled = false
+        end
+
+        it 'should create the right reply' do
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking]
+          )
+
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply', base_uri: '')}
+
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.details.instructions', base_uri: '')}
+          RAW
+
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
+        end
+      end
     end
 
     context 'poll tutorial' do
@@ -628,18 +674,16 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       it 'should create the right reply' do
-        post.update!(raw: "[details=\"This is a test\"]wooohoo[/details]")
+        post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 
-        expect(Post.offset(1).last.raw).to eq(I18n.t(
+        expect(topic.ordered_posts.last(2).first.raw).to eq(I18n.t(
           'discourse_narrative_bot.advanced_user_narrative.details.reply', base_uri: ''
         ))
 
-        expect(narrative.get_data(user)).to eq({
-          "state" => "end",
-          "topic_id" => topic.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("state" => "end",
+                                               "topic_id" => topic.id,
+                                               "track" => described_class.to_s)
 
         expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME).exists?)
           .to eq(true)

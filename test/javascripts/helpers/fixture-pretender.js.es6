@@ -17,4 +17,4 @@ export default function(helpers) {
   });
 
   return fixturesByUrl;
-};
+}

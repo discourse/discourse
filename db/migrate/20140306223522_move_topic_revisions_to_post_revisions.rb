@@ -1,4 +1,4 @@
-class MoveTopicRevisionsToPostRevisions < ActiveRecord::Migration
+class MoveTopicRevisionsToPostRevisions < ActiveRecord::Migration[4.2]
   def up
     execute <<SQL
 

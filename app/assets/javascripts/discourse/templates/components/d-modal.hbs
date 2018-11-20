@@ -1,0 +1,32 @@
+<div class="modal-outer-container">
+  <div class="modal-middle-container">
+    <div class="modal-inner-container">
+      <div class="modal-header">
+        {{#if dismissable}}
+          <div class='modal-close'>
+            <a class="close" {{action closeModal}}>{{d-icon "times"}}</a>
+          </div>
+        {{/if}}
+
+        <div class="title">
+          <h3>{{title}}</h3>
+
+          {{#if subtitle}}
+            <p>{{subtitle}}</p>
+          {{/if}}
+        </div>
+      </div>
+
+      <div id='modal-alert'></div>
+
+      {{yield}}
+
+      {{#each errors as |error|}}
+        <div class="alert alert-error">
+          <button class="close" data-dismiss="alert">×</button>
+          {{error}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

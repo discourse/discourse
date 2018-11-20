@@ -20,7 +20,9 @@ const KeyValueStore = function(ctx) {
 
 KeyValueStore.prototype = {
   abandonLocal() {
-    if (!safeLocalStorage) { return; }
+    if (!safeLocalStorage) {
+      return;
+    }
 
     let i = safeLocalStorage.length - 1;
     while (i >= 0) {
@@ -34,12 +36,16 @@ KeyValueStore.prototype = {
   },
 
   remove(key) {
-    if (!safeLocalStorage) { return; }
+    if (!safeLocalStorage) {
+      return;
+    }
     return safeLocalStorage.removeItem(this.context + key);
   },
 
   set(opts) {
-    if (!safeLocalStorage) { return false; }
+    if (!safeLocalStorage) {
+      return false;
+    }
     safeLocalStorage[this.context + opts.key] = opts.value;
   },
 
@@ -48,22 +54,33 @@ KeyValueStore.prototype = {
   },
 
   get(key) {
-    if (!safeLocalStorage) { return null; }
+    if (!safeLocalStorage) {
+      return null;
+    }
     return safeLocalStorage[this.context + key];
   },
 
   getInt(key, def) {
-    if (!def) { def = 0; }
-    if (!safeLocalStorage) { return def; }
+    if (!def) {
+      def = 0;
+    }
+    if (!safeLocalStorage) {
+      return def;
+    }
     const result = parseInt(this.get(key));
-    if (!isFinite(result)) { return def; }
+    if (!isFinite(result)) {
+      return def;
+    }
     return result;
   },
 
   getObject(key) {
-    if (!safeLocalStorage) { return null; }
-    try { return JSON.parse(safeLocalStorage[this.context + key]); }
-    catch (e) { }
+    if (!safeLocalStorage) {
+      return null;
+    }
+    try {
+      return JSON.parse(safeLocalStorage[this.context + key]);
+    } catch (e) {}
   }
 };
 

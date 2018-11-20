@@ -1,11 +1,14 @@
 # Set default behaviour, in case users don't have core.autocrlf set.
 * text=auto
 
-# Explicitly declare text files we want to always be normalized and converted 
+# Treat email fixtures as binary files so CRLF are not converted to LF.
+*.eml binary
+
+# Explicitly declare text files we want to always be normalized and converted
 # to native line endings on checkout.
 *.yml text
 
-# Custom for Visual Studio, very unlikely, but lets keep it 
+# Custom for Visual Studio, very unlikely, but lets keep it
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union

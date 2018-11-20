@@ -1,0 +1,12 @@
+Return-Path: <existing@bar.com>
+From: Foo Bar <existing@bar.com>
+To: category@bar.com
+Subject: This is a topic from an existing user
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <32@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=12.3 required=4.5
+
+Hey, this is a topic from an existing user ;)

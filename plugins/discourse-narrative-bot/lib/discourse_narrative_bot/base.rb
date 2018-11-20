@@ -19,6 +19,21 @@ module DiscourseNarrativeBot
 
         begin
           opts = transition
+
+          loop do
+            next_state = opts[:next_state]
+
+            break if next_state == :end
+
+            next_opts = self.class::TRANSITION_TABLE.fetch(next_state)
+            prerequisite = next_opts[:prerequisite]
+
+            break if !prerequisite || instance_eval(&prerequisite)
+
+            [:next_state, :next_instructions].each do |key|
+              opts[key] = next_opts[key]
+            end
+          end
         rescue InvalidTransitionError
           # For given input, no transition for current state
           return
@@ -94,7 +109,7 @@ module DiscourseNarrativeBot
             skip_trigger: TrackSelector.skip_trigger,
             reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
           )
-        ), {}, { skip_send_email: false })
+        ), {}, skip_send_email: false)
       end
     end
 
@@ -104,10 +119,12 @@ module DiscourseNarrativeBot
         date: Time.zone.now.strftime('%b %d %Y'),
         format: :svg
       }
-
       options.merge!(type: type) if type
+
       src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
-      "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{I18n.t("#{self.class::I18N_KEY}.certificate.alt")}'>"
+      alt = CGI.escapeHTML(I18n.t("#{self.class::I18N_KEY}.certificate.alt"))
+
+      "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'>"
     end
 
     protected
@@ -153,8 +170,8 @@ module DiscourseNarrativeBot
       end
     end
 
-    def i18n_post_args(extra={})
-      {base_uri: Discourse.base_uri}.merge(extra)
+    def i18n_post_args(extra = {})
+      { base_uri: Discourse.base_uri }.merge(extra)
     end
 
     def valid_topic?(topic_id)

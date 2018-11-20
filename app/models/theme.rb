@@ -1,120 +1,195 @@
 require_dependency 'distributed_cache'
 require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
+require_dependency 'theme_settings_parser'
+require_dependency 'theme_settings_manager'
 
 class Theme < ActiveRecord::Base
 
+  # TODO: remove in 2019
+  self.ignored_columns = ["key"]
+
   @cache = DistributedCache.new('theme')
 
+  belongs_to :user
   belongs_to :color_scheme
   has_many :theme_fields, dependent: :destroy
+  has_many :theme_settings, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
   has_many :child_themes, through: :child_theme_relation, source: :child_theme
   has_many :color_schemes
   belongs_to :remote_theme
 
-  before_create do
-    self.key ||= SecureRandom.uuid
-    true
-  end
+  validate :component_validations
+
+  scope :user_selectable, ->() {
+    where('user_selectable OR id = ?', SiteSetting.default_theme_id)
+  }
 
   def notify_color_change(color)
     changed_colors << color
   end
 
   after_save do
-    changed_colors.each(&:save!)
+    color_schemes = {}
+    changed_colors.each do |color|
+      color.save!
+      color_schemes[color.color_scheme_id] ||= color.color_scheme
+    end
+
+    color_schemes.values.each(&:save!)
+
     changed_colors.clear
+
     changed_fields.each(&:save!)
     changed_fields.clear
 
-    Theme.expire_site_cache! if user_selectable_changed?
+    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
 
     @dependant_themes = nil
     @included_themes = nil
-  end
 
-  after_save do
     remove_from_cache!
-    notify_scheme_change if color_scheme_id_changed?
+    clear_cached_settings!
   end
 
   after_destroy do
     remove_from_cache!
-    if SiteSetting.default_theme_key == self.key
+    clear_cached_settings!
+    if SiteSetting.default_theme_id == self.id
       Theme.clear_default!
     end
 
     if self.id
-
       ColorScheme
         .where(theme_id: self.id)
         .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
-               .destroy_all
+        .destroy_all
 
       ColorScheme
         .where(theme_id: self.id)
         .update_all(theme_id: nil)
     end
+
+    Theme.expire_site_cache!
   end
 
   after_commit ->(theme) do
-    theme.notify_theme_change
-  end, on: :update
+    theme.notify_theme_change(with_scheme: theme.saved_change_to_color_scheme_id?)
+  end, on: [:create, :update]
 
-  def self.theme_keys
-    if keys = @cache["theme_keys"]
-      return keys
+  def self.get_set_cache(key, &blk)
+    if val = @cache[key]
+      return val
     end
-    @cache["theme_keys"] = Set.new(Theme.pluck(:key))
+    @cache[key] = blk.call
   end
 
-  def self.user_theme_keys
-    if keys = @cache["user_theme_keys"]
-      return keys
+  def self.theme_ids
+    get_set_cache "theme_ids" do
+      Theme.pluck(:id)
     end
-    @cache["theme_keys"] = Set.new(
-      Theme
-      .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
-      .pluck(:key)
-    )
+  end
+
+  def self.user_theme_ids
+    get_set_cache "user_theme_ids" do
+      Theme.user_selectable.pluck(:id)
+    end
+  end
+
+  def self.components_for(theme_id)
+    get_set_cache "theme_components_for_#{theme_id}" do
+      ChildTheme.where(parent_theme_id: theme_id).distinct.pluck(:child_theme_id)
+    end
   end
 
   def self.expire_site_cache!
     Site.clear_anon_cache!
+    clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
   end
 
   def self.clear_default!
-    SiteSetting.default_theme_key = ""
+    SiteSetting.default_theme_id = -1
     expire_site_cache!
   end
 
+  def self.transform_ids(ids, extend: true)
+    return [] if ids.blank?
+
+    ids.uniq!
+    parent = ids.first
+
+    components = ids[1..-1]
+    components.push(*components_for(parent)) if extend
+    components.sort!.uniq!
+
+    [parent, *components]
+  end
+
   def set_default!
-    SiteSetting.default_theme_key = key
+    if component
+      raise Discourse::InvalidParameters.new(
+        I18n.t("themes.errors.component_no_default")
+      )
+    end
+    SiteSetting.default_theme_id = id
     Theme.expire_site_cache!
   end
 
   def default?
-    SiteSetting.default_theme_key == key
+    SiteSetting.default_theme_id == id
   end
 
-  def self.lookup_field(key, target, field)
-    return if key.blank?
+  def component_validations
+    return unless component
 
-    cache_key = "#{key}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
+    errors.add(:base, I18n.t("themes.errors.component_no_color_scheme")) if color_scheme_id.present?
+    errors.add(:base, I18n.t("themes.errors.component_no_user_selectable")) if user_selectable
+    errors.add(:base, I18n.t("themes.errors.component_no_default")) if default?
+  end
+
+  def switch_to_component!
+    return if component
+
+    Theme.transaction do
+      self.component = true
+
+      self.color_scheme_id = nil
+      self.user_selectable = false
+      Theme.clear_default! if default?
+
+      ChildTheme.where("parent_theme_id = ?", id).destroy_all
+      self.save!
+    end
+  end
+
+  def switch_to_theme!
+    return unless component
+
+    Theme.transaction do
+      self.component = false
+      ChildTheme.where("child_theme_id = ?", id).destroy_all
+      self.save!
+    end
+  end
+
+  def self.lookup_field(theme_ids, target, field)
+    return if theme_ids.blank?
+    theme_ids = [theme_ids] unless Array === theme_ids
+
+    theme_ids = transform_ids(theme_ids)
+    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
 
     target = target.to_sym
-    theme = find_by(key: key)
-
-    val = theme.resolve_baked_field(target, field) if theme
+    val = resolve_baked_field(theme_ids, target, field)
 
     (@cache[cache_key] = val || "").html_safe
   end
 
-  def self.remove_from_cache!(themes=nil)
+  def self.remove_from_cache!
     clear_cache!
   end
 
@@ -122,39 +197,40 @@ class Theme < ActiveRecord::Base
     @cache.clear
   end
 
-
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
   end
 
-
-  def notify_scheme_change(clear_manager_cache=true)
-    Stylesheet::Manager.cache.clear if clear_manager_cache
-    message = refresh_message_for_targets(["desktop", "mobile", "admin"], self)
-    MessageBus.publish('/file-change', message)
+  def self.lookup_target(target_id)
+    self.targets.invert[target_id]
   end
 
-  def notify_theme_change
+  def self.notify_theme_change(theme_ids, with_scheme: false, clear_manager_cache: true, all_themes: false)
     Stylesheet::Manager.clear_theme_cache!
+    targets = [:mobile_theme, :desktop_theme]
 
-    themes = [self] + dependant_themes
+    if with_scheme
+      targets.prepend(:desktop, :mobile, :admin)
+      Stylesheet::Manager.cache.clear if clear_manager_cache
+    end
 
-    message = themes.map do |theme|
-      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme)
-    end.compact.flatten
+    if all_themes
+      message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
+    else
+      message = refresh_message_for_targets(targets, theme_ids).flatten
+    end
+
     MessageBus.publish('/file-change', message)
   end
 
-  def refresh_message_for_targets(targets, theme)
+  def notify_theme_change(with_scheme: false)
+    theme_ids = (dependant_themes&.pluck(:id) || []).unshift(self.id)
+    self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
+  end
+
+  def self.refresh_message_for_targets(targets, theme_ids)
     targets.map do |target|
-      href = Stylesheet::Manager.stylesheet_href(target.to_sym, theme.key)
-      if href
-        {
-          target: target,
-          new_href: href,
-          theme_key: theme.key
-        }
-      end
+      Stylesheet::Manager.stylesheet_data(target.to_sym, theme_ids)
     end
   end
 
@@ -167,68 +243,43 @@ class Theme < ActiveRecord::Base
   end
 
   def resolve_dependant_themes(direction)
-
-    select_field,where_field=nil
-
     if direction == :up
-      select_field = "parent_theme_id"
+      join_field = "parent_theme_id"
       where_field = "child_theme_id"
     elsif direction == :down
-      select_field = "child_theme_id"
+      join_field = "child_theme_id"
       where_field = "parent_theme_id"
     else
       raise "Unknown direction"
     end
 
-    themes = []
     return [] unless id
 
-    uniq = Set.new
-    uniq << id
+    Theme.joins("JOIN child_themes ON themes.id = child_themes.#{join_field}").where("#{where_field} = ?", id)
+  end
 
-    iterations = 0
-    added = [id]
+  def self.resolve_baked_field(theme_ids, target, name)
+    list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
+  end
 
-    while added.length > 0 && iterations < 5
+  def self.list_baked_fields(theme_ids, target, name)
+    target = target.to_sym
 
-      iterations += 1
+    fields = ThemeField.find_by_theme_ids(theme_ids)
+      .where(target_id: [Theme.targets[target], Theme.targets[:common]])
+      .where(name: name.to_s)
 
-      new_themes = Theme.where("id in (SELECT #{select_field}
-                                  FROM child_themes
-                                  WHERE #{where_field} in (?))", added).to_a
-
-      added = []
-      new_themes.each do |theme|
-        unless uniq.include?(theme.id)
-          added << theme.id
-          uniq << theme.id
-          themes << theme
-        end
-      end
-
-    end
-
-    themes
+    fields.each(&:ensure_baked!)
+    fields
   end
 
   def resolve_baked_field(target, name)
-    list_baked_fields(target,name).map{|f| f.value_baked || f.value}.join("\n")
+    list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
   def list_baked_fields(target, name)
-
-    target = target.to_sym
-
-    theme_ids = [self.id] + (included_themes.map(&:id) || [])
-    fields = ThemeField.where(target_id: [Theme.targets[target], Theme.targets[:common]])
-                       .where(name: name.to_s)
-                       .includes(:theme)
-                       .joins("JOIN (
-                             SELECT #{theme_ids.map.with_index{|id,idx| "#{id} AS theme_id, #{idx} AS sort_column"}.join(" UNION ALL SELECT ")}
-                            ) as X ON X.theme_id = theme_fields.theme_id")
-                       .order('sort_column, target_id')
-    fields.each(&:ensure_baked!)
-    fields
+    theme_ids = (included_themes&.pluck(:id) || []).unshift(self.id)
+    self.class.list_baked_fields(theme_ids, target, name)
   end
 
   def remove_from_cache!
@@ -254,7 +305,7 @@ class Theme < ActiveRecord::Base
 
     value ||= ""
 
-    field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
+    field = theme_fields.find { |f| f.name == name && f.target_id == target_id && f.type_id == type_id }
     if field
       if value.blank? && !upload_id
         theme_fields.delete field.destroy
@@ -270,11 +321,68 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def all_theme_variables
+    fields = {}
+    ids = (included_themes&.pluck(:id) || []).unshift(self.id)
+    ThemeField.find_by_theme_ids(ids).where(type_id: ThemeField.theme_var_type_ids).each do |field|
+      next if fields.key?(field.name)
+      fields[field.name] = field
+    end
+    fields.values
+  end
+
   def add_child_theme!(theme)
-    child_theme_relation.create!(child_theme_id: theme.id)
-    @included_themes = nil
-    child_themes.reload
-    save!
+    new_relation = child_theme_relation.new(child_theme_id: theme.id)
+    if new_relation.save
+      @included_themes = nil
+      child_themes.reload
+      save!
+    else
+      raise Discourse::InvalidParameters.new(new_relation.errors.full_messages.join(", "))
+    end
+  end
+
+  def settings
+    field = theme_fields.where(target_id: Theme.targets[:settings], name: "yaml").first
+    return [] unless field && field.error.nil?
+
+    settings = []
+    ThemeSettingsParser.new(field).load do |name, default, type, opts|
+      settings << ThemeSettingsManager.create(name, default, type, self, opts)
+    end
+    settings
+  end
+
+  def cached_settings
+    Rails.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+      hash = {}
+      self.settings.each do |setting|
+        hash[setting.name] = setting.value
+      end
+      hash
+    end
+  end
+
+  def clear_cached_settings!
+    Rails.cache.delete("settings_for_theme_#{self.id}")
+  end
+
+  def included_settings
+    hash = {}
+
+    self.included_themes.each do |theme|
+      hash.merge!(theme.cached_settings)
+    end
+
+    hash.merge!(self.cached_settings)
+    hash
+  end
+
+  def update_setting(setting_name, new_value)
+    target_setting = settings.find { |setting| setting.name == setting_name }
+    raise Discourse::NotFound unless target_setting
+
+    target_setting.value = new_value
   end
 end
 
@@ -285,7 +393,6 @@ end
 #  id               :integer          not null, primary key
 #  name             :string           not null
 #  user_id          :integer          not null
-#  key              :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  compiler_version :integer          default(0), not null
@@ -296,6 +403,5 @@ end
 #
 # Indexes
 #
-#  index_themes_on_key              (key)
 #  index_themes_on_remote_theme_id  (remote_theme_id) UNIQUE
 #

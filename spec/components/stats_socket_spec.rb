@@ -40,6 +40,18 @@ describe StatsSocket do
     parsed = JSON.parse(line)
 
     expect(parsed.keys.sort).to eq(GC.stat.keys.map(&:to_s).sort)
+
+    # make sure we have libv8 going
+    PrettyText.cook("x")
+
+    socket = UNIXSocket.new(socket_path)
+    socket.send "v8_stat\n", 0
+    line = socket.readline
+    socket.close
+
+    parsed = JSON.parse(line)
+
+    expect(parsed['total_physical_size']).to be > (0)
   end
 
 end

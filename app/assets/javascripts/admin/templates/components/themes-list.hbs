@@ -1,0 +1,26 @@
+<div class="themes-list-header">
+  <b>{{I18n title}}</b>
+</div>
+
+<div class="themes-list-container">
+  {{#if hasThemes}}
+    {{#each themes as |theme|}}
+      <div class="themes-list-item {{if theme.active 'active' ''}}">
+        {{#link-to 'adminCustomizeThemes.show' theme replace=true}}
+          {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
+          {{theme.name}}
+          {{#if theme.user_selectable}}
+            {{d-icon "user"}}
+          {{/if}}
+          {{#if theme.default}}
+            {{d-icon "asterisk"}}
+          {{/if}}
+        {{/link-to}}
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="themes-list-item">
+      <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>
+    </div>
+  {{/if}}
+</div>

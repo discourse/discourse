@@ -3,17 +3,49 @@ require 'distributed_cache'
 
 describe DistributedCache do
 
+  before :all do
+    @bus = MessageBus::Instance.new
+    @bus.configure(backend: :memory)
+    @manager = DistributedCache::Manager.new(@bus)
+  end
+
+  after :all do
+    @bus.destroy
+  end
+
+  def cache(name)
+    DistributedCache.new(name, manager: @manager)
+  end
+
+  let :cache_name do
+    SecureRandom.hex
+  end
+
   let! :cache1 do
-    DistributedCache.new("test")
+    cache(cache_name)
   end
 
   let! :cache2 do
-    DistributedCache.new("test")
+    cache(cache_name)
+  end
+
+  it 'supports arrays with hashes' do
+
+    c1 = cache("test1")
+    c2 = cache("test1")
+
+    c1["test"] = [{ test: :test }]
+
+    wait_for do
+      c2["test"] == [{ test: :test }]
+    end
+
+    expect(c2[:test]).to eq([{ test: :test }])
   end
 
   it 'allows us to store Set' do
-    c1 = DistributedCache.new("test1")
-    c2 = DistributedCache.new("test1")
+    c1 = cache("test1")
+    c2 = cache("test1")
 
     set = Set.new
     set << 1
@@ -31,7 +63,7 @@ describe DistributedCache do
 
     set << 5
 
-    c2["cats"] == set
+    c2["cats"] = set
 
     wait_for do
       c1["cats"] == set
@@ -41,8 +73,8 @@ describe DistributedCache do
   end
 
   it 'does not leak state across caches' do
-    c2 = DistributedCache.new("test1")
-    c3 = DistributedCache.new("test1")
+    c2 = cache("test1")
+    c3 = cache("test1")
     c2["hi"] = "hi"
     wait_for do
       c3["hi"] == "hi"

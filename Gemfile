@@ -1,10 +1,8 @@
 source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
-# source 'http://production.cf.rubygems.org'
+#source 'http://production.cf.rubygems.org'
 
-# does not install in linux ATM, so hack this for now
-# Also comment in code: config/boot.rb
-# gem 'bootsnap', require: false
+gem 'bootsnap', require: false, platform: :mri
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
@@ -15,28 +13,20 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  # Rails 5 is going to ship with Action Cable, we have no use for it as
-  # we already ship MessageBus, AC introduces dependencies on Event Machine,
-  # Celluloid and Faye Web Sockets.
-  #
-  # Note this means upgrading Rails is more annoying, to do so, comment out the
-  # explicit dependencies, and add gem 'rails', bundle update rails and then
-  # comment back the explicit dependencies. Leaving this in a comment till we
-  # upgrade to Rails 5
-  #
-  # gem 'activesupport'
-  # gem 'actionpack'
-  # gem 'activerecord'
-  # gem 'actionmailer'
-  # gem 'activejob'
-  # gem 'railties'
-  # gem 'sprockets-rails'
-  gem 'rails', '~> 4.2'
-  gem 'seed-fu', '~> 2.3.5'
+  gem 'actionmailer', '5.2'
+  gem 'actionpack', '5.2'
+  gem 'actionview', '5.2'
+  gem 'activemodel', '5.2'
+  gem 'activerecord', '5.2'
+  gem 'activesupport', '5.2'
+  gem 'railties', '5.2'
+  gem 'sprockets-rails'
+  gem 'seed-fu'
 end
 
-gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
+gem 'mail', '2.7.1.rc1', require: false
+gem 'mini_mime'
+gem 'mini_suffix'
 
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
@@ -44,74 +34,72 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox'
+gem 'onebox', '1.8.60'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source'
+gem 'ember-source', '2.13.3'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
-gem 'babel-transpiler'
 
 gem 'message_bus'
 
 gem 'rails_multisite'
 
-gem 'fast_xs'
+gem 'fast_xs', platform: :mri
 
-gem 'fast_xor'
+# may move to xorcist post: https://github.com/fny/xorcist/issues/4
+gem 'fast_xor', platform: :mri
 
-gem 'fastimage', '2.1.0'
-gem 'aws-sdk', require: false
+gem 'fastimage'
+
+gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.6'
+gem 'email_reply_trimmer', '~> 0.1'
 
-# TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
-# is merged.
+# Forked until https://github.com/toy/image_optim/pull/162 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
-gem 'nokogiri', '1.7.2'
+gem 'nokogiri'
+
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-instagram'
-
-# forked while https://github.com/intridea/omniauth-github/pull/41 is being upstreamd
-gem 'omniauth-github-discourse', require: 'omniauth-github'
+gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
+gem 'mini_sql'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
-gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
-
-gem 'pgreset'
+gem 'mini_scheduler'
 
 # for sidekiq web
-gem 'sinatra', require: false
+gem 'tilt', require: false
+
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'highline', require: false
+gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
 
-# Gems used only for assets and not required
-# in production environments by default.
-# allow everywhere for now cause we are allowing asset debugging in prd
+# Gems used only for assets and not required in production environments by default.
+# Allow everywhere for now cause we are allowing asset debugging in production
 group :assets do
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
@@ -121,9 +109,7 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'timecop'
-  # TODO: Remove once we upgrade to Rails 5.
-  gem 'test_after_commit'
+  gem 'danger'
 end
 
 group :test, :development do
@@ -132,20 +118,20 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
-  gem 'fabrication', '2.9.8', require: false
-  gem 'discourse-qunit-rails', require: 'qunit-rails'
+  gem 'fabrication', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
   gem 'rspec-html-matchers'
-  gem 'spork-rails'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
+  gem 'rubocop', require: false
 end
 
 group :development do
+  gem 'ruby-prof', require: false
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -166,11 +152,10 @@ group :development do
   gem 'capistrano-bundler', '~> 1.2'
 end
 
-
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank' #, github: "SamSaffron/fast_blank"
+gem 'fast_blank', platform: :mri
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -184,36 +169,44 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
-# gem 'unicorn', require: false
+gem 'unicorn', require: false, platform: :mri
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
-#
 gem 'ruby-readability', require: false
-gem 'simple-rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
 
-gem 'rmmseg-cpp', require: false
+gem 'cppjieba_rb', require: false
 
+gem 'lograge', require: false
+gem 'logstash-event', require: false
+gem 'logstash-logger', require: false
 gem 'logster'
 
 gem 'sassc', require: false
 
+gem 'rotp'
+gem 'rqrcode'
 
-gem 'bcrypt', '3.1.3'
-gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
+gem 'sshkey', require: false
 
+gem 'rchardet', require: false
 
+if ENV["IMPORT"] == "1"
+  gem 'mysql2'
+  gem 'redcarpet'
+  gem 'sqlite3', '~> 1.3.13'
+  gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
+  gem 'reverse_markdown'
+  gem 'tiny_tds'
+end
 
-# if ENV["IMPORT"] == "1"
-#   gem 'mysql2'
-#   gem 'redcarpet'
-  # gem 'sqlite3', '~> 1.3.13'
-# end
+gem 'webpush', require: false
+gem 'colored2', require: false
 
 
 # damingo (Github ID), 2017-08-22, #annotator
@@ -221,3 +214,5 @@ gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
 gem 'annotator_store', path: 'vendor/gems/annotator_store'
 # https://github.com/thoughtbot/administrate
 gem 'administrate'
+gem 'bcrypt', '3.1.3'
+gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'

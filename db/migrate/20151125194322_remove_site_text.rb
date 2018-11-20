@@ -1,4 +1,4 @@
-class RemoveSiteText < ActiveRecord::Migration
+class RemoveSiteText < ActiveRecord::Migration[4.2]
   def change
     execute "INSERT INTO translation_overrides (locale, translation_key, value, created_at, updated_at)
                     SELECT '#{I18n.locale}',

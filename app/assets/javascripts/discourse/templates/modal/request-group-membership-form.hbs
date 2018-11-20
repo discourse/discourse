@@ -1,0 +1,21 @@
+<form class='request-group-membership-form'>
+  {{#d-modal-body rawTitle=title}}
+    <div class="control-group">
+      <label>
+        {{i18n "groups.membership_request.reason"}}
+      </label>
+
+      {{expanding-text-area value=reason}}
+    </div>
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button class="btn-primary"
+        disabled=disableSubmit
+        label="groups.membership_request.submit"
+        action="requestMember"}}
+
+    {{d-modal-cancel close=(action "closeModal")}}
+    {{conditional-loading-spinner size="small" condition=loading}}
+  </div>
+</form>

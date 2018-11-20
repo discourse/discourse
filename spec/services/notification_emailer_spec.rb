@@ -10,7 +10,7 @@ describe NotificationEmailer do
   let(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator
-  def create_notification(type, user=nil)
+  def create_notification(type, user = nil)
     user ||= Fabricate(:user)
     Notification.create(data: "{\"a\": 1}",
                         user: user,
@@ -22,7 +22,7 @@ describe NotificationEmailer do
   shared_examples "enqueue" do
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
       NotificationEmailer.process_notification(notification)
     end
 
@@ -36,7 +36,15 @@ describe NotificationEmailer do
 
       it "enqueues a job if the user is staged" do
         notification.user.staged = true
-        Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+        Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
+        NotificationEmailer.process_notification(notification)
+      end
+
+      it "enqueues a job if the user is staged even if site requires user approval" do
+        SiteSetting.must_approve_users = true
+
+        notification.user.staged = true
+        Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
         NotificationEmailer.process_notification(notification)
       end
     end
@@ -96,7 +104,7 @@ describe NotificationEmailer do
 
     it "enqueue a delayed job for users that are online" do
       notification.user.last_seen_at = 1.minute.ago
-      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
       NotificationEmailer.process_notification(notification)
     end
 
@@ -136,7 +144,7 @@ describe NotificationEmailer do
 
   context 'user_private_message' do
     let(:type) { :user_private_message }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:private_message) }
 
     include_examples "enqueue_private"
@@ -151,7 +159,7 @@ describe NotificationEmailer do
 
   context 'user_invited_to_private_message' do
     let(:type) { :user_invited_to_private_message }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:invited_to_private_message) }
 
     include_examples "enqueue_public"
@@ -159,7 +167,7 @@ describe NotificationEmailer do
 
   context 'user_invited_to_topic' do
     let(:type) { :user_invited_to_topic }
-    let(:delay) { SiteSetting.private_email_time_window_seconds }
+    let(:delay) { SiteSetting.personal_email_time_window_seconds }
     let!(:notification) { create_notification(:invited_to_topic) }
 
     include_examples "enqueue_public"

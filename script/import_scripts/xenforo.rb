@@ -42,7 +42,7 @@ class ImportScripts::XenForo < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :users, results.map {|u| u["id"].to_i}
+      next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['username'].blank?
@@ -100,7 +100,7 @@ class ImportScripts::XenForo < ImportScripts::Base
       ").to_a
 
       break if results.size < 1
-      next if all_records_exist? :posts, results.map {|p| p['id'] }
+      next if all_records_exist? :posts, results.map { |p| p['id'] }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
@@ -156,6 +156,11 @@ class ImportScripts::XenForo < ImportScripts::Base
     # phpBB shortens link text like this, which breaks our markdown processing:
     #   [http://answers.yahoo.com/question/index ... 223AAkkPli](http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli)
     #
+    #Fix for the error: xenforo.rb: 160: in `gsub!': invalid byte sequence in UTF-8 (ArgumentError)
+    if ! s.valid_encoding?
+      s = s.encode("UTF-16be", invalid: :replace, replace: "?").encode('UTF-8')
+    end
+
     # Work around it for now:
     s.gsub!(/\[http(s)?:\/\/(www\.)?/, '[')
 

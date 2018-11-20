@@ -2,26 +2,27 @@ class FilterBestPosts
 
   attr_accessor :filtered_posts, :posts
 
-  def initialize(topic, filtered_posts, limit, options={})
+  def initialize(topic, filtered_posts, limit, options = {})
     @filtered_posts = filtered_posts
     @topic = topic
     @limit = limit
     options.each do |key, value|
-        self.instance_variable_set("@#{key}".to_sym, value)
+      self.instance_variable_set("@#{key}".to_sym, value)
     end
     filter
   end
 
   def filter
-    @posts =  if @min_replies && @topic.posts_count < @min_replies + 1
-                []
-              else
-                filter_posts_liked_by_moderators
-                setup_posts
-                filter_posts_based_on_trust_level
-                filter_posts_based_on_score
-                sort_posts
-              end
+    @posts =
+      if @min_replies && @topic.posts_count < @min_replies + 1
+        Post.none
+      else
+        filter_posts_liked_by_moderators
+        setup_posts
+        filter_posts_based_on_trust_level
+        filter_posts_based_on_score
+        sort_posts
+      end
   end
 
   private
@@ -39,24 +40,26 @@ class FilterBestPosts
   end
 
   def filter_posts_based_on_trust_level
-    return unless @min_trust_level.try('>',0)
-      @posts = if @bypass_trust_level_score.try('>',0)
-                  @posts.where('COALESCE(users.trust_level,0) >= ? OR posts.score >= ?',
-                              @min_trust_level,
-                              @bypass_trust_level_score)
-                else
-                  @posts.where('COALESCE(users.trust_level,0) >= ?', @min_trust_level)
-                end
+    return unless @min_trust_level.try('>', 0)
+
+    @posts =
+      if @bypass_trust_level_score.try('>', 0)
+        @posts.where('COALESCE(users.trust_level,0) >= ? OR posts.score >= ?',
+          @min_trust_level,
+          @bypass_trust_level_score
+        )
+      else
+        @posts.where('COALESCE(users.trust_level,0) >= ?', @min_trust_level)
+      end
   end
 
   def filter_posts_based_on_score
-    return unless @min_score.try('>',0)
+    return unless @min_score.try('>', 0)
     @posts = @posts.where('posts.score >= ?', @min_score)
   end
 
   def sort_posts
-    @posts.to_a.sort!{|a,b| a.post_number <=> b.post_number}
+    @posts = Post.from(@posts, :posts).order(post_number: :asc)
   end
 
 end
-

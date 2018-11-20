@@ -1,6 +1,6 @@
 class ActionDispatch::Session::DiscourseCookieStore < ActionDispatch::Session::CookieStore
-  def initialize(app, options={})
-    super(app,options)
+  def initialize(app, options = {})
+    super(app, options)
   end
 
   private

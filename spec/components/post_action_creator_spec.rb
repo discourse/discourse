@@ -6,7 +6,6 @@ describe PostActionCreator do
   let(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
 
-
   describe 'perform' do
     it 'creates a post action' do
       expect { PostActionCreator.new(user, post).perform(like_type_id) }.to change { PostAction.count }.by(1)

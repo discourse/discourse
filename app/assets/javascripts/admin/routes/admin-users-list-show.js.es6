@@ -1,4 +1,4 @@
-import AdminUser from 'admin/models/admin-user';
+import AdminUser from "admin/models/admin-user";
 
 export default Discourse.Route.extend({
   model: function(params) {
@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
       model: model,
       query: this.userFilter,
       showEmails: false,
-      refreshing: false,
+      refreshing: false
     });
   }
 });

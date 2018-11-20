@@ -5,7 +5,11 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
-  validates :badge_id, presence: true, uniqueness: {scope: :user_id}, if: 'badge.single_grant?'
+  validates :badge_id,
+    presence: true,
+    uniqueness: { scope: :user_id },
+    if: :single_grant_badge?
+
   validates :user_id, presence: true
   validates :granted_at, presence: true
   validates :granted_by, presence: true
@@ -18,6 +22,12 @@ class UserBadge < ActiveRecord::Base
   after_destroy do
     Badge.decrement_counter 'grant_count', self.badge_id
     DiscourseEvent.trigger(:user_badge_removed, self.badge_id, self.user_id)
+  end
+
+  private
+
+  def single_grant_badge?
+    self.badge.single_grant?
   end
 end
 
@@ -37,7 +47,7 @@ end
 # Indexes
 #
 #  index_user_badges_on_badge_id_and_user_id              (badge_id,user_id)
-#  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE
-#  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE
+#  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE WHERE (post_id IS NOT NULL)
+#  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE WHERE (post_id IS NULL)
 #  index_user_badges_on_user_id                           (user_id)
 #

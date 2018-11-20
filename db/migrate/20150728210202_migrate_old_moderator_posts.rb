@@ -1,4 +1,4 @@
-class MigrateOldModeratorPosts < ActiveRecord::Migration
+class MigrateOldModeratorPosts < ActiveRecord::Migration[4.2]
 
   def migrate_key(action_code)
     I18n.overrides_disabled do

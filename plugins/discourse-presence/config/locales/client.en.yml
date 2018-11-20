@@ -1,0 +1,8 @@
+en:
+  js:
+    presence:
+      replying: "replying"
+      editing: "editing"
+      replying_to_topic:
+        one: "replying"
+        other: "replying"

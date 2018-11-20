@@ -4,13 +4,12 @@
 {{#if category}}
   {{category-title-link category=category}}
 {{/if}}
+{{#if tagGroupName}}
+  <h3>{{tagGroupName}}</h3>
+{{/if}}
 {{#each sortedTags as |tag|}}
   <div class='tag-box'>
-    {{#if tag.count}}
-      {{discourse-tag tag.id}} <span class='tag-count'>x {{tag.count}}</span>
-    {{else}}
-      {{discourse-tag tag.id}}
-    {{/if}}
+    {{discourse-tag tag.id isPrivateMessage=isPrivateMessage tagsForUser=tagsForUser}} {{#if tag.pm_count}}{{d-icon "envelope"}}{{/if}}{{#if tag.totalCount}} <span class='tag-count'>x {{tag.totalCount}}</span>{{/if}}
   </div>
 {{/each}}
 <div class="clearfix" />

@@ -1,0 +1,52 @@
+.latest-topic-list,
+.top-topic-list {
+  @extend .topic-list-icons;
+
+  .table-heading {
+    padding: 12px 5px;
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
+
+  .no-topics,
+  .more-topics {
+    margin-top: 1em;
+  }
+}
+
+.latest-topic-list-item {
+  padding: 1em;
+  border-bottom: 1px solid $primary-low;
+  display: flex;
+
+  align-items: center;
+
+  .topic-poster {
+    width: 60px;
+  }
+  .main-link {
+    @extend .topic-list-main-link;
+    flex: 0 1 auto;
+    max-width: 65%;
+    font-size: $font-0;
+    .badge-wrapper {
+      max-width: 100%;
+      .badge-category-bg {
+        flex-shrink: 0;
+      }
+    }
+
+    .top-row {
+      margin-bottom: 0.1em;
+      font-size: $font-up-1;
+    }
+  }
+  .topic-stats {
+    flex: 1;
+    text-align: right;
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
+
+  .topic-last-activity a {
+    color: dark-light-choose($primary-medium, $secondary-high);
+  }
+}

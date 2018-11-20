@@ -1,4 +1,4 @@
-class CreateOnceoffLogs < ActiveRecord::Migration
+class CreateOnceoffLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :onceoff_logs do |t|
       t.string :job_name

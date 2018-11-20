@@ -1,0 +1,61 @@
+# encoding: utf-8
+#
+# This file contains transliteration rules for Arabic
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+ar: 
+  i18n: 
+    transliterate: 
+      rule: 
+        ء: e
+        آ: a
+        أ: a
+        ؤ: w
+        إ: i
+        ئ: "y"
+        ا: a
+        ب: b
+        ة: t
+        ت: t
+        ث: th
+        ج: j
+        ح: h
+        خ: kh
+        د: d
+        ذ: dh
+        ر: r
+        ز: z
+        س: s
+        ش: sh
+        ص: s
+        ض: d
+        ط: t
+        ظ: z
+        ع: e
+        غ: gh
+        ـ: _
+        ف: f
+        ق: q
+        ك: k
+        ل: l
+        م: m
+        ن: "n"
+        ه: h
+        و: w
+        ى: a
+        ي: "y"
+        َ‎: a
+        ُ: u
+        ِ‎: i
+        ٠: 0
+        ١: 1
+        ٢: 2
+        ٣: 3
+        ٤: 4
+        ٥: 5
+        ٦: 6
+        ٧: 7
+        ٩: 9
+        ۸: 8

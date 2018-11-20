@@ -1,4 +1,5 @@
 require_dependency 'nokogiri'
+require_dependency 'url_helper'
 
 class TopicEmbed < ActiveRecord::Base
   include Trashable
@@ -47,11 +48,17 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
+        cook_method = if SiteSetting.embed_support_markdown
+          Post.cook_methods[:regular]
+        else
+          Post.cook_methods[:raw_html]
+        end
+
         creator = PostCreator.new(user,
                                   title: title,
                                   raw: absolutize_urls(url, contents),
                                   skip_validations: true,
-                                  cook_method: Post.cook_methods[:raw_html],
+                                  cook_method: cook_method,
                                   category: eh.try(:category_id))
         post = creator.create
         if post.present?
@@ -64,10 +71,30 @@ class TopicEmbed < ActiveRecord::Base
     else
       absolutize_urls(url, contents)
       post = embed.post
+
       # Update the topic if it changed
-      if post && post.topic && content_sha1 != embed.content_sha1
-        post.revise(user, { raw: absolutize_urls(url, contents) }, skip_validations: true, bypass_rate_limiter: true)
-        embed.update_column(:content_sha1, content_sha1)
+      if post&.topic
+        if post.user != user
+          PostOwnerChanger.new(
+            post_ids: [post.id],
+            topic_id: post.topic_id,
+            new_owner: user,
+            acting_user: Discourse.system_user
+          ).change_owner!
+
+          # make sure the post returned has the right author
+          post.reload
+        end
+
+        if content_sha1 != embed.content_sha1
+          post.revise(
+            user,
+            { raw: absolutize_urls(url, contents) },
+            skip_validations: true,
+            bypass_rate_limiter: true
+          )
+          embed.update!(content_sha1: content_sha1)
+        end
       end
     end
 
@@ -77,7 +104,8 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    original_uri = URI.parse(URI.encode(url))
+    url = UrlHelper.escape_uri(url)
+    original_uri = URI.parse(url)
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
       attributes: %w[href src class],
@@ -90,8 +118,8 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(URI.encode(url), allow_redirections: :safe).read
-    rescue OpenURI::HTTPError
+      html = open(url, allow_redirections: :safe).read
+    rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
 
@@ -113,26 +141,26 @@ class TopicEmbed < ActiveRecord::Base
     response.title = title
     doc = Nokogiri::HTML(read_doc.content)
 
-    tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
+    tags = { 'img' => 'src', 'script' => 'src', 'a' => 'href' }
     doc.search(tags.keys.join(',')).each do |node|
       url_param = tags[node.name]
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(URI.encode(src))
+          uri = URI.parse(UrlHelper.escape_uri(src))
           unless uri.host
             uri.scheme = original_uri.scheme
             uri.host = original_uri.host
             node[url_param] = uri.to_s
           end
-        rescue URI::InvalidURIError
+        rescue URI::Error
           # If there is a mistyped URL, just do nothing
         end
       end
       # only allow classes in the whitelist
       allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
       doc.search('[class]:not([class=""])').each do |classnode|
-        classes = classnode[:class].split(' ').select{ |classname| allowed_classes.include?(classname) }
+        classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
         if classes.length === 0
           classnode.delete('class')
         else
@@ -145,9 +173,11 @@ class TopicEmbed < ActiveRecord::Base
     response
   end
 
-  def self.import_remote(import_user, url, opts=nil)
+  def self.import_remote(import_user, url, opts = nil)
     opts = opts || {}
     response = find_remote(url)
+    return if response.nil?
+
     response.title = opts[:title] if opts[:title].present?
     import_user = response.author if response.author.present?
 
@@ -157,7 +187,7 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(URI.encode(url))
+    uri = URI(UrlHelper.escape_uri(url))
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
@@ -178,8 +208,8 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_id_for_embed(embed_url)
-    embed_url = normalize_url(embed_url)
-    TopicEmbed.where("lower(embed_url) = ?", embed_url).pluck(:topic_id).first
+    embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
+    TopicEmbed.where("embed_url ~* '^https?://#{Regexp.escape(embed_url)}$'").pluck(:topic_id).first
   end
 
   def self.first_paragraph_from(html)

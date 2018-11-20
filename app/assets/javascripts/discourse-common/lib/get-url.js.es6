@@ -4,11 +4,11 @@ export default function getURL(url) {
   if (!url) return url;
 
   if (!baseUri) {
-    baseUri = $('meta[name="discourse-base-uri"]').attr('content') || '';
+    baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
   }
 
   // if it's a non relative URL, return it.
-  if (url !== '/' && !/^\/[^\/]/.test(url)) return url;
+  if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
 
   const found = url.indexOf(baseUri);
 
@@ -17,4 +17,3 @@ export default function getURL(url) {
 
   return baseUri + url;
 }
-
