@@ -168,21 +168,7 @@ a.badge-category {
 }
 
 .suggested-topics-wrapper.related-messages-wrapper {
-  .topic-list th,
-  .topic-list td {
-    padding: 5px;
-  }
-  .topic-list .main-link {
-    font-size: 1em;
-    .topic-list-item .discourse-tags {
-      font-size: $font-down-1;
-    }
-  }
-  #related-messages {
-    padding-bottom: 0;
-  }
-  #suggested-topics {
-    padding-top: 0.5em;
+  .suggested-topics:nth-of-type(n + 2) {
     thead {
       display: none;
     }

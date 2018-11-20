@@ -21,6 +21,7 @@ RSpec.describe Jobs::CleanUpDeprecatedUrlSiteSettings do
       described_class.new.execute({})
     end.to change { SiteSetting.logo_url }.from("/test/some/url").to("")
 
+    expect(SiteSetting.exists?(name: "logo_url")).to eq(false)
     expect(SiteSetting.logo).to eq(logo_upload)
     expect(SiteSetting.logo_small_url).to eq('/test/another/url')
   end
