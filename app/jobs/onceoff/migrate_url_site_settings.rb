@@ -46,7 +46,7 @@ module Jobs
                  SocketError,
                  Discourse::InvalidParameters => e
 
-            logger.info(
+            logger.warn(
               "Error encountered when trying to download file " +
               "for #{new_setting}.\n#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
             )
