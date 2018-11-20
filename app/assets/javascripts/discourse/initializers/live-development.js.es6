@@ -53,7 +53,7 @@ export default {
         // hbs notifications only happen in dev
         Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
       }
-      _.each(data, function(me) {
+      data.forEach(me => {
         if (me === "refresh") {
           // Refresh if necessary
           document.location.reload(true);

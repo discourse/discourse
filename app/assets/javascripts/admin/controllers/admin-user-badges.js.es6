@@ -20,13 +20,13 @@ export default Ember.Controller.extend(GrantBadgeController, {
     _(grouped).each(function(badges) {
       var lastGranted = badges[0].granted_at;
 
-      _.each(badges, function(badge) {
+      badges.forEaach(badge => {
         lastGranted =
           lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
       });
 
       if (badges.length === 1 || expandedBadges.includes(badges[0].badge.id)) {
-        _.each(badges, badge => expanded.push(badge));
+        badges.forEach(badge => expanded.push(badge));
         return;
       }
 

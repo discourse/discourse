@@ -308,11 +308,13 @@ const TopicTrackingState = Discourse.Model.extend({
       const ids = {};
       list.topics.forEach(r => (ids["t" + r.id] = true));
 
-      _.each(tracker.states, (v, k) => {
+      Object.keys(tracker.states).forEach(k => {
         // we are good if we are on the list
         if (ids[k]) {
           return;
         }
+
+        const v = tracker.states[k];
 
         if (filter === "unread" && isUnread(v)) {
           // pretend read
@@ -371,7 +373,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   countCategory(category_id) {
     let sum = 0;
-    _.each(this.states, function(topic) {
+    this.states.forEach(topic => {
       if (topic.category_id === category_id && !topic.deleted) {
         sum +=
           topic.last_read_post_number === null ||
@@ -411,7 +413,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
     // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
-      _.each(data, topic => {
+      data.forEach(topic => {
         var category = idMap[topic.category_id];
         if (category && category.parent_category_id) {
           topic.parent_category_id = category.parent_category_id;
