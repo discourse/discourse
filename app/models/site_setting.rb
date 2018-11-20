@@ -175,7 +175,6 @@ class SiteSetting < ActiveRecord::Base
 
 end
 
-
 # == Schema Information
 #
 # Table name: site_settings

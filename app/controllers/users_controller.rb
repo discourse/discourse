@@ -341,9 +341,6 @@ class UsersController < ApplicationController
       user.approved_at ||= Time.zone.now
     end
 
-    # damingo (Github ID), 2018-03-22, #multisite
-    params[:user_fields]['3'] = request.host
-
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?

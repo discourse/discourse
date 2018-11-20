@@ -14,7 +14,6 @@ class Validators::UploadValidator < ActiveModel::Validator
     if upload.for_group_message && SiteSetting.allow_all_attachments_for_group_messages
       return upload.original_filename =~ SiteSetting.attachment_filename_blacklist_regex
     end
-    return false unless upload.original_filename.present?
 
     extension = File.extname(upload.original_filename)[1..-1] || ""
 

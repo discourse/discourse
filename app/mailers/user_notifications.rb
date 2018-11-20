@@ -391,8 +391,7 @@ class UserNotifications < ActionMailer::Base
       title: notification_data[:topic_title],
       post: post,
       username: original_username,
-      # damingo (Github ID), 2017-08-15
-      from_alias: "#{user_name} via #{SiteSetting.title}",
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],

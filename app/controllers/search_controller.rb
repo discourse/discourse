@@ -136,9 +136,6 @@ class SearchController < ApplicationController
       guardian.ensure_can_see!(context_obj)
 
       [context_obj, type_filter]
-    elsif request.host == 'biofabforum.org'
-      # damingo (Github ID), 2018-02-16, #multisite, Limit search results to the #biofab category.
-      [Category.find_by(id: 274), nil]
     end
   end
 
