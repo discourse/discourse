@@ -53,7 +53,7 @@ export default Ember.Object.extend({
     }
 
     if (topic.get("invisible")) {
-      results.push({ icon: "eye-slash", key: "invisible" });
+      results.push({ icon: "eye-slash"});
     }
 
     results.forEach(result => {
