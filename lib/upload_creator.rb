@@ -168,7 +168,15 @@ class UploadCreator
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
+  MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
+  MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
+
   def convert_to_jpeg!
+
+    if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+      return
+    end
+
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     from = @file.path
@@ -186,8 +194,12 @@ class UploadCreator
       execute_convert(from, to, true)
     end
 
-    # keep the JPEG if it's at least 15% smaller
-    if File.size(jpeg_tempfile.path) < filesize * 0.85
+    new_size = File.size(jpeg_tempfile.path)
+
+    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
+    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    if keep_jpeg
       @file = jpeg_tempfile
       extract_image_info!
     else
