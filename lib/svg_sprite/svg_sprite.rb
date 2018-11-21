@@ -312,9 +312,16 @@ Discourse SVG subset of #{fa_license}
 
   def self.theme_icons
     theme_icon_settings = []
-    ThemeSetting.where("name LIKE '%_icon%'").pluck(:value).each do |icons|
-      theme_icon_settings |= icons.split('|')
+
+    # Theme.all includes default values
+    Theme.all.each do |theme|
+      settings = theme.cached_settings.each do |key, value|
+        if key.to_s.include?("_icon") && value.present?
+          theme_icon_settings |= value.split('|')
+        end
+      end
     end
+
     theme_icon_settings
   end
 

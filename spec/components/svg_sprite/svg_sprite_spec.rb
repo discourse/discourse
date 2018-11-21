@@ -45,8 +45,10 @@ describe SvgSprite do
 
   it 'includes icons defined in theme settings' do
     theme = Fabricate(:theme)
-    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: bars")
+    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: magic")
     theme.save!
+
+    # TODO: add test for default settings values
 
     theme.update_setting(:custom_icon, "gas-pump")
     expect(SvgSprite.all_icons).to include("gas-pump")
