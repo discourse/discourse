@@ -5,10 +5,17 @@ describe SvgSprite do
   before do
     SvgSprite.rebuild_cache
   end
+
   it 'can generate a bundle' do
     bundle = SvgSprite.bundle
     expect(bundle).to match(/heart/)
     expect(bundle).to match(/angle-double-down/)
+  end
+
+  it 'can search for a specific FA icon' do
+    expect(SvgSprite.search("fa-heart")).to match(/heart/)
+    expect(SvgSprite.search("poo-storm")).to match(/poo-storm/)
+    expect(SvgSprite.search("this-is-not-an-icon")).to eq(false)
   end
 
   it 'can get a consistent version string' do
@@ -75,7 +82,7 @@ describe SvgSprite do
     DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
 
     expect(SvgSprite.all_icons).to include("blender")
-    # expect(SvgSprite.all_icons).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons).to include("fab-bandcamp")
   end
 
   it "includes Font Awesome 4.7 icons as group flair" do

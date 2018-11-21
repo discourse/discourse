@@ -230,14 +230,7 @@ Discourse SVG subset of #{fa_license}
       svg_filename = "#{File.basename(fname, ".svg")}"
 
       svg_file.css('symbol').each do |sym|
-        icon_id = sym.attr('id')
-
-        case svg_filename
-        when "regular"
-          icon_id = icon_id.prepend('far-')
-        when "brands"
-          icon_id = icon_id.prepend('fab-')
-        end
+        icon_id = prepare_symbol(sym, svg_filename)
 
         if icons.include? icon_id
           sym.attributes['id'].value = icon_id
@@ -248,6 +241,40 @@ Discourse SVG subset of #{fa_license}
     end
 
     svg_subset << '</svg>'
+  end
+
+  def self.search(searched_icon)
+    searched_icon = process(searched_icon.dup)
+
+    Dir["#{Rails.root}/vendor/assets/svg-icons/fontawesome/*.svg"].each do |fname|
+      svg_file = Nokogiri::XML(File.open(fname))
+      svg_filename = "#{File.basename(fname, ".svg")}"
+
+      svg_file.css('symbol').each do |sym|
+        icon_id = prepare_symbol(sym, svg_filename)
+
+        if searched_icon == icon_id
+          sym.attributes['id'].value = icon_id
+          sym.css('title').each { |t| t.remove }
+          return sym.to_xml
+        end
+      end
+    end
+
+    return false
+  end
+
+  def self.prepare_symbol(symbol, svg_filename)
+    icon_id = symbol.attr('id')
+
+    case svg_filename
+    when "regular"
+      icon_id = icon_id.prepend('far-')
+    when "brands"
+      icon_id = icon_id.prepend('fab-')
+    end
+
+    icon_id
   end
 
   def self.path
