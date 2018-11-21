@@ -832,8 +832,8 @@ class Search
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
     all_terms = data.scan(/'([^']+)'\:\d+/).flatten
     all_terms.map! do |t|
-      t.split(/[\)\(&']/)[0]
-    end.compact!
+      t.split(/[\)\(&']/).find(&:present?)
+    end.reject!(&:blank?)
 
     query = ActiveRecord::Base.connection.quote(
       all_terms
