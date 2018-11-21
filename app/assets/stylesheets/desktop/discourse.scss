@@ -121,7 +121,8 @@ input {
 }
 
 .input {
-  &-xxlarge {
+  &-xxlarge,
+  &-xxlarge + .control-instructions {
     width: 530px;
   }
 }
