@@ -239,9 +239,9 @@ def migrate_to_s3
 
   # Migrate all uploads
   file_uploads = Upload.where.not(sha1: nil).where("url NOT LIKE '#{s3.absolute_base_url}%'")
-  image_uploads = file_uploads.where("lower(extension) NOT IN (?)", FileHelper.supported_images.to_a)
+  non_image_uploads = file_uploads.where("lower(extension) NOT IN (?)", FileHelper.supported_images.to_a)
 
-  [image_uploads, file_uploads].each do |uploads|
+  [non_image_uploads, file_uploads].each do |uploads|
     uploads.find_in_batches(batch_size: 100) do |batch|
       batch.each do |upload|
         now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
