@@ -109,11 +109,11 @@ required:
   exclude_rel_nofollow_domains:
     default: ''
     type: list
-  company_short_name:
+  company_name:
     default: ''
-  company_full_name:
+  governing_law:
     default: ''
-  company_domain:
+  city_for_disputes:
     default: ''
 
 basic:
