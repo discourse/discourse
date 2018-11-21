@@ -274,6 +274,9 @@ def migrate_to_s3
 
           content_type = `file --mime-type -b #{path}`.strip
           to = s3.store_upload(file, upload, content_type)
+
+          file.close
+          File.unlink(path)
         rescue => e
           puts "Encountered an error while migrating #{upload.url}: #{e.class}: #{e.message}"
           next
