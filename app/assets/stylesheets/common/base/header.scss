@@ -213,28 +213,17 @@
 .extra-info-wrapper {
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 1 1 0%; // unit on flex-basis is required for IE11
   height: 100%;
   line-height: $line-height-medium;
   padding: 0 1.5em 0 0.5em;
-  -webkit-animation: fadein 0.4s;
-  animation: fadein 0.4s;
-  // we need to hide overflow in both to turnicate the title in a flexbox
+  // we need to hide overflow in both to truncate the title in a flexbox
   overflow: hidden;
   .extra-info {
     overflow: hidden;
     width: 100%;
-  }
-  h1 {
-    margin: 0 0 0.25em 0;
-    font-size: $font-up-3;
-    width: 100%;
-  }
-  .topic-header-extra {
-    display: inline-flex;
-  }
-  .badge-wrapper {
-    margin-right: 8px;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
   }
   .topic-link {
     color: $header_primary;
@@ -259,5 +248,45 @@
     .unpinned {
       color: $header_primary;
     }
+  }
+  h1 {
+    margin: 0 0 0.25em 0;
+    font-size: $font-up-3;
+    width: 100%;
+  }
+  .categories-wrapper {
+    display: inline-flex;
+    max-width: 100%;
+    // only truncate the last category name. One full width category
+    > a:last-of-type {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .badge-wrapper {
+    margin-right: 8px;
+  }
+  .badge-wrapper.bullet {
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      min-width: 5px;
+    }
+  }
+  .topic-header-extra {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    flex: 1 0 0%; // unit on flex-basis is required for IE11
+    .discourse-tags {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  // if a topic has both categories and tags, the tag container should shrink
+  // instead of wrapping to the next line.
+  .categories-wrapper + .topic-header-extra {
+    min-width: 0;
   }
 }
