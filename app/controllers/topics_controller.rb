@@ -501,9 +501,11 @@ class TopicsController < ApplicationController
     params.require(:username)
     topic = Topic.find_by(id: params[:topic_id])
     user = User.find_by(username: params[:username])
+
+    raise Discourse::NotFound unless topic
     guardian.ensure_can_remove_allowed_users!(topic, user)
 
-    if topic&.remove_allowed_user(current_user, user)
+    if topic.remove_allowed_user(current_user, user)
       render json: success_json
     else
       render json: failed_json, status: 422
