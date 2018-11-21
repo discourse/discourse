@@ -806,7 +806,7 @@ class TopicsController < ApplicationController
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,
-        post_number: params[:post_number],
+        post_number: @topic_view.current_post_number,
         username: request['u'],
         ip_address: request.remote_ip
       }

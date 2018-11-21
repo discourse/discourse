@@ -1095,6 +1095,18 @@ RSpec.describe TopicsController do
       end.to change(TopicViewItem, :count).by(1)
     end
 
+    it 'records a view to invalid post_number' do
+      user = Fabricate(:user)
+
+      expect do
+        get "/t/#{topic.slug}/#{topic.id}/#{256**4}", params: {
+          u: user.username
+        }
+        expect(response.status).to eq(200)
+      end.to change { IncomingLink.count }.by(1)
+
+    end
+
     it 'records incoming links' do
       user = Fabricate(:user)
 
