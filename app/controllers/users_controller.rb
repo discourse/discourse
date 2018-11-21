@@ -545,12 +545,22 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: {
-            is_developer: UsernameCheckerService.is_developer?(@user&.email),
-            admin: @user&.admin?,
-            second_factor_required: !valid_second_factor,
-            backup_enabled: @user&.backup_codes_enabled?
-          }
+          if @error || @user&.errors&.any?
+            render json: {
+              success: false,
+              message: @error,
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user&.email),
+              admin: @user&.admin?
+            }
+          else
+            render json: {
+              is_developer: UsernameCheckerService.is_developer?(@user.email),
+              admin: @user.admin?,
+              second_factor_required: !valid_second_factor,
+              backup_enabled: @user.backup_codes_enabled?
+            }
+          end
         end
       end
     end
