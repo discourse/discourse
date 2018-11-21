@@ -134,7 +134,10 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
             options
               .select { |o| option_ids.has_key?(o) }
               .map { |o| "(#{poll_id}, #{option_ids[o]}, #{user_id.to_i}, '#{r.created_at}', '#{r.updated_at}')" }
-          end.flatten
+          end
+
+          poll_votes.flatten!
+          poll_votes.uniq!
 
           if poll_votes.present?
             execute <<~SQL

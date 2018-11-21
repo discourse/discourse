@@ -33,7 +33,7 @@ function _loadCachedShortUrls($images) {
 }
 
 function _loadShortUrls($images, ajax) {
-  const urls = $images.map(img => $(img).data("orig-src"));
+  const urls = $images.toArray().map(img => $(img).data("orig-src"));
   lookupUncachedUploadUrls(urls, ajax).then(() =>
     _loadCachedShortUrls($images)
   );
