@@ -11,6 +11,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
     a {
       display: block;
     }
@@ -33,14 +35,15 @@
       }
     }
   }
-  // styles for mobile scroll logo / topic
-  .panel {
-    animation: fadein 0.7s;
-  }
-  &.scroll-logo .panel {
+  button.sign-up-button {
     display: none;
   }
-  button.sign-up-button {
+  // styles for mobile scroll logo / topic
+  .panel {
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+  }
+  &.scroll-down .panel {
     display: none;
   }
 }
