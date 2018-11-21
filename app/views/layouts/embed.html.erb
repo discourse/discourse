@@ -13,6 +13,8 @@
       <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>
     <%- end %>
 
+    <%= yield :head %>
+
     <script>
       (function() {
 
@@ -44,7 +46,7 @@
           if (header) {
             state = header.getAttribute('data-embed-state');
           }
-	  
+
           // Send a post message with our loaded height and state
           postUp({type: 'discourse-resize', height: document['body'].offsetHeight, state: state});
 
