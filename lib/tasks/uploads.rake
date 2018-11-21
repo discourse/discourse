@@ -1,6 +1,7 @@
 require "db_helper"
 require "digest/sha1"
 require "base62"
+require "mini_mime"
 
 ################################################################################
 #                                    gather                                    #
@@ -272,7 +273,8 @@ def migrate_to_s3
             next
           end
 
-          content_type = `file --mime-type -b #{path}`.strip
+          content_type = MiniMime.lookup_by_filename(File.basename(path)).content_type
+
           to = s3.store_upload(file, upload, content_type)
 
           file.close
