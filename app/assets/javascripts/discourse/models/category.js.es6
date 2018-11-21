@@ -47,9 +47,9 @@ const Category = RestModel.extend({
     return Discourse.getURL("/c/") + Category.slugFor(this);
   },
 
-  @computed("url")
-  fullSlug(url) {
-    return url.slice(Discourse.BaseUri.length + 3).replace(/\//g, "-");
+  @computed
+  fullSlug() {
+    return Category.slugFor(this).replace(/\//g, "-");
   },
 
   @computed("name")
