@@ -11,9 +11,9 @@ This PR doesn't match our required code formatting standards, as enforced by pre
   })
 end
 
-has_locales_changes = !git.modified_files.grep(/config\/locales/).empty?
-has_en_locales_changes = git.modified_files.include?("config/locales/client.en.yml") || git.modified_files.include?("config/locales/server.en.yml")
+locales_changes = git.modified_files.grep(/config\/locales/)
+has_non_en_locales_changes = locales_changes.grep_v(/config\/locales\/(client|server)\.en\.yml/).any?
 
-if has_locales_changes && !has_en_locales_changes
+if locales_changes.any? && has_non_en_locales_changes
   fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
 end
