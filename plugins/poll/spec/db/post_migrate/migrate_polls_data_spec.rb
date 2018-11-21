@@ -90,7 +90,8 @@ RSpec.describe MigratePollsData do
           "1" => {
             "testing" => [
               "b2c3e3668a886d09e97e38b8adde7d45",
-              "28df49fa9e9c09d3a1eb8cfbcdcda7790",
+              "b2c3e3668a886d09e97e38b8adde7d45",
+              "28df49fa9e9c09d3a1eb8cfbcdcda7790"
             ]
           },
           "2" => {
