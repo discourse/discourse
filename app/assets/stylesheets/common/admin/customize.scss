@@ -527,8 +527,15 @@
 }
 
 .add-upload-modal {
+  input[type="file"] {
+    display: block;
+    margin-bottom: 0.25em;
+    + label {
+      color: $primary-medium;
+    }
+  }
   label {
-    margin-top: 20px;
+    display: inline-block;
   }
 }
 
