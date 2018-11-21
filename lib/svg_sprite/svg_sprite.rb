@@ -176,24 +176,30 @@ module SvgSprite
     "wrench"
   ])
 
-  FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fa-' => '' }
+  FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }
 
   def self.svg_sprite_cache
-    @svg_sprite_cache ||= DistributedCache.new('svg_sprite_version')
+    @svg_sprite_cache ||= DistributedCache.new('svg_sprite')
   end
 
   def self.all_icons
-    icons = SVG_ICONS.dup
+    icons = Set.new()
     icons
       .merge(settings_icons)
       .merge(plugin_icons)
       .merge(badge_icons)
       .merge(group_icons)
       .merge(theme_icons)
+      .delete_if { |i| i.blank? || i.include?("/") }
+      .map! { |i| process(i.dup) }
+      .merge(SVG_ICONS)
+    icons
   end
 
   def self.rebuild_cache
-    svg_sprite_cache['version'] = Digest::SHA1.hexdigest(all_icons.sort.join('|'))
+    icons = all_icons
+    svg_sprite_cache['icons'] = icons
+    svg_sprite_cache['version'] = Digest::SHA1.hexdigest(icons.sort.join('|'))
   end
 
   def self.expire_cache
@@ -201,15 +207,11 @@ module SvgSprite
   end
 
   def self.version
-    if @svg_sprite_cache && @svg_sprite_cache['version']
-      @svg_sprite_cache['version']
-    else
-      rebuild_cache
-    end
+    svg_sprite_cache['version'] || rebuild_cache
   end
 
   def self.bundle
-    icons = all_icons
+    icons = svg_sprite_cache['icons'] || all_icons
 
     doc = File.open("#{Rails.root}/vendor/assets/svg-icons/fontawesome/solid.svg") { |f| Nokogiri::XML(f) }
     fa_license = doc.at('//comment()').text
@@ -258,7 +260,7 @@ Discourse SVG subset of #{fa_license}
 
     SiteSetting.settings_hash.select do |key, value|
       if key.to_s.include?("_icon") && value.present?
-        site_setting_icons |= value.split('|').each { |i| process(i) }
+        site_setting_icons |= value.split('|')
       end
     end
 
@@ -270,29 +272,35 @@ Discourse SVG subset of #{fa_license}
   end
 
   def self.plugin_icons
-    DiscoursePluginRegistry.svg_icons.each { |icon| process(icon.dup) }
+    DiscoursePluginRegistry.svg_icons
   end
 
   def self.badge_icons
-    Badge.all.pluck(:icon).uniq.each { |icon| process(icon) }
+    Badge.all.pluck(:icon).uniq
   end
 
   def self.group_icons
-    Group.where("flair_url LIKE '%fa-%'").pluck(:flair_url).uniq.each { |icon| process(icon) }
+    Group.where("flair_url LIKE '%fa-%'").pluck(:flair_url).uniq
   end
 
   def self.theme_icons
     theme_icon_settings = []
-
     ThemeSetting.where("name LIKE '%_icon%'").pluck(:value).each do |icons|
-      theme_icon_settings |= icons.split('|').each { |icon| process(icon) }
+      theme_icon_settings |= icons.split('|')
     end
-
     theme_icon_settings
+  end
+
+  def self.fa4_shim_file
+    "#{Rails.root}/lib/svg_sprite/fa4-renames.json"
+  end
+
+  def self.fa4_to_fa5_names
+    @db ||= File.open(fa4_shim_file, "r:UTF-8") { |f|  JSON.parse(f.read); }
   end
 
   def self.process(icon_name)
     FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
-    icon_name
+    fa4_to_fa5_names[icon_name] || icon_name
   end
 end
