@@ -102,11 +102,16 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       this.appEvents.on("topic:scrolled", offset =>
         this.mobileScrollGaurd(offset)
       );
+      // used to animate header contents on scroll
       this.appEvents.on("header:show-topic", () => {
-        $("header.d-header").addClass("scroll-logo");
+        $("header.d-header")
+          .removeClass("scroll-up")
+          .addClass("scroll-down");
       });
       this.appEvents.on("header:hide-topic", () => {
-        $("header.d-header").removeClass("scroll-logo");
+        $("header.d-header")
+          .removeClass("scroll-down")
+          .addClass("scroll-up");
       });
     }
   },
@@ -127,6 +132,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // mobile scroll logo clean up.
     if (this.site.mobileView) {
       this.appEvents.off("topic:scrolled");
+      $("header.d-header").removeClass("scroll-down scroll-up");
     }
   },
 
