@@ -484,8 +484,6 @@ class TopicView
   def current_post_number
     if highest_post_number.present?
       post_number > highest_post_number ? highest_post_number : post_number
-    else
-      nil
     end
   end
 
