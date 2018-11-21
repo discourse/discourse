@@ -257,7 +257,7 @@
   .categories-wrapper {
     display: inline-flex;
     max-width: 100%;
-    // only truncate the last category name. One full width category
+    // only truncate the last category name.
     > a:last-of-type {
       overflow: hidden;
       white-space: nowrap;
