@@ -19,7 +19,9 @@ export default Ember.Mixin.create({
         );
       })
       .map(badge => {
-        badge.icon = convertIconClass(badge.icon);
+        if (badge.icon) {
+          badge.icon = convertIconClass(badge.icon);
+        }
         return badge;
       })
       .sort((a, b) => a.get("name").localeCompare(b.get("name")));
