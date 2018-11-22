@@ -220,18 +220,37 @@ describe PrettyText do
       expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
     end
 
-    it "can handle mention with hyperlinks" do
-      Fabricate(:user, username: "sam")
-      expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
-      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
-    end
+    it "handles user and group mentions correctly" do
+      ['user', 'user2'].each do |username |
+        Fabricate(:user, username: username)
+      end
 
-    it "can handle group mention" do
       group = Fabricate(:group)
 
-      expect(PrettyText.cook("hi @#{group.name}! hi")).to match_html(
-        %Q{<p>hi <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a>! hi</p>}
-      )
+      [
+        [
+          'hi @user! @user2 hi',
+          '<p>hi <a class="mention" href="/u/user">@user</a>! <a class="mention" href="/u/user2">@user2</a> hi</p>'
+        ],
+        [
+          "hi\n@user. @#{group.name} @somemention",
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a> <span class="mention">@somemention</span></p>|
+        ]
+      ].each do |input, expected|
+        expect(PrettyText.cook(input)).to eq(expected)
+      end
+    end
+
+    describe 'when mentions are disabled' do
+      before do
+        SiteSetting.enable_mentions = false
+      end
+
+      it 'should not convert mentions to links' do
+        user = Fabricate(:user)
+
+        expect(PrettyText.cook('hi @user')).to eq('<p>hi @user</p>')
+      end
     end
 
     it "can handle mentions inside a hyperlink" do
