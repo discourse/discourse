@@ -21,6 +21,15 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: $font-down-1;
     }
+
+    .badge-grouping-control {
+      display: flex;
+      align-items: center;
+
+      .badge-selector {
+        margin-right: 5px;
+      }
+    }
   }
   .form-horizontal {
     .ace-wrapper {
