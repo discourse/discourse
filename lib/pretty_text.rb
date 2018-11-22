@@ -456,6 +456,8 @@ module PrettyText
   end
 
   def self.lookup_mentions(names, user_id: nil)
+    return {} if names.blank?
+
     sql = <<~SQL
     (
       SELECT
