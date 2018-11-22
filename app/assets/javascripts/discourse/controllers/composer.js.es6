@@ -770,12 +770,19 @@ export default Ember.Controller.extend({
           .then(resolve, reject);
       }
 
-      // we need a draft sequence for the composer to work
-      if (opts.draftSequence === undefined) {
+      // check if there is another draft saved on server
+      // or get a draft sequence number
+      if (!opts.draft || opts.draftSequence === undefined) {
         return Draft.get(opts.draftKey)
-          .then(function(data) {
-            opts.draftSequence = data.draft_sequence;
-            opts.draft = data.draft;
+          .then(data => self.confirmDraftAbandon(data))
+          .then(data => {
+            // we need a draft sequence for the composer to work
+            if (!opts.draft) {
+              opts.draft = data.draft;
+              opts.draftSequence = data.draft_sequence;
+            } else if (opts.draft_sequence === undefined) {
+              opts.draftSequence = data.draft_sequence;
+            }
             self._setModel(composerModel, opts);
           })
           .then(resolve, reject);
@@ -863,6 +870,36 @@ export default Ember.Controller.extend({
         this.appEvents.trigger("draft:destroyed", key);
       });
     }
+  },
+
+  confirmDraftAbandon(data) {
+    if (!data.draft) {
+      return data;
+    }
+
+    // do not show abandon dialog if old draft is clean
+    const draft = JSON.parse(data.draft);
+    if (draft.reply === draft.originalText) {
+      data.draft = null;
+      return data;
+    }
+
+    return new Promise(resolve => {
+      bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
+        {
+          label: I18n.t("drafts.abandon.no_value"),
+          callback: () => resolve(data)
+        },
+        {
+          label: I18n.t("drafts.abandon.yes_value"),
+          class: "btn-danger",
+          callback: () => {
+            data.draft = null;
+            resolve(data);
+          }
+        }
+      ]);
+    });
   },
 
   cancelComposer() {

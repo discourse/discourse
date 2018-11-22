@@ -573,3 +573,20 @@ QUnit.test("Disable body until category is selected", async assert => {
     "textarea is still enabled"
   );
 });
+
+QUnit.test("Checks for existing draft", async assert => {
+  // prettier-ignore
+  server.get("/draft.json", () => { // eslint-disable-line no-undef
+    return [ 200, { "Content-Type": "application/json" }, {
+      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+      draft_sequence: 42
+    } ];
+  });
+
+  await visit("/t/internationalization-localization/280");
+
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".topic-post:eq(0) button.edit");
+
+  assert.equal(find(".modal-body").text(), I18n.t("drafts.abandon.confirm"));
+});
