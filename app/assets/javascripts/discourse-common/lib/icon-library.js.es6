@@ -533,7 +533,8 @@ export function convertIconClass(icon) {
     .replace("far fa-", "far-")
     .replace("fab fa-", "fab-")
     .replace("fas fa-", "")
-    .replace("fa-", "");
+    .replace("fa-", "")
+    .trim();
 }
 
 // TODO: Improve how helpers are registered for vdom compliation

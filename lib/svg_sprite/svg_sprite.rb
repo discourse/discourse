@@ -334,6 +334,7 @@ Discourse SVG subset of #{fa_license}
   end
 
   def self.process(icon_name)
+    icon_name = icon_name.strip
     FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
     fa4_to_fa5_names[icon_name] || icon_name
   end

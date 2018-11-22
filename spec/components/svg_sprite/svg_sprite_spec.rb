@@ -33,6 +33,12 @@ describe SvgSprite do
     expect(version1).not_to eq(version2)
   end
 
+  it 'strips whitespace when processing icons' do
+    Fabricate(:badge, name: 'Custom Icon Badge', icon: '  fab fa-facebook-messenger  ')
+    expect(SvgSprite.all_icons).to include("fab-facebook-messenger")
+    expect(SvgSprite.all_icons).not_to include("  fab-facebook-messenger  ")
+  end
+
   it 'includes Font Awesome 4.7 icons from badges' do
     Fabricate(:badge, name: 'Custom Icon Badge', icon: 'fa-gamepad')
     expect(SvgSprite.all_icons).to include("gamepad")
