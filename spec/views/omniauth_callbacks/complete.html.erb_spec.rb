@@ -33,8 +33,6 @@ describe "users/omniauth_callbacks/complete.html.erb" do
     render
 
     expect(rendered_data["email"]).to eq(result.email)
-    # TODO this is a bit weird, the upcasing is confusing,
-    #  clean it up throughout
     expect(rendered_data["auth_provider"]).to eq("cas")
   end
 
