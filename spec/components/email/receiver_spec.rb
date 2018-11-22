@@ -103,12 +103,39 @@ describe Email::Receiver do
     )
   end
 
-  it "raises a BouncerEmailError when email is a bounced email" do
-    expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
-    expect(IncomingEmail.last.is_bounce).to eq(true)
+  context "bounces" do
+    it "raises a BouncerEmailError" do
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+      expect(IncomingEmail.last.is_bounce).to eq(true)
+  
+      expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
+      expect(IncomingEmail.last.is_bounce).to eq(true)
+    end
 
-    expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
-    expect(IncomingEmail.last.is_bounce).to eq(true)
+    it "creates a whisper post in PM if user is staged" do
+      SiteSetting.enable_staged_users = true
+      SiteSetting.enable_whispers = true
+
+      user = Fabricate(:staged, email: "linux-admin@b-s-c.co.jp")
+      private_message = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user)
+      private_message.allowed_users = [user]
+      private_message.save!
+      post = create_post(topic: private_message, user: user)
+
+      post_reply_key = begin
+        Fabricate(:post_reply_key,
+          reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+          user: user,
+          post: post
+        )
+      end
+      
+      post = process(:bounced_email)
+      
+      expect(post.whisper?).to eq(true)
+      expect(post.raw).to include("The message to linux-admin@b-s-c.co.jp bounced. \n\n### Details\n\n```text\nYour email bounced\n```")
+      expect(IncomingEmail.last.is_bounce).to eq(true)
+    end
   end
 
   it "logs a blank error" do
