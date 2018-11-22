@@ -53,7 +53,7 @@ export default ComboBox.extend(TagsMixin, {
       "mousedown touchstart",
       ".selected-tag",
       event => {
-        const $button = $(event.target).closest('.selected-tag');
+        const $button = $(event.target).closest(".selected-tag");
         this._destroyEvent(event);
         this.destroyTags(this.computeContentItem($button.attr("data-value")));
       }
