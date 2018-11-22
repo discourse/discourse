@@ -2,13 +2,15 @@
   <div>
     <ul class='badge-groupings'>
     {{#each workingCopy as |wc|}}
-      <li>
-        {{#if wc.editing}}
-          {{input value=wc.name}}
-          <button {{action "save" wc}} class="btn no-text">{{d-icon 'check'}}</button>
-        {{else}}
-          {{wc.displayName}}
-        {{/if}}
+      <li class="badge-grouping-item">
+        <div class="badge-grouping">
+          {{#if wc.editing}}
+            {{input value=wc.name class="badge-grouping-name-input"}}
+            <button {{action "save" wc}} class="btn no-text">{{d-icon 'check'}}</button>
+          {{else}}
+            {{wc.displayName}}
+          {{/if}}
+        </div>
         <div class='actions'>
           <button {{action "edit" wc}} class="btn no-text" disabled={{wc.system}}>{{d-icon 'pencil'}}</button>
           <button {{action "up" wc}} class="btn no-text">{{d-icon 'toggle-up'}}</button>
