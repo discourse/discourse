@@ -454,7 +454,7 @@ module Email
     end
 
     def parse_from_field(mail)
-      if mail.bounced? || verp
+      if is_bounce?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)
         end
