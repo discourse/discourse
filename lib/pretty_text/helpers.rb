@@ -39,12 +39,6 @@ module PrettyText
       username
     end
 
-    def mention_lookup(name)
-      return false   if name.blank?
-      return "user"  if User.exists?(username_lower: name.downcase)
-      return "group" if Group.exists?(name: name)
-    end
-
     def category_hashtag_lookup(category_slug)
       if category = Category.query_from_hashtag_slug(category_slug)
         [category.url_with_id, category_slug]
