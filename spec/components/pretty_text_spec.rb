@@ -241,6 +241,14 @@ describe PrettyText do
       end
     end
 
+    it 'does not mention staged users' do
+      user = Fabricate(:user, staged: true)
+
+      expect(PrettyText.cook("something @#{user.username} something")).to eq(
+        %Q|<p>something <span class="mention">@#{user.username}</span> something</p>|
+      )
+    end
+
     describe 'when mentions are disabled' do
       before do
         SiteSetting.enable_mentions = false
