@@ -460,7 +460,7 @@ module PrettyText
         :user_type AS type,
         username_lower AS name
       FROM users
-      WHERE username_lower IN (:names)
+      WHERE username_lower IN (:names) AND staged = false
     )
     UNION
     (
