@@ -429,7 +429,7 @@ module PrettyText
 
   def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")
-    names = elements.map { |element| element.text[1..-1] }
+    names = elements.map { |element| name = element.text[1..-1] }
 
     mentions = lookup_mentions(names, user_id: user_id)
 
@@ -475,6 +475,7 @@ module PrettyText
     SQL
 
     user = User.find_by(id: user_id)
+    names.each(&:downcase!)
 
     results = DB.query(sql,
       names: names,
