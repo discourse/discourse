@@ -20,7 +20,7 @@ export default createWidget("header-topic-info", {
       if (href) {
         heading.push(
           h(
-            "a",
+            "a.private-message-glyph-wrapper",
             { attributes: { href } },
             h("span.private-message-glyph", iconNode("envelope"))
           )
@@ -47,6 +47,7 @@ export default createWidget("header-topic-info", {
 
     const title = [h("h1", heading)];
     const category = topic.get("category");
+
     if (loaded || category) {
       if (
         category &&
@@ -54,12 +55,15 @@ export default createWidget("header-topic-info", {
           !this.siteSettings.suppress_uncategorized_badge)
       ) {
         const parentCategory = category.get("parentCategory");
+        const categories = [];
         if (parentCategory) {
-          title.push(
+          categories.push(
             this.attach("category-link", { category: parentCategory })
           );
         }
-        title.push(this.attach("category-link", { category }));
+        categories.push(this.attach("category-link", { category }));
+
+        title.push(h("div.categories-wrapper", categories));
       }
 
       let extra = [];

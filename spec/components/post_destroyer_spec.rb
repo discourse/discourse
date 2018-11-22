@@ -566,6 +566,16 @@ describe PostDestroyer do
     end
   end
 
+  it "deletes a post belonging to a non-existent topic" do
+    DB.exec("DELETE FROM topics WHERE id = ?", post.topic_id)
+    post.reload
+
+    PostDestroyer.new(admin, post).destroy
+
+    expect(post.deleted_at).to be_present
+    expect(post.deleted_by).to eq(admin)
+  end
+
   describe 'after delete' do
 
     let!(:coding_horror) { Fabricate(:coding_horror) }

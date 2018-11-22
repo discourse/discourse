@@ -31,7 +31,6 @@ export function buildOptions(state) {
     previewing,
     linkify,
     censoredWords,
-    mentionLookup,
     invalidateOneboxes
   } = state;
 
@@ -67,7 +66,6 @@ export function buildOptions(state) {
     lookupAvatarByPostNumber,
     lookupPrimaryUserGroupByPostNumber,
     formatUsername,
-    mentionLookup,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
     lookupImageUrls,

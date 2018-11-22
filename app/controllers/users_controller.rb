@@ -269,8 +269,6 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
-    # Create a New Topic Scenario is not supported (per conversation with codinghorror)
-    # https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     cannot_see = []
     topic_id = params[:topic_id]
     unless topic_id.blank?
@@ -547,11 +545,8 @@ class UsersController < ApplicationController
         else
           if @error || @user&.errors&.any?
             render json: {
-              success: false,
               message: @error,
-              errors: @user&.errors&.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user&.email),
-              admin: @user&.admin?
+              errors: @user&.errors&.to_hash
             }
           else
             render json: {

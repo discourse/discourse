@@ -154,8 +154,8 @@ class Wizard
       end
 
       @wizard.append_step('icons') do |step|
-        step.add_field(id: 'favicon', type: 'image', value: SiteSetting.favicon)
-        step.add_field(id: 'apple_touch_icon', type: 'image', value: SiteSetting.apple_touch_icon)
+        step.add_field(id: 'favicon', type: 'image', value: SiteSetting.site_favicon_url)
+        step.add_field(id: 'apple_touch_icon', type: 'image', value: SiteSetting.site_apple_touch_icon_url)
 
         step.on_update do |updater|
           updater.apply_settings(:favicon)

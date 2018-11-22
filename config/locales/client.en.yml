@@ -3475,6 +3475,7 @@ en:
           silence_user: "User Silenced"
           delete_post: "Post Deleted"
           delete_topic: "Topic Deleted"
+          post_approved: "Post Approved"
 
       logs:
         title: "Logs"
@@ -3569,6 +3570,7 @@ en:
             delete_badge: "delete badge"
             merge_user: "merge user"
             entity_export: "export entity"
+            change_name: "change name"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

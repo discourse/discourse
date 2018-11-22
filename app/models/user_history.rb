@@ -144,7 +144,8 @@ class UserHistory < ActiveRecord::Base
       :delete_badge,
       :post_rejected,
       :merge_user,
-      :entity_export
+      :entity_export,
+      :change_name
     ]
   end
 
