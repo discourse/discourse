@@ -833,7 +833,7 @@ class Search
     all_terms = data.scan(/'([^']+)'\:\d+/).flatten
     all_terms.map! do |t|
       t.split(/[\)\(&']/).find(&:present?)
-    end.reject!(&:blank?)
+    end.compact!
 
     query = ActiveRecord::Base.connection.quote(
       all_terms
