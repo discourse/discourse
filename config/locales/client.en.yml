@@ -3475,6 +3475,7 @@ en:
           silence_user: "User Silenced"
           delete_post: "Post Deleted"
           delete_topic: "Topic Deleted"
+          post_approved: "Post Approved"
 
       logs:
         title: "Logs"
