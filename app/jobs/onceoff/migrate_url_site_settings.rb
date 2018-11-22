@@ -44,6 +44,7 @@ module Jobs
                  Net::OpenTimeout,
                  Net::ReadTimeout,
                  Errno::ECONNREFUSED,
+                 EOFError,
                  SocketError,
                  Discourse::InvalidParameters => e
 
