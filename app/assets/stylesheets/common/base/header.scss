@@ -282,6 +282,9 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      .discourse-tag {
+        display: inline;
+      }
     }
   }
   // if a topic has both categories and tags, the tag container should shrink
