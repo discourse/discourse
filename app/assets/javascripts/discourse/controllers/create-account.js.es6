@@ -151,7 +151,7 @@ export default Ember.Controller.extend(
       const matchingProvider = findAll().find(provider => {
         return provider.name === providerName;
       });
-      return matchingProvider !== undefined
+      return matchingProvider
         ? matchingProvider.get("prettyName")
         : providerName;
     },
