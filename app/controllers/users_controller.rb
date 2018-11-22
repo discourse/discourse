@@ -545,11 +545,8 @@ class UsersController < ApplicationController
         else
           if @error || @user&.errors&.any?
             render json: {
-              success: false,
               message: @error,
-              errors: @user&.errors&.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user&.email),
-              admin: @user&.admin?
+              errors: @user&.errors&.to_hash
             }
           else
             render json: {
