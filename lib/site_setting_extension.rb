@@ -177,7 +177,11 @@ module SiteSettingExtension
 
   def settings_hash
     result = {}
-    deprecated_settings = SiteSettings::DeprecatedSettings::SETTINGS.map { |s| s[0] }
+    deprecated_settings = Set.new
+
+    SiteSettings::DeprecatedSettings::SETTINGS.each do |s|
+      deprecated_settings << s[0]
+    end
 
     defaults.all.keys.each do |s|
       result[s] =
