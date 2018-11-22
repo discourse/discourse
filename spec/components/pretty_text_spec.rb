@@ -225,7 +225,9 @@ describe PrettyText do
         Fabricate(:user, username: username)
       end
 
-      group = Fabricate(:group)
+      group = Fabricate(:group,
+        mentionable_level: Group::ALIAS_LEVELS[:everyone]
+      )
 
       [
         [
@@ -239,6 +241,14 @@ describe PrettyText do
       ].each do |input, expected|
         expect(PrettyText.cook(input)).to eq(expected)
       end
+    end
+
+    it "does not create mention for a non mentionable group" do
+      group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody])
+
+      expect(PrettyText.cook("test @#{group.name} test")).to eq(
+        %Q|<p>test <span class="mention">@#{group.name}</span> test</p>|
+      )
     end
 
     it 'does not mention staged users' do
