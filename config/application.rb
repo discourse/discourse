@@ -129,6 +129,7 @@ module Discourse
       auto-redirect.js
       wizard-start.js
       onpopstate-handler.js
+      embed-application.js
     }
 
     # Precompile all available locales

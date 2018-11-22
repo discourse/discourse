@@ -10,15 +10,16 @@
 }
 
 .groups-header-filters {
-  display: inline-block;
+  display: flex;
 
+  .groups-header-filters-name,
   .groups-header-filters-type {
-    vertical-align: middle;
+    margin-right: 5px;
+    margin-bottom: 0;
   }
 
-  .groups-header-filters-name {
-    vertical-align: middle;
-    margin: 0;
+  &:last-child {
+    margin-right: 0;
   }
 }
 

@@ -21,6 +21,15 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: $font-down-1;
     }
+
+    .badge-grouping-control {
+      display: flex;
+      align-items: center;
+
+      .badge-selector {
+        margin-right: 5px;
+      }
+    }
   }
   .form-horizontal {
     .ace-wrapper {
@@ -117,11 +126,20 @@
   list-style: none;
   margin: 0;
   padding: 10px 3px;
-  li {
-    padding: 6px 0;
-    width: 600px;
+
+  .badge-grouping-item {
     border-bottom: 1px solid #dfdfdf;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
+
+  .badge-grouping {
+    .badge-grouping-name-input {
+      margin: 0;
+    }
+  }
+
   .actions {
     float: right;
     .btn {
