@@ -147,13 +147,13 @@ export default Ember.Controller.extend(
       );
     }.property("accountEmail", "authOptions.email", "authOptions.email_valid"),
 
-    authProviderDisplayName(provider) {
-      switch (provider) {
-        case "Google_oauth2":
-          return "Google";
-        default:
-          return provider;
-      }
+    authProviderDisplayName(providerName) {
+      const matchingProvider = findAll().find(provider => {
+        return provider.name === providerName;
+      });
+      return matchingProvider
+        ? matchingProvider.get("prettyName")
+        : providerName;
     },
 
     prefillUsername: function() {
