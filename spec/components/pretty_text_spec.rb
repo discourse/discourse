@@ -221,7 +221,7 @@ describe PrettyText do
     end
 
     it "handles user and group mentions correctly" do
-      ['user', 'user2'].each do |username |
+      ['User', 'user2'].each do |username |
         Fabricate(:user, username: username)
       end
 
@@ -231,12 +231,12 @@ describe PrettyText do
 
       [
         [
-          'hi @user! @user2 hi',
-          '<p>hi <a class="mention" href="/u/user">@user</a>! <a class="mention" href="/u/user2">@user2</a> hi</p>'
+          'hi @uSer! @user2 hi',
+          '<p>hi <a class="mention" href="/u/user">@uSer</a>! <a class="mention" href="/u/user2">@user2</a> hi</p>'
         ],
         [
-          "hi\n@user. @#{group.name} @somemention",
-          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a> <span class="mention">@somemention</span></p>|
+          "hi\n@user. @#{group.name.capitalize} @somemention",
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/#{group.name}">@#{group.name.capitalize}</a> <span class="mention">@somemention</span></p>|
         ]
       ].each do |input, expected|
         expect(PrettyText.cook(input)).to eq(expected)
