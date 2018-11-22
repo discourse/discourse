@@ -1,62 +1,254 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+
+const sandbox = sinon.createSandbox();
 
 acceptance("Local Dates", {
   loggedIn: true,
   settings: { discourse_local_dates_enabled: true },
   beforeEach() {
-    clearPopupMenuOptionsCallback();
+    freezeDateAndZone();
   },
   afterEach() {
-    sinon.restore();
+    sandbox.restore();
+    moment.tz.setDefault();
   }
 });
 
-test("at removal", assert => {
-  let now = moment("2018-06-20").valueOf();
-  let timezone = moment.tz.guess();
+const DEFAULT_DATE = "2018-06-20";
+const DEFAULT_ZONE = "Europe/Paris";
 
-  sinon.useFakeTimers(now);
+function advance(count, unit = "days") {
+  return moment(DEFAULT_DATE)
+    .add(count, unit)
+    .format("YYYY-MM-DD");
+}
 
-  let html = `<span data-timezones="${timezone}" data-timezone="${timezone}" class="discourse-local-date past cooked-date" data-date="DATE" data-format="L LTS" data-time="14:42:26"></span>`;
+function rewind(count, unit = "days") {
+  return moment(DEFAULT_DATE)
+    .subtract(count, unit)
+    .format("YYYY-MM-DD");
+}
 
-  let yesterday = $(html.replace("DATE", "2018-06-19"));
-  yesterday.applyLocalDates();
+function freezeDateAndZone(date, zone, cb) {
+  date = date || DEFAULT_DATE;
+  zone = zone || DEFAULT_ZONE;
 
-  assert.equal(yesterday.text(), "Yesterday 2:42 PM");
+  sandbox.restore();
+  sandbox.stub(moment.tz, "guess");
+  moment.tz.guess.returns(zone);
 
-  let today = $(html.replace("DATE", "2018-06-20"));
-  today.applyLocalDates();
+  const now = moment(date).valueOf();
+  sandbox.useFakeTimers(now);
 
-  assert.equal(today.text(), "Today 2:42 PM");
+  if (cb) {
+    cb();
 
-  let tomorrow = $(html.replace("DATE", "2018-06-21"));
-  tomorrow.applyLocalDates();
+    moment.tz.guess.returns(DEFAULT_ZONE);
+    sandbox.useFakeTimers(moment(DEFAULT_DATE).valueOf());
+  }
+}
 
-  assert.equal(tomorrow.text(), "Tomorrow 2:42 PM");
+function generateHTML(options = {}) {
+  let output = `<span class="discourse-local-date past cooked-date"`;
+
+  output += ` data-date="${options.date || DEFAULT_DATE}"`;
+  if (options.format) output += ` data-format="${options.format}"`;
+  if (options.time) output += ` data-time="${options.time}"`;
+  if (options.calendar) output += ` data-calendar="${options.calendar}"`;
+  if (options.recurring) output += ` data-recurring="${options.recurring}"`;
+  if (options.displayedZone)
+    output += ` data-displayed-zone="${options.displayedZone}"`;
+
+  return (output += "></span>");
+}
+
+test("default format - time specified", assert => {
+  const html = generateHTML({ date: advance(3), time: "00:00" });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "June 23, 2018 2:00 AM",
+    "it uses moment LLL format"
+  );
 });
 
-test("local dates bbcode", async assert => {
-  await visit("/");
-  await click("#create-topic");
+test("default format - no time specified", assert => {
+  const html = generateHTML({ date: advance(3) });
+  const transformed = $(html).applyLocalDates();
 
-  await fillIn(
-    ".d-editor-input",
-    '[date=2017-10-23 time=01:30:00 format="LL" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
+  assert.equal(
+    transformed.text(),
+    "June 23, 2018",
+    "it uses moment LL format as default if not time is specified"
+  );
+});
+
+test("today", assert => {
+  const html = generateHTML({ time: "14:00" });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(transformed.text(), "Today 4:00 PM", "it display Today");
+});
+
+test("today - no time", assert => {
+  const html = generateHTML();
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(transformed.text(), "Today", "it display Today without time");
+});
+
+test("yesterday", assert => {
+  const html = generateHTML({ date: rewind(1), time: "14:00" });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "Yesterday 4:00 PM",
+    "it displays yesterday"
+  );
+});
+
+QUnit.skip("yesterday - no time", assert => {
+  const html = generateHTML({ date: rewind(1) });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "Yesterday",
+    "it displays yesterday without time"
+  );
+});
+
+test("tomorrow", assert => {
+  const html = generateHTML({ date: advance(1), time: "14:00" });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(transformed.text(), "Tomorrow 4:00 PM", "it displays tomorrow");
+});
+
+test("tomorrow - no time", assert => {
+  const html = generateHTML({ date: advance(1) });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "Tomorrow",
+    "it displays tomorrow without time"
+  );
+});
+
+test("today - no time with different zones", assert => {
+  const html = generateHTML();
+  let transformed = $(html).applyLocalDates();
+
+  assert.equal(transformed.text(), "Today", "it displays today without time");
+
+  freezeDateAndZone(rewind(12, "hours"), "Pacific/Auckland", () => {
+    transformed = $(html).applyLocalDates();
+    assert.equal(
+      transformed.text(),
+      "Tomorrow",
+      "it displays Tomorrow without time"
+    );
+  });
+});
+
+test("calendar off", assert => {
+  const html = generateHTML({ calendar: "off", time: "14:00" });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "June 20, 2018 4:00 PM",
+    "it displays the date without Today"
+  );
+});
+
+test("recurring", assert => {
+  const html = generateHTML({ recurring: "1.week", time: "14:00" });
+  let transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "Today 4:00 PM",
+    "it displays the next occurrence"
   );
 
-  assert.ok(
-    exists(".d-editor-preview .discourse-local-date.past.cooked-date"),
-    "it should contain the cooked output for date & time inputs"
+  freezeDateAndZone(advance(1), () => {
+    transformed = $(html).applyLocalDates();
+
+    assert.equal(
+      transformed.text(),
+      "June 27, 2018 4:00 PM",
+      "it displays the next occurrence"
+    );
+  });
+});
+
+test("displayedZone", assert => {
+  const html = generateHTML({
+    date: advance(3),
+    displayedZone: "Etc/UTC",
+    time: "14:00"
+  });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "June 23, 2018 2:00 PM",
+    "it forces display in the given timezone"
+  );
+});
+
+test("format", assert => {
+  const html = generateHTML({
+    date: advance(3),
+    format: "YYYY | MM - DD"
+  });
+  const transformed = $(html).applyLocalDates();
+
+  assert.equal(
+    transformed.text(),
+    "2018 | 06 - 23",
+    "it uses the given format"
+  );
+});
+
+test("test utils", assert => {
+  assert.equal(
+    moment().format("LLLL"),
+    moment(DEFAULT_DATE).format("LLLL"),
+    "it has defaults"
+  );
+  assert.equal(moment.tz.guess(), DEFAULT_ZONE, "it has defaults");
+
+  freezeDateAndZone(advance(1), DEFAULT_ZONE, () => {
+    assert.equal(
+      moment().format("LLLL"),
+      moment(DEFAULT_DATE)
+        .add(1, "days")
+        .format("LLLL"),
+      "it applies new time"
+    );
+    assert.equal(moment.tz.guess(), DEFAULT_ZONE);
+  });
+
+  assert.equal(
+    moment().format("LLLL"),
+    moment(DEFAULT_DATE).format("LLLL"),
+    "it restores time"
   );
 
-  await fillIn(
-    ".d-editor-input",
-    '[date=2017-10-23 format="LL" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
-  );
+  freezeDateAndZone(advance(1), "Pacific/Auckland", () => {
+    assert.equal(
+      moment().format("LLLL"),
+      moment(DEFAULT_DATE)
+        .add(1, "days")
+        .format("LLLL")
+    );
+    assert.equal(moment.tz.guess(), "Pacific/Auckland", "it applies new zone");
+  });
 
-  assert.ok(
-    exists(".d-editor-preview .discourse-local-date.past.cooked-date"),
-    "it should contain the cooked output for date only input"
-  );
+  assert.equal(moment.tz.guess(), DEFAULT_ZONE, "it restores zone");
 });
