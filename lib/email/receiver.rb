@@ -70,8 +70,10 @@ module Email
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
           @from_email, @from_display_name = parse_from_field(@mail)
+          @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
           process_internal
+          raise BouncedEmailError if is_bounce?
         rescue => e
           error = e.to_s
           error = e.class.name if error.blank?
@@ -109,17 +111,16 @@ module Email
     end
 
     def process_internal
-      raise BouncedEmailError if is_bounce? && !SiteSetting.enable_whispers?
+      handle_bounce if is_bounce?
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
       hidden_reason_id = is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
 
-      user = find_user(@from_email)
+      user = @from_user
 
       if user.present?
-        raise BouncedEmailError if is_bounce? && !user.staged?
         log_and_validate_user(user)
       else
         raise UserNotFoundError unless SiteSetting.enable_staged_users
@@ -195,26 +196,33 @@ module Email
     end
 
     def is_bounce?
-      @is_bounce ||= begin
-        return false unless @mail.bounced? || verp
+      @mail.bounced? || verp
+    end
 
-        @incoming_email.update_columns(is_bounce: true)
+    def handle_bounce
+      @incoming_email.update_columns(is_bounce: true)
 
-        if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
-          email_log.update_columns(bounced: true)
-          email = email_log.user.try(:email).presence
-        end
-
-        email ||= @from_email
-
-        if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
-          Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
-        else
-          Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
-        end
-
-        true
+      if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+        email_log.update_columns(bounced: true)
+        user = email_log.user
+        email = user.try(:email).presence
+        topic = email_log.topic
       end
+
+      email ||= @from_email
+      user ||= @from_user
+
+      if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
+        Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
+      else
+        Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
+      end
+
+      return if SiteSetting.enable_whispers? &&
+                user&.staged? &&
+                (topic.blank? || topic.archetype == Archetype.private_message)
+
+      raise BouncedEmailError
     end
 
     def is_from_reply_by_email_address?
@@ -447,13 +455,8 @@ module Email
 
     def parse_from_field(mail)
       if mail.bounced? || verp
-        final_recipient = mail.final_recipient
-        return extract_from_address_and_name(final_recipient) if final_recipient.is_a? String
-
-        if final_recipient.is_a? Array
-          final_recipient.each do |from|
-            return extract_from_address_and_name(from)
-          end
+        Array.wrap(mail.final_recipient).each do |from|
+          return extract_from_address_and_name(from)
         end
       end
 
@@ -508,10 +511,6 @@ module Email
         else
           I18n.t("emails.incoming.default_subject", email: @from_email)
         end
-    end
-
-    def find_user(email)
-      User.find_by_email(email)
     end
 
     def find_or_create_user(email, display_name, raise_on_failed_create: false)
@@ -1010,13 +1009,15 @@ module Email
       user = options.delete(:user)
 
       if options[:bounce]
-        options[:raw] = "The message to #{user.email} bounced. 
+        options[:raw] = <<~MD
+          The message to #{user.email} bounced.
 
-### Details
+          ### Details
 
-```text
-#{options[:raw]}
-```"
+          ```text
+          #{options[:raw]}
+          ```
+        MD
         user = Discourse.system_user
         options[:post_type] = Post.types[:whisper]
       end

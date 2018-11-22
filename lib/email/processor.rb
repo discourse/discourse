@@ -18,8 +18,6 @@ module Email
         @receiver.process!
       rescue RateLimiter::LimitExceeded
         @retry_on_rate_limit ? Jobs.enqueue(:process_email, mail: @mail) : raise
-      rescue Email::Receiver::BouncedEmailError => e
-        handle_bounce(e)
       rescue => e
         return handle_bounce(e) if @receiver.is_bounce?
 

@@ -107,7 +107,7 @@ describe Email::Receiver do
     it "raises a BouncerEmailError" do
       expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
       expect(IncomingEmail.last.is_bounce).to eq(true)
-  
+
       expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
       expect(IncomingEmail.last.is_bounce).to eq(true)
     end
@@ -129,11 +129,11 @@ describe Email::Receiver do
           post: post
         )
       end
-      
-      post = process(:bounced_email)
-      
+
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+      post = Post.last
       expect(post.whisper?).to eq(true)
-      expect(post.raw).to include("The message to linux-admin@b-s-c.co.jp bounced. \n\n### Details\n\n```text\nYour email bounced\n```")
+      expect(post.raw).to include("The message to linux-admin@b-s-c.co.jp bounced.\n\n### Details\n\n```text\nYour email bounced\n```")
       expect(IncomingEmail.last.is_bounce).to eq(true)
     end
   end
