@@ -86,8 +86,8 @@ QUnit.test("passwordValidation", function(assert) {
 });
 
 QUnit.test("authProviderDisplayName", function(assert) {
-  var subject = this.subject;
-  var controller = subject({ siteSettings: Discourse.SiteSettings });
+  const subject = this.subject;
+  const controller = subject({ siteSettings: Discourse.SiteSettings });
 
   assert.equal(
     controller.authProviderDisplayName("facebook"),
