@@ -264,7 +264,9 @@ module PrettyText
       add_s3_cdn(doc)
     end
 
-    add_mentions(doc) if SiteSetting.enable_mentions
+    if SiteSetting.enable_mentions
+      add_mentions(doc, user_id: opts[:user_id])
+    end
 
     doc.to_html
   end
@@ -425,11 +427,11 @@ module PrettyText
   USER_TYPE ||= 'user'
   GROUP_TYPE ||= 'group'
 
-  def self.add_mentions(doc)
+  def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")
     names = elements.map { |element| element.text[1..-1] }
 
-    mentions = lookup_mentions(names)
+    mentions = lookup_mentions(names, user_id: user_id)
 
     doc.css("span.mention").each do |element|
       name = element.text[1..-1]
@@ -453,7 +455,7 @@ module PrettyText
     end
   end
 
-  def self.lookup_mentions(names)
+  def self.lookup_mentions(names, user_id: nil)
     sql = <<~SQL
     (
       SELECT
@@ -468,14 +470,18 @@ module PrettyText
         :group_type AS type,
         name
       FROM groups
-      WHERE name IN (:names)
+      WHERE name IN (:names) AND (#{Group.mentionable_sql_clause})
     )
     SQL
+
+    user = User.find_by(id: user_id)
 
     results = DB.query(sql,
       names: names,
       user_type: USER_TYPE,
-      group_type: GROUP_TYPE
+      group_type: GROUP_TYPE,
+      levels: Group.alias_levels(user),
+      user_id: user_id
     )
 
     mentions = {}

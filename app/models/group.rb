@@ -132,22 +132,30 @@ class Group < ActiveRecord::Base
   }
 
   scope :mentionable, lambda { |user|
-
-    where("mentionable_level in (:levels) OR
-          (
-            mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-            SELECT group_id FROM group_users WHERE user_id = :user_id)
-          )", levels: alias_levels(user), user_id: user && user.id)
+    where(self.mentionable_sql_clause,
+      levels: alias_levels(user),
+      user_id: user&.id
+    )
   }
 
   scope :messageable, lambda { |user|
-
     where("messageable_level in (:levels) OR
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
+
+  def self.mentionable_sql_clause
+    <<~SQL
+    mentionable_level in (:levels)
+    OR (
+      mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id)
+      )
+    SQL
+  end
 
   def self.alias_levels(user)
     levels = [ALIAS_LEVELS[:everyone]]
