@@ -102,9 +102,9 @@ export default Ember.Component.extend({
 
     let dateTime;
     if (!timeInferred) {
-      dateTime = moment.tz(`${date} ${time}`, timezone);
+      dateTime = moment.tz(`${date} ${time}`, timezone).utc();
     } else {
-      dateTime = moment.tz(date, timezone);
+      dateTime = moment.tz(date, timezone).utc();
     }
 
     let toDateTime;
@@ -123,8 +123,13 @@ export default Ember.Component.extend({
       timezone
     };
 
-    config.time = dateTime.format(this.timeFormat);
-    config.toTime = toDateTime.format(this.timeFormat);
+    if (!timeInferred) {
+      config.time = dateTime.format(this.timeFormat);
+    }
+
+    if (!toTimeInferred) {
+      config.toTime = toDateTime.format(this.timeFormat);
+    }
 
     if (toDate) {
       config.toDate = toDateTime.format(this.dateFormat);
@@ -163,7 +168,6 @@ export default Ember.Component.extend({
       text += `time=${config.time} `;
     }
 
-    text += `timezone="${config.timezone}" `;
     text += `format="${config.format}" `;
     text += `timezones="${config.timezones.join("|")}"`;
     text += `]`;
@@ -176,7 +180,6 @@ export default Ember.Component.extend({
         text += `time=${config.toTime} `;
       }
 
-      text += `timezone="${config.timezone}" `;
       text += `format="${config.format}" `;
       text += `timezones="${config.timezones.join("|")}"`;
       text += `]`;

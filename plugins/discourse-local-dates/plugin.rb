@@ -52,7 +52,6 @@ after_initialize do
 
   on(:reduce_cooked) do |fragment|
     fragment.css(".discourse-local-date").each do |container|
-
       if container.attributes["data-email-preview"]
         preview = container.attributes["data-email-preview"].value
         container.content = preview
