@@ -37,7 +37,7 @@ after_initialize do
     def self.included(base)
       base.send(:include, InstanceMethods)
       base.class_eval do
-        before_filter :ensure_consent_given, only: [:update]
+        before_action :ensure_consent_given, only: [:update]
       end
     end
 
@@ -55,7 +55,7 @@ after_initialize do
     def self.included(base)
       base.send(:include, InstanceMethods)
       base.class_eval do
-        before_filter :ensure_consent_given, only: [:create, :update]
+        before_action :ensure_consent_given, only: [:create, :update]
       end
     end
 

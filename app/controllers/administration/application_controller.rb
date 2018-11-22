@@ -9,8 +9,8 @@ class Administration::ApplicationController < Administrate::ApplicationControlle
   helper :administration
   include ::CurrentUser
 
-  before_filter :ensure_logged_in
-  before_filter :ensure_staff
+  before_action :ensure_logged_in
+  before_action :ensure_staff
 
 
   def namespace

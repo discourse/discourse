@@ -1,3 +1,32 @@
+<%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
+<% if params[:oe].present? %>
+    <style type="text/css">
+        nav#bar, header, footer {
+            display: none;
+        }
+
+        body {
+            padding-bottom: 70px;
+        }
+
+        .annotator-editor textarea {
+            display: none !important;
+        }
+
+        .annotator-viewer .annotator-controls + div {
+            display: none;
+        }
+        <% tags = AnnotatorStore::Annotation.where(post_id: @topic_view.posts.map(&:id)).where.not(creator_id: current_user.id) %>
+        <% if tags.present? %>
+            <%= tags.map {|tag| "[data-annotation-id=\"#{tag.id}\"]"}.join(', ').html_safe %> {
+              background-color: rgba(182, 223, 236, 0.3) !important;
+            }
+        <% end %>
+    </style>
+<% end %>
+<%# -------------------------------------- -%>
+
+
 <h1>
   <%= render_topic_title(@topic_view.topic) %>
 </h1>
@@ -41,8 +70,16 @@
 
 <%- if include_crawler_content? %>
 
+  <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
+  <% if params[:oe].present? %>
+    <script>
+      var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
+    </script>
+  <% end %>
+  <%# -------------------------------------- -%>
+
 <% @topic_view.posts.each do |post| %>
-  <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+  <div id="post-<%= post.id %>"  itemscope itemtype='http://schema.org/DiscussionForumPosting'>
     <% if (u = post.user) %>
       <div class='creator'>
         <span>
@@ -76,10 +113,12 @@
 <% if @topic_view.prev_page || @topic_view.next_page %>
   <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
     <% if @topic_view.prev_page %>
-      <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'name' %></span>
+      <%# damingo (Github ID), 2017-08-22, #annotator %>
+      <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path + (params[:oe].present? ? (@topic_view.prev_page > 1 ? '&oe=1' : '?oe=1') : ''), rel: 'prev', itemprop: 'name' %></span>
     <% end %>
     <% if @topic_view.next_page %>
-      <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'name' %></b></span>
+      <%# damingo (Github ID), 2017-08-22, #annotator %>
+      <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path + (params[:oe].present? ? '&oe=1' : ''), rel: 'next', itemprop: 'name' %></b></span>
     <% end %>
   </div>
 <% end %>
@@ -87,6 +126,12 @@
 <% end %>
 
 <% content_for :head do %>
+  <% if params[:oe].present? %>
+    <%# damingo (Github ID), 2017-08-22, #annotator %>
+    <%= javascript_include_tag 'annotator_store/application' %>
+    <%= stylesheet_link_tag 'annotator_store/application' %>
+  <% end %>
+
   <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
   <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time) %>
 
@@ -102,7 +147,8 @@
 
 <% content_for(:title) { @title || "#{gsub_emoji_to_unicode(@topic_view.page_title)} - #{SiteSetting.title}" } %>
 
-<% if @topic_view.print %>
+<%# damingo (Github ID), 2017-08-22, #annotator %>
+<% if @topic_view.print && !params[:oe].present? %>
   <% content_for :after_body do %>
       <style media="print">
         /* For readability */

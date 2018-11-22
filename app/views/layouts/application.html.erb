@@ -2,18 +2,10 @@
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
-
-    <% if request.host == 'biofabforum.org' %>
-      <title><%= content_for?(:title) ? yield(:title) + ' - ' + 'Biofabrication Forum' : 'Biofabrication Forum' %></title>
-      <meta name="description" content="<%= request.url == 'http://biofabforum.org/c/biofab' ? 'A forum for biohackers, DIYers and enthusiasts around all aspects of production with biomaterials, for example mycelium.' : @description_meta %>">
-    <% else %>
-      <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-      <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
-    <% end %>
-
+    <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
+    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <meta name="discourse_theme_ids" content="<%= theme_ids&.join(",") %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
-    <meta name="discourse_theme_key" content="<%= theme_key %>">
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
@@ -126,8 +118,6 @@
     <%= yield :data %>
 
     <%= render :partial => "common/discourse_javascript" %>
-
-    <%= render_google_analytics_code %>
 
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
