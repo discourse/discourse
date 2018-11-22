@@ -257,7 +257,7 @@ Category.reopenClass({
     return Category.idMap()[id];
   },
 
-  findByIds(ids) {
+  findByIds(ids = []) {
     const categories = [];
     ids.forEach(id => {
       const found = Category.findById(id);
