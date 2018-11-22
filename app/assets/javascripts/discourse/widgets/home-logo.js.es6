@@ -26,15 +26,15 @@ export default createWidget("home-logo", {
     const logoUrl = siteSettings.site_logo_url || "";
     const title = siteSettings.title;
 
-    if (!mobileView && this.attrs.minimized) {
+    if (this.attrs.minimized) {
       const logoSmallUrl = siteSettings.site_logo_small_url || "";
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
           attributes: {
             src: Discourse.getURL(logoSmallUrl),
-            width: 33,
-            height: 33,
+            width: 36,
+            height: 36,
             alt: title
           }
         });
@@ -49,7 +49,7 @@ export default createWidget("home-logo", {
     } else if (logoUrl.length) {
       return h("img#site-logo.logo-big", {
         key: "logo-big",
-        attributes: { src: Discourse.getURL(logoUrl), alt: title }
+        attributes: { src: Discourse.getURL(logoUrl), height: 36, alt: title }
       });
     } else {
       return h("h1#site-text-logo.text-logo", { key: "logo-text" }, title);

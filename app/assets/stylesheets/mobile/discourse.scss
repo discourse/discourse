@@ -149,9 +149,3 @@ blockquote {
 #simple-container {
   width: 90%;
 }
-
-// somehow the image logo assumption inherits margins from earlier in the CSS
-// stack we must remove margins for text site titles
-h1#site-text-logo {
-  margin: 0 0 0 10px;
-}

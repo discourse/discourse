@@ -37,19 +37,6 @@
   }
 }
 
-.topic-header-extra .discourse-tag {
-  -webkit-animation: fadein 0.7s;
-  animation: fadein 0.7s;
-}
-
-.bullet + .topic-header-extra {
-  display: block;
-}
-
-.box + .topic-header-extra {
-  display: inline-block;
-}
-
 .topic-category {
   display: flex;
   flex-wrap: wrap;

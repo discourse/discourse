@@ -1,5 +1,4 @@
 /* hide the reply border above the time gap notices */
-
 .time-gap + .topic-post article {
   border-top: none;
 }
@@ -317,10 +316,6 @@ span.post-count {
 
 iframe {
   max-width: 100%;
-}
-
-.extra-info {
-  display: none;
 }
 
 .open > .dropdown-menu {
