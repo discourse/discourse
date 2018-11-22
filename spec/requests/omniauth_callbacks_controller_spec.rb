@@ -125,7 +125,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(response_body["email"]).to eq(email)
         expect(response_body["username"]).to eq("Some_name")
-        expect(response_body["auth_provider"]).to eq("Google_oauth2")
+        expect(response_body["auth_provider"]).to eq("google_oauth2")
         expect(response_body["email_valid"]).to eq(true)
         expect(response_body["omit_username"]).to eq(false)
         expect(response_body["name"]).to eq("Some Name")

@@ -84,3 +84,18 @@ QUnit.test("passwordValidation", function(assert) {
   testInvalidPassword("porkchops", I18n.t("user.password.same_as_username"));
   testInvalidPassword("pork@chops.com", I18n.t("user.password.same_as_email"));
 });
+
+QUnit.test("authProviderDisplayName", function(assert) {
+  const controller = this.subject({ siteSettings: Discourse.SiteSettings });
+
+  assert.equal(
+    controller.authProviderDisplayName("facebook"),
+    I18n.t("login.facebook.name"),
+    "provider name is translated correctly"
+  );
+  assert.equal(
+    controller.authProviderDisplayName("idontexist"),
+    "idontexist",
+    "provider name falls back if not found"
+  );
+});
