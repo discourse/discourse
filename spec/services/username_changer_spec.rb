@@ -45,6 +45,10 @@ describe UsernameChanger do
           expect(UsernameChanger.change(myself, "HanSolo", myself)).to eq(true)
         end.to change { UserHistory.count }.by(1)
 
+        expect(UserHistory.last.action).to eq(
+          UserHistory.actions[:change_username]
+        )
+
         expect(myself.reload.username).to eq('HanSolo')
 
         expect do
