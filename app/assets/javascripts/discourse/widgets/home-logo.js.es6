@@ -16,18 +16,30 @@ export default createWidget("home-logo", {
     return typeof href === "function" ? href() : href;
   },
 
+  logoUrl() {
+    return this.siteSettings.site_logo_url || "";
+  },
+
+  mobileLogoUrl() {
+    return this.siteSettings.site_mobile_logo_url || "";
+  },
+
+  smallLogoUrl() {
+    return this.siteSettings.site_logo_small_url || "";
+  },
+
   logo() {
     const { siteSettings } = this;
     const mobileView = this.site.mobileView;
 
-    const mobileLogoUrl = siteSettings.site_mobile_logo_url || "";
+    const mobileLogoUrl = this.mobileLogoUrl();
     const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
 
-    const logoUrl = siteSettings.site_logo_url || "";
+    const logoUrl = this.logoUrl();
     const title = siteSettings.title;
 
     if (this.attrs.minimized) {
-      const logoSmallUrl = siteSettings.site_logo_small_url || "";
+      const logoSmallUrl = this.smallLogoUrl();
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
