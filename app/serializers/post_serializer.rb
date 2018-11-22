@@ -394,7 +394,7 @@ class PostSerializer < BasicPostSerializer
 
   def topic
     @topic = object.topic
-    @topic ||= Topic.with_deleted.find(object.topic_id) if scope.is_staff?
+    @topic ||= Topic.with_deleted.find_by(id: object.topic_id) if scope.is_staff?
     @topic
   end
 
