@@ -180,24 +180,22 @@ export default Ember.Component.extend({
     }
 
     // switch mobile scroll logo at the very bottom of topics
+    if (this.site.mobileView) {
+      const isIOS = this.capabilities.isIOS,
+        switchHeight = bodyHeight - offset - windowHeight,
+        appEvents = getOwner(this).lookup("app-events:main");
 
-    // not a mobile device so don't do anything
-    if (!this.site.mobileView) return;
-
-    const isIOS = this.capabilities.isIOS,
-      switchHeight = bodyHeight - offset - windowHeight,
-      appEvents = getOwner(this).lookup("app-events:main");
-
-    if (isIOS && switchHeight < -10) {
-      // match elastic-scroll behaviour in iOS
-      setTimeout(function() {
-        appEvents.trigger("header:hide-topic");
-      }, 300);
-    } else if (!isIOS && switchHeight < 5) {
-      // normal switch for everyone else
-      setTimeout(function() {
-        appEvents.trigger("header:hide-topic");
-      }, 300);
+      if (isIOS && switchHeight < -10) {
+        // match elastic-scroll behaviour in iOS
+        setTimeout(function() {
+          appEvents.trigger("header:hide-topic");
+        }, 300);
+      } else if (!isIOS && switchHeight < 5) {
+        // normal switch for everyone else
+        setTimeout(function() {
+          appEvents.trigger("header:hide-topic");
+        }, 300);
+      }
     }
   },
 
