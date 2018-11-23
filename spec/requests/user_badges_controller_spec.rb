@@ -42,6 +42,15 @@ describe UserBadgesController do
       expect(parsed["user_badges"].length).to eq(1)
     end
 
+    it 'returns user_badges for a user with period in username' do
+      user.update!(username: "myname.test")
+      get "/user-badges/#{user.username}", xhr: true
+
+      expect(response.status).to eq(200)
+      parsed = JSON.parse(response.body)
+      expect(parsed["user_badges"].length).to eq(1)
+    end
+
     it 'returns user_badges for a badge' do
       get "/user_badges.json", params: { badge_id: badge.id }
 
