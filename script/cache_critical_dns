@@ -30,7 +30,7 @@ def swap_address(hosts, name, ips)
   hosts.split("\n").each do |line|
     line.strip!
     if line[0] != '#'
-      _, hostname = line.strip.split(/\s+/)
+      _, hostname = line.split(/\s+/)
       next if hostname == name
     end
     new_file << line
