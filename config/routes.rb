@@ -59,7 +59,6 @@ Discourse::Application.routes.draw do
   get "srv/status" => "forums#status"
 
   get "wizard" => "wizard#index"
-  get "wizard/qunit" => "wizard#qunit"
   get 'wizard/steps' => 'steps#index'
   get 'wizard/steps/:id' => "wizard#index"
   put 'wizard/steps/:id' => "steps#update"
@@ -823,8 +822,9 @@ Discourse::Application.routes.draw do
 
   get "/themes/assets/:ids" => "themes#assets"
 
-  if Rails.env == "test" || Rails.env == "development"
+  unless Rails.env.production?
     get "/qunit" => "qunit#index"
+    get "/wizard/qunit" => "wizard#qunit"
   end
 
   post "/push_notifications/subscribe" => "push_notification#subscribe"
