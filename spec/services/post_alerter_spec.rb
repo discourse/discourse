@@ -441,7 +441,7 @@ describe PostAlerter do
     let(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     before do
-      group.bulk_add([alice.id, carol.id])
+      group.bulk_add([alice.id, eve.id])
     end
 
     def create_post_with_alerts(args = {})
@@ -455,7 +455,6 @@ describe PostAlerter do
 
     context "topic" do
       let(:topic) { Fabricate(:topic, user: alice) }
-      let(:first_post) { Fabricate(:post, user: topic.user) }
 
       [:watching, :tracking, :regular].each do |notification_level|
         context "when notification level is '#{notification_level}'" do
@@ -482,8 +481,19 @@ describe PostAlerter do
       end
     end
 
-    shared_context "message" do
-      context "when mentioned user is part of conversation" do
+    context "message to users" do
+      let(:pm_topic) do
+        Fabricate(:private_message_topic,
+                  user: alice,
+                  topic_allowed_users: [
+                    Fabricate.build(:topic_allowed_user, user: alice),
+                    Fabricate.build(:topic_allowed_user, user: bob),
+                    Fabricate.build(:topic_allowed_user, user: Discourse.system_user)
+                  ]
+        )
+      end
+
+      context "when user is part of conversation" do
         [:watching, :tracking, :regular].each do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before do
@@ -500,13 +510,8 @@ describe PostAlerter do
               expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
             end
 
-            it "notifies about @group mention" do
+            it "notifies about @group mention when allowed user is part of group" do
               args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
-
-            it "notifies about @group mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @group' }
               expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
             end
           end
@@ -521,21 +526,16 @@ describe PostAlerter do
             args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
             expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
           end
-
-          it "does not notify about @group mention" do
-            args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
-            expect { create_post_with_alerts(args) }.to_not add_notification(alice, :group_mentioned)
-          end
         end
       end
 
-      context "when mentioned user is not part of conversation" do
-        it "notifies about @username mention when mentioned user is allowed to see message" do
+      context "when user is not part of conversation" do
+        it "does not notify about @username mention even though mentioned user is an admin" do
           args = { user: bob, topic: pm_topic, raw: 'Hello @carol' }
-          expect { create_post_with_alerts(args) }.to add_notification(carol, :mentioned)
+          expect { create_post_with_alerts(args) }.to_not add_notification(carol, :mentioned)
         end
 
-        it "does not notify about @username mention by non-human user even though mentioned user is allowed to see message" do
+        it "does not notify about @username mention by non-human user even though mentioned user is an admin" do
           args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @carol' }
           expect { create_post_with_alerts(args) }.to_not add_notification(carol, :mentioned)
         end
@@ -545,52 +545,84 @@ describe PostAlerter do
           expect { create_post_with_alerts(args) }.to_not add_notification(dave, :mentioned)
         end
 
-        it "notifies about @group mention when mentioned user is allowed to see message" do
+        it "does not notify about @group mention when user is not an allowed user" do
           args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
-          expect { create_post_with_alerts(args) }.to add_notification(carol, :group_mentioned)
+          expect { create_post_with_alerts(args) }.to_not add_notification(eve, :group_mentioned)
+        end
+      end
+    end
+
+    context "message to group" do
+
+      let(:some_group) { Fabricate(:group, name: 'some_group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      let(:pm_topic) do
+        Fabricate(:private_message_topic,
+                  user: alice,
+                  topic_allowed_groups: [
+                    Fabricate.build(:topic_allowed_group, group: group)
+                  ],
+                  topic_allowed_users: [
+                    Fabricate.build(:topic_allowed_user, user: Discourse.system_user)
+                  ]
+        )
+      end
+
+      before do
+        some_group.bulk_add([alice.id, carol.id])
+      end
+
+      context "when group is part of conversation" do
+        [:watching, :tracking, :regular].each do |notification_level|
+          context "when notification level is '#{notification_level}'" do
+            before do
+              set_topic_notification_level(alice, pm_topic, notification_level)
+            end
+
+            it "notifies about @group mention" do
+              args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+            end
+
+            it "notifies about @group mentions by non-human users" do
+              args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @group' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+            end
+
+            it "notifies about @username mention when user belongs to allowed group" do
+              args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+            end
+          end
         end
 
-        it "does not notify about @group mention by non-human user even though mentioned user is allowed to see message" do
-          args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @group' }
+        context "when notification level is 'muted'" do
+          before do
+            set_topic_notification_level(alice, pm_topic, :muted)
+          end
+
+          it "does not notify about @group mention" do
+            args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+            expect { create_post_with_alerts(args) }.to_not add_notification(alice, :group_mentioned)
+          end
+        end
+      end
+
+      context "when group is not part of conversation" do
+        it "does not notify about @group mention even though mentioned user is an admin" do
+          args = { user: bob, topic: pm_topic, raw: 'Hello @some_group' }
           expect { create_post_with_alerts(args) }.to_not add_notification(carol, :group_mentioned)
         end
 
-        it "does not notify about @group mention when mentioned user is not allowed to see message" do
-          args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
-          expect { create_post_with_alerts(args) }.to_not add_notification(dave, :group_mentioned)
+        it "does not notify about @group mention by non-human user even though mentioned user is an admin" do
+          args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @some_group' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(carol, :group_mentioned)
+        end
+
+        it "does not notify about @username mention when user doesn't belong to allowed group" do
+          args = { user: bob, topic: pm_topic, raw: 'Hello @dave' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(dave, :mentioned)
         end
       end
-    end
-
-    context "personal message" do
-      let(:pm_topic) do
-        Fabricate(:private_message_topic, user: alice, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: alice),
-          Fabricate.build(:topic_allowed_user, user: bob),
-          Fabricate.build(:topic_allowed_user, user: eve)
-        ])
-      end
-      let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
-
-      include_context "message"
-    end
-
-    context "group message" do
-      let(:some_group) { Fabricate(:group, name: 'some_group') }
-      let(:pm_topic) do
-        Fabricate(:private_message_topic, user: alice, topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: some_group)
-        ], topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: eve)
-        ])
-      end
-      let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
-
-      before do
-        some_group.add(alice)
-      end
-
-      include_context "message"
     end
   end
 
