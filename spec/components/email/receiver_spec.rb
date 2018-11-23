@@ -116,7 +116,8 @@ describe Email::Receiver do
       SiteSetting.enable_staged_users = true
       SiteSetting.enable_whispers = true
 
-      user = Fabricate(:staged, email: "linux-admin@b-s-c.co.jp")
+      email = "linux-admin@b-s-c.co.jp"
+      user = Fabricate(:staged, email: email)
       private_message = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user)
       private_message.allowed_users = [user]
       private_message.save!
@@ -133,7 +134,7 @@ describe Email::Receiver do
       expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
       post = Post.last
       expect(post.whisper?).to eq(true)
-      expect(post.raw).to include("The message to linux-admin@b-s-c.co.jp bounced.\n\n### Details\n\n```text\nYour email bounced\n```")
+      expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email, raw: "Your email bounced").strip)
       expect(IncomingEmail.last.is_bounce).to eq(true)
     end
   end

@@ -205,7 +205,7 @@ module Email
       if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
         email_log.update_columns(bounced: true)
         user = email_log.user
-        email = user.try(:email).presence
+        email = user&.email.presence
         topic = email_log.topic
       end
 
@@ -1009,15 +1009,7 @@ module Email
       user = options.delete(:user)
 
       if options[:bounce]
-        options[:raw] = <<~MD
-          The message to #{user.email} bounced.
-
-          ### Details
-
-          ```text
-          #{options[:raw]}
-          ```
-        MD
+        options[:raw] = I18n.t("system_messages.email_bounced", email: user.email, raw: options[:raw])
         user = Discourse.system_user
         options[:post_type] = Post.types[:whisper]
       end

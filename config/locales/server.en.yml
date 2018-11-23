@@ -2692,6 +2692,15 @@ en:
 
         Can you make sure [your email address](%{base_url}/my/preferences/email) is valid and working? You may also wish to add our email address to your address book / contact list to improve deliverability.
 
+    email_bounced: |
+      The message to %{email} bounced.
+
+      ### Details
+
+      ```text
+      %{raw}
+      ```
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
