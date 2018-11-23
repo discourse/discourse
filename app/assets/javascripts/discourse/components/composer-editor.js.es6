@@ -998,7 +998,7 @@ export default Ember.Component.extend({
       $(`a.${INLINE_ONEBOX_CSS_CLASS}`, $preview).each(function(index, link) {
         let $link = $(link);
         $link.removeClass(INLINE_ONEBOX_CSS_CLASS);
-        let text = $link.text();
+        const text = $link.text();
         inline[text] = inline[text] || [];
         inline[text].push($link);
       });
