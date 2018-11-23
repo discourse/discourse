@@ -22,6 +22,8 @@ module Autospec
     reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
     reload("test/javascripts/test_helper.js")
 
+    watch(%r{^plugins/.*/test/.+\.js.es6$})
+
     require "socket"
 
     class ChromeNotInstalled < StandardError; end
