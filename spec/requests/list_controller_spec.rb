@@ -466,6 +466,14 @@ RSpec.describe ListController do
       json = JSON.parse(response.body)
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
+
+    it "should work with period in username" do
+      user.update!(username: "myname.test")
+      get "/topics/created-by/#{user.username}", xhr: true
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["topic_list"]["topics"].size).to eq(1)
+    end
   end
 
   describe "private_messages" do
