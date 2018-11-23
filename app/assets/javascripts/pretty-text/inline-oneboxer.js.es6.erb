@@ -1,6 +1,7 @@
 let _cache = {};
 
-export const INLINE_ONEBOX_CSS_CLASS = "inline-onebox-loading";
+export const INLINE_ONEBOX_LOADING_CSS_CLASS =
+  "<%= CookedPostProcessor::INLINE_ONEBOX_LOADING_CSS_CLASS %>";
 
 export function applyInlineOneboxes(inline, ajax) {
   Object.keys(inline).forEach(url => {

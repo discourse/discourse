@@ -31,7 +31,9 @@ describe CookedPostProcessor do
     end
 
     describe 'when post contains inline oneboxes' do
-      let(:loading_css_class) { 'inline-onebox-loading' }
+      let(:loading_css_class) do
+        described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
+      end
 
       before do
         SiteSetting.enable_inline_onebox_on_all_domains = true

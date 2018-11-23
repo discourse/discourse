@@ -36,7 +36,7 @@ import {
   resolveAllShortUrls
 } from "pretty-text/image-short-url";
 
-import { INLINE_ONEBOX_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -995,9 +995,9 @@ export default Ember.Component.extend({
       resolveAllShortUrls(ajax);
 
       let inline = {};
-      $(`a.${INLINE_ONEBOX_CSS_CLASS}`, $preview).each((index, link) => {
+      $(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`, $preview).each((index, link) => {
         const $link = $(link);
-        $link.removeClass(INLINE_ONEBOX_CSS_CLASS);
+        $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
         const text = $link.text();
         inline[text] = inline[text] || [];
         inline[text].push($link);

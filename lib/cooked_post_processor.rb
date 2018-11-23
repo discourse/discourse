@@ -576,12 +576,12 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
+  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
+
   private
 
   def post_process_inline_oneboxes
-    inline_onebox_class = "inline-onebox-loading"
-
-    @doc.css(".#{inline_onebox_class}").each do |element|
+    @doc.css(".#{INLINE_ONEBOX_LOADING_CSS_CLASS}").each do |element|
       inline_onebox = InlineOneboxer.lookup(
         element.attributes["href"].value,
         invalidate: !!@opts[:invalidate_oneboxes]
@@ -591,7 +591,7 @@ class CookedPostProcessor
         element.children = title
       end
 
-      element.remove_class(inline_onebox_class)
+      element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
     end
   end
 
