@@ -1,4 +1,5 @@
 import { currentUser } from "helpers/qunit-helpers";
+import AppEvents from "discourse/lib/app-events";
 import Composer from "discourse/models/composer";
 import createStore from "helpers/create-store";
 
@@ -7,6 +8,7 @@ QUnit.module("model:composer");
 function createComposer(opts) {
   opts = opts || {};
   opts.user = opts.user || currentUser();
+  opts.appEvents = AppEvents.create();
   return createStore().createRecord("composer", opts);
 }
 
