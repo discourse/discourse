@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'resolv'
 require 'time'
-require 'timeout'
 require 'socket'
+
+REFRESH_SECONDS = 30
 
 HOSTS_PATH = "/etc/hosts"
 
@@ -26,7 +28,7 @@ def swap_address(hosts, name, ips)
   new_file = []
 
   hosts.split("\n").each do |line|
-    line = line.strip
+    line.strip!
     if line[0] != '#'
       _, hostname = line.strip.split(/\s+/)
       next if hostname == name
@@ -118,7 +120,7 @@ end
 end.compact
 
 def loop
-  errors = {}
+  errors = Hash.new(0)
 
   Resolv::DNS.open do |dns|
     dns.timeouts = 2
@@ -132,7 +134,6 @@ def loop
         entries = hosts_entries(dns, var)
       rescue => e
         error("Failed to resolve DNS for #{name} - #{e}")
-        errors[host] ||= 0
         errors[host] += 1
       end
 
@@ -140,7 +141,6 @@ def loop
         resolved[host] = entries
       else
         error("Failed to find any DNS entry for #{var} : #{ENV[var]}")
-        errors[host] ||= 0
         errors[host] += 1
       end
 
@@ -176,5 +176,5 @@ end
 
 while true
   loop
-  sleep 30
+  sleep REFRESH_SECONDS
 end
