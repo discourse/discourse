@@ -46,7 +46,6 @@ export default createWidget("home-logo", {
           attributes: {
             src: Discourse.getURL(logoSmallUrl),
             width: 36,
-            height: 36,
             alt: title
           }
         });
@@ -61,7 +60,7 @@ export default createWidget("home-logo", {
     } else if (logoUrl.length) {
       return h("img#site-logo.logo-big", {
         key: "logo-big",
-        attributes: { src: Discourse.getURL(logoUrl), height: 36, alt: title }
+        attributes: { src: Discourse.getURL(logoUrl), alt: title }
       });
     } else {
       return h("h1#site-text-logo.text-logo", { key: "logo-text" }, title);
