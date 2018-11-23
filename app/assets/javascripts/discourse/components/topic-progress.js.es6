@@ -180,6 +180,10 @@ export default Ember.Component.extend({
     }
 
     // switch mobile scroll logo at the very bottom of topics
+
+    // not a mobile device so don't do anything
+    if (!this.site.mobileView) return;
+
     const isIOS = this.capabilities.isIOS,
       switchHeight = bodyHeight - offset - windowHeight,
       appEvents = getOwner(this).lookup("app-events:main");
