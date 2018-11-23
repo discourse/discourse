@@ -37,10 +37,10 @@ def swap_address(hosts, name, ips)
   end
 
   ips.each do |ip|
-    new_file << "#{ip} #{name} # AUTO GENERATED: #{Time.now.iso8601}"
+    new_file << "#{ip} #{name} # AUTO GENERATED: #{Time.now.iso8601}\n"
   end
 
-  new_file.join("\n")
+  new_file.join
 end
 
 def hosts_entries(dns, name)
