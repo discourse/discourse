@@ -33,9 +33,8 @@
     }
   }
 
-  // the logo height is set in the home-logo widget. This ensures we get a scaled
-  // width that respects the aspect ratio of the image
   #site-logo {
+    height: 36px;
     width: auto;
   }
 
