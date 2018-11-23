@@ -99,7 +99,7 @@ function applyOnebox(state, silent) {
               attrs.push(["target", "_blank"]);
             }
           } else if (mode === INLINE && !isTopLevel(href)) {
-            let onebox = cachedInlineOnebox(href);
+            const onebox = cachedInlineOnebox(href);
 
             if (onebox && onebox.title) {
               text.content = onebox.title;
