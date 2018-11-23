@@ -359,6 +359,10 @@ after_initialize do
     end
   end
 
+  User.class_eval do
+    has_many :poll_votes, dependent: :delete_all
+  end
+
   validate(:post, :validate_polls) do |force = nil|
     return unless self.raw_changed? || force
 
@@ -425,10 +429,6 @@ after_initialize do
 
   on(:merging_users) do |source_user, target_user|
     PollVote.where(user_id: source_user.id).update_all(user_id: target_user.id)
-  end
-
-  on(:user_destroyed) do |user|
-    PollVote.where(user_id: user.id).delete_all
   end
 
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
