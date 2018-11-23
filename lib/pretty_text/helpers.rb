@@ -76,10 +76,6 @@ module PrettyText
       result
     end
 
-    def lookup_inline_onebox(url, opts = {})
-      InlineOneboxer.lookup(url, opts)
-    end
-
     def get_topic_info(topic_id)
       return unless topic_id.is_a?(Integer)
       # TODO this only handles public topics, secured one do not get this

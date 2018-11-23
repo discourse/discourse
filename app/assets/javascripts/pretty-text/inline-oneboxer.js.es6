@@ -1,5 +1,7 @@
 let _cache = {};
 
+export const INLINE_ONEBOX_CSS_CLASS = "inline-onebox-loading";
+
 export function applyInlineOneboxes(inline, ajax) {
   Object.keys(inline).forEach(url => {
     // cache a blank locally, so we never trigger a lookup
