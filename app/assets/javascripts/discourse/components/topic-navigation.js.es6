@@ -136,7 +136,7 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   _shouldPanClose(e) {
-    return (e.deltaY > 200 && e.velocityY > -0.15) || e.velocityY > 0.15;
+    return (e.deltaY > 200 && e.velocityY > -0.10) || e.velocityY > 0.10;
   },
 
   panStart(e) {

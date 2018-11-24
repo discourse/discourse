@@ -61,13 +61,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const panMenuOrigin = this.get("panMenuOrigin");
     const panMenuOffset = this.get("panMenuOffset");
     if (panMenuOrigin === "right" && panMenuOffset === 0) {
-      return (e.deltaX > 200 && e.velocityX > -0.15) || e.velocityX > 0.15;
+      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
     } else if (panMenuOrigin === "left" && panMenuOffset === 0) {
-      return (e.deltaX < -200 && e.velocityX < 0.15) || e.velocityX < -0.15;
+      return (e.deltaX < -200 && e.velocityX < 0.10) || e.velocityX < -0.10;
     } else if (panMenuOrigin === "right" && panMenuOffset !== 0) {
-      return (e.deltaX > 200 && e.velocityX > -0.15) || e.velocityX > 0.15;
+      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
     } else if (panMenuOrigin === "left" && panMenuOffset !== 0) {
-      return (e.deltaX < -200 && e.velocityX < 0.15) || e.velocityX < -0.15;
+      return (e.deltaX < -200 && e.velocityX < 0.10) || e.velocityX < -0.10;
     }
   },
 
