@@ -446,7 +446,12 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    if (!$(e.target).parents('.menu-panel').length) {
+    // prevent all scrollin on menu panels, except on overflow
+    let height = window.innerHeight
+        ? window.innerHeight
+        : $(window).height();
+    if (!$(e.target).parents('.menu-panel').length ||
+        $('.menu-panel .panel-body-contents').height() <= height) {
       e.preventDefault();
     }
   },
