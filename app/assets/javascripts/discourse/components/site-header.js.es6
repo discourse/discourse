@@ -180,6 +180,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   setTopic(topic) {
+    this.eventDispatched("dom:clean", "header");
     this._topic = topic;
     this.queueRerender();
   },

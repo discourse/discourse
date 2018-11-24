@@ -428,10 +428,27 @@ export default createWidget("header", {
     }
 
     this.state.userVisible = !this.state.userVisible;
+    this.toggleBodyScrolling(this.state.userVisible);
   },
 
   toggleHamburger() {
     this.state.hamburgerVisible = !this.state.hamburgerVisible;
+    this.toggleBodyScrolling(this.state.hamburgerVisible);
+  },
+
+  toggleBodyScrolling(bool) {
+    if (!this.site.mobileView) return;
+    if (bool) {
+      document.body.addEventListener('touchmove', this.preventDefault, { passive: false });
+    } else {
+      document.body.removeEventListener('touchmove', this.preventDefault, { passive: false });
+    }
+  },
+
+  preventDefault(e) {
+    if (!$(e.target).parents('.menu-panel').length) {
+      e.preventDefault();
+    }
   },
 
   togglePageSearch() {
@@ -487,6 +504,7 @@ export default createWidget("header", {
     if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
       this.closeAll();
     }
+    this.toggleBodyScrolling(false);
   },
 
   headerKeyboardTrigger(msg) {
