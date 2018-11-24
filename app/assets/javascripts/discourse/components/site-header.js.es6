@@ -138,7 +138,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     if (!this.get("isPanning")) {
       return;
     }
-    e.originalEvent.preventDefault();
     const $menuPanels = $(".menu-panel");
     const panMenuOffset = this.get("panMenuOffset");
     $menuPanels.each((idx, panel) => {

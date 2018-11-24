@@ -6,7 +6,6 @@ export default Ember.Mixin.create({
   //velocity is pixels per ms
 
   _panState: null,
-  panDisableVerticalScroll: false,
 
   didInsertElement() {
     this._super();
