@@ -582,9 +582,12 @@ en:
       topic_sentence:
         one: "1 topic"
         other: "%{count} topics"
-      topic_stat_sentence:
-        one: "%{count} new topic in the past %{unit}."
-        other: "%{count} new topics in the past %{unit}."
+      topic_stat_sentence_week:
+        one: "%{count} new topic in the past week."
+        other: "%{count} new topics in the past week."
+      topic_stat_sentence_month:
+        one: "%{count} new topic in the past month."
+        other: "%{count} new topics in the past month."
       n_more: "Categories (%{count} more) ..."
 
     ip_lookup:
