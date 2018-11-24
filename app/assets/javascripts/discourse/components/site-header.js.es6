@@ -95,6 +95,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         panMenuOffset: -300,
         isPanning: true
       });
+      $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleHamburger", "header");
     } else if (
       windowWidth - center.x < 30 &&
@@ -107,6 +108,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         panMenuOffset: -300,
         isPanning: true
       });
+      $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleUserMenu", "header");
     } else {
       this.set("isPanning", false);
