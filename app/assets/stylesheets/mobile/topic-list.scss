@@ -486,14 +486,6 @@ ol.category-breadcrumb {
   padding: 8px 0;
 }
 
-@supports (--custom: property) {
-  .category-logo {
-    --max-height: 150px;
-    max-width: calc(var(--max-height) * var(--width-ratio));
-    max-height: var(--max-height);
-  }
-}
-
 button.dismiss-read {
   margin-right: 10px;
 }

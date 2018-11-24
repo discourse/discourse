@@ -227,14 +227,6 @@ button.dismiss-read {
   margin: 0.25em 1em 0.5em 0;
 }
 
-@supports (--custom: property) {
-  .category-logo {
-    --max-height: 150px;
-    max-width: calc(var(--max-height) * var(--width-ratio));
-    max-height: var(--max-height);
-  }
-}
-
 /* Tablet (portrait) ----------- */
 
 @include breakpoint(medium) {
