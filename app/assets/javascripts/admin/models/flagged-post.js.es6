@@ -42,16 +42,16 @@ export default Post.extend({
 
   @computed("post_actions.@each.targets_topic")
   topicFlagged() {
-    return _.any(this.get("post_actions"), function(action) {
-      return action.targets_topic;
-    });
+    return (this.get("post_actions") || []).some(
+      action => action.targets_topic
+    );
   },
 
   @computed("post_actions.@each.targets_topic")
   postAuthorFlagged() {
-    return _.any(this.get("post_actions"), function(action) {
-      return !action.targets_topic;
-    });
+    return (this.get("post_actions") || []).some(
+      action => !action.targets_topic
+    );
   },
 
   @computed("flaggedForSpam")

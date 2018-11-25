@@ -582,7 +582,7 @@ export default Ember.Component.extend({
   },
 
   _scrollTo(y) {
-    const yPosition = _.isUndefined(y) ? this.scrollPosition : y;
+    const yPosition = y ? y : this.scrollPosition;
 
     this.$list.scrollTop(yPosition);
 

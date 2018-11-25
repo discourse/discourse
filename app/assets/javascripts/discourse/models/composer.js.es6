@@ -190,14 +190,19 @@ const Composer = RestModel.extend({
   }.observes("archetype"),
 
   // view detected user is typing
-  typing: _.throttle(
-    function() {
-      let typingTime = this.get("typingTime") || 0;
-      this.set("typingTime", typingTime + 100);
-    },
-    100,
-    { leading: false, trailing: true }
-  ),
+  typing() {
+    Ember.run.throttle(
+      this,
+      this.storeTypingTime,
+      { leading: false, trailing: true },
+      100
+    );
+  },
+
+  storeTypingTime() {
+    let typingTime = this.get("typingTime") || 0;
+    this.set("typingTime", typingTime + 100);
+  },
 
   editingFirstPost: Em.computed.and("editingPost", "post.firstPost"),
 

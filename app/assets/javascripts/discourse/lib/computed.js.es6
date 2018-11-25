@@ -102,7 +102,7 @@ export function endWith() {
   const substring = args.pop();
   const computed = Em.computed(function() {
     const self = this;
-    return _.all(
+    return _.every(
       args.map(function(a) {
         return self.get(a);
       }),
