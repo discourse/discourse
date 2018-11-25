@@ -93,7 +93,7 @@ RSpec.describe Admin::FlagsController do
       SiteSetting.queue_jobs = false
       category.update_column(:topic_id, first_post.topic_id)
 
-      post_action = PostAction.act(user, first_post, PostActionType.types[:spam], message: 'bad')
+      PostAction.act(user, first_post, PostActionType.types[:spam], message: 'bad')
 
       post "/admin/flags/agree/#{first_post.id}.json", params: { action_on_post: 'delete' }
       expect(response.status).to eq(403)
