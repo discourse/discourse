@@ -97,6 +97,36 @@ module FileStore
       "#{public_dir}#{relative_base_url.sub("/uploads/", "/uploads/tombstone/")}"
     end
 
-  end
+    def list_missing_uploads(skip_optimized: false)
+      list_missing(Upload)
+      list_missing(OptimizedImage) unless skip_optimized
+    end
 
+    private
+
+    def list_missing(model)
+      public_directory = "#{Rails.root}/public"
+
+      count = 0
+      model.find_each do |upload|
+
+        # could be a remote image
+        next unless upload.url =~ /^\/[^\/]/
+
+        path = "#{public_directory}#{upload.url}"
+        bad = true
+        begin
+          bad = false if File.size(path) != 0
+        rescue
+          # something is messed up
+        end
+        if bad
+          count += 1
+          puts path
+        end
+      end
+      puts "#{count} of #{model.count} #{model.name.underscore.pluralize} are missing" if count > 0
+    end
+
+  end
 end

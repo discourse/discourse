@@ -26,10 +26,12 @@ $mobile-breakpoint: 700px;
 
   .nav-pills {
     display: inline-flex;
+    flex-wrap: wrap;
     width: calc(100% - 10px);
     flex: 1 0 auto;
     @include breakpoint(tablet) {
       white-space: nowrap;
+      flex-wrap: nowrap;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;
       margin: 0 0 0 -10px;
