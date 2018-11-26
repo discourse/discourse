@@ -58,6 +58,10 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
     SQL
 
     DB.query(sql).each do |r|
+      # for some reasons, polls or votes might be an array
+      r.polls = r.polls[0] if Array === r.polls && r.polls.size > 0
+      r.votes = r.votes[0] if Array === r.votes && r.votes.size > 0
+
       existing_user_ids = User.where(id: r.votes.keys).pluck(:id).to_set
 
       # Poll votes are stored in a JSON object with the following hierarchy

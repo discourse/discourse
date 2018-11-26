@@ -1020,42 +1020,6 @@ HTML
     expect(PrettyText.cook("<img src='a'>\nhttp://a.com")).to include('onebox')
   end
 
-  it 'handles mini onebox' do
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com/a")
-
-    stub_request(:get, "http://cnn.com/a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
-    expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
-  end
-
-  it 'handles mini onebox with query param' do
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com?a")
-
-    stub_request(:get, "http://cnn.com?a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
-    expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
-  end
-
-  it 'skips mini onebox for primary domain' do
-
-    # we only include mini onebox if there is something in path or query params
-
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com/")
-
-    stub_request(:get, "http://cnn.com/").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
-    expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)
-  end
-
   it "can handle bbcode" do
     expect(PrettyText.cook("a[b]b[/b]c")).to eq('<p>a<span class="bbcode-b">b</span>c</p>')
     expect(PrettyText.cook("a[i]b[/i]c")).to eq('<p>a<span class="bbcode-i">b</span>c</p>')
@@ -1230,39 +1194,6 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
-  end
-
-  describe "inline onebox" do
-    it "includes the topic title" do
-      topic = Fabricate(:topic)
-
-      raw = "Hello #{topic.url}"
-
-      cooked = <<~HTML
-        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).to eq(cooked.strip)
-    end
-
-    it "invalidates the onebox url" do
-      topic = Fabricate(:topic)
-      url = topic.url
-      raw = "Hello #{url}"
-
-      PrettyText.cook(raw)
-
-      topic.title = "Updated: #{topic.title}"
-      topic.save
-
-      cooked = <<~HTML
-        <p>Hello <a href="#{url}">#{topic.title}</a></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).not_to eq(cooked.strip)
-      expect(PrettyText.cook(raw, invalidate_oneboxes: true)).to eq(cooked.strip)
-      expect(PrettyText.cook(raw)).to eq(cooked.strip)
-    end
   end
 
   describe "image decoding" do

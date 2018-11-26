@@ -20,12 +20,9 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
-    @cooking_options[:cook_method] = post.cook_method
 
-    analyzer = post.post_analyzer
-    @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
-    @has_oneboxes = analyzer.found_oneboxes?
+    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
+    @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
   end
 
@@ -33,6 +30,7 @@ class CookedPostProcessor
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       post_process_oneboxes
+      post_process_inline_oneboxes
       post_process_images
       post_process_quotes
       optimize_urls
@@ -579,7 +577,24 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
+  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
+
   private
+
+  def post_process_inline_oneboxes
+    @doc.css(".#{INLINE_ONEBOX_LOADING_CSS_CLASS}").each do |element|
+      inline_onebox = InlineOneboxer.lookup(
+        element.attributes["href"].value,
+        invalidate: !!@opts[:invalidate_oneboxes]
+      )
+
+      if title = inline_onebox&.dig(:title)
+        element.children = title
+      end
+
+      element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
+    end
+  end
 
   def is_svg?(img)
     path =

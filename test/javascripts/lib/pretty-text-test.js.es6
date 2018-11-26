@@ -2,6 +2,7 @@ import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
 
 QUnit.module("lib:pretty-text");
 
@@ -197,13 +198,13 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
-    '<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>',
+    `<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>`,
     "allows links to contain query params"
   );
 
   assert.cooked(
     "Derpy: http://derp.com?__test=1",
-    '<p>Derpy: <a href="http://derp.com?__test=1">http://derp.com?__test=1</a></p>',
+    `<p>Derpy: <a href="http://derp.com?__test=1" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://derp.com?__test=1</a></p>`,
     "works with double underscores in urls"
   );
 
@@ -233,7 +234,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "Batman: http://en.wikipedia.org/wiki/The_Dark_Knight_(film)",
-    '<p>Batman: <a href="http://en.wikipedia.org/wiki/The_Dark_Knight_(film)">http://en.wikipedia.org/wiki/The_Dark_Knight_(film)</a></p>',
+    `<p>Batman: <a href="http://en.wikipedia.org/wiki/The_Dark_Knight_(film)" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://en.wikipedia.org/wiki/The_Dark_Knight_(film)</a></p>`,
     "autolinks a URL with parentheses (like Wikipedia)"
   );
 
@@ -245,7 +246,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "1. View @eviltrout's profile here: http://meta.discourse.org/u/eviltrout/activity<br/>next line.",
-    '<ol>\n<li>View <span class="mention">@eviltrout</span>\'s profile here: <a href="http://meta.discourse.org/u/eviltrout/activity">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li>\n</ol>',
+    `<ol>\n<li>View <span class="mention">@eviltrout</span>\'s profile here: <a href="http://meta.discourse.org/u/eviltrout/activity" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li>\n</ol>`,
     "allows autolinking within a list without inserting a paragraph."
   );
 
@@ -270,8 +271,8 @@ QUnit.test("Links", assert => {
   assert.cooked(
     "http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369",
     '<p><a href="http://discourse.org">http://discourse.org</a> and ' +
-      '<a href="http://discourse.org/another_url">http://discourse.org/another_url</a> and ' +
-      '<a href="http://www.imdb.com/name/nm2225369">http://www.imdb.com/name/nm2225369</a></p>',
+      `<a href="http://discourse.org/another_url" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://discourse.org/another_url</a> and ` +
+      `<a href="http://www.imdb.com/name/nm2225369" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.imdb.com/name/nm2225369</a></p>`,
     "allows multiple links on one line"
   );
 
@@ -705,13 +706,13 @@ QUnit.test("Oneboxing", assert => {
   assert.ok(
     !matches(
       "- http://www.textfiles.com/bbs/MINDVOX/FORUMS/ethics\n\n- http://drupal.org",
-      /onebox/
+      /class="onebox"/
     ),
     "doesn't onebox a link within a list"
   );
 
   assert.ok(
-    matches("http://test.com", /onebox/),
+    matches("http://test.com", /class="onebox"/),
     "adds a onebox class to a link on its own line"
   );
   assert.ok(

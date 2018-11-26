@@ -1429,20 +1429,13 @@ describe UsersController do
       before do
         sign_in(user)
       end
-      let(:user) { Fabricate(:user) }
+      let(:user) { Fabricate(:user, username: 'test.test', name: "Test User") }
 
       it "should be able to update a user" do
-        put "/u/#{user.username}.json", params: { name: 'test.test' }
+        put "/u/#{user.username}", params: { name: 'test.test' }
 
         expect(response.status).to eq(200)
         expect(user.reload.name).to eq('test.test')
-      end
-
-      it "should be able to update a user" do
-        put "/u/#{user.username}.json", params: { name: 'testing123' }
-
-        expect(response.status).to eq(200)
-        expect(user.reload.name).to eq('testing123')
       end
     end
 
@@ -2024,6 +2017,17 @@ describe UsersController do
         delete "/u/#{user.username}.json"
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe "for user with period in username" do
+    let(:user_with_period) { Fabricate(:user, username: "myname.test") }
+
+    it "still works" do
+      sign_in(user_with_period)
+      UserDestroyer.any_instance.expects(:destroy).with(user_with_period, anything).returns(user_with_period)
+      delete "/u/#{user_with_period.username}", xhr: true
+      expect(response.status).to eq(200)
     end
   end
 

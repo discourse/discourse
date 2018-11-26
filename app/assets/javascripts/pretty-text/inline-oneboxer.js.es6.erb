@@ -1,5 +1,8 @@
 let _cache = {};
 
+export const INLINE_ONEBOX_LOADING_CSS_CLASS =
+  "<%= CookedPostProcessor::INLINE_ONEBOX_LOADING_CSS_CLASS %>";
+
 export function applyInlineOneboxes(inline, ajax) {
   Object.keys(inline).forEach(url => {
     // cache a blank locally, so we never trigger a lookup

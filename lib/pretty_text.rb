@@ -158,7 +158,6 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupInlineOnebox = __lookupInlineOnebox;
         __optInput.lookupImageUrls = __lookupImageUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
@@ -171,12 +170,7 @@ module PrettyText
         buffer << "__optInput.userId = #{opts[:user_id].to_i};\n"
       end
 
-      if opts[:invalidate_oneboxes]
-        buffer << "__optInput.invalidateOneboxes = true;\n"
-      end
-
       buffer << "__textOptions = __buildOptions(__optInput);\n"
-
       buffer << ("__pt = new __PrettyText(__textOptions);")
 
       # Be careful disabling sanitization. We allow for custom emails

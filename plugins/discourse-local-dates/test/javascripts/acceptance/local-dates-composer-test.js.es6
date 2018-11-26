@@ -17,15 +17,15 @@ test("composer bbcode", async assert => {
 
   await fillIn(
     ".d-editor-input",
-    '[date=2017-10-23 time=01:30:00 displayedZone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
+    '[date=2017-10-23 time=01:30:00 displayedTimezone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
   );
 
   assert.equal(getAttr("date"), "2017-10-23", "it has the correct date");
   assert.equal(getAttr("time"), "01:30:00", "it has the correct time");
   assert.equal(
-    getAttr("displayed-zone"),
+    getAttr("displayed-timezone"),
     "America/Chicago",
-    "it has the correct displayed zone"
+    "it has the correct displayed timezone"
   );
   assert.equal(getAttr("format"), "LLLL", "it has the correct format");
   assert.equal(
