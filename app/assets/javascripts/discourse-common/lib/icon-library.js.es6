@@ -257,7 +257,6 @@ const fa4Replacements = {
   "hourglass-o": "far-hourglass",
   houzz: "fab-houzz",
   html5: "fab-html5",
-  "id-badge": "far-id-badge",
   "id-card-o": "far-id-card",
   ils: "shekel-sign",
   image: "far-image",
