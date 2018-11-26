@@ -128,7 +128,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}' AND filesize = #{f.size}").pluck(:id).first
+          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
           verified_ids << id if id.present?
           marker = f.key
         end
@@ -138,7 +138,7 @@ module FileStore
         files = @s3_helper.list(prefix, marker)
       end
 
-      missing_uploads = model.joins('LEFT JOIN verified_ids ON val = id').where(val: nil)
+      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
       missing_count = missing_uploads.count
 
       if missing_count > 0
