@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 def generate_html(text, opts = {})
-  output = "<p><span class=\"discourse-local-date\""
+  output = "<p><span"
   output += " data-date=\"#{opts[:date]}\"" if opts[:date]
   output += " data-time=\"#{opts[:time]}\"" if opts[:time]
+  output += " class=\"discourse-local-date\""
   output += " data-format=\"#{opts[:format]}\"" if opts[:format]
   output += " data-email-preview=\"#{opts[:email_preview]}\"" if opts[:email_preview]
   output += ">"
