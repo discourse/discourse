@@ -995,13 +995,15 @@ export default Ember.Component.extend({
       resolveAllShortUrls(ajax);
 
       let inline = {};
-      $(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`, $preview).each((index, link) => {
-        const $link = $(link);
-        $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
-        const text = $link.text();
-        inline[text] = inline[text] || [];
-        inline[text].push($link);
-      });
+      $(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`, $preview).each(
+        (index, link) => {
+          const $link = $(link);
+          $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
+          const text = $link.text();
+          inline[text] = inline[text] || [];
+          inline[text].push($link);
+        }
+      );
       if (Object.keys(inline).length > 0) {
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
