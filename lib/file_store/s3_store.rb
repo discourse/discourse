@@ -149,7 +149,7 @@ module FileStore
         puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
       end
     ensure
-      connection.exec('DROP TABLE verified_ids') unless connection.nil?  
+      connection.exec('DROP TABLE verified_ids') unless connection.nil?
     end
   end
 end
