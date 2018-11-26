@@ -767,3 +767,51 @@ task "uploads:recover" => :environment do
     end
   end
 end
+
+################################################################################
+#                             attachments_to_oneboxes                          #
+################################################################################
+
+desc 'Convert attachments of a specific extension to oneboxes'
+task 'uploads:attachments_to_oneboxes', [:extension] => [:environment] do |_, args|
+  args.with_defaults(type: 'string')
+  extension = args[:extension]
+
+  if !extension
+    puts "ERROR: Expecting rake uploads:attachments_to_oneboxes[extension]"
+    exit 1
+  end
+
+  search = Post.raw_match("<a class=['\"]attachment['\"]", "regex")
+
+  converted = 0
+  skipped = 0
+
+  search.find_each do |post|
+    updated = false
+    doc = Nokogiri::HTML::fragment(post.raw)
+    attachment_urls = doc.css("a.attachment[href]").map { |a| a["href"] }
+    attachment_urls.each do |url|
+      pattern = /<a class=['"]attachment['"] href=['"]#{url}['"]>(.*)<\/a>\s*\((.*)\)/
+      if (url.end_with?(".#{extension}") && post.raw.match?(pattern))
+        if url.start_with?("//")
+          url.prepend("https:")
+        elsif url.start_with?("/")
+          url.prepend(Discourse.base_url)
+        end
+        post.raw = post.raw.sub(pattern, url)
+        updated = true
+      end
+    end
+
+    if updated
+      post.save!
+      post.rebake!
+      converted += 1
+    else
+      skipped += 1
+    end
+  end
+
+  puts "", "#{converted} converted, #{skipped} skipped", ""
+end
