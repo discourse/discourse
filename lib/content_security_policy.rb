@@ -70,6 +70,7 @@ class ContentSecurityPolicy
     ['/javascripts/',        false, true],
     ['/plugins/',            false, true],
     ['/theme-javascripts/',  false, true],
+    ['/svg-sprite/',         false, true],
   ]
 
   def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url)

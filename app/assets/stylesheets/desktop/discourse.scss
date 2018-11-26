@@ -22,7 +22,7 @@ body.widget-dragging {
     margin: 0;
     line-height: $line-height-small;
 
-    i {
+    .d-icon {
       font-size: $font-down-1;
     }
   }
@@ -117,7 +117,8 @@ input {
 }
 
 .input {
-  &-xxlarge {
+  &-xxlarge,
+  &-xxlarge + .control-instructions {
     width: 530px;
   }
 }

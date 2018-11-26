@@ -38,6 +38,7 @@ describe ContentSecurityPolicy do
         http://test.localhost/javascripts/
         http://test.localhost/plugins/
         http://test.localhost/theme-javascripts/
+        http://test.localhost/svg-sprite/
       ])
     end
 

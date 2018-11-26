@@ -93,6 +93,11 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
     methods.forEach(m => m.set("full_screen_login", true));
   }
 
+  // exclude FA icon for Google, uses custom SVG
+  methods.forEach(m =>
+    m.set("hasRegularIcon", m.get("name") === "google_oauth2" ? false : true)
+  );
+
   return methods;
 }
 

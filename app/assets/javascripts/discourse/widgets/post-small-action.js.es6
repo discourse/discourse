@@ -37,15 +37,15 @@ const icons = {
   "autoclosed.disabled": "unlock-alt",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
-  "pinned.enabled": "thumb-tack",
-  "pinned.disabled": "thumb-tack unpinned",
-  "pinned_globally.enabled": "thumb-tack",
-  "pinned_globally.disabled": "thumb-tack unpinned",
-  "banner.enabled": "thumb-tack",
-  "banner.disabled": "thumb-tack unpinned",
-  "visible.enabled": "eye",
-  "visible.disabled": "eye-slash",
-  split_topic: "sign-out",
+  "pinned.enabled": "thumbtack",
+  "pinned.disabled": "thumbtack unpinned",
+  "pinned_globally.enabled": "thumbtack",
+  "pinned_globally.disabled": "thumbtack unpinned",
+  "banner.enabled": "thumbtack",
+  "banner.disabled": "thumbtack unpinned",
+  "visible.enabled": "far-eye",
+  "visible.disabled": "far-eye-slash",
+  split_topic: "sign-out-alt",
   invited_user: "plus-circle",
   invited_group: "plus-circle",
   user_left: "minus-circle",
@@ -53,7 +53,7 @@ const icons = {
   removed_group: "minus-circle",
   public_topic: "comment",
   private_topic: "envelope",
-  autobumped: "hand-o-right"
+  autobumped: "hand-point-right"
 };
 
 export function addPostSmallActionIcon(key, icon) {

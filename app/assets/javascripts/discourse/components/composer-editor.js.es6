@@ -22,6 +22,7 @@ import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import InputValidation from "discourse/models/input-validation";
 import { findRawTemplate } from "discourse/lib/raw-templates";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   displayErrorForUpload,
@@ -212,7 +213,9 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
       const tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
-        reason += "<br/>" + I18n.t("composer.error.try_like");
+        reason +=
+          "<br/>" +
+          I18n.t("composer.error.try_like", { heart: iconHTML("heart") });
       }
     }
 

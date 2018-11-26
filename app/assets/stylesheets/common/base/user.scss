@@ -19,10 +19,6 @@
 }
 
 .user-main {
-  .d-icon-heart {
-    color: $love !important;
-  }
-
   .about {
     overflow: hidden;
     width: 100%;
@@ -84,7 +80,7 @@
       h1 {
         font-size: $font-up-5;
         font-weight: normal;
-        i {
+        .d-icon {
           font-size: 0.8em;
         }
       }
@@ -697,4 +693,8 @@
       }
     }
   }
+}
+
+.user-summary-page .d-icon-heart {
+  color: $love;
 }

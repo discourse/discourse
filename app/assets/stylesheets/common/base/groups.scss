@@ -50,7 +50,7 @@
     }
 
     td.group-user-status {
-      i {
+      .d-icon {
         color: $primary;
       }
     }
@@ -214,7 +214,7 @@
       background-size: $size;
       height: $size;
 
-      i {
+      .d-icon {
         font-size: $size !important;
       }
     }

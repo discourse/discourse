@@ -1,5 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { iconNode, convertIconClass } from "discourse-common/lib/icon-library";
 
 createWidget("avatar-flair", {
   tagName: "div.avatar-flair",
@@ -7,7 +7,7 @@ createWidget("avatar-flair", {
   isIcon(attrs) {
     return (
       attrs.primary_group_flair_url &&
-      attrs.primary_group_flair_url.substr(0, 3) === "fa-"
+      attrs.primary_group_flair_url.includes("fa-")
     );
   },
 
@@ -52,20 +52,8 @@ createWidget("avatar-flair", {
 
   html(attrs) {
     if (this.isIcon(attrs)) {
-      return [
-        h("i", {
-          className: "fa " + attrs.primary_group_flair_url,
-          attributes: {
-            style: attrs.primary_group_flair_color
-              ? "color: #" +
-                Handlebars.Utils.escapeExpression(
-                  attrs.primary_group_flair_color
-                ) +
-                "; "
-              : ""
-          }
-        })
-      ];
+      const icon = convertIconClass(attrs.primary_group_flair_url);
+      return [iconNode(icon)];
     } else {
       return [];
     }

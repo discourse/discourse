@@ -246,6 +246,7 @@ module Discourse
     end
 
     require_dependency 'stylesheet/manager'
+    require_dependency 'svg_sprite/svg_sprite'
 
     config.after_initialize do
       # require common dependencies that are often required by plugins

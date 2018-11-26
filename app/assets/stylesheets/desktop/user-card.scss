@@ -81,7 +81,7 @@ $user_card_background: $secondary;
     a {
       color: $user_card_primary;
     }
-    i {
+    .d-icon {
       font-size: $font-down-1;
       color: $user_card_primary;
     }
@@ -185,7 +185,7 @@ $user_card_background: $secondary;
       max-width: 90%;
       overflow: hidden;
       align-items: baseline;
-      i {
+      .d-icon {
         margin-right: 0.25em;
       }
     }
@@ -224,7 +224,7 @@ $user_card_background: $secondary;
       background-position: center;
       background-size: $size;
       color: $primary;
-      i {
+      .d-icon {
         margin: auto;
         font-size: $size / 1.5 !important;
       }
