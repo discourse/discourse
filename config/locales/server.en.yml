@@ -1780,6 +1780,7 @@ en:
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
+    enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
