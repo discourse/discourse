@@ -147,7 +147,11 @@ class PostDestroyer
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
       DB.after_commit do
-        agree_with_flags
+        if @opts[:agree_flags]
+          agree_with_flags
+        else
+          defer_flags
+        end
       end
     end
 
@@ -225,7 +229,7 @@ class PostDestroyer
     if @post.has_active_flag? && @user.id > 0 && @user.staff?
       Jobs.enqueue(
         :send_system_message,
-        user_id: @post.user.id,
+        user_id: @post.user_id,
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
           url: @post.url,
@@ -237,8 +241,11 @@ class PostDestroyer
         }
       )
     end
-
     PostAction.agree_flags!(@post, @user, delete_post: true)
+  end
+
+  def defer_flags
+    PostAction.defer_flags!(@post, @user, delete_post: true)
   end
 
   def trash_user_actions
