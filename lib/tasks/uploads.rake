@@ -404,54 +404,7 @@ task "uploads:missing" => :environment do
 end
 
 def list_missing_uploads(skip_optimized: false)
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  public_directory = "#{Rails.root}/public"
-
-  count = 0
-  Upload.find_each do |upload|
-
-    # could be a remote image
-    next unless upload.url =~ /^\/[^\/]/
-
-    path = "#{public_directory}#{upload.url}"
-    bad = true
-    begin
-      bad = false if File.size(path) != 0
-    rescue
-      # something is messed up
-    end
-    if bad
-      count += 1
-      puts path
-    end
-  end
-  puts "#{count} of #{Upload.count} uploads are missing" if count > 0
-
-  unless skip_optimized
-    count = 0
-    OptimizedImage.find_each do |optimized_image|
-      # remote?
-      next unless optimized_image.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{optimized_image.url}"
-
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      if bad
-        count += 1
-        puts path
-      end
-    end
-    puts "#{count} of #{OptimizedImage.count} optimized images are missing" if count > 0
-  end
+  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
 end
 
 ################################################################################
