@@ -33,6 +33,7 @@ class CookedPostProcessor
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       post_process_oneboxes
+      post_process_inline_oneboxes
       post_process_images
       post_process_quotes
       optimize_urls
@@ -575,7 +576,24 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
+  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
+
   private
+
+  def post_process_inline_oneboxes
+    @doc.css(".#{INLINE_ONEBOX_LOADING_CSS_CLASS}").each do |element|
+      inline_onebox = InlineOneboxer.lookup(
+        element.attributes["href"].value,
+        invalidate: !!@opts[:invalidate_oneboxes]
+      )
+
+      if title = inline_onebox&.dig(:title)
+        element.children = title
+      end
+
+      element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
+    end
+  end
 
   def is_svg?(img)
     path =
