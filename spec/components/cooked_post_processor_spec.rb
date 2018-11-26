@@ -20,13 +20,93 @@ describe CookedPostProcessor do
 
     it "post process in sequence" do
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
-      cpp.expects(:post_process_inline_oneboxes).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
       cpp.post_process
 
       expect(PostUpload.exists?(post: post, upload: upload)).to eq(true)
+    end
+
+    describe 'when post contains oneboxes and inline oneboxes' do
+      let(:url_hostname) { 'meta.discourse.org' }
+
+      let(:url) do
+        "https://#{url_hostname}/t/mini-inline-onebox-support-rfc/66400"
+      end
+
+      let(:title) { 'some title' }
+
+      let(:post) do
+        Fabricate(:post, raw: <<~RAW)
+        #{url}
+        This is a #{url} with path
+
+        https://#{url_hostname}/t/random-url
+
+        This is a https://#{url_hostname}/t/another-random-url test
+        This is a #{url} with path
+
+        #{url}
+        RAW
+      end
+
+      before do
+        SiteSetting.enable_inline_onebox_on_all_domains = true
+
+        %i{head get}.each do |method|
+          stub_request(method, url).to_return(
+            status: 200,
+            body: <<~RAW
+            <html>
+              <head>
+                <title>#{title}</title>
+                <meta property='og:title' content="#{title}">
+                <meta property='og:description' content="some description">
+              </head>
+            </html>
+            RAW
+          )
+        end
+      end
+
+      after do
+        InlineOneboxer.purge(url)
+        Oneboxer.invalidate(url)
+      end
+
+      it 'should respect SiteSetting.max_oneboxes_per_post' do
+        SiteSetting.max_oneboxes_per_post = 2
+        SiteSetting.add_rel_nofollow_to_user_content = false
+
+        cpp.post_process
+
+        expect(cpp.html).to have_tag('a',
+          with: {
+            href: url,
+            class: described_class::INLINE_ONEBOX_CSS_CLASS
+          },
+          text: title,
+          count: 2
+        )
+
+        expect(cpp.html).to have_tag('aside.onebox a', text: title, count: 2)
+
+        expect(cpp.html).to have_tag('aside.onebox a',
+          text: url_hostname,
+          count: 2
+        )
+
+        expect(cpp.html).to have_tag('a',
+          without: {
+            class: described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
+          },
+          text: "https://#{url_hostname}/t/another-random-url",
+          count: 1
+        )
+
+        expect(cpp.html).to have_tag('a.onebox', count: 1)
+      end
     end
 
     describe 'when post contains inline oneboxes' do

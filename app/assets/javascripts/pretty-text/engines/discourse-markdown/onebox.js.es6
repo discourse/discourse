@@ -2,7 +2,8 @@ import { lookupCache } from "pretty-text/oneboxer";
 
 import {
   cachedInlineOnebox,
-  INLINE_ONEBOX_LOADING_CSS_CLASS
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
 } from "pretty-text/inline-oneboxer";
 
 const ONEBOX = 1;
@@ -103,6 +104,7 @@ function applyOnebox(state, silent) {
 
             if (onebox && onebox.title) {
               text.content = onebox.title;
+              attrs.push(["class", INLINE_ONEBOX_CSS_CLASS]);
             } else {
               attrs.push(["class", INLINE_ONEBOX_LOADING_CSS_CLASS]);
             }

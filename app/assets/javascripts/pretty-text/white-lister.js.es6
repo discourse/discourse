@@ -1,4 +1,7 @@
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import {
+  INLINE_ONEBOX_CSS_CLASS,
+  INLINE_ONEBOX_LOADING_CSS_CLASS
+} from "pretty-text/inline-oneboxer";
 
 // to match:
 // abcd
@@ -118,6 +121,7 @@ const DEFAULT_LIST = [
   "a.mention",
   "a.mention-group",
   "a.onebox",
+  `a.${INLINE_ONEBOX_CSS_CLASS}`,
   `a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`,
   "a[data-bbcode]",
   "a[name]",
