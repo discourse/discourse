@@ -1364,7 +1364,7 @@ QUnit.test("emoji - enable_inline_emoji_translation", assert => {
   assert.cookedOptions(
     "test:smile:test",
     { siteSettings: { enable_inline_emoji_translation: true } },
-    `<p>test<img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:">test</p>`
+    `<p>test<img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:">test</p>`
   );
 });
 
