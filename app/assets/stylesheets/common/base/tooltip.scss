@@ -4,7 +4,7 @@ $discourse-tooltip-border: $primary-medium;
 #discourse-tooltip {
   background-color: $discourse-tooltip-background;
   position: absolute;
-  z-index: 1000;
+  z-index: z("tooltip");
   border: 1px solid $discourse-tooltip-border;
   max-width: 400px;
   margin-top: 25px;
