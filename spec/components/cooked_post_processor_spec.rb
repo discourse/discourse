@@ -2,7 +2,6 @@ require "rails_helper"
 require "cooked_post_processor"
 
 describe CookedPostProcessor do
-
   context "#post_process" do
     let(:upload) do
       Fabricate(:upload,
@@ -159,26 +158,6 @@ describe CookedPostProcessor do
             count: 1
           )
         end
-      end
-    end
-  end
-
-  context "cooking options" do
-    context "regular user" do
-      let(:post) { Fabricate(:post) }
-
-      it "doesn't omit nofollow" do
-        cpp = CookedPostProcessor.new(post)
-        expect(cpp.cooking_options[:omit_nofollow]).to eq(nil)
-      end
-    end
-
-    context "admin user" do
-      let(:post) { Fabricate(:post, user: Fabricate(:admin)) }
-
-      it "omits nofollow" do
-        cpp = CookedPostProcessor.new(post)
-        expect(cpp.cooking_options[:omit_nofollow]).to eq(true)
       end
     end
   end
