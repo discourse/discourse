@@ -21,9 +21,8 @@ class CookedPostProcessor
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
 
-    analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
-    @has_oneboxes = analyzer.found_oneboxes?
+    @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
   end
 
