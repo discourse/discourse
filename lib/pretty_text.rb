@@ -464,9 +464,9 @@ module PrettyText
     (
       SELECT
         :group_type AS type,
-        name
+        lower(name) AS name
       FROM groups
-      WHERE name IN (:names) AND (#{Group.mentionable_sql_clause})
+      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause})
     )
     SQL
 
