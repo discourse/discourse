@@ -19,8 +19,11 @@
                   {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
 
                   {{#unless site.mobileView}}
-                    {{#if whisperOrUnlistTopicText}}
-                      <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
+                    {{#if model.whisper}}
+                      <span class='whisper'>{{d-icon 'eye-slash'}}</span>
+                    {{/if}}
+                    {{#if model.unlistTopic}}
+                      <span class='whisper'>({{i18n 'composer.unlist'}})</span>
                     {{/if}}
                     {{#if model.noBump}}
                       <span class="no-bump">{{d-icon "anchor"}}</span>

@@ -33,18 +33,14 @@
       height: 1.2em;
       padding: 0;
       flex: 0 0 auto;
-      &.used-color:before {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: fontawesome;
-        content: "\f00c";
-        height: 100%;
-        width: calc(1.25em - 2px);
-        color: rgba($secondary, 0.75);
+      color: white;
+      svg {
+        display: none;
+      }
+      &.used-color svg {
+        display: inline-flex;
+        opacity: 0.8;
+        max-width: 70%;
       }
     }
   }

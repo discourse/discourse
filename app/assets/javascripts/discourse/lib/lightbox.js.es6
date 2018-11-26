@@ -1,5 +1,6 @@
 import loadScript from "discourse/lib/load-script";
 import { escapeExpression } from "discourse/lib/utilities";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
 export default function($elem) {
   if (!$elem) {
@@ -57,6 +58,7 @@ export default function($elem) {
                 '<a class="image-source-link" href="' +
                   href +
                   '">' +
+                  renderIcon("string", "download") +
                   I18n.t("lightbox.download") +
                   "</a>"
               );

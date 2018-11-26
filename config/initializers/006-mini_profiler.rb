@@ -32,6 +32,7 @@ if defined?(Rack::MiniProfiler)
     /\/letter_avatar\//,
     /\/letter_avatar_proxy\//,
     /\/highlight-js\//,
+    /\/svg-sprite\//,
     /qunit/,
     /srv\/status/,
     /commits-widget/,

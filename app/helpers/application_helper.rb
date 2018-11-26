@@ -434,7 +434,12 @@ module ApplicationHelper
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
+      svg_sprite_path: SvgSprite.path,
     }
+
+    if Rails.env.development?
+      setup_data[:svg_icon_list] = SvgSprite.all_icons
+    end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]
       setup_data[:safe_mode] = normalized_safe_mode

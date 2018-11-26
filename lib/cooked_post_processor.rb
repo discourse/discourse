@@ -109,7 +109,7 @@ class CookedPostProcessor
 
     span = create_span_node("url", url)
     a.add_child(span)
-    span.add_previous_sibling(create_icon_node("image"))
+    span.add_previous_sibling(create_icon_node("far-image"))
     span.add_next_sibling(create_span_node("help", I18n.t("upload.placeholders.too_large", max_size_kb: SiteSetting.max_image_size_kb)))
 
     # Only if the image is already linked
@@ -137,8 +137,9 @@ class CookedPostProcessor
 
   def add_broken_image_placeholder!(img)
     img.name = "span"
-    img.set_attribute("class", "broken-image fa fa-chain-broken")
+    img.set_attribute("class", "broken-image")
     img.set_attribute("title", I18n.t("post.image_placeholder.broken"))
+    img << "<svg class=\"fa d-icon d-icon-unlink svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#unlink\"></use></svg>"
     img.remove_attribute("src")
     img.remove_attribute("width")
     img.remove_attribute("height")
@@ -407,7 +408,10 @@ class CookedPostProcessor
   end
 
   def create_icon_node(klass)
-    create_node("i", "fa fa-fw fa-#{klass}")
+    icon = create_node("svg", "fa d-icon d-icon-#{klass} svg-icon")
+    icon.set_attribute("aria-hidden", "true")
+    icon << "<use xlink:href=\"##{klass}\"></use>"
+
   end
 
   def create_link_node(klass, url, external = false)
