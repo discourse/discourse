@@ -18,13 +18,10 @@ class CookedPostProcessor
     # NOTE: we re-cook the post here in order to prevent timing issues with edits
     # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
-    @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
-    @cooking_options[:cook_method] = post.cook_method
 
     analyzer = post.post_analyzer
-    @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
+    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
     @has_oneboxes = analyzer.found_oneboxes?
     @size_cache = {}
   end
