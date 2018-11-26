@@ -58,7 +58,7 @@ module Discourse
     require_dependency 'lib/es6_module_transpiler/rails'
     require_dependency 'lib/js_locale_helper'
 
-    # tiny files needed by site settings
+    # tiny file needed by site settings
     require_dependency 'lib/highlight_js/highlight_js'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
