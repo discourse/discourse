@@ -18,6 +18,7 @@ class CookedPostProcessor
     # NOTE: we re-cook the post here in order to prevent timing issues with edits
     # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
+    @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
 
     analyzer = post.post_analyzer
