@@ -225,9 +225,12 @@ describe PrettyText do
         Fabricate(:user, username: username)
       end
 
-      group = Fabricate(:group,
-        mentionable_level: Group::ALIAS_LEVELS[:everyone]
-      )
+      ['Group', 'group2'].each do |name|
+        Fabricate(:group,
+          name: name,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone]
+        )
+      end
 
       [
         [
@@ -235,8 +238,8 @@ describe PrettyText do
           '<p>hi <a class="mention" href="/u/user">@uSer</a>! <a class="mention" href="/u/user2">@user2</a> hi</p>'
         ],
         [
-          "hi\n@user. @#{group.name.capitalize} @somemention",
-          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/#{group.name}">@#{group.name.capitalize}</a> <span class="mention">@somemention</span></p>|
+          "hi\n@user. @GROUP @somemention @group2",
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
         ]
       ].each do |input, expected|
         expect(PrettyText.cook(input)).to eq(expected)
