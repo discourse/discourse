@@ -1,5 +1,6 @@
 require "edit_rate_limiter"
 require 'post_locker'
+require 'onpdiff'
 
 class PostRevisor
 
@@ -114,6 +115,7 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
+  # - move_likes: moves likes from list of post_ids passed to given post
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -155,6 +157,7 @@ class PostRevisor
     old_raw = @post.raw
 
     Post.transaction do
+      revise_likes(opts[:move_likes], editor) if opts[:move_likes]
       revise_post
 
       yield if block_given?
@@ -599,6 +602,44 @@ class PostRevisor
 
   def successfully_saved_post_and_topic
     @post_successfully_saved && !@topic_changes.errored?
+  end
+
+  def revise_likes deleted_post_ids, acting_user
+    return if deleted_post_ids.blank?
+
+    already_liked_users = UserAction.where(target_post_id: @post.id, action_type: UserAction::LIKE).pluck(:user_id)
+    new_userids_to_like = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).pluck(:user_id)
+
+    #updated_count = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).update_all(target_post_id: @post.id)
+
+    # new_was_liked_actions = Array.new(updated_count) do |i|
+    #   {
+    #     action_type: UserAction::WAS_LIKED,
+    #     target_post_id: @post.id,
+    #     user_id: @post.user_id,
+    #     target_topic_id: @post.topic_id,
+    #     acting_user_id: acting_user.id
+    #   }
+    # end
+
+    args = {}
+    args[:message] = "Merging posts"
+    args[:take_action] = true
+    args[:flag_topic] = true
+
+    deleted_posts = Post.where(id: deleted_post_ids)
+
+    new_users_to_like = User.where(id: new_userids_to_like)
+
+    new_users_to_like.each do |user|
+      PostAction.act(user, @post, PostActionType.types[:like], args)
+
+      deleted_posts.each do |post|
+        PostAction.remove_act(user, post, PostActionType.types[:like])
+      end
+    end
+
+    #UserAction.create(new_was_liked_actions)
   end
 
 end

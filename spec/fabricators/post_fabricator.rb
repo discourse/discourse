@@ -144,3 +144,12 @@ Fabricator(:post_via_email, from: :post) do
     incoming_email.user = post.user
   end
 end
+
+Fabricator(:post_with_likes, from: :post) do
+  user
+
+  after_create do |post|
+    PostAction.act(user, post, PostActionType.types[:like])
+  end
+
+end
