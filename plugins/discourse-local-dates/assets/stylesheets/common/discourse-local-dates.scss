@@ -18,6 +18,29 @@
   }
 }
 
+.discourse-local-date + #discourse-tooltip {
+  .tooltip-content {
+    max-width: 360px;
+    padding: 0.5em;
+
+    .previews {
+      .preview {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .timezone {
+          font-weight: 700;
+        }
+
+        &.current {
+          background: $tertiary-low;
+        }
+      }
+    }
+  }
+}
+
 .discourse-local-dates-create-modal-footer {
   display: flex;
   align-items: center;
