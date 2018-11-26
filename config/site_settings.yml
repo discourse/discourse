@@ -746,6 +746,14 @@ posting:
     default: 0
     locale_default:
       fr: 1
+  enable_inline_emoji_translation:
+    client: true
+    default: false
+    locale_default:
+      zh_CN: true
+      zh_TW: true
+      ja: true
+      ko: true
   approve_post_count:
     default: 0
   approve_unless_trust_level:
