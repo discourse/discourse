@@ -3,7 +3,7 @@ require "cooked_post_processor"
 
 describe CookedPostProcessor do
 
-  context ".post_process" do
+  context "#post_process" do
     let(:upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.jpg'
@@ -21,6 +21,7 @@ describe CookedPostProcessor do
 
     it "post process in sequence" do
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
+      cpp.expects(:post_process_inline_oneboxes).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
@@ -29,6 +30,137 @@ describe CookedPostProcessor do
       expect(PostUpload.exists?(post: post, upload: upload)).to eq(true)
     end
 
+    describe 'when post contains inline oneboxes' do
+      let(:loading_css_class) do
+        described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
+      end
+
+      before do
+        SiteSetting.enable_inline_onebox_on_all_domains = true
+      end
+
+      describe 'internal links' do
+        let(:topic) { Fabricate(:topic) }
+        let(:url) { topic.url }
+        let(:post) { Fabricate(:post, raw: "Hello #{url}") }
+
+        it "includes the topic title" do
+          cpp.post_process
+
+          expect(cpp.html).to have_tag('a',
+            with: {
+              href: UrlHelper.cook_url(url)
+            },
+            without: {
+              class: loading_css_class
+            },
+            text: topic.title,
+            count: 1
+          )
+
+          topic.update!(title: "Updated to something else")
+          cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+          cpp.post_process
+
+          expect(cpp.html).to have_tag('a',
+            with: {
+              href: UrlHelper.cook_url(url)
+            },
+            without: {
+              class: loading_css_class
+            },
+            text: topic.title,
+            count: 1
+          )
+        end
+      end
+
+      describe 'external links' do
+        let(:url_with_path) do
+          'https://meta.discourse.org/t/mini-inline-onebox-support-rfc/66400'
+        end
+
+        let(:url_with_query_param) do
+          'https://meta.discourse.org?a'
+        end
+
+        let(:url_no_path) do
+          'https://meta.discourse.org/'
+        end
+
+        let(:urls) do
+          [
+            url_with_path,
+            url_with_query_param,
+            url_no_path
+          ]
+        end
+
+        let(:title) { 'some title' }
+
+        let(:post) do
+          Fabricate(:post, raw: <<~RAW)
+          This is a #{url_with_path} topic
+          This should not be inline #{url_no_path} oneboxed
+
+          - #{url_with_path}
+
+
+             - #{url_with_query_param}
+          RAW
+        end
+
+        before do
+          urls.each do |url|
+            stub_request(:get, url).to_return(
+              status: 200,
+              body: "<html><head><title>#{title}</title></head></html>"
+            )
+          end
+        end
+
+        after do
+          urls.each { |url| InlineOneboxer.purge(url) }
+        end
+
+        it 'should convert the right links to inline oneboxes' do
+          cpp.post_process
+          html = cpp.html
+
+          expect(html).to_not have_tag('a',
+            with: {
+              href: url_no_path
+            },
+            without: {
+              class: loading_css_class
+            },
+            text: title
+          )
+
+          expect(html).to have_tag('a',
+            with: {
+              href: url_with_path
+            },
+            without: {
+              class: loading_css_class
+            },
+            text: title,
+            count: 2
+          )
+
+          expect(html).to have_tag('a',
+            with: {
+              href: url_with_query_param
+            },
+            without: {
+              class: loading_css_class
+            },
+            text: title,
+            count: 1
+          )
+        end
+      end
+    end
   end
 
   context "cooking options" do
@@ -51,7 +183,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context ".post_process_images" do
+  context "#post_process_images" do
 
     before do
       SiteSetting.responsive_post_image_sizes = ""
@@ -389,7 +521,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".extract_images" do
+  context "#extract_images" do
 
     let(:post) { build(:post_with_plenty_of_images) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -400,7 +532,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".get_size_from_attributes" do
+  context "#get_size_from_attributes" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -437,7 +569,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".get_size_from_image_sizes" do
+  context "#get_size_from_image_sizes" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -449,7 +581,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".get_size" do
+  context "#get_size" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -500,7 +632,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".is_valid_image_url?" do
+  context "#is_valid_image_url?" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -523,7 +655,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".get_filename" do
+  context "#get_filename" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -544,8 +676,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".post_process_oneboxes" do
-
+  context "#post_process_oneboxes" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -553,6 +684,7 @@ describe CookedPostProcessor do
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns("<div>GANGNAM STYLE</div>")
+
       cpp.post_process_oneboxes
     end
 
@@ -598,7 +730,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
+  context "#post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -616,7 +748,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context ".post_process_oneboxes with square image" do
+  context "#post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
       SiteSetting.crawl_images = true
@@ -652,7 +784,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".optimize_urls" do
+  context "#optimize_urls" do
 
     let(:post) { build(:post_with_uploads_and_links) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -729,7 +861,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".pull_hotlinked_images" do
+  context "#pull_hotlinked_images" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -784,7 +916,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".disable_if_low_on_disk_space" do
+  context "#disable_if_low_on_disk_space" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -812,7 +944,7 @@ describe CookedPostProcessor do
 
   end
 
-  context ".download_remote_images_max_days_old" do
+  context "#download_remote_images_max_days_old" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -840,7 +972,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context ".is_a_hyperlink?" do
+  context "#is_a_hyperlink?" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
