@@ -608,19 +608,7 @@ class PostRevisor
     return if deleted_post_ids.blank?
 
     already_liked_users = UserAction.where(target_post_id: @post.id, action_type: UserAction::LIKE).pluck(:user_id)
-    new_userids_to_like = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).pluck(:user_id)
-
-    #updated_count = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).update_all(target_post_id: @post.id)
-
-    # new_was_liked_actions = Array.new(updated_count) do |i|
-    #   {
-    #     action_type: UserAction::WAS_LIKED,
-    #     target_post_id: @post.id,
-    #     user_id: @post.user_id,
-    #     target_topic_id: @post.topic_id,
-    #     acting_user_id: acting_user.id
-    #   }
-    # end
+    new_user_ids_to_like = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).pluck(:user_id)
 
     args = {}
     args[:message] = "Merging posts"
@@ -628,8 +616,7 @@ class PostRevisor
     args[:flag_topic] = true
 
     deleted_posts = Post.where(id: deleted_post_ids)
-
-    new_users_to_like = User.where(id: new_userids_to_like)
+    new_users_to_like = User.where(id: new_user_ids_to_like)
 
     new_users_to_like.each do |user|
       PostAction.act(user, @post, PostActionType.types[:like], args)
@@ -638,8 +625,6 @@ class PostRevisor
         PostAction.remove_act(user, post, PostActionType.types[:like])
       end
     end
-
-    #UserAction.create(new_was_liked_actions)
   end
 
 end

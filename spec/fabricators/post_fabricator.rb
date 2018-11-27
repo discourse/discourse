@@ -150,6 +150,6 @@ Fabricator(:post_with_likes, from: :post) do
 
   after_create do |post|
     PostAction.act(user, post, PostActionType.types[:like])
+    post.reload # to get updated like_count
   end
-
 end

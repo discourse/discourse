@@ -605,17 +605,10 @@ describe PostRevisor do
       it "merges posts having likes" do
         revisor = PostRevisor.new(post_with_likes)
 
-        post_with_likes.reload
-        expect(post_with_likes.like_count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::LIKE).count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(1)
-
         revisor.revise_likes([post_to_be_deleted.id], admin_user)
 
         post_with_likes.reload
         expect(post_with_likes.like_count).to eq(2)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::LIKE).count).to eq(2)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(2)
 
         post_to_be_deleted.reload
         expect(post_to_be_deleted.like_count).to eq(0)
@@ -624,17 +617,10 @@ describe PostRevisor do
       it "merges 1 post with like into 1 without" do
         revisor = PostRevisor.new(post_without_likes)
 
-        post_without_likes.reload
-        expect(post_without_likes.like_count).to eq(0)
-        expect(UserAction.where(target_post_id: post_without_likes.id, action_type: UserAction::LIKE).count).to eq(0)
-        expect(UserAction.where(target_post_id: post_without_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(0)
-
         revisor.revise_likes([post_with_likes.id], admin_user)
 
         post_without_likes.reload
         expect(post_without_likes.like_count).to eq(1)
-        expect(UserAction.where(target_post_id: post_without_likes.id, action_type: UserAction::LIKE).count).to eq(1)
-        expect(UserAction.where(target_post_id: post_without_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(1)
 
         post_with_likes.reload
         expect(post_with_likes.like_count).to eq(0)
@@ -643,20 +629,26 @@ describe PostRevisor do
       it "merges 1 post without like into 1 with like" do
         revisor = PostRevisor.new(post_with_likes)
 
-        post_with_likes.reload
-        expect(post_with_likes.like_count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::LIKE).count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(1)
-
         revisor.revise_likes([post_without_likes.id], admin_user)
 
         post_with_likes.reload
         expect(post_with_likes.like_count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::LIKE).count).to eq(1)
-        expect(UserAction.where(target_post_id: post_with_likes.id, action_type: UserAction::WAS_LIKED).count).to eq(1)
 
         post_without_likes.reload
         expect(post_without_likes.like_count).to eq(0)
+      end
+
+      it 'merges post having like by same user' do
+        revisor = PostRevisor.new(post_with_likes)
+
+        PostAction.act(post_with_likes.user, post_without_likes, PostActionType.types[:like])
+
+        revisor.revise_likes([post_without_likes.id], admin_user)
+
+        post_with_likes.reload
+        post_without_likes.reload
+        expect(post_with_likes.like_count).to eq(1)
+        expect(post_without_likes.like_count).to eq(1)
       end
     end
 
