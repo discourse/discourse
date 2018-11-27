@@ -215,6 +215,7 @@
       }
 
       if (
+        options.timezone &&
         displayedTimezone === watchingUserTimezone &&
         options.timezone !== displayedTimezone &&
         !compareZones(displayedTimezone, options.timezone)
@@ -222,7 +223,7 @@
         timezones.unshift(options.timezone);
       }
 
-      timezones.forEach(timezone => {
+      timezones.filter(z => z).forEach(timezone => {
         if (compareZones(timezone, displayedTimezone)) {
           return;
         }
