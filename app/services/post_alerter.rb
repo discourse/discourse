@@ -454,20 +454,16 @@ class PostAlerter
   # TODO: Move to post-analyzer?
   def extract_mentions(post)
     mentions = post.raw_mentions
-
-    return unless mentions && mentions.length > 0
+    return if mentions.blank?
 
     groups = Group.where('LOWER(name) IN (?)', mentions)
+    mentions -= groups.map(&:name).map(&:downcase)
+    groups = nil if groups.empty?
 
-    if groups.empty?
-      groups = nil
-    else
-      mentions -= groups.map(&:name).map(&:downcase)
-      return [groups, nil] unless mentions && mentions.length > 0
+    if mentions.present?
+      users = User.where(username_lower: mentions).where.not(id: post.user_id)
+      users = nil if users.empty?
     end
-
-    users = User.where(username_lower: mentions).where.not(id: post.user_id)
-    users = nil if users.empty?
 
     [groups, users]
   end
