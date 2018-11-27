@@ -46,6 +46,7 @@ function freezeDateAndZone(date, zone, cb) {
     cb();
 
     moment.tz.guess.returns(DEFAULT_ZONE);
+    moment.tz.setDefault(DEFAULT_ZONE);
     sandbox.useFakeTimers(moment(DEFAULT_DATE).valueOf());
   }
 }
