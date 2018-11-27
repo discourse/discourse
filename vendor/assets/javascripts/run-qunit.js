@@ -12,11 +12,11 @@ if (args.length < 1 || args.length > 3) {
   process.exit(1);
 }
 
-const chromeLauncher = require('chrome-launcher');
-const CDP = require('chrome-remote-interface');
+const chromeLauncher = require("chrome-launcher");
+const CDP = require("chrome-remote-interface");
 
 const QUNIT_RESULT = args[2];
-const fs = require('fs');
+const fs = require("fs");
 
 if (QUNIT_RESULT) {
   (async () => {
@@ -27,14 +27,9 @@ if (QUNIT_RESULT) {
 }
 
 async function runAllTests() {
-
   function launchChrome() {
     const options = {
-      chromeFlags: [
-        '--disable-gpu',
-       '--headless',
-       '--no-sandbox'
-      ]
+      chromeFlags: ["--disable-gpu", "--headless", "--no-sandbox"]
     };
 
     if (process.env.REMOTE_DEBUG) {
@@ -45,19 +40,23 @@ async function runAllTests() {
   }
 
   let chrome = await launchChrome();
-  let protocol = await CDP({ port: chrome.port});
+  let protocol = await CDP({ port: chrome.port });
 
-  const {Page, Runtime} = protocol;
+  const { Page, Runtime } = protocol;
 
   await Promise.all([Page.enable(), Runtime.enable()]);
 
-  Runtime.consoleAPICalled((response) => {
-    const message = response['args'][0].value;
+  Runtime.consoleAPICalled(response => {
+    const message = response["args"][0].value;
 
     // If it's a simple test result, write without newline
-    if(message === "." || message === "F"){
+    if (message === "." || message === "F") {
       process.stdout.write(message);
-    } else if (message && message.startsWith("AUTOSPEC:")) {
+    } else if (
+      message &&
+      message.startsWith &&
+      message.startsWith("AUTOSPEC:")
+    ) {
       fs.appendFileSync(QUNIT_RESULT, `${message.slice(10)}\n`);
     } else {
       console.log(message);
@@ -65,11 +64,10 @@ async function runAllTests() {
   });
 
   console.log("navigate to " + args[0]);
-  Page.navigate({url: args[0]});
+  Page.navigate({ url: args[0] });
 
   Page.loadEventFired(async () => {
-
-    await Runtime.evaluate({ expression: `(${qunit_script})()`});
+    await Runtime.evaluate({ expression: `(${qunit_script})()` });
 
     const timeout = parseInt(args[1] || 300000, 10);
     var start = Date.now();
@@ -84,9 +82,11 @@ async function runAllTests() {
         process.exit(124);
       }
 
-      let numFails = await Runtime.evaluate({expression: `(${check_script})()`});
+      let numFails = await Runtime.evaluate({
+        expression: `(${check_script})()`
+      });
 
-      if (numFails && numFails.result && numFails.result.type !== 'undefined') {
+      if (numFails && numFails.result && numFails.result.type !== "undefined") {
         clearInterval(interval);
         protocol.close();
         chrome.kill();
@@ -101,12 +101,11 @@ async function runAllTests() {
 
     interval = setInterval(runTests, 250);
   });
-
 }
 
 try {
   runAllTests();
-} catch(e) {
+} catch (e) {
   console.log("Failed to run tests: " + e);
   process.exit(1);
 }
@@ -133,7 +132,6 @@ function logQUnit() {
   let durations = {};
 
   QUnit.testDone(function(context) {
-
     durations[context.module + "::" + context.name] = context.runtime;
 
     if (context.failed) {
@@ -150,7 +148,9 @@ function logQUnit() {
   });
 
   QUnit.log(function(context) {
-    if (context.result) { return; }
+    if (context.result) {
+      return;
+    }
 
     var msg = "\n    Assertion Failed:";
     if (context.message) {
@@ -158,7 +158,8 @@ function logQUnit() {
     }
 
     if (context.expected) {
-      msg += "\n      Expected: " + context.expected + ", Actual: " + context.actual;
+      msg +=
+        "\n      Expected: " + context.expected + ", Actual: " + context.actual;
     }
 
     assertionErrors.push(msg);
@@ -168,15 +169,18 @@ function logQUnit() {
     console.log("\n");
 
     if (moduleErrors.length > 0) {
-      for (var idx=0; idx<moduleErrors.length; idx++) {
-        console.error(moduleErrors[idx]+"\n");
+      for (var idx = 0; idx < moduleErrors.length; idx++) {
+        console.error(moduleErrors[idx] + "\n");
       }
     }
 
     console.log("Slowest tests");
     console.log("----------------------------------------------");
-    let ary = Object.keys(durations).map((key) => ({ 'key': key, 'value': durations[key] }))
-    ary.sort((p1, p2) => (p2.value - p1.value));
+    let ary = Object.keys(durations).map(key => ({
+      key: key,
+      value: durations[key]
+    }));
+    ary.sort((p1, p2) => p2.value - p1.value);
     ary.slice(0, 30).forEach(pair => {
       console.log(pair.key + ": " + pair.value + "ms");
     });
@@ -189,19 +193,20 @@ function logQUnit() {
     ];
     console.log(stats.join(", "));
 
-
     window.qunitDone = context;
   });
 }
 let qunit_script = logQUnit.toString();
 
 if (QUNIT_RESULT) {
-  qunit_script = qunit_script.replace("/* QUNIT_RESULT */", "console.log(`AUTOSPEC: ${context.module}:::${context.testId}:::${context.name}`);");
-
+  qunit_script = qunit_script.replace(
+    "/* QUNIT_RESULT */",
+    "console.log(`AUTOSPEC: ${context.module}:::${context.testId}:::${context.name}`);"
+  );
 }
 
 function check() {
-  if(window.qunitDone){
+  if (window.qunitDone) {
     return window.qunitDone.failed;
   }
 }
