@@ -97,6 +97,17 @@ test("default format - no time specified", assert => {
       "it appends creator timezone if watching user timezone is different"
     );
   });
+
+  freezeDateAndZone(advance(1), "Europe/Vienna", () => {
+    html = generateHTML({ date: advance(3) });
+    transformed = $(html).applyLocalDates();
+
+    assert.equal(
+      transformed.text().trim(),
+      "June 23, 2018",
+      "it doesn’t append timezone if different but with the same utc offset"
+    );
+  });
 });
 
 test("today", assert => {

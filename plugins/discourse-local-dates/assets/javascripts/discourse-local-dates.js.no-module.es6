@@ -121,7 +121,9 @@
     };
 
     const _applyFormatting = (dateTime, displayedTimezone, options) => {
-      const sameTimezone = displayedTimezone === moment.tz.guess();
+      const sameTimezone =
+        moment.tz(displayedTimezone).utcOffset() ===
+        moment.tz(moment.tz.guess()).utcOffset();
       const inCalendarRange = dateTime.isBetween(
         moment().subtract(2, "days"),
         moment().add(2, "days")
