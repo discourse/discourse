@@ -39,7 +39,12 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
-      @title = "#{@topic.title} - #{SiteSetting.title}"
+      title_prefix = if I18n.exists?("js.#{@page}")
+        I18n.t("js.#{@page}")
+      else
+        @topic.title
+      end
+      @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]

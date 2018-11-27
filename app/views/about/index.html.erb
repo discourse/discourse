@@ -105,6 +105,13 @@
 
 <% end %>
 
-<% content_for :head do %>
-  <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: @title, description: SiteSetting.site_description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
 <% end %>
