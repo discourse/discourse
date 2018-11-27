@@ -532,6 +532,20 @@ export default function() {
       });
     });
 
+    this.get("/inline-onebox", request => {
+      if (
+        request.queryParams.urls.includes(
+          "http://www.example.com/has-title.html"
+        )
+      ) {
+        return [
+          200,
+          { "Content-Type": "application/html" },
+          '{"inline-oneboxes":[{"url":"http://www.example.com/has-title.html","title":"This is a great title"}]}'
+        ];
+      }
+    });
+
     this.get("/onebox", request => {
       if (
         request.queryParams.url === "http://www.example.com/has-title.html" ||
