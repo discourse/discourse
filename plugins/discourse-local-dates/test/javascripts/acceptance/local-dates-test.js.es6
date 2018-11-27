@@ -16,7 +16,7 @@ acceptance("Local Dates", {
 
 const DEFAULT_DATE = "2018-06-20";
 const DEFAULT_ZONE = "Europe/Paris";
-const DEFAULT_ZONE_FORMATED = DEFAULT_ZONE.split("/").join(": ");
+const DEFAULT_ZONE_FORMATED = DEFAULT_ZONE.split("/")[1];
 
 function advance(count, unit = "days") {
   return moment(DEFAULT_DATE)
@@ -237,7 +237,7 @@ test("displayedTimezone", assert => {
 
   assert.equal(
     transformed.text().trim(),
-    "June 23, 2018 9:00 AM (America: Chicago)",
+    "June 23, 2018 9:00 AM (Chicago)",
     "it displays timezone when different from watching user"
   );
 
@@ -279,7 +279,7 @@ test("displayedTimezone", assert => {
 
   assert.equal(
     transformed.text().trim(),
-    "June 20, 2018 (America: Chicago)",
+    "June 20, 2018 (Chicago)",
     "it uses timezone when displayedTimezone is not set"
   );
 
@@ -300,7 +300,7 @@ test("displayedTimezone", assert => {
 
   assert.equal(
     transformed.text().trim(),
-    "June 20, 2018 (Pacific: Auckland)",
+    "June 20, 2018 (Auckland)",
     "it uses displayedTimezone over timezone"
   );
 });

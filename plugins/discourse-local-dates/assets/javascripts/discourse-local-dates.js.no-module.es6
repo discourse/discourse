@@ -84,6 +84,11 @@
         .replace("Etc/", "")
         .split("/");
 
+    const _zoneWithoutPrefix = timezone => {
+      const parts = _formatTimezone(timezone);
+      return parts[1] || parts[0];
+    };
+
     const _applyZoneToDateTime = (dateTime, timezone) => {
       return moment.tz(dateTime, timezone).utc();
     };
@@ -132,9 +137,7 @@
         } else {
           dateTime = dateTime.format(options.format);
           dateTime = dateTime.replace("TZ", "");
-          dateTime = `${dateTime} (${_formatTimezone(displayedTimezone).join(
-            ": "
-          )})`;
+          dateTime = `${dateTime} (${_zoneWithoutPrefix(displayedTimezone)})`;
         }
       } else {
         if (options.time) {
@@ -142,9 +145,7 @@
 
           if (options.displayedTimezone && !sameTimezone) {
             dateTime = dateTime.replace("TZ", "");
-            dateTime = `${dateTime} (${_formatTimezone(displayedTimezone).join(
-              ": "
-            )})`;
+            dateTime = `${dateTime} (${_zoneWithoutPrefix(displayedTimezone)})`;
           } else {
             dateTime = dateTime.replace(
               "TZ",
@@ -156,13 +157,11 @@
 
           if (!sameTimezone) {
             dateTime = dateTime.replace("TZ", "");
-            dateTime = `${dateTime} (${_formatTimezone(displayedTimezone).join(
-              ": "
-            )})`;
+            dateTime = `${dateTime} (${_zoneWithoutPrefix(displayedTimezone)})`;
           } else {
             dateTime = dateTime.replace(
               "TZ",
-              _formatTimezone(displayedTimezone).join(": ")
+              _zoneWithoutPrefix(displayedTimezone)
             );
           }
         }
@@ -223,14 +222,12 @@
     const _generateTextPreview = previews => {
       return previews
         .map(preview => {
-          const timezoneParts = _formatTimezone(preview.timezone);
+          const formatedZone = _zoneWithoutPrefix(preview.timezone);
 
           if (preview.dateTime.match(/TZ/)) {
-            return preview.dateTime.replace(/TZ/, timezoneParts.join(": "));
+            return preview.dateTime.replace(/TZ/, formatedZone);
           } else {
-            let output = timezoneParts[0];
-            if (timezoneParts[1]) output += ` (${timezoneParts[1]})`;
-            return (output += ` ${preview.dateTime}`);
+            return `${formatedZone} ${preview.dateTime}`;
           }
         })
         .join(", ");
@@ -251,9 +248,7 @@
 
         if (preview.current) $template.addClass("current");
 
-        $template
-          .find(".timezone")
-          .text(_formatTimezone(preview.timezone).join(": "));
+        $template.find(".timezone").text(_zoneWithoutPrefix(preview.timezone));
         $template.find(".date-time").text(preview.dateTime);
         $htmlTooltip.append($template);
       });
