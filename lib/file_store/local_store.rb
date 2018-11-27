@@ -32,12 +32,8 @@ module FileStore
       "#{Discourse.asset_host}#{relative_base_url}"
     end
 
-    def upload_path
-      "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
-    end
-
     def relative_base_url
-      "#{Discourse.base_uri}#{upload_path}"
+      "#{Discourse.base_uri}/#{upload_path}"
     end
 
     def external?
@@ -68,7 +64,7 @@ module FileStore
     end
 
     def get_path_for(type, upload_id, sha, extension)
-      "#{upload_path}/#{super(type, upload_id, sha, extension)}"
+      "/#{upload_path}/#{super(type, upload_id, sha, extension)}"
     end
 
     def copy_file(file, path)
