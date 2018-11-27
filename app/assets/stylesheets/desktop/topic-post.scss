@@ -641,7 +641,6 @@ $topic-avatar-width: 45px;
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
   position: relative;
-  z-index: z("base");
   border-top: 1px solid $primary-low;
   padding: 12px 0 0 0;
   .topic-meta-data,
