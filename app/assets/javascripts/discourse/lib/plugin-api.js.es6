@@ -39,7 +39,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.25";
+const PLUGIN_API_VERSION = "0.8.26";
 
 class PluginApi {
   constructor(version, container) {
@@ -796,7 +796,7 @@ function cmpVersions(a, b) {
   return segmentsA.length - segmentsB.length;
 }
 
-function getPluginApi(version) {
+export function getPluginApi(version) {
   version = version.toString();
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
