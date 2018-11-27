@@ -30,7 +30,7 @@ class PostMerger
     revisor = PostRevisor.new(post, post.topic)
 
     opts = {
-      move_likes: posts.map(&:id)
+      move_likes_from_post_ids: posts.map(&:id)
     }
     revisor.revise!(@user, changes, opts) do
       posts.each { |p| PostDestroyer.new(@user, p).destroy }

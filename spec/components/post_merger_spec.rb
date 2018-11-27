@@ -7,6 +7,7 @@ describe PostMerger do
   let(:user) { Fabricate(:user) }
   let(:post) { create_post }
   let(:topic) { post.topic }
+  let(:user2) { Fabricate(:user) }
 
   describe ".merge" do
     it "should merge posts into the latest post correctly" do
@@ -63,6 +64,23 @@ describe PostMerger do
       expect { PostMerger.new(user, [another_post, post]).merge }.to raise_error(
         PostMerger::CannotMergeError, I18n.t("merge_posts.errors.different_users")
       )
+    end
+
+    it "should merge likes correctly" do
+      UserActionCreator.enable
+
+      reply1 = create_post(topic: topic, raw: 'The first reply', post_number: 2, user: user)
+      reply2 = create_post(topic: topic, raw: "The second reply\nSecond line", post_number: 3, user: user)
+
+      PostAction.act(admin, reply1, PostActionType.types[:like])
+      PostAction.act(user2, reply2, PostActionType.types[:like])
+
+      PostMerger.new(admin, [reply1, reply2]).merge
+
+      reply1.reload
+      reply2.reload
+      expect(reply1.like_count).to eq(0)
+      expect(reply2.like_count).to eq(2)
     end
   end
 end

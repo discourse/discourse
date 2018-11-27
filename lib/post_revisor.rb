@@ -115,7 +115,7 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
-  # - move_likes: moves likes from list of post_ids passed to given post
+  # - move_likes_from_post_ids: moves likes from list of deleted_post_ids to given post
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -157,7 +157,7 @@ class PostRevisor
     old_raw = @post.raw
 
     Post.transaction do
-      revise_likes(opts[:move_likes], editor) if opts[:move_likes]
+      revise_likes(opts[:move_likes_from_post_ids], editor) if opts.has_key?(:move_likes_from_post_ids)
       revise_post
 
       yield if block_given?
