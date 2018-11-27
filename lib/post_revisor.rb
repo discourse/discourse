@@ -604,7 +604,7 @@ class PostRevisor
     @post_successfully_saved && !@topic_changes.errored?
   end
 
-  def revise_likes deleted_post_ids, acting_user
+  def revise_likes(deleted_post_ids, acting_user)
     return if deleted_post_ids.blank?
 
     already_liked_users = UserAction.where(target_post_id: @post.id, action_type: UserAction::LIKE).pluck(:user_id)

@@ -599,7 +599,7 @@ describe PostRevisor do
       let(:admin_user) { Fabricate(:admin) }
 
       before do
-         UserActionCreator.enable
+        UserActionCreator.enable
       end
 
       it "merges posts having likes" do
