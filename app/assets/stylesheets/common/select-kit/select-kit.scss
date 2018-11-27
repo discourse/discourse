@@ -70,7 +70,7 @@
 
     .selected-name {
       text-align: left;
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       padding: 1px 0;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -131,7 +131,7 @@
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
-      flex: 1 0 auto;
+      flex: 1 1 0%;
     }
 
     .d-icon {

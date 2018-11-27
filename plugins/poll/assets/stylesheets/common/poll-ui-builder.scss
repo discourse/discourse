@@ -8,12 +8,15 @@
 
   .tip {
     display: block;
-    min-height: 20px;
   }
 
   .input-group-label {
     display: inline-block;
-    width: 45px;
+    min-width: 55px;
+  }
+
+  .poll-select {
+    line-height: 3em;
   }
 
   .poll-number {

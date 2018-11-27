@@ -24,14 +24,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def set_primary_group
-    if group.primary_group
-      DB.exec("
-        UPDATE users
-        SET primary_group_id = :id
-        WHERE id = :user_id",
-        id: group.id, user_id: user_id
-      )
-    end
+    user.update!(primary_group: group) if group.primary_group
   end
 
   def remove_primary_group

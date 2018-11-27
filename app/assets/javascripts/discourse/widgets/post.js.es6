@@ -3,6 +3,7 @@ import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { transformBasicPost } from "discourse/lib/transform-post";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { dateNode } from "discourse/helpers/node";
@@ -12,6 +13,12 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
+
+function transformWithCallbacks(post) {
+  let transformed = transformBasicPost(post);
+  postTransformCallbacks(transformed);
+  return transformed;
+}
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -402,7 +409,7 @@ createWidget("post-contents", {
       .then(posts => {
         this.state.repliesBelow = posts.map(p => {
           p.shareUrl = `${topicUrl}/${p.post_number}`;
-          return transformBasicPost(p);
+          return transformWithCallbacks(p);
         });
       });
   },
@@ -457,7 +464,11 @@ createWidget("post-article", {
   },
 
   buildAttributes(attrs) {
-    return { "data-post-id": attrs.id, "data-user-id": attrs.user_id };
+    return {
+      "data-post-id": attrs.id,
+      "data-topic-id": attrs.topicId,
+      "data-user-id": attrs.user_id
+    };
   },
 
   html(attrs, state) {
@@ -528,7 +539,7 @@ createWidget("post-article", {
         .then(posts => {
           this.state.repliesAbove = posts.map(p => {
             p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformBasicPost(p);
+            return transformWithCallbacks(p);
           });
         });
     }

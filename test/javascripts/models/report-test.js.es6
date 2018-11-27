@@ -5,7 +5,7 @@ QUnit.module("Report");
 function reportWithData(data) {
   return Report.create({
     type: "topics",
-    data: _.map(data, (val, index) => {
+    data: data.map((val, index) => {
       return {
         x: moment()
           .subtract(index, "days")

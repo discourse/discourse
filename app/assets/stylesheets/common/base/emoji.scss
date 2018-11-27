@@ -143,18 +143,18 @@ img.emoji {
   background: #7c533e;
 }
 
-.emoji-picker .diversity-picker .diversity-scale.selected i {
+.emoji-picker .diversity-picker .diversity-scale.selected .d-icon {
   display: block;
 }
 
-.emoji-picker .diversity-picker i {
+.emoji-picker .diversity-picker .d-icon {
   display: none;
 }
 
 .emoji-picker .diversity-picker .d-icon {
   color: #fff;
   font-size: $font-0;
-  text-shadow: 0.5px 1.5px 0 rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
 }
 
 .emoji-picker button.emoji {
@@ -180,10 +180,6 @@ img.emoji {
   vertical-align: top;
   border-radius: 2px;
   background-color: lighten($tertiary, 40%);
-}
-
-.wmd-emoji-button:before {
-  content: "\f118";
 }
 
 .emoji-picker-modal.fadeIn {

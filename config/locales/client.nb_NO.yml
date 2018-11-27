@@ -1026,7 +1026,7 @@ nb_NO:
       complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med instruksjoner for hvordan du nullstiller passordet."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
-      help: "Fikk du ikke e-posten? Sjekk søppelposten din først.<p>Er du ikke sikker på hvilken e-postadresse du brukte. Skriv inn adressen her og vi vil fortelle deg om den finnes her.</p><p>Hvis du ikke lenger har tilgang til e-postadressen på kontoen din, kontakt <a href='/about'>vår hjelpfulle stab.</a></p>"
+      help: "Fikk du ikke e-posten? Sjekk søppelposten din først.<p>Er du ikke sikker på hvilken e-postadresse du brukte. Skriv inn adressen her og vi vil fortelle deg om den finnes her.</p><p>Hvis du ikke lenger har tilgang til e-postadressen på kontoen din, kontakt <a href='%{basePath}/about'>vår hjelpfulle stab.</a></p>"
       button_ok: "OK"
       button_help: "Hjelp"
     email_login:
@@ -1535,7 +1535,7 @@ nb_NO:
       toggle_information: "vis/skjul detaljer for emnet"
       read_more_in_category: "Vil du lese mer? Les andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='/unread'>1 ulest</a> } other { finnes <a href='/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulest</a> } other { finnes <a href='{basePath}/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='{basePath}/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: "Kanskje du kan lage et nytt emne?"
@@ -1625,7 +1625,7 @@ nb_NO:
           "2_8": 'Du vil se antall nye svar fordi du følger denne kategorien.'
           "2_4": 'Du vil se antall nye svar fordi du skrev et svar i dette emnet.'
           "2_2": 'Du vil se antall nye svar fordi du overvåker dette emnet.'
-          "2": 'Du vil se antall nye svar fordi du <a href="/u/{{username}}/preferences">leste dette emnet</a>.'
+          "2": 'Du vil se antall nye svar fordi du <a href="{{basePath}}/u/{{username}}/preferences">leste dette emnet</a>.'
           "1_2": 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
           "1": 'Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt.'
           "0_7": 'Du ignorerer alle varsler i denne kategorien.'
@@ -2559,8 +2559,8 @@ nb_NO:
           total: "Totalt siden starten"
           no_data: "Ingen data å vise."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Logg for søk</a>'
-            disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
+            disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
       commits:
         latest_changes: "Siste endringer: Oppdater ofte!"
         by: "av"

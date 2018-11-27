@@ -201,7 +201,8 @@ module DiscourseNarrativeBot
         reply_to(@post, raw)
       when 1
         reply_to(@post, I18n.t(self.class.i18n_key('do_not_understand.second_response'),
-          reset_trigger: self.class.reset_trigger
+                               base_path: Discourse.base_path,
+                               reset_trigger: self.class.reset_trigger
         ))
       else
         # Stay out of the user's way

@@ -250,7 +250,12 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    if params[:last].to_s == "1"
+      PostTiming.destroy_last_for(current_user, params[:topic_id])
+    else
+      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    end
+
     render body: nil
   end
 
@@ -495,7 +500,10 @@ class TopicsController < ApplicationController
   def remove_allowed_user
     params.require(:username)
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless topic
     user = User.find_by(username: params[:username])
+    raise Discourse::NotFound unless user
+
     guardian.ensure_can_remove_allowed_users!(topic, user)
 
     if topic.remove_allowed_user(current_user, user)
@@ -801,7 +809,7 @@ class TopicsController < ApplicationController
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,
-        post_number: params[:post_number],
+        post_number: @topic_view.current_post_number,
         username: request['u'],
         ip_address: request.remote_ip
       }

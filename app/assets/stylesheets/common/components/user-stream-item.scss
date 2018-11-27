@@ -48,7 +48,7 @@
     clear: right;
   }
 
-  .delete-info i {
+  .delete-info .d-icon {
     font-size: $font-0;
   }
 
@@ -151,5 +151,8 @@
     width: 15px;
     display: inline-block;
     color: $primary;
+    &.d-icon-heart {
+      color: $love;
+    }
   }
 }

@@ -67,7 +67,7 @@ sq:
     errors:
       <<: *errors
   invite:
-    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
+    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   reading_time: "Koha e leximit"
@@ -131,7 +131,7 @@ sq:
 
       - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
 
-      Për më tepër, [lexoni porositë e bashkësisë](/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
+      Për më tepër, [lexoni porositë e bashkësisë](%{base_path}/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
     'new-reply': |
       Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
 
@@ -141,7 +141,7 @@ sq:
 
       - A i shton diçka diskutimit përgjigja juaj?
 
-      Për më shumë, shikoni [udhëzimet e faqes](/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
+      Për më shumë, shikoni [udhëzimet e faqes](%{base_path}/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -676,7 +676,7 @@ sq:
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_enabled: "Enable replying to topics via email."
-    reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -747,7 +747,7 @@ sq:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      invalid_reply_by_email_address: "Value must contain '%%{reply_key}' and be different from the notification email."
   search:
     within_post: "#%{post_number} nga %{username}"
     types:
@@ -841,7 +841,7 @@ sq:
       [Konfirmo llogarinë e administratorit](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
   flags_dispositions:

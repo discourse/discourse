@@ -165,6 +165,7 @@ cs:
       user_left: "%{who} se odstranil z této zpráy %{when}"
       removed_user: "%{who} smazán %{when}"
       removed_group: "%{who} smazána %{when}"
+      autobumped: "automaticky bumped %{when}"
       autoclosed:
         enabled: 'uzavřeno %{when}'
         disabled: 'otevřeno %{when}'
@@ -201,6 +202,7 @@ cs:
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "Čína (Peking)"
+        cn_northwest_1: "Čína (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irsko)"
         eu_west_2: "EU (Londýn)"
@@ -409,6 +411,7 @@ cs:
         make_user_group_owner: "Udělej vlastníkem"
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
+      member_added: "Přidáno"
       add_members:
         title: "Přidat členy"
         description: "Spravovat členství v této skupině"
@@ -422,6 +425,7 @@ cs:
         profile:
           title: Profil
         interaction:
+          title: Interakce
           posting: Přispívání
           notification: Notifikace
         membership:
@@ -595,6 +599,7 @@ cs:
       topics_entered: "témat zadáno"
       post_count: "počet příspěvků"
       confirm_delete_other_accounts: "Určitě chcete smazat tyto účty?"
+      powered_by: "používá <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "zkopírováno"
     user_fields:
       none: "(zvolit možnost)"
@@ -680,6 +685,7 @@ cs:
       watched_first_post_tags: "Hlídané první příspěvky"
       watched_first_post_tags_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
       muted_categories: "Ztišené"
+      muted_categories_instructions: "Nebudete upozorněni na nic o nových tématech v těchto kategoriích ty se neobjeví v přehledu kategorií či v aktuálních,"
       no_category_access: "Jako moderátor máte omezený přístup ke kategorii bez možnosti ukládat změny."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
@@ -753,8 +759,10 @@ cs:
       second_factor:
         title: "Dvoufázové přihlašování"
         disable: "Vypnout dvoufaktorovou autentizaci"
+        enable: "Povolte dvoufaktorovou autentizaci pro zlepšení zabezpečení vašeho účtu"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
+        rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
         enable_description: |
           Vyfoťte tento QR kód v podporované aplikaci (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) a zadejte svůj autentikační kód.
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
@@ -780,6 +788,7 @@ cs:
         title: "Změňte si svůj profilový obrázek"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
         gravatar_title: "Změňte si avatar na webových stránkách Gravatar"
+        gravatar_failed: "Nemohli sme najít Gravatar asociován s touto email adresou."
         refresh_gravatar_title: "Obnovit Gravatar"
         letter_based: "Systémem přidělený profilový obrázek"
         uploaded_avatar: "Vlastní obrázek"
@@ -1143,7 +1152,7 @@ cs:
       complete_email_found: "Byl nalezen účet odpovídající emailu <b>%{email}</b>. Za chvilku obdržíte email s instrukcemi jak přenastavit vaše heslo."
       complete_username_not_found: "Nebyl nalezen účet s uživatelským jménem <b>%{username}</b>"
       complete_email_not_found: "Nebyl nalezen účet s odpovídající emailu <b>%{email}</b>"
-      help: "Nepříšel email? Nezapomeňte nejprve zkontrolovat složku spam. <p>Nevíte, kterou e-mailovou adresu jste použili? Zadejte e-mailovou adresu a my vás budeme informovat, pokud zde existuje.</p> <p>Pokud již nemáte přístup k e-mailové adrese ve vašem účtu, kontaktujte prosím <a href='/about'>naši ochotnou redakci</a></p>."
+      help: "Nepříšel email? Nezapomeňte nejprve zkontrolovat složku spam. <p>Nevíte, kterou e-mailovou adresu jste použili? Zadejte e-mailovou adresu a my vás budeme informovat, pokud zde existuje.</p> <p>Pokud již nemáte přístup k e-mailové adrese ve vašem účtu, kontaktujte prosím <a href='%{basePath}/about'>naši ochotnou redakci</a></p>."
       button_ok: "OK"
       button_help: "Nápověda"
     email_login:
@@ -1694,7 +1703,7 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v {{catLink}} nebo {{latestLink}}."
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='/unread'>1 nepřečtené</a> téma } other { Je tu <a href='/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       suggest_create_topic: "Co takhle založit nové téma?"
@@ -1786,7 +1795,7 @@ cs:
           "2_8": 'Uvidíte počet nových odpovědí, jelikož sledujete tuto kategorii.'
           "2_4": 'Uvidíte počet nových odpovědí, jelikož jste přispěli do tohoto tématu.'
           "2_2": 'Uvidíte počet nových odpovědí, jelikož sledujete toto téma.'
-          "2": 'Uvidíte počet nových odpovědí, protože <a href="/u/{{username}}/preferences">jste četl(a) toto téma</a>.'
+          "2": 'Uvidíte počet nových odpovědí, protože <a href="{{basePath}}/u/{{username}}/preferences">jste četl(a) toto téma</a>.'
           "1_2": 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           "1": 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           "0_7": 'Ignorujete všechna oznámení v této kategorii.'

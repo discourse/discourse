@@ -38,7 +38,8 @@ class PostAlerter
   end
 
   def only_allowed_users(users, post)
-    users.select { |u| allowed_users(post).include?(u) || allowed_group_users(post).include?(u) }
+    return users unless post.topic.private_message?
+    users.select { |u| all_allowed_users(post).include?(u) }
   end
 
   def notify_about_reply?(post)
@@ -61,12 +62,12 @@ class PostAlerter
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
-        users = only_allowed_users(users, post) if editor.id < 0
+        users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
       if mentioned_users
-        mentioned_users = only_allowed_users(mentioned_users, post) if editor.id < 0
+        mentioned_users = only_allowed_users(mentioned_users, post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
     end
@@ -453,15 +454,16 @@ class PostAlerter
   # TODO: Move to post-analyzer?
   def extract_mentions(post)
     mentions = post.raw_mentions
-
-    return unless mentions && mentions.length > 0
+    return if mentions.blank?
 
     groups = Group.where('LOWER(name) IN (?)', mentions)
     mentions -= groups.map(&:name).map(&:downcase)
+    groups = nil if groups.empty?
 
-    return [groups, nil] unless mentions && mentions.length > 0
-
-    users = User.where(username_lower: mentions).where.not(id: post.user_id)
+    if mentions.present?
+      users = User.where(username_lower: mentions).where.not(id: post.user_id)
+      users = nil if users.empty?
+    end
 
     [groups, users]
   end

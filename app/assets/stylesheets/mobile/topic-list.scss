@@ -67,7 +67,7 @@
     flex-wrap: wrap;
     width: 100%;
     .edit-category {
-      i {
+      .d-icon {
         margin: 0;
       }
       @media screen and (max-width: 374px) {
@@ -162,7 +162,7 @@
     font-size: $font-0;
     line-height: $line-height-small;
     padding: 0.15em 0.4em 0.2em 0.4em;
-    i {
+    .d-icon {
       color: $secondary;
     }
 
@@ -276,7 +276,7 @@ tr.category-topic-link {
     display: inline-block;
     font-size: $font-up-2;
     margin: 0 0 0 10px;
-    i {
+    .d-icon {
       margin-right: 5px;
     }
     a[href] {
@@ -480,6 +480,7 @@ ol.category-breadcrumb {
 
 .category-logo {
   display: block;
+  width: auto;
   max-width: 100%;
   max-height: 150px;
   padding: 8px 0;

@@ -121,10 +121,20 @@ describe PostsController do
       let(:url) { "/posts/#{post.id}/reply-history.json" }
     end
 
-    it 'asks post for reply history' do
-      post = Fabricate(:post)
-      get "/posts/#{post.id}/reply-history.json"
+    it "returns the replies with whitelisted user custom fields" do
+      parent = Fabricate(:post)
+      child = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
+
+      parent.user.upsert_custom_fields(hello: 'world', hidden: 'dontshow')
+      SiteSetting.public_user_custom_fields = 'hello'
+
+      get "/posts/#{child.id}/reply-history.json"
       expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+      expect(json[0]['id']).to eq(parent.id)
+      expect(json[0]['user_custom_fields']['hello']).to eq('world')
+      expect(json[0]['user_custom_fields']['hidden']).to be_blank
     end
   end
 
@@ -134,9 +144,20 @@ describe PostsController do
     end
 
     it 'asks post for replies' do
-      p1 = Fabricate(:post)
-      get "/posts/#{p1.id}/replies.json"
+      parent = Fabricate(:post)
+      child = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
+      PostReply.create!(post: parent, reply: child)
+
+      child.user.upsert_custom_fields(hello: 'world', hidden: 'dontshow')
+      SiteSetting.public_user_custom_fields = 'hello'
+
+      get "/posts/#{parent.id}/replies.json"
       expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+      expect(json[0]['id']).to eq(child.id)
+      expect(json[0]['user_custom_fields']['hello']).to eq('world')
+      expect(json[0]['user_custom_fields']['hidden']).to be_blank
     end
   end
 
@@ -839,11 +860,17 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        post "/posts.json", params: { raw: raw, title: title, wpid: 1 }
+        expect do
+          post "/posts.json", params: { raw: raw, title: title, wpid: 1 }
+        end.to change { Post.count }
+
         expect(response.status).to eq(200)
 
-        post "/posts.json", params: { raw: raw, title: title, wpid: 2 }
-        expect(response).not_to be_successful
+        expect do
+          post "/posts.json", params: { raw: raw, title: title, wpid: 2 }
+        end.to_not change { Post.count }
+
+        expect(response.status).to eq(422)
       end
 
       it 'can not create a post in a disallowed category' do

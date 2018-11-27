@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
 
   baseColors: function() {
     var baseColorsHash = Em.Object.create({});
-    _.each(this.get("baseColorScheme.colors"), function(color) {
+    this.get("baseColorScheme.colors").forEach(color => {
       baseColorsHash.set(color.get("name"), color);
     });
     return baseColorsHash;

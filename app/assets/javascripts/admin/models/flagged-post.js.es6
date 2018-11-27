@@ -24,7 +24,8 @@ export default Post.extend({
       return false;
     }
     lastRevisedAt = Date.parse(lastRevisedAt);
-    return _.some(this.get("post_actions"), function(postAction) {
+    const postActions = this.get("post_actions") || [];
+    return postActions.some(postAction => {
       return Date.parse(postAction.created_at) < lastRevisedAt;
     });
   },

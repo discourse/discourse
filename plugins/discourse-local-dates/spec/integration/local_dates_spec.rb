@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe "Local Dates" do
   before do
-    freeze_time
+    freeze_time DateTime.parse('2018-11-10 12:00')
   end
 
   it "should work without timezone" do
-    post = Fabricate(:post, raw: <<~SQL)
+    post = Fabricate(:post, raw: <<~TXT)
       [date=2018-05-08 time=22:00 format="L LTS" timezones="Europe/Paris|America/Los_Angeles"]
-    SQL
+    TXT
 
     cooked = post.cooked
 
@@ -26,9 +26,9 @@ RSpec.describe "Local Dates" do
   end
 
   it "should work with timezone" do
-    post = Fabricate(:post, raw: <<~SQL)
+    post = Fabricate(:post, raw: <<~TXT)
       [date=2018-05-08 time=22:00 format="L LTS" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]
-    SQL
+    TXT
 
     cooked = post.cooked
 
@@ -37,13 +37,44 @@ RSpec.describe "Local Dates" do
   end
 
   it 'requires the right attributes to convert to a local date' do
-    post = Fabricate(:post, raw: <<~SQL)
+    post = Fabricate(:post, raw: <<~TXT)
       [date]
-    SQL
+    TXT
 
     cooked = post.cooked
 
     expect(post.cooked).to include("<p>[date]</p>")
     expect(cooked).to_not include('data-date=')
+  end
+
+  it 'requires the right attributes to convert to a local date' do
+    post = Fabricate(:post, raw: <<~TXT)
+      [date]
+    TXT
+
+    cooked = post.cooked
+
+    expect(post.cooked).to include("<p>[date]</p>")
+    expect(cooked).to_not include('data-date=')
+  end
+
+  it 'it works with only a date and time' do
+    raw = "[date=2018-11-01 time=12:00]"
+    cooked = Fabricate(:post, raw: raw).cooked
+    expect(cooked).to include('data-date="2018-11-01"')
+    expect(cooked).to include('data-time="12:00"')
+  end
+
+  it 'doesn’t include format by default' do
+    raw = "[date=2018-11-01 time=12:00]"
+    cooked = Fabricate(:post, raw: raw).cooked
+    expect(cooked).not_to include('data-format=')
+  end
+
+  it 'doesn’t include timezone by default' do
+    raw = "[date=2018-11-01 time=12:00]"
+    cooked = Fabricate(:post, raw: raw).cooked
+
+    expect(cooked).not_to include("data-timezone=")
   end
 end

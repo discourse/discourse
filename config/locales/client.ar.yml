@@ -1069,7 +1069,7 @@ ar:
       complete_email_found: "عثرنا على حساب يطابق <b>%{email}</b>. يفترض أن تستلم قريبًا بريدًا به إرشادات إعادة تعيين كلمة المرور."
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
-      help: "لم يصل البريد؟ تفحص مجلد السبام<p>لست متأكداً اي عنوان بريد الكتروني قمت بأستخدامة؟ قم بأدخال عنوان البريد الالكتروني و سنعلمك ان كان موجوداً هنا</p><p> ان لم يعد بأمكانك الوصول الى البريد الالكتروني في حسابك, رجاء اتصل بـ <a href='/about'>طاقم الدعم الخاص بنا</a></p>"
+      help: "لم يصل البريد؟ تفحص مجلد السبام<p>لست متأكداً اي عنوان بريد الكتروني قمت بأستخدامة؟ قم بأدخال عنوان البريد الالكتروني و سنعلمك ان كان موجوداً هنا</p><p> ان لم يعد بأمكانك الوصول الى البريد الالكتروني في حسابك, رجاء اتصل بـ <a href='%{basePath}/about'>طاقم الدعم الخاص بنا</a></p>"
       button_ok: "حسنا"
       button_help: "مساعدة"
     email_login:
@@ -1526,7 +1526,7 @@ ar:
       toggle_information: "أظهر/أخف تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في {{catLink}} أو {{latestLink}}."
       read_more: "أتريد قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
-      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='{basePath}/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='{basePath}/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='{basePath}/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='{basePath}/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='{basePath}/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الأقسام
       view_latest_topics: اعرض اخر الموضوعات
       suggest_create_topic: لمَ لا تكتب موضوعًا؟
@@ -1611,7 +1611,7 @@ ar:
           "2_8": 'سوف تشاهد عداد للردود الجديدة لانك تتابع هذا القسم.'
           "2_4": 'سوف تشاهد عداد للردود الجديدة لانك قمت بالمشاركة برد في هذا الموضوع.'
           "2_2": 'سوف تشاهد عداد للردود الجديدة لانك تتابع هذا الموضوع.'
-          "2": 'سوف تشاهد عداد للردود الجديدة لأنّك <a href="/u/{{username}}/preferences">قرأت هذا الموضوع</a>.'
+          "2": 'سوف تشاهد عداد للردود الجديدة لأنّك <a href="{{basePath}}/u/{{username}}/preferences">قرأت هذا الموضوع</a>.'
           "1_2": 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           "1": 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           "0_7": 'لن يصلك أي إشعار يخص هذا القسم.'

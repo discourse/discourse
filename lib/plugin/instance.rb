@@ -357,6 +357,10 @@ class Plugin::Instance
     javascripts << js
   end
 
+  def register_svg_icon(icon)
+    DiscoursePluginRegistry.register_svg_icon(icon)
+  end
+
   # @option opts [String] :name
   # @option opts [String] :nativeName
   # @option opts [String] :fallbackLocale
@@ -497,9 +501,9 @@ class Plugin::Instance
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Rails.logger.warn("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
           return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
-          Rails.logger.warn("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
           true
         end
       end

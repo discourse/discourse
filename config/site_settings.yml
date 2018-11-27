@@ -45,33 +45,75 @@ required:
   site_contact_username:
     default: ''
     type: username
+  logo:
+    default: ''
+    client: true
+    type: upload
   logo_url:
-    client: true
+    hidden: true
     default: '/images/d-logo-sketch.png'
+  logo_small:
+    default: ''
+    client: true
+    type: upload
   logo_small_url:
-    client: true
+    hidden: true
     default: '/images/d-logo-sketch-small.png'
+  digest_logo:
+    default: ''
+    client: true
+    type: upload
   digest_logo_url:
+    hidden: true
     default: ''
+  mobile_logo:
+    default: ''
+    client: true
+    type: upload
   mobile_logo_url:
-    client: true
+    hidden: true
     default: ''
+  large_icon:
+    default: ''
+    client: true
+    type: upload
   large_icon_url:
+    hidden: true
     default: ''
-  favicon_url:
+  favicon:
+    default: ''
     client: true
+    type: upload
+  favicon_url:
+    hidden: true
     default: '/images/default-favicon.ico'
-  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
-  default_opengraph_image_url: ''
-  twitter_summary_large_image_url: ''
+  apple_touch_icon:
+    default: ''
+    client: true
+    type: upload
+  apple_touch_icon_url:
+    hidden: true
+    default: '/images/default-apple-touch-icon.png'
+  opengraph_image:
+    default: ''
+    type: upload
+  default_opengraph_image_url:
+    hidden: true
+    default: ''
+  twitter_summary_large_image:
+    default: ''
+    type: upload
+  twitter_summary_large_image_url:
+    hidden: true
+    default: ''
   exclude_rel_nofollow_domains:
     default: ''
     type: list
-  company_short_name:
+  company_name:
     default: ''
-  company_full_name:
+  governing_law:
     default: ''
-  company_domain:
+  city_for_disputes:
     default: ''
 
 basic:
@@ -233,7 +275,11 @@ basic:
   push_notifications_prompt:
     default: true
     client: true
+  push_notifications_icon:
+    default: ''
+    type: upload
   push_notifications_icon_url:
+    hidden: true
     default: ''
   vapid_public_key_bytes:
     default: ''
@@ -335,6 +381,9 @@ login:
   verbose_auth_token_logging:
     hidden: true
     default: true
+  max_suspicious_distance_km:
+    hidden: true
+    default: 500
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -545,6 +594,8 @@ posting:
     default: false
     locale_default:
       ja: true
+  max_consecutive_replies:
+    default: 3
   title_prettify:
     default: true
     locale_default:
@@ -968,6 +1019,7 @@ files:
   s3_region:
     default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
+    shadowed_by_global: true
   s3_upload_bucket:
     default: ''
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
@@ -1679,6 +1731,12 @@ uncategorized:
   auto_handle_queued_age:
     default: 60
     min: 0
+
+  svg_icon_subset:
+    default: ''
+    type: 'list'
+    list_type: 'compact'
+    client: true
 
 user_preferences:
   default_email_digest_frequency:

@@ -39,7 +39,12 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
-      @title = "#{@topic.title} - #{SiteSetting.title}"
+      title_prefix = if I18n.exists?("js.#{@page}")
+        I18n.t("js.#{@page}")
+      else
+        @topic.title
+      end
+      @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
@@ -108,10 +113,10 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
+      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
         begin
           file = FileHelper.download(
-            SiteSetting.favicon_url,
+            UrlHelper.absolute(SiteSetting.site_favicon_url),
             max_file_size: 50.kilobytes,
             tmp_file_name: FAVICON,
             follow_redirect: true
@@ -122,7 +127,7 @@ class StaticController < ApplicationController
           data
         rescue => e
           AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
           ""
         end
       end

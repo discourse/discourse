@@ -136,7 +136,7 @@ fi:
         second_response: |-
           Voi ei, en vieläkään tajua. :anguished:
 
-          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](/about).
+          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](%{base_path}/about).
 
           En häiritse sinua enempää nyt.
     new_user_narrative:

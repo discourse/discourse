@@ -9,7 +9,13 @@ module TopicTagsMixin
 
   def tags
     # Calling method `pluck` along with `includes` causing N+1 queries
-    DiscourseTagging.filter_visible(topic.tags, scope).map(&:name)
+    tags = topic.tags.map(&:name)
+
+    if scope.is_staff?
+      tags
+    else
+      tags - scope.hidden_tag_names
+    end
   end
 
   def topic

@@ -4,7 +4,7 @@ module GlobalPath
   end
 
   def cdn_path(p)
-    "#{GlobalSetting.cdn_url}#{path(p)}"
+    GlobalSetting.cdn_url.blank? ? p : "#{GlobalSetting.cdn_url}#{path(p)}"
   end
 
   def upload_cdn_path(p)

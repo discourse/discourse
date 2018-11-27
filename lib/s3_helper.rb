@@ -136,9 +136,10 @@ class S3Helper
     update_lifecycle("purge_tombstone", grace_period, prefix: @tombstone_prefix)
   end
 
-  def list(prefix = "")
-    prefix = get_path_for_s3_upload(prefix)
-    s3_bucket.objects(prefix: prefix)
+  def list(prefix = "", marker = nil)
+    options = { prefix: get_path_for_s3_upload(prefix) }
+    options[:marker] = marker if marker.present?
+    s3_bucket.objects(options)
   end
 
   def tag_file(key, tags)

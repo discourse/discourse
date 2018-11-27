@@ -33,10 +33,10 @@
 // --------------------------------------------------
 
 .topic-list-icons {
-  .d-icon-thumb-tack {
+  .d-icon-thumbtack {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
-  .d-icon-thumb-tack.unpinned {
+  .d-icon-thumbtack.unpinned {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
   a.title {
@@ -73,6 +73,7 @@
 
   td.bulk-select {
     padding: 10px;
+    width: 30px;
     + .main-link {
       padding-left: 0;
     }
@@ -221,6 +222,7 @@ button.dismiss-read {
 }
 
 .category-logo {
+  width: auto;
   max-height: 150px;
   float: left;
   margin: 0.25em 1em 0.5em 0;
@@ -242,7 +244,7 @@ button.dismiss-read {
     span {
       display: none;
     }
-    i {
+    .d-icon {
       margin-right: 0;
     }
   }

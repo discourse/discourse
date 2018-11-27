@@ -1,5 +1,4 @@
 /* hide the reply border above the time gap notices */
-
 .time-gap + .topic-post article {
   border-top: none;
 }
@@ -48,11 +47,10 @@ span.badge-posts {
           }
           &.my-likes {
             display: flex;
-            align-items: baseline;
             max-width: unset;
             margin-right: 0;
             padding: 8px 9px 8px 8px;
-            i {
+            .d-icon {
               padding-left: 8px;
             }
           }
@@ -189,7 +187,7 @@ a.reply-to-tab {
       line-height: $line-height-medium;
     }
     .number,
-    i {
+    .d-icon {
       color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-1;
     }
@@ -259,7 +257,7 @@ a.reply-to-tab {
   margin: 0 auto;
 }
 
-#suggested-topics {
+.suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
   th.views,
@@ -317,10 +315,6 @@ span.post-count {
 
 iframe {
   max-width: 100%;
-}
-
-.extra-info {
-  display: none;
 }
 
 .open > .dropdown-menu {
@@ -400,10 +394,6 @@ blockquote {
 
 .gap {
   padding: 0.25em 0;
-}
-
-.gutter {
-  display: none;
 }
 
 .posts-wrapper {

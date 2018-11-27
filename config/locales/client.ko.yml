@@ -939,7 +939,7 @@ ko:
       complete_email_found: "<b>%{email}</b>과 일치하는 계정을 찾았습니다. 비밀번호를 초기화하는 방법이 담긴 메일을 발송하였으니 확인하여 주십시요."
       complete_username_not_found: "<b>%{username}</b>과 일치하는 계정이 없습니다."
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
-      help: "이메일을 못받으셨나요? 일단 스팸 폴더부터 체크해보세요.<p>어떤 이메일 주소를 입력했는지 확실치 않나요? 이메일 주소를 여기에 입력하시면 기록이 있는지 봐드리겠습니다.</p><p>만약 더 이상 그 이메일 주소로 접근할 수 없다면, <a href='/about'>친절한 운영진</a>에게 도움을 요청하세요.</p>"
+      help: "이메일을 못받으셨나요? 일단 스팸 폴더부터 체크해보세요.<p>어떤 이메일 주소를 입력했는지 확실치 않나요? 이메일 주소를 여기에 입력하시면 기록이 있는지 봐드리겠습니다.</p><p>만약 더 이상 그 이메일 주소로 접근할 수 없다면, <a href='%{basePath}/about'>친절한 운영진</a>에게 도움을 요청하세요.</p>"
       button_ok: "확인"
       button_help: "도움말"
     login:
@@ -1362,7 +1362,7 @@ ko:
       toggle_information: "주제의 세부 정보를 토글합니다."
       read_more_in_category: "더 읽을거리가 필요하신가요? {{catLink}} 또는 {{latestLink}}를 살펴보세요."
       read_more: "{{catLink}} 또는 {{latestLink}}에서 더 많은 토픽들을 찾으실 수 있습니다"
-      read_more_MF: "읽지 않은 글 { UNREAD, plural, =0 {} one { is <a href='/unread'>1 개</a> }other { are <a href='/unread'># 개</a> } }, 새 글은 { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 개</a> } other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 개</a> } } 을 확인해보세요, {CATEGORY, select, true {{catLink} 카테고리의 다른 글들도 살펴보세요.} false {{latestLink}} other {}}"
+      read_more_MF: "읽지 않은 글 { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 개</a> }other { are <a href='{basePath}/unread'># 개</a> } }, 새 글은 { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 개</a> } other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># 개</a> } } 을 확인해보세요, {CATEGORY, select, true {{catLink} 카테고리의 다른 글들도 살펴보세요.} false {{latestLink}} other {}}"
       browse_all_categories: 모든 카테고리 보기
       view_latest_topics: 최신 주제 보기
       suggest_create_topic: "새 주제를 작성 해 보실래요?"
@@ -1450,7 +1450,7 @@ ko:
           "2_8": '이 카테고리를 추적중이므로, 새로운 게시글의 수를 표시합니다.'
           "2_4": '이 토픽에 게시글을 남겼기 때문에, 새로운 게시글의 수를 표시합니다.'
           "2_2": '이 토픽을 추적중이므로, 새로운 게시글의 수를 표시합니다.'
-          "2": '<a href="/u/{{username}}/preferences">이 토픽을 읽었기 때문에,</a> 새로운 게시글의 수를 표시합니다.'
+          "2": '<a href="{{basePath}}/u/{{username}}/preferences">이 토픽을 읽었기 때문에,</a> 새로운 게시글의 수를 표시합니다.'
           "1_2": '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           "1": '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           "0_7": '이 주제에 관한 모든 알림을 무시하고 있습니다.'

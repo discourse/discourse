@@ -1157,7 +1157,7 @@ vi:
       toggle_information: "chuyển đổi các chi tiết chủ để"
       read_more_in_category: "Muốn đọc nữa? Xem qua các chủ đề khác trong {{catLink}} hoặc {{latestLink}}"
       read_more: "Muốn đọc nữa? {{catLink}} hoặc {{latestLink}}"
-      read_more_MF: "Có { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Có { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Duyệt tất cả các hạng mục
       view_latest_topics: xem các chủ đề mới nhất
       suggest_create_topic: "Tại sao không tạo một chủ đề mới?"
@@ -1206,7 +1206,7 @@ vi:
           "3_1": 'Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này.'
           "3": 'Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này.'
           "2_8": 'Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này.'
-          "2": 'Bạn sẽ xem được các bài trả lời bởi vì bạn <a href="/u/{{username}}/preferences">đọc chủ đề này</a>.'
+          "2": 'Bạn sẽ xem được các bài trả lời bởi vì bạn <a href="{{basePath}}/u/{{username}}/preferences">đọc chủ đề này</a>.'
           "1_2": 'Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn.'
           "1": 'Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn.'
           "0_7": 'Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này.'

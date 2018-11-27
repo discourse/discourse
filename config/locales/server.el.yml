@@ -116,7 +116,7 @@ el:
       <<: *errors
   invite:
     not_found: "Η πρόσκληση δεν είναι έγκυρη. Παρακαλώ επικοινωνήστε με τον διαχειριστή της ιστοσελίδας."
-    user_exists: "Δεν υπάρχει λόγος να προσκαλέσετε τον/την <b>%{email}</b>, έχει ήδη <a href='/u/%{username}/summary'>λογαριασμό χρήστη!</a>"
+    user_exists: "Δεν υπάρχει λόγος να προσκαλέσετε τον/την <b>%{email}</b>, έχει ήδη <a href='%{base_path}/u/%{username}/summary'>λογαριασμό χρήστη!</a>"
   bulk_invite:
     file_should_be_csv: "To ανεβασμένο αρχείο πρέπει να έχει μορφή csv."
     error: "Παρουσίαστηκε ένα σφάλμα κατά το ανέβασμα του αρχείου σας, Παρακαλώ δοκιμάστε αργότερα."
@@ -250,7 +250,7 @@ el:
 
       - Συμπεριλάβετε κοινές λέξεις στο νήμα σας έτσι ώστε να μπορούν να το *βρουν* οι άλλοι. Για να κατηγοριοποιήσετε το νήμα σας με άλλα παρόμοια νήματα, επιλέξτε μια κατηγορία.
 
-      - Για περισσότερα, [δείτε τον οδηγό χρήσης της κοινότητάς μας](/guidelines). Αυτός ο πίνακας θα παρουσιαστεί μόνο για την πρώτη σας %{education_posts_text}
+      - Για περισσότερα, [δείτε τον οδηγό χρήσης της κοινότητάς μας](%{base_path}/guidelines). Αυτός ο πίνακας θα παρουσιαστεί μόνο για την πρώτη σας %{education_posts_text}
     'new-reply': |
       Καλώς ήρθατε στην %{site_name} &mdash; **ευχαριστούμε για την συνεισφορά σας**
 
@@ -260,7 +260,7 @@ el:
 
       Η εποικοδομητική κριτική είναι ευπρόσδεκτη, αλλά να γίνεται κριτική σε *ιδέες*, όχι ανθρώπους.
 
-      Για περισσότερες πληροφορίες, [δείτε τις οδηγίες της κοινότητας μας ](/guidelines). Αυτό το παράθυρο θα εμφανιστεί μόνο για την πρώτη σας %{education_posts_text}.
+      Για περισσότερες πληροφορίες, [δείτε τις οδηγίες της κοινότητας μας ](%{base_path}/guidelines). Αυτό το παράθυρο θα εμφανιστεί μόνο για την πρώτη σας %{education_posts_text}.
     avatar: |
       ### Τι θα λέγατε για μια εικόνα στο λογαριασμό σας;
 
@@ -354,7 +354,7 @@ el:
             word:
               too_many: "Πάρα πολλές λέξεις για την ενέργεια"
   user_profile:
-    no_info_me: "<div class='missing-profile'>το πεδίο Σχετικά Με Μένα στο προφίλ σας είναι κενό, <a href='/u/%{username_lower}/preferences/about-me'>θα θέλατε να προσθέσετε κάποιες πληροφορίες;</a></div>"
+    no_info_me: "<div class='missing-profile'>το πεδίο Σχετικά Με Μένα στο προφίλ σας είναι κενό, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>θα θέλατε να προσθέσετε κάποιες πληροφορίες;</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} δεν έχει εισάγει τίποτα στο πεδίο Σχετικά με Εμένα στο προφίλ του</div>"
   vip_category_name: "Σαλόνι"
   vip_category_description: "Κατηγορία αποκλειστικά για μέλη με επίπεδο εμπιστοσύνης (trust level) 3 ή υψηλότερο."
@@ -363,7 +363,7 @@ el:
   staff_category_name: "Συνεργάτες"
   staff_category_description: "Ιδιωτική κατηγορία για συζητήσεις των συνεργατών. Τα θέματα είναι ορατά μόνο σε διαχειριστές και συντονιστές."
   assets_topic_title: "Στοιχεία για τον σχεδιασμό της ιστοσελίδας"
-  assets_topic_body: "Αυτό το νήμα, το οποίο είναι ορατό μόνο στο προσωπικό, υπάρχει για να αποθηκεύετε εικόνες και αρχεία τα οποία θα χρησιμοποιήσετε στην σχεδίαση της σελίδας. Μήν το διαγράψετε!\n\n\nΟδηγίες:\n\n\n1. Απαντήστε στο νήμα.\n2. Ανεβάστε στο πεδίο απάντησης όλες τις εικόνες που θέλετε να χρησιμοποιήσετε. (Χρησιμοποιήστε το εικονίδιο μεταφόρτωσης στην μπάρα εργαλείων ή απλά σύρετε ή κάντε επικόλληση τις εικόνες στο πεδίο απάντησης.)\n3. Καταχωρήστε την απάντησή σας για να αναρτηθεί.\n4. Κάντε δεξί κλικ στις εικόνες της νέας σας ανάρτησης για να δείτε από τις πληροφορίες εικόνας την πλήρη διαδρομή προς το αποθηκευμένο αρχείο ή κάντε κλικ στο εικονίδιο επεξεργασίας για να επεξεργαστείτε την ανάρτησή σας και να πάρετε την πλήρη διαδρομή για όλες σας τις εικόνες. Αντιγράψτε την διαδρομή που θέλετε.\n5. Κάντε επικόλληση της διαδρομής στην σελίδα [βασικών ρυθμίσεων](/admin/site_settings/category/required).\n\n\nΑν θέλετε να ενεργοποιήσετε περισσότερους τύπους αρχείων, επεξεργαστείτε την ρύθμιση των `authorized_extensions` στο [file settings](/admin/site_settings/category/files)."
+  assets_topic_body: "Αυτό το νήμα, το οποίο είναι ορατό μόνο στο προσωπικό, υπάρχει για να αποθηκεύετε εικόνες και αρχεία τα οποία θα χρησιμοποιήσετε στην σχεδίαση της σελίδας. Μήν το διαγράψετε!\n\n\nΟδηγίες:\n\n\n1. Απαντήστε στο νήμα.\n2. Ανεβάστε στο πεδίο απάντησης όλες τις εικόνες που θέλετε να χρησιμοποιήσετε. (Χρησιμοποιήστε το εικονίδιο μεταφόρτωσης στην μπάρα εργαλείων ή απλά σύρετε ή κάντε επικόλληση τις εικόνες στο πεδίο απάντησης.)\n3. Καταχωρήστε την απάντησή σας για να αναρτηθεί.\n4. Κάντε δεξί κλικ στις εικόνες της νέας σας ανάρτησης για να δείτε από τις πληροφορίες εικόνας την πλήρη διαδρομή προς το αποθηκευμένο αρχείο ή κάντε κλικ στο εικονίδιο επεξεργασίας για να επεξεργαστείτε την ανάρτησή σας και να πάρετε την πλήρη διαδρομή για όλες σας τις εικόνες. Αντιγράψτε την διαδρομή που θέλετε.\n5. Κάντε επικόλληση της διαδρομής στην σελίδα [βασικών ρυθμίσεων](%{base_path}/admin/site_settings/category/required).\n\n\nΑν θέλετε να ενεργοποιήσετε περισσότερους τύπους αρχείων, επεξεργαστείτε την ρύθμιση των `authorized_extensions` στο [file settings](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Καλώς ήρθατε στο Discourse"
     body: |2+
@@ -381,7 +381,7 @@ el:
 
 
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Θα ήταν καλό να κλείσετε αυτό το θέμα μέσω του διαχειριστή :wrench: (στην πάνω δεξιά και κάτω θέση), έτσι ώστε οι απαντήσεις να μην μαζευτούν στην ανακοίνωση.
 
@@ -780,11 +780,11 @@ el:
     memory_warning: 'Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης.'
     subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη.  "
     email_polling_errored_recently:
-      one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.   "
-      other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.  "
-    bad_favicon_url: "Το favicon δεν μπορεί να φορτωθεί 'Ελεγξε το favicon_url στις <a href='/admin/site_settings'>Ρυθμίσεις Iστοσελίδας</a>"
-    poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
-    poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a>  "
+      one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.   "
+      other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.  "
+    bad_favicon_url: "Το favicon δεν μπορεί να φορτωθεί 'Ελεγξε το favicon_url στις <a href='%{base_path}/admin/site_settings'>Ρυθμίσεις Iστοσελίδας</a>"
+    poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
+    poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a>  "
   site_settings:
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Διάγραψε αυτόματα όποιες κρυμμένες αναρτήσεις μένουν κρυφές για πάνω από 30 ημέρες. "
@@ -1069,8 +1069,8 @@ el:
     auto_silence_first_post_regex: "Case insensitive regex το οποίο αν ισχύσει θα προκαλέσει την σιγή και την αποστολή για έλεγχο της πρώτης ανάρτησης ενός χρήστη. Παράδειγμα: raging|a[bc]a , θα προκαλέσει όλες τις αναρτήσεις που περιέχουν raging ή aba ή aca να σιγηθούν. Ισχύει μόνο για την πρώτη ανάρτηση."
     flags_default_topics: "Προβολή επισημασμένων νημάτων από προεπιλογή στην σελίδα διαχείρισης"
     reply_by_email_enabled: "Ενεργοποίηση απάντησης στα νήματα μέσω email."
-    reply_by_email_address: "Πρότυπο για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, για παράδειγμα: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Λίστα εναλλακτικών προτύπων για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, πχ: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "Πρότυπο για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, για παράδειγμα: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Λίστα εναλλακτικών προτύπων για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, πχ: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Αφαίρεσε εικόνες από email που έχουν μέγεθος λιγότερο από 2800 Bytes. "
     short_email_length: "Μέγεθος μικρού email σε Bytes"
     display_name_on_email_from: "Εμφάνισε πλήρη ονόματα στα πεδία απoστολέα των email"
@@ -1241,8 +1241,8 @@ el:
       invalid_string_min_max: "Πρέπει να είναι μεταξύ %{min} και %{max} χαρακτήρες."
       invalid_string_min: "Πρέπει να είναι τουλάχιστον %{min} χαρακτήρες."
       invalid_string_max: "Δεν πρέπει να είναι περισσότεροι από %{max} χαρακτήρες."
-      invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
-      invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
+      invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
+      invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
       pop3_polling_host_is_empty: "Πρέπει να ρυθμίσετε εναν 'pop3 polling host' πρίν ενεργοποιήσετε το POP3 polling."
       pop3_polling_username_is_empty: "Πρέπει να θέσετε ένα  'pop3 polling όνομα χρήστη' πριν ενεργοποιήσετε το POP3 polling."
       pop3_polling_password_is_empty: "Πρέπει να θέσετε ένα  'pop3 polling κωδικό πρόσβασης' πριν ενεργοποιήσετε το POP3 polling."
@@ -1400,8 +1400,8 @@ el:
     auto_rejected: "Απορρίφθηκε αυτόματα λόγω παλαιότητας. Δες την ρύθμιση auto_handle_queued_age της ιστοσελίδας."
   flags_reminder:
     flags_were_submitted:
-      one: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από 1 ώρα πριν. [Παρακαλούμε ελέγξτε τις](/admin/flags)."
-      other: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από %{count} ώρες πριν. [Παρακαλούμε ελέγξτε τις](/admin/flags)."
+      one: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από 1 ώρα πριν. [Παρακαλούμε ελέγξτε τις](%{base_path}/admin/flags)."
+      other: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από %{count} ώρες πριν. [Παρακαλούμε ελέγξτε τις](%{base_path}/admin/flags)."
     subject_template:
       one: "1 επισήμανση περιμένει να διαχειριστεί"
       other: "%{count} επισημάνσεις περιμένουν να διαχειριστούν"
@@ -1463,7 +1463,7 @@ el:
     subject_template: "[%{email_prefix}] διαθέσιμη ενημέρωση"
   flag_reasons:
     off_topic: "Η ανάρτησή σου επισημάθηκε ως **εκτός θέματος**: η κοινότητα πιστεύει ότι δεν ταιριάζει με το νήμα, όπως ορίζεται από τον τίτλο και την πρώτη ανάρτηση αυτή τη στιγμή. "
-    inappropriate: "Η δημοσίευσή σου επισημάνθηκε ως \"ακατάλληλη\": η κοινότητα θεωρεί ότι είναι προσβλητική, υβριστική ή παραβιάζει τον [οδηγό χρήσης της κοινότητας](/οδηγίες)."
+    inappropriate: "Η δημοσίευσή σου επισημάνθηκε ως \"ακατάλληλη\": η κοινότητα θεωρεί ότι είναι προσβλητική, υβριστική ή παραβιάζει τον [οδηγό χρήσης της κοινότητας](%{base_path}/οδηγίες)."
     spam: "Η δημοσίευσή σου επισημάνθηκε ως \"ανεπιθύμητη\": η κοινότητα θεωρεί ότι πρόκειται για διαφήμιση ή κάτι που αφορά προώθηση και δεν είναι χρήσιμη ή σχετική με το νήμα όπως αναμενόταν."
     notify_moderators: "Η ανάρτησή σου επισημάνθηκε **προς έλεγχο από συντονιστή**. Η κοινότητα πιστεύει ότι κάτι σχετικά με την ανάρτησή σου, απαιτεί την παρέμβαση ενός συνεργάτη."
   flags_dispositions:
@@ -2182,8 +2182,8 @@ el:
   avatar:
     missing: "Λυπούμαστε, αλλά δεν μπορέσαμε να βρούμε κάποιο άβαταρ που να αντιστοιχίζεται με τη συγκεκριμένη διεύθυνση email. Μπορείτε να δοκιμάσετε να το ανεβάσετε ξανά;"
   flag_reason:
-    sockpuppet: "Ένας νέος χρήστης δημιούργησε ένα νήμα και ένας άλλος νέος χρήσης με την ίδια διεύθυνση IP (%{ip_address}) απάντησε. Δες τις ρυθμίσεις ιστοτόπου <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain (%{domain}). Δες τις ρυθμίσεις ιστοτόπου <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Ένας νέος χρήστης δημιούργησε ένα νήμα και ένας άλλος νέος χρήσης με την ίδια διεύθυνση IP (%{ip_address}) απάντησε. Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain (%{domain}). Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Βάση"
     dark: "Σκουρόχρωμος Συνδυασμός"
@@ -2293,13 +2293,13 @@ el:
 
       ## [Powered by You](#power)
 
-      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
+      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
 
       <a name="tos"></a>
 
       ## [Terms of Service](#tos)
 
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
+      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).
   tos_topic:
     title: "Όροι Χρήσης"
   privacy_topic:
@@ -2639,16 +2639,16 @@ el:
           contact_email:
             label: "Mail"
             placeholder: "name@example.com"
-            description: "Διεύθυνση email του ατόμου ή της ομάδας που είναι υπεύθυνα για αυτή την κοινότητα. Χρησιμοποιείται για σημαντικές ειδοποιήσεις όπως σημάνσεις χωρίς διαχείριση, ανανεώσεις ασφάλειας και στην σελίδα <a href='/about' target='_blank'>σχετικά</a> για έκτακτη επικοινωνία με την κοινότητα."
+            description: "Διεύθυνση email του ατόμου ή της ομάδας που είναι υπεύθυνα για αυτή την κοινότητα. Χρησιμοποιείται για σημαντικές ειδοποιήσεις όπως σημάνσεις χωρίς διαχείριση, ανανεώσεις ασφάλειας και στην σελίδα <a href='%{base_path}/about' target='_blank'>σχετικά</a> για έκτακτη επικοινωνία με την κοινότητα."
           contact_url:
             label: "Ιστοσελίδα"
-            description: "Ιστοσελίδα γενικής επικοινωνίας με εσάς και τον οργανισμό σας. Θα εμφανίζεται στην επιλογή <a href='/about' target='_blank'>σχετικά με τη σελίδα</a>."
+            description: "Ιστοσελίδα γενικής επικοινωνίας με εσάς και τον οργανισμό σας. Θα εμφανίζεται στην επιλογή <a href='%{base_path}/about' target='_blank'>σχετικά με τη σελίδα</a>."
           site_contact:
             label: "Αυτόματα Μηνύματα"
             description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       corporate:
         title: "Οργάνωση"
-        description: "Αυτά τα ονόματα θα υπάρχουν στην <a href='/privacy' target='blank'> Πολιτική Ιδιωτικότητας</a> και στους <a href='/tos' target='blank'>Όρους Χρήσης</a>, που είναι νήματα τα οποία μπορείς να επεξεργαστείς στην κατηγορία Συνεργατών. Εάν δεν έχεις εταιρεία, μπορείς να παραλείψεις αυτό το βήμα για τώρα."
+        description: "Αυτά τα ονόματα θα υπάρχουν στην <a href='%{base_path}/privacy' target='blank'> Πολιτική Ιδιωτικότητας</a> και στους <a href='%{base_path}/tos' target='blank'>Όρους Χρήσης</a>, που είναι νήματα τα οποία μπορείς να επεξεργαστείς στην κατηγορία Συνεργατών. Εάν δεν έχεις εταιρεία, μπορείς να παραλείψεις αυτό το βήμα για τώρα."
         fields:
           company_short_name:
             label: "Όνομα Εταιρείας (σύντομο)"

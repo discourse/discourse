@@ -1,4 +1,6 @@
 .d-header {
+  display: flex;
+  align-items: center;
   width: 100%;
   position: absolute;
   top: 0;
@@ -6,17 +8,25 @@
   background-color: $header_background;
   box-shadow: shadow("header");
 
+  > .wrap {
+    width: 100%;
+    height: 100%;
+    .contents {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
   .docked & {
     position: fixed;
     backface-visibility: hidden; /** do magic for scrolling performance **/
   }
 
-  .contents {
-    margin: 8px 0;
-  }
-
   .title {
-    float: left;
+    display: flex;
+    align-items: center;
+    height: 100%;
     a,
     a:visited {
       color: $header_primary;
@@ -24,17 +34,18 @@
   }
 
   #site-logo {
-    max-height: 2.8571em;
+    width: auto;
   }
 
   .d-icon-home {
-    font-size: 1.643em;
+    font-size: $font-up-5;
   }
 
   .panel {
-    float: right;
     position: relative;
     display: flex;
+    flex: 0 0 auto;
+    margin-left: auto;
     align-items: center;
   }
 
@@ -194,4 +205,89 @@
 // we don't need this X to clear field
 #search-term::-ms-clear {
   display: none;
+}
+
+// topic info in the header
+.extra-info-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0%; // unit on flex-basis is required for IE11
+  height: 100%;
+  line-height: $line-height-medium;
+  padding: 0 1.5em 0 0.5em;
+  // we need to hide overflow in both to truncate the title in a flexbox
+  overflow: hidden;
+  .extra-info {
+    overflow: hidden;
+    width: 100%;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+  }
+  .topic-link {
+    color: $header_primary;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topic-statuses {
+    margin-top: -2px;
+    float: left;
+    padding: 0;
+    i {
+      color: $header_primary;
+    }
+    .d-icon-envelope {
+      color: $danger;
+    }
+    .d-icon-lock {
+      padding-top: 0.15em;
+    }
+    .unpinned {
+      color: $header_primary;
+    }
+  }
+  h1 {
+    margin: 0 0 0.25em 0;
+    font-size: $font-up-3;
+    width: 100%;
+  }
+  .categories-wrapper {
+    display: inline-flex;
+    max-width: 100%;
+    // only truncate the last category name.
+    > a:last-of-type {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .badge-wrapper {
+    margin-right: 8px;
+  }
+  .badge-wrapper.bullet {
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      min-width: 5px;
+    }
+  }
+  .topic-header-extra {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    flex: 1 0 0%; // unit on flex-basis is required for IE11
+    .discourse-tags {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .discourse-tag {
+        display: inline;
+      }
+    }
+  }
+  // if a topic has both categories and tags, the tag container should shrink
+  // instead of wrapping to the next line.
+  .categories-wrapper + .topic-header-extra {
+    min-width: 0;
+  }
 }

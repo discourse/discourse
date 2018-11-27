@@ -103,12 +103,43 @@ describe Email::Receiver do
     )
   end
 
-  it "raises a BouncerEmailError when email is a bounced email" do
-    expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
-    expect(IncomingEmail.last.is_bounce).to eq(true)
+  context "bounces" do
+    it "raises a BouncerEmailError" do
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+      expect(IncomingEmail.last.is_bounce).to eq(true)
 
-    expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
-    expect(IncomingEmail.last.is_bounce).to eq(true)
+      expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
+      expect(IncomingEmail.last.is_bounce).to eq(true)
+    end
+
+    it "creates a whisper post in PM if user is staged" do
+      SiteSetting.enable_staged_users = true
+      SiteSetting.enable_whispers = true
+
+      email = "linux-admin@b-s-c.co.jp"
+      user = Fabricate(:staged, email: email)
+
+      private_message = Fabricate(:topic,
+        archetype: 'private_message',
+        category_id: nil,
+        user: user,
+        allowed_users: [user]
+      )
+
+      post = create_post(topic: private_message, user: user)
+
+      post_reply_key = Fabricate(:post_reply_key,
+        reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+        user: user,
+        post: post
+      )
+
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+      post = Post.last
+      expect(post.whisper?).to eq(true)
+      expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email, raw: "Your email bounced").strip)
+      expect(IncomingEmail.last.is_bounce).to eq(true)
+    end
   end
 
   it "logs a blank error" do
@@ -825,7 +856,7 @@ describe Email::Receiver do
 
       Group.refresh_automatic_group!(:trust_level_4)
 
-      expect { process(:tl3_user) }.to_not change(Topic, :count)
+      expect { process(:tl3_user) }.to raise_error(Email::Receiver::InvalidPost)
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 

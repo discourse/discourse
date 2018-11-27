@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="contents">
         <div class="row">
-          <div class="title span13">
+          <div class="logo-wrapper">
             <a href="<%= path "/" %>">
               <%- if application_logo_url.present? %>
                 <img src="<%= application_logo_url %>" alt="<%= SiteSetting.title %>" id="site-logo">
@@ -12,11 +12,6 @@
               <%- end %>
             </a>
           </div>
-          <% unless current_user %>
-              <div class='panel clearfix'>
-                <a href="<%= path "/login"%>" class='btn btn-primary btn-small login-button'><i class="fa fa-user"></i> <%= I18n.t('log_in') %></a>
-              </div>
-          <% end %>
         </div>
       </div>
     </div>

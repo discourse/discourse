@@ -114,7 +114,7 @@ export default {
     }
 
     // restore href
-    setTimeout(() => {
+    Ember.run.later(() => {
       $link.removeClass("no-href");
       $link.attr("href", $link.data("href"));
       $link.data("href", null);

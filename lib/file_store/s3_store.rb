@@ -110,5 +110,46 @@ module FileStore
       raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.Upload.s3_upload_bucket.blank?
       SiteSetting.Upload.s3_upload_bucket.downcase
     end
+
+    def list_missing_uploads(skip_optimized: false)
+      list_missing(Upload, "original/")
+      list_missing(OptimizedImage, "optimized/") unless skip_optimized
+    end
+
+    private
+
+    def list_missing(model, prefix)
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec('CREATE TEMP TABLE verified_ids(val integer PRIMARY KEY)')
+      marker = nil
+      files = @s3_helper.list(prefix, marker)
+
+      while files.count > 0 do
+        verified_ids = []
+
+        files.each do |f|
+          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
+          verified_ids << id if id.present?
+          marker = f.key
+        end
+
+        verified_id_clause = verified_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+        connection.exec("INSERT INTO verified_ids VALUES #{verified_id_clause}")
+        files = @s3_helper.list(prefix, marker)
+      end
+
+      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
+      missing_count = missing_uploads.count
+
+      if missing_count > 0
+        missing_uploads.find_each do |upload|
+          puts upload.url
+        end
+
+        puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+      end
+    ensure
+      connection.exec('DROP TABLE verified_ids') unless connection.nil?
+    end
   end
 end

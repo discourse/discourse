@@ -180,7 +180,7 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{min_users} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
@@ -251,6 +251,9 @@ en:
     character_count:
       one: "{{count}} character"
       other: "{{count}} characters"
+
+    related_messages:
+      title: "Related Messages"
 
     suggested_topics:
       title: "Suggested Topics"
@@ -535,6 +538,7 @@ en:
           description: "You will never be notified of anything about new topics in this group."
       flair_url: "Avatar Flair Image"
       flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
+      flair_url_description: "Use square images no smaller than 20px by 20px or FontAwesome icons (accepted formats: \"fa-icon\", \"far fa-icon\" or \"fab fa-icon\")."
       flair_bg_color: "Avatar Flair Background Color"
       flair_bg_color_placeholder: "(Optional) Hex color value"
       flair_color: "Avatar Flair Color"
@@ -1179,7 +1183,7 @@ en:
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
-      help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='/about'>our helpful staff.</a></p>"
+      help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='%{basePath}/about'>our helpful staff.</a></p>"
       button_ok: "OK"
       button_help: "Help"
 
@@ -1353,6 +1357,7 @@ en:
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
+      edit_conflict: 'edit conflict'
 
       group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
       group_mentioned:
@@ -1369,7 +1374,7 @@ en:
         title_too_long: "Title can't be more than {{max}} characters"
         post_missing: "Post can't be empty"
         post_length: "Post must be at least {{min}} characters"
-        try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
+        try_like: "Have you tried the {{heart}} button?"
         category_missing: "You must choose a category"
         tags_missing: "You must choose at least {{count}} tags"
 
@@ -1736,15 +1741,15 @@ en:
         UNREAD, plural,
         =0 {}
         one {
-          is <a href='/unread'>1 unread</a>
+          is <a href='{basePath}/unread'>1 unread</a>
         } other {
-          are <a href='/unread'># unread</a>
+          are <a href='{basePath}/unread'># unread</a>
         }
         } {
           NEW, plural,
             =0 {}
-            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
-            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
       browse_all_categories: Browse all categories
@@ -1842,7 +1847,7 @@ en:
           "2_8": 'You will see a count of new replies because you are tracking this category.'
           "2_4": 'You will see a count of new replies because you posted a reply to this topic.'
           "2_2": 'You will see a count of new replies because you are tracking this topic.'
-          "2": 'You will see a count of new replies because you <a href="/u/{{username}}/preferences">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="{{basePath}}/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'
@@ -2050,7 +2055,6 @@ en:
 
     post:
       quote_reply: "Quote"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki last edited on"
@@ -2251,7 +2255,7 @@ en:
           revert: "Revert to this revision"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -2704,9 +2708,18 @@ en:
       manage_groups: "Manage Tag Groups"
       manage_groups_description: "Define groups to organize tags"
       upload: "Upload Tags"
-      upload_description: "Upload a text file to create tags in bulk"
+      upload_description: "Upload a csv file to create tags in bulk"
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
+      delete_unused_confirmation:
+        one: "%{count} tag will be deleted: %{tags}"
+        other: "%{count} tags will be deleted: %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} and %{count} more"
+        other: "%{tags} and %{count} more"
+      delete_unused: "Delete Unused Tags"
+      delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
+      cancel_delete_unused: "Cancel"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -2837,6 +2850,7 @@ en:
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
+        not_found_error: Sorry, this report doesn’t exist
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -2859,8 +2873,8 @@ en:
           total: "All time total"
           no_data: "No data to display."
           trending_search:
-            more: '<a href="/admin/logs/search_logs">Search logs</a>'
-            disabled: 'Trending search report is disabled. Enable <a href="/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
+            disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -3393,7 +3407,7 @@ en:
         title: "Emails"
         settings: "Settings"
         templates: "Templates"
-        preview_digest: "Preview Digest"
+        preview_digest: "Preview Summary"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
@@ -3411,7 +3425,7 @@ en:
         send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
-        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
+        preview_digest_desc: "Preview the content of the summary emails sent to inactive users."
         refresh: "Refresh"
         send_digest_label: "Send this result to:"
         send_digest: "Send"
@@ -3420,7 +3434,7 @@ en:
         html: "html"
         text: "text"
         last_seen_user: "Last Seen User:"
-        no_result: "No results found for digest."
+        no_result: "No results found for summary."
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
         incoming_emails:
@@ -3461,6 +3475,7 @@ en:
           silence_user: "User Silenced"
           delete_post: "Post Deleted"
           delete_topic: "Topic Deleted"
+          post_approved: "Post Approved"
 
       logs:
         title: "Logs"
@@ -3530,6 +3545,7 @@ en:
             revoke_moderation: "revoke moderation"
             backup_create: "create backup"
             deleted_tag: "deleted tag"
+            deleted_unused_tags: "deleted unused tags"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"
@@ -3554,6 +3570,7 @@ en:
             delete_badge: "delete badge"
             merge_user: "merge user"
             entity_export: "export entity"
+            change_name: "change name"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4078,6 +4095,7 @@ en:
   wizard_js:
     wizard:
       done: "Done"
+      finish: "Finish"
       back: "Back"
       next: "Next"
       step: "%{current} of %{total}"

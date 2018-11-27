@@ -133,7 +133,6 @@ class PostDestroyer
         Topic.reset_highest(@post.topic_id)
       end
       trash_public_post_actions
-      agree_with_flags
       trash_user_actions
       @post.update_flagged_posts_count
       remove_associated_replies
@@ -147,6 +146,13 @@ class PostDestroyer
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
+      DB.after_commit do
+        if @opts[:agree_flags]
+          agree_with_flags
+        else
+          defer_flags
+        end
+      end
     end
 
     feature_users_in_the_topic if @post.topic
@@ -223,16 +229,23 @@ class PostDestroyer
     if @post.has_active_flag? && @user.id > 0 && @user.staff?
       Jobs.enqueue(
         :send_system_message,
-        user_id: @post.user.id,
+        user_id: @post.user_id,
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
           url: @post.url,
-          flag_reason: I18n.t("flag_reasons.#{@post.active_flags.last.post_action_type.name_key}", locale: SiteSetting.default_locale)
+          flag_reason: I18n.t(
+            "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",
+            locale: SiteSetting.default_locale,
+            base_path: Discourse.base_path
+          )
         }
       )
     end
-
     PostAction.agree_flags!(@post, @user, delete_post: true)
+  end
+
+  def defer_flags
+    PostAction.defer_flags!(@post, @user, delete_post: true)
   end
 
   def trash_user_actions

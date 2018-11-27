@@ -7,13 +7,36 @@
     cursor: pointer;
     border-bottom: 1px dashed $primary-medium;
 
-    .d-icon-globe {
+    .d-icon {
       margin-right: 0.25em;
       color: $primary;
     }
 
     &.past {
       border-bottom-color: $primary-low-mid;
+    }
+  }
+}
+
+.discourse-local-date + #discourse-tooltip {
+  .tooltip-content {
+    max-width: 360px;
+    padding: 0.5em;
+
+    .previews {
+      .preview {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .timezone {
+          font-weight: 700;
+        }
+
+        &.current {
+          background: $tertiary-low;
+        }
+      }
     }
   }
 }

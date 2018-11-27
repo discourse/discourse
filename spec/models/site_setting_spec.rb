@@ -153,25 +153,44 @@ describe SiteSetting do
   context 'deprecated site settings' do
     before do
       SiteSetting.force_https = true
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
     end
 
     it 'should act as a proxy to the new methods' do
       begin
-        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.push(%w{
-          use_https force_https 0.0.1
-        })
+        original_settings = SiteSettings::DeprecatedSettings::SETTINGS
+        SiteSettings::DeprecatedSettings::SETTINGS.clear
+
+        SiteSettings::DeprecatedSettings::SETTINGS.push([
+          'use_https', 'force_https', true, '0.0.1'
+        ])
 
         SiteSetting.setup_deprecated_methods
 
-        expect(SiteSetting.use_https).to eq(true)
-        expect(SiteSetting.use_https?).to eq(true)
+        expect do
+          expect(SiteSetting.use_https).to eq(true)
+          expect(SiteSetting.use_https?).to eq(true)
+        end.to change { @fake_logger.warnings.count }.by(2)
+
+        expect do
+          expect(SiteSetting.use_https(warn: false))
+        end.to_not change { @fake_logger.warnings }
 
         SiteSetting.use_https = false
 
         expect(SiteSetting.force_https).to eq(false)
         expect(SiteSetting.force_https?).to eq(false)
       ensure
-        SiteSettings::DeprecatedSettings::DEPRECATED_SETTINGS.pop
+        SiteSettings::DeprecatedSettings::SETTINGS.clear
+
+        SiteSettings::DeprecatedSettings::SETTINGS.concat(
+          original_settings
+        )
       end
     end
   end

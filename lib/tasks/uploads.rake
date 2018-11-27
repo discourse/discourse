@@ -121,6 +121,8 @@ def migrate_from_s3
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
 
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
   Post
     .where("user_id > 0")
     .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
@@ -131,7 +133,7 @@ def migrate_from_s3
       post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+            file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
             sha1 = Upload.generate_digest(file)
             origin = nil
 
@@ -160,7 +162,7 @@ def migrate_from_s3
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
                 filename = upload.original_filename
                 origin = upload.origin
                 upload.destroy
@@ -402,44 +404,7 @@ task "uploads:missing" => :environment do
 end
 
 def list_missing_uploads(skip_optimized: false)
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  public_directory = "#{Rails.root}/public"
-
-  Upload.find_each do |upload|
-
-    # could be a remote image
-    next unless upload.url =~ /^\/[^\/]/
-
-    path = "#{public_directory}#{upload.url}"
-    bad = true
-    begin
-      bad = false if File.size(path) != 0
-    rescue
-      # something is messed up
-    end
-    puts path if bad
-  end
-
-  unless skip_optimized
-    OptimizedImage.find_each do |optimized_image|
-      # remote?
-      next unless optimized_image.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{optimized_image.url}"
-
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      puts path if bad
-    end
-  end
+  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
 end
 
 ################################################################################

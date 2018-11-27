@@ -54,10 +54,8 @@ export default Ember.Controller.extend(BufferedContent, {
         ];
 
         if (this.get("buffered.system")) {
-          var protectedFields = this.get("protectedSystemFields");
-          fields = _.filter(fields, function(f) {
-            return !_.include(protectedFields, f);
-          });
+          var protectedFields = this.get("protectedSystemFields") || [];
+          fields = _.filter(fields, f => !protectedFields.includes(f));
         }
 
         this.set("saving", true);
@@ -77,7 +75,7 @@ export default Ember.Controller.extend(BufferedContent, {
         const buffered = this.get("buffered");
         fields.forEach(function(field) {
           var d = buffered.get(field);
-          if (_.include(boolFields, field)) {
+          if (boolFields.includes(field)) {
             d = !!d;
           }
           data[field] = d;

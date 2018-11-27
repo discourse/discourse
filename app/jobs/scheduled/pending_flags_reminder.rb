@@ -26,7 +26,7 @@ module Jobs
             archetype: Archetype.private_message,
             subtype: TopicSubtype.system_message,
             title: I18n.t('flags_reminder.subject_template', count: flagged_posts_count),
-            raw: mentions + I18n.t('flags_reminder.flags_were_submitted', count: SiteSetting.notify_about_flags_after)
+            raw: mentions + I18n.t('flags_reminder.flags_were_submitted', count: SiteSetting.notify_about_flags_after, base_path: Discourse.base_path)
           )
 
           self.last_notified_id = flag_ids.max

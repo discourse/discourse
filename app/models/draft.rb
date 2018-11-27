@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 class Draft < ActiveRecord::Base
-  NEW_TOPIC = 'new_topic'
-  NEW_PRIVATE_MESSAGE = 'new_private_message'
-  EXISTING_TOPIC = 'topic_'
+  NEW_TOPIC ||= 'new_topic'
+  NEW_PRIVATE_MESSAGE ||= 'new_private_message'
+  EXISTING_TOPIC ||= 'topic_'
 
   def self.set(user, key, sequence, data)
-    d = find_draft(user, key)
-    if d
+    if d = find_draft(user, key)
       return if d.sequence > sequence
-      DB.exec("UPDATE drafts
-               SET  data = :data,
-                    sequence = :sequence,
-                    revisions = revisions + 1
-               WHERE id = :id", id: d.id, sequence: sequence, data: data)
+
+      DB.exec(<<~SQL, id: d.id, sequence: sequence, data: data)
+        UPDATE drafts
+           SET sequence = :sequence
+             , data = :data
+             , revisions = revisions + 1
+         WHERE id = :id
+      SQL
     else
       Draft.create!(user_id: user.id, draft_key: key, data: data, sequence: sequence)
     end
@@ -23,16 +25,12 @@ class Draft < ActiveRecord::Base
 
   def self.get(user, key, sequence)
     d = find_draft(user, key)
-    if d && d.sequence == sequence
-      d.data
-    end
+    d.data if d && d.sequence == sequence
   end
 
   def self.clear(user, key, sequence)
     d = find_draft(user, key)
-    if d && d.sequence <= sequence
-      d.destroy
-    end
+    d.destroy if d && d.sequence <= sequence
   end
 
   def self.find_draft(user, key)
@@ -83,11 +81,15 @@ class Draft < ActiveRecord::Base
   end
 
   def self.cleanup!
-    DB.exec("DELETE FROM drafts where sequence < (
-               SELECT max(s.sequence) from draft_sequences s
-               WHERE s.draft_key = drafts.draft_key AND
-                     s.user_id = drafts.user_id
-            )")
+    DB.exec(<<~SQL)
+      DELETE FROM drafts
+       WHERE sequence < (
+        SELECT MAX(s.sequence)
+          FROM draft_sequences s
+         WHERE s.draft_key = drafts.draft_key
+           AND s.user_id = drafts.user_id
+      )
+    SQL
 
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago

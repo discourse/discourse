@@ -43,6 +43,7 @@
 
     .logo {
       display: block;
+      width: auto;
       height: 40px;
       margin: 0 auto 1em auto;
     }
@@ -175,26 +176,18 @@
       margin: 0;
     }
     li {
-      padding: 0;
-      margin-left: 1.5em;
+      padding: 4px 0;
+      display: flex;
       .overflow {
         max-height: 3em;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }
-    li:before {
-      content: "\f0f6";
-      font-family: "FontAwesome";
-      float: left;
-      margin-left: -1.5em;
-    }
-    li.topic-pinned:before {
-      content: "\f08d";
-    }
-    li.topic-closed:before,
-    li.topic-archived:before {
-      content: "\f023";
+
+      .d-icon {
+        margin-right: 6px;
+        margin-top: 2px;
+      }
     }
   }
 }

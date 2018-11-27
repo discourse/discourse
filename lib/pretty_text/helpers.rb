@@ -39,12 +39,6 @@ module PrettyText
       username
     end
 
-    def mention_lookup(name)
-      return false   if name.blank?
-      return "group" if Group.exists?(name: name)
-      return "user"  if User.exists?(username_lower: name.downcase)
-    end
-
     def category_hashtag_lookup(category_slug)
       if category = Category.query_from_hashtag_slug(category_slug)
         [category.url_with_id, category_slug]
@@ -80,10 +74,6 @@ module PrettyText
       end
 
       result
-    end
-
-    def lookup_inline_onebox(url, opts = {})
-      InlineOneboxer.lookup(url, opts)
     end
 
     def get_topic_info(topic_id)

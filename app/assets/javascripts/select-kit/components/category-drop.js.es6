@@ -10,7 +10,7 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  content: Ember.computed.alias("categories"),
+  content: Ember.computed.alias("categoriesWithShortcuts"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
   allowAutoSelectFirst: false,
@@ -23,6 +23,34 @@ export default ComboBoxComponent.extend({
   caretUpIcon: "caret-down",
   subCategory: false,
   isAsync: Ember.computed.not("subCategory"),
+
+  @computed("categories", "hasSelection", "subCategory", "noSubcategories")
+  categoriesWithShortcuts(
+    categories,
+    hasSelection,
+    subCategory,
+    noSubcategories
+  ) {
+    const shortcuts = [];
+
+    if (hasSelection || (noSubcategories && subCategory)) {
+      shortcuts.push({
+        name: this.get("allCategoriesLabel"),
+        __sk_row_type: "noopRow",
+        id: "all-categories"
+      });
+    }
+
+    if (subCategory && (hasSelection || !noSubcategories)) {
+      shortcuts.push({
+        name: this.get("noCategoriesLabel"),
+        __sk_row_type: "noopRow",
+        id: "no-categories"
+      });
+    }
+
+    return shortcuts.concat(categories);
+  },
 
   init() {
     this._super();
@@ -52,45 +80,6 @@ export default ComboBoxComponent.extend({
       contentLength >= 15 ||
       (this.get("isAsync") && contentLength < Discourse.Category.list().length)
     );
-  },
-
-  @computed(
-    "allCategoriesUrl",
-    "allCategoriesLabel",
-    "noCategoriesUrl",
-    "noCategoriesLabel"
-  )
-  collectionHeader(
-    allCategoriesUrl,
-    allCategoriesLabel,
-    noCategoriesUrl,
-    noCategoriesLabel
-  ) {
-    let shortcuts = "";
-
-    if (
-      this.get("hasSelection") ||
-      (this.get("noSubcategories") && this.get("subCategory"))
-    ) {
-      shortcuts += `
-        <a href="${allCategoriesUrl}" class="category-filter">
-          ${allCategoriesLabel}
-        </a>
-      `;
-    }
-
-    if (
-      this.get("subCategory") &&
-      (this.get("hasSelection") || !this.get("noSubcategories"))
-    ) {
-      shortcuts += `
-        <a href="${noCategoriesUrl}" class="category-filter">
-          ${noCategoriesLabel}
-        </a>
-      `;
-    }
-
-    return shortcuts.htmlSafe();
   },
 
   computeHeaderContent() {
@@ -131,19 +120,28 @@ export default ComboBoxComponent.extend({
 
   @computed("parentCategory.url", "subCategory")
   allCategoriesUrl(parentCategoryUrl, subCategory) {
-    return subCategory ? parentCategoryUrl || "/" : "/";
+    return Discourse.getURL(subCategory ? parentCategoryUrl || "/" : "/");
   },
 
   @computed("parentCategory.url")
   noCategoriesUrl(parentCategoryUrl) {
-    return `${parentCategoryUrl}/none`;
+    return Discourse.getURL(`${parentCategoryUrl}/none`);
   },
 
   actions: {
     onSelect(categoryId) {
-      const category = Category.findById(parseInt(categoryId, 10));
-      const categoryURL =
-        Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
+      let categoryURL;
+
+      if (categoryId === "all-categories") {
+        categoryURL = Discourse.getURL(this.get("allCategoriesUrl"));
+      } else if (categoryId === "no-categories") {
+        categoryURL = Discourse.getURL(this.get("noCategoriesUrl"));
+      } else {
+        const category = Category.findById(parseInt(categoryId, 10));
+        const slug = Discourse.Category.slugFor(category);
+        categoryURL = Discourse.getURL("/c/") + slug;
+      }
+
       DiscourseURL.routeTo(categoryURL);
     },
 

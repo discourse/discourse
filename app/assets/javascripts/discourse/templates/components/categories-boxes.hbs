@@ -3,7 +3,11 @@
     <div class='category-box-inner'>
       <div class="category-logo">
         {{#if c.uploaded_logo.url}}
-          {{cdn-img src=c.uploaded_logo.url class="logo"}}
+          {{cdn-img
+              src=c.uploaded_logo.url
+              class="logo"
+              width=c.uploaded_logo.width
+              height=c.uploaded_logo.height}}
         {{/if}}
       </div>
       <div class="category-details">
@@ -25,7 +29,11 @@
             {{#each c.subcategories as |sc|}}
               <a class="subcategory" href={{sc.url}}>
                 <span class="subcategory-image-placeholder">
-                  {{cdn-img src=sc.uploaded_logo.url class="logo"}}
+                  {{cdn-img
+                      src=c.uploaded_logo.url
+                      class="logo"
+                      width=c.uploaded_logo.width
+                      height=c.uploaded_logo.height}}
                 </span>
                 <span class="subcategory-link">{{sc.name}}</span>
               </a>

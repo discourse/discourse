@@ -1390,7 +1390,7 @@ class Topic < ActiveRecord::Base
     post = ordered_posts.where(
       user_deleted: false,
       hidden: false,
-      post_type: Topic.visible_post_types
+      post_type: Post.types[:regular]
     ).last
 
     update!(bumped_at: post.created_at)

@@ -59,38 +59,26 @@ module BackupRestore
       if !can_restore_into_different_schema?
         log "Cannot restore into different schema, restoring in-place"
         enable_readonly_mode
-
         pause_sidekiq
         wait_for_sidekiq
-
         BackupRestore.move_tables_between_schemas("public", "backup")
-
         @db_was_changed = true
         restore_dump
-        migrate_database
-        reconnect_database
-
-        reload_site_settings
-        clear_emoji_cache
-
-        disable_readonly_mode
       else
         log "Restoring into 'backup' schema"
         restore_dump
         enable_readonly_mode
-
         pause_sidekiq
         wait_for_sidekiq
-
         switch_schema!
-
-        migrate_database
-        reconnect_database
-        reload_site_settings
-        clear_emoji_cache
-
-        disable_readonly_mode
       end
+
+      migrate_database
+      reconnect_database
+      reload_site_settings
+      clear_emoji_cache
+      disable_readonly_mode
+      clear_theme_cache
 
       extract_uploads
     rescue SystemExit
@@ -487,6 +475,15 @@ module BackupRestore
       Sidekiq.unpause!
     rescue => ex
       log "Something went wrong while unpausing Sidekiq.", ex
+    end
+
+    def clear_theme_cache
+      log "Clear theme cache"
+      ThemeField.all.each do |field|
+        field.compiler_version = 0
+        field.ensure_baked!
+      end
+      Theme.expire_site_cache!
     end
 
     def disable_readonly_mode

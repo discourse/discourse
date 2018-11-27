@@ -40,7 +40,7 @@ export default Ember.Controller.extend({
         );
       }
 
-      setTimeout(() => {
+      Ember.run.later(() => {
         this.set("model.savingStatus", null);
       }, 2000);
 

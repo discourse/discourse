@@ -60,6 +60,10 @@ module FileStore
       not_implemented
     end
 
+    def list_missing_uploads(skip_optimized: false)
+      not_implemented
+    end
+
     def download(upload)
       DistributedMutex.synchronize("download_#{upload.sha1}") do
         filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"

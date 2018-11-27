@@ -303,6 +303,25 @@ RSpec.describe SessionController do
 
     end
 
+    it 'will never redirect back to /session/sso path' do
+      sso = get_sso("/session/sso?bla=1")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to('/')
+
+      sso = get_sso("http://#{Discourse.current_hostname}/session/sso?bla=1")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to('/')
+
+    end
+
     it 'can take over an account' do
       sso = get_sso("/")
       user = Fabricate(:user)

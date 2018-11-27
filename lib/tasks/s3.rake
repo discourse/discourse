@@ -37,8 +37,27 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   end
 end
 
+def use_db_s3_config
+  ENV["USE_DB_S3_CONFIG"]
+end
+
 def helper
-  @helper ||= S3Helper.new(GlobalSetting.s3_bucket.downcase, '', S3Helper.s3_options(GlobalSetting))
+  @helper ||= begin
+    bucket, options =
+      if use_db_s3_config
+        [
+          SiteSetting.s3_upload_bucket.downcase,
+          S3Helper.s3_options(SiteSetting)
+        ]
+      else
+        [
+          GlobalSetting.s3_bucket.downcase,
+          S3Helper.s3_options(GlobalSetting)
+        ]
+      end
+
+    S3Helper.new(bucket, '', options)
+  end
 end
 
 def assets
@@ -76,7 +95,7 @@ def asset_paths
 end
 
 def ensure_s3_configured!
-  unless GlobalSetting.use_s3?
+  unless GlobalSetting.use_s3? || use_db_s3_config
     STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
     exit 1
   end

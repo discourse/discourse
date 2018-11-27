@@ -5921,8 +5921,6 @@ export default {
             "Topics that don't need a category, or don't fit into any other existing category.",
           description_text: "",
           topic_url: null,
-          logo_url: null,
-          background_url: null,
           read_restricted: false,
           permission: null,
           notification_level: null,
@@ -5951,7 +5949,6 @@ export default {
           description_text:
             "Discussion about this site, its organization, how it works, and how we can improve it.",
           topic_url: "/t/about-the-site-feedback-category/2",
-          logo_url: null,
           background_url: null,
           read_restricted: false,
           permission: null,

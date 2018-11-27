@@ -9,8 +9,12 @@ export function lookupUncachedUploadUrls(urls, ajax) {
     method: "POST",
     data: { short_urls: urls }
   }).then(uploads => {
-    uploads.forEach(upload => (_cache[upload.short_url] = upload.url));
-    urls.forEach(url => (_cache[url] = _cache[url] || "missing"));
+    uploads.forEach(upload =>
+      cacheShortUploadUrl(upload.short_url, upload.url)
+    );
+    urls.forEach(url =>
+      cacheShortUploadUrl(url, lookupCachedUploadUrl(url) || "missing")
+    );
     return uploads;
   });
 }
@@ -19,10 +23,15 @@ export function cacheShortUploadUrl(shortUrl, url) {
   _cache[shortUrl] = url;
 }
 
+export function resetCache() {
+  _cache = {};
+}
+
 function _loadCachedShortUrls($images) {
   $images.each((idx, image) => {
-    let $image = $(image);
-    let url = lookupCachedUploadUrl($image.data("orig-src"));
+    const $image = $(image);
+    const url = lookupCachedUploadUrl($image.data("orig-src"));
+
     if (url) {
       $image.removeAttr("data-orig-src");
       if (url !== "missing") {
@@ -33,8 +42,8 @@ function _loadCachedShortUrls($images) {
 }
 
 function _loadShortUrls($images, ajax) {
-  const urls = _.map($images, img => $(img).data("orig-src"));
-  lookupUncachedUploadUrls(urls, ajax).then(() =>
+  const urls = $images.toArray().map(img => $(img).data("orig-src"));
+  return lookupUncachedUploadUrls(urls, ajax).then(() =>
     _loadCachedShortUrls($images)
   );
 }
@@ -48,11 +57,9 @@ export function resolveAllShortUrls(ajax) {
     $shortUploadUrls = $("img[data-orig-src]");
     if ($shortUploadUrls.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
-      Ember.run.debounce(
+      return Ember.run.debounce(
         null,
-        () => {
-          _loadShortUrls($shortUploadUrls, ajax);
-        },
+        () => _loadShortUrls($shortUploadUrls, ajax),
         450,
         true
       );

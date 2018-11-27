@@ -135,7 +135,7 @@ pl_PL:
         second_response: |-
           Przepraszam. Ciągle nie rozumiem :anguished:
 
-          Jeżeli chcesz się skontaktować z prawdziwą osobą odwiedź naszą [stronę kontaktową](/about).
+          Jeżeli chcesz się skontaktować z prawdziwą osobą odwiedź naszą [stronę kontaktową](%{base_path}/about).
 
           W międzyczasie nie będę Ci już przeszkadzał.
     new_user_narrative:

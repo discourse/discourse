@@ -114,6 +114,15 @@ describe PostRevisor do
       end
     end
 
+    describe 'with nil raw contents' do
+      it "doesn't change version" do
+        expect {
+          expect(subject.revise!(post.user, raw: nil)).to eq(false)
+          post.reload
+        }.not_to change(post, :version)
+      end
+    end
+
     describe 'ninja editing' do
       it 'correctly applies edits' do
         SiteSetting.editing_grace_period = 1.minute

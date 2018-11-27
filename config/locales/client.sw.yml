@@ -1015,7 +1015,7 @@ sw:
       complete_email_found: "Tumegundua akaunti inayolingana na  <b>%{email}</b>,utapokea barua pepe yenye maelezo ya jinsi ya kuweka upya nywila yako hivi punde."
       complete_username_not_found: "hakuna akaunti inayowiana na mtumiaji %{username}"
       complete_email_not_found: "Hakuna akaunti inawiana %{email}"
-      help: "Barua pepe haijafika? Hakikisha kuangalia folda la barua taka. <p>Hauna uhakika barua pepe uliyotumia? Andika barua pepe yako na tutakujulisha kama ipo kwetu.</p><p>Kama hauwezi kufikia barua pepe ya akaunti yako, tafadhali wasiliana na <a href='/about'>wasaidizi wetu.</a></p>"
+      help: "Barua pepe haijafika? Hakikisha kuangalia folda la barua taka. <p>Hauna uhakika barua pepe uliyotumia? Andika barua pepe yako na tutakujulisha kama ipo kwetu.</p><p>Kama hauwezi kufikia barua pepe ya akaunti yako, tafadhali wasiliana na <a href='%{basePath}/about'>wasaidizi wetu.</a></p>"
       button_ok: "Vema"
       button_help: "Msaada"
     email_login:
@@ -1522,7 +1522,7 @@ sw:
       toggle_information: "badilisha taarifa za mada"
       read_more_in_category: "Unataka kusoma zaidi? Vinjari mada zingine ndani ya {{catLink}} au {{latestLink}}."
       read_more: "Unataka kusoma zaidi? {{catLink}} au {{latestLink}}."
-      read_more_MF: "Kuna { UNREAD, plural, =0 {} one { ni <a href='/unread'>haijasomwa 1</a> } other { ni <a href='/unread'>haijasomwa #</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{na } false {ni } other {}} mada<a href='/new'>mpya 1</a>} other { {BOTH, select, true{na } false {ni } other{}} <a href='/new'>mada mpya #</a>} } zilizobaki, au {CATEGORY, select, true {vinjari mada zingine ndani ya {catLink}} hapana {{latestLink}} other {}}"
+      read_more_MF: "Kuna { UNREAD, plural, =0 {} one { ni <a href='{basePath}/unread'>haijasomwa 1</a> } other { ni <a href='{basePath}/unread'>haijasomwa #</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{na } false {ni } other {}} mada<a href='{basePath}/new'>mpya 1</a>} other { {BOTH, select, true{na } false {ni } other{}} <a href='{basePath}/new'>mada mpya #</a>} } zilizobaki, au {CATEGORY, select, true {vinjari mada zingine ndani ya {catLink}} hapana {{latestLink}} other {}}"
       browse_all_categories: Vinjari kategoria zote
       view_latest_topics: tembelea mada mpya
       suggest_create_topic: "Kwa nini usitengeneze mada?"
@@ -1607,7 +1607,7 @@ sw:
           "2_8": 'Utaona jumla ya majibu mapya kwa sababu unafuatilia kategoria hii.'
           "2_4": 'Utaweza kuona jumla ya majibu mapya kwa sababu ulichapisha jibu kwenye mada hii.'
           "2_2": 'Utaweza kuona jumla ya majibu mapya kwa sababu unafuatilia mada hii.'
-          "2": 'Utaweza kuona jumla ya majibu mapya kwa sababu uli<a href="/u/{{username}}/preferences">soma mada hii</a>.'
+          "2": 'Utaweza kuona jumla ya majibu mapya kwa sababu uli<a href="{{basePath}}/u/{{username}}/preferences">soma mada hii</a>.'
           "1_2": 'Utajulishwa kama mtu akitaja @jina lako au akikujibu.'
           "1": 'Utajulishwa kama mtu akitaja @jina lako au akikujibu.'
           "0_7": 'Unapuuzia taarifa za kategoria hii.'

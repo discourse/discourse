@@ -7,12 +7,17 @@ QUnit.test("search for a key", async assert => {
 
   await fillIn(".site-text-search", "Test");
 
+  assert.equal(currentURL(), "/admin/customize/site_texts?q=Test");
   assert.ok(exists(".site-text"));
   assert.ok(exists(".site-text:not(.overridden)"));
   assert.ok(exists(".site-text.overridden"));
 
   // Only show overridden
   await click(".extra-options input");
+  assert.equal(
+    currentURL(),
+    "/admin/customize/site_texts?overridden=true&q=Test"
+  );
 
   assert.ok(!exists(".site-text:not(.overridden)"));
   assert.ok(exists(".site-text.overridden"));

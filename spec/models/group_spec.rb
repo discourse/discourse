@@ -710,11 +710,16 @@ describe Group do
     end
 
     it "always sets user's primary group" do
-      group.update(primary_group: true)
+      group.update(primary_group: true, title: 'AAAA')
       expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
 
-      new_group = Fabricate(:group, primary_group: true)
-      expect { new_group.add(user) }.to change { user.reload.primary_group }.from(group).to(new_group)
+      new_group = Fabricate(:group, primary_group: true, title: 'BBBB')
+
+      expect {
+        new_group.add(user)
+        user.reload
+      }.to change { user.primary_group }.from(group).to(new_group)
+        .and change { user.title }.from('AAAA').to('BBBB')
     end
 
     context 'when adding a user into a public group' do
@@ -819,5 +824,23 @@ describe Group do
         expect(job["args"].first["group_id"]).to eq(group.id)
       end
     end
+  end
+
+  it "allows Font Awesome 4.7 syntax as group avatar flair" do
+    group = Fabricate(:group)
+    group.flair_url = "fa-air-freshener"
+    group.save
+
+    group = Group.find(group.id)
+    expect(group.flair_url).to eq("fa-air-freshener")
+  end
+
+  it "allows Font Awesome 5 syntax as group avatar flair" do
+    group = Fabricate(:group)
+    group.flair_url = "fab fa-bandcamp"
+    group.save
+
+    group = Group.find(group.id)
+    expect(group.flair_url).to eq("fab fa-bandcamp")
   end
 end

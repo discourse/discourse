@@ -37,6 +37,26 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'when image is not authorized' do
+      describe 'when image is for site setting' do
+        let(:filename) { 'logo.png' }
+        let(:file) { file_from_fixtures(filename) }
+
+        before do
+          SiteSetting.authorized_extensions = 'jpg'
+        end
+
+        it 'should create the right upload' do
+          upload = UploadCreator.new(file, filename,
+            for_site_setting: true
+          ).create_for(Discourse.system_user.id)
+
+          expect(upload.persisted?).to eq(true)
+          expect(upload.original_filename).to eq(filename)
+        end
+      end
+    end
+
     describe 'when image has the wrong extension' do
       let(:filename) { "png_as.bin" }
       let(:file) { file_from_fixtures(filename) }
@@ -79,11 +99,35 @@ RSpec.describe UploadCreator do
     end
 
     describe 'converting to jpeg' do
-      let(:filename) { "logo.png" }
+      let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
+
+      let(:small_filename) { "logo.png" }
+      let(:small_file) { file_from_fixtures(small_filename) }
 
       before do
         SiteSetting.png_to_jpg_quality = 1
+      end
+
+      it 'should not store file as jpeg if it does not meet absolute byte saving requirements' do
+
+        # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
+        # the absolute savings required of 25_000 bytes, if you save less than that
+        # skip this
+
+        expect do
+          UploadCreator.new(small_file, small_filename,
+            pasted: true,
+            force_optimize: true
+          ).create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq('png')
+        expect(File.extname(upload.url)).to eq('.png')
+        expect(upload.original_filename).to eq('logo.png')
+
       end
 
       it 'should store the upload with the right extension' do
@@ -98,7 +142,7 @@ RSpec.describe UploadCreator do
 
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
-        expect(upload.original_filename).to eq('logo.jpg')
+        expect(upload.original_filename).to eq('should_be_jpeg.jpg')
       end
     end
   end

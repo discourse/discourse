@@ -34,6 +34,11 @@
   }
 
   Discourse.HighlightJSPath = setupData.highlightJsPath;
+  Discourse.SvgSpritePath = setupData.svgSpritePath;
+
+  if (Discourse.Environment === "development") {
+    Discourse.SvgIconList = setupData.svgIconList;
+  }
 
   if (setupData.s3BaseUrl) {
     Discourse.S3CDN = setupData.s3Cdn;
@@ -47,6 +52,7 @@
     }
 
     if (Discourse.Environment === "development") {
+      /* eslint-disable no-console  */
       if (e) {
         if (e.message || e.stack) {
           console.log(e.message);
@@ -57,6 +63,7 @@
       } else {
         console.log("A promise failed but was not caught.");
       }
+      /* eslint-enable no-console  */
     }
 
     window.onerror(e && e.message, null, null, null, e);

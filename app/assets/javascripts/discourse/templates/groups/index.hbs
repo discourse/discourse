@@ -54,7 +54,7 @@
                     {{/link-to}}
                   </td>
 
-                  <td class="groups-user-count">{{group.user_count}}</td>
+                  <td class="groups-user-count">{{d-icon "group"}}{{group.user_count}}</td>
 
                   <td class="groups-table-type">
                     {{#if group.public_admission}}
@@ -82,7 +82,7 @@
                       </span>
                     {{/if}}
 
-                    {{group-membership-button model=group showLogin='showLogin'}}
+                    {{group-membership-button tagName='' model=group showLogin='showLogin'}}
                   </td>
                 </tr>
               {{/each}}

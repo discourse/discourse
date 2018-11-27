@@ -24,7 +24,7 @@
             <td class='payload-url'>{{#link-to 'adminWebHooks.show' webHook}}{{webHook.payload_url}}{{/link-to}}</td>
             <td class='description'>{{webHook.description}}</td>
             <td class='controls'>
-              {{#link-to 'adminWebHooks.show' webHook tagName='button' classNames='btn btn-default no-text'}}{{d-icon 'edit'}}{{/link-to}}
+              {{#link-to 'adminWebHooks.show' webHook tagName='button' classNames='btn btn-default no-text'}}{{d-icon 'far-edit'}}{{/link-to}}
               {{d-button class="destroy btn-danger" action='destroy' actionParam=webHook icon="remove"}}
             </td>
           </tr>

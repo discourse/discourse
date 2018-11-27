@@ -111,7 +111,7 @@ nl:
       <<: *errors
   invite:
     not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
-    user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='/u/%{username}/summary'>heeft al een account!</a>"
+    user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='%{base_path}/u/%{username}/summary'>heeft al een account!</a>"
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
     error: "Er is een fout opgetreden tijdens het uploaden van dat bestand. Probeer het later opnieuw."
@@ -242,7 +242,7 @@ nl:
 
       - Gebruik algemeen gebruikte woorden, zodat anderen uw topic kunnen *vinden*. Selecteer een categorie om uw topic met verwante topics te groeperen.
 
-      [Bekijk onze gemeenschapsrichtlijnen](/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
+      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
     'new-reply': |
       Welkom op %{site_name} &ndash; **bedankt voor uw bijdrage!**
 
@@ -252,7 +252,7 @@ nl:
 
       - Opbouwende kritiek is welkom, maar geef kritiek op *ideeën*, niet op mensen.
 
-      [Bekijk onze gemeenschapsrichtlijnen](/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
+      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
     avatar: |
       ### Wat dacht u van een afbeelding voor uw account?
 
@@ -282,7 +282,7 @@ nl:
 
       Hebt u overwogen *andere* mensen in de discussie ook te beantwoorden? Een goede discussie omvat veel stemmen en perspectieven.
 
-      Als u uw discussie met deze bepaalde gebruiker uitvoerig wilt voortzetten, [stuur deze dan een persoonlijk bericht](/u/%{reply_username}).
+      Als u uw discussie met deze bepaalde gebruiker uitvoerig wilt voortzetten, [stuur deze dan een persoonlijk bericht](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 
@@ -346,7 +346,7 @@ nl:
             word:
               too_many: "Te veel woorden voor die aktie"
   user_profile:
-    no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
+    no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niets in het veld Over mij van zijn of haar profiel ingevoerd</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Een exclusieve categorie voor leden met vertrouwensniveau 3 en hoger."
@@ -355,7 +355,7 @@ nl:
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
   assets_topic_title: "Assets voor het websiteontwerp"
-  assets_topic_body: "Dit topic, alleen zichtbaar voor personeel, is voor het opslaan van afbeeldingen en bestanden die in het ontwerp van de website worden gebruikt. Verwijder het niet!\n\n\nZo werkt het:\n\n\n1. Reageer op dit topic.\n2. Upload hier alle afbeeldingen die je voor logos, favicons, etc. wilt gebruiken. (Gebruik het werkbalkpictogram voor uploaden in je berichteditor, of sleep of plak de afbeeldingen.)\n3. Verzend je reactie om het te plaatsen.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeeldingen te verkrijgen, of klik op het bewerkingspictogram om uw bericht te bewerken en het pad naar de afbeeldingen op te halen. Kopieer de afbeeldingspaden.\n5. Plak de afbeeldingspaden in [basisinstellingen](/admin/site_settings/category/required).\n\n\nAls u verschillende soorten uploads van bestandstypen wilt inschakelen, bewerk dan 'authorized_extensions' in de [bestandsinstellingen](/admin/site_settings/category/files)."
+  assets_topic_body: "Dit topic, alleen zichtbaar voor personeel, is voor het opslaan van afbeeldingen en bestanden die in het ontwerp van de website worden gebruikt. Verwijder het niet!\n\n\nZo werkt het:\n\n\n1. Reageer op dit topic.\n2. Upload hier alle afbeeldingen die je voor logos, favicons, etc. wilt gebruiken. (Gebruik het werkbalkpictogram voor uploaden in je berichteditor, of sleep of plak de afbeeldingen.)\n3. Verzend je reactie om het te plaatsen.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeeldingen te verkrijgen, of klik op het bewerkingspictogram om uw bericht te bewerken en het pad naar de afbeeldingen op te halen. Kopieer de afbeeldingspaden.\n5. Plak de afbeeldingspaden in [basisinstellingen](%{base_path}/admin/site_settings/category/required).\n\n\nAls u verschillende soorten uploads van bestandstypen wilt inschakelen, bewerk dan 'authorized_extensions' in de [bestandsinstellingen](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Welkom bij Discourse"
     body: |2
@@ -369,7 +369,7 @@ nl:
         - Waarom zouden ze hier moeten komen?
         - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
@@ -757,11 +757,11 @@ nl:
     memory_warning: 'Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen.'
     subfolder_ends_in_slash: "Uw submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
     email_polling_errored_recently:
-      one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details."
-      other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='/logs' target='_blank'>de logboeken</a> voor meer details."
-    bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon_url-instelling in de <a href='/admin/site_settings'>Website-instellingen</a>."
-    poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
-    poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='/admin/site_settings/category/email'>POP3-instellingen</a>."
+      one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
+      other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
+    bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon_url-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
+    poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
+    poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
   site_settings:
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"
@@ -992,7 +992,7 @@ nl:
     auto_respond_to_flag_actions: "Automatisch antwoord Inschakelen op moment van weggooien van een markering."
     min_first_post_typing_time: "Minimum tijd in milliseconden dat een gebruiker moet typen tijdens een eerste post, als de drempelwaarde niet wordt bereikt zal de post automatisch in de wachtrij voor goedkeuring gezet worden. Zet op 0 om uit te schakelen (niet aanbevolen)"
     reply_by_email_enabled: "Mogelijk inschakelen om te antwoorden per e-mail."
-    reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
+    reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reageer.mijnforum.nl"
     strip_images_from_short_emails: "Verwijder afbeeldingen met grootte van minder dan 2800 Bytes uit e-mails."
     short_email_length: "Korte e-mail lengte in Bytes"
     display_name_on_email_from: "Toon de volledige naam in het afzenderveld van e-mails."
@@ -1099,7 +1099,7 @@ nl:
       invalid_string_min_max: "Moet tussen %{min} en %{max} tekens zijn."
       invalid_string_min: "Moet te minste uit %{min} tekens bestaan."
       invalid_string_max: "Mag uit niet meer dan %{max} tekens bestaan."
-      invalid_reply_by_email_address: "Waarde moet '%{reply_key}' bevatten en afwijken van de melding per e-mail."
+      invalid_reply_by_email_address: "Waarde moet '%%{reply_key}' bevatten en afwijken van de melding per e-mail."
       invalid_regex: "Regex is ongeldig of niet toegestaan."
   search:
     within_post: "#%{post_number} door %{username}"
@@ -1232,7 +1232,7 @@ nl:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de gemeenschap meent het niet goed past bij het onderwerp, zoals momenteel bepaald door de titel en de eerste post."
-    inappropriate: "Je bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](/guidelines)."
+    inappropriate: "Je bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
     spam: "Je bericht is gemarkeerd als **spam**: de gemeenschap vindt het bericht een reclame uiting, dat wil zeggen overdreven reclamerend van aard in plaats van nuttig of relevant voor het onderwerp zoals verwacht."
     notify_moderators: "Je bericht is gemarkeerd als **voorleggen aan moderator**: de gemeenschap vindt dat er iets is met het bericht dat nagekeken moet worden."
   flags_dispositions:
@@ -1315,7 +1315,7 @@ nl:
       text_body_template: |
         Er zijn nieuwe gebruikers die zich hebben ingeschreven en wachten op goedkeuring (of afwijzing) voor zij het forum op kunnen.
 
-        [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
+        [Beoordeel deze gebruikers in het admingedeelte](%{base_path}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
     dashboard_problems:
@@ -1380,8 +1380,8 @@ nl:
   avatar:
     missing: "Sorry, we kunnen geen avatar vinden die met dat e-mailadres is gekoppeld. Kunt u proberen deze opnieuw te uploaden?"
   flag_reason:
-    sockpuppet: "Een nieuwe gebruiker heeft een topic aangemaakt, en een andere nieuwe gebruiker op hetzelfde IP-adres (%{ip_address}) heeft geantwoord. Bekijk de website-instelling <a href='/admin/site_settings/category/spam'>'flag_sockpuppets'</a>."
-    spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein (%{domain}) aan te maken. Bekijk de website-instelling <a href='/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
+    sockpuppet: "Een nieuwe gebruiker heeft een topic aangemaakt, en een andere nieuwe gebruiker op hetzelfde IP-adres (%{ip_address}) heeft geantwoord. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>'flag_sockpuppets'</a>."
+    spam_hosts: "Deze nieuwe gebruiker heeft geprobeerd meerdere berichten met koppelingen naar hetzelfde domein (%{domain}) aan te maken. Bekijk de website-instelling <a href='%{base_path}/admin/site_settings/category/spam'>newuser_spam_host_threshold</a>."
   color_schemes:
     base_theme_name: "Basis"
   about: "Over"
@@ -1435,7 +1435,7 @@ nl:
           contact_url:
             label: "Webpagina"
       corporate:
-        description: "Deze namen worden in uw <a href='/privacy' target='blank'>Privacybeleid</a> en <a href='/tos' target='blank'>Servicevoorwaarden</a> ingevoerd, welke bewerkbare topics in de categorie Staf zijn. Als u geen bedrijf hebt, kunt u deze stap nu gerust overslaan."
+        description: "Deze namen worden in uw <a href='%{base_path}/privacy' target='blank'>Privacybeleid</a> en <a href='%{base_path}/tos' target='blank'>Servicevoorwaarden</a> ingevoerd, welke bewerkbare topics in de categorie Staf zijn. Als u geen bedrijf hebt, kunt u deze stap nu gerust overslaan."
       colors:
         title: "Thema"
       icons:
