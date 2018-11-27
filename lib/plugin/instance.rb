@@ -361,6 +361,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
+  def extend_content_security_policy(extension)
+    DiscoursePluginRegistry.extend_content_security_policy(extension)
+  end
+
   # @option opts [String] :name
   # @option opts [String] :nativeName
   # @option opts [String] :fallbackLocale

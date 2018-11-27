@@ -16,6 +16,7 @@ class DiscoursePluginRegistry
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
     attr_writer :svg_icons
+    attr_writer :csp_extensions
     attr_writer :locales
     attr_accessor :custom_html
 
@@ -62,6 +63,10 @@ class DiscoursePluginRegistry
 
     def svg_icons
       @svg_icons ||= []
+    end
+
+    def csp_extensions
+      @csp_extensions ||= []
     end
 
     def handlebars
@@ -112,6 +117,10 @@ class DiscoursePluginRegistry
 
   def self.register_svg_icon(icon)
     self.svg_icons << icon
+  end
+
+  def self.extend_content_security_policy(extension)
+    self.csp_extensions << extension
   end
 
   def register_css(filename)
@@ -259,6 +268,7 @@ class DiscoursePluginRegistry
     self.sass_variables = nil
     self.handlebars = nil
     self.locales = nil
+    self.csp_extensions = nil
   end
 
   def self.reset!
@@ -277,6 +287,7 @@ class DiscoursePluginRegistry
     vendored_core_pretty_text.clear
     seed_path_builders.clear
     locales.clear
+    csp_extensions.clear
   end
 
   def self.setup(plugin_class)
