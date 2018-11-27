@@ -373,7 +373,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   countCategory(category_id) {
     let sum = 0;
-    this.states.forEach(topic => {
+    _.each(this.states, topic => {
       if (topic.category_id === category_id && !topic.deleted) {
         sum +=
           topic.last_read_post_number === null ||
