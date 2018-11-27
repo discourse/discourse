@@ -305,7 +305,7 @@ export default Ember.Controller.extend(BufferedContent, {
       const postStream = this.get("model.postStream");
       const firstLoadedPost = postStream.get("posts.firstObject");
 
-      if (post.get("post_number") === 1) {
+      if (post.get && post.get("post_number") === 1) {
         return;
       }
 
