@@ -37,6 +37,7 @@ function freezeDateAndZone(date, zone, cb) {
   sandbox.restore();
   sandbox.stub(moment.tz, "guess");
   moment.tz.guess.returns(zone);
+  moment.tz.setDefault(zone);
 
   const now = moment(date).valueOf();
   sandbox.useFakeTimers(now);
@@ -126,7 +127,7 @@ test("yesterday", assert => {
   );
 });
 
-QUnit.skip("yesterday - no time", assert => {
+test("yesterday - no time", assert => {
   const html = generateHTML({ date: rewind(1) });
   const transformed = $(html).applyLocalDates();
 
@@ -200,7 +201,7 @@ test("recurring", assert => {
     "it displays the next occurrence"
   );
 
-  freezeDateAndZone(advance(1), () => {
+  freezeDateAndZone(advance(1), null, () => {
     transformed = $(html).applyLocalDates();
 
     assert.equal(
@@ -363,6 +364,7 @@ test("test utils", assert => {
     moment(DEFAULT_DATE).format("LLLL"),
     "it has defaults"
   );
+
   assert.equal(moment.tz.guess(), DEFAULT_ZONE, "it has defaults");
 
   freezeDateAndZone(advance(1), DEFAULT_ZONE, () => {
