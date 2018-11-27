@@ -120,10 +120,14 @@
       };
     };
 
+    const compareZones = (timezoneA, timezoneB) => {
+      return (
+        moment.tz(timezoneA).utcOffset() === moment.tz(timezoneB).utcOffset()
+      );
+    };
+
     const _applyFormatting = (dateTime, displayedTimezone, options) => {
-      const sameTimezone =
-        moment.tz(displayedTimezone).utcOffset() ===
-        moment.tz(moment.tz.guess()).utcOffset();
+      const sameTimezone = compareZones(displayedTimezone, moment.tz.guess());
       const inCalendarRange = dateTime.isBetween(
         moment().subtract(2, "days"),
         moment().add(2, "days")
@@ -196,8 +200,11 @@
     const _generatePreviews = (dateTime, displayedTimezone, options) => {
       const previewedTimezones = [];
       const watchingUserTimezone = moment.tz.guess();
+      const timezones = options.timezones.filter(
+        timezone => timezone !== watchingUserTimezone
+      );
 
-      if (displayedTimezone !== watchingUserTimezone) {
+      if (!compareZones(displayedTimezone, watchingUserTimezone)) {
         previewedTimezones.push({
           timezone: watchingUserTimezone,
           current: true,
@@ -207,18 +214,41 @@
         });
       }
 
-      options.timezones
-        .filter(x => x !== watchingUserTimezone)
-        .forEach(timezone => {
-          previewedTimezones.push({
-            timezone,
-            dateTime: options.time
-              ? dateTime.tz(timezone).format("LLL")
-              : createDateTimeRange(dateTime, timezone)
-          });
-        });
+      if (
+        displayedTimezone === watchingUserTimezone &&
+        options.timezone !== displayedTimezone &&
+        !compareZones(displayedTimezone, options.timezone)
+      ) {
+        timezones.unshift(options.timezone);
+      }
 
-      return previewedTimezones;
+      timezones.forEach(timezone => {
+        if (compareZones(timezone, displayedTimezone)) {
+          return;
+        }
+
+        if (compareZones(timezone, watchingUserTimezone)) {
+          timezone = watchingUserTimezone;
+        }
+
+        previewedTimezones.push({
+          timezone,
+          dateTime: options.time
+            ? dateTime.tz(timezone).format("LLL")
+            : createDateTimeRange(dateTime, timezone)
+        });
+      });
+
+      if (!previewedTimezones.length) {
+        previewedTimezones.push({
+          timezone: "Etc/UTC",
+          dateTime: options.time
+            ? dateTime.tz("Etc/UTC").format("LLL")
+            : createDateTimeRange(dateTime, "Etc/UTC")
+        });
+      }
+
+      return _.uniq(previewedTimezones, "timezone");
     };
 
     const _generateTextPreview = previews => {
