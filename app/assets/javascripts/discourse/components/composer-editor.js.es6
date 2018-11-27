@@ -17,7 +17,7 @@ import {
   fetchUnseenTagHashtags
 } from "discourse/lib/link-tag-hashtag";
 import Composer from "discourse/models/composer";
-import { load } from "pretty-text/oneboxer";
+import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import InputValidation from "discourse/models/input-validation";
@@ -37,7 +37,10 @@ import {
   resolveAllShortUrls
 } from "pretty-text/image-short-url";
 
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import {
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/inline-oneboxer";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -513,7 +516,7 @@ export default Ember.Component.extend({
     applyInlineOneboxes(inline, ajax);
   },
 
-  _loadOneboxes($oneboxes) {
+  _loadOneboxes(oneboxes) {
     const post = this.get("composer.post");
     let refresh = false;
 
@@ -523,15 +526,19 @@ export default Ember.Component.extend({
       post.set("refreshedPost", true);
     }
 
-    $oneboxes.each((_, o) =>
-      load({
-        elem: o,
-        refresh,
-        ajax,
-        categoryId: this.get("composer.category.id"),
-        topicId: this.get("composer.topic.id")
-      })
-    );
+    Object.keys(oneboxes).forEach(oneboxURL => {
+      const onebox = oneboxes[oneboxURL];
+
+      onebox.forEach($onebox => {
+        load({
+          elem: $onebox,
+          refresh,
+          ajax,
+          categoryId: this.get("composer.category.id"),
+          topicId: this.get("composer.topic.id")
+        });
+      });
+    });
   },
 
   _warnMentionedGroups($preview) {
@@ -986,30 +993,57 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      const $oneboxes = $("a.onebox", $preview);
-      if (
-        $oneboxes.length > 0 &&
-        $oneboxes.length <= this.siteSettings.max_oneboxes_per_post
-      ) {
-        Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
-      }
+      Ember.run.debounce(
+        this,
+        () => {
+          const inlineOneboxes = {};
+          const oneboxes = {};
 
+          let oneboxLeft =
+            this.siteSettings.max_oneboxes_per_post -
+            $(
+              `aside.onebox, a.${INLINE_ONEBOX_CSS_CLASS}, a.${LOADING_ONEBOX_CSS_CLASS}`
+            ).length;
+
+          $preview
+            .find(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}, a.onebox`)
+            .each((_index, link) => {
+              const $link = $(link);
+              const text = $link.text();
+
+              const isInline =
+                $link.attr("class") === INLINE_ONEBOX_LOADING_CSS_CLASS;
+
+              const map = isInline ? inlineOneboxes : oneboxes;
+
+              if (oneboxLeft <= 0) {
+                if (map[text] !== undefined) {
+                  map[text].push(link);
+                } else if (isInline) {
+                  $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
+                }
+              } else {
+                if (!map[text]) {
+                  map[text] = [];
+                  oneboxLeft--;
+                }
+
+                map[text].push(link);
+              }
+            });
+
+          if (Object.keys(oneboxes).length > 0) {
+            this._loadOneboxes(oneboxes);
+          }
+
+          if (Object.keys(inlineOneboxes).length > 0) {
+            this._loadInlineOneboxes(inlineOneboxes);
+          }
+        },
+        450
+      );
       // Short upload urls need resolution
       resolveAllShortUrls(ajax);
-
-      let inline = {};
-      $(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`, $preview).each(
-        (index, link) => {
-          const $link = $(link);
-          $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
-          const text = $link.text();
-          inline[text] = inline[text] || [];
-          inline[text].push($link);
-        }
-      );
-      if (Object.keys(inline).length > 0) {
-        Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
-      }
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(

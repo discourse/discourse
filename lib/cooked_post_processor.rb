@@ -8,6 +8,9 @@ require_dependency 'quote_comparer'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
+  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
+  INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
+
   attr_reader :cooking_options, :doc
 
   def initialize(post, opts = {})
@@ -30,7 +33,6 @@ class CookedPostProcessor
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       post_process_oneboxes
-      post_process_inline_oneboxes
       post_process_images
       post_process_quotes
       optimize_urls
@@ -435,13 +437,35 @@ class CookedPostProcessor
   end
 
   def post_process_oneboxes
-    Oneboxer.apply(@doc) do |url|
-      @has_oneboxes = true
-      Oneboxer.onebox(url,
-        invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-        user_id: @post&.user_id,
-        category_id: @post&.topic&.category_id
-      )
+    limit = SiteSetting.max_oneboxes_per_post
+    oneboxes = {}
+    inlineOneboxes = {}
+
+    Oneboxer.apply(@doc, extra_paths: [".#{INLINE_ONEBOX_LOADING_CSS_CLASS}"]) do |url, element|
+      is_onebox = element["class"] == Oneboxer::ONEBOX_CSS_CLASS
+      map = is_onebox ? oneboxes : inlineOneboxes
+      skip_onebox = limit <= 0 && !map[url]
+
+      if skip_onebox
+        remove_inline_onebox_loading_class(element) unless is_onebox
+        next
+      end
+
+      limit -= 1
+      map[url] = true
+
+      if is_onebox
+        @has_oneboxes = true
+
+        Oneboxer.onebox(url,
+          invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
+          user_id: @post&.user_id,
+          category_id: @post&.topic&.category_id
+        )
+      else
+        process_inline_onebox(element)
+        false
+      end
     end
 
     oneboxed_images.each do |img|
@@ -577,23 +601,24 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
-  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
-
   private
 
-  def post_process_inline_oneboxes
-    @doc.css(".#{INLINE_ONEBOX_LOADING_CSS_CLASS}").each do |element|
-      inline_onebox = InlineOneboxer.lookup(
-        element.attributes["href"].value,
-        invalidate: !!@opts[:invalidate_oneboxes]
-      )
+  def process_inline_onebox(element)
+    inline_onebox = InlineOneboxer.lookup(
+      element.attributes["href"].value,
+      invalidate: !!@opts[:invalidate_oneboxes]
+    )
 
-      if title = inline_onebox&.dig(:title)
-        element.children = title
-      end
-
-      element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
+    if title = inline_onebox&.dig(:title)
+      element.children = title
+      element.add_class(INLINE_ONEBOX_CSS_CLASS)
     end
+
+    remove_inline_onebox_loading_class(element)
+  end
+
+  def remove_inline_onebox_loading_class(element)
+    element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
   end
 
   def is_svg?(img)
