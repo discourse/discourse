@@ -118,18 +118,21 @@ describe Email::Receiver do
 
       email = "linux-admin@b-s-c.co.jp"
       user = Fabricate(:staged, email: email)
-      private_message = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user)
-      private_message.allowed_users = [user]
-      private_message.save!
+
+      private_message = Fabricate(:topic,
+        archetype: 'private_message',
+        category_id: nil,
+        user: user,
+        allowed_users: [user]
+      )
+
       post = create_post(topic: private_message, user: user)
 
-      post_reply_key = begin
-        Fabricate(:post_reply_key,
-          reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
-          user: user,
-          post: post
-        )
-      end
+      post_reply_key = Fabricate(:post_reply_key,
+        reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+        user: user,
+        post: post
+      )
 
       expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
       post = Post.last
