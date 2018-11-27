@@ -4,7 +4,10 @@ const sandbox = sinon.createSandbox();
 
 acceptance("Local Dates", {
   loggedIn: true,
-  settings: { discourse_local_dates_enabled: true },
+  settings: {
+    discourse_local_dates_enabled: true,
+    discourse_local_dates_default_timezones: "Europe/Paris|America/Los_Angeles"
+  },
   beforeEach() {
     freezeDateAndZone();
   },
@@ -56,6 +59,7 @@ function generateHTML(options = {}) {
 
   output += ` data-date="${options.date || DEFAULT_DATE}"`;
   if (options.format) output += ` data-format="${options.format}"`;
+  if (options.timezones) output += ` data-timezones="${options.timezones}"`;
   if (options.time) output += ` data-time="${options.time}"`;
   output += ` data-timezone="${options.timezone || DEFAULT_ZONE}"`;
   if (options.calendar) output += ` data-calendar="${options.calendar}"`;
@@ -319,7 +323,6 @@ test("displayedTimezone", assert => {
 test("tooltip", assert => {
   let html = generateHTML({ timezone: "America/Chicago" });
   let transformed = $(html).applyLocalDates();
-
   let htmlToolip = transformed.attr("data-html-tooltip");
   let currentUserPreview = $(htmlToolip).find(".preview.current");
   let timezone = currentUserPreview.find(".timezone").text();
@@ -348,26 +351,83 @@ test("tooltip", assert => {
     );
   });
 
-  html = generateHTML({ timezone: "America/Chicago", time: "14:00:00" });
+  html = generateHTML({
+    timezones: "Etc/UTC",
+    timezone: "America/Chicago",
+    time: "14:00:00"
+  });
   transformed = $(html).applyLocalDates();
   htmlToolip = transformed.attr("data-html-tooltip");
-
-  const $preview = $(htmlToolip)
-    .find(".preview")
-    .first();
-  dateTime = $preview.find(".date-time").text();
-  timezone = $preview.find(".timezone").text();
 
   assert.ok(
     !exists(".preview.current"),
     "doesn’t create current timezone when displayed timezone equals watching user timezone"
   );
+
+  let $firstPreview = $(htmlToolip).find(".preview:nth-child(1)");
+  dateTime = $firstPreview.find(".date-time").text();
+  timezone = $firstPreview.find(".timezone").text();
+  assert.equal(
+    dateTime,
+    "June 20, 2018 2:00 PM",
+    "it doesn’t create range if time has been set"
+  );
+  assert.equal(timezone, "Chicago", "it adds the timezone of the creator");
+
+  let $secondPreview = $(htmlToolip).find(".preview:nth-child(2)");
+  dateTime = $secondPreview.find(".date-time").text();
+  timezone = $secondPreview.find(".timezone").text();
   assert.equal(
     dateTime,
     "June 20, 2018 7:00 PM",
     "it doesn’t create range if time has been set"
   );
   assert.equal(timezone, "UTC", "Etc/UTC is rewritten to UTC");
+
+  freezeDateAndZone(moment("2018-11-26 21:00:00"), "Europe/Vienna", () => {
+    html = generateHTML({
+      date: "2018-11-22",
+      timezone: "America/Chicago",
+      time: "14:00"
+    });
+    transformed = $(html).applyLocalDates();
+    htmlToolip = transformed.attr("data-html-tooltip");
+
+    $firstPreview = $(htmlToolip)
+      .find(".preview")
+      .first();
+
+    assert.equal(
+      $firstPreview.find(".timezone").text(),
+      "Chicago",
+      "it adds the creator timezone to the previews"
+    );
+    assert.equal(
+      $firstPreview.find(".date-time").text(),
+      "November 22, 2018 2:00 PM",
+      "it adds the creator timezone to the previews"
+    );
+  });
+
+  freezeDateAndZone(DEFAULT_DATE, "Europe/Vienna", () => {
+    html = generateHTML({
+      date: "2018-11-22",
+      timezone: "America/Chicago",
+      timezones: "Europe/Paris"
+    });
+    transformed = $(html).applyLocalDates();
+    htmlToolip = transformed.attr("data-html-tooltip");
+
+    $firstPreview = $(htmlToolip)
+      .find(".preview")
+      .first();
+
+    assert.equal(
+      $firstPreview.find(".timezone").text(),
+      "Vienna",
+      "it rewrites timezone with same offset and different name than watching user"
+    );
+  });
 });
 
 test("test utils", assert => {
