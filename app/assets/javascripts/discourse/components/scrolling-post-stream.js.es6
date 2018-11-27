@@ -252,7 +252,7 @@ export default MountWidget.extend({
       uncloak(post, this);
     });
 
-    Object.keys(prev).forEach(pn => cloak(prev[pn], this));
+    Object.values(prev).forEach(node => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);

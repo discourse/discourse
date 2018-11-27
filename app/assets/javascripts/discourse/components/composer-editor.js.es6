@@ -526,9 +526,7 @@ export default Ember.Component.extend({
       post.set("refreshedPost", true);
     }
 
-    Object.keys(oneboxes).forEach(oneboxURL => {
-      const onebox = oneboxes[oneboxURL];
-
+    Object.values(oneboxes).forEach(onebox => {
       onebox.forEach($onebox => {
         load({
           elem: $onebox,
