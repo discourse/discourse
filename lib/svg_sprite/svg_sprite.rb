@@ -61,6 +61,7 @@ module SvgSprite
     "external-link-alt",
     "expand",
     "fab-apple",
+    "fab-discourse",
     "fab-facebook-f",
     "fab-facebook-square",
     "fab-github",
