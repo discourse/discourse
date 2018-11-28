@@ -50,14 +50,17 @@ class UserBadgesController < ApplicationController
     user = fetch_user_from_params
 
     unless can_assign_badge_to_user?(user)
-      render json: failed_json, status: 403
-      return
+      return render json: failed_json, status: 403
     end
 
     badge = fetch_badge_from_params
     post_id = nil
 
     if params[:reason].present?
+      unless is_badge_reason_valid? params[:reason]
+        return render json: { failed: I18n.t('invalid_grant_badge_reason_link') }, status: 400
+      end
+
       path = begin
         URI.parse(params[:reason]).path
       rescue URI::Error
@@ -115,5 +118,10 @@ class UserBadgesController < ApplicationController
 
   def ensure_badges_enabled
     raise Discourse::NotFound unless SiteSetting.enable_badges?
+  end
+
+  def is_badge_reason_valid?(reason)
+    route = Discourse.route_for(reason)
+    route && (route[:controller] == 'posts' || route[:controller] == 'topics')
   end
 end
