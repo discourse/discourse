@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :facebook_user_info, dependent: :destroy
+  has_many :user_associated_accounts, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
