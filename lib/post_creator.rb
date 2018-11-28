@@ -114,7 +114,7 @@ class PostCreator
 
       User
         .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-        .joins("LEFT JOIN muted_users ON muted_users.muted_user_id = #{@user.id.to_i}")
+        .joins("LEFT JOIN muted_users ON muted_users.user_id = users.id AND muted_users.muted_user_id = #{@user.id.to_i}")
         .where("user_options.user_id IS NOT NULL")
         .where("
           (user_options.user_id IN (:user_ids) AND NOT user_options.allow_private_messages) OR
