@@ -14,10 +14,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
   dockedHeader: null,
-  animate: false,
-  isPanning: false,
-  panMenuOrigin: "right",
-  panMenuOffset: 0,
+  _animate: false,
+  _isPanning: false,
+  _panMenuOrigin: "right",
+  _panMenuOffset: 0,
   _topic: null,
 
   @observes(
@@ -30,15 +30,15 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   _animateOpening($panel) {
     $panel.css({ right: "", left: "" });
-    this.panMenuOffset = 0;
+    this._panMenuOffset = 0;
   },
 
   _animateClosing($panel, menuOrigin, windowWidth) {
     $panel.css(menuOrigin, -windowWidth);
-    this.animate = true;
+    this._animate = true;
     Ember.run.schedule("afterRender", () => {
       this.eventDispatched("dom:clean", "header");
-      this.panMenuOffset = 0;
+      this._panMenuOffset = 0;
     });
   },
 
@@ -47,7 +47,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const $window = $(window);
     const windowWidth = parseInt($window.width());
     const $menuPanels = $(".menu-panel");
-    const menuOrigin = this.panMenuOrigin;
+    const menuOrigin = this._panMenuOrigin;
     this._shouldMenuClose(event, menuOrigin)
       ? (offset += velocity)
       : (offset -= velocity);
@@ -98,16 +98,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       (e.direction === "left" || e.direction === "right")
     ) {
       e.originalEvent.preventDefault();
-      this.isPanning = true;
+      this._isPanning = true;
     } else if (
       center.x < 30 &&
       !this.$(".menu-panel").length &&
       e.direction === "right"
     ) {
-      this.animate = false;
-      this.panMenuOrigin = "left";
-      this.panMenuOffset = -300;
-      this.isPanning = true;
+      this._animate = false;
+      this._panMenuOrigin = "left";
+      this._panMenuOffset = -300;
+      this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleHamburger", "header");
     } else if (
@@ -115,26 +115,26 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       !this.$(".menu-panel").length &&
       e.direction === "left"
     ) {
-      this.animate = false;
-      this.panMenuOrigin = "right";
-      this.panMenuOffset = -300;
-      this.isPanning = true;
+      this._animate = false;
+      this._panMenuOrigin = "right";
+      this._panMenuOffset = -300;
+      this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleUserMenu", "header");
     } else {
-      this.isPanning = false;
+      this._isPanning = false;
     }
   },
 
   panEnd(e) {
-    if (!this.isPanning) {
+    if (!this._isPanning) {
       return;
     }
-    this.isPanning = false;
+    this._isPanning = false;
     $(".menu-panel").each((idx, panel) => {
       const $panel = $(panel);
       let offset = $panel.css("right");
-      if (this.panMenuOrigin === "left") {
+      if (this._panMenuOrigin === "left") {
         offset = $panel.css("left");
       }
       offset = Math.abs(parseInt(offset, 10));
@@ -143,19 +143,19 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   panMove(e) {
-    if (!this.isPanning) {
+    if (!this._isPanning) {
       return;
     }
     const $menuPanels = $(".menu-panel");
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      if (this.panMenuOrigin === "right") {
-        const pxClosed = Math.min(0, -e.deltaX + this.panMenuOffset);
+      if (this._panMenuOrigin === "right") {
+        const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
         $panel.css("right", pxClosed);
         $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
       } else {
-        const pxClosed = Math.min(0, e.deltaX + this.panMenuOffset);
+        const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
         $panel.css("left", pxClosed);
         $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
       }
@@ -256,7 +256,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   afterRender() {
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
-      this.animate = true;
+      this._animate = true;
       return;
     }
 
@@ -274,21 +274,21 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }
-      if (this.panMenuOffset) {
+      if (this._panMenuOffset) {
         this.set("panMenuOffset", -width);
       }
 
       $panel.removeClass("drop-down slide-in").addClass(viewMode);
-      if (this.animate || this.panMenuOffset !== 0) {
+      if (this._animate || this._panMenuOffset !== 0) {
         $headerCloak.css("opacity", 0);
         if (
           this.site.mobileView &&
           $panel.parent(".hamburger-panel").length > 0
         ) {
-          this.panMenuOrigin = "left";
+          this._panMenuOrigin = "left";
           $panel.css("left", -windowWidth);
         } else {
-          this.panMenuOrigin = "right";
+          this._panMenuOrigin = "right";
           $panel.css("right", -windowWidth);
         }
       }
@@ -354,7 +354,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
 
       $panel.width(width);
-      if (this.animate) {
+      if (this._animate) {
         $panel.addClass("animate");
         $headerCloak.addClass("animate");
         Ember.run.later(() => {
@@ -364,7 +364,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
       $panel.css({ right: "", left: "" });
       $headerCloak.css("opacity", 0.5);
-      this.animate = false;
+      this._animate = false;
     });
   }
 });
