@@ -56,9 +56,15 @@
   .avatar-flair {
     background-size: $size;
     height: $size;
+    width: $size;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .d-icon {
-      font-size: $size !important;
+      height: $size / 1.8;
+      width: $size / 1.8;
     }
   }
 }
