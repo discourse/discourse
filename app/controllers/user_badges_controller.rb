@@ -121,6 +121,7 @@ class UserBadgesController < ApplicationController
   end
 
   def is_badge_reason_valid?(reason)
-    return Discourse.route_for(reason)
+    route = Discourse.route_for(reason)
+    route && (route[:controller] == 'posts' || route[:controller] == 'topics')
   end
 end
