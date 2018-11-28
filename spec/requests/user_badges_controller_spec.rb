@@ -146,14 +146,14 @@ describe UserBadgesController do
 
     it 'does not grant badge when external link is used in reason' do
       admin = Fabricate(:admin)
-      post_1 = create_post
+      post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
         badge_id: badge.id,
         username: user.username,
-        reason: "http://example.com/" + post_1.url
+        reason: "http://example.com/" + post.url
       }
 
       expect(response.status).to eq(400)
@@ -161,14 +161,14 @@ describe UserBadgesController do
 
     it 'does not grant badge if invalid discourse post/topic link is used in reason' do
       admin = Fabricate(:admin)
-      post_1 = create_post
+      post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
         badge_id: badge.id,
         username: user.username,
-        reason: Discourse.base_url + "/random_url/" + post_1.url
+        reason: Discourse.base_url + "/random_url/" + post.url
       }
 
       expect(response.status).to eq(400)
@@ -176,14 +176,14 @@ describe UserBadgesController do
 
     it 'grants badge when valid post/topic link is given in reason' do
       admin = Fabricate(:admin)
-      post_1 = create_post
+      post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
         badge_id: badge.id,
         username: user.username,
-        reason: Discourse.base_url + '/t/incorrect-usage-of-week-month-year-units-in-a-translated-string/98931'
+        reason: Discourse.base_url + post.url
       }
 
       expect(response.status).to eq(200)
