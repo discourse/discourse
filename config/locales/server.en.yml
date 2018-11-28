@@ -1856,6 +1856,8 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
 
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. A maximum of 12 characters is recommended."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
