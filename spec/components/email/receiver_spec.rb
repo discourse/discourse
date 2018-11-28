@@ -116,6 +116,8 @@ describe Email::Receiver do
       let(:email_address) { "linux-admin@b-s-c.co.jp" }
       let(:user1) { user1 = Fabricate(:user) }
       let(:user2) { user2 = Fabricate(:staged, email: email_address) }
+      let(:topic) { Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user1, allowed_users: [user1, user2]) }
+      let(:post) { create_post(topic: topic, user: user1) }
 
       before do
         SiteSetting.enable_staged_users = true
@@ -123,11 +125,10 @@ describe Email::Receiver do
       end
 
       def create_post_reply_key(value)
-        pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user1, allowed_users: [user1, user2])
         Fabricate(:post_reply_key,
           reply_key: value,
           user: user2,
-          post: create_post(topic: pm, user: user1)
+          post: post
         )
       end
 
@@ -145,7 +146,7 @@ describe Email::Receiver do
         SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
         bounce_key = "14b08c855160d67f2e0c2f8ef36e251e"
         create_post_reply_key(bounce_key)
-        Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key)
+        Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key, post: post)
 
         expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
         post = Post.last
