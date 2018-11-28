@@ -34,6 +34,7 @@ def swap_address(hosts, name, ips)
       next if hostname == name
     end
     new_file << line
+    new_file << "\n"
   end
 
   ips.each do |ip|
