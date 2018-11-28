@@ -87,6 +87,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   panStart(e) {
+    //android supports pulling in from the screen edges
+    const screenEdgeMargin = 30;
+    const screenOffset = 300;
+
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     const $window = $(window);
@@ -100,24 +104,24 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       e.originalEvent.preventDefault();
       this._isPanning = true;
     } else if (
-      center.x < 30 &&
+      center.x < screenEdgeMargin &&
       !this.$(".menu-panel").length &&
       e.direction === "right"
     ) {
       this._animate = false;
       this._panMenuOrigin = "left";
-      this._panMenuOffset = -300;
+      this._panMenuOffset = -screenOffset;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleHamburger", "header");
     } else if (
-      windowWidth - center.x < 30 &&
+      windowWidth - center.x < screenEdgeMargin &&
       !this.$(".menu-panel").length &&
       e.direction === "left"
     ) {
       this._animate = false;
       this._panMenuOrigin = "right";
-      this._panMenuOffset = -300;
+      this._panMenuOffset = -screenOffset;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleUserMenu", "header");
