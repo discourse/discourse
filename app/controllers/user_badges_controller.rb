@@ -50,8 +50,7 @@ class UserBadgesController < ApplicationController
     user = fetch_user_from_params
 
     unless can_assign_badge_to_user?(user)
-      render json: failed_json, status: 403
-      return
+      return render json: failed_json, status: 403
     end
 
     badge = fetch_badge_from_params
@@ -59,8 +58,7 @@ class UserBadgesController < ApplicationController
 
     if params[:reason].present?
       unless is_badge_reason_valid? params[:reason]
-        render json: { failed: 'External link not allowed in reason' }, status: 400
-        return
+        return render json: { failed: I18n.t('invalid_grant_badge_reason_link') }, status: 400
       end
 
       path = begin
@@ -123,12 +121,6 @@ class UserBadgesController < ApplicationController
   end
 
   def is_badge_reason_valid?(reason)
-    uri = URI.parse(reason)
-
-    if uri && uri.scheme && uri.host
-      return Discourse.base_url == "#{uri.scheme}://#{uri.host}"
-    else
-      return false
-    end
+    return Discourse.route_for(reason)
   end
 end

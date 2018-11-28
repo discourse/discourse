@@ -158,6 +158,21 @@ describe UserBadgesController do
 
       expect(response.status).to eq(400)
     end
+
+    it 'does not grant badge if invalid discourse link is used in reason' do
+      admin = Fabricate(:admin)
+      post_1 = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: Discourse.base_url + "/random_url/" + post_1.url
+      }
+
+      expect(response.status).to eq(400)
+    end
   end
 
   context 'destroy' do
