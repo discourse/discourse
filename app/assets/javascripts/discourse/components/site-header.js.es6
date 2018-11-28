@@ -47,8 +47,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const $window = $(window);
     const windowWidth = parseInt($window.width());
     const $menuPanels = $(".menu-panel");
-    this._shouldPanClose(event) ? (offset += velocity) : (offset -= velocity);
     const menuOrigin = this.get("panMenuOrigin");
+    this._shouldMenuClose(event, menuOrigin) ? (offset += velocity) : (offset -= velocity);
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
@@ -65,23 +65,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     });
   },
 
-  _shouldPanClose(e) {
-    const panMenuOrigin = this.get("panMenuOrigin");
-    const panMenuOffset = this.get("panMenuOffset");
-    //already opened, swiping from the right
-    //TODO: separate functions, add parameters
-    if(panMenuOrigin === "right") {
-      
+  _shouldMenuClose(e, menuOrigin) {
+    // menu should close after a pan either:
+    // if a user moved the panel closed past a threshold and away and is NOT swiping back open
+    // if a user swiped to close fast enough regardless of distance
+    if (menuOrigin === "right") {
+      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
     } else {
-      
-    }
-    if (panMenuOrigin === "right" && panMenuOffset === 0) {
-      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
-    } else if (panMenuOrigin === "left" && panMenuOffset === 0) {
-      return (e.deltaX < -200 && e.velocityX < 0.10) || e.velocityX < -0.10;
-    } else if (panMenuOrigin === "right" && panMenuOffset !== 0) {
-      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
-    } else if (panMenuOrigin === "left" && panMenuOffset !== 0) {
       return (e.deltaX < -200 && e.velocityX < 0.10) || e.velocityX < -0.10;
     }
   },
