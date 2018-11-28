@@ -86,7 +86,8 @@ class Admin::FlagsController < Admin::AdminController
     restore_post = params[:action_on_post] == "restore"
 
     if delete_post
-      destroy_post(post, agree_flags: true)
+      # PostDestroy calls PostAction.agree_flags!
+      destroy_post(post)
     elsif restore_post
       PostAction.agree_flags!(post, current_user, delete_post)
       PostDestroyer.new(current_user, post).recover
@@ -137,12 +138,12 @@ class Admin::FlagsController < Admin::AdminController
 
   private
 
-  def destroy_post(post, agree_flags: false)
+  def destroy_post(post)
     if post.is_first_post?
       topic = Topic.find_by(id: post.topic_id)
       guardian.ensure_can_delete!(topic) if topic.present?
     end
 
-    PostDestroyer.new(current_user, post, agree_flags: agree_flags).destroy
+    PostDestroyer.new(current_user, post).destroy
   end
 end
