@@ -15,10 +15,12 @@
     animation: fadein 0.5s;
     a {
       display: block;
+      width: 100%;
     }
   }
   #site-logo {
-    height: 2.4em;
+    max-height: 2.4em;
+    max-width: 100%;
   }
   #site-text-logo {
     margin: 0;
