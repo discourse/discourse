@@ -114,6 +114,8 @@ describe Email::Receiver do
 
     describe "creating whisper post in PMs for staged users" do
       let(:email_address) { "linux-admin@b-s-c.co.jp" }
+      let(:user1) { user1 = Fabricate(:user) }
+      let(:user2) { user2 = Fabricate(:staged, email: email_address) }
 
       before do
         SiteSetting.enable_staged_users = true
@@ -121,12 +123,11 @@ describe Email::Receiver do
       end
 
       def create_post_reply_key(value)
-        user = Fabricate(:staged, email: email_address)
-        pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user, allowed_users: [user])
+        pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user1, allowed_users: [user1, user2])
         Fabricate(:post_reply_key,
           reply_key: value,
-          user: user,
-          post: create_post(topic: pm, user: user)
+          user: user2,
+          post: create_post(topic: pm, user: user1)
         )
       end
 
@@ -140,9 +141,11 @@ describe Email::Receiver do
         expect(IncomingEmail.last.is_bounce).to eq(true)
       end
 
-      it "when bounce without verp" do
+      it "when bounce with verp" do
         SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
-        create_post_reply_key("14b08c855160d67f2e0c2f8ef36e251e")
+        bounce_key = "14b08c855160d67f2e0c2f8ef36e251e"
+        create_post_reply_key(bounce_key)
+        Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key)
 
         expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
         post = Post.last
@@ -169,9 +172,9 @@ describe Email::Receiver do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
-    let!(:user) { Fabricate(:user, email: "foo@bar.com") }
-    let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
-    let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
+    let!(:user) { Fabricate(:user, email: "linux-admin@b-s-c.co.jp") }
+    let!(:email_log) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key) }
+    let!(:email_log_2) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key_2) }
 
     it "deals with soft bounces" do
       expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
