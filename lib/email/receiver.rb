@@ -129,7 +129,7 @@ module Email
       body, elided = select_body
       body ||= ""
 
-      raise NoBodyDetectedError if body.blank? && attachments.empty?
+      raise NoBodyDetectedError if body.blank? && attachments.empty? && !is_bounce?
 
       if is_auto_generated? && !sent_to_mailinglist_mirror?
         @incoming_email.update_columns(is_auto_generated: true)
@@ -202,24 +202,19 @@ module Email
     def handle_bounce
       @incoming_email.update_columns(is_bounce: true)
 
-      if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+      if email_log.present?
         email_log.update_columns(bounced: true)
-        user = email_log.user
-        email = user&.email.presence
         topic = email_log.topic
       end
 
-      email ||= @from_email
-      user ||= @from_user
-
       if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
-        Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
+        Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
-        Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
+        Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
       end
 
       return if SiteSetting.enable_whispers? &&
-                user&.staged? &&
+                @from_user&.staged? &&
                 (topic.blank? || topic.archetype == Archetype.private_message)
 
       raise BouncedEmailError
@@ -234,6 +229,10 @@ module Email
         verp = all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
         verp && verp[/\+verp-(\h{32})@/, 1]
       end
+    end
+
+    def email_log
+      @email_log ||= EmailLog.find_by(bounce_key: bounce_key)
     end
 
     def self.update_bounce_score(email, score)
@@ -457,10 +456,13 @@ module Email
     end
 
     def parse_from_field(mail)
-      if is_bounce?
+      if mail.bounced?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)
         end
+      elsif email_log.present?
+        email = email_log.user&.email || email_log.to_address
+        return [email, email_log.user&.username]
       end
 
       return unless mail[:from]
