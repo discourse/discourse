@@ -63,6 +63,19 @@ RSpec.describe MetadataController do
       expect(manifest["display"]).to eq("standalone")
     end
 
+    it 'uses the short_title if it is set' do
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest).to_not have_key("short_name")
+
+      SiteSetting.short_title = "foo"
+
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest["short_name"]).to eq("foo")
+    end
   end
 
   describe 'opensearch.xml' do
