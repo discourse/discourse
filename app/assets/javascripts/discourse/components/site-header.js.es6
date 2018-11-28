@@ -29,16 +29,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   _animateOpening($panel) {
-    $panel.css({right: "", left: ""});
-    this.set("panMenuOffset", 0);
+    $panel.css({ right: "", left: "" });
+    this.panMenuOffset = 0;
   },
 
   _animateClosing($panel, menuOrigin, windowWidth) {
     $panel.css(menuOrigin, -windowWidth);
-    this.set("animate", true);
+    this.animate = true;
     Ember.run.schedule("afterRender", () => {
       this.eventDispatched("dom:clean", "header");
-      this.set("panMenuOffset", 0);
+      this.panMenuOffset = 0;
     });
   },
 
@@ -47,8 +47,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const $window = $(window);
     const windowWidth = parseInt($window.width());
     const $menuPanels = $(".menu-panel");
-    const menuOrigin = this.get("panMenuOrigin");
-    this._shouldMenuClose(event, menuOrigin) ? (offset += velocity) : (offset -= velocity);
+    const menuOrigin = this.panMenuOrigin;
+    this._shouldMenuClose(event, menuOrigin)
+      ? (offset += velocity)
+      : (offset -= velocity);
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
@@ -69,10 +71,18 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     // menu should close after a pan either:
     // if a user moved the panel closed past a threshold and away and is NOT swiping back open
     // if a user swiped to close fast enough regardless of distance
+    const distanceThreshold = 200;
+    const velocityThreshold = 0.1;
     if (menuOrigin === "right") {
-      return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
+      return (
+        (e.deltaX > distanceThreshold && e.velocityX > -velocityThreshold) ||
+        e.velocityX > velocityThreshold
+      );
     } else {
-      return (e.deltaX < -200 && e.velocityX < 0.10) || e.velocityX < -0.10;
+      return (
+        (e.deltaX < -distanceThreshold && e.velocityX < velocityThreshold) ||
+        e.velocityX < -velocityThreshold
+      );
     }
   },
 
@@ -88,18 +98,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       (e.direction === "left" || e.direction === "right")
     ) {
       e.originalEvent.preventDefault();
-      this.set("isPanning", true);
+      this.isPanning = true;
     } else if (
       center.x < 30 &&
       !this.$(".menu-panel").length &&
       e.direction === "right"
     ) {
-      this.setProperties({
-        animate: false,
-        panMenuOrigin: "left",
-        panMenuOffset: -300,
-        isPanning: true
-      });
+      this.animate = false;
+      this.panMenuOrigin = "left";
+      this.panMenuOffset = -300;
+      this.isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleHamburger", "header");
     } else if (
@@ -107,28 +115,26 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       !this.$(".menu-panel").length &&
       e.direction === "left"
     ) {
-      this.setProperties({
-        animate: false,
-        panMenuOrigin: "right",
-        panMenuOffset: -300,
-        isPanning: true
-      });
+      this.animate = false;
+      this.panMenuOrigin = "right";
+      this.panMenuOffset = -300;
+      this.isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleUserMenu", "header");
     } else {
-      this.set("isPanning", false);
+      this.isPanning = false;
     }
   },
 
   panEnd(e) {
-    if (!this.get("isPanning")) {
+    if (!this.isPanning) {
       return;
     }
-    this.set("isPanning", false);
+    this.isPanning = false;
     $(".menu-panel").each((idx, panel) => {
       const $panel = $(panel);
       let offset = $panel.css("right");
-      if (this.get("panMenuOrigin") === "left") {
+      if (this.panMenuOrigin === "left") {
         offset = $panel.css("left");
       }
       offset = Math.abs(parseInt(offset, 10));
@@ -137,20 +143,19 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   panMove(e) {
-    if (!this.get("isPanning")) {
+    if (!this.isPanning) {
       return;
     }
     const $menuPanels = $(".menu-panel");
-    const panMenuOffset = this.get("panMenuOffset");
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      if (this.get("panMenuOrigin") === "right") {
-        const pxClosed = Math.min(0, -e.deltaX + panMenuOffset);
+      if (this.panMenuOrigin === "right") {
+        const pxClosed = Math.min(0, -e.deltaX + this.panMenuOffset);
         $panel.css("right", pxClosed);
         $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
       } else {
-        const pxClosed = Math.min(0, e.deltaX + panMenuOffset);
+        const pxClosed = Math.min(0, e.deltaX + this.panMenuOffset);
         $panel.css("left", pxClosed);
         $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
       }
@@ -251,7 +256,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   afterRender() {
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
-      this.set("animate", true);
+      this.animate = true;
       return;
     }
 
@@ -261,33 +266,29 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const headerWidth = $("#main-outlet .container").width() || 1100;
     const remaining = parseInt((windowWidth - headerWidth) / 2);
     const viewMode = remaining < 50 ? "slide-in" : "drop-down";
-    const animate = this.get("animate");
 
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
-      let panMenuOffset = this.get("panMenuOffset");
       let width = parseInt($panel.attr("data-max-width") || 300);
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }
-      if (panMenuOffset) {
+      if (this.panMenuOffset) {
         this.set("panMenuOffset", -width);
       }
 
-      $panel
-        .removeClass("drop-down slide-in")
-        .addClass(viewMode);
-      if (animate || panMenuOffset !== 0) {
+      $panel.removeClass("drop-down slide-in").addClass(viewMode);
+      if (this.animate || this.panMenuOffset !== 0) {
         $headerCloak.css("opacity", 0);
         if (
           this.site.mobileView &&
           $panel.parent(".hamburger-panel").length > 0
         ) {
-          this.set("panMenuOrigin", "left");
+          this.panMenuOrigin = "left";
           $panel.css("left", -windowWidth);
         } else {
-          this.set("panMenuOrigin", "right");
+          this.panMenuOrigin = "right";
           $panel.css("right", -windowWidth);
         }
       }
@@ -353,7 +354,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
 
       $panel.width(width);
-      if (animate) {
+      if (this.animate) {
         $panel.addClass("animate");
         $headerCloak.addClass("animate");
         Ember.run.later(() => {
@@ -361,9 +362,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           $headerCloak.removeClass("animate");
         }, 200);
       }
-      $panel.css({right: "", left: ""});
+      $panel.css({ right: "", left: "" });
       $headerCloak.css("opacity", 0.5);
-      this.set("animate", false);
+      this.animate = false;
     });
   }
 });
