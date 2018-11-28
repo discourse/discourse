@@ -275,7 +275,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         width = windowWidth - 50;
       }
       if (this._panMenuOffset) {
-        this.set("panMenuOffset", -width);
+        this._panMenuOffset = -width;
       }
 
       $panel.removeClass("drop-down slide-in").addClass(viewMode);
