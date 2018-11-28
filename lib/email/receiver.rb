@@ -116,8 +116,6 @@ module Email
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
-      hidden_reason_id = is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
-
       user = @from_user
 
       if user.present?
@@ -188,6 +186,10 @@ module Email
       end
     end
 
+    def hidden_reason_id
+      @hidden_reason_id ||= is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
+    end
+
     def log_and_validate_user(user)
       @incoming_email.update_columns(user_id: user.id)
 
@@ -204,6 +206,7 @@ module Email
 
       if email_log.present?
         email_log.update_columns(bounced: true)
+        post = email_log.post
         topic = email_log.topic
       end
 
@@ -213,9 +216,23 @@ module Email
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
       end
 
-      return if SiteSetting.enable_whispers? &&
-                @from_user&.staged? &&
-                (topic.blank? || topic.archetype == Archetype.private_message)
+      if SiteSetting.enable_whispers? && @from_user&.staged?
+        return if email_log.blank?
+
+        if post.present? && topic.present? && topic.archetype == Archetype.private_message
+          body, elided = select_body
+          body ||= ""
+
+          create_reply(user: @from_user,
+                       raw: body,
+                       elided: elided,
+                       hidden_reason_id: hidden_reason_id,
+                       post: post,
+                       topic: topic,
+                       skip_validations: true,
+                       bounce: true)
+        end
+      end
 
       raise BouncedEmailError
     end
