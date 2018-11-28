@@ -58,6 +58,11 @@ class UserBadgesController < ApplicationController
     post_id = nil
 
     if params[:reason].present?
+      unless is_badge_reason_valid? params[:reason]
+        render json: { failed: 'External link not allowed in reason' }, status: 400
+        return
+      end
+
       path = begin
         URI.parse(params[:reason]).path
       rescue URI::Error
@@ -115,5 +120,15 @@ class UserBadgesController < ApplicationController
 
   def ensure_badges_enabled
     raise Discourse::NotFound unless SiteSetting.enable_badges?
+  end
+
+  def is_badge_reason_valid?(reason)
+    uri = URI.parse(reason)
+
+    if uri && uri.scheme && uri.host
+      return Discourse.base_url == "#{uri.scheme}://#{uri.host}"
+    else
+      return false
+    end
   end
 end
