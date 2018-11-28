@@ -964,7 +964,7 @@ describe UserMerger do
   end
 
   it "deletes external auth infos of source user" do
-    FacebookUserInfo.create(user_id: source_user.id, facebook_user_id: "example")
+    UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
     GoogleUserInfo.create(user_id: source_user.id, google_user_id: "google@gmail.com")
     InstagramUserInfo.create(user_id: source_user.id, screen_name: "example", instagram_user_id: "examplel123123")
@@ -975,7 +975,7 @@ describe UserMerger do
 
     merge_users!
 
-    expect(FacebookUserInfo.where(user_id: source_user.id).count).to eq(0)
+    expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
     expect(GithubUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(GoogleUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(InstagramUserInfo.where(user_id: source_user.id).count).to eq(0)
