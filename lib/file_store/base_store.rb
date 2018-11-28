@@ -29,7 +29,7 @@ module FileStore
     end
 
     def upload_path
-      "uploads/#{RailsMultisite::ConnectionManagement.current_db}"
+      File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
     end
 
     def has_been_uploaded?(url)
