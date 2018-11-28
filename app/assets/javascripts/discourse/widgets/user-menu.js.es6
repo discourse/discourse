@@ -203,7 +203,7 @@ export default createWidget("user-menu", {
       this.sendWidgetAction("toggleUserMenu");
     } else {
       const $window = $(window);
-      const windowWidth = parseInt($window.width());
+      const windowWidth = parseInt($window.width(), 10);
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
       $panel.css("right", -windowWidth);

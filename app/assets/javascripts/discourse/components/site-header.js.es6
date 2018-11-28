@@ -28,11 +28,26 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.queueRerender();
   },
 
-  _panOpenClose(offset, velocity, direction) {
+  _animateOpening($panel) {
+    $panel.css({right: "", left: ""});
+    this.set("panMenuOffset", 0);
+  },
+
+  _animateClosing($panel, menuOrigin, windowWidth) {
+    $panel.css(menuOrigin, -windowWidth);
+    this.set("animate", true);
+    Ember.run.schedule("afterRender", () => {
+      this.eventDispatched("dom:clean", "header");
+      this.set("panMenuOffset", 0);
+    });
+  },
+
+  _handlePanDone(offset, event) {
+    const velocity = 40;
     const $window = $(window);
     const windowWidth = parseInt($window.width());
     const $menuPanels = $(".menu-panel");
-    direction === "close" ? (offset += velocity) : (offset -= velocity);
+    this._shouldPanClose(event) ? (offset += velocity) : (offset -= velocity);
     const menuOrigin = this.get("panMenuOrigin");
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
@@ -40,19 +55,12 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       $panel.css(menuOrigin, -offset);
       $headerCloak.css("opacity", Math.min(0.5, (300 - offset) / 600));
       if (offset > windowWidth) {
-        $panel.css(menuOrigin, -windowWidth);
-        this.set("animate", true);
-        this.eventDispatched("dom:clean", "header");
-        this.set("panMenuOffset", 0);
+        this._animateClosing($panel, menuOrigin, windowWidth);
       } else if (offset <= 0) {
-        $panel.css("right", "");
-        $panel.css("left", "");
-        this.set("panMenuOffset", 0);
+        this._animateOpening($panel);
       } else {
-        Ember.run.later(
-          () => this._panOpenClose(offset, velocity, direction),
-          20
-        );
+        //continue to open or close menu
+        window.requestAnimationFrame(() => this._handlePanDone(offset, event));
       }
     });
   },
@@ -60,6 +68,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   _shouldPanClose(e) {
     const panMenuOrigin = this.get("panMenuOrigin");
     const panMenuOffset = this.get("panMenuOffset");
+    //already opened, swiping from the right
+    //TODO: separate functions, add parameters
+    if(panMenuOrigin === "right") {
+      
+    } else {
+      
+    }
     if (panMenuOrigin === "right" && panMenuOffset === 0) {
       return (e.deltaX > 200 && e.velocityX > -0.10) || e.velocityX > 0.10;
     } else if (panMenuOrigin === "left" && panMenuOffset === 0) {
@@ -120,19 +135,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       return;
     }
     this.set("isPanning", false);
-    const $menuPanels = $(".menu-panel");
-    $menuPanels.each((idx, panel) => {
+    $(".menu-panel").each((idx, panel) => {
       const $panel = $(panel);
       let offset = $panel.css("right");
       if (this.get("panMenuOrigin") === "left") {
         offset = $panel.css("left");
       }
-      offset = Math.abs(parseInt(offset));
-      if (this._shouldPanClose(e)) {
-        this._panOpenClose(offset, 40, "close");
-      } else {
-        this._panOpenClose(offset, 40, "open");
-      }
+      offset = Math.abs(parseInt(offset, 10));
+      this._handlePanDone(offset, e);
     });
   },
 
@@ -276,8 +286,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
 
       $panel
-        .removeClass("drop-down")
-        .removeClass("slide-in")
+        .removeClass("drop-down slide-in")
         .addClass(viewMode);
       if (animate || panMenuOffset !== 0) {
         $headerCloak.css("opacity", 0);
@@ -362,8 +371,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           $headerCloak.removeClass("animate");
         }, 200);
       }
-      $panel.css("right", "");
-      $panel.css("left", "");
+      $panel.css({right: "", left: ""});
       $headerCloak.css("opacity", 0.5);
       this.set("animate", false);
     });
