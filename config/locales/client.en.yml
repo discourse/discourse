@@ -3413,6 +3413,13 @@ en:
         settings: "Settings"
         templates: "Templates"
         preview_digest: "Preview Summary"
+        advanced_test:
+          title: "Advanced Test"
+          desc: "See how Discourse processes recieved emails. To be able to correctly process the email, please paste below the whole original email message."
+          email: "Original message"
+          run: "Run Test"
+          text: "Selected Text Body"
+          elided: "Elided Text"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."

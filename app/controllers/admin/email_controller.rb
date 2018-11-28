@@ -89,6 +89,19 @@ class Admin::EmailController < Admin::AdminController
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 
+  def advanced_test
+    params.require(:email)
+
+    receiver = Email::Receiver.new(params['email'])
+    text, elided, format = receiver.select_body
+
+    render json: success_json.merge!(
+      text: text,
+      elided: elided,
+      format: format
+    )
+  end
+
   def send_digest
     params.require(:last_seen_at)
     params.require(:username)

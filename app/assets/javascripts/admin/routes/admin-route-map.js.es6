@@ -31,6 +31,7 @@ export default function() {
         this.route("received");
         this.route("rejected");
         this.route("previewDigest", { path: "/preview-digest" });
+        this.route("advancedTest", { path: "/advanced-test" });
       }
     );
 
