@@ -196,13 +196,13 @@ module Email
     end
 
     def is_bounce?
-      @mail.bounced? || verp
+      @mail.bounced? || bounce_key
     end
 
     def handle_bounce
       @incoming_email.update_columns(is_bounce: true)
 
-      if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+      if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
         email_log.update_columns(bounced: true)
         user = email_log.user
         email = user&.email.presence
@@ -229,8 +229,11 @@ module Email
       Email::Receiver.reply_by_email_address_regex.match(@from_email)
     end
 
-    def verp
-      @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+    def bounce_key
+      @bounce_key ||= begin
+        verp = all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+        verp && verp[/\+verp-(\h{32})@/, 1]
+      end
     end
 
     def self.update_bounce_score(email, score)
@@ -555,7 +558,7 @@ module Email
 
     def destinations
       @destinations ||= all_destinations
-        .map { |d| Email::Receiver.check_address(d) }
+        .map { |d| Email::Receiver.check_address(d, is_bounce?) }
         .reject(&:blank?)
     end
 
@@ -572,7 +575,7 @@ module Email
       end
     end
 
-    def self.check_address(address)
+    def self.check_address(address, include_verp = false)
       # only check for a group/category when 'email_in' is enabled
       if SiteSetting.email_in
         group = Group.find_by_email(address)
@@ -583,7 +586,7 @@ module Email
       end
 
       # reply
-      match = Email::Receiver.reply_by_email_address_regex.match(address)
+      match = Email::Receiver.reply_by_email_address_regex(true, include_verp).match(address)
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
@@ -785,9 +788,13 @@ module Email
       true
     end
 
-    def self.reply_by_email_address_regex(extract_reply_key = true)
+    def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
       reply_addresses = [SiteSetting.reply_by_email_address]
       reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
+
+      if include_verp && SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+        reply_addresses << SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-%{reply_key}")
+      end
 
       reply_addresses.flatten!
       reply_addresses.select!(&:present?)
@@ -1028,7 +1035,7 @@ module Email
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
-        if result.post.topic && result.post.topic.private_message?
+        if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
       end

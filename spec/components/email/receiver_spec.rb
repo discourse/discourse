@@ -112,33 +112,44 @@ describe Email::Receiver do
       expect(IncomingEmail.last.is_bounce).to eq(true)
     end
 
-    it "creates a whisper post in PM if user is staged" do
-      SiteSetting.enable_staged_users = true
-      SiteSetting.enable_whispers = true
+    describe "creating whisper post in PMs for staged users" do
+      let(:email_address) { "linux-admin@b-s-c.co.jp" }
 
-      email = "linux-admin@b-s-c.co.jp"
-      user = Fabricate(:staged, email: email)
+      before do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.enable_whispers = true
+      end
 
-      private_message = Fabricate(:topic,
-        archetype: 'private_message',
-        category_id: nil,
-        user: user,
-        allowed_users: [user]
-      )
+      def create_post_reply_key(value)
+        user = Fabricate(:staged, email: email_address)
+        pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user, allowed_users: [user])
+        Fabricate(:post_reply_key,
+          reply_key: value,
+          user: user,
+          post: create_post(topic: pm, user: user)
+        )
+      end
 
-      post = create_post(topic: private_message, user: user)
+      it "when bounce without verp" do
+        create_post_reply_key("4f97315cc828096c9cb34c6f1a0d6fe8")
 
-      post_reply_key = Fabricate(:post_reply_key,
-        reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
-        user: user,
-        post: post
-      )
+        expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+        post = Post.last
+        expect(post.whisper?).to eq(true)
+        expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
+        expect(IncomingEmail.last.is_bounce).to eq(true)
+      end
 
-      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
-      post = Post.last
-      expect(post.whisper?).to eq(true)
-      expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email, raw: "Your email bounced").strip)
-      expect(IncomingEmail.last.is_bounce).to eq(true)
+      it "when bounce without verp" do
+        SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
+        create_post_reply_key("14b08c855160d67f2e0c2f8ef36e251e")
+
+        expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+        post = Post.last
+        expect(post.whisper?).to eq(true)
+        expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
+        expect(IncomingEmail.last.is_bounce).to eq(true)
+      end
     end
   end
 
