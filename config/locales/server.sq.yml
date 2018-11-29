@@ -81,9 +81,6 @@ sq:
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 përgjigje"
-      other: "%{count} përgjigje"
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
     one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
@@ -519,7 +516,6 @@ sq:
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
-    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -641,7 +637,6 @@ sq:
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."

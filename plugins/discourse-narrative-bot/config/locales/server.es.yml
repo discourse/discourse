@@ -18,12 +18,12 @@ es:
       name: Certificado
       description: "Ha completado nuestro tutorial de nuevo usuario"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de nuevo usuario. Has tomado la iniciativa para aprender las herramientas básicas para el debate, y ahora tú estás certificado!
+        Este distintivo se otorga a quienes han completado el tutorial de nuevo usuario. Has tomado la iniciativa para aprender las herramientas básicas para el debate, ¡y ahora estás certificado!
     licensed:
       name: Licenciado
       description: "Ha completado nuestro tutorial de usuario avanzado"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión — y ahora tú eres un licenciado!
+        Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión —¡y ahora eres un licenciado!
   discourse_narrative_bot:
     bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
     timeout:

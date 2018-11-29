@@ -143,10 +143,6 @@ ro:
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "Un răspuns"
-      few: "%{count} răspunsuri"
-      other: "%{count} de răspunsuri"
   no_mentions_allowed: "Ne pare rău, nu poți menționa alți utilizatori."
   too_many_mentions:
     one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
@@ -300,8 +296,6 @@ ro:
           attributes:
             name:
               taken: este deja folosit de un alt emoji
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} încă nu a introdus nimic în câmpul Despre mine din profilul său</div>"
   vip_category_name: "Sufragerie"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
   meta_category_name: "Feedback la site"
@@ -719,7 +713,6 @@ ro:
       one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
       few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
       other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-    bad_favicon_url: "Eroare la încărcarea Favicon. Verifică setarea favicon_url în <a href='%{base_path}/admin/site_settings'>Setările site-ului</a>."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
@@ -763,8 +756,6 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     onebox_domains_blacklist: "O listă cu domenii care nu vor putea fi utilizate cu onebox."
     max_oneboxes_per_post: "Numărul maxim de utilizări onebox per post."
-    digest_logo_url: "Imaginea logo alternativă folosită în partea de sus a emailurilor-rezumat de pe site-ul tău. Trebuie să aibă o forma de dreptunghi lat. Nu trebuie să  fie o imagine SVG. Dacă e lăsată goală, va fi folosit în locul ei - `logo_url` ."
-    apple_touch_icon_url: "Iconiță folosită pentru dispozitivele touch Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
@@ -934,7 +925,6 @@ ro:
     body_min_entropy: "Entropia minimă (caractere unice, cele ne-englezești contează mai mult) necesară în conținutul unei postări."
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
-    min_body_similar_length: "Lungimea minimă a conținutului unei postări până să fie verificată pentru subiecte similare."
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
     category_style: "Stil vizual pentru categoria ecusoane."
@@ -1115,9 +1105,6 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     remove_muted_tags_from_latest: "Nu afișa în lista subiectelor recente, subiectele ce au fost etichetate cu etichete setate pe silențios"
-    company_short_name: "Numele firmei (scurt)"
-    company_full_name: "Numele firmei (întreg)"
-    company_domain: "Domeniul firmei"
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1981,16 +1968,6 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-        fields:
-          company_short_name:
-            label: "Numele firmei (scurt)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Numele firmei (lung)"
-            placeholder: "Initech, SRL."
-          company_domain:
-            label: "Numele domeniului firmei"
-            placeholder: "initech.com"
       colors:
         title: "Temă"
         fields:
@@ -2002,20 +1979,8 @@ ro:
                 label: "Întunecat simplu"
       logos:
         title: "Logo-uri"
-        fields:
-          logo_url:
-            label: "Logo-ul principal"
-            description: "Imaginea logo din partea stângă-sus a site-ului tău. Folosește o formă de dreptunghi lat."
-          logo_small_url:
-            label: "Logo compact"
-            description: "O versiune compctă a logo-ului tău, care este afișată în partea din stânga-sus a site-ului. Folosește o formă pătrată."
       icons:
         title: "Iconițe"
-        fields:
-          favicon_url:
-            label: "Iconiță mică"
-          apple_touch_icon_url:
-            label: "Iconiță mare"
       homepage:
         title: "Pagina principală"
         fields:

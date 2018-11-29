@@ -458,11 +458,6 @@ sl:
         two: "1 tema"
         few: "%{count} tem"
         other: "%{count} tem"
-      topic_stat_sentence:
-        one: "%{count} nova tema v preteklih %{unit}."
-        two: "%{count} novi temi v preteklih %{unit}."
-        few: "%{count} nove teme v preteklih %{unit}."
-        other: "%{count} novih tem v preteklih %{unit}."
     ip_lookup:
       title: Poizvedba IP naslova
       hostname: Ime gostitelja

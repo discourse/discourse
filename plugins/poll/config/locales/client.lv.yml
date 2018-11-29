@@ -8,8 +8,6 @@
 lv:
   js:
     poll:
-      public:
-        title: "Balsojumi ir publiski."
       cast-votes:
         label: "Balso tagad!"
       show-results:

@@ -98,6 +98,7 @@ ko:
       email: '이메일로 공유'
     action_codes:
       public_topic: "이 글을 %{when} 에 공개"
+      private_topic: "이 토픽을 보관 %{when}"
       split_topic: "이 글을 %{when}에 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
       invited_group: "%{who} 이(가) %{when} 에 초대됨"
@@ -140,6 +141,7 @@ ko:
         ap_southeast_1: "아시아 태평양 (싱가폴)"
         ap_southeast_2: "아시아 태평양 (시드니)"
         cn_north_1: "중국 (북경)"
+        cn_northwest_1: "중국 (닝샤)"
         eu_central_1: "유럽연합 (프랑크푸르트)"
         eu_west_1: "유럽연합 (아일랜드)"
         eu_west_2: "EU (런던)"
@@ -193,6 +195,8 @@ ko:
     alternation: "또는"
     character_count:
       other: "{{count}} 자"
+    related_messages:
+      title: "관련 메시지"
     suggested_topics:
       title: "추천 토픽"
       pm_title: "추천 메세지"
@@ -204,6 +208,8 @@ ko:
       our_moderators: "운영자"
       stat:
         all_time: "전체"
+        last_7_days: "최근 7일"
+        last_30_days: "최근 30일"
       like_count: "좋아요"
       topic_count: "토픽"
       post_count: "게시글"
@@ -224,6 +230,13 @@ ko:
       confirm_clear: "이 주제글의 모든 북마크를 지우시겠습니까?"
     drafts:
       remove: "삭제"
+      new_topic: "새로운 토픽 초안"
+      new_private_message: "새로운 비공개 메시지 초안"
+      topic_reply: "임시 답글"
+    topic_count_latest:
+      other: "{{count}}개의 새 토픽이나 업데이트된 토픽"
+    topic_count_unread:
+      other: "{{count}}개의 읽지 않은 주제"
     preview: "미리보기"
     cancel: "취소"
     save: "변경사항 저장"
@@ -443,8 +456,6 @@ ko:
       subcategories: "하위 카테고리"
       topic_sentence:
         other: "%{count}개의 토픽"
-      topic_stat_sentence:
-        other: "지난 %{unit} 동안 %{count}개의 새로운 토픽이 생겼습니다."
     ip_lookup:
       title: IP 주소 Lookup
       hostname: Hostname
@@ -487,6 +498,7 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
+        label: "실시간 알림"
         not_supported: "안타깝게도 지금 사용하고 계시는 브라우저는 알림을 지원하지 않습니다."
         perm_default: "알림 켜기"
         perm_denied_btn: "권한 거부"
@@ -519,8 +531,10 @@ ko:
       mailing_list_mode:
         label: "메일링 리스트 모드"
         enabled: "메일링 리스트 모드 활성화"
-        instructions: |
+        instructions: |2
+
           이 설정은 활동 요약을 무시합니다.<br />
+
           알림이 꺼진 토픽과 카테고리는 이 이메일에 포함되지 않습니다.
         individual: "모든 새로운 게시글에 대해 메일을 보내주세요."
         individual_no_echo: "내가 쓴 것만 제외하고 모든 게시글에 대해 이메일을 보내주세요"
@@ -1076,7 +1090,6 @@ ko:
         title_too_long: "제목은 {{max}} 글자 이상일 수 없습니다."
         post_missing: "글 내용은 필수 입니다."
         post_length: "글은 최소 {{min}} 글자 이상이어야 합니다."
-        try_like: '<i class="fa fa-heart"></i> 버튼을 사용해 보셨나요?'
         category_missing: "카테고리를 선택해주세요."
       save_edit: "편집 저장"
       reply_original: "기존 주제에 대해 답글을 작성합니다."
@@ -1764,7 +1777,6 @@ ko:
           revert: "이 수정본으로 되돌리기"
           edit_wiki: "Wiki 편집"
           edit_post: "포스트 편집"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -1950,11 +1962,16 @@ ko:
         help: "이 주제는 목록에서 제외됩니다. 주제 목록에 표시되지 않으며 링크를 통해서만 접근 할 수 있습니다."
     posts: "글"
     posts_long: "이 주제의 글 수는 {{number}}개 입니다."
-    posts_likes_MF: |
+    posts_likes_MF: |2
+
       이 토픽에는 {ratio, select,
+
       low {포스트 대비 높은 좋아요를 받은}
+
       med {포스트 대비 매우 높은 좋아요를 받은}
+
       high {포스트 대비 엄청나게 높은 좋아요를 받은}
+
       other {}} {count, plural, one {1 개} other {# 개의 답글이 있습니다.}}
     original_post: "원본 글"
     views: "조회수"
@@ -2131,14 +2148,22 @@ ko:
           name: 기타
         posting:
           name: 포스팅
-    google_search: |
+    google_search: |2
+
       <h3>Google로 검색하기</h3>
+
       <p>
+
       <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+
       <input type="text" id='user-query' value="">
+
       <input type='hidden' id='google-query' name="q">
+
       <button class="btn btn-primary">Google</button>
+
       </form>
+
       </p>
     tagging:
       all_tags: "모든 태그"

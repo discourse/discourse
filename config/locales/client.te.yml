@@ -265,9 +265,6 @@ te:
       latest_by: "నుండి తాజా"
       toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
-      topic_stat_sentence:
-        one: "%{unit} కాలంలో %{count} ఒక కొత్త టపా."
-        other: " %{unit} గతంలో %{count} కొత్త విషయాలు."
     ip_lookup:
       title: ఐపీ చిరునామా లుకప్
       hostname: అతిథిపేరు

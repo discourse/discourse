@@ -516,9 +516,6 @@ hu:
       topic_sentence:
         one: "1 téma"
         other: "%{count} téma"
-      topic_stat_sentence:
-        one: "%{count} új témakör az elmúlt %{unit} során."
-        other: "%{count} új témakör az elmúlt %{unit} során."
       n_more: "Kategóriák (%{count} további) ..."
     ip_lookup:
       title: IP-cím keresése
@@ -596,8 +593,10 @@ hu:
       mailing_list_mode:
         label: "Levelezőlista mód"
         enabled: "Levelezőlista mód bekapcsolása"
-        instructions: |
+        instructions: |2
+
           Ez a beállítás felülírja az aktivitás összefoglalót. <br />
+
           Némított témák és kategóriák nem lesznek benne ezekben az emailekben.
         individual: "Küldjön e-mailt minden új hozzászólásról"
         individual_no_echo: "Küldjön e-mailt minden új hozzászólásról kivéve a sajátokat"
@@ -1174,7 +1173,6 @@ hu:
         title_too_long: "A cím nem lehet hosszabb, mint {{max}} katakter."
         post_missing: "A bejegyzés nem lehet üres"
         post_length: "A bejegyzésnek legalább {{min}} karakter hosszúnak kell lennie"
-        try_like: 'Próbáltad a <i class="fa fa-heart"></i> gombot?'
         category_missing: "Ki kéne választanod egy kategóriát"
         tags_missing: "Kikell választanod legalább {{count}}  címkét"
       save_edit: "Módosítások mentése"
@@ -1191,7 +1189,7 @@ hu:
       title: "Vagy nyomj Ctrl+Enter-t"
       users_placeholder: "Felhasználó hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
-      title_or_link_placeholder: "Adj címet vagy másolj idea egy linket"
+      title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
       edit_reason_placeholder: "miért szerkesztesz?"
       show_edit_reason: "(szerkesztés okának hozzáadása)"
       remove_featured_link: "Hivatkozás eltávolítása a témából."
@@ -1641,7 +1639,6 @@ hu:
           other: "Kijelöltél <b>{{count}}</b> hozzászólást."
     post:
       quote_reply: "Idézet"
-      edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
       edit_reason: "Ok:"
       post_number: "bejegyzés {{number}}"
       wiki_last_edited_on: "Wiki utoljára szerkesztve"
@@ -1678,7 +1675,9 @@ hu:
         attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"
         attachment_download_requires_login: "Sajnáljuk, de be kell jelentkezned, hogy letölthess csatolmányokat!"
       abandon:
+        confirm: "Biztosan visszavonod a bejegyzésedet? "
         no_value: "Nem, tartsd meg"
+        yes_value: "Igen, visszavonom"
       archetypes:
         save: 'Mentési beállítások'
       controls:
@@ -2044,14 +2043,22 @@ hu:
           name: Egyéb
         posting:
           name: Közzététel
-    google_search: |
+    google_search: |2
+
       <h3>Keresés a Google-lel</h3>
+
       <p>
+
         <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+
           <input type="text" id='user-query' value="">
+
           <input type='hidden' id='google-query' name="q">
+
           <button class="btn btn-primary">Google</button>
+
         </form>
+
       </p>
     tagging:
       all_tags: "Összes címke"
@@ -2453,6 +2460,7 @@ hu:
         copy: "Másolás"
         copy_to_clipboard: "Vágólapra másolás"
         copied_to_clipboard: "Vágólapra másolva"
+        copy_to_clipboard_error: "Hiba történt a vágólapra másoláskor"
         email_templates:
           subject: "Tárgy"
           body: "Test"

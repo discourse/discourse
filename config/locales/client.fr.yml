@@ -150,7 +150,7 @@ fr:
     topic_admin_menu: "actions d'administration sur le sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
-    bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confiance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
+    bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouvel utilisateur sera accordé le niveau de confiance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
@@ -218,6 +218,8 @@ fr:
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
+    related_messages:
+      title: "Messages Connexes"
     suggested_topics:
       title: "À lire ensuite"
       pm_title: "À lire ensuite"
@@ -355,6 +357,7 @@ fr:
         make_user_group_owner: "Rendre propriétaire"
         remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
+      member_added: "Ajouté"
       add_members:
         title: "Ajouter membres"
         description: "Gérer les membres de ce groupe"
@@ -476,6 +479,7 @@ fr:
           description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
       flair_url: "Image de la vignette d'avatar"
       flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
+      flair_url_description: "Utiliser des images de minimum 20px fois 20px ou des icônes FontAwesome (formats acceptés: \"fa-icon\", \"far fa-icon\" ou \"fab fa-icon\")."
       flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
       flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
       flair_color: "Couleur de la vignette d'avatar"
@@ -517,9 +521,6 @@ fr:
       topic_sentence:
         one: "1 sujet"
         other: "%{count} sujets"
-      topic_stat_sentence:
-        one: "%{count} nouveau sujet par %{unit}."
-        other: "%{count} nouveaux sujets par %{unit}."
       n_more: "Catégories (%{count}additionnelles) ..."
     ip_lookup:
       title: Rechercher l'adresse IP
@@ -536,6 +537,7 @@ fr:
       topics_entered: "sujets visités"
       post_count: "# messages"
       confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
+      powered_by: "utilisant <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copié"
     user_fields:
       none: "(choisir une option)"
@@ -554,6 +556,7 @@ fr:
       private_messages: "Messages directs"
       activity_stream: "Activité"
       preferences: "Préférences"
+      profile_hidden: "Le profil public de cet usagé est caché."
       expand_profile: "Développer"
       collapse_profile: "Réduire"
       bookmarks: "Signets"
@@ -579,7 +582,7 @@ fr:
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      allow_private_messages: "Permettre les autres utilisateurs de m'envoyer des messages directs"
+      allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -596,8 +599,10 @@ fr:
       mailing_list_mode:
         label: "Liste de diffusion"
         enabled: "Activer la liste de diffusion"
-        instructions: |
+        instructions: |2
+
           Ce réglage outrepasse le résumé d'activités.<br />
+
           Les sujets et catégories passés en silencieux ne sont pas inclus dans ces courriels.
         individual: "Envoyer un courriel pour chaque nouveau message"
         individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
@@ -620,6 +625,7 @@ fr:
       watched_first_post_tags: "Surveiller les nouveaux sujets"
       watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces tags."
       muted_categories: "Silencieuses"
+      muted_categories_instructions: "Vous ne serez aucunement notifié à propos de nouveaux sujets dans ces catégories et ils n'apparaîtront pas sur les pages \"Catégories\" ou \"Dernier\"."
       no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut pas être annulée !"
@@ -693,10 +699,15 @@ fr:
       second_factor:
         title: "Authentification à deux étapes"
         disable: "Désactiver l'authentification à deux étapes"
+        enable: "Activer l'authentification à deux facteurs pour une sécurité accrue de votre compte."
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
+        rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
+        enable_description: |
+          Scannez ce code QR en utilisant une appli supporté  (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et saisir votre code d'identification.
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisir manuellement"
+        extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux étapes aura été activée sur votre compte."
       change_about:
         title: "Modifier À propos de moi"
@@ -716,6 +727,7 @@ fr:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         gravatar_title: "Modifier votre avatar sur le site de Gravatar"
+        gravatar_failed: "Impossible de récupérer le Gravatar associé à cette adresse courriel."
         refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -773,6 +785,18 @@ fr:
         title: "Confirmation du mot de passe"
       auth_tokens:
         title: "Appareils utilisés récemment"
+        ip: "IP"
+        details: "Détails"
+        log_out_all: "Déconnecter tous"
+        active: "actuellement actif(s)"
+        not_you: "Pas vous ?"
+        show_all: "Tout afficher ({{count}})"
+        show_few: "Afficher moins"
+        was_this_you: "Etait-ce vous ?"
+        was_this_you_description: "Si ce n'était pas vous, nous vous conseillons de modifier votre mot de passe et de vous déconnecter partout."
+        browser_and_device: "{{browser}} sur {{device}}"
+        secure_account: "Sécuriser mon compte"
+        latest_post: "Votre dernier message..."
       last_posted: "Dernier message"
       last_emailed: "Dernier courriel"
       last_seen: "Vu"
@@ -781,6 +805,7 @@ fr:
       location: "Localisation"
       website: "Site internet"
       email_settings: "Courriel"
+      hide_profile_and_presence: "Cacher mon profil public et statistiques"
       like_notification_frequency:
         title: "Notifier lors d'un J'aime"
         always: "Toujours"
@@ -793,6 +818,7 @@ fr:
         always: "toujours"
         never: "jamais"
       email_digests:
+        title: "Lorsque je ne visite pas le site, m'envoyer un courriel avec un résumé des sujets et réponses populaires"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
@@ -967,6 +993,9 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
+    too_few_topics_and_posts_notice: "Faites <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
+    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite de %{siteSettingRate} définie dans les paramètres du site."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a dépassé la limite de %{siteSettingRate} définie dans les paramètres du site."
@@ -1142,6 +1171,8 @@ fr:
       categories_with_featured_topics: "Catégories avec sujets à la une"
       categories_and_latest_topics: "Catégories et sujets récents"
       categories_and_top_topics: "Catégories et meilleurs sujets"
+      categories_boxes: "Boîtes avec sous-catégories"
+      categories_boxes_with_topics: "Boîtes avec sujets à la une"
     shortcut_modifier_key:
       shift: 'Maj'
       ctrl: 'Ctrl'
@@ -1200,6 +1231,7 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
+      edit_conflict: 'conflit de modification'
       group_mentioned_limit: "<b>Attention !</b> Vous avez mentionné <a href='{{group_link}}'>{{group}}</a>, cependant ce groupe a plus de membres que le nombre de mentions limite de {{max}} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
@@ -1214,10 +1246,11 @@ fr:
         title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères"
         post_missing: "Le message ne peut être vide"
         post_length: "Le message doit avoir au moins {{min}} caractères"
-        try_like: 'Avez-vous essayé le bouton <i class="fa fa-heart"></i> ?'
+        try_like: "Avez-vous essayé le bouton {{heart}} ?"
         category_missing: "Vous devez choisir une catégorie"
         tags_missing: "Vous devez choisir au moins {{count}} tags"
       save_edit: "Sauvegarder"
+      overwrite_edit: "Ecraser la modification"
       reply_original: "Répondre sur le sujet d'origine"
       reply_here: "Répondre ici"
       reply: "Répondre"
@@ -1256,6 +1289,7 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérer le lien"
       link_optional_text: "titre optionnel"
+      link_url_placeholder: "https://example.com"
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -1270,6 +1304,8 @@ fr:
       help: "Aide Markdown"
       collapse: "réduire le panneau d'édition"
       abandon: "fermer le panneau d'édition et supprimer le brouillon"
+      enter_fullscreen: "utiliser éditeur plein écran"
+      exit_fullscreen: "sortir de l'éditeur plein écran"
       modal_ok: "OK"
       modal_cancel: "Annuler"
       cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -1831,7 +1867,6 @@ fr:
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
     post:
       quote_reply: "Citer"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
       wiki_last_edited_on: "Wiki édité pour la dernière fois"
@@ -1871,6 +1906,7 @@ fr:
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
         file_too_large: "Désolé, ce fichier est trop gros (la taille maximale est {{max_size_kb}}kb). Pourquoi ne pas télécharger votre gros fichier sur un service partagé cloud, puis partager le lien?"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
+        too_many_dragged_and_dropped_files: "Désolé, vous ne pouvez télécharger que {{max}} fichiers à la fois."
         upload_not_authorized: "Désolé, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
@@ -2017,7 +2053,7 @@ fr:
           revert: "Revenir à cette révision"
           edit_wiki: "Modifier le wiki"
           edit_post: "Modifier le message"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}}<strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
@@ -2216,11 +2252,16 @@ fr:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
-    posts_likes_MF: |
+    posts_likes_MF: |2
+
       Ce sujet a {count, plural, one {1 réponse} other {# réponses}}  {ratio, select,
+
       low {avec un haut ratio J'aime/messages}
+
       med {avec un très haut ratio J'aime/messages}
+
       high {avec un énorme ratio J'aime/messages}
+
       other {}}
     original_post: "Message original"
     views: "Vues"
@@ -2323,6 +2364,7 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top"
+    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="https://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
       create_post: "Répondre / Voir"
@@ -2365,6 +2407,7 @@ fr:
       composing:
         title: 'Edition'
         return: '<b>shift</b>+<b>c</b> Revenir à l''éditeur'
+        fullscreen: '<b>shift</b>+<b>F11</b> Editeur plein écran'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Modifier le signet du sujet'
@@ -2417,14 +2460,22 @@ fr:
           name: Autre
         posting:
           name: Contribution
-    google_search: |
+    google_search: |2
+
       <h3>Rechercher avec Google</h3>
+
       <p>
+
       <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+
       <input type="text" id='user-query' value="">
+
       <input type='hidden' id='google-query' name="q">
+
       <button class="btn btn-primary">Google</button>
+
       </form>
+
       </p>
     tagging:
       all_tags: "Tous les tags"
@@ -2446,6 +2497,19 @@ fr:
       sort_by_name: "nom"
       manage_groups: "Gérer les groupes de tags"
       manage_groups_description: "Définir des groupes pour organiser les tags"
+      upload: "Télécharger des tags"
+      upload_description: "Télécharger un fichier csv pour créer des Tags en masse"
+      upload_instructions: "Un par ligne, avec optionnellement un groupe sous la forme 'tag_name,tag_group'."
+      upload_successful: "Tags téléchargés réussi"
+      delete_unused_confirmation:
+        one: "%{count} tag sera supprimé : %{tags}"
+        other: "%{count} tags seront supprimés : %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} et %{count} plus"
+        other: "%{tags} et %{count} plus"
+      delete_unused: "Supprimer tags inutilisés"
+      delete_unused_description: "Supprimer tous les tags qui ne sont pas associés à des sujets ou messages directs"
+      cancel_delete_unused: "Annuler"
       filters:
         without_category: "%{filter} %{tag} sujets"
         with_category: "%{filter} %{tag} sujets dans %{category}"
@@ -2505,6 +2569,7 @@ fr:
           bookmarks: "Il n'y a plus de sujets avec des signets."
           search: "Il n'y a plus de résultats de recherche."
     invite:
+      custom_message: "Rendez votre invitation plus personnelle en écrivant un <a href>message personnalisé</a>."
       custom_message_placeholder: "Entrez votre message personnalisé"
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
@@ -2564,6 +2629,7 @@ fr:
         timeout_error: "Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court"
         exception_error: "Désolé, une erreur s'est produite à l'exécution de la requête"
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de ressayer.
+        not_found_error: "Désolé, ce rapport n'existe pas"
         reports:
           trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
@@ -2651,6 +2717,19 @@ fr:
         was_edited: "Le message a été modifié après le premier signalement"
         previous_flags_count: "Ce message a déjà été signalé {{count}} fois."
         show_details: "Afficher les détails du signalement"
+        user_percentage:
+          summary:
+            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalement)"
+            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalements total)"
+          agreed:
+            one: "{{count}}% d'accord"
+            other: "{{count}}% d'accords"
+          disagreed:
+            one: "{{count}}% pas d'accord"
+            other: "{{count}}% pas d'accords"
+          ignored:
+            one: "{{count}}% reporté"
+            other: "{{count}}% reportés"
         details: "détails"
         flagged_topics:
           topic: "Sujet"
@@ -2857,6 +2936,7 @@ fr:
           label: "Envoyer"
           title: "Envoyer une sauvegarde à cette instance"
           uploading: "Envoi en cours…"
+          uploading_progress: "Envoi en cours… {{progress}}%"
           success: "« {{filename}} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
           error: "Il y a eu une erreur lors de l'envoi de « {{filename}} » : {{message}}"
         operations:
@@ -2887,6 +2967,9 @@ fr:
             label: "Revenir en arrière"
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
+        location:
+          local: "Locale"
+          s3: "Amazon S3"
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
@@ -2992,6 +3075,7 @@ fr:
           import_web_tip: "Dépôt contenant le thème"
           import_file_tip: "Fichier .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt git privé"
+          remote_branch: "Nom de branche (optionnel)"
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
           about_theme: "À propos du thème"
           license: "Licence"
@@ -3149,6 +3233,7 @@ fr:
           silence_user: "Utilisateur mis sous silence"
           delete_post: "Message Supprimé"
           delete_topic: "Sujet supprimé"
+          post_approved: "Message approuvé"
       logs:
         title: "Journaux"
         action: "Action"
@@ -3217,6 +3302,7 @@ fr:
             revoke_moderation: "Révoquer les droits de modération"
             backup_create: "créer une sauvegarde"
             deleted_tag: "tag supprimé"
+            deleted_unused_tags: "supprimer tags inutilisés"
             renamed_tag: "tag renommé"
             revoke_email: "révoquer le courriel"
             lock_trust_level: "verrouiller le niveau de confiance "
@@ -3241,6 +3327,7 @@ fr:
             delete_badge: "supprimer un badge"
             merge_user: "fusionne utilisateur"
             entity_export: "exporter l'entité"
+            change_name: "modifier nom"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3624,6 +3711,8 @@ fr:
           tags: "Tags"
           search: "Rechercher"
           groups: "Groupes"
+        secret_list:
+          invalid_input: "Les champs de saisi ne peuvent pas être vide ou contenir le caractère barre verticale"
       badges:
         title: Badges
         new_badge: Nouveau badge
@@ -3746,6 +3835,7 @@ fr:
   wizard_js:
     wizard:
       done: "Terminer"
+      finish: "Terminer"
       back: "Retour"
       next: "Suivant"
       step: "%{current} sur %{total}"

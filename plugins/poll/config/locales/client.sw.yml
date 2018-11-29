@@ -15,8 +15,6 @@ sw:
         one: "jumla ya kura"
         other: "jumla ya kura"
       average_rating: "Wastani wa tathmini:<strong>%{average}</strong>"
-      public:
-        title: "Kura sio za umma."
       multiple:
         help:
           at_least_min_options:

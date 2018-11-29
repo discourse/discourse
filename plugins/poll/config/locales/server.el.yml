@@ -27,11 +27,6 @@ el:
     default_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με πολλαπλές επιλογές έχει μη έγκυρες παραμέτρους."
     named_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με όνομα <strong>%{name}</strong> και με πολλαπλές επιλογές έχει μη έγγυρες παραμέτρους"
     requires_at_least_1_valid_option: "Πρέπει να κάνεις τουλάχιστον 1 έγκυρη επιλογή."
-    default_cannot_be_made_public: "Ψηφοφορία με ψήφους δεν μπορεί να γίνει δημόσια."
-    edit_window_expired:
-      op_cannot_edit_options: "Δεν μπορείτε να προσθέσετε ή να αφαιρέσετε επιλογές στην ψηφοφορία μετά τα πρώτα %{minutes} λεπτά. Παρακαλούμε επικοινωνήστε με έναν συντονιστή αν χρειάζεται να επεξεργαστείτε μια επιλογή για την ψηφοφορία."
-      staff_cannot_add_or_remove_options: "Δεν μπορείτε να προσθέσετε ή να αφαιρέσετε επιλογές στην ψηφοφορία μετά τα πρώτα %{minutes} λεπτά. Θα πρέπει να κλείσετε αυτό το νήμα και να δημιουργήσετε ένα νέο αντ' αυτού."
-    no_polls_associated_with_this_post: "Σε αυτή την ανάρτηση δεν υπάρχουν ψηφοφορίες."
     no_poll_with_this_name: "Σε αυτή την ανάρτηση δεν υπάρχουν ψηφοφορίες με το όνομα <strong>%{name}</strong>."
     post_is_deleted: "Δεν μπορείτε να ενεργήσετε σε διεγραμένη ανάρτηση."
     topic_must_be_open_to_vote: "Το νήμα πρέπει να είναι ανοιχτό για ψηφοφορίες."

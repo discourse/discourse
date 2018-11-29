@@ -134,9 +134,6 @@ hu:
     permalink: "Közvetlen link"
     imported_from: "Ez egy társ beszélgetés, az eredeti topic itt található: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 válasz"
-      other: "%{count} válasz"
   no_mentions_allowed: "Sajnáljuk, de nem említhetsz meg más felhasználókat."
   too_many_mentions:
     one: "Sajnáljuk, de csak egy felhasználót említhetsz meg ebben a bejegyzésben."
@@ -724,129 +721,216 @@ hu:
     posted_by: "Beküldve %{username} által, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
     user_invited_to_private_message_pm_group:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_topic:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_replied:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_linked:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_mentioned_pm:
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_watching_first_post:
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
+
+
 
         %{message}
     account_exists:
@@ -978,16 +1062,6 @@ hu:
             label: "Automatikus Üzenetek"
       corporate:
         title: "Szervezet"
-        fields:
-          company_short_name:
-            label: "Cég Neve (rövid)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Cég Neve (teljes)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Cég Domain Neve"
-            placeholder: "initech.com"
       colors:
         title: "Téma"
         fields:
@@ -999,18 +1073,8 @@ hu:
                 label: "Simple Dark"
       logos:
         title: "Logók"
-        fields:
-          logo_url:
-            label: "Elsődleges logó"
-          logo_small_url:
-            label: "Kompakt logó"
       icons:
         title: "Ikonok"
-        fields:
-          favicon_url:
-            label: "Kicsi ikon"
-          apple_touch_icon_url:
-            label: "Nagy ikon"
       homepage:
         title: "Főoldal"
         fields:

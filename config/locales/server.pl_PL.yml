@@ -159,11 +159,6 @@ pl_PL:
     permalink: "Link bezpośredni"
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 odpowiedź"
-      few: "%{count} odpowiedzi"
-      many: "%{count} odpowiedzi"
-      other: "%{count} odpowiedzi"
   no_mentions_allowed: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
   no_mentions_allowed_newuser: "Przepraszamy, nowi użytkownicy nie mogą odwoływać się do innych użytkowników."
   no_images_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do postów."
@@ -353,17 +348,12 @@ pl_PL:
           attributes:
             word:
               too_many: "Za długi opis akcji"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>pole \"O mnie\" w profilu jest obecnie puste, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>Czy chcesz je wypełnić?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
   vip_category_name: "Salon"
   vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
   meta_category_name: "Dyskusje o serwisie"
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
-  assets_topic_title: "Zasoby wyglądu strony"
-  assets_topic_body: "Ten wpis (widoczny tylko dla administratorów) służy zapisywaniu obrazków i plików służących do zmianu wyglądu strony. Nie kasuj go!\n\n\nOto jak to zrobić:\n\n\n1. Odpowieź w tym wpisie.\n2. Załaduj wszystkie pliki, których chcesz użyć jako logotypy, favikony itp. (Użyj przycisku uploadowania na pasku narzędzi w edytorze wpisu albo przeciągnij obrazki do treści).\n3. Naciśnij odpowiedź, żeby ją opublikować.\n4. Naciśnij prawym przyciskiem myszki na obrazku, żeby zapisać link do obrazka albo naciśnij przycisk edycji, żeby zobaczyć link w treści wpisu.\n5. Wklej te linki w [ustawieniach strony](%{base_path}/admin/site_settings/category/required).\n\n\nJeżeli chcesz uploadować inne typy plików, zedytuj `dozwolone rozszerzenia` [ustawieniach plików](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Witaj w Discourse"
     body: |2
@@ -826,7 +816,6 @@ pl_PL:
       few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
-    bad_favicon_url: "Nie można załadować favikony. Sprawdź ustawiony favicon_url w <a href='%{base_path}/admin/site_settings'>Ustawieniach Strony</a>."
     poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'ustawienia POP3</a> i dostawcę usług."
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
   site_settings:
@@ -874,8 +863,6 @@ pl_PL:
     inline_onebox_domains_whitelist: "Lista domen, które będą zamknięte w miniaturze jeśli zostały zalinkowane bez tytułu."
     enable_inline_onebox_on_all_domains: "Zignoruj inline_onebox_domain_whitelist strony ustawień i zezwól na wstawki onebox we wszystkich domenach."
     max_oneboxes_per_post: "Masymalna ilość oneboxów w poście."
-    digest_logo_url: "Alternatywne logo używane w biuletynie email. Powinno mieć kształt szerokiego prostokąta. Nie powinno być obrazkiem SVG. Jeśli puste, zostanie użyta wartość z pola `logo_url`."
-    apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
@@ -1058,7 +1045,6 @@ pl_PL:
     body_min_entropy: "Minimalna entropia treści posta (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     allow_uppercase_posts: "Zezwól na same wielkie litery w tytule tematu lub treści postu."
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
-    min_body_similar_length: "Minimalna długość treści posta zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
     category_colors: "Lista kolorów w formacie hex do użycia w etykietach kategorii."
     category_style: "Styl etykiet kategorii"
@@ -1250,9 +1236,6 @@ pl_PL:
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów z tagiem z wyciszonymi tagami w ostatniej liście tematów."
-    company_short_name: "Nazwa firmy (skrócona)"
-    company_full_name: "Nazwa firmy (pełna)"
-    company_domain: "Domena Organizacji"
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -2539,17 +2522,6 @@ pl_PL:
             description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
       corporate:
         title: "Organizacja"
-        description: "Te nazwy zostaną wpisane w twojej <a href='%{base_path}/privacy' target='blank'>Polityce Prywatności</a> i <a href='%{base_path}/tos' target='blank'>Warunków korzystania z usług</a>, są to tematy, które możesz edytować w kategorii obsługa. Jeśli nie posiadasz firmy, możesz pominąć ten krok."
-        fields:
-          company_short_name:
-            label: "Nazwa organizacji (krótka)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nazwa organizacji (pełna)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Domena Organizacji"
-            placeholder: "initech.com"
       colors:
         title: "Motyw"
         fields:
@@ -2562,20 +2534,8 @@ pl_PL:
                 label: "Prosty Ciemny"
       logos:
         title: "Loga"
-        fields:
-          logo_url:
-            label: "Podstawowe logo"
-            description: "Zdjęcie logo w lewym górnym rogu twojej strony. Użyj szerokiego prostokątu. "
-          logo_small_url:
-            label: "Kompaktowe logo"
-            description: "Wersja kompaktowa twojego logo, wyświetlana w lewym górnym rogu strony przy przewijaniu w dół. Używaj kwadratowego kształtu."
       icons:
         title: "Ikony"
-        fields:
-          favicon_url:
-            label: "Mała ikona"
-          apple_touch_icon_url:
-            label: "Duża ikona"
       homepage:
         description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
         title: "Strona Główna"

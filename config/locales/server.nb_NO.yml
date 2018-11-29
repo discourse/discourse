@@ -194,9 +194,6 @@ nb_NO:
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 svar"
-      other: "%{count} svar"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
     one: "Beklager, du kan bare nevne en bruker i et innlegg. "
@@ -425,17 +422,12 @@ nb_NO:
           attributes:
             word:
               too_many: "For mange ord for den handlingen"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>feltet \"Om Meg\" i profilen din er foreløpig blankt, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet i profilen sin ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
   meta_category_name: "Tilbakemeldinger"
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Tråder er kun synlige for administratorer og moderatorer."
-  assets_topic_title: "Ressurser til nettstedets design"
-  assets_topic_body: "Dette emnet, kun synlig for staben, brukes for å lagre bilder og filer som benyttes av nettstedets design. Ikke slett emnet!\n\n\nHer er hvordan du bruker det:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du ønsker å bruke som logoer, ikoner og så videre her. (Bruk knappen merket \"last opp\" i redigeringsverktøyet eller trekk og slipp bilder.)\n3. Publiser svaret ditt.\n4. Høyreklikk på bildene for å kopiere stien til bildet, eller klikk på redigeringsknappen for å vise stien der. Kopier lenken til utklippstavlen.\n5. Lim lenkene til bildene inn der du ønsker å bruke dem i [grunnleggende oppsett](admin/site_settings/category/required).\n\n\nHvis du trenger å laste opp en annen type fil, kan du legge den til i listen `godkjente_filendelser` i instillingene for [Filer](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
     body: |2
@@ -976,7 +968,6 @@ nb_NO:
       one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
       other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
     missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
-    bad_favicon_url: "Favicon filen blir ikke lastet inn. Sjekk instillingen for favicon_url i <a href='%{base_path}/admin/site_settings'>Instillingene for nettstedet</a>."
     poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
     poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>POP3 instillingene</a>. "
     force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
@@ -1036,8 +1027,6 @@ nb_NO:
     inline_onebox_domains_whitelist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_whitelist innstillingen og tillat inline onebox på alle domener."
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
-    digest_logo_url: "Alternativt bilde for logoen som brukes i toppen av nettstedets oppsummeringer på e-post. Må være et bredt rektangulært bilde. Bør ikke være i SVG format. Hvis instillingen er blank, brukes `logo_url` i stedet."
-    apple_touch_icon_url: "Ikon brukt på Apple touch enheter. Anbefalt størrelse er 144px x 144px."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
@@ -1104,9 +1093,6 @@ nb_NO:
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hver nye tråd følges."
     remove_muted_tags_from_latest: "Ikke vis tråder med dempede stikkord i listen over siste tråder."
-    company_short_name: "Firmanavn (kort)"
-    company_full_name: "Firmanavn (hele)"
-    company_domain: "Firmadomene"
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1434,9 +1420,6 @@ nb_NO:
             label: "Automatiserte meldinger"
       corporate:
         title: "Organisasjon"
-        fields:
-          company_short_name:
-            label: "Bedriftsnavn (kort)"
       colors:
         title: "Drakt"
         fields:
@@ -1448,20 +1431,8 @@ nb_NO:
                 label: "Enkel mørk"
       logos:
         title: "Logoer"
-        fields:
-          logo_url:
-            label: "Primær logo"
-            description: "Logoen som vises oppe til venstre på nettstedet. Bruk et bilde med en bred rektangelform."
-          logo_small_url:
-            label: "Kompakt logo"
-            description: "En kompakt versjon av logoen. Vises oppe til venstre npr du blar nedover. Bruk et bilde med kvadratisk form."
       icons:
         title: "Ikoner"
-        fields:
-          favicon_url:
-            label: "Lite ikon"
-          apple_touch_icon_url:
-            label: "Stort ikon"
       homepage:
         title: "Hjemmeside"
         fields:

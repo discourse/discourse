@@ -549,11 +549,6 @@ lt:
         few: "%{count} temos"
         many: "%{count}temų"
         other: "%{count}temos"
-      topic_stat_sentence:
-        one: "%{count} nauja tema per paskutines %{unit}."
-        few: "%{count} naujų temų per paskutines %{unit}."
-        many: "%{count} naujų temų per paskutines %{unit}."
-        other: "%{count} naujų temų per paskutines %{unit}."
     ip_lookup:
       title: IP adreso peržiųra
       hostname: Adresas
@@ -1148,7 +1143,6 @@ lt:
         title_too_long: "Tekstas negali būti viršyti {{max}} simbolių"
         post_missing: "Įrašas negali būti tuščias"
         post_length: "Įrašas turi būti bent {{min}} simbolių ilgumo"
-        try_like: 'Ar bandėte spausti <i class="fa fa-heart"></i> mygtuką?'
         category_missing: "Jūs privalote pasirinkti kategoriją"
         tags_missing: "Privalote pasirinkti bent {{count}} gairę"
       save_edit: "Išsaugoti pakeitimus"
@@ -1706,7 +1700,6 @@ lt:
           other: "Jūs pasirinkote <b>{{count}}</b> įrašus."
     post:
       quote_reply: "Citata"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Priežastis:"
       post_number: "įrašas {{number}}"
       wiki_last_edited_on: "wiki paskutinį kartą redaguota "
@@ -1907,7 +1900,6 @@ lt:
           show: "Rodyti peržiūras"
           edit_wiki: "Redaguoti Wiki"
           edit_post: "Redaguoti Įrašą"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Rodyti suteiktas paslaugas su priedais ir panaikinimais"

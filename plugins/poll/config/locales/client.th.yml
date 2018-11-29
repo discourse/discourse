@@ -13,8 +13,6 @@ th:
       total_votes:
         other: "คะแนนโหวตทั้งหมด"
       average_rating: "คะแนนเฉลี่ย: <strong>%{average}</strong>"
-      public:
-        title: "การโหวตเป็นสาธารณะ"
       multiple:
         help:
           at_least_min_options:

@@ -359,9 +359,6 @@ gl:
       latest_by: "últimos de"
       toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
-      topic_stat_sentence:
-        one: "%{count} tema novo no último %{unit}."
-        other: "%{count} temas novos no último %{unit}."
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -770,7 +767,6 @@ gl:
         title_too_long: "O título non debe ter máis de {{max}} caracteres"
         post_missing: "A publicación non pode estar baleira"
         post_length: "A publicación debe ter alomenos {{min}} caracteres"
-        try_like: 'Probaches o botón <i class="fa fa-heart"></i>?'
         category_missing: "Debes seleccionar unha categoría"
       save_edit: "Gardar a edición"
       reply_original: "Responder no tema orixinal"
@@ -1271,7 +1267,6 @@ gl:
           hide: "Ocultar revisión"
           show: "Amosar revisión"
           revert: "Reverter a esta revisión"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Amosar o resultado coas adicións e eliminacións inseridas"

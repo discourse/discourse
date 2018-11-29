@@ -476,11 +476,11 @@ fi:
           title: "Vaimennettu"
           description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
       flair_url: "Avatarpinssin kuva"
-      flair_url_placeholder: "(Valinnainen) kuvan URL tai Font Awesome -luokka"
+      flair_url_placeholder: "(Ei-pakollinen) kuvan URL tai Font Awesome -luokka"
       flair_bg_color: "Avatar-pinssin taustaväri"
-      flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_bg_color_placeholder: "(Ei-pakollinen) värin Hex-arvo"
       flair_color: "Avatarpinssin väri"
-      flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_color_placeholder: "(Ei-pakollinen) värin Hex-arvo"
       flair_preview_icon: "Ikonin esikatselu"
       flair_preview_image: "Kuvan esikatselu"
     user_action_groups:
@@ -518,9 +518,6 @@ fi:
       topic_sentence:
         one: "1 ketju"
         other: "%{count} ketjua"
-      topic_stat_sentence:
-        one: "%{count} uusi ketju viimeisen %{unit} aikana."
-        other: "%{count} uutta ketjua viimeisen %{unit} aikana."
       n_more: "Alueet (%{count} muuta)..."
     ip_lookup:
       title: IP-osoitteen haku
@@ -761,7 +758,7 @@ fi:
         not_connected: "(ei liitetty)"
       name:
         title: "Nimi"
-        instructions: "koko nimesi (valinnainen)"
+        instructions: "koko nimesi (ei pakollinen)"
         instructions_required: "Koko nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
@@ -1155,7 +1152,7 @@ fi:
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
       password_label: "Aseta salasana"
-      optional_description: "(valinnainen)"
+      optional_description: "(ei pakollinen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:
@@ -1245,7 +1242,6 @@ fi:
         title_too_long: "Otsikko voi olla korkeintaan {{max}} merkkiä pitkä"
         post_missing: "Viesti ei voi olla tyhjä"
         post_length: "Viestissä täytyy olla vähintään {{min}} merkkiä"
-        try_like: 'Oletko jo kokeillut <i class="fa fa-heart"></i>-nappia?'
         category_missing: "Sinun täytyy valita viestille alue"
         tags_missing: "Valitse vähintään {{count}} tunnistetta"
       save_edit: "Tallenna"
@@ -1287,7 +1283,7 @@ fi:
       link_title: "Hyperlinkki"
       link_description: "kirjoita linkin kuvaus tähän"
       link_dialog_title: "Lisää linkki"
-      link_optional_text: "vaihtoehtoinen kuvaus"
+      link_optional_text: "ei-pakollinen kuvaus"
       link_url_placeholder: "https://esimerkki.fi"
       quote_title: "Lainaus"
       quote_text: "Lainaus"
@@ -1866,7 +1862,6 @@ fi:
           other: "Olet valinnut <b>{{count}}</b> viestiä."
     post:
       quote_reply: "Lainaa"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
       wiki_last_edited_on: "wikiä muokattiin viimeksi"
@@ -2053,7 +2048,6 @@ fi:
           revert: "Palaa tähän revisioon"
           edit_wiki: "Muokkaa wikiä"
           edit_post: "Muokkaa viestiä"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Näytä lisäykset ja poistot tekstin osana"
@@ -2089,15 +2083,15 @@ fi:
       tags: "Tunnisteet"
       tags_allowed_tags: "Salli vain nämä tunnisteet tällä alueella:"
       tags_allowed_tag_groups: "Salli vain näiden tunnisteryhmien tunnisteet tällä alueella:"
-      tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
-      tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
+      tags_placeholder: "(Ei-pakollinen) lista sallituista tunnisteista"
+      tag_groups_placeholder: "(Ei-pakollinen) lista sallituista tunnisteryhmistä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: 'Poista alue'
       create: 'Uusi alue'
       create_long: 'Luo uusi alue'
       save: 'Tallenna'
       slug: 'Alueen lyhenne'
-      slug_placeholder: '(Valinnainen) url-lyhenne'
+      slug_placeholder: '(Ei-pakollinen) url-lyhenne'
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
       name: "Alueen nimi"
@@ -2471,7 +2465,7 @@ fi:
       selector_no_tags: "ei tunnisteita"
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
-      choose_for_topic: "valinnaiset tunnisteet"
+      choose_for_topic: "ei-pakolliset tunnisteet"
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
@@ -2485,7 +2479,6 @@ fi:
       manage_groups: "Hallinnoi tunnisteryhmiä"
       manage_groups_description: "Määrittele ryhmiä tunnisteiden järjestämiseksi"
       upload: "Lataa tunnisteita"
-      upload_description: "Luo iso joukko tunnisteita kerralla lataamalla tekstitiedosto"
       upload_instructions: "Yksi per rivi. Mukana voi olla tunnisteryhmä, tällöin muoto on \"tunnisteen_nimi,tunnisteryhmä\"."
       upload_successful: "Tunnisteiden lisäys onnistui"
       filters:
@@ -2515,7 +2508,7 @@ fi:
         new: "Uusi ryhmä"
         tags_label: "Tunnisteet tässä ryhmässä"
         parent_tag_label: "Emotunniste:"
-        parent_tag_placeholder: "Valinnainen"
+        parent_tag_placeholder: "Ei pakollinen"
         parent_tag_description: "Tämän ryhmän tunnisteita voi käyttää vain, jos emotunniste on asetettu"
         one_per_topic_label: "Rajoita tästä ryhmästä yhteen tunnisteeseen per ketju"
         new_name: "Uusi ryhmä tunnisteita"
@@ -2809,7 +2802,7 @@ fi:
         warn_local_payload_url: "Näyttää, että yrität asettaa webhookin paikalliseen URL:ään. Paikalliseen osoitteeseen toimitetulla tapahtumalla voi olla sivuvaikutuksia tai se voi käyttäytyä odottamattomasti. Jatketaanko?"
         secret_invalid: "Salausavaimessa ei voi olla tyhjämerkkejä."
         secret_too_short: "Salausavaimessa tulee olla ainakin 12 merkkiä."
-        secret_placeholder: "Valinnainen merkkijono, käytetään luotaessa allekirjoitusta"
+        secret_placeholder: "Ei-pakollinen merkkijono, käytetään luotaessa salausallekirjoitusta"
         event_type_missing: "Ainakin yksi tapahtumatyyppi täytyy asettaa."
         content_type: "Sisällön tyyppi"
         secret: "Salausavain"

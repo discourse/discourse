@@ -165,6 +165,9 @@ it:
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
     invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
+    location:
+      local: "Locale"
+      s3: "Amazon S3"
   invalid_params: "Hai fornito parametri non validi alla richiesta: %{message}"
   not_logged_in: "Devi essere connesso per far ciò."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
@@ -194,9 +197,6 @@ it:
     permalink: "Collegamento permanente"
     imported_from: "Questo è un argomento collegato all'originale su: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 risposta"
-      other: "%{count} risposte"
   no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
   too_many_mentions:
     one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
@@ -428,17 +428,12 @@ it:
           attributes:
             word:
               too_many: "Troppe parole per quest'azione"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>vuoi compilarlo? </a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
   vip_category_name: "Salotto"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
   meta_category_name: "Feedback Sito"
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, come funziona e su come  possiamo migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
-  assets_topic_title: "Risorse per il design del sito"
-  assets_topic_body: "Questo argomento, visibile solo allo staff, è per l'archiviazione di immagini e file utilizzati nel disegno del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica tutte le immagini che desideri utilizzare per loghi, favicon e così via (usa l'icona di caricamento nella barra degli strumenti sull'editor del messaggio, oppure trascina o incolla le immagini).\n3. Invia la risposta per pubblicarla.\n4. Fai clic con il pulsante destro sulle immagini nel nuovo messaggio per ottenere il percorso delle immagini caricate, oppure fai clic sull'icona di modifica per modificare il messaggio e recuperare il percorso delle immagini. Copia i percorsi delle immagini.\n5. Incolla i percorsi delle immagini nelle [impostazioni di base](%{base_path}/admin/site_settings/category/required).\n\n\nSe è necessario abilitare il caricamento di file di tipo diverso, modifica `authorized_extensions` nelle [impostazioni dei file](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Benvenuto in Discourse"
     body: |2
@@ -601,6 +596,32 @@ it:
     title: 'Reimposta Password'
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      edge: "Microsoft Edge"
+      unknown: "browser sconosciuto"
+    device:
+      android: "Dispositivo Android"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "Dispositivo Mobile"
+      mac: "Mac"
+      linux: "GNU/Linux Computer"
+      windows: "Windows Computer"
+      unknown: "dispositivo sconosciuto"
+    os:
+      android: "Android"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "sistema operativo sconosciuto"
   change_email:
     confirmed: "La tua email è stata aggiornata."
     please_continue: "Procedi su %{site_name}."
@@ -734,9 +755,29 @@ it:
       read: "Leggi tutto"
       write: "Scrivi tutto"
   reports:
-    post_edits:
+    default:
       labels:
+        count: Conteggio
+        percent: Per cento
+        day: Giorno
+    post_edits:
+      title: "Modifica messaggio"
+      labels:
+        post: Messaggio
         author: Autore
+        edit_reason: Motivo
+    user_flagging_ratio:
+      labels:
+        user: Utente
+        agreed_flags: Segnalazioni accettate
+        disagreed_flags: Segnalazioni non accettate
+        ignored_flags: Segnalazioni ignorate
+        score: Punteggio
+    moderators_activity:
+      title: "Attività dei Moderatori"
+      labels:
+        moderator: Moderatore
+        flag_count: Segnalazioni revisionate
     visits:
       title: "Visite Utente"
       xaxis: "Giorno"
@@ -924,7 +965,6 @@ it:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli."
       other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli. "
     missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
-    bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='%{base_path}/admin/site_settings'>Impostazioni del sito</a>."
     poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
     poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a>."
   site_settings:
@@ -973,8 +1013,6 @@ it:
     inline_onebox_domains_whitelist: "Una lista di domini che saranno oneboxed in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignira l'impostazione del sito inline_onebox_domain_whitelist e consenti onebox in linea in tutti i domini."
     max_oneboxes_per_post: "Numero massimo di oneboxe in un messaggio."
-    digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Dovrebbe essere a forma di un ampio rettangolo. Non dovrebbe essere un'immagine SVG. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. "
-    apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti i social login, ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
@@ -1169,7 +1207,6 @@ it:
     body_min_entropy: "Minima entropia (caratteri unici) richiesti come corpo di un messaggio."
     allow_uppercase_posts: "Permetti l'uso di tutti caratteri maiuscoli nel titolo di argomento o nel corpo di un messaggio. "
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
-    min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     desktop_category_page_style: "Stile visuale per la pagina /categorie."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico dei distintivi relativi alle categorie."
@@ -1375,9 +1412,6 @@ it:
     min_trust_level_to_tag_topics: "Livello di esperienza minimo richiesto per etichettare argomenti"
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti contrassegnati con etichette silenziate nella lista degli argomenti recenti."
-    company_short_name: "Nome Azienda (corto)"
-    company_full_name: "Nome Azienda (completo)"
-    company_domain: "Dominio Azienda"
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -2854,17 +2888,6 @@ it:
             description: "Tutti i messaggi personali automatici di Discourse saranno inviati da questo utente, quali avvisi di segnalazione e avvisi di completamento di backup."
       corporate:
         title: "Società"
-        description: "Questi nomi verranno inseriti nelle <a href='%{base_path}/privacy' target='blank'>Norme sulla Privacy</a> e nei <a href='%{base_path}/tos' target='blank'>Termini di servizio</a>, che sono argomenti che è possibile modificare nella categoria Staff. Se non hai un'azienda, non esitare a saltare questo passaggio per ora."
-        fields:
-          company_short_name:
-            label: "Nome Azienda (breve)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nome Azienda (completo)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Nome Dominio Azienda"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -2877,20 +2900,8 @@ it:
                 label: "Semplice Scuro"
       logos:
         title: "Loghi"
-        fields:
-          logo_url:
-            label: "Logo Primario"
-            description: "L'immagine del logo in alto a sinistra del tuo sito. Usare una forma rettangolare estesa."
-          logo_small_url:
-            label: "Logo Piccolo"
-            description: "Una versione compatta del tuo logo, mostrata in alto a sinistra del tuo sito, quando lo scorri verso il basso. Utilizzare una forma quadrata."
       icons:
         title: "Icone"
-        fields:
-          favicon_url:
-            label: "Icona Piccola"
-          apple_touch_icon_url:
-            label: "Icona Grande"
       homepage:
         description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
         title: "Homepage"
