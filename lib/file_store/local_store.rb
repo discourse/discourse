@@ -33,7 +33,7 @@ module FileStore
     end
 
     def relative_base_url
-      "#{Discourse.base_uri}#{upload_path}"
+      File.join(Discourse.base_uri, upload_path)
     end
 
     def external?
