@@ -120,7 +120,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     if (this.siteSettings.tags_sort_alphabetically && topTags) {
       return shortcuts.concat(topTags.sort());
     } else {
-      return shortcuts.concat(topTags);
+      return shortcuts.concat(Ember.makeArray(topTags));
     }
   },
 
