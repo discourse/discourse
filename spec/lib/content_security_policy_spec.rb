@@ -82,17 +82,21 @@ describe ContentSecurityPolicy do
   end
 
   it 'can be extended by plugins' do
-    DiscoursePluginRegistry.extend_content_security_policy(
-      script_src: ['from-plugin.com'],
-      style_src: ['from-plugin.com'],
-    )
+    plugin = Class.new(Plugin::Instance) do
+      attr_accessor :enabled
+      def enabled?; @enabled; end
+    end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
-    parsed = parse(policy)
+    plugin.activate!
+    Discourse.plugins << plugin
 
-    expect(parsed['script-src']).to include('from-plugin.com')
-    expect(parsed['style-src']).to include('from-plugin.com')
+    plugin.enabled = true
+    expect(parse(policy)['script-src']).to include('https://from-plugin.com')
 
-    DiscoursePluginRegistry.reset!
+    plugin.enabled = false
+    expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+
+    Discourse.plugins.pop
   end
 
   it 'can be extended by themes' do

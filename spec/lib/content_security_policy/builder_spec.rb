@@ -25,6 +25,18 @@ describe ContentSecurityPolicy::Builder do
 
       expect(builder.build).to_not include('invalid')
     end
+
+    it 'no-ops on invalid values' do
+      previous = builder.build
+
+      builder << nil
+      builder << 123
+      builder << "string"
+      builder << []
+      builder << {}
+
+      expect(builder.build).to eq(previous)
+    end
   end
 
   def parse(csp_string)

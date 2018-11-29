@@ -26,6 +26,8 @@ class ContentSecurityPolicy
     end
 
     def <<(extension)
+      return unless valid_extension?(extension)
+
       extension.each { |directive, sources| extend_directive(normalize(directive), sources) }
     end
 
@@ -63,6 +65,10 @@ class ContentSecurityPolicy
 
     def extendable?(directive)
       EXTENDABLE_DIRECTIVES.include?(directive)
+    end
+
+    def valid_extension?(extension)
+      extension.is_a?(Hash)
     end
   end
 end

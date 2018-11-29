@@ -8,7 +8,11 @@ class ContentSecurityPolicy
     end
 
     def plugin_extensions
-      DiscoursePluginRegistry.csp_extensions
+      [].tap do |extensions|
+        Discourse.plugins.each do |plugin|
+          extensions.concat(plugin.csp_extensions) if plugin.enabled?
+        end
+      end
     end
 
     THEME_SETTING = 'extend_content_security_policy'
