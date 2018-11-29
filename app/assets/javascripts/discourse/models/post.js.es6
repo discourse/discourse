@@ -369,10 +369,10 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(post_ids) {
+  deleteMany(post_ids, { deferFlags = false } = {}) {
     return ajax("/posts/destroy_many", {
       type: "DELETE",
-      data: { post_ids }
+      data: { post_ids, defer_flags: deferFlags }
     });
   },
 
