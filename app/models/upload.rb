@@ -128,9 +128,7 @@ class Upload < ActiveRecord::Base
       end
 
     self.width, self.height = size = FastImage.new(path).size
-    if !size.blank?
-      self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
-    end
+    self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
     nil
   end
 
