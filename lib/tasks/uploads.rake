@@ -720,7 +720,3 @@ task "uploads:recover" => :environment do
     end
   end
 end
-
-task "uploads:create_inventory" => :environment do
-  Discourse.store.inventory.update!
-end
