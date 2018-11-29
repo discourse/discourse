@@ -48,6 +48,7 @@
   }
 
   $size: 50px;
+  $icon-size: $size / 1.8;
 
   .avatar-flair-image {
     width: $size;
@@ -63,8 +64,8 @@
     justify-content: center;
 
     .d-icon {
-      height: $size / 1.8;
-      width: $size / 1.8;
+      height: $icon-size;
+      width: $icon-size;
     }
   }
 }
