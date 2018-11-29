@@ -175,6 +175,10 @@ class S3Helper
     opts
   end
 
+  def s3_client
+    s3_resource.client
+  end
+
   private
 
   def default_s3_options

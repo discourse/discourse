@@ -455,6 +455,13 @@ module Discourse
     end
   end
 
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    name = site_setting.name.to_s
+    if SiteSetting.enable_s3_uploads && (name.include?("s3_inventory") || name == "s3_upload_bucket")
+      store.inventory.update!
+    end
+  end
+
   def self.current_user_provider
     @current_user_provider || Auth::DefaultCurrentUserProvider
   end

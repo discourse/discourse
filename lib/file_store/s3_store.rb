@@ -2,6 +2,7 @@ require "uri"
 require "mini_mime"
 require_dependency "file_store/base_store"
 require_dependency "s3_helper"
+require_dependency "s3_inventory"
 require_dependency "file_helper"
 
 module FileStore
@@ -114,6 +115,13 @@ module FileStore
     def list_missing_uploads(skip_optimized: false)
       list_missing(Upload, "original/")
       list_missing(OptimizedImage, "optimized/") unless skip_optimized
+    end
+
+    def inventory
+      @inventory ||= begin
+        require 's3_inventory'
+        S3Inventory.new(@s3_helper.s3_client, s3_bucket_name, @s3_helper.s3_bucket_folder_path)
+      end
     end
 
     private
