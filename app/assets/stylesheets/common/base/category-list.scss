@@ -41,11 +41,19 @@
       width: 100%;
     }
 
-    .logo {
+    .logo.aspect-image img {
       display: block;
       width: auto;
       height: 40px;
       margin: 0 auto 1em auto;
+    }
+
+    @supports (--custom: property) {
+      .logo.aspect-image img {
+        --height: 40px;
+        width: calc(var(--height) * var(--aspect-ratio));
+        max-width: 100%;
+      }
     }
 
     h3 .fa {

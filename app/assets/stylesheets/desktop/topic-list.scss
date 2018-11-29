@@ -221,11 +221,31 @@ button.dismiss-read {
   clear: both;
 }
 
-.category-logo {
-  width: auto;
-  max-height: 150px;
+.category-logo.aspect-image {
   float: left;
   margin: 0.25em 1em 0.5em 0;
+
+  img {
+    width: auto;
+    max-height: 150px;
+  }
+}
+
+@supports (--custom: property) {
+  .category-logo.aspect-image {
+    --max-height: 150px;
+    max-height: var(--max-height);
+    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 25%;
+    height: auto;
+
+    img {
+      width: 100%;
+      height: inherit;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
 }
 
 /* Tablet (portrait) ----------- */
