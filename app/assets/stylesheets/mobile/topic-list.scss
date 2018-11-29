@@ -478,12 +478,32 @@ ol.category-breadcrumb {
   padding-top: 10px;
 }
 
-.category-logo {
+.category-logo.aspect-image {
   display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: 150px;
-  padding: 8px 0;
+  margin: 8px 0;
+
+  img {
+    width: auto;
+    max-width: 100%;
+    max-height: 150px;
+  }
+}
+
+@supports (--custom: property) {
+  .category-logo.aspect-image {
+    --max-height: 150px;
+    max-height: var(--max-height);
+    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 100%;
+    height: auto;
+
+    img {
+      width: 100%;
+      height: inherit;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
 }
 
 button.dismiss-read {
