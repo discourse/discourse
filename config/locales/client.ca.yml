@@ -416,9 +416,6 @@ ca:
       topic_sentence:
         one: "1 tema"
         other: "%{count} temes"
-      topic_stat_sentence:
-        one: "%{count} nou tema als passats %{unit}."
-        other: "%{count} nous temes als passats %{unit}."
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -971,7 +968,6 @@ ca:
         title_too_long: "El títol ha de tenir un màxim de {{max}} caràcters"
         post_missing: "La publicació no pot estar buida"
         post_length: "La publicació ha de tenir un mínim de {{min}} caràcters"
-        try_like: 'Ja has provat amb el botó <i class="fa fa-heart"></i>?'
         category_missing: "Has de triar una categoria"
       save_edit: "Desa l'edició"
       reply_original: "Respon a un tema original"
@@ -1583,7 +1579,6 @@ ca:
           revert: "Reverteix a aquesta revisió"
           edit_wiki: "Edita Wiki"
           edit_post: "Edita publicació"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostra la sortida renderitzada amb afegits i eliminacions interiors"

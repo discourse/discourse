@@ -417,9 +417,6 @@ pt:
       topic_sentence:
         one: "1 tópico"
         other: "%{count} tópicos"
-      topic_stat_sentence:
-        one: "%{count} novo tópico no passado %{unit}."
-        other: "%{count} novos tópicos no passado %{unit}."
     ip_lookup:
       title: Pesquisa de Endereço IP
       hostname: Nome do Servidor
@@ -486,8 +483,10 @@ pt:
       mailing_list_mode:
         label: "Modo de lista de distribuição"
         enabled: "Ativar modo de lista de distribuição"
-        instructions: |
+        instructions: |2
+
           Esta configuração sobrepõe o sumário de actividade.<br />
+
           Tópicos e categorias silenciados não são incluídos nestes correios electrónicos.
         individual: "Enviar um email por cada nova publicação"
         individual_no_echo: "Enviar um email por cada nova publicação excepto as minhas"
@@ -1015,7 +1014,6 @@ pt:
         title_too_long: "O título não pode conter mais do que {{max}} carateres."
         post_missing: "A publicação não pode estar vazia"
         post_length: "A publicação tem que ter pelo menos {{min}} carateres"
-        try_like: 'Já tentou o botão <i class="fa fa-heart"></i>?'
         category_missing: "Tem de escolher uma categoria"
       save_edit: "Guardar Edição"
       reply_original: "Responder no Tópico Original"
@@ -1668,7 +1666,6 @@ pt:
           revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Publicação"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostrar o resultado renderizado com inserções e remoções em-linha."
@@ -1831,11 +1828,16 @@ pt:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
     posts: "Publicações"
     posts_long: "existem {{number}} publicações neste tópico"
-    posts_likes_MF: |
+    posts_likes_MF: |2
+
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
+
       low {com uma proporção de gostos para publicações alta}
+
       med {com uma proporção de gostos para publicações muito alta}
+
       high {com uma proporção de gostos para publicações extremamente alta}
+
       other {}}
     original_post: "Publicação Original"
     views: "Vistas"
@@ -2019,14 +2021,22 @@ pt:
           name: Outros
         posting:
           name: A publicar
-    google_search: |
+    google_search: |2
+
       <h3>Pesquisar com o Google</h3>
+
       <p>
+
       <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+
       <input type="text" id='user-query' value="">
+
       <input type='hidden' id='google-query' name="q">
+
       <button class="btn btn-primary">Google</button>
+
       </form>
+
       </p>
     tagging:
       all_tags: "Todas as Etiquetas"

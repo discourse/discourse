@@ -218,6 +218,8 @@ es:
     character_count:
       one: "{{count}} carácter"
       other: "{{count}} caracteres"
+    related_messages:
+      title: " Mensajes relacionados"
     suggested_topics:
       title: "Temas Sugeridos"
       pm_title: "Mensajes sugeridos"
@@ -477,6 +479,7 @@ es:
           description: "Nunca se te notificará de nada sobre temas en este grupo."
       flair_url: "Sub-avatar del grupo"
       flair_url_placeholder: "(Opcional) Dirección URL de una imagen o clase de Font Awesome"
+      flair_url_description: "Use imágenes cuadradas de no menos de 20px por 20px o los iconos de FontAwesome (formatos aceptados: \"fa-icon\", \"far fa-icon\" o \"fab fa-icon\")."
       flair_bg_color: "Color de fondo del sub-avatar del grupo"
       flair_bg_color_placeholder: "(Opcional) Valor del color en hexadecimal"
       flair_color: "Color del sub-avatar del grupo"
@@ -518,9 +521,6 @@ es:
       topic_sentence:
         one: "1 tema"
         other: "%{count} temas"
-      topic_stat_sentence:
-        one: "%{count} tema nuevo en los últimos %{unit}."
-        other: "%{count} temas nuevos en los últimos %{unit}."
       n_more: "Categorías (%{count} más) ..."
     ip_lookup:
       title: Búsqueda de Direcciones IP
@@ -600,7 +600,7 @@ es:
         label: "Modo lista de correo"
         enabled: "Activar modo lista de correo"
         instructions: |
-          Esta opción sobreescribe el resumen de actividad.<br />
+          Esta opción sobrescribe el resumen de actividad.<br />
           Los temas y categorías silenciadas no se incluyen en estos emails.
         individual: "Enviar un email por cada nuevo post"
         individual_no_echo: "Envíame un email por cada nuevo post excepto los publicados por mí"
@@ -1230,6 +1230,7 @@ es:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores offline"
+      edit_conflict: 'conflicto de edición'
       group_mentioned_limit: "<b>¡Advertencia!</b> Has mencionado <a href='{{group_link}}'>{{group}}</a>, sin embargo este grupo tiene más miembros que el límite máximo de {{max}} usuarios configurado por el administrador para hacer menciones. Nadie será notificado. "
       group_mentioned:
         one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>1 persona</a> – ¿seguro que quieres hacerlo?"
@@ -1244,7 +1245,7 @@ es:
         title_too_long: "El título no puede tener más de {{max}} caracteres."
         post_missing: "El post no puede estar vacío."
         post_length: "El post debe tener por lo menos {{min}} caracteres."
-        try_like: '¿Has probado el botón de <i class="fa fa-heart"></i>?'
+        try_like: "¿Has probado el botón {{heart}}?"
         category_missing: "Debes escoger una categoría."
         tags_missing: "Debes seleccionar al menos {{count}} etiquetas"
       save_edit: "Guardar edición"
@@ -1679,7 +1680,7 @@ es:
           "2_8": 'Tú verás la cuenta de nuevas respuestas porque estás siguiendo esta categoría.'
           "2_4": 'Tú verás la cuenta de nuevas respuestas porque has publicado una respuesta en este tema.'
           "2_2": 'Tú verás la cuenta de nuevas respuestas porque estás siguiendo este tema.'
-          "2": 'Tú verás la cuenta de nuevas respuestas porque has <a href="{{basePath}}/u/{{username}}/preferences">leído este tema</a>.'
+          "2": 'Verás el número de respuestas nuevas porque has <a href="{{basePath}}/u/{{username}}/preferences">leído este tema</a>.'
           "1_2": 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
           "1": 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           "0_7": 'Estás ignorando todas las notificaciones en esta categoría.'
@@ -1865,7 +1866,6 @@ es:
           other: "Has seleccionado <b>{{count}}</b> posts."
     post:
       quote_reply: "Citar"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki editada por última vez"
@@ -2052,7 +2052,7 @@ es:
           revert: "Volver a esta revisión"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar post"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Muestra la producción asistida con adiciones y eleminaciones en línea"
@@ -2253,10 +2253,10 @@ es:
     posts_long: "{{number}} posts en este tema"
     posts_likes_MF: |
       Este tema tiene {count, plural, one {1 respuesta} other {# respuestas}} {ratio, select,
-      low {con una ratio de me gusta por post elevada}
-      med {con una ratio de me gusta por post bastante elevada}
-      high {con una ratio de me gusta por post elevadísima}
-      other {}}
+        low {con una ratio de me gusta por post elevada}
+        med {con una ratio de me gusta por post bastante elevada}
+        high {con una ratio de me gusta por post elevadísima}
+        other {}}
     original_post: "Post Original"
     views: "Visitas"
     views_lowercase:
@@ -2484,9 +2484,18 @@ es:
       manage_groups: "Administrar grupos de etiquetas"
       manage_groups_description: "Definir grupos para organizar etiquetas"
       upload: "Subir Etiquetas"
-      upload_description: "Subir un archivo de texto para crear etiquetas de forma masiva"
+      upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato 'tag_name,tag_group'."
       upload_successful: "Etiquetas subidas exitosamente"
+      delete_unused_confirmation:
+        one: "%{count} etiqueta será eliminada: %{tags}"
+        other: "%{count} etiquetas serán eliminadas: %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} y %{count} más"
+        other: "%{tags} y %{count} más"
+      delete_unused: "Eliminar etiquetas sin usar"
+      delete_unused_description: "Eliminar todas las etiquetas que no estén asociadas a ningún tema o mensaje personal"
+      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter} %{tag} temas en %{category}"
@@ -2606,6 +2615,7 @@ es:
         timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
         exception_error: "Lo siento, ha ocurrido un error al ejecutar la consulta"
         too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo."
+        not_found_error: "Lo sentimos, este reporte no existe"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el periodo previo."
           today: "Hoy"
@@ -3209,6 +3219,7 @@ es:
           silence_user: "Usuario Silenciado"
           delete_post: "Post Borrado"
           delete_topic: "Tema Borrado"
+          post_approved: "Post Aprobado"
       logs:
         title: "Logs"
         action: "Acción"
@@ -3277,6 +3288,7 @@ es:
             revoke_moderation: "revocar moderación"
             backup_create: "crear copia de seguridad"
             deleted_tag: "etiqueta eliminada"
+            deleted_unused_tags: "eliminó etiquetas sin usar"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar email"
             lock_trust_level: "Bloqueó el nivel de confianza"
@@ -3301,6 +3313,7 @@ es:
             delete_badge: "borrar distintivo"
             merge_user: "unir usuario"
             entity_export: "entidad exportadora"
+            change_name: "cambiar nombre"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -3808,6 +3821,7 @@ es:
   wizard_js:
     wizard:
       done: "Hecho"
+      finish: "Terminar"
       back: "Atrás"
       next: "Siguiente"
       step: "%{current} de %{total}"

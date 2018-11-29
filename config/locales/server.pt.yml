@@ -148,9 +148,6 @@ pt:
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 resposta"
-      other: "%{count} respostas"
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
     one: "Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem."
@@ -236,24 +233,42 @@ pt:
     until_posts:
       one: "1 mensagem"
       other: "%{count} mensagens"
-    'new-topic': |
+    'new-topic': |2
+
       Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
+
+
 
       - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
 
+
+
       - Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas pretende?
+
+
 
       - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
 
+
+
       Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    'new-reply': |
+    'new-reply': |2
+
       Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
+
+
 
       - A sua resposta melhora de alguma maneira esta conversação?
 
+
+
       - Seja gentil com os restantes membros da comunidade.
 
+
+
       - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
+
+
 
       Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
   activerecord:
@@ -311,15 +326,12 @@ pt:
           attributes:
             word:
               too_many: "Demasiadas palavras para essa ação"
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros de Nível de Confiança 3 ou superior."
   meta_category_name: "Comentários sobre o Sítio"
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
-  assets_topic_title: "Ativos para o desenho do site"
   discourse_welcome_topic:
     title: "Bem-vindo ao Discourse"
   lounge_welcome:
@@ -704,7 +716,6 @@ pt:
     email_polling_errored_recently:
       one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
       other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
-    bad_favicon_url: "Não estamos a conseguir carregar o favicon. Por favor, confirme a sua configuração favicon_url nas  <a href='%{base_path}/admin/site_settings'>Configurações do sítio</a>."
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
@@ -748,8 +759,6 @@ pt:
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_blacklist: "Uma lista de domínios para a qual nunca serão geradas pré-visualizações."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
-    digest_logo_url: "A imagem de logo alternativa usada no topo dos emails de sumário do seu site. Deverá ser um rectângulo largo. Não deve ser uma imagem SVG. Se deixado vazio 'logo_url' será usado."
-    apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
@@ -918,7 +927,6 @@ pt:
     body_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o corpo de uma mensagem."
     allow_uppercase_posts: "Permitir tudo em maiúsculas num título de tópico ou corpo de mensagem."
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
-    min_body_similar_length: "Tamanho mínimo do corpo de uma mensagem antes de ser verificado por tópicos semelhantes."
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     category_style: "Estilo visível para distintivos de categorias."
@@ -1099,9 +1107,6 @@ pt:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados com etiquetas silenciadas na lista de tópicos recentes."
-    company_short_name: "Nome da Empresa (curto)"
-    company_full_name: "Nome da Empresa (Completo)"
-    company_domain: "Domínio da Empresa"
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1245,7 +1250,8 @@ pt:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
   download_backup_mailer:
     subject_template: "[%{email_prefix}] Transferir Cópia de Segurança do Site"
-    no_token: |
+    no_token: |2
+
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
     subject_template: "[%{email_prefix}] Confirmar nova Conta de Administrador"
@@ -1276,65 +1282,108 @@ pt:
     welcome_invite:
       title: "Boas-vindas de Convite"
       subject_template: "Bem-vindo a %{site_name}!"
-      text_body_template: |
+      text_body_template: |2
+
         Obrigado por ter aceite o convite para %{site_name} -- bem-vindo!
+
+
 
         - Nós criamos esta nova conta para si: **%{username}**. Altere o seu nome ou palavra-passe visitando [o seu perfil de utilizador][prefs].
 
+
+
         - Quando iniciar a sessão, por favor, **utilize o mesmo endereço de e-mail do seu convite original** - caso contrário, nós não poderemos confirmar se é você!
+
+
 
         %{new_user_tips}
 
+
+
         Nós acreditamos num [comportamento civilizado da comunidade]%{base_url}/linhas diretrizes) de todas as vezes.
 
+
+
         Desfrute da sua estadia!
+
+
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Cópia de segurança bem-sucedida"
       subject_template: "Cópia de segurança completa corretamente"
-      text_body_template: |
+      text_body_template: |2
+
         A cópia de segurança foi bem-sucedida.
+
+
 
         Visite [admin > secção de cópias de segurança](%{base_url}/admin/backups) para transferir a sua nova cópia de segurança.
 
+
+
         Aqui está o registo:
 
+
+
         ```text
+
         %{logs}
+
         ```
     backup_failed:
       title: "Cópia de segurança falhou"
       subject_template: "A cópia de segurança falhou"
-      text_body_template: |
+      text_body_template: |2
+
         A cópia de segurança falhou.
+
+
 
         Aqui está o registo:
 
+
+
         ```text
+
         %{logs}
+
         ```
     restore_succeeded:
       title: "Restauro bem-sucedido"
       subject_template: "Restauração completa corretamente"
-      text_body_template: |
+      text_body_template: |2
+
         A restauração foi bem sucedida.
+
+
 
         Aqui está o registo:
 
+
+
         ```text
+
         %{logs}
+
         ```
     restore_failed:
       title: "Restauro falhou"
       subject_template: "A restauração falhou"
-      text_body_template: |
+      text_body_template: |2
+
         A restauração falhou.
+
+
 
         Aqui está o registo:
 
+
+
         ```text
+
         %{logs}
+
         ```
     bulk_invite_succeeded:
       subject_template: "Convites de utilizadores em massa processados com sucesso"
@@ -1347,47 +1396,76 @@ pt:
       title: "Exportação de CSV falhou"
       subject_template: "A exportação dos dados falhou"
     email_reject_inactive_user:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+
+
 
         A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
     email_reject_empty:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (com título%{former_title}) não funcionou.
+
+
 
         Não conseguimos encontrar nenhum conteúdo de resposta no seu email.
 
+
+
         Se está a obter isto e _realmente_ incluiu uma resposta, tente novamente com um formato mais simples.
     email_reject_parsing:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+
 
         Não conseguimos encontrar a sua resposta no email. **Certifique-se que a sua resposta se encontra no topo do email** - não conseguimos processar respostas em linha.
     email_reject_invalid_post:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+
+
 
         Algumas causas possíveis são: formatação complexa, mensagem demasiado grande, mensagem demasiado pequena. Por favor tente novamente, ou publique através do sítio se isto continuar.
     email_reject_invalid_post_specified:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+
+
 
         Motivo:
 
+
+
         %{post_error}
+
+
 
         Se conseguir corrigir o problema, tente novamente.
     email_reject_invalid_post_action:
-      text_body_template: |
+      text_body_template: |2
+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+
+
 
         A Acção de Publicação não foi reconhecida. Por favor tente novamente, ou publique através do sítio se isto continuar.
     email_error_notification:
       title: "Notificação de Erro de Mensagem"
-      text_body_template: |
+      text_body_template: |2
+
         Infelizmente, ocorreu um erro de autenticação ao recuperar emails do servidor POP.
 
+
+
         Por favor certifique-se que configurou correctamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
+
+
 
         Se existe uma interface web para a sua conta de POP de email, pode precisar de iniciar sessão na web e verificar a suas configurações aí.
     too_many_spam_flags:
@@ -1398,8 +1476,11 @@ pt:
       subject_template:
         one: "1 utilizador espera a aprovação"
         other: "%{count} utilizadores esperam a aprovação"
-      text_body_template: |
+      text_body_template: |2
+
         Há registos de novos utilizadores à espera de serem aprovados (ou rejeitados) antes de poderem aceder a este fórum.
+
+
 
         [Por favor reveja-os na secção de administração](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
@@ -1408,16 +1489,24 @@ pt:
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
     dashboard_problems:
       subject_template: "Problemas foram encontrados"
-      text_body_template: |
+      text_body_template: |2
+
         Alguns problemas foram reportados no seu painel de administração.
 
+
+
         [Por favor reveja-os e corrija-os](%{base_url}/admin).
-  unsubscribe_link: |
+  unsubscribe_link: |2
+
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
-  unsubscribe_link_and_mail: |
+  unsubscribe_link_and_mail: |2
+
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
-  unsubscribe_mailing_list: |
+  unsubscribe_mailing_list: |2
+
     Está a receber isto porque ativou o modo de lista de distribuição.
+
+
 
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
@@ -1433,110 +1522,190 @@ pt:
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_topic:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_replied:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_replied_pm:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_quoted:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_linked:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_mentioned:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_group_mentioned:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_watching_first_post:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm:
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
+
+
 
           %{message}
     digest:
@@ -1555,12 +1724,19 @@ pt:
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
     notify_old_email:
-      text_body_template: |
+      text_body_template: |2
+
         Isto é uma mensagem automática para o informar que o seu endereço de email para
+
         %{site_name} foi alterado. Se isto foi feito em erro, por favor contacte
+
         a administração do sítio.
 
+
+
         O seu endereço de email foi alterado para:
+
+
 
         %{new_email}
     signup_after_approval:
@@ -1599,7 +1775,8 @@ pt:
   csv_export:
     boolean_yes: "Sim"
     boolean_no: "Não"
-  static_topic_first_reply: |
+  static_topic_first_reply: |2
+
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Orientações"
@@ -1607,86 +1784,167 @@ pt:
     title: "Termos de Serviço"
   privacy_topic:
     title: "Política de Privacidade"
-    body: |
+    body: |2
+
       <a name="collect"></a>
+
+
 
       ## [Que informações reunimos?](#reunião)
 
+
+
       Reunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado.
+
+
 
       Ao inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email.
 
+
+
       Ao inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor.
+
+
 
       <a name="use"></a>
 
+
+
       ## [Para que usamos as suas informações?](#usar)
+
+
 
       Todas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras:
 
+
+
       * Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais.
+
       * Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si.
+
       * Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte.
+
       * Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões.
+
+
 
       <a name="protect"></a>
 
+
+
       ## [Como protegemos a sua informação?](#protect)
+
+
 
       Implementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal.
 
+
+
       <a name="data-retention"></a>
+
+
 
       ## [Qual é a sua política de retenção de dados?](#retenção-dados)
 
+
+
       Iremos fazer um esforço de boa fé para:
 
+
+
       * Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias.
+
       * Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos.
+
+
 
       <a name="cookies"></a>
 
+
+
       ## [Usamos cookies?](#cookies)
+
+
 
       Sim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa.
 
+
+
       Usamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio.
+
+
 
       <a name="disclose"></a>
 
+
+
       ## [Divulgamos informação com partes exteriores?](#divulgar)
+
+
 
       Não vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos.
 
+
+
       <a name="third-party"></a>
+
+
 
       ## [Hiperligações de Terceiras Partes](#terceira-parte)
 
+
+
       Ocasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios.
+
+
 
       <a name="coppa"></a>
 
+
+
       ## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa)
+
+
 
       O nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio.
 
+
+
       <a name="online"></a>
+
+
 
       ## [Política de Privacidade Online](#online)
 
+
+
       Estas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline.
+
+
 
       <a name="consent"></a>
 
+
+
       ## [O seu consentimento](#consentimento)
+
+
 
       Ao utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio.
 
+
+
       <a name="changes"></a>
+
+
 
       ## [Mudanças à nossa Política de Privacidade](#mudanças)
 
+
+
       Se decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página.
+
+
 
       Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
   badges:
@@ -1730,7 +1988,8 @@ pt:
     nice_share:
       name: Boa Partilha
       description: Partilhou uma publicação com 25 visitantes únicos
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido por partilhar uma ligação que foi clicada por 25 visitantes externos. Obrigado por espalhar a palavra sobre as nossas discussões, e esta comunidade.
     good_share:
       name: Ótima Partilha
@@ -1741,7 +2000,8 @@ pt:
     first_like:
       name: Primeiro Gosto
       description: Gostou de uma publicação
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido pela primeira vez que gosta de uma publicação utilizando o botão :heart: . Gostar de mensagens é uma excelente maneira de deixar os seus companheiros membros da comunidade saberem que o que eles postaram foi interessante, útil, giro, ou divertido. Partilhe o amor!
     first_flag:
       name: Primeira Denúncia
@@ -1758,12 +2018,14 @@ pt:
     first_share:
       name: Primeira Partilha
       description: Partilhou uma publicação
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido pela primeira vez que partilha uma ligação a uma publicação ou tópico utilizando o botão de partilha. Partilhar ligações é uma excelente maneira de mostrar discussões interessantes  ao resto do mundo e de fazer crescer a sua comunidade.
     first_link:
       name: Primeira Ligação
       description: Adicionou uma ligação para outro tópico
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido pela primeira vez que coloca uma ligação para outro tópico. Ligar tópicos ajuda os leitores a encontrarem conversas relacionadas interessantes, ao exibir as conexões entre tópicos em ambas as direcções. Ligue à vontade!
     first_quote:
       name: Primeira Citação
@@ -1773,47 +2035,56 @@ pt:
     reader:
       name: Leitor
       description: Ler todas as respostas num tópico com mais de 100 respostas
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido pela primeira vez que lê um tópico alongado com mais de 100 respostas. Ler uma discussão atentamente ajuda-o a acompanhar uma discussão, compreender diferentes pontos de vista, e leva a discussões mais interessantes. Quanto mais lê, melhor fica a discussão. Como costumamos dizer, Ler é Fundamental! :slight_smile:
     popular_link:
       name: Ligação Popular
       description: Publicou uma ligação externa com 50 cliques
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando uma ligação que partilhou obtém 50 cliques. Obrigado por publicar uma ligação útil que adicionou conteúdo interessante à conversa!
     hot_link:
       name: Ligação Quente
       description: Publicou uma ligação externa com 300 cliques
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a  conversa para a frente e iluminou a discussão!
     famous_link:
       name: Ligação Famosa
       description: Publicou uma ligação externa com 1000 cliques
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando uma ligação que partilhou obtém 1000 cliques. Uau!  Publicou uma ligação que significativamente melhorou a conversa ao adicionar detalhe, contexto e informação essencial. Óptimo trabalho!
     appreciated:
       name: Apreciado
       description: Recebeu 1 gosto em 20 publicações
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando recebe pelo menos um gosto em 20 publicações diferentes. Aqui comunidade gosta das suas contribuições para as conversas!
     respected:
       name: Respeitado
       description: Recebeu 2 gostos em 100 publicações
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando recebe pelo menos 2 gostos em 100 publicações diferentes. Aqui a comunidade gosta das suas contribuições para as conversas!
     admired:
       name: Admirado
       description: Recebeu 5 gostos em 300 publicações
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando recebe pelo menos 5 gostos em 300 publicações diferentes. Uau! Aqui a comunidade admira as suas frequentes contribuições de alta qualidade para as conversas.
     out_of_love:
       name: Amor esgotado
       description: Utilizou 50 gostos num dia
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando utiliza todos os seus 50 gostos diários. Lembrar-se de parar um momento e gostar das publicações de que disfruta e que aprecia encoraja as pessoas a criar melhores discussões no futuro.
     higher_love:
       name: Amor superior
       description: Utilizou 50 gostos num dia 5 vezes
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando utiliza todos os seus 50 gostos diários durante 5 dias. Obrigado por dedicar parte do seu tempo a encorajar as melhores conversas cada dia!
     crazy_in_love:
       name: Amando Loucamente
@@ -1821,12 +2092,14 @@ pt:
     thank_you:
       name: Obrigado
       description: Tem 20 publicações gostadas e deu 10 gostos
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando tem 20 publicações suas gostadas e deu em troca 10 ou mais gostos. Quando alguém gosta das suas publicações, você encontra o tempo para gostar do que os outros estão a publicar, também.
     gives_back:
       name: Retribui
       description: Tem 100 publicações gostadas e deu 100 gostos
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido quando tem 100 publicações gostadas e deu 100 ou mais gostos de volta. Obrigado por retribuir!
     empathetic:
       name: Empático
@@ -1841,7 +2114,8 @@ pt:
       description: Publicou uma ligação que foi pré-visualizada
     first_reply_by_email:
       name: Primeira Resposta por Email
-      long_description: |
+      long_description: |2
+
         Este distintivo é concedido pela primeira vez que responde a uma publicação por email :e-mail:.
   admin_login:
     success: "Email Enviado"
@@ -1922,16 +2196,6 @@ pt:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
-        fields:
-          company_short_name:
-            label: "Nome da Empresa (curto)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nome da Empresa (Completo)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Nome do Domínio da Empresa"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -1943,20 +2207,8 @@ pt:
                 label: "Escuro Simples"
       logos:
         title: "Logos"
-        fields:
-          logo_url:
-            label: "Logo Primário"
-            description: "A imagem do logótipo no canto superior esquerdo do seu sítio. Use uma forma rectangular larga."
-          logo_small_url:
-            label: "Logo Compacto"
-            description: "Uma versão compacta do seu logo, mostrada no canto superior esquerdo, visível quando arrastado para baixo. Use uma forma quadrada."
       icons:
         title: "Ícones"
-        fields:
-          favicon_url:
-            label: "Ícone Pequeno"
-          apple_touch_icon_url:
-            label: "Ícone Grande"
       homepage:
         title: "Página de início"
         fields:

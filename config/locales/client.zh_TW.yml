@@ -487,8 +487,6 @@ zh_TW:
       subcategories: "次分類"
       topic_sentence:
         other: "%{count} 個話題"
-      topic_stat_sentence:
-        other: "在過去 1 %{unit}內有 %{count} 則新討論話題。"
       n_more: "分類（%{count} 或更多）…"
     ip_lookup:
       title: IP 位址查詢
@@ -1134,7 +1132,6 @@ zh_TW:
         title_too_long: "標題不能超過 {{max}} 個字"
         post_missing: "文章不可空白"
         post_length: "文章必須至少 {{min}} 個字。"
-        try_like: '試試 <i class="fa fa-heart"></i> 按鈕？'
         category_missing: "你必須選擇一個分類。"
       save_edit: "儲存編輯"
       reply_original: "回覆至原始的討論話題"
@@ -1768,7 +1765,6 @@ zh_TW:
           revert: "還原至該版本"
           edit_wiki: "編輯共筆"
           edit_post: "編輯貼文"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "以單一網頁模式檢視，並標示增加與刪減的內容"

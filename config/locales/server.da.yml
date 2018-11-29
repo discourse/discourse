@@ -145,9 +145,6 @@ da:
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 svar"
-      other: "%{count} svar"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
   too_many_mentions:
     one: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
@@ -336,9 +333,6 @@ da:
           attributes:
             name:
               taken: er allerede i brug af en anden emoji
-  user_profile:
-    no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
   meta_category_name: "Site Feedback"
@@ -737,7 +731,6 @@ da:
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
       other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
-    bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='%{base_path}/admin/site_settings'>Site Settings</a>"
     poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
@@ -780,8 +773,6 @@ da:
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
     onebox_domains_blacklist: "En liste af domæner som aldrig vil blive onebox'et."
     max_oneboxes_per_post: "Maksimalt antal onebox-forekomster i et opslag."
-    digest_logo_url: "Det alternative logo billede der anvendes øverst på jeres sides email opsummering, burde være en bred rektangel. Skal ikke være et SVG billede. Hvis denne efterlades blank, vil 'logo_url' blive anvendt."
-    apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
@@ -1518,16 +1509,6 @@ da:
             label: "Hjemmeside"
       corporate:
         title: "Organisation"
-        fields:
-          company_short_name:
-            label: "Firmanavn (kort)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Firmanavn (fuldt)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Firmaets domænenavn"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -1539,20 +1520,8 @@ da:
                 label: "Enkelt og mørkt"
       logos:
         title: "Logoer"
-        fields:
-          logo_url:
-            label: "Primært logo"
-            description: "Logobilledet øverst til venstre på dit site. Anvend en bredt rektangulært form."
-          logo_small_url:
-            label: "Kompakt logo"
-            description: "En kompakt version af dit logo - vises i toppen til venstre på dit site når der scrolles ned. Hvor en kvadratisk form."
       icons:
         title: "Ikoner"
-        fields:
-          favicon_url:
-            label: "Lille ikon"
-          apple_touch_icon_url:
-            label: "Stort ikon"
       homepage:
         description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
         title: "Hjemmeside"

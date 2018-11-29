@@ -385,9 +385,6 @@ sq:
       topic_sentence:
         one: "1 temë"
         other: "%{count} tema"
-      topic_stat_sentence:
-        one: "%{count} temë e re gjatë %{unit} të fundit."
-        other: "%{count} tema të reja gjatë %{unit} të fundit."
     ip_lookup:
       title: Shiko adresën IP
       hostname: Hostname
@@ -914,7 +911,6 @@ sq:
         title_too_long: "Titulli nuk mund të ketë më shumë se {{max}} shkronja"
         post_missing: "Postimi s'mund të jetë bosh"
         post_length: "Postimi duhet të ketë të paktën {{min} shkronja."
-        try_like: 'A e keni provuar butonin <i class="fa fa-heart"></i> ?'
         category_missing: "Duhet të zgjidhni një kategori"
       save_edit: "Ruani modifikimet"
       reply_original: "Përgjigjuni temës origjinale"
@@ -1457,7 +1453,6 @@ sq:
           hide: "Fshihe revizionin"
           show: "Trego revizionin"
           revert: "Rikthe këtë version"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"

@@ -454,11 +454,6 @@ he:
         two: "%{count} נושאים"
         many: "%{count} נושאים"
         other: "%{count} נושאים"
-      topic_stat_sentence:
-        one: "נושא חדש אחד ב-%{unit}."
-        two: "%{count} נושאים חדשים ב-%{unit}."
-        many: "%{count} נושאים חדשים ב-%{unit}."
-        other: "%{count} נושאים חדשים ב-%{unit}."
     ip_lookup:
       title: חיפוש כתובת IP
       hostname: שם שרת
@@ -1045,7 +1040,6 @@ he:
         title_too_long: "על הכותרת להיות באורך {{max}} לכל היותר."
         post_missing: "הפוסט אינו יכול להיות ריק"
         post_length: "על הפוסט להיות באורך {{min}} תווים לפחות"
-        try_like: 'האם ניסית את כפתור ה-<i class="fa fa-heart"></i>'
         category_missing: "עליך לבחור קטגוריה."
       save_edit: "שמירת עריכה"
       reply_original: "תגובה לנושא המקורי"
@@ -1766,7 +1760,6 @@ he:
           revert: "חזרה לגרסה זו"
           edit_wiki: "עריכת וויקי"
           edit_post: "עריכת פוסט"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"

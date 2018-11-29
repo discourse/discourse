@@ -100,8 +100,6 @@ id:
     loading: "Sedang memuat diskusi..."
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      other: "%{count} balasan"
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
     other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
@@ -193,8 +191,6 @@ id:
           attributes:
             hex:
               invalid: "bukan warna yang valid."
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
   vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
   lounge_welcome:

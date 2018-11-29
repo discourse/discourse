@@ -146,9 +146,6 @@ fa_IR:
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
-    replies:
-      one: "%{count} پاسخ"
-      other: "%{count} پاسخ"
   no_mentions_allowed: "متأسفیم، شما نمی‌توانید به کاربران دیگر اشاره کنید."
   too_many_mentions:
     one: "متأسفیم، شما در هر نوشته تنها می‌توانید به %{count} کاربر اشاره کنید."
@@ -346,16 +343,12 @@ fa_IR:
           attributes:
             word:
               too_many: "برای چنین کاری کلمات زیادی است"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>فیلد درباره من نمایه شما خالی است, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>قصد نوشتن دارید؟</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} هنوز در نمایه‌اش چیزی در فیلد 'درباره من' وارد نکرده است."
   vip_category_name: "سالن"
   vip_category_description: "دسته‌بندی مخصوص برای اعضا با سطح اعتماد 3 و بالاتر."
   meta_category_name: "بازخورد از سایت"
   meta_category_description: "گفتگو در مورد سایت، این سازمان، چگونه کار می کنه٬ و چطور می‌توانیم آن را بهبود ببخشیم. "
   staff_category_name: "همکاران"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. موضوعات فقط برای مدیران ارشد و مدیران قابل رویت است."
-  assets_topic_title: "منابع مورد نیاز طراحی سایت"
   discourse_welcome_topic:
     title: "به دیسکورس خوش آمدید"
     body: |2
@@ -761,7 +754,6 @@ fa_IR:
     email_polling_errored_recently:
       one: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
       other: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
-    bad_favicon_url: "favicon نمی‌تواند بارگذاری شود. مقدار favicon_url را در <a href='%{base_path}/admin/site_settings'>تنظیمات سایت</a> بررسی کنید."
     poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا  <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
     poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
   site_settings:
@@ -807,8 +799,6 @@ fa_IR:
     post_onebox_maxlength: "حداکثر طول متن پیشنمایش لینک به نویسه."
     onebox_domains_blacklist: "لیست دامنه‌هایی که نباید پیش‌نمایش داشته باشند."
     max_oneboxes_per_post: "حداکثر تعداد پیش نمایش پیوند در یک نوشته"
-    digest_logo_url: "موقعیت لوگوی تصویر ثابت در بالای خلاصه ایمیل استفاده  شده است. باید به شکل یک مستطیل عریض باشد. نباید تصویر SVG باشد. اگر این قسمت را وارد نکنید مقدار  `logo_url` استفاده می‌شود."
-    apple_touch_icon_url: "آیکن استفاده شده برای دستگاه های لمسی اپل. اندازه پیشنهادی 144px by 144px."
     notification_email: "از: ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "فهرست pipe-delimited از سربرگ‌های ایمیل سفارشی "
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
@@ -989,7 +979,6 @@ fa_IR:
     body_min_entropy: "حداقل آنتروپی مورد نیاز متن نوشته(نویسه‌های خاص، تعداد غیر انگلیسی برای ادامه )"
     allow_uppercase_posts: "اجازه‌ی استفاده از حروف بزرگ در متن نوشته."
     min_title_similar_length: "حداقل طول عنوان قبل از اینکه برای موضوعات مشابه بررسی شود."
-    min_body_similar_length: "حداقل طول بدنه یک نوشته قبل از اینکه  برای موضوعات مشابه بررسی شود.  "
     desktop_category_page_style: "سبک بصری برای صفحه‌ی دسته‌بندی"
     category_colors: "لیست مقادیر رنگ هگزا دسیمال مجاز برای دسته‌بندی‌ها."
     category_style: "سبک بصری برای نشان دسته‌بندی"
@@ -1179,9 +1168,6 @@ fa_IR:
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     remove_muted_tags_from_latest: "موضوعاتی که برچسب غیر‌فعال دارند در قسمت آخرین موضوعات نمایش نده"
-    company_short_name: "نام شرکت (کوتاه)"
-    company_full_name: "نام شرکت (کامل)"
-    company_domain: "دامنه شرکت"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1990,7 +1976,7 @@ fa_IR:
       description: یک پسند دریافت کرده‌اید
     autobiographer:
       name: نویسنده شرح‌حال
-      description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a>  خود را تکمیل کرده
+      description: "اطلاعات <a href=\"%{base_path}/my/preferences\">صفحه شخصی</a>  خود را تکمیل کرده"
     anniversary:
       name: سالگرد
       description: برای یک سال کاربر فعال بوده، حداقل یک نوشته دارد.
@@ -2228,17 +2214,6 @@ fa_IR:
             label: "پیام‌های خودکار"
       corporate:
         title: "سازمان"
-        description: "این نام ها در <a href='%{base_path}/privacy' target='blank'>سیاست حفظ حریم خصوصی</a> و <a href='%{base_path}/tos' target='blank'>شرایط استفاده از سرویس</a> وارد می‌شوند، که موضوعات قابل ویرایشی در دسته‌بندی کارکنان هستند. اگر شرکت ندارید این قسمت را رد کنید."
-        fields:
-          company_short_name:
-            label: "نام شرکت (کوتاه)"
-            placeholder: "آزموده"
-          company_full_name:
-            label: "نام شرکت (کامل)"
-            placeholder: "شرکت آزموده"
-          company_domain:
-            label: "دامنه شرکت"
-            placeholder: "Azmode.com"
       colors:
         title: "قالب"
         fields:
@@ -2251,20 +2226,8 @@ fa_IR:
                 label: "تیره ساده"
       logos:
         title: "لوگو‌ها"
-        fields:
-          logo_url:
-            label: "لوگو اصلی"
-            description: "تصویر لوگو در بالای سایت سمت چپ قرار می‌گیرد. از یک لوگو عریض مستطیل شکل استفاده کنید."
-          logo_small_url:
-            label: "لوگو فشرده"
-            description: "یک نسخه کوچک از لوگو وقتی که به پایین سایت اسکرول می‌کنید نمایش داده می‌شود. برای این قسمت لوگو مربعی شکل استفاده کنید."
       icons:
         title: "آیکن‌ها"
-        fields:
-          favicon_url:
-            label: "آیکن کوچک"
-          apple_touch_icon_url:
-            label: "آیکن بزرگ"
       homepage:
         description: "توصیه می‌کنیم آخرین موضوعات را در صفحه اصلی سایت نمایش دهید. اما می‌توانید دسته‌بندی‌ها (گروه‌های موضوعات) را نیز نمایش دهید."
         title: "صفحه اصلی"

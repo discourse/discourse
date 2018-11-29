@@ -27,11 +27,6 @@ fi:
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja sisältää epäkelpoja parametreja."
     named_poll_with_multiple_choices_has_invalid_parameters: "Kysely nimeltä <strong>%{name}</strong>, jossa on useampia vaihtoehtoja sisältää epäkelpoja parametreja"
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
-    default_cannot_be_made_public: "Kyselyä, johon on vastattu, ei voi muuttaa julkiseksi."
-    edit_window_expired:
-      op_cannot_edit_options: "Vastausvaihtoehtoja ei enää voi lisätä tai poistaa, kun on kulunut %{minutes} minuuttia. Ota yhteyttä valvojaan, jos vastausvaihtoehtoa tulisi muokata."
-      staff_cannot_add_or_remove_options: "Vastausvaihtoehtoja ei enää voi lisätä tai poistaa, kun on kulunut %{minutes} minuuttia. Tämä ketju tulisi sulkea ja aloittaa uusi ketju."
-    no_polls_associated_with_this_post: "Tämä viesti ei sisällä äänestyskyselyä."
     no_poll_with_this_name: "Tämä viesti ei sisällä äänestyskyselyä nimeltä <strong>%{name}</strong>."
     post_is_deleted: "Ei voi tehdä poistetulle viestille"
     topic_must_be_open_to_vote: "Vain avoimessa ketjussa voi äänestää."

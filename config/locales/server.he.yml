@@ -162,11 +162,6 @@ he:
     permalink: "קישור"
     imported_from: "זה נושא דיון מלווה לערך המקורי ב- %{link}"
     in_reply_to: "◄ %{username}"
-    replies:
-      one: "תגובה אחת"
-      two: "%{count} תגובות"
-      many: "%{count} תגובות"
-      other: "%{count} תגובות"
   no_mentions_allowed: "מצטערים, אך אינכם יכולים לאזכר משתמשים אחרים."
   too_many_mentions:
     one: "מצטערים, אתם יכולים לאזכר רק משתמש אחד בפוסט"
@@ -374,16 +369,12 @@ he:
           attributes:
             word:
               too_many: "יש יותר מדי מילים בפעולה הזו"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין/ה דבר בשדה אודות של הפרופיל שלו/ה</div>"
   vip_category_name: "לאונג'"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
   meta_category_name: "משוב לאתר"
   meta_category_description: "דיון אודות אתר זה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
-  assets_topic_title: "נכסים לעיצוב האתר"
   discourse_welcome_topic:
     title: "ברוכים הבאים לדיסקורס"
     body: |2
@@ -844,7 +835,6 @@ he:
       two: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
       many: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
       other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-    bad_favicon_url: "ה favicon לא עולה. אנא בדקו את הגדרת ה favicon_url ב <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
     poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו  מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
   site_settings:
@@ -890,8 +880,6 @@ he:
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פוסט Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_blacklist: "רשימת מתחמים (דומיינים) שלעולם לא יהיו Oneboxed."
     max_oneboxes_per_post: "מספר מקסימלי של onebox-ים בפוסט."
-    digest_logo_url: "תמונת הלוגו האלטרנטיבי שמשמשת בראש המיילים של הסיכום מאתרכם. אמורה להיות צורה מלבנית מוארכת. צריכה לא להיות תמונת SVG. אם נשאר ריק ייעשה שימוש ב `logo_url`."
-    apple_touch_icon_url: "אייקון שמשמש למכשירי טאץ׳ של אפל. גודל מומלץ 144 על 144 פיקסלים."
     notification_email: "מאת: נעשה שימוש בכתובת מייל זו כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     force_https: "הכריחו את אתרכם להשתמש אך ורק ב HTTPS. אזהרה: אל תאפשרו זאת עד שתוודאו ש HTTPS מותקן ועובד ממש בכל המקרים! וידאתם את הגדרות ה CDN שלכם, כל שירותי ההתחברות, וכל הלוגואים / תלויות החיצוניים - כדי לוודא שכולם עובדים גם כן עם HTTPS?"
@@ -1073,7 +1061,6 @@ he:
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
-    min_body_similar_length: "האורך המינימלי של גוף הפוסט לפני שהוא ייבדק לאיתור נושאים דומים."
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
     category_style: "סגנון ויזואלי עבור עיטורי קטגוריות."
@@ -1264,9 +1251,6 @@ he:
     min_trust_level_to_tag_topics: "רמת אמון מינימלית שדרושה כדי לתייג נושאים"
     suppress_overlapping_tags_in_list: "אם תגים תואמים בדיוק מילים בכותרות נושאים, אל תציגו את התגים"
     remove_muted_tags_from_latest: "אל תציגו נושאים מתוייגים עם תגים מושתקים ברשימת הנושאים האחרונים."
-    company_short_name: "שם חברה (קצר)"
-    company_full_name: "שם חברה (מלא)"
-    company_domain: "שם מתחם (דומיין) חברה"
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -2397,17 +2381,6 @@ he:
             label: "הודעות אוטומטיות"
       corporate:
         title: "ארגון"
-        description: "שמות אלו יוכנסו ל<a href='%{base_path}/privacy' target='blank'>מדיניות הפרטיות</a> שלכם ול<a href='%{base_path}/tos' target='blank'>תנאי השימוש</a>, שתוכלו לערוך בכל זמן בקטגוריית הצוות. אם אין לכם חברה, הרגישו חופשי לדלג על שלב זה לעת עתה."
-        fields:
-          company_short_name:
-            label: "שם החברה (קצר)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "שם החברה (מלא)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "שם המתחם (דומיין) של החברה"
-            placeholder: "initech.com"
       colors:
         title: "תמה"
         fields:
@@ -2420,20 +2393,8 @@ he:
                 label: "כהה פשוט"
       logos:
         title: "לוגואים"
-        fields:
-          logo_url:
-            label: "לוגו ראשי"
-            description: "תמונת הלוגו בצד הימני העליון של האתר שלכם. השתמשו בצורה מלבנית רחבה."
-          logo_small_url:
-            label: "לוגו קומפקטי"
-            description: "גירסה קומפקטית של הלוגו שלכם, מוצגת בצד ימין למעלה של האתר שלכם כאשר גוללים למטה. השתמשו בצורה ריבועית."
       icons:
         title: "אייקונים"
-        fields:
-          favicon_url:
-            label: "אייקון קטן"
-          apple_touch_icon_url:
-            label: "אייקון גדול"
       homepage:
         description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים גם להציג קטגוריות (קבוצות נושאים) בדף הבית אם תעדיפו."
         title: "דף הבית"

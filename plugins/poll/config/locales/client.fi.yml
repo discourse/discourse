@@ -15,8 +15,6 @@ fi:
         one: "ääni"
         other: "ääntä"
       average_rating: "Keskiarvo: <strong>%{average}</strong>"
-      public:
-        title: "Äänet ovat julkisia."
       multiple:
         help:
           at_least_min_options:

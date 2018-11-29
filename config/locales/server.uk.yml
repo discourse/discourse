@@ -60,11 +60,6 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
-    replies:
-      one: "1 відповідь"
-      few: "%{count} відповідей"
-      many: "%{count} відповідей"
-      other: "%{count} відповідей"
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
@@ -137,8 +132,6 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   staff_category_name: "Персонал"
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
@@ -305,7 +298,6 @@ uk:
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
-    apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"

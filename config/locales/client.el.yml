@@ -421,9 +421,6 @@ el:
       topic_sentence:
         one: "1 θέμα"
         other: "%{count} νήματα"
-      topic_stat_sentence:
-        one: "%{count} νέο νήμα στα τελευταία %{unit}."
-        other: "%{count} νέα νήματα στα τελευταία %{unit}."
     ip_lookup:
       title: Αναζήτηση Διεύθυνσης IP
       hostname: Hostname
@@ -494,8 +491,10 @@ el:
       mailing_list_mode:
         label: "Λειτουργία ταχυδρομικής λίστας"
         enabled: "Ενεργοποίησε λειτουργία ταχυδρομικής λίστας"
-        instructions: |
+        instructions: |2
+
           Η ρύθμιση παρακάμπτει την περίληψη δραστηριότητας.<br />
+
           Τα νήματα σε σίγαση και οι κατηγορίες δεν συμπεριλαμβάνονται σε αυτά τα ηλεκτρονικά μηνύματα.
         individual: "Στείλε ένα email για κάθε νέα ανάρτηση"
         individual_no_echo: "Στείλε ένα email για κάθε νέα ανάρτηση, εκτός από τις δικές μου."
@@ -1023,7 +1022,6 @@ el:
         title_too_long: "Ο τίτλος δεν μπορεί να έχει πάνω από {{max}} χαρακτήρες"
         post_missing: "Μία ανάρτηση δεν μπορεί να είναι κενή"
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον {{min}} χαρακτήρες"
-        try_like: 'Έχεις δοκιμάσει το κουμπί <i class="fa fa-heart"></i>;'
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
       save_edit: "Αποθήκευση Επεξεργασίας"
       reply_original: "Απάντηση στο αρχικό νήμα"
@@ -1717,7 +1715,6 @@ el:
           revert: "Επιστροφή σε αυτήν την αναθεώρηση"
           edit_wiki: "Επεξεργασία του Βίκι"
           edit_post: "Επεξεργασία Ανάρτησης"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Δείξε το φορμαρισμένο κείμενο με τις αλλαγές και προσθηκες ενσωματωμένες σε αυτό"
@@ -1906,11 +1903,16 @@ el:
         help: "Αυτό το νήμα είναι αόρατο. Δε θα εμφανίζεται σε καμια λίστα νημάτων και μπορεί να εμφανιστεί μόνο αν ακολουθήσεις ένα άμεσο σύνδεσμο προς αυτό."
     posts: "Αναρτήσεις"
     posts_long: "υπάρχουν {{number}} αναρτήσεις σε αυτό το νήμα"
-    posts_likes_MF: |
+    posts_likes_MF: |2
+
       Αυτό το νήμα έχει {count, plural, one {1 απάντηση} other {# απαντήσεις}} {ratio, select,
+
       low {με μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
+
       med {με πολύ μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
+
       high {με εξαιρετικά μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
+
       other {}}
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
@@ -2101,14 +2103,22 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
-    google_search: |
+    google_search: |2
+
       <h3>Αναζήτηση στο Google</h3>
+
       <p>
+
       <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+
       <input type="text" id='user-query' value="">
+
       <input type='hidden' id='google-query' name="q">
+
       <button class="btn btn-primary">Google</button>
+
       </form>
+
       </p>
     tagging:
       all_tags: "Όλες οι Ετικέτες"

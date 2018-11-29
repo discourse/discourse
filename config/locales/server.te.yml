@@ -86,9 +86,6 @@ te:
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "ఒక జవాబు"
-      other: "%{count} జవాబులు"
   spamming_host: "క్షమించాలి. ఆ అతిధికి మీరు లంకె టపా చెయ్యలేరు."
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
@@ -162,8 +159,6 @@ te:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
   vip_category_name: "అడ్డా"
   vip_category_description: "నమ్మకం స్థాయి మూడు లేదా ఆపై ఉన్న సభ్యులకు మాత్రమే పరిమితమైన వర్గం"
   meta_category_description: "ఈ సైటు గురించి చర్చ. ఎలా మొదలైంది. ఎలా పని చేస్తుంది. ఇంకా ఎలా మెరుగు పరచవచ్చు."

@@ -487,9 +487,6 @@ ur:
       topic_sentence:
         one: "1 ٹاپک"
         other: "%{count} ٹاپک"
-      topic_stat_sentence:
-        one: "%{count} نئے موضوعات پچھلے %{unit} میں۔"
-        other: "%{count} نئے موضوعات پچھلے %{unit} میں۔"
     ip_lookup:
       title: IP ایڈریس کا سراغ
       hostname: ہوسٹ کا نام
@@ -1126,7 +1123,6 @@ ur:
         title_too_long: "عنوان {{max}} حروف سے زیادہ نہیں ہو سکتا"
         post_missing: "پوسٹ خالی نہیں ہو سکتی"
         post_length: "پوسٹ میں کم از کم {{min}} حروف ہونا ضروری ہے"
-        try_like: 'کیا آپ نے <i class="fa fa-heart"></i> بٹن اِستعمال کیا ہے؟'
         category_missing: "ایک زمرہ کا انتخاب کرنا ضروری ہے"
       save_edit: "ترمیم محفوظ کریں"
       reply_original: "حقیقی ٹاپک پر جواب دیں"
@@ -1720,7 +1716,6 @@ ur:
           other: "آپ نے <b>{{count}}</b> پوسٹس منتخب کی ہیں۔"
     post:
       quote_reply: "اقتباس کریں"
-      edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
       edit_reason: "وجہ:"
       post_number: "پوسٹ {{number}}"
       wiki_last_edited_on: "وِکی کو آخری بار ترمیم کیا گیا"
@@ -1904,7 +1899,6 @@ ur:
           revert: "اِس رَوِیژن پر واپس جائیں"
           edit_wiki: "وِیکی میں ترمیم کریں"
           edit_post: "پوسٹ میں ترمیم کریں"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "پیش کیا گیا نتیجہ اضافوں اور کمیوں کو ساتھ اِن لائن دکھائیں"
