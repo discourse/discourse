@@ -24,6 +24,10 @@ describe ImageSizer do
     expect(ImageSizer.resize('100', '101')).to eq([100, 101])
   end
 
+  it 'returns nil if no width or height are provided' do
+    expect(ImageSizer.resize).to eq(nil)
+  end
+
   describe 'when larger than the maximum width' do
 
     before do

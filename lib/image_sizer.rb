@@ -1,7 +1,7 @@
 module ImageSizer
 
   # Resize an image to the aspect ratio we want
-  def self.resize(width, height, opts = {})
+  def self.resize(width = nil, height = nil, opts = {})
     return if width.blank? || height.blank?
 
     max_width = (opts[:max_width] || SiteSetting.max_image_width).to_f
