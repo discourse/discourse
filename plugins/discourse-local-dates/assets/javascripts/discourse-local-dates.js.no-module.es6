@@ -202,15 +202,13 @@
       timezone => timezone !== watchingUserTimezone
     );
 
-    if (!_isEqualZones(displayedTimezone, watchingUserTimezone)) {
-      previewedTimezones.push({
-        timezone: watchingUserTimezone,
-        current: true,
-        dateTime: options.time
-          ? dateTime.tz(watchingUserTimezone).format("LLL")
-          : _createDateTimeRange(dateTime, watchingUserTimezone)
-      });
-    }
+    previewedTimezones.push({
+      timezone: watchingUserTimezone,
+      current: true,
+      dateTime: options.time
+        ? dateTime.tz(watchingUserTimezone).format("LLL")
+        : _createDateTimeRange(dateTime, watchingUserTimezone)
+    });
 
     if (
       options.timezone &&
