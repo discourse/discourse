@@ -18,6 +18,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   _isPanning: false,
   _panMenuOrigin: "right",
   _panMenuOffset: 0,
+  _scheduledMovingAnimation: null,
+  _scheduledRemoveAnimate: null,
   _topic: null,
 
   @observes(
@@ -62,7 +64,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         this._animateOpening($panel);
       } else {
         //continue to open or close menu
-        window.requestAnimationFrame(() => this._handlePanDone(offset, event));
+        this._scheduledMovingAnimation = window.requestAnimationFrame(() =>
+          this._handlePanDone(offset, event)
+        );
       }
     });
   },
@@ -244,6 +248,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         .off("pointermove")
         .off("pointercancel");
     }
+    Ember.run.cancel(this._scheduledRemoveAnimate);
+    window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
 
   buildArgs() {
@@ -361,7 +367,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       if (this._animate) {
         $panel.addClass("animate");
         $headerCloak.addClass("animate");
-        Ember.run.later(() => {
+        this._scheduledRemoveAnimate = Ember.run.later(() => {
           $panel.removeClass("animate");
           $headerCloak.removeClass("animate");
         }, 200);
