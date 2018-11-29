@@ -149,9 +149,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       # properly null the value so the database constraint doesn't catch us
-      if category_params.has_key?(:email_in) && category_params[:email_in].blank?
-        category_params[:email_in] = nil
-      end
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
 
