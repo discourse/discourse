@@ -91,6 +91,7 @@ describe CategoriesController do
 
       it "raises an exception when the text color is missing" do
         post "/categories.json", params: { name: "hello", color: "ff0" }
+        expect(response.status).to eq(400)
       end
 
       describe "failure" do
@@ -299,6 +300,7 @@ describe CategoriesController do
             custom_fields: {
               "dancing" => "frogs"
             },
+            minimum_required_tags: ""
           }
 
           expect(response.status).to eq(200)
@@ -311,6 +313,7 @@ describe CategoriesController do
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
           expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.minimum_required_tags).to eq(0)
         end
 
         it 'logs the changes correctly' do
