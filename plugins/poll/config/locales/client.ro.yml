@@ -17,8 +17,6 @@ ro:
         few: "total voturi"
         other: "total voturi"
       average_rating: "Media: <strong>%{average}</strong>."
-      public:
-        title: "Voturile sunt publice."
       multiple:
         help:
           at_least_min_options:

@@ -14,7 +14,7 @@
       {{#each options.emails as |email|}}
         <li>
           <a href title="{{email.username}}">
-            <i class='fa fa-envelope'></i>
+            {{d-icon 'envelope'}}
             <span class='username'>{{format-username email.username}}</span>
           </a>
         </li>

@@ -13,6 +13,11 @@ RSpec.describe ApplicationController do
       get "/?authComplete=true"
       expect(response).to redirect_to('/login?authComplete=true')
     end
+
+    it "should never cache a login redirect" do
+      get "/"
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
   end
 
   describe 'invalid request params' do
@@ -254,7 +259,6 @@ RSpec.describe ApplicationController do
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to include('example.com')
-      expect(script_src).to include("'self'")
       expect(script_src).to include("'unsafe-eval'")
     end
 
@@ -266,16 +270,6 @@ RSpec.describe ApplicationController do
 
       expect(response.headers).to_not include('Content-Security-Policy')
       expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
-    end
-
-    it 'does not set CSP for /logs' do
-      sign_in(Fabricate(:admin))
-      SiteSetting.content_security_policy = true
-
-      get '/logs'
-
-      expect(response.status).to eq(200)
-      expect(response.headers).to_not include('Content-Security-Policy')
     end
 
     def parse(csp_string)

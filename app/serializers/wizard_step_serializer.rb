@@ -31,8 +31,17 @@ class WizardStepSerializer < ApplicationSerializer
     @i18n_key ||= "wizard.step.#{object.id}".underscore
   end
 
+  def translate(sub_key, vars = nil)
+    key = "#{i18n_key}.#{sub_key}"
+    return nil unless I18n.exists?(key)
+
+    vars.nil? ? I18n.t(key) : I18n.t(key, vars)
+  end
+
   def description
-    I18n.t("#{i18n_key}.description", default: '')
+    return translate("disabled") if object.disabled
+
+    translate("description", base_path: Discourse.base_path)
   end
 
   def include_description?
@@ -40,7 +49,7 @@ class WizardStepSerializer < ApplicationSerializer
   end
 
   def title
-    I18n.t("#{i18n_key}.title", default: '')
+    translate("title")
   end
 
   def include_title?

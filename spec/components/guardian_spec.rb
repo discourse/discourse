@@ -116,6 +116,11 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
     end
 
+    it "does not allow flagging of hidden posts" do
+      post.hidden = true
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+    end
+
     it "allows flagging of staff posts when allow_flagging_staff is true" do
       SiteSetting.allow_flagging_staff = true
       staff_post = Fabricate(:post, user: Fabricate(:moderator))

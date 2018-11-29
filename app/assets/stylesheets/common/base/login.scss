@@ -76,12 +76,6 @@ $input-width: 220px;
     margin-top: 0.5em;
   }
 
-  .user-fields {
-    margin-top: 0.75em;
-    padding-top: 0.25em;
-    border-top: 1px solid $primary-low;
-  }
-
   .user-field {
     > label {
       width: $label-width;
@@ -90,6 +84,10 @@ $input-width: 220px;
       margin-bottom: 0;
       padding-top: 5px;
     }
+    &:first-of-type > label {
+      margin-top: 0;
+    }
+
     input[type="text"] {
       margin-bottom: 0;
       width: 100%;

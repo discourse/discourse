@@ -18,11 +18,9 @@ module Email
         @receiver.process!
       rescue RateLimiter::LimitExceeded
         @retry_on_rate_limit ? Jobs.enqueue(:process_email, mail: @mail) : raise
-      rescue Email::Receiver::BouncedEmailError => e
-        # never reply to bounced emails
-        log_email_process_failure(@mail, e)
-        set_incoming_email_rejection_message(@receiver.incoming_email, I18n.t("emails.incoming.errors.bounced_email_error"))
       rescue => e
+        return handle_bounce(e) if @receiver.is_bounce?
+
         log_email_process_failure(@mail, e)
         incoming_email = @receiver.try(:incoming_email)
         rejection_message = handle_failure(@mail, e)
@@ -33,6 +31,12 @@ module Email
     end
 
     private
+
+    def handle_bounce(e)
+      # never reply to bounced emails
+      log_email_process_failure(@mail, e)
+      set_incoming_email_rejection_message(@receiver.incoming_email, I18n.t("emails.incoming.errors.bounced_email_error"))
+    end
 
     def handle_failure(mail_string, e)
       message_template = case e

@@ -20,7 +20,7 @@ export default Ember.Component.extend({
         postCount = 0;
 
       // Use data we already have before fetching live stats
-      _.each(this.site.get("categories"), function(c) {
+      this.site.get("categories").forEach(c => {
         if (!c.get("read_restricted")) {
           topicCount += c.get("topic_count");
           postCount += c.get("post_count");

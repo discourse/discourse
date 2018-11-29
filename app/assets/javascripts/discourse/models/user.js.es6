@@ -446,7 +446,7 @@ const User = RestModel.extend({
   statsCountNonPM() {
     if (Ember.isEmpty(this.get("statsExcludingPms"))) return 0;
     let count = 0;
-    _.each(this.get("statsExcludingPms"), val => {
+    this.get("statsExcludingPms").forEach(val => {
       if (this.inAllStream(val)) {
         count += val.count;
       }
@@ -469,7 +469,7 @@ const User = RestModel.extend({
     }).then(json => {
       if (!Em.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
-          _.map(json.user.stats, s => {
+          json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
           })
@@ -690,13 +690,13 @@ const User = RestModel.extend({
   availableTitles() {
     let titles = [];
 
-    _.each(this.get("groups"), group => {
+    (this.get("groups") || []).forEach(group => {
       if (group.get("title")) {
         titles.push(group.get("title"));
       }
     });
 
-    _.each(this.get("badges"), badge => {
+    (this.get("badges") || []).forEach(badge => {
       if (badge.get("allow_title")) {
         titles.push(badge.get("name"));
       }

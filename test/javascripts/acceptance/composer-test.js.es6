@@ -366,31 +366,35 @@ QUnit.test("Composer can toggle between edit and reply", async assert => {
 });
 
 QUnit.test("Composer can toggle whispers", async assert => {
+  const menu = selectKit(".toolbar-popup-menu-options");
+
   await visit("/t/this-is-a-test-topic/9");
   await click(".topic-post:eq(0) button.reply");
 
-  await selectKit(".toolbar-popup-menu-options").expand();
-  await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-    "toggleWhisper"
-  );
+  await menu.expand();
+  await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper")
-      .text()
-      .indexOf(I18n.t("composer.whisper")) > 0,
+    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
     "it sets the post type to whisper"
   );
 
-  await selectKit(".toolbar-popup-menu-options").expand();
-  await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-    "toggleWhisper"
-  );
+  await menu.expand();
+  await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper")
-      .text()
-      .indexOf(I18n.t("composer.whisper")) <= 0,
+    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
     "it removes the whisper mode"
+  );
+
+  await menu.expand();
+  await menu.selectRowByValue("toggleWhisper");
+
+  await click(".toggle-fullscreen");
+
+  assert.ok(
+    menu.rowByValue("toggleWhisper").exists(),
+    "whisper toggling is still present when going fullscreen"
   );
 });
 
@@ -406,9 +410,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper")
-        .text()
-        .indexOf(I18n.t("composer.whisper")) > 0,
+      find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -417,9 +419,7 @@ QUnit.test(
 
     await click("#create-topic");
     assert.ok(
-      find(".composer-fields .whisper")
-        .text()
-        .indexOf(I18n.t("composer.whisper")) === -1,
+      find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
       "it should reset the state of the composer's model"
     );
 

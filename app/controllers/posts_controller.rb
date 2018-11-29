@@ -275,7 +275,18 @@ class PostsController < ApplicationController
 
   def reply_history
     post = find_post_from_params
-    render_serialized(post.reply_history(params[:max_replies].to_i, guardian), PostSerializer)
+
+    reply_history = post.reply_history(params[:max_replies].to_i, guardian)
+    user_custom_fields = {}
+    if (added_fields = User.whitelisted_user_custom_fields(guardian)).present?
+      user_custom_fields = User.custom_fields_for_ids(reply_history.pluck(:user_id), added_fields)
+    end
+
+    render_serialized(
+      reply_history,
+      PostSerializer,
+      user_custom_fields: user_custom_fields
+    )
   end
 
   def reply_ids
@@ -351,7 +362,13 @@ class PostsController < ApplicationController
   def replies
     post = find_post_from_params
     replies = post.replies.secured(guardian)
-    render_serialized(replies, PostSerializer)
+
+    user_custom_fields = {}
+    if (added_fields = User.whitelisted_user_custom_fields(guardian)).present?
+      user_custom_fields = User.custom_fields_for_ids(replies.pluck(:user_id), added_fields)
+    end
+
+    render_serialized(replies, PostSerializer, user_custom_fields: user_custom_fields)
   end
 
   def revisions

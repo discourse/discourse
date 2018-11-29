@@ -47,9 +47,9 @@ const Category = RestModel.extend({
     return Discourse.getURL("/c/") + Category.slugFor(this);
   },
 
-  @computed("url")
-  fullSlug(url) {
-    return url.slice(3).replace("/", "-");
+  @computed
+  fullSlug() {
+    return Category.slugFor(this).replace(/\//g, "-");
   },
 
   @computed("name")
@@ -257,9 +257,9 @@ Category.reopenClass({
     return Category.idMap()[id];
   },
 
-  findByIds(ids) {
+  findByIds(ids = []) {
     const categories = [];
-    _.each(ids, id => {
+    ids.forEach(id => {
       const found = Category.findById(id);
       if (found) {
         categories.push(found);

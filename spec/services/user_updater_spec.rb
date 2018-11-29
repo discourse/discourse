@@ -295,9 +295,14 @@ describe UserUpdater do
     it "logs the action" do
       user_without_name = Fabricate(:user, name: nil)
       user = Fabricate(:user, name: 'Billy Bob')
+
       expect do
         UserUpdater.new(acting_user, user).update(name: 'Jim Tom')
       end.to change { UserHistory.count }.by(1)
+
+      expect(UserHistory.last.action).to eq(
+        UserHistory.actions[:change_name]
+      )
 
       expect do
         UserUpdater.new(acting_user, user).update(name: 'JiM TOm')
@@ -311,9 +316,17 @@ describe UserUpdater do
         UserUpdater.new(acting_user, user_without_name).update(name: 'Jim Tom')
       end.to change { UserHistory.count }.by(1)
 
+      expect(UserHistory.last.action).to eq(
+        UserHistory.actions[:change_name]
+      )
+
       expect do
         UserUpdater.new(acting_user, user).update(name: '')
       end.to change { UserHistory.count }.by(1)
+
+      expect(UserHistory.last.action).to eq(
+        UserHistory.actions[:change_name]
+      )
     end
   end
 end

@@ -18,6 +18,8 @@ function on_exit()
 
 function on_reload()
 {
+  log "Stopping Sidekiq"
+  kill -s TSTP $UNICORN_PID
   log "Reloading unicorn ($UNICORN_PID)"
   kill -s USR2 $UNICORN_PID
   unset NEW_UNICORN_PID

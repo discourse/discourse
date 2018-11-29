@@ -454,11 +454,6 @@ he:
         two: "%{count} נושאים"
         many: "%{count} נושאים"
         other: "%{count} נושאים"
-      topic_stat_sentence:
-        one: "נושא חדש אחד ב-%{unit}."
-        two: "%{count} נושאים חדשים ב-%{unit}."
-        many: "%{count} נושאים חדשים ב-%{unit}."
-        other: "%{count} נושאים חדשים ב-%{unit}."
     ip_lookup:
       title: חיפוש כתובת IP
       hostname: שם שרת
@@ -1045,7 +1040,6 @@ he:
         title_too_long: "על הכותרת להיות באורך {{max}} לכל היותר."
         post_missing: "הפוסט אינו יכול להיות ריק"
         post_length: "על הפוסט להיות באורך {{min}} תווים לפחות"
-        try_like: 'האם ניסית את כפתור ה-<i class="fa fa-heart"></i>'
         category_missing: "עליך לבחור קטגוריה."
       save_edit: "שמירת עריכה"
       reply_original: "תגובה לנושא המקורי"
@@ -1307,7 +1301,7 @@ he:
       toggle_information: "הצגת פרטי נושא"
       read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
-      read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='/unread'>1 שלא נקרא</a> } other { <a href='/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='/new'>#</a> נושאים חדשים} } נותרים, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיינו בכל הקטגוריות
       view_latest_topics: הצגת נושאים אחרונים
       suggest_create_topic: "למה לא ליצור נושא חדש?"
@@ -1388,7 +1382,7 @@ he:
           "2_8": 'תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר קטגוריה זו.'
           "2_4": 'תראו ספירה של תגובות חדשות כיוון שפרסמתם תגובה לנושא זה.'
           "2_2": 'תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר נושא זה:'
-          "2": 'אתם תראו ספירה של תגובות חדשות כיוון ש<a href="/u/{{username}}/preferences">קראתם נושא זה</a>.'
+          "2": 'אתם תראו ספירה של תגובות חדשות כיוון ש<a href="{{basePath}}/u/{{username}}/preferences">קראתם נושא זה</a>.'
           "1_2": 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           "1": 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           "0_7": 'אתם מתעלמים מכל ההתראות בקטגוריה זו.'
@@ -1766,7 +1760,6 @@ he:
           revert: "חזרה לגרסה זו"
           edit_wiki: "עריכת וויקי"
           edit_post: "עריכת פוסט"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"

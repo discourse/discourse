@@ -122,11 +122,9 @@ describe UsersController do
     end
 
     context 'missing token' do
-      before do
-        get "/u/password-reset/#{token}"
-      end
-
       it 'disallows login' do
+        get "/u/password-reset/#{token}"
+
         expect(response.status).to eq(200)
 
         expect(CGI.unescapeHTML(response.body))
@@ -136,6 +134,14 @@ describe UsersController do
           src: '/assets/application.js'
         })
 
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "responds with proper error message" do
+        get "/u/password-reset/#{token}.json"
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["message"]).to eq(I18n.t('password_reset.no_token'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -233,6 +239,22 @@ describe UsersController do
         put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
 
         expect(response).to redirect_to(wizard_path)
+      end
+
+      it "logs the password change" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+        token = user.email_tokens.create(email: user.email).token
+        get "/u/password-reset/#{token}"
+
+        expect do
+          put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
+        end.to change { UserHistory.count }.by (1)
+
+        entry = UserHistory.last
+
+        expect(entry.target_user_id).to eq(user.id)
+        expect(entry.action).to eq(UserHistory.actions[:change_password])
       end
 
       it "doesn't invalidate the token when loading the page" do
@@ -529,7 +551,7 @@ describe UsersController do
         post "/u.json", params: {
           name: @user.name,
           username: @user.username,
-          passsword: 'tesing12352343'
+          password: 'tesing12352343'
         }
         expect(response.status).to eq(400)
       end
@@ -1407,20 +1429,13 @@ describe UsersController do
       before do
         sign_in(user)
       end
-      let(:user) { Fabricate(:user) }
+      let(:user) { Fabricate(:user, username: 'test.test', name: "Test User") }
 
       it "should be able to update a user" do
-        put "/u/#{user.username}.json", params: { name: 'test.test' }
+        put "/u/#{user.username}", params: { name: 'test.test' }
 
         expect(response.status).to eq(200)
         expect(user.reload.name).to eq('test.test')
-      end
-
-      it "should be able to update a user" do
-        put "/u/#{user.username}.json", params: { name: 'testing123' }
-
-        expect(response.status).to eq(200)
-        expect(user.reload.name).to eq('testing123')
       end
     end
 
@@ -2002,6 +2017,17 @@ describe UsersController do
         delete "/u/#{user.username}.json"
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe "for user with period in username" do
+    let(:user_with_period) { Fabricate(:user, username: "myname.test") }
+
+    it "still works" do
+      sign_in(user_with_period)
+      UserDestroyer.any_instance.expects(:destroy).with(user_with_period, anything).returns(user_with_period)
+      delete "/u/#{user_with_period.username}", xhr: true
+      expect(response.status).to eq(200)
     end
   end
 

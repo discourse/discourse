@@ -10,9 +10,13 @@
                 {{i18n "admin.dashboard.all_reports"}}
               {{/link-to}}
             </li>
-            <li class="item separator">|</li>
+
+            {{#unless showNotFoundError}}
+              <li class="item separator">|</li>
+            {{/unless}}
           {{/if}}
 
+          {{#unless showNotFoundError}}
           <li class="item report">
             <a href="{{model.reportUrl}}" class="report-url">
               {{model.title}}
@@ -24,6 +28,7 @@
               </span>
             {{/if}}
           </li>
+          {{/unless}}
         </ul>
       {{/if}}
 
@@ -92,6 +97,13 @@
           <div class="alert alert-error report-alert exception">
             {{d-icon "exclamation-triangle"}}
             <span>{{i18n "admin.dashboard.exception_error"}}</span>
+          </div>
+        {{/if}}
+
+        {{#if showNotFoundError}}
+          <div class="alert alert-error report-alert not-found">
+            {{d-icon "exclamation-triangle"}}
+            <span>{{i18n "admin.dashboard.not_found_error"}}</span>
           </div>
         {{/if}}
       {{/unless}}
@@ -192,6 +204,6 @@
 {{/conditional-loading-section}}
 {{else}}
   <div class="alert alert-info">
-    {{{i18n disabledLabel}}}
+    {{{disabledLabel}}}
   </div>
 {{/if}}

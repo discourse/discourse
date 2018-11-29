@@ -56,7 +56,7 @@
 
     .main-results {
       display: flex;
-      flex: 1;
+      flex: 1 1 auto;
     }
 
     .main-results + .secondary-results {
@@ -69,7 +69,7 @@
     .secondary-results {
       display: flex;
       flex-direction: column;
-      flex: 1;
+      flex: 1 1 auto;
 
       .classification-results {
         border-bottom: 1px solid $primary-low;
@@ -110,6 +110,7 @@
             display: flex;
             flex-direction: column;
             overflow: auto;
+            line-height: $line-height-medium;
 
             .username,
             .name {
@@ -127,7 +128,6 @@
             .name {
               color: dark-light-choose($primary-high, $secondary-low);
               font-size: $font-down-1;
-              margin-top: 0.25em;
             }
           }
         }
@@ -176,8 +176,15 @@
   }
 
   .search-link {
+    margin-bottom: 0.25em;
+
     .badge-category-parent {
       line-height: $line-height-small;
+    }
+
+    .topic {
+      display: inline-block;
+      line-height: $line-height-medium;
     }
 
     .topic-title {

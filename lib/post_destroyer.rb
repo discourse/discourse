@@ -133,7 +133,6 @@ class PostDestroyer
         Topic.reset_highest(@post.topic_id)
       end
       trash_public_post_actions
-      agree_with_flags
       trash_user_actions
       @post.update_flagged_posts_count
       remove_associated_replies
@@ -147,6 +146,9 @@ class PostDestroyer
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
+      DB.after_commit do
+        agree_with_flags
+      end
     end
 
     feature_users_in_the_topic if @post.topic
@@ -227,7 +229,11 @@ class PostDestroyer
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
           url: @post.url,
-          flag_reason: I18n.t("flag_reasons.#{@post.active_flags.last.post_action_type.name_key}", locale: SiteSetting.default_locale)
+          flag_reason: I18n.t(
+            "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",
+            locale: SiteSetting.default_locale,
+            base_path: Discourse.base_path
+          )
         }
       )
     end

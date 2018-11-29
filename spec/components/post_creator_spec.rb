@@ -1131,6 +1131,7 @@ describe PostCreator do
 
   context "private message to a muted user" do
     let(:muted_me) { Fabricate(:evil_trout) }
+    let(:another_user) { Fabricate(:user) }
 
     it 'should fail' do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1141,10 +1142,14 @@ describe PostCreator do
         title: 'this message is to someone who muted me!',
         raw: "you will have to see this even if you muted me!",
         archetype: Archetype.private_message,
-        target_usernames: "#{muted_me.username}"
+        target_usernames: "#{muted_me.username},#{another_user.username}"
       )
+
       expect(pc).not_to be_valid
-      expect(pc.errors).to be_present
+
+      expect(pc.errors.full_messages).to contain_exactly(
+        I18n.t(:not_accepting_pms, username: muted_me.username)
+      )
     end
 
     let(:staff_user) { Fabricate(:admin) }

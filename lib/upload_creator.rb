@@ -44,7 +44,7 @@ class UploadCreator
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @filename[/\.svg$/i]
+        if @image_info.type.to_s == "svg"
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if should_convert_to_jpeg?
@@ -117,6 +117,7 @@ class UploadCreator
       @upload.for_group_message   = true if @opts[:for_group_message]
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
+      @upload.for_site_setting    = true if @opts[:for_site_setting]
 
       return @upload unless @upload.save
 
@@ -131,7 +132,7 @@ class UploadCreator
         end
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
       end
 
@@ -167,7 +168,15 @@ class UploadCreator
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
+  MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
+  MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
+
   def convert_to_jpeg!
+
+    if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+      return
+    end
+
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     from = @file.path
@@ -185,8 +194,12 @@ class UploadCreator
       execute_convert(from, to, true)
     end
 
-    # keep the JPEG if it's at least 15% smaller
-    if File.size(jpeg_tempfile.path) < filesize * 0.85
+    new_size = File.size(jpeg_tempfile.path)
+
+    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
+    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    if keep_jpeg
       @file = jpeg_tempfile
       extract_image_info!
     else

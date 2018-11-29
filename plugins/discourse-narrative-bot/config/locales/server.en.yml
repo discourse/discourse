@@ -93,7 +93,7 @@ en:
         "8": "Outlook good"
         "9": "Yes"
         "10": "Signs point to yes"
-        "11": "Reply hazy try again"
+        "11": "Reply hazy, try again"
         "12": "Ask again later"
         "13": "Better not tell you now"
         "14": "Cannot predict now"
@@ -139,7 +139,7 @@ en:
         second_response: |-
           Aw, sorry. I’m still not getting it. :anguished:
 
-          I’m just a bot, but if you’d like to reach a real person, see [our contact page](/about).
+          I’m just a bot, but if you’d like to reach a real person, see [our contact page](%{base_path}/about).
 
           In the meantime, I’ll stay out of your way.
 

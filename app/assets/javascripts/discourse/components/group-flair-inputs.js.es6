@@ -1,5 +1,8 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import { convertIconClass } from "discourse-common/lib/icon-library";
+import { ajax } from "discourse/lib/ajax";
 
 export default Ember.Component.extend({
   classNames: ["group-flair-inputs"],
@@ -11,7 +14,36 @@ export default Ember.Component.extend({
 
   @computed("model.flair_url")
   flairPreviewIcon(flairURL) {
-    return flairURL && flairURL.substr(0, 3) === "fa-";
+    return flairURL && /fa(r|b?)-/.test(flairURL);
+  },
+
+  @computed("model.flair_url", "flairPreviewIcon")
+  flairPreviewIconUrl(flairURL, flairPreviewIcon) {
+    return flairPreviewIcon ? convertIconClass(flairURL) : "";
+  },
+
+  @observes("model.flair_url")
+  _loadSVGIcon() {
+    Ember.run.debounce(this, this._loadIcon, 1000);
+  },
+
+  _loadIcon() {
+    const icon = convertIconClass(this.get("model.flair_url")),
+      c = "#svg-sprites",
+      h = "ajax-icon-holder",
+      singleIconEl = `${c} .${h}`;
+
+    if (!icon) return;
+
+    if (!$(`${c} symbol#${icon}`).length) {
+      ajax(`/svg-sprite/search/${icon}`).then(function(data) {
+        if ($(singleIconEl).length === 0) $(c).append(`<div class="${h}">`);
+
+        $(singleIconEl).html(
+          `<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>${data}</svg>`
+        );
+      });
+    }
   },
 
   @computed("model.flair_url", "flairPreviewIcon")

@@ -42,7 +42,7 @@ componentTest("default", {
 
     assert.equal(
       this.get("subject")
-        .rowByIndex(0)
+        .rowByIndex(1)
         .name(),
       "jeff",
       "it has the correct tag"
@@ -50,7 +50,7 @@ componentTest("default", {
 
     assert.equal(
       this.get("subject")
-        .rowByIndex(1)
+        .rowByIndex(2)
         .name(),
       "neil",
       "it has the correct tag"
@@ -68,7 +68,7 @@ componentTest("default", {
     await this.get("subject").fillInFilter("");
     assert.equal(
       this.get("subject")
-        .rowByIndex(0)
+        .rowByIndex(1)
         .name(),
       "jeff",
       "it returns top tags for an empty search"
@@ -80,6 +80,27 @@ componentTest("default", {
     assert.ok(
       DiscourseURL.routeTo.calledWith("/tags/david"),
       "it uses lowercase URLs for tags"
+    );
+  }
+});
+
+componentTest("no tags", {
+  template: "{{tag-drop}}",
+
+  beforeEach() {
+    this.site.set("can_create_tag", true);
+    this.set("site.top_tags", undefined);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(1)
+        .name(),
+      undefined,
+      "it has no tags and doesn’t crash"
     );
   }
 });

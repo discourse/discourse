@@ -23,8 +23,6 @@ ar:
         many: "العديد من الأصوات"
         other: "مجموع الأصوات"
       average_rating: "متوسط التقييمات: <strong>%{average}</strong> "
-      public:
-        title: "الأصوات تظهر للعموم."
       multiple:
         help:
           at_least_min_options:

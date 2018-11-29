@@ -192,7 +192,14 @@ export default MountWidget.extend({
             // Quickly going back might mean the element is destroyed
             const position = $refreshedElem.position();
             if (position && position.top) {
-              $("html, body").scrollTop(position.top + distToElement);
+              let whereY = position.top + distToElement;
+              $("html, body").scrollTop(whereY);
+
+              // This seems weird, but somewhat infrequently a rerender
+              // will cause the browser to scroll to the top of the document
+              // in Chrome. This makes sure the scroll works correctly if that
+              // happens.
+              Ember.run.next(() => $("html, body").scrollTop(whereY));
             }
           });
         };
@@ -245,7 +252,7 @@ export default MountWidget.extend({
       uncloak(post, this);
     });
 
-    Object.keys(prev).forEach(pn => cloak(prev[pn], this));
+    Object.values(prev).forEach(node => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);

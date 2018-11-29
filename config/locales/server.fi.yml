@@ -156,7 +156,7 @@ fi:
       <p>Jos muistat salasanasi voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
 
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">uusi salasanasi</a>.</p>
-    user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='/u/%{username}/summary'>on jo tunnus!</a>"
+    user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tunnus!</a>"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
@@ -196,9 +196,6 @@ fi:
     permalink: "Ikilinkki"
     imported_from: "Tämä on kommenttiketju artikkelille %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 kommentti"
-      other: "%{count} kommenttia"
   no_mentions_allowed: "Pahoittelut, et voi mainita muita käyttäjiä."
   too_many_mentions:
     one: "Pahoittelut, voit mainita viestissä vain yhden käyttäjän."
@@ -308,7 +305,7 @@ fi:
 
       - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
 
-      Saadaksesi lisätietoa, [käy tutkimassa ohjeet](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
+      Saadaksesi lisätietoa, [käy tutkimassa ohjeet](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     'new-reply': |
       Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
 
@@ -318,7 +315,7 @@ fi:
 
       - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
 
-      Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
+      Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
       ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 
@@ -349,7 +346,7 @@ fi:
 
       Oletko harkinnut vastaavasi myös *muille* keskusteluun osallistuville? Parhaissa keskusteluissa on useita ääniä ja näkökantoja.
 
-      Jos haluat jatkaa keskustelua tämän käyttäjän kanssa edelleen, [lähetä hänelle yksityisviesti](/u/%{reply_username}).
+      Jos haluat jatkaa keskustelua tämän käyttäjän kanssa edelleen, [lähetä hänelle yksityisviesti](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -429,17 +426,12 @@ fi:
           attributes:
             word:
               too_many: "Toiminnolle on määritelty liian monta sanaa"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>Tietoa minusta -kenttä käyttäjätiedoissasi on täyttämättä. <a href='/u/%{username_lower}/preferences/about-me'>Haluaisitko täyttää sen nyt?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} ei ole täyttänyt vielä mitään Minusta -kohtaan profiilissaan</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
   meta_category_name: "Palaute"
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
-  assets_topic_title: "Sivuston designiin liittyviä hyödykkeitä"
-  assets_topic_body: "Tämä ketju näkyy ainoastaan henkilökunnalle, ja se on tarkoitettu sivuston tyyliin liittyvien kuvien ja muiden tiedostojen säilömiseen. Älä poista sitä!\n\n\nTässä ohjeet sen käyttämiseen:\n\n\n1. Vastaa ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Julkaise viesti.\n4. Klikkaa kuvia hiiren oikealla näppäimellä tai klikkaa viestin muokkauspainiketta, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nJos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `authorized_extensions`-listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Tervetuloa käyttämään Discoursea"
     body: |2
@@ -453,7 +445,7 @@ fi:
         - Miksi heidän kannattaa käydä täällä?
         - Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun pohjalla), jottei vastauksia kasaannu ilmoituksen alle.
   lounge_welcome:
@@ -472,7 +464,7 @@ fi:
       * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
       * Piilottaa roskapostiviestin yhdellä liputuksella
 
-      Tässä on nykyinen [lista mestareista](/badges/3/regular). Käyhän moikkaamassa.
+      Tässä on nykyinen [lista mestareista](%{base_path}/badges/3/regular). Käyhän moikkaamassa.
 
       Kiitos, että olet tämän yhteisön arvokas jäsen!
 
@@ -1025,13 +1017,12 @@ fi:
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
-      one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+      one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
     missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
-    bad_favicon_url: "Faviconin asettaminen epäonnistui. Tarkista favicon_url -asetus <a href='/admin/site_settings'>sivuston asetuksissa</a>."
-    poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
-    poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a>."
-    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
+    poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
+    poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
+    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
     unreachable_themes: "Näille teemoille ei löytynyt päivityksiä:"
   site_settings:
@@ -1091,8 +1082,6 @@ fi:
     inline_onebox_domains_whitelist: "Verkko-osoitteet, joista luodaan Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Poista  inline_onebox_domain_whitelist -sivustoasetus käytöstä ja salli rivi-oneboxit kaikista verkko-osoitteista."
     max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
-    digest_logo_url: "Vaihtoehtoinen logo, jota käytetään sähköpostikoosteessa. Muodoltaan sen tulisi olla leveä suorakulmio, eikä se saa olla SVG-muodossa. Jos ei aseteta, käytetään `logo_url`-kuvaa."
-    apple_touch_icon_url: "Applen laitteiden käyttämä ikoni, Suositeltu koko on 144px kertaa 144px."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Verkkotunnuksen SPF, DKIM ja reverse PTR tietueiden täytyy olla kunnossa, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
@@ -1251,8 +1240,6 @@ fi:
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     selectable_avatars_enabled: "Pakota käyttäjä valitsemaan avatarinsa listalta."
     selectable_avatars: "Avatarit, joista käyttäjä voi valita."
-    default_opengraph_image_url: "Opengraph-oletuskuva, jota käytetään kun sivulla ei ole muuta sopivaa kuvaa tai sivuston logoa."
-    twitter_summary_large_image_url: "Twitter-tiivistelmäkortin oletuskuva (tulisi olla ainakin 280px leveä ja ainakin 150px korkea)."
     allow_all_attachments_for_group_messages: "Salli kaikki sähköpostiliitteet ryhmäviesteissä."
     png_to_jpg_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 99 on paras laatu, 100 ottaa pois käytöstä)."
     allow_staff_to_upload_any_file_in_pm: "Salli henkilökunnan ladata minkätyyppisiä liitteitä tahansa yksityisviesteihin."
@@ -1314,7 +1301,6 @@ fi:
     body_min_entropy: "Viestin minimientropia (uniikkeja merkkejä)."
     allow_uppercase_posts: "Salli pelkillä isoilla kirjaimilla kirjoittaminen otsikossa tai viestin leipätekstissä."
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
-    min_body_similar_length: "Viestin minimipituus, kunnes sitä verratataan muihin samankaltaisiin ketjuihin."
     desktop_category_page_style: "/Keskustelualueet-sivun visuaalinen tyyli."
     category_colors: "Lista alueiden sallituista väriarvoista, heksadesimaaleina."
     category_style: "Aluemerkin tyyli."
@@ -1363,8 +1349,8 @@ fi:
     flags_default_topics: "Näytä liputetut ketjut oletuksena ylläpito-osiossa"
     min_flags_staff_visibility: "Kuinka monesti viesti täytyy liputtaa, jotta henkilökunta näkee sen ylläpito-osiossa"
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
-    reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
+    reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %%{reply_key}@reply.example.com tai replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %%{reply_key}@reply.example.com tai replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Käytä HTML:ää tekstin sijaan saapuvissa sähköposteissa."
     disable_emails: "Estä Discoursea lähettämästä minkäänlaisia sähköposteja. Ota pois sähköpostit kaikilta käyttäjiltä valitsemalla \"yes\" . \"Non-staff\" poistaa sähköpostit vain muilta kuin henkilökunnalta."
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
@@ -1535,11 +1521,7 @@ fi:
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos tunniste on vaimennettu, älä näytä ketjua Tuoreimmissa."
-    company_short_name: "Yrityksen nimi (lyhyesti)"
-    company_full_name: "Yrityksen nimi (virallisesti)"
-    company_domain: "Yrityksen verkkotunnus"
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
-    push_notifications_icon_url: "Kuvakemerkki (badge icon) joka ilmestyy ilmoituskulmaan. Suositeltu koko on 96px kertaa 96 px."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -1553,8 +1535,8 @@ fi:
       invalid_string_min_max: "Merkkien lukumäärän täytyy olla välillä %{min} - %{max}."
       invalid_string_min: "Täytyy olla vähintään %{min} merkkiä."
       invalid_string_max: "Ei saa olla yli %{max} merkkiä."
-      invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja olla eri, kuin ilmoitusten sähköpostiosoite."
-      invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
+      invalid_reply_by_email_address: "Arvon täytyy sisältää '%%{reply_key}' ja olla eri, kuin ilmoitusten sähköpostiosoite."
+      invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       pop3_polling_host_is_empty: "Sinun täytyy asettaa 'pop3 polling host' ennen POP3-pollauksen ottamista käyttöön."
       pop3_polling_username_is_empty: "Sinun täytyy asettaa 'pop3 polling username' ennen POP3-pollauksen ottamista käyttöön."
       pop3_polling_password_is_empty: "Sinun täytyy asettaa 'pop3 polling password' ennen POP3-pollauksen ottamista käyttöön."
@@ -1733,8 +1715,8 @@ fi:
       same_ip_address: "Sama IP-osoite (%{ip_address}) kuin muilla käyttäjillä"
   flags_reminder:
     flags_were_submitted:
-      one: "Viestejä liputettiin yli tunti sitten. [Tarkastele niitä](/admin/flags)."
-      other: "Viestejä liputettiin yli %{count} tuntia sitten. [Tarkastele niitä](/admin/flags)."
+      one: "Viestejä liputettiin yli tunti sitten. [Tarkastele niitä](%{base_path}/admin/flags)."
+      other: "Viestejä liputettiin yli %{count} tuntia sitten. [Tarkastele niitä](%{base_path}/admin/flags)."
     subject_template:
       one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
@@ -1855,7 +1837,7 @@ fi:
     subject_template: "[%{email_prefix}] päivitys saatavilla"
   flag_reasons:
     off_topic: "Viestisi liputettiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
-    inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [palstan sääntöjen](/guidelines) vastaiseksi."
+    inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [palstan sääntöjen](%{base_path}/guidelines) vastaiseksi."
     spam: "Viestisi liputettiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
     notify_moderators: "Viestisi liputettiin **valvojalle tiedoksi**: siinä koetaan olevan jotain, johon henkilökunnan pitäisi puuttua."
   flags_dispositions:
@@ -2710,8 +2692,8 @@ fi:
   avatar:
     missing: "Pahoittelut, emme löydä profiilikuvaa, joka olisi yhdistetty tähän sähköpostiosoitteeseen. Voitko yrittää ladata sen uudestaan?"
   flag_reason:
-    sockpuppet: "Uusi käyttäjä aloitti ketjun, johon toinen uusi käyttäjä samasta IP-osoitteesta (%{ip_address}) vastasi. Katso asetus <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, jotka sisälsivät linkkejä samaan verkkotunnukseen (%{domain}). Katso asetus <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Uusi käyttäjä aloitti ketjun, johon toinen uusi käyttäjä samasta IP-osoitteesta (%{ip_address}) vastasi. Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, jotka sisälsivät linkkejä samaan verkkotunnukseen (%{domain}). Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user ylitettiin"
     exceeded_bounces_limit: "bounce_score_threshold ylitettiin"
@@ -2853,13 +2835,13 @@ fi:
 
       ## [Sinä pidät pyörät pyörimässä](#power)
 
-      Tätä sivustoa pyörittää [avulias palstahenkilökunta](/about) sekä *me kaikki*, yhteisö. Jos sinulla on kysyttävää palstan toiminnasta tai ehdotuksia sen suhteen, avaa uusi ketju [sivuston palautealueelle](/c/site-feedback) niin käydään asiaa yhdessä läpi! Jos kyseessä on kriittinen ja kiireellinen ongelma, jota ei voida käsitellä palauteosion tai liputuksen kautta, ota yhteyttä [henkiökunnan sivun](/about) kautta.
+      Tätä sivustoa pyörittää [avulias palstahenkilökunta](%{base_path}/about) sekä *me kaikki*, yhteisö. Jos sinulla on kysyttävää palstan toiminnasta tai ehdotuksia sen suhteen, avaa uusi ketju [sivuston palautealueelle](%{base_path}/c/site-feedback) niin käydään asiaa yhdessä läpi! Jos kyseessä on kriittinen ja kiireellinen ongelma, jota ei voida käsitellä palauteosion tai liputuksen kautta, ota yhteyttä [henkiökunnan sivun](%{base_path}/about) kautta.
 
       <a name="tos"></a>
 
       ## [Käyttöehdot](#tos)
 
-      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa ja oikeuksia sisältöön, tietosuojaan ja lakeihin liittyen. Jotta voit käyttää palvelua, sinun on hyväksyttävä [käyttöehdot](/tos).
+      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](%{base_path}/tos), jotka säätelevät sinun (ja meidän) toimintaa ja oikeuksia sisältöön, tietosuojaan ja lakeihin liittyen. Jotta voit käyttää palvelua, sinun on hyväksyttävä [käyttöehdot](%{base_path}/tos).
   tos_topic:
     title: "Käyttöehdot"
   privacy_topic:
@@ -3267,23 +3249,12 @@ fi:
             description: "Sähköpostiosoite, josta tavoittaa henkilön tai ryhmän, joka vastaa palstan ylläpidosta. Siihen lähetetään kriittisiä huomautuksia käsittelemättömistä liputuksista ja turvallisuuspäivityksistä, ja se näkyy Tietoja-sivulla yhteysosoitteena kiireellisiä yhteydenottoja varten."
           contact_url:
             label: "Internet-sivu"
-            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näytetään <a href='/about' target='_blank'>Tietoja-sivulla</a>."
+            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja-sivulla</a>."
           site_contact:
             label: "Automaattiset viestit"
             description: "Tämän käyttäjän nimissä Discourse lähettää käyttäjille kaikki automaattiset yksityisviestit, kuten liputusvaroitukset ja ilmoitukset valmistuneista varmuuskopioista."
       corporate:
         title: "Organisaatio"
-        description: "Nämä nimet näkyvät <a href='/privacy' target='blank'>tietosuojaselosteen</a> ja <a href='/tos' target='blank'>käyttöehtojen</a> yhteydessä, joita voit milloin vain muokata henkilökunta-alueella. Jos taustalla ei ole yritystä, voit hypätä tämän vaiheen yli toistaiseksi."
-        fields:
-          company_short_name:
-            label: "Yrityksen nimi (lyhyesti)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Yrityksen nimi (kokonaan)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Yrityksen verkkotunnuksen nimi"
-            placeholder: "initech.com"
       colors:
         title: "Värimaailma"
         fields:
@@ -3296,22 +3267,8 @@ fi:
                 label: "Yksinkertainen tumma"
       logos:
         title: "Logot"
-        fields:
-          logo_url:
-            label: "Ensisijainen logo"
-            description: "Logo, joka näkyy sivustosi vasemmassa yläkulmassa. Tee siitä suorakulmion muotoinen."
-          logo_small_url:
-            label: "Tiivis logo"
-            description: "Tiivis versio sivustosi logosta, joka näkyy sivustosi vasemmassa yläkulmassa, kun vierittää alaspäin. Tee siitä neliön muotoinen."
       icons:
         title: "Ikonit"
-        fields:
-          favicon_url:
-            label: "Pieni ikoni"
-            description: "Ikoni, joka edustaa sivustoasi selaimissa ja joka näyttää hyvältä pienessäkin koossa kuten 32 px kertaa 32 px. Suositellut kuvaformaatit ovat PNG ja JPG."
-          apple_touch_icon_url:
-            label: "Suuri ikoni"
-            description: "Ikoni, joka edustaa sivustoasi nykyaikaisemmilla laitteilla ja joka näyttää hyvältä isommassakin koossa. Suositeltu koko on vähintään 512 px kertaa 512 px."
       homepage:
         description: "Suosittelemme, että kotisivusi on Tuoreimmat-näkymä, mutta voit valita Keskustelualueet-näkymän (ketjut ryhmitelty aihepiirin mukaan) kotisivuksi, jos haluat."
         title: "Kotisivu"

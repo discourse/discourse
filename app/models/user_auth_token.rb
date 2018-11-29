@@ -30,23 +30,23 @@ class UserAuthToken < ActiveRecord::Base
     end
   end
 
-  # Returns the login location as it will be used by the the system to detect
-  # suspicious login.
-  #
-  # This should not be very specific because small variations in location
-  # (i.e. changes of network, small trips, etc) will be detected as suspicious
-  # logins.
-  #
-  # On the other hand, if this is too broad it will not report any suspicious
-  # logins at all.
-  #
-  # For example, let's choose the country as the only component in login
-  # locations. In general, this should be a pretty good choce with the
-  # exception that for users from huge countries it might not be specific
-  # enoguh. For US users where the real user and the malicious one could
-  # happen to live both in USA, this will not detect any suspicious activity.
+  RAD_PER_DEG = Math::PI / 180
+  EARTH_RADIUS_KM = 6371 # kilometers
+
   def self.login_location(ip)
-    DiscourseIpInfo.get(ip)[:country]
+    ipinfo = DiscourseIpInfo.get(ip)
+
+    ipinfo['latitude'] && ipinfo['longitude'] ? [ipinfo['latitude'], ipinfo['longitude']] : nil
+  end
+
+  def self.distance(loc1, loc2)
+    lat1_rad, lon1_rad = loc1[0] * RAD_PER_DEG, loc1[1] * RAD_PER_DEG
+    lat2_rad, lon2_rad = loc2[0] * RAD_PER_DEG, loc2[1] * RAD_PER_DEG
+
+    a = Math.sin((lat2_rad - lat1_rad) / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin((lon2_rad - lon1_rad) / 2)**2
+    c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1 - a))
+
+    c * EARTH_RADIUS_KM
   end
 
   def self.is_suspicious(user_id, user_ip)
@@ -57,11 +57,16 @@ class UserAuthToken < ActiveRecord::Base
     ips.uniq!
     return false if ips.empty? # first login is never suspicious
 
-    user_location = login_location(user_ip)
-    ips.none? { |ip| user_location == login_location(ip) }
+    if user_location = login_location(user_ip)
+      ips.none? do |ip|
+        if location = login_location(ip)
+          distance(user_location, location) < SiteSetting.max_suspicious_distance_km
+        end
+      end
+    end
   end
 
-  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil)
+  def self.generate!(user_id: , user_agent: nil, client_ip: nil, path: nil, staff: nil, impersonate: false)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token = UserAuthToken.create!(
@@ -82,7 +87,7 @@ class UserAuthToken < ActiveRecord::Base
         path: path,
         auth_token: hashed_token)
 
-    if staff
+    if staff && !impersonate
       Jobs.enqueue(:suspicious_login,
         user_id: user_id,
         client_ip: client_ip,

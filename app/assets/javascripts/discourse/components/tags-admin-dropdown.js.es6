@@ -22,6 +22,12 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("tagging.upload"),
         description: I18n.t("tagging.upload_description"),
         icon: "upload"
+      },
+      {
+        id: "deleteUnusedTags",
+        name: I18n.t("tagging.delete_unused"),
+        description: I18n.t("tagging.delete_unused_description"),
+        icon: "trash"
       }
     ];
 
@@ -30,7 +36,8 @@ export default DropdownSelectBoxComponent.extend({
 
   actionNames: {
     manageGroups: "showTagGroups",
-    uploadTags: "showUploader"
+    uploadTags: "showUploader",
+    deleteUnusedTags: "deleteUnused"
   },
 
   mutateValue(id) {

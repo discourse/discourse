@@ -184,6 +184,7 @@ end
 #  allow_private_messages           :boolean          default(TRUE), not null
 #  homepage_id                      :integer
 #  theme_ids                        :integer          default([]), not null, is an Array
+#  hide_profile_and_presence        :boolean          default(FALSE), not null
 #
 # Indexes
 #

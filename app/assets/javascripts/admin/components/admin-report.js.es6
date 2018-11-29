@@ -41,7 +41,7 @@ export default Ember.Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
-  disabledLabel: "admin.dashboard.disabled",
+  disabledLabel: I18n.t("admin.dashboard.disabled"),
   isLoading: false,
   rateLimitationString: null,
   dataSourceName: null,
@@ -111,7 +111,12 @@ export default Ember.Component.extend({
     unregisterHoverTooltip($(".info[data-tooltip]"));
   },
 
-  showError: Ember.computed.or("showTimeoutError", "showExceptionError"),
+  showError: Ember.computed.or(
+    "showTimeoutError",
+    "showExceptionError",
+    "showNotFoundError"
+  ),
+  showNotFoundError: Ember.computed.equal("model.error", "not_found"),
   showTimeoutError: Ember.computed.equal("model.error", "timeout"),
   showExceptionError: Ember.computed.equal("model.error", "exception"),
 
@@ -274,13 +279,17 @@ export default Ember.Component.extend({
     if (!this.get("startDate") || !this.get("endDate")) {
       report = sort(filteredReports)[0];
     } else {
-      let reportKey = this.get("reportKey");
+      const reportKey = this.get("reportKey");
 
       report = sort(
         filteredReports.filter(r => r.report_key.includes(reportKey))
       )[0];
 
       if (!report) return;
+    }
+
+    if (report.error === "not_found") {
+      this.set("showFilteringUI", false);
     }
 
     this._renderReport(

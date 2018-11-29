@@ -140,9 +140,6 @@ sv:
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 svar"
-      other: "%{count} svar"
   no_mentions_allowed: "Tyvärr, du kan inte omnämna andra användare."
   too_many_mentions:
     one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
@@ -227,7 +224,7 @@ sv:
 
       - Inkludera vanligt förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori.
 
-      För mer information kan du läsa [riktlinjerna](/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
+      För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
     'new-reply': |
       Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
 
@@ -237,7 +234,7 @@ sv:
 
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
-      För mer, [läs våra riktlinjer](/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
+      För mer, [läs våra riktlinjer](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -280,15 +277,12 @@ sv:
           attributes:
             payload_url:
               invalid: "Webbadressen är ogiltig. Webbadressen skall inkludera :// eller https://. Inga blanktecken är tillåtna"
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En kategori exklusiv för medlemmar med en förtroendenivå av 3 eller högre."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussion om den här webbplatsen, dess organisation, hur den fungerar och hur vi kan förbättra den."
   staff_category_name: "Personal"
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
-  assets_topic_title: "Tillgångar för webb designen"
   discourse_welcome_topic:
     title: "Välkommen till diskussionen"
   lounge_welcome:
@@ -660,11 +654,10 @@ sv:
     memory_warning: 'Din server körs med mindre än 1 GB minne. Minne på minst 1 GB är rekommenderat.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
-      one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
-      other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
-    bad_favicon_url: "Uppladdningen av favoritikonen misslyckas. Kontrollera inställningen favicon_url i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Var vänlig kontrollera dina <a href='/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
-    poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Var vänlig kontrollera dina <a href='/admin/site_settings/category/email'>POP3-inställningar</a>."
+      one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
+      other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
+    poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Var vänlig kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
+    poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Var vänlig kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a>."
   site_settings:
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -705,8 +698,6 @@ sv:
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg i antal tecken."
     onebox_domains_blacklist: "En lista av domäner som aldrig blir oneboxed."
-    digest_logo_url: "Den alternativa logotypen används överst i din webbplats e-postsammanfattning. Den bör ha en bred rektangulär form. Den borde inte vara en SVG-bild. Om den lämnas blank kommer `logo_url` att användas."
-    apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specifieras här måste ha en SPF, DKIM och reverse PTR record korrekt inställt för att e-post ska levereras."
     email_custom_headers: "En pipe-avgränsad lista av anpassade e-postrubriker"
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper / beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
@@ -873,7 +864,6 @@ sv:
     body_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för ett inläggs innehåll"
     allow_uppercase_posts: "Tillåt enbart versaler i ämnets rubrik eller innehåll."
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
-    min_body_similar_length: "Minsta längd på ett ämnes innehåll innan den kommer att kontrolleras för liknande ämnen."
     desktop_category_page_style: "Visuell stil för den/kategori sidan."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     category_style: "Visuell stil för kategori-utmärkelser."
@@ -913,7 +903,7 @@ sv:
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid komponerandet av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
-    reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
+    reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %%{reply_key}@svar.exempel.se eller svar+%%{reply_key}@exempel.se"
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2800 bytes."
     short_email_length: "Kort e-postlängd i bytes."
     display_name_on_email_from: "Visa fullständiga namn på e-post från fält."
@@ -1051,9 +1041,6 @@ sv:
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
-    company_short_name: "Företagsnamn (kort)"
-    company_full_name: "Företagsnamn (hela)"
-    company_domain: "Företags domän"
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1067,8 +1054,8 @@ sv:
       invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
       invalid_string_min: "Måste vara minst %{min} tecken."
       invalid_string_max: "Måste vara högst %{max} tecken."
-      invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
-      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_reply_by_email_address: "Värdet måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3 polling."
       pop3_polling_username_is_empty: "Du måste ställa in ett 'pop3 polling username' innan du aktiverar POP3 polling."
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3 polling."
@@ -1206,7 +1193,7 @@ sv:
     title: "Ny version mail skrivare med anteckningar"
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **orelevant**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av rubriken och det första inlägget."
-    inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
+    inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
     spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
     notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
   flags_dispositions:
@@ -1552,8 +1539,8 @@ sv:
   avatar:
     missing: "Tyvärr, vi kunde inte hitta någon avatar associerad med den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
-    sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Bas"
   about: "Om"
@@ -1799,13 +1786,6 @@ sv:
             label: "Automatiska meddelanden"
       corporate:
         title: "Organisation"
-        fields:
-          company_short_name:
-            label: "(korta) företagsnamnet"
-          company_full_name:
-            label: "(Hela) företagsnamnet"
-          company_domain:
-            label: "Företagsdomän namn"
       colors:
         title: "Tema"
         fields:
@@ -1818,19 +1798,8 @@ sv:
                 label: "Enkelt mörkt"
       logos:
         title: "Logotyper"
-        fields:
-          logo_url:
-            label: "Primär logo"
-            description: "Logon i övre vänster sida av din webplats. Använd en bred rektangulär form."
-          logo_small_url:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
-        fields:
-          favicon_url:
-            label: "Små ikoner"
-          apple_touch_icon_url:
-            label: "Stora ikoner"
       homepage:
         title: "Hemsida"
         fields:

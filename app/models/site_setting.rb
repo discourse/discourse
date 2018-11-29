@@ -19,7 +19,6 @@ class SiteSetting < ActiveRecord::Base
   end
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
-  setup_deprecated_methods
 
   unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
@@ -27,6 +26,7 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  setup_deprecated_methods
   client_settings << :available_locales
 
   def self.available_locales
@@ -166,6 +166,55 @@ class SiteSetting < ActiveRecord::Base
 
   def self.Upload
     SiteSetting::Upload
+  end
+
+  %i{
+    site_logo_url
+    site_logo_small_url
+    site_mobile_logo_url
+    site_favicon_url
+  }.each { |client_setting| client_settings << client_setting }
+
+  def self.site_logo_url
+    self.logo&.url || self.logo_url(warn: false)
+  end
+
+  def self.site_logo_small_url
+    self.logo_small&.url || self.logo_small_url(warn: false)
+  end
+
+  def self.site_digest_logo_url
+    self.digest_logo&.url || self.digest_logo_url(warn: false)
+  end
+
+  def self.site_mobile_logo_url
+    self.mobile_logo&.url || self.mobile_logo_url(warn: false)
+  end
+
+  def self.site_large_icon_url
+    self.large_icon&.url || self.large_icon_url(warn: false)
+  end
+
+  def self.site_favicon_url
+    self.favicon&.url || self.favicon_url(warn: false)
+  end
+
+  def self.site_apple_touch_icon_url
+    self.apple_touch_icon&.url || self.apple_touch_icon_url(warn: false)
+  end
+
+  def self.opengraph_image_url
+    self.opengraph_image&.url || self.default_opengraph_image_url(warn: false)
+  end
+
+  def self.site_twitter_summary_large_image_url
+    self.twitter_summary_large_image&.url ||
+      self.twitter_summary_large_image_url(warn: false)
+  end
+
+  def self.site_push_notifications_icon_url
+    SiteSetting.push_notifications_icon&.url ||
+      SiteSetting.push_notifications_icon_url(warn: false)
   end
 
   def self.shared_drafts_enabled?

@@ -5,10 +5,7 @@ Draft.reopenClass({
   clear(key, sequence) {
     return ajax("/draft.json", {
       type: "DELETE",
-      data: {
-        draft_key: key,
-        sequence: sequence
-      }
+      data: { draft_key: key, sequence }
     });
   },
 
@@ -28,11 +25,7 @@ Draft.reopenClass({
     data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
-      data: {
-        draft_key: key,
-        data: data,
-        sequence: sequence
-      }
+      data: { draft_key: key, sequence, data }
     });
   }
 });

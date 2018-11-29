@@ -11,6 +11,8 @@ registerUnbound("topic-link", (topic, args) => {
     args.class.split(" ").forEach(c => classes.push(c));
   }
 
-  const result = `<a href='${url}' class='${classes.join(" ")}'>${title}</a>`;
+  const result = `<a href='${url}'
+                     class='${classes.join(" ")}'
+                     data-topic-id='${topic.id}'>${title}</a>`;
   return new Handlebars.SafeString(result);
 });

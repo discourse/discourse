@@ -8,10 +8,6 @@ body.widget-dragging {
   cursor: ns-resize;
 }
 
-header {
-  margin-bottom: 15px;
-}
-
 // Common classes
 .boxed {
   height: 100%;
@@ -26,7 +22,7 @@ header {
     margin: 0;
     line-height: $line-height-small;
 
-    i {
+    .d-icon {
       font-size: $font-down-1;
     }
   }
@@ -121,7 +117,8 @@ input {
 }
 
 .input {
-  &-xxlarge {
+  &-xxlarge,
+  &-xxlarge + .control-instructions {
     width: 530px;
   }
 }

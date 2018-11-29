@@ -969,6 +969,46 @@ describe Post do
       post.save
       expect(post.cooked).to match(/nofollow noopener/)
     end
+
+    describe 'mentions' do
+      let(:group) do
+        Fabricate(:group,
+          mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
+        )
+      end
+
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
+      describe 'when user can not mention a group' do
+        it "should not create the mention" do
+          post = Fabricate(:post, raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <span class="mention">@#{group.name}</span></p>|
+          )
+        end
+      end
+
+      describe 'when user can mention a group' do
+        before do
+          group.add(post.user)
+        end
+
+        it 'should create the mention' do
+          post.update!(raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+          )
+        end
+      end
+    end
   end
 
   describe "calculate_avg_time" do

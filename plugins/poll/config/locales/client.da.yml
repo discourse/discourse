@@ -15,8 +15,6 @@ da:
         one: "afgiven stemme"
         other: "afgivne stemmer"
       average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."
-      public:
-        title: "Stemmer er offentlige."
       multiple:
         help:
           at_least_min_options:

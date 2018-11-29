@@ -31,17 +31,18 @@ describe Admin::ReportsController do
 
       context "invalid params" do
         context "inexisting report" do
-          it "returns only existing reports" do
+          it "returns not found reports" do
             get "/admin/reports/bulk.json", params: {
               reports: {
                 topics: { limit: 10 },
-                xxx: { limit: 10 }
+                not_found: { limit: 10 }
               }
             }
 
             expect(response.status).to eq(200)
-            expect(JSON.parse(response.body)["reports"].count).to eq(1)
+            expect(JSON.parse(response.body)["reports"].count).to eq(2)
             expect(JSON.parse(response.body)["reports"][0]["type"]).to eq("topics")
+            expect(JSON.parse(response.body)["reports"][1]["type"]).to eq("not_found")
           end
         end
       end

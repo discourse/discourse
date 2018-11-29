@@ -488,7 +488,10 @@ componentTest("support modifying on select behavior through plugin api", {
       });
     });
 
-    this.set("content", [{ id: "1", name: "robin" }]);
+    this.set("content", [
+      { id: "1", name: "robin" },
+      { id: "2", name: "arpit", __sk_row_type: "noopRow" }
+    ]);
   },
 
   async test(assert) {
@@ -496,6 +499,15 @@ componentTest("support modifying on select behavior through plugin api", {
     await this.get("subject").selectRowByValue(1);
 
     assert.equal(find(".on-select-test").html(), "1");
+
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(2);
+
+    assert.equal(
+      find(".on-select-test").html(),
+      "2",
+      "it calls onSelect for noopRows"
+    );
 
     clearCallbacks();
   }
@@ -885,5 +897,28 @@ componentTest("onDeselect", {
         .trim(),
       "red"
     );
+  }
+});
+
+componentTest("noopRow", {
+  template: "{{single-select value=value content=content}}",
+
+  beforeEach() {
+    this.set("value", "blue");
+    this.set("content", [
+      { id: "red", name: "Red", __sk_row_type: "noopRow" },
+      "blue",
+      "green"
+    ]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("red");
+    assert.equal(this.get("value"), "blue", "it doesn’t change the value");
+
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("green");
+    assert.equal(this.get("value"), "green");
   }
 });

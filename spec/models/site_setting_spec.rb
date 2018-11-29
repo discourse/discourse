@@ -151,52 +151,46 @@ describe SiteSetting do
   end
 
   context 'deprecated site settings' do
+    before do
+      SiteSetting.force_https = true
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
 
-    describe '#use_https' do
-      before do
-        SiteSetting.force_https = true
-      end
+    after do
+      Rails.logger = @orig_logger
+    end
 
-      it 'should act as a proxy to the new methods' do
-        expect(SiteSetting.use_https).to eq(true)
-        expect(SiteSetting.use_https?).to eq(true)
+    it 'should act as a proxy to the new methods' do
+      begin
+        original_settings = SiteSettings::DeprecatedSettings::SETTINGS
+        SiteSettings::DeprecatedSettings::SETTINGS.clear
+
+        SiteSettings::DeprecatedSettings::SETTINGS.push([
+          'use_https', 'force_https', true, '0.0.1'
+        ])
+
+        SiteSetting.setup_deprecated_methods
+
+        expect do
+          expect(SiteSetting.use_https).to eq(true)
+          expect(SiteSetting.use_https?).to eq(true)
+        end.to change { @fake_logger.warnings.count }.by(2)
+
+        expect do
+          expect(SiteSetting.use_https(warn: false))
+        end.to_not change { @fake_logger.warnings }
 
         SiteSetting.use_https = false
 
         expect(SiteSetting.force_https).to eq(false)
         expect(SiteSetting.force_https?).to eq(false)
-      end
-    end
+      ensure
+        SiteSettings::DeprecatedSettings::SETTINGS.clear
 
-    describe 'rename private message to personal message' do
-      before do
-        SiteSetting.min_personal_message_title_length = 15
-        SiteSetting.enable_personal_messages = true
-        SiteSetting.personal_email_time_window_seconds = 15
-        SiteSetting.max_personal_messages_per_day = 15
-        SiteSetting.default_email_personal_messages = true
-      end
-
-      it 'should act as a proxy to the new methods' do
-        expect(SiteSetting.min_private_message_title_length).to eq(15)
-        SiteSetting.min_private_message_title_length = 5
-        expect(SiteSetting.min_personal_message_title_length).to eq(5)
-
-        expect(SiteSetting.enable_private_messages).to eq(true)
-        SiteSetting.enable_private_messages = false
-        expect(SiteSetting.enable_personal_messages).to eq(false)
-
-        expect(SiteSetting.private_email_time_window_seconds).to eq(15)
-        SiteSetting.private_email_time_window_seconds = 5
-        expect(SiteSetting.personal_email_time_window_seconds).to eq(5)
-
-        expect(SiteSetting.max_private_messages_per_day).to eq(15)
-        SiteSetting.max_private_messages_per_day = 5
-        expect(SiteSetting.max_personal_messages_per_day).to eq(5)
-
-        expect(SiteSetting.default_email_private_messages).to eq(true)
-        SiteSetting.default_email_private_messages = false
-        expect(SiteSetting.default_email_personal_messages).to eq(false)
+        SiteSettings::DeprecatedSettings::SETTINGS.concat(
+          original_settings
+        )
       end
     end
   end

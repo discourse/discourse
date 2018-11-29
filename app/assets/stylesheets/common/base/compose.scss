@@ -36,7 +36,7 @@
       border-color: $secondary;
       border-right-color: transparent;
     }
-    i {
+    .d-icon {
       color: $secondary;
     }
   }
@@ -83,6 +83,9 @@
     .saving-text {
       display: none;
     }
+    .toggler {
+      order: 2;
+    }
   }
 
   &.saving .saving-text {
@@ -94,13 +97,19 @@
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
-    i {
+    .d-icon {
       color: $primary-high;
     }
     .reply-details {
-      max-width: calc(100% - 60px);
+      max-width: calc(100% - 175px);
       flex: 1 1 auto;
+      display: flex;
+      align-items: center;
       white-space: nowrap;
+
+      .d-icon {
+        opacity: 0.8;
+      }
     }
     .composer-action-title {
       display: inline-flex;

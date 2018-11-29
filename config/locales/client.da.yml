@@ -434,9 +434,6 @@ da:
       topic_sentence:
         one: "1 emne"
         other: "%{count} emner"
-      topic_stat_sentence:
-        one: "%{count} nyt emne i den/det seneste %{unit}."
-        other: "%{count} nye emner i den/det seneste %{unit}."
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -1003,7 +1000,6 @@ da:
         title_too_long: "Titlen skal være kortere end {{max}} tegn."
         post_missing: "Indlægget kan ikke være tomt."
         post_length: "Indlægget skal være på mindst {{min}} tegn."
-        try_like: 'Har du prøvet <i class="fa fa-heart"></i> knappen?'
         category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
       reply_original: "Svar til det oprindelige emne"
@@ -1251,7 +1247,7 @@ da:
       toggle_information: "vis detaljer om emnet"
       read_more_in_category: "Mere læsestof? Se andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Mere læsestof? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='/unread'>1 ulæst</a> } other { er <a href='/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
       suggest_create_topic: "Hvorfor ikke oprette et emne?"
@@ -1330,7 +1326,7 @@ da:
           "2_8": 'Du vil se antallet af nye svar, fordi du følger denne kategori.'
           "2_4": 'Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne.'
           "2_2": 'Du vil se antallet af nye svar, fordi du følger dette emne.'
-          "2": 'Du vil se antallet af nye svar, fordi du <a href="/u/{{username}}/preferences">læste dette emne</a>.'
+          "2": 'Du vil se antallet af nye svar, fordi du <a href="{{basePath}}/u/{{username}}/preferences">læste dette emne</a>.'
           "1_2": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           "1": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           "0_7": 'Du ignorerer alle notifikationer i denne kategori.'
@@ -1650,7 +1646,6 @@ da:
           revert: "Gå tilbage til denne udgave"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vis det renderede output med tilføjelser og ændringer indlejret"

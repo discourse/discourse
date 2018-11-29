@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'maxminddb'
 require 'resolv'
 
@@ -28,6 +30,7 @@ class DiscourseIpInfo
 
   def lookup(ip, locale: :en, resolve_hostname: false)
     ret = {}
+    return ret if ip.blank?
 
     if @loc_mmdb
       begin

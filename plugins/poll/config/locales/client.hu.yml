@@ -15,8 +15,6 @@ hu:
         one: "összes szavazat"
         other: "összes szavazat"
       average_rating: "Átlagos értékelés:  <strong>%{average}</strong>."
-      public:
-        title: "A szavazatok nyilvánosak"
       multiple:
         help:
           at_least_min_options:

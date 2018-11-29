@@ -164,13 +164,14 @@
 .edit-category-tab-topic-template {
   textarea {
     width: 100%;
+    height: 100%;
+    min-height: 10em;
   }
   .d-editor-container {
     display: block;
   }
   .d-editor-textarea-wrapper {
     border: 1px solid $primary-low;
-    min-height: 14em;
   }
   .d-editor-button-bar .btn {
     padding: 6px 8px;

@@ -288,6 +288,11 @@ module Discourse
     nil
   end
 
+  class << self
+    alias_method :base_path, :base_uri
+    alias_method :base_url_no_path, :base_url_no_prefix
+  end
+
   READONLY_MODE_KEY_TTL  ||= 60
   READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
   PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze

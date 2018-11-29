@@ -8,7 +8,10 @@
     {{#each categoriesOrdered as |cat|}}
       <tr data-category-id="{{cat.id}}">
         <td>
-          {{number-field number=cat.position}}
+          {{#if cat.parent_category_id}}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+          {{/if}}
+          {{number-field number=(readonly cat.position) change=(action 'change' cat)}}
           {{d-button class="btn-default no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
           {{d-button class="btn-default no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
           {{#if cat.hasBufferedChanges}}
@@ -25,6 +28,7 @@
 <div class="modal-footer">
   {{#if showApplyAll}}
     {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
+  {{else}}
+    {{d-button class="btn-primary" action="saveOrder" label="categories.reorder.save"}}
   {{/if}}
-  {{d-button class="btn-primary" disabled=saveDisabled action="saveOrder" label="categories.reorder.save"}}
 </div>

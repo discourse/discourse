@@ -60,8 +60,6 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
-  width: 90%;
-  align-items: flex-end;
   .btn-small {
     margin: 0 6px 0 0;
   }
@@ -97,7 +95,7 @@ a.badge-category {
   a.badge-category {
     margin-top: 5px;
   }
-  a.edit-topic i {
+  a.edit-topic .d-icon {
     font-size: 0.8em;
   }
   .edit-topic-title {
@@ -151,12 +149,6 @@ a.badge-category {
   clear: both;
 }
 
-.extra-info-wrapper {
-  .badge-wrapper {
-    float: left;
-  }
-}
-
 .has-pending-posts {
   padding: 0.5em;
   background-color: $highlight-medium;
@@ -167,32 +159,40 @@ a.badge-category {
   max-width: 757px;
 }
 
+.suggested-topics-wrapper.related-messages-wrapper {
+  .suggested-topics:nth-of-type(n + 2) {
+    thead {
+      display: none;
+    }
+  }
+}
+
 // Target the .badge-category text, the bullet icon needs to maintain `display: block`
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category,
-#suggested-topics h3 .badge-wrapper.box span,
-#suggested-topics h3 .badge-wrapper.bar span {
+.suggested-topics h3 .badge-wrapper.bullet span.badge-category,
+.suggested-topics h3 .badge-wrapper.box span,
+.suggested-topics h3 .badge-wrapper.bar span {
   display: inline;
 }
 
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category {
+.suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
   line-height: $line-height-medium;
 }
 
-#suggested-topics h3 .badge-wrapper.bullet,
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category-parent-bg,
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
+.suggested-topics h3 .badge-wrapper.bullet,
+.suggested-topics h3 .badge-wrapper.bullet span.badge-category-parent-bg,
+.suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
   // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
   line-height: 0.8;
 }
 
-#suggested-topics .badge-wrapper.bullet span.badge-category,
-#suggested-topics .badge-wrapper.bar span.badge-category {
+.suggested-topics .badge-wrapper.bullet span.badge-category,
+.suggested-topics .badge-wrapper.bar span.badge-category {
   max-width: 150px;
 }
 
-#suggested-topics .suggested-topics-title {
+.suggested-topics .suggested-topics-title {
   display: flex;
   align-items: center;
 }
@@ -232,21 +232,21 @@ a.badge-category {
         margin-left: 0.5em;
         flex: 0 0 auto;
       }
-      i {
+      .d-icon {
         font-size: $font-down-2;
         margin: 0 0.5em 0 0;
       }
     }
   }
   a.reply-new {
-    i {
+    .d-icon {
       background: $secondary;
       border-radius: 20px;
       transition: all linear 0.15s;
     }
     &:hover {
       color: $tertiary;
-      i {
+      .d-icon {
         background: $tertiary-low;
       }
     }
@@ -258,11 +258,7 @@ a.topic-featured-link {
   text-transform: lowercase;
   color: dark-light-choose($primary-medium, $secondary-medium);
   font-size: 0.875rem;
-  &::before {
-    position: relative;
-    top: 0.1em;
-    padding-right: 3px;
-    font-family: FontAwesome;
-    content: "\f08e";
+  .d-icon {
+    margin-right: 3px;
   }
 }

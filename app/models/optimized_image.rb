@@ -21,6 +21,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.create_for(upload, width, height, opts = {})
+
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
@@ -29,7 +30,7 @@ class OptimizedImage < ActiveRecord::Base
       upload.fix_image_extension
     end
 
-    if !upload.extension.match?(IM_DECODERS)
+    if !upload.extension.match?(IM_DECODERS) && upload.extension != "svg"
       if !opts[:raise_on_error]
         # nothing to do ... bad extension, not an image
         return
@@ -76,7 +77,7 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        if extension =~ /\.svg$/i
+        if upload.extension == "svg"
           FileUtils.cp(original_path, temp_path)
           resized = true
         elsif opts[:crop]
@@ -86,7 +87,6 @@ class OptimizedImage < ActiveRecord::Base
         end
 
         if resized
-
           thumbnail = OptimizedImage.create!(
             upload_id: upload.id,
             sha1: Upload.generate_digest(temp_path),

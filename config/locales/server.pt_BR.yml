@@ -149,7 +149,7 @@ pt_BR:
       <p>Se você lembrar de sua senha, você pode <a href="%{base_url}/login">Login</a>.</p>
 
       <p>Caso contrário, por favor<a href="%{base_url}/password-reset">Redefinir Senha</a>.</p>
-    user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='/u/%{username}/summary'>já tem uma conta!</a>"
+    user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
     error: "Houve um erro ao tentar enviar esse arquivo. Por favor tente novamente mais tarde."
@@ -189,9 +189,6 @@ pt_BR:
     permalink: "Permalink"
     imported_from: "Este é um tópico de discussão companheiro para a mensagem original em %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 resposta"
-      other: "%{count} respostas"
   no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
   too_many_mentions:
     one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
@@ -300,7 +297,7 @@ pt_BR:
 
       - Incluir palavras geralmente usadas no seu tópico para que outros possam *encontrar*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
 
-      Para mais, [veja os guias da comunidade](/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
+      Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
     'new-reply': |
       Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -310,7 +307,7 @@ pt_BR:
 
       - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
 
-      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
+      Para mais, [veja nosso guia da comunidade](%{base_path}/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -340,7 +337,7 @@ pt_BR:
 
       Você já pensou em responder a * outras * pessoas na discussão? Uma grande discussão envolve muitas vozes e perspectivas.
 
-      Se você quiser continuar sua conversa com esse usuário em particular, [envie-lhes uma mensagem pessoal](/u/%{reply_username}).
+      Se você quiser continuar sua conversa com esse usuário em particular, [envie-lhes uma mensagem pessoal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -420,17 +417,12 @@ pt_BR:
           attributes:
             word:
               too_many: "Muitas palavras para esta ação"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco,<a href='/u/%{username_lower}/preferences/about-me'>você gostaria de preenchê-lo?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
   meta_category_name: "Feedback do Site"
   meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
-  assets_topic_title: "Ativos para o design do site"
-  assets_topic_body: "Este tópico, visível apenas para a equipe, é para armazenar imagens e arquivos usados ​​no design do site. Não exclua!\n\nVeja como:\n\n\n1. Responder a este tópico.\n2. Carregue todas as imagens que você deseja usar para logotipos, favicons e assim por diante. (Use o ícone da barra de ferramentas de upload no editor de postagem ou arraste e solte ou cole imagens.)\n3. Envie sua resposta para postá-lo.\n4.Clique com o botão direito do mouse nas imagens da nova postagem para obter o caminho para as imagens enviadas ou clique na edição ícone para editar sua postagem e recuperar o caminho para as imagens. Copie os caminhos da imagem.\n5. Cole esses caminhos de imagem em [configurações básicas] (/ admin / site_settings / category / required).\n\n\nSe você precisar ativar uploads de tipos de arquivos diferentes, edite `authorized_extensions` em [configurações do arquivo] (/ admin / site_settings / category / files)."
   discourse_welcome_topic:
     title: "Bem vindo ao Discourse"
     body: |2
@@ -444,7 +436,7 @@ pt_BR:
         - Porque as pessoas deveria vir aqui?
         - Onde é possível saber mais a respeito (links, fontes, etc)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
   lounge_welcome:
@@ -965,13 +957,12 @@ pt_BR:
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
     subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
     email_polling_errored_recently:
-      one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
-      other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
+      one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
+      other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
     missing_mailgun_api_key: "O servidor está configurado para enviar e-mails por meio do Mailgun, mas você não forneceu uma chave de API usada para verificar as mensagens do webhook."
-    bad_favicon_url: "O carregamento do favicon está falhando. Verifique a sua configuração de favicon_url nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a> e selecione um servidor de serviço."
-    poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a>."
-    force_https_warning: "Seu site está usando SSL. Mas `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ainda não está ativado nas configurações do seu site."
+    poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Por favor, verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a> e selecione um servidor de serviço."
+    poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Por favor, verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a>."
+    force_https_warning: "Seu site está usando SSL. Mas `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ainda não está ativado nas configurações do seu site."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -1027,8 +1018,6 @@ pt_BR:
     inline_onebox_domains_whitelist: "Uma lista de domínios que serão colocados em miniatura se vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração de site inline_onebox_domain_whitelist e permita onebox in-line em todos os domínios."
     max_oneboxes_per_post: "Número máximos de oneboxes em uma publicação."
-    digest_logo_url: "A imagem de logo alternativa usada no topo do email de resumo do seu site. Ela deve ter um formato retangular alongado e não deve ser uma imagem SVG. Se deixado em branco, `logo_url` será usado."
-    apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
@@ -1255,7 +1244,6 @@ pt_BR:
     body_min_entropy: "A entropia mínima (caracteres únicos, não inglês contam mais) necessária para o corpo de uma mensagem."
     allow_uppercase_posts: "Permitir todas as maiúsculas em um título de tópico ou em um corpo de postagem."
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
-    min_body_similar_length: "O tamanho mínimo do corpo de conteúdo de um post antes que ele seja checado por tópicos semelhantes."
     desktop_category_page_style: "Estilo visual para a página / categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
     category_style: "Estilo visual para emblemas de categoria."
@@ -1304,8 +1292,8 @@ pt_BR:
     flags_default_topics: "Mostrar os tópicos sinalizados por padrão na seção admin"
     min_flags_staff_visibility: "A quantidade mínima de sinalizadores em uma postagem deve ter antes que a equipe possa vê-la na seção administrativa"
     reply_by_email_enabled: "Habilitar responder tópicos via email"
-    reply_by_email_address: "Template de resposta por email, por exemplo: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Exemplo:%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
+    reply_by_email_address: "Template de resposta por email, por exemplo: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML em vez de texto para email recebido."
     disable_emails: "Evite Discurso de enviar qualquer tipo de e-mails. Selecione \"sim\" para desativar os e-mails de todos os usuários. Selecione \"não pessoal\" para desativar os e-mails apenas para usuários que não são funcionários."
     strip_images_from_short_emails: "Arrancar imagens de emails cujo tamanho seja menor que 2800 Bytes"
@@ -1477,11 +1465,7 @@ pt_BR:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para marcar tópicos"
     suppress_overlapping_tags_in_list: "Se as tags corresponderem a palavras exatas em títulos de tópicos, não mostre a tag"
     remove_muted_tags_from_latest: "Não exibir na lista de tópicos recentes os tópicos com a etiqueta de Silenciado."
-    company_short_name: "Nome da empresa (curto)"
-    company_full_name: "Nome da empresa (completo)"
-    company_domain: "Domínio da empresa"
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
-    push_notifications_icon_url: "O ícone do emblema que aparece no canto de notificação. O tamanho recomendado é 96 px por 96 px."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1495,8 +1479,8 @@ pt_BR:
       invalid_string_min_max: "Precisa estar entre %{min} e %{max} caracteres."
       invalid_string_min: "Precisa ter no mínimo %{min} caracteres."
       invalid_string_max: "Deve ser não mais que %{max} caracteres."
-      invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
-      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%{reply_key}' e ser diferente do e-mail de notificação."
+      invalid_reply_by_email_address: "O valor deve conter '%%{reply_key}' e ser diferente do email de notificação."
+      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%%{reply_key}' e ser diferente do e-mail de notificação."
       pop3_polling_host_is_empty: "Você deve definir um 'host de pesquisa pop3' antes de ativar a consulta POP3."
       pop3_polling_username_is_empty: "Você deve definir um 'nome de usuário de pesquisa pop3' antes de ativar a consulta POP3."
       pop3_polling_password_is_empty: "Você deve definir uma 'senha de pesquisa pop3' antes de ativar a consulta POP3."
@@ -1669,8 +1653,8 @@ pt_BR:
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
   flags_reminder:
     flags_were_submitted:
-      one: "As sinalizações foram enviadas há mais de 1 hora. [Por favor, revise-as](/admin/flags)."
-      other: "As sinalizações foram submetidas%{count} horas atrás. [Por favor, revise-as](/admin/flags)."
+      one: "As sinalizações foram enviadas há mais de 1 hora. [Por favor, revise-as](%{base_path}/admin/flags)."
+      other: "As sinalizações foram submetidas%{count} horas atrás. [Por favor, revise-as](%{base_path}/admin/flags)."
     subject_template:
       one: "1 sinalização aguardando a ser controlada"
       other: "%{count} sinalizações aguardando a ser controladas"
@@ -1792,7 +1776,7 @@ pt_BR:
     subject_template: "[%{email_prefix}] atualização disponível"
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
-    inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](/guidelines)."
+    inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](%{base_path}/guidelines)."
     spam: "Sua postagem foi sinalizada como **spam**: a comunidade sente que ela é um anúncio, algo que é demasiadamente promocional em natureza ao invés de ser útil ou relevante ao tópico como esperado."
     notify_moderators: "Sua postagem foi sinalizada como **para a atenção do moderador**: a comunidade sente que algo a respeito do post exige intervenção manual por um membro da staff."
   flags_dispositions:
@@ -2603,8 +2587,8 @@ pt_BR:
   avatar:
     missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   flag_reason:
-    sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
-    spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio (%{domain}). Veja a configuração <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
+    sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
+    spam_hosts: "Esse novo usuário tentou criar múltiplas publicações com links para o mesmo domínio (%{domain}). Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> do site."
   skipped_email_log:
     exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
     exceeded_bounces_limit: "Excedido bounce_score_threshold"
@@ -3057,26 +3041,15 @@ pt_BR:
           contact_email:
             label: "E-mail"
             placeholder: "nome@exemplo.com"
-            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='/about' target='_blank'>sua sobre a página para contato urgente da comunidade."
+            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua sobre a página para contato urgente da comunidade."
           contact_url:
             label: "Página da Web"
-            description: "Página de contato geral para você ou sua organização. Será exibido no <a href='/about' target='_blank'>sua sobre a página</a>."
+            description: "Página de contato geral para você ou sua organização. Será exibido no <a href='%{base_path}/about' target='_blank'>sua sobre a página</a>."
           site_contact:
             label: "Mensagens Automatizadas"
             description: "Todas as mensagens pessoais do Discourse automatizadas serão enviadas a partir desse usuário, como avisos de sinalização e avisos de conclusão de backup."
       corporate:
         title: "Organização"
-        description: "Estes nomes serão inseridos no seu <a href='/privacy' target='blank'>Política de Privacidade</a> e <a href='/tos' target='blank'>Termos de Serviço</a>, Estes são tópicos que você pode editar na categoria Staff. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
-        fields:
-          company_short_name:
-            label: "Nome da Empresa (curto)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nome da Companhia"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Nome do Domínio da Empresa"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -3089,22 +3062,8 @@ pt_BR:
                 label: "Escuro Simples"
       logos:
         title: "Logotipos"
-        fields:
-          logo_url:
-            label: "Logotipo Primário"
-            description: "O logotipo ao lado superior esquerdo de seu site. Use um formato de retângulo largo."
-          logo_small_url:
-            label: "Logotipo Compacto "
-            description: "Uma versão compacta de sua logo, mostrada na parte superior esquerda do site quando rolado para baixo. Use um formato quadrado."
       icons:
         title: "Ícones"
-        fields:
-          favicon_url:
-            label: "Ícone pequeno"
-            description: "Imagem de ícone usada para representar seu site em navegadores da Web que parecem bons em tamanhos pequenos, como 32 x 32 pixels. As extensões de imagem recomendadas são PNG ou JPG."
-          apple_touch_icon_url:
-            label: "Ícone Largo"
-            description: "Imagem de ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. O tamanho recomendado é de pelo menos 512 px por 512 px."
       homepage:
         description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"

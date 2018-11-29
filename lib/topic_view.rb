@@ -402,8 +402,16 @@ class TopicView
     @initial_load
   end
 
+  def pm_params
+    @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
+  end
+
   def suggested_topics
-    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
+    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+  end
+
+  def related_messages
+    @related_messages ||= TopicQuery.new(@user).list_related_for(topic, pm_params: pm_params)
   end
 
   # This is pending a larger refactor, that allows custom orders
@@ -471,6 +479,12 @@ class TopicView
 
   def last_post_id
     @filtered_posts.order(sort_order: :desc).limit(1).pluck(:id).first
+  end
+
+  def current_post_number
+    if highest_post_number.present?
+      post_number > highest_post_number ? highest_post_number : post_number
+    end
   end
 
   protected

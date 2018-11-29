@@ -408,8 +408,6 @@ id:
       subcategories: "Subkategori"
       topic_sentence:
         other: "%{count} topik"
-      topic_stat_sentence:
-        other: "%{count} topik baru dalam %{unit} terakhir."
     ip_lookup:
       title: Pencarian Alamat IP
       hostname: nama host
@@ -823,7 +821,6 @@ id:
         title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
         post_missing: "Tulisan tidak boleh kosong"
         post_length: "Tulisan setidaknya harus {{min}} karakter"
-        try_like: 'Pernahkan anda mencoba tombol <i class="fa fa-heart"></i>?'
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
       reply_original: "Balas pada Topik Asal"

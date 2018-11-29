@@ -24,10 +24,11 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   },
 
   dockCheck(info) {
+    const $header = $("header.d-header");
+
     if (this.docAt === null) {
-      const outlet = $("#main-outlet");
-      if (!(outlet && outlet.length === 1)) return;
-      this.docAt = outlet.offset().top;
+      if (!($header && $header.length === 1)) return;
+      this.docAt = $header.offset().top;
     }
 
     const $body = $("body");

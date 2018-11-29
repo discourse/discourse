@@ -94,7 +94,6 @@ fi:
         '8': "Siltä näyttäisi"
         '9': "Kyllä"
         '10': "Merkit viittaavat siihen suuntaan"
-        '11': "Näky epäselvä, yritä uudelleen"
         '12': "Palaa myöhemmin asiaan"
         '13': "Parempi, etten kerro vielä"
         '14': "En pysty sanomaan juuri nyt"
@@ -136,7 +135,7 @@ fi:
         second_response: |-
           Voi ei, en vieläkään tajua. :anguished:
 
-          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](/about).
+          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](%{base_path}/about).
 
           En häiritse sinua enempää nyt.
     new_user_narrative:

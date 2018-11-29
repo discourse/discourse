@@ -41,9 +41,12 @@ module FileStore
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
       # if this fails, it will throw an exception
+
+      path.prepend(File.join(upload_path, "/")) if RailsMultisite::ConnectionManagement.current_db != "default"
       path = @s3_helper.upload(file, path, options)
+
       # return the upload url
-      "#{absolute_base_url}/#{path}"
+      File.join(absolute_base_url, path)
     end
 
     def remove_file(url, path)
@@ -93,7 +96,7 @@ module FileStore
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
       folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
-      url.sub("#{schema}#{absolute_base_url}/#{folder}", "#{SiteSetting.Upload.s3_cdn_url}/")
+      url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
     def cache_avatar(avatar, user_id)
@@ -109,6 +112,47 @@ module FileStore
     def s3_bucket
       raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.Upload.s3_upload_bucket.blank?
       SiteSetting.Upload.s3_upload_bucket.downcase
+    end
+
+    def list_missing_uploads(skip_optimized: false)
+      list_missing(Upload, "original/")
+      list_missing(OptimizedImage, "optimized/") unless skip_optimized
+    end
+
+    private
+
+    def list_missing(model, prefix)
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec('CREATE TEMP TABLE verified_ids(val integer PRIMARY KEY)')
+      marker = nil
+      files = @s3_helper.list(prefix, marker)
+
+      while files.count > 0 do
+        verified_ids = []
+
+        files.each do |f|
+          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
+          verified_ids << id if id.present?
+          marker = f.key
+        end
+
+        verified_id_clause = verified_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+        connection.exec("INSERT INTO verified_ids VALUES #{verified_id_clause}")
+        files = @s3_helper.list(prefix, marker)
+      end
+
+      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
+      missing_count = missing_uploads.count
+
+      if missing_count > 0
+        missing_uploads.find_each do |upload|
+          puts upload.url
+        end
+
+        puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+      end
+    ensure
+      connection.exec('DROP TABLE verified_ids') unless connection.nil?
     end
   end
 end

@@ -150,6 +150,7 @@
 
 .btn-social {
   color: #fff;
+  background: #666;
   &:hover {
     color: #fff;
   }
@@ -158,7 +159,6 @@
   }
   &:before {
     margin-right: 9px;
-    font-family: FontAwesome;
     font-size: $font-0;
   }
   &.google,
@@ -166,62 +166,28 @@
     background: $google;
     color: #333;
     border: 1px solid $primary-low;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &:before {
-      content: "";
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      // Background image url needs to be encoded for IE11
-      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cpath%20id%3D%22a%22%20d%3D%22M44.5%2020H24v8.5h11.8C34.7%2033.9%2030.1%2037%2024%2037c-7.2%200-13-5.8-13-13s5.8-13%2013-13c3.1%200%205.9%201.1%208.1%202.9l6.4-6.4C34.6%204.1%2029.6%202%2024%202%2011.8%202%202%2011.8%202%2024s9.8%2022%2022%2022c11%200%2021-8%2021-22%200-1.3-.2-2.7-.5-4z%22%2F%3E%3C%2Fdefs%3E%3CclipPath%20id%3D%22b%22%3E%3Cuse%20xlink%3Ahref%3D%22%23a%22%20overflow%3D%22visible%22%2F%3E%3C%2FclipPath%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23FBBC05%22%20d%3D%22M0%2037V11l17%2013z%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23EA4335%22%20d%3D%22M0%2011l17%2013%207-6.1L48%2014V0H0z%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%2334A853%22%20d%3D%22M0%2037l30-23%207.9%201L48%200v48H0z%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%234285F4%22%20d%3D%22M48%2048L17%2024l-4-3%2035-10z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-  }
-  .mobile-view & {
-    // Special case because we're using SVG here
-    &.google,
-    &.google_oauth2 {
-      &:before {
-        width: 17px;
-        height: 17px;
-      }
+    // non-FA SVG icon for Google in login-buttons.hbs
+    .d-icon {
+      opacity: 0.9;
     }
   }
   &.instagram {
     background: $instagram;
-    &:before {
-      content: $fa-var-instagram;
-    }
   }
   &.facebook {
     background: $facebook;
-    &:before {
-      content: $fa-var-facebook;
-    }
   }
   &.cas {
     background: $cas;
   }
   &.twitter {
     background: $twitter;
-    &:before {
-      content: $fa-var-twitter;
-    }
   }
   &.yahoo {
     background: $yahoo;
-    &:before {
-      content: $fa-var-yahoo;
-    }
   }
   &.github {
     background: $github;
-    &:before {
-      content: $fa-var-github;
-    }
   }
 }
 

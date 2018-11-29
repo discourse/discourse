@@ -25,6 +25,9 @@
 
   .reply-to {
     margin: 5px 0;
+    .reply-details {
+      max-width: calc(100% - 75px);
+    }
   }
 
   .toggler {
@@ -171,5 +174,9 @@
 
   .add-warning {
     margin: 0 0 5px 5px;
+  }
+
+  .whisper {
+    margin-right: 5px;
   }
 }

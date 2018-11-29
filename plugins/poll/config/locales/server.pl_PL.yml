@@ -31,12 +31,6 @@ pl_PL:
     default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
     named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
-    default_cannot_be_made_public: "Ankieta z głosami nie może być publiczna."
-    named_cannot_be_made_public: "Ankieta o nazwie <strong>%{name}</strong> posiada głosy, w związku z czym nie może być upubliczniona."
-    edit_window_expired:
-      op_cannot_edit_options: "Po upływie pierwszych %{minutes} minut nie można dodawać lub usuwać opcji wyboru w ankietach. Skontaktuj się z moderatorem jeśli naprawdę musisz zmienić opcję w tej ankiecie."
-      staff_cannot_add_or_remove_options: "Po upływie pierwszych %{minutes} minut nie można dodawać lub usuwać opcji wyboru w ankietach. Należy zamknąć ten temat i utworzyć zamiast tego nowy temat."
-    no_polls_associated_with_this_post: "Wskazany wpis nie posiada przypisanych ankiet."
     no_poll_with_this_name: "Ankieta <strong>%{name}</strong> nie jest przypisana do tego wpisu."
     post_is_deleted: "Nie można wykonywać akcji na usuniętym wpisie."
     topic_must_be_open_to_vote: "Głosowanie jest możliwe tylko w otwartych tematach."

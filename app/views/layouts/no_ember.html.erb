@@ -5,7 +5,6 @@
   <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
   <meta name="description" content="">
   <%= render partial: "layouts/head" %>
-  <%= render partial: "common/special_font_face" %>
   <%= render partial: "common/discourse_stylesheet" %>
   <%= discourse_csrf_tags %>
 

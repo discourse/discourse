@@ -116,7 +116,7 @@ cs:
       <<: *errors
   invite:
     not_found: "Odkaz pozvánky je neplatný. Kontaktujte prosím administrátora stránky."
-    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='/u/%{username}/summary'>je veden u tohoto účtu!</a>"
+    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
     error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
@@ -152,11 +152,6 @@ cs:
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 reakce"
-      few: "%{count} reakce"
-      many: "%{count} reakcí"
-      other: "%{count} reakcí"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
     one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
@@ -267,7 +262,7 @@ cs:
 
       - Používejte ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Zařaďte své téma do vhodné kategorie.
 
-      Více se dozvíte v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
+      Více se dozvíte v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     'new-reply': |
       Vítejte na %{site_name} &mdash; **díky za přispěvek!**
 
@@ -277,7 +272,7 @@ cs:
 
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
-      Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
+      Další doporučení máme v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     avatar: |+
       ### Nechcete si nastavit svůj profilový obrázek?
 
@@ -349,17 +344,12 @@ cs:
           attributes:
             word:
               too_many: "Příliš mnoho slov pro tuto akci"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>Pole 'o mně' na vašem profilu je v tuto chvíli prázdné, <a href='/u/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} o sobě zatím nevyplnil žádné informace</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
-  assets_topic_title: "Soubory pro vzhled webu"
-  assets_topic_body: "Toto téma je viditelné pouze pro redaktory a slouží pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nJak postupovat:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte a vložte)\n3. Pošlete tuto odpověď.\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu příspěvku a adresy vykopírujte odtud.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Vítejte v Discourse"
     body: |2
@@ -373,7 +363,7 @@ cs:
         - Proč by sem měli lidé chodit?
         - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
 
-        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
         Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   lounge_welcome:
@@ -583,7 +573,7 @@ cs:
       title: "Něco jiného"
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
-      title: 'Záložka'
+      title: 'Založit'
       description: 'Přidat záložku k tomuto příspěvku'
       short_description: 'Přidat záložku k tomuto příspěvku'
       long_form: 'přidal záložku k tomuto příspěvku'
@@ -670,6 +660,8 @@ cs:
       title: "Uživatelé podle věrohodnosti"
       xaxis: "Věrohodnost"
       yaxis: "Počet uživatelů"
+    users_by_type:
+      title: "Uživatelé podle typu"
     emails:
       title: "Odesláno emailů"
       xaxis: "Den"
@@ -765,7 +757,6 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
-    apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
@@ -792,7 +783,7 @@ cs:
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
-    reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
     digest_topics: "Maximální počet populárních témat zařazených do email přehledu."
@@ -819,9 +810,9 @@ cs:
   move_posts:
     new_topic_moderator_post:
       one: "Příspěvek byl oddělen do nového tématu: %{topic_link}"
-      few: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
-      many: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
-      other: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
+      few: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
+      many: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
+      other: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
@@ -842,6 +833,7 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
+    click_to_continue: "Pro pokračování klikněte zde."
   user:
     username:
       unique: "musí být unikátní"
@@ -950,30 +942,12 @@ cs:
         title: "Vítejte ve vašem Discourse!"
       privacy:
         title: "Přístup"
-      corporate:
-        fields:
-          company_short_name:
-            label: "Název společnosti (krátký)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Název společnosti (plný)"
-            placeholder: "Initech, s.r.o."
-          company_domain:
-            placeholder: "initech.cz"
       colors:
         title: "Téma"
       logos:
         title: "Loga"
-        fields:
-          logo_url:
-            label: "Primární loga"
       icons:
         title: "Ikony"
-        fields:
-          favicon_url:
-            label: "Malá ikona"
-          apple_touch_icon_url:
-            label: "Velká ikona"
       homepage:
         title: "Domovská stránka"
         fields:

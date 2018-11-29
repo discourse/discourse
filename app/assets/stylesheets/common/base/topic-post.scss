@@ -28,14 +28,19 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: middle;
     a {
+      vertical-align: middle;
       color: dark-light-choose($primary-high, $secondary-low);
     }
   }
   .fa {
     font-size: $font-down-1;
-    margin-left: 3px;
     color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .svg-icon-title {
+    margin-left: 3px;
+    margin-right: 0px;
   }
   .new_user a,
   .user-title,
@@ -630,7 +635,7 @@ blockquote > *:last-child {
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
-    i {
+    .d-icon {
       font-size: 2em;
       width: 45px;
       text-align: center;
@@ -726,7 +731,7 @@ a.mention-group {
   }
 }
 
-#suggested-topics {
+.suggested-topics {
   .topics {
     padding-bottom: 15px;
   }
@@ -740,9 +745,10 @@ a.mention-group {
 
     > * {
       overflow: hidden;
+      vertical-align: middle;
     }
 
-    > i.fa {
+    > .d-icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 6px;
       font-size: $font-0;
@@ -833,11 +839,6 @@ a.mention-group {
   .reply-to-tab {
     span {
       display: none;
-    }
-  }
-  .names {
-    span {
-      display: block;
     }
   }
   .user-title {

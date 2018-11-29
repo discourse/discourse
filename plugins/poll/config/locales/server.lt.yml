@@ -29,7 +29,6 @@ lt:
     default_poll_with_multiple_choices_has_invalid_parameters: "Apklausa su keliais pasirinkimų yra neleistinų parametrus."
     named_poll_with_multiple_choices_has_invalid_parameters: "Apklausa pavadintas <strong>% {name} </ strong>, su daug pasirinkimo yra neleistinų parametrus."
     requires_at_least_1_valid_option: "Jūs privalote pasirinkti bent 1 galiojantį variantą."
-    no_polls_associated_with_this_post: "Nėra apklausų susijusių su šiuo pranešimu."
     no_poll_with_this_name: "Nėra baseinas pavadintas <strong>% {name} </ strong>, susijęs su šio pranešimo."
     post_is_deleted: "Negali veikti ištrintų paštu."
     topic_must_be_open_to_vote: "Apklausa turi būti atidaryta, kad būtų galima balsuoti."

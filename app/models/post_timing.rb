@@ -64,6 +64,25 @@ class PostTiming < ActiveRecord::Base
     record_new_timing(args) if rows == 0
   end
 
+  def self.destroy_last_for(user, topic_id)
+    topic = Topic.find(topic_id)
+    post_number = user.staff? ? topic.highest_staff_post_number : topic.highest_post_number
+
+    last_read = post_number - 1
+
+    PostTiming.transaction do
+      PostTiming.where("topic_id = ? AND user_id = ? AND post_number > ?", topic.id, user.id, last_read).delete_all
+      if last_read < 1
+        last_read = nil
+      end
+
+      TopicUser.where(user_id: user.id, topic_id: topic.id).update_all(
+        highest_seen_post_number: last_read,
+        last_read_post_number: last_read
+      )
+    end
+  end
+
   def self.destroy_for(user_id, topic_ids)
     PostTiming.transaction do
       PostTiming

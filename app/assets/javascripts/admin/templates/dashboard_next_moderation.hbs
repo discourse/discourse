@@ -4,7 +4,7 @@
   <div class="moderators-activity section">
     <div class="section-title">
       <h2>
-        <a href="/admin/reports/moderators_activity">
+        <a href="{{get-url '/admin/reports/moderators_activity'}}">
           {{i18n "admin.dashboard.moderators_activity"}}
         </a>
       </h2>
@@ -34,9 +34,9 @@
       filters=lastWeekfilters}}
 
     {{admin-report
-      dataSourceName="most_disagreed_flaggers"
+      dataSourceName="user_flagging_ratio"
       filters=lastWeekfilters
-      reportOptions=mostDisagreedFlaggersOptions}}
+      reportOptions=userFlaggingRatioOptions}}
 
     {{plugin-outlet name="admin-dashboard-moderation-bottom"}}
   </div>

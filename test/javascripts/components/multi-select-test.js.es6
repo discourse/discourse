@@ -1,4 +1,7 @@
 import componentTest from "helpers/component-test";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { clearCallbacks } from "select-kit/mixins/plugin-api";
+
 moduleForComponent("multi-select", {
   integration: true,
   beforeEach: function() {
@@ -315,5 +318,41 @@ componentTest("with forceEscape", {
         .trim(),
       "<div>jeff</div>"
     );
+  }
+});
+
+componentTest("support modifying on select behavior through plugin api", {
+  template:
+    '<span class="on-select-test"></span>{{multi-select content=content}}',
+
+  beforeEach() {
+    withPluginApi("0.8.13", api => {
+      api.modifySelectKit("select-kit").onSelect((context, value) => {
+        find(".on-select-test").html(value);
+      });
+    });
+
+    this.set("content", [
+      { id: "1", name: "robin" },
+      { id: "2", name: "arpit", __sk_row_type: "noopRow" }
+    ]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(1);
+
+    assert.equal(find(".on-select-test").html(), "1");
+
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue(2);
+
+    assert.equal(
+      find(".on-select-test").html(),
+      "2",
+      "it calls onSelect for noopRows"
+    );
+
+    clearCallbacks();
   }
 });

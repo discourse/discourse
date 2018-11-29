@@ -94,7 +94,6 @@ it:
         '8': "Le prospettive sono buone"
         '9': "Sì"
         '10': "I segni indicano di sì"
-        '11': "E' difficile rispondere, prova di nuovo"
         '12': "Rifai la domanda più tardi"
         '13': "Meglio non risponderti adesso"
         '14': "Ora non lo posso prevedere"
@@ -136,7 +135,7 @@ it:
         second_response: |-
           Oh, scusa. Non sto ancora capendo. :anguished:
 
-          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](/about).
+          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](%{base_path}/about).
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:

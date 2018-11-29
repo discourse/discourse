@@ -673,8 +673,43 @@ class Report
       limit: report.limit || 8,
       category_id: report.category_id
     }
-    result = nil
+
     result = IncomingLinksReport.find(:top_traffic_sources, options)
+    report.data = result.data
+  end
+
+  def self.report_top_referrers(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :user_avatar_template,
+        },
+        title: I18n.t("reports.top_referrers.labels.user")
+      },
+      {
+        property: :num_clicks,
+        type: :number,
+        title: I18n.t("reports.top_referrers.labels.num_clicks")
+      },
+      {
+        property: :num_topics,
+        type: :number,
+        title: I18n.t("reports.top_referrers.labels.num_topics")
+      }
+    ]
+
+    options = {
+      end_date: report.end_date,
+      start_date: report.start_date,
+      limit: report.limit || 8
+    }
+
+    result = IncomingLinksReport.find(:top_referrers, options)
     report.data = result.data
   end
 
@@ -1170,7 +1205,7 @@ class Report
     end
   end
 
-  def self.report_most_disagreed_flaggers(report)
+  def self.report_user_flagging_ratio(report)
     report.data = []
 
     report.modes = [:table]
@@ -1185,27 +1220,27 @@ class Report
           id: :user_id,
           avatar: :avatar_template,
         },
-        title: I18n.t("reports.most_disagreed_flaggers.labels.user")
+        title: I18n.t("reports.user_flagging_ratio.labels.user")
       },
       {
         type: :number,
         property: :disagreed_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.disagreed_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
       },
       {
         type: :number,
         property: :agreed_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.agreed_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
       },
       {
         type: :number,
         property: :ignored_flags,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.ignored_flags")
+        title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
       },
       {
         type: :number,
         property: :score,
-        title: I18n.t("reports.most_disagreed_flaggers.labels.score")
+        title: I18n.t("reports.user_flagging_ratio.labels.score")
       },
     ]
 
@@ -1224,7 +1259,7 @@ class Report
       WHERE u.id <> -1
         AND flags_disagreed > flags_agreed
       ORDER BY score DESC
-      LIMIT 20
+      LIMIT 100
       SQL
 
     DB.query(sql).each do |row|
@@ -1325,6 +1360,15 @@ class Report
   end
 
   def rgba_color(hex, opacity = 1)
+    if hex.size == 3
+      chars = hex.scan(/\w/)
+      hex = chars.zip(chars).flatten.join
+    end
+
+    if hex.size < 3
+      hex = hex.ljust(6, hex.last)
+    end
+
     rgbs = hex_to_rgbs(hex)
 
     "rgba(#{rgbs.join(',')},#{opacity})"

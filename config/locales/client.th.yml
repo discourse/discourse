@@ -393,8 +393,6 @@ th:
       latest_by: "ล่าสุดโดย"
       toggle_ordering: "เปลี่ยนวิธีการจัดลำดับ"
       subcategories: "หมวดหมู่ย่อย"
-      topic_stat_sentence:
-        other: "%{count} กระทู้ใหม่ในเวลาที่ผ่านมา %{unit}."
     ip_lookup:
       title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
@@ -850,7 +848,6 @@ th:
         title_too_long: "ชื่อเรื่องต้องไม่ยาวเกิน {{max}} ตัวอักษร"
         post_missing: "โพสไม่สามารถว่างได้"
         post_length: "โพสต้องมีอย่างน้อย {{min}} ตัวอักษร"
-        try_like: 'คุณได้ลองปุ่ม <i class="fa fa-heart"></i> หรือยัง? '
         category_missing: "คุณต้องเลือกหมวดหมู่"
       save_edit: "บันทึกการแก้ไข"
       reply_original: "ตอบบนกระทู้ต้นฉบับ"

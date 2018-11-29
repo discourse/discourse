@@ -307,21 +307,14 @@
 
       .components-list {
         margin-top: 5px;
-        display: flex;
-        flex-wrap: wrap;
+        display: inline-block;
         font-size: $font-down-1;
         align-items: baseline;
+        color: $primary-high;
 
+        .others-count,
         .others-count:hover {
           text-decoration: underline;
-        }
-        .component {
-          display: flex;
-          padding: 3px 5px 3px 5px;
-          border-radius: 2px;
-          border: 1px solid $primary-low;
-          margin-right: 5px;
-          margin-bottom: 5px;
         }
       }
 
@@ -534,8 +527,15 @@
 }
 
 .add-upload-modal {
+  input[type="file"] {
+    display: block;
+    margin-bottom: 0.25em;
+    + label {
+      color: $primary-medium;
+    }
+  }
   label {
-    margin-top: 20px;
+    display: inline-block;
   }
 }
 

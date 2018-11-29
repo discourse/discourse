@@ -177,9 +177,21 @@ module SiteSettingExtension
 
   def settings_hash
     result = {}
-    defaults.all.keys.each do |s|
-      result[s] = send(s).to_s
+    deprecated_settings = Set.new
+
+    SiteSettings::DeprecatedSettings::SETTINGS.each do |s|
+      deprecated_settings << s[0]
     end
+
+    defaults.all.keys.each do |s|
+      result[s] =
+        if deprecated_settings.include?(s.to_s)
+          send(s, warn: false).to_s
+        else
+          send(s).to_s
+        end
+    end
+
     result
   end
 
@@ -190,7 +202,11 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@client_settings.map { |n| [n, self.send(n)] }.flatten])
+    MultiJson.dump(Hash[*@client_settings.map do |name|
+      value = self.public_send(name)
+      value = value.to_s if type_supervisor.get_type(name) == :upload
+      [name, value]
+    end.flatten])
   end
 
   # Retrieve all settings
@@ -212,7 +228,9 @@ module SiteSettingExtension
     defaults.all(default_locale)
       .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
+
       value = send(s)
+
       opts = {
         setting: s,
         description: description(s),
@@ -229,7 +247,7 @@ module SiteSettingExtension
   end
 
   def description(setting)
-    I18n.t("site_settings.#{setting}")
+    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
   end
 
   def placeholder(setting)
@@ -263,8 +281,16 @@ module SiteSettingExtension
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
       changes, deletions = diff_hash(new_hash, current)
-      changes.each   { |name, val| current[name] = val }
-      deletions.each { |name, _|   current[name] = defaults_view[name] }
+
+      changes.each do |name, val|
+        current[name] = val
+        clear_uploads_cache(name)
+      end
+
+      deletions.each do |name, _|
+        current[name] = defaults_view[name]
+        clear_uploads_cache(name)
+      end
 
       clear_cache!
     end
@@ -312,6 +338,7 @@ module SiteSettingExtension
   def remove_override!(name)
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+    clear_uploads_cache(name)
     clear_cache!
   end
 
@@ -319,6 +346,7 @@ module SiteSettingExtension
     val, type = type_supervisor.to_db_value(name, val)
     provider.save(name, val, type)
     current[name] = type_supervisor.to_rb_value(name, val)
+    clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -410,12 +438,31 @@ module SiteSettingExtension
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
 
-    define_singleton_method clean_name do
-      if (c = current[name]).nil?
-        refresh!
-        current[name]
-      else
-        c
+    if type_supervisor.get_type(name) == :upload
+      define_singleton_method clean_name do
+        upload = uploads[name]
+        return upload if upload
+
+        if (value = current[name]).nil?
+          refresh!
+          value = current[name]
+        end
+
+        value = value.to_i
+
+        if value > 0
+          upload = Upload.find_by(id: value)
+          uploads[name] = upload if upload
+        end
+      end
+    else
+      define_singleton_method clean_name do
+        if (c = current[name]).nil?
+          refresh!
+          current[name]
+        else
+          c
+        end
       end
     end
 
@@ -447,6 +494,17 @@ module SiteSettingExtension
   end
 
   private
+
+  def uploads
+    @uploads ||= {}
+    @uploads[provider.current_site] ||= {}
+  end
+
+  def clear_uploads_cache(name)
+    if type_supervisor.get_type(name) == :upload && uploads.has_key?(name)
+      uploads.delete(name)
+    end
+  end
 
   def logger
     Rails.logger

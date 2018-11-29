@@ -48,7 +48,6 @@
     <%- end %>
 
     <%= render partial: "common/discourse_stylesheet" %>
-    <%= render partial: "common/special_font_face" %>
 
     <%= yield :head %>
 
@@ -82,7 +81,7 @@
       </div>
 
       <footer id='noscript-footer'>
-        <p><%= t 'powered_by_html' %></p>
+        <p style="text-align:center;"><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
 

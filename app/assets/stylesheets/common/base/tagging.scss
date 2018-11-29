@@ -37,19 +37,6 @@
   }
 }
 
-.topic-header-extra .discourse-tag {
-  -webkit-animation: fadein 0.7s;
-  animation: fadein 0.7s;
-}
-
-.bullet + .topic-header-extra {
-  display: block;
-}
-
-.box + .topic-header-extra {
-  display: inline-block;
-}
-
 .topic-category {
   display: flex;
   flex-wrap: wrap;
@@ -127,7 +114,7 @@ $tag-color: $primary-medium;
     display: inline-block;
     font-size: $font-down-1;
   }
-  .topic-featured-link {
+  .discourse-tags + .topic-featured-link {
     margin-left: 8px;
   }
 }
@@ -169,12 +156,14 @@ $tag-color: $primary-medium;
 .discourse-tag.bullet {
   margin-right: 0.25em;
   &:before {
-    content: "\f04d";
-    font-family: FontAwesome;
-    color: $primary-low-mid;
+    background: $primary-low-mid;
     margin-right: 5px;
-    font-size: $font-down-2;
     position: relative;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    content: "";
   }
 }
 

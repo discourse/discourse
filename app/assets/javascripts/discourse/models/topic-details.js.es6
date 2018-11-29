@@ -51,7 +51,8 @@ const TopicDetails = RestModel.extend({
       return I18n.t("topic.notifications.reasons.mailing_list_mode");
     } else {
       return I18n.t(localeString, {
-        username: Discourse.User.currentProp("username_lower")
+        username: Discourse.User.currentProp("username_lower"),
+        basePath: Discourse.BaseUri
       });
     }
   }.property("notification_level", "notifications_reason_id"),

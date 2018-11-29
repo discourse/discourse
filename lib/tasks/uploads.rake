@@ -121,6 +121,8 @@ def migrate_from_s3
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
 
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
   Post
     .where("user_id > 0")
     .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
@@ -131,7 +133,7 @@ def migrate_from_s3
       post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+            file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
             sha1 = Upload.generate_digest(file)
             origin = nil
 
@@ -160,7 +162,7 @@ def migrate_from_s3
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
                 filename = upload.original_filename
                 origin = upload.origin
                 upload.destroy
@@ -226,43 +228,66 @@ def migrate_to_s3
   s3 = FileStore::S3Store.new
   local = FileStore::LocalStore.new
 
+  exclude_tables = %i{
+    incoming_emails
+    stylesheet_cache
+    search_logs
+    post_search_data
+    notifications
+    email_logs
+  }
+
   # Migrate all uploads
-  Upload.where.not(sha1: nil)
-    .where("url NOT LIKE '#{s3.absolute_base_url}%'")
-    .find_each do |upload|
-    # remove invalid uploads
-    if upload.url.blank?
-      upload.destroy!
-      next
-    end
-    # store the old url
-    from = upload.url
-    # retrieve the path to the local file
-    path = local.path_for(upload)
-    # make sure the file exists locally
-    if !path || !File.exists?(path)
-      putc "X"
-      next
-    end
+  file_uploads = Upload.where.not(sha1: nil).where("url NOT LIKE '#{s3.absolute_base_url}%'")
+  image_uploads = file_uploads.where("lower(extension) NOT IN (?)", FileHelper.supported_images.to_a)
 
-    begin
-      file = File.open(path)
-      content_type = `file --mime-type -b #{path}`.strip
-      to = s3.store_upload(file, upload, content_type)
-    rescue
-      putc "X"
-      next
-    ensure
-      file&.close
+  [image_uploads, file_uploads].each do |uploads|
+    uploads.find_in_batches(batch_size: 100) do |batch|
+      batch.each do |upload|
+        now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        # remove invalid uploads
+        if upload.url.blank?
+          upload.destroy!
+          next
+        end
+        # store the old url
+        from = upload.url
+        # retrieve the path to the local file
+        path = local.path_for(upload)
+        # make sure the file exists locally
+        if !path || !File.exists?(path)
+          puts "#{from} does not exist locally"
+          next
+        end
+
+        begin
+          file = File.open(path)
+          content_type = `file --mime-type -b #{path}`.strip
+          to = s3.store_upload(file, upload, content_type)
+        rescue => e
+          puts "Encountered an error while migrating #{upload.url}: #{e.class}: #{e.message}"
+          next
+        ensure
+          file&.close
+        end
+
+        # remap the URL
+        DbHelper.remap(from, to, exclude_tables: exclude_tables)
+        upload.optimized_images.destroy_all
+        puts "Migrating #{from} --> #{to} took #{Process.clock_gettime(Process::CLOCK_MONOTONIC) - now} seconds"
+      end
+
+      [
+        Discourse.asset_host,
+        Discourse.base_url_no_prefix
+      ].each do |from|
+        now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        from = "#{from}#{SiteSetting.Upload.s3_base_url}"
+        to = SiteSetting.s3_cdn_url
+        DbHelper.remap(from, to, exclude_tables: exclude_tables)
+        puts "Remapping #{from} --> #{to} took #{Process.clock_gettime(Process::CLOCK_MONOTONIC) - now} seconds"
+      end
     end
-
-    # remap the URL
-    DbHelper.remap(UrlHelper.absolute(from), Discourse.store.cdn_url(to))
-    DbHelper.remap(UrlHelper.absolute_without_cdn(from), Discourse.store.cdn_url(to))
-    DbHelper.remap(from, to)
-    upload.optimized_images.destroy_all
-
-    putc "."
   end
 end
 
@@ -379,44 +404,7 @@ task "uploads:missing" => :environment do
 end
 
 def list_missing_uploads(skip_optimized: false)
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  public_directory = "#{Rails.root}/public"
-
-  Upload.find_each do |upload|
-
-    # could be a remote image
-    next unless upload.url =~ /^\/[^\/]/
-
-    path = "#{public_directory}#{upload.url}"
-    bad = true
-    begin
-      bad = false if File.size(path) != 0
-    rescue
-      # something is messed up
-    end
-    puts path if bad
-  end
-
-  unless skip_optimized
-    OptimizedImage.find_each do |optimized_image|
-      # remote?
-      next unless optimized_image.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{optimized_image.url}"
-
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      puts path if bad
-    end
-  end
+  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
 end
 
 ################################################################################

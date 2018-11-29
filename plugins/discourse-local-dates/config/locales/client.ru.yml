@@ -8,12 +8,18 @@
 ru:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Сегодня %{time}
+        tomorrow: Завтра %{time}
+        yesterday: 'Вчера %{time} '
       title: Вставить дату
       create:
         modal_title: Вставить дату
+        modal_subtitle: "Автоматически конвертировать дату и время в часовую зону пользователя"
         form:
           insert: Вставить
           advanced_mode: Расширенный режим
+          simple_mode: Простой режим
           format_description: "Формат, используемый для отображения даты пользователю. Используйте \"\\T\\Z\" для отображения часового пояса пользователя в словах (Europe/Paris)"
           timezones_title: Часовые пояса для отображения
           timezones_description: Часовые пояса будут использоваться для отображения дат в режиме предварительного просмотра и отката назад.

@@ -32,7 +32,7 @@ function initializePollUIBuilder(api) {
   api.addToolbarPopupMenuOptionsCallback(function() {
     return {
       action: "showPollBuilder",
-      icon: "bar-chart-o",
+      icon: "chart-bar",
       label: "poll.ui_builder.title",
       condition: "canBuildPoll"
     };

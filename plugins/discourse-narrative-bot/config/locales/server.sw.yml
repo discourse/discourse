@@ -90,7 +90,6 @@ sw:
         '8': "Outlook iko vizuri"
         '9': "Ndio"
         '10': "Ishara inaonekana kuwa ndio"
-        '11': "Jibu halipo vizuri jaribu tena"
         '12': "Tafadhali, uliza tena baadae"
         '13': "Afadhali kutokukwambia kwa sasa"
         '14': "Haiwezi ikabashiri sasa hivi"
@@ -132,7 +131,7 @@ sw:
         second_response: |-
           Oh, jamani. Bado Nashindwa kukuelewa. :anguished:
 
-          Mimi ni roboti tu, kama hautajali unaweza kuwasiliana na binadamu, tembelea [ukurasa wa mawasiliano](/kuhusu)
+          Mimi ni roboti tu, kama hautajali unaweza kuwasiliana na binadamu, tembelea [ukurasa wa mawasiliano](%{base_path}/kuhusu)
 
           Kwa sasa, nitakaa pembeni.
     new_user_narrative:

@@ -56,7 +56,7 @@
         line-height: $line-height-large;
         -webkit-box-flex: 1;
         -ms-flex: 1;
-        flex: 1 0 auto;
+        flex: 1 1 0%;
         -webkit-box-align: start;
         -ms-flex-align: start;
         align-items: flex-start;
@@ -73,7 +73,7 @@
         .name {
           -webkit-box-flex: 1;
           -ms-flex: 1;
-          flex: 1 0 auto;
+          flex: 1 1 auto;
           font-weight: bold;
           font-size: $font-0;
           color: $primary;
@@ -87,7 +87,7 @@
         .desc {
           -webkit-box-flex: 1;
           -ms-flex: 1;
-          flex: 1 0 auto;
+          flex: 1 1 auto;
           width: 100%; //IE11
           font-size: $font-down-1;
           font-weight: normal;
@@ -127,12 +127,6 @@
 
       .d-icon + .d-icon {
         margin-left: 5px;
-      }
-
-      &:hover {
-        .d-icon {
-          color: $primary-low;
-        }
       }
 
       &.is-focused {

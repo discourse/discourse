@@ -62,7 +62,7 @@ const Report = Discourse.Model.extend({
       let d,
         sum = 0,
         count = 0;
-      _.each(this.data, datum => {
+      this.data.forEach(datum => {
         d = moment(datum.x);
         if (d >= earliestDate && d <= latestDate) {
           sum += datum.y;
@@ -116,7 +116,7 @@ const Report = Discourse.Model.extend({
 
   @computed("data")
   currentTotal(data) {
-    return _.reduce(data, (cur, pair) => cur + pair.y, 0);
+    return data.reduce((cur, pair) => cur + pair.y, 0);
   },
 
   @computed("data", "currentTotal")

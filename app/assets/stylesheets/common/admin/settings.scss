@@ -37,6 +37,11 @@
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
+      .uploaded-image-preview {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: $primary-medium;
+      }
     }
     .setting-controls {
       float: left;

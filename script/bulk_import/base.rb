@@ -80,7 +80,7 @@ class BulkImport::Base
     load_indexes
     execute
     fix_primary_keys
-    puts "Done!"
+    puts "Done! Now run the 'import:ensure_consistency' rake task."
   end
 
   def preload_i18n

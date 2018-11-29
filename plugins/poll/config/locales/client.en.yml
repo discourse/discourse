@@ -28,7 +28,13 @@ en:
       average_rating: "Average rating: <strong>%{average}</strong>."
 
       public:
-        title: "Votes are public."
+        title: "Votes are <strong>public</strong>."
+
+      results:
+        vote:
+          title: "Results will be shown on <strong>vote</strong>."
+        closed:
+          title: "Results will be shown once <strong>closed</strong>."
 
       multiple:
         help:
@@ -85,6 +91,11 @@ en:
           regular: Single Choice
           multiple: Multiple Choice
           number: Number Rating
+        poll_result:
+          label: Results
+          always: Always visible
+          vote: On vote
+          closed: When closed
         poll_config:
           max: Max
           min: Min

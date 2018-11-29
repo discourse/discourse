@@ -24,14 +24,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def set_primary_group
-    if group.primary_group
-      DB.exec("
-        UPDATE users
-        SET primary_group_id = :id
-        WHERE id = :user_id",
-        id: group.id, user_id: user_id
-      )
-    end
+    user.update!(primary_group: group) if group.primary_group
   end
 
   def remove_primary_group
@@ -62,23 +55,12 @@ class GroupUser < ActiveRecord::Base
   def grant_trust_level
     return if group.grant_trust_level.nil?
 
-    if (user.group_locked_trust_level || 0) < group.grant_trust_level
-      user.update!(group_locked_trust_level: group.grant_trust_level)
-    end
-
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 
   def recalculate_trust_level
     return if group.grant_trust_level.nil?
 
-    # Find the highest level of the user's remaining groups
-    highest_level = GroupUser
-      .where(user_id: user.id)
-      .includes(:group)
-      .maximum("groups.grant_trust_level")
-
-    user.update!(group_locked_trust_level: highest_level)
     Promotion.recalculate(user)
   end
 end

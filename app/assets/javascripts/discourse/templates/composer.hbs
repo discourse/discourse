@@ -17,10 +17,14 @@
               {{#unless model.viewFullscreen}}
                 <div class="reply-details">
                   {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
+                  {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                   {{#unless site.mobileView}}
-                    {{#if whisperOrUnlistTopicText}}
-                      <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
+                    {{#if model.whisper}}
+                      <span class='whisper'>{{d-icon 'eye-slash'}}</span>
+                    {{/if}}
+                    {{#if model.unlistTopic}}
+                      <span class='whisper'>({{i18n 'composer.unlist'}})</span>
                     {{/if}}
                     {{#if model.noBump}}
                       <span class="no-bump">{{d-icon "anchor"}}</span>
@@ -149,6 +153,9 @@
                 </div>
               {{/if}}
               <div id='draft-status' class="{{if isUploading 'hidden'}}">
+                {{#if model.draftConflictUser}}
+                  {{avatar model.draftConflictUser imageSize="small"}}
+                {{/if}}
                 {{model.draftStatus}}
               </div>
             </div>

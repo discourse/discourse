@@ -213,7 +213,9 @@ export default Ember.Component.extend(
         name: name || this._nameForContent(contentItem),
         locked: false,
         created: options.created || false,
-        __sk_row_type: options.created ? "createRow" : null,
+        __sk_row_type: options.created
+          ? "createRow"
+          : contentItem.__sk_row_type,
         originalContent
       };
 

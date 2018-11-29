@@ -70,6 +70,15 @@ export default Ember.Controller.extend(BufferedContent, {
     }
   },
 
+  @computed("model.details.can_create_post")
+  embedQuoteButton(canCreatePost) {
+    return (
+      canCreatePost &&
+      this.currentUser &&
+      this.currentUser.get("enable_quoting")
+    );
+  },
+
   @computed("model.postStream.loaded", "model.category_id")
   showSharedDraftControls(loaded, categoryId) {
     let draftCat = this.site.shared_drafts_category_id;
@@ -296,7 +305,7 @@ export default Ember.Controller.extend(BufferedContent, {
       const postStream = this.get("model.postStream");
       const firstLoadedPost = postStream.get("posts.firstObject");
 
-      if (post.get("post_number") === 1) {
+      if (post.get && post.get("post_number") === 1) {
         return;
       }
 

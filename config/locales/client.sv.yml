@@ -431,9 +431,6 @@ sv:
       topic_sentence:
         one: "1 ämne"
         other: "%{count} ämnen"
-      topic_stat_sentence:
-        one: "%{count} nytt ämne under den senaste %{unit}."
-        other: "%{count} nya ämnen under den senaste %{unit}."
     ip_lookup:
       title: Kolla upp IP-adress
       hostname: Värdnamn
@@ -965,7 +962,6 @@ sv:
         title_too_long: "Rubriken får inte vara längre än {{max}} tecken"
         post_missing: "Inlägg får inte vara tomma"
         post_length: "Inlägg måste vara minst {{min}} tecken långa."
-        try_like: 'Har du provat <i class="fa fa-heart"></i>-knappen?'
         category_missing: "Du måste välja en kategori"
       save_edit: "Spara ändring"
       reply_original: "Svara på ursprungsämnet"
@@ -1206,7 +1202,7 @@ sv:
       toggle_information: "slå av/på ämnesdetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i {{catLink}} eller {{latestLink}}."
       read_more: "Vill du läsa mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='/unread'>1 oläst</a> } other { <a href='/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Bläddra bland alla kategorier
       view_latest_topics: visa senaste ämnen
       suggest_create_topic: "Varför inte skapa ett ämne?"
@@ -1580,7 +1576,6 @@ sv:
           revert: "Återgå till den här revisionen"
           edit_wiki: "Uppdatera Wiki"
           edit_post: "Ändra meddelandet"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Visa resultat med tillägg och borttagningar inline"

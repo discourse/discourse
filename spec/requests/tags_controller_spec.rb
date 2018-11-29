@@ -389,6 +389,45 @@ describe TagsController do
     end
   end
 
+  describe '#unused' do
+    it "fails if you can't manage tags" do
+      sign_in(Fabricate(:user))
+      get "/tags/unused.json"
+      expect(response.status).to eq(403)
+      delete "/tags/unused.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'logged in' do
+      before do
+        sign_in(Fabricate(:admin))
+      end
+
+      context 'with some tags' do
+        let!(:tags) { [
+          Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
+          Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
+          Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
+          Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
+          Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0)
+        ]}
+
+        it 'returns the correct unused tags' do
+          get "/tags/unused.json"
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)
+          expect(json["tags"]).to contain_exactly("unused1", "unused2")
+        end
+
+        it 'deletes the correct tags' do
+          expect { delete "/tags/unused.json" }.to change { Tag.count }.by(-2) & change { UserHistory.count }.by(1)
+          expect(Tag.pluck(:name)).to contain_exactly("used_publically", "used_privately", "used_everywhere")
+        end
+      end
+
+    end
+  end
+
   context '#upload_csv' do
     it 'requires you to be logged in' do
       post "/tags/upload.json"

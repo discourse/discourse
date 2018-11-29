@@ -121,9 +121,6 @@ tr_TR:
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "%{count} cevap"
-      other: "%{count} cevap"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
     one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
@@ -212,7 +209,7 @@ tr_TR:
 
       - Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisine sıkça kullanılan kelimeler dahil edin. Konunuzun benzer konularla gruplanması için bir kategori seçin.
 
-      Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
+      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
     'new-reply': |
       %{site_name} topluluğuna hoş geldiniz &mdash; **katılımınız için teşekkür ederiz!**
 
@@ -222,7 +219,7 @@ tr_TR:
 
       - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
 
-      Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
+      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
   activerecord:
     attributes:
       category:
@@ -254,8 +251,6 @@ tr_TR:
           attributes:
             hex:
               invalid: "geçerli bir renk değil"
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
   meta_category_name: "Site geri bildirimi"
@@ -610,7 +605,6 @@ tr_TR:
     queue_size_warning: 'Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
-    bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
@@ -649,7 +643,6 @@ tr_TR:
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
-    apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     force_https: "Sitenizi HTTPS kullanmaya zorlayın. DİKKAT: bu seçeneği HTTPS'nin her yerde doğru bir şekilde çalıştığından emin olmadan SEÇMEYİN. Sitenizde bulunan paylaşım siteleri bağlantılarını, CDN' adresinizi, dışsal bağlantısı olan görsellerinizi de kontrol ettiniz mi?"
@@ -803,7 +796,6 @@ tr_TR:
     body_min_entropy: "Gönderi içeriği için gereken en az entropi (tekil karakter, ingilizce-dışı karakterler daha fazla sayılır)"
     allow_uppercase_posts: "Konu başlığı ya da gönderi metninin tümünün büyük harf kullanılarak girilebilmesine izin ver."
     min_title_similar_length: "Bir başlığın benzer konular için kontrolünün yapılmasından önce sahip olması gereken en az uzunluk."
-    min_body_similar_length: "Bir gönderi metninin benzer konular için kontrolünün yapılmasından önce sahip olması gereken en az uzunluk."
     desktop_category_page_style: "/categories sayfasının görsel biçimi."
     category_colors: "Kategoriler için izin verilen onaltılı renk değerlerinin listesi"
     category_style: "Kategori rozetleri için görsel biçim."
@@ -841,7 +833,7 @@ tr_TR:
     auto_respond_to_flag_actions: "Bir bildirim kaldırırken otomatik olarak cevaplamayı etkinleştir"
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
-    reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "2800 Byte boyutundan küçük e-postalardan resimleri çıkar"
     short_email_length: "Kısa e-postanın uzunluğu, Byte olarak"
     unsubscribe_via_email: "Kullanıcıların konu veya içerik alanında 'unsubscribe' olan bir e-posta göndererek e-postalara abonelikten çıkmasına izin ver"
@@ -935,9 +927,6 @@ tr_TR:
     tag_style: "Etiket rozetleri için görsel biçim."
     min_trust_level_to_tag_topics: "Konulara etiket eklemek için gereken en az güven seviyesi."
     suppress_overlapping_tags_in_list: "Eğer etiketler konu ismi içerisinde tam kelime olarak bulunuyorsa, etiketi gösterme"
-    company_short_name: "Firma İsmi (kısa)"
-    company_full_name: "Firma İsmi (tamamı)"
-    company_domain: "Firma Alan Adı"
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -951,7 +940,7 @@ tr_TR:
       invalid_string_min_max: "%{min} ile %{max} karakter arasında olmalı."
       invalid_string_min: "En az %{min} karakter olmalı."
       invalid_string_max: "En fazla %{max} karakter olabilir."
-      invalid_reply_by_email_address: "Değer '%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
+      invalid_reply_by_email_address: "Değer '%%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
       pop3_polling_authentication_failed: "POP3 kimlik doğrulaması başarısız. Lütfen pop3 bilgilerinizi kontrol edin."
   search:
     within_post: "%{username} tarafından #%{post_number}"
@@ -1068,7 +1057,7 @@ tr_TR:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
   flag_reasons:
     off_topic: "Gönderiniz **konu-dışı** olarak bildirildi: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğine uygun olmadığını düşünüyor. "
-    inappropriate: "Gönderiniz **uygunsuz** olarak bildirildi: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğunu düşünüyor."
+    inappropriate: "Gönderiniz **uygunsuz** olarak bildirildi: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](%{base_path}/guidelines) aykırı olduğunu düşünüyor."
     spam: "Gönderiniz **istenmeyen** olarak bildirildi: topluluk, gönderinizin mevcut konuya uygun veya yararlı olmaktansa fazlasıyla promosyonel ve reklam içerikli olduğunu düşünüyor."
     notify_moderators: "Gönderiniz **moderatör kontrolü için** bildirildi: topluluk, gönderinizle ilgili bir şeyin moderatör tarafından kontrol edilmesi gerektiğini düşünüyor."
   flags_dispositions:
@@ -1577,17 +1566,6 @@ tr_TR:
             label: "Ağ Sayfası"
           site_contact:
             label: "Otomatik İletiler"
-      corporate:
-        fields:
-          company_short_name:
-            label: "Firma İsmi (kısa)"
-            placeholder: "Falanteknik"
-          company_full_name:
-            label: "Firma İsmi (tamamı)"
-            placeholder: "Falanteknik A.Ş"
-          company_domain:
-            label: "Firma Alan Adı"
-            placeholder: "falanteknik.com"
       colors:
         title: "Tema"
         fields:
@@ -1599,20 +1577,8 @@ tr_TR:
                 label: "Basit Karanlık"
       logos:
         title: "Görseller"
-        fields:
-          logo_url:
-            label: "Birincil Görsel"
-            description: "Sitenizin sol üst kısmında gözükecek olan görsel. Geniş bir dikdörtgen olursa iyi olur."
-          logo_small_url:
-            label: "Sadeleştirilmiş Görsel"
-            description: "Site görselinizin öz bir sürümü, aşağıya doğru kaydırılma yapıldığında sol üstte gözükecek. Kare bir görsel iyi olur."
       icons:
         title: "Simgeler"
-        fields:
-          favicon_url:
-            label: "Simgecik"
-          apple_touch_icon_url:
-            label: "Büyük Simge"
       homepage:
         title: "Ana Sayfa"
         fields:

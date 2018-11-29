@@ -4,6 +4,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { sanitizeAsync } from "discourse/lib/text";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 function customTagArray(fieldName) {
   return function() {
@@ -44,6 +45,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
       {
         previous,
+        icon: iconHTML("arrows-alt-h"),
         current,
         total
       }

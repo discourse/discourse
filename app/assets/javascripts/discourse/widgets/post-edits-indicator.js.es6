@@ -62,13 +62,14 @@ export default createWidget("post-edits-indicator", {
       "a",
       {
         className,
-        attributes: { title }
+        attributes: { title, href: "#" }
       },
       contents
     );
   },
 
-  click() {
+  click(e) {
+    e.preventDefault();
     if (this.attrs.wiki && this.attrs.version === 1) {
       this.sendWidgetAction("editPost");
     } else if (this.attrs.canViewEditHistory) {

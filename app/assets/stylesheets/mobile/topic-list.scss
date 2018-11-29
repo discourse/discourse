@@ -67,7 +67,7 @@
     flex-wrap: wrap;
     width: 100%;
     .edit-category {
-      i {
+      .d-icon {
         margin: 0;
       }
       @media screen and (max-width: 374px) {
@@ -162,7 +162,7 @@
     font-size: $font-0;
     line-height: $line-height-small;
     padding: 0.15em 0.4em 0.2em 0.4em;
-    i {
+    .d-icon {
       color: $secondary;
     }
 
@@ -276,7 +276,7 @@ tr.category-topic-link {
     display: inline-block;
     font-size: $font-up-2;
     margin: 0 0 0 10px;
-    i {
+    .d-icon {
       margin-right: 5px;
     }
     a[href] {
@@ -478,11 +478,32 @@ ol.category-breadcrumb {
   padding-top: 10px;
 }
 
-.category-logo {
+.category-logo.aspect-image {
   display: block;
-  max-width: 100%;
-  max-height: 150px;
-  padding: 8px 0;
+  margin: 8px 0;
+
+  img {
+    width: auto;
+    max-width: 100%;
+    max-height: 150px;
+  }
+}
+
+@supports (--custom: property) {
+  .category-logo.aspect-image {
+    --max-height: 150px;
+    max-height: var(--max-height);
+    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 100%;
+    height: auto;
+
+    img {
+      width: 100%;
+      height: inherit;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
 }
 
 button.dismiss-read {
