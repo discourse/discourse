@@ -287,7 +287,7 @@ Discourse SVG subset of #{fa_license}
     site_setting_icons = []
 
     SiteSetting.settings_hash.select do |key, value|
-      if key.to_s.include?("_icon") && value.present?
+      if key.to_s.include?("_icon") && value.present? && value.class == String
         site_setting_icons |= value.split('|')
       end
     end
@@ -317,7 +317,7 @@ Discourse SVG subset of #{fa_license}
     # Theme.all includes default values
     Theme.all.each do |theme|
       settings = theme.cached_settings.each do |key, value|
-        if key.to_s.include?("_icon") && value.present?
+        if key.to_s.include?("_icon") && value.present? && value.class == String
           theme_icon_settings |= value.split('|')
         end
       end
