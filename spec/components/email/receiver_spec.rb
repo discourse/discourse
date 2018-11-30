@@ -163,6 +163,14 @@ describe Email::Receiver do
     expect(IncomingEmail.last.error).to eq("RuntimeError")
   end
 
+  it "matches the correct user" do
+    user = Fabricate(:user)
+    email_log = Fabricate(:email_log, to_address: user.email, user: user, bounce_key: nil)
+    email, name = Email::Receiver.new(email(:existing_user)).parse_from_field
+    expect(email).to eq("existing@bar.com")
+    expect(name).to eq("Foo Bar")
+  end
+
   it "strips null bytes from the subject" do
     expect do
       process(:null_byte_in_subject)
