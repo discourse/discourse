@@ -4,6 +4,12 @@ require_dependency 'content_security_policy/default'
 class ContentSecurityPolicy
   class Builder
     EXTENDABLE_DIRECTIVES = %i[
+      script_src
+      worker_src
+    ].freeze
+
+    # Make extending these directives no-op, until core includes them in default CSP
+    TO_BE_EXTENDABLE = %i[
       base_uri
       connect_src
       default_src
@@ -16,9 +22,7 @@ class ContentSecurityPolicy
       media_src
       object_src
       prefetch_src
-      script_src
       style_src
-      worker_src
     ].freeze
 
     def initialize
