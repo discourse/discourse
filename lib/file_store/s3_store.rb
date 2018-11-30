@@ -42,7 +42,7 @@ module FileStore
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
       # if this fails, it will throw an exception
 
-      path.prepend(File.join(upload_path, "/")) if RailsMultisite::ConnectionManagement.current_db != "default"
+      path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
       path = @s3_helper.upload(file, path, options)
 
       # return the upload url
