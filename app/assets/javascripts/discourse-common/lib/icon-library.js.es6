@@ -470,6 +470,7 @@ const fa4Replacements = {
   "vimeo-square": "fab-vimeo-square",
   vine: "fab-vine",
   vk: "fab-vk",
+  vkontakte: "fab-vk",
   "volume-control-phone": "phone-volume",
   warning: "exclamation-triangle",
   wechat: "fab-weixin",
