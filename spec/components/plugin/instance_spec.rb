@@ -133,16 +133,18 @@ describe Plugin::Instance do
     # No enabled_site_setting
     authenticator = Auth::Authenticator.new
     plugin.auth_provider(authenticator: authenticator)
-    plugin.notify_after_initialize
+    plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
+    plugin = Plugin::Instance.new
     authenticator = Auth::Authenticator.new
     plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
-    plugin.notify_after_initialize
+    plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
 
     # Defines own method
+    plugin = Plugin::Instance.new
     SiteSetting.stubs(:ubuntu_login_enabled).returns(true)
     authenticator = Class.new(Auth::Authenticator) do
       def enabled?
@@ -150,7 +152,7 @@ describe Plugin::Instance do
       end
     end.new
     plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
-    plugin.notify_after_initialize
+    plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
   end
 
@@ -182,11 +184,11 @@ describe Plugin::Instance do
       plugin = Plugin::Instance.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
       plugin.activate!
-
-      expect(plugin.auth_providers.count).to eq(1)
-      auth_provider = plugin.auth_providers[0]
-      expect(auth_provider.authenticator.name).to eq('ubuntu')
+      expect(DiscoursePluginRegistry.auth_providers.count).to eq(0)
+      plugin.notify_before_auth
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(1)
+      auth_provider = DiscoursePluginRegistry.auth_providers.to_a[0]
+      expect(auth_provider.authenticator.name).to eq('ubuntu')
     end
 
     it "finds all the custom assets" do
