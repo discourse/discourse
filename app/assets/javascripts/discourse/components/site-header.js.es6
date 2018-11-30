@@ -1,7 +1,11 @@
 import MountWidget from "discourse/components/mount-widget";
 import { observes } from "ember-addons/ember-computed-decorators";
 import Docking from "discourse/mixins/docking";
-import PanEvents from "discourse/mixins/pan-events";
+import PanEvents, {
+  SWIPE_VELOCITY,
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY_THRESHOLD
+} from "discourse/mixins/pan-events";
 
 const _flagProperties = [];
 function addFlagProperty(prop) {
@@ -9,6 +13,10 @@ function addFlagProperty(prop) {
 }
 
 const PANEL_BODY_MARGIN = 30;
+
+//android supports pulling in from the screen edges
+const SCREEN_EDGE_MARGIN = 30;
+const SCREEN_OFFSET = 300;
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
@@ -45,14 +53,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   _handlePanDone(offset, event) {
-    const velocity = 40;
     const $window = $(window);
     const windowWidth = parseInt($window.width());
     const $menuPanels = $(".menu-panel");
     const menuOrigin = this._panMenuOrigin;
     this._shouldMenuClose(event, menuOrigin)
-      ? (offset += velocity)
-      : (offset -= velocity);
+      ? (offset += SWIPE_VELOCITY)
+      : (offset -= SWIPE_VELOCITY);
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
       const $headerCloak = $(".header-cloak");
@@ -75,26 +82,22 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     // menu should close after a pan either:
     // if a user moved the panel closed past a threshold and away and is NOT swiping back open
     // if a user swiped to close fast enough regardless of distance
-    const distanceThreshold = 200;
-    const velocityThreshold = 0.1;
     if (menuOrigin === "right") {
       return (
-        (e.deltaX > distanceThreshold && e.velocityX > -velocityThreshold) ||
-        e.velocityX > velocityThreshold
+        (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
+          e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
+        e.velocityX > SWIPE_VELOCITY_THRESHOLD
       );
     } else {
       return (
-        (e.deltaX < -distanceThreshold && e.velocityX < velocityThreshold) ||
-        e.velocityX < -velocityThreshold
+        (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
+          e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
+        e.velocityX < -SWIPE_VELOCITY_THRESHOLD
       );
     }
   },
 
   panStart(e) {
-    //android supports pulling in from the screen edges
-    const screenEdgeMargin = 30;
-    const screenOffset = 300;
-
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     const $window = $(window);
@@ -108,24 +111,24 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       e.originalEvent.preventDefault();
       this._isPanning = true;
     } else if (
-      center.x < screenEdgeMargin &&
+      center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
       e.direction === "right"
     ) {
       this._animate = false;
       this._panMenuOrigin = "left";
-      this._panMenuOffset = -screenOffset;
+      this._panMenuOffset = -SCREEN_OFFSET;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleHamburger", "header");
     } else if (
-      windowWidth - center.x < screenEdgeMargin &&
+      windowWidth - center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
       e.direction === "left"
     ) {
       this._animate = false;
       this._panMenuOrigin = "right";
-      this._panMenuOffset = -screenOffset;
+      this._panMenuOffset = -SCREEN_OFFSET;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched("toggleUserMenu", "header");
