@@ -25,6 +25,7 @@ RSpec.describe ApplicationController do
       @old_logger = Rails.logger
       @logs = StringIO.new
       Rails.logger = Logger.new(@logs)
+      Rails.logger.level = Logger::WARN
     end
 
     after do
