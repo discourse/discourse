@@ -249,6 +249,7 @@ COMPILED
     theme.clear_cached_settings!
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
+    CSP::Extension.clear_theme_extensions_cache! if name == 'yaml'
 
     # TODO message for mobile vs desktop
     MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
