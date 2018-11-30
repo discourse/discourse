@@ -25,8 +25,8 @@ class Plugin::Instance
 
   # Memoized array readers
   [:assets,
-   :auth_providers,
    :color_schemes,
+   :before_auth_initializers,
    :initializers,
    :javascripts,
    :locales,
@@ -287,6 +287,11 @@ class Plugin::Instance
     initializers << block
   end
 
+  def before_auth(&block)
+    raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!" if @before_auth_complete
+    before_auth_initializers << block
+  end
+
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
     DiscourseEvent.on(event_name) do |*args|
@@ -311,6 +316,13 @@ class Plugin::Instance
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
     end
+  end
+
+  def notify_before_auth
+    before_auth_initializers.each do |callback|
+      callback.call(self)
+    end
+    @before_auth_complete = true
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -458,7 +470,6 @@ class Plugin::Instance
     register_assets! unless assets.blank?
     register_locales!
     register_service_workers!
-    register_auth_providers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -496,13 +507,13 @@ class Plugin::Instance
   end
 
   def auth_provider(opts)
-    provider = Auth::AuthProvider.new
+    before_auth do
+      provider = Auth::AuthProvider.new
 
-    Auth::AuthProvider.auth_attributes.each do |sym|
-      provider.send "#{sym}=", opts.delete(sym)
-    end
+      Auth::AuthProvider.auth_attributes.each do |sym|
+        provider.send "#{sym}=", opts.delete(sym)
+      end
 
-    after_initialize do
       begin
         provider.authenticator.enabled?
       rescue NotImplementedError
@@ -513,9 +524,9 @@ class Plugin::Instance
           true
         end
       end
-    end
 
-    auth_providers << provider
+      DiscoursePluginRegistry.register_auth_provider(provider)
+    end
   end
 
   # shotgun approach to gem loading, in future we need to hack bundler
@@ -591,12 +602,6 @@ class Plugin::Instance
   def register_service_workers!
     service_workers.each do |asset, opts|
       DiscoursePluginRegistry.register_service_worker(asset, opts)
-    end
-  end
-
-  def register_auth_providers!
-    auth_providers.each do |auth_provider|
-      DiscoursePluginRegistry.register_auth_provider(auth_provider)
     end
   end
 
