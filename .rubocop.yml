@@ -2,11 +2,11 @@ AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
   Exclude:
-    - 'db/schema.rb'
-    - 'bundle/**/*'
-    - 'vendor/**/*'
-    - 'node_modules/**/*'
-    - 'public/**/*'
+    - "db/schema.rb"
+    - "bundle/**/*"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "public/**/*"
 
 # Prefer &&/|| over and/or.
 Style/AndOr:
@@ -15,6 +15,10 @@ Style/AndOr:
 # Do not use braces for hash literals when they are the last argument of a
 # method call.
 Style/BracesAroundHashParameters:
+  Enabled: true
+
+# Check for uses of braces or do/end around single line or multi-line blocks.
+Style/BlockDelimiters:
   Enabled: true
 
 # Align `when` with `case`.
@@ -53,7 +57,7 @@ Layout/SpaceAroundOperators:
   Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-    Enabled: true
+  Enabled: true
 
 # Defining a method with parameters needs parentheses.
 Style/MethodDefParentheses:
