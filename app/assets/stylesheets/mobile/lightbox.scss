@@ -21,5 +21,8 @@
 
   .expand {
     position: initial;
+    filter: invert(100%);
+    float: none;
+    height: 16px;
   }
 }
