@@ -607,24 +607,40 @@ class PostRevisor
   def revise_likes(deleted_post_ids, acting_user)
     return if deleted_post_ids.blank?
 
-    already_liked_users = UserAction.where(target_post_id: @post.id, action_type: UserAction::LIKE).pluck(:user_id)
-    new_user_ids_to_like = UserAction.where(target_post_id: deleted_post_ids, action_type: UserAction::LIKE).where.not(user_id: already_liked_users).pluck(:user_id)
+    already_liked_users = PostAction.where(post_id: @post.id, post_action_type_id: PostActionType.types[:like]).pluck(:user_id)
 
     args = {}
     args[:message] = "Merging posts"
     args[:take_action] = true
     args[:flag_topic] = true
 
-    deleted_posts = Post.where(id: deleted_post_ids)
-    new_users_to_like = User.where(id: new_user_ids_to_like)
+    user_with_transferred_likes = Set.new
+    PostAction.where(post_id: deleted_post_ids, post_action_type_id: PostActionType.types[:like]).find_in_batches do |group|
+      group.each do |post_action|
+        unless already_liked_users.include?(post_action.user_id)
+          if user_with_transferred_likes.include?(post_action.user_id)
+            post_action.trash!(acting_user)
+          else
+            deleted_post_id = post_action.post_id
+            deleted_post = Post.where(id: deleted_post_id).first
 
-    new_users_to_like.each do |user|
-      PostAction.act(user, @post, PostActionType.types[:like], args)
+            post_action.post_id = @post.id
+            post_action.update_column(:post_id, @post.id)
 
-      deleted_posts.each do |post|
-        PostAction.remove_act(user, post, PostActionType.types[:like])
+            user_action_like = UserAction.where(target_post_id: deleted_post_id, user_id: post_action.user_id, action_type: UserAction::LIKE, target_topic_id: deleted_post.topic_id).first
+            user_action_like.update_column(:target_post_id, @post.id)
+
+            user_action_was_liked = UserAction.where(target_post_id: deleted_post_id, user_id: deleted_post.user_id, action_type: UserAction::WAS_LIKED, target_topic_id: deleted_post.topic_id).first
+            user_action_was_liked.update_column(:target_post_id, @post.id)
+
+            deleted_post.update_column(:like_count, deleted_post.like_count - 1)
+          end
+          user_with_transferred_likes.add(post_action.user_id)
+          post_action.update_counters
+        end
       end
     end
+
   end
 
 end
