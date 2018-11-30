@@ -309,6 +309,10 @@ describe UserUpdater do
       end.to_not change { UserHistory.count }
 
       expect do
+        UserUpdater.new(acting_user, user).update(bio_raw: 'foo bar')
+      end.to_not change { UserHistory.count }
+
+      expect do
         UserUpdater.new(acting_user, user_without_name).update(bio_raw: 'foo bar')
       end.to_not change { UserHistory.count }
 
