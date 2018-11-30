@@ -32,7 +32,9 @@ class Plugin::Instance
    :locales,
    :service_workers,
    :styles,
-   :themes].each do |att|
+   :themes,
+   :csp_extensions,
+ ].each do |att|
     class_eval %Q{
       def #{att}
         @#{att} ||= []
@@ -359,6 +361,10 @@ class Plugin::Instance
 
   def register_svg_icon(icon)
     DiscoursePluginRegistry.register_svg_icon(icon)
+  end
+
+  def extend_content_security_policy(extension)
+    csp_extensions << extension
   end
 
   # @option opts [String] :name
