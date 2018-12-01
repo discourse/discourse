@@ -2848,6 +2848,7 @@ en:
         activity_metrics: Activity Metrics
         all_reports: "All reports"
         general_tab: "General"
+        reports_tab: "Reports"
         moderation_tab: "Moderation"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
