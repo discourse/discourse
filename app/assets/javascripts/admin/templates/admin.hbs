@@ -7,6 +7,9 @@
 
         {{nav-item route='admin.dashboardNext' label='admin.dashboard.title'}}
         {{#if currentUser.admin}}
+          {{nav-item route='adminUploads' label='admin.uploads.title'}}
+        {{/if}}
+        {{#if currentUser.admin}}
           {{nav-item route='adminSiteSettings' label='admin.site_settings.title'}}
         {{/if}}
         {{nav-item route='adminUsersList' label='admin.users.title'}}

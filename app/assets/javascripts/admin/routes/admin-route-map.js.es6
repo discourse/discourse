@@ -11,6 +11,11 @@ export default function() {
     });
 
     this.route(
+      "adminUploads",
+      { path: "/uploads", resetNamespace: true }
+    );
+
+    this.route(
       "adminSiteSettings",
       { path: "/site_settings", resetNamespace: true },
       function() {

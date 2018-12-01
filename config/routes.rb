@@ -74,6 +74,12 @@ Discourse::Application.routes.draw do
       end
     end
 
+    resources :uploads, constraints: AdminConstraint.new do
+      collection do
+        get "uploads/:id" => "uploads#index"
+      end
+    end
+
     get "reports" => "reports#index"
     get "reports/bulk" => "reports#bulk"
     get "reports/:type" => "reports#show"

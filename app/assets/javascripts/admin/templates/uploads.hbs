@@ -1,0 +1,35 @@
+<div class="uploads">
+  <h3 class="durability-title">{{d-icon "upload"}} {{i18n "admin.dashboard.uploads"}}</h3>
+  <p>
+    {{model.uploads_used}} used of ({{i18n "admin.dashboard.space_free" size=model.uploads_free}})
+  </p>
+</div>
+<table class='table users-list grid'>
+  <thead>
+  <th>By User</th>
+  <th>Filename</th>
+  <th>Extension</th>
+  <th>Created at</th>
+  </thead>
+  <tbody>
+  {{#each model.uploads as |upload|}}
+    <tr class="user">
+      <td class="username">
+        <a href="{{unbound upload.user.path}}" data-user-card="{{unbound upload.user.username}}">
+          {{avatar upload.user imageSize="small"}}
+        </a>
+        {{#link-to 'adminUser' user}}{{unbound upload.user.username}}{{/link-to}}
+      </td>
+      <td>
+        <a href={{upload.url}} target="_blank">{{upload.original_filename}}</a>
+      </td>
+      <td >
+        {{upload.extension}}
+      </td>
+      <td>
+        {{format-date upload.created_at leaveAgo="true"}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
