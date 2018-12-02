@@ -55,6 +55,7 @@ en:
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
+  on_another_topic: "On another topic"
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"

@@ -46,6 +46,25 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
+      it "do off topic quoting of posts from secure categories" do
+        category = Fabricate(:category, read_restricted: true)
+        topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
+
+        expected = <<~HTML
+          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
+          </div>
+          <blockquote>
+          <p>I have nothing to say.</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"maja, post:3, topic:#{topic.id}\"]\nI have nothing to say.\n[/quote]", topic_id: 1)).to eq(n(expected))
+      end
+
       it "indifferent about missing quotations" do
         md = <<~MD
           [quote=#{user.username}, post:123, topic:456, full:true]
