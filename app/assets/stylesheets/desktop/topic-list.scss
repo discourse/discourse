@@ -236,7 +236,6 @@ button.dismiss-read {
     --max-height: 150px;
     max-height: var(--max-height);
     width: calc(var(--max-height) * var(--aspect-ratio));
-    max-width: 25%;
     height: auto;
 
     img {
