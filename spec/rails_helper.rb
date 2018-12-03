@@ -180,11 +180,13 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :multisite) do
+    Rails.configuration.multisite = true
     RailsMultisite::ConnectionManagement.config_filename =
       "spec/fixtures/multisite/two_dbs.yml"
   end
 
   config.after(:each, type: :multisite) do
+    Rails.configuration.multisite = false
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.clear_active_connections!
     ActiveRecord::Base.establish_connection
