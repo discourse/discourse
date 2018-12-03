@@ -229,7 +229,19 @@ describe Validators::PostValidator do
       SiteSetting.max_consecutive_replies = 2
     end
 
+    it "should always allow posting" do
+      [user, user, user, other_user, user, user, user].each_with_index do |u, i|
+        post = Post.new(user: user, topic: topic, raw: "post number #{i}")
+        validator.force_edit_last_validator(post)
+        expect(post.errors.count).to eq(0)
+        post.save
+      end
+    end
+
     it "should not allow posting more than 2 consecutive replies" do
+      post = Post.new(user: other_user, topic: topic, raw: "post number 0")
+      post.save
+
       1.upto(3).each do |i|
         post = Post.new(user: user, topic: topic, raw: "post number #{i}")
         validator.force_edit_last_validator(post)
