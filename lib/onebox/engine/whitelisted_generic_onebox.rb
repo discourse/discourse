@@ -254,74 +254,74 @@ module Onebox
 
       private
 
-        def rewrite_https(html)
-          return unless html
-          uri = URI(@url)
-          html.gsub!("http://", "https://") if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
-          html
-        end
+      def rewrite_https(html)
+        return unless html
+        uri = URI(@url)
+        html.gsub!("http://", "https://") if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
+        html
+      end
 
-        def generic_html
-          return article_html  if is_article?
-          return video_html    if is_video?
-          return image_html    if is_image?
-          return embedded_html if is_embedded?
-          return article_html  if has_text?
-        end
+      def generic_html
+        return article_html  if is_article?
+        return video_html    if is_video?
+        return image_html    if is_image?
+        return embedded_html if is_embedded?
+        return article_html  if has_text?
+      end
 
-        def is_article?
-          (data[:type] =~ /article/ || data[:asset_type] =~ /article/) &&
-          has_text?
-        end
+      def is_article?
+        (data[:type] =~ /article/ || data[:asset_type] =~ /article/) &&
+        has_text?
+      end
 
-        def has_text?
-          !Onebox::Helpers.blank?(data[:title]) &&
-          !Onebox::Helpers.blank?(data[:description])
-        end
+      def has_text?
+        !Onebox::Helpers.blank?(data[:title]) &&
+        !Onebox::Helpers.blank?(data[:description])
+      end
 
-        def is_image?
-          data[:type] =~ /photo|image/ &&
-          data[:type] !~ /photostream/ &&
-          has_image?
-        end
+      def is_image?
+        data[:type] =~ /photo|image/ &&
+        data[:type] !~ /photostream/ &&
+        has_image?
+      end
 
-        def has_image?
-          !Onebox::Helpers.blank?(data[:image])
-        end
+      def has_image?
+        !Onebox::Helpers.blank?(data[:image])
+      end
 
-        def is_video?
-          data[:type] =~ /^video[\/\.]/ && !Onebox::Helpers.blank?(data[:video])
-        end
+      def is_video?
+        data[:type] =~ /^video[\/\.]/ && !Onebox::Helpers.blank?(data[:video])
+      end
 
-        def is_embedded?
-          data[:html] &&
-          data[:height] &&
-          (
-            data[:html]["iframe"] ||
-            WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
-          )
-        end
+      def is_embedded?
+        data[:html] &&
+        data[:height] &&
+        (
+          data[:html]["iframe"] ||
+          WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
+        )
+      end
 
-        def article_html
-          layout.to_html
-        end
+      def article_html
+        layout.to_html
+      end
 
-        def image_html
-          return if Onebox::Helpers.blank?(data[:image])
+      def image_html
+        return if Onebox::Helpers.blank?(data[:image])
 
-          escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
 
-          alt    = data[:description]  || data[:title]
-          width  = data[:image_width]  || data[:thumbnail_width]  || data[:width]
-          height = data[:image_height] || data[:thumbnail_height] || data[:height]
+        alt    = data[:description]  || data[:title]
+        width  = data[:image_width]  || data[:thumbnail_width]  || data[:width]
+        height = data[:image_height] || data[:thumbnail_height] || data[:height]
 
-          "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
-        end
+        "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
+      end
 
-        def video_html
-          escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
+      def video_html
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
 
-          <<-HTML
+        <<-HTML
             <video title='#{data[:title]}'
                    width='#{data[:video_width]}'
                    height='#{data[:video_height]}'
@@ -330,20 +330,20 @@ module Onebox
               <source src='#{escaped_src}'>
             </video>
           HTML
-        end
+      end
 
-        def embedded_html
-          fragment = Nokogiri::HTML::fragment(data[:html])
-          fragment.css("img").each { |img| img["class"] = "thumbnail" }
-          if iframe = fragment.at_css("iframe")
-            iframe.remove_attribute("style")
-            iframe["width"] = data[:width] || "100%"
-            iframe["height"] = data[:height]
-            iframe["scrolling"] = "no"
-            iframe["frameborder"] = "0"
-          end
-          fragment.to_html
+      def embedded_html
+        fragment = Nokogiri::HTML::fragment(data[:html])
+        fragment.css("img").each { |img| img["class"] = "thumbnail" }
+        if iframe = fragment.at_css("iframe")
+          iframe.remove_attribute("style")
+          iframe["width"] = data[:width] || "100%"
+          iframe["height"] = data[:height]
+          iframe["scrolling"] = "no"
+          iframe["frameborder"] = "0"
         end
+        fragment.to_html
+      end
     end
   end
 end

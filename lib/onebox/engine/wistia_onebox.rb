@@ -18,15 +18,15 @@ module Onebox
       end
 
       private
-        def oembed_data
-          @oembed_data ||= begin
-            oembed_url = "https://fast.wistia.com/oembed?embedType=iframe&url=#{url}"
-            response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
-            Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
-          rescue
-            {}
-          end
+      def oembed_data
+        @oembed_data ||= begin
+          oembed_url = "https://fast.wistia.com/oembed?embedType=iframe&url=#{url}"
+          response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
+        rescue
+          {}
         end
+      end
     end
   end
 end

@@ -33,48 +33,48 @@ module Onebox
 
     private
 
-      def engine_html
-        engine.to_html
-      end
+    def engine_html
+      engine.to_html
+    end
 
-      def process_html(html)
-        return "" unless html
+    def process_html(html)
+      return "" unless html
 
-        if @options[:max_width]
-          doc = Nokogiri::HTML::fragment(html)
-          if doc
-            doc.css('[width]').each do |e|
-              width = e['width'].to_i
+      if @options[:max_width]
+        doc = Nokogiri::HTML::fragment(html)
+        if doc
+          doc.css('[width]').each do |e|
+            width = e['width'].to_i
 
-              if width > @options[:max_width]
-                height = e['height'].to_i
-                if (height > 0)
-                  ratio = (height.to_f / width.to_f)
-                  e['height'] = (@options[:max_width] * ratio).floor
-                end
-                e['width'] = @options[:max_width]
+            if width > @options[:max_width]
+              height = e['height'].to_i
+              if (height > 0)
+                ratio = (height.to_f / width.to_f)
+                e['height'] = (@options[:max_width] * ratio).floor
               end
+              e['width'] = @options[:max_width]
             end
-            return doc.to_html
           end
+          return doc.to_html
         end
-
-        html
       end
 
-      def sanitize(html)
-        Sanitize.fragment(html, @options[:sanitize_config] || Sanitize::Config::ONEBOX)
-      end
+      html
+    end
 
-      def engine
-        return nil unless @engine_class
-        return @engine if @engine
+    def sanitize(html)
+      Sanitize.fragment(html, @options[:sanitize_config] || Sanitize::Config::ONEBOX)
+    end
 
-        @engine = @engine_class.new(@url, cache)
-        @engine.options = @options
-        @engine
-      end
+    def engine
+      return nil unless @engine_class
+      return @engine if @engine
 
-      class InvalidURI < StandardError; end
+      @engine = @engine_class.new(@url, cache)
+      @engine.options = @options
+      @engine
+    end
+
+    class InvalidURI < StandardError; end
   end
 end

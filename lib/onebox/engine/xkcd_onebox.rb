@@ -13,18 +13,18 @@ module Onebox
 
       private
 
-        def match
-          @match ||= @url.match(%{xkcd\.com/(?<comic_id>\\d+)})
-        end
+      def match
+        @match ||= @url.match(%{xkcd\.com/(?<comic_id>\\d+)})
+      end
 
-        def data
-          {
-            link: @url,
-            title: raw['safe_title'],
-            image: raw['img'],
-            description: raw['alt']
-          }
-        end
+      def data
+        {
+          link: @url,
+          title: raw['safe_title'],
+          image: raw['img'],
+          description: raw['alt']
+        }
+      end
     end
   end
 end

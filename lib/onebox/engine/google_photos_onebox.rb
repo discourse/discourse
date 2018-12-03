@@ -17,23 +17,23 @@ module Onebox
 
       private
 
-        def video_html(og)
-          escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
-          escaped_image_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
+      def video_html(og)
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
+        escaped_image_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
-          <<-HTML
+        <<-HTML
             <video width='#{og[:video_width]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)} poster="#{escaped_image_src}" controls loop>
               <source src='#{escaped_src}' type='video/mp4'>
             </video>
           HTML
-        end
+      end
 
-        def album_html(og)
-          escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
-          escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
-          album_title = Onebox::Helpers::blank?(og[:description]) ? og[:title].strip : "[#{og[:description].strip}] #{og[:title].strip}"
+      def album_html(og)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
+        album_title = Onebox::Helpers::blank?(og[:description]) ? og[:title].strip : "[#{og[:description].strip}] #{og[:title].strip}"
 
-          <<-HTML
+        <<-HTML
             <div class='onebox google-photos-album'>
               <a href='#{escaped_url}' target='_blank'>
                 <span class='outer-box' style='width:#{og[:image_width]}px'>
@@ -45,24 +45,24 @@ module Onebox
               </a>
             </div>
           HTML
-        end
+      end
 
-        def image_html(og)
-          escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
-          escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
+      def image_html(og)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
-          <<-HTML
+        <<-HTML
             <a href='#{escaped_url}' target='_blank' class="onebox">
               <img src='#{escaped_src}' #{Helpers.title_attr(og)} alt='Google Photos' height='#{og[:image_height]}' width='#{og[:image_width]}'>
             </a>
           HTML
-        end
+      end
 
-        def get_secure_link(link)
-          secure_link = URI(link)
-          secure_link.scheme = 'https'
-          secure_link.to_s
-        end
+      def get_secure_link(link)
+        secure_link = URI(link)
+        secure_link.scheme = 'https'
+        secure_link.to_s
+      end
     end
   end
 end

@@ -22,20 +22,20 @@ module Onebox
 
       private
 
-        def match
-          @match ||= @url.match(/^https?:\/\/commons\.wikimedia\.org\/wiki\/(?<name>File:.+)/)
-        end
+      def match
+        @match ||= @url.match(/^https?:\/\/commons\.wikimedia\.org\/wiki\/(?<name>File:.+)/)
+      end
 
-        def data
-          first_page = raw['query']['pages'].first[1]
+      def data
+        first_page = raw['query']['pages'].first[1]
 
-          {
-            link: first_page['imageinfo'].first['descriptionurl'],
-            title: first_page['title'],
-            image: first_page['imageinfo'].first['url'],
-            thumbnail: first_page['imageinfo'].first['thumburl']
-          }
-        end
+        {
+          link: first_page['imageinfo'].first['descriptionurl'],
+          title: first_page['title'],
+          image: first_page['imageinfo'].first['url'],
+          thumbnail: first_page['imageinfo'].first['thumburl']
+        }
+      end
 
     end
   end

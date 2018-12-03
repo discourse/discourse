@@ -18,13 +18,13 @@ module Onebox
       end
 
       private
-        def match
-          return @match if @match
+      def match
+        return @match if @match
 
-          @match = @url.match(%{trello\.com/(?<type>[^/]+)/(?<key>[^/]+)/?\W*})
+        @match = @url.match(%{trello\.com/(?<type>[^/]+)/(?<key>[^/]+)/?\W*})
 
-          @match
-        end
+        @match
+      end
     end
   end
 end

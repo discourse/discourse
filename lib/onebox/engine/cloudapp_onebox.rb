@@ -21,37 +21,37 @@ module Onebox
 
       private
 
-        def link_html(og)
-          escaped_url = ::Onebox::Helpers.normalize_url_for_output(og[:url])
+      def link_html(og)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(og[:url])
 
-          <<-HTML
+        <<-HTML
             <a href='#{escaped_url}' target='_blank'>
               #{og[:title]}
             </a>
           HTML
-        end
+      end
 
-        def video_html(og)
-          src = og[:url]
-          title = og[:title]
-          direct_src = ::Onebox::Helpers.normalize_url_for_output("#{src}/#{title}")
+      def video_html(og)
+        src = og[:url]
+        title = og[:title]
+        direct_src = ::Onebox::Helpers.normalize_url_for_output("#{src}/#{title}")
 
-          <<-HTML
+        <<-HTML
             <video width='480' height='360' #{Helpers.title_attr(og)} controls loop>
               <source src='#{direct_src}' type='video/mp4'>
             </video>
           HTML
-        end
+      end
 
-        def image_html(og)
-          escaped_url = ::Onebox::Helpers.normalize_url_for_output(og[:url])
+      def image_html(og)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(og[:url])
 
-          <<-HTML
+        <<-HTML
             <a href='#{escaped_url}' target='_blank' class='onebox'>
               <img src='#{og[:image]}' #{Helpers.title_attr(og)} alt='CloudApp' width='480'>
             </a>
           HTML
-        end
+      end
     end
   end
 end

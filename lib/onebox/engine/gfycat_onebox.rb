@@ -58,30 +58,30 @@ module Onebox
 
       private
 
-        def match
-          @match ||= @url.match(/^https?:\/\/gfycat\.com\/(gifs\/detail\/)?(?<name>.+)/)
-        end
+      def match
+        @match ||= @url.match(/^https?:\/\/gfycat\.com\/(gifs\/detail\/)?(?<name>.+)/)
+      end
 
-        def data
+      def data
 
-          total_tags = [raw['gfyItem']['tags'], raw['gfyItem']['userTags']].flatten.compact
-          tag_links = total_tags.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ') if total_tags
-          autoplay = raw['gfyItem']['webmSize'].to_i < 10485760 ? 'autoplay' : ''
+        total_tags = [raw['gfyItem']['tags'], raw['gfyItem']['userTags']].flatten.compact
+        tag_links = total_tags.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ') if total_tags
+        autoplay = raw['gfyItem']['webmSize'].to_i < 10485760 ? 'autoplay' : ''
 
-          {
-            name: raw['gfyItem']['gfyName'],
-            title: raw['gfyItem']['title'] || 'No Title',
-            author: raw['gfyItem']['userName'],
-            tags: tag_links,
-            url: @url,
-            posterUrl: raw['gfyItem']['posterUrl'],
-            webmUrl: raw['gfyItem']['webmUrl'],
-            mp4Url: raw['gfyItem']['mp4Url'],
-            width: raw['gfyItem']['width'],
-            height: raw['gfyItem']['height'],
-            autoplay: autoplay
-          }
-        end
+        {
+          name: raw['gfyItem']['gfyName'],
+          title: raw['gfyItem']['title'] || 'No Title',
+          author: raw['gfyItem']['userName'],
+          tags: tag_links,
+          url: @url,
+          posterUrl: raw['gfyItem']['posterUrl'],
+          webmUrl: raw['gfyItem']['webmUrl'],
+          mp4Url: raw['gfyItem']['mp4Url'],
+          width: raw['gfyItem']['width'],
+          height: raw['gfyItem']['height'],
+          autoplay: autoplay
+        }
+      end
 
     end
   end

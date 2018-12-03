@@ -53,77 +53,77 @@ module Onebox
 
       protected
 
-        def html_doc
-          return @html_doc if @html_doc
+      def html_doc
+        return @html_doc if @html_doc
 
-          headers = nil
-          headers = { 'Cookie' => options[:cookie] } if options[:cookie]
+        headers = nil
+        headers = { 'Cookie' => options[:cookie] } if options[:cookie]
 
-          @html_doc = Onebox::Helpers.fetch_html_doc(url, headers)
+        @html_doc = Onebox::Helpers.fetch_html_doc(url, headers)
+      end
+
+      def get_oembed
+        oembed_url = nil
+
+        StandardEmbed.oembed_providers.each do |regexp, endpoint|
+          if url =~ regexp
+            oembed_url = "#{endpoint}?url=#{url}"
+            break
+          end
         end
 
-        def get_oembed
-          oembed_url = nil
-
-          StandardEmbed.oembed_providers.each do |regexp, endpoint|
-            if url =~ regexp
-              oembed_url = "#{endpoint}?url=#{url}"
-              break
-            end
+        if html_doc
+          if Onebox::Helpers.blank?(oembed_url)
+            application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
+            oembed_url = application_json.value if application_json
           end
 
-          if html_doc
-            if Onebox::Helpers.blank?(oembed_url)
-              application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
-              oembed_url = application_json.value if application_json
-            end
-
-            if Onebox::Helpers.blank?(oembed_url)
-              text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
-              oembed_url ||= text_json.value if text_json
-            end
+          if Onebox::Helpers.blank?(oembed_url)
+            text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
+            oembed_url ||= text_json.value if text_json
           end
-
-          return {} if Onebox::Helpers.blank?(oembed_url)
-
-          json_response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
-          oe = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_response))
-
-          # never use oembed from WordPress 4.4 (it's broken)
-          oe.delete(:html) if oe[:html] && oe[:html]["wp-embedded-content"]
-
-          oe
-        rescue Errno::ECONNREFUSED, Net::HTTPError, Net::HTTPFatalError, MultiJson::LoadError
-          {}
         end
 
-        def get_opengraph
-          ::Onebox::Helpers.extract_opengraph(html_doc)
-        end
+        return {} if Onebox::Helpers.blank?(oembed_url)
 
-        def get_twitter
-          return {} unless html_doc
+        json_response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
+        oe = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_response))
 
-          twitter = {}
+        # never use oembed from WordPress 4.4 (it's broken)
+        oe.delete(:html) if oe[:html] && oe[:html]["wp-embedded-content"]
 
-          html_doc.css('meta').each do |m|
-            if (m["property"] && m["property"][/^twitter:(.+)$/i]) || (m["name"] && m["name"][/^twitter:(.+)$/i])
-              value = (m["content"] || m["value"]).to_s
-              twitter[$1.tr('-:' , '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
-            end
+        oe
+      rescue Errno::ECONNREFUSED, Net::HTTPError, Net::HTTPFatalError, MultiJson::LoadError
+        {}
+      end
+
+      def get_opengraph
+        ::Onebox::Helpers.extract_opengraph(html_doc)
+      end
+
+      def get_twitter
+        return {} unless html_doc
+
+        twitter = {}
+
+        html_doc.css('meta').each do |m|
+          if (m["property"] && m["property"][/^twitter:(.+)$/i]) || (m["name"] && m["name"][/^twitter:(.+)$/i])
+            value = (m["content"] || m["value"]).to_s
+            twitter[$1.tr('-:' , '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
           end
-
-          twitter
         end
 
-        def get_favicon
-          return nil unless html_doc
+        twitter
+      end
 
-          favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
-          favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
+      def get_favicon
+        return nil unless html_doc
 
-          Onebox::Helpers::get_absolute_image_url(favicon, url)
-        end
+        favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
+        favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
+
+        Onebox::Helpers::get_absolute_image_url(favicon, url)
+      end
     end
   end
 end

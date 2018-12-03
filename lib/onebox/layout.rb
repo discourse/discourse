@@ -33,37 +33,37 @@ module Onebox
 
     private
 
-      def uri
-        @uri = URI(link)
-      end
+    def uri
+      @uri = URI(link)
+    end
 
-      def checksum
-        @md5.hexdigest("#{VERSION}:#{link}")
-      end
+    def checksum
+      @md5.hexdigest("#{VERSION}:#{link}")
+    end
 
-      def link
-        ::Onebox::Helpers.normalize_url_for_output(record[:link])
-      end
+    def link
+      ::Onebox::Helpers.normalize_url_for_output(record[:link])
+    end
 
-      def domain
-        record[:domain] || URI(link || '').host.to_s.sub(/^www\./, '')
-      end
+    def domain
+      record[:domain] || URI(link || '').host.to_s.sub(/^www\./, '')
+    end
 
-      def details
-        {
-          link: record[:link],
-          title: record[:title],
-          favicon: record[:favicon],
-          domain: domain,
-          article_published_time: record[:article_published_time],
-          article_published_time_title: record[:article_published_time_title],
-          metadata_1_label: record[:metadata_1_label],
-          metadata_1_value: record[:metadata_1_value],
-          metadata_2_label: record[:metadata_2_label],
-          metadata_2_value: record[:metadata_2_value],
-          subname: view.template_name,
-          view: view.to_html
-        }
-      end
+    def details
+      {
+        link: record[:link],
+        title: record[:title],
+        favicon: record[:favicon],
+        domain: domain,
+        article_published_time: record[:article_published_time],
+        article_published_time_title: record[:article_published_time_title],
+        metadata_1_label: record[:metadata_1_label],
+        metadata_1_value: record[:metadata_1_value],
+        metadata_2_label: record[:metadata_2_label],
+        metadata_2_value: record[:metadata_2_value],
+        subname: view.template_name,
+        view: view.to_html
+      }
+    end
   end
 end

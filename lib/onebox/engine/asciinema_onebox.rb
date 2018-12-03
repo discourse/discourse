@@ -18,9 +18,9 @@ module Onebox
 
       private
 
-        def match
-          @match ||= @url.match(/asciinema\.org\/a\/(?<asciinema_id>[\p{Alnum}_\-]+)$/)
-        end
+      def match
+        @match ||= @url.match(/asciinema\.org\/a\/(?<asciinema_id>[\p{Alnum}_\-]+)$/)
+      end
     end
   end
 end
