@@ -163,8 +163,11 @@ module Email
 
         # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
         # however Rails has special handling for this header and ends up using this value
-        # as the Envelope From address so stuff works as expected
-        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+        # as the Envelope From address. Ideally it is supposed to be set by the mail server and the message can get flagged
+        # by antispam filters if the From address domain doesn't match the senders address domain due to DKIM and SPF failures
+        if SiteSetting.reply_by_email_address.split("@").last == @message.from.split("@").last
+          @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+        end
       end
 
       email_log.post_id = post_id if post_id.present?
