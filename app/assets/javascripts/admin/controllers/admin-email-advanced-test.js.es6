@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   text: null,
   elided: null,
   format: null,
+  loading: null,
 
   actions: {
     run() {
