@@ -50,7 +50,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
 
   begin
     success = true
-    test_path = "#{Rails.root}/vendor/assets/javascripts"
+    test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path] || "/qunit"
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed) }
