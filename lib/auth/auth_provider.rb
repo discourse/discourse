@@ -18,7 +18,9 @@ class Auth::AuthProvider
     @enabled_setting = val
   end
 
-  def background_color=(val) Discourse.deprecate("background_color is no longer functional. Please use CSS instead") end;
+  def background_color=(val)
+    Discourse.deprecate("background_color is no longer functional. Please use CSS instead")
+  end
 
   def name
     authenticator.name
