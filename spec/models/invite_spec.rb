@@ -111,9 +111,9 @@ describe Invite do
 
           it 'returns a new invite if the other has expired' do
             SiteSetting.invite_expiry_days = 1
-            @invite.created_at = 2.days.ago
-            @invite.save
+            @invite.update!(created_at: 2.days.ago)
             new_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+
             expect(new_invite).not_to eq(@invite)
             expect(new_invite).not_to be_expired
           end
@@ -134,64 +134,80 @@ describe Invite do
     end
   end
 
-  context 'to a group-private topic' do
-    let(:group) { Fabricate(:group) }
-    let(:private_category)  { Fabricate(:private_category, group: group) }
-    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
-    let(:inviter) { group_private_topic.user }
+  describe '.invite_by_email' do
+    context 'to a group-private topic' do
+      let(:group) { Fabricate(:group) }
+      let(:private_category)  { Fabricate(:private_category, group: group) }
+      let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+      let(:inviter) { group_private_topic.user }
 
-    before do
-      group.add_owner(inviter)
-      @invite = group_private_topic.invite_by_email(inviter, iceking)
-    end
+      let(:invite) do
+        Invite.invite_by_email(iceking, inviter, group_private_topic)
+      end
 
-    it 'should add the groups to the invite' do
-      expect(@invite.groups).to eq([group])
-    end
+      before do
+        group.add_owner(inviter)
+      end
 
-    context 'when duplicated' do
-      it 'should not duplicate the groups' do
-        expect(group_private_topic.invite_by_email(inviter, iceking)).to eq(@invite)
-        expect(@invite.groups).to eq([group])
+      it 'should add the groups to the invite' do
+        expect(invite.groups).to eq([group])
+      end
+
+      context 'when duplicated' do
+        it 'should not duplicate the groups' do
+          expect(Invite.invite_by_email(iceking, inviter, group_private_topic))
+            .to eq(invite)
+
+          expect(invite.groups).to eq([group])
+        end
+      end
+
+      it 'verifies that inviter is authorized to invite user to a topic' do
+        tl2_user = Fabricate(:user, trust_level: 2)
+
+        invite = Invite.invite_by_email(
+          'foo@bar.com', tl2_user, group_private_topic
+        )
+
+        expect(invite.groups.count).to eq(0)
+      end
+
+      context 'automatic groups' do
+        it 'should not add invited user to automatic groups' do
+          group.update!(automatic: true)
+
+          invite = Invite.invite_by_email(
+            iceking, Fabricate(:admin), group_private_topic
+          )
+
+          expect(invite.groups.count).to eq(0)
+        end
       end
     end
 
-    it 'verifies that inviter is authorized to invite user to a topic' do
-      tl2_user = Fabricate(:user, trust_level: 2)
+    context 'an existing user' do
+      let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
+      let(:coding_horror) { Fabricate(:coding_horror) }
 
-      invite = group_private_topic.invite_by_email(tl2_user, 'foo@bar.com')
-      expect(invite.groups.count).to eq(0)
-    end
+      it "works" do
+        # doesn't create an invite
+        expect do
+          Invite.invite_by_email(coding_horror.email, topic.user, topic)
+        end.to raise_error(Invite::UserExists)
 
-    context 'automatic groups' do
-      it 'should not add invited user to automatic groups' do
-        group.update!(automatic: true)
-        expect(group_private_topic.invite_by_email(Fabricate(:admin), iceking).groups.count).to eq(0)
+        # gives the user permission to access the topic
+        expect(topic.allowed_users.include?(coding_horror)).to eq(true)
       end
     end
-  end
 
-  context 'an existing user' do
-    let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
-    let(:coding_horror) { Fabricate(:coding_horror) }
+    context 'a staged user' do
+      it 'creates an invite for a staged user' do
+        Fabricate(:staged, email: 'staged@account.com')
+        invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
 
-    it "works" do
-      # doesn't create an invite
-      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(Invite::UserExists)
-
-      # gives the user permission to access the topic
-      expect(topic.allowed_users.include?(coding_horror)).to eq(true)
-    end
-
-  end
-
-  context 'a staged user' do
-    it 'creates an invite for a staged user' do
-      Fabricate(:staged, email: 'staged@account.com')
-      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
-
-      expect(invite).to be_valid
-      expect(invite.email).to eq('staged@account.com')
+        expect(invite).to be_valid
+        expect(invite.email).to eq('staged@account.com')
+      end
     end
   end
 

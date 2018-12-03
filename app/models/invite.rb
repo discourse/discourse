@@ -60,7 +60,7 @@ class Invite < ActiveRecord::Base
   def self.extend_permissions(topic, user, invited_by)
     if topic.private_message?
       topic.grant_permission_to_user(user.email)
-    elsif topic.category && topic.category.groups.any?
+    elsif topic.category&.groups&.any?
       if Guardian.new(invited_by).can_invite_via_email?(topic)
         (topic.category.groups - user.groups).each do |group|
           group.add(user)
@@ -104,43 +104,59 @@ class Invite < ActiveRecord::Base
 
     if user = find_user_by_email(lower_email)
       extend_permissions(topic, user, invited_by) if topic
-      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username, base_path: Discourse.base_path)
+
+      raise UserExists.new I18n.t("invite.user_exists",
+        email: lower_email,
+        username: user.username,
+        base_path: Discourse.base_path
+      )
     end
 
-    invite = Invite.with_deleted
-      .where(email: lower_email, invited_by_id: invited_by.id)
-      .order('created_at DESC')
-      .first
+    invite = nil
 
-    if invite && (invite.expired? || invite.deleted_at)
-      invite.destroy
-      invite = nil
-    end
+    Invite.transaction do
+      invite = Invite.with_deleted
+        .where(email: lower_email, invited_by_id: invited_by.id)
+        .order('created_at DESC')
+        .first
 
-    invite.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now) if invite
-
-    if !invite
-      create_args = { invited_by: invited_by, email: lower_email }
-      create_args[:moderator] = true if opts[:moderator]
-      create_args[:custom_message] = custom_message if custom_message
-      invite = Invite.create!(create_args)
-    end
-
-    if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
-      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
-      # to correct association
-      topic.reload
-    end
-
-    if group_ids.present?
-      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
-      group_ids.each do |group_id|
-        invite.invited_groups.create!(group_id: group_id)
+      if invite
+        if (invite.expired? || invite.deleted_at)
+          invite.destroy!
+          invite = nil
+        else
+          invite.update_columns(
+            created_at: Time.zone.now,
+            updated_at: Time.zone.now
+          )
+        end
       end
-    else
-      if topic && topic.category && Guardian.new(invited_by).can_invite_to?(topic)
-        group_ids = topic.category.groups.where(automatic: false).pluck(:id) - invite.invited_groups.pluck(:group_id)
-        group_ids.each { |group_id| invite.invited_groups.create!(group_id: group_id) }
+
+      if !invite
+        create_args = { invited_by: invited_by, email: lower_email }
+        create_args[:moderator] = true if opts[:moderator]
+        create_args[:custom_message] = custom_message if custom_message
+        invite = Invite.create!(create_args)
+      end
+
+      if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
+        invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
+        # to correct association
+        topic.reload
+      end
+
+      if group_ids.present?
+        invited_groups = invite.invited_groups
+        group_ids = group_ids - invited_groups.pluck(:group_id)
+
+        group_ids.each do |group_id|
+          invited_groups.create!(group_id: group_id)
+        end
+      elsif topic&.category && Guardian.new(invited_by).can_invite_to?(topic)
+        (
+          topic.category.groups.where(automatic: false).pluck(:id) -
+          invite.invited_groups.pluck(:group_id)
+        ).each { |group_id| invite.invited_groups.create!(group_id: group_id) }
       end
     end
 
