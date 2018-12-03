@@ -57,19 +57,6 @@ class Invite < ActiveRecord::Base
     InviteRedeemer.new(self, username, name, password, user_custom_fields).redeem unless expired? || destroyed? || !link_valid?
   end
 
-  def self.extend_permissions(topic, user, invited_by)
-    if topic.private_message?
-      topic.grant_permission_to_user(user.email)
-    elsif topic.category && topic.category.groups.any?
-      if Guardian.new(invited_by).can_invite_via_email?(topic)
-        (topic.category.groups - user.groups).each do |group|
-          group.add(user)
-          GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
-        end
-      end
-    end
-  end
-
   def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
     create_invite_by_email(email, invited_by,
       topic: topic,
@@ -103,8 +90,11 @@ class Invite < ActiveRecord::Base
     lower_email = Email.downcase(email)
 
     if user = find_user_by_email(lower_email)
-      extend_permissions(topic, user, invited_by) if topic
-      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username, base_path: Discourse.base_path)
+      raise UserExists.new(I18n.t("invite.user_exists",
+        email: lower_email,
+        username: user.username,
+        base_path: Discourse.base_path
+      ))
     end
 
     invite = Invite.with_deleted
@@ -134,13 +124,9 @@ class Invite < ActiveRecord::Base
 
     if group_ids.present?
       group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+
       group_ids.each do |group_id|
         invite.invited_groups.create!(group_id: group_id)
-      end
-    else
-      if topic && topic.category && Guardian.new(invited_by).can_invite_to?(topic)
-        group_ids = topic.category.groups.where(automatic: false).pluck(:id) - invite.invited_groups.pluck(:group_id)
-        group_ids.each { |group_id| invite.invited_groups.create!(group_id: group_id) }
       end
     end
 

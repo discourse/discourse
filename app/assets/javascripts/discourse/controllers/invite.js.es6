@@ -289,7 +289,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       model.setProperties({ saving: true, error: false });
 
-      const onerror = function(e) {
+      const onerror = e => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {

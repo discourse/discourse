@@ -215,9 +215,13 @@ describe InvitesController do
 
     context 'with a deleted invite' do
       let(:topic) { Fabricate(:topic) }
-      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+
+      let(:invite) do
+        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
+      end
+
       before do
-        invite.destroy
+        invite.destroy!
       end
 
       it "redirects to the root" do
@@ -233,7 +237,9 @@ describe InvitesController do
 
     context 'with a valid invite id' do
       let(:topic) { Fabricate(:topic) }
-      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+      let(:invite) do
+        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
+      end
 
       it 'redeems the invite' do
         put "/invites/show/#{invite.invite_key}.json"
@@ -323,7 +329,11 @@ describe InvitesController do
 
     context 'new registrations are disabled' do
       let(:topic) { Fabricate(:topic) }
-      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+
+      let(:invite) do
+        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
+      end
+
       before { SiteSetting.allow_new_registrations = false }
 
       it "doesn't redeem the invite" do
@@ -338,7 +348,11 @@ describe InvitesController do
 
     context 'user is already logged in' do
       let(:topic) { Fabricate(:topic) }
-      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+
+      let(:invite) do
+        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
+      end
+
       let!(:user) { sign_in(Fabricate(:user)) }
 
       it "doesn't redeem the invite" do

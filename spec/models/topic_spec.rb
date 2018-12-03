@@ -608,35 +608,85 @@ describe Topic do
     end
 
     describe 'public topic' do
-      def expect_the_right_notification_to_be_created
+      def expect_the_right_notification_to_be_created(inviter, invitee)
         notification = Notification.last
 
         expect(notification.notification_type)
           .to eq(Notification.types[:invited_to_topic])
 
-        expect(notification.user).to eq(another_user)
+        expect(notification.user).to eq(invitee)
         expect(notification.topic).to eq(topic)
 
         notification_data = JSON.parse(notification.data)
 
         expect(notification_data["topic_title"]).to eq(topic.title)
-        expect(notification_data["display_username"]).to eq(user.username)
+        expect(notification_data["display_username"]).to eq(inviter.username)
       end
 
       describe 'by username' do
         it 'should invite user into a topic' do
           topic.invite(user, another_user.username)
-
-          expect(topic.reload.allowed_users.last).to eq(another_user)
-          expect_the_right_notification_to_be_created
+          expect_the_right_notification_to_be_created(user, another_user)
         end
       end
 
       describe 'by email' do
         it 'should be able to invite a user' do
           expect(topic.invite(user, another_user.email)).to eq(true)
-          expect(topic.reload.allowed_users.last).to eq(another_user)
-          expect_the_right_notification_to_be_created
+          expect_the_right_notification_to_be_created(user, another_user)
+        end
+
+        describe 'when topic belongs to a private category' do
+          let(:group) { Fabricate(:group) }
+
+          let(:category) do
+            Fabricate(:category, groups: [group]).tap do |category|
+              category.set_permissions(group => :full)
+              category.save!
+            end
+          end
+
+          let(:topic) { Fabricate(:topic, category: category) }
+          let(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+          let(:invitee) { Fabricate(:user) }
+
+          describe 'as a group owner' do
+            it 'should be able to invite a user' do
+              expect do
+                expect(topic.invite(inviter, invitee.email, [group.id]))
+                  .to eq(true)
+              end.to change { Notification.count } &
+                     change { GroupHistory.count }
+
+              expect_the_right_notification_to_be_created(inviter, invitee)
+
+              group_history = GroupHistory.last
+
+              expect(group_history.acting_user).to eq(inviter)
+              expect(group_history.target_user).to eq(invitee)
+
+              expect(group_history.action).to eq(
+                GroupHistory.actions[:add_user_to_group]
+              )
+            end
+
+            describe 'when group ids are not given' do
+              it 'should not invite the user' do
+                expect do
+                  expect(topic.invite(inviter, invitee.email)).to eq(false)
+                end.to_not change { Notification.count }
+              end
+            end
+          end
+
+          describe 'as a normal user' do
+            it 'should not be able to invite a user' do
+              expect do
+                expect(topic.invite(Fabricate(:user), invitee.email, [group.id]))
+                  .to eq(false)
+              end.to_not change { Notification.count }
+            end
+          end
         end
 
         context "for a muted topic" do
@@ -2007,34 +2057,6 @@ describe Topic do
     SiteSetting.min_topic_title_length = 15
     topic.last_posted_at = 1.minute.ago
     expect(topic.save).to eq(true)
-  end
-
-  context 'invite by group manager' do
-    let(:group_manager) { Fabricate(:user) }
-    let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
-    let(:private_category)  { Fabricate(:private_category, group: group) }
-    let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
-
-    context 'to an email' do
-      let(:randolph) { 'randolph@duke.ooo' }
-
-      it "should attach group to the invite" do
-        group_private_topic.invite(group_manager, randolph)
-        expect(Invite.last.groups).to eq([group])
-      end
-    end
-
-    # should work for an existing user - give access, send notification
-    context 'to an existing user' do
-      let(:walter) { Fabricate(:walter_white) }
-
-      it "should add user to the group" do
-        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_falsey
-        group_private_topic.invite(group_manager, walter.email)
-        expect(walter.groups).to include(group)
-        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
-      end
-    end
   end
 
   it "Correctly sets #message_archived?" do
