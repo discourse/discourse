@@ -149,7 +149,7 @@ class Validators::PostValidator < ActiveModel::Validator
     if topic&.posts&.first
       return if topic.posts.first.user == post.user
     end
-      
+
     last_posts_count = DB.query_single(<<~SQL, topic_id: post.topic_id, user_id: post.acting_user.id, max_replies: SiteSetting.max_consecutive_replies).first
       SELECT COUNT(*)
       FROM (
