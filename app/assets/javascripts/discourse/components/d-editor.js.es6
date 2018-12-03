@@ -676,8 +676,13 @@ export default Ember.Component.extend({
     // Replace value (side effect: cursor at the end).
     this.set("value", val.replace(oldVal, newVal));
 
-    // Restore cursor.
-    this._selectText(newSelection.start, newSelection.end - newSelection.start);
+    if ($("textarea.d-editor-input").is(":focus")) {
+      // Restore cursor.
+      this._selectText(
+        newSelection.start,
+        newSelection.end - newSelection.start
+      );
+    }
   },
 
   _addBlock(sel, text) {
