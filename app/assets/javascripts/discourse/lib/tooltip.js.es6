@@ -3,8 +3,9 @@ import { escapeExpression } from "discourse/lib/utilities";
 const fadeSpeed = 300;
 const tooltipID = "#discourse-tooltip";
 
-export function showTooltip($this) {
-  const $parent = $this.offsetParent();
+export function showTooltip(e) {
+  const $this = $(e.currentTarget),
+    $parent = $this.offsetParent();
   // html tooltip are risky try your best to sanitize anything
   // displayed as html to avoid XSS attacks
   const content = $this.attr("data-tooltip")
@@ -77,9 +78,7 @@ export function hideTooltip() {
 
 export function registerTooltip(jqueryContext) {
   if (jqueryContext.length) {
-    jqueryContext
-      .off("click")
-      .on("click", event => showTooltip($(event.currentTarget)));
+    jqueryContext.off("click").on("click", event => showTooltip(event));
   }
 }
 

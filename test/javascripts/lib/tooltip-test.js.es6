@@ -1,4 +1,4 @@
-import { registerTooltip } from "discourse/lib/tooltip";
+import { registerTooltip, registerHoverTooltip } from "discourse/lib/tooltip";
 
 // prettier-ignore
 QUnit.module("lib:tooltip", {
@@ -37,7 +37,7 @@ QUnit.test("text support", async assert => {
 
 QUnit.test("html support", async assert => {
   const $testHtmlLink = fixture(".test-html-link");
-  registerTooltip($testHtmlLink);
+  registerHoverTooltip($testHtmlLink);
 
   await $testHtmlLink.click();
 
