@@ -25,7 +25,6 @@ RSpec.describe ApplicationController do
       @old_logger = Rails.logger
       @logs = StringIO.new
       Rails.logger = Logger.new(@logs)
-      Rails.logger.level = Logger::WARN
     end
 
     after do
@@ -39,12 +38,26 @@ RSpec.describe ApplicationController do
       get "/latest.json", params: { test: bad_str }
 
       expect(response.status).to eq(400)
-      expect(@logs.string).not_to include('exception app middleware')
+
+      log = @logs.string
+
+      if (log.include? 'exception app middleware')
+        # heisentest diagnostics
+        puts
+        puts "EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL"
+        puts log
+        puts ">> action_dispatch.exception"
+        ex = request.env['action_dispatch.exception']
+        puts ">> exception class: #{ex.class} : #{ex}"
+      end
+
+      expect(log).not_to include('exception app middleware')
 
       expect(JSON.parse(response.body)).to eq(
         "status" => 400,
         "error" => "Bad Request"
       )
+
     end
   end
 
