@@ -3415,7 +3415,7 @@ en:
         preview_digest: "Preview Summary"
         advanced_test:
           title: "Advanced Test"
-          desc: "See how Discourse processes recieved emails. To be able to correctly process the email, please paste below the whole original email message."
+          desc: "See how Discourse processes received emails. To be able to correctly process the email, please paste below the whole original email message."
           email: "Original message"
           run: "Run Test"
           text: "Selected Text Body"
