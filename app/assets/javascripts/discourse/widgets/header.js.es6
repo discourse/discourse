@@ -360,6 +360,7 @@ export default createWidget("header", {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
     this.state.searchVisible = false;
+    this.toggleBodyScrolling(false);
   },
 
   linkClickedEvent(attrs) {
@@ -509,7 +510,6 @@ export default createWidget("header", {
     if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
       this.closeAll();
     }
-    this.toggleBodyScrolling(false);
   },
 
   headerKeyboardTrigger(msg) {
