@@ -3,7 +3,9 @@ require 'rails_helper'
 describe Auth::ManagedAuthenticator do
   let(:authenticator) {
     Class.new(described_class) do
-      def name; "myauth" end
+      def name
+        "myauth"
+      end
     end.new
   }
 
@@ -55,8 +57,12 @@ describe Auth::ManagedAuthenticator do
 
       it 'does not work when disabled' do
         authenticator = Class.new(described_class) do
-          def name; "myauth" end
-          def can_connect_existing_user?; false end
+          def name
+            "myauth"
+          end
+          def can_connect_existing_user?
+            false
+          end
         end.new
         result = authenticator.after_authenticate(hash, existing_account: user2)
         expect(result.user.id).to eq(user1.id)
@@ -81,8 +87,12 @@ describe Auth::ManagedAuthenticator do
 
       it 'does not match if match_by_email is false' do
         authenticator = Class.new(described_class) do
-          def name; "myauth" end
-          def match_by_email; false end
+          def name
+            "myauth"
+          end
+          def match_by_email
+            false
+          end
         end.new
         user = Fabricate(:user, email: "awesome@example.com")
         result = authenticator.after_authenticate(hash)

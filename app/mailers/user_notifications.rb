@@ -575,7 +575,7 @@ class UserNotifications < ActionMailer::Base
       if SiteSetting.private_email?
         message = I18n.t('system_messages.contents_hidden')
       else
-        message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "");
+        message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "")
       end
 
       first_footer_classes = "hilight"

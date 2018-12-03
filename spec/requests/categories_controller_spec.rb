@@ -184,7 +184,7 @@ describe CategoriesController do
       c3 = Fabricate(:category)
       c4 = Fabricate(:category)
       if c3.id < c2.id
-        tmp = c3; c2 = c3; c3 = tmp;
+        tmp = c3; c2 = c3; c3 = tmp
       end
       c1.position = 8
       c2.position = 6
