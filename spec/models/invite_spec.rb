@@ -186,17 +186,45 @@ describe Invite do
     end
 
     context 'an existing user' do
-      let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
+      let(:automatic_group) { Fabricate(:group, automatic: true) }
+      let(:group) { Fabricate(:group) }
+
+      let(:category) do
+        Fabricate(:category, groups: [group, automatic_group])
+      end
+
       let(:coding_horror) { Fabricate(:coding_horror) }
 
-      it "works" do
-        # doesn't create an invite
-        expect do
-          Invite.invite_by_email(coding_horror.email, topic.user, topic)
-        end.to raise_error(Invite::UserExists)
+      describe 'for a category topic' do
+        let(:topic) do
+          Fabricate(:topic, category: category)
+        end
 
-        # gives the user permission to access the topic
-        expect(topic.allowed_users.include?(coding_horror)).to eq(true)
+        it 'should raise the right error' do
+          topic.user.update!(trust_level: 2)
+
+          expect do
+            Invite.invite_by_email(coding_horror.email, topic.user, topic)
+          end.to raise_error(Invite::UserExists)
+
+          expect(coding_horror.groups).to eq([group])
+        end
+      end
+
+      describe 'for a private message' do
+        let(:topic) do
+          Fabricate(:topic, category_id: nil, archetype: 'private_message')
+        end
+
+        it "works" do
+          # doesn't create an invite
+          expect do
+            Invite.invite_by_email(coding_horror.email, topic.user, topic)
+          end.to raise_error(Invite::UserExists)
+
+          # gives the user permission to access the topic
+          expect(topic.allowed_users.include?(coding_horror)).to eq(true)
+        end
       end
     end
 

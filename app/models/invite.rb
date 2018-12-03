@@ -62,7 +62,10 @@ class Invite < ActiveRecord::Base
       topic.grant_permission_to_user(user.email)
     elsif topic.category&.groups&.any?
       if Guardian.new(invited_by).can_invite_via_email?(topic)
-        (topic.category.groups - user.groups).each do |group|
+        (
+          topic.category.groups.where(automatic: false) -
+          user.groups.where(automatic: false)
+        ).each do |group|
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
