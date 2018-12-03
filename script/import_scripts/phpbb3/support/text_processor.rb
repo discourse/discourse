@@ -1,3 +1,6 @@
+require_relative 'markdown_node'
+require_relative 'xml_to_markdown'
+
 module ImportScripts::PhpBB3
   class TextProcessor
     # @param lookup [ImportScripts::LookupContainer]
@@ -16,19 +19,25 @@ module ImportScripts::PhpBB3
     end
 
     def process_raw_text(raw)
-      text = raw.dup
-      text = CGI.unescapeHTML(text)
+      if raw[0] == '<'
+        @xml = BBCode::XmlToMarkdown.new(raw)
+        text = @xml.convert
+        text
+      else
+        text = raw.dup
+        text = CGI.unescapeHTML(text)
 
-      clean_bbcodes(text)
-      if @settings.use_bbcode_to_md
-        text = bbcode_to_md(text)
+        clean_bbcodes(text)
+        if @settings.use_bbcode_to_md
+          text = bbcode_to_md(text)
+        end
       end
-      process_smilies(text)
-      process_links(text)
-      process_lists(text)
-      process_code(text)
-      fix_markdown(text)
-      text
+        process_smilies(text)
+        process_links(text)
+        process_lists(text)
+        process_code(text)
+        fix_markdown(text)
+        text
     end
 
     def process_post(raw, attachments)

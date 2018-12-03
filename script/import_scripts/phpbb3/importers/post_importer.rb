@@ -83,7 +83,7 @@ module ImportScripts::PhpBB3
     end
 
     def add_poll(row, mapped_post)
-      return if row[:poll_title].blank?
+      return if row[:poll_title].blank? || row[:poll_title] == "<t></t>"
 
       poll = Poll.new(row[:poll_title], row[:poll_max_options], row[:poll_end])
       mapped_poll = @poll_importer.map_poll(row[:topic_id], poll)

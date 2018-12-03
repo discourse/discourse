@@ -54,7 +54,12 @@ module ImportScripts::PhpBB3
     # @param options [Array]
     # @param poll [ImportScripts::PhpBB3::Poll]
     def get_poll_text(options, poll)
-      poll_text = "#{poll.title}\n"
+      # NOTE: JP this is not tested
+      if poll.title[0] == "<"
+        poll_text = process_raw_text(poll.title)
+      else
+        poll_text = "#{poll.title}\n"
+      end
 
       if poll.max_options > 1
         poll_text << "[poll type=multiple max=#{poll.max_options}]"

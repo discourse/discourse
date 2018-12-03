@@ -23,6 +23,9 @@ module ImportScripts::PhpBB3
       elsif version.start_with?('3.1')
         require_relative 'database_3_1'
         Database_3_1.new(@database_client, @database_settings)
+      elsif version.start_with?('3.2')
+        require_relative 'database_3_2'
+        Database_3_2.new(@database_client, @database_settings)
       else
         raise UnsupportedVersionError, "Unsupported version (#{version}) of phpBB detected.\n" \
           << 'Currently only 3.0.x and 3.1.x are supported by this importer.'
