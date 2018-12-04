@@ -72,7 +72,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
         credentials: auth_token[:credentials] || {},
         extra: auth_token[:extra] || {}
       )
-      retrieve_avatar(result.user, auth_token[:info][:image])
+      retrieve_avatar(result.user, auth_token.dig(:info, :image))
     end
 
     result.email_valid = true if result.email
@@ -94,7 +94,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   def after_create_account(user, auth)
     data = auth[:extra_data]
     create_association!(data.merge(user: user))
-    retrieve_avatar(user, data&.[]("info")&.[]("image"))
+    retrieve_avatar(user, data.dig(:info, :image))
   end
 
   def retrieve_avatar(user, url)
