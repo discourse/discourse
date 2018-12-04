@@ -154,7 +154,7 @@ export default Ember.Controller.extend({
 
   @computed("maximized")
   maximizeIcon(maximized) {
-    return maximized ? "compress" : "expand";
+    return maximized ? "discourse-compress" : "discourse-expand";
   },
 
   @computed("model.isSaving")
