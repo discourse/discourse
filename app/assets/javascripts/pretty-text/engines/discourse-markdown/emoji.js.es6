@@ -195,7 +195,7 @@ function applyEmoji(
 
   for (i = 0; i < content.length - 1; i++) {
     let offset = 0;
-    let emojiName = getEmojiName(content, i, state, inlineEmoji);
+    const emojiName = getEmojiName(content, i, state, inlineEmoji);
     let token = null;
 
     if (emojiName) {
