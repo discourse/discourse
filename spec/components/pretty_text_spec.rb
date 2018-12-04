@@ -1118,13 +1118,13 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports nesting tags in url" do
     cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>'
     expect(cooked).to eq(html)
   end
 
