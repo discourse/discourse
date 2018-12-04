@@ -232,7 +232,7 @@ class Upload < ActiveRecord::Base
           FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
-            upload.url = Discourse.store.store_upload(f, upload)
+            upload.url, upload.etag = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
             upload.save!
           end
@@ -276,6 +276,7 @@ end
 #  extension         :string(10)
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
+#  etag              :string
 #
 # Indexes
 #
@@ -284,4 +285,5 @@ end
 #  index_uploads_on_sha1        (sha1) UNIQUE
 #  index_uploads_on_url         (url)
 #  index_uploads_on_user_id     (user_id)
+#  index_uploads_on_etag        (etag)
 #

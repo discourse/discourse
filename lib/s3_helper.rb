@@ -23,10 +23,11 @@ class S3Helper
   end
 
   def upload(file, path, options = {})
+    options[:body] = file
     path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
-    obj.upload_file(file, options)
-    path
+    output = obj.put(options)
+    return path, output.etag
   end
 
   def remove(s3_filename, copy_to_tombstone = false)

@@ -42,9 +42,9 @@ module FileStore
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
       # if this fails, it will throw an exception
-      path = @s3_helper.upload(file, path, options)
+      path, etag = @s3_helper.upload(file, path, options)
       # return the upload url
-      "#{absolute_base_url}/#{path}"
+      return "#{absolute_base_url}/#{path}", etag
     end
 
     def remove_file(url, path)
