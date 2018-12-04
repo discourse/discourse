@@ -478,7 +478,7 @@ class User < ActiveRecord::Base
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
-        pm:  Notification.types[:private_message],
+        pm: Notification.types[:private_message],
         limit: User.max_unread_notifications
     )[0].to_i
     end

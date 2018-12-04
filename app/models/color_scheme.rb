@@ -4,6 +4,8 @@ require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
 
+  # rubocop:disable Layout/AlignHash
+
   CUSTOM_SCHEMES = {
     'Dark': {
       "primary" =>           'dddddd',
@@ -97,8 +99,11 @@ class ColorScheme < ActiveRecord::Base
     }
   }
 
+  # rubocop:enable Layout/AlignHash
+
   def self.base_color_scheme_colors
     base_with_hash = {}
+
     base_colors.each do |name, color|
       base_with_hash[name] = "#{color}"
     end
@@ -110,6 +115,7 @@ class ColorScheme < ActiveRecord::Base
     CUSTOM_SCHEMES.each do |k, v|
       list.push(id: k.to_s, colors: v)
     end
+
     list
   end
 
@@ -208,6 +214,7 @@ class ColorScheme < ActiveRecord::Base
   def colors_by_name
     @colors_by_name ||= self.colors.inject({}) { |sum, c| sum[c.name] = c; sum; }
   end
+
   def clear_colors_cache
     @colors_by_name = nil
   end

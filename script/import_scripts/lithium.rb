@@ -322,7 +322,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     create_categories(parent_categories) do |category|
       {
         id: category["node_id"],
-        name:  category["name"],
+        name: category["name"],
         position: category["position"],
         post_create_action: lambda do |record|
           after_category_create(record, category)
