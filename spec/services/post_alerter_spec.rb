@@ -803,7 +803,7 @@ describe PostAlerter do
     it "triggers :before_create_notifications_for_users" do
       user = Fabricate(:user)
       topic = Fabricate(:topic)
-      post = Fabricate(:post, user: user, topic: topic)
+      _post = Fabricate(:post, user: user, topic: topic)
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(reply)
@@ -814,7 +814,7 @@ describe PostAlerter do
     it "notifies about regular reply" do
       user = Fabricate(:user)
       topic = Fabricate(:topic)
-      post = Fabricate(:post, user: user, topic: topic)
+      _post = Fabricate(:post, user: user, topic: topic)
 
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
       PostAlerter.post_created(reply)
@@ -827,7 +827,7 @@ describe PostAlerter do
       admin = Fabricate(:admin)
 
       topic = Fabricate(:topic)
-      post = Fabricate(:post, user: user, topic: topic)
+      _post = Fabricate(:post, user: user, topic: topic)
 
       whispered_reply = Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 1)
       PostAlerter.post_created(whispered_reply)
@@ -841,7 +841,7 @@ describe PostAlerter do
       admin2 = Fabricate(:admin)
 
       topic = Fabricate(:topic)
-      post = Fabricate(:post, user: user, topic: topic)
+      _post = Fabricate(:post, user: user, topic: topic)
 
       whispered_reply1 = Fabricate(:post, user: admin1, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 1)
       whispered_reply2 = Fabricate(:post, user: admin2, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 2)
@@ -849,6 +849,21 @@ describe PostAlerter do
       PostAlerter.post_created(whispered_reply2)
 
       expect(admin1.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+
+      TopicUser.change(admin1.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
+
+      # this should change nothing cause the moderator post has an action code
+      # if we have an action code then we should never have notifications, this is rare but
+      # assign whispers are like this
+      whispered_reply3 = topic.add_moderator_post(admin2, "i am a reply", post_type: Post.types[:whisper], action_code: 'moderator_thing')
+      PostAlerter.post_created(whispered_reply3)
+
+      # if this whisper is not ignored like it should we would see a posted notification and no replied notifications
+      notifications = admin1.notifications.where(topic_id: topic.id).to_a
+
+      expect(notifications.first.notification_type).to eq(Notification.types[:replied])
+      expect(notifications.length).to eq(1)
+      expect(notifications.first.post_number).to eq(whispered_reply2.post_number)
     end
 
     it "sends email notifications only to users not on CC list of incoming email" do
