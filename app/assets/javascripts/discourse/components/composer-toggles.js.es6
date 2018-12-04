@@ -26,6 +26,8 @@ export default Ember.Component.extend({
 
   @computed("composeState")
   fullscreenIcon(composeState) {
-    return composeState === "fullscreen" ? "compress" : "expand";
+    return composeState === "fullscreen"
+      ? "discourse-compress"
+      : "discourse-expand";
   }
 });
