@@ -36,7 +36,9 @@ describe Plugin::Instance do
 
       class TroutPlugin < Plugin::Instance
         attr_accessor :enabled
-        def enabled?; @enabled; end
+        def enabled?
+          @enabled
+        end
       end
 
       before do

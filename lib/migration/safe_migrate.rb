@@ -50,7 +50,9 @@ class Migration::SafeMigrate
       super
     rescue => e
       if e.cause.is_a?(Discourse::InvalidMigration)
-        def e.cause; nil; end
+        def e.cause
+          nil
+        end
         def e.backtrace
           super.reject do |frame|
             frame =~ /safe_migrate\.rb/ || frame =~ /schema_migration_details\.rb/

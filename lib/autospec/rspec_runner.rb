@@ -3,8 +3,12 @@ module Autospec
   class RspecRunner < BaseRunner
 
     WATCHERS = {}
-    def self.watch(pattern, &blk); WATCHERS[pattern] = blk; end
-    def watchers; WATCHERS; end
+    def self.watch(pattern, &blk)
+      WATCHERS[pattern] = blk
+    end
+    def watchers
+      WATCHERS
+    end
 
     # Discourse specific
     watch(%r{^lib/(.+)\.rb$})                           { |m| "spec/components/#{m[1]}_spec.rb" }
@@ -30,8 +34,12 @@ module Autospec
     watch(%r{^(plugins/.*)/lib/(.*)\.rb}) { |m| "#{m[1]}/spec/lib/#{m[2]}_spec.rb" }
 
     RELOADERS = Set.new
-    def self.reload(pattern); RELOADERS << pattern; end
-    def reloaders; RELOADERS; end
+    def self.reload(pattern)
+      RELOADERS << pattern
+    end
+    def reloaders
+      RELOADERS
+    end
 
     # we are using a simple runner at the moment, whole idea of using a reloader is no longer needed
     watch("spec/rails_helper.rb")

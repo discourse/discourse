@@ -1019,7 +1019,7 @@ SQL
   end
 
   def html_for_attachments(user_id, files)
-    html = "";
+    html = ""
 
     files.each do |file|
       upload, filename = find_upload(user_id, file["attachment_id"], file["file_name"])

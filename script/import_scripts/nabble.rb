@@ -172,7 +172,7 @@ class ImportScripts::Nabble < ImportScripts::Base
     txt.gsub! /\<quote author="(.*?)"\>/, '[quote="\1"]'
     txt.gsub! /\<\/quote\>/, '[/quote]'
     txt.gsub!(/\<raw\>(.*?)\<\/raw\>/m) do |match|
-      c = Regexp.last_match[1].indent(4);
+      c = Regexp.last_match[1].indent(4)
        "\n#{c}\n"
     end
 

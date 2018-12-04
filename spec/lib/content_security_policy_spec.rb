@@ -86,7 +86,9 @@ describe ContentSecurityPolicy do
   it 'can be extended by plugins' do
     plugin = Class.new(Plugin::Instance) do
       attr_accessor :enabled
-      def enabled?; @enabled; end
+      def enabled?
+        @enabled
+      end
     end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
     plugin.activate!
