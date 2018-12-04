@@ -44,8 +44,12 @@ class SessionController < ApplicationController
         sso.username = current_user.username
         sso.email = current_user.email
         sso.external_id = current_user.id.to_s
-        sso.admin = current_user.admin?
-        sso.moderator = current_user.moderator?
+
+        # damingo (Github ID), 2018-12-04, #multisite, Do not automatically make users admins or moderators on multisite sites.
+        # sso.admin = current_user.admin?
+        # sso.moderator = current_user.moderator?
+        sso.admin = false
+        sso.moderator = false
 
         if sso.return_sso_url.blank?
           render plain: "return_sso_url is blank, it must be provided", status: 400
