@@ -270,6 +270,21 @@ describe PostCreator do
         }.to_not change { topic.excerpt }
       end
 
+      it 'supports custom excerpts' do
+        raw = <<~MD
+          <div class='excerpt'>
+          I am
+
+          a custom excerpt
+          </div>
+
+          testing
+        MD
+        post = create_post(raw: raw)
+
+        expect(post.excerpt).to eq("I am\na custom excerpt")
+      end
+
       it 'creates post stats' do
 
         Draft.set(user, 'new_topic', 0, "test")
