@@ -43,7 +43,10 @@ class PostAlerter
   end
 
   def notify_about_reply?(post)
-    post.post_type == Post.types[:regular] || post.post_type == Post.types[:whisper]
+    # small actions can be whispers in this case they will have an action code
+    # we never want to notify on this
+    post.post_type == Post.types[:regular] ||
+      (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
   def after_save_post(post, new_record = false)
@@ -289,9 +292,9 @@ class PostAlerter
 
     # apply muting here
     return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
-        .joins(:muted_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
+      .joins(:muted_user)
+      .where('NOT admin AND NOT moderator')
+      .exists?
 
     # skip if muted on the topic
     return if TopicUser.where(
@@ -396,25 +399,28 @@ class PostAlerter
     )
 
     if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
-      post_url = original_post.url
-      if post_url
-        payload = {
-         notification_type: type,
-         post_number: original_post.post_number,
-         topic_title: original_post.topic.title,
-         topic_id: original_post.topic.id,
-         excerpt: original_post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
-         username: original_username,
-         post_url: post_url
-        }
-
-        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
-        push_notification(user, payload)
-        DiscourseEvent.trigger(:post_notification_alert, user, payload)
-      end
+      create_notification_alert(user: user, post: post, notification_type: type, username: original_username)
     end
 
     created.id ? created : nil
+  end
+
+  def create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+    if post_url = post.url
+      payload = {
+       notification_type: notification_type,
+       post_number: post.post_number,
+       topic_title: post.topic.title,
+       topic_id: post.topic.id,
+       excerpt: excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+       username: username || post.username,
+       post_url: post_url
+      }
+
+      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      push_notification(user, payload)
+      DiscourseEvent.trigger(:post_notification_alert, user, payload)
+    end
   end
 
   def contains_email_address?(addresses, user)

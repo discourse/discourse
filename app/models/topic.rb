@@ -731,7 +731,6 @@ class Topic < ActiveRecord::Base
                               post_type: opts[:post_type] || Post.types[:moderator_action],
                               action_code: opts[:action_code],
                               no_bump: opts[:bump].blank?,
-                              skip_notifications: opts[:skip_notifications],
                               topic_id: self.id,
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
