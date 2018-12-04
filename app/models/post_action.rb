@@ -435,12 +435,12 @@ class PostAction < ActiveRecord::Base
   before_create do
     post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
-        .where(post_id: post_id)
-        .where(post_action_type_id: post_action_type_ids)
-        .where(deleted_at: nil)
-        .where(disagreed_at: nil)
-        .where(targets_topic: targets_topic)
-        .exists?
+      .where(post_id: post_id)
+      .where(post_action_type_id: post_action_type_ids)
+      .where(deleted_at: nil)
+      .where(disagreed_at: nil)
+      .where(targets_topic: targets_topic)
+      .exists?
   end
 
   # Returns the flag counts for a post, taking into account that some users
