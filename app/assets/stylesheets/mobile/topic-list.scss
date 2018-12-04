@@ -273,9 +273,10 @@ tr.category-topic-link {
   border-top: 1px solid;
 
   h3 {
+    max-width: 100%;
     display: inline-block;
     font-size: $font-up-2;
-    margin: 0 0 0 10px;
+    padding: 0 0 0 10px;
     .d-icon {
       margin-right: 5px;
     }

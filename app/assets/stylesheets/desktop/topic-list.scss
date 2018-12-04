@@ -235,8 +235,9 @@ button.dismiss-read {
   .category-logo.aspect-image {
     --max-height: 150px;
     max-height: var(--max-height);
-    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 60%;
     height: auto;
+    width: calc(var(--max-height) * var(--aspect-ratio));
 
     img {
       width: 100%;
