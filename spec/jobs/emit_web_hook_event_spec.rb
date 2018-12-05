@@ -130,10 +130,19 @@ describe Jobs::EmitWebHookEvent do
     let(:topic) { Fabricate(:topic, tags: [tag]) }
     let(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
 
+    it "doesn't emit when event is not included any tags" do
+      subject.execute(
+        web_hook_id: topic_hook.id,
+        event_type: 'topic',
+        payload: { test: "some payload" }.to_json
+      )
+    end
+
     it "doesn't emit when event is not related with defined tags" do
       subject.execute(
         web_hook_id: topic_hook.id,
         event_type: 'topic',
+        tag_ids: [Fabricate(:tag).id],
         payload: { test: "some payload" }.to_json
       )
     end
