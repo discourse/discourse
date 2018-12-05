@@ -1,30 +1,11 @@
 class UserBadgeSerializer < ApplicationSerializer
 
   class UserSerializer < BasicUserSerializer
+    include UserPrimaryGroupMixin
+
     attributes :name,
                :moderator,
-               :admin,
-               :primary_group_name,
-               :primary_group_flair_url,
-               :primary_group_flair_bg_color,
-               :primary_group_flair_color
-
-    def primary_group_name
-      return nil unless object&.primary_group_id
-      object&.primary_group&.name
-    end
-
-    def primary_group_flair_url
-      object&.primary_group&.flair_url
-    end
-
-    def primary_group_flair_bg_color
-      object&.primary_group&.flair_bg_color
-    end
-
-    def primary_group_flair_color
-      object&.primary_group&.flair_color
-    end
+               :admin
   end
 
   attributes :id, :granted_at, :count, :post_id, :post_number
