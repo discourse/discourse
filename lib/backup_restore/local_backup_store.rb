@@ -3,9 +3,11 @@ require_dependency "disk_space"
 
 module BackupRestore
   class LocalBackupStore < BackupStore
-    def self.base_directory(current_db = nil)
-      current_db ||= RailsMultisite::ConnectionManagement.current_db
-      base_directory = File.join(Rails.root, "public", "backups", current_db)
+    def self.base_directory(db: nil, root_directory: nil)
+      current_db = db || RailsMultisite::ConnectionManagement.current_db
+      root_directory ||= File.join(Rails.root, "public", "backups")
+
+      base_directory = File.join(root_directory, current_db)
       FileUtils.mkdir_p(base_directory) unless Dir.exists?(base_directory)
       base_directory
     end
@@ -15,7 +17,7 @@ module BackupRestore
     end
 
     def initialize(opts = {})
-      @base_directory = opts[:base_directory] || LocalBackupStore.base_directory
+      @base_directory = LocalBackupStore.base_directory(root_directory: opts[:root_directory])
     end
 
     def remote?
