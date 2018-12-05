@@ -1144,4 +1144,26 @@ describe CookedPostProcessor do
 
   end
 
+  context "remove direct reply full quote" do
+    let(:topic) { Fabricate(:topic) }
+
+    it 'works' do
+      raw = "[quote]\nthis is the first post\n[/quote]\nand this is the third reply"
+
+      post = Fabricate(:post, topic: topic, raw: "this is the first post")
+      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post")
+      reply = Fabricate(:post, topic: topic, raw: raw)
+
+      cpp = CookedPostProcessor.new(reply)
+      cpp.removed_direct_reply_full_quotes
+
+      expect(topic.posts).to eq([post, hidden, reply])
+      expect(reply.raw).to eq("and this is the third reply")
+      expect(reply.revisions.count).to eq(1)
+      expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
+      expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
+    end
+
+  end
+
 end

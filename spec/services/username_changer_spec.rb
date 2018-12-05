@@ -335,7 +335,7 @@ describe UsernameChanger do
               Lorem ipsum
 
               [quote="foo, post:1, topic:#{quoted_post.topic.id}"]
-              quoted post
+              quoted
               [/quote]
             RAW
           end
@@ -345,7 +345,7 @@ describe UsernameChanger do
               Lorem ipsum
 
               [quote="bar, post:1, topic:#{quoted_post.topic.id}"]
-              quoted post
+              quoted
               [/quote]
             RAW
           end
@@ -358,7 +358,7 @@ describe UsernameChanger do
               <div class="quote-controls"></div>
               <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
               <blockquote>
-              <p>quoted post</p>
+              <p>quoted</p>
               </blockquote>
               </aside>
             HTML
