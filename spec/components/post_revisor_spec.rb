@@ -593,25 +593,35 @@ describe PostRevisor do
     end
 
     context "revise_likes" do
-      let(:post_with_likes) { Fabricate(:post_with_likes) }
-      let(:post_to_be_deleted) { Fabricate(:post_with_likes) }
       let(:post_without_likes) { Fabricate(:post) }
       let(:admin_user) { Fabricate(:admin) }
+      let(:post) { Fabricate(:post) }
+      let(:post2) { Fabricate(:post) }
 
       before do
         UserActionCreator.enable
       end
 
+      let(:post_with_likes) {
+        PostAction.act(post.user, post, PostActionType.types[:like])
+        post.reload # to get updated like_count
+      }
+
+      let(:post_to_be_deleted_with_likes) {
+        PostAction.act(post2.user, post2, PostActionType.types[:like])
+        post2.reload # to get updated like_count
+      }
+
       it "merges posts having likes" do
         revisor = PostRevisor.new(post_with_likes)
 
-        revisor.revise_likes([post_to_be_deleted.id], admin_user)
+        revisor.revise_likes([post_to_be_deleted_with_likes.id], admin_user)
 
         post_with_likes.reload
         expect(post_with_likes.like_count).to eq(2)
 
-        post_to_be_deleted.reload
-        expect(post_to_be_deleted.like_count).to eq(0)
+        post_to_be_deleted_with_likes.reload
+        expect(post_to_be_deleted_with_likes.like_count).to eq(0)
       end
 
       it "merges 1 post with like into 1 without" do
