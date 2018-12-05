@@ -86,13 +86,13 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       return (
         (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
           e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityX > SWIPE_VELOCITY_THRESHOLD
+        e.velocityX > 0
       );
     } else {
       return (
         (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
           e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityX < -SWIPE_VELOCITY_THRESHOLD
+        e.velocityX < 0
       );
     }
   },
@@ -269,7 +269,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   afterRender() {
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
-      this._animate = true;
+      if (this.site.mobileView) {
+        this._animate = true;
+      }
       return;
     }
 
@@ -351,11 +353,17 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
         const menuTop = this.site.mobileView ? 0 : headerHeight();
 
-        let height = window.innerHeight
+        let height;
+        const winHeightOffset = 16;
+        let initialWinHeight = window.innerHeight
           ? window.innerHeight
           : $(window).height();
-        const winHeight = height - 16;
-        height = winHeight - menuTop;
+        const winHeight = initialWinHeight - winHeightOffset;
+        if (menuTop + contentHeight < winHeight && !this.site.mobileView) {
+          height = contentHeight + "px";
+        } else {
+          height = winHeight - menuTop;
+        }
 
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");

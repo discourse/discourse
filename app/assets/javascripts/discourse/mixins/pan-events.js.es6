@@ -3,7 +3,7 @@
    It fires callbacks for panStart, panEnd, panMove with the pan state, and the original event.
  **/
 export const SWIPE_VELOCITY = 40;
-export const SWIPE_DISTANCE_THRESHOLD = 200;
+export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.1;
 export default Ember.Mixin.create({
   //velocity is pixels per ms
