@@ -223,34 +223,35 @@ SQL
           # If we can't find the route, no big deal
         end
       end
+    end
 
-      # Remove links that aren't there anymore
-      if added_urls.present?
+    # Remove links that aren't there anymore
+    if added_urls.present?
+      TopicLink.where(
+        "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
+        urls: added_urls, post_id: post.id
+      ).delete_all
+
+      reflected_ids.compact!
+      if reflected_ids.present?
         TopicLink.where(
-          "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
-          urls: added_urls, post_id: post.id
+          "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+          reflected_ids: reflected_ids, post_id: post.id
         ).delete_all
-
-        reflected_ids.compact!
-        if reflected_ids.present?
-          TopicLink.where(
-            "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-            reflected_ids: reflected_ids, post_id: post.id
-          ).delete_all
-        else
-          TopicLink
-            .where("link_post_id = :post_id AND reflection", post_id: post.id)
-            .delete_all
-        end
       else
         TopicLink
-          .where(
-            "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
-            post_id: post.id
-          )
+          .where("link_post_id = :post_id AND reflection", post_id: post.id)
           .delete_all
       end
+    else
+      TopicLink
+        .where(
+          "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+          post_id: post.id
+        )
+        .delete_all
     end
+
   end
 
   # Crawl a link's title after it's saved
