@@ -66,27 +66,27 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_topic_hooks(event, topic)
-    if active_web_hooks('topic').exists?
+    if active_web_hooks('topic').exists? && topic.present?
       topic_view = TopicView.new(topic.id, Discourse.system_user)
       payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
 
       WebHook.enqueue_hooks(:topic, event,
         id: topic.id,
-        category_id: topic&.category_id,
-        tag_ids: topic&.tags&.pluck(:id),
+        category_id: topic.category_id,
+        tag_ids: topic.tags.pluck(:id),
         payload: payload
       )
     end
   end
 
   def self.enqueue_post_hooks(event, post)
-    if active_web_hooks('post').exists?
+    if active_web_hooks('post').exists? && post.present?
       payload = WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(:post, event,
         id: post.id,
-        category_id: post&.topic&.category_id,
-        tag_ids: post&.topic&.tags&.pluck(:id),
+        category_id: post.topic&.category_id,
+        tag_ids: post.topic&.tags&.pluck(:id),
         payload: payload
       )
     end
