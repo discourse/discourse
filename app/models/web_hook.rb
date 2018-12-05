@@ -73,7 +73,7 @@ class WebHook < ActiveRecord::Base
       WebHook.enqueue_hooks(:topic, event,
         id: topic.id,
         category_id: topic&.category_id,
-        tag_ids: topic&.tags.pluck(:id),
+        tag_ids: topic&.tags&.pluck(:id),
         payload: payload
       )
     end
@@ -86,7 +86,7 @@ class WebHook < ActiveRecord::Base
       WebHook.enqueue_hooks(:post, event,
         id: post.id,
         category_id: post&.topic&.category_id,
-        tag_ids: post&.topic&.tags.pluck(:id),
+        tag_ids: post&.topic&.tags&.pluck(:id),
         payload: payload
       )
     end
