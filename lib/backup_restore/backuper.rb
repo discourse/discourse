@@ -83,7 +83,7 @@ module BackupRestore
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-      @archive_directory = BackupRestore::LocalBackupStore.base_directory(@current_db)
+      @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
       filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
       @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 

@@ -4,19 +4,19 @@ require_relative 'shared_examples_for_backup_store'
 
 describe BackupRestore::LocalBackupStore do
   before(:all) do
-    @base_directory = Dir.mktmpdir
+    @root_directory = Dir.mktmpdir
     @paths = []
   end
 
   after(:all) do
-    FileUtils.remove_dir(@base_directory, true)
+    FileUtils.remove_dir(@root_directory, true)
   end
 
   before do
     SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
   end
 
-  subject(:store) { BackupRestore::BackupStore.create(base_directory: @base_directory) }
+  subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }
   let(:expected_type) { BackupRestore::LocalBackupStore }
 
   it_behaves_like "backup store"
@@ -26,10 +26,13 @@ describe BackupRestore::LocalBackupStore do
   end
 
   def create_backups
-    create_file(filename: "b.tar.gz", last_modified: "2018-09-13T15:10:00Z", size_in_bytes: 17)
-    create_file(filename: "a.tgz", last_modified: "2018-02-11T09:27:00Z", size_in_bytes: 29)
-    create_file(filename: "r.sql.gz", last_modified: "2017-12-20T03:48:00Z", size_in_bytes: 11)
-    create_file(filename: "no-backup.txt", last_modified: "2018-09-05T14:27:00Z", size_in_bytes: 12)
+    create_file(db_name: "default", filename: "b.tar.gz", last_modified: "2018-09-13T15:10:00Z", size_in_bytes: 17)
+    create_file(db_name: "default", filename: "a.tgz", last_modified: "2018-02-11T09:27:00Z", size_in_bytes: 29)
+    create_file(db_name: "default", filename: "r.sql.gz", last_modified: "2017-12-20T03:48:00Z", size_in_bytes: 11)
+    create_file(db_name: "default", filename: "no-backup.txt", last_modified: "2018-09-05T14:27:00Z", size_in_bytes: 12)
+
+    create_file(db_name: "second", filename: "multi-2.tar.gz", last_modified: "2018-11-27T03:16:54Z", size_in_bytes: 19)
+    create_file(db_name: "second", filename: "multi-1.tar.gz", last_modified: "2018-11-26T03:17:09Z", size_in_bytes: 22)
   end
 
   def remove_backups
@@ -37,8 +40,11 @@ describe BackupRestore::LocalBackupStore do
     @paths.clear
   end
 
-  def create_file(filename:, last_modified:, size_in_bytes:)
-    path = File.join(@base_directory, filename)
+  def create_file(db_name:, filename:, last_modified:, size_in_bytes:)
+    path = File.join(@root_directory, db_name)
+    Dir.mkdir(path) unless Dir.exists?(path)
+
+    path = File.join(path, filename)
     return if File.exists?(path)
 
     @paths << path
@@ -49,8 +55,8 @@ describe BackupRestore::LocalBackupStore do
     File.utime(time, time, path)
   end
 
-  def source_regex(filename)
-    path = File.join(@base_directory, filename)
+  def source_regex(db_name, filename, multisite:)
+    path = File.join(@root_directory, db_name, filename)
     /^#{Regexp.escape(path)}$/
   end
 end
