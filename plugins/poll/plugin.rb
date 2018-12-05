@@ -102,7 +102,7 @@ after_initialize do
           serialized_poll = PollSerializer.new(poll, root: false).as_json
           payload = { post_id: post_id, polls: [serialized_poll] }
 
-          MessageBus.publish("/polls/#{post.topic_id}", payload)
+          post.publish_message!("/polls/#{post.topic_id}", payload)
 
           [serialized_poll, options]
         end
@@ -137,7 +137,7 @@ after_initialize do
           serialized_poll = PollSerializer.new(poll, root: false).as_json
           payload = { post_id: post_id, polls: [serialized_poll] }
 
-          MessageBus.publish("/polls/#{post.topic_id}", payload)
+          post.publish_message!("/polls/#{post.topic_id}", payload)
 
           serialized_poll
         end
@@ -425,7 +425,7 @@ after_initialize do
 
     unless post.is_first_post?
       polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false).as_json
-      MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+      post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
     end
   end
 
