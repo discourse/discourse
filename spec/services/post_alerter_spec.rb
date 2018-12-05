@@ -705,7 +705,7 @@ describe PostAlerter do
       Excon.expects(:post).with { |_req, _body|
         headers = _body[:headers]
         body = _body[:body]
-      }.returns("OK")
+      }.times(3).returns("OK")
 
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
@@ -736,10 +736,46 @@ describe PostAlerter do
         ]
       }
 
-      mention_post
+      post = mention_post
 
       expect(JSON.parse(body)).to eq(payload)
       expect(headers["Content-Type"]).to eq('application/json')
+
+      TopicUser.change(evil_trout.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
+
+      post = Fabricate(:post, topic: post.topic, user_id: evil_trout.id)
+      user2 = Fabricate(:user)
+
+      # if we collapse a reply notification we should get notified on the correct post
+      new_post = create_post_with_alerts(topic: post.topic, user_id: user.id, reply_to_post_number: post.post_number, raw: 'this is my first reply')
+
+      changes = {
+        "notification_type" => Notification.types[:posted],
+        "post_number" => new_post.post_number,
+        "username" => new_post.user.username,
+        "excerpt" => new_post.raw,
+        "url" => UrlHelper.absolute(new_post.url)
+      }
+
+      payload["notifications"][0].merge! changes
+      payload["notifications"][1].merge! changes
+
+      expect(JSON.parse(body)).to eq(payload)
+
+      new_post = create_post_with_alerts(topic: post.topic, user_id: user2.id, reply_to_post_number: post.post_number, raw: 'this is my second reply')
+
+      changes = {
+        "post_number" => new_post.post_number,
+        "username" => new_post.user.username,
+        "excerpt" => new_post.raw,
+        "url" => UrlHelper.absolute(new_post.url)
+      }
+
+      payload["notifications"][0].merge! changes
+      payload["notifications"][1].merge! changes
+
+      expect(JSON.parse(body)).to eq(payload)
+
     end
   end
 
@@ -880,7 +916,7 @@ describe PostAlerter do
         Fabricate.build(:topic_allowed_user, user: dave),
         Fabricate.build(:topic_allowed_user, user: erin)
       ])
-      post = Fabricate(:post, user: alice, topic: topic)
+      _post = Fabricate(:post, user: alice, topic: topic)
 
       TopicUser.change(alice.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
       TopicUser.change(bob.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
@@ -925,7 +961,7 @@ describe PostAlerter do
       category = Fabricate(:mailinglist_mirror_category)
       topic = Fabricate(:topic, category: category)
       user = Fabricate(:staged)
-      post = Fabricate(:post, user: user, topic: topic)
+      _post = Fabricate(:post, user: user, topic: topic)
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
 
       NotificationEmailer.expects(:process_notification).never
