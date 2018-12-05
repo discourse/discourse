@@ -2071,13 +2071,45 @@ RSpec.describe TopicsController do
         let(:recipient) { 'jake@adventuretime.ooo' }
 
         it "should attach group to the invite" do
-
           post "/t/#{group_private_topic.id}/invite.json", params: {
-            user: recipient
+            user: recipient,
+            group_ids: "#{group.id},123"
           }
 
           expect(response.status).to eq(200)
           expect(Invite.find_by(email: recipient).groups).to eq([group])
+        end
+
+        describe 'when group is available to automatic groups only' do
+          before do
+            group.update!(automatic: true)
+          end
+
+          it 'should return the right response' do
+            post "/t/#{group_private_topic.id}/invite.json", params: {
+              user: Fabricate(:user)
+            }
+
+            expect(response.status).to eq(403)
+          end
+        end
+
+        describe 'when user is not part of the required group' do
+          it 'should return the right response' do
+            post "/t/#{group_private_topic.id}/invite.json", params: {
+              user: Fabricate(:user)
+            }
+
+            expect(response.status).to eq(422)
+
+            response_body = JSON.parse(response.body)
+
+            expect(response_body["errors"]).to eq([
+              I18n.t("topic_invite.failed_to_invite",
+                group_names: group.name
+              )
+            ])
+          end
         end
       end
 

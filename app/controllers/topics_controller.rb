@@ -563,7 +563,7 @@ class TopicsController < ApplicationController
       ))
     end
 
-    guardian.ensure_can_invite_to!(topic, groups)
+    guardian.ensure_can_invite_to!(topic)
     group_ids = groups.map(&:id)
 
     begin
@@ -576,7 +576,25 @@ class TopicsController < ApplicationController
           render json: success_json
         end
       else
-        render json: failed_json, status: 422
+        json = failed_json
+
+        unless topic.private_message?
+          group_names = topic.category
+            .visible_group_names(current_user)
+            .where(automatic: false)
+            .pluck(:name)
+            .join(", ")
+
+          if group_names.present?
+            json.merge!(errors: [
+              I18n.t("topic_invite.failed_to_invite",
+                group_names: group_names
+              )
+            ])
+          end
+        end
+
+        render json: json, status: 422
       end
     rescue Topic::UserExists => e
       render json: { errors: [e.message] }, status: 422
