@@ -517,9 +517,6 @@ tr_TR:
       topic_sentence:
         one: "%{count} konu"
         other: "%{count} konu"
-      topic_stat_sentence:
-        one: "%{unit} beri %{count} yeni konu."
-        other: "%{unit} beri %{count} yeni konu."
       n_more: "Kategoriler (%{count}daha fazla) ..."
     ip_lookup:
       title: IP Adresi Ara
@@ -1212,7 +1209,6 @@ tr_TR:
         title_too_long: "Başlık {{max}} karakterden daha uzun olamaz"
         post_missing: "Gönderiler boş olamaz"
         post_length: "Gönderi en az {{min}} karakter olmalı"
-        try_like: '<i class="fa fa-heart"></i> düğmesini denedin mi?'
         category_missing: "Bir kategori seçmelisin"
         tags_missing: "En azından {{count}} etiket seçmelisin"
       save_edit: "Değişikliği Kaydet"
@@ -1982,7 +1978,6 @@ tr_TR:
           revert: "Bu uyarlamaya geri dön"
           edit_wiki: "Wiki'yi düzenle"
           edit_post: "Gönderiyi düzenle"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Hazırlanan cevabı ekleme ve çıkarmalarla birlikte göster"

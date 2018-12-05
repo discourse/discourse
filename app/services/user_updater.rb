@@ -123,9 +123,9 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
+      name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
-         (attributes[:name].present? && old_user_name.casecmp(attributes.fetch(:name)) != 0) ||
-         (attributes[:name].blank? && old_user_name.present?)
+         (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(
           user.id,

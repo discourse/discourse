@@ -83,6 +83,10 @@ describe SvgSprite do
 
     SiteSetting.svg_icon_subset = nil
     expect(SvgSprite.all_icons).not_to include("drafting-compass")
+
+    # does not fail on non-string setting
+    SiteSetting.svg_icon_subset = false
+    expect(SvgSprite.all_icons).to be_truthy
   end
 
   it 'includes icons from plugin registry' do

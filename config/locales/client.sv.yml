@@ -431,9 +431,6 @@ sv:
       topic_sentence:
         one: "1 ämne"
         other: "%{count} ämnen"
-      topic_stat_sentence:
-        one: "%{count} nytt ämne under den senaste %{unit}."
-        other: "%{count} nya ämnen under den senaste %{unit}."
     ip_lookup:
       title: Kolla upp IP-adress
       hostname: Värdnamn
@@ -965,7 +962,6 @@ sv:
         title_too_long: "Rubriken får inte vara längre än {{max}} tecken"
         post_missing: "Inlägg får inte vara tomma"
         post_length: "Inlägg måste vara minst {{min}} tecken långa."
-        try_like: 'Har du provat <i class="fa fa-heart"></i>-knappen?'
         category_missing: "Du måste välja en kategori"
       save_edit: "Spara ändring"
       reply_original: "Svara på ursprungsämnet"
@@ -1580,7 +1576,6 @@ sv:
           revert: "Återgå till den här revisionen"
           edit_wiki: "Uppdatera Wiki"
           edit_post: "Ändra meddelandet"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Visa resultat med tillägg och borttagningar inline"

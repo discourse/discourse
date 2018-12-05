@@ -101,7 +101,7 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.cache_last_seen(id, val)
-    $redis.set(last_seen_key(id), val)
+    $redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
   protected

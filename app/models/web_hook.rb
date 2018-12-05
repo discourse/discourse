@@ -2,6 +2,7 @@ class WebHook < ActiveRecord::Base
   has_and_belongs_to_many :web_hook_event_types
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :categories
+  has_and_belongs_to_many :tags
 
   has_many :web_hook_events, dependent: :destroy
 
@@ -14,6 +15,10 @@ class WebHook < ActiveRecord::Base
   validates_presence_of :web_hook_event_types, unless: :wildcard_web_hook?
 
   before_save :strip_url
+
+  def tag_names=(tag_names_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
+  end
 
   def self.content_types
     @content_types ||= Enum.new('application/json' => 1,
@@ -61,25 +66,27 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_topic_hooks(event, topic)
-    if active_web_hooks('topic').exists?
+    if active_web_hooks('topic').exists? && topic.present?
       topic_view = TopicView.new(topic.id, Discourse.system_user)
       payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
 
       WebHook.enqueue_hooks(:topic, event,
         id: topic.id,
-        category_id: topic&.category_id,
+        category_id: topic.category_id,
+        tag_ids: topic.tags.pluck(:id),
         payload: payload
       )
     end
   end
 
   def self.enqueue_post_hooks(event, post)
-    if active_web_hooks('post').exists?
+    if active_web_hooks('post').exists? && post.present?
       payload = WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(:post, event,
         id: post.id,
-        category_id: post&.topic&.category_id,
+        category_id: post.topic&.category_id,
+        tag_ids: post.topic&.tags&.pluck(:id),
         payload: payload
       )
     end

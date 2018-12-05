@@ -69,7 +69,7 @@ module Email
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
-          @from_email, @from_display_name = parse_from_field(@mail)
+          @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
           process_internal
@@ -249,6 +249,7 @@ module Email
     end
 
     def email_log
+      return nil if bounce_key.blank?
       @email_log ||= EmailLog.find_by(bounce_key: bounce_key)
     end
 
@@ -472,7 +473,9 @@ module Email
       reply.split(previous_replies_regex)[0]
     end
 
-    def parse_from_field(mail)
+    def parse_from_field(mail = nil)
+      mail ||= @mail
+
       if mail.bounced?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)

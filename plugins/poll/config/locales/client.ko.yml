@@ -13,8 +13,6 @@ ko:
       total_votes:
         other: "전체 투표"
       average_rating: "평균: <strong>%{average}</strong>."
-      public:
-        title: "투표는 공개됩니다."
       multiple:
         help:
           at_least_min_options:

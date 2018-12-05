@@ -510,9 +510,6 @@ it:
       topic_sentence:
         one: "1 argomento"
         other: "%{count} argomenti"
-      topic_stat_sentence:
-        one: "%{count} nuovo argomento nell'ultimo %{unit}."
-        other: "%{count} nuovi argomenti nell'ultimo %{unit}."
       n_more: "Categorie (altre %{count}) ..."
     ip_lookup:
       title: Ricerca Indirizzo IP
@@ -1218,7 +1215,6 @@ it:
         title_too_long: "Il titolo non può essere più lungo di {{max}} caratteri"
         post_missing: "Il messaggio non può essere vuoto"
         post_length: "Il messaggio deve essere lungo almeno {{min}} caratteri"
-        try_like: 'Hai provato il pulsante <i class="fa fa-heart"></i>?'
         category_missing: "Devi scegliere una categoria"
         tags_missing: "Devi scegliere almeno {{count}} etichette"
       save_edit: "Salva Modifiche"
@@ -1820,7 +1816,6 @@ it:
           other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
       wiki_last_edited_on: "ultima modifica alla wiki"
@@ -2005,7 +2000,6 @@ it:
           revert: "Ritorna a questa revisione"
           edit_wiki: "Modifica Wiki"
           edit_post: "Modifica Messaggio"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostra il risultato con le aggiunte e le rimozioni in linea"

@@ -113,12 +113,11 @@ class TagUser < ActiveRecord::Base
     builder.exec(watching: notification_levels[:watching],
                  tracking: notification_levels[:tracking],
                  regular: notification_levels[:regular],
-                 auto_watch_tag:  TopicUser.notification_reasons[:auto_watch_tag])
+                 auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag])
 
   end
 
   def self.auto_track(opts)
-
     builder = DB.build <<~SQL
       UPDATE topic_users
       SET notification_level = :tracking, notifications_reason_id = :auto_track_tag
@@ -147,7 +146,7 @@ class TagUser < ActiveRecord::Base
 
     builder.exec(tracking: notification_levels[:tracking],
                  regular: notification_levels[:regular],
-                 auto_track_tag:  TopicUser.notification_reasons[:auto_track_tag])
+                 auto_track_tag: TopicUser.notification_reasons[:auto_track_tag])
   end
 
 end

@@ -146,6 +146,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if SiteSetting.max_consecutive_replies == 0 || post.id || post.acting_user&.staff? || private_message?(post)
 
     topic = post.topic
+    return if topic&.posts&.first&.user == post.user
 
     last_posts_count = DB.query_single(<<~SQL, topic_id: post.topic_id, user_id: post.acting_user.id, max_replies: SiteSetting.max_consecutive_replies).first
       SELECT COUNT(*)

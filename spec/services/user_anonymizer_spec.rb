@@ -179,7 +179,7 @@ describe UserAnonymizer do
       user.twitter_user_info = TwitterUserInfo.create(user_id: user.id, screen_name: "example", twitter_user_id: "examplel123123")
       user.google_user_info = GoogleUserInfo.create(user_id: user.id, google_user_id: "google@gmail.com")
       user.github_user_info = GithubUserInfo.create(user_id: user.id, screen_name: "example", github_user_id: "examplel123123")
-      user.facebook_user_info = FacebookUserInfo.create(user_id: user.id, facebook_user_id: "example")
+      user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
       user.instagram_user_info = InstagramUserInfo.create(user_id: user.id, screen_name: "example", instagram_user_id: "examplel123123")
@@ -189,7 +189,7 @@ describe UserAnonymizer do
       expect(user.twitter_user_info).to eq(nil)
       expect(user.google_user_info).to eq(nil)
       expect(user.github_user_info).to eq(nil)
-      expect(user.facebook_user_info).to eq(nil)
+      expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_infos).to be_empty
       expect(user.instagram_user_info).to eq(nil)

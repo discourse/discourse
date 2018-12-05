@@ -193,7 +193,7 @@ GEM
       mini_mime (>= 0.1.1)
     maxminddb (0.1.21)
     memory_profiler (0.9.12)
-    message_bus (2.1.6)
+    message_bus (2.2.0.pre.1)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
@@ -270,7 +270,7 @@ GEM
       redis
       ruby-openid
     parallel (1.12.1)
-    parser (2.5.1.0)
+    parser (2.5.3.0)
       ast (~> 2.4.0)
     pg (1.1.3)
     powerpack (0.1.2)
@@ -357,17 +357,17 @@ GEM
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
     rtlit (0.0.5)
-    rubocop (0.57.2)
+    rubocop (0.60.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
+      unicode-display_width (~> 1.4.0)
     ruby-openid (2.7.0)
     ruby-prof (0.17.0)
-    ruby-progressbar (1.9.0)
+    ruby-progressbar (1.10.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
@@ -491,7 +491,7 @@ DEPENDENCIES
   mail (= 2.7.1.rc1)
   maxminddb
   memory_profiler
-  message_bus
+  message_bus (= 2.2.0.pre.1)
   mini_mime
   mini_racer
   mini_scheduler

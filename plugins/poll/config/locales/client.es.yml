@@ -16,7 +16,12 @@ es:
         other: "votos totales"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
       public:
-        title: "Los votos son públicos."
+        title: "Votos son <strong>públicos</strong>."
+      results:
+        vote:
+          title: "Los resultados se mostrarán cuando <strong>vote</strong>."
+        closed:
+          title: "Los resultados se mostrarán una vez que esté <strong>cerrado</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -64,6 +69,11 @@ es:
           regular: Una opción
           multiple: Múltiples opciones
           number: Valoración numérica
+        poll_result:
+          label: Resultados
+          always: Siempre visible
+          vote: En votos
+          closed: Cuando estén cerrados
         poll_config:
           max: Máximo
           min: Mínimo

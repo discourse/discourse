@@ -152,9 +152,6 @@ el:
     permalink: "Μόνιμος σύνδεσμος"
     imported_from: "Αυτό είναι ένα συνοδό θέμα συζητησης για την αρχική ανάρτηση στο %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 απάντηση"
-      other: "%{count} απαντήσεις"
   no_mentions_allowed: "Λυπούμαστε, δεν μπορείς να αναφέρεις άλλους χρήστες."
   too_many_mentions:
     one: "Λυπούμαστε, μπορείς να αναφέρεις μόνο έναν χρήστη σε κάθε ανάρτηση."
@@ -241,60 +238,109 @@ el:
     until_posts:
       one: "1 ανάρτηση"
       other: "%{count} αναρτήσεις"
-    'new-topic': |
+    'new-topic': |2
+
       Καλώς ήρθατε στην %{site_name} &mdash. **ευχαριστούμε που αρχίσατε μιά νέα συνομιλία!**
+
+
 
       - Είστε σίγουροι οτι ο τίτλος παρουσιάζει ενδιαφέρον; Είναι αντιπροσωπευτικός του περιεχομένου του νήματος;
 
+
+
       - Ποιος θα ενδιαφερόταν για αυτό; Γιατί αυτό έχει σημασία; Τί είδους απαντήσεις περιμένετε;
+
+
 
       - Συμπεριλάβετε κοινές λέξεις στο νήμα σας έτσι ώστε να μπορούν να το *βρουν* οι άλλοι. Για να κατηγοριοποιήσετε το νήμα σας με άλλα παρόμοια νήματα, επιλέξτε μια κατηγορία.
 
+
+
       - Για περισσότερα, [δείτε τον οδηγό χρήσης της κοινότητάς μας](%{base_path}/guidelines). Αυτός ο πίνακας θα παρουσιαστεί μόνο για την πρώτη σας %{education_posts_text}
-    'new-reply': |
+    'new-reply': |2
+
       Καλώς ήρθατε στην %{site_name} &mdash; **ευχαριστούμε για την συνεισφορά σας**
+
+
 
       - Βελτιώνει/προχωράει η απάντηση σας την συζήτηση με κάποιο τρόπο;
 
+
+
       - Να είστε ευγενικοί με όλους τους φίλους μέλη της κοινότητας μας.
+
+
 
       Η εποικοδομητική κριτική είναι ευπρόσδεκτη, αλλά να γίνεται κριτική σε *ιδέες*, όχι ανθρώπους.
 
+
+
       Για περισσότερες πληροφορίες, [δείτε τις οδηγίες της κοινότητας μας ](%{base_path}/guidelines). Αυτό το παράθυρο θα εμφανιστεί μόνο για την πρώτη σας %{education_posts_text}.
-    avatar: |
+    avatar: |2
+
       ### Τι θα λέγατε για μια εικόνα στο λογαριασμό σας;
+
+
 
       Έχετε δημοσιεύσει μερικά νήματα/θέματα και απαντήσεις, αλλά η φωτογραφία προφίλ σας δεν είναι όσο μοναδική όσο εσείς – είναι μόνο ένα γράμμα.
 
+
+
       Έχετε σκεφτεί **[να επισκεφθείτε το λογαριασμό σας](%{profile_path})** και να ανεβάσετε μια φωτογραφία που σας αντιπροσωπεύει;
 
+
+
       Είναι ευκολότερο να ακολουθείτε συζητήσεις και να βρείτε ενδιαφέροντες ανθρώπους σε συζητήσεις όταν όλοι έχουν μια μοναδική φωτογραφία προφίλ!
-    sequential_replies: |
+    sequential_replies: |2
+
       ### Μπορείτε να απαντήσετε σε πολλαπλές αναρτήσεις με την μια
+
+
 
       Αντί για πολλαπλές απαντήσεις σε ένα νήμα, μπορείτε να κοινοποιήσετε μια απάντηση που περιέχει αποσπάσματα από προηγούμενες αναρτήσεις ή @ονομαστικές αναφορές.
 
+
+
       Μπορείτε να επεξεργαστείτε την προηγούμενη απάντησή σας για να προσθέσετε μια παράθεση, μαρκάροντας κείμενο και επιλέγοντας το κουμπί <b>παράθεσης</b> που εμφανίζεται.
 
+
+
       Είναι ευκολότερο για όλους να διαβάζουν θέματα που έχουν λίγες και αναλυτικές απαντήσεις σε αντίθεση με πολλές μικρές, αυτόνομες απαντήσεις.
-    dominating_topic: |
+    dominating_topic: |2
+
       ### Επιτρέψτε σε άλλους να συμμετέχουν στη συζήτηση
+
+
 
       Αυτό το νήμα φαίνεται να είναι σημαντικό για εσάς &ndash. Έχετε αναρτήσει πάνω από το %{percent}% των απαντήσεων εδώ.
 
+
+
       Είστε σίγουρος ότι παρέχετε επαρκή χρόνο σε άλλους ανθρώπους να μοιραστούν κι εκείνοι τις δικές τους απόψεις;
-    get_a_room: |
+    get_a_room: |2
+
       ### Γιατί δεν δοκιμάζετε να απαντήσετε και σε άλλους χρήστες;
+
+
 
       Έχετε ήδη απαντήσει  %{count} φορές προς @%{reply_username} στο συγκεκριμένο θέμα.
 
+
+
       Σκεφτήκατε να απαντήσετε και σε άλλους συμμετέχοντες σε αυτή την συζήτηση; Μια σωστή συζήτηση πρέπει να περιλαμβάνει πολλές διαφορετικές φωνές και απόψεις.
 
+
+
       Αν θέλετε να συνεχίσετε την συζήτηση με τον ίδιο χρήστη, θα ήταν ίσως προτιμότερο να [στείλετε ένα προσωπικό μήνυμα] (/u/%{reply_username}).
-    too_many_replies: |
+    too_many_replies: |2
+
       ### Έχετε φτάσει το όριο απαντήσεων γι' αυτό το νήμα
 
+
+
       Λυπούμαστε, αλλά οι νέοι χρήστες είναι προσωρινά περιορισμένοι σε %{newuser_max_replies_per_topic} απαντήσεις στο ίδιο νήμα.
+
+
 
       Αντί να προσθέσετε κι άλλη απάντηση, παρακαλώ επεξεργαστείτε τις προηγούμενες απαντήσεις σας ή επισκεφθείτε άλλα νήματα.
   activerecord:
@@ -353,37 +399,51 @@ el:
           attributes:
             word:
               too_many: "Πάρα πολλές λέξεις για την ενέργεια"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>το πεδίο Σχετικά Με Μένα στο προφίλ σας είναι κενό, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>θα θέλατε να προσθέσετε κάποιες πληροφορίες;</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} δεν έχει εισάγει τίποτα στο πεδίο Σχετικά με Εμένα στο προφίλ του</div>"
   vip_category_name: "Σαλόνι"
   vip_category_description: "Κατηγορία αποκλειστικά για μέλη με επίπεδο εμπιστοσύνης (trust level) 3 ή υψηλότερο."
   meta_category_name: "Σχολιασμός Ιστοσελίδας"
   meta_category_description: "Συζήτηση σχετικά με την ιστοσελίδα, την οργάνωσή της, τον τρόπο λειτουργίας της και πώς αυτή μπορεί να βελτιωθεί."
   staff_category_name: "Συνεργάτες"
   staff_category_description: "Ιδιωτική κατηγορία για συζητήσεις των συνεργατών. Τα θέματα είναι ορατά μόνο σε διαχειριστές και συντονιστές."
-  assets_topic_title: "Στοιχεία για τον σχεδιασμό της ιστοσελίδας"
-  assets_topic_body: "Αυτό το νήμα, το οποίο είναι ορατό μόνο στο προσωπικό, υπάρχει για να αποθηκεύετε εικόνες και αρχεία τα οποία θα χρησιμοποιήσετε στην σχεδίαση της σελίδας. Μήν το διαγράψετε!\n\n\nΟδηγίες:\n\n\n1. Απαντήστε στο νήμα.\n2. Ανεβάστε στο πεδίο απάντησης όλες τις εικόνες που θέλετε να χρησιμοποιήσετε. (Χρησιμοποιήστε το εικονίδιο μεταφόρτωσης στην μπάρα εργαλείων ή απλά σύρετε ή κάντε επικόλληση τις εικόνες στο πεδίο απάντησης.)\n3. Καταχωρήστε την απάντησή σας για να αναρτηθεί.\n4. Κάντε δεξί κλικ στις εικόνες της νέας σας ανάρτησης για να δείτε από τις πληροφορίες εικόνας την πλήρη διαδρομή προς το αποθηκευμένο αρχείο ή κάντε κλικ στο εικονίδιο επεξεργασίας για να επεξεργαστείτε την ανάρτησή σας και να πάρετε την πλήρη διαδρομή για όλες σας τις εικόνες. Αντιγράψτε την διαδρομή που θέλετε.\n5. Κάντε επικόλληση της διαδρομής στην σελίδα [βασικών ρυθμίσεων](%{base_path}/admin/site_settings/category/required).\n\n\nΑν θέλετε να ενεργοποιήσετε περισσότερους τύπους αρχείων, επεξεργαστείτε την ρύθμιση των `authorized_extensions` στο [file settings](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Καλώς ήρθατε στο Discourse"
     body: |2+
 
 
+
+
+
         Η πρώτη παράγραφος αυτού του καρφιτσωμένου θέματος θα είναι ορατή ως μήνυμα καλωσορίσματος προς τους νέους επισκέπτες της σελίδας. Είναι σημαντικό!
+
+
 
         **Αλλάξτε αυτό** με μία σύντομη περιγραφή της κοινότητάς σας:
 
+
+
         - Σε ποιον απευθύνεται η σελίδα;
+
         - Τι θα βρει εδώ πέρα;
+
         - Γιατί αξίζει να επισκευθεί τη σελίδα;
+
         - Που αλλού θα μπορούσαν να βρουν υλικό σχετικά με το θέμα; (url κτλπ)
+
+
+
+
+
 
 
 
 
         <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
+
+
         Θα ήταν καλό να κλείσετε αυτό το θέμα μέσω του διαχειριστή :wrench: (στην πάνω δεξιά και κάτω θέση), έτσι ώστε οι απαντήσεις να μην μαζευτούν στην ανακοίνωση.
+
+
 
   lounge_welcome:
     title: "Καλώς ήρθατε στο Σαλόνι"
@@ -775,6 +835,8 @@ el:
     host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
     sidekiq_warning: 'Το Sidekiq σταμάτησε. Κάποιες λειτουργίες, όπως η αποστολή email εκτελούνται ασύγχρονα από το sidekiq. Παρακαλούμε βεβαιωθείτε ότι τουλάχτιστον μία sidekiq λειτουργία εκτελείται.
 
+
+
       <a href="https://github.com/mperham/sidekiq" target="_blank">Περισσότερα για το Sidekiq εδώ</a>.'
     queue_size_warning: 'Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής  είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. '
     memory_warning: 'Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης.'
@@ -782,7 +844,6 @@ el:
     email_polling_errored_recently:
       one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.   "
       other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες.  "
-    bad_favicon_url: "Το favicon δεν μπορεί να φορτωθεί 'Ελεγξε το favicon_url στις <a href='%{base_path}/admin/site_settings'>Ρυθμίσεις Iστοσελίδας</a>"
     poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
     poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a>  "
   site_settings:
@@ -831,8 +892,6 @@ el:
     inline_onebox_domains_whitelist: "Μια λίστα από domains τα οποία θα γίνουν onebox σε σκίκρυνση αν αναφερθούν χωρίς τίτλο"
     enable_inline_onebox_on_all_domains: "Αγνόησε την ρύθμιση inline_onebox_domain_whitelist και επέτρεψε inline onebox σε όλα τα domains."
     max_oneboxes_per_post: "Ανώτατος αριθμός oneboxes σε μια ανάρτηση. "
-    digest_logo_url: "Το εναλλακτικό λογότυπο εικόνας που χρησιμοποιείται στην κορυφή του συνοπτικού email του ιστότοπου σας. Θα πρέπει να είναι ένα ευρύ ορθογώνιο σχήμα. Δεν πρέπει να είναι μια εικόνα SVG. Αν μείνει κενό τότε το `logo_url` θα χρησιμοποιηθεί."
-    apple_touch_icon_url: "Εικονίδιο που χρησιμοποιείται για συσκευές αφής της Apple. Το συνιστώμενο μέγεθος είναι 144px από 144px."
     notification_email: "Η από: διεύθυνση email που χρησιμοποιείται για την αποστολή όλων των απαραιτήτων μηνυμάτων του συστήματος. Ο τομέας που καθορίζεται εδώ πρέπει να έχει SPF, DKIM και reverse PTR αρχεία ρυθμισμένα σωστά για να φθάσει το μήνυμα."
     email_custom_headers: "Μια pipe-delimited λίστα που περιέχει τις προσαρμοσμένες κεφαλίδες των μηνυμάτων email.   "
     force_https: "Αναγκάζει το site σας να χρησιμοποιεί μόνο HTTPS. ΠΡΟΣΟΧΗ: Μην το ενεργοποιήσετε, μέχρι να επαληθεύσετε ότι το HTTPS είναι πλήρως εγκατεστημένο και λειτουργεί απολύτως παντού! Ελέγξατε το CDN σας, όλες τις κοινωνικές συνδέσεις και τα εξωτερικά σας λογότυπα / εξαρτήσεις για να βεβαιωθείτε ότι είναι όλα συμβατά με HTTPS;"
@@ -1023,7 +1082,6 @@ el:
     body_min_entropy: "Η ελάχιστη εντροπία (μοναδικοί χαρακτήρες, μη-Αγγλικά μετράνε για τα περισσότερα) που απαιτούνται για το κύριο τμήμα μίας ανάρτησης."
     allow_uppercase_posts: "Επίτρεψε όλα τα γράμματα στον τίτλο ενός νήματος ή σε μία ανάρτηση να είναι κεφαλαία. "
     min_title_similar_length: "Το ελάχιστο μήκος τίτλου προτού ελεγχθεί για παρόμοια νήματα."
-    min_body_similar_length: "Το ελάχιστο μήκος σώματος μιας δημοσίευσης προτού ελεγχθεί για παρόμοια νήματα."
     desktop_category_page_style: "Οπτικό στυλ για τη σελίδα /Categories."
     category_colors: "Μια λίστα με τιμές δεκαεξαδικού χρώματος, που επιτρέπεται για τις κατηγορίες."
     category_style: "Οπτικό στυλ για τα εμβλημάτα κατηγορίας ."
@@ -1225,9 +1283,6 @@ el:
     min_trust_level_to_tag_topics: "Ελάχιστο επίπεδο εμπιστοσύνης που απαιτείται για προσθήκη ετικετών στα νήματα"
     suppress_overlapping_tags_in_list: "Αν μία ετικέτα ταιριάζει ακριβώς με μία λέξη στον τίτλο ενός θέματος, τότε μην εμφανίσεις την ετικέτα. "
     remove_muted_tags_from_latest: "Μην εμφανίζεις θέματα που έχουν επισημανθεί με ετικέτες σε σίγαση στην λίστα με τα νεώτερα θέματα. "
-    company_short_name: "Όνομα Εταιρείας (σύντομο)"
-    company_full_name: "Όνομα Εταιρείας (πλήρες)"
-    company_domain: "Εταιρικό Domain"
     errors:
       invalid_email: "Μη έγκυρη διεύθυνση email."
       invalid_username: "Δεν υπάρχει χρήστης με αυτό το όνομα χρήστη."
@@ -1408,11 +1463,18 @@ el:
   unsubscribe_mailer:
     title: "Απεγγραφή"
     subject_template: "Επιβεβαιώστε ότι δε θέλετε να λαμβάνετε πλέον ενημερώσεις μέσω email από %{site_title}"
-    text_body_template: |
+    text_body_template: |2
+
       Κάποιος (ίσως εσύ;) ζήτησε να μην αποστέλλονται ενημερώσεις με email από το %{site_domain_name} σε αυτή τη διεύθυνση.
+
       Εάν επιθυμείς να το επιβεβαιώσεις, παρακαλούμε πάτησε αυτό το σύνδεσμο:
 
+
+
       %{confirm_unsubscribe_link}
+
+
+
 
 
       Εάν θέλεις να συνεχίσεις να λαμβάνεις ενημερώσεις με email, μπορείς να αγνοήσεις αυτό το email.
@@ -1427,29 +1489,44 @@ el:
   invite_password_instructions:
     title: "Οδηγίες Κωδικού Πρόσκλησης"
     subject_template: "Όρισε κωδικό πρόσβασης για τον λογαρισμό σου %{site_name}"
-    text_body_template: |
+    text_body_template: |2
+
       Ευχαριστούμε που αποδεχτήκατε την πρόσκληση στην %{site_name} -- καλώς ήρθατε!
 
+
+
       Κάντε κλικ στον παρακάτω σύνδεσμο για να επιλέξετε τον κωδικό πρόσβασής σας:
+
       %{base_url}/u/password-reset/%{email_token}
+
+
 
       (Σε περίπτωση που ο παραπάνω σύνδεσμος έχει λήξει, επιλέξτε "ξέχασα τον κωδικό μου" όταν συνδέεστε με την διεύθυνση email σας.)
   download_backup_mailer:
     title: "Αποστολή Αντιγράφων Ασφαλείας"
     subject_template: "[%{email_prefix}] Λήψη Αντιγράφου Ασφαλείας Ιστοσελίδας"
-    text_body_template: |
+    text_body_template: |2
+
       Αυτό είναι το [site backup download](%{backup_file_path}) που ζητήσατε.
+
+
 
       Στείλαμε τον σύνδεσμο λήψης στην έγκυρη διεύθυνση email σας για λόγους ασφαλείας.
 
+
+
       (Αν δεν ζητήσατε *εσείς* αυτό το αρχείο, τότε θα πρέπει να ανησυχήσετε -- κάποιος έχει πρόσβαση διαχειριστή στην ιστοσελίδα σας.)
-    no_token: |
+    no_token: |2
+
       Λυπούμαστε, ο σύνδεσμος λήψης του αντιγράφου ασφαλείας έχει ήδη χρησιμοποιηθεί ή έχει λήξει.
   admin_confirmation_mailer:
     title: "Επικύρωση Διαχειριστή"
     subject_template: "[%{email_prefix}] Επιβεβαίωση νέου Λογαριασμού Διαχειριστή"
-    text_body_template: |
+    text_body_template: |2
+
       Παρακαλούμε επιβεβαιώστε ότι θέλετε να προσθέστε τον **%{target_username}** ως διαχειριστή στην ιστοσελίδα σας.
+
+
 
       [Επιβεβαίωση Λογαριασμού Διαχειριστή](%{admin_confirm_url})
   test_mailer:
@@ -1484,76 +1561,126 @@ el:
     welcome_user:
       title: "Καλωσόρισμα Χρήστη"
       subject_template: "Καλώς ήλθατε στην %{site_name}!"
-      text_body_template: |
+      text_body_template: |2
+
         Ευχαριστούμε για την εγγραφή σας στην %{site_name}, καλώς ορίσατε!
+
+
 
         %{new_user_tips}
 
+
+
         Πιστεύουμε και επικροτούμε την [πολιτισμένη επικοινωνία](%{base_url}/guidelines) στο διαδίκτυο.
+
+
 
         Να περάσετε καλά!
     welcome_invite:
       title: "Πρόσκληση Καλωσορίσματος"
       subject_template: "Καλώς ήλθατε στην %{site_name}!"
-      text_body_template: |
+      text_body_template: |2
+
         Ευχαριστούμε για την αποδοχή της πρόσκλησης στην %{site_name} -- καλώς ορίσατε!
+
+
 
         - Δημιουργήσαμε αυτόν τον νέο λογαριασμό χρήστη **%{username}** για εσάς. Αλλάξτε το όνομα και τον κωδικό σας από την [σελίδα προφίλ][prefs].
 
+
+
         - Όταν συνδέεστε, παρακαλούμε **χρησιμοποιήστε την διεύθυνση email της αρχικής πρόσκλησης** — για να μπορέσουμε να σας ταυτοποιήσουμε!
+
+
 
         %{new_user_tips}
 
+
+
         Πιστεύουμε και επικροτούμε την [πολιτισμένη επικοινωνία](%{base_url}/guidelines) στο διαδίκτυο.
 
+
+
         Να περάσετε καλά!
+
+
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Το αντίγραφο ασφαλείας πέτυχε"
       subject_template: "Το αντίγραφο ασφαλείας ολοκληρώθηκε επιτυχώς"
-      text_body_template: |
+      text_body_template: |2
+
         Η δημιουργία αντιγράφων ασφαλείας ήταν επιτυχής.
+
+
 
         Επισκέψου ττην σελίδα [διαχείριση > αντίγραφα ασφαλείας](%{base_url}/admin/backups) για να κατεβάσεις το νέο σου αντίγραφο ασφαλείας.
 
+
+
         Το αρχείο καταγραφής είναι εδώ:
 
+
+
         ```text
+
         %{logs}
+
         ```
     backup_failed:
       title: "Το αντίγραφο ασφαλείας απέτυχε"
       subject_template: "Το αντίγραφο ασφαλείας απέτυχε"
-      text_body_template: |
+      text_body_template: |2
+
         Η δημιουργία αντιγράφων ασφαλείας απέτυχε.
+
+
 
         Το αρχείο καταγραφής είναι εδώ:
 
+
+
         ```text
+
         %{logs}
+
         ```
     restore_succeeded:
       title: "Η επαναφορά ήταν επιτυχής"
       subject_template: "Η επαναφορά ολοκληρώθηκε επιτυχώς"
-      text_body_template: |
+      text_body_template: |2
+
         Η αποκατάσταση ήταν επιτυχής.
+
+
 
         Το αρχείο καταγραφής είναι εδώ:
 
+
+
         ```text
+
         %{logs}
+
         ```
     restore_failed:
       title: "Η επαναφορά απέτυχε"
       subject_template: "Η επαναφορά απέτυχε"
-      text_body_template: |
+      text_body_template: |2
+
         Η επαναφορά απέτυχε.
+
+
 
         Το αρχείο καταγραφής είναι εδώ:
 
+
+
         ```text
+
         %{logs}
+
         ```
     bulk_invite_succeeded:
       title: "Η μαζική πρόσκληση ήταν επιτυχής"
@@ -1562,13 +1689,20 @@ el:
     bulk_invite_failed:
       title: "Μαζική πρόσκληση απέτυχε"
       subject_template: "Η επεξεργασία του αρχείου μαζικής πρόσκλησης χρηστών ολοκληρώθηκε με λάθη."
-      text_body_template: |
+      text_body_template: |2
+
         Το αρχείο μαζικής πρόσκλησης χρηστών έχει επεξεργαστεί, %{sent} προσκλήσεις στάλθηκαν με %{failed} σφάλμα(τα).
+
+
 
         Το αρχείο καταγραφής είναι εδώ:
 
+
+
         ```text
+
         %{logs}
+
         ```
     csv_export_succeeded:
       title: "Η CSV Εξαγωγή Πέτυχε"
@@ -1579,163 +1713,237 @@ el:
     email_reject_insufficient_trust_level:
       title: "Απόρριψη email Ανεπαρκές επίπεδο εμπιστοσύνης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Ανεπαρκές Επίπεδο Εμπιστοσύνης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Ο λογαριασμός σας δεν έχει το απαιτούμενο επίπεδο εμπιστοοσύνης ώστε να στείλει νέα νήματα σε αυτή τη διεύθυνση email. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_user_not_found:
       title: "Απόρριψη email Δε βρέθηκε ο χρήστης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Δεν Βρέθηκε Χρήστης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Η απάντησή σας στάλθηκε από μία άγνωστη διεύθυνση email. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_screened_email:
       title: "Απόρριψη email Ελεγχόμενη Διεύθυνση email"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Αποκλεισμένο Email"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Η απάντησή σας στάλθηκε από μία αποκλεισμένη διεύθυνση email. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Email Απερρίφθη Μη Επιτρεπτό Email"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Αποκλεισμένο Email"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο %{former_title}) δεν λειτούργησε.
+
+
 
         Η απάντησή σας στάλθηκε από μία αποκλεισμένη διεύθυνση email. Δοκιμάστε να στείλετε ξανά από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με συνεργάτη](%{base_url}/about).
     email_reject_inactive_user:
       title: "Απόρριψη email Μη ενεργός χρήστης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Ανενεργός Χρήστης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Ο λογαριασμός σου που σχετίζεται με αυτή τη διεύθυνση email δεν είναι ενεργοποιημένος. Παρακαλώ ενεργοποίησε τον λογαριασμό σου προτού στείλεις email.
     email_reject_silenced_user:
       title: "Απόρριψη Email Χρήστης σε Σιγή"
       subject_template: "[%{email_prefix}] Πρόβλημα Email  -- Χρήστης σε Σιγή"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο %{former_title}) δεν λειτούργησε.
+
+
 
         Ο λογαριασμός χρήστη που είναι συνδεμένος με αυτό το email είναι σε σιγή.
     email_reject_reply_user_not_matching:
       title: "Απόρριψη email Ο χρήστης δεν ταιριάζει"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Απροσδόκητη Διεύθυνση Απάντησης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο%{former_title}) απέτυχε.
+
+
 
         Η απάντησή σας στάλθηκε από διαφορετική διεύθυνση email από αυτήν που περιμέναμε και δεν μπορούμε να γνωρίζουμε αν πρόκειται για το ίδιο άτομο. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_no_account:
       title: "Απόρριψη email Κανένας λογαριασμός"
       subject_template: "[%{email_prefix}] Πρόβλημα Email  -- Άγνωστος Λογαριασμός"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο%{former_title}) απέτυχε.
+
+
 
         Δεν μπόρεσε να βρεθεί λογαριασμός χρήστη ο οποίος να αντιστοιχίζεται με αυτήν την διεύθυνση email. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_empty:
       title: "Απόρριψη Κενού email"
       subject_template: "[%{email_prefix}] Πρόβληα Email -- Χωρίς Περιεχόμενο"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (titled %{former_title}) δεν εστάλη.
 
+
+
         Δε μπορέσαμε να βρούμε κανένα κείμενο απάντησης στο email σου.
+
+
 
         Αν λαμβάνεις αυτό και αν _όντως_ συμπεριέλαβες απάντηση, προσπάθησε ξανά με απλούστερη μορφοποίηση.
     email_reject_parsing:
       title: "Απόρριψη Μη Επεξεργάσιμου email"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστο Περιεχόμενο"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (titled %{former_title}) δεν εστάλη.
+
+
 
         Δε μπορέσαμε να βρούμε την απάντησή σου στο email. **Σιγουρέψου ότι η απάντησή σου είναι στην κορυφή του email** - δε μπορούμε να επεξεργαστούμε απαντήσεις μέσα στις γραμμές.
     email_reject_invalid_access:
       title: "Απόρριψη email Μη έγκυρη πρόσβαση"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Σφάλμα Πρόσβασης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο%{former_title}) απέτυχε.
+
+
 
         Ο λογαριασμός σας δεν έχει το δικαίωμα να προσθέσει νέο νήμα σε αυτή την κατηγορία. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Απόρριψη email Άγνωστοι δεν επιτρέπονται"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Σφάλμα Πρόσβασης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Η κατηγορια στην οποία στέλνετε αυτό το email, επιτρέπει απαντήσεις μόνο από χρήστες με έγκυρους λογαριασμούς και γνωστές διευθύνσεις email. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_invalid_post:
       title: "Απόρριψη email Μη έγκυρη ανάρτηση"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Σφάλμα Ανάρτησης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (titled %{former_title}) δεν εστάλη.
+
+
 
         Μερικές πιθανές αιτίες είναι: περίπλοκη μορφοποίηση, πολύ μεγάλο μέγεθος μηνύματος, πολύ μικρό μέγεθος μηνύματος. Παραλούμε προσπαθήστε ξανά, ή αναρτήστε μέσω του ιστοτόπου αν το πρόβλημα συνεχίζεται.
     email_reject_invalid_post_specified:
       title: "Απόρριψη email Μη Έγκυρη Ανάρτηση"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Σφάλμα Ανάρτησης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (titled %{former_title}) δεν εστάλη.
+
+
 
         Αιτία:
 
+
+
         %{post_error}
+
+
 
         Αν μπορείς να διορθώσεις το πρόβλημα, παρακαλούμε προσπάθησε ξανά.
     email_reject_invalid_post_action:
       title: "Απόρριψη email Μη Έγκυρη Πράξη Ανάρτησης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άκυρη Ενέργεια Ανάρτησης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σου προς %{destination} (titled %{former_title}) δεν εστάλη.
+
+
 
         Η ενέργεια ανάρτησης δεν αναγνωρίστηκε. Παρακαλούμε προσπαθήστε ξανά, ή αναρτήστε μέσω του ιστοτόπου αν το πρόβλημα συνεχιζεται.
     email_reject_reply_key:
       title: "Απόρριψη email Μη Έγκυρο Κλειδί Απάντησης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστο Κλειδί Απάντησης"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Το κλειδί απάντησης στο email είναι λανθασμένο ή άγνωστο και έτσι δεν μπορούμε να καταλάβουμε σε τι απαντάτε. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Απόρριψη email Μη Έγκυρη Διεύθυνση Προορισμού"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστη Διεύθυνση Προς:"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο%{former_title}) απέτυχε.
+
+
 
         Δεν αναγνωρίστηκε καμία από τις διευθύνσεις παραληπτών ή το Message-ID header στο email έχει τροποποιηθεί. Παρακαλούμε βεβαιωθείται ότι στέλνετε στην σωστή διεύθυνση email που σας έχει δοθεί από τους συνεργάτες.
     email_reject_topic_not_found:
       title: "Απόρριψη email Δε βρέθηκε το νήμα"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Δεν Βρέθηκε Νήμα"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Το νήμα στο οποίο απαντάτε δεν υπάρχει πια -- μήπως έχει αφαιρεθεί; Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_topic_closed:
       title: "Απόρριψη email Κλειστό Νήμα"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Κλειστό Νήμα"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Το νήμα στο οποίο απαντάτε είναι για την ώρα κλειστό και δεν δέχεται νέες απαντήσεις. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_auto_generated:
       title: "Απόρριψη email Δημιουργήθηκε Αυτόματα"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Αυτόματη Απάντηση"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Το email σας αναγνωρίστηκε ως "αυτοματοποιημένο", το οποίο σημαίνει ότι δημιουργήθηκε αυτόματα από έναν υπολογιστή αντί να πληκτρολογηθεί από άνθρωπο - τέτοια μηνύματα δεν γίνονται αποδεκτά. Αν πιστεύετε ότι αυτό είναι λάθος, [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Απόρριψη Email - Άγνωστο Σφάλμα"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστο Σφάλμα"
-      text_body_template: |
+      text_body_template: |2
+
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
+
+
 
         Υπήρξε ένα άγνωστο σφάλμα κατά την επεξεργασία του email σας. Θα πρέπει να δοκιμάσετε ξανά ή να [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_error_notification:
       title: "Ειδοποίηση Σφάλματος email"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Σφάλμα επαλήθευσης POP"
-      text_body_template: |
+      text_body_template: |2
+
         Δυστυχώς υπήρξε ένα πρόβλημα πιστοποίησης κατά τη διάρκεια συγκέντρωσης μηνυμάτων από τον διακομιστή POP.
 
+
+
         Παρακαλούμε σιγουρευτείτε ότι έχετε τις σωστές ρυθμίσεις πιστοποιητικών POP στις [ρυθμίσεις ιστοτόπου](%{base_url}/admin/site_settings/category/email).
+
+
 
         Εάν υπάρχει διαδικτυακό περιβάλλον χρήστη για το λογαριασμό email POP, ίσως χρειάζεται να συνδεθείτε στο διαδίκτυο και να ελέγξετε τις ρυθμίσεις σας εκεί.
     too_many_spam_flags:
@@ -1744,43 +1952,69 @@ el:
     too_many_tl3_flags:
       title: "Πάρα πολλές επισημάνσεις ΕΕ3 "
       subject_template: "Καινούριος λογαριασμός σε αναμονή"
-      text_body_template: |
+      text_body_template: |2
+
         Γεια σου,
+
+
 
         Αυτό είναι αυτοματοποιημένο μήνυμα από %{site_name} για να σε ενημερώσει ότι ο λογαριασμός σου έχει ανασταλλεί εξαιτίας του μεγάλου αριθμού επισημάνσεων από την κοινότητα.
 
+
+
         Ως μέτρο προστασίας, ο νέος σου λογαριασμός είναι σε σιγή και δε μπορείς να δημιουργήσεις νέες απαντήσεις ή νήματα έως ότου ένας συνεργάτης μπορέσει να εξετάσει το λογαριασμό σου. Ζητούμε συγνώμη για την ταλαιπωρία.
+
+
 
         Για επιπλέον καθοδήγηση, παρακαλούμε ανάτρεξε στον [οδηγό χρήσης](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Σιγήθηκε από Συνεργάτες"
       subject_template: "Λογαριασμός σε αναστολή"
-      text_body_template: |
+      text_body_template: |2
+
         Γεια σου,
+
+
 
         Αυτό είναι ένα αυτοματοποιημένο μήνυμα από την %{site_name} για να σε ενημερώσει ότι ο λογαριασμός σου είναι προσωρινά σε αναστολή για λόγους ασφαλείας.
 
+
+
         Μπορείς να συνεχίσεις την περιήγηση, αλλά δεν θα μπορείς να δημιουργήσεις νέα νήματα ή απαντήσεις ωσότου ένας [συνεργάτης](%{base_url}/about) ελέγξει τις τελευταίες σου αναρτήσεις. Λυπούμαστε για την ταλαιπωρία.
+
+
 
         Για επιπλέον ενημέρωση, ανατρέξτε στον [οδηγό της κοινότητας](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Χρήστης Αυτόματα σε Σιγή"
       subject_template: "Νέος χρήστης %{username} σιγήθηκε από σημάνσεις της κοινότητας"
-      text_body_template: |
+      text_body_template: |2
+
         Αυτό είναι αυτοματοποιημένο μήνυμα.
+
+
 
         Ο νέος χρήστης [%{username}](%{user_url}) τέθηκε αυτόματα σε σίγαση διότι ένας αριθμός χρηστών σήμανε τις αναρτήσεις του %{username}.
 
+
+
         Παρακαλούμε [ελέγξτε τις σημάνσεις](%{base_url}/admin/flags). Αν ο/η %{username} τέθηκε λανθασμένα σε σιγή, κάντε κλικ στο κουμπί αναίρεσης σίγασης στην [σελίδα διαχείρισης χρήστη](%{user_url}).
+
+
 
         Αυτό το όριο μπορεί να ρυθμιστεί μέσω του πεδίου `silence_new_user` στις ρυθμίσεις ιστοσελίδας.
     unsilenced:
       title: "Εκτός Σιγής"
       subject_template: "Λογαριασμός όχι πια σε αναστολή"
-      text_body_template: |
+      text_body_template: |2
+
         Γεια σου,
 
+
+
         Αυτό είναι ένα αυτοματοποιημένο μήνυμα από την %{site_name} για να σε ενημερώσει ότι ο λογαριασμός σου μετά από διαξαγωγή ελέγχου δεν είναι πλέον σε αναστολή.
+
+
 
         Μπορείς και πάλι να αναρτήσεις απαντήσεις και να ξεκινήσεις νέα νήματα. Ευχαριστούμε για την υπομονή σου.
     pending_users_reminder:
@@ -1788,8 +2022,11 @@ el:
       subject_template:
         one: "1 χρήστης περιμένει για έγκριση"
         other: "%{count} χρήστες περιμένουν για έγκριση"
-      text_body_template: |
+      text_body_template: |2
+
         Υπάρχουν εγγραφές νέων χρηστών σε αναμονή έγκρισης (΄ή απόρριψης) πριν μπορέσουν να έχουν πρόσβαση σε αυτό το φόρουμ.
+
+
 
         [Παρακαλούμε αναθεωρήστε τις στην ενότητα διαχείρισης](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
@@ -1799,17 +2036,25 @@ el:
     dashboard_problems:
       title: "Προβλήματα Πίνακα"
       subject_template: "Προέκυψαν προβλήματα"
-      text_body_template: |
+      text_body_template: |2
+
         Μερικά προβλήματα αναφέρονται στον πίνακα διαχείρισης.
+
+
 
         [Παρακαλώ επανεξετάστε τα](%{base_url}/admin).
     new_user_of_the_month:
       title: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"
       subject_template: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"
-      text_body_template: |
+      text_body_template: |2
+
         Συγχαρητήρια, κέρδισες το βραβείο **Χρήστης του Μήνα για %{month_year}**. :trophy:
 
+
+
         Αυτό το βραβείο επονέμεται σε δυο νέους χρήστες κάθε μήνα και θα είναι για πάντα ορατό στην [σελίδα χρήστη](%{url}).
+
+
 
         Γίνατε γρήγορα ένα πολύτιμο μέλος της κοινότητάς μας.  Σας ευχαριστούμε για την συμμετοχή σας και ελπίζουμε να συνεχίσετε έτσι και στο μέλλον!
     queued_posts_reminder:
@@ -1817,18 +2062,30 @@ el:
       subject_template:
         one: "1 ανάρτηση σε αναμονή για έλεγχο"
         other: "%{count} αναρτήσεις σε αναμονή για έλεγχο"
-      text_body_template: |
+      text_body_template: |2
+
         Γεια σου,
 
+
+
         Υπάρχουν αναρτήσεις νέων χρηστων σε αναμονή για έλεγχο πριν δημοσιευθούν. [Κλικ εδώ για έγκριση ή απόρριψη](%{base_url}/queued-posts).
-  unsubscribe_link: |+
+  unsubscribe_link: |2+
+
     Για να απεγγραφείς από αυτά τα email, [κάνε κλικ εδώ](%{unsubscribe_url}).
 
-  unsubscribe_link_and_mail: |+
+
+
+  unsubscribe_link_and_mail: |2+
+
     Για να απεγγραφείς από αυτά τα email, [κάνε κλικ εδώ](%{unsubscribe_url}).
 
-  unsubscribe_mailing_list: |
+
+
+  unsubscribe_mailing_list: |2
+
     Λαμβάνετε αυτό επειδή έχετε ενεργοποιήσει την λειτουργία λίστας αλληλογραφίας (mailing list).
+
+
 
     Για να απεγγραφείς από αυτά τα email, [κάνε κλικ εδώ](%{unsubscribe_url}).
   subject_re: "Απ:"
@@ -1846,169 +2103,279 @@ el:
     only_reply_by_email: "Απαντήστε σε αυτό το email για να αποκριθείς."
     visit_link_to_respond: "[Επισκέψου το νήμα](%{base_url}%{url}) για να αποκριθείς."
     posted_by: "Αναρτήθηκε από %{username} στις %{post_date}"
-    invited_group_to_private_message_body: |
+    invited_group_to_private_message_body: |2
+
       Ο/Η %{username} προσκάλεσε @%{group_name} σε ένα μήνυμα
 
+
+
       > **%{topic_title}**
+
       >
+
       > %{topic_excerpt}
+
+
 
       στην
 
+
+
       > %{site_title} -- %{site_description}
-    invited_to_private_message_body: |
+    invited_to_private_message_body: |2
+
       %{username} σας προσκάλεσε σε ένα μήνυμα
 
+
+
       > **%{topic_title}**
+
       >
+
       > %{topic_excerpt}
 
+
+
       στην
+
+
 
       > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
+    invited_to_topic_body: |2
+
       %{username} σας προσκάλεσε σε μία συζήτηση
 
+
+
       > **%{topic_title}**
+
       >
+
       > %{topic_excerpt}
 
+
+
       στην
+
+
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Ο χρήστης προσκάλεσε ομάδα σε ΠΜ"
       subject_template: "[%{email_prefix}] %{username} προσκλήθηκε @%{group_name} σε ένα μήνυμα '%{topic_title}'"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Προσκλήθηκε ο χρήστης σε ΠΜ"
       subject_template: "[%{email_prefix}] %{username} σας προσκάλεσε σε ένα μήνυμα '%{topic_title}'"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Προσκλήθηκε ο χρήστης σε σταδιακό ΠΜ"
       subject_template: "[%{email_prefix}] %{username} σας προσκάλεσε σε ένα μήνυμα '%{topic_title}'"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_invited_to_topic:
       title: "Προσκλήθηκε ο χρήστης στο νήμα"
       subject_template: "[%{email_prefix}] %{username} σας προσκάλεσε στο '%{topic_title}'"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
 
+
+
         %{message}
+
+
 
         %{respond_instructions}
     user_replied:
       title: "Ο χρήστης απάντησε"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_replied_pm:
       title: "Ο χρήστης απάντησε στο ΠΜ"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_quoted:
       title: "Παρατέθηκε ο χρήστης"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_linked:
       title: "Διασυνδέθηκε ο χρήστης"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_mentioned:
       title: "Αναφέρθηκε ο χρήστης"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_group_mentioned:
       title: "Αναφέρθηκε Ομάδα Χρηστών"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted:
       title: "Ανάρτηση Χρήστη"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_watching_first_post:
       title: "Χρήστης που επιτηρεί την πρώτη ανάρτηση"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm:
       title: "Χρήστης που ανάρτησε ΠΜ"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{header_instructions}
+
+
 
         %{message}
 
+
+
         %{context}
+
+
 
         %{respond_instructions}
     user_posted_pm_staged:
@@ -2016,34 +2383,53 @@ el:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
+
+
           %{message}
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
-      text_body_template: |
+      text_body_template: |2
+
         Αποβλήθηκες από την ιστοσελίδα έως %{suspended_till}.
 
+
+
         %{reason}
+
+
 
         %{message}
     account_silenced:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
-      text_body_template: |
+      text_body_template: |2
+
         Είστε σε κατάσταση σίγασης μέχρι %{silenced_till}.
 
+
+
         %{reason}
+
+
 
         %{message}
     account_exists:
       title: "Ο λογαριασμός υπάρχει ήδη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
-      text_body_template: |
+      text_body_template: |2
+
         Μόλις προσπαθήσατε να δημιουργήσετε έναν λογαριασμό στην %{site_name} η προσπαθήσατε να αλλάξετε το email ενός λογαριασμού σε %{email}. Ωστόσο ένας λογαριασός υπάρχει ήδη για το %{email}.
+
+
 
         Αν ξεχάσατε τον κωδικό σας μπορείτε να κάνετε [επαναφορά κωδικού](%{base_url}/password-reset).
 
+
+
         Αν δεν προσπαθήσατε να δημιουργήσετε έναν λογαριασμό για το %{email} ή να αλλάξετε την διεύθυνση email, μην ανησυχείτε – μπορείτε με ασφάλεια να αγνοήσετε αυτό το μήνυμα.
+
+
 
         Αν έχετε απορίες, [επικοινωνήστε με τους συνεργάτες μας](%{base_url}/about).
     digest:
@@ -2069,68 +2455,107 @@ el:
     forgot_password:
       title: "Ξέχασα τον κωδικό πρόσβασης"
       subject_template: "[%{email_prefix}] Επαναφορά κωδικού"
-      text_body_template: |
+      text_body_template: |2
+
         Κάποιος ζήτησε την δημιουργία νέου κωδικού για εσάς στην [%{site_name}](%{base_url}).
+
+
 
         Αν δεν το έχετε ζητήσει εσείς, μπορείτε με ασφάλεια να αγνοήσετε αυτό το email.
 
+
+
         Κάντε κλικ στον παρακάτω σύνδεσμο για να επιλέξετε έναν νέο κωδικό:
+
         %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "Όρισε κωδικό πρόσβασης"
       subject_template: "[%{email_prefix}] Όρισε Κωδικό Πρόσβασης"
-      text_body_template: |
+      text_body_template: |2
+
         Κάποιος ζήτησε να προστεθεί ένας κωδικός στον λογαριασμό σας στην [%{site_name}](%{base_url}). Εναλλακτικά μπορείτε να συνδεθείτε χρησιμοποιώντας μια υπηρεσία ταυτοποίησης χρήστη (Google, Facebook, κλπ) η οποία θα πρέπει να αντιστοιχίζεται με αυτήν την επικυρωμένη διεύθυνση email.
+
+
 
         Αν δεν το έχετε ζητήσει εσείς, μπορείτε με ασφάλεια να αγνοήσετε αυτό το email.
 
+
+
         Κάντε κλικ στον παρακάτω σύνδεσμο για να επιλέξετε έναν νέο κωδικό:
+
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Σύνδεση Διαχειριστή"
       subject_template: "[%{email_prefix}] Σύνδεση"
-      text_body_template: |
+      text_body_template: |2
+
         Κάποιος ζήτησε να συνδεθεί στον λογαριασμό σας στην [%{site_name}](%{base_url}).
+
+
 
         Αν δεν το έχετε ζητήσει εσείς, μπορείτε με ασφάλεια να αγνοήσετε αυτό το email.
 
+
+
         Κάντε κλικ στον παρακάτω σύνδεσμο για να συνδεθείτε:
+
         %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "Ο Λογαριασμός Δημιουργήθηκε"
       subject_template: "[%{email_prefix}] Ο νέος σας Λογαριασμός"
-      text_body_template: |
+      text_body_template: |2
+
         Ένας νέος λογαριασμός χρήστη δημιουργηθηκε για εσάς στην %{site_name}
 
+
+
         Κάντε κλικ στον παρακάτω σύνδεσμο για να επιλέξετε κωδικό πρόσβασης για τον νέο σας λογαριασμό:
+
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Επιβεβαίωση νέας διεύθυνσης email"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
-      text_body_template: |
+      text_body_template: |2
+
         Επικυρώστε την νέα σας διεύθυνση email στην %{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
+
+
 
         %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "Επιβεβαίωση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
-      text_body_template: |
+      text_body_template: |2
+
         Προτού αλλάξουμε την διεύθυνση email σας, θα πρέπει να επιβεβαιώσουμε ότι σας ανήκει
+
         η τρέχουσα διεύθυνση email. Αφού ολοκληρώσετε αυτό το βήμα, θα σας ζητήσουμε να
+
         επιβεβαιώσετε την νέα σας διεύθυνση email.
 
+
+
         Επιβεβαιώστε την τρέχουσα διεύθυνση email στην%{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
+
+
 
         %{base_url}/u/authorize-email/%{email_token}
     notify_old_email:
       title: "Ειδοποίηση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Η διεύθυνση email σας έχει αλλαχθεί"
-      text_body_template: |
+      text_body_template: |2
+
         Αυτό είναι ένα αυτοματοποιημένο μήνυμα για να σε ενημερώσει ότι η διεύθυνση email σου
+
         για την %{site_name} έχει αλλάξει. Εάν αυτό έγινε κατα λάθος, παρακαλούμε επικοινώνησε
+
         με ένα διαχειριστή
 
+
+
         Η διεύθυνση email σου έχει αλλάξει σε:
+
+
 
         %{new_email}
     signup_after_approval:
@@ -2139,11 +2564,17 @@ el:
     signup:
       title: "Εγγραφή"
       subject_template: "[%{email_prefix}] Επικυρώστε τον νέο σας λογαριασμό"
-      text_body_template: |
+      text_body_template: |2
+
         Καλώς ήρθατε στην %{site_name}!
 
+
+
         Κάντε κλικ στον παρακάτω σύνδεσμο για να επικυρώσετε και να ενεργοποιήσετε τον νέο λογαριασμό σας:
+
         %{base_url}/u/activate-account/%{email_token}
+
+
 
         Αν για κάποιο λόγο δεν μπορείτε να κάνετε κλικ στον παραπάνω σύνδεσμο, παρακαλούμε αντιγράψτε ολόκληρη την διεύθυνση και επικολλήστε την στην γραμμή διευθύνσεων του περιηγητή σας.
   page_not_found:
@@ -2156,9 +2587,12 @@ el:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."
   login_required:
-    welcome_message: |
+    welcome_message: |2
+
       ## [Καλώς ήρθατε στην %{title}](#welcome)
+
       Είναι απαραίτητο να έχετε λογαριασμό χρήστη.
+
       Παρακαλούμε δημιουργήστε έναν λογαριασμό ή συνδεθείτε για να συνεχίσετε..
   terms_of_service:
     title: "Όροι Χρήσης"
@@ -2196,193 +2630,372 @@ el:
   csv_export:
     boolean_yes: "Ναι "
     boolean_no: "Όχι"
-  static_topic_first_reply: |
+  static_topic_first_reply: |2
+
     Επεξεργαστείτε την πρώτη ανάρτηση σε αυτό το νήμα για να αλλάξετε τα περιεχόμενα της σελίδας %{page_name}.
   guidelines_topic:
     title: "Συχνές Ερωτήσεις/Οδηγίες"
-    body: |
+    body: |2
+
       <a name="civilized"></a>
+
+
 
       ## [Αυτός είναι ένας πολιτισμένος χώρος για δημόσιες συζητήσεις](#civilized)
 
+
+
       Παρακαλούμε σεβαστείτε τον χώρο στον οποίο βρίσκεστε και συμπεριφερθείτε πολιτισμένα, σαν να βρίσκεστε σε κάποιο δημόσιο πάρκο ή άλλο δημόσιο χώρο στον οποίο μπορείτε να επικοινωνήσετε πολιτισμένα με τους συνανθρώπους σας.
+
+
 
       Ο οδηγός αυτός έχει σκοπό να σας ενθαρρύνει σε πολιτισμένες συζητήσεις ώστε να παραμένει το επίπεδο της κοινότητας υψηλό.
 
+
+
       <a name="improve"></a>
+
+
 
       ## [Βελτιώστε την Συζήτηση](#improve)
 
+
+
       Βοηθήστε μας να κάνουμε τον χώρο αυτό ένα υπέροχο μέρος για να περνάμε καλά και να ανταλλάσουμε απόψεις. συμβάλλωντας με οποιοδήποτε τρόπο, έστω και μικρό, στην βελτίωση των συζητήσεων. Συνεισφέρετε όσο μπορείτε πιο θετικά σε αυτές και μην μειώνετε τις απόψεις των άλλων.
+
+
 
       Τα θέματα που συζητούνται σε αυτήν την κοινότητα, έχουν αξία σε εμας καθώς και στα μέλη της κοινότητας που συμμετέχουν και θα θέλαμε να συμπεριφερθείτε ανάλογα όταν συμμετέχετε και εσείς σε αυτά. Να σέβεστε λοιπόν τα θέματα στα οποία συμμετέχετε καθώς και τους ανθρώπους που συμμετέχουν σε αυτά, ακόμα και αν διαφωνείτε.
 
+
+
       Σεβαστείτε την διαφορετικότητα των συνανθρώπων σας και αν δεν συμφωνείτε με τα θέματα τα οποία συζητούνται, προτιμήστε να ξεκινήστε ένα δικό σας.
+
+
 
       One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
 
+
+
       <a name="agreeable"></a>
+
+
 
       ## [Συμφωνήστε, ακόμα και όταν διαφωνείτε](#agreeable)
 
+
+
       Πιθανώς να νοιώθετε την αναγκη να διαφωνήσετε και αυτό είναι λογικό. Θυμηθείτε όμως, να διαφωνείτε με τις ιδέες και όχι με τους ανθρώπους που τις εκφράζουν. Αποφύγετε:
 
+
+
       *   Προσωπικούς χαρακτηρισμούς
+
       *   Προσωπικές επιθέσεις
+
       *   Την απάντηση στον "τόνο" του μηνύματος αντί του περιεχομένου
+
       *   Την απάντηση σε απόψεις, λόγω του μέλους που τις εκφράζει
+
+
 
       Αντ' αυτού, επικοινωνήστε θετικά με απόψεις που βοηθούν την βελτίωση μια συζήτησης.
 
+
+
       <a name="participate"></a>
+
+
 
       ## [Your Participation Counts](#participate)
 
+
+
       The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
+
+
 
       Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
 
+
+
       Let’s leave our community better than we found it.
+
+
 
       <a name="flag-problems"></a>
 
+
+
       ## [If You See a Problem, Flag It](#flag-problems)
+
+
 
       Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
 
+
+
       When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
+
+
 
       In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
 
+
+
       <a name="be-civil"></a>
+
+
 
       ## [Always Be Civil](#be-civil)
 
+
+
       Nothing sabotages a healthy conversation like rudeness:
 
+
+
       *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
+
       *   Keep it clean. Don’t post anything obscene or sexually explicit.
+
       *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
+
       *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
+
+
 
       These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
 
+
+
       This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
+
+
 
       <a name="keep-tidy"></a>
 
+
+
       ## [Keep It Tidy](#keep-tidy)
+
+
 
       Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
 
+
+
       *   Don’t start a topic in the wrong category.
+
       *   Don’t cross-post the same thing in multiple topics.
+
       *   Don’t post no-content replies.
+
       *   Don’t divert a topic by changing it midstream.
+
       *   Don’t sign your posts &mdash; every post has your profile information attached to it.
+
+
 
       Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
 
+
+
       <a name="stealing"></a>
+
+
 
       ## [Post Only Your Own Stuff](#stealing)
 
+
+
       You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
+
+
 
       <a name="power"></a>
 
+
+
       ## [Powered by You](#power)
+
+
 
       This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
 
+
+
       <a name="tos"></a>
 
+
+
       ## [Terms of Service](#tos)
+
+
 
       Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).
   tos_topic:
     title: "Όροι Χρήσης"
   privacy_topic:
     title: "Πολιτική Ιδιωτικότητας"
-    body: |
+    body: |2
+
       <a όνομα=“συλλέγουν"></a>
+
+
 
       ## [Τι πληροφορίεσ συλλέγουμε;](#συλλογή)
 
+
+
       Συλλέγουμε πληροφορίες απο εσένα όταν γραφτείς στη σελίδα και όταν μαζέψεις δεδομένα όταν συμμετέχεις στις συζητήσεις διαβάζοντας, γράφοντας, και σταδιακά το περιεχόμενο που είναι κοινοποίημενο εδώ.
+
+
 
       Όταν εγραφείς στη σελίδα μας, μπόρει να ζυτηθεί το όνομα και η ηλεκτρονίκη διεύθυνση σας. Μπορείται, όμως, να επισκεφτείται τη σελίδα μας χωρίς εγράφη. Η διεύθηνση ηλεκτρονικού ταχυδρομίου σας θα εγκριθεί με ηλεκτονικό μήνυμα που θα περιέχει ενα μοναδικό σύνδεσμο. Αν επισκέφτεσαι αυτό το σύνδεσμο , θα ξέρουμε ότι ελέγχεις τι δεύθυνση ηλεκτονικού ταχύδρομιου.
 
+
+
       Οταν είσαι εγγραμένος και κοινοποίης, καταγράφουμε τη διεύθυνση IP που προέρχεται η δημοσίευση. Μπορεί να διατηρίσουμε αρχεία καταγραφής του διακομιστή που περιέχουν τη διεύθυνση IP για κάθε αίτημα του διακομιστή.
+
+
 
       <α όνομα="χρήση"></a>
 
+
+
       ## [Για ποίο σκοπό χρησιμοποίουμε τις πληροφορίες σας;](#χρήση)
+
+
 
       Οποιαδίποτε από τις πληροφορίες που συλλέγουμε απο εσάς μπορεί να χρησιμοποίηθει με ένα από τους ακόλουθους τρόπους:
 
+
+
       *Για να εξατομικεύσουμε την εμπειρία σας&mdash;— τα στοιχεία σας μας βοηθά να ανταποκριθεί καλύτερα στις ατομικές σας ανάγκες.
+
       *Για να βελτιώσουμε την ιστοσελίδα μας &mdash;— προσπαθούμε συνεχώς να βελτιώσουν τις προσφορές τις ιστοσελίδα μας βάσει τις πληροφορίες και την ανατροφοδότηση που λαμβάνουμε από εσάς.
 
+
+
       *Για τη βελτίωση της εξυπηρέτησης πελατών &mdash;— τα στοιχεία σας μας βοηθούν για την ανταπόκριση σε αιτήματα εξυπηρέτησής σας πιο αποτελεσματικά και να υποστηρίζουν τις ανάγκες.
+
       *Για να στείλετε μηνύματα ηλεκτρονικού ταχυδρομείου &mdash;— τη διεύθυνση ηλεκτρονικού ταχυδρομείου που παρέχετε μπορεί να χρησιμοποιηθεί για την αποστολή πληροφοριών, τις ειδοποιήσεις που έχετε ζητήσει για αλλαγές σε θέματα ή απαντώντας στο όνομα χρήστη σας, να απαντήσουμε σε ερωτήσεις, και/ή άλλα αιτήματα ή ερωτήσεις.
+
+
 
       <α όνομα="προστασία"></a>
 
+
+
       ## [Πως προστατεύουμε τις πληροφορίες σας;](#προστασία)
 
+
+
       Εφαρμόζουμε μια ποικιλία μέτρων ασφαλείας για να διατηρήσουμε την ασφάλεια των προσωπικών σας πληροφοριών όταν εισάγεστε, υποβάλλετε ή πρόσβαση στις προσωπικές πληροφορίες σας.
+
       <a name="data-retention"></a>
+
+
 
       ## [Τι είναι τα δεδομέναdata κράτησης πολιτικής?](#data-retention)
 
+
+
       Θα κάνουμε μια καλήπροσπάθεια πιστής:
 
+
+
       *Διατηρούν αρχεία καταγραφής του διακομιστή που περιέχει τη διεύθυνση IP του όλα τα αιτήματα σε αυτόν το διακομιστή δεν φυλάσονται περισσότερο από 90 ημέρες.
+
       *Διατηρούν τις διευθύνσεις IP που σχετίζονται με εγγεγραμμένους χρήστες και τις θέσεις τους όχι περισσότερο από 5 χρόνια.
+
+
 
       <a name="cookies"></a>
 
+
+
       ## [Do we use cookies?](#cookies)
+
+
 
       Ναι. Τα cookies είναι μικρά αρχεία ότι ένα site ή ο πάροχος υπηρεσίας μεταφέρει στο σκληρό δίσκο του υπολογιστή σας μέσω του Web browser σας (αν επιτρέπεται). Αυτά τα cookies επιτρέπουν στον ιστότοπο να αναγνωρίσει το πρόγραμμα περιήγησής σας και, εάν έχετε έναν λογαριασμό, συσχετίσετε με καταχωρημένο λογαριασμό σας.
 
+
+
       Χρησιμοποιούμε cookies για να κατανοήσουν και να αποθηκεύσετε τις προτιμήσεις σας για μελλοντικές επισκέψεις και να μεταγλωττίσετε συγκεντρωτικά δεδομένα σχετικά με την επισκεψιμότητα της ιστοσελίδας και την αλληλεπίδραση ιστοσελίδας, έτσι ώστε να μπορούμε να προσφέρουμε καλύτερες εμπειρίες ιστοσελίδας και εργαλεία στο μέλλον. Μπορεί να συνεργαστούμε με τρίτους παρόχους υπηρεσιών για να μας βοηθήσουν να κατανοήσουμε καλύτερα τους επισκέπτες περιοχών μας.Αυτοί οι πάροχοι δεν επιτρέπεται να χρησιμοποιούν τις πληροφορίες που συλλέγονται για λογαριασμό μας, εκτός από το να μας βοηθήσουν να βελτιστοποιήσουμε την επιχείρησή μας.
+
+
 
       <a name="disclose"></a>
 
+
+
       ## [Αποκαλύπτουμε οποιαδίποτε πληροφορία με εξωτερικούς παρόχους;](#disclose)
+
+
 
       Εμείς δεν πωλάμε, το εμπόριο, ή άλλο τρόπο μεταφοράς σε εξωτερικά μέρη σας προσωπικά αναγνωρίσιμες πληροφορίες. Αυτό δεν περιλαμβάνει έμπιστα τρίτα μέρη που μας βοηθούν σε λειτουργία την ιστοσελίδα μας, διεξάγουν τις δραστηριότητές μας ή εξυπηρέτηση σας, εφόσον τα μέρη συμφωνούν να διατηρήσουν τις πληροφορίες εμπιστευτικές. Ενδέχεται επίσης να δώσουμε τα στοιχεία σας όταν πιστεύουμε ότι είναι σκόπιμο να συμμορφώνονται με τη νομοθεσία, την επιβολή πολιτικών σελιδών μας, ή προστασία δικών μας ή αλλότριων δικαιωμάτων, ιδιοκτησίας ή ασφάλειας. Ωστόσο, μη προσωπικά αναγνωρίσιμες πληροφορίες επισκέπτης μπορεί να παρέχεται σε άλλα μέρη για το εμπόριο, τη διαφήμιση, ή άλλες χρήσεις.
 
+
+
       <a name="third-party"></a>
+
+
 
       ## [Third party links](#third-party)
 
+
+
       Περιστασιακά, κατά την κρίση μας, εμείς μπορεί να περιλαμβάνουμε ή να προσφέρουμε προϊόντα τρίτων ή υπηρεσίες στην ιστοσελίδα μας. Αυτές οι ιστοσελίδες τρίτων έχουν χωριστές και ανεξάρτητες πολιτικές απορρήτου. Έχουμε επομένως καμία ευθύνη ή υποχρέωση για το περιεχόμενο και τις δραστηριότητες των συνδεδεμένων ιστοτόπων. Παρόλα αυτά, επιδιώκουμε να προστατεύσουμε την ακεραιότητα τις σελίδας μας και καλωσορίζουμε οποιαδήποτε ανατροφοδότηση σχετικά με αυτές τις τοποθεσίες.
+
+
 
       <a name="coppa"></a>
 
+
+
       ## [Παιδικό ηλεκτρονικό απόρρητο προστασίας πράξης συμμόρφωσης](#coppa)
+
+
 
       Η σελίδα μας, τα προϊόντα και τις υπηρεσίες μας απευθύνονται σε ανθρώπους που είναι τουλάχιστον 13 ετών ή μεγαλύτεροι. Εάν αυτός ο διακομιστής είναι στις ΗΠΑ, και είστε ηλικίας κάτω των 13, ανά τις απαιτήσεις του COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), μη χρησιμοποίησεται αυτή τη σελίδα.
 
+
+
       <a name="online"></a
+
+
 
       ## [Online Privacy Policy Only](#online)
 
+
+
       Αυτή η πολιτική απορρήτου ισχύει μόνο για πληροφορίες που συλλέγονται μέσω της ιστοσελίδας μας και όχι σε πληροφορίες που συλλέγονται όταν είστε απενεργοποιημένοι.
+
+
 
       <a name="consent"></a>
 
+
+
       ## [Your Consent](#consent)
+
+
 
       Χρησιμοποιώντας την ιστοσελίδα μας, συναινείτε στην πολιτική απορρήτου μας.
 
+
+
       <a name="changes"></a>
 
+
+
       ## [Changes to our Privacy Policy](#changes)
+
       Εάν αποφασίσουμε να αλλάξουμε την πολιτική απορρήτου μας, θα δημοσιεύσουμε αυτές τις αλλαγές σε αυτήν τη σελίδα.
+
       Αυτό το αρχείο είναι CC-BY-SA. Αναβαθμίστικε ταιλευταίος 31Μαΐου, 2013.
   badges:
     editor:
@@ -2426,7 +3039,8 @@ el:
     nice_share:
       name: Καλή Κοινοποίηση
       description: Κοινοποίησε μια ανάρτηση με 25 μοναδικούς επισκέπτες
-      long_description: |
+      long_description: |2
+
         Αυτό το παράσημο χορηγείται για την κοινοποίηση ενός συνδέσμου στον οποίον έκαναν κλικ 25 εξωτερικοί επισκέπτες. Ευχαριστούμε που διαδίδεις τις συητήσεις μας και αυτή την κοινότητα.
     good_share:
       name: Πολύ Καλή Κοινοποίηση
@@ -2437,8 +3051,11 @@ el:
     first_like:
       name: Πρώτο "Μου αρέσει"
       description: «Μου άρεσε» μια ανάρτηση
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται την πρώτη φορά που πατάς "Μου αρέσει" σε μια ανάρτηση χρησιμοποιώντας το κουμπί :heart:. Πατώντας "Μου αρέσει" στις αναρτήσεις είναι ο καλύτερος τρόπος να δίνεις στα υπόλοιπα μέλη της κοινότητας να καταλάβουν ότι αυτό που δημοσίευσαν ήταν ενδιαφέρον, χρήσιμο, έξυπνο ή διασκεδαστικό. Μοιράσου την αγάπη!
+
+
 
     first_flag:
       name: Πρώτη Επισήμανση
@@ -2455,14 +3072,20 @@ el:
     first_share:
       name: Πρώτη Κοινοποίηση
       description: Κοινοποίησε μια δημοσίευση
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται την πρώτη φορά που κοινοποιείς ένα σύνδεσμο σε μια απάντηση ή σε ένα νήμα χρησιμοποιώντας το κουμπί της κοινοποίησης. Το να κοινοποιείς συνδέσμους είναι ένας καλός τρόπος να επιδείξεις ενδιαφέρουσες συζητήσεις με τον υπόλοιπο κόσμο και να μεγαλώσεις την κοινότητά μας.
+
+
 
     first_link:
       name: Πρώτος σύνδεσμος
       description: Προστέθηκε ένας σύνδεσμος σε ένα άλλο νήμα
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται την πρώτη φορά που προσθέτεις ένα σύνδεσμο σε ένα άλλο νήμα. Το να συνδέεις νήματα βοηθά τους άλλους χρήστες να βρουν ενδριαφέρουσες σχετικές συζητήσεις, δείχνοντας τα κοινά στοιχεία μεταξύ των νημάτων και στις δυο κατευθύνσεις. Κάνε συνδέσμους ελεύθερα!
+
+
 
     first_quote:
       name: Πρώτη Παράθεση
@@ -2473,51 +3096,68 @@ el:
     reader:
       name: Αναγνώστης
       description: Διάβασε κάθε απάντηση σε ένα νήμα με περισσότερες από 100 απαντήσεις
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται την πρώτη φορά που διαβάζεις ένα μακρύ νήμα με πάνω από 100 απαντήσεις. Το να διαβάζεις μια συζήτηση στενά σε βοηθά να ακολουθήσεις τη συζήτηση, να καταλάβεις διαφορετικές απόψεις και οδηγεί σε πιο ενδιαφέρουσες συζητήσεις. Όσο περισσότερο διαβάζεις, τόσο το καλύτερο για τη συζήτηση. Όπως μας αρέσει να λέμε, το Διάβασμα είναι θεμελιώδες! :slight_smile:
+
+
 
     popular_link:
       name: Δημοφιλής Σύνδεσμος
       description: Δημοσίευσε έναν εξωτερικό σύνδεσμο με 50 κλικ
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται όταν ένας σύνδεσμος που κοινοποίησες λάβει 50 κλικς. Ευχαριστούμε που δημοσίευσες έναν χρήσιμο σύνδεσμο που πρόσθεσε ενδιαφέρον περιεχόμενο στη συζήτηση!
+
+
 
     hot_link:
       name: Καυτός Σύνδεσμος
       description: Δημοσίευσε έναν εξωτερικό σύνδεσμο με 300 κλικ
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται όταν ένας σύνδεσμος που κοινοποίησες λάβει 300 κλικς. Ευχαριστούμε που δημοσίευσες έναν τόσο μαγευτικό σύνδεσμο που πήγε τη συζήτηση πολύ μπροστά και της έριξε φως!
+
+
 
     famous_link:
       name: Διάσημος Σύνδεσμος
       description: Δημοσίευσε έναν εξωτερικό σύνδεσμο με 1000 κλικ
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν ένας σύνδεσμος που κοινοποίησες λάβει 1000 κλικς. Ουάου! Δημοσίευσες ένα σύνδεσμο που βελτίωσε σημαντικά τη συζήτηση προσθέτοντας ουσιώδεις λεπτομέρειες, συμφραζόμενα και πληροφορίες. Υπέροχη δουλειά!
     appreciated:
       name: Αναγνωρίζεται
       description: Έλαβε 1 "Μου αρέσει" σε 20 δημοσιεύσεις
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν λαμβάνεις τουλάχιστον ένα "Μου αρέσει" σε 20 διαφορετικές δημοσιεύσεις. Η κοινότητα αναγνωρίζει την συνεισφορά σου στις συζητήσεις εδώ!
     respected:
       name: Εκτιμάται
       description: Έλαβε 2 "Μου αρέσει" σε 100 δημοσιεύσεις
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν λαμβάνεις τουλάχιστον 2 "Μου αρέσει" σε 100 διαφορετικές δημοσιεύσεις. Η κοινότητα εκτιμά τη μεγάλη σου συνεισφορά στις συζητήσεις εδώ.
     admired:
       name: Θαυμάζεται
       description: Έλαβε 5 "Μου αρέσει" σε 300 δημοσιεύσεις
-      long_description: |
+      long_description: |2
+
         Αυτό το παράσημο χορηγείται όταν λαμβάνεις τουλάχιστον 5 "Μου αρέσει" σε 300 διαφορετικές δημοσιεύσεις. Ουάου! Η κοινότητα θαυμάζει την συχνή και υψηλής ποιότητας συνεισφορά σου στις συζητήσεις εδώ.
     out_of_love:
       name: "Αγάπη "
       description: Χρησιμοποίησε 50 "Μου αρέσει" σε μια ημέρα
-      long_description: |+
+      long_description: |2+
+
         Το παράσημο χορηγείται όταν χρησιμοποιείς όλα τα 50 "Μου αρέσει" που έχεις ημερησίως. Να θυμάσαι ότι το να έχεις το χρόνο να πατάς "Μου αρέσει" στις αναρτήσεις που απολαμβάνεις και εκτιμάς, ενθαρρύνει τα μέλη της κοινότητας σου να δημιουργούν ακόμα καλύτερες συζητήσεις στο μέλλον.
+
+
 
     higher_love:
       name: Πολύ Αγάπη
       description: Χρησιμοποίησε 50 "Μου αρέσει" σε μια ημέρα 5 φορές
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν χρησιμοποιείς όλα τα 50 ¨Μου αρέσει" που έχεις ημερησίως για 5 ημέρες. Ευχαριστούμε για το χρόνο σου να ενθαρρύνεις ενεργά τις καλύτερες συζητήσεις κάθε μέρα!
     crazy_in_love:
       name: Τρελή Αγάπη
@@ -2525,12 +3165,14 @@ el:
     thank_you:
       name: Ευχαριστεί
       description: Έχει σε 20 δημοσιεύσεις "Μου αρέσει" και πάτησε 10 "Μου αρέσει"
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν έχεις 20 "Μου αρέσει" σε δημοσιεύσεις και δίνεις 10 ή περισσότερα "Μου αρέσει" σε αντάλλαγμα. Όταν κάποιος πατάει "Μου αρέσει" στη δημοσίευσή σου, βρίσκεις το χρόνο να πατήσεις "Μου αρέσει" σε ότι δημοσιεύουν οι άλλοι, επίσης.
     gives_back:
       name: Ανταποδίδει
       description: Έχει σε 100 δημοσιεύσεις "Μου αρέσει" και πάτησε 100 "Μου αρέσει"
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται όταν έχεις 20 "Μου αρέσει" σε δημοσιεύσεις και ταυτόχρονα έχεις κι εσύ πατήσει "μου αρέσει" σε 100 ή περισσότερες αναρτήσεις. Ευχαριστούμε που το συνεχίζεις!
     empathetic:
       name: Λατρεία
@@ -2547,12 +3189,14 @@ el:
     first_reply_by_email:
       name: Πρώτη Απάντηση μέσω Email
       description: Απάντησε σε μία ανάρτηση μέσω email
-      long_description: |
+      long_description: |2
+
         Το παράσημο χορηγείται την πρώτη φορά που απαντάς σε μια δημοσίευση μέσω e-mail :e-mail:.
     new_user_of_the_month:
       name: "Νέος Χρήστης του Μήνα"
       description: Εξαιρετική συνεισφορά κατά τον πρώτο μήνα
-      long_description: |
+      long_description: |2
+
         Αυτό το βραβείο απονέμεται σε δύο νέους χρήστες κάθε μήνα για την εξαιρετική συνεισφορά τους στην κοινότητα, όπως αυτή μετρήθηκε από το πόσο σύχνα άρεσαν οι αναρτήσεις τους και σε ποιους.
     enthusiast:
       name: Θιασώτης
@@ -2648,17 +3292,6 @@ el:
             description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       corporate:
         title: "Οργάνωση"
-        description: "Αυτά τα ονόματα θα υπάρχουν στην <a href='%{base_path}/privacy' target='blank'> Πολιτική Ιδιωτικότητας</a> και στους <a href='%{base_path}/tos' target='blank'>Όρους Χρήσης</a>, που είναι νήματα τα οποία μπορείς να επεξεργαστείς στην κατηγορία Συνεργατών. Εάν δεν έχεις εταιρεία, μπορείς να παραλείψεις αυτό το βήμα για τώρα."
-        fields:
-          company_short_name:
-            label: "Όνομα Εταιρείας (σύντομο)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Όνομα Εταιρείας (πλήρες)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Όνομα Domain Εταιρείας"
-            placeholder: "initech.com"
       colors:
         title: "Θέμα"
         fields:
@@ -2671,20 +3304,8 @@ el:
                 label: "Απλό Σκούρο"
       logos:
         title: "Λογότυπα"
-        fields:
-          logo_url:
-            label: "Κυρίως Λογότυπο"
-            description: "Το λογότυπο στην πάνω αριστερή πλευρά της ιστοσελίδας. Χρησιμοποίησε ένα πλατύ ορθογώνιο σχήμα."
-          logo_small_url:
-            label: "Μικρό λογότυπο"
-            description: "Μία συμπαγής εκδοχή του λογοτύπου σας η οποία εμφανίζεται στην κορυφή αριστερά της σελίδας σας, κατά την κύλιση αυτής προς τα κάτω. Χρησιμοποιήστε ένα τετράγωνο σχήμα."
       icons:
         title: "Εικονίδια"
-        fields:
-          favicon_url:
-            label: "Μικρό εικονίδιο"
-          apple_touch_icon_url:
-            label: "Μεγάλο εικονίδιο"
       homepage:
         description: "Σου προτείνουμε να εμφανίζονται τα τελευταία νήματα στην αρχική σου σελίδα, αλλά μπορείς επίσης να επιλέξεις να εμφανίζονται κατηγορίες (ομάδες ή νήματα) στην αρχική σου σελίδα, εάν το προτιμάς."
         title: "Αρχική Σελίδα"

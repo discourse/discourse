@@ -60,7 +60,6 @@ end
 # let's not run seed_fu every test
 SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
-SiteSetting.max_consecutive_replies = 0
 SiteSetting.automatically_download_gravatars = false
 
 SeedFu.seed
@@ -163,9 +162,6 @@ RSpec.configure do |config|
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
 
-    # it makes hard to test
-    SiteSetting.max_consecutive_replies = 0
-
     Discourse.clear_readonly!
     Sidekiq::Worker.clear_all
 
@@ -180,11 +176,13 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :multisite) do
+    Rails.configuration.multisite = true
     RailsMultisite::ConnectionManagement.config_filename =
       "spec/fixtures/multisite/two_dbs.yml"
   end
 
   config.after(:each, type: :multisite) do
+    Rails.configuration.multisite = false
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.clear_active_connections!
     ActiveRecord::Base.establish_connection

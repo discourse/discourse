@@ -48,7 +48,7 @@ module Jobs
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .joins(<<~SQL)
           LEFT JOIN site_settings ss
-          ON ss.value::integer = uploads.id
+          ON NULLIF(ss.value, '')::integer = uploads.id
           AND ss.data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}
         SQL
         .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")

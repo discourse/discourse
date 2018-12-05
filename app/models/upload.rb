@@ -127,8 +127,12 @@ class Upload < ActiveRecord::Base
         Discourse.store.download(self).path
       end
 
-    self.width, self.height = size = FastImage.new(path).size
-    self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+    begin
+      self.width, self.height = size = FastImage.new(path, raise_on_failure: true).size
+      self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+    rescue => e
+      Discourse.warn_exception(e, message: "Error getting image dimensions")
+    end
     nil
   end
 

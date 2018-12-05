@@ -24,7 +24,6 @@ gl:
     default_poll_with_multiple_choices_has_invalid_parameters: "A enquisa con varios apartados ten parámetros incorrectos."
     named_poll_with_multiple_choices_has_invalid_parameters: "A enquisa chamada <strong>%{name}</strong> con varios apartados ten parámetros incorrectos."
     requires_at_least_1_valid_option: "Debes seleccionar alomenos 1 opción válida."
-    no_polls_associated_with_this_post: "Non hai enquisas asociadas con esta publicación."
     no_poll_with_this_name: "Non hai ningunha enquisa chamada <strong>%{name}</strong> asociada con esta publicación."
     post_is_deleted: "Non se pode actuar sobre unha publicación eliminada."
     topic_must_be_open_to_vote: "O tema debe estar aberto para votalo."

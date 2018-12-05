@@ -1,5 +1,7 @@
 import AppEvents from "discourse/lib/app-events";
 import Topic from "discourse/models/topic";
+import PostStream from "discourse/models/post-stream";
+import { Placeholder } from "discourse/lib/posts-with-placeholders";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: ["controller:composer", "controller:application"],
@@ -494,4 +496,22 @@ QUnit.test("selectBelow", function(assert) {
   assert.equal(selectedPostIds[0], 3, "selected post #3");
   assert.equal(selectedPostIds[1], 4, "also selected 1st post below post #3");
   assert.equal(selectedPostIds[2], 5, "also selected 2nd post below post #3");
+});
+
+QUnit.test("topVisibleChanged", function(assert) {
+  const postStream = PostStream.create({
+    posts: [{ id: 1 }]
+  });
+
+  const model = Topic.create({ postStream });
+  const controller = this.subject({ model });
+  const placeholder = new Placeholder("post-placeholder");
+
+  assert.equal(
+    controller.send("topVisibleChanged", {
+      post: placeholder
+    }),
+    null,
+    "it should work with a post-placehodler"
+  );
 });

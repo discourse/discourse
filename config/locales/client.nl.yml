@@ -490,9 +490,6 @@ nl:
       topic_sentence:
         one: "1 topic"
         other: "%{count} topics"
-      topic_stat_sentence:
-        one: "%{count} nieuw topic in de afgelopen %{unit}."
-        other: "%{count} nieuwe topics in de afgelopen %{unit}."
     ip_lookup:
       title: IP-adres zoeken
       hostname: Hostnaam
@@ -1081,7 +1078,6 @@ nl:
         title_too_long: "Titel kan niet langer zijn dan {{max}} tekens"
         post_missing: "Bericht kan niet leeg zijn"
         post_length: "Bericht moet minstens {{min}} tekens bevatten"
-        try_like: 'Hebt u de knop <i class="fa fa-heart"></i> geprobeerd?'
         category_missing: "U moet een categorie kiezen"
       save_edit: "Bewerking opslaan"
       reply_original: "Antwoorden op oorspronkelijke topic"
@@ -1764,7 +1760,6 @@ nl:
           revert: "Terugkeren naar deze revisie"
           edit_wiki: "Wiki bewerken"
           edit_post: "Bericht bewerken"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "De weergegeven uitvoer met wijzigingen inline tonen"

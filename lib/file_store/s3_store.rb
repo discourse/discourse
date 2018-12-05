@@ -41,10 +41,13 @@ module FileStore
       }
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
+
+      path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
       # if this fails, it will throw an exception
       path, etag = @s3_helper.upload(file, path, options)
-      # return the upload url
-      return "#{absolute_base_url}/#{path}", etag
+
+      # return the upload url and etag
+      return File.join(absolute_base_url, path), etag
     end
 
     def remove_file(url, path)
@@ -94,7 +97,7 @@ module FileStore
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
       folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
-      url.sub("#{schema}#{absolute_base_url}/#{folder}", "#{SiteSetting.Upload.s3_cdn_url}/")
+      url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
     def cache_avatar(avatar, user_id)

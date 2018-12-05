@@ -9,6 +9,11 @@ export default Ember.Controller.extend({
   defaultEventTypes: Ember.computed.alias("adminWebHooks.defaultEventTypes"),
   contentTypes: Ember.computed.alias("adminWebHooks.contentTypes"),
 
+  @computed
+  showTagsFilter() {
+    return this.siteSettings.tagging_enabled;
+  },
+
   @computed("model.isSaving", "saved", "saveButtonDisabled")
   savingStatus(isSaving, saved, saveButtonDisabled) {
     if (isSaving) {

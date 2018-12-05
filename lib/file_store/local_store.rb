@@ -32,12 +32,8 @@ module FileStore
       "#{Discourse.asset_host}#{relative_base_url}"
     end
 
-    def upload_path
-      "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
-    end
-
     def relative_base_url
-      "#{Discourse.base_uri}#{upload_path}"
+      File.join(Discourse.base_uri, upload_path)
     end
 
     def external?
@@ -46,7 +42,7 @@ module FileStore
 
     def download_url(upload)
       return unless upload
-      "#{relative_base_url}/#{upload.sha1}"
+      File.join(relative_base_url, upload.sha1)
     end
 
     def cdn_url(url)
@@ -68,7 +64,7 @@ module FileStore
     end
 
     def get_path_for(type, upload_id, sha, extension)
-      "#{upload_path}/#{super(type, upload_id, sha, extension)}"
+      File.join("/", upload_path, super(type, upload_id, sha, extension))
     end
 
     def copy_file(file, path)
@@ -90,7 +86,7 @@ module FileStore
     end
 
     def public_dir
-      "#{Rails.root}/public"
+      File.join(Rails.root, "public")
     end
 
     def tombstone_dir
@@ -105,15 +101,13 @@ module FileStore
     private
 
     def list_missing(model)
-      public_directory = "#{Rails.root}/public"
-
       count = 0
       model.find_each do |upload|
 
         # could be a remote image
         next unless upload.url =~ /^\/[^\/]/
 
-        path = "#{public_directory}#{upload.url}"
+        path = "#{public_dir}#{upload.url}"
         bad = true
         begin
           bad = false if File.size(path) != 0

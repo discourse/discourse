@@ -219,7 +219,7 @@ RSpec.describe MigratePollsData do
             "type" => "regular"
           },
           "poll" => {
-            "options" =>  [
+            "options" => [
               {
                 "id" => "edeee5dae4802ab24185d41039efb545",
                 "html" => "Yes",

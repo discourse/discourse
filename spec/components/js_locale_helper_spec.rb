@@ -121,42 +121,42 @@ describe JsLocaleHelper do
   end
 
   it 'performs fallbacks to english if a translation is not available' do
-    JsLocaleHelper.set_translations('en',       "en" => {
+    JsLocaleHelper.set_translations('en', "en" => {
         "js" => {
-          "only_english"      => "1-en",
-          "english_and_site"  => "3-en",
-          "english_and_user"  => "5-en",
-          "all_three"         => "7-en",
+          "only_english" => "1-en",
+          "english_and_site" => "3-en",
+          "english_and_user" => "5-en",
+          "all_three" => "7-en",
         }
       })
 
-    JsLocaleHelper.set_translations('ru',       "ru" => {
+    JsLocaleHelper.set_translations('ru', "ru" => {
         "js" => {
-          "only_site"         => "2-ru",
-          "english_and_site"  => "3-ru",
-          "site_and_user"     => "6-ru",
-          "all_three"         => "7-ru",
+          "only_site" => "2-ru",
+          "english_and_site" => "3-ru",
+          "site_and_user" => "6-ru",
+          "all_three" => "7-ru",
         }
       })
 
-    JsLocaleHelper.set_translations('uk',       "uk" => {
+    JsLocaleHelper.set_translations('uk', "uk" => {
         "js" => {
-          "only_user"         => "4-uk",
-          "english_and_user"  => "5-uk",
-          "site_and_user"     => "6-uk",
-          "all_three"         => "7-uk",
+          "only_user" => "4-uk",
+          "english_and_user" => "5-uk",
+          "site_and_user" => "6-uk",
+          "all_three" => "7-uk",
         }
       })
 
     expected = {
-      "none"              => "[uk.js.none]",
-      "only_english"      => "1-en",
-      "only_site"         => "2-ru",
-      "english_and_site"  => "3-ru",
-      "only_user"         => "4-uk",
-      "english_and_user"  => "5-uk",
-      "site_and_user"     => "6-uk",
-      "all_three"         => "7-uk",
+      "none" => "[uk.js.none]",
+      "only_english" => "1-en",
+      "only_site" => "2-ru",
+      "english_and_site" => "3-ru",
+      "only_user" => "4-uk",
+      "english_and_user" => "5-uk",
+      "site_and_user" => "6-uk",
+      "all_three" => "7-uk",
     }
 
     SiteSetting.default_locale = 'ru'

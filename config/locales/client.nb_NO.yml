@@ -510,9 +510,6 @@ nb_NO:
       topic_sentence:
         one: "1 emne"
         other: "%{count} emner"
-      topic_stat_sentence:
-        one: "%{count} nytt emne de siste %{unit}."
-        other: "%{count} nye emner de siste %{unit}."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -1197,7 +1194,6 @@ nb_NO:
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
         post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være på minst {{min}} tegn"
-        try_like: 'Har du prøvd <i class="fa fa-heart"></i> knappen?'
         category_missing: "Du må velge en kategori"
         tags_missing: "Du må velge minst {{count}} stikkord"
       save_edit: "Lagre endring"
@@ -1806,7 +1802,6 @@ nb_NO:
           other: "Du har valgt <b>{{count}}</b> innlegg."
     post:
       quote_reply: "Sitat"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg {{number}}"
       wiki_last_edited_on: "wikien sist redigert"
@@ -1992,7 +1987,6 @@ nb_NO:
           revert: "Gå tilbake til denne versjonen"
           edit_wiki: "Rediger wiki"
           edit_post: "Rediger innlegg"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vis endelig tekst med endringene der de er gjort"

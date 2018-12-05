@@ -19,8 +19,6 @@ pl_PL:
         many: "oddanych głosów"
         other: "oddanych głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
-      public:
-        title: "Głosy są jawne."
       multiple:
         help:
           at_least_min_options:
@@ -56,6 +54,9 @@ pl_PL:
         title: "Zamknij ankietę"
         label: "Zamknij"
         confirm: "Czy na pewno chcesz zamknąć tę ankietę?"
+      automatic_close:
+        closes_in: "zostanie zamknięty w ciągu <strong>%{timeLeft}</strong>"
+        age: "zamknięty <strong>%{age}</strong>"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
@@ -65,6 +66,7 @@ pl_PL:
         help:
           options_count: Wprowadź przynajmniej 2 opcje
           invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
+          min_step_value: Minimalna wartość kroku to 1
         poll_type:
           label: Typ
           regular: Pojedynczy wybór
@@ -78,3 +80,5 @@ pl_PL:
           label: Pokaż kto głosował
         poll_options:
           label: Wprowadź jedną opcję ankiety w jednej linii
+        automatic_close:
+          label: Automatycznie zamknij ankietę

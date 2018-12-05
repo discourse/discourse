@@ -152,11 +152,6 @@ cs:
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 reakce"
-      few: "%{count} reakce"
-      many: "%{count} reakcí"
-      other: "%{count} reakcí"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
     one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
@@ -349,17 +344,12 @@ cs:
           attributes:
             word:
               too_many: "Příliš mnoho slov pro tuto akci"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>Pole 'o mně' na vašem profilu je v tuto chvíli prázdné, <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} o sobě zatím nevyplnil žádné informace</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
-  assets_topic_title: "Soubory pro vzhled webu"
-  assets_topic_body: "Toto téma je viditelné pouze pro redaktory a slouží pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nJak postupovat:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte a vložte)\n3. Pošlete tuto odpověď.\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu příspěvku a adresy vykopírujte odtud.\n5. Vložte tyto adresy do [základního nastavení](%{base_path}/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Vítejte v Discourse"
     body: |2
@@ -583,7 +573,7 @@ cs:
       title: "Něco jiného"
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
-      title: 'Záložka'
+      title: 'Založit'
       description: 'Přidat záložku k tomuto příspěvku'
       short_description: 'Přidat záložku k tomuto příspěvku'
       long_form: 'přidal záložku k tomuto příspěvku'
@@ -670,6 +660,8 @@ cs:
       title: "Uživatelé podle věrohodnosti"
       xaxis: "Věrohodnost"
       yaxis: "Počet uživatelů"
+    users_by_type:
+      title: "Uživatelé podle typu"
     emails:
       title: "Odesláno emailů"
       xaxis: "Den"
@@ -765,7 +757,6 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
-    apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
@@ -819,9 +810,9 @@ cs:
   move_posts:
     new_topic_moderator_post:
       one: "Příspěvek byl oddělen do nového tématu: %{topic_link}"
-      few: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
-      many: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
-      other: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
+      few: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
+      many: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
+      other: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
@@ -842,6 +833,7 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
+    click_to_continue: "Pro pokračování klikněte zde."
   user:
     username:
       unique: "musí být unikátní"
@@ -950,30 +942,12 @@ cs:
         title: "Vítejte ve vašem Discourse!"
       privacy:
         title: "Přístup"
-      corporate:
-        fields:
-          company_short_name:
-            label: "Název společnosti (krátký)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Název společnosti (plný)"
-            placeholder: "Initech, s.r.o."
-          company_domain:
-            placeholder: "initech.cz"
       colors:
         title: "Téma"
       logos:
         title: "Loga"
-        fields:
-          logo_url:
-            label: "Primární loga"
       icons:
         title: "Ikony"
-        fields:
-          favicon_url:
-            label: "Malá ikona"
-          apple_touch_icon_url:
-            label: "Velká ikona"
       homepage:
         title: "Domovská stránka"
         fields:

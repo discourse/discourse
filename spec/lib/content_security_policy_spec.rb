@@ -1,21 +1,24 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe ContentSecurityPolicy do
+  before { ContentSecurityPolicy.base_url = nil }
+
   describe 'report-uri' do
     it 'is enabled by SiteSetting' do
       SiteSetting.content_security_policy_collect_reports = true
-      report_uri = parse(ContentSecurityPolicy.new.build)['report-uri'].first
-      expect(report_uri).to eq('/csp_reports')
+      report_uri = parse(policy)['report-uri'].first
+      expect(report_uri).to eq('http://test.localhost/csp_reports')
 
       SiteSetting.content_security_policy_collect_reports = false
-      report_uri = parse(ContentSecurityPolicy.new.build)['report-uri']
+      report_uri = parse(policy)['report-uri']
       expect(report_uri).to eq(nil)
     end
   end
 
   describe 'worker-src' do
     it 'always has self and blob' do
-      worker_srcs = parse(ContentSecurityPolicy.new.build)['worker-src']
+      worker_srcs = parse(policy)['worker-src']
       expect(worker_srcs).to eq(%w[
         'self'
         blob:
@@ -25,8 +28,8 @@ describe ContentSecurityPolicy do
 
   describe 'script-src' do
     it 'always has self, logster, sidekiq, and assets' do
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to eq(%w[
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
         'unsafe-eval'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
@@ -46,7 +49,7 @@ describe ContentSecurityPolicy do
       SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
+      script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include('https://www.google-analytics.com')
       expect(script_srcs).to include('https://www.googletagmanager.com')
     end
@@ -54,7 +57,7 @@ describe ContentSecurityPolicy do
     it 'whitelists CDN assets when integrated' do
       set_cdn_url('https://cdn.com')
 
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
+      script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
         https://cdn.com/assets/
         https://cdn.com/brotli_asset/
@@ -67,7 +70,7 @@ describe ContentSecurityPolicy do
 
       global_setting(:s3_cdn_url, 'https://s3-cdn.com')
 
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
+      script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
         https://s3-cdn.com/assets/
         https://s3-cdn.com/brotli_asset/
@@ -78,14 +81,59 @@ describe ContentSecurityPolicy do
         http://test.localhost/extra-locales/
       ])
     end
+  end
 
-    it 'can be extended with more sources' do
-      SiteSetting.content_security_policy_script_src = 'example.com|another.com'
-      script_srcs = parse(ContentSecurityPolicy.new.build)['script-src']
-      expect(script_srcs).to include('example.com')
-      expect(script_srcs).to include('another.com')
-      expect(script_srcs).to include("'unsafe-eval'")
-    end
+  it 'can be extended by plugins' do
+    plugin = Class.new(Plugin::Instance) do
+      attr_accessor :enabled
+      def enabled?
+        @enabled
+      end
+    end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+
+    plugin.activate!
+    Discourse.plugins << plugin
+
+    plugin.enabled = true
+    expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+
+    plugin.enabled = false
+    expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+
+    Discourse.plugins.pop
+  end
+
+  it 'can be extended by themes' do
+    policy # call this first to make sure further actions clear the cache
+
+    theme = Fabricate(:theme)
+    settings = <<~YML
+      extend_content_security_policy:
+        type: list
+        default: 'script-src: from-theme.com'
+    YML
+    theme.set_field(target: :settings, name: :yaml, value: settings)
+    theme.save!
+
+    expect(parse(policy)['script-src']).to include('from-theme.com')
+
+    theme.update_setting(:extend_content_security_policy, "script-src: https://from-theme.net|worker-src: from-theme.com")
+    theme.save!
+
+    expect(parse(policy)['script-src']).to_not include('from-theme.com')
+    expect(parse(policy)['script-src']).to include('https://from-theme.net')
+    expect(parse(policy)['worker-src']).to include('from-theme.com')
+
+    theme.destroy!
+
+    expect(parse(policy)['script-src']).to_not include('https://from-theme.net')
+    expect(parse(policy)['worker-src']).to_not include('from-theme.com')
+  end
+
+  it 'can be extended by site setting' do
+    SiteSetting.content_security_policy_script_src = 'from-site-setting.com|from-site-setting.net'
+
+    expect(parse(policy)['script-src']).to include('from-site-setting.com', 'from-site-setting.net')
   end
 
   def parse(csp_string)
@@ -93,5 +141,9 @@ describe ContentSecurityPolicy do
       directive, *sources = policy.split
       [directive, sources]
     end.to_h
+  end
+
+  def policy
+    ContentSecurityPolicy.policy
   end
 end

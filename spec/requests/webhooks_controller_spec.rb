@@ -43,10 +43,10 @@ describe WebhooksController do
       post "/webhooks/sendgrid.json", params: {
         "_json" => [
           {
-            "email"   => email,
+            "email" => email,
             "smtp-id" => "<12345@il.com>",
-            "event"   => "bounce",
-            "status"  => "5.0.0"
+            "event" => "bounce",
+            "status" => "5.0.0"
           }
         ]
       }
@@ -66,9 +66,9 @@ describe WebhooksController do
 
       post "/webhooks/mailjet.json", params: {
         "event" => "bounce",
-        "email"       => email,
+        "email" => email,
         "hard_bounce" => true,
-        "CustomID"    => message_id
+        "CustomID" => message_id
       }
 
       expect(response.status).to eq(200)

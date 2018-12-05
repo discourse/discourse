@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :facebook_user_info, dependent: :destroy
+  has_many :user_associated_accounts, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
@@ -478,7 +478,7 @@ class User < ActiveRecord::Base
       DB.query_single(sql,
         user_id: id,
         seen_notification_id: seen_notification_id,
-        pm:  Notification.types[:private_message],
+        pm: Notification.types[:private_message],
         limit: User.max_unread_notifications
     )[0].to_i
     end
