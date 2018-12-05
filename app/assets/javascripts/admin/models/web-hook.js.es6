@@ -63,6 +63,7 @@ export default RestModel.extend({
   createProperties() {
     const types = this.get("web_hook_event_types");
     const categoryIds = this.get("categories").map(c => c.id);
+    const tagNames = this.get("tag_names");
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
@@ -81,6 +82,7 @@ export default RestModel.extend({
         ? [null]
         : types.map(type => type.id),
       category_ids: Ember.isEmpty(categoryIds) ? [null] : categoryIds,
+      tag_names: Ember.isEmpty(tagNames) ? [null] : tagNames,
       group_ids:
         Ember.isEmpty(groupNames) || Ember.isEmpty(groupNames[0])
           ? [null]

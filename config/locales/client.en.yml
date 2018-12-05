@@ -3082,6 +3082,8 @@ en:
         active_notice: "We will deliver event details when it happens."
         categories_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified categories. Leave blank to trigger webhooks for all categories."
         categories_filter: "Triggered Categories"
+        tags_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified tags. Leave blank to trigger webhooks for all tags."
+        tags_filter: "Triggered Tags"
         groups_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
         groups_filter: "Triggered Groups"
         delete_confirm: "Delete this webhook?"

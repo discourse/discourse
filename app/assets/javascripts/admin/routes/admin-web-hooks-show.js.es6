@@ -19,6 +19,7 @@ export default Discourse.Route.extend({
     }
 
     model.set("category_ids", model.get("category_ids"));
+    model.set("tag_names", model.get("tag_names"));
     model.set("group_ids", model.get("group_ids"));
     controller.setProperties({ model, saved: false });
   },
