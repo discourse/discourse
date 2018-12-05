@@ -111,6 +111,14 @@ describe UploadsController do
         expect(response.status).to eq(422)
       end
 
+      it 'always allows admins to upload avatars' do
+        sign_in(Fabricate(:admin))
+        SiteSetting.allow_uploaded_avatars = false
+
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(200)
+      end
+
       it 'allows staff to upload any file in PM' do
         SiteSetting.authorized_extensions = "jpg"
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true
