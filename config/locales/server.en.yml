@@ -190,6 +190,7 @@ en:
     error: "There was an error uploading that file. Please try again later."
 
   topic_invite:
+    failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}." 
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   backup:
