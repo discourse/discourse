@@ -399,7 +399,7 @@ class PostAlerter
     )
 
     if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
-      create_notification_alert(user: user, post: post, notification_type: type, username: original_username)
+      create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
     created.id ? created : nil
