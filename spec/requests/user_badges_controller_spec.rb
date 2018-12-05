@@ -143,6 +143,51 @@ describe UserBadgesController do
 
       expect(events).to include(:user_badge_granted)
     end
+
+    it 'does not grant badge when external link is used in reason' do
+      admin = Fabricate(:admin)
+      post = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: "http://example.com/" + post.url
+      }
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'does not grant badge if invalid discourse post/topic link is used in reason' do
+      admin = Fabricate(:admin)
+      post = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: Discourse.base_url + "/random_url/" + post.url
+      }
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'grants badge when valid post/topic link is given in reason' do
+      admin = Fabricate(:admin)
+      post = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: Discourse.base_url + post.url
+      }
+
+      expect(response.status).to eq(200)
+    end
   end
 
   context 'destroy' do

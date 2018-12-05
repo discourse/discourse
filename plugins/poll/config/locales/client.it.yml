@@ -15,8 +15,6 @@ it:
         one: "voto totale"
         other: "voti totali"
       average_rating: "Voto medio: <strong>%{average}</strong>."
-      public:
-        title: "I voti sono pubblici."
       multiple:
         help:
           at_least_min_options:

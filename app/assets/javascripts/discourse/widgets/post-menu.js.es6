@@ -404,8 +404,7 @@ export default createWidget("post-menu", {
       ])
     );
 
-    Object.keys(_extraButtons).forEach(k => {
-      const builder = _extraButtons[k];
+    Object.values(_extraButtons).forEach(builder => {
       if (builder) {
         const buttonAtts = builder(attrs, this.state, this.siteSettings);
         if (buttonAtts) {

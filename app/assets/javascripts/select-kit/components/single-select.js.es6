@@ -211,6 +211,12 @@ export default SelectKitComponent.extend({
 
   select(computedContentItem) {
     if (computedContentItem.__sk_row_type === "noopRow") {
+      applyOnSelectPluginApiCallbacks(
+        this.get("pluginApiIdentifiers"),
+        computedContentItem.value,
+        this
+      );
+
       this._boundaryActionHandler("onSelect", computedContentItem.value);
       return;
     }

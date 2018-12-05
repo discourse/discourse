@@ -149,9 +149,6 @@ ca:
     permalink: "Enllaç permanent "
     imported_from: "Aquesta discussió és derivada de l'entrada original de %{link}"
     in_reply_to: "%{username}"
-    replies:
-      one: "1 resposta"
-      other: "%{count} respostes"
   no_mentions_allowed: "Disculpa, no pots mencionar altres persones usuàries"
   too_many_mentions:
     one: "Disculpa, només pots mencionar una persona usuària a un escrit."
@@ -317,15 +314,12 @@ ca:
           attributes:
             payload_url:
               invalid: "La URL no és vàlida. La URL hauria d'incloure http:// o https://. I no es permeten espais en blanc."
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} encara no ha introduït res al camp Sobre mi del seu perfil</div>"
   vip_category_name: "Saló"
   vip_category_description: "Una categoria exclusiva per a membres amb un nivell 3 o superior de confiança."
   meta_category_name: "Sindicació del lloc"
   meta_category_description: "Discussió sobre aquest lloc, la seva organització, com funciona i com podem millorar-ho."
   staff_category_name: "Equip"
   staff_category_description: "Categoria privada per a converses de l'equip. Els temes només seran visibles per a debats entre moderadors i administradors."
-  assets_topic_title: "Recursos per al disseny del lloc"
   discourse_welcome_topic:
     title: "Benvinguda o benvingut a Discourse"
     body: |2
@@ -718,7 +712,6 @@ ca:
     email_polling_errored_recently:
       one: "L'enquesta per correu electrònic ha generat un error durant les darreres 24 hores. Fes un cop d'ull als <a href='%{base_path}/logs' target='_blank'>registres</a> per saber-ne més."
       other: "L'enquesta per correu electrònic ha generat %{count} errors durant les darreres 24 hores. Fes un cop d'ull als <a href='%{base_path}/logs' target='_blank'>registres</a> per saber-ne més."
-    bad_favicon_url: "La càrrega de <i>favicon</i> està fallant. Revisa la configuració de favicon_url a la <a href='%{base_path}/admin/site_settings'>Configuració del lloc</a>."
     poll_pop3_timeout: "S'ha esgotat del temps de connexió al servidor POP3. No s'ha pogut lliurar el correu entrant. Si us plau, revisa la teva <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a> i el proveïdor de serveis."
     poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Si us plau, revisa la teva <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a>."
   site_settings:
@@ -762,8 +755,6 @@ ca:
     post_onebox_maxlength: "Mida màxima en caràcters d'una publicació encaixada de Discourse."
     onebox_domains_blacklist: "Un llistat de dominis que mai no seran encaixats"
     max_oneboxes_per_post: "Quantitat màxima d'encaixos a una publicació"
-    digest_logo_url: "La imatge de logo alternativa emprada a la part superior del resum de correus del teu lloc. Hauria de tenir una forma rectangular allargada. No hauria de tenir format SVG. Si es deixa en blanc, s'emprarà `logo_url`."
-    apple_touch_icon_url: "La icona emprada per a dispositius tàctils d'Apple. La mida recomanada és de 144x144 píxels."
     notification_email: "L'adreça de correu electrònic emprada al \"de:\" en enviar tots els correus electrònics essencials del sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, establerts correctament per tal que arribi el correu electrònic."
     email_custom_headers: "Una llista d'encapçalaments personalitzats de correu, delimitada amb barra vertical "
     force_https: "Força el teu lloc a fer servir només HTTPS. ATENCIÓ: NO activis això fins que no verifiquis que HTTPS està totalment configurat i treballant a tot arreu. Has comprovat la teva xarxa de lliurament de continguts, totes les connexions socials i els logos i dependències externs per assegurar-te també que tots són compatibles amb HTTPS?"
@@ -936,7 +927,6 @@ ca:
     body_min_entropy: "L'entropia mínima (caràcters únics, recompte no anglès per a més) necessari per al cos d'un tema."
     allow_uppercase_posts: "Permet tot en majúscula al títol o al cos d'una publicació."
     min_title_similar_length: "Mida mínima d'un títol abans de ser consultat per a temes semblants."
-    min_body_similar_length: "Mida mínima del cos d'una publicació abans de ser consultada per a temes semblants."
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Una llista de valors de color hexadecimal permesos per categories."
     category_style: "Estil visual per a distincions de categoria."
@@ -1122,9 +1112,6 @@ ca:
     min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules als títols dels temes, no mostris l'etiqueta"
     remove_muted_tags_from_latest: "No mostris temes etiquetats amb etiquetes silenciades al darrer llistat de temes."
-    company_short_name: "Nom de l'empresa (breu)"
-    company_full_name: "Nom de l'empresa (complet)"
-    company_domain: "Domini de l'empresa"
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap participant amb aquest nom."
@@ -1930,17 +1917,6 @@ ca:
             label: "Missatges automàtics"
       corporate:
         title: "Organització"
-        description: "Els noms s'inclouran a la teva <a href='%{base_path}/privacy' target='blank'>Política de Privacitat</a> i a les <a href='%{base_path}/tos' target='blank'>Condicions del Servei</a>, que són temes que pots editar a la categoria d'equip. Si no tens cap empresa, pots deixar-ho buit."
-        fields:
-          company_short_name:
-            label: "Nom de l'empresa (breu)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nom de l'empresa (complet)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Nom de domini de l'empresa"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -1953,20 +1929,8 @@ ca:
                 label: "Fosc senzill"
       logos:
         title: "Logos"
-        fields:
-          logo_url:
-            label: "Logo primari"
-            description: "La imatge de logo a la part superior esquerra del teu lloc. Fes servir una forma rectangular allargada."
-          logo_small_url:
-            label: "Logo compacte"
-            description: "Una versió compacta del teu logo, mostrada a la part superior esquerra del teu lloc en desplaçar-te cap avall. Fes servir una forma quadrada."
       icons:
         title: "Icones"
-        fields:
-          favicon_url:
-            label: "Icona petita"
-          apple_touch_icon_url:
-            label: "Icona gran"
       homepage:
         description: "Et suggerim que mostris els darrers temes a la teva pàgina principal, però si t'ho estimes més, també pots mostrar-hi categories (grups o temes) a la pàgina principal."
         title: "Pàgina principal"

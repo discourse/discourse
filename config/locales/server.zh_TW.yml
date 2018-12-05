@@ -136,8 +136,6 @@ zh_TW:
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
-    replies:
-      other: "%{count} 個回覆"
   no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
     other: "抱歉，您的文章中只能提及 %{count} 位用戶。"
@@ -309,17 +307,12 @@ zh_TW:
           attributes:
             name:
               taken: 已被其他表情符號使用
-  user_profile:
-    no_info_me: "<div class='missing-profile'>你的個人檔案中，「關於我」的部分目前還沒有內容，<a href='%{base_path}/u/%{username_lower}/preferences/about-me'>不如來自我介紹一下吧？</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
   meta_category_name: "站點反饋"
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
-  assets_topic_title: "站點設計資料"
-  assets_topic_body: "這個主題僅限管理人員可見，用來儲存討論區使用的圖片和檔案。請不要刪除它！\n\n如何使用：\n\n\n1. 回覆這個主題。\n2. 上傳你想要用作網站圖示、favicon 與其他所有圖片。（使用文章編輯器內的上傳按鈕，或者拖曳或貼上圖片。）\n3. 發佈你的文章回應。\n4. 在你的新回應裡按右鍵點擊圖片，複製已上傳圖片的連結，或者點擊編輯按鈕來編輯回應，以獲得到圖片的相對位址。複製這些圖片網址。\n5. 將這些圖片的網址張貼到[設定](%{base_path}/admin/site_settings/category/required)中。\n\n\n如果你需要上傳額外的檔案類型，在[檔案設定](%{base_path}/admin/site_settings/category/files)中編輯 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "歡迎來到 Discourse"
     body: |2
@@ -685,7 +678,6 @@ zh_TW:
     subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
     email_polling_errored_recently:
       other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='%{base_path}/logs' target='_blank'>日誌</a>尋找詳情。"
-    bad_favicon_url: "網站表徵圖無法載入。檢查<a href='%{base_path}/admin/site_settings'>站點設置</a>中的 favicon_url。"
     poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
     poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
   site_settings:
@@ -731,8 +723,6 @@ zh_TW:
     inline_onebox_domains_whitelist: "如果連結未包含 title，會被展開成連結預覽的網域白名單。"
     enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_whitelist 網站設定，允許所有網域的連結預覽。"
     max_oneboxes_per_post: "文章中允許的連結預覽數量上限。"
-    digest_logo_url: "郵件摘要中使用的標誌圖像。應為長方形。不能使用 SVG 圖片。如果留空，將使用 `logo_url`。"
-    apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
@@ -904,7 +894,6 @@ zh_TW:
     body_min_entropy: "在一個帖子內文中，允許的最低熵值（單字）。"
     allow_uppercase_posts: "允許標題和內容全大寫"
     min_title_similar_length: "開始檢查相似主題的帖子標題的最少長度。"
-    min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度。"
     desktop_category_page_style: "/categories 頁面的視覺樣式。"
     category_colors: "設定分類顏色的十六進制色彩值列表。"
     category_style: "分類圖標的視覺樣式。"
@@ -1089,9 +1078,6 @@ zh_TW:
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"
-    company_short_name: "公司名（短）"
-    company_full_name: "公司名（全）"
-    company_domain: "公司域名"
     errors:
       invalid_email: "無效的電子郵件地址"
       invalid_username: "沒有用戶使用該用戶名稱。"
@@ -2205,17 +2191,6 @@ zh_TW:
             label: "自動消息"
       corporate:
         title: "組織"
-        description: "這些名字將顯示於<a href='%{base_path}/privacy' target='blank'>隱私策略</a>和<a href='%{base_path}/tos' target='blank'>服務條款</a>中，你可以在工作人員分類中編輯這些主題。如果你沒有公司，你可以跳過這個步驟。"
-        fields:
-          company_short_name:
-            label: "公司名（短）"
-            placeholder: "國際科技"
-          company_full_name:
-            label: "公司名（全）"
-            placeholder: "國際科技有限公司。"
-          company_domain:
-            label: "公司域名名字"
-            placeholder: "initech.com"
       colors:
         title: "主題"
         fields:
@@ -2228,20 +2203,8 @@ zh_TW:
                 label: "簡潔黑"
       logos:
         title: "標誌"
-        fields:
-          logo_url:
-            label: "主要標誌"
-            description: "在你站點左上角出現的小號標誌圖片，應為一個長方形。"
-          logo_small_url:
-            label: "緊湊 Logo"
-            description: "站點標誌的緊湊版本，在向下滾動時出現在左上角。用正方形的圖片。"
       icons:
         title: "表徵圖"
-        fields:
-          favicon_url:
-            label: "小表徵圖"
-          apple_touch_icon_url:
-            label: "大表徵圖"
       homepage:
         description: "我們推薦在你的主頁顯示最新主題，但若你喜歡也可以顯示分類 ( 一組主題 )。"
         title: "主頁"

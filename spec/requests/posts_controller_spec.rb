@@ -243,6 +243,24 @@ describe PostsController do
           delete "/posts/destroy_many.json", params: { post_ids: [post1.id], reply_post_ids: [post1.id] }
         end
       end
+
+      context "deleting flagged posts" do
+        let(:moderator) { Fabricate(:moderator) }
+
+        before do
+          PostAction.act(moderator, post1, PostActionType.types[:off_topic])
+          PostAction.act(moderator, post2, PostActionType.types[:off_topic])
+          Jobs::SendSystemMessage.clear
+        end
+
+        it "defers the posts" do
+          sign_in(moderator)
+          expect(PostAction.flagged_posts_count).to eq(2)
+          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id], defer_flags: true }
+          expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+          expect(PostAction.flagged_posts_count).to eq(0)
+        end
+      end
     end
   end
 

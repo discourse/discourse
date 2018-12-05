@@ -55,6 +55,7 @@ en:
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
+  on_another_topic: "On another topic"
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
@@ -210,6 +211,7 @@ en:
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
 
   reading_time: "Reading time"
   likes: "Likes"
@@ -219,8 +221,8 @@ en:
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
-    one: "No more than 1 reply is allowed. Please edit your previous reply instead, or wait for someone to reply to you."
-    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply instead, or wait for someone to reply to you."
+    one: "No consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
+    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
 
   embed:
     start_discussion: "Start Discussion"
@@ -1744,7 +1746,7 @@ en:
     share_anonymized_statistics: "Share anonymized usage statistics."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
-    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'far-' for regular icons and 'fab-' for brand icons. "
+    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons. "
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -1855,6 +1857,8 @@ en:
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
+
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. A maximum of 12 characters is recommended."
 
     errors:
       invalid_email: "Invalid email address."

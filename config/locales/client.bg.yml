@@ -438,9 +438,6 @@ bg:
       topic_sentence:
         one: "1 тема"
         other: "%{count} теми"
-      topic_stat_sentence:
-        one: "%{count} нова тема в последните %{unit}."
-        other: "%{count} нови теми в последните %{unit}."
     ip_lookup:
       title: Търсене по IP адрес
       hostname: Хост
@@ -956,7 +953,6 @@ bg:
         title_too_long: "Заглавието не може да е повече от {{max}} символа"
         post_missing: "Публикацията не може да е празна"
         post_length: "Публикацията трябва да е най-малко {{min}} символа."
-        try_like: 'Опитвали ли сте <i class="fa fa-heart"></i> бутона?'
         category_missing: "Трябва да изберете категория"
         tags_missing: "Трябва да изберете поне %{count} етикети."
       save_edit: "Запази редакцията"
@@ -1523,7 +1519,6 @@ bg:
           hide: "Скрий ревизията"
           show: "Покажи ревизията"
           revert: "Връщане към тази редакция"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Покажи съобщение с включени допълнения и заличавания. "

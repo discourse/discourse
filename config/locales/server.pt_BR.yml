@@ -189,9 +189,6 @@ pt_BR:
     permalink: "Permalink"
     imported_from: "Este é um tópico de discussão companheiro para a mensagem original em %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 resposta"
-      other: "%{count} respostas"
   no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
   too_many_mentions:
     one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
@@ -420,17 +417,12 @@ pt_BR:
           attributes:
             word:
               too_many: "Muitas palavras para esta ação"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco,<a href='%{base_path}/u/%{username_lower}/preferences/about-me'>você gostaria de preenchê-lo?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
   meta_category_name: "Feedback do Site"
   meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
-  assets_topic_title: "Ativos para o design do site"
-  assets_topic_body: "Este tópico, visível apenas para a equipe, é para armazenar imagens e arquivos usados ​​no design do site. Não exclua!\n\nVeja como:\n\n\n1. Responder a este tópico.\n2. Carregue todas as imagens que você deseja usar para logotipos, favicons e assim por diante. (Use o ícone da barra de ferramentas de upload no editor de postagem ou arraste e solte ou cole imagens.)\n3. Envie sua resposta para postá-lo.\n4.Clique com o botão direito do mouse nas imagens da nova postagem para obter o caminho para as imagens enviadas ou clique na edição ícone para editar sua postagem e recuperar o caminho para as imagens. Copie os caminhos da imagem.\n5. Cole esses caminhos de imagem em [configurações básicas] (/ admin / site_settings / category / required).\n\n\nSe você precisar ativar uploads de tipos de arquivos diferentes, edite `authorized_extensions` em [configurações do arquivo] (/ admin / site_settings / category / files)."
   discourse_welcome_topic:
     title: "Bem vindo ao Discourse"
     body: |2
@@ -968,7 +960,6 @@ pt_BR:
       one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
       other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
     missing_mailgun_api_key: "O servidor está configurado para enviar e-mails por meio do Mailgun, mas você não forneceu uma chave de API usada para verificar as mensagens do webhook."
-    bad_favicon_url: "O carregamento do favicon está falhando. Verifique a sua configuração de favicon_url nas <a href='%{base_path}/admin/site_settings'>Configurações do Site</a>."
     poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Por favor, verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a> e selecione um servidor de serviço."
     poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Por favor, verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a>."
     force_https_warning: "Seu site está usando SSL. Mas `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ainda não está ativado nas configurações do seu site."
@@ -1027,8 +1018,6 @@ pt_BR:
     inline_onebox_domains_whitelist: "Uma lista de domínios que serão colocados em miniatura se vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração de site inline_onebox_domain_whitelist e permita onebox in-line em todos os domínios."
     max_oneboxes_per_post: "Número máximos de oneboxes em uma publicação."
-    digest_logo_url: "A imagem de logo alternativa usada no topo do email de resumo do seu site. Ela deve ter um formato retangular alongado e não deve ser uma imagem SVG. Se deixado em branco, `logo_url` será usado."
-    apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
@@ -1255,7 +1244,6 @@ pt_BR:
     body_min_entropy: "A entropia mínima (caracteres únicos, não inglês contam mais) necessária para o corpo de uma mensagem."
     allow_uppercase_posts: "Permitir todas as maiúsculas em um título de tópico ou em um corpo de postagem."
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
-    min_body_similar_length: "O tamanho mínimo do corpo de conteúdo de um post antes que ele seja checado por tópicos semelhantes."
     desktop_category_page_style: "Estilo visual para a página / categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
     category_style: "Estilo visual para emblemas de categoria."
@@ -1477,11 +1465,7 @@ pt_BR:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para marcar tópicos"
     suppress_overlapping_tags_in_list: "Se as tags corresponderem a palavras exatas em títulos de tópicos, não mostre a tag"
     remove_muted_tags_from_latest: "Não exibir na lista de tópicos recentes os tópicos com a etiqueta de Silenciado."
-    company_short_name: "Nome da empresa (curto)"
-    company_full_name: "Nome da empresa (completo)"
-    company_domain: "Domínio da empresa"
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
-    push_notifications_icon_url: "O ícone do emblema que aparece no canto de notificação. O tamanho recomendado é 96 px por 96 px."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -3066,17 +3050,6 @@ pt_BR:
             description: "Todas as mensagens pessoais do Discourse automatizadas serão enviadas a partir desse usuário, como avisos de sinalização e avisos de conclusão de backup."
       corporate:
         title: "Organização"
-        description: "Estes nomes serão inseridos no seu <a href='%{base_path}/privacy' target='blank'>Política de Privacidade</a> e <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, Estes são tópicos que você pode editar na categoria Staff. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
-        fields:
-          company_short_name:
-            label: "Nome da Empresa (curto)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Nome da Companhia"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Nome do Domínio da Empresa"
-            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
@@ -3089,22 +3062,8 @@ pt_BR:
                 label: "Escuro Simples"
       logos:
         title: "Logotipos"
-        fields:
-          logo_url:
-            label: "Logotipo Primário"
-            description: "O logotipo ao lado superior esquerdo de seu site. Use um formato de retângulo largo."
-          logo_small_url:
-            label: "Logotipo Compacto "
-            description: "Uma versão compacta de sua logo, mostrada na parte superior esquerda do site quando rolado para baixo. Use um formato quadrado."
       icons:
         title: "Ícones"
-        fields:
-          favicon_url:
-            label: "Ícone pequeno"
-            description: "Imagem de ícone usada para representar seu site em navegadores da Web que parecem bons em tamanhos pequenos, como 32 x 32 pixels. As extensões de imagem recomendadas são PNG ou JPG."
-          apple_touch_icon_url:
-            label: "Ícone Largo"
-            description: "Imagem de ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. O tamanho recomendado é de pelo menos 512 px por 512 px."
       homepage:
         description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"

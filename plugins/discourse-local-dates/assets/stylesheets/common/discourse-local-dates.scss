@@ -1,14 +1,10 @@
 .discourse-local-date {
-  display: inline-block;
-  vertical-align: top;
-
   &.cooked-date {
     color: $primary;
     cursor: pointer;
     border-bottom: 1px dashed $primary-medium;
 
     .d-icon {
-      margin-right: 0.25em;
       color: $primary;
     }
 

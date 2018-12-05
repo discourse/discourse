@@ -171,8 +171,8 @@ ar:
           few: "بعد %{count}  عام"
           many: "بعد %{count}  عام"
           other: "بعد %{count} عام"
-      previous_month: 'الشهر السابق'
-      next_month: 'الشهر التالي'
+      previous_month: 'الشهر الماضي'
+      next_month: 'الشهر القادم'
       placeholder: التاريخ
     share:
       topic: 'شارك رابط هذا الموضوع'
@@ -559,13 +559,6 @@ ar:
         few: "%{count} مواضيع"
         many: "%{count} موضوعًا"
         other: "%{count} موضوع"
-      topic_stat_sentence:
-        zero: "لا مواضيع جديدة في ال%{unit} الماضي."
-        one: "موضوع واحد جديد في ال%{unit} الماضي."
-        two: "موضوعان جديدان في ال%{unit} الماضي."
-        few: "%{count} مواضيع جديدة في ال%{unit} الماضي."
-        many: "%{count} موضوعًا جديدًا في ال%{unit} الماضي."
-        other: "%{count} موضوع جديد في ال%{unit} الماضي."
     ip_lookup:
       title: جدول عناوين الIP
       hostname: اسم المضيف
@@ -1205,7 +1198,6 @@ ar:
         title_too_long: "العنوان يجب أن لا يزيد عن {{max}} حرف"
         post_missing: "لا يمكن أن يكون المنشور فارغ"
         post_length: "المنشور يجب أن يكون علي الاقل {{min}} حرف"
-        try_like: 'هل جرّبت زرّ <i class="fa fa-heart"></i>؟'
         category_missing: "يجب عليك إختيار احد الأقسام"
       save_edit: "أحفظ التعديل"
       reply_original: "التعليق على الموضوع الأصلي"
@@ -2044,7 +2036,6 @@ ar:
           revert: "ارجع إلى هذه المراجعة"
           edit_wiki: "عدل الwiki"
           edit_post: "عدل المنشور"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "اعرض النسخة المنسقة في عمود واحد مع تمييز الاسطر المضافة و المحذوفة"

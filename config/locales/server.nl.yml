@@ -146,9 +146,6 @@ nl:
     permalink: "Permalink"
     imported_from: "Dit discussietopic is een voortzetting van het oorspronkelijke topic op %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 antwoord"
-      other: "%{count} antwoorden"
   no_mentions_allowed: "Sorry, u kunt geen andere gebruikers noemen."
   too_many_mentions:
     one: "Sorry, u kunt maar één andere gebruiker in een bericht noemen."
@@ -345,17 +342,12 @@ nl:
           attributes:
             word:
               too_many: "Te veel woorden voor die aktie"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='%{base_path}/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} heeft nog niets in het veld Over mij van zijn of haar profiel ingevoerd</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Een exclusieve categorie voor leden met vertrouwensniveau 3 en hoger."
   meta_category_name: "Feedback op website"
   meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
-  assets_topic_title: "Assets voor het websiteontwerp"
-  assets_topic_body: "Dit topic, alleen zichtbaar voor personeel, is voor het opslaan van afbeeldingen en bestanden die in het ontwerp van de website worden gebruikt. Verwijder het niet!\n\n\nZo werkt het:\n\n\n1. Reageer op dit topic.\n2. Upload hier alle afbeeldingen die je voor logos, favicons, etc. wilt gebruiken. (Gebruik het werkbalkpictogram voor uploaden in je berichteditor, of sleep of plak de afbeeldingen.)\n3. Verzend je reactie om het te plaatsen.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeeldingen te verkrijgen, of klik op het bewerkingspictogram om uw bericht te bewerken en het pad naar de afbeeldingen op te halen. Kopieer de afbeeldingspaden.\n5. Plak de afbeeldingspaden in [basisinstellingen](%{base_path}/admin/site_settings/category/required).\n\n\nAls u verschillende soorten uploads van bestandstypen wilt inschakelen, bewerk dan 'authorized_extensions' in de [bestandsinstellingen](%{base_path}/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Welkom bij Discourse"
     body: |2
@@ -759,7 +751,6 @@ nl:
     email_polling_errored_recently:
       one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
       other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
-    bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon_url-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
     poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Binnenkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
   site_settings:
@@ -803,7 +794,6 @@ nl:
     show_pinned_excerpt_desktop: "Laat een fragment bij vastgemaakte topics zien op desktop."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     max_oneboxes_per_post: "Maximale aantal Oneboxes in een bericht."
-    apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
@@ -953,7 +943,6 @@ nl:
     body_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor de hoofdtekst van een bericht is vereist."
     allow_uppercase_posts: "Sta alleen hoofdletters toe in een topic titel of bericht inhoud."
     min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics."
-    min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     desktop_category_page_style: "Visuele stijl voor de categoriepagina."
     category_colors: "Een lijst me hexadecimale kleurwaardes die gebruikt kunnen worden voor categorieën."
     category_style: "Visuele stijl voor categorie badges."
@@ -1434,17 +1423,10 @@ nl:
         fields:
           contact_url:
             label: "Webpagina"
-      corporate:
-        description: "Deze namen worden in uw <a href='%{base_path}/privacy' target='blank'>Privacybeleid</a> en <a href='%{base_path}/tos' target='blank'>Servicevoorwaarden</a> ingevoerd, welke bewerkbare topics in de categorie Staf zijn. Als u geen bedrijf hebt, kunt u deze stap nu gerust overslaan."
       colors:
         title: "Thema"
       icons:
         title: "Pictogrammen"
-        fields:
-          favicon_url:
-            label: "Klein pictogram"
-          apple_touch_icon_url:
-            label: "Groot pictogram"
       homepage:
         description: "Het tonen van de nieuwste topics op uw startpagina wordt aanbevolen, maar als u dat liever hebt, kunt u ook categorieën (groepen of topics) op de startpagina tonen."
         fields:

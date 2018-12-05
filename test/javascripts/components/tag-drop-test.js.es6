@@ -83,3 +83,24 @@ componentTest("default", {
     );
   }
 });
+
+componentTest("no tags", {
+  template: "{{tag-drop}}",
+
+  beforeEach() {
+    this.site.set("can_create_tag", true);
+    this.set("site.top_tags", undefined);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+
+    assert.equal(
+      this.get("subject")
+        .rowByIndex(1)
+        .name(),
+      undefined,
+      "it has no tags and doesn’t crash"
+    );
+  }
+});

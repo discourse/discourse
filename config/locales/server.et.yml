@@ -140,9 +140,6 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 vastus"
-      other: "%{count} vastust"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
     one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."
@@ -278,15 +275,12 @@ et:
           attributes:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} profiilis on väli 'Minust' veel täitmata</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
   meta_category_name: "Saidi tagasiside."
   meta_category_description: "Arutelu selle saidi, tema korralduse, töömeetodite ja arenguvõimaluste kohta."
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
-  assets_topic_title: "Saidi kujunduse vahendid"
   discourse_welcome_topic:
     title: "Teretulemast Discourse'i"
     body: |2
@@ -1006,16 +1000,6 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-        fields:
-          company_short_name:
-            label: "Ettevõtte nimi (lühike)"
-            placeholder: "Juurutajad"
-          company_full_name:
-            label: "Ettevõtte nimi (täielik)"
-            placeholder: "Juurutajad OÜ"
-          company_domain:
-            label: "Ettevõtte domeeni nimi"
-            placeholder: "juurutajad.ee"
       colors:
         title: "Kujundusteema"
         fields:
@@ -1027,20 +1011,8 @@ et:
                 label: "Lihtne tume"
       logos:
         title: "Logod"
-        fields:
-          logo_url:
-            label: "Peamine logo"
-            description: "Logo kujutis Sinu saidi vasakul ülanurgas. Kasuta laia ristküliku kujulist pilti."
-          logo_small_url:
-            label: "Kompaktne logo"
-            description: "Sinu logo kompaktne versioon, kuvatakse alla kerimisel Sinu saidi vasakul ülanurgas. Kasuta ruudu kujulist pilti."
       icons:
         title: "Ikoonid"
-        fields:
-          favicon_url:
-            label: "Väike ikoon"
-          apple_touch_icon_url:
-            label: "Suur ikoon"
       homepage:
         title: "Avaleht"
         fields:

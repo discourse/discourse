@@ -478,9 +478,6 @@ et:
       topic_sentence:
         one: "1 teema"
         other: "%{count} teemat"
-      topic_stat_sentence:
-        one: "%{count} uus teema viimase %{unit} jooksul."
-        other: "%{count} uut teemat viimase %{unit} jooksul."
     ip_lookup:
       title: IP-aadressi Otsing
       hostname: Hostinimi
@@ -1113,7 +1110,6 @@ et:
         title_too_long: "Pealkiri ei saa olla pikem kui {{max}} sümbolit"
         post_missing: "Positus ei saa olla tühi"
         post_length: "Postitus peab olema vähemalt {{min}} sümbolit pikk"
-        try_like: 'Kas oled proovinud <i class="fa fa-heart"></i> nuppu?'
         category_missing: "Pead valima foorumi"
       save_edit: "Salvesta muudatused"
       reply_original: "Vasta algsesse teemasse"
@@ -1807,7 +1803,6 @@ et:
           revert: "Ennista selleks redaktsiooniks"
           edit_wiki: "Muuda wikit"
           edit_post: "Muuda postitust"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Näita renderdatud väljundit koos lisamiste ja eemaldamistega tekstisiseselt"

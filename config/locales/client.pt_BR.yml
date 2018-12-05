@@ -510,9 +510,6 @@ pt_BR:
       topic_sentence:
         one: "1 tópico"
         other: "%{count} tópicos"
-      topic_stat_sentence:
-        one: "%{count} novo tópico nos últimos %{unit}."
-        other: "%{count} novos tópicos nos últimos %{unit}."
     ip_lookup:
       title: Pesquisa do endereço de IP
       hostname: Nome do host
@@ -1197,7 +1194,6 @@ pt_BR:
         title_too_long: "O título não pode ter mais de {{max}} caracteres"
         post_missing: "A resposta não pode estar vazia"
         post_length: "A resposta tem que ter no mínimo {{min}} caracteres"
-        try_like: 'Já tentou o botão <i class="fa fa-heart"></i>?'
         category_missing: "Você precisa escolher uma categoria"
         tags_missing: "Você deve escolher pelo menos {{count}} tags"
       save_edit: "Salvar alterações"
@@ -1806,7 +1802,6 @@ pt_BR:
           other: "<b>{{count}}</b> respostas selecionadas."
     post:
       quote_reply: "Citação"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
       wiki_last_edited_on: "wiki última vez editada em"
@@ -1992,7 +1987,6 @@ pt_BR:
           revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Postagem"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"

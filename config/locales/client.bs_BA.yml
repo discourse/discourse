@@ -532,10 +532,6 @@ bs_BA:
         one: "1 tema"
         few: "%{count} teme"
         other: "%{count} tema"
-      topic_stat_sentence:
-        one: "%{count} nova tema u zadnjih %{unit}."
-        few: "%{count} nove teme u zadnjih %{unit}."
-        other: "%{count} novih tema u zadnjih %{unit}."
     ip_lookup:
       title: forenzika IP adrese
       hostname: Hostname
@@ -1200,7 +1196,6 @@ bs_BA:
         title_too_long: "Naslov ne može biti više od {{max}} karaktera"
         post_missing: "Odgovor ne može biti prazan"
         post_length: "Odgovor mora biti najmanje {{min}} karaktera"
-        try_like: 'Jeste li probali <i class="fa fa-heart"></i> dugme?'
         category_missing: "Morate odabrati kategoriju"
         tags_missing: "Morate odabrati najmanje {{count}} oznaka"
       save_edit: "Sačuvaj izmjene"
@@ -1824,7 +1819,6 @@ bs_BA:
           other: "Označili ste <b>{{count}}</b> objava."
     post:
       quote_reply: "Citat"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki zanji put izmijenjen"
@@ -2790,6 +2784,7 @@ bs_BA:
       step: "%{current} od %{total}"
       upload: "Učitaj"
       uploading: "Učitavanje..."
+      upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
       quit: "Možda kasnije"
       invites:
         add_user: "Dodaj"
@@ -2798,3 +2793,7 @@ bs_BA:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regularan korisnik"
+      previews:
+        topic_title: "Tema razgovora"
+        share_button: "Podijeli"
+        reply_button: "Odgovori"

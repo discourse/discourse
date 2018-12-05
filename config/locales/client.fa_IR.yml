@@ -494,9 +494,6 @@ fa_IR:
       topic_sentence:
         one: "%{count} موضوع"
         other: "%{count} موضوع"
-      topic_stat_sentence:
-        one: "%{count} موضوع تازه در %{unit} گذشته."
-        other: "%{count} موضوع تازه در %{unit} گذشته."
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -1067,7 +1064,6 @@ fa_IR:
         title_too_long: "عنوان نمی‌تواند بیش‌تر از {{max}} نویسه باشد"
         post_missing: "نوشته نمی‌تواند خالی باشد"
         post_length: "نوشته باید دست‌کم {{min}} نویسه داشته باشد"
-        try_like: 'دکمه‌ی <i class="fa fa-heart"></i> را امتحان کرده‌اید؟ '
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
       save_edit: "ذخیره ویرایش"
       reply_original: "پاسخ دادن در موضوع اصلی"
@@ -1719,7 +1715,6 @@ fa_IR:
           revert: "بازگشت به این بازبینی"
           edit_wiki: "ویرایش دانشنامه"
           edit_post: "ویرایش نوشته"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "نمایش خروجی رندر با اضافات و از بین بردن درون خطی"

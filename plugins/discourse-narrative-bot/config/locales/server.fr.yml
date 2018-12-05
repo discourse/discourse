@@ -94,7 +94,7 @@ fr:
         '8': "De bonnes perspectives"
         '9': "Oui"
         '10': "Les signent tendent vers le oui"
-        '11': "Réponse incertaine essayez de nouveau"
+        '11': "Réponse incertaine, essayez de nouveau"
         '12': "Demander à nouveau plus tard"
         '13': "Il vaut mieux ne pas vous le dire maintenant"
         '14': "Impossible à prédire pour le moment"
@@ -141,9 +141,18 @@ fr:
           Pendant ce temps là, je serais silencieux.
     new_user_narrative:
       reset_trigger: "nouvel utilisateur"
+      title: "Certificat de complétion des étapes de nouvel utilisateur"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
       hello:
         title: ":robot: Bienvenue !"
+        message: |-
+          Merci de vous être inscrit à %{title}, et bienvenue !
+
+          - Je ne suis qu'un robot, mais [notre équipe](%{base_uri}/about) est également disponible si vous avez besoin de contacter quelqu'un.
+
+          - Pour des raisons de sécurité, nous avons temporairement limité ce que les nouveaux utilisateurs peuvent faire. Vous obtiendrez de nouvelles possibilités (et des [badges](%{base_uri}/badges)) au fur et à mesure que nous vous connaitrons.
+
+          - Nous croyons en [un comportement communautaire civilisé](%{base_uri}/guidelines) de tout temps.
       onebox:
         instructions: |-
           Maintenant, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec **un lien sur une ligne vide**, et il sera automatiquement transformé pour inclure un astucieux résumé.
@@ -256,6 +265,9 @@ fr:
           > :imp: J'ai écris quelque chose de très méchant ici
 
           Je devine que vous savez ce que vous avez à faire. **Signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> comme inapproprié !
+        reply: |-
+          [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
+          (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
         not_found: |-
           Oh non, mon méchant message n'a pas encore été signalé. :worried: Pouvez-vous le signaler comme inapproprié en utilisant le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:
@@ -279,12 +291,25 @@ fr:
           - Si vous avez un clavier physique :keyboard:, appuyez sur <kbd>?</kbd> pour voir nos raccourcis clavier pratiques.
         not_found: |-
           Hmm... Il semblerait que vous ayez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara**?
+      end:
+        message: |-
+          Merci d'être resté avec moi @%{username}! J'ai fait ça pour vous, je pense que vous l'avez mérité :
+
+          %{certificate}
+
+          C'est tout pour le moment ! Regardez  [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses:
+
+          (Si vous souhaitez parler avec moi encore une fois pour en apprendre plus, envoyez moi un message ou mentionnez `@%{discobot_username}` n'importe quand !)
       certificate:
         alt: 'Certificat d''accomplissement'
     advanced_user_narrative:
       reset_trigger: 'utilisateur avancé'
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
       title: ':arrow_up: Fonctionnalités utilisateur avancé'
+      start_message: |-
+        En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username}? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
+
+        Mais je divague, commençons !
       edit:
         bot_created_post_raw: "@%{discobot_username} est, de loin, le robot le plus cool que je connaisse :wink:"
         instructions: |-
@@ -344,6 +369,10 @@ fr:
           Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi**'?
         not_found: |-
           Il semble que vous êtes encore en train de Surveillez :eyes: ce sujet ! Si vous avez des difficultés à le trouver, le bouton du niveau de notification est situé sous le sujet.
+        reply: |-
+          Super boulot ! J’espère que vous n'avez pas mis ce sujet en silencieux car il m'arrive parfois d'être un peu bavard :grin:
+
+          Remarquez que quand vous répondez à un sujet, ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement mis sur 'Suivi'. Vous pouvez changer cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Savez-vous que vous pouvez ajouter un sondage sur n'importe quel message ? Essayez en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur pour **créer un sondage**.

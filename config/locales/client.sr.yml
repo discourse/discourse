@@ -380,10 +380,6 @@ sr:
       latest_by: "poslednje od"
       toggle_ordering: "odredi kontrolu smera"
       subcategories: "Podkategorije"
-      topic_stat_sentence:
-        one: "%{count} nova tema u poslednjih %{unit}."
-        few: "%{count} novih tema u poslednjih %{unit}."
-        other: "%{count} novih tema u poslednjih %{unit}."
     ip_lookup:
       title: Pretraga po IP adresi
       hostname: Ime računara
@@ -776,7 +772,6 @@ sr:
         title_too_long: "Naslov ne može biti više od {{max}} karaktera"
         post_missing: "Poruka ne može biti prazna"
         post_length: "Poruka mora imati barem {{min}} karaktera"
-        try_like: 'Da li ste probali <i class="fa fa-heart"></i> dugme?'
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
       reply_original: "Odgovori na originalnu temu"

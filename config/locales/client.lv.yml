@@ -430,10 +430,6 @@ lv:
         zero: "Nav tēmu"
         one: "1 tēma"
         other: "%{count} tēmas"
-      topic_stat_sentence:
-        zero: "Nav jaunu tēmu."
-        one: "%{count} jauna tēma pēdējā %{unit}."
-        other: "%{count} jaunas tēmas pēdējā %{unit}."
     ip_lookup:
       title: IP adreses meklēšana
       hostname: Resursdatora nosaukums
@@ -1018,7 +1014,6 @@ lv:
         title_too_long: "Nosaukums nevar būt garāks par {{max}} burtiem"
         post_missing: "Ieraksts nevar būt tukšs"
         post_length: "Ierakstā jābūt vismaz {{min}} burtiem"
-        try_like: 'Vai jūs mēģinājāt izteikt atzinību ar <i class="fa fa-heart"></i> pogu?'
         category_missing: "Jums ir jāizvēlas sadaļa"
       save_edit: "Saglabāt izmaiņas"
       reply_original: "Atbildēt sākotnējā tēmā"
@@ -1619,7 +1614,7 @@ lv:
           notify_moderators: "paziņoja moderatoriem"
           notify_user: "nosūtīja ziņu"
           bookmark: "pievienoja grāmatzīmēm"
-          like: "izteica atzinību par šo"
+          like: "patika ieraksts"
         by_you:
           off_topic: "Jūs ziņojāt par šo kā novirzīšanos no tēmas"
           spam: "Jūs ziņojāt par šo kā spamu"
@@ -1702,7 +1697,6 @@ lv:
           revert: "Atgriezties pie šīs versijas"
           edit_wiki: "Rediģēt wiki"
           edit_post: "Rediģēt ierakstu"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             button: 'HTML'

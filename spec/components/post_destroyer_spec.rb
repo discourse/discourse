@@ -638,7 +638,7 @@ describe PostDestroyer do
     it "should delete public post actions and agree with flags" do
       second_post.expects(:update_flagged_posts_count)
 
-      PostDestroyer.new(moderator, second_post, agree_flags: true).destroy
+      PostDestroyer.new(moderator, second_post).destroy
 
       expect(PostAction.find_by(id: bookmark.id)).to eq(nil)
 
@@ -655,7 +655,7 @@ describe PostDestroyer do
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
       expect(PostAction.flagged_posts_count).to eq(1)
-      PostDestroyer.new(Discourse.system_user, second_post, agree_flags: true).destroy
+      PostDestroyer.new(Discourse.system_user, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(PostAction.flagged_posts_count).to eq(0)
     end
@@ -663,7 +663,7 @@ describe PostDestroyer do
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
       SiteSetting.delete_removed_posts_after = 0
       expect(PostAction.flagged_posts_count).to eq(1)
-      PostDestroyer.new(second_post.user, second_post, agree_flags: true).destroy
+      PostDestroyer.new(second_post.user, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(PostAction.flagged_posts_count).to eq(0)
     end
@@ -674,13 +674,13 @@ describe PostDestroyer do
       second_post.reload
       expect(PostAction.flagged_posts_count).to eq(0)
 
-      PostDestroyer.new(moderator, second_post, agree_flags: true).destroy
+      PostDestroyer.new(moderator, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if agree_flags is false" do
+    it "should not send the flags_agreed_and_post_deleted message if defer_flags is true" do
       expect(PostAction.flagged_posts_count).to eq(1)
-      PostDestroyer.new(moderator, second_post, agree_flags: false).destroy
+      PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(PostAction.flagged_posts_count).to eq(0)
     end

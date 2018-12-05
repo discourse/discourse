@@ -434,9 +434,6 @@ da:
       topic_sentence:
         one: "1 emne"
         other: "%{count} emner"
-      topic_stat_sentence:
-        one: "%{count} nyt emne i den/det seneste %{unit}."
-        other: "%{count} nye emner i den/det seneste %{unit}."
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -1003,7 +1000,6 @@ da:
         title_too_long: "Titlen skal være kortere end {{max}} tegn."
         post_missing: "Indlægget kan ikke være tomt."
         post_length: "Indlægget skal være på mindst {{min}} tegn."
-        try_like: 'Har du prøvet <i class="fa fa-heart"></i> knappen?'
         category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
       reply_original: "Svar til det oprindelige emne"
@@ -1650,7 +1646,6 @@ da:
           revert: "Gå tilbage til denne udgave"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vis det renderede output med tilføjelser og ændringer indlejret"

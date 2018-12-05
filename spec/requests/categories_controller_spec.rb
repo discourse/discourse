@@ -91,6 +91,7 @@ describe CategoriesController do
 
       it "raises an exception when the text color is missing" do
         post "/categories.json", params: { name: "hello", color: "ff0" }
+        expect(response.status).to eq(400)
       end
 
       describe "failure" do
@@ -183,7 +184,7 @@ describe CategoriesController do
       c3 = Fabricate(:category)
       c4 = Fabricate(:category)
       if c3.id < c2.id
-        tmp = c3; c2 = c3; c3 = tmp;
+        tmp = c3; c2 = c3; c3 = tmp
       end
       c1.position = 8
       c2.position = 6
@@ -299,6 +300,7 @@ describe CategoriesController do
             custom_fields: {
               "dancing" => "frogs"
             },
+            minimum_required_tags: ""
           }
 
           expect(response.status).to eq(200)
@@ -311,6 +313,7 @@ describe CategoriesController do
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
           expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.minimum_required_tags).to eq(0)
         end
 
         it 'logs the changes correctly' do

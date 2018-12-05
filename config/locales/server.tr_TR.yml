@@ -121,9 +121,6 @@ tr_TR:
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "%{count} cevap"
-      other: "%{count} cevap"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
     one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
@@ -254,8 +251,6 @@ tr_TR:
           attributes:
             hex:
               invalid: "geçerli bir renk değil"
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
   meta_category_name: "Site geri bildirimi"
@@ -610,7 +605,6 @@ tr_TR:
     queue_size_warning: 'Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
-    bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='%{base_path}/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
@@ -649,7 +643,6 @@ tr_TR:
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
-    apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     force_https: "Sitenizi HTTPS kullanmaya zorlayın. DİKKAT: bu seçeneği HTTPS'nin her yerde doğru bir şekilde çalıştığından emin olmadan SEÇMEYİN. Sitenizde bulunan paylaşım siteleri bağlantılarını, CDN' adresinizi, dışsal bağlantısı olan görsellerinizi de kontrol ettiniz mi?"
@@ -803,7 +796,6 @@ tr_TR:
     body_min_entropy: "Gönderi içeriği için gereken en az entropi (tekil karakter, ingilizce-dışı karakterler daha fazla sayılır)"
     allow_uppercase_posts: "Konu başlığı ya da gönderi metninin tümünün büyük harf kullanılarak girilebilmesine izin ver."
     min_title_similar_length: "Bir başlığın benzer konular için kontrolünün yapılmasından önce sahip olması gereken en az uzunluk."
-    min_body_similar_length: "Bir gönderi metninin benzer konular için kontrolünün yapılmasından önce sahip olması gereken en az uzunluk."
     desktop_category_page_style: "/categories sayfasının görsel biçimi."
     category_colors: "Kategoriler için izin verilen onaltılı renk değerlerinin listesi"
     category_style: "Kategori rozetleri için görsel biçim."
@@ -935,9 +927,6 @@ tr_TR:
     tag_style: "Etiket rozetleri için görsel biçim."
     min_trust_level_to_tag_topics: "Konulara etiket eklemek için gereken en az güven seviyesi."
     suppress_overlapping_tags_in_list: "Eğer etiketler konu ismi içerisinde tam kelime olarak bulunuyorsa, etiketi gösterme"
-    company_short_name: "Firma İsmi (kısa)"
-    company_full_name: "Firma İsmi (tamamı)"
-    company_domain: "Firma Alan Adı"
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -1577,17 +1566,6 @@ tr_TR:
             label: "Ağ Sayfası"
           site_contact:
             label: "Otomatik İletiler"
-      corporate:
-        fields:
-          company_short_name:
-            label: "Firma İsmi (kısa)"
-            placeholder: "Falanteknik"
-          company_full_name:
-            label: "Firma İsmi (tamamı)"
-            placeholder: "Falanteknik A.Ş"
-          company_domain:
-            label: "Firma Alan Adı"
-            placeholder: "falanteknik.com"
       colors:
         title: "Tema"
         fields:
@@ -1599,20 +1577,8 @@ tr_TR:
                 label: "Basit Karanlık"
       logos:
         title: "Görseller"
-        fields:
-          logo_url:
-            label: "Birincil Görsel"
-            description: "Sitenizin sol üst kısmında gözükecek olan görsel. Geniş bir dikdörtgen olursa iyi olur."
-          logo_small_url:
-            label: "Sadeleştirilmiş Görsel"
-            description: "Site görselinizin öz bir sürümü, aşağıya doğru kaydırılma yapıldığında sol üstte gözükecek. Kare bir görsel iyi olur."
       icons:
         title: "Simgeler"
-        fields:
-          favicon_url:
-            label: "Simgecik"
-          apple_touch_icon_url:
-            label: "Büyük Simge"
       homepage:
         title: "Ana Sayfa"
         fields:

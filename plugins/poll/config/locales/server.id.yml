@@ -24,11 +24,6 @@ id:
     default_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan pilihan ganda parameternya tidak benar."
     named_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan nama <strong>%{name}</strong> dengan pilihan ganda parameternya tidak benar."
     requires_at_least_1_valid_option: "Anda harus memilih setidaknya 1 pilihan yang benar."
-    default_cannot_be_made_public: "Polling dengan pilihan tidak bisa dibuat publik."
-    edit_window_expired:
-      op_cannot_edit_options: "Anda tidak dapat menambahkan atau menghapus pilihan polling setelah %{minutes} menit pertama. Mohon hubungi moderator jika anda ingin mengubah pilihan dalam polling."
-      staff_cannot_add_or_remove_options: "Anda tidak dapat menambahkan atau menghapus pilihan polling setelah %{minutes} menit. Anda disarankan menutup topik ini dan membuat topik baru."
-    no_polls_associated_with_this_post: "Tidak ada polling yang terkait dengan pos ini."
     no_poll_with_this_name: "Tidak ada pollig <strong>%{name}</strong> yang terkait dengan pos ini."
     post_is_deleted: "Tidak dapat beraksi pada sebuah pos yang dihapus."
     topic_must_be_open_to_vote: "Topik harus terbuka untuk dinilai."

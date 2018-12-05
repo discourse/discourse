@@ -113,8 +113,6 @@ vi:
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
-    replies:
-      other: "%{count} câu trả lời"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
     other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
@@ -182,24 +180,42 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
-    'new-topic': |
+    'new-topic': |2
+
       Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã đăng cuộc thảo luận mới!**
+
+
 
       - Bạn có cảm thấy tiêu đề có thú vị không khi bạn đọc to nó? Đó có phải là một đoạn tóm tắt tốt không?
 
+
+
       - Những ai sẽ hứng thú với cuộc thảo luận này? Tại sao đó lại trở thành vấn đề? Bạn muốn những loại phản hồi thế nào?
+
+
 
       - Sử dụng những từ khóa phổ biến để người khác có thể tìm thấy chủ đề của bạn dễ hơn. Để nhóm chủ đề của bạn với các chủ đề liên quan khác, hãy chọn chuyên mục cho chủ đề của mình.
 
+
+
       Xem thêm, [hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện vào lần đầu %{education_posts_text}.
-    'new-reply': |
+    'new-reply': |2
+
       Chào mừng bạn đến với %{site_name} &mdash; **cám ơn vì đã đóng góp!**
+
+
 
       - Câu trả lời của bạn có làm cuộc thảo luận tốt hơn về mặt nào đó?
 
+
+
       - Hãy đối xử tốt với các thành viên khác trong cộng đồng của bạn.
 
+
+
       - Lời phê bình mang tính đóng góp cũng được chào đón, nhưng bạn nên phê bình *ý tưởng* chứ không phải con người.
+
+
 
       [Đọc hướng dẫn cộng đồng](%{base_path}/guidelines) để có thêm thông tin. Bảng này chỉ xuất hiện cho bài viết đầu tiên của bạn %{education_posts_text}.
   activerecord:
@@ -232,8 +248,6 @@ vi:
           attributes:
             hex:
               invalid: "không phải là một màu không hợp lệ"
-  user_profile:
-    no_info_other: "<div class = 'missing-profile'>%{name} đã không nhập bất cứ điều gì nói về bản thân của họ </ div>"
   vip_category_name: "Phòng khách"
   vip_category_description: "Một chuyên mục chỉ dành cho thành viên có mức tin tưởng 3 hoặc cao hơn"
   meta_category_name: "Phản hồi"
@@ -544,7 +558,6 @@ vi:
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
       other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
-    bad_favicon_url: "Favicon không tải được, bạn hãy kiểm tra lại favicon_url trong <a href='%{base_path}/admin/site_settings'>Thiết Lập Website</a>."
     poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
     poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
   site_settings:
@@ -579,7 +592,6 @@ vi:
     add_rel_nofollow_to_user_content: "Thêm rel='nofollow' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: \"rake posts:rebake\""
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
-    apple_touch_icon_url: "Biểu tượng sử dụng trong các thiết bị cảm ứng của Apple. Kích thước gợi ý 144px x 144px"
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
@@ -731,7 +743,6 @@ vi:
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
-    min_body_similar_length: "Chiều dài tối thiểu của nội dung bài viết trước khi kiểm trang chủ đề tương tự."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     category_style: "Style trực quan cho phù hiệu danh mục."
     max_image_size_kb: "Kích cỡ ảnh upload tối đa theo Kb. Thiết lập này phải được cấu hình cả trong nginx (client_max_body_size) / apache hoặc trong proxy."
@@ -998,53 +1009,85 @@ vi:
     csv_export_failed:
       subject_template: "Xuất dữ liệu thất bại"
     email_reject_inactive_user:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Tài khoản của bạn liên kết với địa chỉ email này chưa được kích hoạt. Xin hãy kích hoạt tài khoản của bạn trước khi gửi email.
     email_reject_empty:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Chúng tôi không tìm thấy nội dung trả lời trong email của bạn.
 
+
+
         Nếu bạn tin _đã_kèm_theo nội dung trả lời, xin hãy thử lại với định dạng đơn giản hơn.
     email_reject_parsing:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Chúng tôi không tìm thấy nội dung trả lời trong email của bạn. **Hãy đảm bảo rằng trả lời của bạn ở phía trên cùng của email** -- chúng tôi không thể xử lý các trả lời nội tuyến.
     email_reject_invalid_post:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Một số nguyên nhân có thể là: định dạng phức tạp, nội dung quá nhiều, hoặc nội dung quá ít... xin hãy thử lại, hoặc gửi thông qua website.
     email_reject_invalid_post_specified:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Lý do:
 
+
+
         %{post_error}
+
+
 
         Nếu bạn có thể khắc phục sự cố, xin hãy thử lại.
     email_reject_invalid_post_action:
-      text_body_template: |
+      text_body_template: |2
+
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+
 
         Hành động gửi bài không được công nhận, bạn hãy thử lại hoặc gửi thông qua website.
     email_error_notification:
-      text_body_template: |
+      text_body_template: |2
+
         Thật không may, có một lỗi xác thực trong khi polling mail từ POP server.
 
+
+
         Hãy chắc chắn rằng bạn đã cấu hình đúng các thông tin POP trong [thiết lập website](%{base_url}/admin/site_settings/category/email).
+
+
 
         Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
     pending_users_reminder:
       subject_template:
         other: "%{count} thành viên đang chờ duyệt"
-      text_body_template: |
+      text_body_template: |2
+
         Có tài khoản mới đăng ký đang chờ duyệt (hoặc từ chối) trước khi họ có thể truy cập diễn đàn.
+
+
 
         [Hãy xem xét họ trong khu vực admin](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
@@ -1052,8 +1095,11 @@ vi:
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
     dashboard_problems:
       subject_template: "Vấn đề đã được tìm thấy"
-      text_body_template: |
+      text_body_template: |2
+
         Một số vấn đề đang được báo cáo trên bảng điều khiển admin của bạn.
+
+
 
         [Hãy xem xét và sửa chữa](%{base_url}/admin).
   subject_re: "Re:"
@@ -1072,10 +1118,15 @@ vi:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       click_here: "bấm vào đây"
     notify_old_email:
-      text_body_template: |
+      text_body_template: |2
+
         Đây là tin nhắn tự động để thông báo rằng địa chỉ email của bạn trên %{site_name} đã được thay đổi. Nếu điều này là không đúng, xin hãy liên hệ với BQT.
 
+
+
         Địa chỉ email của bạn được đổi thành:
+
+
 
         %{new_email}
     signup_after_approval:
@@ -1111,7 +1162,8 @@ vi:
   csv_export:
     boolean_yes: "Đồng ý"
     boolean_no: "Không"
-  static_topic_first_reply: |
+  static_topic_first_reply: |2
+
     Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
@@ -1160,7 +1212,8 @@ vi:
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một bài viết có 25 lượt truy cập
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
     good_share:
       name: Chia Sẻ Tốt
@@ -1171,7 +1224,8 @@ vi:
     first_like:
       name: Like Đầu Tiên
       description: Đã like một bài viết
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp cho lần đầu tiên bạn like một bài đăng bằng sử dụng nút :heart:. Like bài viết là một cách tuyệt vời để cho các thành viên của cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
     first_flag:
       name: Gắn Cờ Đầu Tiên
@@ -1188,12 +1242,14 @@ vi:
     first_share:
       name: Chia Sẻ Đầu Tiên
       description: Chia sẻ 1 bài viết
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp cho lần đầu tiên bạn chia sẻ liên kết một bài trả lời hoặc một chủ đề bằng cách sử dụng nút chia sẻ. Chia sẻ liên kết là cách tuyệt vời để chia sẻ các cuộc thảo luận thú vị với phần còn lại của Thế Giới và giúp phát triển cộng đồng.
     first_link:
       name: Liên Kết Đầu Tiên
       description: Đã thêm 1 liên kết tới chủ đề khác
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cáp cho lần đầu tiên bạn thêm một liên kết tới một chủ đề khác. Liên kết chủ đề giúp độc giả tìm thấy thú vị liên quan trong hội thoại, bằng cách hiển thị kết nối giữa các chủ đề theo cả hai hướng. Thoải mái liên kết!
     first_quote:
       name: Trích Dẫn Đầu Tiên
@@ -1203,17 +1259,20 @@ vi:
     reader:
       name: Người xem
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
     popular_link:
       name: Liên kết phổ biến
       description: Đăng một liên kết ngoài được 50 click
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
     hot_link:
       name: Liên kết hấp dẫn
       description: Đăng một liên kết ngoài được 300 click
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
     famous_link:
       name: Liên kết nổi tiếng
@@ -1221,27 +1280,32 @@ vi:
     appreciated:
       name: Được đánh giá cao
       description: Nhận được 1 like cho 20 bài viết
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi bạn nhận được ít nhất 1 like cho 20 bài viết khác nhau. Cộng đồng thích thú với các đóng góp của bạn trong các cuộc đối thoại!
     respected:
       name: Được tôn trọng
       description: Nhận được 2 like cho 100 bài viết
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi bạn nhận được ít nhất 2 like cho 100 bài viết khác nhau. Cộng đồng đang hướng tới tôn trọng những đóng góp của bạn trong các cuộc đối thoại.
     admired:
       name: Được ngưỡng mộ
       description: Nhận được 5 like cho 300 bài viết
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
     out_of_love:
       name: Vì yêu thích
       description: Sử dụng 50 like trong 1 ngày
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi bạn sử dụng tất cả 50 lượt like hàng ngày của bạn. Ghi nhớ một chút các bài viết mà bạn xem và khuyến khích các thành viên cộng đồng tạo ra các cuộc thảo luận lớn hơn trong tương lai.
     higher_love:
       name: Thích nhiều hơn
       description: Sử dụng 50 like một ngày trong 5 ngày
-      long_description: |
+      long_description: |2
+
         Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 5 ngày liên tiếp. Cám ơn bạn đã dành thời gian để khuyến khích các cuộc hội thoại tốt nhất mỗi ngày!
     crazy_in_love:
       name: Thích nhiệt tình

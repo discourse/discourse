@@ -331,7 +331,7 @@ test("tooltip", assert => {
   assert.equal(
     timezone,
     DEFAULT_ZONE_FORMATED,
-    "it creates a range adjusted to watching user timezone"
+    "it adds watching user timezone as preview"
   );
   assert.equal(
     dateTime,
@@ -345,9 +345,9 @@ test("tooltip", assert => {
     htmlToolip = transformed.attr("data-html-tooltip");
     currentUserPreview = $(htmlToolip).find(".preview.current");
 
-    assert.notOk(
+    assert.ok(
       exists(currentUserPreview),
-      "it doesn’t create entry if watching user has the same timezone than creator"
+      "it creates an entry if watching user has the same timezone than creator"
     );
   });
 
@@ -360,11 +360,11 @@ test("tooltip", assert => {
   htmlToolip = transformed.attr("data-html-tooltip");
 
   assert.ok(
-    !exists(".preview.current"),
+    exists($(htmlToolip).find(".preview.current")),
     "doesn’t create current timezone when displayed timezone equals watching user timezone"
   );
 
-  let $firstPreview = $(htmlToolip).find(".preview:nth-child(1)");
+  let $firstPreview = $(htmlToolip).find(".preview:nth-child(2)");
   dateTime = $firstPreview.find(".date-time").text();
   timezone = $firstPreview.find(".timezone").text();
   assert.equal(
@@ -374,14 +374,9 @@ test("tooltip", assert => {
   );
   assert.equal(timezone, "Chicago", "it adds the timezone of the creator");
 
-  let $secondPreview = $(htmlToolip).find(".preview:nth-child(2)");
+  let $secondPreview = $(htmlToolip).find(".preview:nth-child(3)");
   dateTime = $secondPreview.find(".date-time").text();
   timezone = $secondPreview.find(".timezone").text();
-  assert.equal(
-    dateTime,
-    "June 20, 2018 7:00 PM",
-    "it doesn’t create range if time has been set"
-  );
   assert.equal(timezone, "UTC", "Etc/UTC is rewritten to UTC");
 
   freezeDateAndZone(moment("2018-11-26 21:00:00"), "Europe/Vienna", () => {
@@ -393,9 +388,7 @@ test("tooltip", assert => {
     transformed = $(html).applyLocalDates();
     htmlToolip = transformed.attr("data-html-tooltip");
 
-    $firstPreview = $(htmlToolip)
-      .find(".preview")
-      .first();
+    $firstPreview = $(htmlToolip).find(".preview:nth-child(2)");
 
     assert.equal(
       $firstPreview.find(".timezone").text(),

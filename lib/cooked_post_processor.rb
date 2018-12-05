@@ -447,7 +447,12 @@ class CookedPostProcessor
       skip_onebox = limit <= 0 && !map[url]
 
       if skip_onebox
-        remove_inline_onebox_loading_class(element) unless is_onebox
+        if is_onebox
+          element.remove_class('onebox')
+        else
+          remove_inline_onebox_loading_class(element)
+        end
+
         next
       end
 

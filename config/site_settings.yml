@@ -281,6 +281,8 @@ basic:
   push_notifications_icon_url:
     hidden: true
     default: ''
+  short_title:
+    default: ''
   vapid_public_key_bytes:
     default: ''
     client: true

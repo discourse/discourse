@@ -35,6 +35,10 @@ describe CookedPostProcessor do
         "https://#{url_hostname}/t/mini-inline-onebox-support-rfc/66400"
       end
 
+      let(:not_oneboxed_url) do
+        "https://#{url_hostname}/t/random-url"
+      end
+
       let(:title) { 'some title' }
 
       let(:post) do
@@ -42,7 +46,7 @@ describe CookedPostProcessor do
         #{url}
         This is a #{url} with path
 
-        https://#{url_hostname}/t/random-url
+        #{not_oneboxed_url}
 
         This is a https://#{url_hostname}/t/another-random-url test
         This is a #{url} with path
@@ -101,11 +105,17 @@ describe CookedPostProcessor do
           without: {
             class: described_class::INLINE_ONEBOX_LOADING_CSS_CLASS
           },
-          text: "https://#{url_hostname}/t/another-random-url",
+          text: not_oneboxed_url,
           count: 1
         )
 
-        expect(cpp.html).to have_tag('a.onebox', count: 1)
+        expect(cpp.html).to have_tag('a',
+          without: {
+            class: 'onebox'
+          },
+          text: not_oneboxed_url,
+          count: 1
+        )
       end
     end
 

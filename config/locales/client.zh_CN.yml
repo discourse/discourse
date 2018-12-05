@@ -9,7 +9,7 @@ zh_CN:
   js:
     number:
       format:
-        separator: "。"
+        separator: "."
         delimiter: "，"
       human:
         storage_units:
@@ -196,6 +196,8 @@ zh_CN:
     alternation: "或"
     character_count:
       other: "%{count} 个字符"
+    related_messages:
+      title: "相关消息"
     suggested_topics:
       title: "推荐主题"
       pm_title: "推荐私信"
@@ -488,8 +490,6 @@ zh_CN:
       subcategories: "子分类"
       topic_sentence:
         other: "%{count} 主题"
-      topic_stat_sentence:
-        other: "在过去一%{unit}中有 %{count} 个新主题。"
       n_more: "分类 (还有%{count}个分类) ..."
     ip_lookup:
       title: IP 地址查询
@@ -577,14 +577,14 @@ zh_CN:
         few_per_day: "为每个新帖给我发送邮件（大约每天 2 封）"
         warning: "邮件列表模式启用。邮件通知设置被覆盖。"
       tag_settings: "标签"
-      watched_tags: "监看"
-      watched_tags_instructions: "你将自动监看有这些标签的所有主题。所有新帖子和新主题会通知你，新帖数量也会显示在主题旁边。"
+      watched_tags: "关注"
+      watched_tags_instructions: "你将自动关注有这些标签的所有主题。所有新帖子和新主题会通知你，新帖数量也会显示在主题旁边。"
       tracked_tags: "跟踪"
       tracked_tags_instructions: "你将自动跟踪这些标签的所有主题，新帖数量将会显示在主题旁边。"
       muted_tags: "静音"
       muted_tags_instructions: "你将不会收到有这些标签的新主题任何通知，它们也不会出现在“最新”主题列表。"
       watched_categories: "监看"
-      watched_categories_instructions: "你将自动监看这些分类中的所有主题。所有新帖子和新主题会通知你，新帖数量也将显示在主题旁边。"
+      watched_categories_instructions: "你将自动关注这些分类中的所有主题。所有新帖子和新主题会通知你，新帖数量也将显示在主题旁边。"
       tracked_categories: "跟踪"
       tracked_categories_instructions: "你将自动跟踪这些分类中的所有主题。新帖数量将会显示在主题旁边。"
       watched_first_post_categories: "监看头一帖"
@@ -604,7 +604,7 @@ zh_CN:
       muted_users: "静音"
       muted_users_instructions: "抑制来自这些用户的所有通知。"
       muted_topics_link: "显示已静音的主题"
-      watched_topics_link: "显示已监看的主题"
+      watched_topics_link: "显示已关注的主题"
       tracked_topics_link: "显示已跟踪的主题"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       apps: "应用"
@@ -1051,7 +1051,7 @@ zh_CN:
       second_factor: "<a href>使用Authenticator app登陆</a>"
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
-      error: "出错了"
+      error: "未知错误"
       cookies_error: "你的浏览器似乎禁用了Cookie。如果不先启用它们，你可能无法登录。"
       rate_limit: "请请稍后再重试"
       blank_username: "请输入你的邮件地址或用户名。"
@@ -1185,6 +1185,7 @@ zh_CN:
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有点类似于…"
       drafts_offline: "离线草稿"
+      edit_conflict: '编辑冲突'
       group_mentioned_limit: "<b>警告！</b>你提到了<a href='{{group_link}}'> {{group}} </a>，但该群组的成员数超过了的管理员配置的最大{{max}}人数。没人会收到通知。"
       group_mentioned:
         other: "提及 {{group}} 时，你将通知 <a href='{{group_link}}'>{{count}} 人</a> － 确定吗？"
@@ -1198,7 +1199,6 @@ zh_CN:
         title_too_long: "标题过长，最多 {{max}} 个字"
         post_missing: "帖子不能为空"
         post_length: "帖子至少应有 {{min}} 个字"
-        try_like: '试试 <i class="fa fa-heart"></i> 按钮？'
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择{{count}}个标签"
       save_edit: "保存编辑"
@@ -1611,11 +1611,11 @@ zh_CN:
         reasons:
           mailing_list_mode: "邮件列表模式已启用，将以邮件通知你关于该主题的回复。"
           "3_10": '因为你正监看该主题上的标签，你将会收到通知。'
-          "3_6": '因为你正在监看该分类，你将会收到通知。'
+          "3_6": '因为你正在关注该分类，你将会收到通知。'
           "3_5": '因为你开始自动监看该主题，你将会收到通知。'
-          "3_2": '因为你正在监看该主题，你将会收到通知。'
+          "3_2": '因为你正在关注该主题，你将会收到通知。'
           "3_1": '因为你创建了这个主题，你将会收到通知。'
-          "3": '因为你正在监看该主题，你将会收到通知。'
+          "3": '因为你正在关注该主题，你将会收到通知。'
           "2_8": '因为你追踪了该分类，所以你会看到新回复的数量。'
           "2_4": '因为你回复过该主题，所以你会看到新回复的数量。'
           "2_2": '因为你追踪了该主题，所以你会看到新回复的数量。'
@@ -1626,7 +1626,7 @@ zh_CN:
           "0_2": '你将忽略关于该主题的所有通知。'
           "0": '你将忽略关于该主题的所有通知。'
         watching_pm:
-          title: "监看"
+          title: "关注"
           description: "私信有新回复时提醒我，并显示新回复数量。"
         watching:
           title: "监看"
@@ -1798,7 +1798,6 @@ zh_CN:
           other: "已选择 <b>{{count}}</b> 个帖子。"
     post:
       quote_reply: "引用"
-      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
       wiki_last_edited_on: "维基最后修改于"
@@ -1959,7 +1958,6 @@ zh_CN:
           revert: "还原至该版本"
           edit_wiki: "编辑维基"
           edit_post: "编辑帖子"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "行内显示渲染后的页面，并标示增加和删除的内容"
@@ -2055,8 +2053,8 @@ zh_CN:
       navigate_to_first_post_after_read: '阅读主题后导航到第一个帖子'
       notifications:
         watching:
-          title: "监看"
-          description: "你将自动监看这些分类中的所有主题。每一个主题的每一个新帖，将通知你，还将显示新回复的数量。"
+          title: "关注"
+          description: "你将自动关注这些分类中的所有主题。每一个主题的每一个新帖，将通知你，还将显示新回复的数量。"
         watching_first_post:
           title: "监看头一帖"
           description: "在这些分类里面，只是每一个新主题的第一帖，才会通知你。"
@@ -2371,9 +2369,16 @@ zh_CN:
       manage_groups: "管理标签组"
       manage_groups_description: "管理标签的群组"
       upload: "上传标签"
-      upload_description: "上传文本文件以批量创建标签"
+      upload_description: "上传csv文件以批量创建标签"
       upload_instructions: "每行一个，可选带有'tag_name，tag_group'格式的标签组。"
       upload_successful: "标签上传成功"
+      delete_unused_confirmation:
+        other: "%{count}标签将被删除：%{tags}"
+      delete_unused_confirmation_more_tags:
+        other: "%{tags}和%{count}更多"
+      delete_unused: "删除未使用的标签"
+      delete_unused_description: "删除所有未与主题或私信关联的标签"
+      cancel_delete_unused: "取消"
       filters:
         without_category: "%{tag}的%{filter}主题"
         with_category: "%{filter} %{tag}主题在%{category}"
@@ -2384,7 +2389,7 @@ zh_CN:
           title: "监看"
           description: "你将自动监看该标签中的所有主题。你将收到所有新帖子和主题的通知，此外，主题旁边还会显示未读和新帖子的数量。"
         watching_first_post:
-          title: "监看头一帖"
+          title: "关注第一条帖子"
           description: "你只会收到此标签中每个新主题中第一篇帖子的通知。"
         tracking:
           title: "跟踪"
@@ -2493,6 +2498,7 @@ zh_CN:
         timeout_error: 对不起，查询时间太长，请选择较短的间隔
         exception_error: 抱歉，执行查询时发生错误
         too_many_requests: 你执行这个操作太多次了，请稍后再试。
+        not_found_error: 抱歉，报告不存在
         reports:
           trend_title: "%{percent}更改。目前%{current}，在前一期间是%{prev}。"
           today: "今天"
@@ -3087,6 +3093,7 @@ zh_CN:
           silence_user: "禁言的用户"
           delete_post: "删除的帖子"
           delete_topic: "删除的主题"
+          post_approved: "帖子已审批"
       logs:
         title: "日志"
         action: "操作"
@@ -3155,6 +3162,7 @@ zh_CN:
             revoke_moderation: "撤销版主权限"
             backup_create: "创建备份"
             deleted_tag: "删除的标签"
+            deleted_unused_tags: "已被删除的未使用标签"
             renamed_tag: "重命名的标签"
             revoke_email: "撤销邮件"
             lock_trust_level: "锁定信任等级"
@@ -3179,6 +3187,7 @@ zh_CN:
             delete_badge: "删除徽章"
             merge_user: "合并用户"
             entity_export: "导出实体"
+            change_name: "更换名称"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -3676,6 +3685,7 @@ zh_CN:
   wizard_js:
     wizard:
       done: "完成"
+      finish: "结束"
       back: "上一步"
       next: "下一步"
       step: "%{current} / %{total}"

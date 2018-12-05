@@ -166,9 +166,6 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
-  INVITE_ORDER = <<~SQL
-  SQL
-
   def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
       .where('invites.email IS NOT NULL')

@@ -403,8 +403,6 @@ vi:
       subcategories: "Phân loại phụ"
       topic_sentence:
         other: "%{count} chủ đề"
-      topic_stat_sentence:
-        other: "%{count} số lượng chủ đề mới tỏng quá khứ %{unit}."
     ip_lookup:
       title: Tìm kiếm địa chỉ IP
       hostname: Hostname
@@ -473,8 +471,10 @@ vi:
       mailing_list_mode:
         label: "Chế độ mailing list"
         enabled: "Bật chế độ mailing list"
-        instructions: |
+        instructions: |2
+
           Cài đặt này ghi đè tổng quan về hoạt động<br />
+
           Topic bị đánh dấu im lặng và chuyên mục sẽ không bao gồm trong thư
         individual: "Gửi email cho mỗi bài viết mới."
         individual_no_echo: "Gửi email cho mỗi bài viết mới trừ bài viết của tôi"
@@ -936,7 +936,6 @@ vi:
         title_too_long: "Tiêu đề có tối đa {{max}}  ký tự"
         post_missing: "Bài viết không được bỏ trắng"
         post_length: "Bài viết phải có ít nhất {{min}} ký tự"
-        try_like: 'Các bạn đã thử các nút <i class="fa fa-heart"></i>?'
         category_missing: "Bạn phải chọn một phân loại"
       save_edit: "Lưu chỉnh sửa"
       reply_original: "Trả lời cho bài viết gốc"
@@ -1484,7 +1483,6 @@ vi:
           revert: "Hoàn nguyên sửa đổi"
           edit_wiki: "Sửa wiki"
           edit_post: "Sửa bài đăng"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Hiển thị dạng xuất kèm theo các bổ sung và loại bỏ nội tuyến"
@@ -1639,11 +1637,16 @@ vi:
         help: "Chủ đề này ẩn, nó sẽ không hiển thị trong danh sách chủ đề, và chỉ có thể truy cập thông qua liên kết trực tiếp"
     posts: "Bài viết"
     posts_long: "Có {{number}} bài đăng trong chủ đề này"
-    posts_likes_MF: |
+    posts_likes_MF: |2
+
       Chủ đề này có {count, plural, one {1 reply} other {# replies}} {ratio, select,
+
       low {with a high like to post ratio}
+
       med {with a very high like to post ratio}
+
       high {with an extremely high like to post ratio}
+
       other {}}
     original_post: "Bài viết gốc"
     views: "Lượt xem"

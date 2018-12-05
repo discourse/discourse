@@ -105,11 +105,6 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "%{count} atsakymas"
-      few: "%{count} atsakymai"
-      many: "%{count} atsakymų"
-      other: "%{count} atsakymų"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
@@ -213,7 +208,6 @@ lt:
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
-  assets_topic_title: "Svetainės dizaino turinys"
   discourse_welcome_topic:
     title: "Sveiki atvykę į Discourse"
   lounge_welcome:
@@ -926,25 +920,10 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-        fields:
-          company_short_name:
-            label: "Įmonės pavadinimas (trumpas)"
-            placeholder: "Imonė"
-          company_full_name:
-            label: "Įmonės pavadinimas (pilnas)"
-            placeholder: "UAB \"įmonė\""
-          company_domain:
-            label: "Įmonės domenas"
-            placeholder: "imone.lt"
       colors:
         title: "Tema"
       logos:
         title: "Logotipas"
-        fields:
-          logo_url:
-            label: "Pirminis logotipas"
-          logo_small_url:
-            label: "Įmonės logotipas"
       homepage:
         title: "Pagrindinis puslapis"
         fields:

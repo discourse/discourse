@@ -505,9 +505,6 @@ sw:
       topic_sentence:
         one: "1 topiki"
         other: "%{count} Topiki"
-      topic_stat_sentence:
-        one: "%{count} Topiki Mpya katika %{unit} zilizopita."
-        other: "%{count} Topiki Mpya katika %{unit} zilizopita."
     ip_lookup:
       title: Utafutaji wa Anwani ya Mtandao
       hostname: Hostname
@@ -1185,7 +1182,6 @@ sw:
         title_too_long: "Kichwa hakitakiwi kuwa na tarakimu zaidi ya  {{max}}"
         post_missing: "Chapisho haliwezi kuwa tupu"
         post_length: "Posti/Chapisho linatakiwa kuwa na tarakimu japo {{min}}"
-        try_like: 'Je umejaribu kitufe <i class="fa fa-heart"></i>?'
         category_missing: "Ni sharti uchague kategoria"
         tags_missing: "Unatakiwa kuchagua japo vitambulisho {{count}}"
       save_edit: "Hifadhi Uhariri"
@@ -1774,7 +1770,6 @@ sw:
           other: "Umechagua machapisho<b>{{count}}</b>."
     post:
       quote_reply: "Nukulu"
-      edit: "<i class='fa fa-pencil'></i> {{kiungo}} {{replyAvatar}} {{jina la mtumaiji}}"
       edit_reason: "Sababu:"
       post_number: "{{namba}} chapisho"
       wiki_last_edited_on: "uhariri wa wiki ulifanyika"
@@ -1909,7 +1904,6 @@ sw:
           revert: "Rudi kwenye sahihisho hili"
           edit_wiki: "Hariri Wiki"
           edit_post: "Hariri Chapisho"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             button: 'HTML'

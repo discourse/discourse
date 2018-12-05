@@ -69,7 +69,7 @@ module Email
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
-          @from_email, @from_display_name = parse_from_field(@mail)
+          @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
           process_internal
@@ -116,8 +116,6 @@ module Email
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
-      hidden_reason_id = is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
-
       user = @from_user
 
       if user.present?
@@ -129,7 +127,7 @@ module Email
       body, elided = select_body
       body ||= ""
 
-      raise NoBodyDetectedError if body.blank? && attachments.empty?
+      raise NoBodyDetectedError if body.blank? && attachments.empty? && !is_bounce?
 
       if is_auto_generated? && !sent_to_mailinglist_mirror?
         @incoming_email.update_columns(is_auto_generated: true)
@@ -188,6 +186,10 @@ module Email
       end
     end
 
+    def hidden_reason_id
+      @hidden_reason_id ||= is_spam? ? Post.hidden_reasons[:email_spam_header_found] : nil
+    end
+
     def log_and_validate_user(user)
       @incoming_email.update_columns(user_id: user.id)
 
@@ -196,31 +198,41 @@ module Email
     end
 
     def is_bounce?
-      @mail.bounced? || verp
+      @mail.bounced? || bounce_key
     end
 
     def handle_bounce
       @incoming_email.update_columns(is_bounce: true)
 
-      if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+      if email_log.present?
         email_log.update_columns(bounced: true)
-        user = email_log.user
-        email = user&.email.presence
+        post = email_log.post
         topic = email_log.topic
       end
 
-      email ||= @from_email
-      user ||= @from_user
-
       if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
-        Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
+        Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
-        Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
+        Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
       end
 
-      return if SiteSetting.enable_whispers? &&
-                user&.staged? &&
-                (topic.blank? || topic.archetype == Archetype.private_message)
+      if SiteSetting.enable_whispers? && @from_user&.staged?
+        return if email_log.blank?
+
+        if post.present? && topic.present? && topic.archetype == Archetype.private_message
+          body, elided = select_body
+          body ||= ""
+
+          create_reply(user: @from_user,
+                       raw: body,
+                       elided: elided,
+                       hidden_reason_id: hidden_reason_id,
+                       post: post,
+                       topic: topic,
+                       skip_validations: true,
+                       bounce: true)
+        end
+      end
 
       raise BouncedEmailError
     end
@@ -229,8 +241,16 @@ module Email
       Email::Receiver.reply_by_email_address_regex.match(@from_email)
     end
 
-    def verp
-      @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+    def bounce_key
+      @bounce_key ||= begin
+        verp = all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+        verp && verp[/\+verp-(\h{32})@/, 1]
+      end
+    end
+
+    def email_log
+      return nil if bounce_key.blank?
+      @email_log ||= EmailLog.find_by(bounce_key: bounce_key)
     end
 
     def self.update_bounce_score(email, score)
@@ -453,11 +473,16 @@ module Email
       reply.split(previous_replies_regex)[0]
     end
 
-    def parse_from_field(mail)
-      if is_bounce?
+    def parse_from_field(mail = nil)
+      mail ||= @mail
+
+      if mail.bounced?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)
         end
+      elsif email_log.present?
+        email = email_log.user&.email || email_log.to_address
+        return [email, email_log.user&.username]
       end
 
       return unless mail[:from]
@@ -555,7 +580,7 @@ module Email
 
     def destinations
       @destinations ||= all_destinations
-        .map { |d| Email::Receiver.check_address(d) }
+        .map { |d| Email::Receiver.check_address(d, is_bounce?) }
         .reject(&:blank?)
     end
 
@@ -572,7 +597,7 @@ module Email
       end
     end
 
-    def self.check_address(address)
+    def self.check_address(address, include_verp = false)
       # only check for a group/category when 'email_in' is enabled
       if SiteSetting.email_in
         group = Group.find_by_email(address)
@@ -583,7 +608,7 @@ module Email
       end
 
       # reply
-      match = Email::Receiver.reply_by_email_address_regex.match(address)
+      match = Email::Receiver.reply_by_email_address_regex(true, include_verp).match(address)
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
@@ -785,9 +810,13 @@ module Email
       true
     end
 
-    def self.reply_by_email_address_regex(extract_reply_key = true)
+    def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
       reply_addresses = [SiteSetting.reply_by_email_address]
       reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
+
+      if include_verp && SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+        reply_addresses << SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-%{reply_key}")
+      end
 
       reply_addresses.flatten!
       reply_addresses.select!(&:present?)
@@ -1028,7 +1057,7 @@ module Email
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
-        if result.post.topic && result.post.topic.private_message?
+        if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
       end

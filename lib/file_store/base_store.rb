@@ -28,6 +28,10 @@ module FileStore
       not_implemented
     end
 
+    def upload_path
+      File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+    end
+
     def has_been_uploaded?(url)
       not_implemented
     end

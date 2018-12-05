@@ -62,22 +62,23 @@
     margin: 10px 0 0;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-
     &:first-of-type {
       margin-top: 13px;
     }
-
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
-
     .topic-statuses .fa {
       color: dark-light-choose($primary-medium, $secondary-high);
     }
-
+    .title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 0 1 auto;
+    }
     .topic-post-badges .badge.new-posts,
     .title {
       margin-right: 5px;

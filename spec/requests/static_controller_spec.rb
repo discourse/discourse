@@ -101,6 +101,7 @@ describe StaticController do
 
         expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
+        expect(response.body).to include("<title>FAQ - Discourse</title>")
       end
     end
 
@@ -184,6 +185,14 @@ describe StaticController do
           expect(response.status).to eq(200)
           expect(response.body).to include(I18n.t('guidelines'))
         end
+      end
+    end
+
+    context "crawler view" do
+      it "should include correct title" do
+        get '/faq', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+        expect(response.status).to eq(200)
+        expect(response.body).to include("<title>FAQ - Discourse</title>")
       end
     end
   end

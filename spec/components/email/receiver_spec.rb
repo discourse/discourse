@@ -112,33 +112,48 @@ describe Email::Receiver do
       expect(IncomingEmail.last.is_bounce).to eq(true)
     end
 
-    it "creates a whisper post in PM if user is staged" do
-      SiteSetting.enable_staged_users = true
-      SiteSetting.enable_whispers = true
+    describe "creating whisper post in PMs for staged users" do
+      let(:email_address) { "linux-admin@b-s-c.co.jp" }
+      let(:user1) { user1 = Fabricate(:user) }
+      let(:user2) { user2 = Fabricate(:staged, email: email_address) }
+      let(:topic) { Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user1, allowed_users: [user1, user2]) }
+      let(:post) { create_post(topic: topic, user: user1) }
 
-      email = "linux-admin@b-s-c.co.jp"
-      user = Fabricate(:staged, email: email)
+      before do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.enable_whispers = true
+      end
 
-      private_message = Fabricate(:topic,
-        archetype: 'private_message',
-        category_id: nil,
-        user: user,
-        allowed_users: [user]
-      )
+      def create_post_reply_key(value)
+        Fabricate(:post_reply_key,
+          reply_key: value,
+          user: user2,
+          post: post
+        )
+      end
 
-      post = create_post(topic: private_message, user: user)
+      it "when bounce without verp" do
+        create_post_reply_key("4f97315cc828096c9cb34c6f1a0d6fe8")
 
-      post_reply_key = Fabricate(:post_reply_key,
-        reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
-        user: user,
-        post: post
-      )
+        expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+        post = Post.last
+        expect(post.whisper?).to eq(true)
+        expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
+        expect(IncomingEmail.last.is_bounce).to eq(true)
+      end
 
-      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
-      post = Post.last
-      expect(post.whisper?).to eq(true)
-      expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email, raw: "Your email bounced").strip)
-      expect(IncomingEmail.last.is_bounce).to eq(true)
+      it "when bounce with verp" do
+        SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
+        bounce_key = "14b08c855160d67f2e0c2f8ef36e251e"
+        create_post_reply_key(bounce_key)
+        Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key, post: post)
+
+        expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+        post = Post.last
+        expect(post.whisper?).to eq(true)
+        expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
+        expect(IncomingEmail.last.is_bounce).to eq(true)
+      end
     end
   end
 
@@ -146,6 +161,14 @@ describe Email::Receiver do
     Email::Receiver.any_instance.stubs(:process_internal).raises(RuntimeError, "")
     process(:existing_user) rescue RuntimeError
     expect(IncomingEmail.last.error).to eq("RuntimeError")
+  end
+
+  it "matches the correct user" do
+    user = Fabricate(:user)
+    email_log = Fabricate(:email_log, to_address: user.email, user: user, bounce_key: nil)
+    email, name = Email::Receiver.new(email(:existing_user)).parse_from_field
+    expect(email).to eq("existing@bar.com")
+    expect(name).to eq("Foo Bar")
   end
 
   it "strips null bytes from the subject" do
@@ -158,9 +181,9 @@ describe Email::Receiver do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
-    let!(:user) { Fabricate(:user, email: "foo@bar.com") }
-    let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
-    let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
+    let!(:user) { Fabricate(:user, email: "linux-admin@b-s-c.co.jp") }
+    let!(:email_log) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key) }
+    let!(:email_log_2) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key_2) }
 
     it "deals with soft bounces" do
       expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)

@@ -344,16 +344,12 @@ sw:
           attributes:
             word:
               too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
-  user_profile:
-    no_info_me: "<div class='missing-profile'>nafasi ya Kuhusu Mimi iko wazi,<a href='%{base_path}/u/%{username_lower}/preferences/about-me'>ungependa kuijaza?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} hajaandika chochote kwenye sehemu ya Kuhusu Mimi kwenye maelezo mafupi yao</div>"
   vip_category_name: "Majilisi"
   vip_category_description: "Kategoria ya wanachama wa kiwango cha 3 cha uaminifu au zaidi."
   meta_category_name: "Majibu ya Mtandao"
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
-  assets_topic_title: "Vifaa kwa ajili ya kutengeneza tovuti"
   discourse_welcome_topic:
     title: "Karibu kwenye Discourse"
   lounge_welcome:
@@ -712,7 +708,6 @@ sw:
     queue_size_warning: 'Namba za kazi zilizopangwa ni %{queue_size}, ambazo ni nyingi. Hii inaweza kusababishwa na tatizo na m(i)fumo wa Sidekiq, au inabidi uongeze wafanyakazi wa Sidekiq.'
     memory_warning: 'Seva yako inatumia chini ya GB 1 ya kumbukumbu. Tunakushauri utumie kumbukumbu zaidi ya GB 1.'
     missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
-    bad_favicon_url: "Ishara unayoipenda imeshindwa kuonekana. Angalia mipangilio ya favicon_url ndani ya <a href='%{base_path}/admin/site_settings'>Mipangilio ya Tovuti</a>."
     force_https_warning: "Tovuti yako inatumia SSL. Lakini `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
   site_settings:
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
@@ -931,9 +926,6 @@ sw:
     min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
     remove_muted_tags_from_latest: "Usionyeshe mada zenye lebo za kunyamazishwa kwenye orodha ya mada za hivi karibuni."
-    company_short_name: "Jina la Kampuni (fupi)"
-    company_full_name: "Jina la Kampuni (lote)"
-    company_domain: "Kikoa cha Kampuni"
     errors:
       invalid_email: "Barua pepe batili."
       invalid_username: "Hakuna mtumiaji mwenye hilo jina."
@@ -2272,30 +2264,12 @@ sw:
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       corporate:
         title: "Shirika"
-        fields:
-          company_short_name:
-            label: "Jina la Kampuni (fupi)"
-            placeholder: "Initech"
-          company_full_name:
-            label: "Jina la Kampuni (lote)"
-            placeholder: "Initech, Inc."
-          company_domain:
-            label: "Jina la Kikoa cha Kampuni"
-            placeholder: "initech.com"
       colors:
         title: "Mandhari"
       logos:
         title: "Nembo"
-        fields:
-          logo_url:
-            label: "Nembo Msingi"
       icons:
         title: "Ikoni"
-        fields:
-          favicon_url:
-            label: "Ikoni Ndogo"
-          apple_touch_icon_url:
-            label: "Ikoni Kubwa"
       homepage:
         description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
         title: "Ukurasa mkuu"

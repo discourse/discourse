@@ -536,10 +536,6 @@ ro:
         one: "Un subiect"
         few: "%{count} subiecte"
         other: "%{count} de subiecte"
-      topic_stat_sentence:
-        one: "%{count} subiect nou în %{unit}."
-        few: "%{count} subiecte noi în %{unit}."
-        other: "%{count} de subiecte noi în %{unit}."
     ip_lookup:
       title: Căutare adresă IP
       hostname: Nume gazdă
@@ -1156,7 +1152,6 @@ ro:
         title_too_long: "Titlul nu poate avea mai mult de  {{max}} (de) caractere"
         post_missing: "Postarea nu poate fi goală"
         post_length: "Postarea trebuie să aibă minim {{min}} (de) caractere"
-        try_like: 'Ai încercat butonul <i class="fa fa-heart"></i>?'
         category_missing: "Trebuie să alegi o categorie"
       save_edit: "Salvează editarea"
       reply_original: "Răspunde la subiectul inițial"
@@ -1928,7 +1923,6 @@ ro:
           show: "Afișează revizia"
           revert: "Restaurează această revizie"
           edit_post: "Modifică postarea"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Arată output-ul randat, cu adăugiri și ștergeri intercalate"

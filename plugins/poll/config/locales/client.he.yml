@@ -19,8 +19,6 @@ he:
         many: "מספר הצבעות כולל"
         other: "מספר הצבעות"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
-      public:
-        title: "הצבעות הן פומביות."
       multiple:
         help:
           at_least_min_options:

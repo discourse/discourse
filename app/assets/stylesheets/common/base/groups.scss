@@ -189,6 +189,10 @@
   }
 
   .groups-info {
+    .group-info-details {
+      vertical-align: middle;
+    }
+
     .groups-info-name {
       font-weight: bold;
       color: $primary;
@@ -204,18 +208,30 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
+    .group-avatar-flair {
+      vertical-align: middle;
+      color: $primary;
+    }
+
     span {
       display: inline-block;
     }
 
     $size: 40px;
+    $icon-size: $size / 1.8;
 
     .avatar-flair {
       background-size: $size;
       height: $size;
+      width: $size;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       .d-icon {
-        font-size: $size !important;
+        height: $icon-size;
+        width: $icon-size;
       }
     }
 
