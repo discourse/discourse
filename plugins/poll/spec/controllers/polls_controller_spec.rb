@@ -17,9 +17,9 @@ describe ::DiscoursePoll::PollsController do
         put :vote, params: {
           post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
         }, format: :json
-
-        expect(response.status).to eq(200)
       end.first
+
+      expect(response.status).to eq(200)
 
       json = ::JSON.parse(response.body)
       expect(json["poll"]["name"]).to eq("poll")
@@ -27,6 +27,59 @@ describe ::DiscoursePoll::PollsController do
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
       expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to eq(nil)
+      expect(message.group_ids).to eq(nil)
+    end
+
+    it "works in PM" do
+      user2 = Fabricate(:user)
+      topic = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: user2)
+      ])
+      poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
+      end.first
+
+      expect(response.status).to eq(200)
+
+      json = ::JSON.parse(response.body)
+      expect(json["poll"]["name"]).to eq("poll")
+      expect(json["poll"]["voters"]).to eq(1)
+      expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to contain_exactly(-2, -1, user.id, user2.id)
+      expect(message.group_ids).to eq(nil)
+    end
+
+    it "works in secure categories" do
+      group = Fabricate(:group)
+      group.add_owner(user)
+      category = Fabricate(:private_category, group: group)
+      topic = Fabricate(:topic, category: category)
+      poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
+      end.first
+
+      expect(response.status).to eq(200)
+
+      json = ::JSON.parse(response.body)
+      expect(json["poll"]["name"]).to eq("poll")
+      expect(json["poll"]["voters"]).to eq(1)
+      expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to eq(nil)
+      expect(message.group_ids).to contain_exactly(group.id)
     end
 
     it "requires at least 1 valid option" do

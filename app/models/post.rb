@@ -152,13 +152,12 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def publish_change_to_clients!(type, options = {})
-    # special failsafe for posts missing topics consistency checks should fix, but message
-    # is safe to skip
+  def publish_change_to_clients!(type, opts = {})
+    # special failsafe for posts missing topics consistency checks should fix,
+    # but message is safe to skip
     return unless topic
 
-    channel = "/topic/#{topic_id}"
-    msg = {
+    message = {
       id: id,
       post_number: post_number,
       updated_at: Time.now,
@@ -166,20 +165,26 @@ class Post < ActiveRecord::Base
       last_editor_id: last_editor_id,
       type: type,
       version: version
-    }.merge(options)
+    }.merge(opts)
+
+    publish_message!("/topic/#{topic_id}", message)
+  end
+
+  def publish_message!(channel, message, opts = {})
+    return unless topic
 
     if Topic.visible_post_types.include?(post_type)
       if topic.private_message?
-        user_ids = User.where('admin or moderator').pluck(:id)
-        user_ids |= topic.allowed_users.pluck(:id)
-        MessageBus.publish(channel, msg, user_ids: user_ids)
+        opts[:user_ids] = User.where("admin OR moderator").pluck(:id)
+        opts[:user_ids] |= topic.allowed_users.pluck(:id)
       else
-        MessageBus.publish(channel, msg, group_ids: topic.secure_group_ids)
+        opts[:group_ids] = topic.secure_group_ids
       end
     else
-      user_ids = User.where('admin or moderator or id = ?', user_id).pluck(:id)
-      MessageBus.publish(channel, msg, user_ids: user_ids)
+      opts[:user_ids] = User.where("admin OR moderator OR id = ?", user_id).pluck(:id)
     end
+
+    MessageBus.publish(channel, message, opts)
   end
 
   def trash!(trashed_by = nil)
