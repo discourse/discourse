@@ -4049,10 +4049,10 @@ en:
 
       introduction:
         title: "Introduction"
-        disabled: "<p>We couldn’t find any topic with the title “Welcome to Discourse”.</p>
+        disabled: "<p>We couldn’t find any topic with the title “%{topic_title}”.</p>
           <ul>
           <li>If you have changed the title, edit that topic to modify your site’s introductory text.</li>
-          <li>If you have deleted this topic, create another topic with “Welcome to Discourse” as the title. The content of the first post is your site’s introductory text.</li>
+          <li>If you have deleted this topic, create another topic with “%{topic_title}” as the title. The content of the first post is your site’s introductory text.</li>
           </ul>"
 
         fields:
