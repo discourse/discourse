@@ -478,6 +478,10 @@ class Category < ActiveRecord::Base
     self.name_lower = name.downcase if self.name
   end
 
+  def visible_group_names(user)
+    self.groups.visible_groups(user)
+  end
+
   def secure_group_ids
     if self.read_restricted?
       groups.pluck("groups.id")

@@ -555,8 +555,8 @@ describe Guardian do
         expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
       end
 
-      it 'returns true for admin on private topic' do
-        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
+      it 'returns false for admin on private topic' do
+        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be(false)
       end
 
       it 'returns true for a group owner' do
@@ -566,6 +566,49 @@ describe Guardian do
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
+
+      describe 'for a private category for automatic and non-automatic group' do
+        let(:automatic_group) { Fabricate(:group, automatic: true) }
+        let(:group) { Fabricate(:group) }
+
+        let(:category) do
+          Fabricate(:category, read_restricted: true).tap do |category|
+            category.groups << automatic_group
+            category.groups << group
+          end
+        end
+
+        let(:topic) { Fabricate(:topic, category: category) }
+
+        it 'should return true for an admin user' do
+          expect(Guardian.new(admin).can_invite_to?(topic)).to eq(true)
+        end
+
+        it 'should return true for a group owner' do
+          expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
+        end
+
+        it 'should return false for a normal user' do
+          expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
+        end
+      end
+
+      describe 'for a private category for automatic groups' do
+        let(:group) { Fabricate(:group, automatic: true) }
+
+        let(:category) do
+          Fabricate(:private_category, group: group, read_restricted: true)
+        end
+
+        let(:group_owner) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+        let(:topic) { Fabricate(:topic, category: category) }
+
+        it 'should return false for all type of users' do
+          expect(Guardian.new(admin).can_invite_to?(topic)).to eq(false)
+          expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(false)
+          expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
+        end
       end
     end
 
