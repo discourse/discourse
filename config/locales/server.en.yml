@@ -221,8 +221,8 @@ en:
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
-    one: "No more than 1 consecutive reply is allowed. Please edit your previous reply instead, or wait for someone to reply to you."
-    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply instead, or wait for someone to reply to you."
+    one: "No consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
+    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
 
   embed:
     start_discussion: "Start Discussion"
