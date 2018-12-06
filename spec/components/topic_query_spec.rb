@@ -1014,6 +1014,17 @@ describe TopicQuery do
         list = TopicQuery.new(moderator).list_latest
         expect(list.topics).not_to include(topic)
       end
+
+      it "doesn't include shared draft topics for regular users" do
+        group.add(user)
+        SiteSetting.shared_drafts_category = nil
+        list = TopicQuery.new(user).list_latest
+        expect(list.topics).to include(topic)
+
+        SiteSetting.shared_drafts_category = shared_drafts_category.id
+        list = TopicQuery.new(user).list_latest
+        expect(list.topics).not_to include(topic)
+      end
     end
   end
 end
