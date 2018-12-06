@@ -108,6 +108,9 @@ describe UserGuardian do
     end
 
     context "hidden profile" do
+      # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
+      let(:user) { Fabricate(:user) }
+
       let(:hidden_user) do
         result = Fabricate(:user)
         result.user_option.update_column(:hide_profile_and_presence, true)
