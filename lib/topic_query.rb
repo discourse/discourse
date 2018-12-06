@@ -554,20 +554,17 @@ class TopicQuery
   def apply_shared_drafts(result, category_id, options)
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
+    can_create_shared = guardian.can_create_shared_draft?
 
-    if guardian.can_create_shared_draft?
-      if options[:destination_category_id]
-        destination_category_id = get_category_id(options[:destination_category_id])
-        topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
-        return result.where(id: topic_ids)
-      elsif viewing_shared
-        result = result.includes(:shared_draft).references(:shared_draft)
-      else
-        return result.where('topics.category_id != ?', drafts_category_id)
-      end
+    if can_create_shared && options[:destination_category_id]
+      destination_category_id = get_category_id(options[:destination_category_id])
+      topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+      result.where(id: topic_ids)
+    elsif can_create_shared && viewing_shared
+      result.includes(:shared_draft).references(:shared_draft)
+    else
+      result.where('topics.category_id != ?', drafts_category_id)
     end
-
-    result
   end
 
   def apply_ordering(result, options)
