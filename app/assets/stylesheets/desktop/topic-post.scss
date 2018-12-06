@@ -449,10 +449,6 @@ nav.post-controls {
   padding: 20px 0 15px 0;
   table {
     margin-top: 10px;
-  } // this forces category to take less space in suggested topics
-  // as the poster list is not present at all there.
-  th.category {
-    width: 150px;
   }
 }
 

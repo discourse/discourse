@@ -131,6 +131,10 @@
     @extend .topic-list-main-link;
   }
 
+  .link-bottom-line {
+    font-size: $font-down-1;
+  }
+
   .topic-featured-link {
     padding-left: 5px;
   }
