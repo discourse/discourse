@@ -60,6 +60,7 @@ class Plugin::Metadata
     "discourse-translator",
     "discourse-user-card-badges",
     "discourse-voting",
+    "discourse-openid-connect",
     "docker_manager",
     "lazyYT",
     "poll"
