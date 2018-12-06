@@ -7,6 +7,12 @@
   .user-image {
     float: left;
     padding-right: 4px;
+    margin-right: 10px;
+  }
+
+  .user-image-inner {
+    position: relative;
+    display: inline-block;
   }
 
   .user-detail {
@@ -37,6 +43,18 @@
       margin-top: 3px;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
+  }
+
+  .avatar-flair {
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: -2px;
+    right: -8px;
+    background-size: 18px 18px;
+    border-radius: 12px;
+    width: 24px;
+    height: 24px;
   }
 
   &.small {
