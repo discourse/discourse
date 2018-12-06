@@ -114,7 +114,7 @@ class S3Inventory
         "Version" => "2012-10-17",
         "Statement":[
           {
-            "Sid": "InventoryAndAnalyticsExamplePolicy",
+            "Sid": "InventoryAndAnalyticsPolicy",
             "Effect": "Allow",
             "Principal": {"Service": "s3.amazonaws.com"},
             "Action": ["s3:PutObject"],
