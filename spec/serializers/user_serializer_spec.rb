@@ -213,6 +213,31 @@ describe UserSerializer do
     end
   end
 
+  context "with user fields" do
+    let(:user) { Fabricate(:user) }
+
+    let! :fields do
+      [
+        Fabricate(:user_field),
+        Fabricate(:user_field),
+        Fabricate(:user_field, show_on_profile: true),
+        Fabricate(:user_field, show_on_user_card: true),
+        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true)
+      ]
+    end
+
+    let(:other_user_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:user)), root: false).as_json }
+    let(:self_json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
+    let(:admin_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
+
+    it "includes the correct fields for each audience" do
+      expect(admin_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+      expect(other_user_json[:user_fields].keys).to contain_exactly(*fields[2..5].map { |f| f.id.to_s })
+      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+    end
+
+  end
+
   context "with user_api_keys" do
     let(:user) { Fabricate(:user) }
 
