@@ -1042,6 +1042,7 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_force_path_style:
     default: false
+    shadowed_by_global: true
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
