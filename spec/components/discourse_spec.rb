@@ -300,6 +300,24 @@ describe Discourse do
 
       expect(Rails.logger.warnings).to eq([old_method_caller(k)])
     end
+
+    it 'can report the deprecated version' do
+      Discourse.deprecate(SecureRandom.hex, since: "2.1.0.beta1")
+
+      expect(Rails.logger.warnings[0]).to include("(deprecated since Discourse 2.1.0.beta1)")
+    end
+
+    it 'can report the drop version' do
+      Discourse.deprecate(SecureRandom.hex, drop_from: "2.3.0")
+
+      expect(Rails.logger.warnings[0]).to include("(removal in Discourse 2.3.0)")
+    end
+
+    it 'can raise deprecation error' do
+      expect {
+        Discourse.deprecate(SecureRandom.hex, raise_error: true)
+      }.to raise_error(Discourse::Deprecation)
+    end
   end
 
 end
