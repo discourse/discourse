@@ -116,14 +116,18 @@ module FileStore
     end
 
     def list_missing_uploads(skip_optimized: false)
-      list_missing(Upload, "original/")
-      list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      if SiteSetting.enable_s3_inventory
+        inventory.list_missing_uploads(skip_optimized: skip_optimized)
+      else
+        list_missing(Upload, "original/")
+        list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      end
     end
 
     def inventory
       @inventory ||= begin
         require 's3_inventory'
-        S3Inventory.new(@s3_helper.s3_client, s3_bucket_name, @s3_helper.s3_bucket_folder_path)
+        S3Inventory.new
       end
     end
 
@@ -139,7 +143,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
+          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck(:id).first
           verified_ids << id if id.present?
           marker = f.key
         end
@@ -149,7 +153,7 @@ module FileStore
         files = @s3_helper.list(prefix, marker)
       end
 
-      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
+      missing_uploads = model.joins('LEFT JOIN verified_ids ON verified_ids.val = id').where("verified_ids.val IS NULL")
       missing_count = missing_uploads.count
 
       if missing_count > 0

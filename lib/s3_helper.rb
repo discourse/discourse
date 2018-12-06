@@ -180,6 +180,12 @@ class S3Helper
     s3_resource.client
   end
 
+  def download_file(filename, destination_path, failure_message = nil)
+    unless object(filename).download_file(destination_path)
+      raise failure_message&.to_s || "Failed to download file"
+    end
+  end
+
   private
 
   def default_s3_options
