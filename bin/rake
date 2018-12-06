@@ -1,4 +1,12 @@
 #!/usr/bin/env ruby
+
+if ENV['RAILS_ENV'] == 'test' && ENV['LOAD_PLUGINS'].nil?
+  if ARGV.include?('db:migrate')
+    STDERR.puts "You are attempting to run migrations in your test environment and are not loading plugins, setting LOAD_PLUGINS to 1"
+    ENV['LOAD_PLUGINS'] = '1'
+  end
+end
+
 require_relative '../config/boot'
 require 'rake'
 Rake.application.run
