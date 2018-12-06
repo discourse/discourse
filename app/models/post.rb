@@ -175,13 +175,15 @@ class Post < ActiveRecord::Base
 
     if Topic.visible_post_types.include?(post_type)
       if topic.private_message?
-        opts[:user_ids] = User.where("admin OR moderator").pluck(:id)
+        opts[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
         opts[:user_ids] |= topic.allowed_users.pluck(:id)
       else
         opts[:group_ids] = topic.secure_group_ids
       end
     else
-      opts[:user_ids] = User.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+      opts[:user_ids] = User.human_users
+        .where("admin OR moderator OR id = ?", user_id)
+        .pluck(:id)
     end
 
     MessageBus.publish(channel, message, opts)

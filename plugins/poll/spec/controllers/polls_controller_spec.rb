@@ -53,7 +53,7 @@ describe ::DiscoursePoll::PollsController do
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
       expect(message.channel).to eq("/polls/#{poll.topic_id}")
-      expect(message.user_ids).to contain_exactly(-2, -1, user.id, user2.id)
+      expect(message.user_ids).to contain_exactly(user.id, user2.id)
       expect(message.group_ids).to eq(nil)
     end
 
