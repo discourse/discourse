@@ -1026,5 +1026,20 @@ describe TopicQuery do
         expect(list.topics).not_to include(topic)
       end
     end
+
+    context "unread" do
+      let!(:partially_read) do
+        topic = Fabricate(:topic, category: shared_drafts_category)
+        Fabricate(:post, user: creator, topic: topic).topic
+        TopicUser.update_last_read(admin, topic.id, 0, 0, 0)
+        TopicUser.change(admin.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
+        topic
+      end
+
+      it 'does not remove topics from unread' do
+        expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
+        expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
+      end
+    end
   end
 end
