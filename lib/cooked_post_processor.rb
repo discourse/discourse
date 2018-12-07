@@ -32,6 +32,7 @@ class CookedPostProcessor
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
+      removed_direct_reply_full_quotes
       post_process_oneboxes
       post_process_images
       post_process_quotes
@@ -83,6 +84,28 @@ class CookedPostProcessor
         end
       end
     end
+  end
+
+  def removed_direct_reply_full_quotes
+    return if @post.post_number == 1
+
+    num_quotes = @doc.css("aside.quote").size
+    return if num_quotes != 1
+
+    prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
+    return if !prev
+
+    new_raw = @post.raw.gsub(/\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
+    return if @post.raw == new_raw
+
+    PostRevisor.new(@post).revise!(
+      Discourse.system_user,
+      {
+        raw: new_raw.strip,
+        edit_reason: I18n.t(:removed_direct_reply_full_quotes)
+      },
+      skip_validations: true
+    )
   end
 
   def add_image_placeholder!(img)
