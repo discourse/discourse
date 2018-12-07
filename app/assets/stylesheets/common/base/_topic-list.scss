@@ -50,6 +50,9 @@
   a.title:not(.badge-notification) {
     color: $primary-medium;
   }
+  .link-bottom-line {
+    opacity: 0.6;
+  }
 }
 
 .topic-list-main-link {
@@ -155,13 +158,6 @@
   }
   .topic-statuses:empty {
     display: none;
-  }
-  .topic-status {
-    margin-right: 4px;
-    padding: 0;
-    &:last-of-type {
-      margin-right: 0;
-    }
   }
 
   .num {

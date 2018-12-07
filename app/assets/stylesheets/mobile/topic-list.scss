@@ -208,6 +208,10 @@
     }
   }
 
+  .visited .topic-item-stats {
+    opacity: 0.6;
+  }
+
   .age {
     white-space: nowrap;
     a {
