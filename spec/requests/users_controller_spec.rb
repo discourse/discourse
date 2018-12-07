@@ -835,7 +835,7 @@ describe UsersController do
           }
 
           expect(response.status).to eq(200)
-          expect(TwitterUserInfo.count).to eq(1)
+          expect(UserAssociatedAccount.where(provider_name: "twitter").count).to eq(1)
         end
 
         it "returns an error when email has been changed from the validated email address" do
