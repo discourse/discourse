@@ -37,7 +37,14 @@ class MetadataController < ApplicationController
           sizes: file_info[:size],
           type: file_info[:type]
         }
-      ]
+      ],
+      share_target: {
+        action: "/new-topic",
+        params: {
+          title: "title",
+          text: "body"
+        }
+      }
     }
 
     manifest[:short_name] = SiteSetting.short_title if SiteSetting.short_title.present?
