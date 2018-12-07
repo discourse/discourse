@@ -51,9 +51,9 @@ class UserApiKeysController < ApplicationController
 
     require_params
 
-    unless SiteSetting.allowed_user_api_auth_redirects
+    if params.key?(:auth_redirect) && SiteSetting.allowed_user_api_auth_redirects
         .split('|')
-        .any? { |u| params[:auth_redirect] == u }
+        .none? { |u| params[:auth_redirect] == u }
 
       raise Discourse::InvalidAccess
     end
@@ -86,7 +86,11 @@ class UserApiKeysController < ApplicationController
     public_key = OpenSSL::PKey::RSA.new(params[:public_key])
     payload = Base64.encode64(public_key.public_encrypt(payload))
 
-    redirect_to "#{params[:auth_redirect]}?payload=#{CGI.escape(payload)}"
+    if params[:auth_redirect]
+      redirect_to "#{params[:auth_redirect]}?payload=#{CGI.escape(payload)}"
+    else
+      render plain: payload
+    end
   end
 
   def revoke
@@ -124,7 +128,6 @@ class UserApiKeysController < ApplicationController
      :nonce,
      :scopes,
      :client_id,
-     :auth_redirect,
      :application_name
     ].each { |p| params.require(p) }
   end
