@@ -179,7 +179,7 @@
           </div>
         </div>
 
-        {{else}}
+      {{else}}
         <div class='saving-text'>
           {{#if model.createdPost}}
             {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
@@ -197,7 +197,7 @@
         </div>
 
         {{composer-toggles composeState=model.composeState
-          toggleFullscreen=(action "fullscreenComposer")
+          toggleFullscreen=(action "openIfDraft")
           toggleComposer=(action "toggle")
           toggleToolbar=(action "toggleToolbar")}}
 

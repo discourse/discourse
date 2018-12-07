@@ -399,6 +399,48 @@ QUnit.test("Composer can toggle whispers", async assert => {
 });
 
 QUnit.test(
+  "Composer can toggle layouts (open, fullscreen and draft)",
+  async assert => {
+    await visit("/t/this-is-a-test-topic/9");
+    await click(".topic-post:eq(0) button.reply");
+
+    assert.ok(
+      find("#reply-control.open").length === 1,
+      "it starts in open state by default"
+    );
+
+    await click(".toggle-fullscreen");
+
+    assert.ok(
+      find("#reply-control.fullscreen").length === 1,
+      "it expands composer to full screen"
+    );
+
+    await click(".toggle-fullscreen");
+
+    assert.ok(
+      find("#reply-control.open").length === 1,
+      "it collapses composer to regular size"
+    );
+
+    await fillIn(".d-editor-input", "This is a dirty reply");
+    await click(".toggler");
+
+    assert.ok(
+      find("#reply-control.draft").length === 1,
+      "it collapses composer to draft bar"
+    );
+
+    await click(".toggle-fullscreen");
+
+    assert.ok(
+      find("#reply-control.open").length === 1,
+      "from draft, it expands composer back to open state"
+    );
+  }
+);
+
+QUnit.test(
   "Composer can toggle between reply and createTopic",
   async assert => {
     await visit("/t/this-is-a-test-topic/9");
