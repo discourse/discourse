@@ -136,6 +136,30 @@ describe Auth::ManagedAuthenticator do
       end
     end
 
+    describe "profile on update" do
+      let(:user) { Fabricate(:user) }
+      let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
+
+      it "updates the user's location and bio, unless already set" do
+        { description: :bio_raw, location: :location }.each do |auth_hash_key, profile_key|
+          user.user_profile.update(profile_key => "Initial Value")
+          # No value supplied, do not overwrite
+          expect { result = authenticator.after_authenticate(hash) }
+            .not_to change { user.user_profile.reload; user.user_profile[profile_key] }
+
+          # Value supplied, still do not overwrite
+          expect { result = authenticator.after_authenticate(hash.deep_merge(info: { auth_hash_key => "New Value" })) }
+            .not_to change { user.user_profile.reload; user.user_profile[profile_key] }
+
+          # User has not set a value, so overwrite
+          user.user_profile.update(profile_key => "")
+          authenticator.after_authenticate(hash.deep_merge(info: { auth_hash_key => "New Value" }))
+          user.user_profile.reload
+          expect(user.user_profile[profile_key]).to eq("New Value")
+        end
+      end
+    end
+
     describe "avatar on create" do
       let(:user) { Fabricate(:user) }
       it "doesn't schedule with no image" do
@@ -146,6 +170,19 @@ describe Auth::ManagedAuthenticator do
       it "schedules with image" do
         expect { result = authenticator.after_create_account(user, extra_data: hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
           .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
+      end
+    end
+
+    describe "profile on create" do
+      let(:user) { Fabricate(:user) }
+      it "doesn't explode without profile" do
+        authenticator.after_create_account(user, extra_data: hash)
+      end
+
+      it "works with profile" do
+        authenticator.after_create_account(user, extra_data: hash.deep_merge(info: { location: "DiscourseVille", description: "Online forum expert" }))
+        expect(user.user_profile.bio_raw).to eq("Online forum expert")
+        expect(user.user_profile.location).to eq("DiscourseVille")
       end
     end
   end
