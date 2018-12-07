@@ -1150,6 +1150,7 @@ describe CookedPostProcessor do
     it 'works' do
       post = Fabricate(:post, topic: topic, raw: "this is the first post")
       hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post")
+      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       raw = <<~RAW
         [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
         this is the first post
@@ -1162,7 +1163,7 @@ describe CookedPostProcessor do
       cpp = CookedPostProcessor.new(reply)
       cpp.removed_direct_reply_full_quotes
 
-      expect(topic.posts).to eq([post, hidden, reply])
+      expect(topic.posts).to eq([post, hidden, small_action, reply])
       expect(reply.raw).to eq("and this is the third reply")
       expect(reply.revisions.count).to eq(1)
       expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
