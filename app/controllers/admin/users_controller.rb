@@ -444,7 +444,11 @@ class Admin::UsersController < Admin::AdminController
   def sync_sso
     return render body: nil, status: 404 unless SiteSetting.enable_sso
 
-    sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
+    begin
+      sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
+    rescue DiscourseSingleSignOn::ParseError => e
+      return render json: failed_json.merge(message: I18n.t("sso.login_error")), status: 422
+    end
 
     begin
       user = sso.lookup_or_create_user

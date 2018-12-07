@@ -111,7 +111,17 @@ class SessionController < ApplicationController
     params.require(:sso)
     params.require(:sig)
 
-    sso = DiscourseSingleSignOn.parse(request.query_string)
+    begin
+      sso = DiscourseSingleSignOn.parse(request.query_string)
+    rescue DiscourseSingleSignOn::ParseError => e
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso.diagnostics}")
+      end
+
+      # Do NOT pass the error text to the client, it would give them the correct signature
+      return render_sso_error(text: I18n.t("sso.login_error"), status: 422)
+    end
+
     if !sso.nonce_valid?
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")

@@ -846,6 +846,19 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(403)
       expect(JSON.parse(response.body)["message"]).to include("Primary email can't be blank")
     end
+
+    it 'should return the right message if the signature is invalid' do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = "2"
+
+      correct_payload = Rack::Utils.parse_query(sso.payload)
+      post "/admin/users/sync_sso.json", params: correct_payload.merge(sig: "someincorrectsignature")
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
+      expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
+    end
   end
 
   describe '#disable_second_factor' do
