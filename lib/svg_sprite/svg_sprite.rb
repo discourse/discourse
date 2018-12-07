@@ -5,6 +5,7 @@ require_dependency 'distributed_cache'
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "adjust",
+    "ambulance",
     "anchor",
     "angle-double-down",
     "angle-double-up",
@@ -132,6 +133,7 @@ module SvgSprite
     "paint-brush",
     "paper-plane",
     "pencil-alt",
+    "play",
     "plug",
     "plus",
     "plus-circle",
