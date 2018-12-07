@@ -420,7 +420,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def user_fields
-    object.user_fields
+    allowed_keys = scope.allowed_user_field_ids(object).map(&:to_s)
+    object.user_fields&.select { |k, v| allowed_keys.include?(k) }
   end
 
   def include_user_fields?
