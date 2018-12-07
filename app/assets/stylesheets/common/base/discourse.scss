@@ -668,3 +668,23 @@ select {
     }
   }
 }
+
+.topic-statuses {
+  float: left;
+  padding: 0;
+  line-height: $line-height-medium;
+  color: $primary-medium;
+  .topic-status {
+    margin: 0;
+
+    .d-icon {
+      height: 0.75em;
+      width: 0.75em;
+      margin-right: 0.15em;
+    }
+  }
+
+  .d-icon-envelope {
+    color: $danger;
+  }
+}

@@ -13,25 +13,6 @@ body.widget-dragging {
   height: 100%;
 }
 
-.topic-statuses {
-  float: left;
-  padding: 0;
-
-  .topic-status {
-    padding: 0 2px 0 0;
-    margin: 0;
-    line-height: $line-height-small;
-
-    .d-icon {
-      font-size: $font-down-1;
-    }
-  }
-
-  .d-icon-envelope {
-    color: $danger;
-  }
-}
-
 .form-vertical {
   .control-group {
     margin-bottom: 24px;

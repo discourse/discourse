@@ -6,11 +6,6 @@
   margin-left: 0;
 }
 
-h1 .topic-statuses .topic-status .d-icon {
-  font-size: 0.857em;
-  vertical-align: middle;
-}
-
 .topic-body {
   // this ensures consistent top margin on topic posts even if the first line of a post
   // is a top-margin-less element like a list or image.
@@ -509,16 +504,10 @@ video {
   }
   .topic-statuses {
     .d-icon {
-      color: $header_primary;
+      color: $header_primary-medium;
     }
     .d-icon-envelope {
       color: $danger;
-    }
-    .d-icon-lock {
-      padding-top: 0.15em;
-    }
-    .unpinned {
-      color: $header_primary;
     }
   }
   .topic-link {
@@ -541,9 +530,6 @@ video {
     font-size: $font-up-3;
     line-height: $line-height-large;
     width: 100%;
-  }
-  .topic-statuses {
-    margin-top: -2px;
   }
 }
 

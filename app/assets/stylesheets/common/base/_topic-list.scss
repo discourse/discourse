@@ -159,7 +159,6 @@
   .topic-status {
     margin-right: 4px;
     padding: 0;
-    font-size: 1.071em;
     &:last-of-type {
       margin-right: 0;
     }
@@ -257,14 +256,6 @@ ol.category-breadcrumb {
 
 .d-icon-thumbtack.unpinned {
   @include fa-rotate(180deg, 1);
-  color: $primary;
-  /* because it is rotated, right becomes left! */
-  padding-left: 3px;
-  padding-right: 0 !important;
-}
-
-.topic-statuses .fa {
-  padding-right: 3px;
 }
 
 .top-title-buttons {

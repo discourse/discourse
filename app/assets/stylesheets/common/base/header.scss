@@ -231,20 +231,11 @@
     text-overflow: ellipsis;
   }
   .topic-statuses {
-    margin-top: -2px;
-    float: left;
-    padding: 0;
-    i {
-      color: $header_primary;
+    .d-icon {
+      color: $header_primary-medium;
     }
     .d-icon-envelope {
       color: $danger;
-    }
-    .d-icon-lock {
-      padding-top: 0.15em;
-    }
-    .unpinned {
-      color: $header_primary;
     }
   }
   h1 {

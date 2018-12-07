@@ -31,8 +31,9 @@
       overflow: hidden;
     }
     .d-icon {
-      padding-left: 1px; // prevents lock icon from being cut off on the left
       margin-right: 3px;
+      width: 0.7em;
+      height: 0.7em;
     }
   }
 
@@ -62,6 +63,9 @@
       + .badge-category-bg {
         width: 5px;
       }
+    }
+    .d-icon {
+      color: $primary-medium;
     }
   }
 
