@@ -55,7 +55,7 @@ module Jobs
         .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
         .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
         .joins("LEFT JOIN user_profiles up ON up.profile_background = uploads.url OR up.card_background = uploads.url")
-        .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
+        .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id OR c.uploaded_meta_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
