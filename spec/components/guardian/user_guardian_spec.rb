@@ -135,4 +135,41 @@ describe UserGuardian do
 
     end
   end
+
+  describe "#allowed_user_field_ids" do
+    let! :fields do
+      [
+        Fabricate(:user_field),
+        Fabricate(:user_field),
+        Fabricate(:user_field, show_on_profile: true),
+        Fabricate(:user_field, show_on_user_card: true),
+        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true)
+      ]
+    end
+
+    let :user2 do
+      Fabricate.build(:user, id: 4)
+    end
+
+    it "returns all fields for staff" do
+      guardian = Guardian.new(admin)
+      expect(guardian.allowed_user_field_ids(user)).to contain_exactly(*fields.map(&:id))
+    end
+
+    it "returns all fields for self" do
+      guardian = Guardian.new(user)
+      expect(guardian.allowed_user_field_ids(user)).to contain_exactly(*fields.map(&:id))
+    end
+
+    it "returns only public fields for others" do
+      guardian = Guardian.new(user)
+      expect(guardian.allowed_user_field_ids(user2)).to contain_exactly(*fields[2..5].map(&:id))
+    end
+
+    it "has a different cache per user" do
+      guardian = Guardian.new(user)
+      expect(guardian.allowed_user_field_ids(user2)).to contain_exactly(*fields[2..5].map(&:id))
+      expect(guardian.allowed_user_field_ids(user)).to contain_exactly(*fields.map(&:id))
+    end
+  end
 end
