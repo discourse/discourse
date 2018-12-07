@@ -104,4 +104,15 @@ module UserGuardian
     true
   end
 
+  def allowed_user_field_ids(user)
+    @allowed_user_field_ids ||= {}
+    @allowed_user_field_ids[user.id] ||=
+      begin
+        if is_staff? || is_me?(user)
+          UserField.pluck(:id)
+        else
+          UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
+        end
+      end
+  end
 end
