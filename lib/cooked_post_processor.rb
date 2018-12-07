@@ -89,7 +89,7 @@ class CookedPostProcessor
   def removed_direct_reply_full_quotes
     return if @post.post_number == 1
 
-    num_quotes = Nokogiri::HTML.fragment(@post.cooked).css("aside.quote").size
+    num_quotes = @doc.css("aside.quote").size
     return if num_quotes != 1
 
     prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
