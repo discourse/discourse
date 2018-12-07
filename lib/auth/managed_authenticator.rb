@@ -55,7 +55,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     end
 
     # Matching an account by email
-    if match_by_email && association.nil? && (user = User.find_by_email(email))
+    if match_by_email && association.nil? && result.user.nil? && (user = User.find_by_email(email))
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       result.user = user
     end

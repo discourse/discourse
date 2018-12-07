@@ -55,6 +55,14 @@ describe Auth::ManagedAuthenticator do
         expect(UserAssociatedAccount.exists?(user_id: user2.id)).to eq(true)
       end
 
+      it 'still works if another user has a matching email' do
+        Fabricate(:user, email: hash.dig(:info, :email))
+        result = authenticator.after_authenticate(hash, existing_account: user2)
+        expect(result.user.id).to eq(user2.id)
+        expect(UserAssociatedAccount.exists?(user_id: user1.id)).to eq(false)
+        expect(UserAssociatedAccount.exists?(user_id: user2.id)).to eq(true)
+      end
+
       it 'does not work when disabled' do
         authenticator = Class.new(described_class) do
           def name
