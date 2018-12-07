@@ -63,6 +63,7 @@ module SvgSprite
     "exclamation-triangle",
     "external-link-alt",
     "fab-apple",
+    "fab-android",
     "fab-discourse",
     "fab-facebook-f",
     "fab-facebook-square",
