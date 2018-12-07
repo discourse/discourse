@@ -202,6 +202,10 @@ sub sub {
     width: 100%;
     margin-top: 0;
   }
+
+  .topic-statuses {
+    line-height: $line-height-small;
+  }
 }
 
 // make mobile timeline top and bottom dates easier to select
