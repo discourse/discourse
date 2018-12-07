@@ -1148,10 +1148,15 @@ describe CookedPostProcessor do
     let(:topic) { Fabricate(:topic) }
 
     it 'works' do
-      raw = "[quote]\nthis is the first post\n[/quote]\nand this is the third reply"
-
       post = Fabricate(:post, topic: topic, raw: "this is the first post")
       hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post")
+      raw = <<~RAW
+        [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+        this is the first post
+        [/quote]
+
+        and this is the third reply
+      RAW
       reply = Fabricate(:post, topic: topic, raw: raw)
 
       cpp = CookedPostProcessor.new(reply)
