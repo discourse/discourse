@@ -1437,6 +1437,7 @@ en:
       toggle_direction: "Toggle Direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
+      open: "open the composer panel"
       abandon: "close composer and discard draft"
       enter_fullscreen: "enter fullscreen composer"
       exit_fullscreen: "exit fullscreen composer"

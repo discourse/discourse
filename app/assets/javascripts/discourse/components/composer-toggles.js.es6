@@ -12,7 +12,9 @@ export default Ember.Component.extend({
 
   @computed("composeState")
   fullscreenTitle(composeState) {
-    return composeState === "fullscreen"
+    return composeState === "draft"
+      ? "composer.open"
+      : composeState === "fullscreen"
       ? "composer.exit_fullscreen"
       : "composer.enter_fullscreen";
   },
@@ -26,7 +28,9 @@ export default Ember.Component.extend({
 
   @computed("composeState")
   fullscreenIcon(composeState) {
-    return composeState === "fullscreen"
+    return composeState === "draft"
+      ? "chevron-up"
+      : composeState === "fullscreen"
       ? "discourse-compress"
       : "discourse-expand";
   }
