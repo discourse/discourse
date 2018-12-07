@@ -453,6 +453,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
+    result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
     # plugins can remove topics here:
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -694,7 +695,6 @@ class TopicQuery
 
     result = apply_ordering(result, options)
     result = result.listable_topics.includes(:category)
-    result = apply_shared_drafts(result, category_id, options)
 
     if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
       result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids].map(&:to_i)).references(:categories)
