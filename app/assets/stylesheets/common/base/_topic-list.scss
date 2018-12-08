@@ -50,9 +50,6 @@
   a.title:not(.badge-notification) {
     color: $primary-medium;
   }
-  a.badge-wrapper {
-    opacity: 0.6;
-  }
 }
 
 .topic-list-main-link {
@@ -136,6 +133,10 @@
 
   .link-bottom-line {
     font-size: $font-down-1;
+    a.badge-wrapper.box {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   }
 
   .topic-featured-link {

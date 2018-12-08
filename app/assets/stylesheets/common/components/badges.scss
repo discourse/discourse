@@ -42,7 +42,7 @@
   &.bullet {
     margin-right: 12px;
     span.badge-category {
-      color: $primary;
+      color: $primary-high;
       overflow: hidden;
       text-overflow: ellipsis;
       .extra-info-wrapper & {
@@ -114,7 +114,7 @@
     margin-right: 5px;
 
     span.badge-category {
-      color: $primary;
+      color: $primary-high;
       padding: 1px 3px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -139,7 +139,7 @@
   // ----- No category style
 
   &.none {
-    color: $primary;
+    color: $primary-high;
     margin-right: 5px;
   }
 }

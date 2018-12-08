@@ -264,12 +264,22 @@
       min-width: 5px;
     }
   }
+  .badge-wrapper {
+    &.bullet,
+    &.bar,
+    &.none {
+      span.badge-category {
+        color: $header_primary-high;
+      }
+    }
+  }
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
     flex: 1 0 0%; // unit on flex-basis is required for IE11
     .discourse-tags {
+      color: $header_primary-high;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
