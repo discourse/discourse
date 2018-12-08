@@ -114,15 +114,11 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor("raw_email").loadRawEmail(model.get("id"));
     },
 
-    mergeTopic() {
-      showModal("merge-topic", {
+    moveToTopic() {
+      showModal("move-to-topic", {
         model: this.modelFor("topic"),
-        title: "topic.merge_topic.title"
+        title: "topic.move_to.title"
       });
-    },
-
-    splitTopic() {
-      showModal("split-topic", { model: this.modelFor("topic") });
     },
 
     changeOwner() {

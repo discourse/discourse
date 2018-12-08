@@ -607,13 +607,26 @@ class TopicsController < ApplicationController
   end
 
   def merge_topic
-    params.require(:destination_topic_id)
+    topic_id = params.require(:topic_id)
+    destination_topic_id = params.require(:destination_topic_id)
+    params.permit(:participants)
+    params.permit(:archetype)
 
-    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
+
+    topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
-    render_topic_changes(dest_topic)
+    args = {}
+    args[:destination_topic_id] = destination_topic_id.to_i
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    end
+
+    destination_topic = topic.move_posts(current_user, topic.posts.pluck(:id), args)
+    render_topic_changes(destination_topic)
   end
 
   def move_posts
@@ -621,6 +634,10 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
     params.permit(:tags)
+    params.permit(:participants)
+    params.permit(:archetype)
+
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -630,8 +647,8 @@ class TopicsController < ApplicationController
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 
-    dest_topic = move_posts_to_destination(topic)
-    render_topic_changes(dest_topic)
+    destination_topic = move_posts_to_destination(topic)
+    render_topic_changes(destination_topic)
   rescue ActiveRecord::RecordInvalid => ex
     render_json_error(ex)
   end
@@ -893,8 +910,14 @@ class TopicsController < ApplicationController
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
-    args[:category_id] = params[:category_id].to_i if params[:category_id].present?
     args[:tags] = params[:tags] if params[:tags].present?
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    else
+      args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    end
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end
