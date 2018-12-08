@@ -204,7 +204,12 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -10%);
 //header_primary
 $header_primary-low: dark-light-diff($header_primary, $secondary, 90%, -65%);
 $header_primary-medium: dark-light-diff($header_primary, $secondary, 50%, -20%);
-$header_primary-high: dark-light-diff($header_primary, $secondary, 20%, 20%);
+$header_primary-high: dark-light-diff(
+  $header_primary,
+  $header_background,
+  30%,
+  -10%
+);
 
 //secondary
 $secondary-low: dark-light-diff($secondary, $primary, 70%, -70%);
