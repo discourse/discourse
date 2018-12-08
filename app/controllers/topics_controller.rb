@@ -116,7 +116,8 @@ class TopicsController < ApplicationController
       response.headers['X-Robots-Tag'] = 'noindex'
     end
 
-    canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
+    canonical_url @topic_view.topic.embed_url.presence ||
+                    UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
     # provide hint to crawlers only for now
     # we would like to give them a bit more signal about age of data

@@ -858,12 +858,28 @@ RSpec.describe TopicsController do
       end
     end
 
-    it 'correctly renders canoicals' do
+    it 'correctly renders canonical for regular topic' do
       get "/t/#{topic.id}", params: { slug: topic.slug }
 
       expect(response.status).to eq(200)
-      expect(css_select("link[rel=canonical]").length).to eq(1)
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+
+      canonicals = css_select("link[rel=canonical]")
+      expect(canonicals.length).to eq(1)
+      expect(canonicals.first.attr("href")).to eq(topic.url)
+    end
+
+    it 'correctly renders canonical for topic embed' do
+      Fabricate(:topic_embed, topic: topic, embed_url: "http://example.com/post/248")
+
+      get "/t/#{topic.id}", params: { slug: topic.slug }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+
+      canonicals = css_select("link[rel=canonical]")
+      expect(canonicals.length).to eq(1)
+      expect(canonicals.first.attr("href")).to eq("http://example.com/post/248")
     end
 
     it 'returns 301 even if slug does not match URL' do

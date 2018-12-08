@@ -1170,8 +1170,13 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def embed_url
+    @embed_url ||= TopicEmbed.where(topic_id: id).pluck(:embed_url)
+    @embed_url.first
+  end
+
   def has_topic_embed?
-    TopicEmbed.where(topic_id: id).exists?
+    embed_url.present?
   end
 
   def expandable_first_post?
