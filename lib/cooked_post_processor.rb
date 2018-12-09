@@ -32,7 +32,7 @@ class CookedPostProcessor
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      removed_direct_reply_full_quotes if SiteSetting.remove_full_quote
+      removed_direct_reply_full_quotes
       post_process_oneboxes
       post_process_images
       post_process_quotes
@@ -87,7 +87,7 @@ class CookedPostProcessor
   end
 
   def removed_direct_reply_full_quotes
-    return if @post.post_number == 1
+    return if !SiteSetting.remove_full_quote || @post.post_number == 1
 
     num_quotes = @doc.css("aside.quote").size
     return if num_quotes != 1
