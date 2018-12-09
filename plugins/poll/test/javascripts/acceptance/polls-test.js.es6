@@ -1344,7 +1344,7 @@ test("Public poll", async assert => {
 
   assert.equal(
     find(".poll-voters:first li").length,
-    50,
+    26,
     "it should display the right number of voters"
   );
 });
