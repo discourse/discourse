@@ -5,6 +5,21 @@ describe ::DiscoursePoll::PollsValidator do
   subject { described_class.new(post) }
 
   describe "#validate_polls" do
+    it "ensures that polls have valid values" do
+      raw = <<~RAW
+      [poll type=not_good]
+      * 1
+      * 2
+      [/poll]
+      RAW
+
+      expect(post.update_attributes(raw: raw)).to eq(false)
+
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.invalid_argument", argument: "type", value: "not_good")
+      )
+    end
+
     it "ensure that polls have unique names" do
       raw = <<~RAW
       [poll]

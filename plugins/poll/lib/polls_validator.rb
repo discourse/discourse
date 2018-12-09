@@ -8,6 +8,7 @@ module DiscoursePoll
       polls = {}
 
       DiscoursePoll::Poll::extract(@post.raw, @post.topic_id, @post.user_id).each do |poll|
+        return false unless valid_arguments?(poll)
         return false unless unique_poll_name?(polls, poll)
         return false unless unique_options?(poll)
         return false unless at_least_two_options?(poll)
@@ -20,6 +21,32 @@ module DiscoursePoll
     end
 
     private
+
+    def valid_arguments?(poll)
+      valid = true
+
+      unless [nil, "regular", "multiple", "number"].include?(poll["type"])
+        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "type", value: poll["type"]))
+        valid = false
+      end
+
+      unless [nil, "open", "closed"].include?(poll["status"])
+        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "status", value: poll["status"]))
+        valid = false
+      end
+
+      unless [nil, "always", "on_vote", "on_close"].include?(poll["results"])
+        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "results", value: poll["results"]))
+        valid = false
+      end
+
+      unless [nil, "secret", "everyone"].include?(poll["visibility"])
+        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "visibility", value: poll["visibility"]))
+        valid = false
+      end
+
+      valid
+    end
 
     def unique_poll_name?(polls, poll)
       if polls.has_key?(poll["name"])
