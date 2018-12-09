@@ -9,6 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     .contents {
@@ -257,6 +258,9 @@
   }
   .badge-wrapper {
     margin-right: 8px;
+    &.bullet {
+      padding-top: 1px; // alignment hack
+    }
   }
   .badge-wrapper.bullet {
     .badge-category-parent-bg,
