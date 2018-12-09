@@ -235,6 +235,8 @@ describe Auth::GithubAuthenticator do
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
 
+      expect(authenticator.can_connect_existing_user?).to eq(true)
+
       GithubUserInfo.create!(user_id: user1.id, github_user_id: 100, screen_name: "boris")
 
       result = authenticator.after_authenticate(data, existing_account: user2)
