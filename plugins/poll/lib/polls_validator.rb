@@ -14,6 +14,7 @@ module DiscoursePoll
         return false unless at_least_two_options?(poll)
         return false unless valid_number_of_options?(poll)
         return false unless valid_multiple_choice_settings?(poll)
+        return false unless valid_numbers?(poll)
         polls[poll["name"]] = poll
       end
 
@@ -122,6 +123,33 @@ module DiscoursePoll
       end
 
       true
+    end
+
+    def valid_numbers?(poll)
+      return true if poll["type"] != "number"
+
+      valid = true
+
+      min = (poll["min"].presence || 1).to_i
+      max = (poll["max"].presence || 2_147_483_647).to_i
+      step = (poll["step"].presence || 1).to_i
+
+      if min <= 0
+        @post.errors.add(:base, "Min " + I18n.t("errors.messages.greater_than", count: 0))
+        valid = false
+      end
+
+      if max <= 0
+        @post.errors.add(:base, "Max " + I18n.t("errors.messages.greater_than", count: 0))
+        valid = false
+      end
+
+      if step <= 0
+        @post.errors.add(:base, "Step " + I18n.t("errors.messages.greater_than", count: 0))
+        valid = false
+      end
+
+      valid
     end
   end
 end
