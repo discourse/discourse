@@ -4,7 +4,7 @@ class Sanitize
     HTTP_PROTOCOLS ||= ['http', 'https', :relative].freeze
 
     ONEBOX ||= freeze_config merge(RELAXED,
-      elements: RELAXED[:elements] + %w[audio embed iframe source video],
+      elements: RELAXED[:elements] + %w[audio embed iframe source video svg path],
 
       attributes: {
         'a'      => RELAXED[:attributes]['a'] + %w(target),
@@ -13,6 +13,8 @@ class Sanitize
         'iframe' => %w[allowfullscreen frameborder height scrolling src width],
         'source' => %w[src type],
         'video'  => %w[controls height loop width autoplay muted poster],
+        'path'   => %w[d],
+        'svg'    => ['aria-hidden', 'width', 'height', 'viewbox'],
         'div'    => [:data], # any data-* attributes
       },
 
