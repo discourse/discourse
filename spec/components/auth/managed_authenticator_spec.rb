@@ -29,6 +29,13 @@ describe Auth::ManagedAuthenticator do
     }
   }
 
+  let(:create_hash) {
+    {
+      provider: "myauth",
+      uid: "1234"
+    }
+  }
+
   describe 'after_authenticate' do
     it 'can match account from an existing association' do
       user = Fabricate(:user)
@@ -110,10 +117,15 @@ describe Auth::ManagedAuthenticator do
 
     context 'when no matching user' do
       it 'returns the correct information' do
-        result = authenticator.after_authenticate(hash)
+        result = nil
+        expect {
+          result = authenticator.after_authenticate(hash)
+        }.to change { UserAssociatedAccount.count }.by(1)
         expect(result.user).to eq(nil)
         expect(result.username).to eq("IAmGroot")
         expect(result.email).to eq("awesome@example.com")
+        expect(UserAssociatedAccount.last.user).to eq(nil)
+        expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
       end
 
       it 'works if there is already an association with the target account' do
@@ -170,25 +182,34 @@ describe Auth::ManagedAuthenticator do
 
     describe "avatar on create" do
       let(:user) { Fabricate(:user) }
+      let!(:association) { UserAssociatedAccount.create!(provider_name: 'myauth', provider_uid: "1234") }
+
       it "doesn't schedule with no image" do
-        expect { result = authenticator.after_create_account(user, extra_data: hash) }
+        expect { result = authenticator.after_create_account(user, extra_data: create_hash) }
           .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
       end
 
       it "schedules with image" do
-        expect { result = authenticator.after_create_account(user, extra_data: hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
+        association.info["image"] = "https://some.domain/image.jpg"
+        association.save!
+        expect { result = authenticator.after_create_account(user, extra_data: create_hash) }
           .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
       end
     end
 
     describe "profile on create" do
       let(:user) { Fabricate(:user) }
+      let!(:association) { UserAssociatedAccount.create!(provider_name: 'myauth', provider_uid: "1234") }
+
       it "doesn't explode without profile" do
-        authenticator.after_create_account(user, extra_data: hash)
+        authenticator.after_create_account(user, extra_data: create_hash)
       end
 
       it "works with profile" do
-        authenticator.after_create_account(user, extra_data: hash.deep_merge(info: { location: "DiscourseVille", description: "Online forum expert" }))
+        association.info["location"] = "DiscourseVille"
+        association.info["description"] = "Online forum expert"
+        association.save!
+        authenticator.after_create_account(user, extra_data: create_hash)
         expect(user.user_profile.bio_raw).to eq("Online forum expert")
         expect(user.user_profile.location).to eq("DiscourseVille")
       end
