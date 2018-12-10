@@ -552,8 +552,12 @@ class BulkImport::Base
 
     # [URL]...[/URL]
     # [MP3]...[/MP3]
+    # [EMAIL]...[/EMAIL]
+    # [LEFT]...[/LEFT]
     raw.gsub!(/\[\/?URL\]/i, "")
     raw.gsub!(/\[\/?MP3\]/i, "")
+    raw.gsub!(/\[\/?EMAIL\]/i, "")
+    raw.gsub!(/\[\/?LEFT\]/i, "")
 
     # [FONT=blah] and [COLOR=blah]
     raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, "\\1")
@@ -609,6 +613,19 @@ class BulkImport::Base
 
     # [SPOILER=Some hidden stuff]SPOILER HERE!![/SPOILER]
     raw.gsub!(/\[SPOILER="?(.+?)"?\](.+?)\[\/SPOILER\]/im) { "\n#{$1}\n[spoiler]#{$2}[/spoiler]\n" }
+
+    # convert list tags to ul and list=1 tags to ol
+    # (basically, we're only missing list=a here...)
+    # (https://meta.discourse.org/t/phpbb-3-importer-old/17397)
+    raw.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    raw.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+    # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    raw.gsub!(/\[\*\]\n/, '')
+    raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    raw.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
+    raw.gsub!(/\[\*=1\]/, '')
 
     raw
   end
