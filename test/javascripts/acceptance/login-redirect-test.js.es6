@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Login redirect", {});
 
-QUnit.test("redirects categories to top", async assert => {
+QUnit.test("redirects login to default homepage", async assert => {
   await visit("/login");
   assert.equal(
     currentPath(),
