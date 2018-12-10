@@ -10,7 +10,7 @@ task category_stats: :environment do
   Jobs::CategoryStats.new.execute(nil)
 end
 
-# Every 10 minutes
+# Every 15 minutes
 task periodical_updates: :environment do
   Jobs::PeriodicalUpdates.new.execute(nil)
 end
