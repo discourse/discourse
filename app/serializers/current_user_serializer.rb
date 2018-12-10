@@ -45,6 +45,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :top_category_ids,
              :hide_profile_and_presence
 
+  has_many :groups, embed: :object, serializer: BasicGroupSerializer
+
   def link_posting_access
     scope.link_posting_access
   end
