@@ -6,6 +6,16 @@
     opacity: 0.9;
     transition: opacity 0.5s;
   }
+  background: rgba($primary, 0.25);
+}
+
+.d-lazyload-hidden {
+  opacity: 0;
+  box-sizing: border-box;
+}
+
+.cooked img.d-lazyload {
+  transition: opacity 0.4s 0.75s ease;
 }
 
 .lightbox-wrapper {
