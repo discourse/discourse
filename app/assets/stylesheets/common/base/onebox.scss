@@ -549,6 +549,10 @@ aside.onebox.stackexchange .onebox-body {
   .retweet {
     color: dark-light-choose($primary-medium, $secondary-medium);
     padding-left: 10px;
+    svg {
+      fill: currentColor;
+      vertical-align: middle;
+    }
   }
 }
 
