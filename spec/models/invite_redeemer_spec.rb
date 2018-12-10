@@ -38,7 +38,7 @@ describe InviteRedeemer do
       expect(user.id).to eq(staged_user.id)
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
-      expect(user.active).to eq(false)
+      expect(user.staged).to eq(false)
       expect(user.email).to eq('staged@account.com')
       expect(user.approved).to eq(true)
     end
@@ -99,7 +99,6 @@ describe InviteRedeemer do
     end
 
     it "can set password" do
-      inviter = invite.invited_by
       user = InviteRedeemer.new(invite, username, name, password).redeem
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
