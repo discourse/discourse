@@ -28,7 +28,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
       # If we're reconnecting, don't actually try and log the user in
       @auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
-      if (provider && provider.full_screen_login) || cookies['fsl']
+      if provider&.full_screen_login || cookies['fsl']
         cookies.delete('fsl')
         return redirect_to Discourse.base_uri("/my/preferences/account")
       else
@@ -74,7 +74,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
 
-      if (provider && provider.full_screen_login) || cookies['fsl']
+      if provider&.full_screen_login || cookies['fsl']
         cookies.delete('fsl')
         cookies['_bypass_cache'] = true
         cookies[:authentication_data] = @auth_result.to_client_hash.to_json

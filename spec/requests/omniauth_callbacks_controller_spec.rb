@@ -370,7 +370,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         # Log in normally
         get "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(session[:auth_reconnect]).to be_falsey
+        expect(session[:auth_reconnect]).to eq(false)
 
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(200)
@@ -380,7 +380,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
         get "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(session[:auth_reconnect]).to be_falsey
+        expect(session[:auth_reconnect]).to eq(false)
 
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(200)
@@ -392,14 +392,14 @@ RSpec.describe Users::OmniauthCallbacksController do
         # Log in normally
         get "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
-        expect(session[:auth_reconnect]).to be_truthy
+        expect(session[:auth_reconnect]).to eq(true)
 
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(200)
         expect(session[:current_user_id]).to eq(user.id)
 
         # Clear cookie after login
-        expect(session[:auth_reconnect]).to be_falsey
+        expect(session[:auth_reconnect]).to eq(nil)
 
         # Disconnect
         GoogleUserInfo.find_by(user_id: user.id).destroy
@@ -407,7 +407,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         # Reconnect flow:
         get "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
-        expect(session[:auth_reconnect]).to be_truthy
+        expect(session[:auth_reconnect]).to eq(true)
 
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
         get "/auth/google_oauth2/callback.json"
