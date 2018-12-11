@@ -117,11 +117,7 @@ SQL
     PrettyText
       .extract_links(post.cooked)
       .map do |u|
-        uri = begin
-          URI.parse(u.url)
-        rescue URI::Error
-        end
-
+        uri = UrlHelper.relaxed_parse(u.url)
         [u, uri]
       end
       .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
