@@ -117,7 +117,14 @@ createWidget("discourse-poll-voters", {
         attrs.pollType === "number"
           ? result.voters
           : result.voters[attrs.optionId];
-      state.voters = [...new Set([...state.voters, ...newVoters])];
+
+      const existingVoters = new Set(state.voters.map(voter => voter.username));
+      newVoters.forEach(voter => {
+        if (!existingVoters.has(voter.username)) {
+          existingVoters.add(voter.username);
+          state.voters.push(voter);
+        }
+      });
 
       this.scheduleRerender();
     });
