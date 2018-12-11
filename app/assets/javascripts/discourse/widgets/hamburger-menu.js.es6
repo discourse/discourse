@@ -327,7 +327,7 @@ export default createWidget("hamburger-menu", {
     const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
     if (
       $centeredElement.parents(".panel").length &&
-        !$centeredElement.hasClass("header-cloak")
+      !$centeredElement.hasClass("header-cloak")
     ) {
       this.sendWidgetAction("toggleHamburger");
     } else {

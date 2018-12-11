@@ -198,7 +198,7 @@ export default createWidget("user-menu", {
     const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
     if (
       $centeredElement.parents(".panel").length &&
-        !$centeredElement.hasClass("header-cloak")
+      !$centeredElement.hasClass("header-cloak")
     ) {
       this.sendWidgetAction("toggleUserMenu");
     } else {
