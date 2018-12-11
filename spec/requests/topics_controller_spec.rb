@@ -2377,54 +2377,83 @@ RSpec.describe TopicsController do
     end
 
     context "when a crawler" do
-      it "renders with the crawler layout, and handles proper pagination" do
+      let(:page1_time) { 3.months.ago }
+      let(:page2_time) { 2.months.ago }
+      let(:page3_time) { 1.months.ago }
 
-        page1_time = 3.months.ago
-        page2_time = 2.months.ago
-        page3_time = 1.month.ago
-
+      before do
         freeze_time page1_time
 
-        topic = Fabricate(:topic)
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, topic: topic)
+        @topic = Fabricate(:topic)
+        Fabricate(:post, topic: @topic)
+        Fabricate(:post, topic: @topic)
 
         freeze_time page2_time
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: @topic)
+        Fabricate(:post, topic: @topic)
 
         freeze_time page3_time
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: @topic)
 
         # ugly, but no inteface to set this and we don't want to create
         # 100 posts to test this thing
         TopicView.stubs(:chunk_size).returns(2)
+      end
+
+      it "renders with the crawler layout, and handles proper pagination" do
 
         user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 
-        get topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+        get @topic.url, env: { "HTTP_USER_AGENT" => user_agent }
 
         body = response.body
 
         expect(body).to have_tag(:body, with: { class: 'crawler' })
         expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
-        expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=2")
+        expect(body).to include('<link rel="next" href="' + @topic.relative_url + "?page=2")
 
         expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
 
-        get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        get @topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
 
-        expect(body).to include('<link rel="prev" href="' + topic.relative_url)
-        expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
+        expect(body).to include('<link rel="prev" href="' + @topic.relative_url)
+        expect(body).to include('<link rel="next" href="' + @topic.relative_url + "?page=3")
 
-        get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        get @topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
-        expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
+        expect(body).to include('<link rel="prev" href="' + @topic.relative_url + "?page=2")
+        expect(body).not_to include('<link rel="prev" href="' + @topic.relative_url + "?page=4")
+      end
+
+      it "renders with the crawler layout, and should not treat as slow platform" do
+
+        user_agent = "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+
+        get @topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+
+        body = response.body
+
+        expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
+        expect(body).to include('<link rel="next" href="' + @topic.relative_url + "?page=2")
+
+        get @topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        body = response.body
+
+        expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
+        expect(body).to include('<link rel="prev" href="' + @topic.relative_url)
+        expect(body).to include('<link rel="next" href="' + @topic.relative_url + "?page=3")
+
+        get @topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        body = response.body
+
+        expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
+        expect(body).to include('<link rel="prev" href="' + @topic.relative_url + "?page=2")
+        expect(body).not_to include('<link rel="prev" href="' + @topic.relative_url + "?page=4")
       end
     end
 

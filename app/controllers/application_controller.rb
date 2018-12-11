@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
   end
 
   def slow_platform?
-    request.user_agent =~ /Android/
+    !use_crawler_layout? && request.user_agent =~ /Android/
   end
 
   def set_layout
