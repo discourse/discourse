@@ -17,6 +17,12 @@ class Middleware::OmniauthBypassMiddleware
         authenticator.register_middleware(self)
       end
     end
+
+    @omniauth.before_request_phase do |env|
+      # If the user is trying to reconnect to an existing account, store in session
+      request = ActionDispatch::Request.new(env)
+      request.session[:auth_reconnect] = !!request.params["reconnect"]
+    end
   end
 
   def call(env)
