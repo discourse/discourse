@@ -54,3 +54,20 @@ QUnit.test("changing value updates dirty state", async assert => {
     "saving via Enter key marks setting as overriden"
   );
 });
+
+QUnit.test(
+  "always shows filtered site settings if a filter is set",
+  async assert => {
+    await visit("/admin/site_settings");
+    await fillIn("#setting-filter", "title");
+    assert.equal(count(".row.setting"), 1);
+
+    // navigate away to the "Dashboard" page
+    await click(".nav.nav-pills li:nth-child(1) a");
+    assert.equal(count(".row.setting"), 0);
+
+    // navigate back to the "Settings" page
+    await click(".nav.nav-pills li:nth-child(2) a");
+    assert.equal(count(".row.setting"), 1);
+  }
+);
