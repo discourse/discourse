@@ -412,6 +412,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["authenticated"]).to eq(true)
         expect(session[:current_user_id]).to eq(user.id)
         expect(GoogleUserInfo.count).to eq(1)
       end

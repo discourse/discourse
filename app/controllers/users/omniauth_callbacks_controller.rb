@@ -32,6 +32,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         cookies.delete('fsl')
         return redirect_to Discourse.base_uri("/my/preferences/account")
       else
+        @auth_result.authenticated = true
         return respond_to do |format|
           format.html
           format.json { render json: @auth_result.to_client_hash }
