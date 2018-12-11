@@ -12,8 +12,8 @@ export default Discourse.Route.extend({
   afterModel(siteSettings) {
     const controller = this.controllerFor("adminSiteSettings");
 
-    if (!controller.get("visible")) {
-      controller.set("visible", siteSettings);
+    if (!controller.get("visibleSiteSettings")) {
+      controller.set("visibleSiteSettings", siteSettings);
     }
   }
 });
