@@ -5,9 +5,9 @@ describe ::DiscoursePoll::PollsValidator do
   subject { described_class.new(post) }
 
   describe "#validate_polls" do
-    it "ensures that polls have valid values" do
+    it "ensures that polls have valid arguments" do
       raw = <<~RAW
-      [poll type=not_good]
+      [poll type=not_good1 status=not_good2 results=not_good3]
       * 1
       * 2
       [/poll]
@@ -15,9 +15,23 @@ describe ::DiscoursePoll::PollsValidator do
 
       expect(post.update_attributes(raw: raw)).to eq(false)
 
-      expect(post.errors[:base]).to include(
-        I18n.t("poll.invalid_argument", argument: "type", value: "not_good")
-      )
+      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "type", value: "not_good1"))
+      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "status", value: "not_good2"))
+      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "results", value: "not_good3"))
+    end
+
+    it "ensures that all possible values are valid" do
+      Poll.types.keys.product(Poll.statuses.keys, Poll.results.keys).each do |type, status, result|
+        raw = <<~RAW
+        [poll type=#{type} status=#{status} result=#{result}]
+        * 1
+        * 2
+        [/poll]
+        RAW
+
+        expect(post.update_attributes(raw: raw)).to eq(true)
+        expect(post.errors[:base].size).to eq(0)
+      end
     end
 
     it "ensure that polls have unique names" do
@@ -266,6 +280,28 @@ describe ::DiscoursePoll::PollsValidator do
           I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
         )
       end
+    end
+
+    it "number type polls are validated" do
+      raw = <<~RAW
+      [poll type=number min=-5 max=-10 step=-1]
+      [/poll]
+      RAW
+
+      expect(post.update_attributes(raw: raw)).to eq(false)
+      expect(post.errors[:base]).to include("Min " + I18n.t("errors.messages.greater_than", count: 0))
+      expect(post.errors[:base]).to include("Max " + I18n.t("errors.messages.greater_than", count: "min"))
+      expect(post.errors[:base]).to include("Step " + I18n.t("errors.messages.greater_than", count: 0))
+
+      raw = <<~RAW
+      [poll type=number min=9999999999 max=9999999999 step=1]
+      [/poll]
+      RAW
+
+      expect(post.update_attributes(raw: raw)).to eq(false)
+      expect(post.errors[:base]).to include("Min " + I18n.t("errors.messages.less_than", count: 2_147_483_647))
+      expect(post.errors[:base]).to include("Max " + I18n.t("errors.messages.less_than", count: 2_147_483_647))
+      expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_at_least_2_options"))
     end
   end
 end

@@ -1,5 +1,8 @@
 module DiscoursePoll
   class PollsValidator
+
+    MAX_VALUE = 2_147_483_647
+
     def initialize(post)
       @post = post
     end
@@ -9,12 +12,12 @@ module DiscoursePoll
 
       DiscoursePoll::Poll::extract(@post.raw, @post.topic_id, @post.user_id).each do |poll|
         return false unless valid_arguments?(poll)
+        return false unless valid_numbers?(poll)
         return false unless unique_poll_name?(polls, poll)
         return false unless unique_options?(poll)
         return false unless at_least_two_options?(poll)
         return false unless valid_number_of_options?(poll)
         return false unless valid_multiple_choice_settings?(poll)
-        return false unless valid_numbers?(poll)
         polls[poll["name"]] = poll
       end
 
@@ -26,23 +29,18 @@ module DiscoursePoll
     def valid_arguments?(poll)
       valid = true
 
-      unless [nil, "regular", "multiple", "number"].include?(poll["type"])
+      if poll["type"].present? && !::Poll.types.has_key?(poll["type"])
         @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "type", value: poll["type"]))
         valid = false
       end
 
-      unless [nil, "open", "closed"].include?(poll["status"])
+      if poll["status"].present? && !::Poll.statuses.has_key?(poll["status"])
         @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "status", value: poll["status"]))
         valid = false
       end
 
-      unless [nil, "always", "on_vote", "on_close"].include?(poll["results"])
+      if poll["results"].present? && !::Poll.results.has_key?(poll["results"])
         @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "results", value: poll["results"]))
-        valid = false
-      end
-
-      unless [nil, "secret", "everyone"].include?(poll["visibility"])
-        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "visibility", value: poll["visibility"]))
         valid = false
       end
 
@@ -131,21 +129,34 @@ module DiscoursePoll
       valid = true
 
       min = (poll["min"].presence || 1).to_i
-      max = (poll["max"].presence || 2_147_483_647).to_i
+      max = (poll["max"].presence || MAX_VALUE).to_i
       step = (poll["step"].presence || 1).to_i
 
       if min <= 0
         @post.errors.add(:base, "Min " + I18n.t("errors.messages.greater_than", count: 0))
         valid = false
+      elsif min > MAX_VALUE
+        @post.errors.add(:base, "Min " + I18n.t("errors.messages.less_than", count: MAX_VALUE))
+        valid = false
       end
 
-      if max <= 0
-        @post.errors.add(:base, "Max " + I18n.t("errors.messages.greater_than", count: 0))
+      if max < min
+        @post.errors.add(:base, "Max " + I18n.t("errors.messages.greater_than", count: "min"))
+        valid = false
+      elsif max > MAX_VALUE
+        @post.errors.add(:base, "Max " + I18n.t("errors.messages.less_than", count: MAX_VALUE))
         valid = false
       end
 
       if step <= 0
         @post.errors.add(:base, "Step " + I18n.t("errors.messages.greater_than", count: 0))
+        valid = false
+      elsif ((max - min + 1) / step) < 2
+        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options"))
+        else
+          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
+        end
         valid = false
       end
 
