@@ -206,15 +206,19 @@
   }
 
   &.medium {
-    vertical-align: top;
-    flex: 0 0 32%;
+    flex: 0 0 auto;
+    width: 32%;
     margin-right: calc(2% - 3px);
-    &:nth-of-type(3n) {
-      margin-right: 0;
+    @media screen and (min-width: 851px) {
+      &:nth-of-type(3n) {
+        margin-right: 0;
+      }
     }
     @include breakpoint(medium) {
-      flex: 0 0 49%;
-      margin-right: 0;
+      width: 48.5%;
+      &:nth-of-type(2n) {
+        margin-right: 0;
+      }
     }
     @include breakpoint(mobile) {
       flex: 0 0 100%;
@@ -224,9 +228,6 @@
     }
     &:active {
       box-shadow: none;
-    }
-    @include breakpoint(mobile-small) {
-      width: 100%;
     }
   }
   &.large {
