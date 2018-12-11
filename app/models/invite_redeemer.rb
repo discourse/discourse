@@ -59,7 +59,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     user.save!
 
     if invite.via_email
-      user.email_tokens.create(email: user.email)
+      user.email_tokens.create!(email: user.email)
       user.activate
     end
 
