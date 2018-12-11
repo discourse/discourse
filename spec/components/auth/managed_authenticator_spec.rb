@@ -117,13 +117,12 @@ describe Auth::ManagedAuthenticator do
 
     context 'when no matching user' do
       it 'returns the correct information' do
-        result = nil
         expect {
           result = authenticator.after_authenticate(hash)
+          expect(result.user).to eq(nil)
+          expect(result.username).to eq("IAmGroot")
+          expect(result.email).to eq("awesome@example.com")
         }.to change { UserAssociatedAccount.count }.by(1)
-        expect(result.user).to eq(nil)
-        expect(result.username).to eq("IAmGroot")
-        expect(result.email).to eq("awesome@example.com")
         expect(UserAssociatedAccount.last.user).to eq(nil)
         expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
       end
