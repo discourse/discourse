@@ -6,7 +6,8 @@ export default Discourse.Route.extend({
   beforeModel() {
     this.replaceWith(
       "adminSiteSettingsCategory",
-      this.controllerFor("adminSiteSettings").get("visible")[0].nameKey
+      this.controllerFor("adminSiteSettings").get("visibleSiteSettings")[0]
+        .nameKey
     );
   }
 });
