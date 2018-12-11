@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
   categoryNameKey: null,
   adminSiteSettings: Ember.inject.controller(),
 
-  @computed("adminSiteSettings.visible", "categoryNameKey")
+  @computed("adminSiteSettings.visibleSiteSettings", "categoryNameKey")
   category(categories, nameKey) {
     return (categories || []).findBy("nameKey", nameKey);
   },
