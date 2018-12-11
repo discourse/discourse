@@ -52,6 +52,22 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     });
   },
 
+  _isRTL() {
+    return $("html").css("direction") === "rtl";
+  },
+
+  _leftMenuClass() {
+    return this._isRTL() ? ".user-menu" : ".hamburger-panel";
+  },
+
+  _leftMenuAction() {
+    return this._isRTL() ? "toggleUserMenu" : "toggleHamburger";
+  },
+
+  _rightMenuAction() {
+    return this._isRTL() ? "toggleHamburger" : "toggleUserMenu";
+  },
+
   _handlePanDone(offset, event) {
     const $window = $(window);
     const windowWidth = parseInt($window.width());
@@ -120,7 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._panMenuOffset = -SCREEN_OFFSET;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched("toggleHamburger", "header");
+      this.eventDispatched(this._leftMenuAction(), "header");
     } else if (
       windowWidth - center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
@@ -131,7 +147,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._panMenuOffset = -SCREEN_OFFSET;
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched("toggleUserMenu", "header");
+      this.eventDispatched(this._rightMenuAction(), "header");
     } else {
       this._isPanning = false;
     }
@@ -298,7 +314,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         $headerCloak.css("opacity", 0);
         if (
           this.site.mobileView &&
-          $panel.parent(".hamburger-panel").length > 0
+          $panel.parent(this._leftMenuClass()).length > 0
         ) {
           this._panMenuOrigin = "left";
           $panel.css("left", -windowWidth);
