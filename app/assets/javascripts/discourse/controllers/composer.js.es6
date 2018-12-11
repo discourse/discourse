@@ -770,6 +770,12 @@ export default Ember.Controller.extend({
           .then(resolve, reject);
       }
 
+      if (composerModel) {
+        if (composerModel.get("action") !== opts.action) {
+          composerModel.setProperties({ unlistTopic: false, whisper: false });
+        }
+      }
+
       // check if there is another draft saved on server
       // or get a draft sequence number
       if (!opts.draft || opts.draftSequence === undefined) {
@@ -786,12 +792,6 @@ export default Ember.Controller.extend({
             self._setModel(composerModel, opts);
           })
           .then(resolve, reject);
-      }
-
-      if (composerModel) {
-        if (composerModel.get("action") !== opts.action) {
-          composerModel.setProperties({ unlistTopic: false, whisper: false });
-        }
       }
 
       self._setModel(composerModel, opts);
@@ -884,7 +884,7 @@ export default Ember.Controller.extend({
       return data;
     }
 
-    return new Promise(resolve => {
+    return new Ember.RSVP.Promise(resolve => {
       bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
         {
           label: I18n.t("drafts.abandon.no_value"),
