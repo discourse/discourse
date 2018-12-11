@@ -125,7 +125,9 @@ export default Ember.Component.extend(PanEvents, {
     const $timelineContainer = $(".timeline-container");
     const maxOffset = parseInt($timelineContainer.css("height"), 10);
 
-    this._shouldPanClose(event) ? (offset += SWIPE_VELOCITY) : (offset -= SWIPE_VELOCITY);
+    this._shouldPanClose(event)
+      ? (offset += SWIPE_VELOCITY)
+      : (offset -= SWIPE_VELOCITY);
 
     $timelineContainer.css("bottom", -offset);
     if (offset > maxOffset) {
@@ -133,15 +135,16 @@ export default Ember.Component.extend(PanEvents, {
     } else if (offset <= 0) {
       $timelineContainer.css("bottom", "");
     } else {
-      Ember.run.later(
-        () => this._handlePanDone(offset, event),
-        20
-      );
+      Ember.run.later(() => this._handlePanDone(offset, event), 20);
     }
   },
 
   _shouldPanClose(e) {
-    return (e.deltaY > SWIPE_DISTANCE_THRESHOLD && e.velocityY > -SWIPE_VELOCITY_THRESHOLD) || e.velocityY > SWIPE_VELOCITY_THRESHOLD;
+    return (
+      (e.deltaY > SWIPE_DISTANCE_THRESHOLD &&
+        e.velocityY > -SWIPE_VELOCITY_THRESHOLD) ||
+      e.velocityY > SWIPE_VELOCITY_THRESHOLD
+    );
   },
 
   panStart(e) {

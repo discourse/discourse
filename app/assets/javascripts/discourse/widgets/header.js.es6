@@ -440,19 +440,23 @@ export default createWidget("header", {
   toggleBodyScrolling(bool) {
     if (!this.site.mobileView) return;
     if (bool) {
-      document.body.addEventListener("touchmove", this.preventDefault, { passive: false });
+      document.body.addEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
     } else {
-      document.body.removeEventListener("touchmove", this.preventDefault, { passive: false });
+      document.body.removeEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
     }
   },
 
   preventDefault(e) {
     // prevent all scrollin on menu panels, except on overflow
-    const height = window.innerHeight
-        ? window.innerHeight
-        : $(window).height();
-    if (!$(e.target).parents(".menu-panel").length ||
-        $(".menu-panel .panel-body-contents").height() <= height) {
+    const height = window.innerHeight ? window.innerHeight : $(window).height();
+    if (
+      !$(e.target).parents(".menu-panel").length ||
+      $(".menu-panel .panel-body-contents").height() <= height
+    ) {
       e.preventDefault();
     }
   },
