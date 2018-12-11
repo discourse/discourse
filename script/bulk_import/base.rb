@@ -482,7 +482,7 @@ class BulkImport::Base
     post[:raw] = (post[:raw] || "").scrub.strip.presence || "<Empty imported post>"
     post[:raw] = process_raw post[:raw]
     if @bbcode_to_md
-      post[:raw] = post[:raw].bbcode_to_md(false) rescue post[:raw]
+      post[:raw] = post[:raw].bbcode_to_md(false, {}, :disable, :quote) rescue post[:raw]
     end
     post[:like_count] ||= 0
     post[:cooked] = pre_cook post[:raw]
