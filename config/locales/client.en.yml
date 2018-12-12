@@ -296,6 +296,10 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
+      abandon:
+        confirm: "You already opened another draft in this topic. Are you sure you want to abandon it?"
+        yes_value: "Yes, abandon"
+        no_value: "No, keep"
 
     topic_count_latest:
       one: "See {{count}} new or updated topic"
