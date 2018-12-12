@@ -233,8 +233,9 @@ aside.quote {
 .quote-controls {
   float: right;
   display: flex;
-  .d-icon {
-    margin-left: 0.2em;
+  align-items: center;
+  a {
+    margin-left: 0.3em;
   }
 }
 
