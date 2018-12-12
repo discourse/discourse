@@ -675,6 +675,8 @@ posting:
     default: true
   suppress_reply_when_quoting:
     default: true
+  remove_full_quote:
+    default: true
   max_reply_history:
     default: 1
     client: true
