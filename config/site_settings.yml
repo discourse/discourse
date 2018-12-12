@@ -1260,6 +1260,10 @@ security:
   content_security_policy_script_src:
     type: list
     default: ''
+  invalidate_inactive_admin_email_after_days:
+    default: 365
+    min: 0
+    max: 2000
 
 onebox:
   enable_flash_video_onebox: false
