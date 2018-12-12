@@ -104,7 +104,8 @@ class CookedPostProcessor
         raw: new_raw.strip,
         edit_reason: I18n.t(:removed_direct_reply_full_quotes)
       },
-      skip_validations: true
+      skip_validations: true,
+      bypass_bump: true
     )
   end
 

@@ -1164,12 +1164,17 @@ describe CookedPostProcessor do
       small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
-      expect(topic.posts).to eq([post, hidden, small_action, reply])
-      expect(reply.raw).to eq("and this is the third reply")
-      expect(reply.revisions.count).to eq(1)
-      expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
-      expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
+      freeze_time Time.zone.now do
+        topic.bumped_at = 1.day.ago
+        CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+
+        expect(topic.posts).to eq([post, hidden, small_action, reply])
+        expect(topic.bumped_at).to eq(1.day.ago)
+        expect(reply.raw).to eq("and this is the third reply")
+        expect(reply.revisions.count).to eq(1)
+        expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
+        expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
+      end
     end
 
     it "does nothing when 'remove_full_quote' is disabled" do
