@@ -56,7 +56,7 @@ task 'javascript:update' do
     }, {
       source: 'jquery.cookie/jquery.cookie.js'
     }, {
-      source: 'jQuery/dist/jquery.js'
+      source: 'jquery/dist/jquery.js'
     }, {
       source: 'jquery-tags-input/src/jquery.tagsinput.js'
     }, {
@@ -65,6 +65,9 @@ task 'javascript:update' do
       source: 'mousetrap/mousetrap.js'
     }, {
       source: 'resumablejs/resumable.js'
+    }, {
+      # TODO: drop when we eventually drop IE11, this will land in iOS in version 13
+      source: 'intersection-observer/intersection-observer.js'
     }
   ]
 
