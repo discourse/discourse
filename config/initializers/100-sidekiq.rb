@@ -46,7 +46,7 @@ if Sidekiq.server?
   Scheduler::Defer.async = false
 
   # warm up AR
-  RailsMultisite::ConnectionManagement.each_connection do
+  RailsMultisite::ConnectionManagement.safe_each_connection do
     (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
       table.classify.constantize.first rescue nil
     end
