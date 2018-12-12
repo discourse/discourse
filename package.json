@@ -13,6 +13,7 @@
     "favcount": "https://github.com/chrishunt/favcount",
     "handlebars": "4.0.5",
     "htmlparser": "https://github.com/tautologistics/node-htmlparser",
+    "intersection-observer": "^0.5.1",
     "jquery": "3.3.1",
     "jquery-color": "1.0.0",
     "jquery-resize": "https://github.com/cowboy/jquery-resize/",
