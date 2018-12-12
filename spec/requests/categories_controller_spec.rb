@@ -37,6 +37,18 @@ describe CategoriesController do
         expect(json['topic_list_latest']).to include(%{"more_topics_url":"/latest"})
       end
     end
+
+    it "Shows correct title if category list is set for homepage" do
+      SiteSetting.top_menu = "categories|latest"
+      get "/"
+
+      expect(response.body).to have_tag "title", text: "Discourse"
+
+      SiteSetting.short_site_description = "Official community"
+      get "/"
+
+      expect(response.body).to have_tag "title", text: "Discourse - Official community"
+    end
   end
 
   context 'extensibility event' do
