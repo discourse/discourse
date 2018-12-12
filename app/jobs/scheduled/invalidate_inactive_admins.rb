@@ -11,6 +11,7 @@ module Jobs
         .where('last_seen_at < ?', SiteSetting.invalidate_inactive_admin_email_after_days.days.ago)
         .each do |user|
 
+        user.deactivate
         user.email_tokens.update_all(confirmed: false, expired: true)
 
         Discourse.authenticators.each do |authenticator|
