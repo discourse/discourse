@@ -87,7 +87,7 @@ class CookedPostProcessor
   end
 
   def removed_direct_reply_full_quotes
-    return if @post.post_number == 1
+    return if !SiteSetting.remove_full_quote || @post.post_number == 1
 
     num_quotes = @doc.css("aside.quote").size
     return if num_quotes != 1
@@ -104,7 +104,8 @@ class CookedPostProcessor
         raw: new_raw.strip,
         edit_reason: I18n.t(:removed_direct_reply_full_quotes)
       },
-      skip_validations: true
+      skip_validations: true,
+      bypass_bump: true
     )
   end
 
