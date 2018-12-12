@@ -11,7 +11,7 @@ describe Jobs::InvalidateInactiveAdmins do
   it "does nothing when all admins have been seen recently" do
     SiteSetting.invalidate_inactive_admin_email_after_days = 365
     subject
-    expect(active_admin.active).to eq(true)
+    expect(active_admin.reload.active).to eq(true)
     expect(active_admin.email_tokens.where(confirmed: true).exists?).to eq(true)
   end
 
@@ -24,14 +24,14 @@ describe Jobs::InvalidateInactiveAdmins do
         SiteSetting.invalidate_inactive_admin_email_after_days = 365
       end
 
-      it 'marks email tokens as unconfirmed and keeps user as active' do
+      it 'marks email tokens as unconfirmed' do
         subject
-        expect(not_seen_admin.email_tokens.where(confirmed: true).exists?).to eq(false)
+        expect(not_seen_admin.reload.email_tokens.where(confirmed: true).exists?).to eq(false)
       end
 
-      it 'keeps the user active' do
+      it 'makes the user as not active' do
         subject
-        expect(not_seen_admin.active).to eq(true)
+        expect(not_seen_admin.reload.active).to eq(false)
       end
 
       context 'with social logins' do
@@ -59,9 +59,9 @@ describe Jobs::InvalidateInactiveAdmins do
 
       it 'does nothing' do
         subject
-        expect(active_admin.active).to eq(true)
+        expect(active_admin.reload.active).to eq(true)
         expect(active_admin.email_tokens.where(confirmed: true).exists?).to eq(true)
-        expect(not_seen_admin.active).to eq(true)
+        expect(not_seen_admin.reload.active).to eq(true)
         expect(not_seen_admin.email_tokens.where(confirmed: true).exists?).to eq(true)
       end
     end
