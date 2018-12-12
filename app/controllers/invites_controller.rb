@@ -220,8 +220,7 @@ class InvitesController < ApplicationController
   end
 
   def send_activation_email(user)
-    email_token = user.email_tokens.create(email: user.email)
-    raise ActiveRecord::RecordInvalid.new(email_token) if !email_token.persisted?
+    email_token = user.email_tokens.create!(email: user.email)
 
     Jobs.enqueue(:critical_user_email,
                  type: :signup,
