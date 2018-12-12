@@ -33,12 +33,13 @@ class Wizard
       @wizard.append_step('forum-title') do |step|
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
+        step.add_field(id: 'short_site_description', type: 'text', required: false, value: SiteSetting.short_site_description)
 
         step.on_update do |updater|
           updater.ensure_changed(:title)
 
           if updater.errors.blank?
-            updater.apply_settings(:title, :site_description)
+            updater.apply_settings(:title, :site_description, :short_site_description)
           end
         end
       end
