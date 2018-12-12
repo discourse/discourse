@@ -7,15 +7,15 @@ class Sanitize
       elements: RELAXED[:elements] + %w[audio embed iframe source video svg path],
 
       attributes: {
-        'a'      => RELAXED[:attributes]['a'] + %w(target),
-        'audio'  => %w[controls],
-        'embed'  => %w[height src type width],
+        'a' => RELAXED[:attributes]['a'] + %w(target),
+        'audio' => %w[controls],
+        'embed' => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width],
         'source' => %w[src type],
-        'video'  => %w[controls height loop width autoplay muted poster],
-        'path'   => %w[d],
-        'svg'    => ['aria-hidden', 'width', 'height', 'viewbox'],
-        'div'    => [:data], # any data-* attributes
+        'video' => %w[controls height loop width autoplay muted poster],
+        'path' => %w[d],
+        'svg' => ['aria-hidden', 'width', 'height', 'viewbox'],
+        'div' => [:data], # any data-* attributes
       },
 
       add_attributes: {
@@ -40,7 +40,7 @@ class Sanitize
       ],
 
       protocols: {
-        'embed'  => { 'src' => HTTP_PROTOCOLS },
+        'embed' => { 'src' => HTTP_PROTOCOLS },
         'iframe' => { 'src' => HTTP_PROTOCOLS },
         'source' => { 'src' => HTTP_PROTOCOLS },
       },

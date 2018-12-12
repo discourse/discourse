@@ -69,35 +69,35 @@ describe Onebox::Engine::TwitterStatusOnebox do
       id_str: "363116819147538433",
       text: "I'm a sucker for pledges. @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh",
       truncated: false,
-      entities:  {
-        hashtags:  [
+      entities: {
+        hashtags: [
            {
             text: "sharingeconomy",
-            indices:  [
+            indices: [
               41,
               56
             ]
           }
         ],
-        symbols:  [],
-        user_mentions:  [
+        symbols: [],
+        user_mentions: [
            {
             screen_name: "peers",
             name: "Peers",
             id: 1428357889,
             id_str: "1428357889",
-            indices:  [
+            indices: [
               27,
               33
             ]
           }
         ],
-        urls:  [
+        urls: [
            {
             url: "http://t.co/T4Sc47KAzh",
             expanded_url: "http://www.peers.org/action/peers-pledgea/",
             display_url: "peers.org/action/peers-p…",
-            indices:  [
+            indices: [
               57,
               79
             ]
@@ -110,7 +110,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
       in_reply_to_user_id: nil,
       in_reply_to_user_id_str: nil,
       in_reply_to_screen_name: nil,
-      user:  {
+      user: {
         id: 1087064150,
         id_str: "1087064150",
         name: "Vyki Englert",
@@ -118,22 +118,22 @@ describe Onebox::Engine::TwitterStatusOnebox do
         location: "Los Angeles, CA",
         description: "Rides bikes, writes code, likes maps. @CompilerLA / @CityGrows / Brigade Captain @HackforLA",
         url: "http://t.co/YCAP3asRG1",
-        entities:  {
-          url:  {
-            urls:  [
+        entities: {
+          url: {
+            urls: [
                {
                 url: "http://t.co/YCAP3asRG1",
                 expanded_url: "http://www.compiler.la",
                 display_url: "compiler.la",
-                indices:  [
+                indices: [
                   0,
                   22
                 ]
               }
             ]
           },
-          description:  {
-            urls:  []
+          description: {
+            urls: []
           }
         },
         protected: false,

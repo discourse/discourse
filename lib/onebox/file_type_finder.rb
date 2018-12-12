@@ -11,13 +11,13 @@ module Onebox
     #
     # For easy reference, keep these sorted in alphabetical order.
     @long_file_types = {
-      ".bib"             => "tex",
-      ".html.hbs"        => "handlebars",
+      ".bib" => "tex",
+      ".html.hbs" => "handlebars",
       ".html.handlebars" => "handlebars",
-      ".latex"           => "tex",
-      ".ru"              => "rb",
-      ".simplecov"       => "rb", # Not official, but seems commonly found
-      ".sty"             => "tex"
+      ".latex" => "tex",
+      ".ru" => "rb",
+      ".simplecov" => "rb", # Not official, but seems commonly found
+      ".sty" => "tex"
     }
 
     # Some extensionless files for which we know the type
@@ -27,24 +27,24 @@ module Onebox
     # For easy reference, keep these sorted in alphabetical order,
     # FIRST by their types and THEN by their names.
     @extensionless_files = {
-      "cmake.in"      => "cmake",
+      "cmake.in" => "cmake",
 
-      "gruntfile"     => "js",
-      "gulpfile"      => "js",
+      "gruntfile" => "js",
+      "gulpfile" => "js",
 
-      "artisan"       => "php",
+      "artisan" => "php",
 
-      "berksfile"     => "rb",
-      "capfile"       => "rb",
-      "cheffile"      => "rb",
+      "berksfile" => "rb",
+      "capfile" => "rb",
+      "cheffile" => "rb",
       "cheffile.lock" => "rb",
-      "gemfile"       => "rb",
-      "guardfile"     => "rb",
-      "rakefile"      => "rb",
-      "thorfile"      => "rb",
-      "vagrantfile"   => "rb",
+      "gemfile" => "rb",
+      "guardfile" => "rb",
+      "rakefile" => "rb",
+      "thorfile" => "rb",
+      "vagrantfile" => "rb",
 
-      "boxfile"       => "yaml" # Not currently (2014-11) in Highlight.js
+      "boxfile" => "yaml" # Not currently (2014-11) in Highlight.js
     }
 
     def self.from_file_name(file_name)

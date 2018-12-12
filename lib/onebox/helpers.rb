@@ -1,7 +1,7 @@
 module Onebox
   module Helpers
 
-    class DownloadTooLarge < StandardError; end;
+    class DownloadTooLarge < StandardError; end
 
     def self.symbolize_keys(hash)
       return {} if hash.nil?
@@ -137,8 +137,8 @@ module Onebox
     end
 
     def self.pretty_filesize(size)
-      conv = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB' ];
-      scale = 1024;
+      conv = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB' ]
+      scale = 1024
 
       ndx = 1
       if (size < 2 * (scale**ndx)) then
