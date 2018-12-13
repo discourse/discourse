@@ -263,7 +263,8 @@ def migrate_to_s3
         begin
           file = File.open(path)
           content_type = `file --mime-type -b #{path}`.strip
-          to = s3.store_upload(file, upload, content_type)
+          to, upload.etag = s3.store_upload(file, upload, content_type)
+          upload.save
         rescue => e
           puts "Encountered an error while migrating #{upload.url}: #{e.class}: #{e.message}"
           next
