@@ -67,7 +67,6 @@ class TopicQuery
          tags
          match_all_tags
          no_subcategories
-         slow_platform
          no_tags)
   end
 
@@ -495,7 +494,7 @@ class TopicQuery
   protected
 
   def per_page_setting
-    @options[:slow_platform] ? 15 : 30
+    30
   end
 
   def private_messages_for(user, type)

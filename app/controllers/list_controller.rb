@@ -383,7 +383,6 @@ class ListController < ApplicationController
     # hacky columns get special handling
     options[:topic_ids] = param_to_integer_list(:topic_ids)
     options[:no_subcategories] = options[:no_subcategories] == 'true'
-    options[:slow_platform] = slow_platform?
 
     options
   end
