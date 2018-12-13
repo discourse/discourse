@@ -107,7 +107,7 @@ Discourse::Application.routes.draw do
       end
       delete "penalty_history", constraints: AdminConstraint.new
       put "suspend"
-      put "delete_all_posts"
+      put "delete_posts_batch"
       put "unsuspend"
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
