@@ -25,5 +25,9 @@ export default Em.Component.extend(UploadMixin, {
 
   uploadDone() {
     bootbox.alert(I18n.t("user.invited.bulk_invite.success"));
+  },
+
+  uploadOptions() {
+    return { autoUpload: false };
   }
 });

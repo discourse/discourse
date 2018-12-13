@@ -74,6 +74,21 @@ export default Em.Mixin.create({
       }
     });
 
+    $upload.on("fileuploadadd", (e, data) => {
+      bootbox.confirm(
+        I18n.t("generic_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        result => {
+          if (result) {
+            return data.submit();
+          } else {
+            return data.abort();
+          }
+        }
+      );
+    });
+
     $upload.on("fileuploadsubmit", (e, data) => {
       const opts = _.merge(
         { bypassNewUserRestriction: true },
@@ -96,7 +111,10 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      displayErrorForUpload(data);
+      // show error message if it is not manually aborted, if we dont have reason for abortion, shows generic error
+      if (!data || (data && data.errorThrown !== "abort")) {
+        displayErrorForUpload(data);
+      }
       reset();
     });
   }.on("didInsertElement"),
