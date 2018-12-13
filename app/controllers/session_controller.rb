@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'single_sign_on_provider'
 require_dependency 'url_helper'
 
 class SessionController < ApplicationController
@@ -46,7 +47,7 @@ class SessionController < ApplicationController
     payload ||= request.query_string
 
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOn.parse(payload)
+      sso = SingleSignOnProvider.parse(payload)
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
