@@ -115,7 +115,7 @@ describe UserAnonymizer do
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
       user.save!
-      expect { make_anonymous }.to change { Upload.count }.by(-1)
+      make_anonymous
       user.reload
       expect(user.user_avatar).to eq(nil)
       expect(user.uploaded_avatar_id).to eq(nil)
