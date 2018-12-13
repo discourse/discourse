@@ -30,6 +30,11 @@ describe UserAvatar do
         expect(avatar.gravatar_upload).to eq(Upload.last)
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
         expect(user.reload.uploaded_avatar).to eq(nil)
+
+        expect do
+          avatar.destroy
+        end.to_not change { Upload.count }
+
       end
 
       describe 'when user has an existing custom upload' do
@@ -57,7 +62,8 @@ describe UserAvatar do
 
           avatar.update_gravatar!
 
-          expect(Upload.find_by(id: upload.id)).to eq(nil)
+          # old upload to be cleaned up via clean_up_uploads
+          expect(Upload.find_by(id: upload.id)).not_to eq(nil)
 
           new_upload = Upload.last
 
