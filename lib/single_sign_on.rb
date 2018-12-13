@@ -58,7 +58,7 @@ class SingleSignOn
     decoded_hash = Rack::Utils.parse_query(decoded)
 
     return_sso_url = decoded_hash['return_sso_url']
-    sso.sso_secret = sso_secret || (provider_secret(return_sso_url) if return_sso_url)
+    sso.sso_secret = sso_secret || provider_secret(return_sso_url)
 
     if sso.sign(parsed["sso"]) != parsed["sig"]
       diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
@@ -91,6 +91,7 @@ class SingleSignOn
   end
 
   def self.provider_secret(return_sso_url)
+    return nil unless return_sso_url && SiteSetting.enable_sso_provider
     provider_secrets = SiteSetting.sso_provider_secrets.split(/[|\n]/)
     provider_secrets_hash = Hash[*provider_secrets]
     return_url_host = URI.parse(return_sso_url).host
