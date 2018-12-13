@@ -35,17 +35,29 @@ describe PostsController do
     end
 
     it "schedules auto-close job" do
+      freeze_time
       name = "auto_close"
       close_date = 1.month.from_now
 
-      post :create, params: {
-        title: title, raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]"
-      }, format: :json
+      expect do
+        post :create, params: {
+          title: title,
+          raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]"
+        }, format: :json
+      end.to change { Jobs::ClosePoll.jobs.size }.by(1) &
+             change { Poll.count }.by(1)
 
       expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
-      expect(Poll.find_by(post_id: json["id"]).close_at).to be
-      expect(Jobs.scheduled_for(:close_poll, post_id: json["id"], poll_name: name)).to be
+      post_id = json["id"]
+
+      expect(Poll.find_by(post_id: post_id).close_at).to eq(1.month.from_now)
+
+      job = Jobs::ClosePoll.jobs.first
+      job_args = job["args"].first
+
+      expect(job_args["post_id"]).to eq(post_id)
+      expect(job_args["poll_name"]).to eq(name)
     end
 
     it "should have different options" do
