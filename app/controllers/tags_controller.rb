@@ -351,7 +351,6 @@ class TagsController < ::ApplicationController
       q: params[:q]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
-    options[:slow_platform] = true if slow_platform?
 
     if params[:tag_id] == 'none'
       options[:no_tags] = true

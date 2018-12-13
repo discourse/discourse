@@ -36,11 +36,6 @@ describe TopicView do
       expect(TopicView.new(topic.id, evil_trout).chunk_size).to eq(TopicView.chunk_size)
     end
 
-    it "returns `slow_chunk_size` when slow_platform is true" do
-      tv = TopicView.new(topic.id, evil_trout, slow_platform: true)
-      expect(tv.chunk_size).to eq(TopicView.slow_chunk_size)
-    end
-
     it "returns `print_chunk_size` when print param is true" do
       tv = TopicView.new(topic.id, evil_trout, print: true)
       expect(tv.chunk_size).to eq(TopicView.print_chunk_size)
