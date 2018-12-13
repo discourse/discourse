@@ -49,7 +49,7 @@ class S3Inventory
     FileUtils.mkdir_p(@tmp_directory)
     copy_archive_to_tmp_directory
     unzip_archive
-    
+
     etags = []
     connection = ActiveRecord::Base.connection.raw_connection
     connection.exec('CREATE TEMP TABLE etags(val text PRIMARY KEY)')
@@ -111,12 +111,12 @@ class S3Inventory
     s3_client.put_bucket_policy(
       bucket: destination_bucket_name,
       policy: {
-        "Version" => "2012-10-17",
-        "Statement":[
+        "Version": "2012-10-17",
+        "Statement": [
           {
             "Sid": "InventoryAndAnalyticsPolicy",
             "Effect": "Allow",
-            "Principal": {"Service": "s3.amazonaws.com"},
+            "Principal": { "Service": "s3.amazonaws.com" },
             "Action": ["s3:PutObject"],
             "Resource": ["arn:aws:s3:::#{destination_bucket_name}/*"],
             "Condition": {
@@ -134,12 +134,12 @@ class S3Inventory
   end
 
   def update_configuration
-    s3_client.put_bucket_inventory_configuration({
+    s3_client.put_bucket_inventory_configuration(
       bucket: source_bucket_name,
       id: inventory_id,
       inventory_configuration: inventory_configuration,
       use_accelerate_endpoint: false
-    })
+    )
   end
 
   def inventory_configuration
