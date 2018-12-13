@@ -260,6 +260,7 @@ export default Ember.Mixin.create({
       display: "inline-block",
       width,
       height,
+      "margin-bottom": this.$().css("margin-bottom"),
       "vertical-align": "middle"
     });
 
