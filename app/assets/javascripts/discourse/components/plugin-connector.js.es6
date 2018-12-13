@@ -12,6 +12,8 @@ export default Ember.Component.extend({
 
     const connectorClass = this.get("connector.connectorClass");
     connectorClass.setupComponent.call(this, args, this);
+
+    this.set("actions", connectorClass.actions);
   },
 
   @observes("args")
