@@ -3,8 +3,8 @@ require_dependency 'upload_creator'
 
 class UserAvatar < ActiveRecord::Base
   belongs_to :user
-  belongs_to :gravatar_upload, class_name: 'Upload', dependent: :destroy
-  belongs_to :custom_upload, class_name: 'Upload', dependent: :destroy
+  belongs_to :gravatar_upload, class_name: 'Upload'
+  belongs_to :custom_upload, class_name: 'Upload'
 
   def contains_upload?(id)
     gravatar_upload_id == id || custom_upload_id == id
@@ -50,7 +50,6 @@ class UserAvatar < ActiveRecord::Base
                 user.update!(uploaded_avatar_id: upload_id)
               end
 
-              gravatar_upload&.destroy!
               self.gravatar_upload = upload
               save!
             end
