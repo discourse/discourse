@@ -29,12 +29,13 @@ describe Wizard::StepUpdater do
   end
 
   it "updates the forum title step" do
-    updater = wizard.create_updater('forum_title', title: 'new forum title', site_description: 'neat place')
+    updater = wizard.create_updater('forum_title', title: 'new forum title', site_description: 'neat place', short_site_description: 'best community')
     updater.update
 
     expect(updater.success?).to eq(true)
     expect(SiteSetting.title).to eq("new forum title")
     expect(SiteSetting.site_description).to eq("neat place")
+    expect(SiteSetting.short_site_description).to eq("best community")
     expect(wizard.completed_steps?('forum-title')).to eq(true)
   end
 
