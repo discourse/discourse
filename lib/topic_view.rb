@@ -9,10 +9,6 @@ class TopicView
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
 
-  def self.slow_chunk_size
-    10
-  end
-
   def self.print_chunk_size
     1000
   end
@@ -57,7 +53,6 @@ class TopicView
 
     @chunk_size =
       case
-      when options[:slow_platform] then TopicView.slow_chunk_size
       when @print then TopicView.print_chunk_size
       else TopicView.chunk_size
       end

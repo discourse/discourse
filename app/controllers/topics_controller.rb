@@ -64,7 +64,6 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
     username_filters = opts[:username_filters]
 
-    opts[:slow_platform] = true if slow_platform?
     opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
