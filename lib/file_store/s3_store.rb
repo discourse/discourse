@@ -18,12 +18,12 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      return store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil)
       path = get_path_for_optimized_image(optimized_image)
-      store_file(file, path, content_type: content_type)
+      return store_file(file, path, content_type: content_type)
     end
 
     # options

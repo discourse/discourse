@@ -177,7 +177,7 @@ class S3Helper
   end
 
   def s3_client
-    s3_resource.client
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
   def download_file(filename, destination_path, failure_message = nil)
@@ -206,7 +206,7 @@ class S3Helper
   end
 
   def s3_resource
-    Aws::S3::Resource.new(@s3_options)
+    @s3_resource ||= Aws::S3::Resource.new(client: s3_client)
   end
 
   def s3_bucket
