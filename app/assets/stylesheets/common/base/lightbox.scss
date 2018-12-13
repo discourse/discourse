@@ -1,12 +1,11 @@
 .lightbox-wrapper .lightbox {
   position: relative;
   display: inline-block;
-
+  background: $primary-low;
   &:hover .meta {
     opacity: 0.9;
     transition: opacity 0.5s;
   }
-  background: rgba($primary, 0.25);
 }
 
 .d-lazyload-hidden {
