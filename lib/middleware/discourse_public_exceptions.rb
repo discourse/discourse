@@ -20,6 +20,9 @@ module Middleware
       # the Request object has a "broken" .params which can not be accessed
       exception = nil if Rack::QueryParser::InvalidParameterError === exception
 
+      # We also can not dispatch bad requests as no proper params
+      exception = nil if ActionController::BadRequest === exception
+
       if exception
         begin
           fake_controller = ApplicationController.new
