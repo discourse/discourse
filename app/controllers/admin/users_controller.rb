@@ -45,13 +45,12 @@ class Admin::UsersController < Admin::AdminController
     render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
-  def delete_all_posts
-    hijack do
-      user = User.find_by(id: params[:user_id])
-      user.delete_all_posts!(guardian)
-      # staff action logs will have an entry for each post
-      render body: nil
-    end
+  def delete_posts_batch
+    user = User.find_by(id: params[:user_id])
+    deleted_posts = user.delete_posts_in_batches(guardian)
+    # staff action logs will have an entry for each post
+
+    render json: { posts_deleted: deleted_posts.length }
   end
 
   # DELETE action to delete penalty history for a user
