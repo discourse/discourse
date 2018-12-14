@@ -893,7 +893,7 @@ en:
         percent: Percent
         day: Day
     post_edits:
-      title: "Post edits"
+      title: "Post Edits"
       labels:
         post: Post
         editor: Editor
@@ -908,7 +908,7 @@ en:
         ignored_flags: Ignored flags
         score: Score
     moderators_activity:
-      title: "Moderators activity"
+      title: "Moderator Activity"
       labels:
         moderator: Moderator
         flag_count: Flags reviewed
@@ -918,7 +918,7 @@ en:
         pm_count: PMs created
         revision_count: Revisions
     flags_status:
-      title: "Flags status"
+      title: "Flags Status"
       values:
         agreed: Agreed
         disagreed: Disagreed
@@ -1002,7 +1002,7 @@ en:
         suspended: Suspended
         silenced: Silenced
     trending_search:
-      title: Trending search
+      title: Trending Search Terms
       labels:
         term: Term
         searches: Searches
@@ -1135,7 +1135,7 @@ en:
         os: Operating System
         login_time: Login Time
     staff_logins:
-      title: "Staff logins"
+      title: "Staff Logins"
       labels:
         user: User
         location: Location
