@@ -194,7 +194,7 @@ describe User do
     end
   end
 
-  describe 'delete posts' do
+  describe 'delete posts in batches' do
     before do
       @post1 = Fabricate(:post)
       @user = @post1.user
@@ -205,8 +205,15 @@ describe User do
       @queued_post = Fabricate(:queued_post, user: @user)
     end
 
-    it 'allows moderator to delete all posts' do
-      @user.delete_all_posts!(@guardian)
+    it 'deletes only one batch of posts' do
+      deleted_posts = @user.delete_posts_in_batches(@guardian, 1)
+      expect(Post.where(id: @posts.map(&:id)).count).to eq(2)
+      expect(deleted_posts.length).to eq(1)
+      expect(deleted_posts[0]).to eq(@post2)
+    end
+
+    it 'correctly deletes posts and topics' do
+      @user.delete_posts_in_batches(@guardian, 20)
       expect(Post.where(id: @posts.map(&:id))).to be_empty
       expect(QueuedPost.where(user_id: @user.id).count).to eq(0)
       @posts.each do |p|
@@ -220,7 +227,7 @@ describe User do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
       expect do
-        @user.delete_all_posts!(invalid_guardian)
+        @user.delete_posts_in_batches(invalid_guardian)
       end.to raise_error Discourse::InvalidAccess
 
       @posts.each do |p|

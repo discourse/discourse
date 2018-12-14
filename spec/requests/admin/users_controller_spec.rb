@@ -942,4 +942,32 @@ RSpec.describe Admin::UsersController do
 
   end
 
+  describe "#delete_posts_batch" do
+    context "when there are user posts" do
+      before do
+        post = Fabricate(:post, user: user)
+        Fabricate(:post, topic: post.topic, user: user)
+        Fabricate(:post, user: user)
+      end
+
+      it 'returns how many posts were deleted' do
+        sign_in(admin)
+
+        put "/admin/users/#{user.id}/delete_posts_batch.json"
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["posts_deleted"]).to eq(3)
+      end
+    end
+
+    context "when there are no posts left to be deleted" do
+      it "returns correct json" do
+        sign_in(admin)
+
+        put "/admin/users/#{user.id}/delete_posts_batch.json"
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["posts_deleted"]).to eq(0)
+      end
+    end
+  end
+
 end
