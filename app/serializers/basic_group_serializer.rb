@@ -42,6 +42,14 @@ class BasicGroupSerializer < ApplicationSerializer
     staff?
   end
 
+  def include_automatic_membership_email_domains?
+    scope.is_admin?
+  end
+
+  def include_automatic_membership_retroactive?
+    scope.is_admin?
+  end
+
   def include_has_messages?
     staff? || scope.can_see_group_messages?(object)
   end
