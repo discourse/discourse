@@ -227,7 +227,7 @@
     .topic-statuses {
       display: inline-block;
       font-size: 1.3em;
-      line-height: 1;
+      line-height: $line-height-medium;
       color: $primary-medium;
       span {
         line-height: 1;
