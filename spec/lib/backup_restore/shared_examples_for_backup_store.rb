@@ -29,6 +29,17 @@ shared_examples "backup store" do
         expect(store.latest_file).to be_nil
       end
     end
+
+    describe "#stats" do
+      it "works when there are no files" do
+        stats = store.stats
+
+        expect(stats[:used_bytes]).to eq(0)
+        expect(stats).to have_key(:free_bytes)
+        expect(stats[:count]).to eq(0)
+        expect(stats[:last_backup_taken_at]).to be_nil
+      end
+    end
   end
 
   context "with backup files" do
@@ -66,6 +77,18 @@ shared_examples "backup store" do
         RailsMultisite::ConnectionManagement.with_connection("second") do
           expect(store.latest_file).to eq(backup5)
         end
+      end
+    end
+
+    describe "#reset_cache" do
+      it "resets the storage stats report" do
+        report_type = "storage_stats"
+        report = Report.find(report_type)
+        Report.cache(report, 35.minutes)
+        expect(Report.find_cached(report_type)).to be_present
+
+        store.reset_cache
+        expect(Report.find_cached(report_type)).to be_nil
       end
     end
 
@@ -164,6 +187,17 @@ shared_examples "backup store" do
           store.delete_file(backup5.filename)
           expect(store.files).to_not include(backup5)
         end
+      end
+    end
+
+    describe "#stats" do
+      it "returns the correct stats" do
+        stats = store.stats
+
+        expect(stats[:used_bytes]).to eq(57)
+        expect(stats).to have_key(:free_bytes)
+        expect(stats[:count]).to eq(3)
+        expect(stats[:last_backup_taken_at]).to eq(Time.parse("2018-09-13T15:10:00Z"))
       end
     end
   end

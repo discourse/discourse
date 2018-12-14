@@ -191,7 +191,7 @@
     display: flex;
     border: 1px solid $primary-low;
 
-    .durability,
+    .storage-stats,
     .last-dashboard-update {
       flex: 1 1 50%;
       box-sizing: border-box;
@@ -199,7 +199,7 @@
       padding: 0 1em;
     }
 
-    .durability {
+    .storage-stats {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -213,15 +213,11 @@
       .uploads p:last-of-type {
         margin-bottom: 0;
       }
-
-      .durability-title {
-        text-transform: capitalize;
-      }
     }
 
     @media screen and (max-width: 400px) {
       flex-wrap: wrap;
-      .durability,
+      .storage-stats,
       .last-dashboard-update {
         flex: 1 1 100%;
         text-align: left;

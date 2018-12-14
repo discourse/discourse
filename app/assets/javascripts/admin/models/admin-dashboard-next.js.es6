@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 
-const GENERAL_ATTRIBUTES = ["disk_space", "updated_at", "last_backup_taken_at"];
+const GENERAL_ATTRIBUTES = ["updated_at"];
 
 const AdminDashboardNext = Discourse.Model.extend({});
 
