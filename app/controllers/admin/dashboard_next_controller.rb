@@ -12,6 +12,7 @@ class Admin::DashboardNextController < Admin::AdminController
   end
 
   def moderation; end
+  def security; end
 
   def general
     data = AdminDashboardNextGeneralData.fetch_cached_stats

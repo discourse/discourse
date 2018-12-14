@@ -2854,6 +2854,7 @@ en:
         all_reports: "All reports"
         general_tab: "General"
         moderation_tab: "Moderation"
+        security_tab: "Security"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
