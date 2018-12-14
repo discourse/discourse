@@ -322,14 +322,14 @@ class CookedPostProcessor
     end
 
     if upload = Upload.get_from_url(src)
-      upload.create_thumbnail!(width, height, crop)
+      upload.create_thumbnail!(width, height, crop: crop)
 
       each_responsive_ratio do |ratio|
         resized_w = (width * ratio).to_i
         resized_h = (height * ratio).to_i
 
         if upload.width && resized_w <= upload.width
-          upload.create_thumbnail!(resized_w, resized_h, crop)
+          upload.create_thumbnail!(resized_w, resized_h, crop: crop)
         end
       end
     end
