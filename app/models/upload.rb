@@ -65,7 +65,8 @@ class Upload < ActiveRecord::Base
     opts = opts.merge(raise_on_error: true)
     begin
       OptimizedImage.create_for(self, width, height, opts)
-    rescue
+    rescue => ex
+      Rails.logger.info ex if Rails.env.development?
       opts = opts.merge(raise_on_error: false)
       if fix_image_extension
         OptimizedImage.create_for(self, width, height, opts)
