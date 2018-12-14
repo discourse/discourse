@@ -1012,6 +1012,7 @@ ru:
         most_liked_users: "Фавориты"
         most_replied_to_users: "Самые активные собеседники"
         no_likes: "Пока ни одной симпатии."
+        replies: "Отвечает"
       ip_address:
         title: "Последний IP адрес"
       registration_ip_address:
@@ -2165,6 +2166,7 @@ ru:
       allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
       add_permission: "Добавить права"
+      require_reply_approval: "Требовать одобрения модератором всех новых ответов"
       this_year: "за год"
       default_position: "Позиция по умолчанию"
       position_disabled: "Разделы будут показаны в порядке активности. Чтобы настроить порядок разделов,"

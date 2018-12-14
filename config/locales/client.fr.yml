@@ -521,6 +521,12 @@ fr:
       topic_sentence:
         one: "1 sujet"
         other: "%{count} sujets"
+      topic_stat_sentence_week:
+        one: "%{count}nouveau sujet dans la dernière semaine."
+        other: "%{count} nouveaux sujets dans la dernière semaine."
+      topic_stat_sentence_month:
+        one: "%{count} nouveau sujet dans le dernier mois."
+        other: "%{count} nouveaux sujets dans le dernier mois."
       n_more: "Catégories (%{count}additionnelles) ..."
     ip_lookup:
       title: Rechercher l'adresse IP
@@ -684,7 +690,7 @@ fr:
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
       second_factor_backup:
-        title: "Codes de secours de l'authentification à deux étapes"
+        title: "Codes de secours de l'authentification à deux facteurs"
         regenerate: "Regénérer"
         disable: "Désactiver"
         enable: "Activer"
@@ -697,8 +703,8 @@ fr:
           title: "Codes de secours générés"
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
-        title: "Authentification à deux étapes"
-        disable: "Désactiver l'authentification à deux étapes"
+        title: "Authentification à deux facteurs"
+        disable: "Désactiver l'authentification à deux facteurs"
         enable: "Activer l'authentification à deux facteurs pour une sécurité accrue de votre compte."
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
@@ -708,7 +714,7 @@ fr:
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisir manuellement"
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
-        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux étapes aura été activée sur votre compte."
+        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -1087,10 +1093,10 @@ fr:
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
-      second_factor_title: "Authentification à deux étapes"
+      second_factor_title: "Authentification à deux facteurs"
       second_factor_description: "Veuillez saisir le code d'authentification de votre app :"
       second_factor_backup: "<a href>Se connecter avec un code de secours</a>"
-      second_factor_backup_title: "Authentification à deux étapes (code de secours)"
+      second_factor_backup_title: "Authentification à deux facteurs (code de secours)"
       second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
       second_factor: "<a href>Se connecter avec une application</a>"
       email_placeholder: "courriel ou pseudo"
@@ -1111,7 +1117,7 @@ fr:
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
-      omniauth_disallow_totp: "L'authentification à deux étapes est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
+      omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
       resend_title: "Renvoyer le courriel d'activation"
       change_email: "Changer l'adresse de courriel"
       provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
@@ -2432,7 +2438,7 @@ fr:
       earned_n_times:
         one: "A reçu ce badge 1 fois"
         other: "A reçu ce badge %{count} fois"
-      granted_on: "Accordé le %{date}"
+      granted_on: "Accordé %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "Vous pouvez utiliser ce badge comme titre"
@@ -2844,6 +2850,8 @@ fr:
         active_notice: "Nous delivrerons les détails de l'évènement quand il se produit."
         categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laisser vide pour les déclencher pour toutes les catégories."
         categories_filter: "Catégories"
+        tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux tags définis. Laisser vide pour les déclencher pour tous les tags."
+        tags_filter: "Tags déclenchés"
         groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laisser vide pour les déclencher pour tous les groupes."
         groups_filter: "Groupes"
         delete_confirm: "Supprimer ce Webhook ?"
@@ -3318,7 +3326,7 @@ fr:
             post_edit: "message modifié"
             post_unlocked: "message dévérouillé"
             check_personal_message: "contrôler messages directs"
-            disabled_second_factor: "désactiver l'authentification à deux étapes"
+            disabled_second_factor: "désactiver l'authentification à deux facteurs"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
             post_rejected: "message rejeté"
@@ -3520,7 +3528,7 @@ fr:
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
-        second_factor_enabled: Authentification à deux étapes activée
+        second_factor_enabled: Authentification à deux facteurs activée
         topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus

@@ -736,8 +736,10 @@ pl_PL:
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
       second_factor_backup:
+        regenerate: "Odnów"
         disable: "Wyłącz"
         enable: "Włącz"
+        copied_to_clipboard: "Skopiowane do schowka"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
         disable: "Wyłącz dwuskładnikowe uwierzytelnianie"

@@ -142,6 +142,14 @@ pt_BR:
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial do novo usuário."
       hello:
         title: "Olá! :robot:"
+        message: |-
+          Obrigado por entrar em %{title}, e seja bem-vindo!
+
+          - Sou apenas um robô, mas [nossa simpática equipe](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
+
+          - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você ganhará novas habilidades (e [emblemas](%{base_uri}/badges)) conforme vamos o conhecendo.
+
+          - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
       onebox:
         instructions: |-
           Em seguida, você pode compartilhar um desses links comigo? Responda com ** um link em uma linha sozinho ** e ele será expandido automaticamente para incluir um resumo interessante.
