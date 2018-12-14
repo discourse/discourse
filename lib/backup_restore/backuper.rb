@@ -1,4 +1,3 @@
-require "disk_space"
 require "mini_mime"
 
 module BackupRestore
@@ -304,7 +303,7 @@ module BackupRestore
 
     def refresh_disk_space
       log "Refreshing disk stats..."
-      DiskSpace.reset_cached_stats
+      @store.reset_cache
     rescue => ex
       log "Something went wrong while refreshing disk stats.", ex
     end
