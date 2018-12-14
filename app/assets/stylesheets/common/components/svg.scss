@@ -9,11 +9,6 @@
   fill: currentColor;
   flex-shrink: 0; // Prevent the icon from shrinking if it's in a flexbox
   overflow: visible;
-
-  &.d-icon-lock {
-    height: 0.9em;
-    width: 0.9em;
-  }
 }
 
 // Stacked Icons

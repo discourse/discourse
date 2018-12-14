@@ -151,8 +151,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
-    [FacebookUserInfo, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
-      SingleSignOnRecord, TwitterUserInfo, EmailChangeRequest
+    [UserAssociatedAccount, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
+      SingleSignOnRecord, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
     end
@@ -623,11 +623,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     notification
   end
 
-  def process_facebook_user_info(r)
-    return nil if FacebookUserInfo.where(facebook_user_id: r['facebook_user_id']).exists?
-    r
-  end
-
   def process_github_user_info(r)
     return nil if GithubUserInfo.where(github_user_id: r['github_user_id']).exists?
     r
@@ -648,13 +643,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     r
   end
 
-  def process_single_sign_on_record(r)
-    return nil if SingleSignOnRecord.where(external_id: r['external_id']).exists?
+  def process_user_associated_account(r)
+    return nil if UserAssociatedAccount.where(provider_uid: r['uid'], provider_name: r['provider']).exists?
     r
   end
 
-  def process_twitter_user_info(r)
-    return nil if TwitterUserInfo.where(twitter_user_id: r['twitter_user_id']).exists?
+  def process_single_sign_on_record(r)
+    return nil if SingleSignOnRecord.where(external_id: r['external_id']).exists?
     r
   end
 

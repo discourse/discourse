@@ -15,11 +15,7 @@ class TopicLinkClick < ActiveRecord::Base
     url = args[:url][0...TopicLink.max_url_length]
     return nil if url.blank?
 
-    uri = begin
-      URI.parse(url)
-    rescue URI::Error
-    end
-
+    uri = UrlHelper.relaxed_parse(url)
     urls = Set.new
     urls << url
     if url =~ /^http/

@@ -3097,7 +3097,7 @@ pt_BR:
       group_mentioned: '%{username} mencionei você em "%{topic}" - %{site_title}'
       quoted: '%{username} citou você em "%{topic}" - %{site_title}'
       replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
-      posted: '%{username} publicado em "%{topic}" - %{site_title}'
+      posted: '%{username} postou em "%{topic}" - %{site_title}'
       private_message: '%{username} enviou-lhe uma mensagem privada em "%{topic}" - %{site_title}'
       linked: '%{username}ligado ao seu post de "%{topic}" - %{site_title}'
       confirm_title: 'Notificações ativadas -%{site_title}'

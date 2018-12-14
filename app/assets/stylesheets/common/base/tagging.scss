@@ -80,7 +80,7 @@ $tag-color: $primary-medium;
   }
 
   .extra-info-wrapper & {
-    color: $header-primary !important;
+    color: $header-primary_high !important;
   }
 
   &.box {
@@ -124,10 +124,9 @@ $tag-color: $primary-medium;
 }
 
 .topic-list-item .discourse-tags {
-  display: block;
-  font-size: $font-down-2;
+  display: inline-block;
   font-weight: normal;
-  clear: both;
+  font-size: $font-down-1;
 
   .discourse-tag.box {
     position: relative;

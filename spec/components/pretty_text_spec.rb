@@ -46,6 +46,25 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
+      it "do off topic quoting of posts from secure categories" do
+        category = Fabricate(:category, read_restricted: true)
+        topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
+
+        expected = <<~HTML
+          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
+          </div>
+          <blockquote>
+          <p>I have nothing to say.</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"maja, post:3, topic:#{topic.id}\"]\nI have nothing to say.\n[/quote]", topic_id: 1)).to eq(n(expected))
+      end
+
       it "indifferent about missing quotations" do
         md = <<~MD
           [quote=#{user.username}, post:123, topic:456, full:true]
@@ -1099,13 +1118,13 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports nesting tags in url" do
     cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>'
     expect(cooked).to eq(html)
   end
 

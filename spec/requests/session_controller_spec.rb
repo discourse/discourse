@@ -557,6 +557,26 @@ RSpec.describe SessionController do
       expect(response.status).to eq(419)
     end
 
+    it 'returns the correct error code for invalid signature' do
+      sso = get_sso('/hello/world')
+      sso.external_id = '997'
+      sso.sso_url = "http://somewhere.over.com/sso_login"
+
+      correct_params = Rack::Utils.parse_query(sso.payload)
+      get "/session/sso_login", params: correct_params.merge("sig": "thisisnotthesigyouarelookingfor"), headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+
+      correct_params = Rack::Utils.parse_query(sso.payload)
+      get "/session/sso_login", params: correct_params.merge("sig": "thisisasignaturewith@special!characters"), headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     describe 'local attribute override from SSO payload' do
       before do
         SiteSetting.email_editable = false

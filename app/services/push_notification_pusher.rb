@@ -49,7 +49,7 @@ class PushNotificationPusher
         title: I18n.t("discourse_push_notifications.popup.confirm_title",
                       site_title: SiteSetting.title),
         body: I18n.t("discourse_push_notifications.popup.confirm_body"),
-        icon:  ActionController::Base.helpers.image_url("push-notifications/check.png"),
+        icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
         badge: get_badge,
         tag: "#{Discourse.current_hostname}-subscription"
       }

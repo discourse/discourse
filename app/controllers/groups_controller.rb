@@ -241,11 +241,13 @@ class GroupsController < ApplicationController
       .order(username_lower: dir)
       .limit(limit)
       .offset(offset)
+      .includes(:primary_group)
 
     owners = users
       .order(order)
       .order(username_lower: dir)
       .where('group_users.owner')
+      .includes(:primary_group)
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),

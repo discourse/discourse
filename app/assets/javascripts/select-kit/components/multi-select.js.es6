@@ -115,6 +115,11 @@ export default SelectKitComponent.extend({
   },
   mutateContent() {},
 
+  forceValues(values) {
+    this.mutateValues(values);
+    this._compute();
+  },
+
   filterComputedContent(computedContent, computedValues, filter) {
     return computedContent.filter(c => {
       return this._normalize(get(c, "name")).indexOf(filter) > -1;

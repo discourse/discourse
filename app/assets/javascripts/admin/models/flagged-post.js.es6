@@ -136,7 +136,7 @@ export default Post.extend({
             label: I18n.t("yes_value"),
             class: "btn-danger",
             callback() {
-              Post.deleteMany(replies.map(r => r.id))
+              Post.deleteMany(replies.map(r => r.id), { deferFlags: true })
                 .then(action)
                 .then(resolve)
                 .catch(error => {

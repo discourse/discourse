@@ -107,7 +107,7 @@ Discourse::Application.routes.draw do
       end
       delete "penalty_history", constraints: AdminConstraint.new
       put "suspend"
-      put "delete_all_posts"
+      put "delete_posts_batch"
       put "unsuspend"
       put "revoke_admin", constraints: AdminConstraint.new
       put "grant_admin", constraints: AdminConstraint.new
@@ -159,6 +159,8 @@ Discourse::Application.routes.draw do
         get "send-digest" => "email#send_digest"
         get "smtp_should_reject"
         post "handle_mail"
+        get "advanced-test"
+        post "advanced-test" => "email#advanced_test"
       end
     end
 
@@ -239,6 +241,7 @@ Discourse::Application.routes.draw do
     get "dashboard" => "dashboard_next#index"
     get "dashboard/general" => "dashboard_next#general"
     get "dashboard/moderation" => "dashboard_next#moderation"
+    get "dashboard/security" => "dashboard_next#security"
 
     get "dashboard-old" => "dashboard#index"
 

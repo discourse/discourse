@@ -243,7 +243,7 @@ export default Ember.Controller.extend(
       },
 
       connectAccount(method) {
-        method.doLogin();
+        method.doLogin(true);
       }
     }
   }

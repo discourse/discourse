@@ -66,6 +66,13 @@
   a.topic-featured-link {
     display: inline-block;
   }
+  .topic-statuses {
+    line-height: 1.2em;
+    margin-right: 0.15em;
+    .d-icon {
+      color: $primary-medium;
+    }
+  }
 }
 
 h1 {

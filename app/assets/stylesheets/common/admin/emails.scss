@@ -83,3 +83,15 @@
     border-width: 1px;
   }
 }
+
+.email-advanced-test {
+  .admin-controls {
+    display: block;
+  }
+
+  .email-body {
+    width: 95%;
+    height: 150px;
+    font-family: monospace;
+  }
+}

@@ -296,6 +296,10 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
+      abandon:
+        confirm: "You already opened another draft in this topic. Are you sure you want to abandon it?"
+        yes_value: "Yes, abandon"
+        no_value: "No, keep"
 
     topic_count_latest:
       one: "See {{count}} new or updated topic"
@@ -1437,6 +1441,7 @@ en:
       toggle_direction: "Toggle Direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
+      open: "open the composer panel"
       abandon: "close composer and discard draft"
       enter_fullscreen: "enter fullscreen composer"
       exit_fullscreen: "exit fullscreen composer"
@@ -2849,6 +2854,7 @@ en:
         all_reports: "All reports"
         general_tab: "General"
         moderation_tab: "Moderation"
+        security_tab: "Security"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
@@ -3082,6 +3088,8 @@ en:
         active_notice: "We will deliver event details when it happens."
         categories_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified categories. Leave blank to trigger webhooks for all categories."
         categories_filter: "Triggered Categories"
+        tags_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified tags. Leave blank to trigger webhooks for all tags."
+        tags_filter: "Triggered Tags"
         groups_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
         groups_filter: "Triggered Groups"
         delete_confirm: "Delete this webhook?"
@@ -3411,6 +3419,13 @@ en:
         settings: "Settings"
         templates: "Templates"
         preview_digest: "Preview Summary"
+        advanced_test:
+          title: "Advanced Test"
+          desc: "See how Discourse processes received emails. To be able to correctly process the email, please paste below the whole original email message."
+          email: "Original message"
+          run: "Run Test"
+          text: "Selected Text Body"
+          elided: "Elided Text"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
@@ -3727,6 +3742,8 @@ en:
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
+        delete_posts_progress: "Deleting posts..."
+        delete_posts_failed: "There was a problem deleting the posts."
         penalty_post_actions: "What would you like to do with the associated post?"
         penalty_post_delete: "Delete the post"
         penalty_post_edit: "Edit the post"

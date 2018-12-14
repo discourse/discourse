@@ -9,22 +9,32 @@ describe BackupRestore::S3BackupStore do
 
     @objects = []
 
-    @s3_client.stub_responses(:list_objects, -> (context) do
-      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
-      expect(context.params[:prefix]).to be_blank
+    def expected_prefix
+      Rails.configuration.multisite ? "backups/#{RailsMultisite::ConnectionManagement.current_db}/" : ""
+    end
 
-      { contents: @objects }
+    def check_context(context)
+      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
+      expect(context.params[:key]).to start_with(expected_prefix) if context.params.key?(:key)
+      expect(context.params[:prefix]).to eq(expected_prefix) if context.params.key?(:prefix)
+    end
+
+    @s3_client.stub_responses(:list_objects, -> (context) do
+      check_context(context)
+
+      { contents: objects_with_prefix(context) }
     end)
 
     @s3_client.stub_responses(:delete_object, -> (context) do
-      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
+      check_context(context)
+
       expect do
         @objects.delete_if { |obj| obj[:key] == context.params[:key] }
       end.to change { @objects }
     end)
 
     @s3_client.stub_responses(:head_object, -> (context) do
-      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
+      check_context(context)
 
       if object = @objects.find { |obj| obj[:key] == context.params[:key] }
         { content_length: object[:size], last_modified: object[:last_modified] }
@@ -34,7 +44,7 @@ describe BackupRestore::S3BackupStore do
     end)
 
     @s3_client.stub_responses(:get_object, -> (context) do
-      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
+      check_context(context)
 
       if object = @objects.find { |obj| obj[:key] == context.params[:key] }
         { content_length: object[:size], body: "A" * object[:size] }
@@ -44,7 +54,7 @@ describe BackupRestore::S3BackupStore do
     end)
 
     @s3_client.stub_responses(:put_object, -> (context) do
-      expect(context.params[:bucket]).to eq(SiteSetting.s3_backup_bucket)
+      check_context(context)
 
       @objects << {
         key: context.params[:key],
@@ -79,31 +89,51 @@ describe BackupRestore::S3BackupStore do
     end
   end
 
+  def objects_with_prefix(context)
+    prefix = context.params[:prefix]
+
+    if prefix.blank?
+      @objects.reject { |obj| obj[:key].include?("/") }
+    else
+      @objects.select { |obj| obj[:key].start_with?(prefix) }
+    end
+  end
+
   def create_backups
     @objects.clear
+
     @objects << { key: "b.tar.gz", size: 17, last_modified: Time.parse("2018-09-13T15:10:00Z") }
     @objects << { key: "a.tgz", size: 29, last_modified: Time.parse("2018-02-11T09:27:00Z") }
     @objects << { key: "r.sql.gz", size: 11, last_modified: Time.parse("2017-12-20T03:48:00Z") }
     @objects << { key: "no-backup.txt", size: 12, last_modified: Time.parse("2018-09-05T14:27:00Z") }
+
+    @objects << { key: "backups/second/multi-2.tar.gz", size: 19, last_modified: Time.parse("2018-11-27T03:16:54Z") }
+    @objects << { key: "backups/second/multi-1.tar.gz", size: 22, last_modified: Time.parse("2018-11-26T03:17:09Z") }
   end
 
   def remove_backups
     @objects.clear
   end
 
-  def source_regex(filename)
+  def source_regex(db_name, filename, multisite:)
     bucket = Regexp.escape(SiteSetting.s3_backup_bucket)
+    prefix = file_prefix(db_name, multisite)
     filename = Regexp.escape(filename)
     expires = BackupRestore::S3BackupStore::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
 
-    /\Ahttps:\/\/#{bucket}.*\/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z/
+    /\Ahttps:\/\/#{bucket}.*#{prefix}\/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z/
   end
 
-  def upload_url_regex(filename)
+  def upload_url_regex(db_name, filename, multisite:)
     bucket = Regexp.escape(SiteSetting.s3_backup_bucket)
+    prefix = file_prefix(db_name, multisite)
     filename = Regexp.escape(filename)
     expires = BackupRestore::S3BackupStore::UPLOAD_URL_EXPIRES_AFTER_SECONDS
 
-    /\Ahttps:\/\/#{bucket}.*\/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z/
+    /\Ahttps:\/\/#{bucket}.*#{prefix}\/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z/
+  end
+
+  def file_prefix(db_name, multisite)
+    multisite ? "\\/#{db_name}" : ""
   end
 end

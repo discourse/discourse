@@ -470,7 +470,7 @@ describe UsersController do
           get "/u/admin-login/#{email_token.token}"
           expect(response).not_to redirect_to('/')
           expect(session[:current_user_id]).not_to eq(admin.id)
-          expect(response.body).to include(I18n.t('login.second_factor_description'));
+          expect(response.body).to include(I18n.t('login.second_factor_description'))
         end
 
         describe 'invalid 2 factor token' do
@@ -483,8 +483,8 @@ describe UsersController do
             }
 
             expect(response.status).to eq(200)
-            expect(response.body).to include(I18n.t('login.second_factor_description'));
-            expect(response.body).to include(I18n.t('login.invalid_second_factor_code'));
+            expect(response.body).to include(I18n.t('login.second_factor_description'))
+            expect(response.body).to include(I18n.t('login.invalid_second_factor_code'))
           end
         end
 
@@ -835,7 +835,7 @@ describe UsersController do
           }
 
           expect(response.status).to eq(200)
-          expect(TwitterUserInfo.count).to eq(1)
+          expect(UserAssociatedAccount.where(provider_name: "twitter").count).to eq(1)
         end
 
         it "returns an error when email has been changed from the validated email address" do

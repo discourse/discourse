@@ -152,6 +152,12 @@
       color: $primary;
       padding: 0.5em 0.667em 1.2em 0;
     }
+    .topic-statuses {
+      a {
+        line-height: 0.8;
+        color: $primary-medium;
+      }
+    }
   }
 
   .badge-notification,
@@ -273,9 +279,10 @@ tr.category-topic-link {
   border-top: 1px solid;
 
   h3 {
+    max-width: 100%;
     display: inline-block;
     font-size: $font-up-2;
-    margin: 0 0 0 10px;
+    padding: 0 0 0 10px;
     .d-icon {
       margin-right: 5px;
     }

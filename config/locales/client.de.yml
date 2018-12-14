@@ -479,6 +479,7 @@ de:
           description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
       flair_url: "Avatar-Hintergrund"
       flair_url_placeholder: "(Optional) Bild-URL oder Font Awesome-Klasse"
+      flair_url_description: "Verwende quadratische Bilder, die nicht kleiner als 20x20 Pixel sind oder FontAwesome-Icons (akzeptierte Formate: \"fa-icon\", \"far fa-icon\" oder \"fab fa-icon\")."
       flair_bg_color: "Avatar-Hintergrundfarbe"
       flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
       flair_color: "Avatar-Hintergrundfarbe"
@@ -520,6 +521,12 @@ de:
       topic_sentence:
         one: "1 Thema"
         other: "%{count} Themen"
+      topic_stat_sentence_week:
+        one: "%{count} neues Thema in der letzten Woche."
+        other: "%{count} neue Themen in der letzten Woche."
+      topic_stat_sentence_month:
+        one: "%{count} neues Thema im letzten Monat."
+        other: "%{count} neue Themen im letzten Monat."
       n_more: "Kategorien (%{count} weitere) ..."
     ip_lookup:
       title: IP-Adressen-Abfrage
@@ -1244,6 +1251,7 @@ de:
         title_too_long: "Titel darf maximal {{max}} Zeichen lang sein"
         post_missing: "Beitrag darf nicht leer sein"
         post_length: "Beitrag muss mindestens {{min}} Zeichen lang sein"
+        try_like: "Hast du schon die {{heart}}-Schaltfläche ausprobiert?"
         category_missing: "Du musst eine Kategorie auswählen"
         tags_missing: "Du musst mindestens %{count} Schlagwörter wählen."
       save_edit: "Speichern"
@@ -2050,6 +2058,7 @@ de:
           revert: "Diese Überarbeitung wiederherstellen"
           edit_wiki: "Bearbeite Wiki"
           edit_post: "Bearbeite Beitrag"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Zeige die Änderungen inline an"

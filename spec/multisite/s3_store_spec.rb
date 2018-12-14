@@ -27,9 +27,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
     describe "#store_upload" do
       it "returns the correct url for default and second multisite db" do
-        expect(store.store_upload(uploaded_file, upload)).to eq(
-          "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
-        )
+        conn.with_connection('default') do
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+          )
+        end
 
         conn.with_connection('second') do
           expect(store.store_upload(uploaded_file, upload)).to eq(

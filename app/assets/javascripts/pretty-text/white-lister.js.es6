@@ -183,6 +183,7 @@ const DEFAULT_LIST = [
   "small",
   "span[lang]",
   "span.excerpt",
+  "div.excerpt",
   "span.hashtag",
   "span.mention",
   "strike",

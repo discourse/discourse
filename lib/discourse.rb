@@ -602,9 +602,18 @@ module Discourse
     end
   end
 
-  def self.deprecate(warning)
-    location = caller_locations[1]
-    warning = "Deprecation Notice: #{warning}\nAt: #{location.label} #{location.path}:#{location.lineno}"
+  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false)
+    location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
+    warning = ["Deprecation notice:", warning]
+    warning << "(deprecated since Discourse #{since})" if since
+    warning << "(removal in Discourse #{drop_from})" if drop_from
+    warning << "\nAt #{location}"
+    warning = warning.join(" ")
+
+    if raise_error
+      raise Deprecation.new(warning)
+    end
+
     if Rails.env == "development"
       STDERR.puts(warning)
     end

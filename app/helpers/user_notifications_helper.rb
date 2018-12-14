@@ -1,4 +1,5 @@
 module UserNotificationsHelper
+  include GlobalPath
 
   def indent(text, by = 2)
     spacer = " " * by
@@ -22,11 +23,9 @@ module UserNotificationsHelper
     logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg$/i
     return nil if logo_url.blank? || logo_url =~ /\.svg$/i
 
-    if logo_url !~ /http(s)?\:\/\//
-      logo_url = "#{Discourse.base_url}#{logo_url}"
-    end
-
-    logo_url
+    uri = URI.parse(UrlHelper.absolute(upload_cdn_path(logo_url)))
+    uri.scheme = SiteSetting.scheme if uri.scheme.blank?
+    uri.to_s
   end
 
   def html_site_link(color)

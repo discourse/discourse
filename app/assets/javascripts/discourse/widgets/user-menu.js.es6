@@ -194,7 +194,31 @@ export default createWidget("user-menu", {
     });
   },
 
-  clickOutside() {
-    this.sendWidgetAction("toggleUserMenu");
+  clickOutsideMobile(e) {
+    const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
+    if (
+      $centeredElement.parents(".panel").length &&
+      !$centeredElement.hasClass("header-cloak")
+    ) {
+      this.sendWidgetAction("toggleUserMenu");
+    } else {
+      const $window = $(window);
+      const windowWidth = parseInt($window.width(), 10);
+      const $panel = $(".menu-panel");
+      $panel.addClass("animate");
+      $panel.css("right", -windowWidth);
+      const $headerCloak = $(".header-cloak");
+      $headerCloak.addClass("animate");
+      $headerCloak.css("opacity", 0);
+      Ember.run.later(() => this.sendWidgetAction("toggleUserMenu"), 200);
+    }
+  },
+
+  clickOutside(e) {
+    if (this.site.mobileView) {
+      this.clickOutsideMobile(e);
+    } else {
+      this.sendWidgetAction("toggleUserMenu");
+    }
   }
 });

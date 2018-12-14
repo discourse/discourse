@@ -1354,6 +1354,20 @@ QUnit.test("emoji", assert => {
   );
 });
 
+QUnit.test("emoji - enable_inline_emoji_translation", assert => {
+  assert.cookedOptions(
+    "test:smile:test",
+    { siteSettings: { enable_inline_emoji_translation: false } },
+    `<p>test:smile:test</p>`
+  );
+
+  assert.cookedOptions(
+    "test:smile:test",
+    { siteSettings: { enable_inline_emoji_translation: true } },
+    `<p>test<img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:">test</p>`
+  );
+});
+
 QUnit.test("emoji - emojiSet", assert => {
   assert.cookedOptions(
     ":smile:",

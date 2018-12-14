@@ -19,17 +19,39 @@ class Guardian
   include TagGuardian
 
   class AnonymousUser
-    def blank?; true; end
-    def admin?; false; end
-    def staff?; false; end
-    def moderator?; false; end
-    def approved?; false; end
-    def staged?; false; end
-    def silenced?; false; end
-    def secure_category_ids; []; end
-    def topic_create_allowed_category_ids; []; end
-    def has_trust_level?(level); false; end
-    def email; nil; end
+    def blank?
+      true
+    end
+    def admin?
+      false
+    end
+    def staff?
+      false
+    end
+    def moderator?
+      false
+    end
+    def approved?
+      false
+    end
+    def staged?
+      false
+    end
+    def silenced?
+      false
+    end
+    def secure_category_ids
+      []
+    end
+    def topic_create_allowed_category_ids
+      []
+    end
+    def has_trust_level?(level)
+      false
+    end
+    def email
+      nil
+    end
   end
 
   attr_accessor :can_see_emails

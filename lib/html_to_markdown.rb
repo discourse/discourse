@@ -3,7 +3,9 @@ require "nokogiri"
 class HtmlToMarkdown
 
   class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head = "", body = "", opened = false, markdown = ""); super; end
+    def initialize(name, head = "", body = "", opened = false, markdown = "")
+      super
+    end
   end
 
   def initialize(html, opts = {})

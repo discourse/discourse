@@ -44,20 +44,6 @@ blockquote {
   margin-bottom: 9px;
 }
 
-.topic-statuses {
-  display: inline-block;
-
-  .topic-status {
-    .d-icon {
-      color: $secondary-high;
-    }
-  }
-
-  &:empty {
-    display: none;
-  }
-}
-
 // categories should not be bold on mobile; they fight with the topic title too much
 .badge-wrapper {
   font-weight: normal;
@@ -92,16 +78,16 @@ blockquote {
   }
 
   > li > a {
+    display: flex;
+    align-items: center;
     padding: 8px 10px;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    display: block;
   }
 
   .d-icon-caret-down {
-    position: absolute;
-    right: 0;
+    margin-left: auto;
   }
 
   .drop {

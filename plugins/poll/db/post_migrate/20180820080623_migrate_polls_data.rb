@@ -9,6 +9,8 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
     "number" => 2,
   }
 
+  PG_INTEGER_MAX ||= 2_147_483_647
+
   def up
     # Ensure we don't have duplicate polls
     DB.exec <<~SQL
@@ -86,10 +88,10 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
         status = poll["status"] == "open" ? 0 : 1
         visibility = poll["public"] == "true" ? 1 : 0
         close_at = (Time.zone.parse(poll["close"]) rescue nil)
-        min = poll["min"].to_i
-        max = poll["max"].to_i
-        step = poll["step"].to_i
-        anonymous_voters = poll["anonymous_voters"].to_i
+        min = poll["min"].to_i.clamp(0, PG_INTEGER_MAX)
+        max = poll["max"].to_i.clamp(0, PG_INTEGER_MAX)
+        step = poll["step"].to_i.clamp(0, max)
+        anonymous_voters = poll["anonymous_voters"].to_i.clamp(0, PG_INTEGER_MAX)
 
         poll_id = execute(<<~SQL
           INSERT INTO polls (

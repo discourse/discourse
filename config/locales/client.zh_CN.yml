@@ -450,6 +450,7 @@ zh_CN:
           description: "你不会收到组内关于新主题中的任何通知。"
       flair_url: "头像图片"
       flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
+      flair_url_description: "使用不小于20px × 20px的方形图像或FontAwesome图标（可接受的格式：“fa-icon”，“far fa-icon”或“fab fa-icon”）。"
       flair_bg_color: "头像背景颜色"
       flair_bg_color_placeholder: "（可选）十六进制色彩值"
       flair_color: "头像颜色"
@@ -490,6 +491,10 @@ zh_CN:
       subcategories: "子分类"
       topic_sentence:
         other: "%{count} 主题"
+      topic_stat_sentence_week:
+        other: "%{count}上周新帖。"
+      topic_stat_sentence_month:
+        other: "%{count}上月新帖。"
       n_more: "分类 (还有%{count}个分类) ..."
     ip_lookup:
       title: IP 地址查询
@@ -1199,6 +1204,7 @@ zh_CN:
         title_too_long: "标题过长，最多 {{max}} 个字"
         post_missing: "帖子不能为空"
         post_length: "帖子至少应有 {{min}} 个字"
+        try_like: "试试{{heart}}按钮？"
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择{{count}}个标签"
       save_edit: "保存编辑"
@@ -1254,7 +1260,8 @@ zh_CN:
       list_item: "列表条目"
       toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
-      collapse: "最小号编辑面板"
+      collapse: "最小化编辑面板"
+      open: "打开编辑面板"
       abandon: "关闭编辑面板并放弃草稿"
       enter_fullscreen: "进入全屏编辑模式"
       exit_fullscreen: "退出全屏编辑模式"
@@ -1958,6 +1965,7 @@ zh_CN:
           revert: "还原至该版本"
           edit_wiki: "编辑维基"
           edit_post: "编辑帖子"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> {{icon}} <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "行内显示渲染后的页面，并标示增加和删除的内容"
@@ -2493,7 +2501,7 @@ zh_CN:
         activity_metrics: 活跃指标
         all_reports: "所有报告"
         general_tab: "常规"
-        moderation_tab: "适度"
+        moderation_tab: "管理"
         disabled: 停用
         timeout_error: 对不起，查询时间太长，请选择较短的间隔
         exception_error: 抱歉，执行查询时发生错误
@@ -2707,6 +2715,8 @@ zh_CN:
         active_notice: "当事件发生时，我们会推送细节"
         categories_filter_instructions: "相关 Webhook 事件将在满足特定分类的情况下才发送。留空忽略分类限制。"
         categories_filter: "触发的分类"
+        tags_filter_instructions: "相关Webhook事件将在满足特定标签的情况下才发送。留空忽略标签限制。"
+        tags_filter: "触发的标签"
         groups_filter_instructions: "相关 Webhook 事件将在满足特定群组的情况下才发送。留空忽略群组限制。"
         groups_filter: "触发的群组"
         delete_confirm: "删除这个 webhook？"
@@ -3027,6 +3037,13 @@ zh_CN:
         settings: "设置"
         templates: "模板"
         preview_digest: "预览"
+        advanced_test:
+          title: "高级测试"
+          desc: "了解Discourse如何处理收到的电子邮件。为了能够正确处理电子邮件，请在下方粘贴整个原始邮件。"
+          email: "原始消息"
+          run: "运行测试"
+          text: "已选择的测试正文"
+          elided: "省略文本"
         sending_test: "发送测试邮件…"
         error: "<b>错误</b> - %{server_error}"
         test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"

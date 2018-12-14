@@ -55,6 +55,7 @@ en:
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
+  on_another_topic: "On another topic"
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
@@ -221,8 +222,8 @@ en:
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
-    one: "No more than 1 reply is allowed. Please edit your previous reply instead, or wait for someone to reply to you."
-    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply instead, or wait for someone to reply to you."
+    one: "No consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
+    other: "No more than %{count} consecutive replies are allowed. Please edit your previous reply, or wait for someone to reply to you."
 
   embed:
     start_discussion: "Start Discussion"
@@ -274,6 +275,7 @@ en:
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
   max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
   pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
+  removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -1132,6 +1134,12 @@ en:
         device: Device
         os: Operating System
         login_time: Login Time
+    staff_logins:
+      title: "Staff logins"
+      labels:
+        user: User
+        location: Location
+        login_at: Login at
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1191,6 +1199,7 @@ en:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
+    short_site_description: "Short description, as used in the title tag on homepage."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, as well as on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
     contact_url: "Contact URL for this site. Used on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
@@ -1296,6 +1305,7 @@ en:
     content_security_policy_report_only: EXPERIMENTAL - Turn on Content-Security-Policy-Report-Only
     content_security_policy_collect_reports: Enable CSP violation report collection at /csp_reports
     content_security_policy_script_src: Additional whitelisted script sources. The current host and CDN are included by default.
+    invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1305,6 +1315,7 @@ en:
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
+    remove_full_quote: "Automatically remove full quotes on direct replies."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
@@ -1779,6 +1790,7 @@ en:
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
+    enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -4044,13 +4056,16 @@ en:
           site_description:
             label: "Describe your community in one short sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
+          short_site_description:
+            label: "Describe your community in few words"
+            placeholder: "Best community ever"
 
       introduction:
         title: "Introduction"
-        disabled: "<p>We couldn’t find any topic with the title “Welcome to Discourse”.</p>
+        disabled: "<p>We couldn’t find any topic with the title “%{topic_title}”.</p>
           <ul>
           <li>If you have changed the title, edit that topic to modify your site’s introductory text.</li>
-          <li>If you have deleted this topic, create another topic with “Welcome to Discourse” as the title. The content of the first post is your site’s introductory text.</li>
+          <li>If you have deleted this topic, create another topic with “%{topic_title}” as the title. The content of the first post is your site’s introductory text.</li>
           </ul>"
 
         fields:

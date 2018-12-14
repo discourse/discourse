@@ -6,12 +6,12 @@
   margin-left: 0;
 }
 
-h1 .topic-statuses .topic-status .d-icon {
-  font-size: 0.857em;
-  vertical-align: middle;
-}
-
 .topic-body {
+  // this ensures consistent top margin on topic posts even if the first line of a post
+  // is a top-margin-less element like a list or image.
+  .regular {
+    margin-top: 15px;
+  }
   padding: 0;
   &:first-of-type {
     border-top: none;
@@ -444,10 +444,6 @@ nav.post-controls {
   padding: 20px 0 15px 0;
   table {
     margin-top: 10px;
-  } // this forces category to take less space in suggested topics
-  // as the poster list is not present at all there.
-  th.category {
-    width: 150px;
   }
 }
 
@@ -508,16 +504,10 @@ video {
   }
   .topic-statuses {
     .d-icon {
-      color: $header_primary;
+      color: $header_primary-medium;
     }
     .d-icon-envelope {
       color: $danger;
-    }
-    .d-icon-lock {
-      padding-top: 0.15em;
-    }
-    .unpinned {
-      color: $header_primary;
     }
   }
   .topic-link {
@@ -540,9 +530,6 @@ video {
     font-size: $font-up-3;
     line-height: $line-height-large;
     width: 100%;
-  }
-  .topic-statuses {
-    margin-top: -2px;
   }
 }
 

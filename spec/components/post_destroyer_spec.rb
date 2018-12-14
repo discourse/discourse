@@ -632,7 +632,7 @@ describe PostDestroyer do
     let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
 
     before do
-      SiteSetting.queue_jobs = false
+      Jobs::SendSystemMessage.clear
     end
 
     it "should delete public post actions and agree with flags" do
@@ -650,36 +650,39 @@ describe PostDestroyer do
       expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
 
-      notification = second_post.user.notifications.where(notification_type: Notification.types[:private_message]).last
-      expect(notification).to be_present
-      expect(notification.topic.title).to eq(I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template'))
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostDestroyer.new(Discourse.system_user, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
       SiteSetting.delete_removed_posts_after = 0
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostDestroyer.new(second_post.user, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostAction.defer_flags!(second_post, moderator)
       second_post.reload
+      expect(PostAction.flagged_posts_count).to eq(0)
+
       PostDestroyer.new(moderator, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if defer_flags is true" do
+      expect(PostAction.flagged_posts_count).to eq(1)
+      PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
     end
 
     it "should set the deleted_public_actions custom field" do

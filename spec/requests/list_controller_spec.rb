@@ -5,8 +5,10 @@ RSpec.describe ListController do
   let(:group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }
+  let(:admin) { Fabricate(:admin) }
 
   before do
+    admin  # to skip welcome wizard at home page `/`
     SiteSetting.top_menu = 'latest|new|unread|categories'
   end
 
@@ -76,6 +78,17 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
       expect(parsed["topic_list"]["topics"].length).to eq(1)
+    end
+
+    it "shows correct title if topic list is set for homepage" do
+      get "/"
+
+      expect(response.body).to have_tag "title", text: "Discourse"
+
+      SiteSetting.short_site_description = "Best community"
+      get "/"
+
+      expect(response.body).to have_tag "title", text: "Discourse - Best community"
     end
   end
 

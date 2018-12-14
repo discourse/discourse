@@ -131,6 +131,14 @@
     @extend .topic-list-main-link;
   }
 
+  .link-bottom-line {
+    font-size: $font-down-1;
+    a.badge-wrapper.box {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
   .topic-featured-link {
     padding-left: 5px;
   }
@@ -144,21 +152,13 @@
   .topic-excerpt {
     font-size: $font-down-1;
     margin-top: 5px;
-    color: dark-light-choose($primary-high, $secondary-high);
+    color: $primary-high;
     word-wrap: break-word;
     line-height: $line-height-large;
     padding-right: 20px;
   }
   .topic-statuses:empty {
     display: none;
-  }
-  .topic-status {
-    margin-right: 4px;
-    padding: 0;
-    font-size: 1.071em;
-    &:last-of-type {
-      margin-right: 0;
-    }
   }
 
   .num {
@@ -253,14 +253,6 @@ ol.category-breadcrumb {
 
 .d-icon-thumbtack.unpinned {
   @include fa-rotate(180deg, 1);
-  color: $primary;
-  /* because it is rotated, right becomes left! */
-  padding-left: 3px;
-  padding-right: 0 !important;
-}
-
-.topic-statuses .fa {
-  padding-right: 3px;
 }
 
 .top-title-buttons {

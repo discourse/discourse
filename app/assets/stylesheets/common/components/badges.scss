@@ -31,8 +31,9 @@
       overflow: hidden;
     }
     .d-icon {
-      padding-left: 1px; // prevents lock icon from being cut off on the left
       margin-right: 3px;
+      width: 0.74em;
+      height: 0.74em;
     }
   }
 
@@ -41,7 +42,7 @@
   &.bullet {
     margin-right: 12px;
     span.badge-category {
-      color: $primary;
+      color: $primary-high;
       overflow: hidden;
       text-overflow: ellipsis;
       .extra-info-wrapper & {
@@ -62,6 +63,9 @@
       + .badge-category-bg {
         width: 5px;
       }
+    }
+    .d-icon {
+      color: $primary-medium;
     }
   }
 
@@ -110,7 +114,7 @@
     margin-right: 5px;
 
     span.badge-category {
-      color: $primary;
+      color: $primary-high;
       padding: 1px 3px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -135,7 +139,7 @@
   // ----- No category style
 
   &.none {
-    color: $primary;
+    color: $primary-high;
     margin-right: 5px;
   }
 }

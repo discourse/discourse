@@ -846,6 +846,19 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(403)
       expect(JSON.parse(response.body)["message"]).to include("Primary email can't be blank")
     end
+
+    it 'should return the right message if the signature is invalid' do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = "2"
+
+      correct_payload = Rack::Utils.parse_query(sso.payload)
+      post "/admin/users/sync_sso.json", params: correct_payload.merge(sig: "someincorrectsignature")
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
+      expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
+    end
   end
 
   describe '#disable_second_factor' do
@@ -927,6 +940,34 @@ RSpec.describe Admin::UsersController do
       expect(find_logs(:removed_unsilence_user)).to be_present
     end
 
+  end
+
+  describe "#delete_posts_batch" do
+    context "when there are user posts" do
+      before do
+        post = Fabricate(:post, user: user)
+        Fabricate(:post, topic: post.topic, user: user)
+        Fabricate(:post, user: user)
+      end
+
+      it 'returns how many posts were deleted' do
+        sign_in(admin)
+
+        put "/admin/users/#{user.id}/delete_posts_batch.json"
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["posts_deleted"]).to eq(3)
+      end
+    end
+
+    context "when there are no posts left to be deleted" do
+      it "returns correct json" do
+        sign_in(admin)
+
+        put "/admin/users/#{user.id}/delete_posts_batch.json"
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["posts_deleted"]).to eq(0)
+      end
+    end
   end
 
 end

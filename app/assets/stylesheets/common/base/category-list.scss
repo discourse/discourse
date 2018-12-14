@@ -55,10 +55,6 @@
         max-width: 100%;
       }
     }
-
-    h3 .fa {
-      color: $primary;
-    }
   }
 
   .category-box-inner {
@@ -143,7 +139,7 @@
         display: inline-block;
         margin-right: 0.6em;
       }
-      .logo {
+      .logo img {
         display: inline-block;
         height: 20px;
         width: 20px;
@@ -186,16 +182,34 @@
     li {
       padding: 4px 0;
       display: flex;
+      align-items: baseline;
       .overflow {
         max-height: 3em;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
       .d-icon {
-        margin-right: 6px;
-        margin-top: 2px;
+        margin-right: 0.15em;
+        width: 0.76em;
+        height: 0.76em;
       }
     }
+  }
+}
+
+.categories-list .category {
+  h3 .d-icon {
+    color: $primary-medium;
+    height: 0.76em;
+    width: 0.76em;
+    vertical-align: baseline;
+    margin-right: 0.15em;
+  }
+}
+
+.category-boxes-with-topics,
+.category-boxes {
+  .category-box h3 .d-icon {
+    margin-right: 0;
   }
 }

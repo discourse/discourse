@@ -53,12 +53,11 @@ class UserAnonymizer
       end
 
       @user.user_avatar.try(:destroy)
-      @user.twitter_user_info.try(:destroy)
       @user.google_user_info.try(:destroy)
       @user.github_user_info.try(:destroy)
-      @user.facebook_user_info.try(:destroy)
       @user.single_sign_on_record.try(:destroy)
       @user.oauth2_user_infos.try(:destroy_all)
+      @user.user_associated_accounts.try(:destroy_all)
       @user.instagram_user_info.try(:destroy)
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)

@@ -171,6 +171,24 @@ task "users:anonymize_all" => :environment do
   puts "", "#{total} users anonymized.", ""
 end
 
+desc "List all users which have been staff in the last month"
+task "users:list_recent_staff" => :environment do
+  current_staff_ids = User.human_users.where("admin OR moderator").pluck(:id)
+  recent_actions = UserHistory.where("created_at < ?", 1.month.ago)
+  recent_admin_ids = recent_actions.where(action: UserHistory.actions[:revoke_admin]).pluck(:target_user_id)
+  recent_moderator_ids = recent_actions.where(action: UserHistory.actions[:revoke_moderation]).pluck(:target_user_id)
+
+  all_ids = current_staff_ids + recent_admin_ids + recent_moderator_ids
+  users = User.where(id: all_ids.uniq)
+
+  puts "Users which have had staff privileges in the last month:"
+  users.each do |user|
+    puts "#{user.id}: #{user.username} (#{user.email})"
+  end
+  puts "----"
+  puts "user_ids = [#{all_ids.uniq.join(',')}]"
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 

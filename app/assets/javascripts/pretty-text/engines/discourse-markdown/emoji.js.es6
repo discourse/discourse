@@ -57,7 +57,7 @@ function imageFor(code, opts) {
   }
 }
 
-function getEmojiName(content, pos, state) {
+function getEmojiName(content, pos, state, inlineEmoji) {
   if (content.charCodeAt(pos) !== 58) {
     return;
   }
@@ -65,6 +65,7 @@ function getEmojiName(content, pos, state) {
   if (pos > 0) {
     let prev = content.charCodeAt(pos - 1);
     if (
+      !inlineEmoji &&
       !state.md.utils.isSpace(prev) &&
       !state.md.utils.isPunctChar(String.fromCharCode(prev))
     ) {
@@ -173,7 +174,13 @@ function getEmojiTokenByTranslation(content, pos, state) {
   }
 }
 
-function applyEmoji(content, state, emojiUnicodeReplacer, enableShortcuts) {
+function applyEmoji(
+  content,
+  state,
+  emojiUnicodeReplacer,
+  enableShortcuts,
+  inlineEmoji
+) {
   let i;
   let result = null;
   let contentToken = null;
@@ -188,7 +195,7 @@ function applyEmoji(content, state, emojiUnicodeReplacer, enableShortcuts) {
 
   for (i = 0; i < content.length - 1; i++) {
     let offset = 0;
-    let emojiName = getEmojiName(content, i, state);
+    const emojiName = getEmojiName(content, i, state, inlineEmoji);
     let token = null;
 
     if (emojiName) {
@@ -235,6 +242,7 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings, state) => {
     opts.features.emoji = !!siteSettings.enable_emoji;
     opts.features.emojiShortcuts = !!siteSettings.enable_emoji_shortcuts;
+    opts.features.inlineEmoji = !!siteSettings.enable_inline_emoji_translation;
     opts.emojiSet = siteSettings.emoji_set || "";
     opts.customEmoji = state.customEmoji;
   });
@@ -246,7 +254,8 @@ export function setup(helper) {
           c,
           s,
           md.options.discourse.emojiUnicodeReplacer,
-          md.options.discourse.features.emojiShortcuts
+          md.options.discourse.features.emojiShortcuts,
+          md.options.discourse.features.inlineEmoji
         )
       )
     );

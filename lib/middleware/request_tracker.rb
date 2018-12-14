@@ -18,7 +18,7 @@ class Middleware::RequestTracker
 
     unless @patched_instrumentation
       MethodProfiler.patch(PG::Connection, [
-        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query
+        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query, :exec_params
       ], :sql)
 
       MethodProfiler.patch(Redis::Client, [

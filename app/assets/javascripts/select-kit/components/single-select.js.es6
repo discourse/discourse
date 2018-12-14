@@ -56,6 +56,11 @@ export default SelectKitComponent.extend({
     this.set("value", computedValue);
   },
 
+  forceValue(value) {
+    this.mutateValue(value);
+    this._compute();
+  },
+
   _beforeWillComputeValue(value) {
     if (
       !isEmpty(this.get("content")) &&

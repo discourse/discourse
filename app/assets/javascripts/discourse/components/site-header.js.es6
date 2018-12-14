@@ -1,6 +1,11 @@
 import MountWidget from "discourse/components/mount-widget";
 import { observes } from "ember-addons/ember-computed-decorators";
 import Docking from "discourse/mixins/docking";
+import PanEvents, {
+  SWIPE_VELOCITY,
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY_THRESHOLD
+} from "discourse/mixins/pan-events";
 
 const _flagProperties = [];
 function addFlagProperty(prop) {
@@ -9,10 +14,20 @@ function addFlagProperty(prop) {
 
 const PANEL_BODY_MARGIN = 30;
 
-const SiteHeaderComponent = MountWidget.extend(Docking, {
+//android supports pulling in from the screen edges
+const SCREEN_EDGE_MARGIN = 30;
+const SCREEN_OFFSET = 300;
+
+const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
   dockedHeader: null,
+  _animate: false,
+  _isPanning: false,
+  _panMenuOrigin: "right",
+  _panMenuOffset: 0,
+  _scheduledMovingAnimation: null,
+  _scheduledRemoveAnimate: null,
   _topic: null,
 
   @observes(
@@ -21,6 +36,157 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   )
   notificationsChanged() {
     this.queueRerender();
+  },
+
+  _animateOpening($panel) {
+    $panel.css({ right: "", left: "" });
+    this._panMenuOffset = 0;
+  },
+
+  _animateClosing($panel, menuOrigin, windowWidth) {
+    $panel.css(menuOrigin, -windowWidth);
+    this._animate = true;
+    Ember.run.schedule("afterRender", () => {
+      this.eventDispatched("dom:clean", "header");
+      this._panMenuOffset = 0;
+    });
+  },
+
+  _isRTL() {
+    return $("html").css("direction") === "rtl";
+  },
+
+  _leftMenuClass() {
+    return this._isRTL() ? ".user-menu" : ".hamburger-panel";
+  },
+
+  _leftMenuAction() {
+    return this._isRTL() ? "toggleUserMenu" : "toggleHamburger";
+  },
+
+  _rightMenuAction() {
+    return this._isRTL() ? "toggleHamburger" : "toggleUserMenu";
+  },
+
+  _handlePanDone(offset, event) {
+    const $window = $(window);
+    const windowWidth = parseInt($window.width());
+    const $menuPanels = $(".menu-panel");
+    const menuOrigin = this._panMenuOrigin;
+    this._shouldMenuClose(event, menuOrigin)
+      ? (offset += SWIPE_VELOCITY)
+      : (offset -= SWIPE_VELOCITY);
+    $menuPanels.each((idx, panel) => {
+      const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
+      $panel.css(menuOrigin, -offset);
+      $headerCloak.css("opacity", Math.min(0.5, (300 - offset) / 600));
+      if (offset > windowWidth) {
+        this._animateClosing($panel, menuOrigin, windowWidth);
+      } else if (offset <= 0) {
+        this._animateOpening($panel);
+      } else {
+        //continue to open or close menu
+        this._scheduledMovingAnimation = window.requestAnimationFrame(() =>
+          this._handlePanDone(offset, event)
+        );
+      }
+    });
+  },
+
+  _shouldMenuClose(e, menuOrigin) {
+    // menu should close after a pan either:
+    // if a user moved the panel closed past a threshold and away and is NOT swiping back open
+    // if a user swiped to close fast enough regardless of distance
+    if (menuOrigin === "right") {
+      return (
+        (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
+          e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
+        e.velocityX > 0
+      );
+    } else {
+      return (
+        (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
+          e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
+        e.velocityX < 0
+      );
+    }
+  },
+
+  panStart(e) {
+    const center = e.center;
+    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
+    const $window = $(window);
+    const windowWidth = parseInt($window.width());
+    if (
+      ($centeredElement.hasClass("panel-body") ||
+        $centeredElement.hasClass("header-cloak") ||
+        $centeredElement.parents(".panel-body").length) &&
+      (e.direction === "left" || e.direction === "right")
+    ) {
+      e.originalEvent.preventDefault();
+      this._isPanning = true;
+    } else if (
+      center.x < SCREEN_EDGE_MARGIN &&
+      !this.$(".menu-panel").length &&
+      e.direction === "right"
+    ) {
+      this._animate = false;
+      this._panMenuOrigin = "left";
+      this._panMenuOffset = -SCREEN_OFFSET;
+      this._isPanning = true;
+      $("header.d-header").removeClass("scroll-down scroll-up");
+      this.eventDispatched(this._leftMenuAction(), "header");
+    } else if (
+      windowWidth - center.x < SCREEN_EDGE_MARGIN &&
+      !this.$(".menu-panel").length &&
+      e.direction === "left"
+    ) {
+      this._animate = false;
+      this._panMenuOrigin = "right";
+      this._panMenuOffset = -SCREEN_OFFSET;
+      this._isPanning = true;
+      $("header.d-header").removeClass("scroll-down scroll-up");
+      this.eventDispatched(this._rightMenuAction(), "header");
+    } else {
+      this._isPanning = false;
+    }
+  },
+
+  panEnd(e) {
+    if (!this._isPanning) {
+      return;
+    }
+    this._isPanning = false;
+    $(".menu-panel").each((idx, panel) => {
+      const $panel = $(panel);
+      let offset = $panel.css("right");
+      if (this._panMenuOrigin === "left") {
+        offset = $panel.css("left");
+      }
+      offset = Math.abs(parseInt(offset, 10));
+      this._handlePanDone(offset, e);
+    });
+  },
+
+  panMove(e) {
+    if (!this._isPanning) {
+      return;
+    }
+    const $menuPanels = $(".menu-panel");
+    $menuPanels.each((idx, panel) => {
+      const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
+      if (this._panMenuOrigin === "right") {
+        const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
+        $panel.css("right", pxClosed);
+        $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+      } else {
+        const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
+        $panel.css("left", pxClosed);
+        $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+      }
+    });
   },
 
   dockCheck(info) {
@@ -47,6 +213,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   },
 
   setTopic(topic) {
+    this.eventDispatched("dom:clean", "header");
     this._topic = topic;
     this.queueRerender();
   },
@@ -74,6 +241,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         this.eventDispatched("dom:clean", "header");
       }
     });
+
+    if (this.site.mobileView) {
+      $("body")
+        .on("pointerdown", e => this._panStart(e))
+        .on("pointermove", e => this._panMove(e))
+        .on("pointerup", e => this._panMove(e))
+        .on("pointercancel", e => this._panMove(e));
+    }
   },
 
   willDestroyElement() {
@@ -84,6 +259,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
     this.appEvents.off("header:show-topic");
     this.appEvents.off("header:hide-topic");
     this.appEvents.off("dom:clean");
+
+    if (this.site.mobileView) {
+      $("body")
+        .off("pointerdown")
+        .off("pointerup")
+        .off("pointermove")
+        .off("pointercancel");
+    }
+    Ember.run.cancel(this._scheduledRemoveAnimate);
+    window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
 
   buildArgs() {
@@ -100,6 +285,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   afterRender() {
     const $menuPanels = $(".menu-panel");
     if ($menuPanels.length === 0) {
+      if (this.site.mobileView) {
+        this._animate = true;
+      }
       return;
     }
 
@@ -112,15 +300,29 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
 
     $menuPanels.each((idx, panel) => {
       const $panel = $(panel);
+      const $headerCloak = $(".header-cloak");
       let width = parseInt($panel.attr("data-max-width") || 300);
       if (windowWidth - width < 50) {
         width = windowWidth - 50;
       }
+      if (this._panMenuOffset) {
+        this._panMenuOffset = -width;
+      }
 
-      $panel
-        .removeClass("drop-down")
-        .removeClass("slide-in")
-        .addClass(viewMode);
+      $panel.removeClass("drop-down slide-in").addClass(viewMode);
+      if (this._animate || this._panMenuOffset !== 0) {
+        $headerCloak.css("opacity", 0);
+        if (
+          this.site.mobileView &&
+          $panel.parent(this._leftMenuClass()).length > 0
+        ) {
+          this._panMenuOrigin = "left";
+          $panel.css("left", -windowWidth);
+        } else {
+          this._panMenuOrigin = "right";
+          $panel.css("right", -windowWidth);
+        }
+      }
 
       const $panelBody = $(".panel-body", $panel);
       // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
@@ -150,7 +352,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
 
         if (
           contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN >
-          fullHeight
+            fullHeight ||
+          this.site.mobileView
         ) {
           contentHeight =
             fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
@@ -160,11 +363,19 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         }
         $("body").addClass("drop-down-mode");
       } else {
-        const menuTop = headerHeight();
+        if (this.site.mobileView) {
+          $headerCloak.show();
+        }
+
+        const menuTop = this.site.mobileView ? 0 : headerHeight();
 
         let height;
-        const winHeight = $(window).height() - 16;
-        if (menuTop + contentHeight < winHeight) {
+        const winHeightOffset = 16;
+        let initialWinHeight = window.innerHeight
+          ? window.innerHeight
+          : $(window).height();
+        const winHeight = initialWinHeight - winHeightOffset;
+        if (menuTop + contentHeight < winHeight && !this.site.mobileView) {
           height = contentHeight + "px";
         } else {
           height = winHeight - menuTop;
@@ -180,6 +391,17 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
       }
 
       $panel.width(width);
+      if (this._animate) {
+        $panel.addClass("animate");
+        $headerCloak.addClass("animate");
+        this._scheduledRemoveAnimate = Ember.run.later(() => {
+          $panel.removeClass("animate");
+          $headerCloak.removeClass("animate");
+        }, 200);
+      }
+      $panel.css({ right: "", left: "" });
+      $headerCloak.css("opacity", 0.5);
+      this._animate = false;
     });
   }
 });

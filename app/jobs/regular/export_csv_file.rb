@@ -10,16 +10,16 @@ module Jobs
     sidekiq_options retry: false
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
-      user_archive:   ['topic_title', 'category', 'sub_category', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
-      user_list:      ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged'],
-      user_stats:     ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
-      user_profile:   ['location', 'website', 'views'],
-      user_sso:       ['external_id', 'external_email', 'external_username', 'external_name', 'external_avatar_url'],
-      staff_action:   ['staff_user', 'action', 'subject', 'created_at', 'details', 'context'],
+      user_archive: ['topic_title', 'category', 'sub_category', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
+      user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged'],
+      user_stats: ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
+      user_profile: ['location', 'website', 'views'],
+      user_sso: ['external_id', 'external_email', 'external_username', 'external_name', 'external_avatar_url'],
+      staff_action: ['staff_user', 'action', 'subject', 'created_at', 'details', 'context'],
       screened_email: ['email', 'action', 'match_count', 'last_match_at', 'created_at', 'ip_address'],
-      screened_ip:    ['ip_address', 'action', 'match_count', 'last_match_at', 'created_at'],
-      screened_url:   ['domain', 'action', 'match_count', 'last_match_at', 'created_at'],
-      report:         ['date', 'value']
+      screened_ip: ['ip_address', 'action', 'match_count', 'last_match_at', 'created_at'],
+      screened_url: ['domain', 'action', 'match_count', 'last_match_at', 'created_at'],
+      report: ['date', 'value']
     )
 
     def execute(args)

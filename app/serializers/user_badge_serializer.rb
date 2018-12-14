@@ -1,7 +1,11 @@
 class UserBadgeSerializer < ApplicationSerializer
 
   class UserSerializer < BasicUserSerializer
-    attributes :name, :moderator, :admin
+    include UserPrimaryGroupMixin
+
+    attributes :name,
+               :moderator,
+               :admin
   end
 
   attributes :id, :granted_at, :count, :post_id, :post_number

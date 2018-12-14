@@ -338,6 +338,87 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    context 'when attempting reconnect' do
+      let(:user2) { Fabricate(:user) }
+      before do
+        GoogleUserInfo.create!(google_user_id: '12345', user: user)
+        GoogleUserInfo.create!(google_user_id: '123456', user: user2)
+
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+          provider: 'google_oauth2',
+          uid: '12345',
+          info: OmniAuth::AuthHash::InfoHash.new(
+            email: 'someother_email@test.com',
+            name: 'Some name'
+          ),
+          extra: {
+            raw_info: OmniAuth::AuthHash.new(
+              email_verified: true,
+              email: 'someother_email@test.com',
+              family_name: 'Huh',
+              given_name: user.name,
+              gender: 'male',
+              name: "#{user.name} Huh",
+            )
+          },
+        )
+
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+
+      it 'should not reconnect normally' do
+        # Log in normally
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(session[:auth_reconnect]).to eq(false)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+
+        # Log into another user
+        OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(session[:auth_reconnect]).to eq(false)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user2.id)
+        expect(GoogleUserInfo.count).to eq(2)
+      end
+
+      it 'should reconnect if parameter supplied' do
+        # Log in normally
+        get "/auth/google_oauth2?reconnect=true"
+        expect(response.status).to eq(302)
+        expect(session[:auth_reconnect]).to eq(true)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+
+        # Clear cookie after login
+        expect(session[:auth_reconnect]).to eq(nil)
+
+        # Disconnect
+        GoogleUserInfo.find_by(user_id: user.id).destroy
+
+        # Reconnect flow:
+        get "/auth/google_oauth2?reconnect=true"
+        expect(response.status).to eq(302)
+        expect(session[:auth_reconnect]).to eq(true)
+
+        OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["authenticated"]).to eq(true)
+        expect(session[:current_user_id]).to eq(user.id)
+        expect(GoogleUserInfo.count).to eq(1)
+      end
+
+    end
+
     context 'after changing email' do
       require_dependency 'email_updater'
 

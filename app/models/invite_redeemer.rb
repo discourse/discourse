@@ -24,7 +24,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
       email: invite.email,
       username: available_username,
       name: available_name,
-      active: true,
+      active: false,
       trust_level: SiteSetting.default_invitee_trust_level
     }
 
@@ -57,6 +57,12 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     end
 
     user.save!
+
+    if invite.via_email
+      user.email_tokens.create!(email: user.email)
+      user.activate
+    end
+
     User.find(user.id)
   end
 
@@ -82,8 +88,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def mark_invite_redeemed
-    Invite.where(['id = ? AND redeemed_at IS NULL AND created_at >= ?',
-                       invite.id, SiteSetting.invite_expiry_days.days.ago]).update_all('redeemed_at = CURRENT_TIMESTAMP')
+    Invite.where('id = ? AND redeemed_at IS NULL AND created_at >= ?',
+                 invite.id, SiteSetting.invite_expiry_days.days.ago)
+      .update_all('redeemed_at = CURRENT_TIMESTAMP')
   end
 
   def get_invited_user
@@ -119,7 +126,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def send_welcome_message
-    if Invite.where(['email = ?', invite.email]).update_all(['user_id = ?', invited_user.id]) == 1
+    if Invite.where('email = ?', invite.email).update_all(['user_id = ?', invited_user.id]) == 1
       invited_user.send_welcome_message = true
     end
   end

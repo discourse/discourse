@@ -184,4 +184,28 @@ describe Admin::EmailController do
       expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
     end
   end
+
+  describe '#advanced_test' do
+    it 'should ...' do
+      email = <<~EMAIL
+        From: "somebody" <somebody@example.com>
+        To: someone@example.com
+        Date: Mon, 3 Dec 2018 00:00:00 -0000
+        Subject: This is some subject
+        Content-Type: text/plain; charset="UTF-8"
+
+        Hello, this is a test!
+
+        ---
+
+        This part should be elided.
+      EMAIL
+      post "/admin/email/advanced-test.json", params: { email: email }
+      expect(response.status).to eq(200)
+      incoming = JSON.parse(response.body)
+      expect(incoming['format']).to eq(1)
+      expect(incoming['text']).to eq("Hello, this is a test!")
+      expect(incoming['elided']).to eq("---\n\nThis part should be elided.")
+    end
+  end
 end

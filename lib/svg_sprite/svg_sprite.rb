@@ -5,6 +5,7 @@ require_dependency 'distributed_cache'
 module SvgSprite
   SVG_ICONS ||= Set.new([
     "adjust",
+    "ambulance",
     "anchor",
     "angle-double-down",
     "angle-double-up",
@@ -50,6 +51,8 @@ module SvgSprite
     "crosshairs",
     "cube",
     "desktop",
+    "discourse-compress",
+    "discourse-expand",
     "download",
     "ellipsis-h",
     "ellipsis-v",
@@ -59,8 +62,8 @@ module SvgSprite
     "exclamation-circle",
     "exclamation-triangle",
     "external-link-alt",
-    "expand",
     "fab-apple",
+    "fab-android",
     "fab-discourse",
     "fab-facebook-f",
     "fab-facebook-square",
@@ -131,6 +134,7 @@ module SvgSprite
     "paint-brush",
     "paper-plane",
     "pencil-alt",
+    "play",
     "plug",
     "plus",
     "plus-circle",
@@ -223,7 +227,7 @@ Discourse SVG subset of #{fa_license}
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 """.dup
 
-    Dir["#{Rails.root}/vendor/assets/svg-icons/fontawesome/*.svg"].each do |fname|
+    Dir["#{Rails.root}/vendor/assets/svg-icons/**/*.svg"].each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
@@ -247,7 +251,7 @@ Discourse SVG subset of #{fa_license}
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    Dir["#{Rails.root}/vendor/assets/svg-icons/fontawesome/*.svg"].each do |fname|
+    Dir["#{Rails.root}/vendor/assets/svg-icons/**/*.svg"].each do |fname|
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
@@ -287,7 +291,7 @@ Discourse SVG subset of #{fa_license}
     site_setting_icons = []
 
     SiteSetting.settings_hash.select do |key, value|
-      if key.to_s.include?("_icon") && value.present?
+      if key.to_s.include?("_icon") && String === value
         site_setting_icons |= value.split('|')
       end
     end
@@ -317,7 +321,7 @@ Discourse SVG subset of #{fa_license}
     # Theme.all includes default values
     Theme.all.each do |theme|
       settings = theme.cached_settings.each do |key, value|
-        if key.to_s.include?("_icon") && value.present?
+        if key.to_s.include?("_icon") && String === value
           theme_icon_settings |= value.split('|')
         end
       end

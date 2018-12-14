@@ -1,0 +1,17 @@
+.hamburger-panel .menu-panel.slide-in {
+  left: 0;
+}
+.header-cloak {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  background-color: black;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  display: none;
+  touch-action: pan-y pinch-zoom;
+  &.animate {
+    transition: opacity 0.2s ease-out;
+  }
+}

@@ -35,6 +35,7 @@ fr:
   anonymous: "Anonyme"
   remove_posts_deleted_by_author: "Supprimé par l'auteur"
   redirect_warning: "Nous n'avons pas été en mesure de vérifier que le lien que vous avez sélectionné a bien été posté sur le forum. Si vous souhaitez quand même continuer, sélectionnez le lien ci-dessous."
+  on_another_topic: "Sur un autre sujet"
   themes:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
     other_error: "Il y a eu un problème pendant la mise à jour du thème"
@@ -186,14 +187,12 @@ fr:
   provider_not_enabled: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'est pas activé."
   provider_not_found: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
+  invalid_grant_badge_reason_link: "Lien discourse externe ou invalide pas permis dans la raison d'un badge"
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à 1 réponse par sujet."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponses par sujet."
-  max_consecutive_replies:
-    one: "Pas plus qu'un message possible. Veuillez modifier votre réponse précédente, ou attendre que quelqu'un vous réponde."
-    other: "Seules %{count} messages de suite sont possible. Veuillez modifier votre réponse précédente, ou attendre que quelqu'un vous réponde."
   embed:
     start_discussion: "Démarrer la discussion"
     continue: "Continuer la discussion"
@@ -1621,6 +1620,7 @@ fr:
     native_app_install_banner: "Propose aux visiteurs réguliers d'installer l'application Discourse native."
     share_anonymized_statistics: "Partager les statistiques d'utilisation anonymes."
     auto_handle_queued_age: "Gérer automatiquement les documents qui attendent d'être examinés après ce nombre de jours. Les signalements seront ignorés. Les messages et les utilisateurs en file d'attente  seront rejetés. Réglez à 0 pour désactiver cette fonction."
+    svg_icon_subset: "Rajouter des icônes supplémentaires FontAwesome 5 que vous souhaitez inclure dans vos médias. Utiliser le préfixe 'fa-' pour les icônes solides, 'far-' pour les icônes normaux et 'fab-' pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximum d'accès à la page /print (mettre à 0 pour désactiver)"
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
@@ -1708,6 +1708,7 @@ fr:
     shared_drafts_category: "Activez la fonction Ébauches partagées en désignant une catégorie pour les ébauches de sujet. Les sujets dans cette catégorie ne figureront pas dans les listes de sujets des responsables."
     push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
     push_notifications_icon: "L'icône de badge qui apparait dans le coin notifications. Taille recommandée: 96px x 96px."
+    short_title: "Le titre court sera utilisé sur la page d'accueil de l'utilisateur, dans le launcheur, ou d'autres endroits ou la place disponible est limitée. Maximum 12 caractères conseillé."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1868,7 +1869,7 @@ fr:
     second_factor_title: "Authentification à deux facteurs"
     second_factor_description: "Veuillez saisir le code d'authentification requise de votre app :"
     second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
-    second_factor_backup_title: "Code de secours de l'authentification à deux étapes"
+    second_factor_backup_title: "Code de secours de l'authentification à deux facteurs"
     invalid_second_factor_code: "Code d'authentification invalide. Chaque code ne peut être utilisé qu'une fois."
     second_factor_toggle:
       totp: "Utilisez plutôt une application d'authentification"
@@ -4281,7 +4282,6 @@ fr:
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
       introduction:
         title: "Introduction"
-        disabled: "<p>Nous n'avons pas trouvé de sujet avec le titre “Welcome to Discourse”.</p> <ul> <li>Si vous avez modifié le titre, modifier le sujet pour modifier le texte d'introduction de votre site.</li> <li>Si vous avez supprimé ce sujet, créer un nouveau sujet avec le titre “Welcome to Discourse” comme titre. Le contenu du premier message est le message d'introduction de votre site.</li> </ul>"
         fields:
           welcome:
             label: "Sujet de bienvenue"

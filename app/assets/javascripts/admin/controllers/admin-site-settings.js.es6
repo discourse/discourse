@@ -2,6 +2,8 @@ import debounce from "discourse/lib/debounce";
 
 export default Ember.Controller.extend({
   filter: null,
+  allSiteSettings: Ember.computed.alias("model"),
+  visibleSiteSettings: null,
   onlyOverridden: false,
 
   filterContentNow(category) {
@@ -14,7 +16,7 @@ export default Ember.Controller.extend({
     }
 
     if ((!filter || 0 === filter.length) && !this.get("onlyOverridden")) {
-      this.set("model", this.get("allSiteSettings"));
+      this.set("visibleSiteSettings", this.get("allSiteSettings"));
       this.transitionToRoute("adminSiteSettings");
       return;
     }
@@ -62,7 +64,7 @@ export default Ember.Controller.extend({
     all.hasMore = matches.length > 30;
     all.count = all.hasMore ? "30+" : matches.length;
 
-    this.set("model", matchesGroupedByCategory);
+    this.set("visibleSiteSettings", matchesGroupedByCategory);
     this.transitionToRoute(
       "adminSiteSettingsCategory",
       category || "all_results"

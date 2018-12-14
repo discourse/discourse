@@ -176,6 +176,7 @@ class PostRevisor
       !@post.wiki? &&
       @fields.has_key?('raw') &&
       @editor.staff? &&
+      @editor != Discourse.system_user &&
       !@post.user.staff?
     )
       PostLocker.new(@post, @editor).lock

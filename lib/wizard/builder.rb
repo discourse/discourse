@@ -33,12 +33,13 @@ class Wizard
       @wizard.append_step('forum-title') do |step|
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
+        step.add_field(id: 'short_site_description', type: 'text', required: false, value: SiteSetting.short_site_description)
 
         step.on_update do |updater|
           updater.ensure_changed(:title)
 
           if updater.errors.blank?
-            updater.apply_settings(:title, :site_description)
+            updater.apply_settings(:title, :site_description, :short_site_description)
           end
         end
       end
@@ -48,6 +49,7 @@ class Wizard
 
         if @wizard.completed_steps?('introduction') && !introduction.get_summary
           step.disabled = true
+          step.description_vars = { topic_title: I18n.t("discourse_welcome_topic.title") }
         else
           step.add_field(id: 'welcome', type: 'textarea', required: true, value: introduction.get_summary)
 
@@ -102,6 +104,7 @@ class Wizard
       end
 
       @wizard.append_step('corporate') do |step|
+        step.description_vars = { base_path: Discourse.base_path }
         step.add_field(id: 'company_name', type: 'text', value: SiteSetting.company_name)
         step.add_field(id: 'governing_law', type: 'text', value: SiteSetting.governing_law)
         step.add_field(id: 'city_for_disputes', type: 'text', value: SiteSetting.city_for_disputes)
@@ -263,6 +266,7 @@ class Wizard
 
       @wizard.append_step('finished') do |step|
         step.banner = "finished.png"
+        step.description_vars = { base_path: Discourse.base_path }
       end
       @wizard
     end

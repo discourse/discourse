@@ -668,3 +668,25 @@ select {
     }
   }
 }
+
+.topic-statuses {
+  display: inline;
+  float: left;
+  margin-right: 0.15em;
+  .topic-status {
+    margin: 0;
+    display: inline-flex;
+    color: $primary-medium;
+    .d-icon {
+      height: 0.76em;
+      width: 0.75em;
+    }
+    &:not(:last-child) {
+      margin-right: 0.15em;
+    }
+  }
+
+  .d-icon-envelope {
+    color: $danger;
+  }
+}

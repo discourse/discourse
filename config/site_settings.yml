@@ -31,6 +31,8 @@ required:
     default: 'Discourse'
   site_description:
     default: ''
+  short_site_description:
+    default: ''
   contact_email:
     client: true
     default: ''
@@ -673,6 +675,8 @@ posting:
     default: true
   suppress_reply_when_quoting:
     default: true
+  remove_full_quote:
+    default: true
   max_reply_history:
     default: 1
     client: true
@@ -746,6 +750,14 @@ posting:
     default: 0
     locale_default:
       fr: 1
+  enable_inline_emoji_translation:
+    client: true
+    default: false
+    locale_default:
+      zh_CN: true
+      zh_TW: true
+      ja: true
+      ko: true
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -1034,6 +1046,7 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_force_path_style:
     default: false
+    shadowed_by_global: true
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
@@ -1247,6 +1260,10 @@ security:
   content_security_policy_script_src:
     type: list
     default: ''
+  invalidate_inactive_admin_email_after_days:
+    default: 365
+    min: 0
+    max: 2000
 
 onebox:
   enable_flash_video_onebox: false

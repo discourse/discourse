@@ -4,6 +4,13 @@ img.emoji {
   vertical-align: middle;
 }
 
+small img.emoji,
+sub img.emoji,
+sup img.emoji {
+  height: 1.1em;
+  width: 1.1em;
+}
+
 .emoji-picker {
   background-clip: padding-box;
   z-index: z("modal", "content");

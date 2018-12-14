@@ -334,6 +334,25 @@
   }
 }
 
+.delete-posts-progress {
+  .progress-bar {
+    height: 15px;
+    position: relative;
+    background: $primary-low-mid;
+    border-radius: 25px;
+    overflow: hidden;
+    margin: 30px 0 20px;
+    span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background-color: $tertiary;
+      position: relative;
+      transition: width 0.6s linear;
+    }
+  }
+}
+
 #invite-modal {
   overflow: visible;
 

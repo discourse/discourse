@@ -50,7 +50,15 @@ if Rails.env.production?
 
     # we handle this cleanly in the message bus middleware
     # no point logging to logster
-    /RateLimiter::LimitExceeded.*/m
+    /RateLimiter::LimitExceeded.*/m,
+
+    # see https://github.com/rails/rails/issues/34599
+    # Poll defines an enum with the value `open` ActiveRecord then attempts
+    # AR then warns cause #open is being redefined, it is already defined
+    # privately in Kernel per: http://ruby-doc.org/core-2.5.3/Kernel.html#method-i-open
+    # Once the rails issue is fixed we can stop this error suppression and stop defining
+    # scopes for the enums
+    /^Creating scope :open\. Overwriting existing method Poll\.open\./,
   ]
 end
 
@@ -86,7 +94,14 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", rate: rate, duration: 'minute', publish_at: Time.current.to_i)
+      MessageBus.publish("/logs_error_rate_exceeded",
+        {
+          rate: rate,
+          duration: 'minute',
+          publish_at: Time.current.to_i
+        },
+        group_ids: [Group::AUTO_GROUPS[:admins]]
+      )
     end
   end
 
@@ -94,7 +109,14 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", rate: rate, duration: 'hour', publish_at: Time.current.to_i)
+      MessageBus.publish("/logs_error_rate_exceeded",
+        {
+          rate: rate,
+          duration: 'hour',
+          publish_at: Time.current.to_i,
+        },
+        group_ids: [Group::AUTO_GROUPS[:admins]]
+      )
     end
   end
 end

@@ -41,6 +41,10 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
   end
 
+  def can_connect_existing_user?
+    true
+  end
+
   def after_authenticate(auth_token, existing_account: nil)
     result = Auth::Result.new
 

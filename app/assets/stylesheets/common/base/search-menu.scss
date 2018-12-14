@@ -57,6 +57,9 @@
     .main-results {
       display: flex;
       flex: 1 1 auto;
+      .topic-statuses {
+        color: $primary-medium;
+      }
     }
 
     .main-results + .secondary-results {
@@ -189,17 +192,6 @@
 
     .topic-title {
       margin-right: 0.25em;
-    }
-
-    .topic-statuses {
-      float: none;
-      display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      margin: 0;
-
-      .fa {
-        margin: 0;
-      }
     }
   }
 }

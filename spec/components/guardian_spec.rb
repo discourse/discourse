@@ -1,4 +1,4 @@
-require 'rails_helper';
+require 'rails_helper'
 
 require 'guardian'
 require_dependency 'post_destroyer'

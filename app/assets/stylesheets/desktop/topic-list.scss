@@ -211,6 +211,7 @@ button.dismiss-read {
 
 .category-heading {
   clear: both;
+  max-width: 100%;
   p {
     line-height: $line-height-large;
     font-size: $font-up-3;
@@ -235,9 +236,9 @@ button.dismiss-read {
   .category-logo.aspect-image {
     --max-height: 150px;
     max-height: var(--max-height);
-    width: calc(var(--max-height) * var(--aspect-ratio));
-    max-width: 25%;
+    max-width: 60%;
     height: auto;
+    width: calc(var(--max-height) * var(--aspect-ratio));
 
     img {
       width: 100%;
@@ -279,10 +280,6 @@ button.dismiss-read {
     td {
       padding: 10px;
       font-size: $font-0;
-    }
-    .category {
-      min-width: 0;
-      padding: 0;
     }
     // suppress views column
     th.views {

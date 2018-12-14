@@ -19,7 +19,7 @@ HBS
 ctx = MiniRacer::Context.new(timeout: 15000)
 ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
 ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
-ctx.eval("module = {}; exports = {};");
+ctx.eval("module = {}; exports = {};")
 ctx.attach("rails.logger.info", proc { |err| puts(err.to_s) })
 ctx.attach("rails.logger.error", proc { |err| puts(err.to_s) })
 ctx.eval <<JS
@@ -35,4 +35,4 @@ ctx.eval(source)
 
 js_source = ::JSON.generate(template, quirks_mode: true)
 
-puts ctx.eval("exports.compile(#{js_source})");
+puts ctx.eval("exports.compile(#{js_source})")

@@ -142,6 +142,27 @@ describe Invite do
             expect(invite.topics).to match_array([topic, another_topic])
           end
         end
+
+        it 'correctly marks invite as sent via email' do
+          expect(invite.via_email).to eq(true)
+
+          Invite.invite_by_email(iceking, inviter, topic)
+          expect(invite.reload.via_email).to eq(true)
+        end
+
+        it 'does not mark invite as sent via email after generating invite link' do
+          expect(invite.via_email).to eq(true)
+
+          Invite.generate_invite_link(iceking, inviter, topic)
+          expect(invite.reload.via_email).to eq(false)
+
+          Invite.invite_by_email(iceking, inviter, topic)
+          expect(invite.reload.via_email).to eq(false)
+
+          Invite.generate_invite_link(iceking, inviter, topic)
+          expect(invite.reload.via_email).to eq(false)
+        end
+
       end
     end
   end

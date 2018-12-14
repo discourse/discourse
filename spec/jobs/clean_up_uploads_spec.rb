@@ -48,6 +48,7 @@ describe Jobs::CleanUpUploads do
     begin
       original_provider = SiteSetting.provider
       SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+      SiteSetting.clean_orphan_uploads_grace_period_hours = 1
 
       logo_upload = fabricate_upload
       logo_small_upload = fabricate_upload
@@ -85,6 +86,11 @@ describe Jobs::CleanUpUploads do
         favicon_upload,
         apple_touch_icon_upload
       ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
+
+      fabricate_upload
+      SiteSetting.opengraph_image = ''
+
+      Jobs::CleanUpUploads.new.execute(nil)
     ensure
       SiteSetting.delete_all
       SiteSetting.provider = original_provider

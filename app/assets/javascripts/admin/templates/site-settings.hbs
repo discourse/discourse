@@ -15,7 +15,7 @@
 
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
-    {{#each model as |category|}}
+    {{#each visibleSiteSettings as |category|}}
       <li class="{{category.nameKey}}">
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
