@@ -2839,9 +2839,13 @@ en:
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
         mobile_title: "Mobile"
-        space_free: "{{size}} free"
-        uploads: "uploads"
-        backups: "backups"
+        space_used: "%{usedSize} used"
+        space_used_and_free: "%{usedSize} (%{freeSize} free)"
+        uploads: "Uploads"
+        backups: "Backups"
+        backup_count:
+          one: "%{count} backup on %{location}"
+          other: "%{count} backups on %{location}"
         lastest_backup: "Latest: %{date}"
         traffic_short: "Traffic"
         traffic: "Application web requests"
@@ -3216,7 +3220,7 @@ en:
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
-          local: "Local"
+          local: "Local Storage"
           s3: "Amazon S3"
 
       export_csv:

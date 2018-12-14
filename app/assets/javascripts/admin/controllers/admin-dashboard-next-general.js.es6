@@ -16,12 +16,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   isLoading: false,
   dashboardFetchedAt: null,
   exceptionController: Ember.inject.controller("exception"),
-  diskSpace: Ember.computed.alias("model.attributes.disk_space"),
   logSearchQueriesEnabled: setting("log_search_queries"),
-  lastBackupTakenAt: Ember.computed.alias(
-    "model.attributes.last_backup_taken_at"
-  ),
-  shouldDisplayDurability: Ember.computed.and("diskSpace"),
   basePath: Discourse.BaseUri,
 
   @computed
@@ -87,6 +82,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
 
   usersByTypeReport: staticReport("users_by_type"),
   usersByTrustLevelReport: staticReport("users_by_trust_level"),
+  storageReport: staticReport("storage_report"),
 
   fetchDashboard() {
     if (this.get("isLoading")) return;
@@ -125,13 +121,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   @computed("model.attributes.updated_at")
   updatedTimestamp(updatedAt) {
     return moment(updatedAt)
-      .tz(moment.tz.guess())
-      .format("LLL");
-  },
-
-  @computed("lastBackupTakenAt")
-  backupTimestamp(lastBackupTakenAt) {
-    return moment(lastBackupTakenAt)
       .tz(moment.tz.guess())
       .format("LLL");
   },

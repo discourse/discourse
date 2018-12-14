@@ -24,7 +24,11 @@ module BackupRestore
 
     def delete_file(filename)
       obj = @s3_helper.object(filename)
-      obj.delete if obj.exists?
+
+      if obj.exists?
+        obj.delete
+        reset_cache
+      end
     end
 
     def download_file(filename, destination_path, failure_message = nil)
@@ -38,6 +42,7 @@ module BackupRestore
       raise BackupFileExists.new if obj.exists?
 
       obj.upload_file(source_path, content_type: content_type)
+      reset_cache
     end
 
     def generate_upload_url(filename)
@@ -99,6 +104,10 @@ module BackupRestore
       else
         SiteSetting.s3_backup_bucket
       end
+    end
+
+    def free_bytes
+      nil
     end
   end
 end

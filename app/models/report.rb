@@ -49,8 +49,10 @@ class Report
     ].compact.map(&:to_s).join(':')
   end
 
-  def self.clear_cache
-    Discourse.cache.keys("reports:*").each do |key|
+  def self.clear_cache(type = nil)
+    pattern = type ? "reports:#{type}:*" : "reports:*"
+
+    Discourse.cache.keys(pattern).each do |key|
       Discourse.cache.redis.del(key)
     end
   end
@@ -76,9 +78,9 @@ class Report
 
     {
       type: type,
-      title: I18n.t("reports.#{type}.title"),
-      xaxis: I18n.t("reports.#{type}.xaxis"),
-      yaxis: I18n.t("reports.#{type}.yaxis"),
+      title: I18n.t("reports.#{type}.title", default: nil),
+      xaxis: I18n.t("reports.#{type}.xaxis", default: nil),
+      yaxis: I18n.t("reports.#{type}.yaxis", default: nil),
       description: description.presence ? description : nil,
       data: data,
       start_date: start_date&.iso8601,
@@ -1404,6 +1406,28 @@ class Report
       data[:login_time] = row.login_time
 
       report.data << data
+    end
+  end
+
+  def self.report_storage_stats(report)
+    backup_stats = begin
+      BackupRestore::BackupStore.create.stats
+    rescue BackupRestore::BackupStore::StorageError
+      nil
+    end
+
+    report.data = {
+      backups: backup_stats,
+      uploads: {
+        used_bytes: DiskSpace.uploads_used_bytes,
+        free_bytes: DiskSpace.uploads_free_bytes
+      }
+    }
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
+      clear_cache(:storage_stats)
     end
   end
 
