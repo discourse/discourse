@@ -36,7 +36,7 @@ class UserAuthToken < ActiveRecord::Base
   def self.login_location(ip)
     ipinfo = DiscourseIpInfo.get(ip)
 
-    ipinfo['latitude'] && ipinfo['longitude'] ? [ipinfo['latitude'], ipinfo['longitude']] : nil
+    ipinfo[:latitude] && ipinfo[:longitude] ? [ipinfo[:latitude], ipinfo[:longitude]] : nil
   end
 
   def self.distance(loc1, loc2)

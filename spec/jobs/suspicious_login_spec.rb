@@ -4,20 +4,20 @@ describe Jobs::SuspiciousLogin do
 
   let(:user) { Fabricate(:moderator) }
 
-  let(:zurich) { [47.3686498, 8.5391825] } # Zurich, Switzerland
-  let(:bern) { [46.947922, 7.444608] }  # Bern, Switzerland
-  let(:london) { [51.5073509, -0.1277583] } # London, United Kingdom
+  let(:zurich) { { latitude: 47.3686498, longitude: 8.5391825 } } # Zurich, Switzerland
+  let(:bern) { { latitude: 46.947922, longitude: 7.444608 } }  # Bern, Switzerland
+  let(:london) { { latitude: 51.5073509, longitude: -0.1277583 } } # London, United Kingdom
 
   before do
-    UserAuthToken.stubs(:login_location).with("1.1.1.1").returns(zurich)
-    UserAuthToken.stubs(:login_location).with("1.1.1.2").returns(bern)
-    UserAuthToken.stubs(:login_location).with("1.1.2.1").returns(london)
+    DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(zurich)
+    DiscourseIpInfo.stubs(:get).with("1.1.1.2").returns(bern)
+    DiscourseIpInfo.stubs(:get).with("1.1.2.1").returns(london)
   end
 
   it "will correctly compute distance" do
     def expect_distance(from, to, distance)
-      expect(UserAuthToken.distance(from, to).to_i).to eq(distance)
-      expect(UserAuthToken.distance(to, from).to_i).to eq(distance)
+      expect(UserAuthToken.distance(from.values, to.values).to_i).to eq(distance)
+      expect(UserAuthToken.distance(to.values, from.values).to_i).to eq(distance)
     end
 
     expect_distance(zurich, bern, 95)
