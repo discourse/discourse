@@ -8,6 +8,10 @@ export default function() {
         path: "/dashboard/moderation",
         resetNamespace: true
       });
+      this.route("admin.dashboardNextSecurity", {
+        path: "/dashboard/security",
+        resetNamespace: true
+      });
     });
 
     this.route(
