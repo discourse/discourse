@@ -150,7 +150,7 @@ pt_BR:
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
-    bootstrap_mode_enabled: "Para tornar o lançamento do seu novo site mais fácil, você está no modo de bootstrap. Todos os novos usuários receberão o nível de confiança 1 e terão as atualizações diárias de resumos de e-mail ativadas. Isso será desativado automaticamente quando %{min_users} dos usuários entrarem."
+    bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você está no modo de bootstrap. Todos os novos usuários receberão o nível de confiança 1 e terão os e-mails diários de resumos ativados. Isso será desativado automaticamente quando %{min_users} usuários entrarem."
     bootstrap_mode_disabled: "O modo Bootstrap será desativado em 24 horas."
     themes:
       default_description: "Padrão"
@@ -244,6 +244,7 @@ pt_BR:
         unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
       created: "você favoritou essa resposta"
+      not_bookmarked: "favoritar essa resposta"
       remove: "Remover favorito"
     drafts:
       resume: "Resuma"
@@ -510,6 +511,7 @@ pt_BR:
       topic_sentence:
         one: "1 tópico"
         other: "%{count} tópicos"
+      n_more: "Categorias (mais %{count}) ..."
     ip_lookup:
       title: Pesquisa do endereço de IP
       hostname: Nome do host
@@ -952,6 +954,9 @@ pt_BR:
       enabled: "Este site está em modo de leitura apenas. Por favor continue a navegar, no entanto, respostas, curtidas e outras ações estão desativadas por enquanto."
       login_disabled: "O login é desativado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desativado enquanto o site está em modo de somente leitura."
+    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de alguma conversas para ler e responder."
+    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversar para ler e responder."
+    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Há atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de algumas conversas para ler e responder."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcançou a configuração limite do site de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedeu a configuração limite do site de %{siteSettingRate}."
@@ -998,9 +1003,10 @@ pt_BR:
       disable: "Mostrar Posts Deletados"
     private_message_info:
       title: "Mensagem"
-      leave_message: "Você quer mesmo deixar esta mensagem?"
-      remove_allowed_user: "Tem a certeza que deseja remover {{name}} desta mensagem?"
-      remove_allowed_group: "Tem a certeza que deseja remover {{name}} desta mensagem?"
+      edit: "Adicionar ou Remover ..."
+      leave_message: "Você quer mesmo sair desta mensagem?"
+      remove_allowed_user: "Tem certeza que deseja remover {{name}} desta mensagem?"
+      remove_allowed_group: "Tem certeza que deseja remover {{name}} desta mensagem?"
     email: 'Email'
     username: 'Nome de Usuário'
     last_seen: 'Visto'
@@ -1045,7 +1051,7 @@ pt_BR:
       second_factor_backup_title: "Backup de dois fatores"
       second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
       second_factor: "<a href>Faça o login usando o aplicativo Authenticator</a>"
-      email_placeholder: "e-mail ou Nome de Usuário"
+      email_placeholder: "e-mail ou nome de usuário"
       caps_lock_warning: "CAIXA ALTA está ligado"
       error: "Erro desconhecido"
       cookies_error: "Seu navegador parece ter cookies desativados. Você pode não conseguir efetuar login sem ativá-los primeiro."
@@ -1621,7 +1627,7 @@ pt_BR:
           "2_8": 'Você verá uma contagem de novas respostas porque está acompanhando essa categoria.'
           "2_4": 'Você verá uma contagem de novas respostas porque postou uma resposta a este tópico.'
           "2_2": 'Você verá uma contagem de novas respostas porque está acompanhando este tópico.'
-          "2": 'Você verá uma contagem de novas respostas porque<a href="{{basePath}}/u/{{username}}/preferences">leia este tópico</a>.'
+          "2": 'Você verá uma contagem de novas respostas porque você <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
           "1_2": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           "1": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           "0_7": 'Você está ignorando todas as notificações nessa categoria.'
@@ -1675,7 +1681,7 @@ pt_BR:
         remove_banner: "Remover Banner Tópico"
       reply:
         title: 'Responder'
-        help: 'comece a compor uma resposta a este tópico'
+        help: 'começar a escrever uma resposta para este tópico'
       clear_pin:
         title: "Remover destaque"
         help: "Retirar destaque deste tópico para que ele não apareça mais no topo da sua lista de tópicos"
@@ -1719,7 +1725,7 @@ pt_BR:
       automatically_add_to_groups: "Este convite também inclui acesso para esses grupos:"
       invite_private:
         title: 'Convidar para Conversa Privada'
-        email_or_username: "Email ou Nome de Usuário do convidado"
+        email_or_username: "E-mail ou Nome de Usuário do Convidado"
         email_or_username_placeholder: "email ou Nome de Usuário"
         action: "Convite"
         success: "Nós convidamos aquele usuário para participar desta mensagem privada."
@@ -1730,7 +1736,7 @@ pt_BR:
       invite_reply:
         title: 'Convite'
         username_placeholder: "nome de usuário"
-        action: 'Enviar Convites'
+        action: 'Enviar Convite'
         help: 'Convidar outros para este tópico por email ou notificação'
         to_forum: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
         sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
@@ -1769,9 +1775,13 @@ pt_BR:
         action: "unificar as mensagens selecionadas"
         error: "Houve um erro ao unificar as mensagens selecionadas."
       change_owner:
+        title: "Trocar Autor"
         action: "trocar autor"
         error: "Houve um erro ao alterar o autor dessas mensagens."
         placeholder: "novo autor"
+        instructions:
+          one: "Por favor escolha um novo autor para a postagem de <b>@{{old_user}}</b>"
+          other: "Por favor escolha um novo autor para as {{count}} postagens de <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Alterar o timestamp ..."
         action: "alterar horário"
@@ -1858,14 +1868,14 @@ pt_BR:
         save: 'Salvar as opções'
       few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas poucas curtidas sobrando para você usar hoje."
       controls:
-        reply: "comece a compor uma resposta para este tópico"
+        reply: "começar a escrever uma resposta para esta postagem"
         like: "curtir esta resposta"
         has_liked: "você curtiu essa resposta"
         undo_like: "desfazer curtida"
         edit: "editar esta resposta"
         edit_action: "Editar"
         edit_anonymous: "Você precisa estar conectado para editar essa resposta."
-        flag: "sinalize privativamente esta resposta para chamar atenção ou enviar uma notificação privada sobre ela"
+        flag: "sinalizar em privado para chamar atenção a esta resposta ou enviar uma notificação privada sobre ela"
         delete: "apagar esta resposta"
         undelete: "recuperar esta resposta"
         share: "compartilhar o link desta resposta"
@@ -1879,15 +1889,15 @@ pt_BR:
             one: "Sim e 1 resposta"
             other: "Sim, e todas as {{count}} respostas"
           just_the_post: "Não, apenas este post"
-        admin: "ações de mensagens do admin"
+        admin: "ações administrativas da postagem"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Converter para Moderação"
         revert_to_regular: "Remover da Moderação"
         rebake: "Reconstruir HTML"
         unhide: "Revelar"
-        change_owner: "Trocar autor"
-        grant_badge: "Grant Badge"
+        change_owner: "Trocar Autor"
+        grant_badge: "Conceder Emblema"
         lock_post: "Bloquear Post"
         lock_post_description: "impedir que o pôster edite este post"
         unlock_post: "Desbloquear postagem"
@@ -2563,7 +2573,7 @@ pt_BR:
         active_posts: "Posts sinalizados"
         old_posts: "Posts antigos sinalizados"
         topics: "Tópicos sinalizados"
-        moderation_history: "Moderação Histórico"
+        moderation_history: "Histórico de Moderação"
         agree: "Concordo"
         agree_title: "Confirmar esta marcação como válida e correta"
         agree_flag_hide_post: "Esconder publicação"

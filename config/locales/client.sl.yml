@@ -9,12 +9,17 @@ sl:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
           units:
+            byte:
+              one: Bajt
+              two: Bajta
+              few: Bajti
+              other: Bajtov
             gb: GB
             kb: KB
             mb: MB
@@ -49,6 +54,11 @@ sl:
           two: "%{count} s"
           few: "%{count} s"
           other: "%{count} s"
+        less_than_x_minutes:
+          one: "< 1 min"
+          two: "< %{count} min"
+          few: "< %{count} min"
+          other: "< %{count} min"
         x_minutes:
           one: "%{count} min"
           two: "%{count} min"
@@ -64,6 +74,11 @@ sl:
           two: "%{count} d"
           few: "%{count} d"
           other: "%{count} d"
+        x_months:
+          one: "1 mes"
+          two: "%{count} mes"
+          few: "%{count} mes"
+          other: "%{count} mes"
         about_x_years:
           one: "%{count} l"
           two: "%{count} l"
@@ -143,12 +158,14 @@ sl:
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
       public_topic: "je naredil temo javno %{when}"
+      private_topic: "je spremenil temo v osebno sporočilo %{when}"
       split_topic: "je razdelil temo %{when}"
       invited_user: "je povabil %{who} %{when}"
       invited_group: "je povabil %{who} %{when}"
       user_left: "%{who}se je odstranil s tega sporočila %{when}"
       removed_user: "je odstranil %{who} %{when}"
       removed_group: "je odstranil %{who} %{when}"
+      autobumped: "samodejno izpostavljeno %{when}"
       autoclosed:
         enabled: 'zaprto %{when}'
         disabled: 'odprto %{when}'
@@ -196,6 +213,7 @@ sl:
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
     yes_value: "Da"
+    submit: "Oddaj"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
     sign_up: "Prijava"
@@ -217,6 +235,7 @@ sl:
     privacy_policy: "Politika zasebnost"
     privacy: "Zasebnost"
     tos: "Pogoji storitve"
+    rules: "Pravila"
     mobile_view: "Mobilni pogled"
     desktop_view: "Namizni pogled"
     you: "Ti"
@@ -239,6 +258,8 @@ sl:
       two: "{{count}} znaka"
       few: "{{count}} znakov"
       other: "{{count}} znakov"
+    related_messages:
+      title: "Povezana sporočila"
     suggested_topics:
       title: "Predlagane Teme"
       pm_title: "Predlagana Sporočila"
@@ -250,6 +271,8 @@ sl:
       our_moderators: "Naši Moderatorji"
       stat:
         all_time: "Vse"
+        last_7_days: "Zadnjih 7"
+        last_30_days: "Zadnjih 30"
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Objave"
@@ -265,7 +288,34 @@ sl:
         unbookmark: "Klikni za odstranitev vseh zaznamkov v tej temi"
     bookmarks:
       created: "ustvarili ste zaznamek te objave"
+      not_bookmarked: "Zaznamuj objavo"
       remove: "Odstrani Zaznamek"
+      confirm_clear: "Ste prepričani, da želite počistiti vse svoje zaznamke iz te teme?"
+    drafts:
+      resume: "Nadaljuj"
+      remove: "Odstrani"
+      new_topic: "Nov osnutek teme"
+      new_private_message: "Nov osnutek osebnega sporočila"
+      topic_reply: "Osnutek odgovora"
+      abandon:
+        confirm: "V tej temi že imate drug osnutek. Ste prepričani, da ga želite opustiti?"
+        yes_value: "Da, opusti"
+        no_value: "Ne, obdrži"
+    topic_count_latest:
+      one: "Poglej {{count}} novo ali posodobljeno temo"
+      two: "Poglej {{count}} novi ali posodobljeni temi"
+      few: "Poglej {{count}} nove ali posodobljene teme"
+      other: "Poglej {{count}} novih ali posodobljenih tem"
+    topic_count_unread:
+      one: "Poglej {{count}} neprebrano temo"
+      two: "Poglej {{count}} neprebrani temi"
+      few: "Poglej {{count}} neprebrane teme"
+      other: "Poglej {{count}} neprebranih tem"
+    topic_count_new:
+      one: "Poglej {{count}} novo temo"
+      two: "Poglej {{count}} novi temi"
+      few: "Poglej {{count}} nove teme"
+      other: "Poglej {{count}} novih tem"
     preview: "predogled"
     cancel: "prekliči"
     save: "Shrani Spremembe"
@@ -273,10 +323,13 @@ sl:
     saved: "Shranjeno!"
     upload: "Naloži"
     uploading: "Nalagam..."
+    uploading_filename: "Nalagam: {{filename}} ..."
+    clipboard: "odložišče"
     uploaded: "Naloženo!"
     pasting: "Prilepljam..."
     enable: "Omogoči"
     disable: "Onemogoči"
+    continue: "Nadaljuj"
     undo: "Razveljavi"
     revert: "Povrni"
     failed: "Spodletelo"
@@ -360,6 +413,35 @@ sl:
         make_user_group_owner: "Spremeni v lastnika"
         remove_user_as_group_owner: "Odstrani lastništvo"
     groups:
+      member_added: "Dodano"
+      add_members:
+        title: "Dodaj člane"
+        description: "Upravljaj članstvo te skupine"
+        usernames: "Uporabniška imena"
+      manage:
+        title: 'Upravljaj'
+        name: 'Ime'
+        full_name: 'Polno ime'
+        add_members: "Dodaj člane"
+        delete_member_confirm: "Odstrani '%{username}' iz skupine '%{group}'?"
+        profile:
+          title: Profil
+        interaction:
+          posting: Objave
+          notification: Obvestila
+        membership:
+          title: Članstvo
+          access: Dostopnost
+        logs:
+          title: "Dnevniki"
+          when: "Kdaj"
+          action: "Dejanje"
+          acting_user: "Izvajalec"
+          target_user: "Ciljni uporabnik"
+          subject: "Zadeva"
+          details: "Podrobnosti"
+          from: "Od"
+          to: "Za"
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
       empty:
@@ -370,6 +452,9 @@ sl:
         topics: "Člani te skupine nimajo nobene teme."
         logs: "Dnevnik za to skupino je prazen."
       add: "Dodaj"
+      join: "Pridruži se"
+      leave: "Zapusti"
+      request: "Zahteva"
       message: "Sporočilo"
       allow_membership_requests: "Dovoli uporabnikom, da zaprosijo za članstvo pri lastnikih skupine"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
@@ -379,18 +464,47 @@ sl:
         reason: "Sporoči lastnikom skupine zakaj spadaš v to skupino"
       membership: "Članstvo"
       name: "Ime"
+      group_name: "Ime skupine"
+      user_count: "Uporabniki"
       bio: "O skupini"
       selector_placeholder: "vnesi uporabniško ime"
       owner: "lastnik"
       index:
         title: "Skupine"
+        all: "Vse skupine"
         empty: "Ni javnih skupin."
+        filter: "Filtriraj po tipu skupine"
+        owner_groups: "Sem skrbnik skupin"
+        close_groups: "Zaprte skupine"
+        automatic_groups: "Samodejne skupine"
+        automatic: "Samodejno"
+        closed: "Zaprto"
+        public: "Javno"
+        private: "Zasebno"
+        public_groups: "Javne skupine"
+        automatic_group: Samodejna skupina
+        close_group: Zapri skupino
+        my_groups: "Moje skupine"
+        group_type: "Vrsta skupine"
+        is_group_user: "Član"
+        is_group_owner: "Skrbnik"
       title:
         one: "Skupina"
         two: "Skupini"
         few: "Skupin"
         other: "Skupin"
       activity: "Aktivnost"
+      members:
+        title: "Člani"
+        filter_placeholder_admin: "uporabniško ime ali e-pošta"
+        filter_placeholder: "uporabniško ime"
+        remove_member: "Odstrani člana"
+        remove_member_description: "Odstrani <b>%{username}</b> iz te skupine"
+        make_owner: "Izberi za skrbnika"
+        make_owner_description: "Izberi <b>%{username}</b> za skrbnika te skupine"
+        remove_owner: "Odstrani kot skrbnika"
+        remove_owner_description: "Odstrani <b>%{username} </b> kot skrbnika te skupine"
+        owner: "Skrbnik"
       topics: "Teme"
       posts: "Objave"
       mentions: "Omembe"
@@ -436,8 +550,10 @@ sl:
       "12": "Poslano"
       "13": "Prejeto"
       "14": "Čaka odobritev"
+      "15": "Osnutki"
     categories:
       all: "vse kategorije"
+      all_subcategories: "vse"
       no_subcategory: "nič"
       category: "Kategorija"
       category_list: "Prikaži seznam kategorij"

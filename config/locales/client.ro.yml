@@ -568,6 +568,7 @@ ro:
       private_messages: "Mesaje"
       activity_stream: "Activitate"
       preferences: "Preferințe"
+      profile_hidden: "Acest profil public al utilizatorului este ascuns."
       expand_profile: "Extinde"
       collapse_profile: "Colaps"
       bookmarks: "Semne de carte"
@@ -691,6 +692,7 @@ ro:
         error: "A apărut o eroare la schimbarea acestei valori."
       change_username:
         title: "Schimbă numele utilizatorului"
+        confirm: "Ești absolut sigur că vrei să-ți schimbi numele de utilizator?"
         taken: "Acest nume de utilizator este deja folosit."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       change_email:
@@ -751,6 +753,8 @@ ro:
         any: "oricare"
       password_confirmation:
         title: "Confirmă parola"
+      auth_tokens:
+        details: "Detalii"
       last_posted: "Ultima postare"
       last_emailed: "Ultimul email"
       last_seen: "Văzut "

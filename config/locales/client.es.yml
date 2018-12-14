@@ -227,8 +227,8 @@ es:
       simple_title: "Acerca de"
       title: "Sobre %{title}"
       stats: "Estadísticas del sitio"
-      our_admins: "Nuestros Administradores"
-      our_moderators: "Nuestros Moderadores"
+      our_admins: "Nuestros administradores"
+      our_moderators: "Nuestros moderadores"
       stat:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7"
@@ -521,6 +521,12 @@ es:
       topic_sentence:
         one: "1 tema"
         other: "%{count} temas"
+      topic_stat_sentence_week:
+        one: "%{count} nuevo tema en la última semana."
+        other: "%{count} nuevos temas en la última semana."
+      topic_stat_sentence_month:
+        one: "%{count} nuevo tema en el último mes."
+        other: "%{count} nuevos temas en el último mes."
       n_more: "Categorías (%{count} más) ..."
     ip_lookup:
       title: Búsqueda de Direcciones IP
@@ -1302,6 +1308,7 @@ es:
       toggle_direction: "Alternar dirección"
       help: "Ayuda de Edición con Markdown"
       collapse: "minimizar el panel de edición"
+      open: "abre el panel de composición"
       abandon: "cerrar el editor y descartar borrador"
       enter_fullscreen: "ingresar al editor en pantalla completa"
       exit_fullscreen: "salir del editor en pantalla completa"
@@ -2830,6 +2837,8 @@ es:
         active_notice: "Enviaremos detalles del evento cuando suceda."
         categories_filter_instructions: "Los webhooks sólo se dispararán si el evento está relacionado con las categorías especificadas. Déjalo en blanco para disparar webhooks con todas las categorías."
         categories_filter: "Categorías que disparan"
+        tags_filter_instructions: "Los webhooks relevantes solo se activarán si el evento está relacionado con etiquetas específicas. Deje en blanco para activar webhooks para todas las etiquetas."
+        tags_filter: "Etiquetas activadas"
         groups_filter_instructions: "Los webhooks sólo se dispararán si el evento está relacionado con los grupos especificados. Déjalo en blanco para disparar webhooks con todos las grupos."
         groups_filter: "Grupos que disparan"
         delete_confirm: "¿Eliminar este webhook?"
@@ -3153,6 +3162,13 @@ es:
         settings: "Ajustes"
         templates: "Plantillas"
         preview_digest: "Vista previa de Resumen"
+        advanced_test:
+          title: "Prueba Avanzada"
+          desc: "Vea como Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, pegue debajo del mensaje de correo electrónico original completo."
+          email: "Mensaje Original"
+          run: "Correr Prueba"
+          text: "Cuerpo del mensaje seleccionado"
+          elided: "Texto elidido"
         sending_test: "Enviando e-mail de prueba..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Hubo un error al enviar el email de prueba. Por favor, revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo, y prueba de nuevo."

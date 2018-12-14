@@ -35,6 +35,7 @@ fi:
   anonymous: "Anonyymejä"
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
   redirect_warning: "Emme pystyneet varmistamaan että klikkaamasi linkki on oikeasti lähetetty palstalle. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
+  on_another_topic: "Toisessa ketjussa"
   themes:
     bad_color_scheme: "Teemaa ei voitu päivittää, värimalli ei kelpaa"
     other_error: "Jotakin meni vikaan, kun teemaa päivitettiin"
@@ -117,6 +118,7 @@ fi:
       odd: täytyy olla pariton
       record_invalid: 'Validointi epäonnistui: %{errors}'
       max_emojis: "ei voi olla yli %{max_emojis_count}emojia"
+      emojis_disabled: "ei voi olla emojeita"
       ip_address_already_screened: "sisältyy jo olemassa olevaan sääntöön"
       restrict_dependent_destroy:
         one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
@@ -144,6 +146,7 @@ fi:
         other: 'Määrittämäsi valinnat eivät kelpaa %{name}'
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
+      s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, jos %{setting_name} ei ole määritetty."
     conflicting_google_user_id: 'Tämän käyttäjätilin Google Account ID on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -161,12 +164,17 @@ fi:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
   topic_invite:
+    failed_to_invite: "Käyttäjää ei voi kutsua ketjuun, jollei hän ole jonkun näistä ryhmistä jäsen: %{group_names}."
     user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
   backup:
     operation_already_running: "Tehtävä on parhaillaan käynnissä. Uutta tehtävää ei voi aloittaa juuri nyt."
     backup_file_should_be_tar_gz: "Varmuuskopion tulisi olla .tar.gz-pakattu tiedosto."
     not_enough_space_on_disk: "Ei tarpeeksi levytilaa."
     invalid_filename: "Varmuuskopion nimi sisältää ei-sallittuja merkkejä. Sallittuja ovat a-z 0-9 . - _."
+    file_exists: "Tiedosto jota yrität lähettää on jo olemassa."
+    location:
+      local: "Paikallinen"
+      s3: "Amazon S3"
   invalid_params: "Vastasit pyyntöön parametreilla, jotka eivät kelpaa: %{message}"
   not_logged_in: "Sinun täytyy kirjautua sisään ensin."
   not_found: "Pyydettyä osoitetta tai resurssia ei löytynyt."
@@ -176,11 +184,15 @@ fi:
   provider_not_enabled: "Et saa katsella pyydettyä resurssia. Autentikoinnintarjoajaa ei ole otettu käyttöön."
   provider_not_found: "Et saa katsella pyydettyä resurssia. Autentikoinnintarjoajaa ei ole olemassa."
   read_only_mode_enabled: "Sivusto on vain luku-tilassa. Vuorovaikutteiset toiminnot ovat poissa käytöstä."
+  invalid_grant_badge_reason_link: "Ulkoiset linkit ja epäkelvot Discourse-linkit eivät kelpaa ansiomerkin syyksi"
   reading_time: "Lukuaika"
   likes: "Tykkäykset"
   too_many_replies:
     one: "Pahoittelut, uudet käyttäjät voivat kirjoittaa yhden vastauksen samaan ketjuun."
     other: "Pahoittelut, uudet käyttäjät voivat kirjoittaa %{count} vastausta samaan ketjuun."
+  max_consecutive_replies:
+    one: "Perättäiset vastaukset on kielletty. Muokkaa edellistä vastaustasi tai odota että joku vastaa sinulle."
+    other: "Voi vastata enintään %{count} kertaa perättäin. Muokkaa edellistä vastaustasi tai odota että joku vastaa sinulle."
   embed:
     start_discussion: "Lisää kommentti"
     continue: "Siirry keskusteluun"
@@ -196,6 +208,9 @@ fi:
     permalink: "Ikilinkki"
     imported_from: "Tämä on kommenttiketju artikkelille %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} vastaus"
+      other: "%{count} vastausta"
   no_mentions_allowed: "Pahoittelut, et voi mainita muita käyttäjiä."
   too_many_mentions:
     one: "Pahoittelut, voit mainita viestissä vain yhden käyttäjän."
@@ -259,6 +274,7 @@ fi:
     tag: "Tunnisteelliset ketjut"
     badge: "%{display_name} -ansiomerkki sivustolla %{site_title}"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
+  edit_conflict: "Toinen käyttäjä muokkasi viestiä, minkä vuoksi sinun tekemääsi muutosta ei voi enää tallentaa."
   revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"
   queue:
@@ -625,6 +641,7 @@ fi:
       firefox: "Firefox"
       opera: "Opera"
       ie: "Internet Explorer"
+      edge: "Microsoft Edge"
       unknown: "tuntematon selain"
     device:
       android: "Android-laite"
@@ -633,6 +650,7 @@ fi:
       ipod: "iPod"
       mobile: "mobiililaite"
       mac: "Mac"
+      linux: "GNU/Linux -tietokone"
       windows: "Windows-tietokone"
       unknown: "tuntematon laite"
     os:
@@ -683,6 +701,8 @@ fi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Sopimaton'
+      description: 'Viestissä on sisältöä, jota tolkun ihminen pitää loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">palstan sääntöjen</a> vastaisena.'
+      short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
@@ -693,10 +713,10 @@ fi:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Valvojan tulee huomioida viesti muusta kuin yllä listatusta syystä.'
+      description: 'Henkilökunnan tulisi huomioida viesti muusta kuin yllä listatusta syystä.'
       short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
-      long_form: 'liputti tämän valvojien nähtäväksi'
-      email_title: 'Valvojien tulisi huomioida viesti ketjussa "%{title}" '
+      long_form: 'liputti tämän henkilökunnan huomioitavaksi'
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}" '
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Kirjanmerkki'
@@ -731,9 +751,12 @@ fi:
       short_description: 'Tämä on mainos'
     inappropriate:
       title: 'Sopimaton'
+      description: 'Ketjussa on sisältöä, jota tolkun ihminen pitää loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">palstan sääntöjen</a> vastaisena.'
       long_form: 'liputti tämän sopimattomaksi'
+      short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
     notify_moderators:
       title: "Jotain muuta"
+      description: 'Henkilökunnan tulisi huomioida tämä ketju <a href="%{base_path}/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
       short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
@@ -796,6 +819,14 @@ fi:
         editor: Muokkaaja
         author: Kirjoittaja
         edit_reason: Syy
+    user_flagging_ratio:
+      title: "Käyttäjän liputussuhde"
+      labels:
+        user: Käyttäjä
+        agreed_flags: Hyväksyttyjä lippuja
+        disagreed_flags: Hylättyjä lippuja
+        ignored_flags: Sivuutettuja lippuja
+        score: Luku
     moderators_activity:
       title: "Valvojien toiminta"
       labels:
@@ -929,6 +960,10 @@ fi:
       xaxis: "Käyttäjä"
       num_clicks: "Klikkausta"
       num_topics: "Ketjut"
+      labels:
+        user: "Käyttäjä"
+        num_clicks: "Klikkauksia"
+        num_topics: "Ketjuja"
     top_traffic_sources:
       title: "Parhaat liikenteen lähteet"
       xaxis: "Verkkotunnus"
@@ -1009,9 +1044,20 @@ fi:
       labels:
         user_agent: "Käyttäjäagentti"
         page_views: "Sivunkatselut"
+    suspicious_logins:
+      title: "Epäilyttävät kirjautumiset"
+      labels:
+        user: Käyttäjä
+        client_ip: Asiakkaan IP
+        location: Paikka
+        browser: Selain
+        device: Laite
+        os: Käyttöjärjestelmä
+        login_time: Kirjautumisaika
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
+    gc_warning: 'Palvelimesi käyttää Rubyn oletuksia roskienkeräyksessä, mikä ei tarjoa parasta mahdollista suorituskykyä. Tässä ketjussa on suorituskyvyn optimoisesta: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
@@ -1020,6 +1066,7 @@ fi:
       one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
       other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
     missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
+    bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
     poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
     force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
@@ -1056,6 +1103,8 @@ fi:
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan nimi, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
+    contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset ja se näkyy <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
+    contact_url: "Verkko-osoite, jonka kautta voi ottaa yhteyttä sivustoon. Näkyy <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
@@ -1839,7 +1888,7 @@ fi:
     off_topic: "Viestisi liputettiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
     inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [palstan sääntöjen](%{base_path}/guidelines) vastaiseksi."
     spam: "Viestisi liputettiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
-    notify_moderators: "Viestisi liputettiin **valvojalle tiedoksi**: siinä koetaan olevan jotain, johon henkilökunnan pitäisi puuttua."
+    notify_moderators: "Viestisi liputettiin **valvojien tiedoksi**: siinä koetaan olevan jotain, mihin henkilökunnan pitäisi puuttua."
   flags_dispositions:
     agreed: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja selvitämme sitä."
     agreed_and_deleted: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja poistimme kyseisen viestin."

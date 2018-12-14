@@ -794,6 +794,7 @@ it:
         always: "sempre"
         never: "mai"
       email_digests:
+        title: "Quando non visito il sito da un po', inviami un'email con il sommario degli Argomenti e delle risposte più popolari"
         every_30_minutes: "ogni 30 minuti"
         every_hour: "ogni ora"
         daily: "ogni giorno"
@@ -1299,6 +1300,8 @@ it:
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Prepara la bozza di un argomento che sarà visibile solo allo Staff"
+        toggle_topic_bump:
+          desc: "Rispondi senza cambiare la data dell'ultima risposta"
     notifications:
       tooltip:
         regular:
