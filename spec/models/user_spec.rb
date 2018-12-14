@@ -1924,4 +1924,46 @@ describe User do
       expect(user.next_best_title).to eq(nil)
     end
   end
+
+  describe 'check_site_contact_username' do
+    before { SiteSetting.site_contact_username = contact_user.username }
+
+    context 'admin' do
+      let(:contact_user) { Fabricate(:admin) }
+
+      it 'clears site_contact_username site setting when admin privilege is revoked' do
+        contact_user.revoke_admin!
+        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+      end
+    end
+
+    context 'moderator' do
+      let(:contact_user) { Fabricate(:moderator) }
+
+      it 'clears site_contact_username site setting when moderator privilege is revoked' do
+        contact_user.revoke_moderation!
+        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+      end
+    end
+
+    context 'admin and moderator' do
+      let(:contact_user) { Fabricate(:moderator, admin: true) }
+
+      it 'does not change site_contact_username site setting when admin privilege is revoked' do
+        contact_user.revoke_admin!
+        expect(SiteSetting.site_contact_username).to eq(contact_user.username)
+      end
+
+      it 'does not change site_contact_username site setting when moderator privilege is revoked' do
+        contact_user.revoke_moderation!
+        expect(SiteSetting.site_contact_username).to eq(contact_user.username)
+      end
+
+      it 'clears site_contact_username site setting when staff privileges are revoked' do
+        contact_user.revoke_admin!
+        contact_user.revoke_moderation!
+        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+      end
+    end
+  end
 end
