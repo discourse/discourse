@@ -276,8 +276,12 @@ const Report = Discourse.Model.extend({
             return this._numberLabel(value, opts);
           }
           if (type === "date") {
-            const date = moment(value, "YYYY-MM-DD");
+            const date = moment(value);
             if (date.isValid()) return this._dateLabel(value, date);
+          }
+          if (type === "precise_date") {
+            const date = moment(value);
+            if (date.isValid()) return this._dateLabel(value, date, "LLL");
           }
           if (type === "text") return this._textLabel(value);
 
@@ -377,10 +381,10 @@ const Report = Discourse.Model.extend({
     };
   },
 
-  _dateLabel(value, date) {
+  _dateLabel(value, date, format = "LL") {
     return {
       value,
-      formatedValue: value ? date.format("LL") : "—"
+      formatedValue: value ? date.format(format) : "—"
     };
   },
 

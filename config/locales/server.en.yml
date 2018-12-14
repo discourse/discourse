@@ -1134,6 +1134,12 @@ en:
         device: Device
         os: Operating System
         login_time: Login Time
+    staff_logins:
+      title: "Staff logins"
+      labels:
+        user: User
+        location: Location
+        login_at: Login at
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."

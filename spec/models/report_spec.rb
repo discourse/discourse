@@ -995,6 +995,37 @@ describe Report do
         expect(report.data[2][:username]).to eq("joffrey")
       end
     end
+  end
 
+  describe "report_staff_logins" do
+    let(:joffrey) { Fabricate(:admin, username: "joffrey") }
+    let(:robin) { Fabricate(:admin, username: "robin") }
+    let(:james) { Fabricate(:user, username: "james") }
+
+    context "with data" do
+      it "works" do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        ip = [81, 2, 69, 142]
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))
+        Resolv::DNS.any_instance.stubs(:getname).with(ip.join(".")).returns("ip-#{ip.join("-")}.example.com")
+
+        UserAuthToken.log(action: "generate", user_id: robin.id, client_ip: ip.join("."), created_at: 1.hour.ago)
+        UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: "1.2.3.4")
+        UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: ip.join("."), created_at: 2.hours.ago)
+        UserAuthToken.log(action: "generate", user_id: james.id)
+
+        report = Report.find("staff_logins")
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("joffrey")
+
+        expect(report.data[1][:username]).to eq("robin")
+        expect(report.data[1][:location]).to eq("London, England, United Kingdom")
+
+        expect(report.data[2][:username]).to eq("joffrey")
+      end
+    end
   end
 end
