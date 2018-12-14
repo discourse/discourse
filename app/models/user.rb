@@ -122,6 +122,7 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :expire_old_email_tokens
   after_save :index_search
+  after_save :check_site_contact_username
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
 
@@ -1367,6 +1368,13 @@ class User < ActiveRecord::Base
     end
 
     true
+  end
+
+  def check_site_contact_username
+    if (saved_change_to_admin? || saved_change_to_moderator?) &&
+        self.username == SiteSetting.site_contact_username && !staff?
+      SiteSetting.set_and_log(:site_contact_username, SiteSetting.defaults[:site_contact_username])
+    end
   end
 
   def self.ensure_consistency!
