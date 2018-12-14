@@ -44,13 +44,14 @@ class ContentSecurityPolicy
     def script_src
       [
         :unsafe_eval,
+        :report_sample,
         "#{base_url}/logs/",
         "#{base_url}/sidekiq/",
         "#{base_url}/mini-profiler-resources/",
         *script_assets
       ].tap do |sources|
-        sources << 'https://www.google-analytics.com' if SiteSetting.ga_universal_tracking_code.present?
-        sources << 'https://www.googletagmanager.com' if SiteSetting.gtm_container_id.present?
+        sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
+        sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?
       end
     end
 
