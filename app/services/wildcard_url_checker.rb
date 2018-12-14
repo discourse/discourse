@@ -1,8 +1,6 @@
 module WildcardUrlChecker
 
   def self.check_url(url, url_to_check)
-    puts "url: " + url
-    puts "url_to_check: " + url_to_check
     escaped_url = Regexp.escape(url).sub("\\*", '\S*')
     url_regex = Regexp.new("^#{escaped_url}$", 'i')
 
