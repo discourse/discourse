@@ -15,7 +15,7 @@ describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
@@ -288,10 +288,22 @@ describe CookedPostProcessor do
           filesize: 800
         )
 
+        # Fake a loading image
+        OptimizedImage.create!(
+          url: 'http://a.b.c/10x10.png',
+          width: CookedPostProcessor::LOADING_SIZE,
+          height: CookedPostProcessor::LOADING_SIZE,
+          upload_id: upload.id,
+          sha1: SecureRandom.hex,
+          extension: '.png',
+          filesize: 123
+        )
+
         cpp = CookedPostProcessor.new(post)
 
         cpp.add_to_size_cache(upload.url, 2000, 1500)
         cpp.post_process_images
+        expect(cpp.loading_image(upload)).to be_present
 
         # 1.5x is skipped cause we have a missing thumb
         expect(cpp.html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
@@ -379,7 +391,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.max_image_height = 2000
@@ -447,7 +459,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.create_thumbnails = true
@@ -462,7 +474,7 @@ describe CookedPostProcessor do
 
       it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match /width="690" height="500">/
+        expect(cpp.html).to match(/width="690" height="500">/)
         expect(cpp).to be_dirty
       end
 
@@ -472,7 +484,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.create_thumbnails = true
@@ -499,7 +511,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
       let(:base_url) { "http://test.localhost/subfolder" }
       let(:base_uri) { "/subfolder" }
 
@@ -538,7 +550,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_and_title) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.max_image_height = 2000

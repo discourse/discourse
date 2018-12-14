@@ -29,6 +29,21 @@ describe OptimizedImage do
       end
     end
 
+    describe ".resize_instructions" do
+      let(:image) { "#{Rails.root}/spec/fixtures/images/logo.png" }
+
+      it "doesn't return any color options by default" do
+        instructions = described_class.resize_instructions(image, image, "50x50")
+        expect(instructions).to_not include('-colors')
+      end
+
+      it "supports an optional color option" do
+        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
+        expect(instructions).to include('-colors')
+      end
+
+    end
+
     describe '.resize' do
       it 'should work correctly when extension is bad' do
 
@@ -186,7 +201,6 @@ describe OptimizedImage do
   describe ".create_for" do
 
     it "is able to 'optimize' an svg" do
-
       # we don't really optimize anything, we simply copy
       # but at least this confirms this actually works
 
@@ -237,6 +251,11 @@ describe OptimizedImage do
           expect(oi.width).to eq(100)
           expect(oi.height).to eq(200)
           expect(oi.url).to eq("/internally/stored/optimized/image.png")
+        end
+
+        it "is able to change the format" do
+          oi = OptimizedImage.create_for(upload, 100, 200, format: 'gif')
+          expect(oi.url).to eq("/internally/stored/optimized/image.gif")
         end
 
       end
