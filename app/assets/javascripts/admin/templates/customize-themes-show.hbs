@@ -2,8 +2,8 @@
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
-      {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
-      {{d-button action="cancelEditingName" class="btn-small cancel-edit" icon="times"}}
+      {{d-button action=(action "finishedEditingName") class="btn-primary btn-small submit-edit" icon="check"}}
+      {{d-button action=(action "cancelEditingName") class="btn-small cancel-edit" icon="times"}}
     {{else}}
       {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
@@ -36,8 +36,8 @@
 
   {{#unless model.component}}
     <div class="control-unit">
-      {{inline-edit-checkbox action="applyDefault" labelKey="admin.customize.theme.is_default" checked=model.default}}
-      {{inline-edit-checkbox action="applyUserSelectable" labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
+      {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default}}
+      {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
     </div>
 
     <div class="control-unit">
@@ -49,8 +49,8 @@
                                        value=colorSchemeId
                                        icon="paint-brush"}}
          {{#if colorSchemeChanged}}
-            {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
-            {{d-button action="cancelChangeScheme" class="btn-default btn-small cancel-edit" icon="times"}}
+            {{d-button action=(action "changeScheme") class="btn-primary btn-small submit-edit" icon="check"}}
+            {{d-button action=(action "cancelChangeScheme") class="btn-default btn-small cancel-edit" icon="times"}}
          {{/if}}
       </div>
       {{#link-to 'adminCustomize.colors' class="btn btn-default edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
@@ -74,13 +74,13 @@
 
     {{#if model.remote_theme}}
       {{#if model.remote_theme.commits_behind}}
-        {{#d-button action="updateToLatest" icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+        {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
       {{else}}
-        {{#d-button action="checkForThemeUpdates" icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+        {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
       {{/if}}
     {{/if}}
 
-    {{#d-button action="editTheme" class="btn btn-default edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
+    {{#d-button action=(action "editTheme") class="btn btn-default edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
     {{#if model.remote_theme}}
       <span class='status-message'>
         {{#if updatingRemote}}
@@ -119,7 +119,7 @@
         <li>
           <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
           <span class='col'>
-            {{d-button action="removeUpload" actionParam=upload class="second btn-default btn-small cancel-edit" icon="times"}}
+            {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-small cancel-edit" icon="times"}}
           </span>
         </li>
         {{/each}}
@@ -127,7 +127,7 @@
     {{else}}
       <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
     {{/if}}
-    {{#d-button action="addUploadModal" class="btn-default" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+    {{#d-button action=(action "addUploadModal") class="btn-default" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
   </div>
 
   {{#if hasSettings}}
@@ -147,14 +147,14 @@
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
-            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-default btn-small cancel-edit col" icon="times"}}</li>
+            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default btn-small cancel-edit col" icon="times"}}</li>
           {{/each}}
         </ul>
       {{/if}}
       {{#if selectableChildThemes}}
         <div class="description">
           {{combo-box forceEscape=true filterable=true content=selectableChildThemes value=selectedChildThemeId none="admin.customize.theme.select_component"}}
-          {{#d-button action="addChildTheme" icon="plus" disabled=addButtonDisabled class="btn-default add-component-button"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+          {{#d-button action=(action "addChildTheme") icon="plus" disabled=addButtonDisabled class="btn-default add-component-button"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
         </div>
       {{/if}}
     </div>
@@ -163,6 +163,6 @@
   <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn btn-default'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
   <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
-  {{d-button action="switchType" label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
-  {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
+  {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+  {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash" class="btn-danger"}}
 </div>

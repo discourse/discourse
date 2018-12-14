@@ -77,16 +77,12 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
       this._close();
     },
 
-    composePrivateMessage(...args) {
-      this.sendAction("composePrivateMessage", ...args);
-    },
-
     messageGroup() {
-      this.sendAction("createNewMessageViaParams", this.get("group.name"));
+      this.createNewMessageViaParams(this.get("group.name"));
     },
 
     showGroup() {
-      this.sendAction("showGroup", this.get("group"));
+      this.showGroup(this.get("group"));
       this._close();
     }
   }

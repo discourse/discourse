@@ -104,6 +104,7 @@ export default Ember.Component.extend(
       return this.get("topic.op_like_count") > 0;
     },
 
+    @computed
     expandPinned: function() {
       const pinned = this.get("topic.pinned");
       if (!pinned) {
@@ -132,7 +133,7 @@ export default Ember.Component.extend(
       }
 
       return false;
-    }.property(),
+    },
 
     showEntrance,
 

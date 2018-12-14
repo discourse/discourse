@@ -2,7 +2,7 @@
   <div class='values'>
     {{#each collection as |value index|}}
       <div class='value' data-index={{index}}>
-        {{d-button action="removeValue"
+        {{d-button action=(action "removeValue")
                    actionParam=value
                    icon="times"
                    class="btn-default remove-value-btn btn-small"}}

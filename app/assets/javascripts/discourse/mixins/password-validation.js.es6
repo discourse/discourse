@@ -7,7 +7,7 @@ export default Ember.Mixin.create({
   init() {
     this._super();
     this.set("rejectedPasswords", []);
-    this.set("rejectedPasswordsMessages", Ember.Map.create());
+    this.set("rejectedPasswordsMessages", new Map());
   },
 
   @computed("passwordMinLength")

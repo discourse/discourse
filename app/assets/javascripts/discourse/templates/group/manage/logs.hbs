@@ -6,7 +6,7 @@
     {{group-manage-logs-filter clearFilter="clearFilter" value=filters.subject type="subject"}}
   </div>
 
-  {{#load-more selector=".group-manage-logs .group-manage-logs-row" action="loadMore"}}
+  {{#load-more selector=".group-manage-logs .group-manage-logs-row" action=(action "loadMore")}}
     <table class="group-manage-logs">
       <thead>
         <th>{{i18n 'groups.manage.logs.action'}}</th>

@@ -6,6 +6,7 @@ export default DropdownSelectBoxComponent.extend({
   showFullTitle: false,
   allowInitialValueMutation: false,
   headerIcon: ["bars", "caret-down"],
+  actionsMapping: null,
 
   autoHighlight() {},
 
@@ -15,32 +16,35 @@ export default DropdownSelectBoxComponent.extend({
         id: "manageGroups",
         name: I18n.t("tagging.manage_groups"),
         description: I18n.t("tagging.manage_groups_description"),
-        icon: "wrench"
+        icon: "wrench",
+        __sk_row_type: "noopRow"
       },
       {
         id: "uploadTags",
         name: I18n.t("tagging.upload"),
         description: I18n.t("tagging.upload_description"),
-        icon: "upload"
+        icon: "upload",
+        __sk_row_type: "noopRow"
       },
       {
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash"
+        icon: "trash",
+        __sk_row_type: "noopRow"
       }
     ];
 
     return items;
   },
 
-  actionNames: {
-    manageGroups: "showTagGroups",
-    uploadTags: "showUploader",
-    deleteUnusedTags: "deleteUnused"
-  },
+  actions: {
+    onSelect(id) {
+      const action = this.get("actionsMapping")[id];
 
-  mutateValue(id) {
-    this.sendAction(`actionNames.${id}`);
+      if (action) {
+        action();
+      }
+    }
   }
 });

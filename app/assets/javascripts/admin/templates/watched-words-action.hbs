@@ -5,7 +5,7 @@
 <div class="watched-word-controls">
 {{watched-word-form
   actionKey=actionNameKey
-  action="recordAdded"
+  action=(action "recordAdded")
   filteredContent=filteredContent
   regularExpressions=adminWatchedWords.regularExpressions}}
 
@@ -20,7 +20,7 @@
 <div class="watched-words-list">
   {{#if showWordsList}}
     {{#each filteredContent as |word| }}
-      <div class="watched-word-box">{{admin-watched-word word=word action="recordRemoved"}}</div>
+      <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
     {{/each}}
   {{else}}
     {{i18n 'admin.watched_words.word_count' count=wordCount}}

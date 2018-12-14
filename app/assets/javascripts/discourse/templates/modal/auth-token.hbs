@@ -30,6 +30,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button class="btn btn-primary" icon="lock" label="user.auth_tokens.secure_account" action="highlightSecure"}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button class="btn btn-primary" icon="lock" label="user.auth_tokens.secure_account" action=(action "highlightSecure")}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

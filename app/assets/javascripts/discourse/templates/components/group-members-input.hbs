@@ -20,7 +20,7 @@
           id="member-selector"}}
 
     {{#if addButton}}
-      {{d-button action="addMembers"
+      {{d-button action=(action "addMembers")
           class="add"
           icon="plus"
           disabled=disableAddButton

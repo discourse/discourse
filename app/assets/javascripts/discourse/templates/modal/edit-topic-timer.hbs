@@ -12,24 +12,23 @@
   </div>
 
   {{edit-topic-timer-form
-      topic=model
-      topicTimer=topicTimer
-      timerTypes=selections
-      updateTime=updateTime
-      closeModal="closeModal"}}
+    topic=model
+    topicTimer=topicTimer
+    timerTypes=selections
+    updateTime=updateTime}}
 {{/d-modal-body}}
 
 <div class="modal-footer">
   {{d-button class="btn-primary"
       disabled=saveDisabled
       label="topic.topic_status_update.save"
-      action="saveTimer"}}
+      action=(action "saveTimer")}}
 
   {{conditional-loading-spinner size="small" condition=loading}}
 
   {{#if topicTimer.execute_at}}
     {{d-button class="pull-right btn-danger"
-        action="removeTimer"
+        action=(action "removeTimer")
         label='topic.topic_status_update.remove'}}
   {{/if}}
 </div>

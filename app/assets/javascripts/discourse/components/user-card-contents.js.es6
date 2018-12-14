@@ -185,21 +185,17 @@ export default Ember.Component.extend(
         this._close();
       },
 
-      composePrivateMessage(...args) {
-        this.sendAction("composePrivateMessage", ...args);
-      },
-
       togglePosts() {
-        this.sendAction("togglePosts", this.get("user"));
+        this.togglePosts(this.get("user"));
         this._close();
       },
 
       deleteUser() {
-        this.sendAction("deleteUser", this.get("user"));
+        this.deleteUser(this.get("user"));
       },
 
       showUser() {
-        this.sendAction("showUser", this.get("user"));
+        this.showUser(this.get("user"));
         this._close();
       },
 

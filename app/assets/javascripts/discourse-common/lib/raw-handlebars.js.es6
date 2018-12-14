@@ -24,10 +24,6 @@ RawHandlebars.helpers["get"] = function(context, options) {
     context = context.slice(context.indexOf(".") + 1);
   }
 
-  if (val && val.isDescriptor) {
-    return Em.get(firstContext, context);
-  }
-
   return val === undefined ? Em.get(firstContext, context) : val;
 };
 

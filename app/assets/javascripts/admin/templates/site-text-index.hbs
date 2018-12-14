@@ -5,10 +5,10 @@
                placeholderKey="admin.site_text.search"
                class="no-blur site-text-search"
                autofocus="true"
-               key-up="search"}}
+               key-up=(action "search")}}
 
   <div class='extra-options'>
-    {{d-checkbox label="admin.site_text.show_overriden" checked=overridden change="search"}}
+    {{d-checkbox label="admin.site_text.show_overriden" checked=overridden change=(action "search")}}
   </div>
 </div>
 

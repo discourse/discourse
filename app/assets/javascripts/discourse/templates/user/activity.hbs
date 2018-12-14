@@ -29,7 +29,7 @@
 
   {{#if canDownloadPosts}}
     <div class='user-archive'>
-      {{d-button action="exportUserArchive" class="btn-default" label="user.download_archive.button_text" icon="download"}}
+      {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
     </div>
   {{/if}}
 {{/d-section}}

@@ -6,11 +6,5 @@ export default Ember.Component.extend({
   @computed("user.role")
   roleName(role) {
     return this.get("roles").findBy("id", role).label;
-  },
-
-  actions: {
-    removeUser(user) {
-      this.sendAction("removeUser", user);
-    }
   }
 });

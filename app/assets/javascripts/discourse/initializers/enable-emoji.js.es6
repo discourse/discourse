@@ -1,6 +1,10 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerEmoji } from "pretty-text/emoji";
 import PreloadStore from "preload-store";
+import { translations } from "pretty-text/emoji/data";
+import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
+import { emojiUrlFor } from "discourse/lib/text";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 
 export default {
   name: "enable-emoji",
@@ -17,7 +21,7 @@ export default {
           id: "emoji",
           group: "extras",
           icon: "smile-o",
-          action: "emoji",
+          action: () => toolbar.context.send("emoji"),
           title: "composer.emoji"
         });
       });

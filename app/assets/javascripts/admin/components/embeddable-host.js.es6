@@ -61,7 +61,7 @@ export default Ember.Component.extend(bufferedProperty("host"), {
           this.get("host")
             .destroyRecord()
             .then(() => {
-              this.sendAction("deleteHost", this.get("host"));
+              this.deleteHost(this.get("host"));
             });
         }
       });
@@ -70,7 +70,7 @@ export default Ember.Component.extend(bufferedProperty("host"), {
     cancel() {
       const host = this.get("host");
       if (host.get("isNew")) {
-        this.sendAction("deleteHost", host);
+        this.deleteHost(host);
       } else {
         this.rollbackBuffer();
         this.set("editToggled", false);

@@ -70,7 +70,7 @@ export default Ember.Component.extend({
 
   actions: {
     showInserted() {
-      this.sendAction("showInserted");
+      this.showInserted();
     }
   }
 });

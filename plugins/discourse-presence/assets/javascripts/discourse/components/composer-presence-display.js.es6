@@ -9,7 +9,7 @@ export const keepAliveDuration = 10000;
 export const bufferTime = 3000;
 
 export default Ember.Component.extend({
-  composer: Ember.inject.controller(),
+  // composer: Ember.inject.controller(),
 
   // Passed in variables
   action: null,

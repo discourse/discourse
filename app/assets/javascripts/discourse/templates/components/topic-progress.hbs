@@ -4,7 +4,7 @@
 
 {{#if showBackButton}}
   <div class='progress-back-container'>
-    {{d-button label="topic.timeline.back" class="btn-primary progress-back" action="goBack" icon="arrow-down"}}
+    {{d-button label="topic.timeline.back" class="btn-primary progress-back" action=(action "goBack") icon="arrow-down"}}
   </div>
 {{/if}}
 

@@ -112,7 +112,7 @@ export default Ember.Component.extend({
     this.set("saving", true);
     this.get("step")
       .save()
-      .then(response => this.sendAction("goNext", response))
+      .then(response => this.goNext(response))
       .catch(() => this.animateInvalidFields())
       .finally(() => this.set("saving", false));
   },
@@ -144,7 +144,8 @@ export default Ember.Component.extend({
       if (this.get("saving")) {
         return;
       }
-      this.sendAction("goBack");
+
+      this.goBack();
     },
 
     nextStep() {

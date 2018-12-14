@@ -17,7 +17,7 @@ export default Em.Component.extend(UploadMixin, {
   },
 
   uploadDone() {
-    this.sendAction("done");
+    this.done();
   },
 
   calculateUploadUrl() {

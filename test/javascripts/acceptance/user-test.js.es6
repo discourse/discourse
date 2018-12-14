@@ -30,6 +30,7 @@ QUnit.test("Root URL - Viewing Self", async assert => {
 
 QUnit.test("Viewing Summary", async assert => {
   await visit("/u/eviltrout/summary");
+
   assert.ok(exists(".replies-section li a"), "replies");
   assert.ok(exists(".topics-section li a"), "topics");
   assert.ok(exists(".links-section li a"), "links");

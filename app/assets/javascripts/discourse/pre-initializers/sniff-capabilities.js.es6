@@ -1,13 +1,11 @@
-/*global Modernizr:true safari:true*/
+/*global safari:true*/
 
 // Initializes an object that lets us know about our capabilities.
 export default {
   name: "sniff-capabilities",
   initialize(container, application) {
     const $html = $("html"),
-      touch =
-        $html.hasClass("touch") ||
-        Modernizr.prefixed("MaxTouchPoints", navigator) > 1,
+      touch = $html.hasClass("touch") || navigator.maxTouchPoints > 1,
       caps = { touch };
 
     // Store the touch ability in our capabilities object
