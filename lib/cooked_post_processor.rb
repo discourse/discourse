@@ -10,6 +10,8 @@ class CookedPostProcessor
 
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
+  LOADING_SIZE = 10
+  LOADING_COLORS = 32
 
   attr_reader :cooking_options, :doc
 
@@ -27,6 +29,8 @@ class CookedPostProcessor
     @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
+
+    @disable_loading_image = !!opts[:disable_loading_image]
   end
 
   def post_process(bypass_bump = false)
@@ -332,9 +336,17 @@ class CookedPostProcessor
           upload.create_thumbnail!(resized_w, resized_h, crop: crop)
         end
       end
+
+      unless @disable_loading_image
+        upload.create_thumbnail!(LOADING_SIZE, LOADING_SIZE, format: 'png', colors: LOADING_COLORS)
+      end
     end
 
     add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+  end
+
+  def loading_image(upload)
+    upload.thumbnail(LOADING_SIZE, LOADING_SIZE)
   end
 
   def is_a_hyperlink?(img)
@@ -397,6 +409,10 @@ class CookedPostProcessor
         end
       else
         img["src"] = upload.url
+      end
+
+      if small_upload = loading_image(upload)
+        img["data-small-upload"] = small_upload.url
       end
     end
 
