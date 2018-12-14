@@ -778,6 +778,12 @@ describe CookedPostProcessor do
       cpp.post_process_oneboxes
 
       expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+
+      upload.destroy
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process_oneboxes
+
+      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
     end
 
     it "replaces large image placeholder" do

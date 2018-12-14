@@ -513,7 +513,7 @@ class CookedPostProcessor
       end
 
       upload_id = downloaded_images[src]
-      upload = Upload.find(upload_id) if upload_id
+      upload = Upload.find_by_id(upload_id) if upload_id
       img["src"] = upload.url if upload.present?
 
       # make sure we grab dimensions for oneboxed images
