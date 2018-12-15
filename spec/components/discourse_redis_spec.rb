@@ -35,15 +35,22 @@ describe DiscourseRedis do
 
         expect(redis.keys).to include('key')
         expect(redis.keys).to_not include('key2')
+        expect(redis.scan_each.to_a).to eq(['key'])
+
+        redis.scan_each.each do |key|
+          expect(key).to eq('key')
+        end
 
         redis.del('key')
 
         expect(raw_redis.get('default:key')).to eq(nil)
+        expect(redis.scan_each.to_a).to eq([])
 
         raw_redis.set('default:key1', '1')
         raw_redis.set('default:key2', '2')
 
         expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+        expect(redis.scan_each.to_a).to contain_exactly('key1', 'key2')
       end
     end
 
