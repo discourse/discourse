@@ -26,7 +26,8 @@ class Admin::UsersController < Admin::AdminController
                                     :revoke_api_key,
                                     :anonymize,
                                     :reset_bounce_score,
-                                    :disable_second_factor]
+                                    :disable_second_factor,
+                                    :delete_posts_batch]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -46,8 +47,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def delete_posts_batch
-    user = User.find_by(id: params[:user_id])
-    deleted_posts = user.delete_posts_in_batches(guardian)
+    deleted_posts = @user.delete_posts_in_batches(guardian)
     # staff action logs will have an entry for each post
 
     render json: { posts_deleted: deleted_posts.length }
@@ -563,6 +563,7 @@ class Admin::UsersController < Admin::AdminController
 
   def fetch_user
     @user = User.find_by(id: params[:user_id])
+    raise Discourse::NotFound unless @user
   end
 
   def refresh_browser(user)

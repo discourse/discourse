@@ -241,9 +241,9 @@ RSpec.describe Admin::UsersController do
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(false)
     end
 
-    it "returns a 403 if the username doesn't exist" do
+    it "returns a 404 if the username doesn't exist" do
       put "/admin/users/123123/grant_admin.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it 'updates the admin flag' do
@@ -300,9 +300,9 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(404)
     end
 
-    it "returns a 422 if the username doesn't exist" do
+    it "returns a 404 if the username doesn't exist" do
       put "/admin/users/123123/trust_level.json"
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(404)
     end
 
     it "upgrades the user's trust level" do
@@ -347,9 +347,9 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(404)
     end
 
-    it "returns a 403 if the username doesn't exist" do
+    it "returns a 404 if the username doesn't exist" do
       put "/admin/users/123123/grant_moderation.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it 'updates the moderator flag' do
@@ -394,7 +394,7 @@ RSpec.describe Admin::UsersController do
 
     it "returns a 404 if the user doesn't exist" do
       put "/admin/users/123123/primary_group.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "changes the user's primary group" do
@@ -554,9 +554,9 @@ RSpec.describe Admin::UsersController do
       expect(reg_user).not_to be_silenced
     end
 
-    it "returns a 403 if the user doesn't exist" do
+    it "returns a 404 if the user doesn't exist" do
       put "/admin/users/123123/silence.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "punishes the user for spamming" do
@@ -626,7 +626,7 @@ RSpec.describe Admin::UsersController do
 
     it "returns a 403 if the user doesn't exist" do
       put "/admin/users/123123/unsilence.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "unsilences the user" do
@@ -943,6 +943,14 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#delete_posts_batch" do
+    describe 'when user is is invalid' do
+      it 'should return the right response' do
+        put "/admin/users/nothing/delete_posts_batch.json"
+
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "when there are user posts" do
       before do
         post = Fabricate(:post, user: user)
@@ -951,8 +959,6 @@ RSpec.describe Admin::UsersController do
       end
 
       it 'returns how many posts were deleted' do
-        sign_in(admin)
-
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)["posts_deleted"]).to eq(3)
@@ -961,8 +967,6 @@ RSpec.describe Admin::UsersController do
 
     context "when there are no posts left to be deleted" do
       it "returns correct json" do
-        sign_in(admin)
-
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)["posts_deleted"]).to eq(0)
