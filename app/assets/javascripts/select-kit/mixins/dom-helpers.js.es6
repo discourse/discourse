@@ -64,6 +64,10 @@ export default Ember.Mixin.create({
   },
 
   @on("didRender")
+  _schedulePositionRendering() {
+    Ember.run.debounce(this, this._adjustPosition, 50, true);
+  },
+
   _adjustPosition() {
     this._applyFixedPosition();
     this._applyDirection();
@@ -205,9 +209,10 @@ export default Ember.Mixin.create({
 
     const fullHeight =
       this.get("verticalOffset") + bodyHeight + componentHeight;
-    const hasBelowSpace = $(window).height() - offsetBottom - fullHeight > 0;
-    const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight > 0;
+    const hasBelowSpace = $(window).height() - offsetBottom - fullHeight >= -1;
+    const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight >= -1;
     const headerHeight = this._computedStyle(this.$header()[0], "height");
+
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
       options.top = headerHeight + this.get("verticalOffset");
