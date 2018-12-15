@@ -4,14 +4,12 @@
   color: $primary;
   border: 1px solid $primary-low;
   line-height: $line-height-large;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background-color: $secondary;
   margin: 0 0 3px;
-
-  .fa {
-    padding-right: 3px;
-    font-size: 1.4em;
-    vertical-align: bottom;
+  .d-icon {
+    margin-right: 0.25em;
   }
 
   img {
