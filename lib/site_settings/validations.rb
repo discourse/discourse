@@ -62,4 +62,33 @@ module SiteSettings::Validations
       validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
     end
   end
+
+  def validate_s3_upload_bucket(new_val)
+    validate_bucket_setting("s3_upload_bucket", new_val, SiteSetting.s3_backup_bucket)
+  end
+
+  def validate_s3_backup_bucket(new_val)
+    validate_bucket_setting("s3_backup_bucket", SiteSetting.s3_upload_bucket, new_val)
+  end
+
+  private
+
+  def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)
+    return if upload_bucket.blank? || backup_bucket.blank?
+
+    backup_bucket_name, backup_prefix = split_s3_bucket(backup_bucket)
+    upload_bucket_name, upload_prefix = split_s3_bucket(upload_bucket)
+
+    return if backup_bucket_name != upload_bucket_name
+
+    if backup_prefix == upload_prefix || backup_prefix.blank? || upload_prefix&.start_with?(backup_prefix)
+      validate_error(:s3_bucket_reused, setting_name: setting_name)
+    end
+  end
+
+  def split_s3_bucket(s3_bucket)
+    bucket_name, prefix = s3_bucket.downcase.split("/", 2)
+    prefix&.chomp!("/")
+    [bucket_name, prefix]
+  end
 end
