@@ -78,8 +78,7 @@ describe Admin::ThemesController do
 
     it 'can import a theme from Git' do
       post "/admin/themes/import.json", params: {
-        remote: '    https://github.com/discourse/discourse-brand-header       ',
-        branch: ''
+        remote: '    https://github.com/discourse/discourse-brand-header       '
       }
 
       expect(response.status).to eq(201)
