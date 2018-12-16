@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   editing: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("editing", false);
   },
 
@@ -17,7 +17,7 @@ export default Ember.Component.extend({
 
     save() {
       // Action has to toggle 'editing' property.
-      this.sendAction("action", this.get("buffer"));
+      this.action(this.get("buffer"));
     }
   }
 });

@@ -13,7 +13,7 @@ QUnit.test("can edit username", async assert => {
   await visit("/admin/users/2/sam");
 
   assert.equal(
-    $(".display-row.username .value")
+    find(".display-row.username .value")
       .text()
       .trim(),
     "sam"
@@ -24,7 +24,7 @@ QUnit.test("can edit username", async assert => {
   await fillIn(".display-row.username .value input", "new-sam");
   await click(".display-row.username a");
   assert.equal(
-    $(".display-row.username .value")
+    find(".display-row.username .value")
       .text()
       .trim(),
     "sam"
@@ -35,7 +35,7 @@ QUnit.test("can edit username", async assert => {
   await fillIn(".display-row.username .value input", "new-sam");
   await click(".display-row.username button");
   assert.equal(
-    $(".display-row.username .value")
+    find(".display-row.username .value")
       .text()
       .trim(),
     "new-sam"

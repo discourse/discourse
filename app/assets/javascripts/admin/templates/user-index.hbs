@@ -21,14 +21,14 @@
   <div class='display-row username'>
     {{admin-editable-field name='user.username.title'
                            value=model.username
-                           action='saveUsername'
+                           action=(action 'saveUsername')
                            editing=editingUsername}}
   </div>
 
   <div class='display-row'>
     {{admin-editable-field name='user.name.title'
                            value=model.name
-                           action='saveName'
+                           action=(action 'saveName')
                            editing=editingName}}
   </div>
 
@@ -108,7 +108,7 @@
   <div class='display-row'>
     {{admin-editable-field name='user.title.title'
                            value=model.title
-                           action='saveTitle'
+                           action=(action 'saveTitle')
                            editing=editingTitle}}
   </div>
 
