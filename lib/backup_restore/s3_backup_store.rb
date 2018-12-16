@@ -44,6 +44,7 @@ module BackupRestore
       obj = @s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
+      ensure_cors!
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     end
 
@@ -74,7 +75,6 @@ module BackupRestore
     end
 
     def presigned_url(obj, method, expires_in_seconds)
-      ensure_cors!
       obj.presigned_url(method, expires_in: expires_in_seconds)
     end
 
