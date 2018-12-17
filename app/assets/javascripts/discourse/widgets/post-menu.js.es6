@@ -267,7 +267,7 @@ registerButton("delete", attrs => {
     return {
       id: "delete_topic",
       action: "deletePost",
-      title: "topic.actions.delete",
+      title: "post.controls.delete_topic",
       icon: "trash-o",
       className: "delete"
     };
