@@ -16,8 +16,10 @@ class HtmlToMarkdown
   end
 
   # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
+  INLINE_ELEMENTS ||= %w{span font}
+  BLOCK_ELEMENTS ||= %w{div p}
   def fix_span_elements(node)
-    if node.name == 'span' && node.at('div')
+    if (INLINE_ELEMENTS.include?(node.name) && BLOCK_ELEMENTS.any? { |e| node.at(e) })
       node.swap(node.children)
     end
 
