@@ -108,28 +108,34 @@ after_initialize do
         end
       end
 
-      def toggle_status(post_id, poll_name, status, user)
+      def toggle_status(post_id, poll_name, status, user, raise_errors = true)
         Poll.transaction do
           post = Post.find_by(id: post_id)
 
           # post must not be deleted
           if post.nil? || post.trashed?
-            raise StandardError.new I18n.t("poll.post_is_deleted")
+            raise StandardError.new I18n.t("poll.post_is_deleted") if raise_errors
+            return
           end
 
           # topic must not be archived
           if post.topic&.archived
-            raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
+            raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status") if raise_errors
+            return
           end
 
           # either staff member or OP
           unless post.user_id == user&.id || user&.staff?
-            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
+            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status") if raise_errors
+            return
           end
 
           poll = Poll.find_by(post_id: post_id, name: poll_name)
 
-          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
+          if !poll
+            raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if raise_errors
+            return
+          end
 
           poll.status = status
           poll.save!
