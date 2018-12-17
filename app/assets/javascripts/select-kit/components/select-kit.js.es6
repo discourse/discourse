@@ -25,10 +25,6 @@ export default Ember.Component.extend(
       "isExpanded",
       "isDisabled",
       "isHidden",
-      "isAbove",
-      "isBelow",
-      "isLeftAligned",
-      "isRightAligned",
       "hasSelection",
       "hasReachedMaximum",
       "hasReachedMinimum"
