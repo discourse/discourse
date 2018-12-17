@@ -779,7 +779,7 @@ describe CookedPostProcessor do
 
       expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
 
-      upload.destroy
+      upload.destroy!
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes
 
