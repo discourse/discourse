@@ -39,7 +39,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
-    importer = ThemeStore::GitImporter.new(url, private_key: private_key, branch: branch)
+    importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
