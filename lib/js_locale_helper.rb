@@ -116,9 +116,7 @@ module JsLocaleHelper
     I18n.locale = locale_sym
 
     translations =
-      if Rails.env.development?
-        load_translations(locale_sym, force: true)
-      elsif locale_sym == :en
+      if locale_sym == :en
         load_translations(locale_sym)
       elsif locale_sym == site_locale || site_locale == :en
         load_translations_merged(locale_sym, fallback_locale, :en)
