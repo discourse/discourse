@@ -14,17 +14,17 @@ describe SiteSettings::Validations do
 
       it "shouldn't raise an error when both buckets are blank" do
         change_bucket_value("")
-        expect { validate("") }.to_not raise_error
+        validate("")
       end
 
       it "shouldn't raise an error when only one bucket is set" do
         change_bucket_value("")
-        expect { validate("my-awesome-bucket") }.to_not raise_error
+        validate("my-awesome-bucket")
       end
 
       it "shouldn't raise an error when both buckets are equal, but use a different path" do
         change_bucket_value("my-awesome-bucket/foo")
-        expect { validate("my-awesome-bucket/bar") }.to_not raise_error
+        validate("my-awesome-bucket/bar")
       end
 
       it "should raise an error when both buckets are equal" do
@@ -52,10 +52,10 @@ describe SiteSettings::Validations do
 
       it "shouldn't raise an error when the 's3_backup_bucket' is a subdirectory of 's3_upload_bucket'" do
         SiteSetting.s3_upload_bucket = "my-awesome-bucket"
-        expect { validate("my-awesome-bucket/backups") }.to_not raise_error
+        validate("my-awesome-bucket/backups")
 
         SiteSetting.s3_upload_bucket = "my-awesome-bucket/foo"
-        expect { validate("my-awesome-bucket/foo/backups") }.to_not raise_error
+        validate("my-awesome-bucket/foo/backups")
       end
     end
 
