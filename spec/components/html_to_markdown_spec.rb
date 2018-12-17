@@ -33,6 +33,15 @@ describe HtmlToMarkdown do
   it "converts <b>" do
     expect(html_to_markdown("<b>Bold</b>")).to eq("**Bold**")
     expect(html_to_markdown("<b>B*ld</b>")).to eq("__B*ld__")
+
+    html = <<~HTML
+      <p><b>Bold
+      <br>
+      <br>
+      </b>
+      </p>
+    HTML
+    expect(html_to_markdown(html)).to eq("**Bold**")
   end
 
   it "converts <em>" do
