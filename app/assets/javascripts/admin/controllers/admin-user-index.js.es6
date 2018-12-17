@@ -7,9 +7,6 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(CanCheckEmails, {
   adminTools: Ember.inject.service(),
-  editingUsername: false,
-  editingName: false,
-  editingTitle: false,
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
   availableGroups: null,
@@ -244,17 +241,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.get("adminTools").showSilenceModal(this.get("model"));
     },
 
-    toggleUsernameEdit() {
-      this.set("userUsernameValue", this.get("model.username"));
-      this.toggleProperty("editingUsername");
-    },
-
-    saveUsername() {
+    saveUsername(newUsername) {
       const oldUsername = this.get("model.username");
-      this.set("model.username", this.get("userUsernameValue"));
+      this.set("model.username", newUsername);
 
       return ajax(`/users/${oldUsername.toLowerCase()}/preferences/username`, {
-        data: { new_username: this.get("userUsernameValue") },
+        data: { new_username: newUsername },
         type: "PUT"
       })
         .catch(e => {
@@ -264,19 +256,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
         .finally(() => this.toggleProperty("editingUsername"));
     },
 
-    toggleNameEdit() {
-      this.set("userNameValue", this.get("model.name"));
-      this.toggleProperty("editingName");
-    },
-
-    saveName() {
+    saveName(newName) {
       const oldName = this.get("model.name");
-      this.set("model.name", this.get("userNameValue"));
+      this.set("model.name", newName);
 
       return ajax(
         userPath(`${this.get("model.username").toLowerCase()}.json`),
         {
-          data: { name: this.get("userNameValue") },
+          data: { name: newName },
           type: "PUT"
         }
       )
@@ -287,24 +274,19 @@ export default Ember.Controller.extend(CanCheckEmails, {
         .finally(() => this.toggleProperty("editingName"));
     },
 
-    toggleTitleEdit() {
-      this.set("userTitleValue", this.get("model.title"));
-      this.toggleProperty("editingTitle");
-    },
+    saveTitle(newTitle) {
+      const oldTitle = this.get("model.title");
 
-    saveTitle() {
-      const prevTitle = this.get("userTitleValue");
-
-      this.set("model.title", this.get("userTitleValue"));
+      this.set("model.title", newTitle);
       return ajax(
         userPath(`${this.get("model.username").toLowerCase()}.json`),
         {
-          data: { title: this.get("userTitleValue") },
+          data: { title: newTitle },
           type: "PUT"
         }
       )
         .catch(e => {
-          this.set("model.title", prevTitle);
+          this.set("model.title", oldTitle);
           popupAjaxError(e);
         })
         .finally(() => this.toggleProperty("editingTitle"));
