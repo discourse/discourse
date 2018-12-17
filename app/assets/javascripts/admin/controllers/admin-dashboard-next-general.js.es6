@@ -60,7 +60,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   trendingSearchFilters() {
     return {
       startDate: moment()
-        .subtract(6, "days")
+        .subtract(1, "month")
         .startOf("day"),
       endDate: this.get("today")
     };
