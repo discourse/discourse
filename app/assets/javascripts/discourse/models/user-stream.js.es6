@@ -43,7 +43,7 @@ export default RestModel.extend({
 
   noContent: function() {
     return this.get("loaded") && this.get("content").length === 0;
-  }.property("loaded", "content.@each"),
+  }.property("loaded", "content.[]"),
 
   remove(userAction) {
     // 1) remove the user action from the child groups

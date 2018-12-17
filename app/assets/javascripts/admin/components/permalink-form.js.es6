@@ -33,7 +33,7 @@ export default Ember.Component.extend({
             self.set("url", "");
             self.set("permalink_type_value", "");
             self.set("formSubmitted", false);
-            self.sendAction("action", Permalink.create(result.permalink));
+            self.action(Permalink.create(result.permalink));
             Em.run.schedule("afterRender", function() {
               self.$(".permalink-url").focus();
             });

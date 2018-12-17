@@ -1,6 +1,6 @@
 {{#if showSelector}}
   {{user-selector topicId=topicId
-                  onChangeCallback='triggerResize'
+                  onChangeCallback=(action "triggerResize") 
                   id="private-message-users"
                   includeMessageableGroups='true'
                   placeholderKey="composer.users_placeholder"

@@ -104,7 +104,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
           bc.applyBufferedChanges();
         }
       });
-      this.propertyDidChange("categoriesBuffered");
+      this.notifyPropertyChange("categoriesBuffered");
     },
 
     saveOrder() {

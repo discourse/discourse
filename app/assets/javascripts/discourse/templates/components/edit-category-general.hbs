@@ -31,7 +31,7 @@
       {{/if}}
       {{#if category.topic_url}}
         <br>
-        {{d-button class="btn-small" action="showCategoryTopic" icon="pencil" label="category.change_in_category_topic"}}
+        {{d-button class="btn-small" action=(action "showCategoryTopic") icon="pencil" label="category.change_in_category_topic"}}
       {{/if}}
     </section>
   {{/if}}

@@ -6,9 +6,9 @@
 
   {{expanding-text-area value=buffered.value rows="1" class="site-text-value"}}
 
-  {{#save-controls model=siteText action="saveChanges" saved=saved}}
+  {{#save-controls model=siteText action=(action "saveChanges") saved=saved}}
     {{#if siteText.can_revert}}
-      {{d-button action="revertChanges" label="admin.site_text.revert" class="revert-site-text"}}
+      {{d-button action=(action "revertChanges") label="admin.site_text.revert" class="revert-site-text"}}
     {{/if}}
   {{/save-controls}}
 

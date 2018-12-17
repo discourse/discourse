@@ -12,8 +12,8 @@ export default Em.Component.extend(UploadMixin, {
 
   uploadDone() {
     bootbox.alert(I18n.t("tagging.upload_successful"), () => {
-      this.sendAction("refresh");
-      this.sendAction("closeModal");
+      this.refresh();
+      this.closeModal();
     });
   }
 });

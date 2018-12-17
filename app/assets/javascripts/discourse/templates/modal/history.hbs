@@ -1,38 +1,38 @@
 {{#d-modal-body title="history" maxHeight="70%"}}
   <div id="revision">
     <div id="revision-controls">
-      {{d-button class="btn-default" action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
-      {{d-button class="btn-default" action="loadPreviousVersion" icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
+      {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
+      {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
       <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
         {{#conditional-loading-spinner condition=loading size="small"}}
           {{{revisionsText}}}
         {{/conditional-loading-spinner}}
       </div>
-      {{d-button class="btn-default" action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
-      {{d-button class="btn-default" action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+      {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
+      {{d-button class="btn-default" action=(action "loadLastVersion") icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
     </div>
 
     {{#if displayEdit}}
-      {{d-button action="editPost"
+      {{d-button action=(action "editPost")
           class="btn-default"
           icon="pencil"
           label=editButtonLabel}}
     {{/if}}
 
     <div id="display-modes">
-      {{d-button action="displayInline"
+      {{d-button action=(action "displayInline")
           icon="square-o"
           label="post.revisions.displays.inline.button"
           title="post.revisions.displays.inline.title"
           class=inlineClass}}
       {{#unless site.mobileView}}
-        {{d-button action="displaySideBySide"
+        {{d-button action=(action "displaySideBySide")
             icon="columns"
             label="post.revisions.displays.side_by_side.button"
             title="post.revisions.displays.side_by_side.title"
             class=sideBySideClass}}
 
-        {{d-button action="displaySideBySideMarkdown"
+        {{d-button action=(action "displaySideBySideMarkdown")
             icon="columns"
             label="post.revisions.displays.side_by_side_markdown.button"
             title="post.revisions.displays.side_by_side_markdown.title"
@@ -124,19 +124,19 @@
 {{/d-modal-body}}
 <div class="modal-footer">
     {{#if displayRevert}}
-      {{d-button action="revertToVersion" icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
+      {{d-button action=(action "revertToVersion") icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
     {{/if}}
 
     {{#if displayHide}}
-      {{d-button action="hideVersion" icon="eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+      {{d-button action=(action "hideVersion") icon="eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
     {{/if}}
 
     {{#if displayShow}}
-      {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
+      {{d-button action=(action "showVersion") icon="eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
     {{/if}}
 
     {{#if displayEdit}}
-      {{d-button action="editPost"
+      {{d-button action=(action "editPost")
           icon="pencil"
           class="btn-default"
           label=editButtonLabel}}

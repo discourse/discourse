@@ -14,10 +14,10 @@
       {{nav-item route='groups' label='groups.index.title'}}
       <div class="admin-actions">
     {{#unless siteSettings.enable_sso}}
-      {{d-button class="btn-default" action="sendInvites" title="admin.invite.button_title" icon="user-plus" label="admin.invite.button_text"}}
+      {{d-button class="btn-default" action=(action "sendInvites") title="admin.invite.button_title" icon="user-plus" label="admin.invite.button_text"}}
     {{/unless}}
     {{#if currentUser.admin}}
-      {{d-button class="btn-default" action="exportUsers" title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
+      {{d-button class="btn-default" action=(action "exportUsers") title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
     {{/if}}
   </div>
     </ul>

@@ -5,12 +5,14 @@
 // behavior of not refreshing when navigating to the same place.
 export default {
   didInsertElement() {
-    this._super();
-    this.appEvents.on("url:refresh", () => this.sendAction("refresh"));
+    this._super(...arguments);
+
+    this.appEvents.on("url:refresh", this.refresh);
   },
 
   willDestroyElement() {
-    this._super();
-    this.appEvents.off("url:refresh");
+    this._super(...arguments);
+
+    this.appEvents.off("url:refresh", this, this.refresh);
   }
 };

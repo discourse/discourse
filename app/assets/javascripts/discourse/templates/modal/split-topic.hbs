@@ -15,7 +15,7 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{#d-button class="btn-primary" disabled=buttonDisabled action="movePostsToNewTopic"}}
+  {{#d-button class="btn-primary" disabled=buttonDisabled action=(action "movePostsToNewTopic")}}
     {{d-icon 'sign-out'}} {{buttonTitle}}
   {{/d-button}}
 </div>

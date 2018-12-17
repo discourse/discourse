@@ -24,7 +24,7 @@ export default Em.Component.extend(UploadMixin, {
       uploadedAvatarId: upload.id
     });
 
-    this.sendAction("done");
+    this.done();
   },
 
   @computed("user_id")

@@ -57,34 +57,34 @@
 
     <div class='queue-controls'>
       {{#if editing}}
-        {{d-button action="confirmEdit"
+        {{d-button action=(action "confirmEdit")
                    label="queue.confirm"
                    disabled=post.isSaving
                    class="btn-primary confirm"}}
-        {{d-button action="cancelEdit"
+        {{d-button action=(action "cancelEdit")
                    label="queue.cancel"
                    icon="times"
                    disabled=post.isSaving
                    class="btn-danger cancel"}}
       {{else}}
-        {{d-button action="approve"
+        {{d-button action=(action "approve")
                    disabled=post.isSaving
                    label="queue.approve"
                    icon="check"
                    class="btn-primary approve"}}
-        {{d-button action="reject"
+        {{d-button action=(action "reject")
                    disabled=post.isSaving
                    label="queue.reject"
                    icon="times"
                    class="btn-danger reject"}}
         {{#if post.can_delete_user}}
-          {{d-button action="deleteUser"
+          {{d-button action=(action "deleteUser")
                      disabled=post.isSaving
                      label="queue.delete_user"
                      icon="trash"
                      class="btn-danger delete-user"}}
         {{/if}}
-        {{d-button action="edit"
+        {{d-button action=(action "edit")
                    disabled=post.isSaving
                    label="queue.edit"
                    icon="pencil"

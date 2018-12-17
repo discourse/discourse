@@ -91,18 +91,27 @@ const Post = RestModel.extend({
       .catch(popupAjaxError);
   },
 
-  internalLinks: function() {
+  @computed("link_counts.@each.internal")
+  internalLinks() {
     if (Ember.isEmpty(this.get("link_counts"))) return null;
+
     return this.get("link_counts")
       .filterBy("internal")
       .filterBy("title");
-  }.property("link_counts.@each.internal"),
+  },
 
-  flagsAvailable: function() {
+  @computed("actions_summary.@each.can_act")
+  flagsAvailable() {
+    // TODO: Investigate why `this.site` is sometimes null when running
+    // Search - Search with context
+    if (!this.site) {
+      return [];
+    }
+
     return this.site.get("flagTypes").filter(item => {
       return this.get(`actionByName.${item.get("name_key")}.can_act`);
     });
-  }.property("actions_summary.@each.can_act"),
+  },
 
   afterUpdate(res) {
     if (res.category) {

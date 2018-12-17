@@ -71,7 +71,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (time) {
           this.send("closeModal");
 
-          this.get("topicTimer").setProperties({
+          Ember.setProperties(this.get("topicTimer"), {
             execute_at: result.execute_at,
             duration: result.duration,
             category_id: result.category_id

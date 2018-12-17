@@ -19,8 +19,8 @@ export default Ember.Mixin.create({
         );
       })
       .map(badge => {
-        if (badge.icon) {
-          badge.icon = convertIconClass(badge.icon);
+        if (badge.get("icon")) {
+          badge.set("icon", convertIconClass(badge.icon));
         }
         return badge;
       })

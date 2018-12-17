@@ -112,7 +112,7 @@ createWidget("user-menu-dismiss-link", {
         {{attach
           widget="link"
           attrs=(hash
-            action="dismissNotifications"
+            action=(action "dismissNotifications")
             className="dismiss"
             tabindex="0"
             icon="check"

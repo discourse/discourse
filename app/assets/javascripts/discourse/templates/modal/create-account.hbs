@@ -1,11 +1,11 @@
-{{#create-account email=accountEmail disabled=submitDisabled action="createAccount"}}
+{{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
     {{#d-modal-body title="create_account.title" class=(concat (if hasAtLeastOneLoginButton "has-alt-auth") " " (if userFields "has-user-fields"))}}
-          
+
       {{#unless hasAuthOptions}}
-        {{login-buttons externalLogin="externalLogin"}}
+        {{login-buttons externalLogin=(action "externalLogin")}}
       {{/unless}}
-      
+
       {{#if showCreateForm}}
         <div class="login-form">
           <form>
@@ -17,10 +17,10 @@
                 {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
                 </td>
           </tr>
-          
+
           <tr class="instructions create-account-email">
             <td></td>
-                {{input-tip validation=emailValidation}}
+                {{input-tip validation=emailValidation id="account-email-validation"}}
                 <td><label>{{i18n 'user.email.instructions'}}</label></td>
           </tr>
 
@@ -113,10 +113,11 @@
     {{#if showCreateForm}}
       <div class="modal-footer">
         <button class='btn btn-large btn-primary' disabled={{submitDisabled}} {{action "createAccount"}}>{{i18n 'create_account.title'}}</button>
+
         {{#conditional-loading-spinner condition=formSubmitted size="small"}}
-          <button class="btn btn-large" id="login-link" {{action "showLogin"}}>
-            {{i18n 'log_in'}}
-          </button>
+          {{#d-button class="btn btn-large" id="login-link" action=(route-action "showLogin")}}
+            {{i18n "log_in"}}
+          {{/d-button}}
         {{/conditional-loading-spinner}}
 
       <div class='disclaimer'>{{{disclaimerHtml}}}</div>

@@ -12,7 +12,7 @@ export default Ember.Component.extend({
       if (!this.get("disabled") && e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
-        this.sendAction();
+        this.action();
         return false;
       }
     });

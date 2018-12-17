@@ -185,14 +185,13 @@ export default Ember.Controller.extend(
     @on("init")
     fetchConfirmationValue() {
       return ajax(userPath("hp.json")).then(json => {
-        this.set("accountPasswordConfirm", json.value);
-        this.set(
-          "accountChallenge",
-          json.challenge
+        this.setProperties({
+          accountPasswordConfirm: json.value,
+          accountChallenge: json.challenge
             .split("")
             .reverse()
             .join("")
-        );
+        });
       });
     },
 

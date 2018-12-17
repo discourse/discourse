@@ -3,7 +3,7 @@
   <div class="jumpt-to-post-form">
     <div class="jump-to-post-control">
       <span class="index">#</span>
-      {{input id="post-jump" type="number" value=postNumber insert-newline="jump"}}
+      {{input id="post-jump" type="number" value=postNumber insert-newline=(action "jump")}}
       <span class='input-hint-text post-number'>
         {{i18n "topic.progress.jump_prompt_of" count=filteredPostsCount}}
       </span>
@@ -27,6 +27,6 @@
 {{/d-modal-body}}
 
 <div class='modal-footer'>
-  {{d-button class="btn-primary" action="jump" label="composer.modal_ok"}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button class="btn-primary" action=(action "jump") label="composer.modal_ok"}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

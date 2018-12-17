@@ -3,7 +3,7 @@ export default Ember.Component.extend({
 
   actions: {
     share: function(source) {
-      this.sendAction("action", source);
+      this.action(source);
     }
   }
 });

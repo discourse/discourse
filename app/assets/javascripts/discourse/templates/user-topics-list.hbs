@@ -1,4 +1,4 @@
-{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action="loadMore"}}
+{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
   {{basic-topic-list topicList=model
                      hideCategory=hideCategory
                      showParticipants=showParticipants
@@ -7,7 +7,7 @@
                      selected=selected
                      hasIncoming=hasIncoming
                      incomingCount=incomingCount
-                     showInserted="showInserted"
+                     showInserted=(action "showInserted")
                      tagsForUser=tagsForUser}}
 
   {{conditional-loading-spinner condition=model.loadingMore}}

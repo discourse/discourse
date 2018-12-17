@@ -389,9 +389,8 @@ export default Ember.Component.extend(
     },
 
     highlightSelection(items) {
-      this.propertyWillChange("highlightedSelection");
       this.set("highlightedSelection", makeArray(items));
-      this.propertyDidChange("highlightedSelection");
+      this.notifyPropertyChange("highlightedSelection");
     },
 
     clearHighlightSelection() {
