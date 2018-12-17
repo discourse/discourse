@@ -14,7 +14,8 @@ module Jobs
         args[:post_id],
         args[:poll_name],
         "closed",
-        Discourse.system_user
+        Discourse.system_user,
+        false
       )
     end
 
