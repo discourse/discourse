@@ -8,11 +8,16 @@ module FileStore
 
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
+    MULTISITE_TOMBSTONE_PREFIX ||= File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
 
     attr_reader :s3_helper
 
     def initialize(s3_helper = nil)
-      @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
+      if !Rails.configuration.multisite
+        @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
+      else
+        @s3_helper = s3_helper || S3Helper.new(s3_bucket, MULTISITE_TOMBSTONE_PREFIX)
+      end
     end
 
     def store_upload(file, upload, content_type = nil)
