@@ -69,8 +69,10 @@ export default Ember.Mixin.create({
   },
 
   _adjustPosition() {
+    if (this.get("isExpanded")) {
+      this._applyDirection();
+    }
     this._applyFixedPosition();
-    this._applyDirection();
     this._positionWrapper();
   },
 
@@ -197,11 +199,15 @@ export default Ember.Mixin.create({
         parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset") >
         0;
       if (enoughMarginToOppositeEdge) {
-        this.setProperties({ isLeftAligned: true, isRightAligned: false });
+        this.$()
+          .addClass("is-left-aligned")
+          .removeClass("is-right-aligned");
         options.left = this.get("horizontalOffset");
         options.right = "unset";
       } else {
-        this.setProperties({ isLeftAligned: false, isRightAligned: true });
+        this.$()
+          .addClass("is-right-aligned")
+          .removeClass("is-left-aligned");
         options.left = "unset";
         options.right = this.get("horizontalOffset");
       }
@@ -214,10 +220,14 @@ export default Ember.Mixin.create({
     const headerHeight = this._computedStyle(this.$header()[0], "height");
 
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
-      this.setProperties({ isBelow: true, isAbove: false });
+      this.$()
+        .addClass("is-below")
+        .removeClass("is-above");
       options.top = headerHeight + this.get("verticalOffset");
     } else {
-      this.setProperties({ isBelow: false, isAbove: true });
+      this.$()
+        .addClass("is-above")
+        .removeClass("is-below");
       options.bottom = headerHeight + this.get("verticalOffset");
     }
 
