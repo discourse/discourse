@@ -69,9 +69,7 @@ export default Ember.Mixin.create({
   },
 
   _adjustPosition() {
-    if (this.get("isExpanded")) {
-      this._applyDirection();
-    }
+    this._applyDirection();
     this._applyFixedPosition();
     this._positionWrapper();
   },
