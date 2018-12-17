@@ -221,7 +221,7 @@ describe ::DiscoursePoll::PollsValidator do
         )
       end
 
-      it "ensure that min > 0" do
+      it "ensure that min >= 0" do
         raw = <<~RAW
         [poll type=multiple min=-1]
         * 1
@@ -236,7 +236,7 @@ describe ::DiscoursePoll::PollsValidator do
         )
       end
 
-      it "ensure that min != 0" do
+      it "ensure that min can be 0" do
         raw = <<~RAW
         [poll type=multiple min=0]
         * 1
@@ -244,11 +244,7 @@ describe ::DiscoursePoll::PollsValidator do
         [/poll]
         RAW
 
-        expect(post.update_attributes(raw: raw)).to eq(false)
-
-        expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
-        )
+        expect(post.update_attributes(raw: raw)).to eq(true)
       end
 
       it "ensure that min != number of options" do

@@ -560,8 +560,8 @@ export default createWidget("discourse-poll", {
 
   min() {
     let min = parseInt(this.attrs.poll.get("min"), 10);
-    if (isNaN(min) || min < 1) {
-      min = 1;
+    if (isNaN(min) || min < 0) {
+      min = 0;
     }
     return min;
   },

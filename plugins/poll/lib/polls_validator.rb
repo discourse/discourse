@@ -106,10 +106,10 @@ module DiscoursePoll
     def valid_multiple_choice_settings?(poll)
       if poll["type"] == "multiple"
         options = poll["options"].size
-        min = (poll["min"].presence || 1).to_i
+        min = (poll["min"].presence || 0).to_i
         max = (poll["max"].presence || options).to_i
 
-        if min > max || min <= 0 || max <= 0 || max > options || min >= options
+        if min > max || min < 0 || max <= 0 || max > options || min >= options
           if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
             @post.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
           else
