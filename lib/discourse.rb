@@ -358,11 +358,8 @@ module Discourse
   end
 
   def self.recently_readonly?
-    if (read_only = last_read_only[$redis.namespace]).blank?
-      return false
-    end
-
-    read_only > 15.seconds.ago
+    read_only = last_read_only[$redis.namespace]
+    read_only.present? && read_only > 15.seconds.ago
   end
 
   def self.received_readonly!
