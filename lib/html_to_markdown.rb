@@ -32,6 +32,7 @@ class HtmlToMarkdown
         node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && node.parent.description&.block?
         node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element&.description&.block?
         node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/\r\n?/, "\n")
         node.remove if node.content.empty?
       end
     end
@@ -200,7 +201,7 @@ class HtmlToMarkdown
         @stack[-1].markdown << " " if node.text[0] == " "
         @stack[-1].markdown << delimiter
         traverse(node)
-        @stack[-1].markdown.chomp!
+        @stack[-1].markdown.gsub!(/\n+$/, "")
         if @stack[-1].markdown[-1] == " "
           @stack[-1].markdown.chomp!(" ")
           append_space = true
