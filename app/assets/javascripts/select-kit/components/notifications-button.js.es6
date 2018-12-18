@@ -24,6 +24,14 @@ export default DropdownSelectBoxComponent.extend({
     return iconForSelectedDetails;
   },
 
+  @on("init")
+  _setNotificationsButtonComponentOptions() {
+    this.get("rowComponentOptions").setProperties({
+      i18nPrefix: this.get("i18nPrefix"),
+      i18nPostfix: this.get("i18nPostfix")
+    });
+  },
+
   iconForSelectedDetails: Ember.computed.alias("selectedDetails.icon"),
 
   computeHeaderContent() {
@@ -35,14 +43,6 @@ export default DropdownSelectBoxComponent.extend({
     );
     content.hasSelection = this.get("hasSelection");
     return content;
-  },
-
-  @on("didReceiveAttrs")
-  _setNotificationsButtonComponentOptions() {
-    this.get("rowComponentOptions").setProperties({
-      i18nPrefix: this.get("i18nPrefix"),
-      i18nPostfix: this.get("i18nPostfix")
-    });
   },
 
   @computed("computedValue")

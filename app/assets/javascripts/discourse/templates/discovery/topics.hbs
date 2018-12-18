@@ -24,12 +24,12 @@
     discoveryList=true}}
 {{/if}}
 
-{{bulk-select-button selected=selected action="refresh" category=category}}
+{{bulk-select-button selected=selected action=(action "refresh") category=category}}
 
-{{#discovery-topics-list model=model refresh="refresh" incomingCount=topicTrackingState.incomingCount}}
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount}}
   {{#if top}}
     <div class='top-lists'>
-      {{period-chooser period=period action="changePeriod"}}
+      {{period-chooser period=period action=(action "changePeriod")}}
     </div>
   {{else}}
     {{#if topicTrackingState.hasIncoming}}
@@ -50,8 +50,8 @@
       showTopicPostBadges=showTopicPostBadges
       showPosters=true
       canBulkSelect=canBulkSelect
-      changeSort="changeSort"
-      toggleBulkSelect="toggleBulkSelect"
+      changeSort=(action "changeSort")
+      toggleBulkSelect=(action "toggleBulkSelect")
       hideCategory=model.hideCategory
       order=order
       ascending=ascending
@@ -81,7 +81,7 @@
         {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>.{{/if}}
       {{else if top}}
         {{#link-to "discovery.categories"}}{{i18n 'topic.browse_all_categories'}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}} {{i18n 'or'}} {{i18n 'filters.top.other_periods'}}.
-        {{top-period-buttons period=period action="changePeriod"}}
+        {{top-period-buttons period=period action=(action "changePeriod")}}
       {{else}}
         {{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}.
       {{/if}}

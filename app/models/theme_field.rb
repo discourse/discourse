@@ -29,6 +29,13 @@ class ThemeField < ActiveRecord::Base
     @theme_var_type_ids ||= [2, 3, 4]
   end
 
+  def self.force_recompilation!
+    find_each do |field|
+      field.compiler_version = 0
+      field.ensure_baked!
+    end
+  end
+
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 

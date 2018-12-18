@@ -3,6 +3,6 @@
   {{label}}
 </label>
 {{#if changed}}
-  {{d-button action="finished" class="btn-primary btn-small submit-edit" icon="check"}}
-  {{d-button action="cancelled" class="btn-small cancel-edit" icon="times"}}
+  {{d-button action=(action "finished") class="btn-primary btn-small submit-edit" icon="check"}}
+  {{d-button action=(action "cancelled") class="btn-small cancel-edit" icon="times"}}
 {{/if}}

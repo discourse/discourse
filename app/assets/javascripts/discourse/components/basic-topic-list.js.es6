@@ -66,11 +66,5 @@ export default Ember.Component.extend({
       }
       return false;
     }
-  },
-
-  actions: {
-    showInserted() {
-      this.sendAction("showInserted");
-    }
   }
 });

@@ -44,10 +44,10 @@
             <ul>
               {{#if model.can_send_private_message_to_user}}
               <li>
-                <a class='btn btn-primary compose-pm' {{action "composePrivateMessage" model}}>
+                {{#d-button class="btn btn-primary compose-pm" action=(route-action "composePrivateMessage" model)}}
                   {{d-icon "envelope"}}
-                  {{i18n 'user.private_message'}}
-                </a>
+                  {{i18n "user.private_message"}}
+                {{/d-button}}
               </li>
               {{/if}}
               {{#if currentUser.staff}}
@@ -165,7 +165,7 @@
               {{#if model.email}}
                 {{model.email}}
               {{else}}
-                {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+                {{d-button action=(route-action "checkEmail") actionParam=model icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </dd>
             </div>
@@ -186,7 +186,7 @@
           {{/if}}
 
           {{#if canDeleteUser}}
-            <div>{{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+            <div>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
           {{/if}}
         </dl>
         {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}

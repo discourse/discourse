@@ -3,7 +3,7 @@
 
   <p class="desc">{{i18n 'admin.emoji.help'}}</p>
 
-  <p>{{emoji-uploader done="emojiUploaded"}}</p>
+  <p>{{emoji-uploader done=(action "emojiUploaded")}}</p>
 
   {{#if sortedEmojis}}
     <div>

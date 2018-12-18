@@ -10,9 +10,6 @@ export default Ember.Component.extend({
       this.session.set("hideSignupCta", true);
       this.keyValueStore.setItem("anon-cta-hidden", new Date().getTime());
       Em.run.later(() => this.session.set("showSignupCta", false), 20 * 1000);
-    },
-    showCreateAccount() {
-      this.sendAction();
     }
   },
 

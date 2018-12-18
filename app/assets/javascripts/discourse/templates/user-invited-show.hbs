@@ -1,6 +1,6 @@
 {{#d-section pageClass="user-invites"}}
   {{#if canInviteToForum}}
-    {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .user-invite-list tr" action="loadMore"}}
+    {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .user-invite-list tr" action=(action "loadMore")}}
       <section class='user-content'>
         <h2>{{i18n 'user.invited.title'}}</h2>
 
@@ -14,7 +14,7 @@
             </nav>
 
             <div class="pull-right">
-              {{d-button icon="plus" action="showInvite" label="user.invited.create" class="btn"}}
+              {{d-button icon="plus" action=(route-action "showInvite") label="user.invited.create" class="btn"}}
               {{#if canBulkInvite}}
                 {{csv-uploader uploading=uploading}}
                 <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" target="_blank" style="color:black;">{{d-icon "question-circle"}}</a>
@@ -23,12 +23,12 @@
                 {{#if rescindedAll}}
                   {{i18n 'user.invited.rescinded_all'}}
                 {{else}}
-                  {{d-button icon="times" action="rescindAll" class="btn" label="user.invited.rescind_all"}}
+                  {{d-button icon="times" action=(action "rescindAll") class="btn" label="user.invited.rescind_all"}}
                 {{/if}}
                 {{#if reinvitedAll}}
                   {{i18n 'user.invited.reinvited_all'}}
                 {{else}}
-                  {{d-button icon="refresh" action="reinviteAll" class="btn" label="user.invited.reinvite_all"}}
+                  {{d-button icon="refresh" action=(action "reinviteAll") class="btn" label="user.invited.reinvite_all"}}
                 {{/if}}
               {{/if}}
             </div>
@@ -87,13 +87,13 @@
                     {{#if invite.rescinded}}
                       {{i18n 'user.invited.rescinded'}}
                     {{else}}
-                      {{d-button icon="times" action="rescind" actionParam=invite class="btn" label="user.invited.rescind"}}
+                      {{d-button icon="times" action=(action "rescind") actionParam=invite class="btn" label="user.invited.rescind"}}
                     {{/if}}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     {{#if invite.reinvited}}
                       {{i18n 'user.invited.reinvited'}}
                     {{else}}
-                      {{d-button icon="refresh" action="reinvite" actionParam=invite class="btn" label="user.invited.reinvite"}}
+                      {{d-button icon="refresh" action=(action "reinvite") actionParam=invite class="btn" label="user.invited.reinvite"}}
                     {{/if}}
                   </td>
                 {{/if}}

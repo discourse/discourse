@@ -83,10 +83,10 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    this.sendAction("onClickRow", this.get("computedContent"));
+    this.onClickRow(this.get("computedContent"));
   },
 
   _sendMouseoverAction() {
-    this.sendAction("onMouseoverRow", this.get("computedContent"));
+    this.onMouseoverRow(this.get("computedContent"));
   }
 });

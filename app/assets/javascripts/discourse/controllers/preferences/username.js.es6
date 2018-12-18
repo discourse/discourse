@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
       Discourse.User.checkUsername(
         newUsername,
         undefined,
-        this.get("content.id")
+        this.get("model.id")
       ).then(result => {
         if (result.errors) {
           this.set("errorMessage", result.errors.join(" "));
@@ -71,7 +71,7 @@ export default Ember.Controller.extend({
         result => {
           if (result) {
             this.set("saving", true);
-            this.get("content")
+            this.get("model")
               .changeUsername(this.get("newUsername"))
               .then(() => {
                 DiscourseURL.redirectTo(

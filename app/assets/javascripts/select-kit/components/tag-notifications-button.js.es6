@@ -9,7 +9,7 @@ export default NotificationOptionsComponent.extend({
   allowInitialValueMutation: false,
 
   mutateValue(value) {
-    this.sendAction("action", value);
+    this.action(value);
   },
 
   computeValue() {

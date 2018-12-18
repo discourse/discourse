@@ -1,4 +1,4 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action=(action "login")}}
   {{#d-modal-body title="login.title" class=(concat "login-modal" " " (if hasAtLeastOneLoginButton "has-alt-auth"))}}
 
     {{#if canLoginLocal}}
@@ -30,14 +30,14 @@
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
-        emailLogin='emailLogin'
-        externalLogin='externalLogin'}}
+        emailLogin=(action "emailLogin")
+        externalLogin=(action "externalLogin")}}
     {{/if}}
   {{/d-modal-body}}
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      {{d-button action="login"
+      {{d-button action=(action "login")
           icon="unlock"
           label=loginButtonLabel
           disabled=loginDisabled

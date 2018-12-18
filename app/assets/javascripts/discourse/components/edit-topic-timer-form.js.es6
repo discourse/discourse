@@ -65,7 +65,9 @@ export default Ember.Component.extend({
   @observes("selection")
   _updateBasedOnLastPost() {
     if (!this.get("autoClose")) {
-      this.set("topicTimer.based_on_last_post", false);
+      Ember.run.schedule("afterRender", () => {
+        this.set("topicTimer.based_on_last_post", false);
+      });
     }
   }
 });

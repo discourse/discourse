@@ -317,10 +317,11 @@ export default {
         .findBy("id", selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
-        let actionMethod = topicController._actions[action];
+
+        let actionMethod = topicController.actions[action];
         if (!actionMethod) {
           const topicRoute = container.lookup("route:topic");
-          actionMethod = topicRoute._actions[action];
+          actionMethod = topicRoute.actions[action];
         }
 
         const result = actionMethod.call(topicController, post);

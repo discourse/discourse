@@ -16,7 +16,7 @@ widgetTest("basics", {
 });
 
 widgetTest("log out", {
-  template: '{{mount-widget widget="user-menu" logout="logout"}}',
+  template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
 
   beforeEach() {
     this.on("logout", () => (this.loggedOut = true));
@@ -54,7 +54,7 @@ widgetTest("private messages - enabled", {
 
 widgetTest("anonymous", {
   template:
-    '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
+    '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
   beforeEach() {
     this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
@@ -85,7 +85,7 @@ widgetTest("anonymous - disabled", {
 
 widgetTest("anonymous - switch back", {
   template:
-    '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
+    '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
   beforeEach() {
     this.currentUser.setProperties({ is_anonymous: true });

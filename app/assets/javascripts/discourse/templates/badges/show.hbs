@@ -13,9 +13,9 @@
           <div class='grant-info-item'>
             {{i18n 'badges.allow_title'}}
             {{d-button
-                    class='btn btn-small pad-left no-text'
-                    action='toggleSetUserTitle'
-                    icon='pencil'}}
+              class="btn btn-small pad-left no-text"
+              action=(action "toggleSetUserTitle")
+              icon="pencil"}}
           </div>
         {{/if}}
         {{#if model.multiple_grant}}
@@ -29,14 +29,14 @@
     {{#if canSelectTitle}}
       <div class='badge-set-title {{if hiddenSetTitle 'hidden' ''}}'>
         {{badge-title selectableUserBadges=selectableUserBadges user=user}}
-        <button class='btn btn-default close-btn' {{action "toggleSetUserTitle"}}>{{i18n 'close'}}</button>
+        {{d-button class="btn-default close-btn" action=(action "toggleSetUserTitle") label="close"}}
       </div>
     {{/if}}
   </div>
 
   {{#if userBadges}}
     <div class="user-badges {{model.slug}}">
-      {{#load-more selector=".badge-info" action="loadMore"}}
+      {{#load-more selector=".badge-info" action=(action "loadMore")}}
       <div class="badges-granted">
         {{#each userBadges as |ub|}}
           {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}

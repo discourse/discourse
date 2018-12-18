@@ -1,23 +1,23 @@
 {{#if editing}}
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.host"}}</div>
-    {{input value=buffered.host placeholder="example.com" enter="save" class="host-name"}}
+    {{input value=buffered.host placeholder="example.com" enter=(action "save") class="host-name"}}
   </td>
 	<td class="editing-input">
     <div class="label">{{i18n "admin.embedding.class_name"}}</div>
-    {{input value=buffered.class_name placeholder="class" enter="save" class="class-name"}}
+    {{input value=buffered.class_name placeholder="class" enter=(action "save") class="class-name"}}
 	</td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.path_whitelist"}}</div>
-    {{input value=buffered.path_whitelist placeholder="/blog/.*" enter="save" class="path-whitelist"}}
+    {{input value=buffered.path_whitelist placeholder="/blog/.*" enter=(action "save") class="path-whitelist"}}
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     {{category-chooser value=categoryId class="small"}}
   </td>
   <td class="editing-controls">
-    {{d-button icon="check" action="save" class="btn-primary" disabled=cantSave}}
-    {{d-button icon="times" action="cancel" class="btn-danger" disabled=host.isSaving}}
+    {{d-button icon="check" action=(action "save") class="btn-primary" disabled=cantSave}}
+    {{d-button icon="times" action=(action "cancel") class="btn-danger" disabled=host.isSaving}}
   </td>
 {{else}}
   <td><div class="label">{{i18n "admin.embedding.host"}}</div>{{host.host}}</td>
@@ -25,7 +25,7 @@
   <td><div class="label">{{i18n "admin.embedding.path_whitelist"}}</div>{{host.path_whitelist}}</td>
   <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category}}</td>
   <td class="controls">
-    {{d-button icon="pencil" action="edit"}}
-    {{d-button icon="trash-o" action="delete" class='btn-danger'}}
+    {{d-button icon="pencil" action=(action "edit")}}
+    {{d-button icon="trash-o" action=(action "delete") class='btn-danger'}}
   </td>
 {{/if}}

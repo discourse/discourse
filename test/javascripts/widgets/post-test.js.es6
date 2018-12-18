@@ -18,7 +18,7 @@ widgetTest("basic elements", {
 
 widgetTest("wiki", {
   template:
-    '{{mount-widget widget="post" args=args showHistory="showHistory"}}',
+    '{{mount-widget widget="post" args=args showHistory=(action "showHistory")}}',
   beforeEach() {
     this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
     this.on("showHistory", () => (this.historyShown = true));
@@ -33,7 +33,8 @@ widgetTest("wiki", {
 });
 
 widgetTest("wiki without revision", {
-  template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
+  template:
+    '{{mount-widget widget="post" args=args editPost=(action "editPost")}}',
   beforeEach() {
     this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
     this.on("editPost", () => (this.editPostCalled = true));
@@ -46,7 +47,7 @@ widgetTest("wiki without revision", {
 
 widgetTest("via-email", {
   template:
-    '{{mount-widget widget="post" args=args showRawEmail="showRawEmail"}}',
+    '{{mount-widget widget="post" args=args showRawEmail=(action "showRawEmail")}}',
   beforeEach() {
     this.set("args", { via_email: true, canViewRawEmail: true });
     this.on("showRawEmail", () => (this.rawEmailShown = true));
@@ -59,7 +60,7 @@ widgetTest("via-email", {
 
 widgetTest("via-email without permission", {
   template:
-    '{{mount-widget widget="post" args=args showRawEmail="showRawEmail"}}',
+    '{{mount-widget widget="post" args=args showRawEmail=(action "showRawEmail")}}',
   beforeEach() {
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.on("showRawEmail", () => (this.rawEmailShown = true));
@@ -75,7 +76,7 @@ widgetTest("via-email without permission", {
 
 widgetTest("history", {
   template:
-    '{{mount-widget widget="post" args=args showHistory="showHistory"}}',
+    '{{mount-widget widget="post" args=args showHistory=(action "showHistory")}}',
   beforeEach() {
     this.set("args", { version: 3, canViewEditHistory: true });
     this.on("showHistory", () => (this.historyShown = true));
@@ -88,7 +89,7 @@ widgetTest("history", {
 
 widgetTest("history without view permission", {
   template:
-    '{{mount-widget widget="post" args=args showHistory="showHistory"}}',
+    '{{mount-widget widget="post" args=args showHistory=(action "showHistory")}}',
   beforeEach() {
     this.set("args", { version: 3, canViewEditHistory: false });
     this.on("showHistory", () => (this.historyShown = true));
@@ -168,7 +169,7 @@ widgetTest("share button", {
 
 widgetTest("liking", {
   template:
-    '{{mount-widget widget="post-menu" args=args toggleLike="toggleLike"}}',
+    '{{mount-widget widget="post-menu" args=args toggleLike=(action "toggleLike")}}',
   beforeEach() {
     const args = { showLike: true, canToggleLike: true };
     this.set("args", args);
@@ -195,7 +196,7 @@ widgetTest("liking", {
 
 widgetTest("anon liking", {
   template:
-    '{{mount-widget widget="post-menu" args=args showLogin="showLogin"}}',
+    '{{mount-widget widget="post-menu" args=args showLogin=(action "showLogin")}}',
   anonymous: true,
   beforeEach() {
     const args = { showLike: true };
@@ -218,7 +219,8 @@ widgetTest("anon liking", {
 });
 
 widgetTest("edit button", {
-  template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
+  template:
+    '{{mount-widget widget="post" args=args editPost=(action "editPost")}}',
   beforeEach() {
     this.set("args", { canEdit: true });
     this.on("editPost", () => (this.editPostCalled = true));
@@ -230,7 +232,7 @@ widgetTest("edit button", {
 });
 
 widgetTest(`edit button - can't edit`, {
-  template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
+  template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.set("args", { canEdit: false });
   },
@@ -240,7 +242,8 @@ widgetTest(`edit button - can't edit`, {
 });
 
 widgetTest("recover button", {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template:
+    '{{mount-widget widget="post" args=args deletePost=(action "deletePost")}}',
   beforeEach() {
     this.set("args", { canDelete: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
@@ -252,7 +255,8 @@ widgetTest("recover button", {
 });
 
 widgetTest("delete topic button", {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template:
+    '{{mount-widget widget="post" args=args deletePost=(action "deletePost")}}',
   beforeEach() {
     this.set("args", { canDeleteTopic: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
@@ -264,7 +268,7 @@ widgetTest("delete topic button", {
 });
 
 widgetTest(`delete topic button - can't delete`, {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.set("args", { canDeleteTopic: false });
   },
@@ -276,8 +280,7 @@ widgetTest(`delete topic button - can't delete`, {
 widgetTest(
   `delete topic button - can't delete when topic author without permission`,
   {
-    template:
-      '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+    template: '{{mount-widget widget="post" args=args}}',
     beforeEach() {
       this.set("args", {
         canDeleteTopic: false,
@@ -299,7 +302,7 @@ widgetTest(
 
 widgetTest("recover topic button", {
   template:
-    '{{mount-widget widget="post" args=args recoverPost="recoverPost"}}',
+    '{{mount-widget widget="post" args=args recoverPost=(action "recoverPost")}}',
   beforeEach() {
     this.set("args", { canRecoverTopic: true });
     this.on("recoverPost", () => (this.recovered = true));
@@ -311,7 +314,7 @@ widgetTest("recover topic button", {
 });
 
 widgetTest(`recover topic button - can't recover`, {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.set("args", { canRecoverTopic: false });
   },
@@ -321,7 +324,8 @@ widgetTest(`recover topic button - can't recover`, {
 });
 
 widgetTest("delete post button", {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template:
+    '{{mount-widget widget="post" args=args deletePost=(action "deletePost")}}',
   beforeEach() {
     this.set("args", { canDelete: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
@@ -344,7 +348,7 @@ widgetTest(`delete post button - can't delete`, {
 
 widgetTest("recover post button", {
   template:
-    '{{mount-widget widget="post" args=args recoverPost="recoverPost"}}',
+    '{{mount-widget widget="post" args=args recoverPost=(action "recoverPost")}}',
   beforeEach() {
     this.set("args", { canRecover: true });
     this.on("recoverPost", () => (this.recovered = true));
@@ -356,7 +360,7 @@ widgetTest("recover post button", {
 });
 
 widgetTest(`recover post button - can't recover`, {
-  template: '{{mount-widget widget="post" args=args deletePost="deletePost"}}',
+  template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.set("args", { canRecover: false });
   },
@@ -366,7 +370,8 @@ widgetTest(`recover post button - can't recover`, {
 });
 
 widgetTest(`flagging`, {
-  template: '{{mount-widget widget="post" args=args showFlags="showFlags"}}',
+  template:
+    '{{mount-widget widget="post" args=args showFlags=(action "showFlags")}}',
   beforeEach() {
     this.set("args", { canFlag: true });
     this.on("showFlags", () => (this.flagsShown = true));
@@ -473,7 +478,7 @@ widgetTest("reply directly above", {
 
 widgetTest("cooked content hidden", {
   template:
-    '{{mount-widget widget="post" args=args expandHidden="expandHidden"}}',
+    '{{mount-widget widget="post" args=args expandHidden=(action "expandHidden")}}',
   beforeEach() {
     this.set("args", { cooked_hidden: true });
     this.on("expandHidden", () => (this.unhidden = true));
@@ -509,7 +514,7 @@ widgetTest("can't bookmark", {
 
 widgetTest("bookmark", {
   template:
-    '{{mount-widget widget="post" args=args toggleBookmark="toggleBookmark"}}',
+    '{{mount-widget widget="post" args=args toggleBookmark=(action "toggleBookmark")}}',
   beforeEach() {
     const args = { canBookmark: true };
 
@@ -555,35 +560,40 @@ widgetTest("show admin menu", {
 
 widgetTest("toggle moderator post", {
   template:
-    '{{mount-widget widget="post" args=args togglePostType="togglePostType"}}',
+    '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
+    this.currentUser.set("staff", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
   async test(assert) {
     await click(".post-menu-area .show-post-admin-menu");
     await click(".post-admin-menu .toggle-post-type");
+
     assert.ok(this.toggled);
     assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 widgetTest("toggle moderator post", {
   template:
-    '{{mount-widget widget="post" args=args togglePostType="togglePostType"}}',
+    '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
+    this.currentUser.set("staff", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
   async test(assert) {
     await click(".post-menu-area .show-post-admin-menu");
     await click(".post-admin-menu .toggle-post-type");
+
     assert.ok(this.toggled);
     assert.equal(this.$(".post-admin-menu").length, 0, "also hides the menu");
   }
 });
 
 widgetTest("rebake post", {
-  template: '{{mount-widget widget="post" args=args rebakePost="rebakePost"}}',
+  template:
+    '{{mount-widget widget="post" args=args rebakePost=(action "rebakePost")}}',
   beforeEach() {
     this.set("args", { canManage: true });
     this.on("rebakePost", () => (this.baked = true));
@@ -597,7 +607,8 @@ widgetTest("rebake post", {
 });
 
 widgetTest("unhide post", {
-  template: '{{mount-widget widget="post" args=args unhidePost="unhidePost"}}',
+  template:
+    '{{mount-widget widget="post" args=args unhidePost=(action "unhidePost")}}',
   beforeEach() {
     this.set("args", { canManage: true, hidden: true });
     this.on("unhidePost", () => (this.unhidden = true));
@@ -612,7 +623,7 @@ widgetTest("unhide post", {
 
 widgetTest("change owner", {
   template:
-    '{{mount-widget widget="post" args=args changePostOwner="changePostOwner"}}',
+    '{{mount-widget widget="post" args=args changePostOwner=(action "changePostOwner")}}',
   beforeEach() {
     this.currentUser.admin = true;
     this.set("args", { canManage: true });
@@ -628,7 +639,7 @@ widgetTest("change owner", {
 
 widgetTest("reply", {
   template:
-    '{{mount-widget widget="post" args=args replyToPost="replyToPost"}}',
+    '{{mount-widget widget="post" args=args replyToPost=(action "replyToPost")}}',
   beforeEach() {
     this.set("args", { canCreatePost: true });
     this.on("replyToPost", () => (this.replied = true));
@@ -813,7 +824,7 @@ widgetTest("topic map - no summary", {
 
 widgetTest("topic map - has summary", {
   template:
-    '{{mount-widget widget="post" args=args toggleSummary="toggleSummary"}}',
+    '{{mount-widget widget="post" args=args toggleSummary=(action "toggleSummary")}}',
   beforeEach() {
     this.set("args", { showTopicMap: true, hasTopicSummary: true });
     this.on("toggleSummary", () => (this.summaryToggled = true));
