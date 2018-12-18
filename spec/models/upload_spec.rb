@@ -43,7 +43,6 @@ describe Upload do
       upload.reload
       expect(upload.optimized_images.count).to eq(1)
     end
-
   end
 
   it "can reconstruct dimensions on demand" do

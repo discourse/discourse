@@ -174,7 +174,20 @@ class OptimizedImage < ActiveRecord::Base
   IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
-    extension = File.extname((opts && opts[:filename]) || path || ext_path)[1..-1]
+    opts ||= {}
+
+    # This logic is a little messy but the result of using mocks for most
+    # of the image tests. The idea here is you shouldn't trust the "original"
+    # path of a file to figure out its extension. However, in certain cases
+    # such as generating the loading upload thumbnail, we force the format,
+    # and this allows us to use the forced format in that case.
+    extension = nil
+    if (opts[:format] && path != ext_path)
+      extension = File.extname(path)[1..-1]
+    else
+      extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
+    end
+
     raise Discourse::InvalidAccess if !extension || !extension.match?(IM_DECODERS)
     "#{extension}:#{path}"
   end
