@@ -3,6 +3,14 @@ require_dependency 'enum'
 class SearchLog < ActiveRecord::Base
   validates_presence_of :term
 
+  attr_reader :ctr
+
+  def ctr
+    return 0 if click_through == 0 || searches == 0
+
+    ((click_through.to_f / searches.to_f) * 100).ceil(1)
+  end
+
   def self.search_types
     @search_types ||= Enum.new(
       header: 1,
@@ -132,9 +140,9 @@ class SearchLog < ActiveRecord::Base
       result = result.where('search_type = ?', search_types[search_type])
     end
 
-    result = result.group('lower(term)')
-      .order('unique_searches DESC, click_through ASC, term ASC')
-      .limit(limit).to_a
+    result.group('lower(term)')
+      .order('searches DESC, click_through DESC, unique_searches DESC, term ASC')
+      .limit(limit)
   end
 
   def self.start_of(period)
