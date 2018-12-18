@@ -313,6 +313,7 @@ module Discourse
     end
 
     MessageBus.publish(readonly_channel, true)
+    Site.clear_anon_cache!
     true
   end
 

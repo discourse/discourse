@@ -164,9 +164,14 @@ describe Discourse do
     end
 
     def get_readonly_message
+      message = nil
+
       messages = MessageBus.track_publish do
         yield
       end
+
+      expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
+        .to eq(true)
 
       messages.find { |m| m.channel == Discourse.readonly_channel }
     end
@@ -189,18 +194,7 @@ describe Discourse do
 
     describe ".disable_readonly_mode" do
       it "removes a key from redis and publish a message through the message bus" do
-        Discourse.enable_readonly_mode
-        message = nil
-
-        messages = MessageBus.track_publish do
-          Discourse.disable_readonly_mode
-        end
-
-        expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
-          .to eq(true)
-
-        message = messages.find { |m| m.channel == Discourse.readonly_channel }
-
+        message = get_readonly_message { Discourse.disable_readonly_mode }
         assert_readonly_mode_disabled(message, readonly_mode_key)
       end
 
