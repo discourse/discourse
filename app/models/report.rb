@@ -723,7 +723,7 @@ class Report
         title: I18n.t("reports.trending_search.labels.term")
       },
       {
-        property: :unique_searches,
+        property: :searches,
         type: :number,
         title: I18n.t("reports.trending_search.labels.searches")
       },
@@ -744,17 +744,10 @@ class Report
     )
 
     trends.each do |trend|
-      ctr =
-        if trend.click_through == 0 || trend.searches == 0
-          0
-        else
-          trend.click_through.to_f / trend.searches.to_f
-        end
-
       report.data << {
         term: trend.term,
-        unique_searches: trend.unique_searches,
-        ctr: (ctr * 100).ceil(1)
+        searches: trend.searches,
+        ctr: trend.ctr
       }
     end
   end
