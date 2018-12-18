@@ -28,7 +28,7 @@ import {
   registerIconRenderer,
   replaceIcon
 } from "discourse-common/lib/icon-library";
-import { registerCategoryLinkRenderer } from "discourse/helpers/category-link";
+import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { addNavItem } from "discourse/models/nav-item";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -779,20 +779,16 @@ class PluginApi {
 
   /**
    * Registers a renderer that overrides the display of category links.
-   * For example, to render an icon instead of any category name:
    *
-   * import { iconHTML } from "discourse-common/lib/icon-library";
+   * Example:
    *
-   * api.registerCategoryLinkRenderer({
-   *   name: 'rocket',
-   *
-   *   render(category, opts) {
-   *     return `<span>${iconHTML('rocket')}</span>`;
-   *   },
-   * });
+   * function testReplaceRenderer(category, opts) {
+   *   return "Hello World";
+   * }
+   * api.replaceCategoryLinkRenderer(categoryIconsRenderer);
    **/
-  registerCategoryLinkRenderer(fn) {
-    registerCategoryLinkRenderer(fn);
+  replaceCategoryLinkRenderer(fn) {
+    replaceCategoryLinkRenderer(fn);
   }
 }
 
