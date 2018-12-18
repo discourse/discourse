@@ -1153,6 +1153,7 @@ describe CookedPostProcessor do
   context "remove direct reply full quote" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+
     let(:raw) do
       <<~RAW
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -1160,6 +1161,16 @@ describe CookedPostProcessor do
       [/quote]
 
       and this is the third reply
+      RAW
+    end
+
+    let(:raw2) do
+      <<~RAW
+      and this is the third reply
+
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the first post
+      [/quote]
       RAW
     end
 
@@ -1181,6 +1192,15 @@ describe CookedPostProcessor do
         expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
         expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
       end
+    end
+
+    it 'does not delete quote if not first paragraph' do
+      SiteSetting.remove_full_quote = true
+
+      reply = Fabricate(:post, topic: topic, raw: raw2)
+      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      expect(topic.posts).to eq([post, reply])
+      expect(reply.raw).to eq(raw2)
     end
 
     it "does nothing when 'remove_full_quote' is disabled" do
