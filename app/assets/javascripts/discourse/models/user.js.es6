@@ -716,6 +716,16 @@ User.reopenClass(Singleton, {
   // TODO: Use app.register and junk Singleton
   createCurrent() {
     const userJson = PreloadStore.get("currentUser");
+
+    if (userJson && userJson.primary_group_id) {
+      const primaryGroup = userJson.groups.find(
+        group => group.id === userJson.primary_group_id
+      );
+      if (primaryGroup) {
+        userJson.primary_group_name = primaryGroup.name;
+      }
+    }
+
     if (userJson) {
       const store = Discourse.__container__.lookup("service:store");
       return store.createRecord("user", userJson);
