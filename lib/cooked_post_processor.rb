@@ -95,7 +95,7 @@ class CookedPostProcessor
     prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
     return if !prev
 
-    new_raw = @post.raw.gsub(/\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
+    new_raw = @post.raw.gsub(/\A\s*\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
     return if @post.raw == new_raw
 
     PostRevisor.new(@post).revise!(
