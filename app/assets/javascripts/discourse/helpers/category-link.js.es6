@@ -38,12 +38,7 @@ export function categoryBadgeHTML(category, opts) {
   )
     return "";
 
-  for (let i = 0; i < _renderers.length; i++) {
-    let result = _renderers[i].render(category, opts);
-    if (result) {
-      return result;
-    }
-  }
+  return _renderers[0].render(category, opts);
 }
 
 export function categoryLinkHTML(category, options) {
