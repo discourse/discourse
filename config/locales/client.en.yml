@@ -530,7 +530,7 @@ en:
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in this group."
+          description: "You will be notified of new topics in this group but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -2366,7 +2366,7 @@ en:
           description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in these categories."
+          description: "You will be notified of new topics in this category but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -2741,7 +2741,7 @@ en:
           description: "You will automatically watch all topics with this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic with this tag."
+          description: "You will be notified of new topics in this tag but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
