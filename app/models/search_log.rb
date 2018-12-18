@@ -125,8 +125,7 @@ class SearchLog < ActiveRecord::Base
       SUM(CASE
                WHEN search_result_id IS NOT NULL THEN 1
                ELSE 0
-           END) AS click_through,
-      COUNT(DISTINCT ip_address) AS unique_searches
+           END) AS click_through
     SQL
 
     result = SearchLog.select(select_sql)
@@ -141,7 +140,7 @@ class SearchLog < ActiveRecord::Base
     end
 
     result.group('lower(term)')
-      .order('searches DESC, click_through DESC, unique_searches DESC, term ASC')
+      .order('searches DESC, click_through DESC, term ASC')
       .limit(limit)
   end
 
