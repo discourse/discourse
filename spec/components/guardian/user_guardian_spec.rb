@@ -14,8 +14,8 @@ describe UserGuardian do
     Fabricate.build(:admin, id: 3)
   end
 
-  let :user_avatar do
-    UserAvatar.new(user_id: user.id)
+  let(:user_avatar) do
+    Fabricate(:user_avatar, user: user)
   end
 
   let :users_upload do
@@ -54,19 +54,24 @@ describe UserGuardian do
       it "can not set uploads not owned by current user" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, already_uploaded)).to eq(true)
+
+        UserUpload.create!(
+          upload_id: not_my_upload.id,
+          user_id: not_my_upload.user_id
+        )
+
         expect(guardian.can_pick_avatar?(user_avatar, not_my_upload)).to eq(false)
         expect(guardian.can_pick_avatar?(user_avatar, nil)).to eq(true)
       end
 
       it "can handle uploads that are associated but not directly owned" do
-        yes_my_upload = not_my_upload
-        UserUpload.create!(upload_id: yes_my_upload.id, user_id: user_avatar.user_id)
-        expect(guardian.can_pick_avatar?(user_avatar, yes_my_upload)).to eq(true)
+        UserUpload.create!(
+          upload_id: not_my_upload.id,
+          user_id: user_avatar.user_id
+        )
 
-        UserUpload.destroy_all
-
-        UserUpload.create!(upload_id: yes_my_upload.id, user_id: yes_my_upload.user_id)
-        expect(guardian.can_pick_avatar?(user_avatar, yes_my_upload)).to eq(true)
+        expect(guardian.can_pick_avatar?(user_avatar, not_my_upload))
+          .to eq(true)
       end
     end
 
