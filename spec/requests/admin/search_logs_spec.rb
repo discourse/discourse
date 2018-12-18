@@ -32,6 +32,8 @@ RSpec.describe Admin::SearchLogsController do
 
       json = ::JSON.parse(response.body)
       expect(json[0]['term']).to eq('ruby')
+      expect(json[0]['searches']).to eq(1)
+      expect(json[0]['ctr']).to eq(0)
     end
   end
 

@@ -3628,9 +3628,7 @@ en:
           title: "Search Logs"
           term: "Term"
           searches: "Searches"
-          click_through: "Click Through"
-          unique: "Unique"
-          unique_title: "unique users performing the search"
+          click_through_rate: "CTR"
           types:
             all_search_types: "All search types"
             header: "Header"
