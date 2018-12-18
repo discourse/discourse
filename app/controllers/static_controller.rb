@@ -12,7 +12,7 @@ class StaticController < ApplicationController
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
-    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines', 'rules'].include?(params[:id])
+    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines'].include?(params[:id])
       return redirect_to path('/login')
     end
 
@@ -31,7 +31,7 @@ class StaticController < ApplicationController
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
-    @page = 'faq' if @page == 'guidelines' || @page == 'rules'
+    @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
     @page.gsub!(/[^a-z0-9\_\-]/, '')

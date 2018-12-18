@@ -329,12 +329,14 @@ Discourse::Application.routes.draw do
   get "login" => "static#show", id: "login", constraints: { format: /(json|html)/ }
   get "password-reset" => "static#show", id: "password_reset", constraints: { format: /(json|html)/ }
   get "faq" => "static#show", id: "faq", constraints: { format: /(json|html)/ }
-  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines', constraints: { format: /(json|html)/ }
-  get "rules" => "static#show", id: "rules", as: 'rules', constraints: { format: /(json|html)/ }
   get "tos" => "static#show", id: "tos", as: 'tos', constraints: { format: /(json|html)/ }
   get "privacy" => "static#show", id: "privacy", as: 'privacy', constraints: { format: /(json|html)/ }
   get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
   get "login-preferences" => "static#show", id: "login", constraints: { format: /(json|html)/ }
+
+  %w{guidelines rules conduct}.each do |faq_alias|
+    get faq_alias => "static#show", id: "guidelines", as: faq_alias, constraints: { format: /(json|html)/ }
+  end
 
   get "my/*path", to: 'users#my_redirect'
   get "user_preferences" => "users#user_preferences_redirect"
