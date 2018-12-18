@@ -8,16 +8,13 @@ module FileStore
 
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
-    MULTISITE_TOMBSTONE_PREFIX ||= File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
 
     attr_reader :s3_helper
 
     def initialize(s3_helper = nil)
-      if !Rails.configuration.multisite
-        @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
-      else
-        @s3_helper = s3_helper || S3Helper.new(s3_bucket, MULTISITE_TOMBSTONE_PREFIX)
-      end
+      @s3_helper = s3_helper || S3Helper.new(s3_bucket,
+        Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX
+      )
     end
 
     def store_upload(file, upload, content_type = nil)
@@ -90,6 +87,10 @@ module FileStore
 
     def purge_tombstone(grace_period)
       @s3_helper.update_tombstone_lifecycle(grace_period)
+    end
+
+    def multisite_tombstone_prefix
+      File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
     end
 
     def path_for(upload)
