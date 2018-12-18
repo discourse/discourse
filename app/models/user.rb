@@ -353,6 +353,10 @@ class User < ActiveRecord::Base
       .maximum("groups.grant_trust_level")
   end
 
+  def visible_groups
+    groups.visible_groups(self)
+  end
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
