@@ -78,25 +78,15 @@ export default Em.Mixin.create({
     // set autoUpload: false in uploadOptions to allow this function to be called
     $upload.on("fileuploadadd", (e, data) => {
       const options = this.uploadOptions();
-      if (options.shouldConfirm) {
-        const confirmationMessage = options.confirmationMessage
-          ? options.confirmationMessage
-          : I18n.t("generic_confirmation");
-        bootbox.confirm(
-          confirmationMessage,
-          I18n.t("cancel"),
-          I18n.t("go_ahead"),
-          result => {
-            if (result) {
-              return data.submit();
-            } else {
-              return data.abort();
-            }
-          }
-        );
-      } else {
-        data.submit();
-      }
+      const confirmationMessage = options.confirmationMessage
+        ? options.confirmationMessage
+        : I18n.t("generic_confirmation");
+      bootbox.confirm(
+        confirmationMessage,
+        I18n.t("cancel"),
+        I18n.t("go_ahead"),
+        result => result ? data.submit() : data.abort()
+      );
     });
 
     $upload.on("fileuploadsubmit", (e, data) => {

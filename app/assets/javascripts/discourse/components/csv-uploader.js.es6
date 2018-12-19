@@ -30,7 +30,6 @@ export default Em.Component.extend(UploadMixin, {
   uploadOptions() {
     return {
       autoUpload: false,
-      shouldConfirm: true,
       confirmationMessage: I18n.t(
         "user.invited.bulk_invite.confirmation_message"
       )
