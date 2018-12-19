@@ -28,21 +28,37 @@ function hide(image) {
 // Restore an image when onscreen
 function show(image) {
   let sources = imageSources.get(image);
+
   if (sources) {
-    image.setAttribute("src", sources.src);
+    const copyImg = new Image();
+    copyImg.onload = () => {
+      image.src = copyImg.src;
+      if (copyImg.srcset) {
+        image.srcset = copyImg.srcset;
+      }
+      image.classList.remove("d-lazyload-hidden");
+      image.parentNode.removeChild(copyImg);
+      copyImg.onload = null;
+    };
+
+    copyImg.src = sources.src;
     if (sources.srcSet) {
-      image.setAttribute("srcset", sources.srcSet);
+      copyImg.srcset = sources.srcSet;
     }
+
+    copyImg.style.position = "absolute";
+    copyImg.style.top = 0;
+    copyImg.style.left = 0;
+    copyImg.style.height = "100%";
+    copyImg.style.width = "100%";
+
+    image.parentNode.appendChild(copyImg);
+  } else {
+    image.classList.remove("d-lazyload-hidden");
   }
-  image.classList.remove("d-lazyload-hidden");
 }
 
 export function setupLazyLoading(api) {
-  // Old IE don't support this API
-  if (!("IntersectionObserver" in window)) {
-    return;
-  }
-
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const { target } = entry;
@@ -50,15 +66,14 @@ export function setupLazyLoading(api) {
       if (entry.isIntersecting) {
         show(target);
         observer.unobserve(target);
-      } else {
-        // The Observer is triggered when entries are added. This allows
-        // us to hide things that start off screen.
-        hide(target);
       }
     });
   }, OBSERVER_OPTIONS);
 
   api.decorateCooked($post => {
-    $(".lightbox img", $post).each((_, $img) => observer.observe($img));
+    $(".lightbox img", $post).each((_, img) => {
+      hide(img);
+      observer.observe(img);
+    });
   });
 }
