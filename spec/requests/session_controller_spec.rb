@@ -557,6 +557,38 @@ RSpec.describe SessionController do
       expect(response.status).to eq(419)
     end
 
+    context "when sso provider is enabled" do
+      before do
+        SiteSetting.enable_sso_provider = true
+        SiteSetting.sso_provider_secrets = [
+          "*|secret,forAll",
+          "*.rainbow|wrongSecretForOverRainbow",
+          "www.random.site|secretForRandomSite",
+          "somewhere.over.rainbow|secretForOverRainbow",
+        ].join("\n")
+      end
+
+      it "doesn't break" do
+        sso = get_sso('/hello/world')
+        sso.external_id = '997'
+        sso.sso_url = "http://somewhere.over.com/sso_login"
+        sso.return_sso_url = "http://someurl.com"
+
+        user = Fabricate(:user)
+        user.create_single_sign_on_record(external_id: '997', last_payload: '')
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        user.single_sign_on_record.reload
+        expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
+
+        expect(response).to redirect_to('/hello/world')
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        expect(user.id).to eq(logged_on_user.id)
+      end
+    end
+
     it 'returns the correct error code for invalid signature' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'
@@ -652,7 +684,7 @@ RSpec.describe SessionController do
           "somewhere.over.rainbow|secretForOverRainbow",
         ].join("\n")
 
-        @sso = SingleSignOn.new
+        @sso = SingleSignOnProvider.new
         @sso.nonce = "mynonce"
         @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
@@ -684,7 +716,7 @@ RSpec.describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload)
+        sso2 = SingleSignOnProvider.parse(payload)
 
         expect(sso2.email).to eq(@user.email)
         expect(sso2.name).to eq(@user.name)
@@ -718,7 +750,7 @@ RSpec.describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload)
+        sso2 = SingleSignOnProvider.parse(payload)
 
         expect(sso2.email).to eq(@user.email)
         expect(sso2.name).to eq(@user.name)
@@ -781,7 +813,7 @@ RSpec.describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload)
+        sso2 = SingleSignOnProvider.parse(payload)
 
         expect(sso2.avatar_url.blank?).to_not eq(true)
         expect(sso2.profile_background_url.blank?).to_not eq(true)
