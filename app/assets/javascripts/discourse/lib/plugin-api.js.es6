@@ -28,6 +28,7 @@ import {
   registerIconRenderer,
   replaceIcon
 } from "discourse-common/lib/icon-library";
+import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { addNavItem } from "discourse/models/nav-item";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -39,7 +40,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.25";
+const PLUGIN_API_VERSION = "0.8.26";
 
 class PluginApi {
   constructor(version, container) {
@@ -774,6 +775,20 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a renderer that overrides the display of category links.
+   *
+   * Example:
+   *
+   * function testReplaceRenderer(category, opts) {
+   *   return "Hello World";
+   * }
+   * api.replaceCategoryLinkRenderer(categoryIconsRenderer);
+   **/
+  replaceCategoryLinkRenderer(fn) {
+    replaceCategoryLinkRenderer(fn);
   }
 }
 
