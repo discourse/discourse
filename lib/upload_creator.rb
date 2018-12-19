@@ -123,7 +123,7 @@ class UploadCreator
 
       # store the file and update its url
       File.open(@file.path) do |f|
-        url = Discourse.store.store_upload(f, @upload)
+        url, @upload.etag = Discourse.store.store_upload(f, @upload)
 
         if url.present?
           @upload.update!(url: url)
