@@ -12,7 +12,9 @@ module FileStore
     attr_reader :s3_helper
 
     def initialize(s3_helper = nil)
-      @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
+      @s3_helper = s3_helper || S3Helper.new(s3_bucket,
+        Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX
+      )
     end
 
     def store_upload(file, upload, content_type = nil)
@@ -85,6 +87,10 @@ module FileStore
 
     def purge_tombstone(grace_period)
       @s3_helper.update_tombstone_lifecycle(grace_period)
+    end
+
+    def multisite_tombstone_prefix
+      File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
     end
 
     def path_for(upload)

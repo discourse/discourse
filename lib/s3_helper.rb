@@ -39,14 +39,27 @@ class S3Helper
     end
 
     # delete the file
+    s3_filename.prepend(multisite_upload_path) if Rails.configuration.multisite
     s3_bucket.object(get_path_for_s3_upload(s3_filename)).delete
   rescue Aws::S3::Errors::NoSuchKey
   end
 
   def copy(source, destination, options: {})
+    if !Rails.configuration.multisite
+      options[:copy_source] = File.join(@s3_bucket_name, source)
+    else
+      if @s3_bucket_folder_path
+        bucket_folder, filename = begin
+          source.split("/".freeze, 2)
+        end
+        options[:copy_source] = File.join(@s3_bucket_name, bucket_folder, multisite_upload_path, filename)
+      else
+        options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
+      end
+    end
     s3_bucket
       .object(destination)
-      .copy_from(options.merge(copy_source: File.join(@s3_bucket_name, source)))
+      .copy_from(options)
   end
 
   # make sure we have a cors config for assets
@@ -192,6 +205,10 @@ class S3Helper
   def get_path_for_s3_upload(path)
     path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
     path
+  end
+
+  def multisite_upload_path
+    File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
   end
 
   def s3_resource
