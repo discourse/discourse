@@ -1,5 +1,6 @@
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", {
   loggedIn: true,
@@ -125,10 +126,15 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 });
 
 QUnit.test("shared draft", async assert => {
+  toggleCheckDraftPopup(true);
+
   const composerActions = selectKit(".composer-actions");
 
   await visit("/");
   await click("#create-topic");
+
+  await fillIn("#reply-title", "This is the new text for the title");
+  await fillIn(".d-editor-input", "This is the new text for the post");
 
   await composerActions.expand();
   await composerActions.selectRowByValue("shared_draft");
@@ -138,6 +144,8 @@ QUnit.test("shared draft", async assert => {
     I18n.t("composer.create_shared_draft")
   );
   assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+
+  toggleCheckDraftPopup(false);
 });
 
 QUnit.test("hide component if no content", async assert => {

@@ -786,7 +786,14 @@ export default Ember.Controller.extend({
       // or get a draft sequence number
       if (!opts.draft || opts.draftSequence === undefined) {
         return Draft.get(opts.draftKey)
-          .then(data => self.confirmDraftAbandon(data))
+          .then(data => {
+            if (opts.skipDraftCheck) {
+              data.draft = undefined;
+              return data;
+            }
+
+            return self.confirmDraftAbandon(data);
+          })
           .then(data => {
             opts.draft = opts.draft || data.draft;
 
