@@ -5,12 +5,21 @@ describe AdminUserListSerializer do
 
   context "emails" do
     let(:admin) { Fabricate(:user_single_email, admin: true, email: "admin@email.com") }
+    let(:moderator) { Fabricate(:user_single_email, moderator: true, email: "moderator@email.com") }
     let(:user) { Fabricate(:user_single_email, email: "user@email.com") }
     let(:guardian) { Guardian.new(admin) }
+    let(:mod_guardian) { Guardian.new(moderator) }
 
     let(:json) do
       AdminUserListSerializer.new(user,
         scope: guardian,
+        root: false
+      ).as_json
+    end
+
+    let(:mod_json) do
+      AdminUserListSerializer.new(user,
+        scope: mod_guardian,
         root: false
       ).as_json
     end
@@ -55,6 +64,18 @@ describe AdminUserListSerializer do
       end
 
       include_examples "not shown"
+    end
+
+    context "when moderator makes a request with show_emails param set to true" do
+      before do
+        mod_guardian.can_see_emails = true
+        fabricate_secondary_emails_for(user)
+      end
+
+      it "doesn't contain emails" do
+        expect(mod_json[:email]).to eq(nil)
+        expect(mod_json[:secondary_emails]).to eq(nil)
+      end
     end
 
     context "with a normal user after clicking 'show emails'" do
