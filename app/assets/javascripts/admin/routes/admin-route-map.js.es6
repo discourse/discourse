@@ -12,6 +12,10 @@ export default function() {
         path: "/dashboard/security",
         resetNamespace: true
       });
+      this.route("admin.dashboardNextReports", {
+        path: "/dashboard/reports",
+        resetNamespace: true
+      });
     });
 
     this.route(

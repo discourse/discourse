@@ -43,6 +43,10 @@
     @include active-navigation-item;
   }
 
+  &.dashboard-next-reports .navigation-item.reports {
+    @include active-navigation-item;
+  }
+
   &.general .navigation-item.general {
     @include active-navigation-item;
   }
@@ -524,5 +528,35 @@
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 1em;
     grid-row-gap: 1em;
+  }
+}
+
+.dashboard-next-reports {
+  .reports-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    margin: 0 -1.5%;
+  }
+  .report {
+    margin: 1.5%;
+    border: 1px solid $primary-low;
+    flex: 1 1 28%;
+    transition: box-shadow 0.25s;
+    min-width: 225px;
+    max-width: 550px;
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 1em;
+      .report-description {
+        color: $primary-high;
+      }
+    }
+    &:hover {
+      box-shadow: shadow("card");
+    }
   }
 }

@@ -4,10 +4,28 @@ acceptance("Dashboard Next", {
   loggedIn: true
 });
 
-QUnit.test("Visit dashboard next page", async assert => {
+QUnit.test("Dashboard", async assert => {
+  await visit("/admin");
+  assert.ok(exists(".dashboard-next"), "has dashboard-next class");
+});
+
+QUnit.test("tabs", async assert => {
   await visit("/admin");
 
-  assert.ok(exists(".dashboard-next"), "has dashboard-next class");
+  assert.ok(exists(".dashboard-next .navigation-item.general"), "general tab");
+  assert.ok(
+    exists(".dashboard-next .navigation-item.moderation"),
+    "moderation tab"
+  );
+  assert.ok(
+    exists(".dashboard-next .navigation-item.security"),
+    "security tab"
+  );
+  assert.ok(exists(".dashboard-next .navigation-item.reports"), "reports tab");
+});
+
+QUnit.test("general tab", async assert => {
+  await visit("/admin");
 
   assert.ok(exists(".admin-report.signups"), "signups report");
   assert.ok(exists(".admin-report.posts"), "posts report");
@@ -28,10 +46,6 @@ QUnit.test("Visit dashboard next page", async assert => {
     "Houston...",
     "displays problems"
   );
-});
-
-QUnit.test("it has counters", async assert => {
-  await visit("/admin");
 
   assert.equal(
     $(".admin-report.page-view-total-reqs .today-count")
@@ -56,5 +70,39 @@ QUnit.test("it has counters", async assert => {
       .text()
       .trim(),
     "80.8k"
+  );
+});
+
+QUnit.test("reports tab", async assert => {
+  await visit("/admin");
+  await click(".dashboard-next .navigation-item.reports .navigation-link");
+
+  assert.equal(
+    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    1
+  );
+
+  await fillIn(".dashboard-next .filter-reports-input", "flags");
+
+  assert.equal(
+    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    0
+  );
+
+  await click(".dashboard-next .navigation-item.security .navigation-link");
+  await click(".dashboard-next .navigation-item.reports .navigation-link");
+
+  assert.equal(
+    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    1,
+    "navigating back and forth resets filter"
+  );
+
+  await fillIn(".dashboard-next .filter-reports-input", "activities");
+
+  assert.equal(
+    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    1,
+    "filter is case insensitive"
   );
 });
