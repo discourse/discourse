@@ -298,6 +298,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = action;
     options.categoryId = this.get("composerModel.categoryId");
     options.topicTitle = this.get("composerModel.title");
+    options.skipDraftCheck = true;
     this._openComposer(options);
   },
 
