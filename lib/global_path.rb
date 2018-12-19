@@ -22,4 +22,10 @@ module GlobalPath
     end
   end
 
+  def full_cdn_url(url)
+    uri = URI.parse(UrlHelper.absolute(upload_cdn_path(url)))
+    uri.scheme = SiteSetting.scheme if uri.scheme.blank?
+    uri.to_s
+  end
+
 end
