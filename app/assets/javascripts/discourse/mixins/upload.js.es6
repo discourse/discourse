@@ -74,21 +74,6 @@ export default Em.Mixin.create({
       }
     });
 
-    // all pre-processing or confirmations come here before file is submitted to server
-    // set autoUpload: false in uploadOptions to allow this function to be called
-    $upload.on("fileuploadadd", (e, data) => {
-      const options = this.uploadOptions();
-      const confirmationMessage = options.confirmationMessage
-        ? options.confirmationMessage
-        : I18n.t("generic_confirmation");
-      bootbox.confirm(
-        confirmationMessage,
-        I18n.t("cancel"),
-        I18n.t("go_ahead"),
-        result => result ? data.submit() : data.abort()
-      );
-    });
-
     $upload.on("fileuploadsubmit", (e, data) => {
       const opts = _.merge(
         { bypassNewUserRestriction: true },

@@ -28,11 +28,19 @@ export default Em.Component.extend(UploadMixin, {
   },
 
   uploadOptions() {
-    return {
-      autoUpload: false,
-      confirmationMessage: I18n.t(
-        "user.invited.bulk_invite.confirmation_message"
-      )
-    };
-  }
+    return { autoUpload: false };
+  },
+
+  _init: function() {
+    const $upload = this.$();
+
+    $upload.on("fileuploadadd", (e, data) => {
+      bootbox.confirm(
+        I18n.t("user.invited.bulk_invite.confirmation_message"),
+        I18n.t("cancel"),
+        I18n.t("go_ahead"),
+        result => (result ? data.submit() : data.abort())
+      );
+    });
+  }.on("didInsertElement")
 });
