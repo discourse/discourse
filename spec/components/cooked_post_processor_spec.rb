@@ -259,7 +259,6 @@ describe CookedPostProcessor do
     end
 
     context "responsive images" do
-
       before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
       it "includes responsive images on demand" do
@@ -289,7 +288,7 @@ describe CookedPostProcessor do
         )
 
         # Fake a loading image
-        OptimizedImage.create!(
+        optimized_image = OptimizedImage.create!(
           url: 'http://a.b.c/10x10.png',
           width: CookedPostProcessor::LOADING_SIZE,
           height: CookedPostProcessor::LOADING_SIZE,
@@ -303,10 +302,12 @@ describe CookedPostProcessor do
 
         cpp.add_to_size_cache(upload.url, 2000, 1500)
         cpp.post_process_images
-        expect(cpp.loading_image(upload)).to be_present
 
+        html = cpp.html
+
+        expect(html).to include(%Q|data-small-upload="#{optimized_image.url}"|)
         # 1.5x is skipped cause we have a missing thumb
-        expect(cpp.html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
+        expect(html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
       end
 
       it "doesn't include response images for cropped images" do
