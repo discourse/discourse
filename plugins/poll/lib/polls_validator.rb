@@ -106,10 +106,10 @@ module DiscoursePoll
     def valid_multiple_choice_settings?(poll)
       if poll["type"] == "multiple"
         options = poll["options"].size
-        min = (poll["min"].presence || 0).to_i
+        min = (poll["min"].presence || 1).to_i
         max = (poll["max"].presence || options).to_i
 
-        if min > max || min < 0 || max <= 0 || max > options || min >= options
+        if min > max || min <= 0 || max <= 0 || max > options || min >= options
           if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
             @post.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
           else
@@ -128,28 +128,28 @@ module DiscoursePoll
 
       valid = true
 
-      min = (poll["min"].presence || 1).to_i
+      min = poll["min"].to_i
       max = (poll["max"].presence || MAX_VALUE).to_i
       step = (poll["step"].presence || 1).to_i
 
-      if min <= 0
-        @post.errors.add(:base, "Min " + I18n.t("errors.messages.greater_than", count: 0))
+      if min < 0
+        @post.errors.add(:base, "Min #{I18n.t("errors.messages.greater_than", count: 0)}")
         valid = false
       elsif min > MAX_VALUE
-        @post.errors.add(:base, "Min " + I18n.t("errors.messages.less_than", count: MAX_VALUE))
+        @post.errors.add(:base, "Min #{I18n.t("errors.messages.less_than", count: MAX_VALUE)}")
         valid = false
       end
 
       if max < min
-        @post.errors.add(:base, "Max " + I18n.t("errors.messages.greater_than", count: "min"))
+        @post.errors.add(:base, "Max #{I18n.t("errors.messages.greater_than", count: "min")}")
         valid = false
       elsif max > MAX_VALUE
-        @post.errors.add(:base, "Max " + I18n.t("errors.messages.less_than", count: MAX_VALUE))
+        @post.errors.add(:base, "Max #{I18n.t("errors.messages.less_than", count: MAX_VALUE)}")
         valid = false
       end
 
       if step <= 0
-        @post.errors.add(:base, "Step " + I18n.t("errors.messages.greater_than", count: 0))
+        @post.errors.add(:base, "Step #{I18n.t("errors.messages.greater_than", count: 0)}")
         valid = false
       elsif ((max - min + 1) / step) < 2
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
