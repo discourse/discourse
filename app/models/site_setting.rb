@@ -8,7 +8,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :data_type
 
   after_save do |site_setting|
-    SiteSetting.refresh!
     DiscourseEvent.trigger(:site_setting_saved, site_setting)
     true
   end

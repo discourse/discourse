@@ -458,6 +458,7 @@ module Discourse
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     name = site_setting.name.to_s
     if SiteSetting.enable_s3_uploads && (name.include?("s3_inventory") || name == "s3_upload_bucket")
+      SiteSetting.refresh!
       store.inventory.update!
     end
   end
