@@ -355,6 +355,12 @@ HTML
       expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
     end
 
+    it 'is empty when the settings are invalid' do
+      theme.set_field(target: :settings, name: :yaml, value: 'nil_setting: ')
+      theme.save!
+
+      expect(theme.settings).to be_empty
+    end
   end
 
   it 'correctly caches theme ids' do
