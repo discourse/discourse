@@ -2,8 +2,9 @@ import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import { observes } from "ember-addons/ember-computed-decorators";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(CanCheckEmails, {
   query: null,
   queryParams: ["order", "ascending"],
   order: null,
