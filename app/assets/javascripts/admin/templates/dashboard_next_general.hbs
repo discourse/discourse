@@ -5,7 +5,7 @@
     <div class="period-section">
       <div class="section-title">
         <h2>
-          <a href="{{get-url '/admin/reports'}}">
+          <a href="{{get-url '/admin/dashboard/reports'}}">
             {{i18n "admin.dashboard.community_health"}}
           </a>
         </h2>
@@ -85,10 +85,6 @@
             {{/each}}
           </div>
         </div>
-
-        {{#link-to "adminReports"}}
-          {{i18n "admin.dashboard.all_reports"}}
-        {{/link-to}}
       </div>
 
       <div class="user-metrics">
