@@ -12,17 +12,11 @@ function hide(image) {
   image.classList.add("d-lazyload");
   image.classList.add("d-lazyload-hidden");
 
-  imageSources.set(image, {
-    src: image.getAttribute("src"),
-    srcSet: image.getAttribute("srcset")
-  });
+  imageSources.set(image, { src: image.src, srcset: image.srcset });
   image.removeAttribute("srcset");
 
-  image.setAttribute(
-    "src",
-    image.getAttribute("data-small-upload") || LOADING_DATA
-  );
-  image.removeAttribute("data-small-upload");
+  image.src = image.dataset.smallUpload || LOADING_DATA;
+  delete image.dataset.smallUpload;
 }
 
 // Restore an image when onscreen
@@ -42,9 +36,7 @@ function show(image) {
     };
 
     copyImg.src = sources.src;
-    if (sources.srcSet) {
-      copyImg.srcset = sources.srcSet;
-    }
+    copyImg.srcset = sources.srcset || copyImg.srcset;
 
     copyImg.style.position = "absolute";
     copyImg.style.top = 0;
