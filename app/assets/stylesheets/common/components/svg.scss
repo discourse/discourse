@@ -11,6 +11,12 @@
   overflow: visible;
 }
 
+// Fixes Edge bug with SVG elements not triggering click event
+svg,
+svg use {
+  pointer-events: none;
+}
+
 // Stacked Icons
 // Usage:
 // <span class="fa-stack">
