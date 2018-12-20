@@ -9,8 +9,8 @@ class SearchController < ApplicationController
   end
 
   def show
-    @search_term = params.require(:q)
-    raise Discourse::InvalidParameters.new(:q) if @search_term.length < SiteSetting.min_search_term_length
+    @search_term = params[:q]
+    raise Discourse::InvalidParameters.new(:q) if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length
 
     search_args = {
       type_filter: 'topic',
