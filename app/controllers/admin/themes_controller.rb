@@ -96,8 +96,15 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.order(:name).includes(:theme_fields, :remote_theme)
-    @color_schemes = ColorScheme.all.to_a
+    @themes = Theme.order(:name).includes(:child_themes,
+                                          :remote_theme,
+                                          :theme_settings,
+                                          :settings_field,
+                                          :user,
+                                          :color_scheme,
+                                          theme_fields: :upload
+                                          )
+    @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
     light = ColorScheme.new(name: I18n.t("color_schemes.light"))
     @color_schemes.unshift(light)
 
