@@ -96,7 +96,9 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      displayErrorForUpload(data);
+      if (!data || (data && data.errorThrown !== "abort")) {
+        displayErrorForUpload(data);
+      }
       reset();
     });
   }.on("didInsertElement"),
