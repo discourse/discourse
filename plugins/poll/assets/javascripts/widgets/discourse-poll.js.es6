@@ -8,6 +8,7 @@ import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from "discourse/widgets/post";
 import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
+import { userPath } from "discourse/lib/url";
 
 function optionHtml(option) {
   return new RawHtml({ html: `<span>${option.html}</span>` });
@@ -143,6 +144,7 @@ createWidget("discourse-poll-voters", {
       return h("li", [
         avatarFor("tiny", {
           username: user.username,
+          url: userPath(user.username),
           template: user.avatar_template
         }),
         " "
