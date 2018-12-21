@@ -332,6 +332,15 @@ describe Category do
       expect(Permalink.count).to eq(0)
     end
 
+    it "correctly creates permalink when category slug is changed in subfolder install" do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      old_url = @category.url
+      @category.update_attributes(slug: 'new-category')
+      permalink = Permalink.last
+      expect(permalink.url).to eq(old_url[1..-1])
+    end
+
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
       expect(category.topic.public_topic_timer).to eq(nil)
