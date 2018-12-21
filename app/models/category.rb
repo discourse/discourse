@@ -572,11 +572,9 @@ class Category < ActiveRecord::Base
 
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
-    if self.parent_category
-      url = "c/#{self.parent_category.slug}/#{old_slug}"
-    else
-      url = "c/#{old_slug}"
-    end
+    url = +"#{Discourse.base_uri}/c"
+    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{old_slug}"
 
     if Permalink.where(url: url).exists?
       Permalink.where(url: url).update_all(category_id: id)
