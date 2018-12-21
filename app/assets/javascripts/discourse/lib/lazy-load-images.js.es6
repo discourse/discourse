@@ -2,7 +2,10 @@ const OBSERVER_OPTIONS = {
   rootMargin: "50%" // load images slightly before they're visible
 };
 
-const imageSources = new WeakMap();
+// Min size in pixels for consideration for lazy loading
+const MINIMUM_SIZE = 150;
+
+const hiddenData = new WeakMap();
 
 const LOADING_DATA =
   "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -12,7 +15,12 @@ function hide(image) {
   image.classList.add("d-lazyload");
   image.classList.add("d-lazyload-hidden");
 
-  imageSources.set(image, { src: image.src, srcset: image.srcset });
+  hiddenData.set(image, {
+    src: image.src,
+    srcset: image.srcset,
+    width: image.width,
+    height: image.height
+  });
   image.removeAttribute("srcset");
 
   image.src = image.dataset.smallUpload || LOADING_DATA;
@@ -21,9 +29,9 @@ function hide(image) {
 
 // Restore an image when onscreen
 function show(image) {
-  let sources = imageSources.get(image);
+  let imageData = hiddenData.get(image);
 
-  if (sources) {
+  if (imageData) {
     const copyImg = new Image();
     copyImg.onload = () => {
       image.src = copyImg.src;
@@ -35,14 +43,14 @@ function show(image) {
       copyImg.onload = null;
     };
 
-    copyImg.src = sources.src;
-    copyImg.srcset = sources.srcset || copyImg.srcset;
+    copyImg.src = imageData.src;
+    copyImg.srcset = imageData.srcset || copyImg.srcset;
 
     copyImg.style.position = "absolute";
     copyImg.style.top = 0;
     copyImg.style.left = 0;
-    copyImg.style.height = "100%";
-    copyImg.style.width = "100%";
+    copyImg.style.width = imageData.width;
+    copyImg.style.height = imageData.height;
 
     image.parentNode.appendChild(copyImg);
   } else {
@@ -62,10 +70,15 @@ export function setupLazyLoading(api) {
     });
   }, OBSERVER_OPTIONS);
 
-  api.decorateCooked($post => {
-    $(".lightbox img", $post).each((_, img) => {
-      hide(img);
-      observer.observe(img);
-    });
-  });
+  api.decorateCooked(
+    $post => {
+      $("img", $post).each((_, img) => {
+        if (img.width >= MINIMUM_SIZE && img.height >= MINIMUM_SIZE) {
+          hide(img);
+          observer.observe(img);
+        }
+      });
+    },
+    { onlyStream: true }
+  );
 }

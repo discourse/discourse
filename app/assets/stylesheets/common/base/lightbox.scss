@@ -13,6 +13,10 @@
   box-sizing: border-box;
 }
 
+.onebox img.d-lazyload-hidden {
+  border: 1px solid $primary-low;
+}
+
 .cooked img.d-lazyload {
   transition: opacity 0.4s 0.75s ease;
 }
