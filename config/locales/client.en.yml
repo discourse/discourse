@@ -213,6 +213,7 @@ en:
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
+    go_ahead: "Go ahead"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -996,6 +997,7 @@ en:
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
+          confirmation_message: "You’re about to email invites to everyone in the uploaded file."
 
       password:
         title: "Password"
