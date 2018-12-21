@@ -1357,7 +1357,7 @@ class Topic < ActiveRecord::Base
       user_deleted: false,
       hidden: false,
       post_type: Post.types[:regular]
-    ).last
+    ).last || first_post
 
     update!(bumped_at: post.created_at)
   end
