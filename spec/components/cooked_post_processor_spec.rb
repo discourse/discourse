@@ -1165,12 +1165,14 @@ describe CookedPostProcessor do
 
   context "remove direct reply full quote" do
     let(:topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+    let!(:post) { Fabricate(:post, topic: topic, raw: "this is the 'first' post\n\nit has two lines") }
 
     let(:raw) do
       <<~RAW
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+      this is the ‘first’ post
+
+      it has two lines
       [/quote]
 
       and this is the third reply

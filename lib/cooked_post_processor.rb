@@ -96,10 +96,14 @@ class CookedPostProcessor
     num_quotes = @doc.css("aside.quote").size
     return if num_quotes != 1
 
-    prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
+    prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:cooked).first
     return if !prev
 
-    new_raw = @post.raw.gsub(/\A\s*\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
+    # Use previous post's cooked version because there MarkdownIt's typographer
+    # might replace some characters.
+    prev = Nokogiri::HTML(prev).text.strip
+    regexp = prev.lines.map(&:strip).reject(&:empty?).map { |l| Regexp.quote(l) }.join('\s*')
+    new_raw = @post.raw.gsub(/\A\[quote[^\]]*\]\s*#{regexp}\s*\[\/quote\]/i, '')
     return if @post.raw == new_raw
 
     PostRevisor.new(@post).revise!(
