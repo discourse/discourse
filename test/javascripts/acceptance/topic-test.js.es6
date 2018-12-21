@@ -286,3 +286,10 @@ QUnit.test("select below", async assert => {
     "it should select the right number of posts"
   );
 });
+
+QUnit.test("View Hidden Replies", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".gap");
+
+  assert.equal(find(".gap").length, 0, "it hides gap");
+});
