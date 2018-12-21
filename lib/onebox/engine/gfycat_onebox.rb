@@ -12,10 +12,6 @@ module Onebox
         1
       end
 
-      def url
-        "https://gfycat.com/cajax/get/#{match[:name]}"
-      end
-
       def to_html
         <<-HTML
           <aside class="onebox gfycat">
@@ -32,14 +28,14 @@ module Onebox
               </h4>
 
               <div class="video">
-                <video controls loop #{data[:autoplay]} muted poster="#{data[:posterUrl]}" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
+                <video controls loop muted poster="#{data[:posterUrl]}" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
                   <source id="webmSource" src="#{data[:webmUrl]}" type="video/webm">
                   <source id="mp4Source" src="#{data[:mp4Url]}" type="video/mp4">
                   <img title="Sorry, your browser doesn't support HTML5 video." src="#{data[:posterUrl]}">
                 </video>
               </div>
               <p>
-                <span class="label1">#{data[:tags]}</span>
+                <span class="label1">#{data[:keywords]}</span>
               </p>
 
             </article>
@@ -51,7 +47,7 @@ module Onebox
         <<-HTML
           <a href="#{data[:url]}">
             <img src="#{data[:posterUrl]}" width="#{data[:width]}" height="#{data[:height]}"><br/>
-            #{data[:gfyName]}
+            #{data[:name]}
           </a>
         HTML
       end
@@ -62,27 +58,53 @@ module Onebox
         @match ||= @url.match(/^https?:\/\/gfycat\.com\/(gifs\/detail\/)?(?<name>.+)/)
       end
 
-      def data
-
-        total_tags = [raw['gfyItem']['tags'], raw['gfyItem']['userTags']].flatten.compact
-        tag_links = total_tags.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ') if total_tags
-        autoplay = raw['gfyItem']['webmSize'].to_i < 10485760 ? 'autoplay' : ''
-
-        {
-          name: raw['gfyItem']['gfyName'],
-          title: raw['gfyItem']['title'] || 'No Title',
-          author: raw['gfyItem']['userName'],
-          tags: tag_links,
-          url: @url,
-          posterUrl: raw['gfyItem']['posterUrl'],
-          webmUrl: raw['gfyItem']['webmUrl'],
-          mp4Url: raw['gfyItem']['mp4Url'],
-          width: raw['gfyItem']['width'],
-          height: raw['gfyItem']['height'],
-          autoplay: autoplay
-        }
+      def nokogiri_page
+        @nokogiri_page ||= begin
+          response = Onebox::Helpers.fetch_response(url, 10) rescue nil
+          Nokogiri::HTML(response)
+        end
       end
 
+      def get_og_data
+        og_data = {}
+
+        if json_string = nokogiri_page.at_css('script[type="application/ld+json"]')&.text
+          og_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_string))
+        end
+
+        og_data
+      end
+
+      def data
+        og_data = get_og_data
+
+        response = {
+          name: match[:name],
+          title: og_data[:headline] || 'No Title',
+          author: og_data[:author],
+          url: @url
+        }
+
+        keywords = og_data[:keywords]&.split(',')
+        if keywords
+          response[:keywords] = keywords.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ')
+        end
+
+        if og_data[:video]
+          content_url = ::Onebox::Helpers.normalize_url_for_output(og_data[:video][:contentUrl])
+          video_url = Pathname.new(content_url)
+          response[:webmUrl] = video_url.sub_ext(".webm").to_s
+          response[:mp4Url] = video_url.sub_ext(".mp4").to_s
+
+          thumbnail_url = ::Onebox::Helpers.normalize_url_for_output(og_data[:video][:thumbnailUrl])
+          response[:posterUrl] = thumbnail_url
+
+          response[:width] = og_data[:video][:width]
+          response[:height] = og_data[:video][:height]
+        end
+
+        response
+      end
     end
   end
 end
