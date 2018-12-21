@@ -70,9 +70,20 @@ export default Ember.Controller.extend(GrantBadgeController, {
             }
           });
         },
-        function() {
-          // Failure
-          bootbox.alert(I18n.t("generic_error"));
+        function(error) {
+          let err;
+          if (
+            error.jqXHR &&
+            error.jqXHR.responseJSON &&
+            error.jqXHR.responseJSON.failed
+          ) {
+            err = I18n.t("generic_error_with_reason", {
+              error: error.jqXHR.responseJSON.failed
+            });
+          } else {
+            err = I18n.t("generic_error");
+          }
+          bootbox.alert(err);
         }
       );
     },
