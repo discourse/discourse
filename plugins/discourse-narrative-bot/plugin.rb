@@ -204,7 +204,7 @@ after_initialize do
   end
 
   self.add_model_callback(PostAction, :after_commit, on: :create) do
-    if self.user.enqueue_narrative_bot_job?
+    if self.post && self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
         when *PostActionType.flag_types_without_custom.values
