@@ -96,7 +96,6 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      // show error message if it is not manually aborted, if we dont have reason for abortion, shows generic error
       if (!data || (data && data.errorThrown !== "abort")) {
         displayErrorForUpload(data);
       }
