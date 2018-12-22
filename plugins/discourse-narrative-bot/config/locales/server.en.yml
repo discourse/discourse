@@ -149,7 +149,7 @@ en:
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:
-        title: ":robot: Greetings!"
+        title: "Greetings!"
         message: |-
           Thanks for joining %{title}, and welcome!
 
