@@ -231,7 +231,7 @@ en:
     continue: "Continue Discussion"
     error: "Error Embedding"
     referer: "Referer:"
-    mismatch: "The referer did not match any of the following hosts:"
+    mismatch: "The referer was either not sent, or did not match any of the following hosts:"
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
