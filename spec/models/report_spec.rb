@@ -1037,17 +1037,17 @@ describe Report do
     context "when has Upload records" do
       let!(:tarek_upload) do
         Fabricate(:upload, user: tarek,
-                  url: "/uploads/default/original/1X/tarek.jpg",
-                  extension: "jpg",
-                  original_filename: "tarek.jpg",
-                  filesize: 1000)
+                           url: "/uploads/default/original/1X/tarek.jpg",
+                           extension: "jpg",
+                           original_filename: "tarek.jpg",
+                           filesize: 1000)
       end
       let!(:khalil_upload) do
         Fabricate(:upload, user: khalil,
-                  url: "/uploads/default/original/1X/khalil.png",
-                  extension: "png",
-                  original_filename: "khalil.png",
-                  filesize: 2000)
+                           url: "/uploads/default/original/1X/khalil.png",
+                           extension: "png",
+                           original_filename: "khalil.png",
+                           filesize: 2000)
       end
 
       it "works" do

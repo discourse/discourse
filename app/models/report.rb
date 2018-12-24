@@ -1456,11 +1456,11 @@ class Report
     report.data = []
 
     sql = <<~SQL
-    SELECT 
+    SELECT
     u.id as user_id,
-    u.username, 
-    u.uploaded_avatar_id, 
-    up.filesize, 
+    u.username,
+    u.uploaded_avatar_id,
+    up.filesize,
     up.original_filename,
     up.extension,
     up.url
