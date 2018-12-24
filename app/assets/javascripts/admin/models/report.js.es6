@@ -264,7 +264,7 @@ const Report = Discourse.Model.extend({
         mainProperty,
         type,
         compute: (row, opts = {}) => {
-          let value = null;
+           let value;
 
           if (opts.useSortProperty) {
             value = row[label.sort_property || mainProperty];
