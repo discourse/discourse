@@ -1,6 +1,8 @@
 require_dependency 'topic_subtype'
 
 class Report
+  extend ActionView::Helpers::NumberHelper
+
   # Change this line each time report format change
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 3
@@ -1416,6 +1418,73 @@ class Report
         free_bytes: DiskSpace.uploads_free_bytes
       }
     }
+  end
+
+  def self.report_top_uploads(report)
+    report.modes = [:table]
+    report.labels = [
+      {
+        type: :link,
+        properties: [
+          :file_url,
+          :file_name,
+        ],
+        title: I18n.t("reports.top_uploads.labels.filename")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :author_username,
+          id: :author_id,
+          avatar: :author_avatar_template,
+        },
+        title: I18n.t("reports.top_uploads.labels.author")
+      },
+      {
+        type: :text,
+        property: :extension,
+        title: I18n.t("reports.top_uploads.labels.extension")
+      },
+      {
+        type: :text,
+        property: :filesize_label,
+        sort_property: :filesize,
+        title: I18n.t("reports.top_uploads.labels.filesize")
+      },
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+    SELECT 
+    u.id as user_id,
+    u.username, 
+    u.uploaded_avatar_id, 
+    up.filesize, 
+    up.original_filename,
+    up.extension,
+    up.url
+    FROM uploads up
+    JOIN users u
+    ON u.id = up.user_id
+    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    ORDER BY up.filesize DESC
+    LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      data = {}
+      data[:author_id] = row.user_id
+      data[:author_username] = row.username
+      data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:filesize_label] = number_to_human_size(row.filesize)
+      data[:filesize] = row.filesize
+      data[:extension] = row.extension
+      data[:file_url] = "#{Discourse.base_url}/#{row.url}"
+      data[:file_name] = row.original_filename.truncate(25)
+
+      report.data << data
+    end
   end
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
