@@ -25,16 +25,16 @@ class S3Helper
   end
 
   def upload(file, path, options = {})
-    options[:body] = file
     path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
 
     etag = begin
-      if File.size(options[:body]) >= MULTIPART_THRESHOLD
+      if File.size(file) >= MULTIPART_THRESHOLD
         obj.upload_file(file, options)
         obj.load
         obj.etag
       else
+        options[:body] = file
         obj.put(options).etag
       end
     end
@@ -224,8 +224,12 @@ class S3Helper
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
   end
 
+  def s3_client
+    Aws::S3::Client.new(@s3_options)
+  end
+
   def s3_resource
-    Aws::S3::Resource.new(@s3_options)
+    Aws::S3::Resource.new(client: s3_client)
   end
 
   def s3_bucket
