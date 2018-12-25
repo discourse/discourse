@@ -421,7 +421,7 @@ class CookedPostProcessor
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
-    informations = "#{original_width}x#{original_height}"
+    informations = "#{original_width}×#{original_height}"
     informations << " #{number_to_human_size(upload.filesize)}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)

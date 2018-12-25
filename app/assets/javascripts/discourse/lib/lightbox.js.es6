@@ -48,7 +48,6 @@ export default function($elem) {
               escapeExpression(item.el.attr("title")),
               $("span.informations", item.el)
                 .text()
-                .replace("x", "&times;")
             ];
             if (
               !Discourse.SiteSettings.prevent_anons_from_downloading_files ||
