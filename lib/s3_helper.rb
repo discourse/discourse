@@ -4,6 +4,8 @@ class S3Helper
 
   class SettingMissing < StandardError; end
 
+  MULTIPART_THRESHOLD = 15 * 1024 * 1024
+
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
@@ -26,8 +28,18 @@ class S3Helper
     options[:body] = file
     path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
-    output = obj.put(options)
-    return path, output.etag
+
+    etag = begin
+      if File.size(options[:body]) >= MULTIPART_THRESHOLD
+        obj.upload_file(file, options)
+        obj.load
+        obj.etag
+      else
+        obj.put(options).etag
+      end
+    end
+
+    return path, etag
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
