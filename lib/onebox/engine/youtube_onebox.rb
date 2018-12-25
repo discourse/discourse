@@ -131,6 +131,9 @@ module Onebox
           p['playlist'] = video_id
         end
 
+        # https://developers.google.com/youtube/player_parameters#rel
+        p['rel'] = 0 if params.include?('rel')
+
         URI.encode_www_form(p)
       end
 
