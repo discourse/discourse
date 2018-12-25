@@ -344,6 +344,11 @@ export function setup(helper) {
   helper.registerPlugin(md => {
     const ruler = md.block.bbcode.ruler;
 
+    ruler.push("excerpt", {
+      tag: "excerpt",
+      wrap: "div.excerpt"
+    });
+
     ruler.push("code", {
       tag: "code",
       replace: function(state, tagInfo, content) {
