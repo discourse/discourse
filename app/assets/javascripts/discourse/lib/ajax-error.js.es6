@@ -32,7 +32,7 @@ export function extractError(error, defaultMessage) {
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.failed) {
-      parsedError = parsedJSON.failed;
+      parsedError = parsedJSON.message;
     }
   }
 
