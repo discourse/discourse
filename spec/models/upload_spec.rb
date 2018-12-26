@@ -55,6 +55,9 @@ describe Upload do
     expect(upload.width).to eq(64250)
     expect(upload.height).to eq(64250)
 
+    upload.reload
+    expect(upload.read_attribute(:width)).to eq(64250)
+
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
 
     expect(upload.thumbnail_width).to eq(500)

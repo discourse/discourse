@@ -126,8 +126,19 @@ class Upload < ActiveRecord::Base
       end
 
     begin
-      self.width, self.height = size = FastImage.new(path, raise_on_failure: true).size
-      self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+      w, h = FastImage.new(path, raise_on_failure: true).size
+
+      self.width = w || 0
+      self.height = h || 0
+
+      self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(w, h)
+
+      self.update_columns(
+        width: width,
+        height: height,
+        thumbnail_width: thumbnail_width,
+        thumbnail_height: thumbnail_height
+      )
     rescue => e
       Discourse.warn_exception(e, message: "Error getting image dimensions")
     end
