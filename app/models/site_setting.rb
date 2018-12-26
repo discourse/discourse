@@ -153,7 +153,7 @@ class SiteSetting < ActiveRecord::Base
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       if SiteSetting.s3_endpoint == "https://s3.amazonaws.com"
-        if SiteSetting.Upload.s3_region == 'cn-north-1' || SiteSetting.Upload.s3_region == 'cn-northwest-1'
+        if SiteSetting.Upload.s3_region.start_with?("cn-")
           "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         else
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
