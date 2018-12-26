@@ -549,6 +549,11 @@ class Post < ActiveRecord::Base
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
+    if opts.fetch(:invalidate_broken_images, false)
+      custom_fields.delete(BROKEN_IMAGES)
+      save_custom_fields
+    end
+
     # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
