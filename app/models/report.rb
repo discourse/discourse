@@ -943,7 +943,12 @@ class Report
 
     report.labels = [
       {
-        property: :action_type,
+        type: :post,
+        properties: {
+          topic_id: :topic_id,
+          number: :post_number,
+          truncated_raw: :post_type
+        },
         title: I18n.t("reports.flags_status.labels.flag")
       },
       {
@@ -982,7 +987,7 @@ class Report
 
     report.data = []
 
-    flag_types = PostActionType.flag_types_without_custom
+    flag_types = PostActionType.flag_types
 
     sql = <<~SQL
     WITH period_actions AS (
@@ -999,13 +1004,16 @@ class Report
     user_id,
     COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
     FROM post_actions
-    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
+    WHERE post_action_type_id IN (#{flag_types.values.join(',')})
+      AND created_at >= '#{report.start_date}'
+      AND created_at <= '#{report.end_date}'
+    ORDER BY created_at DESC
     ),
     poster_data AS (
     SELECT pa.id,
     p.user_id AS poster_id,
+    p.topic_id as topic_id,
+    p.post_number as post_number,
     u.username_lower AS poster_username,
     u.uploaded_avatar_id AS poster_avatar_id
     FROM period_actions pa
@@ -1039,6 +1047,8 @@ class Report
     pd.poster_username,
     pd.poster_id,
     pd.poster_avatar_id,
+    pd.post_number,
+    pd.topic_id,
     fd.flagger_username,
     fd.flagger_id,
     fd.flagger_avatar_id,
@@ -1062,7 +1072,10 @@ class Report
 
     DB.query(sql).each do |row|
       data = {}
-      data[:action_type] = flag_types.key(row.post_action_type_id).to_s
+
+      data[:post_type] = flag_types.key(row.post_action_type_id).to_s
+      data[:post_number] = row.post_number
+      data[:topic_id] = row.topic_id
 
       if row.staff_id
         data[:staff_username] = row.staff_username
