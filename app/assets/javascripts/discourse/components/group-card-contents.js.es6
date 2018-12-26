@@ -23,6 +23,11 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
   viewingTopic: Ember.computed.match("currentPath", /^topic\./),
 
   showMoreMembers: Ember.computed.gt("moreMembersCount", 0),
+  hasMembersOrIsMember: Ember.computed.or(
+    "group.members",
+    "group.is_group_owner_display",
+    "group.is_group_user"
+  ),
 
   group: null,
 
