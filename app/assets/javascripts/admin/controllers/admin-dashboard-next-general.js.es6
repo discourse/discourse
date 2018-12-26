@@ -19,16 +19,9 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   logSearchQueriesEnabled: setting("log_search_queries"),
   basePath: Discourse.BaseUri,
 
-  @computed
-  activityMetrics() {
-    return [
-      "page_view_total_reqs",
-      "visits",
-      "time_to_first_response",
-      "likes",
-      "flags",
-      "user_to_user_private_messages_with_replies"
-    ];
+  @computed("siteSettings.dashboard_general_tab_activity_metrics")
+  activityMetrics(metrics) {
+    return (metrics || "").split("|").filter(m => m);
   },
 
   @computed

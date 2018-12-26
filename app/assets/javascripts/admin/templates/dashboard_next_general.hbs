@@ -56,36 +56,38 @@
 
   <div class="section-columns">
     <div class="section-column">
-      <div class="admin-report activity-metrics">
-        <div class="header">
-          <ul class="breadcrumb">
-            <li class="item report">
-              {{#link-to "adminReports" class="report-url"}}
-                {{i18n "admin.dashboard.activity_metrics"}}
-              {{/link-to}}
-            </li>
-          </ul>
-        </div>
-        <div class="report-body">
-          <div class="counters-list">
-            <div class="counters-header">
-              <div class="counters-cell"></div>
-              <div class="counters-cell">{{i18n 'admin.dashboard.reports.today'}}</div>
-              <div class="counters-cell">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
-              <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
-              <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
-            </div>
+      {{#if activityMetrics.length}}
+        <div class="admin-report activity-metrics">
+          <div class="header">
+            <ul class="breadcrumb">
+              <li class="item report">
+                {{#link-to "adminReports" class="report-url"}}
+                  {{i18n "admin.dashboard.activity_metrics"}}
+                {{/link-to}}
+              </li>
+            </ul>
+          </div>
+          <div class="report-body">
+            <div class="counters-list">
+              <div class="counters-header">
+                <div class="counters-cell"></div>
+                <div class="counters-cell">{{i18n 'admin.dashboard.reports.today'}}</div>
+                <div class="counters-cell">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
+                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
+                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
+              </div>
 
-            {{#each activityMetrics as |metric|}}
-              {{admin-report
-                showHeader=false
-                filters=activityMetricsFilters
-                forcedModes="counters"
-                dataSourceName=metric}}
-            {{/each}}
+              {{#each activityMetrics as |metric|}}
+                {{admin-report
+                  showHeader=false
+                  filters=activityMetricsFilters
+                  forcedModes="counters"
+                  dataSourceName=metric}}
+              {{/each}}
+            </div>
           </div>
         </div>
-      </div>
+      {{/if}}
 
       <div class="user-metrics">
         {{#conditional-loading-section isLoading=isLoading}}

@@ -3993,6 +3993,7 @@ en:
           tags: "Tags"
           search: "Search"
           groups: "Groups"
+          dashboard: "Dashboard"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
 

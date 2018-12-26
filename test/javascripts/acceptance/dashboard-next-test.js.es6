@@ -1,7 +1,10 @@
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Dashboard Next", {
-  loggedIn: true
+  loggedIn: true,
+  settings: {
+    dashboard_general_tab_activity_metrics: "page_view_total_reqs"
+  }
 });
 
 QUnit.test("Dashboard", async assert => {
@@ -26,7 +29,6 @@ QUnit.test("tabs", async assert => {
 
 QUnit.test("general tab", async assert => {
   await visit("/admin");
-
   assert.ok(exists(".admin-report.signups"), "signups report");
   assert.ok(exists(".admin-report.posts"), "posts report");
   assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
@@ -46,6 +48,10 @@ QUnit.test("general tab", async assert => {
     "Houston...",
     "displays problems"
   );
+});
+
+QUnit.test("general tab - activity metrics", async assert => {
+  await visit("/admin");
 
   assert.equal(
     $(".admin-report.page-view-total-reqs .today-count")
