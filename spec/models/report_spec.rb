@@ -498,7 +498,7 @@ describe Report do
         expect(report.data).to be_present
 
         row = report.data[0]
-        expect(row[:action_type]).to eq("spam")
+        expect(row[:post_type]).to eq("spam")
         expect(row[:staff_username]).to eq(nil)
         expect(row[:staff_id]).to eq(nil)
         expect(row[:poster_username]).to eq(post.user.username)
