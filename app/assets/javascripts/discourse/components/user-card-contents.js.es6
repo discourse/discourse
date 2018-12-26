@@ -46,6 +46,10 @@ export default Ember.Component.extend(
       "user.location",
       "user.website_name"
     ),
+    isSuspendedOrHasBio: Ember.computed.or(
+      "user.suspend_reason",
+      "user.bio_cooked"
+    ),
     showCheckEmail: Ember.computed.and("user.staged", "canCheckEmails"),
 
     user: null,
