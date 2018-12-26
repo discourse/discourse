@@ -4,8 +4,6 @@ class S3Helper
 
   class SettingMissing < StandardError; end
 
-  MULTIPART_THRESHOLD = 15 * 1024 * 1024
-
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
@@ -29,7 +27,8 @@ class S3Helper
     obj = s3_bucket.object(path)
 
     etag = begin
-      if File.size(file) >= MULTIPART_THRESHOLD
+      if File.size(file) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+        options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
         obj.upload_file(file, options)
         obj.load
         obj.etag
