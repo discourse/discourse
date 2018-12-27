@@ -24,7 +24,7 @@ function hide(image) {
   image.removeAttribute("srcset");
 
   image.src = image.dataset.smallUpload || LOADING_DATA;
-  delete image.dataset.smallUpload;
+  image.removeAttribute("data-small-upload");
 }
 
 // Restore an image when onscreen
