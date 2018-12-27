@@ -57,6 +57,12 @@ export default Ember.Component.extend(
     // If inside a topic
     topicPostCount: null,
 
+    @computed("user.staff")
+    staff: staff => (staff ? "staff" : ""),
+
+    @computed("user.trust_level")
+    new_user: trust_level => (trust_level === 0 ? "new-user" : ""),
+
     @computed("user.name")
     nameFirst(name) {
       return (
