@@ -661,6 +661,15 @@ describe PostsController do
         put "/posts/#{post.id}/rebake.json"
         expect(response.status).to eq(200)
       end
+
+      it "will invalidate broken images cache" do
+        sign_in(Fabricate(:moderator))
+        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
+        post.save_custom_fields
+        put "/posts/#{post.id}/rebake.json"
+        post.reload
+        expect(post.custom_fields[Post::BROKEN_IMAGES]).to be_nil
+      end
     end
   end
 

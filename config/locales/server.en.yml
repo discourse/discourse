@@ -1903,6 +1903,8 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. A maximum of 12 characters is recommended."
 
+    dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
