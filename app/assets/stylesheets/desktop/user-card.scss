@@ -81,10 +81,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     margin-right: 0.5em;
     font-size: $font-0;
     font-weight: normal;
-    color: scale-color($primary, $lightness: 20%);
+    color: $primary;
     .desc,
     a {
-      color: scale-color($primary, $lightness: 35%);
+      color: $primary-high;
     }
   }
   p {
@@ -120,7 +120,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       margin-top: $avatar_margin;
     }
     .new-user a {
-      color: scale-color($primary, $lightness: 70%);
+      color: $primary-low-mid;
     }
   }
   // user bio - suspension reason
@@ -243,15 +243,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .overflow {
         max-height: 60px;
         overflow: hidden;
-      }
-    }
-  }
-  // group members - show more members link
-  .fourth-row {
-    .members a {
-      color: lighten($primary, 40%);
-      &:hover {
-        color: $primary;
       }
     }
   }
