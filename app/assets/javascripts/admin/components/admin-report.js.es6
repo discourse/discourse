@@ -209,7 +209,14 @@ export default Ember.Component.extend({
     "normalizedStartDate",
     "normalizedEndDate"
   )
-  reportKey(dataSourceName, categoryId, groupId, customFilterId, startDate, endDate) {
+  reportKey(
+    dataSourceName,
+    categoryId,
+    groupId,
+    customFilterId,
+    startDate,
+    endDate
+  ) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
     let reportKey = "reports:";
