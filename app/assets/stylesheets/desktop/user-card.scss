@@ -1,6 +1,6 @@
 $card_width: 580px;
 $avatar_width: 120px;
-$avatar_margin: -53px; // negative margin makes avatars extend above cards
+$avatar_margin: -50px; // negative margin makes avatars extend above cards
 
 // shared styles for user and group cards
 #user-card,
@@ -91,7 +91,7 @@ $avatar_margin: -53px; // negative margin makes avatars extend above cards
     margin: 0 0 5px 0;
   }
   .btn {
-    margin: 0 0 7px 0;
+    margin-bottom: 5px;
   }
   .usercard-controls {
     list-style-type: none;
@@ -119,6 +119,9 @@ $avatar_margin: -53px; // negative margin makes avatars extend above cards
       margin-right: 10px;
       margin-top: $avatar_margin;
     }
+    .new-user a {
+      color: scale-color($primary, $lightness: 70%);
+    }
   }
   // user bio - suspension reason
   .second-row {
@@ -128,9 +131,6 @@ $avatar_margin: -53px; // negative margin makes avatars extend above cards
       a {
         color: $primary;
         text-decoration: underline;
-      }
-      img {
-        max-width: 100%;
       }
       a.mention {
         text-decoration: none;
@@ -142,6 +142,10 @@ $avatar_margin: -53px; // negative margin makes avatars extend above cards
     }
     .suspended {
       color: $danger;
+      .suspension-reason-title,
+      .suspension-date {
+        font-weight: bold;
+      }
     }
   }
   // location and website
@@ -231,6 +235,7 @@ $avatar_margin: -53px; // negative margin makes avatars extend above cards
       }
       img {
         max-width: 100%;
+        height: auto;
       }
       a.mention {
         text-decoration: none;
