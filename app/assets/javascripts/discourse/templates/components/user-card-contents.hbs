@@ -3,7 +3,7 @@
 
     <div class="card-row first-row">
       <div class="user-card-avatar">
-        <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+        <a href="{{user.path}}" {{action "showUser"}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
         {{#if user.primary_group_name}}
           {{avatar-flair
           flairURL=user.primary_group_flair_url
@@ -16,7 +16,7 @@
       <div class="names">
         <span>
           <h1 class="{{staff}} {{new_user}} {{if nameFirst "full-name" "username"}}">
-            <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name (format-username username)}}
+            <a href="{{user.path}}" {{action "showUser"}}>{{if nameFirst user.name (format-username username)}}
               {{user-status user currentUser=currentUser}}</a>
           </h1>
           {{plugin-outlet name="user-card-after-username" args=(hash user=user) tagName=''}}
@@ -83,10 +83,14 @@
       <div class="card-row second-row">
         {{#if user.suspend_reason}}
           <div class='suspended'>
-            {{d-icon "ban"}}
-            <b>{{i18n 'user.suspended_notice' date=user.suspendedTillDate}}</b><br>
-            <b>{{i18n 'user.suspended_reason'}}</b>
-            {{user.suspend_reason}}
+            <div class="suspension-date">
+              {{d-icon "ban"}}
+              {{i18n 'user.suspended_notice' date=user.suspendedTillDate}}
+            </div>
+            <div class='suspension-reason'>
+              <span class="suspension-reason-title">{{i18n 'user.suspended_reason'}}</span>
+              <span class="suspension-reason-description">{{user.suspend_reason}}</span>
+            </div>
           </div>
         {{else}}
           {{#if user.bio_cooked}}
@@ -107,7 +111,7 @@
             <span class='website-name'>
               {{d-icon "globe"}}
               {{#if linkWebsite}}
-                <a href={{user.website}} rel={{unless removeNoFollow 'nofollow noopener'}}
+                <a href="{{user.website}}" rel={{unless removeNoFollow 'nofollow noopener'}}
                  target="_blank">{{user.website_name}}</a>
               {{else}}
                 <span title={{user.website}}>{{user.website_name}}</span>
