@@ -55,6 +55,7 @@ export default Ember.Component.extend({
   endDate: null,
   category: null,
   groupId: null,
+  customFilterId: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
@@ -62,6 +63,7 @@ export default Ember.Component.extend({
   showCategoryOptions: Ember.computed.alias("model.category_filtering"),
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
   showGroupOptions: Ember.computed.alias("model.group_filtering"),
+  showCustomFilterOptions: Ember.computed.alias("model.custom_filtering"),
   showExport: Ember.computed.not("model.onlyTable"),
   showRefresh: Ember.computed.or(
     "showCategoryOptions",
@@ -69,6 +71,7 @@ export default Ember.Component.extend({
     "showGroupOptions"
   ),
   shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
+  customFilterOptions: Ember.computed.alias("model.custom_filter_options"),
 
   init() {
     this._super(...arguments);
@@ -84,6 +87,7 @@ export default Ember.Component.extend({
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,
+      customFilterId: state.filter,
       startDate: state.startDate,
       endDate: state.endDate
     });
@@ -201,10 +205,11 @@ export default Ember.Component.extend({
     "dataSourceName",
     "categoryId",
     "groupId",
+    "customFilterId",
     "normalizedStartDate",
     "normalizedEndDate"
   )
-  reportKey(dataSourceName, categoryId, groupId, startDate, endDate) {
+  reportKey(dataSourceName, categoryId, groupId, customFilterId, startDate, endDate) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
     let reportKey = "reports:";
@@ -214,6 +219,7 @@ export default Ember.Component.extend({
       startDate.replace(/-/g, ""),
       endDate.replace(/-/g, ""),
       groupId,
+      customFilterId,
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       SCHEMA_VERSION
@@ -230,6 +236,7 @@ export default Ember.Component.extend({
       this.attrs.onRefresh({
         categoryId: this.get("categoryId"),
         groupId: this.get("groupId"),
+        filter: this.get("customFilterId"),
         startDate: this.get("startDate"),
         endDate: this.get("endDate")
       });
@@ -363,6 +370,10 @@ export default Ember.Component.extend({
 
     if (this.get("categoryId") && this.get("categoryId") !== "all") {
       payload.data.category_id = this.get("categoryId");
+    }
+
+    if (this.get("customFilterId") && this.get("customFilterId") !== "all") {
+      payload.data.custom_filter_id = this.get("customFilterId");
     }
 
     if (this.get("reportOptions.table.limit")) {

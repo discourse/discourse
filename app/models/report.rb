@@ -6,11 +6,12 @@ class Report
   SCHEMA_VERSION = 3
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets, :limit, :processing, :average, :percent,
+                :end_date, :category_id, :group_id, :custom_filter_id,
+                :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color
+                :dates_filtering, :error, :primary_color, :secondary_color,
+                :custom_filtering, :custom_filter_options
 
   def self.default_days
     30
@@ -29,6 +30,9 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
+    @custom_filtering = false
+    @custom_filter_options = nil
+    @custom_filter_id = nil
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     @primary_color = rgba_color(tertiary)
@@ -43,6 +47,7 @@ class Report
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
+      report.custom_filter_id,
       report.facets,
       report.limit,
       SCHEMA_VERSION,
@@ -75,7 +80,6 @@ class Report
 
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
-
     {
       type: type,
       title: I18n.t("reports.#{type}.title", default: nil),
@@ -90,6 +94,7 @@ class Report
       prev_end_date: prev_end_date&.iso8601,
       category_id: category_id,
       group_id: group_id,
+      custom_filter_id: self.custom_filter_id,
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
@@ -113,6 +118,8 @@ class Report
       higher_is_better: self.higher_is_better,
       category_filtering: self.category_filtering,
       group_filtering: self.group_filtering,
+      custom_filtering: self.custom_filtering,
+      custom_filter_options: self.custom_filter_options,
       modes: self.modes,
     }.tap do |json|
       json[:icon] = self.icon if self.icon
@@ -141,6 +148,7 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
+    report.custom_filter_id = opts[:custom_filter_id] if opts[:custom_filter_id]
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false

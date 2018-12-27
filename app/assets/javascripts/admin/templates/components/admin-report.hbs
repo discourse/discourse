@@ -173,6 +173,19 @@
           </div>
         {{/if}}
 
+        {{#if showCustomFilterOptions}}
+          <div class="control">
+            <div class="input">
+              {{combo-box
+                castInteger=true
+                filterable=true
+                valueAttribute="id"
+                content=customFilterOptions
+                value=customFilterId}}
+            </div>
+          </div>
+        {{/if}}
+
         {{#if showExport}}
           <div class="control">
             <div class="input">
