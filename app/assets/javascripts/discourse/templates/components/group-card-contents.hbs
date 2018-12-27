@@ -3,7 +3,7 @@
 
     <div class="card-row first-row">
       <div class="group-card-avatar">
-        <a href={{groupPath}} {{action "showGroup"}} class="card-huge-avatar">
+        <a href="{{groupPath}}" {{action "showGroup"}} class="card-huge-avatar">
           {{avatar-flair
           flairURL=group.flair_url
           flairBgColor=group.flair_bg_color
@@ -13,8 +13,8 @@
       </div>
       <div class="names">
         <span>
-          <h1 class="{{ group.name }}">
-            <a href={{groupPath}} {{action "showGroup"}}>{{ group.name }}</a>
+          <h1 class="{{group.name}}">
+            <a href="{{groupPath}}" {{action "showGroup"}}>{{group.name}}</a>
           </h1>
           {{#if group.full_name}}
             <h2 class='full-name'>{{group.full_name}}</h2>
@@ -26,13 +26,13 @@
       <div class="usercard-controls group-details-button">
         {{group-membership-button
            model=group
-           showLogin='showLogin'}}
+           showLogin=(route-action "showLogin")}}
         {{#if group.messageable}}
           {{d-button
-             action="messageGroup"
-             class="btn-primary group-message-button inline"
-             icon="envelope"
-             label="groups.message"}}
+          action="messageGroup"
+          class="btn-primary group-message-button inline"
+          icon="envelope"
+          label="groups.message"}}
         {{/if}}
       </div>
     </div>
@@ -50,7 +50,7 @@
             <span class="desc">
               {{i18n 'groups.user_count'}}
             </span>
-            {{ group.user_count }}
+            {{group.user_count}}
           </h3>
           <h3>
             {{#if group.is_group_owner_display}}
@@ -66,15 +66,14 @@
     {{#if group.members}}
       <div class="card-row fourth-row">
         <div class="members metadata">
-          <span>
-            {{#each group.members as |user|}}
-              <a href={{user.path}} {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
-            {{/each}}
-            {{#if showMoreMembers}}
-              <a href={{groupPath}} {{action "showGroup"}}>+{{ moreMembersCount }}
-                {{i18n "more"}}</a>
-            {{/if}}
-          </span>
+          {{#each group.members as |user|}}
+            <a href="{{user.path}}" {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
+          {{/each}}
+          {{#if showMoreMembers}}
+            <a href="{{groupPath}}" {{action "showGroup"}} class="more-members-link"><span
+               class="more-members-count">+{{moreMembersCount}}
+                {{i18n "more"}}</span></a>
+          {{/if}}
         </div>
       </div>
     {{/if}}
