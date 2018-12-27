@@ -58,7 +58,7 @@
         {{#if hasUserFilters}}
           <li>
             {{d-button
-            action="cancelFilter"
+            action=(action "cancelFilter")
             icon="times"
             label="topic.filters.cancel"}}
           </li>
@@ -147,7 +147,7 @@
                   {{user.email}}
                 {{else}}
                   {{d-button
-                  action="checkEmail"
+                  action=(action "checkEmail")
                   actionParam=user
                   icon="envelope-o"
                   label="admin.users.check_email.text"
