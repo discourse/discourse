@@ -29,7 +29,7 @@
            showLogin=(route-action "showLogin")}}
         {{#if group.messageable}}
           {{d-button
-          action="messageGroup"
+          action=(action "messageGroup")
           class="btn-primary group-message-button inline"
           icon="envelope"
           label="groups.message"}}
