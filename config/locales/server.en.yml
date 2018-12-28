@@ -1262,10 +1262,10 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
-    logo: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    logo_small: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    digest_logo: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
-    mobile_logo: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
+    logo: "The logo image at the top left of your site. Use a wide rectangular image with an aspect ratio greater than 3:1 and a minimum height of 120px. If left blank, the site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square image. The recommended size is 120px by 120px. If left blank, a home glyph will be shown."
+    digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
+    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with an aspect ratio greater than 3:1 and a minimum height of 120px. If left blank, the image from the `logo` setting will be used."
     large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
     apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
@@ -4173,10 +4173,10 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangle shape."
+            description: "The logo image at the top left of your site. Use a wide rectangular image with an aspect ratio greater than 3:1 and a minimum height of 120px"
           logo_small:
             label: "Compact Logo"
-            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square image. The recommended size is 120x120"
 
       icons:
         title: "Icons"
