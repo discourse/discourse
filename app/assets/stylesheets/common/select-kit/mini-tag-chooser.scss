@@ -21,6 +21,8 @@
       }
 
       .select-kit-header {
+        height: 30px;
+
         .selected-name {
           margin: 0;
           border: 0;
@@ -28,6 +30,7 @@
           outline: none;
           box-shadow: none;
           cursor: pointer;
+          max-width: 250px;
         }
       }
 
