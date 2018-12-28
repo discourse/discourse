@@ -523,7 +523,7 @@ QUnit.test("computed labels", assert => {
   assert.equal(filesizeLabel.sortProperty, "filesize");
   assert.equal(filesizeLabel.title, "Filesize");
   assert.equal(filesizeLabel.type, "bytes");
-  const computedFilesizeLabel  = filesizeLabel.compute(row);
+  const computedFilesizeLabel = filesizeLabel.compute(row);
   assert.equal(computedFilesizeLabel.formatedValue, "569.0 KB");
   assert.equal(computedFilesizeLabel.value, 582641);
 
