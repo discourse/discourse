@@ -10,8 +10,7 @@ class Report
                 :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color,
-                :custom_filtering, :custom_filter_options
+                :dates_filtering, :error, :primary_color, :secondary_color, :filter_options
 
   def self.default_days
     30
@@ -30,8 +29,7 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
-    @custom_filtering = false
-    @custom_filter_options = nil
+    @filter_options = nil
     @filter = nil
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
@@ -118,8 +116,7 @@ class Report
       higher_is_better: self.higher_is_better,
       category_filtering: self.category_filtering,
       group_filtering: self.group_filtering,
-      custom_filtering: self.custom_filtering,
-      custom_filter_options: self.custom_filter_options,
+      filter_options: self.filter_options,
       modes: self.modes,
     }.tap do |json|
       json[:icon] = self.icon if self.icon

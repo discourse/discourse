@@ -63,7 +63,6 @@ export default Ember.Component.extend({
   showCategoryOptions: Ember.computed.alias("model.category_filtering"),
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
   showGroupOptions: Ember.computed.alias("model.group_filtering"),
-  showCustomFilterOptions: Ember.computed.alias("model.custom_filtering"),
   showExport: Ember.computed.not("model.onlyTable"),
   showRefresh: Ember.computed.or(
     "showCategoryOptions",
@@ -71,7 +70,7 @@ export default Ember.Component.extend({
     "showGroupOptions"
   ),
   shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
-  customFilterOptions: Ember.computed.alias("model.custom_filter_options"),
+  filterOptions: Ember.computed.alias("model.filter_options"),
 
   init() {
     this._super(...arguments);
