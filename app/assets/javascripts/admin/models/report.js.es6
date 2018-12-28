@@ -385,7 +385,7 @@ const Report = Discourse.Model.extend({
   _bytesLabel(value) {
     return {
       value,
-      formatedValue: I18n.toHumanSize(value),
+      formatedValue: I18n.toHumanSize(value)
     };
   },
 
