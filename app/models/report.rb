@@ -1,8 +1,6 @@
 require_dependency 'topic_subtype'
 
 class Report
-  extend ActionView::Helpers::NumberHelper
-
   # Change this line each time report format change
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 3
@@ -1446,9 +1444,8 @@ class Report
         title: I18n.t("reports.top_uploads.labels.extension")
       },
       {
-        type: :text,
-        property: :filesize_label,
-        sort_property: :filesize,
+        type: :bytes,
+        property: :filesize,
         title: I18n.t("reports.top_uploads.labels.filesize")
       },
     ]
@@ -1477,10 +1474,10 @@ class Report
       data[:author_id] = row.user_id
       data[:author_username] = row.username
       data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
-      data[:filesize_label] = number_to_human_size(row.filesize)
+      data[:filesize_label] = row.filesize
       data[:filesize] = row.filesize
       data[:extension] = row.extension
-      data[:file_url] = "#{Discourse.base_url}/#{row.url}"
+      data[:file_url] = Discourse.store.cdn_url(row.url)
       data[:file_name] = row.original_filename.truncate(25)
 
       report.data << data
