@@ -490,6 +490,13 @@ describe User do
         mc.hammer_nose
         UPPERCASE
         sgif
+        Джофрэй
+        Джо.фрэй
+        Джофр-эй
+        Д.жофрэй
+        乔夫雷
+        乔夫_雷
+        _乔夫雷
     }.each do |username|
       it "allows #{username}" do
         assert_good(username)
@@ -514,6 +521,13 @@ describe User do
       sam.woff
       sam.Png
       sam.gif
+      .Джофрэй
+      Джофрэй.
+      Джо\ фрэй
+      Джоф__рэй
+      乔夫雷.js
+      乔夫雷.
+      乔夫%雷
     }.each do |username|
       it "disallows #{username}" do
         assert_bad(username)
