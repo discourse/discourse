@@ -113,9 +113,9 @@ class Admin::ReportsController < Admin::AdminController
       limit = report_params[:limit].to_i
     end
 
-    custom_filter_id = nil
-    if report_params.has_key?(:custom_filter_id)
-      custom_filter_id = report_params[:custom_filter_id]
+    filter = nil
+    if report_params.has_key?(:filter)
+      filter = report_params[:filter]
     end
 
     {
@@ -123,7 +123,7 @@ class Admin::ReportsController < Admin::AdminController
       end_date: end_date,
       category_id: category_id,
       group_id: group_id,
-      custom_filter_id: custom_filter_id,
+      filter: filter,
       facets: facets,
       limit: limit
     }
