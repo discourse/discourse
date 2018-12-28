@@ -70,7 +70,6 @@ export default Ember.Component.extend({
     "showGroupOptions"
   ),
   shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
-  filterOptions: Ember.computed.alias("model.filter_options"),
 
   init() {
     this._super(...arguments);
@@ -176,6 +175,16 @@ export default Ember.Component.extend({
     return `admin-report-${currentMode}`;
   },
 
+  @computed("model.filter_options")
+  filterOptions(options) {
+    return options.map( (option) => {
+      if (option.allowAny) {
+        option.choices.unshift(I18n.t("admin.dashboard.report_filter_any"));
+      }
+      return option;
+    });
+  },
+
   @computed("startDate")
   normalizedStartDate(startDate) {
     return startDate && typeof startDate.isValid === "function"
@@ -237,10 +246,10 @@ export default Ember.Component.extend({
       let newParams = [];
 
       if (this.get("filter")) {
-        let filter = this.get("filter").slice(1, -1);
+        const filter = this.get("filter").slice(1, -1);
         params = filter.split("&") || [];
         params.map(p => {
-          let pair = p.split("=");
+          const pair = p.split("=");
           paramPairs[pair[0]] = pair[1];
         });
       }

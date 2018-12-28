@@ -1439,7 +1439,27 @@ class Report
   end
 
   def self.report_top_uploads(report)
+    if report.filter.present?
+      filters = report.filter.delete_prefix("[").delete_suffix("]").split("&").map do |param|
+        param_pair = param.split("=")
+        { id: param_pair[0], value: param_pair[1] }
+      end
+
+      extension_filter = filters.find { |pair| pair[:id] == "file-extension" }
+      if extension_filter.present? && extension_filter[:value] != "any"
+        extension_filter_sql =  "AND up.extension = '#{extension_filter[:value]}'"
+      end
+    end
+
     report.modes = [:table]
+    report.filter_options = [
+      {
+        id: "file-extension",
+        selected: extension_filter.present? ? extension_filter.fetch(:value, "any") : "any",
+        choices: ["jpeg", "gif", "png"],
+        allowAny: true
+      }
+    ]
     report.labels = [
       {
         type: :link,
@@ -1484,7 +1504,7 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}' #{extension_filter_sql}
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
