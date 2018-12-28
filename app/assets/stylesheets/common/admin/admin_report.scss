@@ -81,7 +81,7 @@
   }
 
   .main {
-    flex: 1 0 0;
+    flex: 1;
   }
 
   .main .report-alert {
@@ -182,5 +182,11 @@
   .trend {
     margin-left: unset;
     margin-right: auto;
+  }
+}
+
+.admin-report.storage-stats {
+  .main {
+    flex: 1 0 auto;
   }
 }
