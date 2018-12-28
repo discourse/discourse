@@ -1447,7 +1447,7 @@ class Report
 
       extension_filter = filters.find { |pair| pair[:id] == "file-extension" }
       if extension_filter.present? && extension_filter[:value] != "any"
-        extension_filter_sql =  "AND up.extension = '#{extension_filter[:value]}'"
+        extension_filter_sql = "AND up.extension = '#{extension_filter[:value]}'"
       end
     end
 
