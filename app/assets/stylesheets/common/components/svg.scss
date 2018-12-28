@@ -12,8 +12,7 @@
 }
 
 // Fixes Edge bug with SVG elements not triggering click event
-svg,
-svg use {
+svg > use {
   pointer-events: none;
 }
 
