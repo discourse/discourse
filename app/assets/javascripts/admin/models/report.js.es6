@@ -264,13 +264,7 @@ const Report = Discourse.Model.extend({
         mainProperty,
         type,
         compute: (row, opts = {}) => {
-          let value;
-
-          if (opts.useSortProperty) {
-            value = row[label.sort_property || mainProperty];
-          } else {
-            value = row[mainProperty];
-          }
+          const value = row[mainProperty];
 
           if (type === "user") return this._userLabel(label.properties, row);
           if (type === "post") return this._postLabel(label.properties, row);
