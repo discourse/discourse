@@ -81,7 +81,7 @@
   }
 
   .main {
-    flex: 1;
+    flex: 1 0 0;
   }
 
   .main .report-alert {
@@ -132,7 +132,7 @@
 
       .mode {
         display: inline-flex;
-        flex: 1;
+        flex: 1 0 0;
 
         .mode-btn.is-current {
           color: $tertiary;
