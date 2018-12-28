@@ -404,7 +404,8 @@ QUnit.test("computed labels", assert => {
       topic_id: 2,
       topic_title: "Test topic",
       post_number: 3,
-      post_raw: "This is the beginning of"
+      post_raw: "This is the beginning of",
+      filesize: 582641
     }
   ];
 
@@ -437,7 +438,8 @@ QUnit.test("computed labels", assert => {
         truncated_raw: "post_raw"
       },
       title: "Post"
-    }
+    },
+    { type: "bytes", property: "filesize", title: "Filesize" }
   ];
 
   const report = Report.create({
@@ -515,6 +517,15 @@ QUnit.test("computed labels", assert => {
     "<a href='/t/-/2/3'>This is the beginning of</a>"
   );
   assert.equal(computedPostLabel.value, "This is the beginning of");
+
+  const filesizeLabel = computedLabels[6];
+  assert.equal(filesizeLabel.mainProperty, "filesize");
+  assert.equal(filesizeLabel.sortProperty, "filesize");
+  assert.equal(filesizeLabel.title, "Filesize");
+  assert.equal(filesizeLabel.type, "bytes");
+  const computedFilesizeLabel = filesizeLabel.compute(row);
+  assert.equal(computedFilesizeLabel.formatedValue, "569.0 KB");
+  assert.equal(computedFilesizeLabel.value, 582641);
 
   // subfolder support
   Discourse.BaseUri = "/forum";

@@ -272,6 +272,7 @@ const Report = Discourse.Model.extend({
           if (type === "seconds") return this._secondsLabel(value);
           if (type === "link") return this._linkLabel(label.properties, row);
           if (type === "percent") return this._percentLabel(value);
+          if (type === "bytes") return this._bytesLabel(value);
           if (type === "number") {
             return this._numberLabel(value, opts);
           }
@@ -378,6 +379,13 @@ const Report = Discourse.Model.extend({
     return {
       value,
       formatedValue: value ? formatedValue() : "—"
+    };
+  },
+
+  _bytesLabel(value) {
+    return {
+      value,
+      formatedValue: I18n.toHumanSize(value)
     };
   },
 

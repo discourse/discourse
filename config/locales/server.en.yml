@@ -1171,6 +1171,14 @@ en:
         location: Location
         login_at: Login at
       description: "List of admin and moderator login times with locations."
+    top_uploads:
+      title: "Top Uploads"
+      labels:
+        filename: Filename
+        extension: Extension
+        author: Author
+        filesize: File size
+      description: "List all uploads by extension, filesize and author."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
