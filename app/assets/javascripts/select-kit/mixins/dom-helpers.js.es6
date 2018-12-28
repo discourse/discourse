@@ -63,11 +63,6 @@ export default Ember.Mixin.create({
     return this.$(this.filterInputSelector);
   },
 
-  @on("didRender")
-  _schedulePositionRendering() {
-    Ember.run.debounce(this, this._adjustPosition, 50, true);
-  },
-
   _adjustPosition() {
     this._applyDirection();
     this._applyFixedPosition();
@@ -128,15 +123,27 @@ export default Ember.Mixin.create({
     });
     this.focusFilterOrHeader();
     this.autoHighlight();
-    this._boundaryActionHandler("onExpand", this);
+
+    Ember.run.next(() => {
+      this._boundaryActionHandler("onExpand", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._adjustPosition();
+        }
+      });
+    });
   },
 
   collapse() {
     this.set("isExpanded", false);
 
     Ember.run.next(() => {
-      Ember.run.schedule("afterRender", () => this._removeFixedPosition());
       this._boundaryActionHandler("onCollapse", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._removeFixedPosition();
+        }
+      });
     });
   },
 
