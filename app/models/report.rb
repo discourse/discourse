@@ -6,7 +6,7 @@ class Report
   SCHEMA_VERSION = 3
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :custom_filter_id,
+                :end_date, :category_id, :group_id, :filter,
                 :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
@@ -32,7 +32,7 @@ class Report
     @dates_filtering = true
     @custom_filtering = false
     @custom_filter_options = nil
-    @custom_filter_id = nil
+    @filter = nil
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     @primary_color = rgba_color(tertiary)
@@ -47,7 +47,7 @@ class Report
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
-      report.custom_filter_id,
+      report.filter,
       report.facets,
       report.limit,
       SCHEMA_VERSION,
@@ -94,7 +94,7 @@ class Report
       prev_end_date: prev_end_date&.iso8601,
       category_id: category_id,
       group_id: group_id,
-      custom_filter_id: self.custom_filter_id,
+      filter: self.filter,
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
@@ -148,7 +148,7 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
-    report.custom_filter_id = opts[:custom_filter_id] if opts[:custom_filter_id]
+    report.filter = opts[:filter] if opts[:filter]
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
