@@ -55,7 +55,7 @@ export default Ember.Component.extend({
   endDate: null,
   category: null,
   groupId: null,
-  customFilterId: null,
+  filter: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
@@ -87,7 +87,7 @@ export default Ember.Component.extend({
     this.setProperties({
       category: Category.findById(state.categoryId),
       groupId: state.groupId,
-      customFilterId: state.filter,
+      filter: state.filter,
       startDate: state.startDate,
       endDate: state.endDate
     });
@@ -205,7 +205,7 @@ export default Ember.Component.extend({
     "dataSourceName",
     "categoryId",
     "groupId",
-    "customFilterId",
+    "filter",
     "normalizedStartDate",
     "normalizedEndDate"
   )
@@ -213,7 +213,7 @@ export default Ember.Component.extend({
     dataSourceName,
     categoryId,
     groupId,
-    customFilterId,
+    filter,
     startDate,
     endDate
   ) {
@@ -226,7 +226,7 @@ export default Ember.Component.extend({
       startDate.replace(/-/g, ""),
       endDate.replace(/-/g, ""),
       groupId,
-      customFilterId,
+      filter,
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       SCHEMA_VERSION
@@ -239,11 +239,33 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    filter(filterOptionId, value) {
+      let params = [];
+      let paramPairs = {};
+      let newParams = [];
+
+      if(this.get("filter")) {
+        let filter = this.get("filter").slice(1,-1);;
+        params = filter.split("&") || [];
+        params.map((p) => {
+          let pair = p.split("=");
+          paramPairs[pair[0]] = pair[1];
+        });
+      }
+
+      paramPairs[filterOptionId] = value;
+      Object.keys(paramPairs).forEach((key) => {
+        newParams.push(`${key}=${paramPairs[key]}`);
+      });
+
+      this.set("filter", `[${newParams.join("&")}]`);
+    },
+
     refreshReport() {
       this.attrs.onRefresh({
         categoryId: this.get("categoryId"),
         groupId: this.get("groupId"),
-        filter: this.get("customFilterId"),
+        filter: this.get("filter"),
         startDate: this.get("startDate"),
         endDate: this.get("endDate")
       });
@@ -379,8 +401,8 @@ export default Ember.Component.extend({
       payload.data.category_id = this.get("categoryId");
     }
 
-    if (this.get("customFilterId") && this.get("customFilterId") !== "all") {
-      payload.data.custom_filter_id = this.get("customFilterId");
+    if (this.get("filter") && this.get("filter") !== "all") {
+      payload.data.filter = this.get("filter");
     }
 
     if (this.get("reportOptions.table.limit")) {

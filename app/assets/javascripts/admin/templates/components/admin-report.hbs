@@ -174,16 +174,15 @@
         {{/if}}
 
         {{#if showCustomFilterOptions}}
-          <div class="control">
-            <div class="input">
-              {{combo-box
-                castInteger=true
-                filterable=true
-                valueAttribute="id"
-                content=customFilterOptions
-                value=customFilterId}}
+          {{#each customFilterOptions as |filterOption|}}
+            <div class="control">
+              <div class="input">
+                {{combo-box content=filterOption.choices
+                            value=filterOption.selected
+                            onSelect=(action "filter" filterOption.id)}}
+              </div>
             </div>
-          </div>
+          {{/each}}
         {{/if}}
 
         {{#if showExport}}
