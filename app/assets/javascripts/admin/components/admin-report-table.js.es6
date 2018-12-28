@@ -79,8 +79,8 @@ export default Ember.Component.extend({
     if (sortLabel) {
       const compare = (label, direction) => {
         return (a, b) => {
-          const aValue = label.compute(a).value;
-          const bValue = label.compute(b).value;
+          let aValue = label.compute(a).value;
+          let bValue = label.compute(b).value;
           const result = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
           return result * direction;
         };
