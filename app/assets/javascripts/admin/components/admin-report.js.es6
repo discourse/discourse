@@ -177,12 +177,14 @@ export default Ember.Component.extend({
 
   @computed("model.filter_options")
   filterOptions(options) {
-    return options.map(option => {
-      if (option.allowAny) {
-        option.choices.unshift(I18n.t("admin.dashboard.report_filter_any"));
-      }
-      return option;
-    });
+    if (options) {
+      return options.map(option => {
+        if (option.allowAny) {
+          option.choices.unshift(I18n.t("admin.dashboard.report_filter_any"));
+        }
+        return option;
+      });
+    }
   },
 
   @computed("startDate")
