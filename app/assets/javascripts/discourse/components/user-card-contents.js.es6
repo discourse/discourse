@@ -58,10 +58,10 @@ export default Ember.Component.extend(
     topicPostCount: null,
 
     @computed("user.staff")
-    staff: staff => (staff ? "staff" : ""),
+    staff: isStaff => (isStaff ? "staff" : ""),
 
     @computed("user.trust_level")
-    new_user: trust_level => (trust_level === 0 ? "new-user" : ""),
+    newUser: trustLevel => (trustLevel === 0 ? "new-user" : ""),
 
     @computed("user.name")
     nameFirst(name) {
