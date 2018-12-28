@@ -128,7 +128,7 @@
     const sameTimezone = _isEqualZones(displayedTimezone, moment.tz.guess());
     const inCalendarRange = dateTime.isBetween(
       moment().subtract(2, "days"),
-      moment().add(2, "days")
+      moment().add(1, "days").endOf("day")
     );
 
     if (options.calendar && inCalendarRange) {
