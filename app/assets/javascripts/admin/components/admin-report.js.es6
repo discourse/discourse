@@ -209,14 +209,7 @@ export default Ember.Component.extend({
     "normalizedStartDate",
     "normalizedEndDate"
   )
-  reportKey(
-    dataSourceName,
-    categoryId,
-    groupId,
-    filter,
-    startDate,
-    endDate
-  ) {
+  reportKey(dataSourceName, categoryId, groupId, filter, startDate, endDate) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
     let reportKey = "reports:";
@@ -244,17 +237,17 @@ export default Ember.Component.extend({
       let paramPairs = {};
       let newParams = [];
 
-      if(this.get("filter")) {
-        let filter = this.get("filter").slice(1,-1);;
+      if (this.get("filter")) {
+        let filter = this.get("filter").slice(1, -1);
         params = filter.split("&") || [];
-        params.map((p) => {
+        params.map(p => {
           let pair = p.split("=");
           paramPairs[pair[0]] = pair[1];
         });
       }
 
       paramPairs[filterOptionId] = value;
-      Object.keys(paramPairs).forEach((key) => {
+      Object.keys(paramPairs).forEach(key => {
         newParams.push(`${key}=${paramPairs[key]}`);
       });
 
