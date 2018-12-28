@@ -106,7 +106,12 @@ export default Ember.Component.extend({
   pages(data, perPage, page) {
     if (!data || data.length <= perPage) return [];
 
-    let pages = [...Array(Math.ceil(data.length / perPage)).keys()].map(v => {
+    const pagesIndexes = [];
+    for (let i = 0; i < Math.ceil(data.length / perPage); i++) {
+      pagesIndexes.push(i);
+    }
+
+    let pages = pagesIndexes.map(v => {
       return {
         page: v + 1,
         index: v,

@@ -26,7 +26,7 @@ sup img.emoji {
 .emoji-picker .categories-column {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 0 0;
   align-items: center;
   justify-content: space-between;
   border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -61,7 +61,7 @@ sup img.emoji {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   padding: 0;
-  flex: 1;
+  flex: 1 0 0;
   flex-direction: column;
 }
 
@@ -223,7 +223,7 @@ sup img.emoji {
 .emoji-picker .filter input {
   height: 24px;
   margin: 0;
-  flex: 1;
+  flex: 1 0 0;
   border: none;
   box-shadow: none;
   padding-right: 24px;
@@ -247,7 +247,7 @@ sup img.emoji {
   align-items: center;
   justify-content: flex-start;
   padding: 4px;
-  flex: 1;
+  flex: 1 0 0;
 }
 
 .emoji-picker .filter .clear-filter {

@@ -470,7 +470,7 @@ $mobile-breakpoint: 700px;
   nav {
     display: inline-flex;
     position: relative;
-    flex: 1;
+    flex: 1 0 0;
     height: auto;
     overflow: hidden;
     padding: 0;
@@ -892,7 +892,7 @@ table#user-badges {
 
     .value-input {
       box-sizing: border-box;
-      flex: 1;
+      flex: 1 0 0;
       border-color: $primary-low;
       cursor: pointer;
       margin: 0;
@@ -919,7 +919,7 @@ table#user-badges {
     margin-left: -0.25em;
     margin-top: -0.125em;
     .new-value-input {
-      flex: 1;
+      flex: 1 0 0;
     }
     .value-input,
     .new-value-input {

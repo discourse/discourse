@@ -6,7 +6,7 @@ class Admin::ReportsController < Admin::AdminController
       ApplicationRequest.req_types.keys
         .select { |r| r =~ /^page_view_/ && r !~ /mobile/ }
         .map { |r| r + "_reqs" } +
-      Report.singleton_methods.grep(/^report_(?!about)/)
+      Report.singleton_methods.grep(/^report_(?!about|storage_stats)/)
 
     reports = reports_methods.map do |name|
       type = name.to_s.gsub('report_', '')

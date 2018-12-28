@@ -63,11 +63,6 @@ export default Ember.Mixin.create({
     return this.$(this.filterInputSelector);
   },
 
-  @on("didRender")
-  _schedulePositionRendering() {
-    Ember.run.debounce(this, this._adjustPosition, 50, true);
-  },
-
   _adjustPosition() {
     this._applyDirection();
     this._applyFixedPosition();
@@ -128,15 +123,27 @@ export default Ember.Mixin.create({
     });
     this.focusFilterOrHeader();
     this.autoHighlight();
-    this._boundaryActionHandler("onExpand", this);
+
+    Ember.run.next(() => {
+      this._boundaryActionHandler("onExpand", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._adjustPosition();
+        }
+      });
+    });
   },
 
   collapse() {
     this.set("isExpanded", false);
 
     Ember.run.next(() => {
-      Ember.run.schedule("afterRender", () => this._removeFixedPosition());
       this._boundaryActionHandler("onCollapse", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._removeFixedPosition();
+        }
+      });
     });
   },
 
@@ -185,29 +192,43 @@ export default Ember.Mixin.create({
         : windowWidth;
       const bodyWidth = this._computedStyle(this.$body()[0], "width");
 
-      let marginToEdge;
+      let spaceToLeftEdge;
       if (this.$scrollableParent().length) {
-        marginToEdge =
+        spaceToLeftEdge =
           this.$().offset().left - this.$scrollableParent().offset().left;
       } else {
-        marginToEdge = this.get("element").getBoundingClientRect().left;
+        spaceToLeftEdge = this.get("element").getBoundingClientRect().left;
       }
 
-      const enoughMarginToOppositeEdge =
-        parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset") >
-        0;
-      if (enoughMarginToOppositeEdge) {
+      let isLeftAligned = true;
+      const spaceToRightEdge = parentWidth - spaceToLeftEdge;
+      const elementWidth = this.get("element").getBoundingClientRect().width;
+      if (spaceToRightEdge > spaceToLeftEdge + elementWidth) {
+        isLeftAligned = false;
+      }
+
+      if (isLeftAligned) {
         this.$()
           .addClass("is-left-aligned")
           .removeClass("is-right-aligned");
-        options.left = this.get("horizontalOffset");
-        options.right = "unset";
+
+        if (this._isRTL()) {
+          options.right = this.get("horizontalOffset");
+        } else {
+          options.left =
+            -bodyWidth + elementWidth - this.get("horizontalOffset");
+        }
       } else {
         this.$()
           .addClass("is-right-aligned")
           .removeClass("is-left-aligned");
-        options.left = "unset";
-        options.right = this.get("horizontalOffset");
+
+        if (this._isRTL()) {
+          options.right =
+            -bodyWidth + elementWidth - this.get("horizontalOffset");
+        } else {
+          options.left = this.get("horizontalOffset");
+        }
       }
     }
 

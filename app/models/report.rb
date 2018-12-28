@@ -1514,7 +1514,7 @@ class Report
       data[:author_id] = row.user_id
       data[:author_username] = row.username
       data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
-      data[:filesize_label] = row.filesize
+
       data[:filesize] = row.filesize
       data[:extension] = row.extension
       data[:file_url] = Discourse.store.cdn_url(row.url)

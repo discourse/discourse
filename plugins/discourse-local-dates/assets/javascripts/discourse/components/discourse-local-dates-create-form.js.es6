@@ -137,6 +137,10 @@ export default Ember.Component.extend({
       text += ` timezones="${config.timezones.join("|")}"`;
     }
 
+    if (config.recurring) {
+      text += ` recurring="${config.recurring}"`;
+    }
+
     text += `]`;
 
     return text;

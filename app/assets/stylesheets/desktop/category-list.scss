@@ -109,7 +109,7 @@
   flex-flow: row wrap;
 
   div.column {
-    flex: 1;
+    flex: 1 0 0;
     flex-direction: row;
     min-width: 300px;
   }
