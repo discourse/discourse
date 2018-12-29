@@ -177,6 +177,7 @@
           <div class="control">
             <div class="input">
               {{combo-box content=filterOption.choices
+                          filterable=true
                           value=filterOption.selected
                           onSelect=(action "filter" filterOption.id)}}
             </div>
