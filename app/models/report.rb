@@ -76,6 +76,11 @@ class Report
     self.start_date
   end
 
+  def filter_values
+    return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h if self.filter.present?
+    {}
+  end
+
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
     {
@@ -1439,23 +1444,11 @@ class Report
   end
 
   def self.report_top_uploads(report)
-    if report.filter.present?
-      filters = report.filter.delete_prefix("[").delete_suffix("]").split("&").map do |param|
-        param_pair = param.split("=")
-        { id: param_pair[0], value: param_pair[1] }
-      end
-
-      extension_filter = filters.find { |pair| pair[:id] == "file-extension" }
-      if extension_filter.present? && extension_filter[:value] != "any"
-        extension_filter_sql = "AND up.extension = '#{extension_filter[:value]}'"
-      end
-    end
-
     report.modes = [:table]
     report.filter_options = [
       {
         id: "file-extension",
-        selected: extension_filter.present? ? extension_filter.fetch(:value, "any") : "any",
+        selected: report.filter_values.fetch("file-extension", "any"),
         choices: ["jpeg", "gif", "png"],
         allowAny: true
       }
@@ -1504,12 +1497,17 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}' #{extension_filter_sql}
+    /*where*/
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
 
-    DB.query(sql).each do |row|
+    extension_filter = report.filter_values["file-extension"]
+    builder = DB.build(sql)
+    builder.where("up.created_at >= :start_date", start_date: report.start_date)
+    builder.where("up.created_at < :end_date", end_date: report.end_date)
+    builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
+    builder.query.each do |row|
       data = {}
       data[:author_id] = row.user_id
       data[:author_username] = row.username

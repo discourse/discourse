@@ -258,7 +258,9 @@ export default Ember.Component.extend({
 
       paramPairs[filterOptionId] = value;
       Object.keys(paramPairs).forEach(key => {
-        newParams.push(`${key}=${paramPairs[key]}`);
+        if (paramPairs[key] !== I18n.t("admin.dashboard.report_filter_any")) {
+          newParams.push(`${key}=${paramPairs[key]}`);
+        }
       });
 
       this.set("filter", `[${newParams.join("&")}]`);
