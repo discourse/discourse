@@ -1449,7 +1449,7 @@ class Report
       {
         id: "file-extension",
         selected: report.filter_values.fetch("file-extension", "any"),
-        choices: ["jpeg", "gif", "png"],
+        choices: SiteSetting.authorized_extensions.split("|"),
         allowAny: true
       }
     ]
