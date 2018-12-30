@@ -5,6 +5,53 @@ import DiscourseURL from "discourse/lib/url";
 import RawHtml from "discourse/widgets/raw-html";
 import renderTags from "discourse/lib/render-tags";
 import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";
+import { avatarImg } from "discourse/widgets/post";
+
+createWidget("topic-header-participant", {
+  tagName: "span",
+
+  buildClasses(attrs) {
+    return `trigger-${attrs.type}-card`;
+  },
+
+  html(attrs) {
+    const { user, group } = attrs;
+    let avatar, url;
+
+    if (attrs.type === "user") {
+      avatar = avatarImg("tiny", {
+        template: user.avatar_template,
+        username: user.username
+      });
+      url = user.get("path");
+    } else {
+      avatar = iconNode("users");
+      url = Discourse.getURL(`/groups/${group.name}`);
+    }
+
+    return h(
+      "a.icon",
+      {
+        attributes: {
+          href: url,
+          "data-auto-route": true,
+          title: attrs.username
+        }
+      },
+      avatar
+    );
+  },
+
+  click(e) {
+    const $target = $(e.target);
+    this.appEvents.trigger(
+      `topic-header:trigger-${this.attrs.type}-card`,
+      this.attrs.username,
+      $target
+    );
+    e.preventDefault();
+  }
+});
 
 export default createWidget("header-topic-info", {
   tagName: "div.extra-info-wrapper",
@@ -71,6 +118,58 @@ export default createWidget("header-topic-info", {
       const tags = renderTags(topic);
       if (tags && tags.length > 0) {
         extra.push(new RawHtml({ html: tags }));
+      }
+
+      if (showPM) {
+        const maxHeaderParticipants = extra.length > 0 ? 5 : 10;
+        const participants = [];
+        const topicDetails = topic.get("details");
+        const totalParticipants =
+          topicDetails.allowed_users.length +
+          topicDetails.allowed_groups.length;
+
+        topicDetails.allowed_users.some(user => {
+          if (participants.length >= maxHeaderParticipants) {
+            return true;
+          }
+
+          participants.push(
+            this.attach("topic-header-participant", {
+              type: "user",
+              user: user,
+              username: user.username
+            })
+          );
+        });
+
+        topicDetails.allowed_groups.some(group => {
+          if (participants.length >= maxHeaderParticipants) {
+            return true;
+          }
+
+          participants.push(
+            this.attach("topic-header-participant", {
+              type: "group",
+              group: group,
+              username: group.name
+            })
+          );
+        });
+
+        if (totalParticipants > maxHeaderParticipants) {
+          const remaining = totalParticipants - maxHeaderParticipants;
+          participants.push(
+            this.attach("link", {
+              className: "more-participants",
+              action: "jumpToTopPost",
+              href,
+              attributes: { "data-topic-id": topic.get("id") },
+              contents: () => `+${remaining}`
+            })
+          );
+        }
+
+        extra.push(h("div.topic-header-participants", participants));
       }
 
       extra = extra.concat(applyDecorators(this, "after-tags", attrs, state));
