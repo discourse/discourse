@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMD="cd /src && RAILS_ENV=development rake db:migrate"
+CMD="cd /src && USER=discourse RAILS_ENV=development rake db:migrate"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"
-CMD="cd /src && RAILS_ENV=test rake db:migrate"
+CMD="cd /src && USER=discourse RAILS_ENV=test rake db:migrate"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"
