@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency 'middleware/anonymous_cache'
-require_dependency 'method_profiler'
+require 'method_profiler'
+require 'middleware/anonymous_cache'
 
 class Middleware::RequestTracker
 
