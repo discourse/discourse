@@ -121,6 +121,10 @@ export default Ember.Mixin.create({
       this.set("isFixed", true);
       return this._show($target.text().replace(/^@/, ""), $target);
     });
+
+    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
+      return this._show(username, $target);
+    });
   },
 
   _positionCard(target) {

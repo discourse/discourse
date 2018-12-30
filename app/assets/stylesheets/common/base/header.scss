@@ -299,3 +299,27 @@
     min-width: 0;
   }
 }
+
+.topic-header-participants {
+  &:not(:first-child) {
+    margin-left: 4px;
+  }
+
+  > span {
+    margin: 0 2px;
+    display: inline-block;
+    height: 20px;
+  }
+
+  .trigger-group-card {
+    line-height: 20px;
+    margin: 0 4px;
+  }
+
+  .more-participants {
+    display: inline-block;
+    color: $header_primary-high;
+    line-height: 20px;
+    padding: 0 4px;
+  }
+}
