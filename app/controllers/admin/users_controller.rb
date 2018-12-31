@@ -164,6 +164,15 @@ class Admin::UsersController < Admin::AdminController
     )
   end
 
+  def check_password
+    user = User.find_by_username_or_email(params[:username])
+    if user && user.confirm_password?(params[:password])
+      render json: success_json
+    else
+      render json: failed_json
+    end
+  end
+
   def log_out
     if @user
       @user.user_auth_tokens.destroy_all

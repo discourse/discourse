@@ -100,6 +100,7 @@ Discourse::Application.routes.draw do
         get "list" => "users#index"
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
+        post "check-password" => "users#check_password"
         delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
         get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"

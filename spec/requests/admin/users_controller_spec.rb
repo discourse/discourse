@@ -527,6 +527,50 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe '#check_password' do
+    let(:reg_user) { Fabricate(:user, password: "ilovepasta") }
+
+    it "returns success with username and the correct password" do
+      post "/admin/users/check-password.json", params: {
+        username: reg_user.username,
+        password: "ilovepasta"
+      }
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['success']).to eq("OK")
+    end
+
+    it "returns success with email and the correct password" do
+      post "/admin/users/check-password.json", params: {
+        username: reg_user.email,
+        password: "ilovepasta"
+      }
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['success']).to eq("OK")
+    end
+
+    it "returns failed with a wrong password" do
+      post "/admin/users/check-password.json", params: {
+        username: reg_user.username,
+        password: "ihatepasta"
+      }
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['failed']).to eq("FAILED")
+    end
+
+    it "returns failed with invalid username" do
+      post "/admin/users/check-password.json", params: {
+        username: "123123",
+        password: "ilovepasta"
+      }
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['failed']).to eq("FAILED")
+    end
+  end
+
   describe '#log_out' do
     let(:reg_user) { Fabricate(:user) }
 
