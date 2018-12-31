@@ -1243,6 +1243,7 @@ en:
       submit_new_email: "Update Email Address"
 
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      sent_activation_email_again_generic: "We sent another activation email. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
