@@ -58,7 +58,7 @@ class UserBadgesController < ApplicationController
 
     if params[:reason].present?
       unless is_badge_reason_valid? params[:reason]
-        return render json: { failed: I18n.t('invalid_grant_badge_reason_link') }, status: 400
+        return render json: failed_json.merge(message: I18n.t('invalid_grant_badge_reason_link')), status: 400
       end
 
       path = begin
