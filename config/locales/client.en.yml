@@ -347,8 +347,14 @@ en:
     choose_topic:
       none_found: "No topics found."
       title:
-        search: "Search for a Topic by name, url or id:"
+        search: "Search for a Topic by title, url or id:"
         placeholder: "type the topic title here"
+
+    choose_message:
+      none_found: "No messages found."
+      title:
+        search: "Search for a Message by title:"
+        placeholder: "type the message title here"
 
     queue:
       topic: "Topic:"
@@ -2004,10 +2010,16 @@ en:
           other: "{{count}} posts"
         cancel: "Remove filter"
 
+      move_to:
+        title: "Move to"
+        action: "move to"
+        error: "There was an error moving posts."
+
       split_topic:
         title: "Move to New Topic"
         action: "move to new topic"
-        topic_name: "New Topic Name"
+        topic_name: "New Topic Title"
+        radio_label: "New Topic"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
@@ -2017,9 +2029,29 @@ en:
         title: "Move to Existing Topic"
         action: "move to existing topic"
         error: "There was an error moving posts into that topic."
+        radio_label: "Existing Topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      move_to_new_message:
+        title: "Move to New Message"
+        action: "move to new message"
+        message_title: "New Message Title"
+        radio_label: "New Message"
+        participants: "Participants"
+        instructions:
+          one: "You are about to create a new message and populate it with the post you've selected."
+          other: "You are about to create a new message and populate it with the <b>{{count}}</b> posts you've selected."
+
+      move_to_existing_message:
+        title: "Move to Existing Message"
+        action: "move to existing message"
+        radio_label: "Existing Message"
+        participants: "Participants"
+        instructions:
+          one: "Please choose the message you'd like to move that post to."
+          other: "Please choose the message you'd like to move those <b>{{count}}</b> posts to."
 
       merge_posts:
         title: "Merge Selected Posts"
