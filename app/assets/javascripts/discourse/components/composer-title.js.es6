@@ -1,11 +1,13 @@
 import {
   default as computed,
-  observes
+  observes,
+  on
 } from "ember-addons/ember-computed-decorators";
 import InputValidation from "discourse/models/input-validation";
 import { load, lookupCache } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import afterTransition from "discourse/lib/after-transition";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend({
   classNames: ["title-input"],
@@ -24,6 +26,20 @@ export default Ember.Component.extend({
     if (this.get("composer.titleLength") > 0) {
       Ember.run.debounce(this, this._titleChanged, 10);
     }
+    // We need to bind the full screen shortcut to the composer title in order
+    // for it to work even if the title has focus - see components/d-editor.js.es6
+    const mouseTrap = Mousetrap(this.$()[0]);
+    mouseTrap.bind(["shift+f11"], event => {
+      const composer = getOwner(this).lookup("controller:composer");
+      composer.toggleFullscreen();
+      return true;
+    });
+  },
+
+  @on("willDestroyElement")
+  _clearKeyboardShortcuts() {
+    const mouseTrap = Mousetrap(this.$()[0]);
+    mouseTrap.unbind("shift+f11");
   },
 
   @computed(
