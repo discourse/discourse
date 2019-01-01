@@ -1,3 +1,4 @@
+/* global Mousetrap:true */
 import {
   default as computed,
   observes,
