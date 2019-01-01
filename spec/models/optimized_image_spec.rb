@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should work correctly' do
+      it 'should work correctly (requires correct version of image optim)' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -128,7 +128,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should work correctly' do
+      it 'should work correctly (requires correct version of image optim)' do
         tmp_path = "/tmp/downsized.png"
 
         begin
