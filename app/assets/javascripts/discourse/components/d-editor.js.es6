@@ -20,6 +20,7 @@ import {
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -252,15 +253,24 @@ export default Ember.Component.extend({
 
     Ember.run.scheduleOnce("afterRender", this, this._readyNow);
 
-    const mouseTrap = Mousetrap(this.$(".d-editor-input")[0]);
+    // binding shortcuts does not work if an input has focus. The shortcuts below
+    // need to be explicitly bound to the editor input in order for the shortcuts
+    // to work even if it has focus.
+    const mouseTrap = Mousetrap($(".d-editor-input")[0]);
     const shortcuts = this.get("toolbar.shortcuts");
 
-    // for some reason I am having trouble bubbling this so hack it in
     mouseTrap.bind(["ctrl+alt+f"], event => {
       this.appEvents.trigger("header:keyboard-trigger", {
         type: "search",
         event
       });
+      return true;
+    });
+    // the full screen shortcut is also added in components/composer-title.js.es6
+    //  in order to work even if the title input has focus
+    mouseTrap.bind(["shift+f11"], event => {
+      const composer = getOwner(this).lookup("controller:composer");
+      composer.toggleFullscreen();
       return true;
     });
 
@@ -322,7 +332,7 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    mouseTrap.unbind("ctrl+/", "command+/");
+    mouseTrap.unbind("ctrl+/", "command+/", "shift+f11");
     this.$(".d-editor-preview").off("click.preview");
   },
 
