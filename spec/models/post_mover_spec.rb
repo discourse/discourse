@@ -584,7 +584,6 @@ describe PostMover do
           p2.reload
           expect(p2.topic.archetype).to eq(Archetype.private_message)
           expect(p2.topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
-          expect(p2.topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
           expect(p2.topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
           expect(p2.topic.tags.pluck(:name)).to eq([])
         end
