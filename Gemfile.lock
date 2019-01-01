@@ -357,7 +357,7 @@ GEM
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
     rtlit (0.0.5)
-    rubocop (0.60.0)
+    rubocop (0.61.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
@@ -426,7 +426,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
-    unicode-display_width (1.4.0)
+    unicode-display_width (1.4.1)
     unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
