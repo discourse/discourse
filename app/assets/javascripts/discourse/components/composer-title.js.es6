@@ -29,16 +29,17 @@ export default Ember.Component.extend({
     // We need to bind the full screen shortcut to the composer title in order
     // for it to work even if the title has focus - see components/d-editor.js.es6
     const mouseTrap = Mousetrap(this.$()[0]);
-    mouseTrap.bind(["shift+f11"], event => {
+    mouseTrap.bind(["shift+f11"], () => {
       const composer = getOwner(this).lookup("controller:composer");
       composer.toggleFullscreen();
       return true;
     });
+    this._mouseTrap = mouseTrap;
   },
 
   @on("willDestroyElement")
   _clearKeyboardShortcuts() {
-    const mouseTrap = Mousetrap(this.$()[0]);
+    const mouseTrap = this._mouseTrap;
     mouseTrap.unbind("shift+f11");
   },
 
