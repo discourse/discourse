@@ -268,7 +268,7 @@ export default Ember.Component.extend({
     });
     // the full screen shortcut is also added in components/composer-title.js.es6
     // in order to work even if the title input has focus
-    mouseTrap.bind(["shift+f11"], event => {
+    mouseTrap.bind(["shift+f11"], () => {
       const composer = getOwner(this).lookup("controller:composer");
       composer.toggleFullscreen();
       return true;
