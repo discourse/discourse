@@ -302,7 +302,6 @@ bs_BA:
     choose_topic:
       none_found: "Nema tema."
       title:
-        search: "Traži temu prema naslovu, url-u ili id-u:"
         placeholder: "ovdje unesite naslov teme"
     queue:
       topic: "Tema:"
@@ -480,7 +479,6 @@ bs_BA:
           description: "Dobit ćete obavijest za svaki naredni post u svakoj narednoj poruci, i broj novih odgovora će biti prikazan."
         watching_first_post:
           title: "Pratiti prve objave"
-          description: "Bit će te obavješteni samo o prvim objavama u svakoj novoj temi ove grupe."
         tracking:
           title: "Praćenje"
           description: "Bićete obaviješteni ukoliko neko spomene vaše @ime ili nešto što je naslovljeno za vas, i broj novih odgovora će biti prikazan."
@@ -1766,7 +1764,6 @@ bs_BA:
       split_topic:
         title: "Move to New Topic"
         action: "move to new topic"
-        topic_name: "Ime Nove Teme"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "Kreirati će te novu temu i popuniti je sa objavom koju ste označili."
@@ -2192,9 +2189,6 @@ bs_BA:
         private_messages_short: "PP"
         private_messages_title: "Privatne Poruke"
         mobile_title: "Mobiteli"
-        space_free: "{{size}} slobodno"
-        uploads: "Učitavanja"
-        backups: "backupovi"
         show_traffic_report: "Pokaži detaljan izvještaj prometa"
         reports:
           today: "Today"

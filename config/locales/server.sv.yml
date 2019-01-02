@@ -130,7 +130,6 @@ sv:
     continue: "Fortsätt diskussion"
     error: "Fel vid inbäddningen"
     referer: "Hänvisning:"
-    mismatch: "Hänvisningarna matchade inte någon av följande ägare"
     no_hosts: "Inga värdar var uppsatta för textinbäddningen"
     configure: "konfigurera inbäddningen"
     more_replies:
@@ -544,10 +543,6 @@ sv:
       title: "Bokmärken"
       xaxis: "Dag"
       yaxis: "Antal nya bokmärken"
-    starred:
-      title: "Favoriserad"
-      xaxis: "Dag"
-      yaxis: "Antal favoriserade ämnen"
     users_by_trust_level:
       title: "Användare per förtroendenivå"
       xaxis: "Förtroendenivå"
@@ -1085,13 +1080,6 @@ sv:
     errors:
       different_topics: "Inlägg som härrör sig till olika ämnen kan inte läggas ihop."
       different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ett inlägg har delats in i ett nytt ämne: %{topic_link}"
-      other: "%{count} inlägg delades in i ett nytt ämne: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
-      other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
   topic_statuses:
     archived_enabled: "Detta ämne är nu arkiverat. Det är fryst och kan inte förändras på något sätt."
     archived_disabled: "Detta ämne är nu oarkiverat. Det är inte längre fruset, och kan ändras."

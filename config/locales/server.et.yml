@@ -130,7 +130,6 @@ et:
     continue: "Jätka arutelu"
     error: "Sängitamine ebaõnnestus"
     referer: "Sissetulev link:"
-    mismatch: "Sissetulev link ei kattu ühegagi järgmistest hostidest:"
     no_hosts: "Sängitamiseks pole ühtegi hosti seadistatud."
     configure: "Sängitamise seadistamine"
     more_replies:
@@ -547,13 +546,11 @@ et:
         percent: Protsent
         day: Päev
     post_edits:
-      title: "Postituse muutmised"
       labels:
         post: Postitus
         author: Autor
         edit_reason: Põhjus
     moderators_activity:
-      title: "Modereerimise tegevus"
       labels:
         moderator: Moderaator
         time_read: Lugemise aeg
@@ -604,8 +601,6 @@ et:
       title: "Järjehoidjad"
       xaxis: "Päev"
       yaxis: "Uute järjehoidjate arv"
-    starred:
-      xaxis: "Päev"
     users_by_trust_level:
       xaxis: "Usaldustase"
       yaxis: "Kasutajate arv"

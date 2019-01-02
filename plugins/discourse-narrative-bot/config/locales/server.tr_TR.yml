@@ -74,8 +74,6 @@ tr_TR:
       help_trigger: 'yardımı görüntüle'
     new_user_narrative:
       reset_trigger: "yeni kullanıcı"
-      hello:
-        title: ":robot: Selamlar!"
       quoting:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:

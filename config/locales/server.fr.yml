@@ -198,7 +198,6 @@ fr:
     continue: "Continuer la discussion"
     error: "Erreur d'intégration"
     referer: "Référent :"
-    mismatch: "Le référent ne correspondait à aucun des hôtes suivants :"
     no_hosts: "Aucun hôte n'a été configuré pour l'intégration."
     configure: "Configurer l'intégration"
     more_replies:
@@ -879,7 +878,6 @@ fr:
         percent: Pourcentage
         day: Jour
     post_edits:
-      title: "Modifications de message"
       labels:
         post: Message
         editor: Éditeur
@@ -894,7 +892,6 @@ fr:
         ignored_flags: Signalements ignorés
         score: Score
     moderators_activity:
-      title: "Activité des modérateurs"
       labels:
         moderator: Modérateur
         flag_count: Signalements examinés
@@ -904,7 +901,6 @@ fr:
         pm_count: Messages privés créés
         revision_count: Révisions
     flags_status:
-      title: "Statut des signalements"
       values:
         agreed: Acceptés
         disagreed: Rejetés
@@ -924,22 +920,18 @@ fr:
       title: "Inscriptions"
       xaxis: "Jour"
       yaxis: "Nombre d'inscriptions"
-      description: "Nouvelles créations de compte pour cette période"
     new_contributors:
       title: "Nouveaux contributeurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
-      description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
-      description: "Nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en % qui représente le taux \"d'adhérence\" de la communauté. Viser > 30%."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
       yaxis: "Utilisateurs impliqués"
-      description: "Nombre d'utilisateurs ayant aimé ou publié un message dans les derniers 24h"
     profile_views:
       title: "Vues des profils d'utilisateurs"
       xaxis: "Jour"
@@ -948,7 +940,6 @@ fr:
       title: "Sujets"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux sujets"
-      description: "Nouveaux sujets crées pour cette période"
     posts:
       title: "Messages"
       xaxis: "Jour"
@@ -966,10 +957,6 @@ fr:
       title: "Signets"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux signets"
-    starred:
-      title: "Favoris"
-      xaxis: "Jour"
-      yaxis: "Nombre de nouveaux sujets favoris"
     users_by_trust_level:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
@@ -988,7 +975,6 @@ fr:
         suspended: Suspendu
         silenced: Sous silence
     trending_search:
-      title: Recherche tendance
       labels:
         term: Terme
         searches: Recherches
@@ -1206,10 +1192,6 @@ fr:
     inline_onebox_domains_whitelist: "Une liste de domaines qui seront transformé en Onebox s'ils ont été liés sans titre"
     enable_inline_onebox_on_all_domains: "Ignorer le paramètre inline_onebox_domain_whitelist et permettre des onebox 'inline' pour tous les domaines."
     max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
-    logo: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
-    logo_small: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
-    digest_logo: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Elle devrait idéalement être en forme de large rectangle et ne pas être une image SVG. Si vide, `logo_url` sera utilisé."
-    mobile_logo: "Logo personnalisé utilisé sur la version mobile de votre site. Si non renseigné, `logo_url` sera utilisé, par exemple : https://example.com/uploads/default/logo.png"
     large_icon: "Image utilisée comme logo sur Android. Taille recommandée : 512 px par 512 px."
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a>, pour fonctionner correctement à travers un CDN il doit être PNG."
     apple_touch_icon: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
@@ -1775,13 +1757,6 @@ fr:
     errors:
       different_topics: "Des messages appartenant à différents sujets ne peuvent pas être fusionnés."
       different_users: "Des messages appartenant à différents utilisateurs ne peuvent pas être fusionnés."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Un message a été déplacé vers un nouveau sujet : %{topic_link}"
-      other: "%{count} messages ont été déplacés vers un nouveau sujet : %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Un message a été intégré dans un sujet existant : %{topic_link}"
-      other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
   change_owner:
     post_revision_text: "Propriété transférée"
   topic_statuses:
@@ -1878,7 +1853,6 @@ fr:
     email:
       sent_test: "envoyé !"
       sent_test_disabled: "impossible d'envoyer, les courriels sont désactivés"
-      sent_test_disabled_for_non_staff: "impossible d'envoyer, les courriels sont désactivés sauf pour les responsables"
   user:
     deactivated: "A été désactivé à cause de trop de courriels rejetés vers '%{email}'."
     deactivated_by_staff: "Désactivé par un responsable"
@@ -4340,10 +4314,8 @@ fr:
         fields:
           logo:
             label: "Logo principal"
-            description: "L'image logo du coin supérieur gauche de votre site. Utilisez une forme rectangulaire large."
           logo_small:
             label: "Logo compact"
-            description: "Une version compacte de votre logo qui est affichée dans le coin supérieur gauche de votre site quand vous défilez la page vers le bas. Utilisez une forme carrée."
       icons:
         title: "Icônes"
         fields:

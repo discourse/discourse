@@ -291,7 +291,6 @@ fr:
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
-        search: "Rechercher un sujet par son nom, URL ou ID :"
         placeholder: "entrez ici le titre du sujet"
     queue:
       topic: "Sujet :"
@@ -467,7 +466,6 @@ fr:
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez uniquement notifié du premier message de chaque sujet de ce groupe."
         tracking:
           title: "Suivre"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -1819,7 +1817,6 @@ fr:
       split_topic:
         title: "Déplacer vers un nouveau sujet"
         action: "déplacer vers un nouveau sujet"
-        topic_name: "Titre du nouveau sujet"
         error: "Il y a eu une erreur en déplaçant les messages vers un nouveau sujet."
         instructions:
           one: "Vous êtes sur le point de créer un nouveau sujet avec le message que vous avez sélectionné."
@@ -2159,7 +2156,6 @@ fr:
           description: "Vous surveillerez automatiquement tous les sujets dans ces catégories. Vous serez notifié des nouveaux messages dans tous les sujets, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez uniquement notifié du premier message de chaque sujet dans ces catégories."
         tracking:
           title: "Suivi"
           description: "Vous allez suivre automatiquement tous les sujets dans ces catégories. Vous serez notifié lorsque quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -2527,7 +2523,6 @@ fr:
           description: "Vous surveillerez automatiquement tous les sujets avec ce tag. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez uniquement notifié du premier message de chaque sujet avec ce tag."
         tracking:
           title: "Suivi"
           description: "Vous allez suivre automatiquement tous les sujets avec ce tag. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
@@ -2615,9 +2610,6 @@ fr:
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
         mobile_title: "Mobile"
-        space_free: "{{size}} libre"
-        uploads: "fichiers envoyés"
-        backups: "sauvegardes"
         lastest_backup: "Plus récent: %{date}"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
@@ -2976,7 +2968,6 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
         location:
-          local: "Locale"
           s3: "Amazon S3"
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
@@ -3370,9 +3361,6 @@ fr:
           title: "Journaux de recherche"
           term: "Terme"
           searches: "Recherches"
-          click_through: "Taux de clics"
-          unique: "Unique"
-          unique_title: "utilisateurs uniques ayant recherché"
           types:
             all_search_types: "Tous les types de recherche"
             header: "Entête"

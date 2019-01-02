@@ -142,7 +142,6 @@ es:
       title: "Certificado de completación para el nuevo usuario"
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario nuevo"
       hello:
-        title: ":robot: Saludos!"
         message: |-
           Gracias por unirte a %{title}, y bienvenido!
 

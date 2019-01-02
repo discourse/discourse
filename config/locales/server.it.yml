@@ -187,7 +187,6 @@ it:
     continue: "Continua Discussione"
     error: "Errore Inclusione"
     referer: "Referer:"
-    mismatch: "Il referer non corrisponde con nessuno dei seguenti host:"
     no_hosts: "Non sono stati configurati host per l'inclusione."
     configure: "Configura Inclusione"
     more_replies:
@@ -197,6 +196,9 @@ it:
     permalink: "Collegamento permanente"
     imported_from: "Questo è un argomento collegato all'originale su: %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} risposta"
+      other: "%{count} risposte"
   no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
   too_many_mentions:
     one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
@@ -693,6 +695,7 @@ it:
       self: "Non hai ancora nessuna attività."
       others: "Nessuna attività."
     no_bookmarks:
+      self: "Non hai messaggi nei Segnalibri. I Segnalibri ti consentono di accedere velocemente a specifici messaggi."
       others: "Nessun segnalibro."
     no_likes_given:
       self: "Non hai messo \"Mi piace\" ad alcun messaggio."
@@ -700,6 +703,8 @@ it:
     no_replies:
       self: "Non hai risposto a nessun messaggio."
       others: "Nessuna risposta."
+    no_drafts:
+      self: "Non hai bozze. Iniziando a scrivere una risposta a un qualsiasi Argomento, questa verrà automaticamente salvata come nuova Bozza."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -761,7 +766,6 @@ it:
         percent: Per cento
         day: Giorno
     post_edits:
-      title: "Modifica messaggio"
       labels:
         post: Messaggio
         author: Autore
@@ -774,7 +778,6 @@ it:
         ignored_flags: Segnalazioni ignorate
         score: Punteggio
     moderators_activity:
-      title: "Attività dei Moderatori"
       labels:
         moderator: Moderatore
         flag_count: Segnalazioni revisionate
@@ -789,7 +792,6 @@ it:
     daily_engaged_users:
       xaxis: "Giorno"
       yaxis: "Utenti Impegnati"
-      description: "Numero di utenti che hanno scritto o messo Mi piace nell'ultimo giorno"
     profile_views:
       title: "Visite Profilo Utente"
       xaxis: "Giorno"
@@ -798,7 +800,6 @@ it:
       title: "Argomenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi argomenti"
-      description: "Nuovi argomenti creati durante questo periodo"
     posts:
       title: "Messaggi"
       xaxis: "Giorno"
@@ -816,10 +817,6 @@ it:
       title: "Segnalibri"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi segnalibri"
-    starred:
-      title: "Preferiti"
-      xaxis: "Giorno"
-      yaxis: "Numero di nuovi argomenti preferiti"
     users_by_trust_level:
       title: "Utenti per Livello Esperienza"
       xaxis: "Livello Esperienza"
@@ -838,7 +835,6 @@ it:
         suspended: Sospeso
         silenced: Silenziato
     trending_search:
-      title: Ricerche di tendenza
       labels:
         term: Termine
         searches: Ricerche
@@ -1468,13 +1464,6 @@ it:
     errors:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Un messaggio è stato spostato in un nuovo argomento: %{topic_link}"
-      other: "%{count} messaggi sono stati spostati in un nuovo argomento: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Un messaggio è stato fuso in un argomento esistente: %{topic_link}"
-      other: "%{count} messaggi sono stati fusi in un argomento esistente: %{topic_link}"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."

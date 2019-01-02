@@ -289,7 +289,6 @@ tr_TR:
     choose_topic:
       none_found: "Hiçbir konu bulunamadı."
       title:
-        search: "İsim, url ya da id ile konu ara:"
         placeholder: "konu başlığını buraya yaz"
     queue:
       topic: "Konu:"
@@ -464,7 +463,6 @@ tr_TR:
           description: "Her mesajda her yeni gönderi hakkında bilgilendirileceksin ve yeni cevap sayısı gösterilecek."
         watching_first_post:
           title: "İlk Gönderi İzlenmesi"
-          description: "Bu gruptaki her yeni konu ile ilgili olarak sadece ilk gönderide bilgilendirileceksin"
         tracking:
           title: "Takip ediliyor"
           description: "Herhangi biri @isminden bahseder ya da sana cevap verirse bildirim alacaksın ve yeni cevap sayısını göreceksin."
@@ -1760,7 +1758,6 @@ tr_TR:
       split_topic:
         title: "Yeni Konuya Geç"
         action: "yeni konuya geç"
-        topic_name: "Yeni Konu Adı"
         error: "Gönderileri yeni konuya taşırken bir hata oluştu."
         instructions:
           one: "Yeni bir konu oluşturmak ve bu konuyu seçtiğiniz <b>{{count}}</b> gönderi ile doldurmak üzeresiniz."
@@ -2077,7 +2074,6 @@ tr_TR:
           description: "Bu kategorilerdeki tüm konuları otomatik olarak izleyeceksin. Tüm konulardaki her yeni gönderiden haberdar olacak ve yeni cevapların sayısını göreceksin. "
         watching_first_post:
           title: "İlk Gönderi İzleme"
-          description: "Bu kategorilerde bulunan tüm konuların sadece ilk gönderilerinde bildirim alacaksın."
         tracking:
           title: "Takip Ediliyor"
           description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak takip edeceksin. Birisi @isminden bahsederse veya gönderine cevap verirse bildirim alacak, ayrıca yeni cevapların sayısını da göreceksin. "
@@ -2413,7 +2409,6 @@ tr_TR:
           description: "Bu etiketi içeren tüm konuları otomatik olarak izleyeceksin. Tüm yeni mesajlar ve konulardan haberdar edileceksin, ayrıca konuların yanında okunmamış ve yeni mesajların sayısı da görünecek."
         watching_first_post:
           title: "İlk gönderi izlemesi"
-          description: "Bu etiketle yalnızca her yeni konudaki ilk gönderiden haberdar edileceksin."
         tracking:
           title: "Takip ediliyor"
           description: "Bu etiketi içeren tüm konuları otomatik olarak takip edeceksin. Konunun yanında okunmamış ve yeni yayınların sayısı görünecek."
@@ -2500,9 +2495,6 @@ tr_TR:
         private_messages_short: "Mesajlar"
         private_messages_title: "Mesajlar"
         mobile_title: "Mobil"
-        space_free: "{{size}} boş"
-        uploads: "yüklemeler"
-        backups: "yedekler"
         lastest_backup: "Güncel: %{date}"
         traffic_short: "Akış"
         traffic: "Uygulama web istekleri"
@@ -3195,9 +3187,6 @@ tr_TR:
           title: "Arama Günlükleri"
           term: "Dönem"
           searches: "Aramalar"
-          click_through: "Buraya tıklayın"
-          unique: "Benzersiz"
-          unique_title: "aramayı yapan benzersiz kullanıcılar"
           types:
             all_search_types: "Tüm arama türleri"
             header: "Üst kısım"

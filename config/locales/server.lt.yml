@@ -447,7 +447,6 @@ lt:
       labels:
         day: Diena
     post_edits:
-      title: "Įrašo redagavimai"
       labels:
         editor: Redaktorius
         author: Autorius
@@ -493,9 +492,6 @@ lt:
       xaxis: "Diena"
     bookmarks:
       title: "Žymės"
-      xaxis: "Diena"
-    starred:
-      title: "Pažymėta žvaigždute"
       xaxis: "Diena"
     users_by_trust_level:
       xaxis: "Patikimumo lygis"

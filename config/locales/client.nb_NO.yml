@@ -283,7 +283,6 @@ nb_NO:
     choose_topic:
       none_found: "Ingen emner funnet."
       title:
-        search: "Søk etter et emne med navn, URL eller ID:"
         placeholder: "skriv tittelen på emnet her"
     queue:
       topic: "Emne:"
@@ -457,7 +456,6 @@ nb_NO:
           description: "Du vil bli varslet om hvert nye innlegg i hver beskjed, og antallet nye svar vil bli vist."
         watching_first_post:
           title: "Følger første innlegg"
-          description: "Du vil bare bli varslet om det første innlegget i hvert nye emne i denne gruppen."
         tracking:
           title: "Overvåker"
           description: "Du vil få beskjeddersom nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
@@ -1752,7 +1750,6 @@ nb_NO:
       split_topic:
         title: "Flytt til nytt emne"
         action: "flytt til nytt emne"
-        topic_name: "Nytt navn på emne"
         error: "Det oppstod en feil ved flytting av innlegg til det nye emnet."
         instructions:
           one: "Du er i ferd med å opprette et nytt emne basert på innlegget du har valgt.."
@@ -2086,7 +2083,6 @@ nb_NO:
           description: "Du vil automatisk følge alle emnene i disse kategoriene. Du vil bli varslet om alle nye innlegg i hvert emne, og antall nye svar vil bli vist."
         watching_first_post:
           title: "Følger første innlegg"
-          description: "Du vil bare bli varslet om det første innlegget i hvert nye emne i disse kategoriene."
         tracking:
           title: "Overvåkning"
           description: "Du vil automatisk overvåke alle emner i disse kategoriene. Du vil bli varslet dersom noen nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
@@ -2426,7 +2422,6 @@ nb_NO:
           description: "Du vil automatisk følge alle emnene med dette stikkordet. Du vil bli varslet om alle nye innlegg og emner; i tillegg vil antallet uleste og nye innlegg vises ved siden av emnet."
         watching_first_post:
           title: "Følger første innlegg"
-          description: "Du vil bare bli varslet om det første innlegget i hvert nye emne med dette stikkordet."
         tracking:
           title: "Overvåkning"
           description: "Du vil automatisk overvåke alle emner med dette stikkordet. Antallet uleste og nye innlegg vil vises ved siden av emnet."
@@ -2513,9 +2508,6 @@ nb_NO:
         private_messages_short: "Meldinger"
         private_messages_title: "Meldinger"
         mobile_title: "Mobil"
-        space_free: "{{size}} ledig"
-        uploads: "opplastinger"
-        backups: "sikkerhetskopier"
         lastest_backup: "Siste: %{date}"
         traffic_short: "Trafikk"
         traffic: "Applikasjon webforespørsler"
@@ -3209,9 +3201,6 @@ nb_NO:
           title: "Søkelogger"
           term: "Term"
           searches: "Søk"
-          click_through: "Klikk gjennom"
-          unique: "Unike"
-          unique_title: "unike brukere som har utført søket"
           types:
             all_search_types: "Alle søketyper"
             header: "Hode"

@@ -180,6 +180,7 @@ es:
     submit: "Enviar"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
+    go_ahead: "Continuar"
     sign_up: "Registrarse"
     log_in: "Iniciar sesión"
     age: "Edad"
@@ -198,6 +199,7 @@ es:
     privacy: "Privacidad"
     tos: "Condiciones de uso"
     rules: "Reglas"
+    conduct: "Código de conducta"
     mobile_view: "Versión móvil"
     desktop_view: "Versión de escritorio"
     you: "Tú"
@@ -257,6 +259,10 @@ es:
       new_topic: "Nuevo tema borrador"
       new_private_message: "Nuevo mensaje privado borrador"
       topic_reply: "Respuesta borrador"
+      abandon:
+        confirm: "Ya has abierto otro borrador en este tema. ¿Seguro que quieres abandonarlo?"
+        yes_value: "Sí, abandonar"
+        no_value: "No, mantener"
     topic_count_latest:
       one: "Ver {{count}} tema nuevo o actualizado"
       other: "Ver {{count}} temas nuevos o actualizados"
@@ -291,7 +297,6 @@ es:
     choose_topic:
       none_found: "Ningún tema encontrado."
       title:
-        search: "Buscar un Tema por nombre, url o id:"
         placeholder: "escribe el título de tema aquí"
     queue:
       topic: "Tema:"
@@ -467,7 +472,7 @@ es:
           description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Sólo se te notificará del primer post en cada nuevo tema en este grupo."
+          description: "Se te notificará acerca de nuevos temas en este grupo, pero no cuando haya nuevas respuestas."
         tracking:
           title: "Siguiendo"
           description: "Se te notificará si alguien menciona tu @nombre o te responde, y un contador de nuevos mensajes será mostrado."
@@ -708,7 +713,7 @@ es:
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
         enable_description: |
-          Escanee este código QR en una app soportada (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e ingrese su código de autenticación.
+          Escanea este código QR en una app soportada (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e introduce su código de autenticación.
         disable_description: "Por favor ingrese el código de autenticación desde su aplicación"
         show_key_description: "Ingrese Manualmente"
         extended_description: |
@@ -732,7 +737,7 @@ es:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
         gravatar_title: "Cambia tu avatar en la web de Gravatar"
-        gravatar_failed: "No pudimos encontrar tu Gravatar con esta dirección de correo."
+        gravatar_failed: "Hemos podido encontrar tu Gravatar con esta dirección de correo."
         refresh_gravatar_title: "Actualizar tu Gravatar"
         letter_based: "Imagen de perfil asignada por el sistema"
         uploaded_avatar: "Foto personalizada"
@@ -898,6 +903,7 @@ es:
           text: "Invitación masiva desde archivo"
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
           error: "Lo siento, el archivo debe tener formato CSV. "
+          confirmation_message: "Estás a punto de enviar invitaciones por correo a todo el mundo en el archivo subido."
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -1176,7 +1182,7 @@ es:
       categories_with_featured_topics: "Categorías y temas destacados"
       categories_and_latest_topics: "Categorías y temas recientes"
       categories_and_top_topics: "Categorías y Temas Top"
-      categories_boxes: "Cajas con Subcategorías"
+      categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
     shortcut_modifier_key:
       shift: 'Shift'
@@ -1255,7 +1261,7 @@ es:
         category_missing: "Debes escoger una categoría."
         tags_missing: "Debes seleccionar al menos {{count}} etiquetas"
       save_edit: "Guardar edición"
-      overwrite_edit: "Sobrescribir Edición"
+      overwrite_edit: "Sobrescribir edición"
       reply_original: "Responder en el Tema Original"
       reply_here: "Responder Aquí"
       reply: "Responder"
@@ -1819,7 +1825,6 @@ es:
       split_topic:
         title: "Mover a un tema nuevo"
         action: "mover a un tema nuevo"
-        topic_name: "Nombre del tema nuevo"
         error: "Hubo un error moviendo los posts al nuevo tema"
         instructions:
           one: "Estas a punto de crear un tema nuevo y rellenarlo con el post que has seleccionado."
@@ -1836,7 +1841,7 @@ es:
         action: "unir posts seleccionados"
         error: "Hubo un error al unir los posts seleccionados."
       change_owner:
-        title: "Cambiar Dueño"
+        title: "Cambiar dueño"
         action: "cambiar dueño"
         error: "Hubo un error cambiando la autoría de los posts."
         placeholder: "nombre de usuario del nuevo dueño"
@@ -1966,6 +1971,7 @@ es:
         unlock_post_description: "permitir al usuario que publicó, editar este post"
         delete_topic_disallowed_modal: "No tienes permiso para borrar este tema. Si de verdad quieres que se elimine, repórtalo y explica los motivos en el propio reporte para que lo estudiemos."
         delete_topic_disallowed: "no tienes permiso para borrar este tema"
+        delete_topic: "borrar tema"
       actions:
         flag: 'Reportar'
         defer_flags:
@@ -2159,7 +2165,7 @@ es:
           description: "Vigilarás automáticamente todos los temas en estas categorías. Se te notificará de cada nuevo post en cada tema, y se mostrará un contador de nuevas respuestas."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Se te notificará del primer post de cada nuevo tema en estas categorías."
+          description: "Se te notificará acerca de nuevos temas en esta categoría, pero no cuando haya nuevas respuestas."
         tracking:
           title: "Seguir"
           description: "Seguirás automáticamente todos los temas en estas categorías. Se te notificará si alguien menciona tu @nombre o te responde, y se mostrará un contador de nuevas respuestas."
@@ -2490,10 +2496,10 @@ es:
       sort_by_name: "nombre"
       manage_groups: "Administrar grupos de etiquetas"
       manage_groups_description: "Definir grupos para organizar etiquetas"
-      upload: "Subir Etiquetas"
+      upload: "Subir etiquetas"
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato 'tag_name,tag_group'."
-      upload_successful: "Etiquetas subidas exitosamente"
+      upload_successful: "Etiquetas subidas con éxito"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
         other: "%{count} etiquetas serán eliminadas: %{tags}"
@@ -2514,7 +2520,7 @@ es:
           description: "Vigilarás automáticamente todos los temas en esta etiqueta. Se te notificará de todos los nuevos temas y posts, y además aparecerá el contador de posts sin leer y nuevos posts al lado del tema."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Se te notificará únicamente en el primer post de cada nuevo tema con esta etiqueta."
+          description: "Se te notificará acerca de nuevos temas con esta etiqueta, pero no cuando haya nuevas respuestas."
         tracking:
           title: "Seguir"
           description: "Seguirás automáticamente todos los temas con esta etiqueta. Aparecerá un contador de posts sin leer y nuevos posts al lado del tema."
@@ -2602,9 +2608,13 @@ es:
         private_messages_short: "Mensajes privados"
         private_messages_title: "Mensajes"
         mobile_title: "Móvil"
-        space_free: "{{size}} libre"
-        uploads: "subidas"
-        backups: "backups"
+        space_used: "%{usedSize} usado"
+        space_used_and_free: "%{usedSize} (%{freeSize} libre)"
+        uploads: "Archivos subidos"
+        backups: "Copias de seguridad"
+        backup_count:
+          one: "%{count} copia de seguridad en %{location}"
+          other: "%{count} copias de seguridad en %{location}"
         lastest_backup: "Recientes: %{date}"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
@@ -2618,11 +2628,14 @@ es:
         all_reports: "Todos los reportes"
         general_tab: "General"
         moderation_tab: "Moderación"
+        security_tab: "Seguridad"
+        reports_tab: "Reportes"
         disabled: Desactivado
         timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
         exception_error: "Lo siento, ha ocurrido un error al ejecutar la consulta"
         too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo."
         not_found_error: "Lo sentimos, este reporte no existe"
+        filter_reports: Filtrar reporte
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el periodo previo."
           today: "Hoy"
@@ -2645,7 +2658,7 @@ es:
           no_data: "Ningún dato a mostrar."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar logs</a>'
-            disabled: 'El reporte de Tendencias de Búsquedas está inhabilitado. Habilita el <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log consultas de búsquedas</a> para colectar datos.'
+            disabled: 'El reporte de Tendencias de búsqueda está inhabilitado. Habilita el <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log consultas de búsquedas</a> para recolectar datos.'
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"
@@ -2963,7 +2976,7 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Seguro que quieres retornar la base de datos al estado funcional previo?"
         location:
-          local: "Local"
+          local: "Almacenamiento local"
           s3: "Amazon S3"
       export_csv:
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
@@ -3010,12 +3023,12 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          theme_name: "Nombre del Theme"
-          component_name: "Nombre del Componente"
-          themes_intro: "Selecciona un theme existente o crear nuevo para empezar"
-          beginners_guide_title: "Guía para novatos usando Discourse Themes"
-          developers_guide_title: "Guía para desarrolladores para Discourse Themes"
-          browse_themes: "Navegar themes de la comunidad"
+          theme_name: "Nombre del tema"
+          component_name: "Nombre del componente"
+          themes_intro: "Selecciona un tema existente o crear nuevo para empezar"
+          beginners_guide_title: "Guía para novatos usando temas de Discourse"
+          developers_guide_title: "Guía para desarrolladores para temas de Discourse"
+          browse_themes: "Ver temas de la comunidad"
           import_theme: "Importar Theme"
           customize_desc: "Personalizar:"
           title: "Themes"
@@ -3038,14 +3051,14 @@ es:
           custom_sections: "Personalizaciones:"
           theme_components: "Componentes del Theme"
           convert: "Convertir"
-          convert_component_alert: "¿Estás seguro que quieres convertir este componente en theme? Será eliminado como componente desde %{relatives}."
-          convert_component_tooltip: "Convertir este componente en theme"
+          convert_component_alert: "¿Estás seguro de que quieres convertir este componente en tema? Será eliminado como componente desde %{relatives}."
+          convert_component_tooltip: "Convertir este componente en tema"
           convert_theme_alert: "¿Estás seguro que quieres convertir este theme en componente? Será eliminado como principal desde %{relatives}."
-          convert_theme_tooltip: "Convertir este theme en componente"
-          inactive_themes: "Themes inactivos:"
-          broken_theme_tooltip: "Este theme tiene errores en su CSS, HTML o YAML"
-          default_theme_tooltip: "Este theme es el theme por defecto del sitio"
-          updates_available_tooltip: "Hay actualizaciones disponibles para este theme"
+          convert_theme_tooltip: "Convertir este tema en componente"
+          inactive_themes: "Tema inactivos:"
+          broken_theme_tooltip: "Este tema tiene errores en su CSS, HTML o YAML"
+          default_theme_tooltip: "Este tema es el tema por defecto del sitio"
+          updates_available_tooltip: "Hay actualizaciones disponibles para este tema"
           and_x_more: "y {{count}} más."
           collapse: Colapsar
           uploads: "Subidos"
@@ -3087,7 +3100,7 @@ es:
             one: "Theme está 1 commit detrás!"
             other: "Theme está {{count}} commits detrás!"
           compare_commits: "(Ver nuevos commits)"
-          repo_unreachable: "No se pudo contactar con el repositorio Git de este theme. Mensaje de error:"
+          repo_unreachable: "No se ha podido contactar con el repositorio Git de este tema. Mensaje de error:"
           scss:
             text: "CSS"
             title: "Ingresa tu CSS, aceptamos estilos válidos de CSS y SCSS"
@@ -3161,12 +3174,12 @@ es:
         title: "Emails"
         settings: "Ajustes"
         templates: "Plantillas"
-        preview_digest: "Vista previa de Resumen"
+        preview_digest: "Vista previa de resumen"
         advanced_test:
-          title: "Prueba Avanzada"
-          desc: "Vea como Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, pegue debajo del mensaje de correo electrónico original completo."
-          email: "Mensaje Original"
-          run: "Correr Prueba"
+          title: "Prueba avanzada"
+          desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, pega debajo del mensaje de correo electrónico original completo."
+          email: "Mensaje original"
+          run: "Realizar prueba"
           text: "Cuerpo del mensaje seleccionado"
           elided: "Texto elidido"
         sending_test: "Enviando e-mail de prueba..."
@@ -3235,7 +3248,7 @@ es:
           silence_user: "Usuario Silenciado"
           delete_post: "Post Borrado"
           delete_topic: "Tema Borrado"
-          post_approved: "Post Aprobado"
+          post_approved: "Post aprobado"
       logs:
         title: "Logs"
         action: "Acción"
@@ -3364,9 +3377,7 @@ es:
           title: "Buscar Logs"
           term: "Término"
           searches: "Búsquedas"
-          click_through: "A través del clic"
-          unique: "Único"
-          unique_title: "usuarios únicos realizando la búsqueda"
+          click_through_rate: "CTR"
           types:
             all_search_types: "Todos los tipos de búsqueda"
             header: "Encabezado"
@@ -3479,6 +3490,8 @@ es:
         suspended_until: "(hasta %{until})"
         cant_suspend: "Este usuario no puede ser suspendido."
         delete_all_posts: "Eliminar todos los posts"
+        delete_posts_progress: "Borrando mensajes..."
+        delete_posts_failed: "Ha habido un problema borrando los mensajes."
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Borrar el post"
         penalty_post_edit: "Editar el post"

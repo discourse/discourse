@@ -141,7 +141,6 @@ pt_BR:
       reset_trigger: "novo usuário"
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial do novo usuário."
       hello:
-        title: "Olá! :robot:"
         message: |-
           Obrigado por entrar em %{title}, e seja bem-vindo!
 
