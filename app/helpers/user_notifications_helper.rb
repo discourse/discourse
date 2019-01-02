@@ -19,11 +19,14 @@ module UserNotificationsHelper
   end
 
   def logo_url
-    logo_url = SiteSetting.site_digest_logo_url
+    if SiteSetting.digest_logo
+      logo_url = SiteSetting.site_digest_logo_url
+    end
+
     logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg$/i
     return nil if logo_url.blank? || logo_url =~ /\.svg$/i
 
-    full_cdn_url(logo_url)
+    logo_url
   end
 
   def html_site_link(color)

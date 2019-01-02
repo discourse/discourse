@@ -1480,7 +1480,9 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    WHERE up.created_at >= '#{report.start_date}'
+    AND up.created_at <= '#{report.end_date}'
+    AND up.id > 0
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL

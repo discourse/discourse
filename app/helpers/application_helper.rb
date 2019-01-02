@@ -201,7 +201,10 @@ module ApplicationHelper
     twitter_summary_large_image_url =
       SiteSetting.site_twitter_summary_large_image_url
 
-    opengraph_image_url = SiteSetting.opengraph_image_url
+    opengraph_image_url =
+      if SiteSetting.opengraph_image
+        SiteSetting.site_opengraph_image_url
+      end
 
     if opts[:image].blank? && (opengraph_image_url.present? || twitter_summary_large_image_url.present?)
       opts[:twitter_summary_large_image] = twitter_summary_large_image_url if twitter_summary_large_image_url.present?

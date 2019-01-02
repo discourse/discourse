@@ -4,6 +4,14 @@ require_dependency 'file_store/base_store'
 RSpec.describe FileStore::BaseStore do
   let(:upload) { Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest('9999')) }
 
+  describe '#get_depth_for' do
+    describe 'when id is negative' do
+      it 'should return the right depth' do
+        expect(FileStore::BaseStore.new.get_depth_for(-999)).to eq(0)
+      end
+    end
+  end
+
   describe '#get_path_for_upload' do
     it 'should return the right path' do
       expect(FileStore::BaseStore.new.get_path_for_upload(upload))

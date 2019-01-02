@@ -93,7 +93,9 @@ module FileStore
     end
 
     def get_depth_for(id)
-      [0, Math.log(id / 1_000.0, 16).ceil].max
+      depths = [0]
+      depths << Math.log(id / 1_000.0, 16).ceil if id.positive?
+      depths.max
     end
 
     def get_path_for(type, id, sha, extension)

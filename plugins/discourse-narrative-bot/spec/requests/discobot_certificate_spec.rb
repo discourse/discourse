@@ -27,7 +27,7 @@ describe "Discobot Certificate" do
       it 'should return the right text' do
         stub_request(:get, /letter_avatar_proxy/).to_return(status: 200)
 
-        stub_request(:get, "http://test.localhost//images/d-logo-sketch-small.png")
+        stub_request(:get, SiteSetting.site_logo_small_url)
           .to_return(status: 200)
 
         get '/discobot/certificate.svg', params: params
