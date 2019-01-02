@@ -274,6 +274,9 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
+      abandon:
+        yes_value: "Da, abandonează."
+        no_value: "Nu, păstrează."
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "{{count}} subiecte noi sau actualizate."
@@ -309,7 +312,6 @@ ro:
     choose_topic:
       none_found: "Nu au fost găsite subiecte noi."
       title:
-        search: "Căutați un subiect după nume, url sau id:"
         placeholder: "Scrieți aici titlul subiectului"
     queue:
       topic: "Subiect:"
@@ -484,7 +486,6 @@ ro:
           description: "Veți fi notificat pentru fiecare nouă postare în fiecare mesaj, și va fi afișat un contor al noilor răspunsuri."
         watching_first_post:
           title: "Urmărind activ prima postare"
-          description: "Vei fi notificat doar pentru prima postare din fiecare nou subiect al acestui grup."
         tracking:
           title: "Urmărind"
           description: "Vei fi notificat dacă cineva menționează @numele tău sau îți răspunde și va fi afișat un contor al noilor răspunsuri."
@@ -1038,6 +1039,7 @@ ro:
       caps_lock_warning: "Tasta Caps Lock este activă"
       error: "Eroare necunoscută"
       rate_limit: "Te rog așteaptă înainte de a te reconecta."
+      blank_username: "Vă rugăm să introduceți adresa dvs. de email sau numele de utilizator."
       blank_username_or_password: "Introdu emailul sau numele de utilizator și parola."
       reset_password: 'Resetare parolă'
       logging_in: "În curs de autentificare..."
@@ -1174,6 +1176,7 @@ ro:
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
+      reply_placeholder_choose_category: "Trebuie să selectați o categorie înainte de a scrie aici."
       view_new_post: "Vezi noua ta postare."
       saving: "Se salvează"
       saved: "Salvat!"
@@ -1677,7 +1680,6 @@ ro:
       split_topic:
         title: "Mutare în subiect nou."
         action: "mută în subiect nou"
-        topic_name: "Numele subiectului nou"
         error: "A apărut o eroare la mutarea postărilor în subiectul nou."
         instructions:
           one: "Vei crea o nouă discuţie care va fi populată cu postarea selectată."
@@ -2010,7 +2012,6 @@ ro:
           description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat cu privire la fiecare nouă postare din fiecare subiect, și va fi afișat un contor al noilor răspunsuri."
         watching_first_post:
           title: "Urmărind activ prima postare"
-          description: "Vei fi notificat doar cu privire la primele postări din fiecare nou subiect din aceste categorii."
         tracking:
           title: "Urmărire"
           description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde, și va fi afișat un contor al noilor răspunsuri."
@@ -2360,7 +2361,6 @@ ro:
           description: "Vei urmări activ în mod automat toate discuțiile cu această etichetă. Vei primi notificări cu privire la toate noile postări și discuții, și în plus, un contor al postărilor noi și al celor necitite va apărea în dreptul discuției."
         watching_first_post:
           title: "Urmărind activ prima postare"
-          description: "Vei primi notificări doar cu privire la prima postare din fiecare discuție nouă cu această etichetă."
         tracking:
           title: "Urmărind"
           description: "Vei urmări automat toate discuțiile cu această etichetă. Un contor cu postările necitite și cu cele noi va apărea lângă discuție."
@@ -2438,9 +2438,6 @@ ro:
         private_messages_short: "Mesje"
         private_messages_title: "Mesaje"
         mobile_title: "Mobil"
-        space_free: "{{size}} liber"
-        uploads: "încărcări"
-        backups: "back-up"
         traffic_short: "Trafic"
         traffic: "Cereri web"
         page_views: "Vizualizări"
@@ -2991,7 +2988,6 @@ ro:
         search_logs:
           term: "Termen"
           searches: "Căutări"
-          unique: "Unic"
           types:
             all_search_types: "Toate tipurile de căutare"
             header: "Antet"

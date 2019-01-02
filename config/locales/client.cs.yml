@@ -341,7 +341,6 @@ cs:
     choose_topic:
       none_found: "Žádná témata nenalezena."
       title:
-        search: "Hledat téma podle názvu, URL nebo ID:"
         placeholder: "sem napište název tématu"
     queue:
       topic: "Téma:"
@@ -525,7 +524,6 @@ cs:
           description: "Budete informováni o každém novém příspěvku v každné zprávě a také se vám zobrazí počet nepřečtených příspěvků."
         watching_first_post:
           title: "Hlídané první příspěvky"
-          description: "Budete informováni o prvním novém příspěvku v každém novém tématu vytvořeném v této skupině."
         tracking:
           title: "Sledování"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek a zobrazí se vám počet nových odpovědí."
@@ -1929,7 +1927,6 @@ cs:
       split_topic:
         title: "Rozdělit téma"
         action: "do nového tématu"
-        topic_name: "Název nového tématu:"
         error: "Bohužel nastala chyba při rozdělování tématu."
         instructions:
           one: "Chystáte se vytvořit nové téma a naplnit ho příspěvkem, který jste označili."
@@ -2327,7 +2324,6 @@ cs:
           description: "Budete automaticky sledovat všechna témata v těchto kategoriích. Budete upozorněni na každý nový příspěvek v každém tématu a zobrazí se počet nových odpovědí."
         watching_first_post:
           title: "Hlídání prvního příspěvku"
-          description: "Budete informováni o prvním novém příspěvku v každém novém tématu vytvořeném v těchto kategoriích."
         tracking:
           title: "Sledování"
           description: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo vám odpoví, a zobrazí se počet nových odpovědí."
@@ -2712,7 +2708,6 @@ cs:
           description: "Budete automaticky sledovat všechna nová témata s těmito štítky. Na všechny nové příspěvky a témata budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
         watching_first_post:
           title: "Hlídané první příspěvky"
-          description: "Budete upozorněni na první příspěvek v každém novém tématu s tímto tagem."
         tracking:
           title: "Sledování"
           description: "Budete automaticky sledovat všechna témata s tímto tagem. Počet nepřečtených a nových příspěvků bude vidět vedle tématu."
@@ -2800,9 +2795,6 @@ cs:
         private_messages_short: "Zpráv"
         private_messages_title: "Zprávy"
         mobile_title: "Mobilní verze"
-        space_free: "{{size}} prázdné"
-        uploads: "Nahrané soubory"
-        backups: "zálohy"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
         page_views: "Zobrazení stránky "
@@ -3447,9 +3439,6 @@ cs:
           title: "Vyhledat přihlášení"
           term: "Období"
           searches: "Vyhledávání"
-          click_through: "kliknutí "
-          unique: "Unikátní"
-          unique_title: "Unikátní uživatel provádějící vyhledávání"
           types:
             all_search_types: "Vyhledávat všechny typy"
             header: "Hlavička"

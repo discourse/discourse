@@ -263,7 +263,6 @@ zh_TW:
     choose_topic:
       none_found: "未找到任何討論話題。"
       title:
-        search: "以名稱、URL 或 ID 搜尋討論話題:"
         placeholder: "請在這裡輸入討論標題"
     queue:
       topic: "話題："
@@ -435,7 +434,6 @@ zh_TW:
           description: "當任何訊息中有新貼文時你會收到通知。並且會顯示新回覆的數量。"
         watching_first_post:
           title: "關注第一則貼文"
-          description: "你只會收到此組中每個新主題第一則貼文的通知。"
         tracking:
           title: "追蹤"
           description: "當其他人通過 @名字 提及你或回覆時你會收到通知。並且會顯示新回覆的數量。"
@@ -1594,7 +1592,6 @@ zh_TW:
       split_topic:
         title: "移至新討論話題"
         action: "移至新討論話題"
-        topic_name: "新討論話題的名稱"
         error: "將討論話題移至新討論話題時發生錯誤。"
         instructions:
           other: "你即將建立一個新討論話題，並填入 <b>{{count}}</b> 篇你已選擇的文章。"
@@ -1838,7 +1835,6 @@ zh_TW:
           description: "你將自動關注這些分類中的所有主題。每一個主題的每一個新帖，將通知你，還將顯示新回覆的數量。"
         watching_first_post:
           title: "關注新的發文"
-          description: "在這些分類裡面，只是每一個新主題的第一帖，才會通知你。"
         tracking:
           title: "追蹤"
           description: "你將自動跟蹤這些分類中的所有主題。如果有人@你或回覆你，將通知你，還將顯示新回覆的數量。"
@@ -2214,9 +2210,6 @@ zh_TW:
         private_messages_short: "訊息"
         private_messages_title: "訊息"
         mobile_title: "行動裝置"
-        space_free: "{{size}} 可用空間"
-        uploads: "上傳"
-        backups: "備份檔"
         traffic_short: "流量"
         traffic: "網頁應用程式請求數"
         page_views: "瀏覽數"

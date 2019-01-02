@@ -41,5 +41,3 @@ sl:
       help_trigger: 'prikaži pomoč'
     new_user_narrative:
       reset_trigger: "novi uporabnik"
-      hello:
-        title: ":robot: Pozdrav!"

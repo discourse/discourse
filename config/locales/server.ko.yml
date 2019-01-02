@@ -141,7 +141,6 @@ ko:
     continue: "토론 계속하기"
     error: "삽입에 실패했습니다."
     referer: "리퍼러(Referer):"
-    mismatch: "리퍼러가 다음 호스트와 일치하지 않습니다:"
     no_hosts: "임베딩을 위한 호스트가 설정되지 않았습니다."
     configure: "삽입 설정"
     more_replies:
@@ -701,10 +700,6 @@ ko:
       title: "북마크들"
       xaxis: "일"
       yaxis: "새로운 북마크 수"
-    starred:
-      title: "즐겨찾기"
-      xaxis: "일"
-      yaxis: "새로운 즐겨찾기 수"
     users_by_trust_level:
       title: "회원등급당 사용자 수"
       xaxis: "회원등급"

@@ -284,7 +284,6 @@ pt_BR:
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
-        search: "Procurar por um Tópico pelo nome, url ou id:"
         placeholder: "digite o título do tópico aqui"
     queue:
       topic: "Tópico:"
@@ -458,7 +457,6 @@ pt_BR:
           description: "Você será notificado sobre toda nova postagem em toda mensagem, e uma contagem de novas mensagens será mostrada."
         watching_first_post:
           title: "Observando o primeiro post"
-          description: "Você somente será notificado sobre a primeira postagem em cada novo tópico neste grupo."
         tracking:
           title: "Monitorando"
           description: "Você será notificado se alguém mencionar seu @name ou responder a você, e uma contagem de novas respostas será mostrada."
@@ -1758,7 +1756,6 @@ pt_BR:
       split_topic:
         title: "Mover para novo tópico"
         action: "mover para novo tópico"
-        topic_name: "Nome do tópico novo"
         error: "Houve um erro ao mover as mensagens para o novo tópico."
         instructions:
           one: "Você está prestes a criar um novo tópico e populá-lo com a resposta que você selecionou."
@@ -2096,7 +2093,6 @@ pt_BR:
           description: "Você vai observar automaticamente todos os tópicos dessas categorias. Você será notificado de todas as novas mensagens em todos os tópicos.  Além disso, a contagem de novas respostas também será exibida."
         watching_first_post:
           title: "Observando o primeiro post"
-          description: "Você somente será notificado sobre a primeira postagem em cada novo tópico destas categorias."
         tracking:
           title: "Monitorar"
           description: "Você vai monitorar automaticamente todos os tópicos dessas categorias. Você será notificado se alguém mencionar o seu @nome ou responder para você.  Além disso, a contagem de novas respostas também será exibida."
@@ -2436,7 +2432,6 @@ pt_BR:
           description: "Você assistirá automaticamente todos os tópicos com esta tag. Você será notificado sobre todas as novas postagens e tópicos, além da contagem de postagens não lidas e novas também serão exibidas ao lado do tópico."
         watching_first_post:
           title: "Observando o primeiro post"
-          description: "Você só será notificado da primeira postagem em cada novo tópico com essa tag."
         tracking:
           title: "Monitorando"
           description: "Você acompanhará automaticamente todos os tópicos com essa tag. Uma contagem de postagens não lidas e novas será exibida ao lado do tópico."
@@ -2523,9 +2518,6 @@ pt_BR:
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
         mobile_title: "Mobile"
-        space_free: "{{size}} livre"
-        uploads: "uploads"
-        backups: "backups"
         lastest_backup: "Mais recentes: %{date}"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
@@ -3219,9 +3211,6 @@ pt_BR:
           title: "Logs de pesquisa"
           term: "Termo"
           searches: "Pesquisas"
-          click_through: "Clique através"
-          unique: "único"
-          unique_title: "usuários únicos realizando a pesquisa"
           types:
             all_search_types: "Todos os tipos de pesquisa"
             header: "Cabeçalho"

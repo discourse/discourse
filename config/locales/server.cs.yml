@@ -652,10 +652,6 @@ cs:
       title: "Záložky"
       xaxis: "Den"
       yaxis: "Počet nových záložek"
-    starred:
-      title: "Oblíbená"
-      xaxis: "Den"
-      yaxis: "Počet nových oblíbených témat"
     users_by_trust_level:
       title: "Uživatelé podle věrohodnosti"
       xaxis: "Věrohodnost"
@@ -807,12 +803,6 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Příspěvek byl oddělen do nového tématu: %{topic_link}"
-      few: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
-      many: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
-      other: "%{count} příspěvky byly odděleny do nového tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."

@@ -280,7 +280,6 @@ nl:
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
-        search: "Zoeken naar een topic op naam, url of id:"
         placeholder: "typ hier de titel van het topic"
     queue:
       topic: "Topic:"
@@ -439,7 +438,6 @@ nl:
           description: "U ontvangt een melding bij elk nieuw bericht, en het aantal nieuwe antwoorden wordt weergeven."
         watching_first_post:
           title: "Eerste bericht in de gaten houden"
-          description: "U ontvangt alleen een melding van het eerste bericht in elk nieuw topic in deze groep."
         tracking:
           title: "Volgen"
           description: "U ontvangt een melding wanneer iemand uw @naam noemt of een bericht van u beantwoordt, en het aantal nieuwe antwoorden wordt weergeven."
@@ -1564,7 +1562,6 @@ nl:
       split_topic:
         title: "Verplaatsen naar nieuw topic"
         action: "verplaatsen naar nieuw topic"
-        topic_name: "Naam van nieuw topic"
         error: "Er is een fout opgetreden bij het verplaatsen van berichten naar het nieuwe topic."
         instructions:
           one: "U gaat een nieuw topic aanmaken en met het geselecteerde bericht vullen."
@@ -1849,7 +1846,6 @@ nl:
           description: "U houdt automatisch alle topics in deze categorieën in de gaten. U ontvangt meldingen voor elk nieuw bericht in elk topic, en het aantal nieuwe antwoorden verschijnt naast het topic."
         watching_first_post:
           title: "Eerste bericht in de gaten houden"
-          description: "U ontvangt alleen een melding van het eerste bericht in elk nieuw topic in deze categorieën."
         tracking:
           title: "Volgen"
           description: "U volgt automatisch alle topics in deze categorieën. U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt, en het aantal nieuwe antwoorden wordt weergegeven."
@@ -2254,9 +2250,6 @@ nl:
         private_messages_short: "PB's"
         private_messages_title: "Berichten"
         mobile_title: "Mobiel"
-        space_free: "{{size}} beschikbaar"
-        uploads: "uploads"
-        backups: "back-ups"
         traffic_short: "Verkeer"
         traffic: "Applicatiewebverzoeken"
         page_views: "Paginaweergaven"

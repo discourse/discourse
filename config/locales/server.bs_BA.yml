@@ -288,10 +288,6 @@ bs_BA:
       title: "Bookmarks"
       xaxis: "Day"
       yaxis: "Number of new bookmarks"
-    starred:
-      title: "Starred"
-      xaxis: "Day"
-      yaxis: "Number of new starred topics"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"

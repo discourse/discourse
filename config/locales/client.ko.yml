@@ -262,7 +262,6 @@ ko:
     choose_topic:
       none_found: "토픽을 찾을 수 없습니다."
       title:
-        search: "이름, url, ID로 토픽 검색"
         placeholder: "토픽 제목을 입력하세요"
     queue:
       topic: "토픽:"
@@ -405,7 +404,6 @@ ko:
           description: "이 메시지에 새로운 답글이 있을 때 알림을 받게 되며 새로운 답글의 개수는 표시됩니다."
         watching_first_post:
           title: "첫번째 글 보기"
-          description: "이 그룹의 신규 토픽에 대해서만 알림을 받게 됩니다."
         tracking:
           title: "추적 중"
           description: "누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
@@ -1591,7 +1589,6 @@ ko:
       split_topic:
         title: "새로운 주제로 이동"
         action: "새로운 주제로 이동"
-        topic_name: "새로운 주제 이름"
         error: "새로운 주제로 이동시키는데 문제가 발생하였습니다."
         instructions:
           other: "새로운 주제를 생성하여, 선택한 <b>{{count}}</b>개의 글로 채우려고 합니다."
@@ -1868,7 +1865,6 @@ ko:
           description: "이 카테고리의 모든 토픽을 주시하도록 자동 설정됩니다. 모든 토픽과 게시글에 대하여 알림을 받게 되며, 새로운 게시글의 수가 표시됩니다."
         watching_first_post:
           title: "첫번째 글 보기"
-          description: "이 카테고리에 새로운 토픽이 생길때마다 알림을 받습니다."
         tracking:
           title: "추적 중"
           description: "이 카테고리의 모든 토픽을 추적하도록 자동 설정됩니다. 다른 사용자가 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 달 때 알림을 받게 되며 새로운 게시글의 수가 표시됩니다."
@@ -2270,9 +2266,6 @@ ko:
         private_messages_short: "메시지"
         private_messages_title: "메시지"
         mobile_title: "모바일"
-        space_free: "{{size}} free"
-        uploads: "업로드"
-        backups: "백업"
         lastest_backup: "최근: %{date}"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"

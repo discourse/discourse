@@ -79,8 +79,6 @@ lv:
     bookmarks:
       title: "Grāmatzīmes"
       xaxis: "Diena"
-    starred:
-      xaxis: "Diena"
     emails:
       title: "E-pasti Izsūtīti "
     user_to_user_private_messages:

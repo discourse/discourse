@@ -140,8 +140,6 @@ ko:
     new_user_narrative:
       reset_trigger: "새로운 사용자"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
-      hello:
-        title: ":robot: 반가워!"
       onebox:
         instructions: |-
           자 이제, 이 링크 중 하나를 나한테 공유해볼래? 한줄 당 링크 하나씩 써서 답글을 써봐. 그러면 자동으로 해당 페이지의 요약이 추가된단다.

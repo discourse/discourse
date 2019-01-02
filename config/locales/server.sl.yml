@@ -25,6 +25,7 @@ sl:
     pm: "pm"
   title: "Discourse"
   topics: "Teme"
+  posts: "objave"
   loading: "Nalagam"
   log_in: "Vpis"
   errors: &errors
@@ -81,6 +82,10 @@ sl:
   user_notifications:
     signup_after_approval:
       subject_template: "Potrjeni ste bili na %{site_name}!"
+  login_required:
+    welcome_message: |
+      ## [Dobrodošli na %{title}](#welcome)
+      Za dostop morate biti prijavljeni. Ustvarite račun in se prijavite za nadaljevanje.
   badges:
     anniversary:
       name: Obletnica

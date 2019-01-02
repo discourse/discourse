@@ -285,10 +285,6 @@ gl:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de novos marcadores"
-    starred:
-      title: "Con estrela"
-      xaxis: "Día"
-      yaxis: "Número de novos temas con estrela"
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
       xaxis: "Nivel de confianza"

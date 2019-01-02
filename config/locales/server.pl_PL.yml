@@ -147,7 +147,6 @@ pl_PL:
     continue: "Kontynuuj dyskusję"
     error: "Błąd osadzenia"
     referer: "Odnośnik:"
-    mismatch: "Odnośnik nie pasuje do żadnego z następujących hostów:"
     no_hosts: "Brak ustawionych hostów do osadzenia."
     configure: "Konfiguracja osadzenia"
     more_replies:
@@ -702,10 +701,6 @@ pl_PL:
       title: "Zakładki"
       xaxis: "Dzień"
       yaxis: "Liczba nowych zakładek"
-    starred:
-      title: "Oznaczone"
-      xaxis: "Dzień"
-      yaxis: "Liczba oznaczonych tematów"
     users_by_trust_level:
       title: "Użytkownicy wg poziomu zaufania"
       xaxis: "Poziom zaufania"
@@ -1291,17 +1286,6 @@ pl_PL:
     errors:
       different_topics: "Nie można połączyć postów z różnych wątków."
       different_users: "Nie można połączyć postów różnych użytkowników."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Wydzielono 1 post tworząc nowy wątek: %{topic_link}"
-      few: "Wydzielono %{count} posty tworząc nowy wątek: %{topic_link}"
-      many: "Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}"
-      other: "Wydzielono %{count} postów tworząc nowy wątek: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "1 post przeniesiono do wątku: %{topic_link}"
-      few: "%{count} posty przeniesiono do wątku: %{topic_link}"
-      many: "%{count} postów przeniesiono do wątku: %{topic_link}"
-      other: "%{count} postów przeniesiono do wątku: %{topic_link}"
   topic_statuses:
     archived_enabled: "Temat został zarchiwizowany. Został zablokowany i nie może być zmieniany. "
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
