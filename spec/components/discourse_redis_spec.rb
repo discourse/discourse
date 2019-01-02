@@ -175,9 +175,12 @@ describe DiscourseRedis do
     end
 
     it "should raise the right error" do
-      error = RuntimeError.new('test error')
-      Redis::Client.any_instance.expects(:call).raises(error).twice
-      2.times { expect { connector.resolve }.to raise_error(error) }
+      error = RuntimeError.new('test')
+
+      2.times do
+        expect { connector.resolve(BrokenRedis.new(error)) }
+          .to raise_error(error)
+      end
     end
   end
 
