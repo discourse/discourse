@@ -34,6 +34,16 @@ def run_or_fail(command)
   $?.exitstatus == 0
 end
 
+def run_or_fail_prettier(*patterns)
+  if patterns.any? { |p| Dir[p].any? }
+    patterns = patterns.map { |p| "'#{p}'" }.join(' ')
+    run_or_fail("yarn prettier --list-different #{patterns}")
+  else
+    puts "Skipping prettier. Pattern not found."
+    true
+  end
+end
+
 desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
@@ -49,7 +59,7 @@ task 'docker:test' do
         @good &&= run_or_fail("yarn eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
-        @good &&= run_or_fail("yarn prettier --list-different 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss' 'plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6'")
+        @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
       else
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]

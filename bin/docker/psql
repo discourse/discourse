@@ -1,5 +1,5 @@
 #!/bin/bash
 
 PARAMS="$@"
-CMD="psql $PARAMS"
+CMD="USER=discourse psql $PARAMS"
 docker exec -it -u postgres discourse_dev /bin/bash -c "$CMD"

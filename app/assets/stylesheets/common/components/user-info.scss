@@ -45,18 +45,6 @@
     }
   }
 
-  .avatar-flair {
-    background-repeat: no-repeat;
-    background-position: center;
-    position: absolute;
-    bottom: -2px;
-    right: -8px;
-    background-size: 18px 18px;
-    border-radius: 12px;
-    width: 24px;
-    height: 24px;
-  }
-
   &.small {
     width: 333px;
     @media screen and (max-width: $small-width) {

@@ -604,10 +604,6 @@ pt:
       title: "Marcadores"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores"
-    starred:
-      title: "Favoritos"
-      xaxis: "Dia"
-      yaxis: "Número de novos tópicos favoritos"
     users_by_trust_level:
       title: "Utilizadores por Nível de Confiança"
       xaxis: "Nível de Confiança"
@@ -1156,13 +1152,6 @@ pt:
     errors:
       different_topics: "Publicações pertencentes a tópicos diferentes não podem ser unidas."
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Uma mensagem foi dividida em um novo tópico: %{topic_link}"
-      other: "%{count} mensagens foram divididas em um novo tópico: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Uma mensagem foi unida em um tópico existente: %{topic_link}"
-      other: "%{count} mensagens foram unidas em um tópico existente: %{topic_link}"
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer maneira."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."

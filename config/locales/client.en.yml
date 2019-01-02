@@ -213,6 +213,7 @@ en:
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
+    go_ahead: "Go ahead"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -231,6 +232,7 @@ en:
     privacy: "Privacy"
     tos: "Terms of Service"
     rules: "Rules"
+    conduct: "Code of Conduct"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
     you: "You"
@@ -345,8 +347,14 @@ en:
     choose_topic:
       none_found: "No topics found."
       title:
-        search: "Search for a Topic by name, url or id:"
+        search: "Search for a Topic by title, url or id:"
         placeholder: "type the topic title here"
+
+    choose_message:
+      none_found: "No messages found."
+      title:
+        search: "Search for a Message by title:"
+        placeholder: "type the message title here"
 
     queue:
       topic: "Topic:"
@@ -530,7 +538,7 @@ en:
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in this group."
+          description: "You will be notified of new topics in this group but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -995,6 +1003,7 @@ en:
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
+          confirmation_message: "You’re about to email invites to everyone in the uploaded file."
 
       password:
         title: "Password"
@@ -1240,6 +1249,7 @@ en:
       submit_new_email: "Update Email Address"
 
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      sent_activation_email_again_generic: "We sent another activation email. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
@@ -2000,10 +2010,16 @@ en:
           other: "{{count}} posts"
         cancel: "Remove filter"
 
+      move_to:
+        title: "Move to"
+        action: "move to"
+        error: "There was an error moving posts."
+
       split_topic:
         title: "Move to New Topic"
         action: "move to new topic"
-        topic_name: "New Topic Name"
+        topic_name: "New Topic Title"
+        radio_label: "New Topic"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
@@ -2013,9 +2029,29 @@ en:
         title: "Move to Existing Topic"
         action: "move to existing topic"
         error: "There was an error moving posts into that topic."
+        radio_label: "Existing Topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      move_to_new_message:
+        title: "Move to New Message"
+        action: "move to new message"
+        message_title: "New Message Title"
+        radio_label: "New Message"
+        participants: "Participants"
+        instructions:
+          one: "You are about to create a new message and populate it with the post you've selected."
+          other: "You are about to create a new message and populate it with the <b>{{count}}</b> posts you've selected."
+
+      move_to_existing_message:
+        title: "Move to Existing Message"
+        action: "move to existing message"
+        radio_label: "Existing Message"
+        participants: "Participants"
+        instructions:
+          one: "Please choose the message you'd like to move that post to."
+          other: "Please choose the message you'd like to move those <b>{{count}}</b> posts to."
 
       merge_posts:
         title: "Merge Selected Posts"
@@ -2166,6 +2202,7 @@ en:
         unlock_post_description: "allow the poster to edit this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
+        delete_topic: "delete topic"
 
       actions:
         flag: 'Flag'
@@ -2365,7 +2402,7 @@ en:
           description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in these categories."
+          description: "You will be notified of new topics in this category but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -2740,7 +2777,7 @@ en:
           description: "You will automatically watch all topics with this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic with this tag."
+          description: "You will be notified of new topics in this tag but not replies to the topics."
         tracking:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
@@ -2838,9 +2875,13 @@ en:
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
         mobile_title: "Mobile"
-        space_free: "{{size}} free"
-        uploads: "uploads"
-        backups: "backups"
+        space_used: "%{usedSize} used"
+        space_used_and_free: "%{usedSize} (%{freeSize} free)"
+        uploads: "Uploads"
+        backups: "Backups"
+        backup_count:
+          one: "%{count} backup on %{location}"
+          other: "%{count} backups on %{location}"
         lastest_backup: "Latest: %{date}"
         traffic_short: "Traffic"
         traffic: "Application web requests"
@@ -2855,11 +2896,13 @@ en:
         general_tab: "General"
         moderation_tab: "Moderation"
         security_tab: "Security"
+        reports_tab: "Reports"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
+        filter_reports: Filter reports
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -3215,7 +3258,7 @@ en:
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
-          local: "Local"
+          local: "Local Storage"
           s3: "Amazon S3"
 
       export_csv:
@@ -3623,9 +3666,7 @@ en:
           title: "Search Logs"
           term: "Term"
           searches: "Searches"
-          click_through: "Click Through"
-          unique: "Unique"
-          unique_title: "unique users performing the search"
+          click_through_rate: "CTR"
           types:
             all_search_types: "All search types"
             header: "Header"
@@ -3985,6 +4026,7 @@ en:
           tags: "Tags"
           search: "Search"
           groups: "Groups"
+          dashboard: "Dashboard"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
 

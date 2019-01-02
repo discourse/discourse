@@ -55,13 +55,13 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  validates_with ::Validators::PostValidator
+  validates_with ::Validators::PostValidator, unless: :skip_validation
 
   after_save :index_search
   after_save :create_user_action
 
   # We can pass several creating options to a post via attributes
-  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
+  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
   LARGE_IMAGES      ||= "large_images".freeze
   BROKEN_IMAGES     ||= "broken_images".freeze
@@ -530,7 +530,7 @@ class Post < ActiveRecord::Base
 
         if attempts > 3
           post.update_columns(baked_version: BAKED_VERSION)
-          Discourse.warn_exception(e, message: "Can not rebake post# #{p.id} after 3 attempts, giving up")
+          Discourse.warn_exception(e, message: "Can not rebake post# #{post.id} after 3 attempts, giving up")
         else
           post.custom_fields["rebake_attempts"] = attempts + 1
           post.save_custom_fields
@@ -548,6 +548,11 @@ class Post < ActiveRecord::Base
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
+
+    if opts.fetch(:invalidate_broken_images, false)
+      custom_fields.delete(BROKEN_IMAGES)
+      save_custom_fields
+    end
 
     # Extracts urls from the body
     TopicLink.extract_from(self)

@@ -1,4 +1,4 @@
-require_dependency "middleware/anonymous_cache"
+require "middleware/anonymous_cache"
 
 enabled =
   if Rails.configuration.respond_to?(:enable_anon_caching)

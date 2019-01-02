@@ -287,7 +287,6 @@ hu:
     choose_topic:
       none_found: "Nem találhatók témák."
       title:
-        search: "Témakör keresése név, URL-cím vagy azonosító alapján:"
         placeholder: "ide írd be a témakör címét"
     queue:
       topic: "Téma:"
@@ -463,7 +462,6 @@ hu:
           description: "Értesítést fogsz kapni minden üzenetben lévő új bejegyzésről és megjelenik az olvasatlan válaszok száma is."
         watching_first_post:
           title: "Első hozzászólások figyelése"
-          description: "Csak minden új téma első hozzászólásáról kapsz értesítést ebben a csoportban."
         tracking:
           title: "Követés"
           description: "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked, és megjelenik az olvasatlan válaszok száma is."
@@ -1605,7 +1603,6 @@ hu:
       split_topic:
         title: "Áthelyezés új témába"
         action: "áthelyezés új témába"
-        topic_name: "Új témakör címe"
         error: "Hiba lépett fel a bejegyzés új témakörbe való helyezése során!"
       merge_topic:
         title: "Áthelyezés létező témába"
@@ -1802,7 +1799,6 @@ hu:
           description: "Automatikusan figyelni fogsz minden témakört ezekben a kategóriákban. Értesítést kapsz az összes témakör minden új hozzászólásáról  és látni fogod az új hozzászólások számát."
         watching_first_post:
           title: "Első hozzászólás figyelése"
-          description: "Csak minden új témakör legelső hozzászólásáról fogsz értesítést kapni ezekben a kategóriákban."
         tracking:
           title: "Követés"
           description: "Automatikusan követni fogsz minden témakört ezekben a kategóriákban. Látni fogod az új hozzászólások számát és értesítve leszel ha valaki a megemlíti a @nevedet vagy válaszol neked."
@@ -2159,9 +2155,6 @@ hu:
         private_messages_short: "Üzenetek"
         private_messages_title: "Üzenetek"
         mobile_title: "Mobiltelefon"
-        space_free: "{{size}} szabad"
-        uploads: "Feltöltések"
-        backups: "Biztonsági mentések"
         lastest_backup: "Legutóbbi: %{date}"
         traffic_short: "Forgalom"
         page_views: "Oldal látogatások"
@@ -2712,7 +2705,6 @@ hu:
         search_logs:
           term: "Kifejezés"
           searches: "Keresések"
-          unique: "Egyedi"
           types:
             header: "Fejléc"
             full_page: "Teljes oldal"

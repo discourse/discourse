@@ -147,6 +147,7 @@ fi:
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, jos %{setting_name} ei ole määritetty."
+      s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
     conflicting_google_user_id: 'Tämän käyttäjätilin Google Account ID on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -198,7 +199,7 @@ fi:
     continue: "Siirry keskusteluun"
     error: "Virhe upotettaessa"
     referer: "Referer-viite:"
-    mismatch: "Referer-viite ei täsmää mihinkään näistä isännistä:"
+    mismatch: "Referer-viitettä ei lähetetty tai se ei täsmää mihinkään näistä isännistä:"
     no_hosts: "Isäntiä ei ole määritetty upotusta varten."
     configure: "Määritä upottaminen"
     more_replies:
@@ -240,6 +241,7 @@ fi:
   not_accepting_pms: "Pahoittelut, %{username} ei ota vastaan yksityisviestejä tällä hetkellä."
   max_pm_recepients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
   pm_reached_recipients_limit: "Pahoittelut, yksityisviestillä ei voi olla yli %{recipients_limit} vastaanottajaa."
+  removed_direct_reply_full_quotes: "Jos edellinen viesti lainataan kokonaan, poista lainaus automaattisesti."
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
   invalid_characters: "sisältää epäkelpoja merkkejä"
   is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
@@ -813,12 +815,13 @@ fi:
         percent: Prosenttia
         day: Päivä
     post_edits:
-      title: "Viestin muokkauksia"
+      title: "Viestimuokkaukset"
       labels:
         post: Viesti
         editor: Muokkaaja
         author: Kirjoittaja
         edit_reason: Syy
+      description: "Kuinka monesti viestejä muokattiin."
     user_flagging_ratio:
       title: "Käyttäjän liputussuhde"
       labels:
@@ -827,8 +830,9 @@ fi:
         disagreed_flags: Hylättyjä lippuja
         ignored_flags: Sivuutettuja lippuja
         score: Luku
+      description: "Luettelo käyttäjistä järjestettynä sen mukaan, miten henkilökunta suhtautuu heidän liputuksiinsa (hylätyt jaettuna hyväksytyillä)."
     moderators_activity:
-      title: "Valvojien toiminta"
+      title: "Valvoja-aktiivisuus"
       labels:
         moderator: Valvoja
         flag_count: Arvioituja lippuja
@@ -837,8 +841,9 @@ fi:
         post_count: Kirjoitetut viestit
         pm_count: Kirjoitetut yksityisviestit
         revision_count: Revisiot
+      description: "Luettelo valvojien aktiivisuudesta, sisältäen käsitellyt liput, lukuajan, luodut ketjut, lähetetyt viestit, lähetetyt yksityisviestit ja tarkastukset."
     flags_status:
-      title: "Lippujen tilanne"
+      title: "Lippujen status"
       values:
         agreed: Samaa mieltä
         disagreed: Eri mieltä
@@ -850,39 +855,42 @@ fi:
         poster: Kirjoittaja
         flagger: Liputtaja
         time_to_resolution: Selvitysaika
+      description: "Luettelo lippujen statuksista sisältäen lippujen tyypit, kirjoittajat, liputtajat ja selvitysajat."
     visits:
       title: "Vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
+      description: "Uniikin kävijäkerrat"
     signups:
       title: "Liittymiset"
       xaxis: "Päivä"
       yaxis: "Liittymisten lukumäärä"
-      description: "Uusien tunnusten luonnit tänä aikana"
+      description: "Uudet rekisteröidyt käyttäjät tällä ajanjaksolla."
     new_contributors:
       title: "Uusia kirjoittajia"
       xaxis: "Päivä"
       yaxis: "Uusien kirjoittajien lukumäärä"
-      description: "Kuinka moni käyttäjä kirjoitti ensimmäisen viestinsä tänä aikana"
+      description: "Kuinka moni kirjoitti ensimmäisen viestinsä tällä ajanjaksolla."
     dau_by_mau:
-      title: "DAU/MAU"
+      title: "PAK/KAK"
       xaxis: "Päivä"
-      yaxis: "Päivittäin aktiivisten käyttäjien osuus kuukausittain aktiivisista"
-      description: "Viimeisenä päivänä kirjautuneiden käyttäjien lukumäärän suhde viimeisen kuukauden aikana kirjautuneisiin. Tämä prosenttiluku mittaa yhteisön pysyvyyttä. Sopiva tavoite: >30%."
+      yaxis: "PAK/KAK"
+      description: "Käyttäjät jotka kirjautuivat viimeisen päivän aikana jaettuna käyttäjillä, jotka kirjautuivat kuukauden aikana - tuottaa %-luvun joka kuvastaa yhteisön \"tarttuvuutta\". Tähtää yli 30 %:iin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"
       yaxis: "Sitoutuneet käyttäjät"
-      description: "Viimeisen päivän aikana tykänneiden tai kirjoittaneiden käyttäjien lukumäärä"
+      description: "Kuinka moni tykkäsi tai kirjoitti viimeisen päivän aikana."
     profile_views:
       title: "Käyttäjäprofiilin katselut"
       xaxis: "Päivä"
       yaxis: "Katseltujen käyttäjäprofiilien määrä"
+      description: "Uudet käyttäjäprofiilikatselut."
     topics:
       title: "Ketjut"
       xaxis: "Päivä"
       yaxis: "Uusien ketjujen lukumäärä"
-      description: "Tänä aikana aloitettujen ketjujen määrä"
+      description: "Kuinka monta ketjua aloitettiin tällä ajanjaksolla."
     posts:
       title: "Viestit"
       xaxis: "Päivä"
@@ -892,24 +900,24 @@ fi:
       title: "Tykkäyksiä"
       xaxis: "Päivä"
       yaxis: "Uusien tykkäysten lukumäärä"
+      description: "Uudet tykkäykset."
     flags:
       title: "Liputukset"
       xaxis: "Päivä"
       yaxis: "Liputusten lukumäärä"
+      description: "Uudet liputukset."
     bookmarks:
       title: "Kirjanmerkit"
       xaxis: "Päivä"
       yaxis: "Uusien kirjanmerkkien lukumäärä"
-    starred:
-      title: "Tähdet"
-      xaxis: "Päivä"
-      yaxis: "Tähdellisten ketjujen lukumäärä"
+      description: "Kuinka monta ketjua tai viestiä lisättiin kirjanmerkkeihin."
     users_by_trust_level:
       title: "Käyttäjiä luottamustasoilla"
       xaxis: "Luottamustaso"
       yaxis: "Käyttäjien lukumäärä"
       labels:
         level: Taso
+      description: "Kuinka monta käyttäjää on milläkin luottamustasolla."
     users_by_type:
       title: "Käyttäjät tyypeittäin"
       xaxis: "Tyyppi"
@@ -921,40 +929,49 @@ fi:
         moderator: Valvoja
         suspended: Hyllytetty
         silenced: Hiljennetty
+      description: "Kuinka monta käyttäjää on ylläpitäjinä, valvojina, hyllytettynä ja hiljennettynä."
     trending_search:
-      title: Kuumat haut
+      title: Nousussa olevat hakusanat
       labels:
         term: Hakusana
         searches: Hakuja
         click_through: KS
+      description: "Suosituimmat hakusanat ja niiden klikkaussuhteet."
     emails:
       title: "Lähetettyjä sähköposteja"
       xaxis: "Päivä"
       yaxis: "Sähköpostien lukumäärä"
+      description: "Kuinka monta uutta sähköpostia lähetetty."
     user_to_user_private_messages:
       title: "Käyttäjältä käyttäjälle (pl. vastaukset)"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+      description: "Kuinka monta yksityiskeskustelua aloitettu."
     user_to_user_private_messages_with_replies:
       title: "Käyttäjältä käyttäjälle (ml. vastaukset)"
       xaxis: "Päivä"
       yaxis: "Viestien määrä"
+      description: "Kuinka monta uutta yksityisviestiä."
     system_private_messages:
       title: "Järjestelmä"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+      description: "Kuinka monta yksityisviestiä systeemi on lähettänyt automaattisesti."
     moderator_warning_private_messages:
       title: "Varoitus valvojalle"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+      description: "Kuinka monta yksityistä varoitusta valvojat ovat lähettäneet."
     notify_moderators_private_messages:
       title: "Ilmoita valvojille"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+      description: "Kuinka monta kertaa valvojia on yksityisesti huomautettu lipuista."
     notify_user_private_messages:
       title: "Ilmoita käyttäjälle"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
+      description: "Kuinka monesti käyttäjiä huomautettiin yksityisesti lipuista."
     top_referrers:
       title: "Parhaat viittaajat"
       xaxis: "Käyttäjä"
@@ -964,6 +981,7 @@ fi:
         user: "Käyttäjä"
         num_clicks: "Klikkauksia"
         num_topics: "Ketjuja"
+      description: "Käyttäjät järjestettynä sen mukaan, montako kertaa heidän jakamiaan linkkejä on klikattu."
     top_traffic_sources:
       title: "Parhaat liikenteen lähteet"
       xaxis: "Verkkotunnus"
@@ -974,35 +992,43 @@ fi:
         domain: Verkkotunnus
         num_clicks: Klikkaukset
         num_topics: Ketjut
+      description: "Ulkoiset lähteet jotka ovat linkittäneet tälle sivustolle eniten."
     top_referred_topics:
       title: "Parhaat viitatut ketjut"
       labels:
         num_clicks: "Klikkaukset"
         topic: "Ketju"
+      description: "Ketjut jotka ovat saaneet eniten klikkauksia ulkoisilta sivustoilta."
     page_view_anon_reqs:
       title: "Anonyymejä"
       xaxis: "Päivä"
       yaxis: "Anonyymien sivunlataukset"
+      description: "Kuinka monta sivunkatselua kirjautumattomilta vierailta."
     page_view_logged_in_reqs:
       title: "Kirjautuneita"
       xaxis: "Päivä"
-      yaxis: "Kirjautuneiden sivunlataukset"
+      yaxis: "Kirjautuneiden sivukatselut"
+      description: "Kuinka monta sivunkatselua kirjautuneilta käyttäjiltä."
     page_view_crawler_reqs:
       title: "Hakurobotteja"
       xaxis: "Päivä"
       yaxis: "Hakurobottien sivunlataukset"
+      description: "Hakurobotit järjestettynä sivukatseluiden mukaan."
     page_view_total_reqs:
       title: "Sivunkatselua"
       xaxis: "Päivä"
       yaxis: "Sivunlatauksia yhteensä"
+      description: "Kaikkien kävijöiden sivunkatselut."
     page_view_logged_in_mobile_reqs:
       title: "Kirjautuneiden sivunlataukset"
       xaxis: "Päivä"
       yaxis: "Mobiilikäyttäjien sivunlataukset"
+      description: "Kirjautuneiden mobiilikäyttäjien sivunkatselut."
     page_view_anon_mobile_reqs:
       title: "Anonyymien sivunlataukset"
       xaxis: "Päivä"
       yaxis: "Anonyymien mobiilikäyttäjien sivunlataukset"
+      description: "Kirjautumattomien vieraiden mobiilikäyttäjien sivunkatselut."
     http_background_reqs:
       title: "Taustajärjestelmä"
       xaxis: "Päivä"
@@ -1031,19 +1057,23 @@ fi:
       title: "Aika ensimmäiseen vastaukseen"
       xaxis: "Päivä"
       yaxis: "Keskimääräinen aika (tuntia)"
+      description: "Keskimääräinen aika (tunteina) siihen, kun uuteen ketjuun vastataan ensimmäisen kerran."
     topics_with_no_response:
       title: "Ketjut, joihin ei ole vastattu"
       xaxis: "Päivä"
       yaxis: "Yhteensä"
+      description: "Kuinka moneen uuteen ketjuun ei vastattu ollenkaan."
     mobile_visits:
       title: "Käyttäjävierailut (mobiili)"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
+      description: "Uniikkien mobiilikävijöiden määrä."
     web_crawlers:
       title: "Hakurobottien pyynnöt"
       labels:
         user_agent: "Käyttäjäagentti"
         page_views: "Sivunkatselut"
+      description: "Hakurobottien sivunkatselut."
     suspicious_logins:
       title: "Epäilyttävät kirjautumiset"
       labels:
@@ -1054,6 +1084,22 @@ fi:
         device: Laite
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
+      description: "Yksityiskohdat uusista kirjautumisista, jotka epäilyttävällä tavalla poikkesivat aiemmista kirjautumisista."
+    staff_logins:
+      title: "Henkilökunnan kirjautumiset"
+      labels:
+        user: Käyttäjä
+        location: Paikka
+        login_at: Kirjautumisaika
+      description: "Luettelu ylläpitäjien ja valvojien kirjautumisista sekä niiden ajoista ja paikoista."
+    top_uploads:
+      title: "Parhaat lataukset"
+      labels:
+        filename: Tiedostonimi
+        extension: Tiedostopääte
+        author: Käyttäjä
+        filesize: Tiedoston koko
+      description: "Luettelo kaikista latauksista järjestettynä tiedostopäätteen, tiedoston koon ja käyttäjän mukaan."
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
@@ -1061,6 +1107,14 @@ fi:
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
+    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
+    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
+    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-salausarvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
+    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
+    s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataa uusin versio</a>.'
+    failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
       one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
@@ -1103,6 +1157,7 @@ fi:
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan nimi, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
+    short_site_description: "Lyhyt kuvaus, jota käytetään etusivulla otsikkotagissa (title tag)."
     contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset ja se näkyy <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     contact_url: "Verkko-osoite, jonka kautta voi ottaa yhteyttä sivustoon. Näkyy <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
@@ -1131,6 +1186,13 @@ fi:
     inline_onebox_domains_whitelist: "Verkko-osoitteet, joista luodaan Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Poista  inline_onebox_domain_whitelist -sivustoasetus käytöstä ja salli rivi-oneboxit kaikista verkko-osoitteista."
     max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
+    logo_small: "Kuva, joka toimii sivuston pienenä logona sivuston yläkulmassa, kun vieritetään alaspäin. Valitse neliönmuotoinen kuva. Suositeltu koko on 120px kertaa 120px. Jos jätät tyhjäksi, tilalla näytetään koti-merkki."
+    digest_logo: "Vaihtoehtoinen logo, jota käytetään sivustosi sähköpostitiivistelmien yläosassa. Valitse leveä suorakulmainen kuva. Älä käytä SVG-kuvaa. Jos jätät tyhjäksi, käytetään \"logo\"-asetuksen kuvaa."
+    large_icon: "Kuva, jota käytetään logo/splash -kuvana Androidissa. Suositeltu koko on 512x512 pikseliä."
+    favicon: "Palstan favicon, ks. <a href='https://fi.wikipedia.org/wiki/Favicon' target='_blank'>https://fi.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa."
+    apple_touch_icon: "Applen kosketuslaitteiden käyttämä ikoni. Suositeltu koko on 144px kertaa 144px."
+    opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään kun sivulla ei ole muuta sopivaa kuvaa eikä sivuston logoa."
+    twitter_summary_large_image: "Oletuksena käytettävän Twitter-tiivistelmäkortin kuva (tulisi olla ainakin 280 px leveä ja ainakin 150 px korkea)."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Verkkotunnuksen SPF, DKIM ja reverse PTR tietueiden täytyy olla kunnossa, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
@@ -1629,13 +1691,6 @@ fi:
     errors:
       different_topics: "Eri ketjuissa olevia viestejä ei voi yhdistää."
       different_users: "Eri käyttäjien viestejä ei voi yhdistää."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Yksi viesti siirrettiin uuteen ketjuun: %{topic_link}"
-      other: "%{count} viestiä siirrettiin uuteen ketjuun: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}"
-      other: "%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}"
   change_owner:
     post_revision_text: "Vaihtoi omistajaa"
   topic_statuses:
@@ -1732,7 +1787,6 @@ fi:
     email:
       sent_test: "lähetettiin!"
       sent_test_disabled: "ei voida lähettää, koska sähköpostien lähettäminen ei ole käytössä"
-      sent_test_disabled_for_non_staff: "ei voida lähettää, koska sähköposteja ei lähetetä muille kuin henkilökunnalle"
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"

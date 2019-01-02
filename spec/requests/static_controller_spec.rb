@@ -164,7 +164,7 @@ describe StaticController do
         SiteSetting.login_required = true
       end
 
-      ['faq', 'guidelines', 'rules'].each do |page_name|
+      ['faq', 'guidelines', 'rules', 'conduct'].each do |page_name|
         it "#{page_name} page redirects to login page for anon" do
           get "/#{page_name}"
           expect(response).to redirect_to '/login'
@@ -174,9 +174,7 @@ describe StaticController do
           get "/#{page_name}"
           expect(response).to redirect_to '/login'
         end
-      end
 
-      ['faq', 'guidelines', 'rules'].each do |page_name|
         it "#{page_name} page loads for logged in user" do
           sign_in(Fabricate(:user))
 

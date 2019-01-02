@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
+require_dependency 'single_sign_on_provider'
 require_dependency 'url_helper'
 
 class SessionController < ApplicationController
@@ -46,7 +47,7 @@ class SessionController < ApplicationController
     payload ||= request.query_string
 
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOn.parse(payload)
+      sso = SingleSignOnProvider.parse(payload)
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
@@ -115,7 +116,7 @@ class SessionController < ApplicationController
       sso = DiscourseSingleSignOn.parse(request.query_string)
     rescue DiscourseSingleSignOn::ParseError => e
       if SiteSetting.verbose_sso_logging
-        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso.diagnostics}")
+        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature

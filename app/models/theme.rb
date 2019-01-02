@@ -16,9 +16,11 @@ class Theme < ActiveRecord::Base
   has_many :theme_fields, dependent: :destroy
   has_many :theme_settings, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
-  has_many :child_themes, through: :child_theme_relation, source: :child_theme
+  has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :color_schemes
   belongs_to :remote_theme
+
+  has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -346,7 +348,7 @@ class Theme < ActiveRecord::Base
   end
 
   def settings
-    field = theme_fields.where(target_id: Theme.targets[:settings], name: "yaml").first
+    field = settings_field
     return [] unless field && field.error.nil?
 
     settings = []

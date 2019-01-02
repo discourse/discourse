@@ -76,8 +76,6 @@ pt:
       help_trigger: 'exibir ajuda'
     new_user_narrative:
       reset_trigger: "novo utilizador"
-      hello:
-        title: ":robot: Saudações!"
       certificate:
         alt: 'Certificado de Realização'
     advanced_user_narrative:

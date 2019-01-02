@@ -125,10 +125,12 @@ class Site
     json
   end
 
+  SITE_JSON_CHANNEL = '/site_json'
+
   def self.clear_anon_cache!
     # publishing forces the sequence up
     # the cache is validated based on the sequence
-    MessageBus.publish('/site_json', '')
+    MessageBus.publish(SITE_JSON_CHANNEL, '')
   end
 
 end

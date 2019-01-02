@@ -2023,6 +2023,11 @@ test("Public number poll", async assert => {
     "it should display the right number of voters"
   );
 
+  assert.ok(
+    find(".poll-voters:first li:first a").attr("href"),
+    "user URL exists"
+  );
+
   await click(".poll-voters-toggle-expand:first a");
 
   assert.equal(

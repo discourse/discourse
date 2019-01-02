@@ -118,7 +118,7 @@ es:
       odd: debe ser impar
       record_invalid: 'Error en la validación: %{errors}'
       max_emojis: "no puede tener más de %{max_emojis_count} emoji"
-      emojis_disabled: "no puede tener emoji"
+      emojis_disabled: "no puede tener emojis"
       ip_address_already_screened: "ya se está incluido en una regla existente"
       restrict_dependent_destroy:
         one: "No se pudo eliminar el registro porque existe otro %{record} dependiente"
@@ -198,7 +198,6 @@ es:
     continue: "Continuar discusión"
     error: "Error al insertar"
     referer: "Referente:"
-    mismatch: "El referente no ha coincidido con ninguno de los siguientes hosts:"
     no_hosts: "No se han definido hosts para el insertado"
     configure: "Configurar insertado"
     more_replies:
@@ -813,12 +812,13 @@ es:
         percent: Porcentaje
         day: Día
     post_edits:
-      title: "Ediciones"
+      title: "Ediciones del mensaje"
       labels:
         post: Post
         editor: Editor
         author: Autor
         edit_reason: Motivo
+      description: "Número de nuevas ediciones."
     user_flagging_ratio:
       title: "Proporción de reportes del usuario"
       labels:
@@ -828,7 +828,7 @@ es:
         ignored_flags: Reportes ignorados
         score: Puntuación
     moderators_activity:
-      title: "Actividad de moderadores"
+      title: "Actividad de moderación"
       labels:
         moderator: Moderador
         flag_count: Reportes revisados
@@ -838,7 +838,7 @@ es:
         pm_count: Mensajes privados creados
         revision_count: Ediciones
     flags_status:
-      title: "Estado de los reportes"
+      title: "Estado de reportes"
       values:
         agreed: De acuerdo
         disagreed: En desacuerdo
@@ -858,22 +858,18 @@ es:
       title: "Registros"
       xaxis: "Día"
       yaxis: "Número de Registros"
-      description: "Nuevos registros de cuentas para este periodo"
     new_contributors:
       title: "Nuevos Colaboradores"
       xaxis: "Día"
       yaxis: "Número de nuevos colaboradores"
-      description: "Número de usuarios quienes hicieron su primer post en este periodo"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Nro. de miembros que se loguearon en el último día dividido el núm. de miembros que se loguearon en el último mes – devuelve un % que indica la 'adhesión' de la comunidad. Apunta al >30%."
     daily_engaged_users:
       title: "Usuarios comprometidos a diario"
       xaxis: "Día"
       yaxis: "Usuarios Comprometidos"
-      description: "Número de usuarios que le han gustado o publicado en el último día"
     profile_views:
       title: "Visitas a perfil de usuario"
       xaxis: "Día"
@@ -882,7 +878,6 @@ es:
       title: "Temas nuevos"
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
-      description: "Nuevos temas creados durante este período"
     posts:
       title: "Nuevos posts"
       xaxis: "día"
@@ -900,10 +895,6 @@ es:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de nuevos marcadores"
-    starred:
-      title: "Favorito"
-      xaxis: "Día"
-      yaxis: "Número de temas nuevos favoritos"
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
       xaxis: "Día"
@@ -922,7 +913,7 @@ es:
         suspended: Suspendidos
         silenced: Silenciados
     trending_search:
-      title: Trending search
+      title: Tendencias de búsqueda
       labels:
         term: Término
         searches: Búsquedas
@@ -1054,6 +1045,12 @@ es:
         device: Dispositivo
         os: Sistema operativo
         login_time: Fecha y hora de inicio de sesión
+    staff_logins:
+      title: "Inicios de sesión del staff"
+      labels:
+        user: Usuario
+        location: Ubicación
+        login_at: Inicio de sesión el
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
@@ -1111,6 +1108,7 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
+    short_site_description: "Descripción breve, usada como el título de la etiqueta en la página principal."
     contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página <a href='%{base_path}/about' target='_blank'>/about</a> de contacto para asuntos urgentes."
     contact_url: "URL de contacto para este sitio. Usada en la página <a href='%{base_path}/about' target='_blank'>/about</a> como formulario de contacto para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
@@ -1140,10 +1138,6 @@ es:
     inline_onebox_domains_whitelist: "Lista de dominios que serán oneboxed en miniatura si son enlazados sin un título"
     enable_inline_onebox_on_all_domains: "Ignorar configuración inline_onebox_domain_whitelist site y permitir inline onebox en todos los dominios."
     max_oneboxes_per_post: "Número máximo de oneboxes en un tema."
-    logo: "La imagen del logotipo en la parte superior izquierda de su sitio debe ser una forma de rectángulo ancho. Si se deja en blanco el texto del título del sitio se mostrará."
-    logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de su sitio debe ser una forma cuadrada, que se ve cuando se desplaza hacia abajo. Si se deja en blanco, se mostrará el home glyph."
-    digest_logo: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de su sitio. Debe ser una forma de rectángulo ancho. No debe ser una imagen SVG. Si se deja en blanco, se utilizará `logo_url`."
-    mobile_logo: "URL del logo personalizado utilizado en la versión móvil de su sitio. Si se deja en blanco, se usará `logo_url`. Ej: https://example.com/uploads/default/logo.png"
     large_icon: "Imagen utilizada como logotipo o imagen de bienvenida en Android. El tamaño recomendado es de 512px por 512px."
     favicon: "El favicon para tu sitio, lee <a href='https://es.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png."
     apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. El tamaño recomendado es de 144px por 144px."
@@ -1207,6 +1201,7 @@ es:
     content_security_policy_report_only: EXPERIMENTAL - Turn on Content-Security-Policy-Report-Only
     content_security_policy_collect_reports: Habilitar CSP violation report collection en /csp_reports
     content_security_policy_script_src: Fuentes adicionales de script en la lista blanca. El host actual y CDN se incluyen de forma predeterminada.
+    invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
@@ -1216,6 +1211,7 @@ es:
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
+    remove_full_quote: "Quitar automáticamente citas completas en respuestas directas"
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en un post cuando el post cite la respuesta."
     max_reply_history: "Número máximo de respuestas a mostrar al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de mejores temas mostrados en el resumen de mejores temas."
@@ -1390,6 +1386,7 @@ es:
     title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un tema."
     body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un post."
     allow_uppercase_posts: "Permite todas mayúsculas en el título de un tema o en el cuerpo del mensaje"
+    max_consecutive_replies: "Número de mensajes que un usuario debe hacer seguidos antes de que se le prohíba añadir una nueva respuesta."
     min_title_similar_length: "La extensión mínima que un título debe tener antes de revisar temas similares."
     desktop_category_page_style: "Estilo visual de la página de /categorías."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
@@ -1616,6 +1613,7 @@ es:
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coinciden con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
+    force_lowercase_tags: "Forzar que todas las etiquetas sean completamente en minúscula"
     company_name: "Nombre de Compañía"
     governing_law: "Ley que rige"
     city_for_disputes: "Ciudad de Disputas"
@@ -1682,13 +1680,6 @@ es:
     errors:
       different_topics: "Mensajes que pertenecen a temas diferentes no pueden ser juntados."
       different_users: "Mensajes que pertenecen a diferentes usuarios no pueden ser juntados."
-  move_posts:
-    new_topic_moderator_post:
-      one: "un post fue trasladado a un nuevo tema: %{topic_link}"
-      other: "%{count} posts fueron trasladados a un nuevo tema: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Un post fue trasladado al siguiente tema: %{topic_link}"
-      other: "%{count} posts fueron trasladados al siguiente tema: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad"
   topic_statuses:
@@ -2109,6 +2100,13 @@ es:
     csv_export_succeeded:
       title: "Exportación de datos en CSV completada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
+      text_body_template: |
+        ¡La exportación de los datos ha finalizado correctamente! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        El enlace de arriba funcionará durante las próximas 48 horas.
+
+        Los datos han sido comprimidos en un archivo gzip. Si no consigues extraerlo al abrirlo, usa las herramientas que encontrarás aquí: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "Error en la exportación de datos en CSV"
       subject_template: "La exportación de datos falló"
@@ -2233,6 +2231,10 @@ es:
     email_reject_post_too_short:
       title: "Emails Rechazados Post muy corto"
       subject_template: "[%{email_prefix}] Problemas con el correo -- Post muy corto"
+      text_body_template: |
+        Lo sentimos, pero tu correo para %{destination} (con título %{former_title}) no ha funcionado.
+
+        Para asegurar la calidad de las conversaciones, las respuestas muy cortas no están permitidas. ¿Podrías responder con al menos %{count} caracteres? Alternativamente, puedes darle me gusta a un mensaje respondiendo por email con "+1".
     email_reject_invalid_post_action:
       title: "Email Rechazado, Acción de Post Inválida"
       subject_template: "[%{email_prefix}] Problema con el correo -- Acción de Post Inválida"
@@ -2266,6 +2268,10 @@ es:
     email_reject_old_destination:
       title: "Correo electrónico rechazo antiguo destino"
       subject_template: "[%{email_prefix}] Problema con el correo -- Estás intentando responder a una notificación antigua"
+      text_body_template: |
+        Lo sentimos, pero tu correo para %{destination} (titulado %{former_title}) no ha funcionado.
+
+        Solo aceptamos respuestas a las notificaciones originales durante %{number_of_days} días. Por favor, [visita el tema](%{short_url}) para seguir con la conversación.
     email_reject_topic_not_found:
       title: "Email rechazado, tema no encontrado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Tema no encontrado"
@@ -2309,6 +2315,13 @@ es:
     email_reject_attachment:
       title: "Adjuntos del Email Rechazados"
       subject_template: "[%{email_prefix}] Problema con el correo -- Adjuntos rechazados"
+      text_body_template: |
+        Lamentablemente, algunos archivos adjuntos de tu correo a %{destination} (titulado %{former_title}) han sido rechazados.
+
+        Detalles:
+        %{rejected_errors}
+
+        Si crees que se trata de un error, [contacta con un miembro del staff](%{base_url}/about).
     email_error_notification:
       title: "Email, error de notificación"
       subject_template: "[%{email_prefix}] Problema con el correo -- Error de autenticación POP"
@@ -3770,6 +3783,9 @@ es:
           site_description:
             label: "Describe tu comunidad en una frase corta"
             placeholder: "Un sitio para Jane y sus amigos donde discutir cosas interesantes"
+          short_site_description:
+            label: "Describe tu comunidad en pocas palabras"
+            placeholder: "La mejor comunidad del mundo"
       introduction:
         title: "Introducción"
         fields:
@@ -3831,10 +3847,8 @@ es:
         fields:
           logo:
             label: "Logo Principal"
-            description: "La imagen del logotipo en la parte superior izquierda de su sitio. Usa una forma de rectángulo ancho."
           logo_small:
             label: "Logo Compacto"
-            description: "Una versión compacta de su logotipo, que se muestra en la parte superior izquierda de su sitio cuando se desplaza hacia abajo. Usa una forma cuadrada."
       icons:
         title: "Iconos"
         fields:

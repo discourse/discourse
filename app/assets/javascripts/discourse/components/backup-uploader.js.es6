@@ -28,7 +28,8 @@ export default Em.Component.extend(UploadMixin, {
     return {
       type: "PUT",
       dataType: "xml",
-      autoUpload: false
+      autoUpload: false,
+      multipart: false
     };
   },
 

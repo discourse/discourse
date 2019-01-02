@@ -144,7 +144,6 @@ de:
       title: "Abschlußzertifikat für neue Benutzer Lektionen"
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
-        title: ":robot: Grüß dich!"
         message: |-
           Danke, dass du %{title}beigetreten bist. Willkommen!
 

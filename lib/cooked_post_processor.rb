@@ -10,6 +10,8 @@ class CookedPostProcessor
 
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
+  LOADING_SIZE = 10
+  LOADING_COLORS = 32
 
   attr_reader :cooking_options, :doc
 
@@ -27,6 +29,8 @@ class CookedPostProcessor
     @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
+
+    @disable_loading_image = !!opts[:disable_loading_image]
   end
 
   def post_process(bypass_bump = false)
@@ -95,7 +99,7 @@ class CookedPostProcessor
     prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
     return if !prev
 
-    new_raw = @post.raw.gsub(/\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
+    new_raw = @post.raw.gsub(/\A\s*\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
     return if @post.raw == new_raw
 
     PostRevisor.new(@post).revise!(
@@ -322,19 +326,27 @@ class CookedPostProcessor
     end
 
     if upload = Upload.get_from_url(src)
-      upload.create_thumbnail!(width, height, crop)
+      upload.create_thumbnail!(width, height, crop: crop)
 
       each_responsive_ratio do |ratio|
         resized_w = (width * ratio).to_i
         resized_h = (height * ratio).to_i
 
         if upload.width && resized_w <= upload.width
-          upload.create_thumbnail!(resized_w, resized_h, crop)
+          upload.create_thumbnail!(resized_w, resized_h, crop: crop)
         end
+      end
+
+      unless @disable_loading_image
+        upload.create_thumbnail!(LOADING_SIZE, LOADING_SIZE, format: 'png', colors: LOADING_COLORS)
       end
     end
 
     add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+  end
+
+  def loading_image(upload)
+    upload.thumbnail(LOADING_SIZE, LOADING_SIZE)
   end
 
   def is_a_hyperlink?(img)
@@ -398,6 +410,10 @@ class CookedPostProcessor
       else
         img["src"] = upload.url
       end
+
+      if small_upload = loading_image(upload)
+        img["data-small-upload"] = small_upload.url
+      end
     end
 
     # then, some overlay informations
@@ -405,7 +421,7 @@ class CookedPostProcessor
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
-    informations = "#{original_width}x#{original_height}"
+    informations = "#{original_width}×#{original_height}"
     informations << " #{number_to_human_size(upload.filesize)}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
@@ -513,7 +529,7 @@ class CookedPostProcessor
       end
 
       upload_id = downloaded_images[src]
-      upload = Upload.find(upload_id) if upload_id
+      upload = Upload.find_by_id(upload_id) if upload_id
       img["src"] = upload.url if upload.present?
 
       # make sure we grab dimensions for oneboxed images

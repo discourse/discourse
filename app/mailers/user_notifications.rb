@@ -35,7 +35,7 @@ class UserNotifications < ActionMailer::Base
 
   def suspicious_login(user, opts = {})
     ipinfo = DiscourseIpInfo.get(opts[:client_ip])
-    location = [ipinfo[:city], ipinfo[:region], ipinfo[:country]].reject(&:blank?).join(", ")
+    location = ipinfo[:location]
     browser = BrowserDetection.browser(opts[:user_agent])
     device = BrowserDetection.device(opts[:user_agent])
     os = BrowserDetection.os(opts[:user_agent])

@@ -259,9 +259,13 @@ module Oneboxer
     SiteSetting.onebox_domains_blacklist.split("|")
   end
 
+  def self.preserve_fragment_url_hosts
+    @preserve_fragment_url_hosts ||= ['http://github.com']
+  end
+
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts)
+      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
       return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 

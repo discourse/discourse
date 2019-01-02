@@ -45,7 +45,9 @@ class ThemeSettingsManager
   end
 
   def db_record
-    ThemeSetting.where(name: @name, data_type: type, theme: @theme).first
+    # theme.theme_settings will already be preloaded, so it is better to use
+    # `find` on an array, rather than make a round trip to the database
+    theme.theme_settings.to_a.find { |i| i.name.to_s == @name.to_s && i.data_type.to_s == type.to_s }
   end
 
   def has_record?

@@ -150,7 +150,6 @@ he:
     continue: "המשך דיון"
     error: "תקלה בשילוב"
     referer: "מפנה:"
-    mismatch: "המפנה לא התאים לאף אחד מהשרתים הבאים:"
     no_hosts: "אף שרת לא הוגדר לשילוב."
     configure: "הגדרת שילוב (Embedding)"
     more_replies:
@@ -721,10 +720,6 @@ he:
       title: "סימניות"
       xaxis: "יום"
       yaxis: "מספר סימניות חדשות"
-    starred:
-      title: "כוכב"
-      xaxis: "יום"
-      yaxis: "מספר נושאים חדשים שכוכבו"
     users_by_trust_level:
       title: "משתמשים בכל רמת אמון"
       xaxis: "רמת אמון"
@@ -1305,17 +1300,6 @@ he:
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
       different_users: "לא ניתן למזג פוסטים ששייכים למשתמשים שונים."
-  move_posts:
-    new_topic_moderator_post:
-      one: "תגובה פוצלה לנושא חדש: %{topic_link}"
-      two: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-      many: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-      other: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "תגובה אוחדה לנושא קיים:  %{topic_link}"
-      two: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
-      many: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
-      other: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
   topic_statuses:
     archived_enabled: "הנושא הזה נכנס לארכיון. הוא קפוא ולא ניתן לשינוי בכל דרך."
     archived_disabled: "הנושא הזה הוצא מהארכיון. הוא כבר לא קפוא, וניתן לשינוי."

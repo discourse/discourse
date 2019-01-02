@@ -169,6 +169,7 @@ en:
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
+      s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:
@@ -190,7 +191,7 @@ en:
     error: "There was an error uploading that file. Please try again later."
 
   topic_invite:
-    failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}." 
+    failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   backup:
@@ -230,7 +231,7 @@ en:
     continue: "Continue Discussion"
     error: "Error Embedding"
     referer: "Referer:"
-    mismatch: "The referer did not match any of the following hosts:"
+    mismatch: "The referer was either not sent, or did not match any of the following hosts:"
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
@@ -893,12 +894,13 @@ en:
         percent: Percent
         day: Day
     post_edits:
-      title: "Post edits"
+      title: "Post Edits"
       labels:
         post: Post
         editor: Editor
         author: Author
         edit_reason: Reason
+      description: "Number of new post edits."
     user_flagging_ratio:
       title: "User Flagging Ratio"
       labels:
@@ -907,8 +909,9 @@ en:
         disagreed_flags: Disagreed flags
         ignored_flags: Ignored flags
         score: Score
+      description: "List of users ordered by ratio of staff response to their flags (disagreed to agreed)."
     moderators_activity:
-      title: "Moderators activity"
+      title: "Moderator Activity"
       labels:
         moderator: Moderator
         flag_count: Flags reviewed
@@ -917,8 +920,9 @@ en:
         post_count: Posts created
         pm_count: PMs created
         revision_count: Revisions
+      description: List of moderator activity including flags reviewed, reading time, topics created, posts created, private messages created, and revisions.
     flags_status:
-      title: "Flags status"
+      title: "Flags Status"
       values:
         agreed: Agreed
         disagreed: Disagreed
@@ -930,39 +934,42 @@ en:
         poster: Poster
         flagger: Flagger
         time_to_resolution: Resolution time
+      description: "List of flags' statuses including type of flag, poster, flagger, and time to resolution."
     visits:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
+      description: "Number of all unique user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
       yaxis: "Number of signups"
-      description: "New account registrations for this period"
+      description: "New account registrations for this period."
     new_contributors:
       title: "New Contributors"
       xaxis: "Day"
       yaxis: "Number of new contributors"
-      description: "Number of users who made their first post during this period"
+      description: "Number of users who made their first post during this period."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
-      description: "No. of members that logged in in the last day divided by no of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
+      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
       yaxis: "Engaged Users"
-      description: "Number of users that have liked or posted in the last day"
+      description: "Number of users that have liked or posted in the last day."
     profile_views:
       title: "User Profile Views"
       xaxis: "Day"
       yaxis: "Number of user profiles viewed"
+      description: "Total new views of user profiles."
     topics:
       title: "Topics"
       xaxis: "Day"
       yaxis: "Number of new topics"
-      description: "New topics created during this period"
+      description: "New topics created during this period."
     posts:
       title: "Posts"
       xaxis: "Day"
@@ -972,24 +979,24 @@ en:
       title: "Likes"
       xaxis: "Day"
       yaxis: "Number of new likes"
+      description: "Number of new likes."
     flags:
       title: "Flags"
       xaxis: "Day"
       yaxis: "Number of flags"
+      description: "Number of new flags."
     bookmarks:
       title: "Bookmarks"
       xaxis: "Day"
       yaxis: "Number of new bookmarks"
-    starred:
-      title: "Starred"
-      xaxis: "Day"
-      yaxis: "Number of new starred topics"
+      description: "Number of new topics and posts bookmarked."
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
       labels:
         level: Level
+      description: "Number of users grouped by trust level."
     users_by_type:
       title: "Users per Type"
       xaxis: "Type"
@@ -1001,40 +1008,49 @@ en:
         moderator: Moderator
         suspended: Suspended
         silenced: Silenced
+      description: "Number of users grouped by admin, moderator, suspended, and silenced."
     trending_search:
-      title: Trending search
+      title: Trending Search Terms
       labels:
         term: Term
         searches: Searches
         click_through: CTR
+      description: "Most popular search terms with their click-through rates."
     emails:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
+      description: "Number of new emails sent."
     user_to_user_private_messages:
       title: "User-to-User (excluding replies)"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of newly initiated private messages."
     user_to_user_private_messages_with_replies:
       title: "User-to-User (with replies)"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of all new private messages and responses."
     system_private_messages:
       title: "System"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of private messages sent automatically by the System."
     moderator_warning_private_messages:
       title: "Moderator Warning"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of warnings sent by private messages from moderators."
     notify_moderators_private_messages:
       title: "Notify Moderators"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of times moderators have been privately notified by a flag."
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Day"
       yaxis: "Number of messages"
+      description: "Number of times users have been privately notified by a flag."
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -1044,6 +1060,7 @@ en:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Topics"
+      description: "Users listed by number of clicks on links they have shared."
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -1054,35 +1071,43 @@ en:
         domain: Domain
         num_clicks: Clicks
         num_topics: Topics
+      description: "External sources that have linked to this site the most."
     top_referred_topics:
       title: "Top Referred Topics"
       labels:
         num_clicks: "Clicks"
         topic: "Topic"
+      description: "Topics that have received the most clicks from external sources."
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
       yaxis: "Anonymous Pageviews"
+      description: "Number of new page views by visitors not logged in to an account."
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
       yaxis: "Logged In Pageviews"
+      description: "Number of new pageviews from logged in users."
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Day"
       yaxis: "Web Crawler Pageviews"
+      description: "Webcrawlers listed by number of new pageviews they have generated."
     page_view_total_reqs:
       title: "Pageviews"
       xaxis: "Day"
       yaxis: "Total Pageviews"
+      description: "Number of new pageviews from all visitors."
     page_view_logged_in_mobile_reqs:
       title: "Logged In Pageviews"
       xaxis: "Day"
       yaxis: "Mobile Logged In Pageviews"
+      description: "Number of new pageviews from users on mobile devices and logged in to an account."
     page_view_anon_mobile_reqs:
       title: "Anon Pageviews"
       xaxis: "Day"
       yaxis: "Mobile Anon Pageviews"
+      description: "Number of new pageviews from visitors on a mobile device who are not logged in."
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -1111,19 +1136,23 @@ en:
       title: "Time to first response"
       xaxis: "Day"
       yaxis: "Average time (hours)"
+      description: "Average time  (in hours) of the first response to new topics."
     topics_with_no_response:
       title: "Topics with no response"
       xaxis: "Day"
       yaxis: "Total"
+      description: "Number of new topics created that did not receive a response."
     mobile_visits:
       title: "User Visits (mobile)"
       xaxis: "Day"
       yaxis: "Number of visits"
+      description: "Number of unique users who visited using a mobile device."
     web_crawlers:
       title: "Web Crawler Requests"
       labels:
         user_agent: "User Agent"
         page_views: "Pageviews"
+      description: "Number of new pageviews generated by all webcrawlers."
     suspicious_logins:
       title: "Suspicious Logins"
       labels:
@@ -1134,12 +1163,22 @@ en:
         device: Device
         os: Operating System
         login_time: Login Time
+      description: "Details of new logins that differ suspiciously from previous logins."
     staff_logins:
-      title: "Staff logins"
+      title: "Staff Logins"
       labels:
         user: User
         location: Location
         login_at: Login at
+      description: "List of admin and moderator login times with locations."
+    top_uploads:
+      title: "Top Uploads"
+      labels:
+        filename: Filename
+        extension: Extension
+        author: Author
+        filesize: File size
+      description: "List all uploads by extension, filesize and author."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1231,10 +1270,10 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
-    logo: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    logo_small: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    digest_logo: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
-    mobile_logo: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
+    logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square image. The recommended size is 120px by 120px. If left blank, a home glyph will be shown."
+    digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
+    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
     large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
     apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
@@ -1872,6 +1911,8 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. A maximum of 12 characters is recommended."
 
+    dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -1947,11 +1988,11 @@ en:
 
   move_posts:
     new_topic_moderator_post:
-      one: "A post was split to a new topic: %{topic_link}"
-      other: "%{count} posts were split to a new topic: %{topic_link}"
+      one: "A post was split to a new %{entity}: %{topic_link}"
+      other: "%{count} posts were split to a new %{entity}: %{topic_link}"
     existing_topic_moderator_post:
-      one: "A post was merged into an existing topic: %{topic_link}"
-      other: "%{count} posts were merged into an existing topic: %{topic_link}"
+      one: "A post was merged into an existing %{entity}: %{topic_link}"
+      other: "%{count} posts were merged into an existing %{entity}: %{topic_link}"
 
   change_owner:
     post_revision_text: "Ownership transferred"
@@ -2054,7 +2095,6 @@ en:
     email:
       sent_test: "sent!"
       sent_test_disabled: "cannot send because emails are disabled"
-      sent_test_disabled_for_non_staff: "cannot send because emails are disabled for non-staff"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
@@ -4141,10 +4181,10 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangle shape."
+            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1"
           logo_small:
             label: "Compact Logo"
-            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square image. The recommended size is 120x120"
 
       icons:
         title: "Icons"

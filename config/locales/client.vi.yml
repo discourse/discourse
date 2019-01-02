@@ -128,6 +128,7 @@ vi:
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
+    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
     s3:
@@ -238,7 +239,6 @@ vi:
     choose_topic:
       none_found: "Không tìm thấy chủ đề nào"
       title:
-        search: "Tìm kiếm chủ đề dựa vào tên, url hoặc id:"
         placeholder: "viết chủ đề của chủ đề thảo luận ở đây"
     queue:
       topic: "Chủ đề:"
@@ -353,7 +353,6 @@ vi:
           description: "Bạn sẽ được thông báo khi có bài viết mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị"
         watching_first_post:
           title: "Theo dõi chủ đề đầu tiên"
-          description: "Bạn sẽ được thông báo về bài viết đầu tiên của mỗi chủ đề mới trong nhóm này"
         tracking:
           title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn, và số lượng trả lời mới sẽ được hiển thị"
@@ -1326,7 +1325,6 @@ vi:
       split_topic:
         title: "Di chuyển tới Chủ đề mới"
         action: "di chuyển tới chủ đề mới"
-        topic_name: "Tên chủ đề mới"
         error: "Có lỗi khi di chuyển bài viết tới chủ đề mới."
         instructions:
           other: "Bạn muốn tạo chủ đề mới và phổ biến nó với <b>{{count}}</b> bài viết đã chọn."
@@ -1830,9 +1828,6 @@ vi:
         private_messages_short: "Tin nhắn"
         private_messages_title: "Tin nhắn"
         mobile_title: "Điện thoại"
-        space_free: "{{size}} trống"
-        uploads: "tải lên"
-        backups: "sao lưu"
         traffic_short: "Băng thông"
         traffic: "Application web requests"
         show_traffic_report: "Xem chi tiết Báo cáo Lưu lượng"

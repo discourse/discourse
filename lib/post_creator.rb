@@ -476,7 +476,8 @@ class PostCreator
 
   def save_post
     @post.disable_rate_limits! if skip_validations?
-    saved = @post.save(validate: !skip_validations?)
+    @post.skip_validation = skip_validations?
+    saved = @post.save
     rollback_from_errors!(@post) unless saved
   end
 

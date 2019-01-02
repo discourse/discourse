@@ -179,7 +179,6 @@ pt_BR:
     continue: "Continuar Discussão"
     error: "Erro na Incorporação"
     referer: "Referer:"
-    mismatch: "O referenciador não encontrou nenhum dos seguintes hosts:"
     no_hosts: "Nenhum host foi configurado para incorporação."
     configure: "Configurar incorporação"
     more_replies:
@@ -730,14 +729,12 @@ pt_BR:
         percent: Porcento
         day: Dia
     post_edits:
-      title: "Publicar edições"
       labels:
         post: Publicar
         editor: Editor
         author: Autor
         edit_reason: Razão
     moderators_activity:
-      title: "Atividade de moderadores"
       labels:
         moderator: Moderador
         flag_count: sinalizações revisadas
@@ -747,7 +744,6 @@ pt_BR:
         pm_count: MPs criadas
         revision_count: Revisões
     flags_status:
-      title: " status de Sinalização"
       values:
         agreed: Acordado
         disagreed: Discordado
@@ -767,22 +763,18 @@ pt_BR:
       title: "Inscrições"
       xaxis: "Dia"
       yaxis: "Número de Inscrições"
-      description: "Novos registros de conta para este período"
     new_contributors:
       title: "Novos contribuidores"
       xaxis: "Dia"
       yaxis: "Número de novos colaboradores"
-      description: "Número de usuários que fizeram sua primeira postagem durante esse período"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Número de membros que se conectaram no último dia dividido por nenhum dos membros que efetuaram login no último mês - retorna um% que indica a 'rigidez' da comunidade. Apontar para> 30%."
     daily_engaged_users:
       title: "Usuários engajados diariamente"
       xaxis: "Dia"
       yaxis: "Usuários Engajados"
-      description: "Número de usuários que curtiram ou postaram no último dia"
     profile_views:
       title: "Visualizações de Perfil de Usuário"
       xaxis: "Dia"
@@ -791,7 +783,6 @@ pt_BR:
       title: "Tópicos"
       xaxis: "Dia"
       yaxis: "Número de tópicos novos"
-      description: "Novos tópicos criados durante este período"
     posts:
       title: "Posts"
       xaxis: "Dia"
@@ -809,10 +800,6 @@ pt_BR:
       title: "Marcadores Adicionados"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores adicionados"
-    starred:
-      title: "Favorito"
-      xaxis: "Dia"
-      yaxis: "Número de novos tópicos favoritos"
     users_by_trust_level:
       title: "Usuários por Nível de Confiança"
       xaxis: "Nível de Confiança"
@@ -831,7 +818,6 @@ pt_BR:
         suspended: Suspenso
         silenced: Silenciado
     trending_search:
-      title: Pesquisa em tendência
       labels:
         term: Termo
         searches: Pesquisas
@@ -1524,13 +1510,6 @@ pt_BR:
     errors:
       different_topics: "Publicações que pertencem a tópicos diferentes não podem ser combinadas."
       different_users: "Publicações que pertencem a usuários diferentes não podem ser combinadas."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Uma publicação foi dividida em um novo tópico : %{topic_link}"
-      other: "%{count} publicações foram divididas em um novo tópico: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Uma publicação foi combinada em um tópico existente: %{topic_link}"
-      other: "%{count} publicações foram combinadas em um tópico existente: %{topic_link}"
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer forma."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."

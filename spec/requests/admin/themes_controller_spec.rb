@@ -76,6 +76,14 @@ describe Admin::ThemesController do
       expect(theme.theme_fields.first.upload.original_filename).to eq(upload.original_filename)
     end
 
+    it 'can import a theme from Git' do
+      post "/admin/themes/import.json", params: {
+        remote: '    https://github.com/discourse/discourse-brand-header       '
+      }
+
+      expect(response.status).to eq(201)
+    end
+
     it 'imports a theme' do
       post "/admin/themes/import.json", params: { theme: theme_file }
       expect(response.status).to eq(201)

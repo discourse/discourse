@@ -192,10 +192,12 @@ protected
 
     lookup = AvatarLookup.new(user_ids)
     user_ids.map do |user_id|
+      lookup_hash = lookup[user_id]
+
       UserWithCount.new(
-        lookup[user_id].attributes.merge(count: user_hash[user_id])
-      )
-    end.sort_by { |u| -u[:count] }
+        lookup_hash.attributes.merge(count: user_hash[user_id])
+      ) if lookup_hash.present?
+    end.compact.sort_by { |u| -u[:count] }
   end
 
 end

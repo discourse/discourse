@@ -1,6 +1,11 @@
 require 'rails_helper'
 require 'wizard'
 require 'wizard/builder'
+require 'global_path'
+
+class GlobalPathInstance
+  extend GlobalPath
+end
 
 describe Wizard::Builder do
   let(:moderator) { Fabricate.build(:moderator) }
@@ -49,9 +54,9 @@ describe Wizard::Builder do
       logo_small_field = fields.last
 
       expect(logo_field.id).to eq('logo')
-      expect(logo_field.value).to eq(upload.url)
+      expect(logo_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
       expect(logo_small_field.id).to eq('logo_small')
-      expect(logo_small_field.value).to eq(upload2.url)
+      expect(logo_small_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
 
@@ -70,9 +75,9 @@ describe Wizard::Builder do
       apple_touch_icon_field = fields.last
 
       expect(favicon_field.id).to eq('favicon')
-      expect(favicon_field.value).to eq(upload.url)
+      expect(favicon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
       expect(apple_touch_icon_field.id).to eq('apple_touch_icon')
-      expect(apple_touch_icon_field.value).to eq(upload2.url)
+      expect(apple_touch_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
 

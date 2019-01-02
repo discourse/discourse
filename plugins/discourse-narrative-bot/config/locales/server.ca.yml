@@ -140,8 +140,6 @@ ca:
     new_user_narrative:
       reset_trigger: "nou usuari"
       cert_title: "En reconeixement per haver completat satisfactòriament el tutorial de nou usuari"
-      hello:
-        title: ":robot: Salutacions!"
       onebox:
         instructions: |-
           Seguidament, pots compartir un d'aquests enllaços amb mi? Respon amb  **un enllaç d'una línia sense res més**, i s'expandirà automàticament per incloure un breu resum.

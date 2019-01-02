@@ -12,7 +12,7 @@ class StaticController < ApplicationController
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
-    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines', 'rules'].include?(params[:id])
+    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines'].include?(params[:id])
       return redirect_to path('/login')
     end
 
@@ -31,7 +31,7 @@ class StaticController < ApplicationController
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
-    @page = 'faq' if @page == 'guidelines' || @page == 'rules'
+    @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
     @page.gsub!(/[^a-z0-9\_\-]/, '')
@@ -103,12 +103,17 @@ class StaticController < ApplicationController
 
   FAVICON ||= -"favicon"
 
-  # We need to be able to draw our favicon on a canvas
-  # and pull it off the canvas into a data uri
-  # This can work by ensuring people set all the right CORS
-  # settings in the CDN asset, BUT its annoying and error prone
-  # instead we cache the favicon in redis and serve it out real quick with
-  # a huge expiry, we also cache these assets in nginx so it bypassed if needed
+  # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
+  # that draws the notification count on top of favicon (per user default off)
+  #
+  # With s3 the original upload is going to be stored at s3, we don't have a local copy of the favicon.
+  # To allow canvas to work with s3 we are going to need to add special CORS headers and use
+  # a special crossorigin hint on the original, this is not easily workable.
+  #
+  # Forcing all consumers to set magic CORS headers on a CDN is also not workable for us.
+  #
+  # So we cache the favicon in redis and serve it out real quick with
+  # a huge expiry, we also cache these assets in nginx so it is bypassed if needed
   def favicon
     is_asset_path
 

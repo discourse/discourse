@@ -59,6 +59,34 @@ describe DiscoursePoll::PollsUpdater do
       expect(message).to be(nil)
     end
 
+    describe "when editing" do
+
+      let(:raw) do
+        <<~RAW
+        This is a new poll with three options.
+
+        [poll type=multiple results=always min=1 max=2]
+        * first
+        * second
+        * third
+        [/poll]
+        RAW
+      end
+
+      let(:post) { Fabricate(:post, raw: raw) }
+
+      it "works if poll is closed and unmodified" do
+        DiscoursePoll::Poll.vote(post.id, "poll", ["e55de753c08b93d04d677ce05e942d3c"], post.user)
+        DiscoursePoll::Poll.toggle_status(post.id, "poll", "closed", post.user)
+
+        freeze_time (SiteSetting.poll_edit_window_mins + 1).minutes.from_now
+        update(post, DiscoursePoll::PollsValidator.new(post).validate_polls)
+
+        expect(post.errors[:base].size).to equal(0)
+      end
+
+    end
+
     describe "deletes polls" do
 
       it "that were removed" do

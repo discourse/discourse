@@ -313,6 +313,7 @@ module Discourse
     end
 
     MessageBus.publish(readonly_channel, true)
+    Site.clear_anon_cache!
     true
   end
 
@@ -346,6 +347,7 @@ module Discourse
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
     $redis.del(key)
     MessageBus.publish(readonly_channel, false)
+    Site.clear_anon_cache!
     true
   end
 
@@ -354,12 +356,12 @@ module Discourse
   end
 
   def self.last_read_only
-    @last_read_only ||= {}
+    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
   end
 
   def self.recently_readonly?
-    return false unless read_only = last_read_only[$redis.namespace]
-    read_only > 15.seconds.ago
+    read_only = last_read_only[$redis.namespace]
+    read_only.present? && read_only > 15.seconds.ago
   end
 
   def self.received_readonly!

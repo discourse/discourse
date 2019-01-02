@@ -272,7 +272,6 @@ lv:
     choose_topic:
       none_found: "Tēmas netika atrastas."
       title:
-        search: "Meklē tēmu pēc vārda, URL vai ID:"
         placeholder: "ierakstiet tēmas nosaukumu šeit"
     queue:
       topic: "Tēma:"
@@ -378,7 +377,6 @@ lv:
           description: "Jums paziņos par katru jaunu ierakstu katrā ziņā, kā arī parādīs jauno atbilžu skaitu."
         watching_first_post:
           title: "Seko pirmajam ierakstam"
-          description: "Jums paziņos tikai par pirmo ierakstu katrā jaunajā tēmā šai grupā."
         tracking:
           title: "Sekošana"
           description: "Jums paziņos, ja kāds pieminēs jūsu @vārdu vai atbildēs jums. Jūs redzēsiet jauno atbilžu skaitu."
@@ -1478,7 +1476,6 @@ lv:
       split_topic:
         title: "Pārvietot uz jaunu tēmu"
         action: "pārvietot uz jaunu tēmu"
-        topic_name: "Jaunās tēmas nosaukums"
         error: "Pārvietojot ierakstus uz jauno tēmu, notika kļūda."
         instructions:
           zero: "Jūs tūlīt izveidosiet jaunu tēmu bez ierakstiem."
@@ -1774,7 +1771,6 @@ lv:
           description: "Jūs automātiski novērosiet visas tēmas šajās sadaļās. Jums paziņos par katru jaunu ierakstu katrā tēmā, kā arī parādīs jauno atbilžu skaitu."
         watching_first_post:
           title: "Novērot pirmo ierakstu"
-          description: "Jums paziņos tikai par pirmo ierakstu katrā šo sadaļu jaunajā tēmā."
         tracking:
           title: "Sekošana"
           description: "Jūs automātiski sekosiet visām tēmām šajās sadaļās. Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs jums, kā arī parādīs jauno atbilžu skaitu."
@@ -2187,9 +2183,6 @@ lv:
         private_messages_short: "Ziņas"
         private_messages_title: "Ziņās"
         mobile_title: "Mobilais"
-        space_free: "{{size}} par brīvu"
-        uploads: "augšuplādes"
-        backups: "rezerves kopijas"
         traffic_short: "Datu plūsma"
         page_views: "Lapu skatījumi"
         page_views_short: "Lapu skatījumi"

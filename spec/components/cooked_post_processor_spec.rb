@@ -15,7 +15,7 @@ describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
@@ -259,7 +259,6 @@ describe CookedPostProcessor do
     end
 
     context "responsive images" do
-
       before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
       it "includes responsive images on demand" do
@@ -288,13 +287,27 @@ describe CookedPostProcessor do
           filesize: 800
         )
 
+        # Fake a loading image
+        optimized_image = OptimizedImage.create!(
+          url: 'http://a.b.c/10x10.png',
+          width: CookedPostProcessor::LOADING_SIZE,
+          height: CookedPostProcessor::LOADING_SIZE,
+          upload_id: upload.id,
+          sha1: SecureRandom.hex,
+          extension: '.png',
+          filesize: 123
+        )
+
         cpp = CookedPostProcessor.new(post)
 
         cpp.add_to_size_cache(upload.url, 2000, 1500)
         cpp.post_process_images
 
+        html = cpp.html
+
+        expect(html).to include(%Q|data-small-upload="#{optimized_image.url}"|)
         # 1.5x is skipped cause we have a missing thumb
-        expect(cpp.html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
+        expect(html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
       end
 
       it "doesn't include response images for cropped images" do
@@ -379,7 +392,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.max_image_height = 2000
@@ -395,7 +408,7 @@ describe CookedPostProcessor do
 
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
       end
@@ -447,7 +460,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.create_thumbnails = true
@@ -462,7 +475,7 @@ describe CookedPostProcessor do
 
       it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match /width="690" height="500">/
+        expect(cpp.html).to match(/width="690" height="500">/)
         expect(cpp).to be_dirty
       end
 
@@ -472,7 +485,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.create_thumbnails = true
@@ -488,7 +501,7 @@ describe CookedPostProcessor do
       it "crops the image" do
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1125x2436 1.21 KB</span><span class=\"expand\"></span>
+<span class=\"filename\">logo.png</span><span class=\"informations\">1125×2436 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
       end
@@ -499,7 +512,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
       let(:base_url) { "http://test.localhost/subfolder" }
       let(:base_uri) { "/subfolder" }
 
@@ -519,7 +532,7 @@ describe CookedPostProcessor do
       it "generates overlay information" do
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
       end
@@ -528,7 +541,7 @@ describe CookedPostProcessor do
         upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+<span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
       end
 
@@ -538,7 +551,7 @@ describe CookedPostProcessor do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_and_title) }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
         SiteSetting.max_image_height = 2000
@@ -554,7 +567,7 @@ describe CookedPostProcessor do
       it "generates overlay information" do
         cpp.post_process_images
         expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
-       <span class=\"filename\">WAT</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+       <span class=\"filename\">WAT</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
        </div></a></div></p>"
         expect(cpp).to be_dirty
       end
@@ -778,6 +791,12 @@ describe CookedPostProcessor do
       cpp.post_process_oneboxes
 
       expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+
+      upload.destroy!
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process_oneboxes
+
+      expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
     end
 
     it "replaces large image placeholder" do
@@ -1147,6 +1166,7 @@ describe CookedPostProcessor do
   context "remove direct reply full quote" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+
     let(:raw) do
       <<~RAW
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -1154,6 +1174,16 @@ describe CookedPostProcessor do
       [/quote]
 
       and this is the third reply
+      RAW
+    end
+
+    let(:raw2) do
+      <<~RAW
+      and this is the third reply
+
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the first post
+      [/quote]
       RAW
     end
 
@@ -1175,6 +1205,15 @@ describe CookedPostProcessor do
         expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
         expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
       end
+    end
+
+    it 'does not delete quote if not first paragraph' do
+      SiteSetting.remove_full_quote = true
+
+      reply = Fabricate(:post, topic: topic, raw: raw2)
+      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      expect(topic.posts).to eq([post, reply])
+      expect(reply.raw).to eq(raw2)
     end
 
     it "does nothing when 'remove_full_quote' is disabled" do

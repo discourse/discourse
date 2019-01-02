@@ -287,7 +287,7 @@ describe PrettyText do
       end
 
       it 'should not convert mentions to links' do
-        user = Fabricate(:user)
+        _user = Fabricate(:user)
 
         expect(PrettyText.cook('hi @user')).to eq('<p>hi @user</p>')
       end
@@ -577,6 +577,17 @@ describe PrettyText do
 
     it "should handle nil" do
       expect(PrettyText.excerpt(nil, 100)).to eq('')
+    end
+
+    it "handles custom bbcode excerpt" do
+      raw = <<~RAW
+      [excerpt]
+      hello [site](https://site.com)
+      [/excerpt]
+      more stuff
+      RAW
+      post = Fabricate(:post, raw: raw)
+      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"nofollow noopener\">site</a>")
     end
 
     it "handles span excerpt at the beginning of a post" do

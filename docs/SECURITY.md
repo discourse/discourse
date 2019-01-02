@@ -21,11 +21,13 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 
 The main vector for [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting) attacks is via the post composer, as we allow users to enter Markdown, HTML (a safe subset thereof), and BBCode to format posts.
 
-There are 2 main scenarios we protect against:
+There are 3 main scenarios we protect against:
 
 1. **Markdown preview invokes an XSS.** This is possibly severe in one specific case: when a forum staff member edits a user's post, seeing the raw markup, where a malicious user may have inserted code to run JavaScript. This code would only show up in the preview, but it would run in the context of a forum staff member, which is *very* bad.
 
 2. **Markdown displayed on the page invokes an XSS.** To protect against client side preview XSS, Discourse uses [Google Caja](https://developers.google.com/caja/) in the preview window.
+
+3. **CSP is on by default** for [all Discourse installations](https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243) as of Discourse 2.2. It can be switched off in the site settings, but it is default on.
 
 On the server side we run a whitelist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/master/lib/pretty_text.rb).
 

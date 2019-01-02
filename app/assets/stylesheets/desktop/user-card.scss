@@ -279,12 +279,14 @@ $user_card_background: $secondary;
   }
 
   .badge-section {
-    float: left;
+    display: flex;
+    align-items: flex-start;
     width: 500px;
     padding-bottom: 10px;
     margin-top: 5px;
 
     .user-badge {
+      margin-right: 0.5em;
       background: $primary-very-low;
       border: 1px solid $primary-low;
       color: $user_card_primary;

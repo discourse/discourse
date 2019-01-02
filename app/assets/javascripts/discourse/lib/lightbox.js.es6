@@ -46,9 +46,7 @@ export default function($elem) {
             const href = item.el.data("download-href") || item.src;
             let src = [
               escapeExpression(item.el.attr("title")),
-              $("span.informations", item.el)
-                .text()
-                .replace("x", "&times;")
+              $("span.informations", item.el).text()
             ];
             if (
               !Discourse.SiteSettings.prevent_anons_from_downloading_files ||

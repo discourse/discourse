@@ -113,19 +113,28 @@
   }
 }
 
-.split-modal {
+.move-to-modal {
   .modal-body {
     position: relative;
     height: 350px;
   }
 
   #move-selected {
+    width: 475px;
+
     p {
       margin-top: 0;
     }
 
-    input[type="radio"] {
-      margin-right: 10px;
+    .radios {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+
+      .radio-label {
+        display: inline-block;
+        padding-right: 15px;
+      }
     }
 
     button {
@@ -142,8 +151,18 @@
       width: 95%;
       margin-top: 20px;
       #split-topic-name,
-      #choose-topic-title {
+      #choose-topic-title,
+      #choose-message-title {
         width: 100%;
+      }
+
+      .participant-selector {
+        width: 100%;
+      }
+
+      div.ac-wrap {
+        width: 100%;
+        margin-bottom: 9px;
       }
     }
   }

@@ -36,7 +36,7 @@ RSpec.describe DbHelper do
     it 'allows tables to be excluded from scanning' do
       post = Fabricate(:post, cooked: "test")
 
-      DbHelper.remap("test", "something else", exclude_tables: %w{posts})
+      DbHelper.remap("test", "something else", excluded_tables: %w{posts})
 
       expect(post.reload.cooked).to eq('test')
     end

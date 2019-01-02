@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should work correctly' do
+      it 'should produce cropped images (requires ImageMagick 7)' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -17,16 +17,34 @@ describe OptimizedImage do
             5
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/cropped.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          # we don't want to deal with something new here every time image magick
+          # is upgraded or pngquant is upgraded, lets just test the basics ...
+          # cropped image should be less than 120 bytes
 
-          cropped_hex = Digest::MD5.hexdigest(File.read(tmp_path))
+          cropped_size = File.size(tmp_path)
 
-          expect(cropped_hex).to eq(fixture_hex)
+          expect(cropped_size).to be < 120
+          expect(cropped_size).to be > 50
+
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
       end
+    end
+
+    describe ".resize_instructions" do
+      let(:image) { "#{Rails.root}/spec/fixtures/images/logo.png" }
+
+      it "doesn't return any color options by default" do
+        instructions = described_class.resize_instructions(image, image, "50x50")
+        expect(instructions).to_not include('-colors')
+      end
+
+      it "supports an optional color option" do
+        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
+        expect(instructions).to include('-colors')
+      end
+
     end
 
     describe '.resize' do
@@ -113,7 +131,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should work correctly' do
+      it 'should downsize logo (requires ImageMagick 7)' do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -123,12 +141,10 @@ describe OptimizedImage do
             "100x100\>"
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/downsized.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          info = FastImage.new(tmp_path)
+          expect(info.size).to eq([100, 27])
+          expect(File.size(tmp_path)).to be < 2300
 
-          downsized_hex = Digest::MD5.hexdigest(File.read(tmp_path))
-
-          expect(downsized_hex).to eq(fixture_hex)
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -186,7 +202,6 @@ describe OptimizedImage do
   describe ".create_for" do
 
     it "is able to 'optimize' an svg" do
-
       # we don't really optimize anything, we simply copy
       # but at least this confirms this actually works
 
@@ -237,6 +252,11 @@ describe OptimizedImage do
           expect(oi.width).to eq(100)
           expect(oi.height).to eq(200)
           expect(oi.url).to eq("/internally/stored/optimized/image.png")
+        end
+
+        it "is able to change the format" do
+          oi = OptimizedImage.create_for(upload, 100, 200, format: 'gif')
+          expect(oi.url).to eq("/internally/stored/optimized/image.gif")
         end
 
       end

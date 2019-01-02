@@ -37,6 +37,7 @@ module DiscoursePoll
           attributes = new_poll.slice(*POLL_ATTRIBUTES)
           attributes["visibility"] = new_poll["public"] == "true" ? "everyone" : "secret"
           attributes["close_at"] = Time.zone.parse(new_poll["close"]) rescue nil
+          attributes["status"] = old_poll["status"]
           poll = ::Poll.new(attributes)
 
           if is_different?(old_poll, poll, new_poll_options)

@@ -281,7 +281,6 @@ sr:
     choose_topic:
       none_found: "Nema pronađenih tema."
       title:
-        search: "Traži temu prema imenu, adresi ili id-u."
         placeholder: "unesite naslov teme ovde"
     queue:
       topic: "Tema:"
@@ -1034,7 +1033,6 @@ sr:
       split_topic:
         title: "Prebaci u Novu Temu"
         action: "prebacu u novu temu"
-        topic_name: "Ime Nove Teme"
         error: "Dogodila se greška pri prebacivanju poruka u novu temu."
         instructions:
           one: "Otvorićete novu temu popunjenu s <b>{{count}}</b> poruka koje ste izabrali."

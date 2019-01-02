@@ -141,8 +141,6 @@ fi:
     new_user_narrative:
       reset_trigger: "peruskurssi"
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
-      hello:
-        title: ":robot: Tervehdys!"
       onebox:
         instructions: |-
           Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.

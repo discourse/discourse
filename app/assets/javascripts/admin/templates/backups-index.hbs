@@ -6,9 +6,9 @@
         {{/if}}
 
         {{#if site.isReadOnly}}
-          {{d-button class="btn-default" icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
+          {{d-button class="btn-default" icon="far-eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
         {{else}}
-          {{d-button class="btn-default" icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
+          {{d-button class="btn-default" icon="far-eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
         {{/if}}
       </div>
 <table class="grid">
@@ -31,10 +31,10 @@
                      title="admin.backups.operations.download.title"
                      label="admin.backups.operations.download.label"}}
           {{#if status.isOperationRunning}}
-            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
+            {{d-button icon="far-trash-alt" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
             {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{else}}
-            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
+            {{d-button icon="far-trash-alt" action="destroyBackup" actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
             {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{/if}}
         </div>

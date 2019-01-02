@@ -30,6 +30,7 @@ export default {
             return p.toString() === "[object SafariRemoteNotification]";
           })(!window["safari"] || safari.pushNotification);
         caps.isChrome = !!window.chrome && !caps.isOpera;
+        caps.isIE11 = !!ua.match(/Trident.*rv\:11\./);
 
         caps.canPasteImages = caps.isChrome || caps.isFirefox;
       }

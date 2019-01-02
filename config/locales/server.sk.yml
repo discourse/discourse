@@ -630,10 +630,6 @@ sk:
       title: "Záložky"
       xaxis: "Deň"
       yaxis: "Počet nových záložiek"
-    starred:
-      title: "Obľúbené"
-      xaxis: "Deň"
-      yaxis: "Počet nových ohviezdičkovaných tém"
     users_by_trust_level:
       title: "Používatelia podľa stupňa dôvery"
       xaxis: "Stupeň dôvery"
@@ -1046,17 +1042,6 @@ sk:
   redirected_to_top_reasons:
     new_user: "Vitajte v našej komunite! Toto sú najpopulárnejšie z posledných tém."
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Príspevok bol oddelený do novej témy: %{topic_link}"
-      few: "%{count} príspevky boli oddelené do novej témy: %{topic_link}"
-      many: "%{count} príspevkov bolo oddelených do novej témy: %{topic_link}"
-      other: "%{count} príspevkov bolo oddelených do novej témy: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Príspevok bol pripojený k existujúcej téme: %{topic_link}"
-      few: "%{count} príspevky boli pripojené k existujúcej téme: %{topic_link}"
-      many: "%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}"
-      other: "%{count} príspevkov bolo pripojených k existujúcej téme: %{topic_link}"
   topic_statuses:
     archived_enabled: "Táto téma je archivovaná. Je zmrazená a už sa nedá nijako meniť. "
     archived_disabled: "Táto téma je vyňatá z archivu. Už nie je zmrazená a môže sa opäť meniť. "

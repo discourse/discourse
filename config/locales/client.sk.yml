@@ -338,7 +338,6 @@ sk:
     choose_topic:
       none_found: "Nenašli sa žiadne témy."
       title:
-        search: "Hľadaj tému podľa názvu, url alebo id:"
         placeholder: "sem napíšte názov témy"
     queue:
       topic: "Téma:"
@@ -522,7 +521,6 @@ sk:
           description: "Budete upozornený na každý nový príspevok vo všetkých správach a zobrazí sa počet nových odpovedí."
         watching_first_post:
           title: "Sledovať prvý príspevok"
-          description: "Budete upozornený iba na prvý príspevok v každej téme v tejto skupine."
         tracking:
           title: "Pozorovať"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie a zobrazí sa počet nových odpovedí."
@@ -1632,7 +1630,6 @@ sk:
       split_topic:
         title: "Presuň na novú tému"
         action: "presuň na novú tému"
-        topic_name: "Názov novej témy"
         error: "Nastala chyba pri presune príspevku na novú tému."
         instructions:
           one: "Vytvárate novú tému do ktorej bude vložený príspevok, ktorý ste označili. "
@@ -2312,9 +2309,6 @@ sk:
         private_messages_short: "Správy"
         private_messages_title: "Správy"
         mobile_title: "Mobil"
-        space_free: "{{size}} voľné"
-        uploads: "nahraté"
-        backups: "zálohy"
         traffic_short: "Vyťaženie"
         traffic: "Požiadavky webových aplikácií"
         show_traffic_report: "Zobraziť detaily vyťaženia"

@@ -43,6 +43,10 @@
     @include active-navigation-item;
   }
 
+  &.dashboard-next-reports .navigation-item.reports {
+    @include active-navigation-item;
+  }
+
   &.general .navigation-item.general {
     @include active-navigation-item;
   }
@@ -191,7 +195,7 @@
     display: flex;
     border: 1px solid $primary-low;
 
-    .durability,
+    .storage-stats,
     .last-dashboard-update {
       flex: 1 1 50%;
       box-sizing: border-box;
@@ -199,7 +203,7 @@
       padding: 0 1em;
     }
 
-    .durability {
+    .storage-stats {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -213,15 +217,11 @@
       .uploads p:last-of-type {
         margin-bottom: 0;
       }
-
-      .durability-title {
-        text-transform: capitalize;
-      }
     }
 
     @media screen and (max-width: 400px) {
       flex-wrap: wrap;
-      .durability,
+      .storage-stats,
       .last-dashboard-update {
         flex: 1 1 100%;
         text-align: left;
@@ -286,7 +286,7 @@
 
 .counters-list {
   display: flex;
-  flex: 1;
+  flex: 1 0 0;
   flex-direction: column;
 
   .counters-header {
@@ -528,5 +528,35 @@
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 1em;
     grid-row-gap: 1em;
+  }
+}
+
+.dashboard-next-reports {
+  .reports-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    margin: 0 -1.5%;
+  }
+  .report {
+    margin: 1.5%;
+    border: 1px solid $primary-low;
+    flex: 1 1 28%;
+    transition: box-shadow 0.25s;
+    min-width: 225px;
+    max-width: 550px;
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 1em;
+      .report-description {
+        color: $primary-high;
+      }
+    }
+    &:hover {
+      box-shadow: shadow("card");
+    }
   }
 }

@@ -232,7 +232,6 @@ th:
     choose_topic:
       none_found: "ไม่พบกระทู้ใดๆ"
       title:
-        search: "ค้นหากระทู้โดยชื่อ url หรือ id"
         placeholder: "ระบุชื่อกระทู้ที่นี่"
     queue:
       topic: "กระทู้:"
@@ -351,7 +350,6 @@ th:
           description: "คุณจะถูกแจ้งเตือนทุกๆโพสใหม่ในทุกๆข้อความและจำนวนใหม่จะถูกนับอละแสดง"
         watching_first_post:
           title: "ดูโพสต์แรก"
-          description: "คุณได้รับการแจ้งเตือนเกี่ยวกับโพสต์ใหม่ในกระทู้ในกลุ่มนี้"
         tracking:
           title: "ติดตาม"
           description: "คุณจะได้รับการแจ้งเตือนเมื่อใครก็ตามเอ่ยชื่อของคุณ @name หรือตอบคุณ และจำนวนของการตอบจะถูกแสดง"
@@ -1095,7 +1093,6 @@ th:
       split_topic:
         title: "ย้ายไปหัวข้อใหม่"
         action: "ย้ายไปหัวข้อใหม่"
-        topic_name: "ชื่อหัวข้อใหม่"
       merge_topic:
         title: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
         action: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
@@ -1313,9 +1310,6 @@ th:
         private_messages_short: "ข้อความ"
         private_messages_title: "ข้อความ"
         mobile_title: "โทรศัพท์"
-        space_free: "{{size}} ว่าง"
-        uploads: "อัพโหลด"
-        backups: "สำรอง"
         traffic_short: "การจราจร"
         reports:
           today: "วันนี้"

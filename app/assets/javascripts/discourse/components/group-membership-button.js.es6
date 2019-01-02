@@ -15,6 +15,11 @@ export default Ember.Component.extend({
     return publicExit && userIsGroupUser;
   },
 
+  @computed("model.allow_membership_requests", "userIsGroupUser")
+  canRequestMembership(allowMembershipRequests, userIsGroupUser) {
+    return allowMembershipRequests && !userIsGroupUser;
+  },
+
   @computed("model.is_group_user")
   userIsGroupUser(isGroupUser) {
     return !!isGroupUser;

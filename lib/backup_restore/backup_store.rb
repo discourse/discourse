@@ -18,12 +18,17 @@ module BackupRestore
 
     # @return [Array<BackupFile>]
     def files
-      unsorted_files.sort_by { |file| -file.last_modified.to_i }
+      @files ||= unsorted_files.sort_by { |file| -file.last_modified.to_i }
     end
 
     # @return [BackupFile]
     def latest_file
       files.first
+    end
+
+    def reset_cache
+      @files = nil
+      Report.clear_cache(:storage_stats)
     end
 
     def delete_old
@@ -33,6 +38,8 @@ module BackupRestore
       backup_files[SiteSetting.maximum_backups..-1].each do |file|
         delete_file(file.filename)
       end
+
+      reset_cache
     end
 
     def remote?
@@ -60,6 +67,15 @@ module BackupRestore
       fail NotImplementedError
     end
 
+    def stats
+      {
+        used_bytes: used_bytes,
+        free_bytes: free_bytes,
+        count: files.size,
+        last_backup_taken_at: latest_file&.last_modified
+      }
+    end
+
     private
 
     # @return [Array<BackupFile>]
@@ -69,6 +85,14 @@ module BackupRestore
 
     def cleanup_allowed?
       true
+    end
+
+    def used_bytes
+      files.sum { |file| file.size }
+    end
+
+    def free_bytes
+      fail NotImplementedError
     end
   end
 end

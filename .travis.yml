@@ -46,6 +46,7 @@ cache:
     - vendor/bundle
 
 before_install:
+  - wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
   - nvm install node
   - node --version
   - gem install bundler

@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-vi: {}
+vi:
+  site_settings:
+    presence_max_users_shown: 'Số lượng người dùng tối đa được hiển thị.'

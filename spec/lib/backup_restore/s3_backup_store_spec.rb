@@ -81,11 +81,19 @@ describe BackupRestore::S3BackupStore do
     before { create_backups }
     after(:all) { remove_backups }
 
-    it "doesn't delete files when cleanup is disabled" do
-      SiteSetting.maximum_backups = 1
-      SiteSetting.s3_disable_cleanup = true
+    describe "#delete_old" do
+      it "doesn't delete files when cleanup is disabled" do
+        SiteSetting.maximum_backups = 1
+        SiteSetting.s3_disable_cleanup = true
 
-      expect { store.delete_old }.to_not change { store.files }
+        expect { store.delete_old }.to_not change { store.files }
+      end
+    end
+
+    describe "#stats" do
+      it "returns nil for 'free_bytes'" do
+        expect(store.stats[:free_bytes]).to be_nil
+      end
     end
   end
 
