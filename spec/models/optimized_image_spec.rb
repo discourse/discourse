@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should produce cropped images' do
+      it 'should produce cropped images (requires ImageMagick 7)' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -131,7 +131,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should downsize logo' do
+      it 'should downsize logo (requires ImageMagick 7)' do
         tmp_path = "/tmp/downsized.png"
 
         begin
