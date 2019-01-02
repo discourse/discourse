@@ -711,6 +711,28 @@ describe SiteSettingExtension do
 
   end
 
+  describe '.all_settings' do
+    describe 'uploads settings' do
+      it 'should return the right values' do
+        system_upload = Fabricate(:upload, id: -999)
+        settings.setting(:logo, system_upload.id, type: :upload)
+        settings.refresh!
+        setting = settings.all_settings.last
+
+        expect(setting[:value]).to eq(system_upload.url)
+        expect(setting[:default]).to eq(system_upload.url)
+
+        upload = Fabricate(:upload)
+        settings.logo = upload
+        settings.refresh!
+        setting = settings.all_settings.last
+
+        expect(setting[:value]).to eq(upload.url)
+        expect(setting[:default]).to eq(system_upload.url)
+      end
+    end
+  end
+
   describe '.client_settings_json_uncached' do
     it 'should return the right json value' do
       upload = Fabricate(:upload)

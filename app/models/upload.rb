@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
   SHA1_LENGTH = 40
+  SEEDED_ID_THRESHOLD = 0
 
   belongs_to :user
 
@@ -35,6 +36,8 @@ class Upload < ActiveRecord::Base
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
     UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
   end
+
+  scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
   def to_s
     self.url

@@ -219,7 +219,7 @@ module ApplicationHelper
         opts[:twitter_summary_large_image] = twitter_summary_large_image_url
       end
 
-      opts[:image] = SiteSetting.opengraph_image_url.presence ||
+      opts[:image] = SiteSetting.site_opengraph_image_url.presence ||
         twitter_summary_large_image_url.presence ||
         SiteSetting.site_large_icon_url.presence ||
         SiteSetting.site_apple_touch_icon_url.presence ||
@@ -295,7 +295,7 @@ module ApplicationHelper
       if mobile_view? && SiteSetting.site_mobile_logo_url
         SiteSetting.site_mobile_logo_url
       else
-        SiteSetting.site_home_logo_url
+        SiteSetting.site_logo_url
       end
     end
   end

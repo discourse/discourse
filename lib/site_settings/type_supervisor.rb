@@ -177,7 +177,7 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
     elsif type == self.class.types[:upload] && val.present?
-      val = val.id
+      val = val.is_a?(Integer) ? val : val.id
     end
 
     [val, type]

@@ -92,10 +92,6 @@ module FileStore
     def purge_tombstone(grace_period)
     end
 
-    def get_depth_for(id)
-      [0, Math.log(id / 1_000.0, 16).ceil].max
-    end
-
     def get_path_for(type, id, sha, extension)
       depth = get_depth_for(id)
       tree = File.join(*sha[0, depth].chars, "")
@@ -146,6 +142,12 @@ module FileStore
 
     def not_implemented
       raise "Not implemented."
+    end
+
+    def get_depth_for(id)
+      depths = [0]
+      depths << Math.log(id / 1_000.0, 16).ceil if id.positive?
+      depths.max
     end
 
   end
