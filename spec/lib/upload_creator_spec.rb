@@ -98,6 +98,27 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'pngquant' do
+      let(:filename) { "pngquant.png" }
+      let(:file) { file_from_fixtures(filename) }
+
+      it 'should apply pngquant to optimized images' do
+        upload = UploadCreator.new(file, filename,
+          pasted: true,
+          force_optimize: true
+        ).create_for(user.id)
+
+        # no optimisation possible without losing details
+        expect(upload.filesize).to eq(9558)
+
+        thumbnail_size = upload.get_optimized_image(upload.width, upload.height, {}).filesize
+
+        # pngquant will lose some colors causing some extra size reduction
+        expect(thumbnail_size).to be < 7500
+      end
+
+    end
+
     describe 'converting to jpeg' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }

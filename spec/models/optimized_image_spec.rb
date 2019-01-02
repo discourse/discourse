@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should work correctly (requires correct version of image optim)' do
+      it 'should produce cropped images' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -17,12 +17,15 @@ describe OptimizedImage do
             5
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/cropped.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          # we don't want to deal with something new here every time image magick
+          # is upgraded or pngquant is upgraded, lets just test the basics ...
+          # cropped image should be less than 120 bytes
 
-          cropped_hex = Digest::MD5.hexdigest(File.read(tmp_path))
+          cropped_size = File.size(tmp_path)
 
-          expect(cropped_hex).to eq(fixture_hex)
+          expect(cropped_size).to be < 120
+          expect(cropped_size).to be > 50
+
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -128,7 +131,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should work correctly (requires correct version of image optim)' do
+      it 'should downsize logo' do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -138,12 +141,10 @@ describe OptimizedImage do
             "100x100\>"
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/downsized.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          info = FastImage.new(tmp_path)
+          expect(info.size).to eq([100, 27])
+          expect(File.size(tmp_path)).to be < 2300
 
-          downsized_hex = Digest::MD5.hexdigest(File.read(tmp_path))
-
-          expect(downsized_hex).to eq(fixture_hex)
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
