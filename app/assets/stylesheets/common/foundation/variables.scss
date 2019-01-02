@@ -195,14 +195,14 @@ $box-shadow: (
 // standard color transformations, use these if possible, and add any new dark-light-diffs here
 
 //primary
-$primary-very-low: dark-light-diff($primary, $secondary, 97%, -80%);
-$primary-low: dark-light-diff($primary, $secondary, 90%, -65%);
+$primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%);
+$primary-low: dark-light-diff($primary, $secondary, 90%, -78%);
 $primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%);
 $primary-medium: dark-light-diff($primary, $secondary, 50%, -35%);
 $primary-high: dark-light-diff($primary, $secondary, 30%, -25%);
 
 //header_primary
-$header_primary-low: dark-light-diff($header_primary, $secondary, 90%, -65%);
+$header_primary-low: dark-light-diff($header_primary, $secondary, 90%, -78%);
 $header_primary-medium: dark-light-diff($header_primary, $secondary, 50%, -35%);
 $header_primary-high: dark-light-diff(
   $header_primary,
