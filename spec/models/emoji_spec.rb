@@ -18,7 +18,7 @@ describe Emoji do
   describe '.load_custom' do
     describe 'when a custom emoji has an invalid upload_id' do
       it 'should return the custom emoji without a URL' do
-        CustomEmoji.create!(name: 'test', upload_id: -1)
+        CustomEmoji.create!(name: 'test', upload_id: 9999)
 
         emoji = Emoji.load_custom.first
 

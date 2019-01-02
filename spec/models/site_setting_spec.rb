@@ -150,40 +150,6 @@ describe SiteSetting do
     end
   end
 
-  describe '.site_home_logo_url' do
-    describe 'when logo site setting is set' do
-      let(:upload) { Fabricate(:upload) }
-
-      before do
-        SiteSetting.logo = upload
-      end
-
-      it 'should return the right URL' do
-        expect(SiteSetting.site_home_logo_url)
-          .to eq("#{Discourse.base_url}#{upload.url}")
-      end
-    end
-
-    describe 'when logo site setting is not set' do
-      describe 'when there is a custom title' do
-        before do
-          SiteSetting.title = "test"
-        end
-
-        it 'should return a blank string' do
-          expect(SiteSetting.site_home_logo_url).to eq('')
-        end
-      end
-
-      describe 'when title has not been set' do
-        it 'should return the default logo url' do
-          expect(SiteSetting.site_home_logo_url)
-            .to eq("#{Discourse.base_url}/images/d-logo-sketch.png")
-        end
-      end
-    end
-  end
-
   context 'deprecated site settings' do
     before do
       SiteSetting.force_https = true

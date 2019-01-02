@@ -67,8 +67,8 @@ class PushNotificationPusher
   protected
 
   def self.get_badge
-    if SiteSetting.site_push_notifications_icon_url.present?
-      SiteSetting.site_push_notifications_icon_url
+    if (url = SiteSetting.site_push_notifications_icon_url).present?
+      url
     else
       ActionController::Base.helpers.image_url("push-notifications/discourse.png")
     end
