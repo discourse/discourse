@@ -367,7 +367,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           $headerCloak.show();
         }
 
-        const menuTop = this.site.mobileView ? headerTop() : headerHeight();
+        const menuTop = this.site.mobileView ? 0 : headerHeight();
 
         let height;
         const winHeightOffset = 16;
@@ -386,7 +386,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         }
         if (style.top !== menuTop + "px" || style.height !== height) {
           $panel.css({ top: menuTop + "px", height });
-          $(".header-cloak").css({ top: menuTop + "px" });
         }
         $("body").removeClass("drop-down-mode");
       }
@@ -434,10 +433,4 @@ export function headerHeight() {
   return parseInt(
     $header.outerHeight() + headerOffsetTop - $(window).scrollTop()
   );
-}
-
-export function headerTop() {
-  const $header = $("header.d-header");
-  const headerOffset = $header.offset();
-  return headerOffset ? headerOffset.top : 0;
 }
