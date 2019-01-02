@@ -310,8 +310,20 @@
   }
 
   .trigger-group-card {
-    line-height: 20px;
+    height: 16px;
     margin: 0 4px;
+    padding: 1px 4px;
+    border: 1px solid $primary-low;
+    border-radius: 0.25em;
+    align-items: center;
+
+    a {
+      color: $primary-high;
+
+      .d-icon {
+        margin-right: 4px;
+      }
+    }
   }
 
   .more-participants {
