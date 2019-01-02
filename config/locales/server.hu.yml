@@ -504,10 +504,6 @@ hu:
       title: "Könyvjelzők"
       xaxis: "Nap"
       yaxis: "Új könyvjelzők száma"
-    starred:
-      title: "Csillagozott"
-      xaxis: "Nap"
-      yaxis: "Új csillagozott témák száma"
     users_by_trust_level:
       title: "Felhasználok láma bizalmi szintenként"
       xaxis: "Bizalmi szint"

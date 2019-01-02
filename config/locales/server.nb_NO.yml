@@ -184,7 +184,6 @@ nb_NO:
     continue: "Fortsett diskusjon"
     error: "Feil ved innbygging"
     referer: "Referer:"
-    mismatch: "Referer passet ikke med noen av de følgende vertsnavnene:"
     no_hosts: "Vertsnavn for innbygging."
     configure: "Sett opp innbygging"
     more_replies:
@@ -738,14 +737,12 @@ nb_NO:
         percent: Prosent
         day: Dag
     post_edits:
-      title: "Innlegg redigert"
       labels:
         post: Innlegg
         editor: Tekstbehandler
         author: Forfatter
         edit_reason: Begrunnelse
     moderators_activity:
-      title: "Moderatoraktivitet"
       labels:
         moderator: Moderator
         flag_count: Flagg vurdert
@@ -755,7 +752,6 @@ nb_NO:
         pm_count: Meldinger opprettet
         revision_count: Revisjoner
     flags_status:
-      title: "Flagg status"
       values:
         agreed: Enig
         disagreed: Uenig
@@ -775,22 +771,18 @@ nb_NO:
       title: "Nye brukere"
       xaxis: "Dag"
       yaxis: "Antall nye brukere"
-      description: "Nyregistrerte brukere i denne perioden"
     new_contributors:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
       yaxis: "Antall nye bidragsytere"
-      description: "Antall brukere som skrev sitt første innlegg i denne perioden"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
       yaxis: "DAB/MAB"
-      description: "Antall medlemmer som logget inn siste døgn delt på antall brukere som logget inn siste måned – returnerer en % som indikerer samfunnets evne til å engasjere brukere. Sikt mot >30%."
     daily_engaged_users:
       title: "Daglige Engasjerte Brukere"
       xaxis: "Dag"
       yaxis: "Engasjerte Brukere"
-      description: "Antall brukere som har likt eller skrevet innlegg siste døgn"
     profile_views:
       title: "Visninger av brukerprofil"
       xaxis: "Dag"
@@ -799,7 +791,6 @@ nb_NO:
       title: "Tråder"
       xaxis: "Dag"
       yaxis: "Antall nye tråder"
-      description: "Nye emner opprettet i denne perioden"
     posts:
       title: "Innlegg"
       xaxis: "Dag"
@@ -817,10 +808,6 @@ nb_NO:
       title: "Bokmerker"
       xaxis: "Dag"
       yaxis: "Antall nye bokmerker"
-    starred:
-      title: "Favoritt"
-      xaxis: "Dag"
-      yaxis: "Antall nye favoritt-tråder"
     users_by_trust_level:
       title: "Brukere per tillitsnivå"
       xaxis: "Tillitsnivå"
@@ -839,7 +826,6 @@ nb_NO:
         suspended: Utestengt
         silenced: Dempet
     trending_search:
-      title: Søketrender
       labels:
         term: Uttrykk
         searches: Søk

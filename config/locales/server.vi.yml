@@ -454,10 +454,6 @@ vi:
       title: "Các đánh dấu"
       xaxis: "Ngày"
       yaxis: "Số đánh dấu mới"
-    starred:
-      title: "Bắt đầu"
-      xaxis: "Ngày"
-      yaxis: "Số chủ đề được tạo."
     users_by_trust_level:
       title: "Thành viên ở mõi bậc tin tưởng"
       xaxis: "Bậc tin tưởng"
@@ -903,11 +899,6 @@ vi:
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
-  move_posts:
-    new_topic_moderator_post:
-      other: "%{count} bài viết đã được chia thành chủ đề mới: %{topic_link}"
-    existing_topic_moderator_post:
-      other: "%{count} bài viết đã được hợp nhất vào chủ đề: %{topic_link}"
   topic_statuses:
     archived_enabled: "Chủ đề này được đưa vào lưu trữ. Nó sẽ không được sửa đổi nữa. "
     archived_disabled: "Chủ đề này được đưa khỏi lưu trữ. Nó có thể được sửa đổi."

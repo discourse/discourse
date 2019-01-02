@@ -140,8 +140,6 @@ pl_PL:
     new_user_narrative:
       reset_trigger: "nowy użytkownik"
       cert_title: "W podziękowaniu za skończony samouczek"
-      hello:
-        title: ":robot: Witaj!"
       onebox:
         instructions: |-
           Następnie, czy możesz udostępnić mi jeden z poniższych linków? Odpowiedz przy użyciu **link**, a automatycznie zostanie dodane dobre podsumowanie.

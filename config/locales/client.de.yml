@@ -291,7 +291,6 @@ de:
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
-        search: "Suche nach Thema anhand von Name, URL oder ID:"
         placeholder: "Gib hier den Titel des Themas ein"
     queue:
       topic: "Thema:"
@@ -467,7 +466,6 @@ de:
           description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
-          description: "Du erhältst nur eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in dieser Gruppe."
         tracking:
           title: "Verfolgen"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
@@ -1818,7 +1816,6 @@ de:
       split_topic:
         title: "In neues Thema verschieben"
         action: "in ein neues Thema verschieben"
-        topic_name: "Bezeichnung des neuen Themas"
         error: "Beim Verschieben der Beiträge ins neue Thema ist ein Fehler aufgetreten."
         instructions:
           one: "Du bist dabei, ein neues Thema zu erstellen und den ausgewählten Beitrag dorthin zu verschieben."
@@ -2158,7 +2155,6 @@ de:
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
-          description: "Du erhältst eine Benachrichtigung nur für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
         tracking:
           title: "Verfolgen"
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
@@ -2509,7 +2505,6 @@ de:
           description: "Du wirst automatisch alle Themen mit diesem Schlagwort beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
-          description: "Du erhältst nur eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesem Schlagwort."
         tracking:
           title: "Verfolgen"
           description: "Du wirst automatisch allen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
@@ -2597,9 +2592,6 @@ de:
         private_messages_short: "Nachr."
         private_messages_title: "Nachrichten"
         mobile_title: "Mobilgerät"
-        space_free: "{{size}} frei"
-        uploads: "Uploads"
-        backups: "Backups"
         lastest_backup: "Letztes: %{date}"
         traffic_short: "Traffic"
         traffic: "Web Requests der Applikation"
@@ -2956,7 +2948,6 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
         location:
-          local: "Lokal"
           s3: "Amazon S3"
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
@@ -3350,9 +3341,6 @@ de:
           title: "Suchprotokolle"
           term: "Suchbegriff"
           searches: "Suchen"
-          click_through: "Durchklicken"
-          unique: "Eindeutig"
-          unique_title: "einzelne Benutzer mit dieser Suche"
           types:
             all_search_types: "Alle Sucharten"
             header: "Überschrift"

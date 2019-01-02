@@ -259,7 +259,6 @@ ca:
     choose_topic:
       none_found: "No s'ha trobat temes."
       title:
-        search: "Cercar un tema per nom, url o id:"
         placeholder: "escriu el títol del tema aquí"
     queue:
       topic: "Tema:"
@@ -365,7 +364,6 @@ ca:
           description: "Se't notificarà cada nova publicació a tot missatge i es mostrarà un recompte de respostes"
         watching_first_post:
           title: "Mirant la primera publicació"
-          description: "Només se't notificarà de la primera publicació per cada nou tema a aquest grup."
         tracking:
           title: "Rastreig"
           description: "Se't notificarà si algú menciona el teu @nom o et respòn, i se't mostrarà un recompte de noves respostes."
@@ -1390,7 +1388,6 @@ ca:
       split_topic:
         title: "Mou a un nou tema"
         action: "mou a un nou tema"
-        topic_name: "Nom del nou tema"
         error: "Hi ha hagut una errada en moure publicacions a aquest nou tema."
         instructions:
           one: "Estàs a punt de crear un nou tema i difondre'l amb la publicació que has triat."
@@ -1654,7 +1651,6 @@ ca:
           description: "Veuràs automàticament tots els temes dins aquestes categories. Et notificarem cada publicació nova a cada tema i et mostrarem un recompte de noves respostes."
         watching_first_post:
           title: "Mirant la primera publicació"
-          description: "Només et notificarem sobre la primera publicació a cada nou tema dins aquestes categories."
         tracking:
           title: "Seguint"
           description: "Automàticament observaràs tots els nous temes en aquestes categories. Se't notificarà si algú menciona el teu @nom o et respòn, i se't mostrarà un recompte de noves respostes."
@@ -2047,9 +2043,6 @@ ca:
         private_messages_short: "Mtgs"
         private_messages_title: "Missatges"
         mobile_title: "Mòbil"
-        space_free: "{{size}} gratis"
-        uploads: "actualitzacions"
-        backups: "còpies de seguretat"
         traffic_short: "Trànsit"
         traffic: "Peticions d'aplicació web"
         page_views: "Vistes de pàgina"

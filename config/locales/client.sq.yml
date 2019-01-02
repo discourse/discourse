@@ -247,7 +247,6 @@ sq:
     choose_topic:
       none_found: "Asnjë temë nuk u gjet."
       title:
-        search: "Kërko për një temë sipas titullit, adresës URL apo id:"
         placeholder: "shkruaj titullin e temës këtu"
     queue:
       topic: "Tema:"
@@ -341,7 +340,6 @@ sq:
           description: "Ju do të njoftoheni për çdo postim të ri në çdo mesazh, dhe numri i ri i përgjigjeve të reja do të tregohet."
         watching_first_post:
           title: "Postimi i parë nën vëzhgim"
-          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këtë etiketë."
         tracking:
           title: "Në gjurmim"
           description: "Ju do të njoftoheni në qoftë se dikush ju pëmend me @emri ose ju përgjigjet, gjithashtu numri i përgjigjeve të reja do të tregohet."
@@ -1272,7 +1270,6 @@ sq:
       split_topic:
         title: "Ktheje në një temë të re"
         action: "ktheje në një temë të re"
-        topic_name: "Titulli i temës së re"
         error: "Pati një gabim gjatë transfertës drejt një teme të re."
         instructions:
           one: "Jeni duke krijuar një temë të re dhe duke e populluar atë me postimin që keni përzgjedhur."
@@ -1527,7 +1524,6 @@ sq:
           title: "Në vëzhgim"
         watching_first_post:
           title: "Postimi i parë nën vëzhgim"
-          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këto kategori."
         tracking:
           title: "Në gjurmim"
         regular:
@@ -1892,9 +1888,6 @@ sq:
         private_messages_short: "Msgs"
         private_messages_title: "Mesazhet"
         mobile_title: "Mobile"
-        space_free: "{{size}} lirë"
-        uploads: "ngarkime"
-        backups: "backupe"
         traffic_short: "Trafik"
         traffic: "Kërkesat web të aplikimit"
         show_traffic_report: "Trego raportin e detajuar të trafikut"

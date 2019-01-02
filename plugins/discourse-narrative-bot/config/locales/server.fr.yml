@@ -144,7 +144,6 @@ fr:
       title: "Certificat de complétion des étapes de nouvel utilisateur"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
       hello:
-        title: ":robot: Bienvenue !"
         message: |-
           Merci de vous être inscrit à %{title}, et bienvenue !
 

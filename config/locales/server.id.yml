@@ -324,10 +324,6 @@ id:
     bookmarks:
       xaxis: "Hari"
       yaxis: "Jumlah bookmark baru"
-    starred:
-      title: "Bertanda Bintang"
-      xaxis: "Hari"
-      yaxis: "Jumlah topik berbintang baru"
     users_by_trust_level:
       title: "Pengguna per Level Kepercayaan"
       xaxis: "Level Kepercayaan"

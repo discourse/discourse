@@ -279,7 +279,6 @@ sw:
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
       title:
-        search: "Tafuta Mada kwa jina, anwani au utambulisho:"
         placeholder: "andika kichwa cha mada hapa"
     queue:
       topic: "Mada:"
@@ -453,7 +452,6 @@ sw:
           description: "Utajulishwa kuhusu kila chapisho jipya kwenye kila ujumbe, na idadi ya majibu mapya itaonyeshwa."
         watching_first_post:
           title: "Chapisho la Kwanza Linaangaliwa"
-          description: "Utajulishwa kuhusu chapisho la kwanza kwenye kila mada ndani ya kikundi hichi."
         tracking:
           title: "Inafuatiliwa"
           description: "Utajulishwa kama mtu akitaja @jina lako au akikujibu, na idadi ya majibu mapya itaonyeshwa."
@@ -1726,7 +1724,6 @@ sw:
       split_topic:
         title: "Hamisha kwenda Mada Mpya"
         action: "hamisha kwenda mada mpya"
-        topic_name: "Jina la mada mpya"
         error: "Hitilafu imetokea wakati wa kuhamisha machapisho kwenda mada mpya."
       merge_topic:
         title: "Hamisha kwenda kwenye Mada Iliyopo"
@@ -1987,7 +1984,6 @@ sw:
           description: "Utaangalia mada zote kwenye kategoria hizi. Utajulishwa kuhusiana na machapisho mapya ndani ya mada zote, na namba ya majibu itaonyeshwa."
         watching_first_post:
           title: "Chapisho la Kwanza Linaangaliwa"
-          description: "Utajulishwa kuhusu chapisho la kwanza tu kwenye kila mada ndani ya vikundi hivi."
         tracking:
           title: "Fuatilia"
           description: "Ufuatilia mada zote kwenye kategoria hizi. Utajulishwa kama mtu akitaja @jina lako au akikujibu, na namba ya majibu itaonyeshwa."
@@ -2276,7 +2272,6 @@ sw:
           description: "Otomatikali utaangalia mada zote zenye lebo hii. Utajulishwa kuhusiana na mada na machapisho mapya, pia namba za machapisho ambayo hayajasomwa na mapya itatokea pembeni ya mada."
         watching_first_post:
           title: "Chapisho la Kwanza Linaangaliwa"
-          description: "Utajulishwa kuhusu chapisho la kwanza kwenye kila mada zenye lebo hii."
         tracking:
           title: "Fuatilia"
           description: "Utafuatilia mada zote zenye lebo hizi. Namba za machapisho ambayo hayajasomwa na mapya itatokea pembeni ya mada."
@@ -2359,9 +2354,6 @@ sw:
         private_messages_short: "Ujumbe"
         private_messages_title: "Ujumbe"
         mobile_title: "Kifaa cha kiganjani"
-        space_free: "iko wazi {{size}}"
-        uploads: "vilivyopakiwa"
-        backups: "machelezo"
         lastest_backup: "Hivi karibuni: %{date}"
         traffic_short: "Utembeleaji"
         page_views: "Ukurasa Umeonwa Mara"
@@ -2980,9 +2972,6 @@ sw:
           title: "Batli ya Utafiti"
           term: "Neno"
           searches: "Utafiti"
-          click_through: "Bofya"
-          unique: "Kipekee"
-          unique_title: "watumiaji wakipekee wanaofanya utafiti"
           types:
             all_search_types: "Aina zote za matokeo"
             full_page: "Ukurasa Wote"
