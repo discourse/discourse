@@ -291,10 +291,10 @@ QUnit.test("replying to post as staff", async assert => {
   assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
 });
 
-QUnit.test("replying to post as regular user", async assert => {
+QUnit.test("replying to post as TL3 user", async assert => {
   const composerActions = selectKit(".composer-actions");
 
-  replaceCurrentUser({ staff: false, admin: false });
+  replaceCurrentUser({ staff: false, admin: false, trust_level: 3 });
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await composerActions.expand();
@@ -307,6 +307,18 @@ QUnit.test("replying to post as regular user", async assert => {
       "toggle button is not visible"
     );
   });
+});
+
+QUnit.test("replying to post as TL4 user", async assert => {
+  const composerActions = selectKit(".composer-actions");
+
+  replaceCurrentUser({ staff: false, admin: false, trust_level: 4 });
+  await visit("/t/internationalization-localization/280");
+  await click("article#post_3 button.reply");
+  await composerActions.expand();
+
+  assert.equal(composerActions.rows().length, 4);
+  assert.equal(composerActions.rowByIndex(3).value(), "toggle_topic_bump");
 });
 
 QUnit.test(
