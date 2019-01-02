@@ -88,7 +88,8 @@ describe PostMover do
       context "errors" do
 
         it "raises an error when one of the posts doesn't exist" do
-          expect { topic.move_posts(user, [1003], title: "new testing topic name") }.to raise_error(Discourse::InvalidParameters)
+          non_existent_post_id = Post.maximum(:id)&.next || 1
+          expect { topic.move_posts(user, [non_existent_post_id], title: "new testing topic name") }.to raise_error(Discourse::InvalidParameters)
         end
 
         it "raises an error and does not create a topic if no posts were moved" do
