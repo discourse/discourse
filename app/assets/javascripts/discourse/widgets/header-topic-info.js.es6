@@ -16,17 +16,18 @@ createWidget("topic-header-participant", {
 
   html(attrs) {
     const { user, group } = attrs;
-    let avatar, url;
+    let content, url;
 
     if (attrs.type === "user") {
-      avatar = avatarImg("tiny", {
+      content = avatarImg("tiny", {
         template: user.avatar_template,
         username: user.username
       });
       url = user.get("path");
     } else {
-      avatar = iconNode("users");
+      content = [iconNode("users")];
       url = Discourse.getURL(`/groups/${group.name}`);
+      content.push(h("span", group.name));
     }
 
     return h(
@@ -38,7 +39,7 @@ createWidget("topic-header-participant", {
           title: attrs.username
         }
       },
-      avatar
+      content
     );
   },
 
@@ -136,7 +137,7 @@ export default createWidget("header-topic-info", {
           participants.push(
             this.attach("topic-header-participant", {
               type: "user",
-              user: user,
+              user,
               username: user.username
             })
           );
@@ -150,7 +151,7 @@ export default createWidget("header-topic-info", {
           participants.push(
             this.attach("topic-header-participant", {
               type: "group",
-              group: group,
+              group,
               username: group.name
             })
           );
