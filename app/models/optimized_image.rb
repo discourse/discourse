@@ -318,9 +318,13 @@ class OptimizedImage < ActiveRecord::Base
     convert_with(instructions, to, opts)
   end
 
+  MAX_PNGQUANT_SIZE = 500_000
+
   def self.convert_with(instructions, to, opts = {})
     Discourse::Utils.execute_command(*instructions)
-    FileHelper.optimize_image!(to)
+
+    allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
+    FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
     true
   rescue => e
     if opts[:raise_on_error]
