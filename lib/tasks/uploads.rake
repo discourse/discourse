@@ -244,11 +244,7 @@ def migrate_to_s3
     exit 3
   end
 
-  s3 = Aws::S3::Client.new(
-    region: GlobalSetting.s3_region,
-    access_key_id: GlobalSetting.s3_access_key_id,
-    secret_access_key: GlobalSetting.s3_secret_access_key,
-  )
+  s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
 
   begin
     s3.head_bucket(bucket: GlobalSetting.s3_bucket)
