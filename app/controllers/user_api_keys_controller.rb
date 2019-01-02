@@ -87,12 +87,15 @@ class UserApiKeysController < ApplicationController
     public_key = OpenSSL::PKey::RSA.new(params[:public_key])
     @payload = Base64.encode64(public_key.public_encrypt(@payload))
 
-    (redirect_to("#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}") && return) if params[:auth_redirect]
-    respond_to do |format|
-      format.html { render :show }
-      format.json do
-        instructions = I18n.t("user_api_key.instructions", application_name: @application_name)
-        render json: { payload: @payload, instructions: instructions }
+    if params[:auth_redirect]
+      redirect_to("#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}")
+    else
+      respond_to do |format|
+        format.html { render :show }
+        format.json do
+          instructions = I18n.t("user_api_key.instructions", application_name: @application_name)
+          render json: { payload: @payload, instructions: instructions }
+        end
       end
     end
   end
