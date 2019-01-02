@@ -14,7 +14,7 @@
     }
 
     .select-kit-body {
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px solid $primary-low;
       background-clip: padding-box;
       box-shadow: shadow("dropdown");
       max-width: 300px;
