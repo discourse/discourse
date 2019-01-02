@@ -2620,7 +2620,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
       end
 
-      [:user, :trust_level_4].each do |user|
+      [:user].each do |user|
         it "denies access for #{user}" do
           sign_in(Fabricate(user))
           put "/t/#{topic.id}/reset-bump-date.json"
@@ -2635,7 +2635,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    [:admin, :moderator].each do |user|
+    [:admin, :moderator, :trust_level_4].each do |user|
       it "should reset bumped_at as #{user}" do
         sign_in(Fabricate(user))
         topic = Fabricate(:topic, bumped_at: 1.hour.ago)
