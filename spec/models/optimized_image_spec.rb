@@ -201,6 +201,32 @@ describe OptimizedImage do
 
   describe ".create_for" do
 
+    context "versioning" do
+      let(:filename) { 'logo.png' }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "is able to update optimized images on version change" do
+        upload = UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+        optimized = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized.version).to eq(OptimizedImage::VERSION)
+
+        optimized_again = OptimizedImage.create_for(upload, 10, 10)
+        expect(optimized_again.id).to eq(optimized.id)
+
+        optimized.update_columns(version: nil)
+        old_id = optimized.id
+
+        optimized_new = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized_new.id).not_to eq(old_id)
+
+        # cleanup (which transaction rollback may miss)
+        optimized_new.destroy
+        upload.destroy
+      end
+    end
+
     it "is able to 'optimize' an svg" do
       # we don't really optimize anything, we simply copy
       # but at least this confirms this actually works

@@ -7,7 +7,7 @@ class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
   # BUMP UP if optimized image algorithm changes
-  VERSION = 1
+  VERSION = 2
 
   def self.lock(upload_id, width, height)
     @hostname ||= `hostname`.strip rescue "unknown"
@@ -43,7 +43,7 @@ class OptimizedImage < ActiveRecord::Base
     thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
     # correct bad thumbnail if needed
-    if thumbnail && thumbnail.url.blank?
+    if thumbnail && (thumbnail.url.blank? || thumbnail.version != VERSION)
       thumbnail.destroy!
       thumbnail = nil
     end
@@ -94,7 +94,8 @@ class OptimizedImage < ActiveRecord::Base
             width: width,
             height: height,
             url: "",
-            filesize: File.size(temp_path)
+            filesize: File.size(temp_path),
+            version: VERSION
           )
 
           # store the optimized image and update its url
