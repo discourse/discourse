@@ -4052,6 +4052,11 @@ en:
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
     minimum_required_tags: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    forbidden:
+      in_this_category: "\"%{tag_name}\" cannot be used in this category"
+      restricted_to:
+        one: "\"%{tag_name}\" is restricted to the \"%{category_names}\" category"
+        other: "\"%{tag_name}\" is restricted to the following categories: %{category_names}"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
