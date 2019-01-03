@@ -9,60 +9,52 @@ class PostActionsController < ApplicationController
   def create
     raise Discourse::NotFound if @post.blank?
 
-    taken = PostAction.counts_for([@post], current_user)[@post.id]
-
-    guardian.ensure_post_can_act!(
+    creator = PostActionCreator.new(
+      current_user,
       @post,
-      PostActionType.types[@post_action_type_id],
-      opts: {
-        is_warning: params[:is_warning],
-        taken_actions: taken
-      }
+      @post_action_type_id,
+      is_warning: params[:is_warning],
+      message: params[:message],
+      take_action: params[:take_action] == 'true',
+      flag_topic: params[:flag_topic] == 'true'
     )
+    result = creator.perform
 
-    args = {}
-    args[:message] = params[:message] if params[:message].present?
-    args[:is_warning] = params[:is_warning] if params[:is_warning].present? && guardian.is_staff?
-    args[:take_action] = true if guardian.is_staff? && params[:take_action] == 'true'
-    args[:flag_topic] = true if params[:flag_topic] == 'true'
-
-    begin
-      post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
-    rescue PostAction::FailedToCreatePost => e
-      return render_json_error(e.message)
-    end
-
-    if post_action.blank? || post_action.errors.present?
-      render_json_error(post_action)
+    if result.failed?
+      render_json_error(result)
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
 
       if @post_action_type_id == PostActionType.types[:like]
-        limiter = post_action.post_action_rate_limiter
+        limiter = result.post_action.post_action_rate_limiter
         response.headers['Discourse-Actions-Remaining'] = limiter.remaining.to_s
         response.headers['Discourse-Actions-Max'] = limiter.max.to_s
       end
-      render_post_json(@post, _add_raw = false)
+      render_post_json(@post, add_raw: false)
     end
   end
 
   def destroy
-    post_action = current_user.post_actions.find_by(post_id: params[:id].to_i, post_action_type_id: @post_action_type_id, deleted_at: nil)
-    raise Discourse::NotFound if post_action.blank?
+    result = PostActionDestroyer.new(
+      current_user,
+      Post.find_by(id: params[:id].to_i),
+      @post_action_type_id
+    ).perform
 
-    guardian.ensure_can_delete!(post_action)
-
-    PostAction.remove_act(current_user, @post, post_action.post_action_type_id)
-
-    @post.reload
-    render_post_json(@post, _add_raw = false)
+    if result.failed?
+      render_json_error(result)
+    else
+      render_post_json(result.post, add_raw: false)
+    end
   end
 
   def defer_flags
     guardian.ensure_can_defer_flags!(@post)
 
-    PostAction.defer_flags!(@post, current_user)
+    if reviewable = @post.reviewable_flag
+      reviewable.perform(current_user, :ignore)
+    end
 
     render json: { success: true }
   end

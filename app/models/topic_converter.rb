@@ -25,20 +25,7 @@ class TopicConverter
       @topic.save
       update_user_stats
       update_category_topic_count_by(1)
-
-      # TODO: Every post in a PRIVATE MESSAGE looks the same: each is a UserAction::NEW_PRIVATE_MESSAGE.
-      #       So we need to remove all those user actions and re-log all the posts.
-      #       Post counting depends on the correct UserActions (NEW_TOPIC, REPLY), so once a private topic
-      #       becomes a public topic, post counts are wrong. The reverse is not so bad because
-      #       we don't count NEW_PRIVATE_MESSAGE in any public stats.
-      #       TBD: why do so many specs fail with this change?
-
-      # UserAction.where(target_topic_id: @topic.id, action_type: [UserAction::GOT_PRIVATE_MESSAGE, UserAction::NEW_PRIVATE_MESSAGE]).find_each do |ua|
-      #   UserAction.remove_action!(ua.attributes.symbolize_keys.slice(:action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id))
-      # end
-      # @topic.posts.each do |post|
-      #   UserActionCreator.log_post(post) unless post.post_number == 1
-      # end
+      Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
 
       watch_topic(topic)
     end
@@ -52,6 +39,7 @@ class TopicConverter
       @topic.archetype = Archetype.private_message
       add_allowed_users
       @topic.save!
+      Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       watch_topic(topic)
     end
     @topic

@@ -3,9 +3,6 @@
     <ul class="nav nav-pills">
       {{nav-item route='adminUsersList.show' routeParam='active' label='admin.users.nav.active'}}
       {{nav-item route='adminUsersList.show' routeParam='new' label='admin.users.nav.new'}}
-      {{#if siteSettings.must_approve_users}}
-        {{nav-item route='adminUsersList.show' routeParam='pending' label='admin.users.nav.pending'}}
-      {{/if}}
       {{nav-item route='adminUsersList.show' routeParam='staff' label='admin.users.nav.staff'}}
       {{nav-item route='adminUsersList.show' routeParam='suspended' label='admin.users.nav.suspended'}}
       {{nav-item route='adminUsersList.show' routeParam='silenced' label='admin.users.nav.silenced'}}

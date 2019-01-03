@@ -523,7 +523,7 @@ module DiscourseNarrativeBot
     end
 
     def like_post(post)
-      PostAction.act(self.discobot_user, post, PostActionType.types[:like])
+      PostActionCreator.like(self.discobot_user, post)
     end
 
     def welcome_topic

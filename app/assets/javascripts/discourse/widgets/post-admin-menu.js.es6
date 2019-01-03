@@ -6,10 +6,7 @@ createWidget(
   "post-admin-menu-button",
   jQuery.extend(ButtonClass, {
     tagName: "li.btn",
-    click() {
-      this.sendWidgetAction("closeAdminMenu");
-      return this.sendWidgetAction(this.attrs.action);
-    }
+    secondaryAction: "closeAdminMenu"
   })
 );
 
@@ -23,8 +20,8 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     contents.push({
       icon: "list",
       className: "btn-default",
-      label: "admin.flags.moderation_history",
-      action: "showModerationHistory"
+      label: "review.moderation_history",
+      url: `/review?topic_id=${attrs.topicId}&status=all`
     });
   }
 

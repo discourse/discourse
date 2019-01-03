@@ -7,7 +7,7 @@ export default Ember.Mixin.create(ModalFunctionality, {
   postEdit: null,
   postAction: null,
   user: null,
-  post: null,
+  postId: null,
   successCallback: null,
 
   resetModal() {
@@ -15,7 +15,7 @@ export default Ember.Mixin.create(ModalFunctionality, {
       reason: null,
       message: null,
       loadingUser: true,
-      post: null,
+      postId: null,
       postEdit: null,
       postAction: "delete",
       before: null,

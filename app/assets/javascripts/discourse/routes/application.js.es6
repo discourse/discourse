@@ -52,10 +52,10 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     postWasEnqueued(details) {
-      const title = details.reason
-        ? "queue_reason." + details.reason + ".title"
-        : "queue.approval.title";
-      showModal("post-enqueued", { model: details, title });
+      showModal("post-enqueued", {
+        model: details,
+        title: "review.approval.title"
+      });
     },
 
     composePrivateMessage(user, post) {

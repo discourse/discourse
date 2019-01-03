@@ -33,10 +33,11 @@ class SpamRule::FlagSockpuppets
 
   def flag_sockpuppet_users
     message = I18n.t('flag_reason.sockpuppet', ip_address: @post.user.ip_address, base_path: Discourse.base_path)
-    PostAction.act(Discourse.system_user, @post, PostActionType.types[:spam], message: message) rescue PostAction::AlreadyActed
+
+    PostActionCreator.create(Discourse.system_user, @post, :spam, message: message)
 
     if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(:new_user?)
-      PostAction.act(Discourse.system_user, first_post, PostActionType.types[:spam], message: message) rescue PostAction::AlreadyActed
+      PostActionCreator.create(Discourse.system_user, first_post, :spam, message: message)
     end
   end
 

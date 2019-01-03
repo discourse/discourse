@@ -10,7 +10,7 @@ describe PostAction do
     expect(events.map { |e| e[:event_name] }).to_not include(:flag_reviewed)
 
     flagged_post = Fabricate(:post)
-    PostAction.act(admin, flagged_post, PostActionType.types[:spam])
+    PostActionCreator.spam(admin, flagged_post)
     events = DiscourseEvent.track_events { PostDestroyer.new(admin, flagged_post).destroy }
     expect(events.map { |e| e[:event_name] }).to include(:flag_reviewed)
   end

@@ -1,0 +1,23 @@
+{{#if filteredHistories}}
+  <table class='reviewable-histories'>
+    <tr>
+      <th colspan="3">{{i18n "review.history.title"}}</th>
+    </tr>
+    {{#each filteredHistories as |rh|}}
+      {{#unless rh.created}}
+        <tr>
+          <td>{{format-date rh.created_at format="medium"}}</td>
+          <td>
+            {{#user-link user=rs.user}}
+              {{avatar rh.created_by imageSize="tiny"}}
+              {{rh.created_by.username}}
+            {{/user-link}}
+          </td>
+          <td>
+            {{reviewable-history-description rh}}
+          </td>
+        </tr>
+      {{/unless}}
+    {{/each}}
+  </table>
+{{/if}}
