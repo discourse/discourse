@@ -182,6 +182,7 @@ export default ComboBox.extend(TagsMixin, {
     let results = json.results;
 
     context.set("termMatchesForbidden", json.forbidden ? true : false);
+    context.set("termMatchErrorMessage", json.forbidden_message);
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
       results = results.sort((a, b) => a.id > b.id);
