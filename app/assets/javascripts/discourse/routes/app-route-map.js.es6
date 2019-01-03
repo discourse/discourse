@@ -125,7 +125,6 @@ export default function() {
       );
 
       this.route("badges");
-      this.route("flaggedPosts", { path: "/flagged-posts" });
       this.route("deletedPosts", { path: "/deleted-posts" });
 
       this.route(
@@ -169,6 +168,11 @@ export default function() {
     }
   );
 
+  this.route("review", { path: "/review" }, function() {
+    this.route("show", { path: "/:reviewable_id" });
+    this.route("index", { path: "/" });
+    this.route("topics", { path: "/topics" });
+  });
   this.route("signup", { path: "/signup" });
   this.route("login", { path: "/login" });
   this.route("login-preferences");
@@ -186,8 +190,6 @@ export default function() {
   this.route("badges", { resetNamespace: true }, function() {
     this.route("show", { path: "/:id/:slug" });
   });
-
-  this.route("queued-posts", { path: "/queued-posts", resetNamespace: true });
 
   this.route("full-page-search", { path: "/search" });
 

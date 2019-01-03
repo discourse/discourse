@@ -310,7 +310,7 @@ EOM
       post = Post.find_by(id: post_id_from_imported_post_id("thread-#{like['postid']}"))
       user = User.find_by(id: user_id_from_imported_user_id(like["userid"]))
       begin
-        PostAction.act(user, post, 2) if user && post
+        PostActionCreator.like(user, post) if user && post
       rescue => e
         puts "error acting on post #{e}"
       end

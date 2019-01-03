@@ -222,7 +222,6 @@ en:
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
-    flags_title: "Flags"
     show_more: "show more"
     show_help: "options"
     links: "Links"
@@ -359,23 +358,67 @@ en:
         search: "Search for a Message by title:"
         placeholder: "type the message title here"
 
-    queue:
-      topic: "Topic:"
-      approve: "Approve"
-      reject: "Reject"
-      delete_user: "Delete User"
-      title: "Needs Approval"
-      none: "There are no posts to review."
-      edit: "Edit"
-      cancel: "Cancel"
-      view_pending: "view pending posts"
-      has_pending_posts:
+    review:
+      view_all: "view all"
+      grouped_by_topic: "grouped by topic"
+      none: "There is nothing to review right now."
+      view_pending: "view pending"
+      topic_has_pending:
         one: "This topic has <b>1</b> post awaiting approval"
         other: "This topic has <b>{{count}}</b> posts awaiting approval"
+      title: "Needs Review"
+      topic: "Topic:"
+      filtered_topic: "You have filtered to reviewable content in a single topic."
+      remove_filter: "remove filter"
+      topics:
+        topic: "Topic"
+        reviewable_count: "Reviewable Count"
+        reported_by: "Reported by"
+        details: "details"
+        unique_users:
+          one: "1 user"
+          other: "{{count}} users"
+      topic_replies:
+        one: "(1 reply)"
+        other: "({{count}} replies)"
+      edit: "Edit"
+      save: "Save"
+      cancel: "Cancel"
+      new_topic: "New Topic:"
 
-      confirm: "Save Changes"
-      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and IP address."
+      filters:
+        type:
+          title: "Type:"
+          all: "(all types)"
+        minimum_score: "Minimum Score:"
+        refresh: "Refresh"
+        status: "Status:"
+        category: "Category:"
+      conversation:
+        view_full: "view full conversation"
+      scores:
+        description: "Description"
+        score: "Score"
+      statuses:
+        pending:
+          title: "Pending"
+        approved:
+          title: "Approved"
+        rejected:
+          title: "Rejected"
+        ignored:
+          title: "Ignored"
+        reviewed:
+          title: "(All Reviewed)"
 
+      types:
+        reviewable_flagged_post:
+          title: 'Flagged Post'
+          flagged_by: "Flagged By"
+        reviewable_queued_post:
+          title: 'Queued Post'
+        reviewable_user:
+          title: 'User'
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -2980,102 +3023,6 @@ en:
         latest_changes: "Latest changes: please update often!"
         by: "by"
 
-      flags:
-        title: "Flags"
-        active_posts: "Flagged Posts"
-        old_posts: "Old Flagged Posts"
-        topics: "Flagged Topics"
-        moderation_history: "Moderation History"
-
-        agree: "Agree"
-        agree_title: "Confirm this flag as valid and correct"
-        agree_flag_hide_post: "Hide Post"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
-        agree_flag_restore_post: "Agree and Restore Post"
-        agree_flag_restore_post_title: "Restore the post so that all users can see it."
-        agree_flag_suspend: "Suspend User"
-        agree_flag_suspend_title: "Agree with flag and suspend the user."
-        agree_flag_silence: "Silence User"
-        agree_flag_silence_title: "Agree with flag and silence the user."
-
-        agree_flag: "Keep Post"
-        agree_flag_title: "Agree with flag and keep the post unchanged."
-        ignore_flag: "Ignore"
-        ignore_flag_title: "Remove this flag; it requires no action at this time."
-        delete: "Delete"
-        delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete Post and Ignore flag"
-        delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Delete Post and Agree with flag"
-        delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
-        delete_flag_modal_title: "Delete and..."
-        delete_spammer: "Delete Spammer"
-        delete_spammer_title: "Remove the user and all posts and topics by this user."
-        disagree_flag_unhide_post: "Disagree (unhide post)"
-        disagree_flag_unhide_post_title: "Remove any flags from this post and make the post visible again"
-        disagree_flag: "Disagree"
-        disagree_flag_title: "Deny this flag as invalid or incorrect"
-        clear_topic_flags: "Done"
-        clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
-        more: "(more replies...)"
-        suspend_user: "Suspend User"
-        suspend_user_title: "Suspend user for this post"
-        replies:
-          one: "[1 reply]"
-          other: "[%{count} replies]"
-        delete_replies:
-          one: "Also delete the %{count} reply to this post?"
-          other: "Also delete the %{count} replies to this post?"
-
-        dispositions:
-          agreed: "agreed"
-          disagreed: "disagreed"
-          deferred: "ignored"
-
-        flagged_by: "Flagged by"
-        resolved_by: "Resolved by"
-        took_action: "Took action"
-        system: "System"
-        error: "Something went wrong"
-        reply_message: "Reply"
-        no_results: "There are no flagged posts."
-        topic_flagged: "This <strong>topic</strong> has been flagged."
-        show_full: "show full post"
-        visit_topic: "Visit the topic to take action"
-        was_edited: "Post was edited after the first flag"
-        previous_flags_count: "This post has already been flagged {{count}} times."
-        show_details: "Show flag details"
-
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flags)"
-          agreed:
-            one: "{{count}}% agree"
-            other: "{{count}}% agree"
-          disagreed:
-            one: "{{count}}% disagree"
-            other: "{{count}}% disagree"
-          ignored:
-            one: "{{count}}% ignore"
-            other: "{{count}}% ignore"
-
-        details: "details"
-
-        flagged_topics:
-          topic: "Topic"
-          type: "Type"
-          users: "Users"
-          last_flagged: "Last Flagged"
-          no_results: "There are no flagged topics."
-
-        short_names:
-          off_topic: "off-topic"
-          inappropriate: "inappropriate"
-          spam: "spam"
-          notify_user: "custom"
-          notify_moderators: "custom"
-
       groups:
         new:
           title: "New Group"
@@ -3791,19 +3738,12 @@ en:
         nav:
           new: "New"
           active: "Active"
-          pending: "Pending"
           staff: "Staff"
           suspended: "Suspended"
           silenced: "Silenced"
           suspect: "Suspect"
           staged: "Staged"
         approved: "Approved?"
-        approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
-        reject_selected:
-          one: "reject user"
-          other: "reject users ({{count}})"
         titles:
           active: "Active Users"
           new: "New Users"
@@ -3820,12 +3760,6 @@ en:
           suspended: "Suspended Users"
           suspect: "Suspect Users"
           staged: "Staged Users"
-        reject_successful:
-          one: "Successfully rejected 1 user."
-          other: "Successfully rejected %{count} users."
-        reject_failures:
-          one: "Failed to reject 1 user."
-          other: "Failed to reject %{count} users."
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"

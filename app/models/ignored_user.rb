@@ -7,11 +7,11 @@ end
 #
 # Table name: ignored_users
 #
-#  id            :integer          not null, primary key
-#  user_id       :integer          not null
+#  id              :bigint(8)        not null, primary key
+#  user_id         :integer          not null
 #  ignored_user_id :integer          not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

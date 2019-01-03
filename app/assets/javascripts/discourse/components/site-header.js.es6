@@ -421,8 +421,7 @@ function applyFlaggedProperties() {
   });
 }
 
-addFlagProperty("currentUser.site_flagged_posts_count");
-addFlagProperty("currentUser.post_queue_new_count");
+addFlagProperty("currentUser.reviewable_count");
 
 export { addFlagProperty, applyFlaggedProperties };
 

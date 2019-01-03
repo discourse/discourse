@@ -5,6 +5,7 @@ require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 require_dependency 'topic_publisher'
+require_dependency 'post_action_destroyer'
 
 class TopicsController < ApplicationController
   requires_login only: [
@@ -430,7 +431,7 @@ class TopicsController < ApplicationController
       .where(user_id: current_user.id)
       .where('topic_id = ?', topic.id).each do |pa|
 
-      PostAction.remove_act(current_user, pa.post, PostActionType.types[:bookmark])
+      PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
     end
 
     render body: nil
@@ -483,9 +484,8 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    guardian.ensure_can_see!(first_post)
-
-    PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
+    result = PostActionCreator.create(current_user, first_post, :bookmark)
+    return render_json_error(result) if result.failed?
 
     render body: nil
   end

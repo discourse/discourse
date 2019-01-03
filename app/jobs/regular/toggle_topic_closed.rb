@@ -15,7 +15,7 @@ module Jobs
       user = topic_timer.user
 
       if Guardian.new(user).can_close?(topic)
-        if state == false && PostAction.auto_close_threshold_reached?(topic)
+        if state == false && topic.auto_close_threshold_reached?
           topic.set_or_create_timer(
             TopicTimer.types[:open],
             SiteSetting.num_hours_to_close_topic,

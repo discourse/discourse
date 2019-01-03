@@ -192,11 +192,9 @@ module PostGuardian
   end
 
   def can_delete_post_action?(post_action)
-    # You can only undo your own actions
-    is_my_own?(post_action) && not(post_action.is_private_message?) &&
-
-    # Make sure they want to delete it within the window
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+    is_my_own?(post_action) &&
+      !post_action.is_private_message? &&
+      post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
   def can_see_post?(post)

@@ -1,18 +1,15 @@
-import storePretender from "helpers/store-pretender";
-import fixturePretender from "helpers/fixture-pretender";
-import flagPretender from "helpers/flag-pretender";
-
 export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
     const firstSeg = decodeURIComponent(item[0]);
-    const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
+    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
 
     const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
     if (m) {
-      result[m[1]] = result[m[1]] || {};
-      result[m[1]][m[2]] = val;
+      let key = m[1];
+      result[key] = result[key] || {};
+      result[key][m[2].replace("][", ".")] = val;
     } else {
       result[firstSeg] = val;
     }
@@ -38,9 +35,16 @@ export let fixturesByUrl;
 
 export default function() {
   const server = new Pretender(function() {
-    storePretender.call(this, helpers);
-    flagPretender.call(this, helpers);
-    fixturesByUrl = fixturePretender.call(this, helpers);
+    // Autoload any `*-pretender` files
+    Object.keys(requirejs.entries).forEach(e => {
+      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      if (m && m[1] !== "create") {
+        let result = requirejs(e).default.call(this, helpers);
+        if (m[1] === "fixture") {
+          fixturesByUrl = result;
+        }
+      }
+    });
 
     this.get("/admin/plugins", () => response({ plugins: [] }));
 

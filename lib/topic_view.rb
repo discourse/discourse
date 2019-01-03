@@ -383,7 +383,7 @@ class TopicView
   end
 
   def all_active_flags
-    @all_active_flags ||= PostAction.active_flags_counts_for(@posts)
+    @all_active_flags ||= ReviewableFlaggedPost.counts_for(@posts)
   end
 
   def links

@@ -809,7 +809,7 @@ describe Guardian do
 
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_falsey
 
-        PostAction.act(user, first_post, PostActionType.types[:off_topic])
+        PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
       end
     end

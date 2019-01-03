@@ -1,10 +1,3 @@
-{{#if hasSelection}}
-  <div id='selected-controls'>
-    <button {{action "approveUsers"}} class='btn'>{{count-i18n key="admin.users.approved_selected" count=selectedCount}}</button>
-    <button {{action "rejectUsers"}}  class='btn btn-danger'>{{count-i18n key="admin.users.reject_selected" count=selectedCount}}</button>
-  </div>
-{{/if}}
-
 <div class="admin-title">
   <h2>{{title}}</h2>
   {{#if canCheckEmails}}
@@ -20,9 +13,6 @@
   {{#if model}}
     <table class='table users-list grid'>
       <thead>
-        {{#if showApproval}}
-          <th>{{input type="checkbox" checked=selectAll}}</th>
-        {{/if}}
         <th>{{i18n 'username'}}</th>
         <th class='email-heading'>{{i18n 'email'}}</th>
         <th>{{i18n 'admin.users.last_emailed'}}</th>
@@ -31,7 +21,7 @@
         {{admin-directory-toggle field="posts_read" i18nKey="admin.user.posts_read_count" order=order ascending=ascending}}
         {{admin-directory-toggle field="read_time" i18nKey="admin.user.time_read" order=order ascending=ascending}}
         {{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}
-        {{#if showApproval}}
+        {{#if siteSettings.must_approve_users}}
           <th>{{i18n 'admin.users.approved'}}</th>
         {{/if}}
         <th>&nbsp;</th>
@@ -39,13 +29,6 @@
       <tbody>
         {{#each model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
-            {{#if showApproval}}
-            <td class="approval">
-              {{#if user.can_approve}}
-                {{input type="checkbox" checked=user.selected}}
-              {{/if}}
-            </td>
-            {{/if}}
             <td class="username">
               <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">
                 {{avatar user imageSize="small"}}
@@ -84,15 +67,10 @@
               <div>{{{format-duration user.created_at_age}}}</div>
             </td>
 
-            {{#if showApproval}}
-              <td>
-                {{#if user.approved}}
-                  {{i18n 'yes_value'}}
-                {{else}}
-                  {{i18n 'no_value'}}
-                {{/if}}
-              </td>
+            {{#if siteSettings.must_approve_users}}
+              <td>{{i18n-yes-no user.approved}}</td>
             {{/if}}
+
             <td class="user-status">
               {{#if user.admin}}
                 {{d-icon "shield-alt" title="admin.title" }}

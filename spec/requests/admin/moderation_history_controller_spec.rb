@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Admin::BackupsController do
+RSpec.describe Admin::ModerationHistoryController do
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -36,10 +36,10 @@ RSpec.describe Admin::BackupsController do
     end
 
     it 'includes post approval record' do
-      queued_post = Fabricate(:queued_post)
-      post = queued_post.approve!(Discourse.system_user)
+      reviewable = Fabricate(:reviewable_queued_post)
+      result = reviewable.perform(Discourse.system_user, :approve)
 
-      get "/admin/moderation_history.json?filter=post&post_id=#{post.id}"
+      get "/admin/moderation_history.json?filter=post&post_id=#{result.created_post.id}"
 
       expect(response.status).to eq(200)
 

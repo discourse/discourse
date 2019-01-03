@@ -1,0 +1,71 @@
+<div class='created-by'>
+  {{#user-link user=reviewable.target_created_by}}
+    {{avatar reviewable.target_created_by imageSize="large"}}
+  {{/user-link}}
+</div>
+
+<div class='post-contents'>
+  <div class='names'>
+    <span class="username">
+      {{#user-link user=reviewable.target_created_by}}
+        {{reviewable.target_created_by.username}}
+      {{/user-link}}
+    </span>
+  </div>
+
+  {{reviewable-topic-link topic=reviewable.topic}}
+
+  <div class='post-body'>
+    {{{reviewable.cooked}}}
+  </div>
+
+  {{#if reviewable.payload.tags}}
+    <div class="list-tags">
+      {{#each reviewable.payload.tags as |t|}}
+        {{discourse-tag t}}
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if reviewable.reviewable_scores}}
+    <table class='reviewable-scores'>
+      <tr>
+        <th class='user'>{{i18n "review.types.reviewable_flagged_post.flagged_by"}}</th>
+        <th>{{i18n "review.scores.description"}}</th>
+        <th>{{i18n "review.scores.score"}}</th>
+      </tr>
+      {{#each reviewable.reviewable_scores as |rs|}}
+        <tr class='reviewable-score'>
+          <td class='user'>
+            {{#user-link user=rs.user}}
+              {{avatar rs.user imageSize="tiny"}}
+              {{rs.user.username}}
+            {{/user-link}}
+            {{user-flag-percentage
+              agreed=rs.agree_stats.agreed
+              disagreed=rs.agree_stats.disagreed
+              ignored=rs.agree_stats.ignored}}
+          </td>
+          <td>{{rs.score_type.title}}</td>
+          <td>{{format-score rs.score}}</td>
+        </tr>
+        {{#if rs.reviewable_conversation}}
+          <tr>
+            <td colspan='3'>
+              <div class='reviewable-conversation'>
+                {{#each rs.reviewable_conversation.conversation_posts as |p|}}
+                  {{reviewable-conversation-post post=p}}
+                {{/each}}
+                <div class='controls'>
+                  <a href={{rs.reviewable_conversation.permalink}} class='btn btn-small'>
+                    {{i18n "review.conversation.view_full"}}
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {{/if}}
+      {{/each}}
+    </table>
+  {{/if}}
+</div>

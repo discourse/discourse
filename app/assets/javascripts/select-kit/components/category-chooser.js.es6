@@ -116,6 +116,12 @@ export default ComboBoxComponent.extend({
     }
   },
 
+  didClearSelection() {
+    if (this.attrs.onChooseCategory) {
+      this.attrs.onChooseCategory(null);
+    }
+  },
+
   computeContent() {
     return this.categoriesByScope(this.get("scopedCategoryId"));
   },

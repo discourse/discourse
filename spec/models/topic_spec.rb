@@ -776,10 +776,11 @@ describe Topic do
     end
 
     context "user actions" do
-      let(:actions) { topic.user.user_actions }
-
       it "should set up actions correctly" do
-        UserActionCreator.enable
+        UserActionManager.enable
+
+        post = create_post(archetype: 'private_message', target_usernames: [Fabricate(:coding_horror).username])
+        actions = post.user.user_actions
 
         expect(actions.map { |a| a.action_type }).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map { |a| a.action_type }).to include(UserAction::NEW_PRIVATE_MESSAGE)

@@ -1,3 +1,4 @@
+
 .flagged-post.hidden-post {
   .flagged-post-excerpt,
   .flagged-post-avatar {
@@ -113,25 +114,6 @@
     .flag-user-extra {
       display: flex;
       align-items: center;
-
-      .user-flag-percentage {
-        display: flex;
-        align-items: center;
-        margin-left: 0.5em;
-
-        .percentage-label {
-          margin-right: 0.25em;
-          &.agreed {
-            color: $success;
-          }
-          &.disagreed {
-            color: $danger;
-          }
-          &.ignored {
-            color: $primary-medium;
-          }
-        }
-      }
     }
   }
 

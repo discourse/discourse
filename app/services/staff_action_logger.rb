@@ -554,27 +554,27 @@ class StaffActionLogger
   end
 
   def log_post_approved(post, opts = {})
-    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    raise Discourse::InvalidParameters.new(:post) unless post.is_a?(Post)
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:post_approved],
       post_id: post.id
     ))
   end
 
-  def log_post_rejected(rejected_post, opts = {})
-    raise Discourse::InvalidParameters.new(:rejected_post) unless rejected_post && rejected_post.is_a?(QueuedPost)
+  def log_post_rejected(reviewable, rejected_at, opts = {})
+    raise Discourse::InvalidParameters.new(:rejected_post) unless reviewable.is_a?(Reviewable)
 
-    topic = rejected_post.topic || Topic.with_deleted.find_by(id: rejected_post.topic_id)
+    topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t('staff_action_logs.not_found')
-    username = rejected_post.user&.username || I18n.t('staff_action_logs.unknown')
-    name = rejected_post.user&.name || I18n.t('staff_action_logs.unknown')
+    username = reviewable.created_by.username || I18n.t('staff_action_logs.unknown')
+    name = reviewable.created_by.name || I18n.t('staff_action_logs.unknown')
 
     details = [
-      "created_at: #{rejected_post.created_at}",
-      "rejected_at: #{rejected_post.rejected_at}",
+      "created_at: #{reviewable.created_at}",
+      "rejected_at: #{rejected_at}",
       "user: #{username} (#{name})",
       "topic: #{topic_title}",
-      "raw: #{rejected_post.raw}",
+      "raw: #{reviewable.payload['raw']}",
     ]
 
     UserHistory.create!(params(opts).merge(

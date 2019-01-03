@@ -205,6 +205,7 @@ export default ComboBox.extend(TagsMixin, {
     // TODO: FIX buffered-proxy.js to support arrays
     this.get("tags").removeObjects(tags);
     this.set("tags", this.get("tags").slice(0));
+    this._tagsChanged();
 
     this.set(
       "searchDebounce",
@@ -216,9 +217,17 @@ export default ComboBox.extend(TagsMixin, {
     this.destroyTags(tags);
   },
 
+  _tagsChanged() {
+    if (this.attrs.onChangeTags) {
+      this.attrs.onChangeTags({ target: { value: this.get("tags") } });
+    }
+  },
+
   actions: {
     onSelect(tag) {
       this.set("tags", makeArray(this.get("tags")).concat(tag));
+      this._tagsChanged();
+
       this._prepareSearch(this.get("filter"));
       this.autoHighlight();
     },
