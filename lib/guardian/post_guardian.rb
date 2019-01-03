@@ -267,6 +267,6 @@ module PostGuardian
   end
 
   def can_skip_bump?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 end
