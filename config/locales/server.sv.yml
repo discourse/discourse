@@ -703,7 +703,6 @@ sv:
     polling_interval: "När long polling inte är aktiverat, hur ofta bör inloggade klienter polla i millisekunder"
     anon_polling_interval: "Hur ofta bör anonyma klienter polla i millisekunder"
     background_polling_interval: "Hur ofta bör klienter polla i millisekunder (när fönstret är i bakgrunden)"
-    flags_required_to_hide_post: "Antal flaggor som orsakar att ett inlägg automatiskt döljs och skickar ett meddelande till användaren (ange 0 för att det aldrig ska hända)"
     cooldown_minutes_after_hiding_posts: "Antal minuter en användare måste vänta innan de kan redigera ett inlägg som dolt på grund av flaggningar från användare"
     max_topics_in_first_day: "Högsta antal ämnen en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"
     max_replies_in_first_day: "Högsta antal svar en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"

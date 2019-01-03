@@ -1097,7 +1097,6 @@ zh_TW:
     polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
-    flags_required_to_hide_post: "一個帖子累計多少個標記之後會被自動隱藏，並向帖子作者發送私信通知（0 為從不）"
     cooldown_minutes_after_hiding_posts: "如果一個文章因為標記而隱藏，用戶需要等待多少分鐘才能編輯該文章"
     max_topics_in_first_day: "新用戶在24小時內在發表第一帖後允許創建的主題數"
     max_replies_in_first_day: "新用戶在24小時內在發表第一帖後允許創建的回覆數"

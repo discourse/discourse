@@ -26,12 +26,15 @@ class UserDestroyer
     optional_transaction(open_transaction: opts[:transaction]) do
 
       Draft.where(user_id: user.id).delete_all
-      QueuedPost.where(user_id: user.id).delete_all
+      Reviewable.where(created_by_id: user.id).delete_all
 
       if opts[:delete_posts]
         user.posts.each do |post|
+
           # agree with flags
-          PostAction.agree_flags!(post, @actor) if opts[:delete_as_spammer]
+          if opts[:delete_as_spammer] && reviewable = post.reviewable_flag
+            reviewable.perform(@actor, :agree_and_keep)
+          end
 
           # block all external urls
           if opts[:block_urls]

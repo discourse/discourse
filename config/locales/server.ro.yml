@@ -760,7 +760,6 @@ ro:
     polling_interval: "Atunci când nu se face long polling, cât de des ar trebui clienții autentificați să facă interogări, în milisecunde."
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
-    flags_required_to_hide_post: "Număr de marcaje de avertizare care fac ca o postare să fie automat ascunsă și utilizatorului să îi fie trimis automat un mesaj (0 pentru niciodată)"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pe care un utilizator trebuie să le aștepte până când va putea edita o postare ascunsă prin marcaje de avertizare ale comunității."
     max_topics_in_first_day: "Numărul maxim de subiecte pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
     max_replies_in_first_day: "Numărul maxim de răspunsuri pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"

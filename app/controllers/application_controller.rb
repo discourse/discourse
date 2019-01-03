@@ -600,7 +600,16 @@ class ApplicationController < ActionController::Base
     opts = { status: opts } if opts.is_a?(Integer)
     opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
 
-    render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
+    render(
+      json: MultiJson.dump(create_errors_json(obj, opts)),
+      status: opts[:status] || status_code(obj)
+    )
+  end
+
+  def status_code(obj)
+    return 403 if obj.try(:forbidden)
+    return 404 if obj.try(:not_found)
+    422
   end
 
   def success_json
@@ -761,7 +770,7 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def render_post_json(post, add_raw = true)
+  def render_post_json(post, add_raw: true)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.add_raw = add_raw
 

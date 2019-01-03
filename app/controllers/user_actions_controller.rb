@@ -22,15 +22,7 @@ class UserActionsController < ApplicationController
       acting_username: params[:acting_username]
     }
 
-    # Pending is restricted
-    stream = if opts[:action_types].include?(UserAction::PENDING)
-      guardian.ensure_can_see_notifications!(user)
-      UserAction.stream_queued(opts)
-    else
-      UserAction.stream(opts)
-    end
-
-    stream = stream.to_a
+    stream = UserAction.stream(opts).to_a
     if stream.length == 0 && (help_key = params['no_results_help_key'])
       if user.id == guardian.user.try(:id)
         help_key += ".self"

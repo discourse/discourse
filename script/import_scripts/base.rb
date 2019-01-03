@@ -596,12 +596,9 @@ class ImportScripts::Base
           skipped += 1
           puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
         else
-          begin
-            PostAction.act(user, post, PostActionType.types[:bookmark])
-            created += 1
-          rescue PostAction::AlreadyActed
-            skipped += 1
-          end
+          result = PostActionCreator.create(user, post, :bookmark)
+          created += 1 if result.success?
+          skipped += 1 if result.failed?
         end
       end
 

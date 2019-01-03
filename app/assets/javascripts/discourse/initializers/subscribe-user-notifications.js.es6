@@ -21,18 +21,12 @@ export default {
     const appEvents = container.lookup("app-events:main");
 
     if (user) {
-      if (user.get("staff")) {
-        bus.subscribe("/flagged_counts", data => {
-          user.set("site_flagged_posts_count", data.total);
-        });
-        bus.subscribe("/queue_counts", data => {
-          user.set("post_queue_new_count", data.post_queue_new_count);
-          if (data.post_queue_new_count > 0) {
-            user.set("show_queued_posts", 1);
-          }
-        });
-      }
-
+      bus.subscribe("/reviewable_counts", data => {
+        user.set("reviewable_count", data.reviewable_count);
+        if (data.reviewable_count > 0) {
+          user.set("show_reviewables", 1);
+        }
+      });
       bus.subscribe(
         `/notification/${user.get("id")}`,
         data => {

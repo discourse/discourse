@@ -238,7 +238,7 @@ module DiscourseNarrativeBot
 
     def like_user_post
       if @post.raw.match(/thank/i)
-        PostAction.act(self.discobot_user, @post, PostActionType.types[:like])
+        PostActionCreator.like(self.discobot_user, @post)
       end
     end
 

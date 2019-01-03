@@ -1,0 +1,37 @@
+<div class='created-by'>
+  {{#user-link user=reviewable.created_by}}
+    {{avatar reviewable.created_by imageSize="large"}}
+  {{/user-link}}
+</div>
+
+<div class='post-contents'>
+  <div class='names'>
+    <span class="username">
+      {{#user-link user=reviewable.created_by}}
+        {{reviewable.created_by.username}}
+      {{/user-link}}
+      {{#if reviewable.created_by.silenced}}
+        {{d-icon "ban" title="user.silenced_tooltip"}}
+      {{/if}}
+    </span>
+  </div>
+
+  {{#reviewable-topic-link topic=reviewable.topic}}
+    {{i18n "review.new_topic"}}
+    {{reviewable.payload.title}}
+  {{/reviewable-topic-link}}
+
+  <div class='post-body'>
+    {{cook-text reviewable.payload.raw}}
+  </div>
+
+  {{#if reviewable.payload.tags}}
+    <div class="list-tags">
+      {{#each reviewable.payload.tags as |t|}}
+        {{discourse-tag t}}
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{yield}}
+</div>

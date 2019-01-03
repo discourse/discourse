@@ -3,11 +3,11 @@ require "rails_helper"
 describe PostOwnerChanger do
   describe "change_owner!" do
     let!(:editor) { Fabricate(:admin) }
-    let(:topic) { Fabricate(:topic) }
     let(:user_a) { Fabricate(:user) }
-    let(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
-    let(:p2) { Fabricate(:post, topic: topic, post_number: 2) }
-    let(:p3) { Fabricate(:post) }
+    let(:p1) { create_post(post_number: 1) }
+    let(:topic) { p1.topic }
+    let(:p2) { create_post(topic: topic, post_number: 2) }
+    let(:p3) { create_post }
 
     it "raises an error with a parameter missing" do
       expect {
@@ -23,10 +23,8 @@ describe PostOwnerChanger do
     it "changes the user" do
       bumped_at = topic.bumped_at
 
-      freeze_time 2.days.from_now
-
       old_user = p1.user
-      PostAction.act(user_a, p1, PostActionType.types[:like])
+      PostActionCreator.like(user_a, p1)
       p1.reload
       expect(p1.topic.like_count).to eq(1)
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
@@ -84,7 +82,7 @@ describe PostOwnerChanger do
     end
 
     context "sets topic notification level for the new owner" do
-      let(:p4) { Fabricate(:post, post_number: 2, topic: topic) }
+      let(:p4) { create_post(post_number: 2, topic: topic) }
 
       it "'watching' if the first post gets a new owner" do
         PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
@@ -125,7 +123,7 @@ describe PostOwnerChanger do
         UserAction.create!(action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
                            target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at)
 
-        UserActionCreator.enable
+        UserActionManager.enable
       end
 
       subject(:change_owners) do
@@ -138,7 +136,7 @@ describe PostOwnerChanger do
       end
 
       it "updates users' topic and post counts" do
-        PostAction.act(p2user, p1, PostActionType.types[:like])
+        PostActionCreator.like(p2user, p1)
         expect(p1user.user_stat.reload.likes_received).to eq(1)
 
         change_owners
@@ -190,16 +188,28 @@ describe PostOwnerChanger do
       end
 
       context 'private message topic' do
-        let(:topic) { Fabricate(:private_message_topic) }
+        # let(:topic) { Fabricate(:private_message_topic) }
+        let(:pm) do
+          create_post(
+            archetype: 'private_message',
+            target_usernames: [p2user.username]
+          )
+        end
+        let(:pm_poster) { pm.user }
 
         it "should update users' counts" do
-          PostAction.act(p2user, p1, PostActionType.types[:like])
+          PostActionCreator.like(p2user, pm)
 
           expect {
-            change_owners
-          }.to_not change { p1user.user_stat.post_count }
+            PostOwnerChanger.new(
+              post_ids: [pm.id],
+              topic_id: pm.topic_id,
+              new_owner: user_a,
+              acting_user: editor
+            ).change_owner!
+          }.to_not change { pm_poster.user_stat.post_count }
 
-          expect(p1user.user_stat.likes_received).to eq(0)
+          expect(pm_poster.user_stat.likes_received).to eq(0)
 
           user_a_stat = user_a.user_stat
           expect(user_a_stat.first_post_created_at).to be_present

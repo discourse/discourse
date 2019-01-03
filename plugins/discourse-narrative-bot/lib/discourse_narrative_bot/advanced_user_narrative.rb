@@ -149,13 +149,7 @@ module DiscourseNarrativeBot
       if SiteSetting.delete_removed_posts_after < 1
         opts[:delete_removed_posts_after] = 1
 
-        # Flag it and defer so the stub doesn't get destroyed
-        flag = PostAction.create!(
-          user: self.discobot_user,
-          post: post, post_action_type_id:
-          PostActionType.types[:notify_moderators]
-        )
-
+        flag = PostActionCreator.notify_moderators(self.discobot_user, post).post_action
         PostAction.defer_flags!(post, self.discobot_user)
       end
 

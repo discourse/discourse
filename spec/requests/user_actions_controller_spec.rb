@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_dependency 'post_enqueuer'
 
 describe UserActionsController do
   context 'index' do
@@ -10,7 +9,7 @@ describe UserActionsController do
     end
 
     it "returns a 404 for a user with a hidden profile" do
-      UserActionCreator.enable
+      UserActionManager.enable
       post = Fabricate(:post)
       post.user.user_option.update_column(:hide_profile_and_presence, true)
 
@@ -19,8 +18,8 @@ describe UserActionsController do
     end
 
     it 'renders list correctly' do
-      UserActionCreator.enable
-      post = Fabricate(:post)
+      UserActionManager.enable
+      post = create_post
 
       get "/user_actions.json", params: { username: post.user.username }
 
@@ -35,12 +34,12 @@ describe UserActionsController do
     end
 
     it 'can be filtered by acting_username' do
-      UserActionCreator.enable
+      UserActionManager.enable
       PostActionNotifier.enable
 
       post = Fabricate(:post)
       user = Fabricate(:user)
-      PostAction.act(user, post, PostActionType.types[:like])
+      PostActionCreator.like(user, post)
 
       get "/user_actions.json", params: {
         username: post.user.username,
@@ -87,37 +86,5 @@ describe UserActionsController do
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
     end
 
-    context "queued posts" do
-      context "without access" do
-        let(:user) { Fabricate(:user) }
-        it "raises an exception" do
-          get "/user_actions.json", params: {
-            username: user.username, filter: UserAction::PENDING
-          }
-          expect(response).to be_forbidden
-        end
-      end
-
-      context "with access" do
-        let(:user) { sign_in(Fabricate(:user)) }
-
-        it 'finds queued posts' do
-          queued_post = PostEnqueuer.new(user, 'default').enqueue(raw: 'this is the raw enqueued content')
-
-          get "/user_actions.json", params: {
-            username: user.username, filter: UserAction::PENDING
-          }
-
-          expect(response.status).to eq(200)
-          parsed = JSON.parse(response.body)
-          actions = parsed["user_actions"]
-          expect(actions.length).to eq(1)
-
-          action = actions.first
-          expect(action['username']).to eq(user.username)
-          expect(action['excerpt']).to be_present
-        end
-      end
-    end
   end
 end

@@ -723,15 +723,6 @@ section.details {
   }
 }
 
-#selected-controls {
-  background-color: $tertiary-low;
-  padding: 8px;
-  min-height: 27px;
-  position: fixed;
-  bottom: 0;
-  width: 1075px;
-}
-
 .user-controls {
   padding: 5px;
   clear: both;
@@ -973,7 +964,6 @@ table#user-badges {
 @import "common/admin/dashboard_next";
 @import "common/admin/settings";
 @import "common/admin/users";
-@import "common/admin/moderation_history";
 @import "common/admin/suspend";
 @import "common/admin/badges";
 @import "common/admin/emails";

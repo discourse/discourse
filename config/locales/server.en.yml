@@ -347,10 +347,6 @@ en:
 
   excerpt_image: "image"
 
-  queue:
-    delete_reason: "Deleted via post moderation queue"
-    not_found: "Post not found or already updated."
-
   groups:
     success:
       bulk_add:
@@ -793,6 +789,10 @@ en:
       grant: "Grant Admin Access"
       complete: "<b>%{target_username}</b> is now an administrator."
       back_to: "Return to %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Needs Approval"
+
   post_action_types:
     off_topic:
       title: "Off-Topic"
@@ -1365,7 +1365,7 @@ en:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
-    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and message sent to the user (0 for never)"
+    score_required_to_hide_post: "Score threshold that causes a post to be automatically hidden and message sent to the user (0 to disable)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
@@ -1375,7 +1375,7 @@ en:
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
 
-    num_spam_flags_to_silence_new_user: "If a new user's posts get this many spam flags from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    spam_score_to_silence_new_user: "If a new user's posts receive this score from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -1719,7 +1719,7 @@ en:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
+    score_to_auto_close_topic: "The total flag score of that is required to automatically pause a topic for intervention"
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
@@ -1728,7 +1728,7 @@ en:
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
     flags_default_topics: "Show flagged topics by default in the admin section"
-    min_flags_staff_visibility: "The minimum amount of flags on a post must have before staff can see it in the admin section"
+    min_score_default_visibility: "Don't show reviewable items unless they meet this score"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -2429,8 +2429,8 @@ en:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
     agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
     disagreed: "Thanks for letting us know. We're looking into it."
-    deferred: "Thanks for letting us know. We're looking into it."
-    deferred_and_deleted: "Thanks for letting us know. We've removed the post."
+    ignored: "Thanks for letting us know. We're looking into it."
+    ignored_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
     one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
@@ -4362,3 +4362,53 @@ en:
     update: "Updated"
     create: "Created"
     destroy: "Destroyed"
+
+
+  reviewables:
+    missing_version: "You must supply a version parameter"
+    conflict: "There was an update conflict preventing you from doing that."
+    actions:
+      agree:
+        title: "Agree..."
+      agree_and_keep:
+        title: "Keep Post"
+        description: "Agree with flag and keep the post unchanged."
+      agree_and_suspend:
+        title: "Suspend User"
+        description: "Agree with flag and suspend the user."
+      agree_and_silence:
+        title: "Silence User"
+        description: "Agree with flag and silence the user."
+      agree_and_restore:
+        title: "Restore Post"
+        description: "Restore the post so that all users can see it."
+      agree_and_hide:
+        title: "Hide Post"
+        description: "Hide this post and automatically send the user a message urging them to edit it."
+      delete_spammer:
+        title: "Delete Spammer"
+        description: "Remove the user and all their posts and topics."
+        confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
+      delete:
+        title: "Delete..."
+      delete_and_ignore:
+        title: "Delete Post and Ignore flag"
+        description: "Delete post; if the first post, delete the topic as well"
+      delete_and_agree:
+        title: "Delete Post and Agree with flag"
+        description: "Delete post; if the first post, delete the topic as well"
+      disagree_and_restore:
+        title: "Disagree and Restore Post"
+        description: "Restore the post so that all users can see it."
+      disagree:
+        title: "Disagree"
+      ignore:
+        title: "Ignore"
+      approve:
+        title: "Approve"
+      reject:
+        title: "Reject"
+      delete_user:
+        title: "Delete User"
+        confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
+        reason: "Deleted via review queue"
