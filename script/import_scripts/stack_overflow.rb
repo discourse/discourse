@@ -165,8 +165,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
     end
   end
 
-  LIKE ||= PostActionType.types[:like]
-
   def import_likes
     puts "", "Importing post likes..."
 
@@ -196,7 +194,7 @@ class ImportScripts::StackOverflow < ImportScripts::Base
         next unless post_id = post_id_from_imported_post_id(l["PostId"])
         next unless user = User.find_by(id: user_id)
         next unless post = Post.find_by(id: post_id)
-        PostAction.act(user, post, LIKE) rescue nil
+        PostActionCreator.like(user, post) rescue nil
       end
     end
 
@@ -229,7 +227,7 @@ class ImportScripts::StackOverflow < ImportScripts::Base
         next unless post_id = post_id_from_imported_post_id(l["PostCommentId"])
         next unless user = User.find_by(id: user_id)
         next unless post = Post.find_by(id: post_id)
-        PostAction.act(user, post, LIKE) rescue nil
+        PostActionCreator.like(user, post) rescue nil
       end
     end
   end

@@ -155,7 +155,7 @@ RSpec.configure do |config|
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
-    UserActionCreator.disable
+    UserActionManager.disable
     NotificationEmailer.disable
 
     SiteSetting.provider.all.each do |setting|

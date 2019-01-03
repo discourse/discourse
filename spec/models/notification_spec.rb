@@ -269,7 +269,7 @@ describe Notification do
           topic: post.topic
         ))
 
-        PostAction.act(user, post, PostActionType.types[:like])
+        PostActionCreator.like(user, post)
       end.to change { Notification.count }.by(2)
 
       expect(Notification.filter_by_display_username_and_type(

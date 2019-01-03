@@ -6,15 +6,14 @@ describe FlagQuery do
   let(:codinghorror) { Fabricate(:coding_horror) }
 
   describe "flagged_topics" do
-    it "respects `min_flags_staff_visibility`" do
+    it "respects `min_score_default_visibility`" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
       post = create_post
 
-      PostAction.act(moderator, post, PostActionType.types[:spam])
-
-      SiteSetting.min_flags_staff_visibility = 1
+      SiteSetting.min_score_default_visibility = 2.0
+      PostActionCreator.create(moderator, post, :spam)
 
       result = FlagQuery.flagged_topics
       expect(result[:flagged_topics]).to be_present
@@ -22,12 +21,12 @@ describe FlagQuery do
       expect(ft.topic).to eq(post.topic)
       expect(ft.flag_counts).to eq(PostActionType.types[:spam] => 1)
 
-      SiteSetting.min_flags_staff_visibility = 2
+      SiteSetting.min_score_default_visibility = 10.0
 
       result = FlagQuery.flagged_topics
       expect(result[:flagged_topics]).to be_blank
 
-      PostAction.act(admin, post, PostActionType.types[:inappropriate])
+      PostActionCreator.create(admin, post, :inappropriate)
       result = FlagQuery.flagged_topics
       expect(result[:flagged_topics]).to be_present
       ft = result[:flagged_topics].first
@@ -44,7 +43,7 @@ describe FlagQuery do
     it "does not return flags on system posts" do
       admin = Fabricate(:admin)
       post = create_post(user: Discourse.system_user)
-      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      PostActionCreator.create(codinghorror, post, :spam)
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
 
       expect(posts).to be_blank
@@ -62,28 +61,35 @@ describe FlagQuery do
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
 
-      PostAction.act(codinghorror, post, PostActionType.types[:spam])
-      PostAction.act(user2, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a :one::zero:")
+      PostActionCreator.spam(codinghorror, post)
+      PostActionCreator.create(user2, post, :spam)
+      result = PostActionCreator.new(
+        user3,
+        post,
+        PostActionType.types[:notify_moderators],
+        message: "this is a :one::zero:"
+      ).perform
+      mod_message = result.post_action
 
-      PostAction.act(codinghorror, post2, PostActionType.types[:spam])
-      PostAction.act(user2, post2, PostActionType.types[:spam])
+      PostActionCreator.spam(codinghorror, post2)
+      PostActionCreator.spam(user2, post2)
 
-      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+      posts, topics, users, all_actions = FlagQuery.flagged_posts_report(admin)
 
       expect(posts.count).to eq(2)
       first = posts.first
 
       expect(users.count).to eq(5)
-      expect(first[:post_actions].count).to eq(2)
+      expect(first[:post_action_ids].count).to eq(2)
 
       expect(topics.count).to eq(2)
 
       second = posts[1]
+      expect(second[:post_action_ids].count).to eq(3)
 
-      expect(second[:post_actions].count).to eq(3)
-      expect(second[:post_actions].first[:permalink]).to eq(mod_message.related_post.topic.relative_url)
-      expect(second[:post_actions].first[:conversation][:response][:excerpt]).to match("<img src=")
+      action = all_actions.find { |a| a[:id] == second[:post_action_ids][0] }
+      expect(action[:permalink]).to eq(mod_message.related_post.topic.relative_url)
+      expect(action[:conversation][:response][:excerpt]).to match("<img src=")
 
       posts, users = FlagQuery.flagged_posts_report(admin, offset: 1)
       expect(posts.count).to eq(1)
@@ -100,61 +106,32 @@ describe FlagQuery do
       posts = FlagQuery.flagged_posts_report(admin, user_id: -1000)
       expect(posts[0]).to be_blank
 
-      # chuck post in category a mod can not see and make sure its missing
+      # chuck post in category a mod can not see and make sure it's not returned
       category = Fabricate(:category)
       category.set_permissions(admins: :full)
       category.save
-      post2.topic.category_id = category.id
+
+      post2.topic.change_category_to_id(category.id)
       post2.topic.save
 
       posts, users = FlagQuery.flagged_posts_report(moderator)
-
       expect(posts.count).to eq(1)
     end
 
-    it "respects `min_flags_staff_visibility`" do
+    it "respects `min_score_default_visibility`" do
       admin = Fabricate(:admin)
       flagger = Fabricate(:user)
 
       post = create_post
+      PostActionCreator.create(flagger, post, :spam)
 
-      PostAction.act(flagger, post, PostActionType.types[:spam])
-
-      SiteSetting.min_flags_staff_visibility = 2
+      SiteSetting.min_score_default_visibility = 3.0
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
       expect(posts).to be_blank
       expect(topics).to be_blank
       expect(users).to be_blank
 
-      PostAction.act(admin, post, PostActionType.types[:inappropriate])
-      posts, topics, users = FlagQuery.flagged_posts_report(admin)
-      expect(posts).to be_present
-      expect(topics).to be_present
-      expect(users).to be_present
-    end
-
-    it "respects `min_flags_staff_visibility` for tl3 hidden spam" do
-      admin = Fabricate(:admin)
-      tl3 = Fabricate(:user, trust_level: 3)
-      post = create_post
-
-      post.user.update_column(:trust_level, 0)
-      PostAction.act(tl3, post, PostActionType.types[:spam])
-
-      SiteSetting.min_flags_staff_visibility = 2
-      posts, topics, users = FlagQuery.flagged_posts_report(admin)
-      expect(posts).to be_present
-      expect(topics).to be_present
-      expect(users).to be_present
-    end
-
-    it "respects `min_flags_staff_visibility` for tl4 hidden posts" do
-      admin = Fabricate(:admin)
-      tl4 = Fabricate(:user, trust_level: 4)
-      post = create_post
-      PostAction.act(tl4, post, PostActionType.types[:spam])
-
-      SiteSetting.min_flags_staff_visibility = 2
+      PostActionCreator.create(admin, post, :inappropriate)
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
       expect(posts).to be_present
       expect(topics).to be_present

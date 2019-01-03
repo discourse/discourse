@@ -75,13 +75,13 @@ describe FilterBestPosts do
     end
 
     it "doesn't count likes from admins" do
-      PostAction.act(admin, p3, PostActionType.types[:like])
+      PostActionCreator.like(admin, p3)
       best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(0)
     end
 
     it "should find the post liked by the moderator" do
-      PostAction.act(moderator, p2, PostActionType.types[:like])
+      PostActionCreator.like(moderator, p2)
       best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
     end

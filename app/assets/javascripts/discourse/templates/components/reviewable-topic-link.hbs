@@ -1,0 +1,10 @@
+<div class='post-topic'>
+  {{#if topic}}
+    {{i18n "review.topic"}}
+    {{topic-status topic=topic}}
+    {{topic-link topic}}
+    {{i18n "review.topic_replies" count=topic.reply_count}}
+  {{else}}
+    {{yield}}
+  {{/if}}
+</div>

@@ -1,10 +1,10 @@
 require 'rails_helper'
-require 'post_destroyer'
+require_dependency 'post_destroyer'
 
 describe PostDestroyer do
 
   before do
-    UserActionCreator.enable
+    UserActionManager.enable
   end
 
   let(:moderator) { Fabricate(:moderator) }
@@ -24,11 +24,11 @@ describe PostDestroyer do
 
       freeze_time(now - 40.days)
       reply2 = create_post(topic: topic)
-      PostAction.hide_post!(reply2, PostActionType.types[:off_topic])
+      reply2.hide!(PostActionType.types[:off_topic])
 
       freeze_time(now - 20.days)
       reply3 = create_post(topic: topic)
-      PostAction.hide_post!(reply3, PostActionType.types[:off_topic])
+      reply3.hide!(PostActionType.types[:off_topic])
 
       freeze_time(now - 10.days)
       reply4 = create_post(topic: topic)
@@ -84,15 +84,15 @@ describe PostDestroyer do
 
       # flag the post, it should not nuke the stub anymore
       topic.recover!
-      PostAction.act(Fabricate(:coding_horror), reply1, PostActionType.types[:spam])
+      reviewable = PostActionCreator.spam(Fabricate(:coding_horror), reply1).reviewable
 
       PostDestroyer.destroy_stubs
 
       reply1.reload
       expect(reply1.deleted_at).to eq(nil)
 
-      # defer the flag, we should be able to delete the stub
-      PostAction.defer_flags!(reply1, Discourse.system_user)
+      # ignore the flag, we should be able to delete the stub
+      reviewable.perform(Discourse.system_user, :ignore)
       PostDestroyer.destroy_stubs
 
       reply1.reload
@@ -219,8 +219,8 @@ describe PostDestroyer do
 
   describe "recovery and post actions" do
     let(:codinghorror) { Fabricate(:coding_horror) }
-    let!(:like) { PostAction.act(codinghorror, post, PostActionType.types[:like]) }
-    let!(:another_like) { PostAction.act(moderator, post, PostActionType.types[:like]) }
+    let!(:like) { PostActionCreator.like(codinghorror, post).post_action }
+    let!(:another_like) { PostActionCreator.like(moderator, post).post_action }
 
     it "restores public post actions" do
       PostDestroyer.new(moderator, post).destroy
@@ -231,7 +231,7 @@ describe PostDestroyer do
     end
 
     it "does not recover previously-deleted actions" do
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(codinghorror, post, :like)
       expect(PostAction.exists?(id: like.id)).to eq(false)
 
       PostDestroyer.new(moderator, post).destroy
@@ -628,8 +628,9 @@ describe PostDestroyer do
 
   describe "post actions" do
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
-    let!(:bookmark) { PostAction.act(moderator, second_post, PostActionType.types[:bookmark]) }
-    let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
+    let!(:bookmark) { PostActionCreator.create(moderator, second_post, :bookmark).post_action }
+    let(:flag_result) { PostActionCreator.off_topic(moderator, second_post) }
+    let!(:flag) { flag_result.post_action }
 
     before do
       Jobs::SendSystemMessage.clear
@@ -637,8 +638,6 @@ describe PostDestroyer do
 
     it "should delete public post actions and agree with flags" do
       url = second_post.url
-      second_post.expects(:update_flagged_posts_count)
-
       PostDestroyer.new(moderator, second_post).destroy
 
       expect(PostAction.find_by(id: bookmark.id)).to eq(nil)
@@ -671,35 +670,35 @@ describe PostDestroyer do
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
-      expect(PostAction.flagged_posts_count).to eq(1)
+      expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(Discourse.system_user, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
-      expect(PostAction.flagged_posts_count).to eq(0)
+      expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
       SiteSetting.delete_removed_posts_after = 0
-      expect(PostAction.flagged_posts_count).to eq(1)
+      expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(second_post.user, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
-      expect(PostAction.flagged_posts_count).to eq(0)
+      expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
-      expect(PostAction.flagged_posts_count).to eq(1)
-      PostAction.defer_flags!(second_post, moderator)
+    it "should not send the flags_agreed_and_post_deleted message if flags were ignored" do
+      expect(ReviewableFlaggedPost.pending.count).to eq(1)
+      flag_result.reviewable.perform(moderator, :ignore)
       second_post.reload
-      expect(PostAction.flagged_posts_count).to eq(0)
+      expect(ReviewableFlaggedPost.pending.count).to eq(0)
 
       PostDestroyer.new(moderator, second_post).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if defer_flags is true" do
-      expect(PostAction.flagged_posts_count).to eq(1)
+      expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
-      expect(PostAction.flagged_posts_count).to eq(0)
+      expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
     it "should set the deleted_public_actions custom field" do

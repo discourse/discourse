@@ -89,7 +89,7 @@ describe PostTiming do
       end
       user2 = Fabricate(:coding_horror, created_at: 1.day.ago)
 
-      PostAction.act(user2, post, PostActionType.types[:like])
+      PostActionCreator.like(user2, post)
 
       expect(post.user.unread_notifications).to eq(1)
 

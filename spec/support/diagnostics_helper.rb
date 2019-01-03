@@ -18,6 +18,7 @@ module MessageBus::DiagnosticsHelper
   ensure
     @tracking = nil
   end
+
 end
 
 module MessageBus

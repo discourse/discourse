@@ -60,10 +60,14 @@ class PostDestroyer
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
     end
+
+    UserActionManager.post_destroyed(@post)
+
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
     if @post.is_first_post? && @post.topic
+      UserActionManager.topic_destroyed(@post.topic)
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
     end
@@ -76,11 +80,12 @@ class PostDestroyer
       user_recovered
     end
     topic = Topic.with_deleted.find @post.topic_id
-    topic.recover! if @post.is_first_post?
+    topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
-    recover_user_actions
+    UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
+      UserActionManager.topic_created(@post.topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
     end
@@ -126,7 +131,6 @@ class PostDestroyer
       end
       trash_public_post_actions
       trash_user_actions
-      @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
       if @post.topic && @post.is_first_post?
@@ -138,11 +142,14 @@ class PostDestroyer
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
+
       DB.after_commit do
-        if @opts[:defer_flags]
-          defer_flags
-        else
-          agree_with_flags
+        if reviewable = @post.reviewable_flag
+          if @opts[:defer_flags]
+            ignore(reviewable)
+          else
+            agree(reviewable)
+          end
         end
       end
     end
@@ -164,7 +171,6 @@ class PostDestroyer
 
       Post.transaction do
         @post.update_column(:user_deleted, true)
-        @post.update_flagged_posts_count
         @post.topic_links.each(&:destroy)
       end
     end
@@ -174,7 +180,6 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.update_flagged_posts_count
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
@@ -217,8 +222,8 @@ class PostDestroyer
     end
   end
 
-  def agree_with_flags
-    if @post.has_active_flag? && @user.human? && @user.staff?
+  def agree(reviewable)
+    if @user.human? && @user.staff? && rs = reviewable.reviewable_scores.order('created_at DESC').first
       Jobs.enqueue(
         :send_system_message,
         user_id: @post.user_id,
@@ -227,7 +232,7 @@ class PostDestroyer
           flagged_post_raw_content: @post.raw,
           url: @post.url,
           flag_reason: I18n.t(
-            "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",
+            "flag_reasons.#{PostActionType.types[rs.reviewable_score_type]}",
             locale: SiteSetting.default_locale,
             base_path: Discourse.base_path
           )
@@ -235,11 +240,13 @@ class PostDestroyer
       )
     end
 
-    PostAction.agree_flags!(@post, @user, delete_post: true)
+    result = reviewable.perform(@user, :agree_and_keep, post_was_deleted: true)
+    reviewable.transition_to(result.transition_to, @user)
   end
 
-  def defer_flags
-    PostAction.defer_flags!(@post, @user, delete_post: true)
+  def ignore(reviewable)
+    reviewable.perform_ignore(@user, post_was_deleted: true)
+    reviewable.transition_to(:ignored, @user)
   end
 
   def trash_user_actions
@@ -253,11 +260,6 @@ class PostDestroyer
       }
       UserAction.remove_action!(row)
     end
-  end
-
-  def recover_user_actions
-    # TODO: Use a trash concept for `user_actions` to avoid churn and simplify this?
-    UserActionCreator.log_post(@post)
   end
 
   def remove_associated_replies

@@ -1,0 +1,72 @@
+<div class="reviewable">
+  <ul class="nav nav-pills reviewable-title">
+    {{nav-item route='review.index' label='review.view_all'}}
+    {{nav-item route='review.topics' label='review.grouped_by_topic'}}
+  </ul>
+
+  <div class="reviewable-container">
+    <div class="reviewable-list">
+      {{#if reviewables}}
+        {{#load-more selector=".reviewable-item" action=(action "loadMore")}}
+          <div class='reviewables'>
+            {{#each reviewables as |r|}}
+              {{reviewable-item reviewable=r remove=(action "remove")}}
+            {{/each}}
+          </div>
+        {{/load-more}}
+        {{conditional-loading-spinner condition=reviewables.loadingMore}}
+      {{else}}
+        <div class="alert alert-info no-review">
+          {{i18n "review.none"}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class='reviewable-filters'>
+      <div class='reviewable-filter'>
+        <label class='filter-label'>{{i18n "review.filters.status"}}</label>
+        {{combo-box value=filterStatus content=statuses}}
+      </div>
+
+      {{#if filtersExpanded}}
+        <div class='reviewable-filter'>
+          <label class='filter-label'>{{i18n "review.filters.type.title"}}</label>
+          {{combo-box value=filterType content=allTypes none="review.filters.type.all"}}
+        </div>
+
+        <div class='reviewable-filter'>
+          <label class='filter-label'>{{i18n "review.filters.minimum_score"}}</label>
+          {{input value=filterScore class="score-filter"}}
+        </div>
+
+        <div class='reviewable-filter'>
+          <label class='filter-label'>{{i18n "review.filters.category"}}</label>
+          {{category-chooser none="category.all" value=filterCategoryId}}
+        </div>
+
+        {{#if filterTopic}}
+          <div class='reviewable-filter topic-filter'>
+            {{i18n "review.filtered_topic"}}
+            {{d-button label="review.remove_filter" action=(action "resetTopic")}}
+          </div>
+        {{/if}}
+      {{/if}}
+
+      <div class='reviewable-filters-actions'>
+        {{d-button
+          icon="sync"
+          label="review.filters.refresh"
+
+          class="btn-primary refresh" action=(action "refresh")}}
+
+        {{#if site.mobileView}}
+          {{d-button
+            label="show_help"
+            icon=toggleFiltersIcon
+            class="btn-default expand-secondary-filters"
+            action=(action "toggleFilters")}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

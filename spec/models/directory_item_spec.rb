@@ -49,7 +49,7 @@ describe DirectoryItem do
 
   context 'refresh' do
     before do
-      UserActionCreator.enable
+      UserActionManager.enable
     end
 
     it "creates the record for the user and handles likes" do
@@ -58,7 +58,7 @@ describe DirectoryItem do
 
       user2 = Fabricate(:user)
 
-      PostAction.act(user2, post, PostActionType.types[:like])
+      PostActionCreator.like(user2, post)
 
       DirectoryItem.refresh!
 

@@ -2499,7 +2499,6 @@ bs_BA:
         titles:
           active: "Active Users"
           new: "New Users"
-          pending: "Users Pending Review"
           newuser: "Users at Trust Level 0 (New User)"
           basic: "Users at Trust Level 1 (Basic User)"
           staff: "Zaposleni"

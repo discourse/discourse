@@ -22,10 +22,10 @@ class SpamRule::AutoSilence
     return false if @user.staged?
     return false if @user.has_trust_level?(TrustLevel[1])
 
-    if SiteSetting.num_spam_flags_to_silence_new_user > 0 &&
+    if SiteSetting.spam_score_to_silence_new_user > 0 &&
         SiteSetting.num_users_to_silence_new_user > 0 &&
-        num_spam_flags_against_user >= SiteSetting.num_spam_flags_to_silence_new_user &&
-        num_users_who_flagged_spam_against_user >= SiteSetting.num_users_to_silence_new_user
+        user_spam_stats.total_spam_score >= SiteSetting.spam_score_to_silence_new_user &&
+        user_spam_stats.spam_user_count >= SiteSetting.num_users_to_silence_new_user
       return true
     end
 
@@ -39,14 +39,27 @@ class SpamRule::AutoSilence
     false
   end
 
-  def num_spam_flags_against_user
-    Post.where(user_id: @user.id).sum(:spam_count)
-  end
+  def user_spam_stats
+    return @user_spam_stats if @user_spam_stats
 
-  def num_users_who_flagged_spam_against_user
-    post_ids = Post.where('user_id = ? and spam_count > 0', @user.id).pluck(:id)
-    return 0 if post_ids.empty?
-    PostAction.spam_flags.where(post_id: post_ids).pluck(:user_id).uniq.size
+    params = {
+      user_id: @user.id,
+      spam_type: PostActionType.types[:spam],
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    }
+
+    result = DB.query(<<~SQL, params)
+      SELECT COALESCE(SUM(rs.score), 0) AS total_spam_score,
+        COUNT(DISTINCT rs.user_id) AS spam_user_count
+      FROM reviewables AS r
+      INNER JOIN reviewable_scores AS rs ON rs.reviewable_id = r.id
+      WHERE r.target_created_by_id = :user_id
+        AND rs.reviewable_score_type = :spam_type
+        AND rs.status IN (:pending, :agreed)
+    SQL
+
+    @user_spam_stats = result[0]
   end
 
   def num_tl3_flags_against_user

@@ -221,7 +221,7 @@
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
 
-  {{#if showApproval}}
+  {{#if siteSettings.must_approve_users}}
     <div class="display-row">
       <div class="field">{{i18n "admin.users.approved"}}</div>
       <div class="value">

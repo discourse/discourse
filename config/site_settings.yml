@@ -1335,9 +1335,9 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  flags_required_to_hide_post: 3
+  score_required_to_hide_post: 10
   cooldown_minutes_after_hiding_posts: 10
-  num_spam_flags_to_silence_new_user: 3
+  spam_score_to_silence_new_user: 6.0
   num_users_to_silence_new_user: 3
   num_tl3_flags_to_silence_new_user: 4
   num_tl3_users_to_silence_new_user: 2
@@ -1367,7 +1367,9 @@ spam:
   flags_default_topics:
     default: false
     client: true
-  min_flags_staff_visibility: 1
+  min_score_default_visibility:
+    default: 0.0
+    client: true
 
 rate_limits:
   unique_posts_mins: 5

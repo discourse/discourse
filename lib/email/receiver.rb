@@ -1,6 +1,5 @@
 require "digest"
 require_dependency "new_post_manager"
-require_dependency "post_action_creator"
 require_dependency "html_to_markdown"
 require_dependency "plain_text_to_markdown"
 require_dependency "upload_creator"
@@ -936,11 +935,8 @@ module Email
     end
 
     def create_post_action(user, post, type)
-      PostActionCreator.new(user, post).perform(type)
-    rescue PostAction::AlreadyActed
-      # it's cool, don't care
-    rescue Discourse::InvalidAccess => e
-      raise InvalidPostAction.new(e)
+      result = PostActionCreator.new(user, post, type).perform
+      raise InvalidPostAction.new if result.failed? && result.forbidden
     end
 
     def is_whitelisted_attachment?(attachment)

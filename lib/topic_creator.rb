@@ -44,6 +44,7 @@ class TopicCreator
     create_warning(topic)
     watch_topic(topic)
     create_shared_draft(topic)
+    UserActionManager.topic_created(topic)
 
     topic
   end

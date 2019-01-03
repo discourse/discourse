@@ -30,7 +30,7 @@ export default Ember.Controller.extend(PenaltyController, {
           suspend_until: this.get("suspendUntil"),
           reason: this.get("reason"),
           message: this.get("message"),
-          post_id: this.get("post.id"),
+          post_id: this.get("postId"),
           post_action: this.get("postAction"),
           post_edit: this.get("postEdit")
         });
