@@ -1153,6 +1153,27 @@ describe Post do
       post.reload
       expect(post.baked_at).to eq(baked)
     end
+
+    it "will rate limit globally" do
+
+      post1 = create_post
+      post2 = create_post
+      post3 = create_post
+
+      Post.where(id: [post1.id, post2.id, post3.id]).update_all(baked_version: -1)
+
+      global_setting :max_old_rebakes_per_15_minutes, 2
+
+      RateLimiter.clear_all_global!
+      RateLimiter.enable
+
+      Post.rebake_old(100)
+
+      expect(post3.reload.baked_version).not_to eq(-1)
+      expect(post2.reload.baked_version).not_to eq(-1)
+      expect(post1.reload.baked_version).to eq(-1)
+
+    end
   end
 
   describe ".unhide!" do
