@@ -1,6 +1,5 @@
 require_dependency 'post_creator'
 require_dependency 'new_post_result'
-require_dependency 'post_enqueuer'
 require_dependency 'word_watcher'
 
 # Determines what actions should be taken with new posts.
@@ -127,7 +126,7 @@ class NewPostManager
         end
       end
 
-      result = manager.enqueue('default')
+      result = manager.enqueue
 
       if is_fast_typer?(manager)
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
@@ -178,23 +177,37 @@ class NewPostManager
     perform_create_post unless handled
   end
 
-  # Enqueue this post in a queue
-  def enqueue(queue, reason = nil)
+  # Enqueue this post
+  def enqueue(reason = nil)
     result = NewPostResult.new(:enqueued)
-    enqueuer = PostEnqueuer.new(@user, queue)
 
-    queued_args = { post_options: @args.dup }
-    queued_args[:raw] = queued_args[:post_options].delete(:raw)
-    queued_args[:topic_id] = queued_args[:post_options].delete(:topic_id)
+    reviewable = ReviewableQueuedPost.new(
+      created_by: @user,
+      payload: { raw: @args[:raw] },
+      topic_id: @args[:topic_id],
+      reviewable_by_moderator: true
+    )
+    reviewable.payload['title'] = @args[:title] if @args[:title].present?
 
-    post = enqueuer.enqueue(queued_args)
+    create_options = reviewable.create_options
 
-    QueuedPost.broadcast_new! if post && post.errors.empty?
+    creator = @args[:topic_id] ?
+      PostCreator.new(@user, create_options) :
+      TopicCreator.new(@user, Guardian.new(@user), create_options)
 
-    result.queued_post = post
+    errors = Set.new
+    creator.valid?
+    creator.errors.full_messages.each { |msg| errors << msg }
+    errors = creator.errors.full_messages.uniq
+    if errors.blank?
+      reviewable.save
+      reviewable.errors.full_messages.each { |msg| errors << msg }
+    end
+
+    result.reviewable = reviewable
     result.reason = reason if reason
-    result.check_errors_from(enqueuer)
-    result.pending_count = QueuedPost.new_posts.where(user_id: @user.id).count
+    result.check_errors(errors)
+    result.pending_count = Reviewable.where(created_by: @user).pending.count
     result
   end
 

@@ -656,7 +656,7 @@ describe DiscourseNarrativeBot::TrackSelector do
               user
 
               expect do
-                PostAction.act(user, another_post, PostActionType.types[:like])
+                PostActionCreator.like(user, another_post)
               end.to_not change { Post.count }
             end
           end

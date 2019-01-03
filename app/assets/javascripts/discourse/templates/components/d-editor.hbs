@@ -39,7 +39,14 @@
     </div>
 
     {{conditional-loading-spinner condition=loading}}
-    {{textarea autocomplete="discourse" tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated disabled=disabled}}
+    {{textarea
+      autocomplete="discourse"
+      tabindex=tabindex
+      value=value
+      class="d-editor-input"
+      placeholder=placeholderTranslated
+      disabled=disabled
+      change=change}}
     {{popup-input-tip validation=validation}}
     {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>

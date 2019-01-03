@@ -32,9 +32,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     user = User.new(user_params) if user.nil?
 
     if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
-      user.approved = true
-      user.approved_by_id = invite.invited_by_id
-      user.approved_at = Time.zone.now
+      ReviewableUser.set_approved_fields!(user, invite.invited_by)
     end
 
     user_fields = UserField.all
@@ -132,8 +130,13 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def approve_account_if_needed
-    if get_existing_user
-      invited_user.approve(invite.invited_by, false)
+    if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user)
+      reviewable_user.perform(
+        invite.invited_by,
+        :approve,
+        send_email: false,
+        approved_by_invite: true
+      )
     end
   end
 

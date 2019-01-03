@@ -1,0 +1,17 @@
+{{#if multiple}}
+  {{dropdown-select-box
+    headerIcon=bundle.icon
+    class="reviewable-action-dropdown"
+    nameProperty="label"
+    title=bundle.label
+    content=bundle.actions
+    onSelect=(action "performById")
+    disabled=reviewableUpdating}}
+{{else}}
+  {{d-button
+    class=(concat "reviewable-action " (dasherize first.id))
+    icon=first.icon
+    action=(action "perform" first)
+    translatedLabel=first.label
+    disabled=reviewableUpdating}}
+{{/if}}

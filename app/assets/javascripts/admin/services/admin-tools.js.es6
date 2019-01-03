@@ -53,12 +53,7 @@ export default Ember.Service.extend({
       admin: true,
       modalClass: `${type}-user-modal`
     });
-    if (opts.post) {
-      controller.setProperties({
-        post: opts.post,
-        postEdit: opts.post.get("raw")
-      });
-    }
+    controller.setProperties({ postId: opts.postId, postEdit: opts.postEdit });
 
     return (user.adminUserView
       ? Ember.RSVP.resolve(user)

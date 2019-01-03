@@ -288,15 +288,14 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def approve
-    guardian.ensure_can_approve!(@user)
-    @user.approve(current_user)
+    Discourse.deprecate("AdminUsersController#approve is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
+    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', [@user.id])
     render body: nil
   end
 
   def approve_bulk
-    User.where(id: params[:users]).each do |u|
-      u.approve(current_user) if guardian.can_approve?(u)
-    end
+    Discourse.deprecate("AdminUsersController#approve_bulk is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
+    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', params[:users])
     render body: nil
   end
 
@@ -366,7 +365,10 @@ class Admin::UsersController < Admin::AdminController
     )
   end
 
+  # Kept for backwards compatibility, but is replaced by the Reviewable Queue
   def reject_bulk
+    Discourse.deprecate("AdminUsersController#reject_bulk is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
+
     success_count = 0
     d = UserDestroyer.new(current_user)
 

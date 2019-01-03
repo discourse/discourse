@@ -34,7 +34,6 @@ class TopicViewSerializer < ApplicationSerializer
                         :category_id,
                         :word_count,
                         :deleted_at,
-                        :pending_posts_count,
                         :user_id,
                         :featured_link,
                         :featured_link_root_domain,
@@ -240,10 +239,6 @@ class TopicViewSerializer < ApplicationSerializer
 
   def bookmarked
     object.topic_user&.bookmarked
-  end
-
-  def include_pending_posts_count?
-    scope.is_staff? && NewPostManager.queue_enabled?
   end
 
   def topic_timer

@@ -787,7 +787,6 @@ pt:
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes não registados podem fazer solicitações ao servidor, em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
-    flags_required_to_hide_post: "Número de denúncias que fazem com que uma mensagem seja automaticamente escondida e uma mensagem enviada ao utilizador (0 se nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
     max_topics_in_first_day: "O número máximo de tópicos que o utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
     max_replies_in_first_day: "O número máximo de respostas que um utilizador pode criar no período de 24 horas após criar a sua primeira publicação"

@@ -23,7 +23,7 @@ describe PostSerializer do
 
     before do
       acted_ids.each do |id|
-        PostAction.act(actor, post, id)
+        PostActionCreator.new(actor, post, id).perform
       end
       post.reload
     end

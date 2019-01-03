@@ -17,14 +17,15 @@ class FlagSettings
     @without_custom_types = Enum.new
   end
 
-  def add(id, name, details = nil)
+  def add(id, name, topic_type: nil, notify_type: nil, auto_action_type: nil, custom_type: nil)
     details ||= {}
 
     @all_flag_types[name] = id
-    @topic_flag_types[name] = id if !!details[:topic_type]
-    @notify_types[name] = id if !!details[:notify_type]
-    @auto_action_types[name] = id if !!details[:auto_action_type]
-    if !!details[:custom_type]
+    @topic_flag_types[name] = id if !!topic_type
+    @notify_types[name] = id if !!notify_type
+    @auto_action_types[name] = id if !!auto_action_type
+
+    if !!custom_type
       @custom_types[name] = id
     else
       @without_custom_types[name] = id

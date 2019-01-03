@@ -55,27 +55,16 @@ export default createWidget("hamburger-menu", {
         className: "admin-link",
         icon: "wrench",
         label: "admin_title"
-      },
-      {
-        href: `/admin/flags/${flagsPath}`,
-        className: "flagged-posts-link",
-        icon: "flag",
-        label: "flags_title",
-        badgeClass: "flagged-posts",
-        badgeTitle: "notifications.total_flagged",
-        badgeCount: "site_flagged_posts_count"
       }
     ];
 
-    if (currentUser.show_queued_posts) {
-      links.push({
-        route: "queued-posts",
-        className: "queued-posts-link",
-        label: "queue.title",
-        badgeCount: "post_queue_new_count",
-        badgeClass: "queued-posts"
-      });
-    }
+    links.push({
+      route: "review",
+      className: "review",
+      label: "review.title",
+      badgeCount: "reviewable_count",
+      badgeClass: "reviewables"
+    });
 
     if (currentUser.admin) {
       links.push({

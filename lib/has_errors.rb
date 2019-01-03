@@ -2,6 +2,7 @@
 # child objects with errors
 module HasErrors
   attr_reader :errors
+  attr_accessor :forbidden, :not_found, :conflict
 
   def errors
     @errors ||= ActiveModel::Errors.new(self)
@@ -23,10 +24,18 @@ module HasErrors
     raise ActiveRecord::Rollback.new
   end
 
+  def add_error(msg)
+    errors[:base] << msg unless errors[:base].include?(msg)
+  end
+
   def add_errors_from(obj)
-    obj.errors.full_messages.each do |msg|
-      errors[:base] << msg unless errors[:base].include?(msg)
+    return if obj.blank?
+
+    if obj.is_a?(StandardError)
+      return add_error(obj.message)
     end
+
+    obj.errors.full_messages.each { |msg| add_error(msg) }
   end
 
 end

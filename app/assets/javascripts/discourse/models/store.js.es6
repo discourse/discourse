@@ -223,6 +223,7 @@ export default Ember.Object.extend({
       totalRows: pageTarget["total_rows_" + typeName] || content.length,
       loadMoreUrl: pageTarget["load_more_" + typeName],
       refreshUrl: pageTarget["refresh_" + typeName],
+      resultSetMeta: result.meta,
       store: this,
       __type: type
     };
@@ -328,8 +329,6 @@ export default Ember.Object.extend({
 
     root = root || obj;
 
-    // Experimental: If serialized with a certain option we'll wire up embedded objects
-    // automatically.
     if (root.__rest_serializer === "1") {
       this._hydrateEmbedded(type, obj, root);
     }

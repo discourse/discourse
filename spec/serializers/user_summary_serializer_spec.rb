@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe UserSummarySerializer do
   it "returns expected data" do
-    UserActionCreator.enable
+    UserActionManager.enable
     user = Fabricate(:user)
     liked_user = Fabricate(:user, name: "John Doe", username: "john_doe")
     liked_post = create_post(user: liked_user)
-    PostAction.act(user, liked_post, PostActionType.types[:like])
+    PostActionCreator.like(user, liked_post)
 
     guardian = Guardian.new(user)
     summary = UserSummary.new(user, guardian)

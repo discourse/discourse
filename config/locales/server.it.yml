@@ -1015,7 +1015,6 @@ it:
     polling_interval: "Se non si esegue il long polling, quanto spesso i client autenticati devono fare poll in millisecondi"
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
-    flags_required_to_hide_post: "Numero di segnalazioni che rendono un messaggio automaticamente nascosto. L'utente riceve un messaggio privato (0 per mai)"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
     max_topics_in_first_day: "Numero massimo di argomenti che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"

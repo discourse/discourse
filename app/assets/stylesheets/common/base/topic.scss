@@ -153,16 +153,6 @@ a.badge-category {
   clear: both;
 }
 
-.has-pending-posts {
-  padding: 0.5em;
-  background-color: $highlight-medium;
-  a[href] {
-    float: right;
-  }
-  margin-top: 1em;
-  max-width: 757px;
-}
-
 .suggested-topics-wrapper.related-messages-wrapper {
   .suggested-topics:nth-of-type(n + 2) {
     thead {
