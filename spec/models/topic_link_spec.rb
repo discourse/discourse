@@ -41,7 +41,7 @@ describe TopicLink do
 
     it 'works' do
       expect(topic.topic_links.pluck(:url)).to contain_exactly(
-        "http://a.com",
+        "http://a.com/",
         "https://b.com/b",
         "//b.com/#{'a' * 500}"[0...TopicLink.max_url_length]
       )

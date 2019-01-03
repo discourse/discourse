@@ -205,7 +205,7 @@ SQL
       reflected_post = Post.find_by(topic_id: topic_id, post_number: post_number.to_i)
     end
 
-    url = url[0...TopicLink.max_url_length]&.chomp("/")
+    url = url[0...TopicLink.max_url_length]
     return nil if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
     unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
