@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 describe PostAction do
   it { is_expected.to rate_limit }
@@ -16,38 +15,24 @@ describe PostAction do
     GivenDailyLike.find_for(user_id, dt).pluck(:likes_given)[0] || 0
   end
 
-  describe "rate limits" do
-
-    it "limits redo/undo" do
-
-      RateLimiter.enable
-
-      PostAction.act(eviltrout, post, PostActionType.types[:like])
-      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
-      PostAction.act(eviltrout, post, PostActionType.types[:like])
-      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
-
-      expect {
-        PostAction.act(eviltrout, post, PostActionType.types[:like])
-      }.to raise_error(RateLimiter::LimitExceeded)
-
-    end
+  it "disallows the same action from happening twice" do
+    PostAction.create(user: eviltrout, post: post, post_action_type_id: PostActionType.types[:like])
+    pa = PostAction.new(user: eviltrout, post: post, post_action_type_id: PostActionType.types[:like])
+    expect(pa).not_to be_valid
   end
 
-  describe "messaging" do
+  context "messaging" do
 
-    it "doesn't generate title longer than 255 characters" do
-      topic = create_topic(title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
-      post = create_post(topic: topic)
-      expect { PostAction.act(admin, post, PostActionType.types[:notify_user], message: "WAT") }.not_to raise_error
-    end
-
-    it "notify moderators integration test" do
+    it "notifies moderators (integration test)" do
       post = create_post
       mod = moderator
       Group.refresh_automatic_groups!
 
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
+      result = PostActionCreator.notify_moderators(
+        codinghorror,
+        post,
+        "this is my special long message"
+      )
 
       posts = Post.joins(:topic)
         .select('posts.id, topics.subtype, posts.topic_id')
@@ -55,7 +40,8 @@ describe PostAction do
         .to_a
 
       expect(posts.count).to eq(1)
-      expect(action.related_post_id).to eq(posts[0].id.to_i)
+      expect(result.post_action.related_post_id).to eq(posts[0].id.to_i)
+      expect(result.reviewable_score.meta_topic_id).to eq(posts[0].topic_id)
       expect(posts[0].subtype).to eq(TopicSubtype.notify_moderators)
 
       topic = posts[0].topic
@@ -73,149 +59,38 @@ describe PostAction do
 
       # reply to PM should not clear flag
       PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
-      action.reload
-      expect(action.deleted_at).to eq(nil)
+      result.post_action.reload
+      expect(result.post_action.deleted_at).to eq(nil)
 
       # Acting on the flag should not post an automated status message (since a moderator already replied)
       expect(topic.posts.count).to eq(2)
-      PostAction.agree_flags!(post, admin)
-      expect(action.user.user_stat.flags_agreed).to eq(1)
-      expect(action.user.user_stat.flags_disagreed).to eq(0)
 
+      result.reviewable.perform(admin, :agree_and_keep)
       topic.reload
       expect(topic.posts.count).to eq(2)
 
       # Clearing the flags should not post an automated status message
-      new_action = PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
-      PostAction.clear_flags!(post, admin)
-      expect(new_action.user.user_stat.flags_agreed).to eq(0)
-      expect(new_action.user.user_stat.flags_disagreed).to eq(1)
+      result = PostActionCreator.notify_moderators(mod, post, "another special message")
+      result.reviewable.perform(admin, :disagree)
       topic.reload
       expect(topic.posts.count).to eq(2)
 
       # Acting on the flag should post an automated status message
       another_post = create_post
-      action = PostAction.act(codinghorror, another_post, PostActionType.types[:notify_moderators], message: "foobar")
-      topic = action.related_post.topic
+      result = PostActionCreator.notify_moderators(codinghorror, another_post, "foobar")
+      topic = result.post_action.related_post.topic
 
       expect(topic.posts.count).to eq(1)
-      PostAction.agree_flags!(another_post, admin)
-      expect(action.user.user_stat.flags_agreed).to eq(2)
-      expect(action.user.user_stat.flags_disagreed).to eq(0)
+      result.reviewable.perform(admin, :agree_and_keep)
 
       topic.reload
       expect(topic.posts.count).to eq(2)
       expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
     end
 
-    describe 'notify_moderators' do
-      before do
-        PostAction.stubs(:create)
-      end
-
-      it "creates a pm if selected" do
-        post = build(:post, id: 1000)
-        PostCreator.any_instance.expects(:create).returns(post)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message")
-      end
-    end
-
-    describe "notify_user" do
-      before do
-        PostAction.stubs(:create)
-        post = build(:post)
-        post.user = build(:user)
-      end
-
-      it "sends an email to user if selected" do
-        PostCreator.any_instance.expects(:create).returns(build(:post))
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message")
-      end
-    end
-  end
-
-  describe "flag counts" do
-    before do
-      PostAction.update_flagged_posts_count
-    end
-
-    it "increments the numbers correctly" do
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      expect(PostAction.flagged_posts_count).to eq(1)
-
-      PostAction.clear_flags!(post, Discourse.system_user)
-      expect(PostAction.flagged_posts_count).to eq(0)
-    end
-
-    it "respects min_flags_staff_visibility" do
-      SiteSetting.min_flags_staff_visibility = 2
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      PostAction.act(eviltrout, post, PostActionType.types[:off_topic])
-      expect(PostAction.flagged_posts_count).to eq(1)
-    end
-
-    it "tl3 hidden posts will supersede min_flags_staff_visibility" do
-      SiteSetting.min_flags_staff_visibility = 2
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      codinghorror.update_column(:trust_level, 3)
-      post.user.update_column(:trust_level, 0)
-      PostAction.act(codinghorror, post, PostActionType.types[:spam])
-      expect(PostAction.flagged_posts_count).to eq(1)
-    end
-
-    it "tl4 hidden posts will supersede min_flags_staff_visibility" do
-      SiteSetting.min_flags_staff_visibility = 2
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      codinghorror.update_column(:trust_level, 4)
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-
-      expect(PostAction.flagged_posts_count).to eq(1)
-    end
-
-    it "should reset counts when a topic is deleted" do
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      post.topic.trash!
-      expect(PostAction.flagged_posts_count).to eq(0)
-    end
-
-    it "should ignore flags on non-human users" do
-      post = create_post(user: Discourse.system_user)
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      expect(PostAction.flagged_posts_count).to eq(0)
-    end
-
-    it "should ignore validated flags" do
-      post = create_post
-
-      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      expect(post.hidden).to eq(false)
-      expect(post.hidden_at).to be_blank
-      PostAction.defer_flags!(post, admin)
-      expect(PostAction.flagged_posts_count).to eq(0)
-
-      post.reload
-      expect(post.hidden).to eq(false)
-      expect(post.hidden_at).to be_blank
-
-      PostAction.hide_post!(post, PostActionType.types[:off_topic])
-
-      post.reload
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).to be_present
-    end
-
   end
 
   describe "update_counters" do
-
     it "properly updates topic counters" do
       freeze_time Date.today
       # we need this to test it
@@ -223,8 +98,8 @@ describe PostAction do
 
       expect(value_for(moderator.id, Date.today)).to eq(0)
 
-      PostAction.act(moderator, post, PostActionType.types[:like])
-      PostAction.act(codinghorror, second_post, PostActionType.types[:like])
+      PostActionCreator.like(moderator, post)
+      PostActionCreator.like(codinghorror, second_post)
 
       post.topic.reload
       expect(post.topic.like_count).to eq(2)
@@ -263,11 +138,11 @@ describe PostAction do
 
   describe "undo/redo repeatedly" do
     it "doesn't create a second action for the same user/type" do
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostActionCreator.like(codinghorror, post)
+      PostActionDestroyer.destroy(codinghorror, post, :like)
+      PostActionCreator.like(codinghorror, post)
       expect(PostAction.where(post: post).with_deleted.count).to eq(1)
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(codinghorror, post, :like)
 
       # Check that we don't lose consistency into negatives
       expect(post.reload.like_count).to eq(0)
@@ -280,7 +155,7 @@ describe PostAction do
     end
 
     it 'should generate and remove notifications correctly' do
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostActionCreator.like(codinghorror, post)
 
       expect(Notification.count).to eq(1)
 
@@ -289,11 +164,11 @@ describe PostAction do
       expect(notification.user_id).to eq(post.user_id)
       expect(notification.notification_type).to eq(Notification.types[:liked])
 
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(codinghorror, post, :like)
 
       expect(Notification.count).to eq(0)
 
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostActionCreator.like(codinghorror, post)
 
       expect(Notification.count).to eq(1)
 
@@ -310,13 +185,14 @@ describe PostAction do
       )
 
       expect do
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
+        PostActionCreator.like(codinghorror, post)
       end.to_not change { Notification.count }
     end
 
     it 'notifies on likes correctly' do
-      PostAction.act(eviltrout, post, PostActionType.types[:like])
-      PostAction.act(admin, post, PostActionType.types[:like])
+      SiteSetting.post_undo_action_window_mins = 120
+      PostActionCreator.like(eviltrout, post)
+      PostActionCreator.like(admin, post)
 
       # one like
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
@@ -332,7 +208,7 @@ describe PostAction do
       freeze_time 1.hour.from_now
 
       expect do
-        PostAction.act(admin2, post, PostActionType.types[:like])
+        PostActionCreator.like(admin2, post)
       end.to_not change { Notification.count }
 
       # adds info to the notification
@@ -345,7 +221,7 @@ describe PostAction do
       expect(notification.data_hash["username2"]).to eq(eviltrout.username)
 
       # this is a tricky thing ... removing a like should fix up the notifications
-      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(eviltrout, post, :like)
 
       # rebuilds the missing notification
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
@@ -367,12 +243,12 @@ describe PostAction do
 
       # this gets skipped
       admin3 = Fabricate(:admin)
-      PostAction.act(admin3, post, PostActionType.types[:like])
+      PostActionCreator.like(admin3, post)
 
       freeze_time 2.days.from_now
 
       admin4 = Fabricate(:admin)
-      PostAction.act(admin4, post, PostActionType.types[:like])
+      PostActionCreator.like(admin4, post)
 
       # first happend within the same day, no need to notify
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
@@ -388,21 +264,13 @@ describe PostAction do
         SiteSetting.likes_notification_consolidation_threshold = 0
 
         expect do
-          PostAction.act(
-            liker,
-            Fabricate(:post, user: likee),
-            PostActionType.types[:like]
-          )
+          PostActionCreator.like(liker, Fabricate(:post, user: likee))
         end.to change { likee.reload.notifications.count }.by(1)
 
         SiteSetting.likes_notification_consolidation_threshold = 1
 
         expect do
-          PostAction.act(
-            liker,
-            Fabricate(:post, user: likee),
-            PostActionType.types[:like]
-          )
+          PostActionCreator.like(liker, Fabricate(:post, user: likee))
         end.to_not change { likee.reload.notifications.count }
       end
 
@@ -419,11 +287,7 @@ describe PostAction do
 
           expect do
             3.times do
-              PostAction.act(
-                liker,
-                Fabricate(:post, user: likee),
-                PostActionType.types[:like]
-              )
+              PostActionCreator.like(liker, Fabricate(:post, user: likee))
             end
           end.to change { likee.reload.notifications.count }.by(1)
 
@@ -443,11 +307,7 @@ describe PostAction do
 
           expect do
             2.times do
-              PostAction.act(
-                liker,
-                Fabricate(:post, user: likee),
-                PostActionType.types[:like]
-              )
+              PostActionCreator.like(liker, Fabricate(:post, user: likee))
             end
           end.to_not change { likee.reload.notifications.count }
 
@@ -458,11 +318,7 @@ describe PostAction do
 
           # Like from a different user shouldn't be consolidated
           expect do
-            PostAction.act(
-              Fabricate(:user),
-              Fabricate(:post, user: likee),
-              PostActionType.types[:like]
-            )
+            PostActionCreator.like(Fabricate(:user), Fabricate(:post, user: likee))
           end.to change { likee.reload.notifications.count }.by(1)
 
           notification = likee.notifications.last
@@ -477,11 +333,7 @@ describe PostAction do
           ).since)
 
           expect do
-            PostAction.act(
-              liker,
-              Fabricate(:post, user: likee),
-              PostActionType.types[:like]
-            )
+            PostActionCreator.like(liker, Fabricate(:post, user: likee))
           end.to change { likee.reload.notifications.count }.by(1)
 
           notification = likee.notifications.last
@@ -505,7 +357,7 @@ describe PostAction do
 
           expect do
             [liker2, liker].each do |user|
-              PostAction.act(user, post, PostActionType.types[:like])
+              PostActionCreator.like(user, post)
             end
           end.to change { likee.reload.notifications.count }.by(1)
 
@@ -518,11 +370,7 @@ describe PostAction do
 
           expect do
             2.times do
-              PostAction.act(
-                liker,
-                Fabricate(:post, user: likee),
-                PostActionType.types[:like]
-              )
+              PostActionCreator.like(liker, Fabricate(:post, user: likee))
             end
           end.to change { likee.reload.notifications.count }.by(2)
 
@@ -530,11 +378,7 @@ describe PostAction do
             .to contain_exactly(Notification.types[:liked])
 
           expect do
-            PostAction.act(
-              liker,
-              Fabricate(:post, user: likee),
-              PostActionType.types[:like]
-            )
+            PostActionCreator.like(liker, Fabricate(:post, user: likee))
           end.to change { likee.reload.notifications.count }.by(-1)
 
           notification = likee.notifications.last
@@ -554,7 +398,7 @@ describe PostAction do
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
 
       expect do
-        PostAction.act(mutee, post, PostActionType.types[:like])
+        PostActionCreator.like(mutee, post)
       end.to_not change { Notification.count }
     end
 
@@ -568,7 +412,7 @@ describe PostAction do
       )
 
       expect do
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
+        PostActionCreator.like(codinghorror, post)
       end.to_not change { Notification.count }
     end
 
@@ -578,7 +422,7 @@ describe PostAction do
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
 
       expect do
-        PostAction.act(admin, post, PostActionType.types[:like])
+        PostActionCreator.like(admin, post)
       end.to change { Notification.count }.by(1)
 
       notification = Notification.last
@@ -590,7 +434,7 @@ describe PostAction do
     it 'should increase the `like_count` and `like_score` when a user likes something' do
       freeze_time Date.today
 
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostActionCreator.like(codinghorror, post)
       post.reload
       expect(post.like_count).to eq(1)
       expect(post.like_score).to eq(1)
@@ -599,21 +443,21 @@ describe PostAction do
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       # When a staff member likes it
-      PostAction.act(moderator, post, PostActionType.types[:like])
+      PostActionCreator.like(moderator, post)
       post.reload
       expect(post.like_count).to eq(2)
       expect(post.like_score).to eq(4)
       expect(post.topic.like_count).to eq(2)
 
       # Removing likes
-      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(codinghorror, post, :like)
       post.reload
       expect(post.like_count).to eq(1)
       expect(post.like_score).to eq(3)
       expect(post.topic.like_count).to eq(1)
       expect(value_for(codinghorror.id, Date.today)).to eq(0)
 
-      PostAction.remove_act(moderator, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(moderator, post, :like)
       post.reload
       expect(post.like_count).to eq(0)
       expect(post.like_score).to eq(0)
@@ -623,18 +467,18 @@ describe PostAction do
     it "shouldn't change given_likes unless likes are given or removed" do
       freeze_time(Time.zone.now)
 
-      PostAction.act(codinghorror, Fabricate(:post), PostActionType.types[:like])
+      PostActionCreator.like(codinghorror, Fabricate(:post))
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       PostActionType.types.each do |type_name, type_id|
         post = Fabricate(:post)
 
-        PostAction.act(codinghorror, post, type_id)
+        PostActionCreator.create(codinghorror, post, type_name)
         actual_count = value_for(codinghorror.id, Date.today)
         expected_count = type_name == :like ? 2 : 1
         expect(actual_count).to eq(expected_count), "Expected likes_given to be #{expected_count} when adding '#{type_name}', but got #{actual_count}"
 
-        PostAction.remove_act(codinghorror, post, type_id)
+        PostActionDestroyer.new(codinghorror, post, type_id).perform
         actual_count = value_for(codinghorror.id, Date.today)
         expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
       end
@@ -643,65 +487,39 @@ describe PostAction do
 
   describe 'flagging' do
 
-    context "flag_counts_for" do
-      it "returns the correct flag counts" do
-        post = create_post
-
-        SiteSetting.flags_required_to_hide_post = 7
-
-        # A post with no flags has 0 for flag counts
-        expect(PostAction.flag_counts_for(post.id)).to eq([0, 0])
-
-        _flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
-        expect(PostAction.flag_counts_for(post.id)).to eq([0, 1])
-
-        # If staff takes action, it is ranked higher
-        PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
-        expect(PostAction.flag_counts_for(post.id)).to eq([0, 8])
-
-        # If a flag is dismissed
-        PostAction.clear_flags!(post, admin)
-        expect(PostAction.flag_counts_for(post.id)).to eq([0, 8])
-      end
+    it 'does not allow you to flag stuff twice, even if the reason is different' do
+      post = Fabricate(:post)
+      expect(PostActionCreator.spam(eviltrout, post)).to be_success
+      expect(PostActionCreator.off_topic(eviltrout, post)).to be_failed
     end
 
-    it 'does not allow you to flag stuff with the same reason more than once' do
+    it 'allows you to flag stuff again if your previous flag was removed' do
       post = Fabricate(:post)
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      expect { PostAction.act(eviltrout, post, PostActionType.types[:off_topic]) }.to raise_error(PostAction::AlreadyActed)
-    end
-
-    it 'allows you to flag stuff with another reason' do
-      post = Fabricate(:post)
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      PostAction.remove_act(eviltrout, post, PostActionType.types[:spam])
-      expect { PostAction.act(eviltrout, post, PostActionType.types[:off_topic]) }.not_to raise_error()
+      PostActionCreator.spam(eviltrout, post)
+      PostActionDestroyer.destroy(eviltrout, post, :spam)
+      expect(PostActionCreator.spam(eviltrout, post)).to be_success
     end
 
     it 'should update counts when you clear flags' do
       post = Fabricate(:post)
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      reviewable = PostActionCreator.spam(eviltrout, post).reviewable
 
-      post.reload
-      expect(post.spam_count).to eq(1)
+      expect(post.reload.spam_count).to eq(1)
 
-      PostAction.clear_flags!(post, Discourse.system_user)
+      reviewable.perform(Discourse.system_user, :disagree)
 
-      post.reload
-      expect(post.spam_count).to eq(0)
+      expect(post.reload.spam_count).to eq(0)
     end
 
     it "will not allow regular users to auto hide staff posts" do
       mod = Fabricate(:moderator)
       post = Fabricate(:post, user: mod)
 
-      SiteSetting.flags_required_to_hide_post = 2
+      SiteSetting.score_required_to_hide_post = 2.0
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      PostAction.act(Fabricate(:walter_white), post, PostActionType.types[:spam])
-
-      post.reload
+      PostActionCreator.spam(eviltrout, post)
+      PostActionCreator.spam(Fabricate(:walter_white), post)
 
       expect(post.hidden).to eq(false)
       expect(post.hidden_at).to be_blank
@@ -711,11 +529,11 @@ describe PostAction do
       mod = Fabricate(:moderator)
       post = Fabricate(:post, user: mod)
 
-      SiteSetting.flags_required_to_hide_post = 2
+      SiteSetting.score_required_to_hide_post = 8.0
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      PostAction.act(Fabricate(:admin), post, PostActionType.types[:spam])
+      PostActionCreator.spam(eviltrout, post)
+      PostActionCreator.spam(Fabricate(:admin), post)
 
       post.reload
 
@@ -727,11 +545,11 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
-      SiteSetting.flags_required_to_hide_post = 2
+      SiteSetting.score_required_to_hide_post = 3.0
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      PostAction.act(walterwhite, post, PostActionType.types[:spam])
+      PostActionCreator.spam(eviltrout, post)
+      PostActionCreator.spam(walterwhite, post)
 
       job_args = Jobs::SendSystemMessage.jobs.last["args"].first
       expect(job_args["user_id"]).to eq(post.user.id)
@@ -753,8 +571,8 @@ describe PostAction do
       expect(post.hidden_at).to be_present # keep the most recent hidden_at time
       expect(post.topic.visible).to eq(true)
 
-      PostAction.act(eviltrout, post, PostActionType.types[:spam])
-      PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+      PostActionCreator.spam(eviltrout, post)
+      PostActionCreator.off_topic(walterwhite, post)
 
       job_args = Jobs::SendSystemMessage.jobs.last["args"].first
       expect(job_args["user_id"]).to eq(post.user.id)
@@ -781,7 +599,7 @@ describe PostAction do
       post = create_post
       post.update!(user: nil)
 
-      PostAction.act(codinghorror, post, PostActionType.types[:spam], take_action: true)
+      PostActionCreator.new(moderator, post, PostActionType.types[:spam], take_action: true).perform
       post.reload
       expect(post.hidden).to eq(true)
     end
@@ -792,7 +610,7 @@ describe PostAction do
 
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostAction.act(Fabricate(:leader), post, PostActionType.types[:spam])
+      PostActionCreator.spam(Fabricate(:leader), post)
 
       post.reload
 
@@ -804,13 +622,11 @@ describe PostAction do
     it "hide non-tl4 posts that are flagged by a tl4 user" do
       SiteSetting.site_contact_username = admin.username
 
-      post_action_type = PostActionType.types[:spam]
       tl4_user = Fabricate(:trust_level_4)
-
       user = Fabricate(:leader)
       post = create_post(user: user)
 
-      PostAction.act(tl4_user, post, post_action_type)
+      PostActionCreator.spam(tl4_user, post)
 
       post.reload
 
@@ -819,20 +635,20 @@ describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl4_user])
 
       post = create_post(user: user)
-      PostAction.act(Fabricate(:leader), post, post_action_type)
+      PostActionCreator.spam(Fabricate(:leader), post)
       post.reload
 
       expect(post.hidden).to be_falsey
 
       post = create_post(user: user)
-      PostAction.act(Fabricate(:moderator), post, post_action_type)
+      PostActionCreator.spam(Fabricate(:moderator), post)
       post.reload
 
       expect(post.hidden).to be_falsey
 
       user = Fabricate(:trust_level_4)
       post = create_post(user: user)
-      PostAction.act(tl4_user, post, post_action_type)
+      PostActionCreator.spam(tl4_user, post)
       post.reload
 
       expect(post.hidden).to be_falsey
@@ -840,28 +656,40 @@ describe PostAction do
 
     it "can flag the topic instead of a post" do
       post1 = create_post
-      _post2 = create_post(topic: post1.topic)
-      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], flag_topic: true)
-      expect(post_action.targets_topic).to eq(true)
+      create_post(topic: post1.topic)
+      result = PostActionCreator.new(
+        Fabricate(:user),
+        post1,
+        PostActionType.types[:spam],
+        flag_topic: true
+      ).perform
+      expect(result.post_action.targets_topic).to eq(true)
+      expect(result.reviewable.payload['targets_topic']).to eq(true)
     end
 
     it "will flag the first post if you flag a topic but there is only one post in the topic" do
       post = create_post
-      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], flag_topic: true)
-      expect(post_action.targets_topic).to eq(false)
-      expect(post_action.post_id).to eq(post.id)
+      result = PostActionCreator.new(
+        Fabricate(:user),
+        post,
+        PostActionType.types[:spam],
+        flag_topic: true
+      ).perform
+      expect(result.post_action.targets_topic).to eq(false)
+      expect(result.post_action.post_id).to eq(post.id)
+      expect(result.reviewable.payload['targets_topic']).to eq(false)
     end
 
     it "will unhide the post when a moderator undos the flag on which s/he took action" do
       Discourse.stubs(:site_contact_user).returns(admin)
 
       post = create_post
-      PostAction.act(moderator, post, PostActionType.types[:spam], take_action: true)
+      PostActionCreator.new(moderator, post, PostActionType.types[:spam], take_action: true).perform
 
       post.reload
       expect(post.hidden).to eq(true)
 
-      PostAction.remove_act(moderator, post, PostActionType.types[:spam])
+      PostActionDestroyer.destroy(moderator, post, :spam)
 
       post.reload
       expect(post.hidden).to eq(false)
@@ -877,8 +705,8 @@ describe PostAction do
       let(:flagger2) { Fabricate(:user) }
 
       before do
-        SiteSetting.flags_required_to_hide_post = 0
-        SiteSetting.num_flags_to_close_topic = 3
+        SiteSetting.score_required_to_hide_post = 0
+        SiteSetting.score_to_auto_close_topic = 12.0
         SiteSetting.num_flaggers_to_close_topic = 2
         SiteSetting.num_hours_to_close_topic = 1
       end
@@ -886,7 +714,7 @@ describe PostAction do
       it "will automatically pause a topic due to large community flagging" do
         # reaching `num_flaggers_to_close_topic` isn't enough
         [flagger1, flagger2].each do |flagger|
-          PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+          PostActionCreator.inappropriate(flagger, post1)
         end
 
         expect(topic.reload.closed).to eq(false)
@@ -896,7 +724,7 @@ describe PostAction do
 
         # reaching `num_flags_to_close_topic` isn't enough
         [post1, post2, post3].each do |post|
-          PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
+          PostActionCreator.inappropriate(flagger1, post)
         end
 
         expect(topic.reload.closed).to eq(false)
@@ -907,7 +735,7 @@ describe PostAction do
         # reaching both should close the topic
         [flagger1, flagger2].each do |flagger|
           [post1, post2, post3].each do |post|
-            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+            PostActionCreator.inappropriate(flagger, post)
           end
         end
 
@@ -927,7 +755,7 @@ describe PostAction do
         it "will not close topics opened by staff" do
           [flagger1, flagger2].each do |flagger|
             [post1, post2, post3].each do |post|
-              PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+              PostActionCreator.inappropriate(flagger, post)
             end
           end
 
@@ -939,10 +767,10 @@ describe PostAction do
         freeze_time
 
         SiteSetting.num_flaggers_to_close_topic = 1
-        SiteSetting.num_flags_to_close_topic = 1
+        SiteSetting.score_to_auto_close_topic = 2.0
 
         post = Fabricate(:post, topic: topic)
-        PostAction.act(flagger1, post, PostActionType.types[:spam])
+        PostActionCreator.spam(flagger1, post)
         expect(topic.reload.closed).to eq(true)
 
         timer = TopicTimer.last
@@ -962,7 +790,7 @@ describe PostAction do
 
         freeze_time timer.execute_at
         SiteSetting.num_flaggers_to_close_topic = 10
-        SiteSetting.num_flags_to_close_topic = 10
+        SiteSetting.score_to_auto_close_topic = 20.0
 
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
@@ -973,7 +801,7 @@ describe PostAction do
         freeze_time
         [flagger1, flagger2].each do |flagger|
           [post1, post2, post3].each do |post|
-            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+            PostActionCreator.inappropriate(flagger, post)
           end
         end
 
@@ -991,25 +819,31 @@ describe PostAction do
 
   it "prevents user to act twice at the same time" do
     # flags are already being tested
-    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types_without_custom)
+    all_types_except_flags = PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
     all_types_except_flags.values.each do |action|
-      expect do
-        PostAction.act(eviltrout, post, action)
-        PostAction.act(eviltrout, post, action)
-      end.to raise_error(PostAction::AlreadyActed)
+      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
+      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end
   end
 
-  describe ".create_message_for_post_action" do
+  describe "messages" do
     it "does not create a message when there is no message" do
-      message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:spam], {})
-      expect(message_id).to be_nil
+      result = PostActionCreator.spam(Discourse.system_user, post)
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_nil
+      expect(result.reviewable_score.meta_topic_id).to be_nil
     end
 
     [:notify_moderators, :notify_user, :spam].each do |post_action_type|
       it "creates a message for #{post_action_type}" do
-        message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[post_action_type], message: "WAT")
-        expect(message_id).to be_present
+        result = PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[post_action_type],
+          message: 'WAT'
+        ).perform
+        expect(result).to be_success
+        expect(result.post_action.related_post_id).to be_present
       end
     end
 
@@ -1019,14 +853,8 @@ describe PostAction do
         messageable_level = group.messageable_level
         group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
 
-        expect do
-          PostAction.create_message_for_post_action(
-            Fabricate(:user),
-            post,
-            PostActionType.types[:notify_moderators],
-            message: 'testing',
-          )
-        end.to raise_error(ActiveRecord::RecordNotSaved)
+        result = PostActionCreator.notify_moderators(Fabricate(:user), post, 'testing')
+        expect(result).to be_failed
       ensure
         group.update!(messageable_level: messageable_level)
       end
@@ -1036,8 +864,10 @@ describe PostAction do
       SiteSetting.max_topic_title_length = 50
       post.topic.title = 'This is a test topic ' * 2
       post.topic.save!
-      message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:notify_moderators], message: "WAT")
-      expect(message_id).to be_present
+
+      result = PostActionCreator.notify_moderators(Discourse.system_user, post, 'WAT')
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_present
     end
   end
 
@@ -1045,8 +875,7 @@ describe PostAction do
     it "returns the correct map" do
       user = Fabricate(:user)
       post = Fabricate(:post)
-      post_action = PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)
-
+      post_action = PostActionCreator.create(user, post, :bookmark).post_action
       map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
 
       expect(map).to eq(post.topic_id => [post.post_number])
@@ -1058,47 +887,43 @@ describe PostAction do
     it "should not add a moderator post when it's disabled" do
       post = create_post
 
-      action = PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
-      action.reload
-      topic = action.related_post.topic
+      result = PostActionCreator.create(moderator, post, :spam, message: "WAT")
+      topic = result.post_action.related_post.topic
       expect(topic.posts.count).to eq(1)
 
       SiteSetting.auto_respond_to_flag_actions = false
-      PostAction.agree_flags!(post, admin)
-      expect(action.user.user_stat.flags_agreed).to eq(1)
-
-      topic.reload
-      expect(topic.posts.count).to eq(1)
+      result.reviewable.perform(admin, :agree_and_keep)
+      expect(topic.reload.posts.count).to eq(1)
     end
 
     it "should create a notification in the related topic" do
       Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
-      action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")
-      topic = action.reload.related_post.topic
+      result = PostActionCreator.create(user, post, :spam, message: "WAT")
+      topic = result.post_action.related_post.topic
+      reviewable = result.reviewable
       expect(user.notifications.count).to eq(0)
 
       SiteSetting.auto_respond_to_flag_actions = true
-      PostAction.agree_flags!(post, admin)
-      expect(action.user.user_stat.flags_agreed).to eq(1)
+      reviewable.perform(admin, :agree_and_keep)
 
       user_notifications = user.notifications
-      expect(user_notifications.count).to eq(1)
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    it "should not add a moderator post when post is flagged via private message" do
+    skip "should not add a moderator post when post is flagged via private message" do
       Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
-      action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")
+      result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
+      action = result.post_action
       action.reload.related_post.topic
       expect(user.notifications.count).to eq(0)
 
       SiteSetting.auto_respond_to_flag_actions = true
-      PostAction.agree_flags!(post, admin)
-      expect(action.user.user_stat.flags_agreed).to eq(0)
+      result.reviewable.perform(admin, :agree_and_keep)
+      expect(user.reload.user_stat.flags_agreed).to eq(0)
 
       user_notifications = user.notifications
       expect(user_notifications.count).to eq(0)
@@ -1162,35 +987,47 @@ describe PostAction do
   describe "triggers Discourse events" do
     let(:post) { Fabricate(:post) }
 
-    it 'flag created' do
-      event = DiscourseEvent.track_events { PostAction.act(eviltrout, post, PostActionType.types[:spam]) }.last
-      expect(event[:event_name]).to eq(:flag_created)
+    it 'triggers a flag_created event' do
+      event = DiscourseEvent.track(:flag_created) { PostActionCreator.spam(eviltrout, post) }
+      expect(event).to be_present
     end
 
     context "resolving flags" do
-      before do
-        @flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      let(:result) { PostActionCreator.spam(eviltrout, post) }
+      let(:post_action) { result.post_action }
+      let(:reviewable) { result.reviewable }
+
+      it 'creates events for agreed' do
+        events = DiscourseEvent.track_events { reviewable.perform(moderator, :agree_and_keep) }
+
+        reviewed_event = events.find { |e| e[:event_name] == :flag_reviewed }
+        expect(reviewed_event).to be_present
+
+        event = events.find { |e| e[:event_name] == :flag_agreed }
+        expect(event).to be_present
+        expect(event[:params]).to eq([post_action])
       end
 
-      it 'flag agreed' do
-        events = DiscourseEvent.track_events { PostAction.agree_flags!(post, moderator) }.last(2)
-        expect(events[0][:event_name]).to eq(:flag_reviewed)
-        expect(events[1][:event_name]).to eq(:flag_agreed)
-        expect(events[1][:params].first).to eq(@flag)
+      it 'creates events for disagreed' do
+        events = DiscourseEvent.track_events { reviewable.perform(moderator, :disagree) }
+
+        reviewed_event = events.find { |e| e[:event_name] == :flag_reviewed }
+        expect(reviewed_event).to be_present
+
+        event = events.find { |e| e[:event_name] == :flag_disagreed }
+        expect(event).to be_present
+        expect(event[:params]).to eq([post_action])
       end
 
-      it 'flag disagreed' do
-        events = DiscourseEvent.track_events { PostAction.clear_flags!(post, moderator) }.last(2)
-        expect(events[0][:event_name]).to eq(:flag_reviewed)
-        expect(events[1][:event_name]).to eq(:flag_disagreed)
-        expect(events[1][:params].first).to eq(@flag)
-      end
+      it 'creates events for ignored' do
+        events = DiscourseEvent.track_events { reviewable.perform(moderator, :ignore) }
 
-      it 'flag deferred' do
-        events = DiscourseEvent.track_events { PostAction.defer_flags!(post, moderator) }.last(2)
-        expect(events[0][:event_name]).to eq(:flag_reviewed)
-        expect(events[1][:event_name]).to eq(:flag_deferred)
-        expect(events[1][:params].first).to eq(@flag)
+        reviewed_event = events.find { |e| e[:event_name] == :flag_reviewed }
+        expect(reviewed_event).to be_present
+
+        event = events.find { |e| e[:event_name] == :flag_deferred }
+        expect(event).to be_present
+        expect(event[:params]).to eq([post_action])
       end
     end
   end

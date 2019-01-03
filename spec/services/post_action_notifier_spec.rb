@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 describe PostActionNotifier do
 
@@ -64,7 +63,7 @@ describe PostActionNotifier do
       other_user = Fabricate(:user)
       topic.allowed_users << user << other_user
       expect {
-        PostAction.act(other_user, mention_post, PostActionType.types[:like])
+        PostActionCreator.like(other_user, mention_post)
       }.to change(user.notifications, :count)
     end
   end

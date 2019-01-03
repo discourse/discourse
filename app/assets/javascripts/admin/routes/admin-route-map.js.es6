@@ -121,18 +121,6 @@ export default function() {
     );
 
     this.route(
-      "adminFlags",
-      { path: "/flags", resetNamespace: true },
-      function() {
-        this.route("postsActive", { path: "active" });
-        this.route("postsOld", { path: "old" });
-        this.route("topics", { path: "topics" }, function() {
-          this.route("show", { path: ":id" });
-        });
-      }
-    );
-
-    this.route(
       "adminLogs",
       { path: "/logs", resetNamespace: true },
       function() {

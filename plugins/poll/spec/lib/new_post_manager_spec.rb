@@ -26,12 +26,12 @@ describe NewPostManager do
         first_post_checks: true
       }
 
-      expect { NewPostManager.new(user, params).perform }
-        .to change { QueuedPost.count }.by(1)
+      result = NewPostManager.new(user, params).perform
+      expect(result.action).to eq(:enqueued)
+      expect(result.reviewable).to be_present
 
-      QueuedPost.last.approve!(admin)
-
-      expect(Poll.where(post: Post.last).exists?).to eq(true)
+      review_result = result.reviewable.perform(admin, :approve)
+      expect(Poll.where(post: review_result.post).exists?).to eq(true)
     end
   end
 end

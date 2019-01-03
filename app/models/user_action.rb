@@ -1,5 +1,9 @@
 class UserAction < ActiveRecord::Base
 
+  self.ignored_columns = %w{
+    queued_post_id
+  }
+
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
@@ -18,14 +22,12 @@ class UserAction < ActiveRecord::Base
   EDIT = 11
   NEW_PRIVATE_MESSAGE = 12
   GOT_PRIVATE_MESSAGE = 13
-  PENDING = 14
   SOLVED = 15
   ASSIGNED = 16
 
   ORDER = Hash[*[
     GOT_PRIVATE_MESSAGE,
     NEW_PRIVATE_MESSAGE,
-    PENDING,
     NEW_TOPIC,
     REPLY,
     RESPONSE,
@@ -149,48 +151,6 @@ class UserAction < ActiveRecord::Base
     topic_archived
   }.map! { |s|  "NULL as #{s}" }.join(", ")
 
-  def self.stream_queued(opts = nil)
-    opts ||= {}
-
-    offset = opts[:offset] || 0
-    limit = opts[:limit] || 60
-
-    # this is somewhat ugly, but the serializer wants all these columns
-    # it is more correct to have an object with all the fields needed
-    # cause then we can catch and change if we ever add columns
-    builder = DB.build <<~SQL
-      SELECT
-        a.id,
-        t.title,
-        a.action_type,
-        a.created_at,
-        t.id topic_id,
-        u.username,
-        u.name,
-        u.id AS user_id,
-        qp.raw,
-        t.category_id,
-        #{NULL_QUEUED_STREAM_COLS}
-      FROM user_actions as a
-      JOIN queued_posts AS qp ON qp.id = a.queued_post_id
-      LEFT OUTER JOIN topics t on t.id = qp.topic_id
-      JOIN users u on u.id = a.user_id
-      LEFT JOIN categories c on c.id = t.category_id
-      /*where*/
-      /*order_by*/
-      /*offset*/
-      /*limit*/
-    SQL
-
-    builder
-      .where('a.user_id = :user_id', user_id: opts[:user_id].to_i)
-      .where('action_type = :pending', pending: UserAction::PENDING)
-      .order_by("a.created_at desc")
-      .offset(offset.to_i)
-      .limit(limit.to_i)
-      .query
-  end
-
   def self.stream(opts = nil)
     opts ||= {}
 
@@ -281,12 +241,8 @@ class UserAction < ActiveRecord::Base
   def self.log_action!(hash)
     required_parameters = [:action_type, :user_id, :acting_user_id]
 
-    if hash[:action_type] == UserAction::PENDING
-      required_parameters << :queued_post_id
-    else
-      required_parameters << :target_post_id
-      required_parameters << :target_topic_id
-    end
+    required_parameters << :target_post_id
+    required_parameters << :target_topic_id
 
     require_parameters(hash, *required_parameters)
 
@@ -415,7 +371,6 @@ class UserAction < ActiveRecord::Base
 
     unless guardian.can_see_notifications?(User.where(id: user_id).first)
       builder.where("a.action_type not in (#{BOOKMARK})")
-      builder.where('a.action_type <> :pending', pending: UserAction::PENDING)
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
@@ -470,7 +425,6 @@ end
 #  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  queued_post_id  :integer
 #
 # Indexes
 #

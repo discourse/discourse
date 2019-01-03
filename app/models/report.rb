@@ -510,7 +510,7 @@ class Report
     end
 
     if report.facets.include?(:total)
-      report.total      = subject_class.count
+      report.total = subject_class.count
     end
 
     if report.facets.include?(:prev30Days)
@@ -553,10 +553,19 @@ class Report
     report.icon = 'flag'
     report.higher_is_better = false
 
-    basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
-    countable = PostAction.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
-    add_counts report, countable, 'post_actions.created_at'
+    basic_report_about(
+      report,
+      ReviewableFlaggedPost,
+      :count_by_date,
+      report.start_date,
+      report.end_date,
+      report.category_id
+    )
+
+    countable = ReviewableFlaggedPost.scores_with_topics
+    countable.merge!(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
+
+    add_counts report, countable, 'reviewable_scores.created_at'
   end
 
   def self.report_likes(report)
@@ -1280,7 +1289,7 @@ class Report
 
     report.modes = [:table]
 
-    report.dates_filtering = false
+    report.dates_filtering = true
 
     report.labels = [
       {
@@ -1314,25 +1323,36 @@ class Report
       },
     ]
 
+    statuses = ReviewableScore.statuses
+
+    agreed = "SUM(CASE WHEN rs.status = #{statuses[:agreed]} THEN 1 ELSE 0 END)::numeric"
+    disagreed = "SUM(CASE WHEN rs.status = #{statuses[:disagreed]} THEN 1 ELSE 0 END)::numeric"
+    ignored = "SUM(CASE WHEN rs.status = #{statuses[:ignored]} THEN 1 ELSE 0 END)::numeric"
+
     sql = <<~SQL
       SELECT u.id,
              u.username,
              u.uploaded_avatar_id as avatar_id,
              CASE WHEN u.silenced_till IS NOT NULL THEN 't' ELSE 'f' END as silenced,
-             us.flags_disagreed AS disagreed_flags,
-             us.flags_agreed AS agreed_flags,
-             us.flags_ignored AS ignored_flags,
-             ROUND((1-(us.flags_agreed::numeric / us.flags_disagreed::numeric)) *
-                   (us.flags_disagreed - us.flags_agreed)) AS score
+             #{disagreed} AS disagreed_flags,
+             #{agreed} AS agreed_flags,
+             #{ignored} AS ignored_flags,
+             ROUND((1-(#{agreed} / #{disagreed})) * (#{disagreed} - #{agreed})) AS score
       FROM users AS u
-        INNER JOIN user_stats AS us ON us.user_id = u.id
-      WHERE u.id <> -1
-        AND flags_disagreed > flags_agreed
+      INNER JOIN reviewable_scores AS rs ON rs.user_id = u.id
+      WHERE u.id > 0
+        AND rs.created_at >= :start_date
+        AND rs.created_at <= :end_date
+      GROUP BY u.id,
+        u.username,
+        u.uploaded_avatar_id,
+        u.silenced_till
+      HAVING #{disagreed} > #{agreed}
       ORDER BY score DESC
       LIMIT 100
       SQL
 
-    DB.query(sql).each do |row|
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
       flagger = {}
       flagger[:user_id] = row.id
       flagger[:username] = row.username

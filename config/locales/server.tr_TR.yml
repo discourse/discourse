@@ -648,7 +648,6 @@ tr_TR:
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
-    flags_required_to_hide_post: "Gönderinin otomatik olarak gizlenip kullanıcıya ileti gönderilmesi için gereken toplam bildirim sayısı (hiçbir zaman için 0)"
     cooldown_minutes_after_hiding_posts: "Topluluk tarafından bildirilerek gizlenen gönderiyi düzenleyebilmek için, kullanıcının beklemesi gereken dakika süresi "
     max_topics_in_first_day: "Kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik zaman dilimi içerisinde oluşturmasına izin verilen konu sayısı."
     max_replies_in_first_day: "Kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik zaman dilimi içerisinde oluşturabileceği cevap sayısı."

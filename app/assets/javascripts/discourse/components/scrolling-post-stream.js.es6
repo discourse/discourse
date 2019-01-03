@@ -3,7 +3,6 @@ import MountWidget from "discourse/components/mount-widget";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import optionalService from "discourse/lib/optional-service";
 
 function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) {
@@ -26,7 +25,6 @@ function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
 }
 
 export default MountWidget.extend({
-  adminTools: optionalService(),
   widget: "post-stream",
   _topVisible: null,
   _bottomVisible: null,
@@ -329,12 +327,5 @@ export default MountWidget.extend({
     this.$().off("mouseleave.post-stream");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
-  },
-
-  showModerationHistory(post) {
-    this.get("adminTools").showModerationHistory({
-      filter: "post",
-      post_id: post.id
-    });
   }
 });

@@ -238,12 +238,9 @@ describe Jobs::CleanUpUploads do
     upload = fabricate_upload
     upload2 = fabricate_upload
 
-    QueuedPost.create(
-      queue: "uploads",
-      state: QueuedPost.states[:new],
-      user_id: Fabricate(:user).id,
-      raw: "#{upload.sha1}\n#{upload2.short_url}",
-      post_options: {}
+    ReviewableQueuedPost.create(
+      created_by: Fabricate(:user),
+      payload: { raw: "#{upload.sha1}\n#{upload2.short_url}" },
     )
 
     Jobs::CleanUpUploads.new.execute(nil)

@@ -2,13 +2,38 @@ desc "rebuild the user_actions table"
 task "user_actions:rebuild" => :environment do
   MessageBus.off
   UserAction.delete_all
-  PostAction.all.each { |i| UserActionCreator.log_post_action(i) }
-  Topic.all.each { |i| UserActionCreator.log_topic(i) }
-  Post.all.each { |i| UserActionCreator.log_post(i) }
+  PostAction.all.each do |i|
+    if i.deleted_at.nil?
+      UserActionManager.post_action_created(i)
+    else
+      UserActionManager.post_action_destroyed(i)
+    end
+  end
+  Topic.all.each { |i| UserActionManager.log_topic(i) }
+  Post.all.each do |i|
+    if i.deleted_at.nil?
+      UserActionManager.post_created(i)
+    else
+      UserActionManager.post_destroyed(i)
+    end
+  end
   Notification.all.each do |notification|
-    UserActionCreator.log_notification(notification.post,
-                                       notification.user,
-                                       notification.notification_type,
-                                       notification.user)
+
+    if notification.post.deleted_at.nil?
+      UserActionManager.notification_created(
+        notification.post,
+        notification.user,
+        notification.notification_type,
+        notification.user
+      )
+    else
+      UserActionManager.notification_destroyed(
+        notification.post,
+        notification.user,
+        notification.notification_type,
+        notification.user
+      )
+    end
+
   end
 end

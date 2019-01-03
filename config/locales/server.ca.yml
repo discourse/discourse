@@ -758,7 +758,6 @@ ca:
     polling_interval: "Quan no hi ha mostreig llarg, amb quina freqüència en mil·lisegons haurien de connectar-se a clients de mostreig"
     anon_polling_interval: "Amb quina freqüència en mil·lisegons podria votar els clients"
     background_polling_interval: "Amb quina freqüència en mil·lisegons podrien votar els client (quan la finestra és al fons)"
-    flags_required_to_hide_post: "Quantitat de banderes que fan que una publicació s'amagui automàticament i s'enviï un missatge a la persona (0 per a mai)"
     cooldown_minutes_after_hiding_posts: "Quantitat de minuts que una persona ha d'esperar abans d'editar una publicació oculta amb les banderes de la comunitat"
     max_topics_in_first_day: "Quantitat màxima de temes que una persona pot crear en les 24 hores posteriors a la seva primera publicació"
     max_replies_in_first_day: "Quantitat màxima de respostes que una persona pot crear en les 24 hores posteriors a la seva primera publicació"

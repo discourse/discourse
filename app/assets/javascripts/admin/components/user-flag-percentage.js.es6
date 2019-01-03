@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   },
 
   // We do a little logic to choose which icon to display and which text
-  @computed("user.flags_agreed", "user.flags_disagreed", "user.flags_ignored")
+  @computed("agreed", "disagreed", "ignored")
   percentage(agreed, disagreed, ignored) {
     let total = agreed + disagreed + ignored;
     let result = { total };

@@ -44,8 +44,8 @@ describe PostMover do
         Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
-        UserActionCreator.enable
-        @like = PostAction.act(another_user, p4, PostActionType.types[:like])
+        UserActionManager.enable
+        @like = PostActionCreator.like(another_user, p4)
       end
 
       context 'success' do
@@ -452,7 +452,7 @@ describe PostMover do
           end
 
           it "preserves post actions in the new post" do
-            PostAction.act(another_user, p1, PostActionType.types[:like])
+            PostActionCreator.like(another_user, p1)
 
             new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
             new_post = new_topic.posts.where(post_number: 1).first
@@ -573,8 +573,8 @@ describe PostMover do
         Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
-        UserActionCreator.enable
-        @like = PostAction.act(another_user, p4, PostActionType.types[:like])
+        UserActionManager.enable
+        @like = PostActionCreator.like(another_user, p4)
       end
 
       context 'move to new message' do

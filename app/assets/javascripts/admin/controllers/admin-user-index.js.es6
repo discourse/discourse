@@ -13,7 +13,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   availableGroups: null,
   userTitleValue: null,
 
-  showApproval: setting("must_approve_users"),
   showBadges: setting("enable_badges"),
   hasLockedTrustLevel: Ember.computed.notEmpty(
     "model.manual_locked_trust_level"
@@ -214,9 +213,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.get("adminTools").showActionLogs(this, {
         target_user: this.get("model.username")
       });
-    },
-    showFlagsReceived() {
-      this.get("adminTools").showFlagsReceived(this.get("model"));
     },
     showSuspendModal() {
       this.get("adminTools").showSuspendModal(this.get("model"));

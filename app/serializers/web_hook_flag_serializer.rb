@@ -24,18 +24,24 @@ class WebHookFlagSerializer < ApplicationSerializer
   end
 
   def resolved_at
-    object.disposed_at
+    object.disagreed_at || object.agreed_at || object.deferred_at
   end
 
   def include_resolved_at?
-    object.disposed_at.present?
+    resolved_at.present?
   end
 
   def resolved_by
-    User.find(object.disposed_by_id).username
+    User.find(disposed_by_id).username
   end
 
   def include_resolved_by?
-    object.disposed_by_id.present?
+    disposed_by_id.present?
+  end
+
+protected
+
+  def disposed_by_id
+    object.disagreed_by_id || object.agreed_by_id || object.deferred_by_id
   end
 end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 require_dependency 'queued_posts_controller'
-require_dependency 'queued_post'
 
+# NOTE: This controller only exists for backwards compatibility
 describe QueuedPostsController do
   context 'without authentication' do
     it 'fails' do
@@ -30,7 +30,7 @@ describe QueuedPostsController do
 
   describe '#update' do
     before { sign_in(Fabricate(:moderator)) }
-    let(:qp) { Fabricate(:queued_post) }
+    let(:qp) { Fabricate(:reviewable_queued_post) }
 
     context 'not found' do
       it 'returns json error' do
@@ -40,9 +40,7 @@ describe QueuedPostsController do
           queued_post: { state: 'approved' }
         }
 
-        expect(response.status).to eq(422)
-
-        expect(JSON.parse(response.body)["errors"].first).to eq(I18n.t('queue.not_found'))
+        expect(response.status).to eq(404)
       end
     end
 
@@ -54,9 +52,10 @@ describe QueuedPostsController do
         }
 
         expect(response.status).to eq(200)
+        json = ::JSON.parse(response.body)
+        qp_json = json['queued_posts']
 
-        qp.reload
-        expect(qp.state).to eq(QueuedPost.states[:approved])
+        expect(qp_json['state']).to eq(2)
       end
     end
 
@@ -69,8 +68,9 @@ describe QueuedPostsController do
 
         expect(response.status).to eq(200)
 
-        qp.reload
-        expect(qp.state).to eq(QueuedPost.states[:rejected])
+        json = ::JSON.parse(response.body)
+        qp_json = json['queued_posts']
+        expect(qp_json['state']).to eq(3)
       end
     end
 
@@ -85,7 +85,7 @@ describe QueuedPostsController do
       end
 
       context 'when it is a topic' do
-        let(:queued_topic) { Fabricate(:queued_topic) }
+        let(:queued_topic) { Fabricate(:reviewable_queued_post_topic,) }
 
         it 'updates the topic attributes' do
           put "/queued_posts/#{queued_topic.id}.json", params: {
@@ -95,14 +95,14 @@ describe QueuedPostsController do
           expect(response.status).to eq(200)
           queued_topic.reload
 
-          expect(queued_topic.raw).to eq(changes[:raw])
-          expect(queued_topic.post_options['title']).to eq(changes[:title])
-          expect(queued_topic.post_options['category']).to eq(changes[:category_id])
-          expect(queued_topic.post_options['tags']).to eq(changes[:tags])
+          expect(queued_topic.payload['raw']).to eq(changes[:raw])
+          expect(queued_topic.payload['title']).to eq(changes[:title])
+          expect(queued_topic.category_id).to eq(changes[:category_id])
+          expect(queued_topic.payload['tags']).to eq(changes[:tags])
         end
 
         it 'removes tags if not present' do
-          queued_topic.post_options[:tags] = ['another-tag']
+          queued_topic.payload[:tags] = ['another-tag']
           queued_topic.save!
 
           put "/queued_posts/#{queued_topic.id}.json", params: {
@@ -112,29 +112,29 @@ describe QueuedPostsController do
           expect(response.status).to eq(200)
           queued_topic.reload
 
-          expect(queued_topic.raw).to eq(changes[:raw])
-          expect(queued_topic.post_options['title']).to eq(changes[:title])
-          expect(queued_topic.post_options['category']).to eq(changes[:category_id])
-          expect(queued_topic.post_options['tags']).to be_nil
+          expect(queued_topic.payload['raw']).to eq(changes[:raw])
+          expect(queued_topic.payload['title']).to eq(changes[:title])
+          expect(queued_topic.category_id).to eq(changes[:category_id])
+          expect(queued_topic.payload['tags']).to be_nil
         end
       end
 
       context 'when it is a reply' do
-        let(:queued_reply) { Fabricate(:queued_post) }
+        let(:queued_reply) { Fabricate(:reviewable_queued_post) }
 
         it 'updates the reply attributes' do
           put "/queued_posts/#{queued_reply.id}.json", params: {
             queued_post: changes
           }
 
-          original_category = queued_reply.post_options['category']
+          original_category = queued_reply.category_id
           expect(response.status).to eq(200)
           queued_reply.reload
 
-          expect(queued_reply.raw).to eq(changes[:raw])
-          expect(queued_reply.post_options['title']).to be_nil
-          expect(queued_reply.post_options['category']).to eq(original_category)
-          expect(queued_reply.post_options['tags']).to be_nil
+          expect(queued_reply.payload['raw']).to eq(changes[:raw])
+          expect(queued_reply.payload['title']).to be_nil
+          expect(queued_reply.category_id).to eq(original_category)
+          expect(queued_reply.payload['tags']).to be_nil
         end
       end
     end

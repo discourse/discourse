@@ -1,0 +1,266 @@
+.reviewable {
+  .reviewable-container {
+    display: flex;
+    flex-direction: row;
+
+    .reviewable-list {
+      flex: 1;
+      box-sizing: border-box;
+    }
+
+    .reviewable-filters {
+      width: 250px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .reviewable-list + .reviewable-filters {
+      margin-left: 1em;
+    }
+  }
+}
+
+.reviewable-user-details {
+  margin: 0.5em 0;
+}
+
+.no-review {
+  margin-top: 1em;
+}
+
+.reviewable-filters {
+  background-color: $primary-very-low;
+  padding: 0.5em 1em 1em 1em;
+  margin-bottom: 1em;
+
+  .reviewable-filter {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 1em 0;
+
+    .filter-label {
+      margin: 0 0 0.5em 0;
+    }
+
+    .score-filter {
+      margin: 0;
+      width: 100%;
+    }
+
+    .category-chooser {
+      width: 100%;
+    }
+  }
+}
+
+.reviewable-topics {
+  width: 100%;
+
+  tbody {
+    td {
+      padding: 0.5em;
+    }
+  }
+
+  .reviewable-details {
+    display: flex;
+    justify-content: flex-end;
+
+    .btn {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.reviewable-filters {
+  .topic-filter .btn {
+    display: flex;
+    width: auto;
+  }
+
+  .refresh {
+    height: 1em;
+    display: flex;
+  }
+
+  .score-filter {
+    width: 5em;
+  }
+}
+.user-flag-percentage {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5em;
+
+  .percentage-label {
+    margin-right: 0.25em;
+    &.agreed {
+      color: $success;
+    }
+    &.disagreed {
+      color: $danger;
+    }
+    &.ignored {
+      color: $primary-medium;
+    }
+  }
+  .d-icon {
+    font-size: 0.9em;
+  }
+}
+
+.reviewable-item {
+  margin-bottom: 1em;
+  border-bottom: 1px solid dark-light-choose($primary-low, $secondary-low);
+
+  .topic-statuses {
+    float: none;
+  }
+
+  .reviewable-meta-data {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    display: flex;
+    width: 100%;
+    margin-bottom: 0.5em;
+    font-size: $font-down-1;
+    align-items: center;
+    .reviewable-type {
+      margin-right: 1em;
+    }
+    .created-at {
+      a {
+        color: dark-light-choose($primary-medium, $secondary-medium);
+      }
+      margin-right: 1em;
+    }
+    .score {
+      margin-right: 1em;
+    }
+    .status {
+      color: dark-light-choose($primary-high, $secondary-high);
+    }
+  }
+
+  .reviewable-contents {
+    display: flex;
+  }
+
+  .reviewable-actions {
+    margin-top: 0.5em;
+    display: flex;
+
+    .reviewable-action,
+    .reviewable-action-dropdown {
+      margin-right: 0.5em;
+
+      &.delete-user {
+        @extend .btn-danger;
+      }
+    }
+  }
+  padding-bottom: 1em;
+}
+
+.reviewable-histories {
+  margin-top: 1em;
+}
+
+.reviewable-scores,
+.reviewable-histories {
+  min-width: 50%;
+
+  .user {
+    display: flex;
+    align-items: center;
+
+    .user-flag-percentage {
+      margin-left: 0.5em;
+    }
+  }
+  > tr > th {
+    text-align: left;
+  }
+  > tr > th,
+  > tr > td {
+    padding: 0.25em;
+  }
+}
+
+.reviewable-conversation {
+  margin: 0.5em 0;
+
+  .reviewable-conversation-post {
+    max-width: $topic-body-width;
+    margin-bottom: 0.5em;
+
+    .username {
+      font-weight: bold;
+      margin-right: 0.25em;
+    }
+  }
+
+  .controls {
+    margin-top: 0.25em;
+  }
+}
+
+.reviewable-queued-post,
+.reviewable-flagged-post {
+  .reviewable-contents {
+    margin-top: 1em;
+  }
+
+  .post-title {
+    background-color: yellow;
+  }
+  .created-by {
+    margin-right: 1em;
+  }
+
+  .post-contents {
+    width: 100%;
+  }
+  .post-topic {
+    font-weight: bold;
+    color: $primary-medium;
+    margin-bottom: 1em;
+  }
+}
+
+.reviewable-item {
+  .post-body {
+    max-width: $topic-body-width;
+    max-height: 300px;
+    overflow-y: auto;
+
+    p,
+    aside {
+      margin: 0 0 1em 0;
+    }
+
+    p {
+      word-break: break-all;
+    }
+  }
+}
+
+.editable-fields {
+  width: 100%;
+  .editable-field {
+    .mini-tag-chooser {
+      margin: 0;
+    }
+
+    .reviewable-input-text {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .reviewable-input-textarea {
+      width: 100%;
+      height: 10em;
+    }
+    margin-bottom: 0.5em;
+  }
+}

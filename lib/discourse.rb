@@ -619,7 +619,7 @@ module Discourse
     end
   end
 
-  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false)
+  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
     warning = ["Deprecation notice:", warning]
     warning << "(deprecated since Discourse #{since})" if since
@@ -632,6 +632,10 @@ module Discourse
     end
 
     if Rails.env == "development"
+      STDERR.puts(warning)
+    end
+
+    if output_in_test && Rails.env == "test"
       STDERR.puts(warning)
     end
 

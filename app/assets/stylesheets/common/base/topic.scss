@@ -154,11 +154,11 @@ a.badge-category {
 }
 
 .has-pending-posts {
+  display: flex;
+  justify-content: space-between;
+
   padding: 0.5em;
   background-color: $highlight-medium;
-  a[href] {
-    float: right;
-  }
   margin-top: 1em;
   max-width: 757px;
 }

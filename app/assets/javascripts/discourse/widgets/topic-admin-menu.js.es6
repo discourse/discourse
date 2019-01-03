@@ -14,6 +14,7 @@ createWidget("admin-menu-button", {
       this.attach("button", {
         className,
         action: attrs.action,
+        url: attrs.url,
         icon: attrs.icon,
         label: attrs.fullLabel || `topic.${attrs.label}`,
         secondaryAction: "hideAdminMenu"
@@ -252,10 +253,10 @@ export default createWidget("topic-admin-menu", {
 
     if (this.currentUser.get("staff")) {
       buttons.push({
-        action: "showModerationHistory",
-        buttonClass: "btn-default",
         icon: "list",
-        fullLabel: "admin.flags.moderation_history"
+        buttonClass: "btn-default",
+        fullLabel: "review.moderation_history",
+        url: `/review?topic_id=${topic.id}&status=all`
       });
     }
 
