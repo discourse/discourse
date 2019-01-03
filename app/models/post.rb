@@ -516,13 +516,32 @@ class Post < ActiveRecord::Base
   end
 
   def self.rebake_old(limit)
+
+    limiter = RateLimiter.new(
+      nil,
+      "global_periodical_rebake_limit",
+      GlobalSetting.max_old_rebakes_per_15_minutes,
+      900,
+      global: true
+    )
+
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
       .order('id desc')
       .limit(limit).pluck(:id).each do |id|
       begin
+
+        break if !limiter.can_perform?
+
         post = Post.find(id)
         post.rebake!
+
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+
       rescue => e
         problems << { post: post, ex: e }
 
