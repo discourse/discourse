@@ -126,7 +126,8 @@ class UploadCreator
         url = Discourse.store.store_upload(f, @upload)
 
         if url.present?
-          @upload.update!(url: url)
+          @upload.url = url
+          @upload.save!
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end

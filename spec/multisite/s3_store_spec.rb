@@ -24,12 +24,14 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
+          expect(upload.etag).to eq("ETag")
         end
 
         conn.with_connection('second') do
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/second/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
+          expect(upload.etag).to eq("ETag")
         end
       end
     end
