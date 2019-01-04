@@ -2884,6 +2884,7 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
+  email_from: "%{user_name} via %{site_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"

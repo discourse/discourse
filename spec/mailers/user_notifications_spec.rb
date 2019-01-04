@@ -247,7 +247,7 @@ describe UserNotifications do
                                              notification_data_hash: notification.data_hash
                                            )
       # from should include full user name
-      expect(mail[:from].display_names).to eql(['John Doe'])
+      expect(mail[:from].display_names).to eql(['John Doe via Discourse'])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
@@ -350,7 +350,7 @@ describe UserNotifications do
       expect(mail[:from].display_names).to_not eql(['John Doe'])
 
       # from should include username if "show user full names" is disabled
-      expect(mail[:from].display_names).to eql(['john'])
+      expect(mail[:from].display_names).to eql(['john via Discourse'])
 
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
@@ -397,7 +397,7 @@ describe UserNotifications do
       )
 
       # from should include username if full user name is not provided
-      expect(mail[:from].display_names).to eql(['john'])
+      expect(mail[:from].display_names).to eql(['john via Discourse'])
 
       # subject should include "[PM]"
       expect(mail.subject).to include("[PM] ")
@@ -656,13 +656,13 @@ describe UserNotifications do
       it "should have user name as from_alias" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_posts = true
-        expects_build_with(has_entry(:from_alias, "#{user.name}"))
+        expects_build_with(has_entry(:from_alias, "#{user.name} via Discourse"))
       end
 
       it "should not have user name as from_alias if display_name_on_posts is disabled" do
         SiteSetting.enable_names = false
         SiteSetting.display_name_on_posts = false
-        expects_build_with(has_entry(:from_alias, "walterwhite"))
+        expects_build_with(has_entry(:from_alias, "walterwhite via Discourse"))
       end
 
       it "should explain how to respond" do
