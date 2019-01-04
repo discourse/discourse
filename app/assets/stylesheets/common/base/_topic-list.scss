@@ -144,6 +144,9 @@
     .discourse-tag.box {
       margin-right: 0.25em;
     }
+    .topic-excerpt {
+      flex: 1 1 0%; // IE11 fix - unit on flexbasis is required
+    }
   }
 
   .topic-featured-link {
