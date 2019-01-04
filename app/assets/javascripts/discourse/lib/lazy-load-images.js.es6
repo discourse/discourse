@@ -47,8 +47,8 @@ function show(image) {
     copyImg.srcset = imageData.srcset || copyImg.srcset;
 
     copyImg.style.position = "absolute";
-    copyImg.style.top = 0;
-    copyImg.style.left = 0;
+    copyImg.style.top = `${image.offsetTop}px`;
+    copyImg.style.left = `${image.offsetLeft}px`;
     copyImg.style.width = imageData.width;
     copyImg.style.height = imageData.height;
 
