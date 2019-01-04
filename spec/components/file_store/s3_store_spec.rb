@@ -38,6 +38,8 @@ describe FileStore::S3Store do
   context 'uploading to s3' do
     include_context "s3 helpers"
 
+    let(:etag) { "etag" }
+
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
@@ -45,11 +47,13 @@ describe FileStore::S3Store do
         s3_object = stub
 
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
-        s3_object.expects(:upload_file)
+
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
         )
+        expect(upload.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -63,11 +67,13 @@ describe FileStore::S3Store do
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:upload_file)
+
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
           )
+          expect(upload.etag).to eq(etag)
         end
       end
     end
@@ -80,11 +86,13 @@ describe FileStore::S3Store do
         path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
         s3_bucket.expects(:object).with(path).returns(s3_object)
-        s3_object.expects(:upload_file)
+
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
         )
+        expect(optimized_image.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -99,11 +107,13 @@ describe FileStore::S3Store do
           path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
           s3_bucket.expects(:object).with(path).returns(s3_object)
-          s3_object.expects(:upload_file)
+
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
           )
+          expect(optimized_image.etag).to eq(etag)
         end
       end
     end

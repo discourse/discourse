@@ -24,8 +24,21 @@ class S3Helper
 
   def upload(file, path, options = {})
     path = get_path_for_s3_upload(path)
-    s3_bucket.object(path).upload_file(file, options)
-    path
+    obj = s3_bucket.object(path)
+
+    etag = begin
+      if File.size(file) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+        options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+        obj.upload_file(file, options)
+        obj.load
+        obj.etag
+      else
+        options[:body] = file
+        obj.put(options).etag
+      end
+    end
+
+    return path, etag
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
@@ -210,8 +223,12 @@ class S3Helper
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
   end
 
+  def s3_client
+    Aws::S3::Client.new(@s3_options)
+  end
+
   def s3_resource
-    Aws::S3::Resource.new(@s3_options)
+    Aws::S3::Resource.new(client: s3_client)
   end
 
   def s3_bucket
