@@ -50,10 +50,10 @@ describe FileStore::S3Store do
 
         s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
-        expect(store.store_upload(uploaded_file, upload)).to eq([
-          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png",
-          etag
-        ])
+        expect(store.store_upload(uploaded_file, upload)).to eq(
+          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+        )
+        expect(upload.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -70,10 +70,10 @@ describe FileStore::S3Store do
 
           s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
-          expect(store.store_upload(uploaded_file, upload)).to eq([
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png",
-            etag
-          ])
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
+          )
+          expect(upload.etag).to eq(etag)
         end
       end
     end
@@ -89,10 +89,10 @@ describe FileStore::S3Store do
 
         s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
-        expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq([
-          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}",
-          etag
-        ])
+        expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
+          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
+        )
+        expect(optimized_image.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -110,10 +110,10 @@ describe FileStore::S3Store do
 
           s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
-          expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq([
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}",
-            etag
-          ])
+          expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
+          )
+          expect(optimized_image.etag).to eq(etag)
         end
       end
     end

@@ -99,7 +99,7 @@ class OptimizedImage < ActiveRecord::Base
 
           # store the optimized image and update its url
           File.open(temp_path) do |file|
-            url, thumbnail.etag = Discourse.store.store_optimized_image(file, thumbnail)
+            url = Discourse.store.store_optimized_image(file, thumbnail)
             if url.present?
               thumbnail.url = url
               thumbnail.save

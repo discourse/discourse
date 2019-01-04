@@ -123,13 +123,10 @@ class UploadCreator
 
       # store the file and update its url
       File.open(@file.path) do |f|
-        url, etag = Discourse.store.store_upload(f, @upload)
+        url = Discourse.store.store_upload(f, @upload)
 
         if url.present?
-          attrs = { url: url }
-          attrs[:etag] = etag if etag.present?
-
-          @upload.update!(attrs)
+          @upload.update!(url: url)
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
