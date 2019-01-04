@@ -16,6 +16,15 @@ class Plugin::CustomEmoji
     @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
     emojis[name] = url
   end
+
+  def self.translations
+    @@translations ||= {}
+  end
+
+  def self.translate(from, to)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+    translations[from] = to
+  end
 end
 
 class Plugin::Instance
@@ -427,6 +436,10 @@ class Plugin::Instance
 
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
+  end
+
+  def translate_emoji(from, to)
+    Plugin::CustomEmoji.translate(from, to)
   end
 
   def automatic_assets
