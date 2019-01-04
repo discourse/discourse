@@ -19,15 +19,13 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
-      upload.update_attributes!(etag: etag)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
       url
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil)
       path = get_path_for_optimized_image(optimized_image)
-      url, etag = store_file(file, path, content_type: content_type)
-      optimized_image.update_attributes!(etag: etag)
+      url, optimized_image.etag = store_file(file, path, content_type: content_type)
       url
     end
 
