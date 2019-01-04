@@ -33,6 +33,10 @@ $user_card_background: $secondary;
     z-index: z("composer", "content") + 1;
   }
 
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+
   .card-content {
     padding: 12px 12px 0 12px;
     background: rgba($user_card_background, 0.85);
