@@ -4,6 +4,7 @@ import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
+import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import {
@@ -40,7 +41,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.26";
+const PLUGIN_API_VERSION = "0.8.27";
 
 class PluginApi {
   constructor(version, container) {
@@ -789,6 +790,23 @@ class PluginApi {
    **/
   replaceCategoryLinkRenderer(fn) {
     replaceCategoryLinkRenderer(fn);
+  }
+
+  /**
+   * Registers custom languages for use with HighlightJS.
+   *
+   * See https://highlightjs.readthedocs.io/en/latest/language-guide.html
+   * for instructions on how to define a new language for HighlightJS.
+   * Build minified language file by running "node tools/build.js -t cdn" in the HighlightJS repo
+   * and use the minified output as the registering function.
+   *
+   * Example:
+   *
+   * let aLang = function(e){return{cI:!1,c:[{bK:"GET HEAD PUT POST DELETE PATCH",e:"$",c:[{cN:"title",b:"/?.+"}]},{b:"^{$",e:"^}$",sL:"json"}]}}
+   * api.registerHighlightJSLanguage("kibana", aLang);
+   **/
+  registerHighlightJSLanguage(name, fn) {
+    registerHighlightJSLanguage(name, fn);
   }
 }
 

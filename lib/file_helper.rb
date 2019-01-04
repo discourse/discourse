@@ -82,7 +82,12 @@ class FileHelper
     tmp
   end
 
-  def self.optimize_image!(filename)
+  def self.optimize_image!(filename, allow_pngquant: false)
+    pngquant_options = false
+    if allow_pngquant
+      pngquant_options = { allow_lossy: true }
+    end
+
     ImageOptim.new(
       # GLOBAL
       timeout: 15,
@@ -92,7 +97,7 @@ class FileHelper
       advpng: false,
       pngcrush: false,
       pngout: false,
-      pngquant: false,
+      pngquant: pngquant_options,
       # JPG
       jpegoptim: { strip: SiteSetting.strip_image_metadata ? "all" : "none" },
       jpegtran: false,

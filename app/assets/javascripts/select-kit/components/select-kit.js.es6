@@ -277,7 +277,9 @@ export default Ember.Component.extend(
         collectionComputedContent.length === 0 &&
         !isLoading
       ) {
-        return I18n.t("select_kit.no_content");
+        return (
+          this.get("termMatchErrorMessage") || I18n.t("select_kit.no_content")
+        );
       }
     },
 

@@ -136,7 +136,6 @@ nl:
     continue: "Discussie voortzetten"
     error: "Fout bij embedden"
     referer: "Verwijzing:"
-    mismatch: "De verwijzing kwam met geen van de volgende hosts overeen:"
     no_hosts: "Er zijn geen hosts ingesteld voor embedding."
     configure: "Embedden configureren"
     more_replies:
@@ -639,10 +638,6 @@ nl:
       title: "Bladwijzers"
       xaxis: "Dag"
       yaxis: "Aantal nieuwe bladwijzers"
-    starred:
-      title: "Met ster"
-      xaxis: "Dag"
-      yaxis: "Aantal nieuwe topics met ster"
     users_by_trust_level:
       title: "Gebruikers per vertrouwensniveau"
       xaxis: "Vertrouwensniveau"
@@ -1111,13 +1106,6 @@ nl:
   redirected_to_top_reasons:
     new_user: "Welkom bij onze gemeenschap! Dit zijn de meest populaire recente topics."
     not_seen_in_a_month: "Welkom terug! We hebben u een tijdje niet gezien. Dit zijn de meest populaire topics sinds uw afwezigheid."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Een bericht is gesplitst naar een nieuw topic: %{topic_link}"
-      other: "%{count} berichten zijn gesplitst naar een nieuw topic: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Een bericht is samengevoegd in een bestaand topic: %{topic_link}"
-      other: "%{count} berichten zijn samengevoegd in een bestaand topic: %{topic_link}"
   topic_statuses:
     archived_enabled: "Dit topic is nu gearchiveerd. Het is bevroren en kan op geen enkele manier worden gewijzigd."
     archived_disabled: "Dit topic is nu niet meer gearchiveerd. Het is niet meer bevroren en kan worden gewijzigd."

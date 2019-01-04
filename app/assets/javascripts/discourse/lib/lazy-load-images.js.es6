@@ -2,7 +2,10 @@ const OBSERVER_OPTIONS = {
   rootMargin: "50%" // load images slightly before they're visible
 };
 
-const imageSources = new WeakMap();
+// Min size in pixels for consideration for lazy loading
+const MINIMUM_SIZE = 150;
+
+const hiddenData = new WeakMap();
 
 const LOADING_DATA =
   "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -12,37 +15,50 @@ function hide(image) {
   image.classList.add("d-lazyload");
   image.classList.add("d-lazyload-hidden");
 
-  imageSources.set(image, {
-    src: image.getAttribute("src"),
-    srcSet: image.getAttribute("srcset")
+  hiddenData.set(image, {
+    src: image.src,
+    srcset: image.srcset,
+    width: image.width,
+    height: image.height
   });
   image.removeAttribute("srcset");
 
-  image.setAttribute(
-    "src",
-    image.getAttribute("data-small-upload") || LOADING_DATA
-  );
+  image.src = image.dataset.smallUpload || LOADING_DATA;
   image.removeAttribute("data-small-upload");
 }
 
 // Restore an image when onscreen
 function show(image) {
-  let sources = imageSources.get(image);
-  if (sources) {
-    image.setAttribute("src", sources.src);
-    if (sources.srcSet) {
-      image.setAttribute("srcset", sources.srcSet);
-    }
+  let imageData = hiddenData.get(image);
+
+  if (imageData) {
+    const copyImg = new Image();
+    copyImg.onload = () => {
+      image.src = copyImg.src;
+      if (copyImg.srcset) {
+        image.srcset = copyImg.srcset;
+      }
+      image.classList.remove("d-lazyload-hidden");
+      image.parentNode.removeChild(copyImg);
+      copyImg.onload = null;
+    };
+
+    copyImg.src = imageData.src;
+    copyImg.srcset = imageData.srcset || copyImg.srcset;
+
+    copyImg.style.position = "absolute";
+    copyImg.style.top = `${image.offsetTop}px`;
+    copyImg.style.left = `${image.offsetLeft}px`;
+    copyImg.style.width = imageData.width;
+    copyImg.style.height = imageData.height;
+
+    image.parentNode.appendChild(copyImg);
+  } else {
+    image.classList.remove("d-lazyload-hidden");
   }
-  image.classList.remove("d-lazyload-hidden");
 }
 
 export function setupLazyLoading(api) {
-  // Old IE don't support this API
-  if (!("IntersectionObserver" in window)) {
-    return;
-  }
-
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const { target } = entry;
@@ -50,15 +66,19 @@ export function setupLazyLoading(api) {
       if (entry.isIntersecting) {
         show(target);
         observer.unobserve(target);
-      } else {
-        // The Observer is triggered when entries are added. This allows
-        // us to hide things that start off screen.
-        hide(target);
       }
     });
   }, OBSERVER_OPTIONS);
 
-  api.decorateCooked($post => {
-    $(".lightbox img", $post).each((_, $img) => observer.observe($img));
-  });
+  api.decorateCooked(
+    $post => {
+      $("img", $post).each((_, img) => {
+        if (img.width >= MINIMUM_SIZE && img.height >= MINIMUM_SIZE) {
+          hide(img);
+          observer.observe(img);
+        }
+      });
+    },
+    { onlyStream: true }
+  );
 }

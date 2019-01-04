@@ -44,7 +44,7 @@ function addHashtag(buffer, matches, state) {
 export function setup(helper) {
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /#([\w-:]{1,101})/,
+      matcher: /#([\u00C0-\u1FFF\u2C00-\uD7FF\w-:]{1,101})/,
       onMatch: addHashtag
     };
 

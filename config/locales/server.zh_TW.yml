@@ -127,7 +127,6 @@ zh_TW:
     continue: "繼續討論"
     error: "嵌入時遭遇錯誤"
     referer: "Referer："
-    mismatch: "referer 來源與下列任何主機不符："
     no_hosts: "未設置內嵌用的主機。"
     configure: "配置嵌入"
     more_replies:
@@ -567,10 +566,6 @@ zh_TW:
       title: "書籤"
       xaxis: "天"
       yaxis: "新書籤數量"
-    starred:
-      title: "關注"
-      xaxis: "天"
-      yaxis: "新關注數量"
     users_by_trust_level:
       title: "按信任等級區分的使用者統計"
       xaxis: "信任等級"
@@ -1125,11 +1120,6 @@ zh_TW:
     errors:
       different_topics: "無法合並不同主題的帖子。"
       different_users: "無法合並不同用戶的帖子。"
-  move_posts:
-    new_topic_moderator_post:
-      other: "%{count} 個帖子被分離到了新主題：%{topic_link}"
-    existing_topic_moderator_post:
-      other: "%{count} 個帖子被合併到現存主題：%{topic_link}"
   topic_statuses:
     archived_enabled: "此討論話題已封存，即已經凍結，無法修改。"
     archived_disabled: "此討論話題已被解除封存，即不再凍結，可以修改。"

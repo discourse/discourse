@@ -24,6 +24,8 @@
     z-index: z("dropdown");
 
     .select-kit-body {
+      -webkit-animation: fadein 0.25s;
+      animation: fadein 0.25s;
       display: flex;
       flex-direction: column;
       left: 0;
@@ -123,10 +125,6 @@
     align-items: center;
     justify-content: flex-start;
 
-    &.no-content {
-      white-space: nowrap;
-    }
-
     .name {
       margin: 0;
       overflow: hidden;
@@ -212,7 +210,7 @@
       background: none;
       margin: 0;
       padding: 0;
-      flex: 1;
+      flex: 1 0 0;
       outline: none;
       border: 0;
       border-radius: 0;

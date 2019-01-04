@@ -133,9 +133,19 @@
 
   .link-bottom-line {
     font-size: $font-down-1;
-    a.badge-wrapper.box {
+    display: flex;
+    align-items: center;
+    a.badge-wrapper.box,
+    a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;
+    }
+    .discourse-tag.simple:after,
+    .discourse-tag.box {
+      margin-right: 0.25em;
+    }
+    .topic-excerpt {
+      flex: 1 1 0%; // IE11 fix - unit on flexbasis is required
     }
   }
 

@@ -282,10 +282,6 @@ QUnit.test("Can split/merge topic", function(assert) {
   const selectedPostIds = controller.get("selectedPostIds");
 
   assert.not(
-    controller.get("canSplitTopic"),
-    "can't split topic when no posts are selected"
-  );
-  assert.not(
     controller.get("canMergeTopic"),
     "can't merge topic when no posts are selected"
   );
@@ -293,26 +289,17 @@ QUnit.test("Can split/merge topic", function(assert) {
   selectedPostIds.pushObject(1);
 
   assert.not(
-    controller.get("canSplitTopic"),
-    "can't split topic when can't move posts"
-  );
-  assert.not(
     controller.get("canMergeTopic"),
     "can't merge topic when can't move posts"
   );
 
   model.set("details.can_move_posts", true);
 
-  assert.ok(controller.get("canSplitTopic"), "can split topic");
   assert.ok(controller.get("canMergeTopic"), "can merge topic");
 
   selectedPostIds.removeObject(1);
   selectedPostIds.pushObject(2);
 
-  assert.not(
-    controller.get("canSplitTopic"),
-    "can't split topic when 1st post is not a regular post"
-  );
   assert.ok(
     controller.get("canMergeTopic"),
     "can merge topic when 1st post is not a regular post"
@@ -320,10 +307,6 @@ QUnit.test("Can split/merge topic", function(assert) {
 
   selectedPostIds.pushObject(3);
 
-  assert.not(
-    controller.get("canSplitTopic"),
-    "can't split topic when all posts are selected"
-  );
   assert.ok(
     controller.get("canMergeTopic"),
     "can merge topic when all posts are selected"

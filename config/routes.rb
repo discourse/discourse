@@ -242,6 +242,7 @@ Discourse::Application.routes.draw do
     get "dashboard/general" => "dashboard_next#general"
     get "dashboard/moderation" => "dashboard_next#moderation"
     get "dashboard/security" => "dashboard_next#security"
+    get "dashboard/reports" => "dashboard_next#reports"
 
     get "dashboard-old" => "dashboard#index"
 

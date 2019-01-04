@@ -105,7 +105,6 @@ class S3Helper
   end
 
   def update_lifecycle(id, days, prefix: nil, tag: nil)
-
     filter = {}
 
     if prefix
@@ -183,14 +182,15 @@ class S3Helper
   end
 
   def object(path)
-    path = get_path_for_s3_upload(path)
-    s3_bucket.object(path)
+    s3_bucket.object(get_path_for_s3_upload(path))
   end
 
   def self.s3_options(obj)
-    opts = { region: obj.s3_region,
-             endpoint: SiteSetting.s3_endpoint,
-             force_path_style: SiteSetting.s3_force_path_style }
+    opts = {
+      region: obj.s3_region,
+      endpoint: SiteSetting.s3_endpoint,
+      force_path_style: SiteSetting.s3_force_path_style
+    }
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id

@@ -135,7 +135,6 @@ da:
     continue: "Fortsæt diskussion"
     error: "Fejl ved indlejring"
     referer: "Henviser:"
-    mismatch: "Henviseren matcher ikke nogen af følgende værter:"
     no_hosts: "Ingen værter var konfigureret til indlejring."
     configure: "Konfigurér indlejring"
     more_replies:
@@ -619,10 +618,6 @@ da:
       title: "Bogmærker"
       xaxis: "Dag"
       yaxis: "Antal nye bogmærker"
-    starred:
-      title: "Favoritter"
-      xaxis: "Dag"
-      yaxis: "Antal nye favoritter"
     users_by_trust_level:
       title: "Brugere pr. tillidsniveau"
       xaxis: "Tillidsniveau"

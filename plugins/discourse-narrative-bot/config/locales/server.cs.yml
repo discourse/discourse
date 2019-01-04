@@ -119,7 +119,5 @@ cs:
           Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle neporozumněl. :frowning:
     new_user_narrative:
       reset_trigger: "nový uživatel"
-      hello:
-        title: ":robot: Zdravím!"
     advanced_user_narrative:
       reset_trigger: 'pokročilý uživatel'

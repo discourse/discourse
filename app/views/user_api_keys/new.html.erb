@@ -24,7 +24,7 @@
   <%= hidden_field_tag 'access', @access %>
   <%= hidden_field_tag 'nonce', @nonce %>
   <%= hidden_field_tag 'client_id', @client_id %>
-  <%= hidden_field_tag 'auth_redirect', @auth_redirect %>
+  <%= hidden_field_tag('auth_redirect', @auth_redirect) if @auth_redirect %>
   <%= hidden_field_tag 'push_url', @push_url %>
   <%= hidden_field_tag 'public_key', @public_key%>
   <%= hidden_field_tag 'scopes', @scopes%>

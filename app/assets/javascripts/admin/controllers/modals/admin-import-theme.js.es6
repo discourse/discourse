@@ -17,6 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   checkPrivate: Ember.computed.match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
+  urlPlaceholder: "https://github.com/discourse/sample_theme",
 
   @computed("loading", "remote", "uploadUrl", "local", "localFile")
   importDisabled(isLoading, isRemote, uploadUrl, isLocal, localFile) {
@@ -25,6 +26,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("privateChecked")
   privateWasChecked() {
+    this.get("privateChecked")
+      ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
+      : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
+
     const checked = this.get("privateChecked");
     if (checked && !this._keyLoading) {
       this._keyLoading = true;

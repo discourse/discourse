@@ -661,6 +661,15 @@ describe PostsController do
         put "/posts/#{post.id}/rebake.json"
         expect(response.status).to eq(200)
       end
+
+      it "will invalidate broken images cache" do
+        sign_in(Fabricate(:moderator))
+        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
+        post.save_custom_fields
+        put "/posts/#{post.id}/rebake.json"
+        post.reload
+        expect(post.custom_fields[Post::BROKEN_IMAGES]).to be_nil
+      end
     end
   end
 
@@ -1151,10 +1160,18 @@ describe PostsController do
         include_examples "it works"
       end
 
+      context "TL4 users" do
+        before do
+          sign_in(Fabricate(:trust_level_4))
+        end
+
+        include_examples "it works"
+      end
+
       context "users" do
         let(:topic) { Fabricate(:topic) }
 
-        [:user, :trust_level_4].each do |user|
+        [:user].each do |user|
           it "will raise an error for #{user}" do
             sign_in(Fabricate(user))
             post "/posts.json", params: {

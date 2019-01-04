@@ -468,10 +468,6 @@ bg:
       title: "Отметки"
       xaxis: "Ден"
       yaxis: "Брой нови отметки"
-    starred:
-      title: "Любими"
-      xaxis: "Ден"
-      yaxis: "Брой нови любими теми"
     users_by_trust_level:
       title: "Потребители с  Ниво на доверие"
       xaxis: "Ниво на Доверие"

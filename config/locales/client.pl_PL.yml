@@ -220,6 +220,7 @@ pl_PL:
     submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
+    go_ahead: "Idź dalej"
     sign_up: "Rejestracja"
     log_in: "Logowanie"
     age: "Wiek"
@@ -240,6 +241,7 @@ pl_PL:
     privacy: "Prywatność"
     tos: "Warunki użytkowania serwisu"
     rules: "Zasady"
+    conduct: "Regulamin"
     mobile_view: "Wersja mobilna"
     desktop_view: "Wersja komputerowa"
     you: "Ty"
@@ -301,6 +303,9 @@ pl_PL:
       new_topic: "Nowy szkic tematu "
       new_private_message: "Nowy szkic wiadomości prywatnej"
       topic_reply: "Szkic odpowiedzi"
+      abandon:
+        yes_value: "Tak, porzuć"
+        no_value: "Nie, zatrzymaj"
     topic_count_latest:
       one: "Zobacz {{count}} nowy albo zaktualizowany temat"
       few: "Zobacz {{count}} nowe albo zaktualizowane tematy"
@@ -341,7 +346,6 @@ pl_PL:
     choose_topic:
       none_found: "Nie znaleziono tematów."
       title:
-        search: "Szukaj tematu po nazwie, URL-u albo ID:"
         placeholder: "tutaj wpisz tytuł tematu"
     queue:
       topic: "Temat:"
@@ -525,7 +529,6 @@ pl_PL:
           description: "Dostaniesz powiadomienie o każdym nowym wpisie w każdej dyskusji, zobaczysz również ilość odpowiedzi."
         watching_first_post:
           title: "Oglądasz pierwszy post"
-          description: "Zostaniesz powiadomiony tylko o pierwszym wpisie w każdym nowym temacie w tej grupie."
         tracking:
           title: "Śledzenie"
           description: "Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę, zobaczysz również liczbę odpowiedzi."
@@ -683,7 +686,7 @@ pl_PL:
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
       deleted_yourself: "Twoje konto zostało usunięte."
-      delete_yourself_not_allowed: "Skontaktuj się z członkiem ekipy jeśli chcesz, aby twoje konto zostało usunięte."
+      delete_yourself_not_allowed: "Skontaktuj się z członkiem zespołu jeśli chcesz, aby twoje konto zostało usunięte."
       unread_message_count: "Wiadomości"
       admin_delete: "Usuń"
       users: "Użytkownicy"
@@ -740,6 +743,7 @@ pl_PL:
         disable: "Wyłącz"
         enable: "Włącz"
         copied_to_clipboard: "Skopiowane do schowka"
+        copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
         disable: "Wyłącz dwuskładnikowe uwierzytelnianie"
@@ -752,6 +756,7 @@ pl_PL:
         error: "Wystąpił błąd podczas zmiany tej wartości."
       change_username:
         title: "Zmień nazwę użytkownika"
+        confirm: "Czy jesteś absolutnie pewien że chcesz zmienić swoją nazwę użytkownika?"
         taken: "Przykro nam, ale ta nazwa jest zajęta."
         invalid: "Ta nazwa jest niepoprawna. Powinna zawierać jedynie liczby i litery."
       change_email:
@@ -793,8 +798,10 @@ pl_PL:
           many: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
           other: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
       associated_accounts:
+        title: "Powiązane konta"
         connect: "Połącz"
         revoke: "Unieważnij"
+        not_connected: "(nie połączony)"
       name:
         title: "Pełna nazwa"
         instructions: "twoja pełna nazwa (opcjonalnie)"
@@ -821,9 +828,16 @@ pl_PL:
         title: "Powtórz hasło"
       auth_tokens:
         title: "Ostatnio używane urządzenia"
+        ip: "IP"
+        details: "Detale"
         log_out_all: "Wyloguj się wszędzie"
         active: "teraz aktywna"
         not_you: "To nie ty?"
+        show_all: "Pokaż wszystko ({{count}})"
+        show_few: "Pokaż mniej"
+        was_this_you: "To byłes Ty?"
+        secure_account: "Zabezpiecz moje konto"
+        latest_post: "Twój ostatni wpis ..."
       last_posted: "Ostatni wpis"
       last_emailed: "Ostatnio otrzymał email"
       last_seen: "Ostatnio widziano"
@@ -1085,6 +1099,8 @@ pl_PL:
       disable: "Pokaż usunięte wpisy."
     private_message_info:
       title: "Wiadomość"
+      invite: "Zaproś innych"
+      edit: "Dodaj lub usuń"
       remove_allowed_user: "Czy naprawdę chcesz usunąć {{name}} z tej dyskusji?"
       remove_allowed_group: "Czy naprawdę chcesz usunąć {{name}} z tej wiadomości?"
     email: 'Email'
@@ -1118,6 +1134,7 @@ pl_PL:
       password: "Hasło"
       second_factor_title: "Dwuskładnikowe uwierzytelnianie"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
+      second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
@@ -1276,6 +1293,7 @@ pl_PL:
       cancel: "Anuluj"
       create_topic: "Utwórz temat"
       create_pm: "Wiadomość"
+      create_whisper: "Szept"
       title: "Lub naciśnij Ctrl+Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -1320,7 +1338,10 @@ pl_PL:
       yourself_confirm:
         title: "Nie zapomniałeś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
-      admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
+      admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
+      composer_actions:
+        reply: Odpowiedź
+        edit: Edycja
     notifications:
       tooltip:
         regular:
@@ -1805,7 +1826,6 @@ pl_PL:
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
-        topic_name: "Nazwa Nowego Tematu"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
         instructions:
           one: "Masz zamiar utworzyć nowy temat, składający się z wybranego przez ciebie wpisu."
@@ -2151,7 +2171,6 @@ pl_PL:
           description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym wpisie w każdym temacie, a liczba nowych wpisów będzie wyświetlana."
         watching_first_post:
           title: "Oglądasz pierwszy post"
-          description: "Zostaniesz powiadomiony o pierwszym wpisie w każdym nowym temacie w tych kategoriach."
         tracking:
           title: "Śledzona"
           description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę. Zobaczysz również liczbę odpowiedzi."
@@ -2537,6 +2556,9 @@ pl_PL:
         save: "Zapisz"
         delete: "Usuń"
         confirm_delete: "Czy na pewno chcesz usunąć ten tag grupy?"
+        everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
+        usable_only_by_staff: "Tagi są widoczne dla zespołu, ale jedynie obsługa serwisu może ich używać"
+        visible_only_to_staff: "Tagi są widoczne jedynie dla zespołu"
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
@@ -2592,9 +2614,6 @@ pl_PL:
         private_messages_short: "Wiad."
         private_messages_title: "Wiadomości"
         mobile_title: "Mobile"
-        space_free: "{{size}} wolne"
-        uploads: "załączniki"
-        backups: "kopie zapasowe"
         traffic_short: "Ruch"
         traffic: "Zapytania do aplikacji"
         page_views: "Wyświetlenia strony"
@@ -2672,6 +2691,10 @@ pl_PL:
           notify_user: "niestandardowe"
           notify_moderators: "niestandardowe"
       groups:
+        manage:
+          interaction:
+            visibility_levels:
+              staff: "Właściciele grupy i zespół"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
         title: "Grupy"
@@ -3080,6 +3103,7 @@ pl_PL:
           filter: "Filtruj:"
           title: "Działania obsługi"
           clear_filters: "Pokaż wszystko"
+          staff_user: "Użytkownik"
           target_user: "Użytkownik będący Obiektem"
           subject: "Temat"
           when: "Kiedy"
@@ -3131,6 +3155,7 @@ pl_PL:
             backup_destroy: "Zniszcz kopię zapasową "
             reviewed_post: "przejrzane posty"
             custom_staff: "spersonalizowana akcja wtyczki"
+            change_name: "zmień nazwe"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -3165,8 +3190,6 @@ pl_PL:
           title: "Logi wyszukiwań"
           term: "Szukana fraza"
           searches: "Wyszukiwania"
-          click_through: "Kliknij przez"
-          unique: "Unikalny"
           types:
             all_search_types: "Wszystkie typy wyszukiwania"
             header: "Nagłówek"
@@ -3621,11 +3644,13 @@ pl_PL:
   wizard_js:
     wizard:
       done: "Zrobione"
+      finish: "Zakończ"
       back: "Poprzednia"
       next: "Następna"
       step: "%{current} z %{total}"
       upload: "Prześlij"
       uploading: "Przesyłanie…"
+      upload_error: "Przepraszamy, wystąpił błąd podczas wysyłania tego pliku. Proszę spróbuj ponownie."
       quit: "Może później"
       staff_count:
         one: "W twojej społeczności jest 1 członek załogi (Ty)."

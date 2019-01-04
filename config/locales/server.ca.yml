@@ -139,7 +139,6 @@ ca:
     continue: "Continua la discussió"
     error: "Errada en incrustar"
     referer: "Referent:"
-    mismatch: "El referent no coincideix amb cap dels següents amfitrions:"
     no_hosts: "No s'hi han establert amfitrions per inscrustar."
     configure: "Configurar la incrustació"
     more_replies:
@@ -598,10 +597,6 @@ ca:
       title: "Preferits"
       xaxis: "Dia"
       yaxis: "Quantitat de nous preferits"
-    starred:
-      title: "Estrellat"
-      xaxis: "Dia"
-      yaxis: "Quantitat de nous temes estrellats"
     users_by_trust_level:
       title: "Persones usuàries per nivell de confiança"
       xaxis: "Nivell de confiança"
@@ -1160,13 +1155,6 @@ ca:
     errors:
       different_topics: "Les publicacions que pertanyen a diferents temes no es poden fusionar."
       different_users: "Les publicacions que pertanyen a diferents participants no es poden fusionar."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Una publicació ha estat dividida a un nou tema: %{topic_link}"
-      other: "%{count} publicacions han estat dividides a un nou tema: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Una publicació ha estat fusionada a un tema existent: %{topic_link}"
-      other: "%{count} publicacions han estat fusionades a un tema existent: %{topic_link}"
   topic_statuses:
     archived_enabled: "Aquest tema ara està arxivat. Està congelat i no es pot canviar de cap manera."
     archived_disabled: "Aquest tema ara està desarxivat. Ja no està congelat i es pot canviar."

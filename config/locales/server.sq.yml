@@ -389,8 +389,6 @@ sq:
       title: "Të preferuarat"
       xaxis: "Ditë"
       yaxis: "Numri i postimeve të preferuar të rinj"
-    starred:
-      xaxis: "Ditë"
     users_by_trust_level:
       title: "Përdorues për Nivel Besimi"
       xaxis: "Niveli i besimit"
@@ -756,13 +754,6 @@ sq:
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
-  move_posts:
-    new_topic_moderator_post:
-      one: "A post was split to a new topic: %{topic_link}"
-      other: "%{count} posts were split to a new topic: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "A post was merged into an existing topic: %{topic_link}"
-      other: "%{count} posts were merged into an existing topic: %{topic_link}"
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."

@@ -276,18 +276,18 @@ module BackupRestore
     end
 
     def notify_user
+      return if @success && @user.id == Discourse::SYSTEM_USER_ID
+
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
-      post = SystemMessage.create_from_system_user(@user, status,
-        logs: Discourse::Utils.pretty_logs(@logs)
+      post = SystemMessage.create_from_system_user(
+        @user, status, logs: Discourse::Utils.pretty_logs(@logs)
       )
 
-      if !@success && @user.id == Discourse::SYSTEM_USER_ID
+      if @user.id == Discourse::SYSTEM_USER_ID
         post.topic.invite_group(@user, Group[:admins])
       end
-
-      post
     rescue => ex
       log "Something went wrong while notifying user.", ex
     end

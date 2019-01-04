@@ -194,7 +194,6 @@ de:
     continue: "Diskussion fortsetzen"
     error: "Fehler bei der Einbettung"
     referer: "Referrer:"
-    mismatch: "Der Referrer entsprach keiner der folgenden Hostnamen:"
     no_hosts: "Es wurden keine Hostnamen für die Einbettung konfiguriert."
     configure: "Einbettung konfigurieren"
     more_replies:
@@ -788,7 +787,6 @@ de:
         percent: Prozent
         day: Tag
     post_edits:
-      title: "Beitragsbearbeitungen"
       labels:
         post: Beitrag
         editor: Bearbeiter
@@ -803,7 +801,6 @@ de:
         ignored_flags: Ignorierte Meldungen
         score: Wertung
     moderators_activity:
-      title: "Moderator-Aktivität"
       labels:
         moderator: Moderator
         flag_count: Überprüfte Meldungen
@@ -813,7 +810,6 @@ de:
         pm_count: Erstellte Nachrichten
         revision_count: Revisionen
     flags_status:
-      title: "Meldungsstatus"
       values:
         agreed: Zugestimmt
         disagreed: Abgelehnt
@@ -833,22 +829,18 @@ de:
       title: "Neue Benutzer"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Benutzer"
-      description: "Neue Registrierungen in dieser Zeit"
     new_contributors:
       title: "Neue Mitwirkende"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
-      description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben"
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich am vergangenen Tag angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, die das „Klebeverhalten“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
       yaxis: "Engagierte Benutzer"
-      description: "Anzahl der Benutzer, die innerhalb des letzten Tages einen Beitrag geschrieben oder mit einem Like markiert haben"
     profile_views:
       title: "Profilaufrufe"
       xaxis: "Tag"
@@ -857,7 +849,6 @@ de:
       title: "Themen"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Themen"
-      description: "Neue Themen, die in dieser Zeit erstellt wurden"
     posts:
       title: "Beiträge"
       xaxis: "Tag"
@@ -875,10 +866,6 @@ de:
       title: "Lesezeichen"
       xaxis: "Tag"
       yaxis: "Anzahl der Lesezeichen"
-    starred:
-      title: "Favoriten"
-      xaxis: "Tag"
-      yaxis: "Anzahl der Favoriten"
     users_by_trust_level:
       title: "Benutzer nach Stufe"
       xaxis: "Stufe"
@@ -897,7 +884,6 @@ de:
         suspended: Gesperrt
         silenced: Stummgeschaltet
     trending_search:
-      title: Suchtrends
       labels:
         term: Begriff
         searches: Suchen
@@ -1115,10 +1101,6 @@ de:
     inline_onebox_domains_whitelist: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die `inline_onebox_domain_whitelist`-Seiteneinstellung und erlaube Inline-Oneboxen für alle Domains"
     max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
-    logo: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
-    logo_small: "Dein Logo in klein für die obere linke Seite deiner Site, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
-    digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Site. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
-    mobile_logo: "Benutzerdefiniertes Logo für die mobile Seitenversion. Falls leer, wird `logo_url` verwendet. Beispiel: https://example.com/uploads/default/logo.png"
     large_icon: "Bild wird als Logo/Startbild auf Android verwendet. Empfohlene Größe beträgt 512px mal 512px."
     favicon: "Favicon für deine Seite, siehe <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über ein CDN richtig funktioniert, muss es im PNG-Format vorliegen."
     apple_touch_icon: "Icon für berührungsempfindliche Apple-Geräte. Empfohlene Grösse ist 144px auf 144px."
@@ -1685,13 +1667,6 @@ de:
     errors:
       different_topics: "Beiträge unterschiedlicher Themen können nicht zusammengeführt werden."
       different_users: "Beiträge unterschiedlicher Benutzer können nicht zusammengeführt werden."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ein Beitrag wurde in ein neues Thema verschoben: %{topic_link}"
-      other: "%{count} Beiträge wurden in ein neues Thema verschoben: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ein Beitrag wurde in ein neues Thema verschoben: %{topic_link}"
-      other: "%{count} Beiträge wurden in ein neues Thema verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer übertragen."
   topic_statuses:
@@ -1788,7 +1763,6 @@ de:
     email:
       sent_test: "gesendet!"
       sent_test_disabled: "kann nicht gesendet werden da E-Mails deaktiviert sind"
-      sent_test_disabled_for_non_staff: "kann nicht gesendet werden da E-Mails für Nicht-Moderatoren deaktiviert sind"
   user:
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
     deactivated_by_staff: "Deaktiviert vom Team"
@@ -3680,10 +3654,8 @@ de:
         fields:
           logo:
             label: "Hauptlogo"
-            description: "Das Logobild für den linken, oberen Bereich deiner Seite. Verwende eine weite, rechteckige Form."
           logo_small:
             label: "Kompaktes Logo"
-            description: "Eine kompakte Version deines Logos, das auf deiner Seite oben links angezeigt wird, wenn man herunterscollt. Verwende eine quadratische Form."
       icons:
         title: "Icons"
         fields:

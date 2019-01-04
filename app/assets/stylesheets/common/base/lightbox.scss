@@ -2,7 +2,6 @@
   position: relative;
   display: inline-block;
   overflow: hidden;
-  background: $primary-low;
   &:hover .meta {
     opacity: 0.9;
     transition: opacity 0.5s;
@@ -11,6 +10,10 @@
 
 .d-lazyload-hidden {
   box-sizing: border-box;
+}
+
+.onebox img.d-lazyload-hidden {
+  border: 1px solid $primary-low;
 }
 
 .cooked img.d-lazyload {

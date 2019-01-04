@@ -260,7 +260,7 @@ module Oneboxer
   end
 
   def self.preserve_fragment_url_hosts
-    ['http://github.com']
+    @preserve_fragment_url_hosts ||= ['http://github.com']
   end
 
   def self.external_onebox(url)

@@ -621,6 +621,12 @@ QUnit.test("Category hashtags", assert => {
     '<p><small><span class="hashtag">#category-hashtag</span></small></p>',
     "it works between HTML tags"
   );
+
+  assert.cooked(
+    "Checkout #ụdị",
+    '<p>Checkout <span class="hashtag">#ụdị</span></p>',
+    "it works for non-english characters"
+  );
 });
 
 QUnit.test("Heading", assert => {

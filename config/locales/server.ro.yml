@@ -132,7 +132,6 @@ ro:
     continue: "Continuă discuție"
     error: "Eroare la încorporare"
     referer: "Referent:"
-    mismatch: "Referentul nu corespunde nici uneia dintre următoarele gazde:"
     no_hosts: "Nu s-a setat nicio gazdă pentru încorporare."
     configure: "Configurează încorporarea"
     more_replies:
@@ -579,7 +578,6 @@ ro:
       title: "Subiecte"
       xaxis: "Zi"
       yaxis: "Număr de subiecte noi"
-      description: "Discuții noi create în această perioadă"
     posts:
       title: "Postări"
       xaxis: "Zi"
@@ -596,10 +594,6 @@ ro:
       title: "Semne de carte"
       xaxis: "Zi"
       yaxis: "Număr de semne de carte noi"
-    starred:
-      title: "Marcat cu steluță"
-      xaxis: "Zi"
-      yaxis: "Număr de subiecte noi marcate cu steluță"
     users_by_trust_level:
       title: "Utilizatori pe nivel de încredre"
       xaxis: "Nivel de încredere"
@@ -1154,15 +1148,6 @@ ro:
     errors:
       different_topics: "Postările care aparțin unor subiecte diferite nu pot fi comasate."
       different_users: "Postările care aparțin unor utilizatori diferiți nu pot fi comasate."
-  move_posts:
-    new_topic_moderator_post:
-      one: "o postare a fost mutată într-un nou subiect: %{topic_link}"
-      few: "%{count}  postări au fost mutate într-un nou subiect: %{topic_link}"
-      other: "%{count} de postări au fost mutate într-un nou subiect: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "o postare a fost comasată într-un subiect existent: %{topic_link}"
-      few: "%{count} postări au fost comasate într-un subiect existent: %{topic_link}"
-      other: "%{count} de postări au fost comasate într-un subiect existent: %{topic_link}"
   topic_statuses:
     archived_enabled: "Acest subiect este acum arhivat. Este înghețat și nu mai poate fi schimbat în nici un fel."
     archived_disabled: "Acest subiect este acum dezarhivat. Nu mai este înghețat și poate fi modificat."

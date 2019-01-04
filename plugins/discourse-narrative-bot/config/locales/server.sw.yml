@@ -137,8 +137,6 @@ sw:
     new_user_narrative:
       reset_trigger: "mtumiaji mpya"
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
-      hello:
-        title: ":robot: Habari!"
       onebox:
         instructions: |-
           Baada ya hapo, je unaweza kunipa hivi viungo na mimi? Jibu na **kila kiungo kwenye mstari wake**, na itaongezeka kuonyesha muhtasari kuhusiana na hicho kiungo.

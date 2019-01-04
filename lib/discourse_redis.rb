@@ -201,6 +201,31 @@ class DiscourseRedis
     end
   end
 
+  def scan_each(options = {}, &block)
+    DiscourseRedis.ignore_readonly do
+      match = options[:match].presence || '*'
+
+      options[:match] =
+        if @namespace
+          "#{namespace}:#{match}"
+        else
+          match
+        end
+
+      if block
+        @redis.scan_each(options) do |key|
+          key = remove_namespace(key) if @namespace
+          block.call(key)
+        end
+      else
+        @redis.scan_each(options).map do |key|
+          key = remove_namespace(key) if @namespace
+          key
+        end
+      end
+    end
+  end
+
   def keys(pattern = nil)
     DiscourseRedis.ignore_readonly do
       pattern = pattern || '*'
@@ -251,6 +276,12 @@ class DiscourseRedis
 
   def self.new_redis_store
     Cache.new
+  end
+
+  private
+
+  def remove_namespace(key)
+    key[(namespace.length + 1)..-1]
   end
 
 end

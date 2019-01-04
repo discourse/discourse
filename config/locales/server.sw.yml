@@ -555,7 +555,6 @@ sw:
       yaxis: "Idadi ya utembeleaji"
     signups:
       xaxis: "Siku"
-      description: "Akaunti mpya zilizosajiliwa katika kipindi hiki"
     new_contributors:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
@@ -568,7 +567,6 @@ sw:
       title: "Mada"
       xaxis: "Siku"
       yaxis: "Idadi ya mada mpya"
-      description: "Mada mpya zilizotengenezwa katika kipindi hiki"
     posts:
       title: "Machapisho"
       xaxis: "Siku"
@@ -586,10 +584,6 @@ sw:
       title: "Mialamisho"
       xaxis: "Siku"
       yaxis: "Idadi ya mialamisho mapya"
-    starred:
-      title: "Wekewa nyota"
-      xaxis: "Siku"
-      yaxis: "Idadi ya mada mpya zenye nyota"
     users_by_trust_level:
       title: "Watumiaji kwenye Kila Kiwango cha Uaminifu"
       xaxis: "Kiwango cha Uaminifu"
@@ -604,7 +598,6 @@ sw:
         suspended: Alisitishwa
         silenced: Amenyamazishwa
     trending_search:
-      title: Utafiti maarufu
       labels:
         term: Neno
         searches: Utafiti

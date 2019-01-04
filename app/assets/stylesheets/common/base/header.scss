@@ -9,8 +9,6 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    box-sizing: border-box;
-    padding: 0;
     width: 100%;
     height: 100%;
     .contents {
@@ -297,5 +295,40 @@
   // instead of wrapping to the next line.
   .categories-wrapper + .topic-header-extra {
     min-width: 0;
+  }
+}
+
+.topic-header-participants {
+  &:not(:first-child) {
+    margin-left: 4px;
+  }
+
+  > span {
+    margin: 0 2px;
+    display: inline-block;
+    height: 20px;
+  }
+
+  .trigger-group-card {
+    margin: 0 4px;
+    padding: 1px 4px 0;
+    border: 1px solid $primary-low;
+    border-radius: 0.25em;
+    align-items: center;
+
+    a {
+      color: $primary-high;
+
+      .d-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .more-participants {
+    display: inline-block;
+    color: $header_primary-high;
+    line-height: 20px;
+    padding: 0 4px;
   }
 }

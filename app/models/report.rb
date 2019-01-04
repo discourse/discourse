@@ -246,6 +246,8 @@ class Report
   def self.report_signups(report)
     report.group_filtering = true
 
+    report.icon = 'user-plus'
+
     if report.group_id
       basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
       add_counts report, User.real, 'users.created_at'
@@ -941,7 +943,12 @@ class Report
 
     report.labels = [
       {
-        property: :action_type,
+        type: :post,
+        properties: {
+          topic_id: :topic_id,
+          number: :post_number,
+          truncated_raw: :post_type
+        },
         title: I18n.t("reports.flags_status.labels.flag")
       },
       {
@@ -980,7 +987,7 @@ class Report
 
     report.data = []
 
-    flag_types = PostActionType.flag_types_without_custom
+    flag_types = PostActionType.flag_types
 
     sql = <<~SQL
     WITH period_actions AS (
@@ -997,13 +1004,16 @@ class Report
     user_id,
     COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
     FROM post_actions
-    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
+    WHERE post_action_type_id IN (#{flag_types.values.join(',')})
+      AND created_at >= '#{report.start_date}'
+      AND created_at <= '#{report.end_date}'
+    ORDER BY created_at DESC
     ),
     poster_data AS (
     SELECT pa.id,
     p.user_id AS poster_id,
+    p.topic_id as topic_id,
+    p.post_number as post_number,
     u.username_lower AS poster_username,
     u.uploaded_avatar_id AS poster_avatar_id
     FROM period_actions pa
@@ -1037,6 +1047,8 @@ class Report
     pd.poster_username,
     pd.poster_id,
     pd.poster_avatar_id,
+    pd.post_number,
+    pd.topic_id,
     fd.flagger_username,
     fd.flagger_id,
     fd.flagger_avatar_id,
@@ -1060,7 +1072,10 @@ class Report
 
     DB.query(sql).each do |row|
       data = {}
-      data[:action_type] = flag_types.key(row.post_action_type_id).to_s
+
+      data[:post_type] = flag_types.key(row.post_action_type_id).to_s
+      data[:post_number] = row.post_number
+      data[:topic_id] = row.topic_id
 
       if row.staff_id
         data[:staff_username] = row.staff_username
@@ -1416,6 +1431,72 @@ class Report
         free_bytes: DiskSpace.uploads_free_bytes
       }
     }
+  end
+
+  def self.report_top_uploads(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :link,
+        properties: [
+          :file_url,
+          :file_name,
+        ],
+        title: I18n.t("reports.top_uploads.labels.filename")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :author_username,
+          id: :author_id,
+          avatar: :author_avatar_template,
+        },
+        title: I18n.t("reports.top_uploads.labels.author")
+      },
+      {
+        type: :text,
+        property: :extension,
+        title: I18n.t("reports.top_uploads.labels.extension")
+      },
+      {
+        type: :bytes,
+        property: :filesize,
+        title: I18n.t("reports.top_uploads.labels.filesize")
+      },
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+    SELECT
+    u.id as user_id,
+    u.username,
+    u.uploaded_avatar_id,
+    up.filesize,
+    up.original_filename,
+    up.extension,
+    up.url
+    FROM uploads up
+    JOIN users u
+    ON u.id = up.user_id
+    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    ORDER BY up.filesize DESC
+    LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      data = {}
+      data[:author_id] = row.user_id
+      data[:author_username] = row.username
+      data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:filesize] = row.filesize
+      data[:extension] = row.extension
+      data[:file_url] = Discourse.store.cdn_url(row.url)
+      data[:file_name] = row.original_filename.truncate(25)
+
+      report.data << data
+    end
   end
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|

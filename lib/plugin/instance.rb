@@ -511,7 +511,7 @@ class Plugin::Instance
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
-        provider.send "#{sym}=", opts.delete(sym)
+        provider.send "#{sym}=", opts.delete(sym) if opts.has_key?(sym)
       end
 
       begin

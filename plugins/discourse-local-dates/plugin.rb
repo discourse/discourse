@@ -28,7 +28,7 @@ after_initialize do
       date = {}
       cooked_date.attributes.values.each do |attribute|
         data_name = attribute.name&.gsub('data-', '')
-        if data_name && ['date', 'time', 'timezone'].include?(data_name)
+        if data_name && ['date', 'time', 'timezone', 'recurring'].include?(data_name)
           unless attribute.value == 'undefined'
             date[data_name] = CGI.escapeHTML(attribute.value || "")
           end

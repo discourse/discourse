@@ -75,7 +75,7 @@ class ThemeSerializer < ChildThemeSerializer
   end
 
   def child_themes
-    object.child_themes.order(:name)
+    object.child_themes
   end
 
   def settings

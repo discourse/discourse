@@ -271,6 +271,7 @@ class PostAlerter
     Notification.types[:replied],
     Notification.types[:quoted],
     Notification.types[:posted],
+    Notification.types[:private_message],
   ]
 
   def create_notification(user, type, post, opts = {})
@@ -341,13 +342,8 @@ class PostAlerter
       collapsed = true
     end
 
-    if type == Notification.types[:private_message]
-      destroy_notifications(user, type, post.topic)
-      collapsed = true
-    end
-
     original_post = post
-    original_username = opts[:display_username] || post.username # xxxxx need something here too
+    original_username = opts[:display_username].presence || post.username
 
     if collapsed
       post = first_unread_post(user, post.topic) || post

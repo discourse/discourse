@@ -10,7 +10,7 @@
       icon="user-times"
       label="groups.leave"
       disabled=updatingMembership}}
-{{else if model.allow_membership_requests}}
+{{else if canRequestMembership}}
   {{d-button action="showRequestMembershipForm"
       class="group-index-request"
       disabled=loading

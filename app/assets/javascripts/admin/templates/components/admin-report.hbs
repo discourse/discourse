@@ -6,7 +6,7 @@
         <ul class="breadcrumb">
           {{#if showAllReportsLink}}
             <li class="item all-reports">
-              {{#link-to "adminReports" class="report-url"}}
+              {{#link-to "admin.dashboardNextReports" class="report-url"}}
                 {{i18n "admin.dashboard.all_reports"}}
               {{/link-to}}
             </li>
@@ -112,17 +112,15 @@
     {{#if showFilteringUI}}
       <div class="filters">
         {{#if showModes}}
-          <ul class="modes">
+          <div class="modes">
             {{#each displayedModes as |displayedMode|}}
-              <li class="mode">
-                {{d-button
-                  action="changeMode"
-                  actionParam=displayedMode.mode
-                  class=displayedMode.cssClass
-                  icon=displayedMode.icon}}
-              </li>
+              {{d-button
+                action="changeMode"
+                actionParam=displayedMode.mode
+                class=displayedMode.cssClass
+                icon=displayedMode.icon}}
             {{/each}}
-          </ul>
+          </div>
         {{/if}}
 
         {{#if showDatesOptions}}
