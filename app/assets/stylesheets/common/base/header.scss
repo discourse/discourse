@@ -258,7 +258,8 @@
   .badge-wrapper {
     margin-right: 8px;
     &.bullet {
-      padding-top: 1px; // alignment hack
+      padding-top: 2px; // alignment hack
+      line-height: 18px;
     }
   }
   .badge-wrapper.bullet {
@@ -287,7 +288,10 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       .discourse-tag {
-        display: inline;
+        display: block;
+        float: left;
+        line-height: 18px;
+        margin: 2px 4px 0 0;
       }
     }
   }
@@ -299,28 +303,28 @@
 }
 
 .topic-header-participants {
-  &:not(:first-child) {
-    margin-left: 4px;
-  }
-
   > span {
     margin: 0 2px;
-    display: inline-block;
+    display: block;
+    float: left;
     height: 20px;
   }
 
   .trigger-group-card {
+    display: block;
+    float: left;
     margin: 0 4px;
-    padding: 1px 4px 0;
+    padding: 1px 4px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
     align-items: center;
+    height: 16px;
 
     a {
       color: $primary-high;
 
       .d-icon {
-        margin-right: 4px;
+        margin: 1px 4px 0 0;
       }
     }
   }
