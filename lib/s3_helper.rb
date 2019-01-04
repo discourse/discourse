@@ -28,7 +28,7 @@ class S3Helper
     obj = s3_bucket.object(path)
 
     etag = begin
-      if File.size(file) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+      if File.size(file.path) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
         options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
         obj.upload_file(file, options)
         obj.load
