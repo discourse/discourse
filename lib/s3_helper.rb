@@ -7,6 +7,7 @@ class S3Helper
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
+    @s3_client = options.delete(:client)
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
@@ -224,7 +225,7 @@ class S3Helper
   end
 
   def s3_client
-    Aws::S3::Client.new(@s3_options)
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
   def s3_resource
