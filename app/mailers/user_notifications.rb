@@ -235,7 +235,7 @@ class UserNotifications < ActionMailer::Base
       @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
 
       opts = {
-        from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
+        from_alias: I18n.t('user_notifications.digest.from', site_name: Email.site_title),
         subject: I18n.t('user_notifications.digest.subject_template', email_prefix: @email_prefix, date: short_date(Time.now)),
         add_unsubscribe_link: true,
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
