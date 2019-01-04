@@ -188,6 +188,42 @@ describe UserBadgesController do
 
       expect(response.status).to eq(200)
     end
+
+    it 'grants badge when valid post/topic link with relative_url_root is given in reason' do
+      Discourse.expects(:base_uri).at_least_once.returns('/discuss')
+
+      admin = Fabricate(:admin)
+      post = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: Discourse.base_url + post.url
+      }
+
+      expect(response.status).to eq(200)
+      expect(UserBadge.where(badge_id: badge.id, post_id: post.id, granted_by: admin.id).count).to eq(1)
+    end
+
+    it 'does not grant badge when post/topic link is given without relative_url_root in reason' do
+      relative_url_root = '/discuss'
+      Discourse.expects(:base_uri).at_least_once.returns(relative_url_root)
+
+      admin = Fabricate(:admin)
+      post = create_post
+
+      sign_in(admin)
+
+      post "/user_badges.json", params: {
+        badge_id: badge.id,
+        username: user.username,
+        reason: Discourse.base_url.sub(relative_url_root, '') + post.url
+      }
+
+      expect(response.status).to eq(400)
+    end
   end
 
   context 'destroy' do
