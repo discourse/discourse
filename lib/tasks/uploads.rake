@@ -278,7 +278,7 @@ def migrate_to_s3
   end
 
   puts " => #{s3_objects.size} files"
-  print " - Syncing files to S3\n"
+  puts " - Syncing files to S3"
 
   synced = 0
   failed = []
