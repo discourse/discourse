@@ -122,14 +122,20 @@ function getEmojiTokenByTranslation(content, pos, state) {
   let found = null;
 
   while (t.length > 0 && pos < content.length) {
+    let matched = false;
     let code = content.charCodeAt(pos);
 
     for (let i = 0; i < t.length; i++) {
       if (t[i][0] === code) {
+        matched = true;
         found = t[i][2];
         t = t[i][1];
         break;
       }
+    }
+
+    if (!matched) {
+      return;
     }
 
     pos++;
@@ -164,26 +170,32 @@ function getEmojiTokenByTranslation(content, pos, state) {
   }
 }
 
-function applyEmoji(content, state, emojiUnicodeReplacer, enableShortcuts, inlineEmoji) {
+function applyEmoji(
+  content,
+  state,
+  emojiUnicodeReplacer,
+  enableShortcuts,
+  inlineEmoji
+) {
   let result = null;
-  let contentToken = null;
   let start = 0;
 
   if (emojiUnicodeReplacer) {
     content = emojiUnicodeReplacer(content);
   }
 
-  let endToken = content.length;
+  let end = content.length;
 
   for (let i = 0; i < content.length - 1; i++) {
     let offset = 0;
     let token = null;
-    const emojiName = getEmojiName(content, i, state, inlineEmoji);
 
-    if (emojiName) {
-      token = getEmojiTokenByName(emojiName, state);
+    const name = getEmojiName(content, i, state, inlineEmoji);
+
+    if (name) {
+      token = getEmojiTokenByName(name, state);
       if (token) {
-        offset = emojiName.length + 2;
+        offset = name.length + 2;
       }
     }
 
@@ -199,22 +211,24 @@ function applyEmoji(content, state, emojiUnicodeReplacer, enableShortcuts, inlin
 
     if (token) {
       result = result || [];
+
       if (i - start > 0) {
-        contentToken = new state.Token("text", "", 0);
-        contentToken.content = content.slice(start, i);
-        result.push(contentToken);
+        let text = new state.Token("text", "", 0);
+        text.content = content.slice(start, i);
+        result.push(text);
       }
 
       result.push(token);
-      i += offset;
-      endToken = start = i;
+
+      end = start = i + offset;
+      i += offset - 1;
     }
   }
 
-  if (endToken < content.length) {
-    contentToken = new state.Token("text", "", 0);
-    contentToken.content = content.slice(endToken);
-    result.push(contentToken);
+  if (end < content.length) {
+    let text = new state.Token("text", "", 0);
+    text.content = content.slice(end);
+    result.push(text);
   }
 
   return result;
