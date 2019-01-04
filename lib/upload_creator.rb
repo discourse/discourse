@@ -80,8 +80,8 @@ class UploadCreator
       end
 
       fixed_original_filename = nil
-      if is_image
 
+      if is_image
         current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
         expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
 
@@ -89,11 +89,7 @@ class UploadCreator
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
         if current_extension != expected_extension
-          basename = File.basename(@filename, current_extension)
-
-          if basename.length == 0
-            basename = "image"
-          end
+          basename = File.basename(@filename, current_extension).presence || "image"
           fixed_original_filename = "#{basename}#{expected_extension}"
         end
       end
@@ -173,10 +169,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
-
-    if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
-      return
-    end
+    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
@@ -290,7 +283,6 @@ class UploadCreator
 
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
-
     filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]
