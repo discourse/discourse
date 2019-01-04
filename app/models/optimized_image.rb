@@ -11,11 +11,19 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.lock(upload_id, width, height)
     @hostname ||= `hostname`.strip rescue "unknown"
-    # note, the extra lock here ensures we only optimize one image per machine
-    # this can very easily lead to runaway CPU so slowing it down is beneficial
-    DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+    # note, the extra lock here ensures we only optimize one image per machine on webs
+    # this can very easily lead to runaway CPU so slowing it down is beneficial and it is hijacked
+    #
+    # we can not afford this blocking in Sidekiq cause it can lead to starvation
+    if Sidekiq.server?
       DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
         yield
+      end
+    else
+      DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+        DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
+          yield
+        end
       end
     end
   end
