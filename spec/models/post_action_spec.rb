@@ -160,6 +160,26 @@ describe PostAction do
       expect(PostAction.flagged_posts_count).to eq(1)
     end
 
+    it "tl3 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 3)
+      post.user.update_column(:trust_level, 0)
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
+    it "tl4 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 4)
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
     it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.topic.trash!
