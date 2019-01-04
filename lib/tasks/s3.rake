@@ -33,7 +33,10 @@ def upload(path, remote_path, content_type, content_encoding = nil)
     puts "Skipping: #{remote_path}"
   else
     puts "Uploading: #{remote_path}"
-    helper.upload(path, remote_path, options)
+
+    File.open(path) do |file|
+      helper.upload(file, remote_path, options)
+    end
   end
 end
 
