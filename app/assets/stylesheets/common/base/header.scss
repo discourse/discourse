@@ -307,8 +307,9 @@ $mobile-avatar-height: 1.532em;
   align-items: center;
   overflow: hidden;
   font-size: $font-down-1;
-  margin-left: 5px;
-
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
   .trigger-user-card,
   .trigger-group-card {
     &:not(:last-of-type) {
