@@ -259,7 +259,6 @@
     margin-right: 8px;
     &.bullet {
       padding-top: 2px; // alignment hack
-      line-height: 18px;
     }
   }
   .badge-wrapper.bullet {
@@ -287,55 +286,81 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      height: 20px;
       .discourse-tag {
-        display: block;
-        float: left;
-        line-height: 18px;
-        margin: 2px 4px 0 0;
+        display: inline; // tags need to stay inline in order for them to truncate
       }
     }
   }
-  // if a topic has both categories and tags, the tag container should shrink
-  // instead of wrapping to the next line.
-  .categories-wrapper + .topic-header-extra {
-    min-width: 0;
+  // the tag container should shrink
+  .topic-header-extra {
+    min-width: 1px; // 1px value is needed to avoid IE11 flexbox bug
   }
 }
 
-.topic-header-participants {
-  height: 20px;
+// PM header participants
 
-  > span {
-    margin: 0 2px;
-    display: block;
-    float: left;
-    height: 20px;
+$avatar-height: 1.641em;
+$mobile-avatar-height: 1.532em;
+
+.topic-header-participants {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-size: $font-down-1;
+  margin-left: 5px;
+
+  .trigger-user-card,
+  .trigger-group-card {
+    &:not(:last-of-type) {
+      margin-right: 5px;
+    }
+  }
+
+  .trigger-user-card {
+    .icon {
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
+      display: inline-block;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
   }
 
   .trigger-group-card {
-    display: block;
-    float: left;
-    margin: 0 4px;
-    padding: 1px 4px;
+    padding: 0 5px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
-    align-items: center;
-    height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
-    a {
+    .icon {
+      display: flex;
+      align-items: center;
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
       color: $primary-high;
 
       .d-icon {
-        margin: 1px 4px 0 0;
+        margin-right: 5px;
       }
+    }
+
+    span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
   .more-participants {
-    display: inline-block;
     color: $header_primary-high;
-    line-height: 20px;
-    padding: 0 4px;
+    margin-left: 5px;
   }
 }
