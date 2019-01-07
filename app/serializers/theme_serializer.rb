@@ -68,6 +68,7 @@ class ThemeSerializer < ChildThemeSerializer
   has_many :theme_fields, serializer: ThemeFieldSerializer, embed: :objects
   has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
+  has_many :translations, serializer: ThemeTranslationSerializer, embed: :objects
 
   def initialize(theme, options = {})
     super

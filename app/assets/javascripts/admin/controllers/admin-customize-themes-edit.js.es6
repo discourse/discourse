@@ -16,7 +16,8 @@ export default Ember.Controller.extend({
     { id: 0, name: "common" },
     { id: 1, name: "desktop" },
     { id: 2, name: "mobile" },
-    { id: 3, name: "settings" }
+    { id: 3, name: "settings" },
+    { id: 4, name: "translations" }
   ],
 
   fieldsForTarget: function(target) {

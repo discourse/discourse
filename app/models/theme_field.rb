@@ -1,4 +1,5 @@
 require_dependency 'theme_settings_parser'
+require_dependency 'theme_translation_parser'
 
 class ThemeField < ActiveRecord::Base
 
@@ -11,9 +12,28 @@ class ThemeField < ActiveRecord::Base
     where(theme_id: theme_ids)
       .joins(
         "JOIN (
-          SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS sort_column" }.join(" UNION ALL SELECT ")}
+          SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS theme_sort_column" }.join(" UNION ALL SELECT ")}
         ) as X ON X.theme_id = theme_fields.theme_id")
-      .order("sort_column")
+      .order("theme_sort_column")
+  }
+
+  scope :find_locale_fields, ->(theme_ids, locale_codes) {
+    return none unless theme_ids.present? && locale_codes.present?
+
+    find_by_theme_ids(theme_ids)
+      .where(target_id: Theme.targets[:translations], name: locale_codes)
+      .joins(self.sanitize_sql_array([
+        "JOIN (
+          SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
+        ) as Y ON Y.locale_code = theme_fields.name",
+        *locale_codes.map.with_index { |code, index| [code, index] }
+      ]))
+      .reorder("X.theme_sort_column", "Y.locale_sort_column")
+  }
+
+  scope :find_first_locale_fields, ->(theme_ids, locale_codes) {
+    find_locale_fields(theme_ids, locale_codes)
+      .select("DISTINCT ON (X.theme_sort_column) *")
   }
 
   def self.types
@@ -66,6 +86,7 @@ class ThemeField < ActiveRecord::Base
 if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
 Discourse._registerPluginCode('#{version}', api => {
   #{settings(es6_source)}
+  let themePrefix = "theme_translations.#{self.theme_id}.";
   #{es6_source}
 });
 }
@@ -87,8 +108,10 @@ PLUGIN_API_JS
       setting_helpers = ''
       theme.cached_settings.each do |k, v|
         val = v.is_a?(String) ? "\"#{v.gsub('"', "\\u0022")}\"" : v
-        setting_helpers += "{{theme-setting-injector #{is_raw ? "" : "context=this"} key=\"#{k}\" value=#{val}}}\n"
+        setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} parent=\"themeSettings\" key=\"#{k}\" value=#{val}}}\n"
       end
+      theme_prefix = "theme_translations.#{self.theme_id}."
+      setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} key=\"theme-prefix\" value=\"#{theme_prefix}\"}}\n"
       hbs_template = setting_helpers + node.inner_html
 
       if is_raw
@@ -143,6 +166,65 @@ COMPILED
     [doc.to_s, errors&.join("\n")]
   end
 
+  def raw_translation_data
+    # Might raise ThemeTranslationParser::InvalidYaml
+    ThemeTranslationParser.new(self).load
+  end
+
+  def translation_data(with_overrides: true)
+    fallback_fields = theme.theme_fields.find_locale_fields([theme.id], I18n.fallbacks[name])
+
+    fallback_data = fallback_fields.each_with_index.map do |field, index|
+      begin
+        field.raw_translation_data
+      rescue ThemeTranslationParser::InvalidYaml
+        # If this is the locale with the error, raise it.
+        # If not, let the other theme_field raise the error when it processes itself
+        raise if field.id == id
+        {}
+      end
+    end
+
+    # TODO: Deduplicate the fallback data in the same way as JSLocaleHelper#load_translations_merged
+    #       this would reduce the size of the payload, without affecting functionality
+    data = {}
+    fallback_data.each { |hash| data.merge!(hash) }
+    overrides = theme.translation_override_hash.deep_symbolize_keys
+    data.deep_merge!(overrides) if with_overrides
+    data
+  end
+
+  def process_translation
+    errors = []
+    javascript_cache || build_javascript_cache
+    javascript_cache.content = ''
+    begin
+      data = translation_data
+
+      js = <<~JS
+        /* Translation data for theme #{self.theme_id} (#{self.name})*/
+        const data = #{data.to_json};
+
+        for (let lang in data){
+          let cursor = I18n.translations;
+          for (let key of [lang, "js", "theme_translations"]){
+            cursor = cursor[key] = cursor[key] || {};
+          }
+          cursor[#{self.theme_id}] = data[lang];
+        }
+      JS
+
+      javascript_cache.content << transpile(js, 0)
+    rescue ThemeTranslationParser::InvalidYaml => e
+      errors << e.message
+    end
+
+    javascript_cache.save!
+    doc = ""
+    doc = "<script src='#{javascript_cache.url}'></script>" if javascript_cache.content.present?
+    [doc, errors&.join("\n")]
+  end
+
   def validate_yaml!
     return unless self.name == "yaml"
 
@@ -181,12 +263,12 @@ COMPILED
     self.error = errors.join("\n").presence
   end
 
-  def self.guess_type(name)
+  def self.guess_type(name:, target:)
     if html_fields.include?(name.to_s)
       types[:html]
     elsif scss_fields.include?(name.to_s)
       types[:scss]
-    elsif name.to_s === "yaml"
+    elsif name.to_s == "yaml" || target.to_s == "translations"
       types[:yaml]
     end
   end
@@ -200,9 +282,9 @@ COMPILED
   end
 
   def ensure_baked!
-    if ThemeField.html_fields.include?(self.name)
+    if ThemeField.html_fields.include?(self.name) || translation = Theme.targets[:translations] == self.target_id
       if !self.value_baked || compiler_version != COMPILER_VERSION
-        self.value_baked, self.error = process_html(self.value)
+        self.value_baked, self.error = translation ? process_translation : process_html(self.value)
         self.compiler_version = COMPILER_VERSION
 
         if self.will_save_change_to_value_baked? ||

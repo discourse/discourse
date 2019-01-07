@@ -4,33 +4,43 @@
 
 import { registerHelper } from "discourse-common/lib/helpers";
 
-function inject(context, key, value) {
+function inject(context, parent, key, value) {
   if (typeof value === "string") {
     value = value.replace(/\\u0022/g, '"');
   }
 
   if (!(context instanceof Ember.Object)) {
-    injectPlainObject(context, key, value);
+    injectPlainObject(context, parent, key, value);
     return;
   }
 
-  if (!context.get("themeSettings")) {
-    context.set("themeSettings", {});
+  if (!parent) {
+    context.set(key, value);
+    return;
   }
-  context.set(`themeSettings.${key}`, value);
+
+  if (parent && !context.get(parent)) {
+    context.set(parent, {});
+  }
+  context.set(`${parent}.${key}`, value);
 }
 
-function injectPlainObject(context, key, value) {
-  if (!context.themeSettings) {
-    _.assign(context, { themeSettings: {} });
+function injectPlainObject(context, parent, key, value) {
+  if (!parent) {
+    _.assign(context, { [key]: value });
+    return;
   }
-  _.assign(context.themeSettings, { [key]: value });
+
+  if (!context[parent]) {
+    _.assign(context, { [parent]: {} });
+  }
+  _.assign(context[parent], { [key]: value });
 }
 
-registerHelper("theme-setting-injector", function(arr, hash) {
-  inject(hash.context, hash.key, hash.value);
+registerHelper("theme-injector", function(arr, hash) {
+  inject(hash.context, hash.parent, hash.key, hash.value);
 });
 
-Handlebars.registerHelper("theme-setting-injector", function(hash) {
-  inject(this, hash.hash.key, hash.hash.value);
+Handlebars.registerHelper("theme-injector", function(hash) {
+  inject(this, hash.hash.parent, hash.hash.key, hash.hash.value);
 });

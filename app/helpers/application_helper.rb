@@ -402,6 +402,11 @@ module ApplicationHelper
     lookup.html_safe if lookup
   end
 
+  def theme_translations_lookup
+    lookup = Theme.lookup_field(theme_ids, :translations, I18n.locale)
+    lookup.html_safe if lookup
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     if opts.key?(:theme_ids)
       ids = opts[:theme_ids] unless customization_disabled?
