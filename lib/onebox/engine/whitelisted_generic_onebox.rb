@@ -96,6 +96,7 @@ module Onebox
           samsung.com
           screenr.com
           scribd.com
+          simplecast.com
           slideshare.net
           sourceforge.net
           speakerdeck.com
@@ -262,11 +263,16 @@ module Onebox
       end
 
       def generic_html
+        return card_html     if is_card?
         return article_html  if is_article?
         return video_html    if is_video?
         return image_html    if is_image?
         return embedded_html if is_embedded?
         return article_html  if has_text?
+      end
+
+      def is_card?
+        data[:card] == 'player' && data[:player] =~ URI::regexp
       end
 
       def is_article?
@@ -300,6 +306,19 @@ module Onebox
           data[:html]["iframe"] ||
           WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
         )
+      end
+
+      def card_html
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(data[:player])
+
+        <<~RAW
+        <iframe src="#{escaped_url}"
+                width="#{data[:player_width] || "100%"}"
+                height="#{data[:player_height]}"
+                scrolling="no"
+                frameborder="0">
+        </iframe>
+        RAW
       end
 
       def article_html
