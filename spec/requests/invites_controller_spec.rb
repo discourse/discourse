@@ -355,6 +355,7 @@ describe InvitesController do
                 put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
                 expect(response.status).to eq(200)
                 expect(JSON.parse(response.body)["success"]).to eq(true)
+                expect(JSON.parse(response.body)["message"]).to eq(I18n.t("invite.confirm_email"))
 
                 invited_user = User.find_by_email(invite.email)
                 expect(invited_user.active).to eq(false)

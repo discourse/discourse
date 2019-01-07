@@ -8,13 +8,12 @@
     </div>
 
     <div class="col-form">
-      <p>{{i18n 'invites.invited_by'}}</p>
-
-      <p>{{user-info user=invitedBy}}</p>
-
       {{#if successMessage}}
-        <p>{{successMessage}}</p>
+        <br/><br/>
+        <div class='alert alert-info'><p>{{{successMessage}}}</p></div>
       {{else}}
+        <p>{{i18n 'invites.invited_by'}}</p>
+        <p>{{user-info user=invitedBy}}</p>
 
         <p>{{{yourEmailMessage}}}
         {{#if externalAuthsEnabled}}
@@ -63,7 +62,6 @@
             <br/><br/>
             <div class='alert alert-error'>{{errorMessage}}</div>
           {{/if}}
-
         </form>
       {{/if}}
     </div>
