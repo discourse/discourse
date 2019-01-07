@@ -359,7 +359,8 @@ class UsersController < ApplicationController
       activation.finish
 
 
-      # Use to notify community managers about new sign-ups.
+      # damingo (Github ID)
+      # Used to notify community managers about new sign-ups.
       # Users can simply set the notification level of the posts thread accordingly ("Watching" to get immediate
       # e-mail notifications, "Tracking" to only get in-site and desktop notifications).
       if topic = Topic.find_by(id: 6710)

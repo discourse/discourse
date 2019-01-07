@@ -59,6 +59,7 @@ bootsnap-load-path-cache
 !/plugins/discourse-text-direction
 !/plugins/discourse-annotator
 !/plugins/discourse-topic-previews
+!/plugins/edgeryders-multisite
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
