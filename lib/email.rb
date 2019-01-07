@@ -37,4 +37,8 @@ module Email
     [text&.decoded, html&.decoded]
   end
 
+  def self.site_title
+    SiteSetting.email_site_title.presence || SiteSetting.title
+  end
+
 end

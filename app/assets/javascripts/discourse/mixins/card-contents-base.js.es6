@@ -16,6 +16,7 @@ export default Ember.Mixin.create({
   cardTarget: null,
   post: null,
   isFixed: false,
+  isDocked: false,
 
   _show(username, $target) {
     // No user card for anon
@@ -121,6 +122,12 @@ export default Ember.Mixin.create({
       this.set("isFixed", true);
       return this._show($target.text().replace(/^@/, ""), $target);
     });
+
+    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
+      this.set("isFixed", true);
+      this.set("isDocked", true);
+      return this._show(username, $target);
+    });
   },
 
   _positionCard(target) {
@@ -131,6 +138,7 @@ export default Ember.Mixin.create({
     const width = this.$().width();
     const height = 175;
     const isFixed = this.get("isFixed");
+    const isDocked = this.get("isDocked");
 
     let verticalAdjustments = 0;
 
@@ -179,8 +187,15 @@ export default Ember.Mixin.create({
               position.top = "unset";
             }
           }
+
+          if (isDocked && position.top < 44) {
+            position.top = 44;
+          }
+
           this.$().css(position);
         }
+
+        this.$().toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
         //
@@ -205,7 +220,8 @@ export default Ember.Mixin.create({
       loading: null,
       cardTarget: null,
       post: null,
-      isFixed: false
+      isFixed: false,
+      isDocked: false
     });
   },
 

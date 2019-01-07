@@ -323,7 +323,6 @@ lt:
     choose_topic:
       none_found: "Nerasta temų."
       title:
-        search: "Ieškokite temų pagal pavadinimą, url arba id:"
         placeholder: "Įveskite temos pavadinimą čia"
     queue:
       topic: "Tema"
@@ -494,7 +493,6 @@ lt:
           description: "Būsi perspėtas dėl kiekvieno naujo įrašo kiekvienoje žinutėje."
         watching_first_post:
           title: "Stebime Pirmą Įrašą"
-          description: "Būsite perspėjami apie naujus įrašus šioje grupėje."
         tracking:
           title: "Sekamos"
           description: "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
@@ -1650,7 +1648,6 @@ lt:
       split_topic:
         title: "Perkelti į naują temą"
         action: "perkelti į naują temą"
-        topic_name: "Naujos temos pavadinimas"
         instructions:
           one: "Jūs tuoj sukursite naują temą ir įkesite įrašą, kurį pažymėjote."
           few: "Jūs tuoj sukursite naują temą ir įkesite <b>{{count}}</b> įrašus, kuriuos pažymėjote."
@@ -2307,9 +2304,6 @@ lt:
         private_messages_short: "Msgs"
         private_messages_title: "Žinutės"
         mobile_title: "Mobili "
-        space_free: "{{size}} laisva"
-        uploads: "Įkėlimai"
-        backups: "Atsarginės kopijos"
         lastest_backup: "Naujausi: %{date}"
         traffic_short: "Srautas"
         traffic: "Application web requests"
@@ -2799,7 +2793,6 @@ lt:
             title: "Sukurti naujus Atskirus Tinklus blokuotus sąrašus jeigu yra bent 'min_ban_entries_for_roll_up' įrašai."
         search_logs:
           title: "Paieškos žurnalas"
-          unique: "Unikalus"
           types:
             full_page: "Pilnas puslapis"
         logster:

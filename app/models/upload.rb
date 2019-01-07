@@ -289,6 +289,7 @@ end
 #  extension         :string(10)
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
+#  etag              :string
 #
 # Indexes
 #
@@ -297,4 +298,5 @@ end
 #  index_uploads_on_sha1        (sha1) UNIQUE
 #  index_uploads_on_url         (url)
 #  index_uploads_on_user_id     (user_id)
+#  index_uploads_on_etag        (etag)
 #

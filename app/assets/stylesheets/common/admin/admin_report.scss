@@ -132,7 +132,7 @@
 
       .mode {
         display: inline-flex;
-        flex: 1;
+        flex: 1 0 0;
 
         .mode-btn.is-current {
           color: $tertiary;
@@ -182,5 +182,11 @@
   .trend {
     margin-left: unset;
     margin-right: auto;
+  }
+}
+
+.admin-report.storage-stats {
+  .main {
+    flex: 1 0 auto;
   }
 }

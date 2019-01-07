@@ -1028,4 +1028,45 @@ describe Report do
       end
     end
   end
+
+  describe "report_top_uploads" do
+    let(:report) { Report.find("top_uploads") }
+    let(:tarek) { Fabricate(:admin, username: "tarek") }
+    let(:khalil) { Fabricate(:admin, username: "khalil") }
+
+    context "with data" do
+      let!(:tarek_upload) do
+        Fabricate(:upload, user: tarek,
+                           url: "/uploads/default/original/1X/tarek.jpg",
+                           extension: "jpg",
+                           original_filename: "tarek.jpg",
+                           filesize: 1000)
+      end
+      let!(:khalil_upload) do
+        Fabricate(:upload, user: khalil,
+                           url: "/uploads/default/original/1X/khalil.png",
+                           extension: "png",
+                           original_filename: "khalil.png",
+                           filesize: 2000)
+      end
+
+      it "works" do
+        expect(report.data.length).to eq(2)
+        expect_row_to_be_equal(report.data[0], khalil, khalil_upload)
+        expect_row_to_be_equal(report.data[1], tarek, tarek_upload)
+      end
+
+      def expect_row_to_be_equal(row, user, upload)
+        expect(row[:author_id]).to eq(user.id)
+        expect(row[:author_username]).to eq(user.username)
+        expect(row[:author_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
+        expect(row[:filesize]).to eq(upload.filesize)
+        expect(row[:extension]).to eq(upload.extension)
+        expect(row[:file_url]).to eq(Discourse.store.cdn_url(upload.url))
+        expect(row[:file_name]).to eq(upload.original_filename.truncate(25))
+      end
+    end
+
+    include_examples "no data"
+  end
 end

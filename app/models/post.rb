@@ -55,13 +55,13 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  validates_with ::Validators::PostValidator
+  validates_with ::Validators::PostValidator, unless: :skip_validation
 
   after_save :index_search
   after_save :create_user_action
 
   # We can pass several creating options to a post via attributes
-  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
+  attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
   LARGE_IMAGES      ||= "large_images".freeze
   BROKEN_IMAGES     ||= "broken_images".freeze
@@ -516,13 +516,32 @@ class Post < ActiveRecord::Base
   end
 
   def self.rebake_old(limit)
+
+    limiter = RateLimiter.new(
+      nil,
+      "global_periodical_rebake_limit",
+      GlobalSetting.max_old_rebakes_per_15_minutes,
+      900,
+      global: true
+    )
+
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
       .order('id desc')
       .limit(limit).pluck(:id).each do |id|
       begin
+
+        break if !limiter.can_perform?
+
         post = Post.find(id)
         post.rebake!
+
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+
       rescue => e
         problems << { post: post, ex: e }
 

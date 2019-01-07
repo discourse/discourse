@@ -7,15 +7,23 @@ class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
   # BUMP UP if optimized image algorithm changes
-  VERSION = 1
+  VERSION = 2
 
   def self.lock(upload_id, width, height)
     @hostname ||= `hostname`.strip rescue "unknown"
-    # note, the extra lock here ensures we only optimize one image per machine
-    # this can very easily lead to runaway CPU so slowing it down is beneficial
-    DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+    # note, the extra lock here ensures we only optimize one image per machine on webs
+    # this can very easily lead to runaway CPU so slowing it down is beneficial and it is hijacked
+    #
+    # we can not afford this blocking in Sidekiq cause it can lead to starvation
+    if Sidekiq.server?
       DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
         yield
+      end
+    else
+      DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+        DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
+          yield
+        end
       end
     end
   end
@@ -43,7 +51,7 @@ class OptimizedImage < ActiveRecord::Base
     thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
     # correct bad thumbnail if needed
-    if thumbnail && thumbnail.url.blank?
+    if thumbnail && (thumbnail.url.blank? || thumbnail.version != VERSION)
       thumbnail.destroy!
       thumbnail = nil
     end
@@ -94,7 +102,8 @@ class OptimizedImage < ActiveRecord::Base
             width: width,
             height: height,
             url: "",
-            filesize: File.size(temp_path)
+            filesize: File.size(temp_path),
+            version: VERSION
           )
 
           # store the optimized image and update its url
@@ -318,9 +327,13 @@ class OptimizedImage < ActiveRecord::Base
     convert_with(instructions, to, opts)
   end
 
+  MAX_PNGQUANT_SIZE = 500_000
+
   def self.convert_with(instructions, to, opts = {})
     Discourse::Utils.execute_command(*instructions)
-    FileHelper.optimize_image!(to)
+
+    allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
+    FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
     true
   rescue => e
     if opts[:raise_on_error]

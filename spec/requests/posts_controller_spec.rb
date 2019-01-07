@@ -1160,10 +1160,18 @@ describe PostsController do
         include_examples "it works"
       end
 
+      context "TL4 users" do
+        before do
+          sign_in(Fabricate(:trust_level_4))
+        end
+
+        include_examples "it works"
+      end
+
       context "users" do
         let(:topic) { Fabricate(:topic) }
 
-        [:user, :trust_level_4].each do |user|
+        [:user].each do |user|
           it "will raise an error for #{user}" do
             sign_in(Fabricate(user))
             post "/posts.json", params: {

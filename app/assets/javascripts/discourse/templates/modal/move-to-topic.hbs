@@ -1,0 +1,112 @@
+{{#d-modal-body id='move-selected'}}
+
+  {{#if model.isPrivateMessage}}
+    <div class="radios">
+      {{#if canSplitTopic}}
+        <label class="radio-label" for="move-to-new-message">
+          {{radio-button id='move-to-new-message' name="move-to-entity" value="new_message" selection=selection}}
+          <b>{{i18n 'topic.move_to_new_message.radio_label'}}</b>
+        </label>
+      {{/if}}
+
+        <label class="radio-label" for="move-to-existing-message">
+          {{radio-button id='move-to-existing-message' name="move-to-entity" value="existing_message" selection=selection}}
+          <b>{{i18n 'topic.move_to_existing_message.radio_label'}}</b>
+        </label>
+    </div>
+
+    {{#if canSplitTopic}}
+      {{#if newMessage}}
+        <p>{{{i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount}}}</p>
+        <form>
+          <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+
+          {{#if canTagMessages}}
+            <label>{{i18n 'tagging.tags'}}</label>
+            {{tag-chooser tags=tags filterable=true}}
+          {{/if}}
+        </form>
+      {{/if}}
+    {{/if}}
+
+    {{#if existingMessage}}
+      <p>{{{i18n 'topic.move_to_existing_message.instructions' count=selectedPostsCount}}}</p>
+      <form>
+        {{choose-message currentTopicId=model.id selectedTopicId=selectedTopicId}}
+
+        <label>{{i18n 'topic.move_to_new_message.participants'}}</label>
+        {{user-selector usernames=participants class="participant-selector"}}
+      </form>
+    {{/if}}
+
+  {{else}}
+
+    <div class="radios">
+      {{#if canSplitTopic}}
+        <label class="radio-label" for="move-to-new-topic">
+          {{radio-button id='move-to-new-topic' name="move-to-entity" value="new_topic" selection=selection}}
+          <b>{{i18n 'topic.split_topic.radio_label'}}</b>
+        </label>
+      {{/if}}
+
+      <label class="radio-label" for="move-to-existing-topic">
+        {{radio-button id='move-to-existing-topic' name="move-to-entity" value="existing_topic" selection=selection}}
+        <b>{{i18n 'topic.merge_topic.radio_label'}}</b>
+      </label>
+
+      {{#if canSplitTopic}}
+        <label class="radio-label" for="move-to-new-message">
+          {{radio-button id='move-to-new-message' name="move-to-entity" value="new_message" selection=selection}}
+          <b>{{i18n 'topic.move_to_new_message.radio_label'}}</b>
+        </label>
+      {{/if}}
+    </div>
+
+    {{#if existingTopic}}
+      <p>{{{i18n 'topic.merge_topic.instructions' count=selectedPostsCount}}}</p>
+      <form>
+        {{choose-topic currentTopicId=model.id selectedTopicId=selectedTopicId}}
+      </form>
+    {{/if}}
+
+    {{#if canSplitTopic}}
+      {{#if newTopic}}
+        <p>{{{i18n 'topic.split_topic.instructions' count=selectedPostsCount}}}</p>
+        <form>
+          <label>{{i18n 'topic.split_topic.topic_name'}}</label>
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+
+          <label>{{i18n 'categories.category'}}</label>
+          {{category-chooser value=categoryId class="small"}}
+          {{#if canAddTags}}
+            <label>{{i18n 'tagging.tags'}}</label>
+            {{tag-chooser tags=tags filterable=true categoryId=categoryId}}
+          {{/if}}
+        </form>
+      {{/if}}
+    {{/if}}
+
+    {{#if canSplitTopic}}
+      {{#if newMessage}}
+        <p>{{{i18n 'topic.move_to_new_message.instructions' count=selectedPostsCount}}}</p>
+        <form>
+          <label>{{i18n 'topic.move_to_new_message.message_title'}}</label>
+          {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+
+          {{#if canTagMessages}}
+            <label>{{i18n 'tagging.tags'}}</label>
+            {{tag-chooser tags=tags filterable=true}}
+          {{/if}}
+        </form>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{#d-button class="btn-primary" disabled=buttonDisabled action=(action "performMove")}}
+    {{d-icon 'sign-out'}} {{buttonTitle}}
+  {{/d-button}}
+</div>

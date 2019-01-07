@@ -158,7 +158,7 @@ const DiscourseURL = Ember.Object.extend({
       return false;
     }
 
-    if (a.host !== document.location.host) {
+    if (a.host && a.host !== document.location.host) {
       document.location = a.href;
       return false;
     }

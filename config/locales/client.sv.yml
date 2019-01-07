@@ -263,7 +263,6 @@ sv:
     choose_topic:
       none_found: "Inga ämnen hittades."
       title:
-        search: "Sök efter ett Ämne baserat på namn, url eller id:"
         placeholder: "skriv ämnets rubrik här"
     queue:
       topic: "Ämne:"
@@ -383,7 +382,6 @@ sv:
           description: "Du kommer att notifieras om varje nytt inlägg i det här meddelandet, och en räknare med antalet nya svar kommer att visas."
         watching_first_post:
           title: "Bevakar första inlägget"
-          description: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i den här gruppen."
         tracking:
           title: "Följer"
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar på ditt inlägg, och en räknare med antalet nya svar kommer att visas."
@@ -1387,7 +1385,6 @@ sv:
       split_topic:
         title: "Flytta till nytt ämne"
         action: "flytta till nytt ämne"
-        topic_name: "Nytt ämnesnamn"
         error: "Ett fel inträffade då inläggen skulle flyttas till det nya ämnet."
         instructions:
           one: "Du är påväg att skapa ett nytt ämne och lägga inlägget du har valt i den."
@@ -1658,7 +1655,6 @@ sv:
           description: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du blir notifierad om varje nytt inlägg i alla ämnen, och en räknare över antalet nya inlägg visas. "
         watching_first_post:
           title: "Bevakar första inlägget"
-          description: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i de här kategorierna."
         tracking:
           title: "Följer"
           description: "Du kommer automatiskt att följa alla ämnen i de här kategorierna. Du blir notifierad om någon nämner ditt @namn eller svarar på ditt inlägg, och en räknare över antalet nya inlägg visas."
@@ -2055,9 +2051,6 @@ sv:
         private_messages_short: "Meddelanden"
         private_messages_title: "Meddelanden"
         mobile_title: "Mobil"
-        space_free: "{{size}} ledigt"
-        uploads: "uppladdningar"
-        backups: "säkerhetskopior"
         traffic_short: "Trafik"
         traffic: "Applikations-webbegäran"
         page_views: "Sidvisningar"

@@ -139,8 +139,6 @@ id:
     new_user_narrative:
       reset_trigger: "pengguna baru"
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna baru."
-      hello:
-        title: ":robot: Salam!"
       onebox:
         instructions: |-
           Selanjutnya, bisakah Anda membagikan salah satu tautan ini kepada saya? Balas dengan **a link on a line by itself**, otomatis tautan itu akan menjelaskan ringkasan yang menarik.

@@ -282,7 +282,6 @@ it:
     choose_topic:
       none_found: "Nessun argomento trovato."
       title:
-        search: "Cerca un Argomento per nome, url o id:"
         placeholder: "digita il titolo dell'argomento"
     queue:
       topic: "Argomento:"
@@ -457,7 +456,6 @@ it:
           description: "Verrai avvertito per ogni nuovo invio in qualsiasi messaggio, e verrà mostrato il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Sarai avvertito soltanto per il primo messaggio in ogni nuovo argomento in questo gruppo."
         tracking:
           title: "Seguendo"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
@@ -1769,7 +1767,6 @@ it:
       split_topic:
         title: "Sposta in un nuovo argomento"
         action: "sposta in un nuovo argomento"
-        topic_name: "Nome Nuovo Argomento"
         error: "Si è verificato un errore spostando il messaggio nel nuovo argomento."
         instructions:
           one: "Stai per creare un nuovo argomento riempiendolo con il messaggio che hai selezionato."
@@ -2101,7 +2098,6 @@ it:
           description: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osservando il Primo Messaggio"
-          description: "Riceverai una notifica soltanto per il primo messaggio di ogni nuovo argomento in queste categorie."
         tracking:
           title: "Seguendo"
           description: "Seguirai automaticamente tutti gli argomenti in tali categorie. Ti verrà inviata una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
@@ -2342,7 +2338,7 @@ it:
         dismiss_topics: '<b>x</b>, <b>t</b> Marca gli Argomenti come letti'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Disconnetti'
       composing:
-        title: 'Scrivendo'
+        title: 'Scrittura'
       actions:
         title: 'Azioni'
         bookmark_topic: '<b>f</b> Aggiungi/togli argomento nei segnalibri'
@@ -2516,9 +2512,6 @@ it:
         private_messages_short: "MP"
         private_messages_title: "Messaggi"
         mobile_title: "Mobile"
-        space_free: "{{size}} liberi"
-        uploads: "caricamenti"
-        backups: "backup"
         lastest_backup: "Recenti: %{date}"
         traffic_short: "Traffico"
         traffic: "Richieste web dell'applicazione"
@@ -3188,9 +3181,6 @@ it:
           title: "Log Ricerca"
           term: "Termine"
           searches: "Ricerche"
-          click_through: "Cliccate"
-          unique: "Unico"
-          unique_title: "utenti unici che stanno effettuando la ricerca"
           types:
             all_search_types: "Tutti i tipi di ricerca"
         logster:

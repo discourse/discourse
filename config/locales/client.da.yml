@@ -255,7 +255,6 @@ da:
     choose_topic:
       none_found: "Ingen emner fundet."
       title:
-        search: "Søg efter et emne efter navn, url eller UD:"
         placeholder: "indtast emnets titel her"
     queue:
       topic: "Emne:"
@@ -382,7 +381,6 @@ da:
           description: "Du får beskeder om hvert nyt indlæg i hver besked og antallet af nye svar bliver vist."
         watching_first_post:
           title: "Ser på første indlæg"
-          description: "Du får kun besked om første indlæg i hvert nyt emne i denne gruppe."
         tracking:
           title: "Følger"
           description: "Du får besked hvis nogen nævner dit @navn eller svarer dig og antallet af nye svar bliver vist."
@@ -1455,7 +1453,6 @@ da:
       split_topic:
         title: "Flyt til nyt emne"
         action: "flyt til nyt emne"
-        topic_name: "Navn på nyt emne"
         error: "Der opstod en fejl under flytningen af indlæg til det nye emne."
         instructions:
           one: "Du er ved at oprette et nyt emne med det valgte indlæg."
@@ -1733,7 +1730,6 @@ da:
           description: "Du overvåger automatisk alle emner i disse kategorier. Du får besked om hvert nyt indlæg i hvert emne og antallet af nye svar bliver vist."
         watching_first_post:
           title: "Overvåger Første Indlæg"
-          description: "Du vil kun blive notificeret om det første indlæg under hvert nyt emne i denne kategori."
         tracking:
           title: "Følger"
           description: "Du tracker automatisk alle emner i disse kategorier. Du får besked hvis nogen nævner dit @navn eller svarer dig, og antallet af nye svar bliver vist."
@@ -2133,9 +2129,6 @@ da:
         private_messages_short: "Beskeder"
         private_messages_title: "Beskeder"
         mobile_title: "Mobil"
-        space_free: "{{size}} tilbage"
-        uploads: "uploads"
-        backups: "backups"
         lastest_backup: "Senest: %{date}"
         traffic_short: "Trafik"
         traffic: "Applikation web forespørgsler"

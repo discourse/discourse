@@ -896,10 +896,10 @@ class Topic < ActiveRecord::Base
   end
 
   def move_posts(moved_by, post_ids, opts)
-    post_mover = PostMover.new(self, moved_by, post_ids)
+    post_mover = PostMover.new(self, moved_by, post_ids, move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message")
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id])
+      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
 
       DiscourseEvent.trigger(:topic_merged,
         post_mover.original_topic,

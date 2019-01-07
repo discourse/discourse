@@ -730,10 +730,6 @@ ar:
       title: "العلامات"
       xaxis: "اليوم"
       yaxis: "عدد العلامات الجديدة"
-    starred:
-      title: "متألق"
-      xaxis: "يوم"
-      yaxis: "عدد المواضيع المتألقة الجديدة"
     users_by_trust_level:
       title: "الأعضاء في مستوى الثقة"
       xaxis: "مستوى الثقة"
@@ -1195,21 +1191,6 @@ ar:
     errors:
       different_topics: "المشاركات من موضوعين مختلفين لايُمكن دمجهم"
       different_users: "المشاركات من اعضاء مختلفين لايُمكن دمجهم"
-  move_posts:
-    new_topic_moderator_post:
-      zero: "المشاركه التي انقسمت الي موضوع جديد: %{topic_link}"
-      one: "المشاركه التي انقسمت الي موضوع جديد : %{topic_link}"
-      two: "%{count} المشاركات التي انقسمت الي موضوع جديد: %{topic_link] "
-      few: "%{count} المشاركات التي انقسمت الي موضوع جديد: %{topic_link] "
-      many: "%{count} المشاركات التي انقسمت الي موضوع جديد: %{topic_link] "
-      other: "%{count} المشاركات التي انقسمت الي موضوع جديد: %{topic_link] "
-    existing_topic_moderator_post:
-      zero: "المشاركه التي اندمجت الي موضوع واحد %{topic_link}"
-      one: "المشاركه التي اندمجت الي موضوع واحد %{topic_link}"
-      two: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
-      few: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
-      many: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
-      other: "%{count} المشاركات التي اندمجت الي مشاركه واحده %{topic_link}"
   topic_statuses:
     archived_enabled: "هذا الموضوع مؤرشف الأن. لن تستطيع أن تعدل عليه بأي طريقة."
     archived_disabled: "هذا الموضوع غير مؤرشف الأن.لم يجمد، و تستطيع أن تعدل عليه."

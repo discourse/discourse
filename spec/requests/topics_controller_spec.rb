@@ -241,6 +241,140 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe 'moving to a new message' do
+      let(:user) { Fabricate(:user) }
+      let(:trust_level_4) { Fabricate(:trust_level_4) }
+      let(:moderator) { Fabricate(:moderator) }
+      let!(:message) { Fabricate(:private_message_topic) }
+      let!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
+      let!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: message) }
+
+      it "raises an error without post_ids" do
+        sign_in(moderator)
+        post "/t/#{message.id}/move-posts.json", params: { title: 'blah', archetype: 'private_message' }
+        expect(response.status).to eq(400)
+      end
+
+      it "raises an error when the user doesn't have permission to move the posts" do
+        sign_in(trust_level_4)
+
+        post "/t/#{message.id}/move-posts.json", params: {
+          title: 'blah', post_ids: [p1.post_number, p2.post_number], archetype: 'private_message'
+        }
+
+        expect(response.status).to eq(403)
+        result = ::JSON.parse(response.body)
+        expect(result['errors']).to be_present
+      end
+
+      context 'success' do
+        before { sign_in(Fabricate(:admin)) }
+
+        it "returns success" do
+          SiteSetting.allow_staff_to_tag_pms = true
+
+          expect do
+            post "/t/#{message.id}/move-posts.json", params: {
+              title: 'Logan is a good movie',
+              post_ids: [p2.id],
+              archetype: 'private_message',
+              tags: ["tag1", "tag2"]
+            }
+          end.to change { Topic.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          result = ::JSON.parse(response.body)
+
+          expect(result['success']).to eq(true)
+          expect(result['url']).to eq(Topic.last.relative_url)
+          expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
+        end
+
+        describe 'when message has been deleted' do
+          it 'should still be able to move posts' do
+            PostDestroyer.new(Fabricate(:admin), message.first_post).destroy
+
+            expect(message.reload.deleted_at).to_not be_nil
+
+            expect do
+              post "/t/#{message.id}/move-posts.json", params: {
+                title: 'Logan is a good movie',
+                post_ids: [p2.id],
+                archetype: 'private_message'
+              }
+            end.to change { Topic.count }.by(1)
+
+            expect(response.status).to eq(200)
+
+            result = JSON.parse(response.body)
+
+            expect(result['success']).to eq(true)
+            expect(result['url']).to eq(Topic.last.relative_url)
+          end
+        end
+      end
+
+      context 'failure' do
+        it "returns JSON with a false success" do
+          sign_in(moderator)
+          post "/t/#{message.id}/move-posts.json", params: {
+            post_ids: [p2.id],
+            archetype: 'private_message'
+          }
+          expect(response.status).to eq(200)
+          result = ::JSON.parse(response.body)
+          expect(result['success']).to eq(false)
+          expect(result['url']).to be_blank
+        end
+      end
+    end
+
+    describe 'moving to an existing message' do
+      let!(:user) { sign_in(Fabricate(:admin)) }
+      let(:trust_level_4) { Fabricate(:trust_level_4) }
+      let(:evil_trout) { Fabricate(:evil_trout) }
+      let(:message) { Fabricate(:private_message_topic) }
+      let(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
+      let(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
+
+      let(:dest_message) do
+        Fabricate(:private_message_topic, user: trust_level_4, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: evil_trout)
+        ])
+      end
+
+      context 'success' do
+        it "returns success" do
+          user
+          post "/t/#{message.id}/move-posts.json", params: {
+            post_ids: [p2.id],
+            destination_topic_id: dest_message.id,
+            archetype: 'private_message'
+          }
+
+          expect(response.status).to eq(200)
+          result = ::JSON.parse(response.body)
+          expect(result['success']).to eq(true)
+          expect(result['url']).to be_present
+        end
+      end
+
+      context 'failure' do
+        it "returns JSON with a false success" do
+          post "/t/#{message.id}/move-posts.json", params: {
+            post_ids: [p2.id],
+            archetype: 'private_message'
+          }
+
+          expect(response.status).to eq(200)
+          result = ::JSON.parse(response.body)
+          expect(result['success']).to eq(false)
+          expect(result['url']).to be_blank
+        end
+      end
+    end
   end
 
   describe '#merge_topic' do
@@ -251,7 +385,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
-    describe 'moving to a new topic' do
+    describe 'merging into another topic' do
       let(:moderator) { Fabricate(:moderator) }
       let(:user) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, user: user) }
@@ -276,6 +410,53 @@ RSpec.describe TopicsController do
           sign_in(moderator)
           post "/t/#{topic.id}/merge-topic.json", params: {
             destination_topic_id: dest_topic.id
+          }
+
+          expect(response.status).to eq(200)
+          result = ::JSON.parse(response.body)
+          expect(result['success']).to eq(true)
+          expect(result['url']).to be_present
+        end
+      end
+    end
+
+    describe 'merging into another message' do
+      let(:moderator) { Fabricate(:moderator) }
+      let(:user) { Fabricate(:user) }
+      let(:trust_level_4) { Fabricate(:trust_level_4) }
+      let(:message) { Fabricate(:private_message_topic, user: user) }
+      let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
+      let!(:p2) { Fabricate(:post, topic: message, reply_to_post_number: p1.post_number, user: user) }
+
+      it "raises an error without destination_topic_id" do
+        sign_in(moderator)
+        post "/t/#{message.id}/merge-topic.json", params: {
+          archetype: 'private_message'
+        }
+        expect(response.status).to eq(400)
+      end
+
+      it "raises an error when the user doesn't have permission to merge" do
+        sign_in(trust_level_4)
+        post "/t/#{message.id}/merge-topic.json", params: {
+          destination_topic_id: 345,
+          archetype: 'private_message'
+        }
+        expect(response).to be_forbidden
+      end
+
+      let(:dest_message) do
+        Fabricate(:private_message_topic, user: trust_level_4, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: moderator)
+        ])
+      end
+
+      context 'moves all the posts to the destination message' do
+        it "returns success" do
+          sign_in(moderator)
+          post "/t/#{message.id}/merge-topic.json", params: {
+            destination_topic_id: dest_message.id,
+            archetype: 'private_message'
           }
 
           expect(response.status).to eq(200)
@@ -2439,7 +2620,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
       end
 
-      [:user, :trust_level_4].each do |user|
+      [:user].each do |user|
         it "denies access for #{user}" do
           sign_in(Fabricate(user))
           put "/t/#{topic.id}/reset-bump-date.json"
@@ -2454,7 +2635,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    [:admin, :moderator].each do |user|
+    [:admin, :moderator, :trust_level_4].each do |user|
       it "should reset bumped_at as #{user}" do
         sign_in(Fabricate(user))
         topic = Fabricate(:topic, bumped_at: 1.hour.ago)

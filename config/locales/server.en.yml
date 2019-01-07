@@ -874,6 +874,7 @@ en:
     read: "read"
     read_write: "read/write"
     description: "\"%{application_name}\" is requesting the following access to your account:"
+    instructions: "We just generated a new user API key for you to use with \"%{application_name}\", please paste the following key into your application:"
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -1171,6 +1172,14 @@ en:
         location: Location
         login_at: Login at
       description: "List of admin and moderator login times with locations."
+    top_uploads:
+      title: "Top Uploads"
+      labels:
+        filename: Filename
+        extension: Extension
+        author: Author
+        filesize: File size
+      description: "List all uploads by extension, filesize and author."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1262,10 +1271,10 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
-    logo: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    logo_small: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    digest_logo: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
-    mobile_logo: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: https://example.com/uploads/default/logo.png"
+    logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square image. The recommended size is 120px by 120px. If left blank, a home glyph will be shown."
+    digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
+    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
     large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
     apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
@@ -1353,7 +1362,7 @@ en:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
-    show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
+    show_email_on_profile: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
 
@@ -1980,11 +1989,11 @@ en:
 
   move_posts:
     new_topic_moderator_post:
-      one: "A post was split to a new topic: %{topic_link}"
-      other: "%{count} posts were split to a new topic: %{topic_link}"
+      one: "A post was split to a new %{entity}: %{topic_link}"
+      other: "%{count} posts were split to a new %{entity}: %{topic_link}"
     existing_topic_moderator_post:
-      one: "A post was merged into an existing topic: %{topic_link}"
-      other: "%{count} posts were merged into an existing topic: %{topic_link}"
+      one: "A post was merged into an existing %{entity}: %{topic_link}"
+      other: "%{count} posts were merged into an existing %{entity}: %{topic_link}"
 
   change_owner:
     post_revision_text: "Ownership transferred"
@@ -2875,6 +2884,7 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
+  email_from: "%{user_name} via %{site_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -4044,6 +4054,11 @@ en:
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
     minimum_required_tags: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    forbidden:
+      in_this_category: "\"%{tag_name}\" cannot be used in this category"
+      restricted_to:
+        one: "\"%{tag_name}\" is restricted to the \"%{category_names}\" category"
+        other: "\"%{tag_name}\" is restricted to the following categories: %{category_names}"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
@@ -4173,10 +4188,10 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangle shape."
+            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1"
           logo_small:
             label: "Compact Logo"
-            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square image. The recommended size is 120x120"
 
       icons:
         title: "Icons"

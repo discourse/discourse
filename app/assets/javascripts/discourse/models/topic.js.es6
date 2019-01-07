@@ -752,11 +752,10 @@ export function movePosts(topicId, data) {
   );
 }
 
-export function mergeTopic(topicId, destinationTopicId) {
-  return ajax("/t/" + topicId + "/merge-topic", {
-    type: "POST",
-    data: { destination_topic_id: destinationTopicId }
-  }).then(moveResult);
+export function mergeTopic(topicId, data) {
+  return ajax("/t/" + topicId + "/merge-topic", { type: "POST", data }).then(
+    moveResult
+  );
 }
 
 export default Topic;

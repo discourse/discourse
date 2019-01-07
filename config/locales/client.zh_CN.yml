@@ -177,6 +177,7 @@ zh_CN:
     privacy: "隐私"
     tos: "服务条款"
     rules: "规则"
+    conduct: "行为准则"
     mobile_view: "移动版"
     desktop_view: "桌面版"
     you: "你"
@@ -266,7 +267,6 @@ zh_CN:
     choose_topic:
       none_found: "没有找到主题。"
       title:
-        search: "通过标题、URL 或者 ID 搜索主题："
         placeholder: "在此输入主题标题"
     queue:
       topic: "主题："
@@ -438,7 +438,6 @@ zh_CN:
           description: "你将会在该私信中的每个新帖子发布后收到通知，并且会显示新回复数量。"
         watching_first_post:
           title: "跟踪"
-          description: "你只会收到此组中每个新主题的第一帖的通知。"
         tracking:
           title: "跟踪"
           description: "你会在别人@你或回复你时收到通知，并且新帖数量也将在这些主题后显示。"
@@ -599,9 +598,9 @@ zh_CN:
       muted_categories: "静音"
       muted_categories_instructions: "你不会收到有关这些分类中新主题的任何通知，也不会出现在类别或最新页面上。"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
-      delete_account: "删除我的帐号"
-      delete_account_confirm: "你真的要永久删除自己的帐号吗？删除之后无法恢复！"
-      deleted_yourself: "你的帐号已被删除。"
+      delete_account: "删除我的账户"
+      delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"
+      deleted_yourself: "你的账户已被删除。"
       delete_yourself_not_allowed: "想删除账户请联系管理人员。"
       unread_message_count: "私信"
       admin_delete: "删除"
@@ -639,7 +638,7 @@ zh_CN:
         select_all: "全选"
         tags: "标签"
       preferences_nav:
-        account: "帐号"
+        account: "账户"
         profile: "个人信息"
         emails: "邮件"
         notifications: "通知"
@@ -671,7 +670,7 @@ zh_CN:
       second_factor:
         title: "双重验证"
         disable: "停用双重验证"
-        enable: "启用两步认证加强账号安全"
+        enable: "启用两步认证加强账户安全"
         confirm_password_description: "确认密码以继续"
         label: "编码"
         rate_limit: "请等待另一个验证码。"
@@ -854,7 +853,7 @@ zh_CN:
         reinvited_all: "所有邀请已重新发送！"
         time_read: "阅读时间"
         days_visited: "访问天数"
-        account_age_days: "帐号建立天数"
+        account_age_days: "账户建立天数"
         create: "发送邀请"
         generate_link: "复制邀请链接"
         link_generated: "邀请链接生成成功！"
@@ -991,7 +990,7 @@ zh_CN:
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "你好！看起来你正在享受讨论，但你尚未注册帐户。"
-      value_prop: "当你创建了帐号，我们就可以准确地记录你的阅读进度。这样你再次访问时就可以回到上次离开的地方。只要有人回复你，你也可以通过此处和电子邮件收到通知。而且你还可以赞帖子，向他人分享感激之情。:heartbeat:"
+      value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度。这样你再次访问时就可以回到上次离开的地方。只要有人回复你，你也可以通过此处和电子邮件收到通知。而且你还可以赞帖子，向他人分享感激之情。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -1019,7 +1018,7 @@ zh_CN:
     search_hint: '用户名、电子邮件或 IP 地址'
     create_account:
       disclaimer: "注册即表示你同意<a href='{{privacy_link}}'>隐私策略</a>和<a href='{{tos_link}}'>服务条款</a>。"
-      title: "创建新帐号"
+      title: "创建新账户"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "重置密码"
@@ -1032,7 +1031,7 @@ zh_CN:
       complete_email_found: "你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
-      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
+      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账户的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
       button_ok: "OK"
       button_help: "帮助"
     email_login:
@@ -1053,7 +1052,7 @@ zh_CN:
       second_factor_backup: "<a href>使用备用码登录</a>"
       second_factor_backup_title: "两步验证备份"
       second_factor_backup_description: "请输入你的备份码："
-      second_factor: "<a href>使用Authenticator app登陆</a>"
+      second_factor: "<a href>使用Authenticator app登录</a>"
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
@@ -1065,10 +1064,10 @@ zh_CN:
       logging_in: "登录中…"
       or: "或"
       authenticating: "验证中…"
-      awaiting_activation: "你的帐号尚未激活，点击忘记密码链接以重新发送激活邮件。"
-      awaiting_approval: "你的帐号尚未被论坛版主审核。请等待一段时间，当你的帐号被审核时会收到一封电子邮件。"
+      awaiting_activation: "你的账户尚未激活，点击忘记密码链接以重新发送激活邮件。"
+      awaiting_approval: "你的账户尚未被论坛版主审核。请等待一段时间，当你的账户被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
-      not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成帐号激活。"
+      not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成账户激活。"
       not_allowed_from_ip_address: "你使用的 IP 地址已被封禁。"
       admin_not_allowed_from_ip_address: "你不能从这个 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活邮件。"
@@ -1080,8 +1079,8 @@ zh_CN:
       sent_activation_email_again: "我们又向 <b>{{currentEmail}}</b> 发送了一封激活邮件，邮件送达可能需要几分钟；请检查一下你邮箱的垃圾邮件文件夹。"
       to_continue: "请登录"
       preferences: "需要登入后更改设置"
-      forgot: "我记不清帐号详情了"
-      not_approved: "你的帐号还未通过审核。一旦审核通过，我们将邮件通知你。"
+      forgot: "我记不清账户详情了"
+      not_approved: "你的账户还未通过审核。一旦审核通过，我们将邮件通知你。"
       google_oauth2:
         name: "Google"
         title: "Google 登录"
@@ -1110,10 +1109,10 @@ zh_CN:
       accept_title: "邀请"
       welcome_to: "欢迎来到%{site_name}！"
       invited_by: "邀请你的是："
-      social_login_available: "你也可以通过任何使用这个邮箱的社交网站登陆。"
+      social_login_available: "你也可以通过任何使用这个邮箱的社交网站登录。"
       your_email: "你的帐户邮箱地址是<b>%{email}</b>。"
       accept_invite: "接受邀请"
-      success: "已创建你的帐号，你现在可以登录了。"
+      success: "已创建你的账户，你现在可以登录了。"
       name_label: "昵称"
       password_label: "设置密码"
       optional_description: "（可选）"
@@ -1755,7 +1754,6 @@ zh_CN:
       split_topic:
         title: "拆分主题"
         action: "拆分主题"
-        topic_name: "新主题名"
         error: "拆分主题时发生错误。"
         instructions:
           other: "你将创建一个新的主题，并包含你选择的 <b>{{count}}</b> 个帖子。"
@@ -2032,7 +2030,7 @@ zh_CN:
       special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       images: "图片"
       email_in: "自定义进站电子邮件地址："
-      email_in_allow_strangers: "接受无帐号的匿名用户的邮件"
+      email_in_allow_strangers: "接受无账户的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
@@ -2065,7 +2063,6 @@ zh_CN:
           description: "你将自动关注这些分类中的所有主题。每一个主题的每一个新帖，将通知你，还将显示新回复的数量。"
         watching_first_post:
           title: "监看头一帖"
-          description: "在这些分类里面，只是每一个新主题的第一帖，才会通知你。"
         tracking:
           title: "跟踪"
           description: "你将自动跟踪这些分类中的所有主题。如果有人@你或回复你，将通知你，还将显示新回复的数量。"
@@ -2232,7 +2229,7 @@ zh_CN:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          other: "{{categoryName}}（{{count}}）"
+          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}}分类中热门的主题"
       top:
         title: "热门"
@@ -2398,7 +2395,6 @@ zh_CN:
           description: "你将自动监看该标签中的所有主题。你将收到所有新帖子和主题的通知，此外，主题旁边还会显示未读和新帖子的数量。"
         watching_first_post:
           title: "关注第一条帖子"
-          description: "你只会收到此标签中每个新主题中第一篇帖子的通知。"
         tracking:
           title: "跟踪"
           description: "你将使用此标签自动跟踪所有主题。未读和新帖计数将显示在主题旁。"
@@ -2486,7 +2482,6 @@ zh_CN:
         private_messages_short: "私信"
         private_messages_title: "私信"
         mobile_title: "移动"
-        space_free: "{{size}} 空闲"
         uploads: "上传"
         backups: "备份"
         lastest_backup: "最新：%{date}"
@@ -2728,7 +2723,7 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当用户登陆，退出，创建，批准或更新时。"
+          details: "当用户登录，退出，创建，批准或更新时。"
         group_event:
           name: "群组事件"
           details: "当群组创建，更新或销毁时。"
@@ -2839,7 +2834,7 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "你确定要将数据库回滚到之前的工作状态吗？"
         location:
-          local: "本地"
+          local: "本地存储"
           s3: "Amazon S3"
       export_csv:
         success: "导出开始，完成后你将被通过私信通知。"
@@ -3239,9 +3234,6 @@ zh_CN:
           title: "搜索日志"
           term: "术语"
           searches: "搜索"
-          click_through: "点击通过"
-          unique: "独特"
-          unique_title: "执行搜索的特定用户"
           types:
             all_search_types: "所有搜索类型"
             header: "头部"
@@ -3278,7 +3270,7 @@ zh_CN:
           upload_successful: "上传成功。敏感词已添加。"
       impersonate:
         title: "检视用户视角"
-        help: "使用此工具来检视其他用户的帐号以方便调试。你应该在完成后立即退出。"
+        help: "使用此工具来检视其他用户的账户以方便调试。你应该在完成后立即退出。"
         not_found: "无法找到该用户。"
         invalid: "抱歉，你不能以此用户角度检视。"
       users:
@@ -3425,9 +3417,9 @@ zh_CN:
         send_activation_email: "发送激活邮件"
         activation_email_sent: "激活邮件已发送。"
         send_activation_email_failed: "在发送激活邮件时发生了错误。"
-        activate: "激活帐号"
+        activate: "激活账户"
         activate_failed: "在激活用户帐号时发生了错误。"
-        deactivate_account: "停用帐号"
+        deactivate_account: "停用账户"
         deactivate_failed: "在停用用户帐号时发生了错误。"
         unsilence_failed: '解除禁言时出错了。'
         silence_failed: '禁言用户时出错了。'

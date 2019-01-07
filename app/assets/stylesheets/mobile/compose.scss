@@ -150,7 +150,7 @@
   .with-tags {
     .category-input {
       flex-basis: auto;
-      flex: 1;
+      flex: 1 0 0;
       margin: 0;
       width: 45%;
       margin-bottom: 5px;
@@ -158,7 +158,7 @@
 
     .mini-tag-chooser {
       width: 50%;
-      flex: 1;
+      flex: 1 0 0;
       margin-left: 5px;
       margin-bottom: 5px;
       z-index: z("base");

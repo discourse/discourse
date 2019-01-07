@@ -115,32 +115,32 @@ module DiscourseUpdates
 
     private
 
-      def last_installed_version_key
-        'last_installed_version'
-      end
+    def last_installed_version_key
+      'last_installed_version'
+    end
 
-      def latest_version_key
-        'discourse_latest_version'
-      end
+    def latest_version_key
+      'discourse_latest_version'
+    end
 
-      def critical_updates_available_key
-        'critical_updates_available'
-      end
+    def critical_updates_available_key
+      'critical_updates_available'
+    end
 
-      def missing_versions_count_key
-        'missing_versions_count'
-      end
+    def missing_versions_count_key
+      'missing_versions_count'
+    end
 
-      def updated_at_key
-        'last_version_check_at'
-      end
+    def updated_at_key
+      'last_version_check_at'
+    end
 
-      def missing_versions_list_key
-        'missing_versions'
-      end
+    def missing_versions_list_key
+      'missing_versions'
+    end
 
-      def missing_versions_key_prefix
-        'missing_version'
-      end
+    def missing_versions_key_prefix
+      'missing_version'
+    end
   end
 end

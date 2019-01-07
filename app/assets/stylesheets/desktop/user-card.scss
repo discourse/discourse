@@ -25,6 +25,11 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     position: fixed;
     z-index: z("composer", "content") + 1;
   }
+
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+
   .card-content {
     padding: 12px;
     background: rgba($secondary, 0.85);

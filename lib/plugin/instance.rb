@@ -16,6 +16,15 @@ class Plugin::CustomEmoji
     @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
     emojis[name] = url
   end
+
+  def self.translations
+    @@translations ||= {}
+  end
+
+  def self.translate(from, to)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+    translations[from] = to
+  end
 end
 
 class Plugin::Instance
@@ -429,6 +438,10 @@ class Plugin::Instance
     Plugin::CustomEmoji.register(name, url)
   end
 
+  def translate_emoji(from, to)
+    Plugin::CustomEmoji.translate(from, to)
+  end
+
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")
@@ -511,7 +524,7 @@ class Plugin::Instance
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
-        provider.send "#{sym}=", opts.delete(sym)
+        provider.send "#{sym}=", opts.delete(sym) if opts.has_key?(sym)
       end
 
       begin

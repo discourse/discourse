@@ -33,7 +33,10 @@ def upload(path, remote_path, content_type, content_encoding = nil)
     puts "Skipping: #{remote_path}"
   else
     puts "Uploading: #{remote_path}"
-    helper.upload(path, remote_path, options)
+
+    File.open(path) do |file|
+      helper.upload(file, remote_path, options)
+    end
   end
 end
 
@@ -99,6 +102,40 @@ def ensure_s3_configured!
     STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
     exit 1
   end
+end
+
+task 's3:correct_acl' => :environment do
+  ensure_s3_configured!
+
+  puts "ensuring public-read is set on every upload and optimized image"
+
+  i = 0
+
+  base_url = Discourse.store.absolute_base_url
+
+  objects = Upload.pluck(:id, :url).map { |array| array << :upload }
+  objects.concat(OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image })
+
+  puts "#{objects.length} objects found"
+
+  objects.each do |id, url, type|
+    i += 1
+    if !url.start_with?(base_url)
+      puts "Skipping #{type} #{id} since it is not stored on s3, url is #{url}"
+    else
+      begin
+        key = url[(base_url.length + 1)..-1]
+        object = Discourse.store.s3_helper.object(key)
+        object.acl.put(acl: "public-read")
+      rescue => e
+        puts "Skipping #{type} #{id} url is #{url} #{e}"
+      end
+    end
+    if i % 100 == 0
+      puts "#{i} done"
+    end
+  end
+
 end
 
 task 's3:upload_assets' => :environment do

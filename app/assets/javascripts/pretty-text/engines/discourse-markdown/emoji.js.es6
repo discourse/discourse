@@ -9,22 +9,18 @@ let translationTree = null;
 // We build a data structure that allows us to quickly
 // search through our N next chars to see if any match
 // one of our alias emojis.
-//
 function buildTranslationTree() {
   let tree = [];
   let lastNode;
 
-  Object.keys(translations).forEach(function(key) {
-    let i;
+  Object.keys(translations).forEach(key => {
     let node = tree;
 
-    for (i = 0; i < key.length; i++) {
+    for (let i = 0; i < key.length; i++) {
       let code = key.charCodeAt(i);
-      let j;
-
       let found = false;
 
-      for (j = 0; j < node.length; j++) {
+      for (let j = 0; j < node.length; j++) {
         if (node[j][0] === code) {
           node = node[j][1];
           found = true;
@@ -33,7 +29,7 @@ function buildTranslationTree() {
       }
 
       if (!found) {
-        // token, children, value
+        // code, children, value
         let tmp = [code, []];
         node.push(tmp);
         lastNode = tmp;
@@ -41,7 +37,7 @@ function buildTranslationTree() {
       }
     }
 
-    lastNode[1] = translations[key];
+    lastNode[2] = translations[key];
   });
 
   return tree;
@@ -121,28 +117,28 @@ function getEmojiTokenByName(name, state) {
 function getEmojiTokenByTranslation(content, pos, state) {
   translationTree = translationTree || buildTranslationTree();
 
-  let currentTree = translationTree;
-
-  let i;
-  let search = true;
-  let found = false;
+  let t = translationTree;
   let start = pos;
+  let found = null;
 
-  while (search) {
-    search = false;
+  while (t.length > 0 && pos < content.length) {
+    let matched = false;
     let code = content.charCodeAt(pos);
 
-    for (i = 0; i < currentTree.length; i++) {
-      if (currentTree[i][0] === code) {
-        currentTree = currentTree[i][1];
-        pos++;
-        search = true;
-        if (typeof currentTree === "string") {
-          found = currentTree;
-        }
+    for (let i = 0; i < t.length; i++) {
+      if (t[i][0] === code) {
+        matched = true;
+        found = t[i][2];
+        t = t[i][1];
         break;
       }
     }
+
+    if (!matched) {
+      return;
+    }
+
+    pos++;
   }
 
   if (!found) {
@@ -181,34 +177,31 @@ function applyEmoji(
   enableShortcuts,
   inlineEmoji
 ) {
-  let i;
   let result = null;
-  let contentToken = null;
-
   let start = 0;
 
   if (emojiUnicodeReplacer) {
     content = emojiUnicodeReplacer(content);
   }
 
-  let endToken = content.length;
+  let end = content.length;
 
-  for (i = 0; i < content.length - 1; i++) {
+  for (let i = 0; i < content.length - 1; i++) {
     let offset = 0;
-    const emojiName = getEmojiName(content, i, state, inlineEmoji);
     let token = null;
 
-    if (emojiName) {
-      token = getEmojiTokenByName(emojiName, state);
+    const name = getEmojiName(content, i, state, inlineEmoji);
+
+    if (name) {
+      token = getEmojiTokenByName(name, state);
       if (token) {
-        offset = emojiName.length + 2;
+        offset = name.length + 2;
       }
     }
 
     if (enableShortcuts && !token) {
       // handle aliases (note: we can't do this in inline cause ; is not a split point)
-      //
-      let info = getEmojiTokenByTranslation(content, i, state);
+      const info = getEmojiTokenByTranslation(content, i, state);
 
       if (info) {
         offset = info.pos - i;
@@ -218,21 +211,24 @@ function applyEmoji(
 
     if (token) {
       result = result || [];
+
       if (i - start > 0) {
-        contentToken = new state.Token("text", "", 0);
-        contentToken.content = content.slice(start, i);
-        result.push(contentToken);
+        let text = new state.Token("text", "", 0);
+        text.content = content.slice(start, i);
+        result.push(text);
       }
 
       result.push(token);
-      endToken = start = i + offset;
+
+      end = start = i + offset;
+      i += offset - 1;
     }
   }
 
-  if (endToken < content.length) {
-    contentToken = new state.Token("text", "", 0);
-    contentToken.content = content.slice(endToken);
-    result.push(contentToken);
+  if (end < content.length) {
+    let text = new state.Token("text", "", 0);
+    text.content = content.slice(end);
+    result.push(text);
   }
 
   return result;
