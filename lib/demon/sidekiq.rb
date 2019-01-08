@@ -43,6 +43,10 @@ class Demon::Sidekiq < Demon::Base
       end
     end
 
+    # Sidekiq not as high priority as web, in this environment it is forked so a web is very
+    # likely running
+    Discourse::Utils.execute_command('renice', '-n', '5', '-p', Process.pid.to_s)
+
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
     cli.run
