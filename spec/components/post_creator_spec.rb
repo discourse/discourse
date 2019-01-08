@@ -580,8 +580,9 @@ describe PostCreator do
 
       it "returns blank for another post with the same content" do
         creator.create
-        new_post_creator.create
-        expect(new_post_creator.errors).to be_present
+        post = new_post_creator.create
+
+        expect(post.errors[:raw]).to include(I18n.t(:just_posted_that))
       end
 
       it "returns a post for admins" do

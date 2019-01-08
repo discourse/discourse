@@ -167,7 +167,6 @@ class PostCreator
         create_topic
         save_post
         extract_links
-        store_unique_post_key
         track_topic
         update_topic_stats
         update_topic_auto_close
@@ -182,6 +181,7 @@ class PostCreator
     end
 
     if @post && errors.blank? && !@opts[:import_mode]
+      store_unique_post_key
       # update counters etc.
       @post.topic.reload
 
