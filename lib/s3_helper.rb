@@ -12,7 +12,7 @@ class S3Helper
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
       raise Discourse::InvalidParameters.new("s3_bucket_name") if s3_bucket_name.blank?
-      s3_bucket_name.downcase.split("/".freeze, 2)
+      self.class.get_bucket_and_folder_path(s3_bucket_name)
     end
 
     @tombstone_prefix =
@@ -21,6 +21,10 @@ class S3Helper
       else
         tombstone_prefix
       end
+  end
+
+  def self.get_bucket_and_folder_path(s3_bucket_name)
+    s3_bucket_name.downcase.split("/".freeze, 2)
   end
 
   def upload(file, path, options = {})
@@ -62,10 +66,10 @@ class S3Helper
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
       if @s3_bucket_folder_path
-        bucket_folder, filename = begin
+        folder, filename = begin
           source.split("/".freeze, 2)
         end
-        options[:copy_source] = File.join(@s3_bucket_name, bucket_folder, multisite_upload_path, filename)
+        options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
         options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
       end

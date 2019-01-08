@@ -214,6 +214,7 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -246,11 +247,18 @@ def migrate_to_s3
 
   s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
 
+  if bucket_has_folder_path
+    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
+    folder = File.join(folder, "/")
+  else
+    bucket, folder = GlobalSetting.s3_bucket, ""
+  end
+
   begin
-    s3.head_bucket(bucket: GlobalSetting.s3_bucket)
+    s3.head_bucket(bucket: bucket)
   rescue Aws::S3::Errors::NotFound
-    puts "Bucket '#{GlobalSetting.s3_bucket}' not found. Creating it..."
-    s3.create_bucket(bucket: GlobalSetting.s3_bucket) unless dry_run
+    puts "Bucket '#{bucket}' not found. Creating it..."
+    s3.create_bucket(bucket: bucket) unless dry_run
   end
 
   puts "Uploading files to S3..."
@@ -267,7 +275,7 @@ def migrate_to_s3
 
   s3_objects = []
   prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: GlobalSetting.s3_bucket, prefix: prefix }
+  options = { bucket: bucket, prefix: prefix }
 
   loop do
     response = s3.list_objects_v2(options)
@@ -287,6 +295,8 @@ def migrate_to_s3
     path = File.join("public", file)
     name = File.basename(path)
     etag = Digest::MD5.file(path).hexdigest
+    key = file[file.index(prefix)..-1]
+    key.prepend(folder) if bucket_has_folder_path
 
     if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
       next if File.size(path) == s3_object.size && s3_object.etag[etag]
@@ -295,9 +305,9 @@ def migrate_to_s3
     options = {
       acl: "public-read",
       body: File.open(path, "rb"),
-      bucket: GlobalSetting.s3_bucket,
+      bucket: bucket,
       content_type: MiniMime.lookup_by_filename(name)&.content_type,
-      key: file[file.index(prefix)..-1],
+      key: key,
     }
 
     if !FileHelper.is_supported_image?(name)
@@ -337,7 +347,7 @@ def migrate_to_s3
     }
 
     from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{folder}#{prefix}\\1"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"
