@@ -248,7 +248,7 @@ def migrate_to_s3
   s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
 
   if bucket_has_folder_path
-    bucket, folder = ENV["DISCOURSE_S3_BUCKET"].split("/".freeze, 2)
+    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
     folder = File.join(folder, "/")
   else
     bucket, folder = GlobalSetting.s3_bucket, ""
