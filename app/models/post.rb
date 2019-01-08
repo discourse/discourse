@@ -515,7 +515,7 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, changes, opts)
   end
 
-  def self.rebake_old(limit)
+  def self.rebake_old(limit, priority: :normal)
 
     limiter = RateLimiter.new(
       nil,
@@ -534,7 +534,7 @@ class Post < ActiveRecord::Base
         break if !limiter.can_perform?
 
         post = Post.find(id)
-        post.rebake!
+        post.rebake!(priority: priority)
 
         begin
           limiter.performed!
@@ -560,15 +560,13 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(opts = nil)
-    opts ||= {}
-
-    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
+  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
+    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
-    if opts.fetch(:invalidate_broken_images, false)
+    if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
       save_custom_fields
     end
@@ -578,7 +576,7 @@ class Post < ActiveRecord::Base
     QuotedPost.extract_from(self)
 
     # make sure we trigger the post process
-    trigger_post_process(bypass_bump: true)
+    trigger_post_process(bypass_bump: true, priority: priority)
 
     publish_change_to_clients!(:rebaked)
 
@@ -692,7 +690,7 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal)
     args = {
       post_id: id,
       bypass_bump: bypass_bump,
@@ -700,6 +698,11 @@ class Post < ActiveRecord::Base
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     args[:cooking_options] = self.cooking_options
+
+    if priority == :low
+      args[:queue] = 'low'
+    end
+
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
