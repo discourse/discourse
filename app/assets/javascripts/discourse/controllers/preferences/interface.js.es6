@@ -20,6 +20,8 @@ const USER_HOMES = {
   5: "top"
 };
 
+const FONT_SIZES = ["normal", "larger", "largest"];
+
 export default Ember.Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")
   saveAttrNames(makeDefault) {
@@ -32,7 +34,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "automatically_unpin_topics",
       "allow_private_messages",
       "homepage_id",
-      "hide_profile_and_presence"
+      "hide_profile_and_presence",
+      "font_size"
     ];
 
     if (makeDefault) {
@@ -55,6 +58,13 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return currentThemeId();
   },
 
+  @computed()
+  fontSizes() {
+    return FONT_SIZES.map(value => {
+      return { name: I18n.t(`user.font_size.${value}`), value };
+    });
+  },
+
   userSelectableThemes: function() {
     return listThemes(this.site);
   }.property(),
@@ -68,6 +78,25 @@ export default Ember.Controller.extend(PreferencesTabController, {
   themeIdChanged() {
     const id = this.get("themeId");
     previewTheme([id]);
+  },
+
+  @observes("model.user_option.font_size")
+  fontSizeChanged() {
+    const newSize = this.get("model.user_option.font_size");
+    const classList = document.documentElement.classList;
+    if (!classList.contains(`font-size-${newSize}`)) {
+      FONT_SIZES.forEach(name => {
+        let className = `font-size-${name}`;
+        if (newSize === name) {
+          classList.add(className);
+        } else {
+          classList.remove(className);
+        }
+      });
+
+      // Force refresh when leaving this screen
+      Discourse.set("assetVersion", "forceRefresh");
+    }
   },
 
   homeChanged() {

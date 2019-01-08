@@ -28,6 +28,12 @@ class UserOption < ActiveRecord::Base
     @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
   end
 
+  def self.font_sizes
+    @font_sizes = Enum.new(normal: 0, larger: 1, largest: 2)
+  end
+
+  validates :font_size_id, inclusion: { in: UserOption.font_sizes.values }
+
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -57,6 +63,8 @@ class UserOption < ActiveRecord::Base
     end
 
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
+
+    self.font_size = SiteSetting.default_font_size
 
     true
   end
@@ -146,6 +154,14 @@ class UserOption < ActiveRecord::Base
     end
   end
 
+  def font_size
+    UserOption.font_sizes[font_size_id]
+  end
+
+  def font_size=(value)
+    self.font_size_id = UserOption.font_sizes[value.to_sym]
+  end
+
   private
 
   def update_tracked_topics
@@ -185,6 +201,7 @@ end
 #  homepage_id                      :integer
 #  theme_ids                        :integer          default([]), not null, is an Array
 #  hide_profile_and_presence        :boolean          default(FALSE), not null
+#  font_size_id                     :integer          default(0), not null
 #
 # Indexes
 #
