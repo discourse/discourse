@@ -160,7 +160,7 @@ module Onebox
       end
 
       def self.https_hosts
-        %w(slideshare.net dailymotion.com livestream.com)
+        %w(slideshare.net dailymotion.com livestream.com imgur.com flickr.com)
       end
 
       def self.host_matches(uri, list)
