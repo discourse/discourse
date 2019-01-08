@@ -80,25 +80,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
     previewTheme([id]);
   },
 
-  @observes("model.user_option.font_size")
-  fontSizeChanged() {
-    const newSize = this.get("model.user_option.font_size");
-    const classList = document.documentElement.classList;
-    if (!classList.contains(`font-size-${newSize}`)) {
-      FONT_SIZES.forEach(name => {
-        const className = `font-size-${name}`;
-        if (newSize === name) {
-          classList.add(className);
-        } else {
-          classList.remove(className);
-        }
-      });
-
-      // Force refresh when leaving this screen
-      Discourse.set("assetVersion", "forceRefresh");
-    }
-  },
-
   homeChanged() {
     const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
     const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
@@ -143,6 +124,22 @@ export default Ember.Controller.extend(PreferencesTabController, {
           this.homeChanged();
         })
         .catch(popupAjaxError);
+    },
+
+    selectFontSize(newSize) {
+      const classList = document.documentElement.classList;
+
+      FONT_SIZES.forEach(name => {
+        const className = `font-size-${name}`;
+        if (newSize === name) {
+          classList.add(className);
+        } else {
+          classList.remove(className);
+        }
+      });
+
+      // Force refresh when leaving this screen
+      Discourse.set("assetVersion", "forceRefresh");
     }
   }
 });

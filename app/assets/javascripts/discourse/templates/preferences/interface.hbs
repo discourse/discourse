@@ -13,7 +13,7 @@
 <div class="control-group font-size">
   <label class="control-label">{{i18n 'user.font_size.title'}}</label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=fontSizes value=model.user_option.font_size}}
+    {{combo-box valueAttribute="value" content=fontSizes value=model.user_option.font_size onSelect=(action "selectFontSize")}}
   </div>
 </div>
 
