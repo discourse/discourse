@@ -649,7 +649,7 @@ describe PostAction do
         PostAction.auto_close_if_threshold_reached(topic)
 
         expect(topic.reload.closed).to eq(true)
-        
+
         timer = TopicTimer.last
         expect(timer.execute_at).to eq(1.hour.from_now)
 
