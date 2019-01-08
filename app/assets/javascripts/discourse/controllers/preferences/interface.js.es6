@@ -58,7 +58,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return currentThemeId();
   },
 
-  @computed()
+  @computed
   fontSizes() {
     return FONT_SIZES.map(value => {
       return { name: I18n.t(`user.font_size.${value}`), value };
@@ -86,7 +86,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     const classList = document.documentElement.classList;
     if (!classList.contains(`font-size-${newSize}`)) {
       FONT_SIZES.forEach(name => {
-        let className = `font-size-${name}`;
+        const className = `font-size-${name}`;
         if (newSize === name) {
           classList.add(className);
         } else {
