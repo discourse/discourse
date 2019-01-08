@@ -32,9 +32,7 @@ module BackupRestore
     end
 
     def download_file(filename, destination_path, failure_message = nil)
-      unless @s3_helper.object(filename).download_file(destination_path)
-        raise failure_message&.to_s || "Failed to download file"
-      end
+      @s3_helper.download_file(filename, destination_path, failure_message)
     end
 
     def upload_file(filename, source_path, content_type)
