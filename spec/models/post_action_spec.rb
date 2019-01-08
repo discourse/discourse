@@ -589,54 +589,100 @@ describe PostAction do
       expect(post.hidden).to eq(false)
     end
 
-    it "will automatically pause a topic due to large community flagging" do
-      SiteSetting.flags_required_to_hide_post = 0
-      SiteSetting.num_flags_to_close_topic = 3
-      SiteSetting.num_flaggers_to_close_topic = 2
-      SiteSetting.num_hours_to_close_topic = 1
+    context "topic auto closing" do
+      let(:topic) { Fabricate(:topic) }
+      let(:post1) { create_post(topic: topic) }
+      let(:post2) { create_post(topic: topic) }
+      let(:post3) { create_post(topic: topic) }
 
-      topic = Fabricate(:topic)
-      post1 = create_post(topic: topic)
-      post2 = create_post(topic: topic)
-      post3 = create_post(topic: topic)
+      let(:flagger1) { Fabricate(:user) }
+      let(:flagger2) { Fabricate(:user) }
 
-      flagger1 = Fabricate(:user)
-      flagger2 = Fabricate(:user)
-
-      # reaching `num_flaggers_to_close_topic` isn't enough
-      [flagger1, flagger2].each do |flagger|
-        PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+      before do
+        SiteSetting.flags_required_to_hide_post = 0
+        SiteSetting.num_flags_to_close_topic = 3
+        SiteSetting.num_flaggers_to_close_topic = 2
+        SiteSetting.num_hours_to_close_topic = 1
       end
 
-      expect(topic.reload.closed).to eq(false)
-
-      # clean up
-      PostAction.where(post: post1).delete_all
-
-      # reaching `num_flags_to_close_topic` isn't enough
-      [post1, post2, post3].each do |post|
-        PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
-      end
-
-      expect(topic.reload.closed).to eq(false)
-
-      # clean up
-      PostAction.where(post: [post1, post2, post3]).delete_all
-
-      # reaching both should close the topic
-      [flagger1, flagger2].each do |flagger|
-        [post1, post2, post3].each do |post|
-          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+      it "will automatically pause a topic due to large community flagging" do
+        # reaching `num_flaggers_to_close_topic` isn't enough
+        [flagger1, flagger2].each do |flagger|
+          PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
         end
+
+        expect(topic.reload.closed).to eq(false)
+
+        # clean up
+        PostAction.where(post: post1).delete_all
+
+        # reaching `num_flags_to_close_topic` isn't enough
+        [post1, post2, post3].each do |post|
+          PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
+        end
+
+        expect(topic.reload.closed).to eq(false)
+
+        # clean up
+        PostAction.where(post: [post1, post2, post3]).delete_all
+
+        # reaching both should close the topic
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        topic_status_update = TopicTimer.last
+
+        expect(topic_status_update.topic).to eq(topic)
+        expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
+        expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
-      expect(topic.reload.closed).to eq(true)
+      it "will keep the topic in closed status until the community flags are handled" do
+        freeze_time
 
-      topic_status_update = TopicTimer.last
+        PostAction.stubs(:auto_close_threshold_reached?).returns(true)
+        PostAction.auto_close_if_threshold_reached(topic)
 
-      expect(topic_status_update.topic).to eq(topic)
-      expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
-      expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
+        expect(topic.reload.closed).to eq(true)
+        
+        timer = TopicTimer.last
+        expect(timer.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        Jobs.expects(:enqueue_in).with(1.hour.to_i, :toggle_topic_closed, topic_timer_id: timer.id, state: false).returns(true)
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(true)
+        expect(timer.reload.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        PostAction.stubs(:auto_close_threshold_reached?).returns(false)
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
+
+      it "will reopen topic after the flags are auto handled" do
+        freeze_time
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        freeze_time 61.days.from_now
+        Jobs::AutoQueueHandler.new.execute({})
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: TopicTimer.last.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
     end
 
   end
