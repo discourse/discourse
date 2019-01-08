@@ -564,9 +564,7 @@ class PostAction < ActiveRecord::Base
 
   MAXIMUM_FLAGS_PER_POST = 3
 
-  def self.auto_close_if_threshold_reached(topic)
-    return if topic.nil? || topic.closed?
-
+  def self.auto_close_threshold_reached?(topic)
     flags = PostAction.active
       .flags
       .joins(:post)
@@ -579,6 +577,13 @@ class PostAction < ActiveRecord::Base
     return if flags.count < SiteSetting.num_flaggers_to_close_topic
     # we need a minimum number of flags
     return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
+
+    true
+  end
+
+  def self.auto_close_if_threshold_reached(topic)
+    return if topic.nil? || topic.closed?
+    return unless auto_close_threshold_reached?(topic)
 
     # the threshold has been reached, we will close the topic waiting for intervention
     topic.update_status("closed", true, Discourse.system_user,
