@@ -102,6 +102,29 @@ describe UserAvatarsController do
       expect(response.headers["Last-Modified"]).to eq(optimized_image.upload.created_at.httpdate)
     end
 
+    it 'serves new version for old urls' do
+      user = Fabricate(:user)
+      SiteSetting.avatar_sizes = "45"
+
+      image = file_from_fixtures("cropped.png")
+      upload = UploadCreator.new(image, "image.png").create_for(user.id)
+
+      user.update_columns(uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/45/#{upload.id}_1.png"
+
+      expect(response.status).to eq(200)
+
+      image = response.body
+      optimized = upload.get_optimized_image(45, 45, {})
+
+      expect(optimized.filesize).to eq(body.length)
+
+      # clean up images
+      upload.destroy
+
+    end
+
     it 'serves a correct last modified for render blank' do
       freeze_time
 
