@@ -99,7 +99,11 @@ class UserAvatarsController < ApplicationController
     upload_id, version = params[:version].split("_")
 
     version = (version || OptimizedImage::VERSION).to_i
-    return render_blank if version != OptimizedImage::VERSION
+
+    # old versions simply get new avatar
+    if version > OptimizedImage::VERSION
+      return render_blank
+    end
 
     upload_id = upload_id.to_i
     return render_blank unless upload_id > 0
