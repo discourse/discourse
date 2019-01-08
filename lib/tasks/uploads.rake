@@ -251,14 +251,17 @@ def migrate_to_s3
     bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
     folder = File.join(folder, "/")
   else
-    bucket, folder = GlobalSetting.s3_bucket, ""
+    bucket = GlobalSetting.s3_bucket
+    folder = ""
   end
 
-  begin
-    s3.head_bucket(bucket: bucket)
-  rescue Aws::S3::Errors::NotFound
-    puts "Bucket '#{bucket}' not found. Creating it..."
-    s3.create_bucket(bucket: bucket) unless dry_run
+  unless bucket_has_folder_path
+    begin
+      s3.head_bucket(bucket: bucket)
+    rescue Aws::S3::Errors::NotFound
+      puts "Bucket '#{bucket}' not found. Creating it..."
+      s3.create_bucket(bucket: bucket) unless dry_run
+    end
   end
 
   puts "Uploading files to S3..."
@@ -274,7 +277,7 @@ def migrate_to_s3
   print " - Listing S3 files"
 
   s3_objects = []
-  prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
+  prefix = Rails.configuration.multisite ? "#{folder}#{db}/original/" : "#{folder}original/"
   options = { bucket: bucket, prefix: prefix }
 
   loop do
