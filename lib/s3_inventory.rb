@@ -1,11 +1,12 @@
 require "aws-sdk-s3"
 require "csv"
+require "discourse_event"
 
 class S3Inventory
 
   class StorageError < RuntimeError; end
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+  ::DiscourseEvent.on(:site_setting_saved) do |site_setting|
     name = site_setting.name.to_s
     Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
