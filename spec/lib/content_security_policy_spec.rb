@@ -111,6 +111,8 @@ describe ContentSecurityPolicy do
 
     plugin.enabled = true
     expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+    expect(parse(policy)['object-src']).to include('https://test-stripping.com')
+    expect(parse(policy)['object-src']).to_not include("'none'")
 
     plugin.enabled = false
     expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
