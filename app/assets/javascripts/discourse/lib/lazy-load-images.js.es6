@@ -19,7 +19,8 @@ function hide(image) {
     src: image.src,
     srcset: image.srcset,
     width: image.width,
-    height: image.height
+    height: image.height,
+    className: image.className
   });
   image.removeAttribute("srcset");
 
@@ -51,6 +52,7 @@ function show(image) {
     copyImg.style.left = `${image.offsetLeft}px`;
     copyImg.style.width = imageData.width;
     copyImg.style.height = imageData.height;
+    copyImg.className = imageData.className;
 
     image.parentNode.appendChild(copyImg);
   } else {
