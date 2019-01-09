@@ -134,7 +134,6 @@ bs_BA:
       close: 'zatvori'
       twitter: 'podijeli link na Twitteru'
       facebook: 'podijeli link na Facebook-u'
-      google+: 'podijeli link na Google+'
       email: 'pošalji ovaj link na email'
     action_codes:
       public_topic: "postavio ovu temu kao javno %{when}"

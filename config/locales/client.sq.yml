@@ -107,7 +107,6 @@ sq:
       close: 'mbylle'
       twitter: 'shpërndaje këtë lidhje në Twitter'
       facebook: 'postojeni këtë lidhje në Facebook'
-      google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgoje këtë lidhje me email'
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"

@@ -114,7 +114,6 @@ pt:
       close: 'fechar'
       twitter: 'partilhar esta hiperligação no Twitter'
       facebook: 'partilhar esta hiperligação no Facebook'
-      google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por e-mail'
     action_codes:
       public_topic: "tornei este tópico publico %{when}"

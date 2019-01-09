@@ -94,7 +94,6 @@ zh_CN:
       close: '关闭'
       twitter: '分享至 Twitter'
       facebook: '分享至 Facebook'
-      google+: '分享至 Google+'
       email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"

@@ -212,7 +212,6 @@ basic:
     choices:
      - twitter
      - facebook
-     - google+
      - email
   desktop_category_page_style:
     client: true

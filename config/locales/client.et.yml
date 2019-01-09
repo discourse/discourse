@@ -114,7 +114,6 @@ et:
       close: 'Sulge'
       twitter: 'Jaga seda viidet Twitteris'
       facebook: 'jaga seda viidet Facebookis'
-      google+: 'jaga seda viidet Google-plussis'
       email: 'Jaga viidet meiliga'
     action_codes:
       public_topic: "muutsin selle teema avalikuks %{when}"

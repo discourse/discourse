@@ -154,7 +154,6 @@ lt:
       close: 'uždaryti'
       twitter: 'pasidalinkite šią nuorodą per Twitter'
       facebook: 'pasidalinkite šią nuorodą per Facebook'
-      google+: 'pasidalinkite šią nuorodą per Google+'
       email: 'siųskite šią nuorodą į el. paštą'
     action_codes:
       public_topic: "nustatė diskusijas viešom %{when}"

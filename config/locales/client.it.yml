@@ -114,7 +114,6 @@ it:
       close: 'chiudi'
       twitter: 'condividi questo collegamento su Twitter'
       facebook: 'condividi questo collegamento su Facebook'
-      google+: 'condividi questo collegamento su Google+'
       email: 'invia questo collegamento via email'
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"

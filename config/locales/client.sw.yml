@@ -114,7 +114,6 @@ sw:
       close: 'funga'
       twitter: 'Shiriki hiki kiungo kwenye Twitter'
       facebook: 'Shiriki hiki kiungo kwenye Facebook'
-      google+: 'Kishiriki hiki kiungo kwenye Google+, mtandao wa kijamii'
       email: 'tuma kiungo hiki kwenye barua pepe'
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
