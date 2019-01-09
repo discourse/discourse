@@ -32,7 +32,7 @@ class Admin::EmailController < Admin::AdminController
 
     if params[:reply_key].present?
       email_logs = email_logs.where(
-        "post_reply_keys.reply_key ILIKE ?", "%#{params[:reply_key]}%"
+        "CAST (post_reply_keys.reply_key AS VARCHAR) ILIKE ?", "%#{params[:reply_key]}%"
       )
     end
 
