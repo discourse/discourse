@@ -27,7 +27,7 @@ export default function interceptClick(e) {
     !href ||
     href === "#" ||
     $currentTarget.attr("target") ||
-    $currentTarget.data("ember-action") != null ||
+    $currentTarget.data("ember-action") ||
     $currentTarget.data("auto-route") != null ||
     $currentTarget.data("share-url") != null ||
     $currentTarget.hasClass("widget-link") ||
