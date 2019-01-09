@@ -191,7 +191,7 @@
   }
 }
 
-.flag-counts {
+div.flag-counts {
   display: inline-block;
   margin-right: 0.5em;
 
@@ -204,9 +204,16 @@
 .flagged-topic {
   td.topic-title {
     width: 400px;
+
+    .combined-title {
+      .d-icon {
+        margin-right: 0.5em;
+      }
+      display: flex;
+    }
+
     a {
       width: 400px;
-      display: inline-block;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
