@@ -45,20 +45,25 @@ function resolveParams(ctx, options) {
   return params;
 }
 
-export function registerUnbound(name, fn) {
-  const func = function(property, options) {
-    if (
-      options.types &&
-      (options.types[0] === "ID" || options.types[0] === "PathExpression")
-    ) {
-      property = get(this, property, options);
+export function registerUnbound(name, fn, argCount = 1) {
+  const func = function(...args) {
+    const options = args.pop();
+    const properties = args.slice(0, argCount + 1);
+
+    for (let i = 0; i < argCount; i++) {
+      if (
+        options.types &&
+        (options.types[i] === "ID" || options.types[i] === "PathExpression")
+      ) {
+        properties[i] = get(this, properties[i], options);
+      }
     }
 
-    return fn.call(this, property, resolveParams(this, options));
+    return fn.call(this, ...properties, resolveParams(this, options));
   };
 
   _helpers[name] = Ember.Helper.extend({
-    compute: (params, args) => fn(params[0], args)
+    compute: (params, args) => fn(...params.slice(0, argCount + 1), args)
   });
   Handlebars.registerHelper(name, func);
 }
