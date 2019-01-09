@@ -114,7 +114,6 @@ hu:
       close: 'bezár'
       twitter: 'a hivatkozás megosztása a Twitteren'
       facebook: 'a hivatkozás megosztása a Facebookon'
-      google+: 'a hivatkozás megosztása a Google+ -on'
       email: 'a hivatkozás elküldése e-mailben'
     action_codes:
       public_topic: "publikussá tette ezt a témát ekkor: %{when}"

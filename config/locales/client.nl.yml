@@ -108,7 +108,6 @@ nl:
       close: 'sluiten'
       twitter: 'deze koppeling delen op Twitter'
       facebook: 'deze koppeling delen op Facebook'
-      google+: 'deze koppeling delen op Google+'
       email: 'deze koppeling delen via e-mail'
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"

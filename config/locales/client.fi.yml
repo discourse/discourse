@@ -114,7 +114,6 @@ fi:
       close: 'sulje'
       twitter: 'jaa tämä linkki Twitterissä'
       facebook: 'jaa tämä linkki Facebookissa'
-      google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"

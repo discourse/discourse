@@ -114,7 +114,6 @@ es:
       close: 'cerrar'
       twitter: 'comparte este enlace en Twitter'
       facebook: 'comparte este enlace en Facebook'
-      google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
     action_codes:
       public_topic: "hizo este tema público %{when}"

@@ -154,7 +154,6 @@ pl_PL:
       close: 'zamknij'
       twitter: 'udostępnij ten odnośnik na Twitterze'
       facebook: 'udostępnij ten odnośnik na Facebooku'
-      google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"

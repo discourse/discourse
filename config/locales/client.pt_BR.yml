@@ -114,7 +114,6 @@ pt_BR:
       close: 'fechar'
       twitter: 'compartilhe este link no Twitter'
       facebook: 'compartilhe este link no Facebook'
-      google+: 'compartilhe este link no Google+'
       email: 'enviar esse link para um email'
     action_codes:
       public_topic: "tornou este tópico público em %{when}"

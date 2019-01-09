@@ -154,7 +154,6 @@ sl:
       close: 'zapri'
       twitter: 'deli povezavo na Twitterju'
       facebook: 'deli povezao na Facebooku'
-      google+: 'deli povezavo na Google+'
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
       public_topic: "je naredil temo javno %{when}"

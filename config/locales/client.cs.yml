@@ -154,7 +154,6 @@ cs:
       close: 'zavřít'
       twitter: 'sdílet odkaz na Twitteru'
       facebook: 'sdílet odkaz na Facebooku'
-      google+: 'sdílet odkaz na Google+'
       email: 'odeslat odkaz emailem'
     action_codes:
       public_topic: "Téma zveřejněno %{when}"

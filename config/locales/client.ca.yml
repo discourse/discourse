@@ -114,7 +114,6 @@ ca:
       close: 'tanca'
       twitter: 'comparteix aquest enllaç a Twitter'
       facebook: 'comparteix aquest enllaç a Facebook'
-      google+: 'comparteix aquest enllaç a Google+'
       email: 'envia aquest enllaç per correu electrònic'
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
