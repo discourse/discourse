@@ -36,17 +36,6 @@ export default {
     });
 
     Sharing.addSource({
-      id: "google+",
-      icon: "fab-google-plus-square",
-      title: I18n.t("share.google+"),
-      generateUrl: function(link) {
-        return "https://plus.google.com/share?url=" + encodeURIComponent(link);
-      },
-      shouldOpenInPopup: true,
-      popupHeight: 600
-    });
-
-    Sharing.addSource({
       id: "email",
       icon: "envelope-square",
       title: I18n.t("share.email"),

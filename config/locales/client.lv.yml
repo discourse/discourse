@@ -126,7 +126,6 @@ lv:
       close: 'aizvērt'
       twitter: 'padalīties ar šo saiti Twitter'
       facebook: 'padalīties ar šo saiti Facebook'
-      google+: 'padalīties ar šo saiti Google+'
       email: 'nosūtīt šo saiti e-pastā'
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"

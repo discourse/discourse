@@ -114,7 +114,6 @@ fr:
       close: 'fermer'
       twitter: 'partager ce lien sur Twitter'
       facebook: 'partager ce lien sur Facebook'
-      google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"

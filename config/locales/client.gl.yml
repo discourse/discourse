@@ -108,7 +108,6 @@ gl:
       close: 'pechar'
       twitter: 'compartir esta ligazón no Twitter'
       facebook: 'compartir esta ligazón no Facebook'
-      google+: 'compartir esta ligazón no Google+'
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
       public_topic: "fixo esta publicación pública no %{when}"

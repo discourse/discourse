@@ -94,7 +94,6 @@ vi:
       close: 'đóng'
       twitter: 'chia sẻ lên Twitter'
       facebook: 'chia sẻ lên Facebook'
-      google+: 'chia sẻ lên Google+'
       email: 'Gửi liên kết này qua email'
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"

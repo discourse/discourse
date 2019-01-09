@@ -94,7 +94,6 @@ zh_TW:
       close: '關閉'
       twitter: '在 Twitter 分享此連結'
       facebook: '在 Facebook 分享此連結'
-      google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     action_codes:
       public_topic: "於 %{when}發佈這個話題"

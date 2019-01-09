@@ -144,7 +144,6 @@ he:
       close: 'סגור'
       twitter: 'שתפו קישור זה בטוויטר'
       facebook: 'שתפו קישור זה בפייסבוק'
-      google+: 'שתפו קישור זה בגוגל+'
       email: 'שליחת קישור בדוא״ל'
     action_codes:
       public_topic: "הפכו נושא זה לפומבי %{when}"

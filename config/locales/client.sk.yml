@@ -154,7 +154,6 @@ sk:
       close: 'zatvoriť'
       twitter: 'zdieľaj odkaz na Twitteri'
       facebook: 'zdieľaj odkaz na Facebooku'
-      google+: 'zdieľaj odkaz na Google+'
       email: 'pošli odkaz emailom'
     action_codes:
       public_topic: "téma je verejná%{when}"

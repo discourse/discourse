@@ -154,7 +154,6 @@ ru:
       close: 'Закрыть'
       twitter: 'Поделиться ссылкой через Twitter'
       facebook: 'Поделиться ссылкой через Facebook'
-      google+: 'Поделиться ссылкой через Google+'
       email: 'Поделиться ссылкой по электронной почте'
     action_codes:
       public_topic: "Сделал эту тему публичной %{when}"
