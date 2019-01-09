@@ -14,11 +14,11 @@ html {
   overflow-y: scroll;
   direction: ltr;
 
-  &.font-size-larger {
+  &.text-size-larger {
     font-size: $base-font-size-larger;
   }
 
-  &.font-size-largest {
+  &.text-size-largest {
     font-size: $base-font-size-largest;
   }
 }

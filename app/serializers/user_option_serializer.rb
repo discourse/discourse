@@ -24,7 +24,7 @@ class UserOptionSerializer < ApplicationSerializer
              :allow_private_messages,
              :homepage_id,
              :hide_profile_and_presence,
-             :font_size
+             :text_size
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

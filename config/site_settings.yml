@@ -1812,7 +1812,7 @@ user_preferences:
     type: category_list
     default: ''
   
-  default_font_size:
+  default_text_size:
     type: enum
     default: normal
     choices:

@@ -20,7 +20,7 @@ const USER_HOMES = {
   5: "top"
 };
 
-const FONT_SIZES = ["normal", "larger", "largest"];
+const TEXT_SIZES = ["normal", "larger", "largest"];
 
 export default Ember.Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")
@@ -35,7 +35,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "allow_private_messages",
       "homepage_id",
       "hide_profile_and_presence",
-      "font_size"
+      "text_size"
     ];
 
     if (makeDefault) {
@@ -59,9 +59,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
   },
 
   @computed
-  fontSizes() {
-    return FONT_SIZES.map(value => {
-      return { name: I18n.t(`user.font_size.${value}`), value };
+  textSizes() {
+    return TEXT_SIZES.map(value => {
+      return { name: I18n.t(`user.text_size.${value}`), value };
     });
   },
 
@@ -126,11 +126,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
         .catch(popupAjaxError);
     },
 
-    selectFontSize(newSize) {
+    selectTextSize(newSize) {
       const classList = document.documentElement.classList;
 
-      FONT_SIZES.forEach(name => {
-        const className = `font-size-${name}`;
+      TEXT_SIZES.forEach(name => {
+        const className = `text-size-${name}`;
         if (newSize === name) {
           classList.add(className);
         } else {

@@ -158,18 +158,18 @@ describe ApplicationHelper do
       expect(helper.html_classes.split(" ")).not_to include('rtl')
     end
 
-    it 'includes the user specified font size' do
+    it 'includes the user specified text size' do
       user = Fabricate(:user)
-      user.user_option.font_size = "larger"
+      user.user_option.text_size = "larger"
       user.user_option.save!
       helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
-      expect(helper.html_classes.split(" ")).to include('font-size-larger')
+      expect(helper.html_classes.split(" ")).to include('text-size-larger')
     end
 
-    it 'falls back to the default font size for anon' do
-      expect(helper.html_classes.split(" ")).to include('font-size-normal')
-      SiteSetting.default_font_size = "largest"
-      expect(helper.html_classes.split(" ")).to include('font-size-largest')
+    it 'falls back to the default text size for anon' do
+      expect(helper.html_classes.split(" ")).to include('text-size-normal')
+      SiteSetting.default_text_size = "largest"
+      expect(helper.html_classes.split(" ")).to include('text-size-largest')
     end
   end
 

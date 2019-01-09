@@ -113,7 +113,7 @@ module ApplicationHelper
     list << (mobile_view? ? 'mobile-view' : 'desktop-view')
     list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
     list << 'rtl' if rtl?
-    list << font_size_class
+    list << text_size_class
     list.join(' ')
   end
 
@@ -131,9 +131,9 @@ module ApplicationHelper
     result.join(' ')
   end
 
-  def font_size_class
-    size = current_user&.user_option&.font_size || SiteSetting.default_font_size
-    "font-size-#{size}"
+  def text_size_class
+    size = current_user&.user_option&.text_size || SiteSetting.default_text_size
+    "text-size-#{size}"
   end
 
   def escape_unicode(javascript)

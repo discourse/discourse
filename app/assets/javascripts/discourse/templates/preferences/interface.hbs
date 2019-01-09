@@ -10,10 +10,10 @@
 </div>
 {{/if}}
 
-<div class="control-group font-size">
-  <label class="control-label">{{i18n 'user.font_size.title'}}</label>
+<div class="control-group text-size">
+  <label class="control-label">{{i18n 'user.text_size.title'}}</label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=fontSizes value=model.user_option.font_size onSelect=(action "selectFontSize")}}
+    {{combo-box valueAttribute="value" content=textSizes value=model.user_option.text_size onSelect=(action "selectTextSize")}}
   </div>
 </div>
 

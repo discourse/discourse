@@ -910,8 +910,8 @@ en:
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
 
-      font_size:
-        title: "Font Size"
+      text_size:
+        title: "Text Size"
         normal: "Normal"
         larger: "Larger"
         largest: "Largest"

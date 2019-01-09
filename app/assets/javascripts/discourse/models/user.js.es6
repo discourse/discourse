@@ -286,7 +286,7 @@ const User = RestModel.extend({
       "allow_private_messages",
       "homepage_id",
       "hide_profile_and_presence",
-      "font_size"
+      "text_size"
     ];
 
     if (fields) {
