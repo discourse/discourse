@@ -28,8 +28,8 @@ export default function interceptClick(e) {
     href === "#" ||
     $currentTarget.attr("target") ||
     $currentTarget.data("ember-action") ||
-    $currentTarget.data("auto-route") != null ||
-    $currentTarget.data("share-url") != null ||
+    $currentTarget.data("auto-route") ||
+    $currentTarget.data("share-url") ||
     $currentTarget.hasClass("widget-link") ||
     $currentTarget.hasClass("raw-link") ||
     $currentTarget.hasClass("mention") ||
