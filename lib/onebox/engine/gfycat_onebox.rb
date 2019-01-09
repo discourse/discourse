@@ -27,8 +27,8 @@ module Onebox
                 </a>
               </h4>
 
-              <div class="video">
-                <video controls loop muted poster="#{data[:posterUrl]}" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
+              <div class="video" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
+                <video controls loop muted poster="#{data[:posterUrl]}">
                   <source id="webmSource" src="#{data[:webmUrl]}" type="video/webm">
                   <source id="mp4Source" src="#{data[:mp4Url]}" type="video/mp4">
                   <img title="Sorry, your browser doesn't support HTML5 video." src="#{data[:posterUrl]}">
