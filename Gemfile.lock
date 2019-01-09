@@ -435,9 +435,9 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    webpush (0.3.2)
+    webpush (0.3.6)
       hkdf (~> 0.2)
-      jwt
+      jwt (~> 2.0)
 
 PLATFORMS
   ruby
@@ -557,4 +557,4 @@ DEPENDENCIES
   webpush
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
