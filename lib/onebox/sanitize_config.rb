@@ -44,6 +44,10 @@ class Sanitize
         'iframe' => { 'src' => HTTP_PROTOCOLS },
         'source' => { 'src' => HTTP_PROTOCOLS },
       },
+
+      css: {
+        properties: RELAXED[:css][:properties] + %w[--aspect-ratio]
+      }
     )
   end
 end
