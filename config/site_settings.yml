@@ -285,6 +285,7 @@ basic:
     default: ''
   short_title:
     default: ''
+    max: 12
   vapid_public_key_bytes:
     default: ''
     client: true
