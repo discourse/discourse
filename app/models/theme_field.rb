@@ -86,7 +86,7 @@ class ThemeField < ActiveRecord::Base
 if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
 Discourse._registerPluginCode('#{version}', api => {
   #{settings(es6_source)}
-  let themePrefix = "theme_translations.#{self.theme_id}.";
+  let themePrefix = (key) => `theme_translations.#{self.theme_id}.${key}`;
   #{es6_source}
 });
 }
@@ -110,8 +110,7 @@ PLUGIN_API_JS
         val = v.is_a?(String) ? "\"#{v.gsub('"', "\\u0022")}\"" : v
         setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} parent=\"themeSettings\" key=\"#{k}\" value=#{val}}}\n"
       end
-      theme_prefix = "theme_translations.#{self.theme_id}."
-      setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} key=\"theme-prefix\" value=\"#{theme_prefix}\"}}\n"
+      setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} key=\"themeId\" value=\"#{self.theme_id}\"}}\n"
       hbs_template = setting_helpers + node.inner_html
 
       if is_raw
