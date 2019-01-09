@@ -2347,8 +2347,8 @@ en:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for 1 hour due to a large number of community flags."
-    other: "This topic is temporarily closed for %{count} hours due to a large number of community flags."
+    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
     private_topic_title: "Topic #%{id}"
