@@ -8,7 +8,7 @@ import addonFmt from "ember-addons/fmt";
   @return {Function} computedProperty function
 **/
 export function propertyEqual(p1, p2) {
-  return Em.computed(function() {
+  return Ember.computed(function() {
     return this.get(p1) === this.get(p2);
   }).property(p1, p2);
 }
@@ -22,7 +22,7 @@ export function propertyEqual(p1, p2) {
   @return {Function} computedProperty function
 **/
 export function propertyNotEqual(p1, p2) {
-  return Em.computed(function() {
+  return Ember.computed(function() {
     return this.get(p1) !== this.get(p2);
   }).property(p1, p2);
 }
@@ -57,7 +57,7 @@ export function i18n(...args) {
 
 /**
   Uses an Ember String `fmt` call to format a string. See:
-  http://emberjs.com/api/classes/Em.String.html#method_fmt
+  http://emberjs.com/api/classes/Ember.String.html#method_fmt
 
   @method fmt
   @params {String} properties* to format
@@ -100,7 +100,7 @@ export function url(...args) {
 export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
-  const computed = Em.computed(function() {
+  const computed = Ember.computed(function() {
     const self = this;
     return _.all(
       args.map(function(a) {
@@ -124,7 +124,7 @@ export function endWith() {
   @param {String} name of site setting
 **/
 export function setting(name) {
-  return Em.computed(function() {
+  return Ember.computed(function() {
     return Discourse.SiteSettings[name];
   }).property();
 }

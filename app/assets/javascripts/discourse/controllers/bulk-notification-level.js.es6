@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  disabled: Em.computed.empty("notificationLevelId"),
+  disabled: Ember.computed.empty("notificationLevelId"),
 
   actions: {
     changeNotificationLevel() {

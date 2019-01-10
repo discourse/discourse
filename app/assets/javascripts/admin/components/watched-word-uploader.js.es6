@@ -1,11 +1,11 @@
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Em.Component.extend(UploadMixin, {
+export default Ember.Component.extend(UploadMixin, {
   type: "csv",
   classNames: "watched-words-uploader",
   uploadUrl: "/admin/logs/watched_words/upload",
-  addDisabled: Em.computed.alias("uploading"),
+  addDisabled: Ember.computed.alias("uploading"),
 
   validateUploadedFilesOptions() {
     return { csvOnly: true };

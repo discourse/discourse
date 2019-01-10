@@ -39,7 +39,7 @@ export default Ember.Component.extend(
       "topic.visited"
     ],
     attributeBindings: ["data-topic-id"],
-    "data-topic-id": Em.computed.alias("topic.id"),
+    "data-topic-id": Ember.computed.alias("topic.id"),
 
     @computed
     newDotText() {

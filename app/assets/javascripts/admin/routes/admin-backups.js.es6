@@ -41,7 +41,7 @@ export default Discourse.Route.extend({
       } else {
         this.controllerFor("adminBackupsLogs")
           .get("logs")
-          .pushObject(Em.Object.create(log));
+          .pushObject(Ember.Object.create(log));
       }
     });
   },

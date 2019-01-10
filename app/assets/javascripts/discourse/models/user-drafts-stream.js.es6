@@ -70,7 +70,7 @@ export default RestModel.extend({
           this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.drafts) {
-          const copy = Em.A();
+          const copy = Ember.A();
           result.drafts.forEach(draft => {
             let draftData = JSON.parse(draft.data);
             draft.post_number = draftData.postId || null;

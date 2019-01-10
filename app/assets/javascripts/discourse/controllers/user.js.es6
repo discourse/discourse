@@ -53,7 +53,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !suspended || isStaff;
   },
 
-  linkWebsite: Em.computed.not("model.isBasic"),
+  linkWebsite: Ember.computed.not("model.isBasic"),
 
   @computed("model.trust_level")
   removeNoFollow(trustLevel) {

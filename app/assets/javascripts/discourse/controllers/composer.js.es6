@@ -80,11 +80,11 @@ export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
   application: Ember.inject.controller(),
 
-  replyAsNewTopicDraft: Em.computed.equal(
+  replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_TOPIC_KEY
   ),
-  replyAsNewPrivateMessageDraft: Em.computed.equal(
+  replyAsNewPrivateMessageDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
   ),
@@ -155,7 +155,7 @@ export default Ember.Controller.extend({
     return "title";
   },
 
-  showToolbar: Em.computed({
+  showToolbar: Ember.computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");
@@ -198,7 +198,7 @@ export default Ember.Controller.extend({
     return currentUser && currentUser.get("staff");
   },
 
-  canUnlistTopic: Em.computed.and("model.creatingTopic", "isStaffUser"),
+  canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
   @computed("canWhisper", "model.post")
   showWhisperToggle(canWhisper, repliedToPost) {

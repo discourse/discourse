@@ -5,12 +5,12 @@ import computed from "ember-addons/ember-computed-decorators";
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
-  isParentCategory: Em.computed.empty("category.parent_category_id"),
-  showSubcategoryListStyle: Em.computed.and(
+  isParentCategory: Ember.computed.empty("category.parent_category_id"),
+  showSubcategoryListStyle: Ember.computed.and(
     "category.show_subcategory_list",
     "isParentCategory"
   ),
-  isDefaultSortOrder: Em.computed.empty("category.sort_order"),
+  isDefaultSortOrder: Ember.computed.empty("category.sort_order"),
 
   @computed
   availableSubcategoryListStyles() {

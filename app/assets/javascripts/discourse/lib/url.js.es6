@@ -176,7 +176,7 @@ const DiscourseURL = Ember.Object.extend({
   routeTo(path, opts) {
     opts = opts || {};
 
-    if (Em.isEmpty(path)) {
+    if (Ember.isEmpty(path)) {
       return;
     }
 

@@ -7,7 +7,7 @@
   require("discourse/routes/application").default.reopen({
     actions: {
       didTransition: function() {
-        Em.run.next(function() {
+        Ember.run.next(function() {
           Discourse.authenticationComplete(authenticationData);
         });
         return this._super();

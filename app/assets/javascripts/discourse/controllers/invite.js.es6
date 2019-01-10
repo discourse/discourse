@@ -120,13 +120,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   topicId: Ember.computed.alias("model.id"),
 
   // Is Private Topic? (i.e. visible only to specific group members)
-  isPrivateTopic: Em.computed.and(
+  isPrivateTopic: Ember.computed.and(
     "invitingToTopic",
     "model.category.read_restricted"
   ),
 
   // Is Private Message?
-  isMessage: Em.computed.equal("model.archetype", "private_message"),
+  isMessage: Ember.computed.equal("model.archetype", "private_message"),
 
   // Allow Existing Members? (username autocomplete)
   allowExistingMembers: Ember.computed.alias("invitingToTopic"),

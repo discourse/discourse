@@ -86,7 +86,7 @@ export default MountWidget.extend(Docking, {
     this._super();
 
     if (this.get("fullscreen") && !this.get("addShowClass")) {
-      Em.run.next(() => {
+      Ember.run.next(() => {
         this.set("addShowClass", true);
         this.queueRerender();
       });

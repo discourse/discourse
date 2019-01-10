@@ -7,12 +7,12 @@ export default Ember.Component.extend({
 
   classNames: ["themes-list"],
 
-  hasThemes: Em.computed.gt("themesList.length", 0),
-  hasUserThemes: Em.computed.gt("userThemes.length", 0),
-  hasInactiveThemes: Em.computed.gt("inactiveThemes.length", 0),
+  hasThemes: Ember.computed.gt("themesList.length", 0),
+  hasUserThemes: Ember.computed.gt("userThemes.length", 0),
+  hasInactiveThemes: Ember.computed.gt("inactiveThemes.length", 0),
 
-  themesTabActive: Em.computed.equal("currentTab", THEMES),
-  componentsTabActive: Em.computed.equal("currentTab", COMPONENTS),
+  themesTabActive: Ember.computed.equal("currentTab", THEMES),
+  componentsTabActive: Ember.computed.equal("currentTab", COMPONENTS),
 
   @computed("themes", "components", "currentTab")
   themesList(themes, components) {
@@ -79,7 +79,7 @@ export default Ember.Component.extend({
       }
     },
     navigateToTheme(theme) {
-      Em.getOwner(this)
+      Ember.getOwner(this)
         .lookup("router:main")
         .transitionTo("adminCustomizeThemes.show", theme);
     }

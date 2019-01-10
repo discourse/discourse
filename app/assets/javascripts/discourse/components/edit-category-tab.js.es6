@@ -1,6 +1,6 @@
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Em.Component.extend({
+export default Ember.Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
 

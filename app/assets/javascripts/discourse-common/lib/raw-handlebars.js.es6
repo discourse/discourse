@@ -24,7 +24,7 @@ RawHandlebars.helpers["get"] = function(context, options) {
     context = context.slice(context.indexOf(".") + 1);
   }
 
-  return val === undefined ? Em.get(firstContext, context) : val;
+  return val === undefined ? Ember.get(firstContext, context) : val;
 };
 
 // adds compatability so this works with stringParams
@@ -45,7 +45,7 @@ RawHandlebars.registerHelper("each", function(
   contextName,
   options
 ) {
-  var list = Em.get(this, contextName);
+  var list = Ember.get(this, contextName);
   var output = [];
   var innerContext = objectCreate(this);
   for (var i = 0; i < list.length; i++) {

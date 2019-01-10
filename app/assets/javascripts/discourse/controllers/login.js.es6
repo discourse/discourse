@@ -32,7 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
-  loginRequired: Em.computed.alias("application.loginRequired"),
+  loginRequired: Ember.computed.alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   resetForm() {
@@ -67,7 +67,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
-  loginDisabled: Em.computed.or("loggingIn", "loggedIn"),
+  loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
 
   @computed("loggingIn", "authenticate", "application.canSignUp")
   showSignupLink(loggingIn, authenticate, canSignUp) {

@@ -6,7 +6,7 @@ import RestModel from "discourse/models/rest";
 import PreloadStore from "preload-store";
 
 const Site = RestModel.extend({
-  isReadOnly: Em.computed.alias("is_readonly"),
+  isReadOnly: Ember.computed.alias("is_readonly"),
 
   @computed("notification_types")
   notificationLookup(notificationTypes) {
@@ -87,7 +87,7 @@ const Site = RestModel.extend({
 
   updateCategory(newCategory) {
     const categories = this.get("categories");
-    const categoryId = Em.get(newCategory, "id");
+    const categoryId = Ember.get(newCategory, "id");
     const existingCategory = categories.findBy("id", categoryId);
 
     // Don't update null permissions
@@ -159,7 +159,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.post_action_types) {
-      result.postActionByIdLookup = Em.Object.create();
+      result.postActionByIdLookup = Ember.Object.create();
       result.post_action_types = result.post_action_types.map(p => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
@@ -168,7 +168,7 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.topic_flag_types) {
-      result.topicFlagByIdLookup = Em.Object.create();
+      result.topicFlagByIdLookup = Ember.Object.create();
       result.topic_flag_types = result.topic_flag_types.map(p => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);

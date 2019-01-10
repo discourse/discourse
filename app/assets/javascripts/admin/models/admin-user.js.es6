@@ -305,7 +305,7 @@ const AdminUser = Discourse.User.extend({
     return this.get("trust_level") < 4;
   }.property("trust_level"),
 
-  canSuspend: Em.computed.not("staff"),
+  canSuspend: Ember.computed.not("staff"),
 
   suspendDuration: function() {
     const suspended_at = moment(this.suspended_at),

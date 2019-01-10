@@ -35,14 +35,14 @@ Invite.reopenClass({
 
   findInvitedBy(user, filter, search, offset) {
     if (!user) {
-      return Em.RSVP.resolve();
+      return Ember.RSVP.resolve();
     }
 
     var data = {};
-    if (!Em.isNone(filter)) {
+    if (!Ember.isNone(filter)) {
       data.filter = filter;
     }
-    if (!Em.isNone(search)) {
+    if (!Ember.isNone(search)) {
       data.search = search;
     }
     data.offset = offset || 0;
@@ -54,17 +54,17 @@ Invite.reopenClass({
         return Invite.create(i);
       });
 
-      return Em.Object.create(result);
+      return Ember.Object.create(result);
     });
   },
 
   findInvitedCount(user) {
     if (!user) {
-      return Em.RSVP.resolve();
+      return Ember.RSVP.resolve();
     }
     return ajax(
       userPath(user.get("username_lower") + "/invited_count.json")
-    ).then(result => Em.Object.create(result.counts));
+    ).then(result => Ember.Object.create(result.counts));
   },
 
   reinviteAll() {
