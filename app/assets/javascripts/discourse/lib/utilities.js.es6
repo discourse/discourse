@@ -546,7 +546,6 @@ export function isAppleDevice() {
   // This will apply hack on all iDevices
   return (
     navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-    navigator.userAgent.match(/Safari/g) &&
     !navigator.userAgent.match(/Trident/g)
   );
 }
