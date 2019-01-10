@@ -30,6 +30,12 @@ export default ComboBoxComponent.extend({
       return computedContent;
     }
 
+    if (this.get("scopedCategoryId")) {
+      computedContent = this.categoriesByScope().map(c =>
+        this.computeContentItem(c)
+      );
+    }
+
     const _matchFunction = (f, text) => {
       return this._normalize(text).indexOf(f) > -1;
     };
@@ -111,11 +117,14 @@ export default ComboBoxComponent.extend({
   },
 
   computeContent() {
+    return this.categoriesByScope(this.get("scopedCategoryId"));
+  },
+
+  categoriesByScope(scopedCategoryId = null) {
     const categories = Discourse.SiteSettings.fixed_category_positions_on_create
       ? Category.list()
       : Category.listByActivity();
 
-    let scopedCategoryId = this.get("scopedCategoryId");
     if (scopedCategoryId) {
       const scopedCat = Category.findById(scopedCategoryId);
       scopedCategoryId =
