@@ -25,6 +25,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button class="btn btn-primary" label="admin.customize.theme.create" action="createTheme" disabled=saving}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button class="btn btn-primary" label="admin.customize.theme.create" action=(action "createTheme") disabled=saving}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

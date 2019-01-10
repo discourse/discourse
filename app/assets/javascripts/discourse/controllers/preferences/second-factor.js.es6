@@ -40,24 +40,23 @@ export default Ember.Controller.extend({
     if (!this.get("secondFactorToken")) return;
     this.set("loading", true);
 
-    this.get("content")
+    this.get("model")
       .toggleSecondFactor(this.get("secondFactorToken"), enable, 1)
       .then(response => {
         if (response.error) {
           this.set("errorMessage", response.error);
-          this.set("loading", false);
           return;
         }
 
         this.set("errorMessage", null);
         DiscourseURL.redirectTo(
-          userPath(`${this.get("content").username.toLowerCase()}/preferences`)
+          userPath(`${this.get("model").username.toLowerCase()}/preferences`)
         );
       })
       .catch(error => {
-        this.set("loading", false);
         popupAjaxError(error);
-      });
+      })
+      .finally(() => this.set("loading", false));
   },
 
   actions: {
@@ -65,7 +64,7 @@ export default Ember.Controller.extend({
       if (!this.get("password")) return;
       this.set("loading", true);
 
-      this.get("content")
+      this.get("model")
         .loadSecondFactorCodes(this.get("password"))
         .then(response => {
           if (response.error) {

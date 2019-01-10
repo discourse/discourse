@@ -83,7 +83,7 @@ GEM
       open4 (~> 1.3)
     coderay (1.1.2)
     colored2 (3.1.2)
-    concurrent-ruby (1.1.3)
+    concurrent-ruby (1.1.4)
     connection_pool (2.2.2)
     cork (0.3.0)
       colored2 (~> 3.1)
@@ -105,6 +105,7 @@ GEM
       terminal-table (~> 1)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
+    discourse-ember-source (3.5.1.3)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -114,9 +115,9 @@ GEM
     email_reply_trimmer (0.1.12)
     ember-data-source (3.0.2)
       ember-source (>= 2, < 3.0)
-    ember-handlebars-template (0.7.5)
+    ember-handlebars-template (0.8.0)
       barber (>= 0.11.0)
-      sprockets (>= 3.3, < 4)
+      sprockets (>= 3.3, < 4.1)
     ember-rails (0.18.5)
       active_model_serializers
       ember-data-source (>= 1.0.0.beta.5)
@@ -124,7 +125,7 @@ GEM
       ember-source (>= 1.1.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (2.13.3)
+    ember-source (2.18.2)
     erubi (1.7.1)
     excon (0.62.0)
     execjs (2.7.0)
@@ -462,11 +463,11 @@ DEPENDENCIES
   colored2
   cppjieba_rb
   danger
+  discourse-ember-source (~> 3.5.1)
   discourse_image_optim
   email_reply_trimmer (~> 0.1)
-  ember-handlebars-template (= 0.7.5)
+  ember-handlebars-template (= 0.8.0)
   ember-rails (= 0.18.5)
-  ember-source (= 2.13.3)
   excon
   execjs
   fabrication

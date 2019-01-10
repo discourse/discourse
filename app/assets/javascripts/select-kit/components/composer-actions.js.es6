@@ -19,7 +19,6 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
-  composerController: Ember.inject.controller("composer"),
   pluginApiIdentifiers: ["composer-actions"],
   classNames: "composer-actions",
   fullWidthOnMobile: true,
@@ -210,38 +209,14 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   _replyFromExisting(options, post, topic) {
-    const reply = this.get("composerModel.reply");
+    this.closeComposer();
 
-    let url;
-    if (post) url = post.get("url");
-    if (!post && topic) url = topic.get("url");
-
-    let topicTitle;
-    if (topic) topicTitle = topic.get("title");
-
-    this.get("composerController").close();
-    this.get("composerController")
-      .open(options)
-      .then(() => {
-        if (!url || !topicTitle) return;
-
-        url = `${location.protocol}//${location.host}${url}`;
-        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
-        const continueDiscussion = I18n.t("post.continue_discussion", {
-          postLink: link
-        });
-
-        if (!reply.includes(continueDiscussion)) {
-          this.get("composerController")
-            .get("model")
-            .prependText(continueDiscussion, { new_line: true });
-        }
-      });
+    this.openComposer(options, post, topic);
   },
 
   _openComposer(options) {
-    this.get("composerController").close();
-    this.get("composerController").open(options);
+    this.closeComposer();
+    this.openComposer(options);
   },
 
   toggleWhisperSelected(options, model) {
@@ -323,7 +298,8 @@ export default DropdownSelectBoxComponent.extend({
           model
         );
       } else {
-        Ember.Logger.error(`No method '${action}' found`);
+        // eslint-disable-next-line no-console
+        console.error(`No method '${action}' found`);
       }
     }
   }

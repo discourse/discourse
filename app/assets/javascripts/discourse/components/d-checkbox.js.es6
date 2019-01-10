@@ -13,7 +13,7 @@ export default Ember.Component.extend({
     // In Ember 13.3 we can use action on the checkbox `{{input}}` but not in 1.11
     this.$("input").on("click.d-checkbox", () => {
       Ember.run.scheduleOnce("afterRender", () =>
-        this.sendAction("change", this.$("input").prop("checked"))
+        this.change(this.$("input").prop("checked"))
       );
     });
   },

@@ -119,7 +119,8 @@ export default Ember.Controller.extend({
                 this.transitionToRoute("groups.index");
               })
               .catch(error => {
-                Ember.Logger.error(error);
+                // eslint-disable-next-line no-console
+                console.error(error);
                 bootbox.alert(I18n.t("admin.groups.delete_failed"));
               })
               .finally(() => this.set("destroying", false));

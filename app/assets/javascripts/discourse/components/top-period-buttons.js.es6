@@ -8,7 +8,7 @@ export default Ember.Component.extend({
 
   actions: {
     changePeriod(p) {
-      this.sendAction("action", p);
+      this.action(p);
     }
   }
 });

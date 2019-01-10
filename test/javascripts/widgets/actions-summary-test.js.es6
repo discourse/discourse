@@ -46,7 +46,7 @@ widgetTest("undo", {
 
 widgetTest("deferFlags", {
   template:
-    '{{mount-widget widget="actions-summary" args=args deferPostActionFlags="deferPostActionFlags"}}',
+    '{{mount-widget widget="actions-summary" args=args deferPostActionFlags=(action "deferPostActionFlags")}}',
   beforeEach() {
     this.set("args", {
       actionsSummary: [

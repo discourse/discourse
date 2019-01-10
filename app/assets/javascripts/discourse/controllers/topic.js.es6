@@ -1,4 +1,4 @@
-import BufferedContent from "discourse/mixins/buffered-content";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
 import Post from "discourse/models/post";
@@ -32,7 +32,7 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default Ember.Controller.extend(BufferedContent, {
+export default Ember.Controller.extend(bufferedProperty("model"), {
   composer: Ember.inject.controller(),
   application: Ember.inject.controller(),
   multiSelect: false,
@@ -52,6 +52,7 @@ export default Ember.Controller.extend(BufferedContent, {
   username_filters: null,
   filter: null,
   quoteState: null,
+
   canRemoveTopicFeaturedLink: Ember.computed.and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
@@ -203,10 +204,6 @@ export default Ember.Controller.extend(BufferedContent, {
   actions: {
     showPostFlags(post) {
       return this.send("showFlags", post);
-    },
-
-    topicRouteAction(name, model) {
-      return this.send(name, model);
     },
 
     openFeatureTopic() {
@@ -411,11 +408,11 @@ export default Ember.Controller.extend(BufferedContent, {
       quoteState.clear();
 
       if (
-        composerController.get("content.topic.id") === topic.get("id") &&
-        composerController.get("content.action") === Composer.REPLY
+        composerController.get("model.topic.id") === topic.get("id") &&
+        composerController.get("model.action") === Composer.REPLY
       ) {
-        composerController.set("content.post", post);
-        composerController.set("content.composeState", Composer.OPEN);
+        composerController.set("model.post", post);
+        composerController.set("model.composeState", Composer.OPEN);
         this.appEvents.trigger("composer:insert-block", quotedText.trim());
       } else {
         const opts = {
@@ -785,13 +782,13 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     toggleVisibility() {
-      this.get("content").toggleStatus("visible");
+      this.get("model").toggleStatus("visible");
     },
 
     toggleClosed() {
-      const topic = this.get("content");
+      const topic = this.get("model");
 
-      this.get("content")
+      this.get("model")
         .toggleStatus("closed")
         .then(result => {
           topic.set("topic_status_update", result.topic_status_update);
@@ -799,20 +796,20 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     recoverTopic() {
-      this.get("content").recover();
+      this.get("model").recover();
     },
 
     makeBanner() {
-      this.get("content").makeBanner();
+      this.get("model").makeBanner();
     },
 
     removeBanner() {
-      this.get("content").removeBanner();
+      this.get("model").removeBanner();
     },
 
     togglePinned() {
       const value = this.get("model.pinned_at") ? false : true,
-        topic = this.get("content"),
+        topic = this.get("model"),
         until = this.get("model.pinnedInCategoryUntil");
 
       // optimistic update
@@ -826,7 +823,7 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     pinGlobally() {
-      const topic = this.get("content"),
+      const topic = this.get("model"),
         until = this.get("model.pinnedGloballyUntil");
 
       // optimistic update
@@ -840,16 +837,16 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     toggleArchived() {
-      this.get("content").toggleStatus("archived");
+      this.get("model").toggleStatus("archived");
     },
 
     clearPin() {
-      this.get("content").clearPin();
+      this.get("model").clearPin();
     },
 
     togglePinnedForUser() {
       if (this.get("model.pinned_at")) {
-        const topic = this.get("content");
+        const topic = this.get("model");
         if (topic.get("pinned")) {
           topic.clearPin();
         } else {
@@ -940,11 +937,11 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     convertToPublicTopic() {
-      this.get("content").convertTopic("public");
+      this.get("model").convertTopic("public");
     },
 
     convertToPrivateMessage() {
-      this.get("content").convertTopic("private");
+      this.get("model").convertTopic("private");
     },
 
     removeFeaturedLink() {
@@ -952,7 +949,7 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     resetBumpDate() {
-      this.get("content").resetBumpDate();
+      this.get("model").resetBumpDate();
     }
   },
 
@@ -1002,7 +999,8 @@ export default Ember.Controller.extend(BufferedContent, {
 
   _jumpToPostId(postId) {
     if (!postId) {
-      Ember.Logger.warn(
+      // eslint-disable-next-line no-console
+      console.warn(
         "jump-post code broken - requested an index outside the stream array"
       );
       return;
@@ -1157,11 +1155,11 @@ export default Ember.Controller.extend(BufferedContent, {
   },
 
   recoverTopic() {
-    this.get("content").recover();
+    this.get("model").recover();
   },
 
   deleteTopic() {
-    this.get("content").destroy(this.currentUser);
+    this.get("model").destroy(this.currentUser);
   },
 
   subscribe() {
@@ -1284,7 +1282,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   unsubscribe() {
     // never unsubscribe when navigating from topic to topic
-    if (!this.get("content.id")) return;
+    if (!this.get("model.id")) return;
     this.messageBus.unsubscribe("/topic/*");
   },
 

@@ -30,8 +30,6 @@
 
       if (previous === value) return;
 
-      this.propertyWillChange(key);
-
       if (current === value) {
         delete buffer[key];
         if (empty(buffer)) {
@@ -42,7 +40,7 @@
         this.set('hasBufferedChanges', true);
       }
 
-      this.propertyDidChange(key);
+      this.notifyPropertyChange(key);
       return value;
     },
 
@@ -65,9 +63,8 @@
       for (key in buffer) {
         if (!buffer.hasOwnProperty(key)) continue;
 
-        this.propertyWillChange(key);
         delete buffer[key];
-        this.propertyDidChange(key);
+        this.notifyPropertyChange(key);
       }
       this.set('hasBufferedChanges', false);
     }

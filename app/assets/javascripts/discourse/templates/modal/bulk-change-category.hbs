@@ -3,5 +3,5 @@
 <p>{{category-chooser value=newCategoryId}}</p>
 
 {{#conditional-loading-spinner condition=loading}}
-  {{d-button action="changeCategory" label="topics.bulk.change_category"}}
+  {{d-button action=(action "changeCategory") label="topics.bulk.change_category"}}
 {{/conditional-loading-spinner}}

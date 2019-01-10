@@ -44,7 +44,7 @@
         <li class='compose-pm'>
           {{d-button
             class="btn-primary"
-            action=(action "composePrivateMessage" user post)
+            action=(route-action "composePrivateMessage" user post)
             icon="envelope"
             label="user.private_message"}}
         </li>
@@ -63,7 +63,7 @@
       {{#if hasUserFilters}}
         <li>
           {{d-button
-            action="cancelFilter"
+            action=(action "cancelFilter")
             icon="times"
             label="topic.filters.cancel"}}
         </li>
@@ -73,7 +73,8 @@
         <li>
           {{d-button
             class="btn-danger"
-            action=(action "deleteUser" user)
+            action=(action "deleteUser")
+            actionParam=user
             icon="exclamation-triangle"
             label="admin.user.delete"}}
         </li>
@@ -136,7 +137,7 @@
               {{#if user.email}}
                 {{user.email}}
               {{else}}
-                {{d-button action="checkEmail" actionParam=user icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+                {{d-button action=(action "checkEmail") actionParam=user icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </h3>
           {{/if}}

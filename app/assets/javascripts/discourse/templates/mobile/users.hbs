@@ -1,4 +1,4 @@
-{{#load-more selector=".directory .user" action="loadMore"}}
+{{#load-more selector=".directory .user" action=(action "loadMore")}}
   <div class="container">
     <div class='directory'>
       {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}

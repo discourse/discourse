@@ -45,7 +45,7 @@
       </div>
     {{else}}
       <div class="controls">
-        {{d-button action="checkEmail" class="btn-default" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+        {{d-button action=(action "checkEmail") class="btn-default" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
   </div>
@@ -113,14 +113,14 @@
             <td>
               {{#if authProvider.method.can_revoke}}
                 {{#conditional-loading-spinner condition=revoking size='small'}}
-                  {{d-button action="revokeAccount" actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash" }}
+                  {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash" }}
                 {{/conditional-loading-spinner}}
               {{/if}}
             </td>
           {{else}}
             <td colspan=2>
               {{#if authProvider.method.can_connect}}
-                {{d-button action="connectAccount" actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
+                {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
               {{else}}
                 {{i18n 'user.associated_accounts.not_connected'}}
               {{/if}}
@@ -132,7 +132,7 @@
       </table>
     {{else}}
       <div class="controls">
-        {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+        {{d-button action=(action "checkEmail") actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
   </div>
@@ -144,7 +144,7 @@
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
-      {{d-button action="showAvatarSelector" actionParam=model class="btn-default pad-left" icon="pencil"}}
+      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil"}}
     </div>
   </div>
 {{/unless}}
@@ -222,7 +222,7 @@
   <div class="control-group delete-account">
     <br/>
     <div class="controls">
-      {{d-button action="delete" disabled=deleteDisabled class="btn-danger" icon="trash-o" label="user.delete_account"}}
+      {{d-button action=(action "delete") disabled=deleteDisabled class="btn-danger" icon="trash-o" label="user.delete_account"}}
     </div>
   </div>
 {{/if}}

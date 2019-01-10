@@ -96,7 +96,7 @@ export default TextField.extend({
           self.set("hasGroups", hasGroups);
 
           selected = items;
-          if (self.get("onChangeCallback")) self.sendAction("onChangeCallback");
+          if (self.get("onChangeCallback")) self.onChangeCallback();
         },
 
         reverseTransform(i) {

@@ -20,7 +20,7 @@ export default Ember.Controller.extend({
   ),
   unchanged: propertyEqual("newEmailLower", "currentUser.email"),
 
-  reset: function() {
+  reset() {
     this.setProperties({
       taken: false,
       saving: false,
@@ -30,16 +30,16 @@ export default Ember.Controller.extend({
     });
   },
 
-  newEmailLower: function() {
-    return this.get("newEmail")
-      .toLowerCase()
-      .trim();
-  }.property("newEmail"),
+  @computed("newEmail")
+  newEmailLower(newEmail) {
+    return newEmail.toLowerCase().trim();
+  },
 
-  saveButtonText: function() {
-    if (this.get("saving")) return I18n.t("saving");
+  @computed("saving")
+  saveButtonText(saving) {
+    if (saving) return I18n.t("saving");
     return I18n.t("user.change");
-  }.property("saving"),
+  },
 
   @computed("newEmail")
   invalidEmail(newEmail) {
@@ -57,16 +57,15 @@ export default Ember.Controller.extend({
   },
 
   actions: {
-    changeEmail: function() {
-      var self = this;
+    changeEmail() {
+      const self = this;
       this.set("saving", true);
-      return this.get("content")
+
+      return this.get("model")
         .changeEmail(this.get("newEmail"))
         .then(
-          function() {
-            self.set("success", true);
-          },
-          function(e) {
+          () => self.set("success", true),
+          e => {
             self.setProperties({ error: true, saving: false });
             if (
               e.jqXHR.responseJSON &&

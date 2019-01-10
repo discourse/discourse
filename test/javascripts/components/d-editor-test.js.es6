@@ -686,7 +686,7 @@ componentTest("emoji", {
           id: "emoji",
           group: "extras",
           icon: "smile-o",
-          action: "emoji"
+          action: () => toolbar.context.send("emoji")
         });
       });
     });
