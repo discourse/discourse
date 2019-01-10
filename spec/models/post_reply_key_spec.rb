@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe PostReplyKey do
   describe "#reply_key" do
     it "should format the reply_key correctly" do
-      hex = SecureRandom.hex
+      hex = SecureRandom.uuid
       post_reply_key = Fabricate(:post_reply_key,
         reply_key: hex
       )
@@ -12,8 +12,7 @@ RSpec.describe PostReplyKey do
         .pluck("reply_key::text")
         .first
 
-      expect(raw_key).to_not eq(hex)
-      expect(raw_key.delete('-')).to eq(hex)
+      expect(raw_key).to eq(hex)
       expect(PostReplyKey.find(post_reply_key.id).reply_key).to eq(hex)
     end
   end

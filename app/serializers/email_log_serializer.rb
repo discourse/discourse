@@ -12,6 +12,6 @@ class EmailLogSerializer < ApplicationSerializer
   end
 
   def reply_key
-    @options[:reply_keys][[object.post_id, object.user_id]].delete("-")
+    @options[:reply_keys][[object.post_id, object.user_id]]
   end
 end
