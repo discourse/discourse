@@ -8,12 +8,8 @@ class PostReplyKey < ActiveRecord::Base
   validates :user_id, presence: true
   validates :reply_key, presence: true
 
-  def reply_key
-    super&.delete('-')
-  end
-
   def self.generate_reply_key
-    SecureRandom.hex(16)
+    SecureRandom.uuid
   end
 end
 
