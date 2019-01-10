@@ -41,8 +41,8 @@ gem 'onebox', '1.8.76'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source', '2.13.3'
-gem 'ember-handlebars-template', '0.7.5'
+gem 'discourse-ember-source', '~> 3.5.1'
+gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
 # message bus 2.2.0 should be very stable

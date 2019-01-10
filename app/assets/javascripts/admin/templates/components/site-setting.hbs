@@ -6,12 +6,12 @@
 </div>
 {{#if dirty}}
   <div class='setting-controls'>
-    {{d-button class="ok" action="save" icon="check"}}
-    {{d-button class="cancel" action="cancel" icon="times"}}
+    {{d-button class="ok" action=(action "save") icon="check"}}
+    {{d-button class="cancel" action=(action "cancel") icon="times"}}
   </div>
 {{else if setting.overridden}}
   {{#if setting.secret}}
-    {{d-button action="toggleSecret" icon="eye-slash"}}
+    {{d-button action=(action "toggleSecret") icon="eye-slash"}}
   {{/if}}
-  {{d-button class="btn-default undo" action="resetDefault" icon="undo" label="admin.settings.reset"}}
+  {{d-button class="btn-default undo" action=(action "resetDefault") icon="undo" label="admin.settings.reset"}}
 {{/if}}

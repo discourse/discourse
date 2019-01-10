@@ -28,7 +28,7 @@
     {{groups-form-interaction-fields model=model}}
 
     <div class='control-group buttons'>
-      {{d-button action="save"
+      {{d-button action=(action "save")
           disabled=saving
           class='btn btn-primary group-form-save'
           label="admin.groups.new.create"}}

@@ -1,6 +1,5 @@
 import Ember from "ember";
 
-const inspect = Ember.inspect;
 const isArray = Ember.isArray;
 
 export default function(str, formats) {
@@ -19,6 +18,12 @@ export default function(str, formats) {
   return str.replace(/%@([0-9]+)?/g, function(s, argIndex) {
     argIndex = argIndex ? parseInt(argIndex, 10) - 1 : idx++;
     s = cachedFormats[argIndex];
-    return s === null ? "(null)" : s === undefined ? "" : inspect(s);
+    return typeof s === "string"
+      ? s
+      : s === null
+        ? "(null)"
+        : s === undefined
+          ? ""
+          : "" + s;
   });
 }

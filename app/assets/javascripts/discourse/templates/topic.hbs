@@ -14,7 +14,7 @@
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
-      {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
+      {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
           {{#if model.isPrivateMessage}}
@@ -31,8 +31,8 @@
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
             <div class="edit-controls">
-              {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-              {{d-button action="cancelEditingTopic" class="btn-default btn-small cancel-edit" icon="times"}}
+              {{d-button action=(action "finishedEditingTopic") class="btn-primary btn-small submit-edit" icon="check"}}
+              {{d-button action=(action "cancelEditingTopic") class="btn-default btn-small cancel-edit" icon="times"}}
 
               {{#if canRemoveTopicFeaturedLink}}
                 <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
@@ -91,9 +91,9 @@
               toggleClosed=(action "toggleClosed")
               toggleArchived=(action "toggleArchived")
               toggleVisibility=(action "toggleVisibility")
-              showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-              showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-              showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+              showFeatureTopic=(route-action "showFeatureTopic")
+              showChangeTimestamp=(route-action "showChangeTimestamp")
               resetBumpDate=(action "resetBumpDate")
               convertToPublicTopic=(action "convertToPublicTopic")
               convertToPrivateMessage=(action "convertToPrivateMessage")}}
@@ -119,9 +119,9 @@
             toggleClosed=(action "toggleClosed")
             toggleArchived=(action "toggleArchived")
             toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showFeatureTopic=(route-action "showFeatureTopic")
+            showChangeTimestamp=(route-action "showChangeTimestamp")
             resetBumpDate=(action "resetBumpDate")
             convertToPublicTopic=(action "convertToPublicTopic")
             convertToPrivateMessage=(action "convertToPrivateMessage")}}
@@ -143,9 +143,9 @@
                 toggleClosed=(action "toggleClosed")
                 toggleArchived=(action "toggleArchived")
                 toggleVisibility=(action "toggleVisibility")
-                showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-                showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-                showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+                showFeatureTopic=(route-action "showFeatureTopic")
+                showChangeTimestamp=(route-action "showChangeTimestamp")
                 resetBumpDate=(action "resetBumpDate")
                 convertToPublicTopic=(action "convertToPublicTopic")
                 convertToPrivateMessage=(action "convertToPrivateMessage")}}
@@ -172,9 +172,9 @@
                 gaps=model.postStream.gaps
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
-                showHistory=(action "topicRouteAction" "showHistory")
-                showLogin=(action "topicRouteAction" "showLogin")
-                showRawEmail=(action "topicRouteAction" "showRawEmail")
+                showHistory=(route-action "showHistory")
+                showLogin=(route-action "showLogin")
+                showRawEmail=(route-action "showRawEmail")
                 deletePost=(action "deletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
@@ -192,7 +192,7 @@
                 toggleSummary=(action "toggleSummary")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
-                showInvite=(action "topicRouteAction" "showInvite")
+                showInvite=(route-action "showInvite")
                 topVisibleChanged=(action "topVisibleChanged")
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
@@ -256,22 +256,22 @@
                     toggleClosed=(action "toggleClosed")
                     toggleArchived=(action "toggleArchived")
                     toggleVisibility=(action "toggleVisibility")
-                    showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-                    showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-                    showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                    showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+                    showFeatureTopic=(route-action "showFeatureTopic")
+                    showChangeTimestamp=(route-action "showChangeTimestamp")
                     resetBumpDate=(action "resetBumpDate")
                     convertToPublicTopic=(action "convertToPublicTopic")
                     convertToPrivateMessage=(action "convertToPrivateMessage")
                     toggleBookmark=(action "toggleBookmark")
-                    showFlagTopic=(action "topicRouteAction" "showFlagTopic")
-                    showInvite=(action "topicRouteAction" "showInvite")
+                    showFlagTopic=(route-action "showFlagTopic")
+                    showInvite=(route-action "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}
                   <div id="topic-footer-buttons">
-                    {{d-button icon="reply" class="btn-primary pull-right" action="showLogin" label="topic.reply.title"}}
+                    {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
                   </div>
                 {{/if}}
               {{/if}}
@@ -308,10 +308,10 @@
             <div>{{model.message}}</div>
             {{#if model.noRetry}}
               {{#unless currentUser}}
-                {{d-button action="showLogin" class="btn-primary topic-retry" icon="user" label="log_in"}}
+                {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}
               {{/unless}}
             {{else}}
-              {{d-button action="retryLoading" class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
+              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
             {{/if}}
           </div>
           {{conditional-loading-spinner condition=retrying}}
@@ -320,7 +320,7 @@
     </div>
   {{/if}}
 
-  {{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
+  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
   {{#if embedQuoteButton}}
     {{quote-button quoteState=quoteState selectText=(action "selectText")}}

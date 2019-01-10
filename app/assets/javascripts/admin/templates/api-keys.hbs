@@ -19,8 +19,8 @@
           {{/if}}
         </td>
         <td class="key-controls">
-          {{d-button class="btn-default" action="regenerateKey" actionParam=k icon="undo" label='admin.api.regenerate'}}
-          {{d-button class="btn-default" action="revokeKey" actionParam=k icon="times" label='admin.api.revoke'}}
+          {{d-button class="btn-default" action=(action "regenerateKey") actionParam=k icon="undo" label='admin.api.regenerate'}}
+          {{d-button class="btn-default" action=(action "revokeKey") actionParam=k icon="times" label='admin.api.revoke'}}
         </td>
       </tr>
     {{/each}}

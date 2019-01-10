@@ -1,10 +1,12 @@
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
-    Ember.Logger.error(error.stack);
+    // eslint-disable-next-line no-console
+    console.error(error.stack);
   }
 
   if (typeof error === "string") {
-    Ember.Logger.error(error);
+    // eslint-disable-next-line no-console
+    console.error(error);
   }
 
   if (error.jqXHR) {
@@ -22,7 +24,8 @@ export function extractError(error, defaultMessage) {
       parsedJSON = $.parseJSON(error.responseText);
     } catch (ex) {
       // in case the JSON doesn't parse
-      Ember.Logger.error(ex.stack);
+      // eslint-disable-next-line no-console
+      console.error(ex.stack);
     }
   }
 

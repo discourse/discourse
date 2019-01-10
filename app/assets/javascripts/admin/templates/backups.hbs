@@ -7,7 +7,7 @@
         {{plugin-outlet name="downloader" tagName=""}}
         <div class="admin-actions">
           {{#if model.canRollback}}
-            {{d-button action="rollback"
+            {{d-button action=(route-action "rollback")
                        class="btn-default btn-rollback"
                        label="admin.backups.operations.rollback.label"
                        title="admin.backups.operations.rollback.title"
@@ -15,13 +15,13 @@
                        disabled=rollbackDisabled}}
           {{/if}}
           {{#if model.isOperationRunning}}
-            {{d-button action="cancelOperation"
+            {{d-button action=(route-action "cancelOperation")
                        class="btn-danger"
                        title="admin.backups.operations.cancel.title"
                        label="admin.backups.operations.cancel.label"
                        icon="times"}}
           {{else}}
-            {{d-button action="showStartBackupModal"
+            {{d-button action=(route-action "showStartBackupModal")
                        class="btn-primary"
                        title="admin.backups.operations.backup.title"
                        label="admin.backups.operations.backup.label"

@@ -19,7 +19,7 @@ export default Em.Component.extend(UploadMixin, {
   uploadDone() {
     if (this) {
       bootbox.alert(I18n.t("admin.watched_words.form.upload_successful"));
-      this.sendAction("done");
+      this.done();
     }
   }
 });

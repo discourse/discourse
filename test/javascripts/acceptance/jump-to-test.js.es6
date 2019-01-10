@@ -3,6 +3,8 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Jump to", {
   loggedIn: true,
 
+  mobileView: true,
+
   pretend(server, helper) {
     server.get("/t/280/excerpts.json", () => helper.response(200, []));
     server.get("/t/280/3.json", () => helper.response(200, {}));
@@ -20,7 +22,6 @@ acceptance("Jump to", {
 
 QUnit.test("default", async assert => {
   await visit("/t/internationalization-localization/280");
-
   await click("nav#topic-progress .nums");
   await click("button.jump-to-post");
 

@@ -298,6 +298,40 @@ export default Ember.Controller.extend({
   uploadIcon: () => uploadIcon(),
 
   actions: {
+    togglePreview() {
+      this.toggleProperty("showPreview");
+    },
+
+    closeComposer() {
+      this.close();
+    },
+
+    openComposer(options, post, topic) {
+      this.open(options).then(() => {
+        let url;
+        if (post) url = post.get("url");
+        if (!post && topic) url = topic.get("url");
+
+        let topicTitle;
+        if (topic) topicTitle = topic.get("title");
+
+        if (!url || !topicTitle) return;
+
+        url = `${location.protocol}//${location.host}${url}`;
+        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
+        const continueDiscussion = I18n.t("post.continue_discussion", {
+          postLink: link
+        });
+
+        const reply = this.get("model.reply");
+        if (!reply || !reply.includes(continueDiscussion)) {
+          this.get("model").prependText(continueDiscussion, {
+            new_line: true
+          });
+        }
+      });
+    },
+
     cancelUpload() {
       this.set("model.uploadCancelled", true);
     },
@@ -308,10 +342,6 @@ export default Ember.Controller.extend({
 
     storeToolbarState(toolbarEvent) {
       this.set("toolbarEvent", toolbarEvent);
-    },
-
-    togglePreview() {
-      this.toggleProperty("showPreview");
     },
 
     typed() {

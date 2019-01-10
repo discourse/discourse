@@ -4,7 +4,7 @@
 <div class="permalink-search">
   {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
 </div>
-{{permalink-form action="recordAdded"}}
+{{permalink-form action=(action "recordAdded")}}
 <br/>
 
 {{#conditional-loading-spinner condition=loading}}
@@ -42,7 +42,7 @@
             {{/if}}
           </td>
           <td class="col action">
-            {{d-button action="destroy" actionParam=pl icon="trash-o" class="btn-danger"}}
+            {{d-button action=(action "destroy") actionParam=pl icon="trash-o" class="btn-danger"}}
           </td>
         </tr>
       {{/each}}

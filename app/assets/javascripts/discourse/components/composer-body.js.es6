@@ -58,7 +58,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   keyUp() {
-    this.sendAction("typed");
+    this.typed();
 
     const lastKeyUp = new Date();
     this._lastKeyUp = lastKeyUp;
@@ -117,6 +117,6 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   click() {
-    this.sendAction("openIfDraft");
+    this.openIfDraft();
   }
 });

@@ -333,7 +333,7 @@ export default Ember.Component.extend({
         this._trackEmojiUsage(code);
       }
 
-      this.sendAction("emojiSelected", code);
+      this.emojiSelected(code);
 
       if (this.$modal.hasClass("fadeIn")) {
         this.set("active", false);

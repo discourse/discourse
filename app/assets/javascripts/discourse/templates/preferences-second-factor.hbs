@@ -30,7 +30,7 @@
 
       <div class="control-group">
         <div class="controls">
-          {{d-button action="disableSecondFactor"
+          {{d-button action=(action "disableSecondFactor")
               class="btn btn-primary"
               disabled=loading
               label=disableButtonText}}
@@ -78,7 +78,7 @@
 
         <div class="control-group">
           <div class="controls">
-            {{d-button action="enableSecondFactor"
+            {{d-button action=(action "enableSecondFactor")
                 class="btn btn-primary"
                 disabled=loading
                 label=enableButtonText}}
@@ -105,12 +105,12 @@
 
         <div class="control-group">
           <div class="controls">
-            {{d-button action="confirmPassword"
+            {{d-button action=(action "confirmPassword")
                 class="btn btn-primary"
                 disabled=loading
                 label=submitButtonText}}
 
-            {{d-button action="resetPassword"
+            {{d-button action=(action "resetPassword")
                 class="btn"
                 disabled=resetPasswordLoading
                 icon="envelope"

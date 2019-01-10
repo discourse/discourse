@@ -57,7 +57,7 @@ export default Ember.Component.extend({
 
   actions: {
     changePostActionType(at) {
-      this.sendAction("changePostActionType", at);
+      this.changePostActionType(at);
     }
   }
 });

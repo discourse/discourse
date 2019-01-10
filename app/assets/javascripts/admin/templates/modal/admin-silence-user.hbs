@@ -27,10 +27,10 @@
 <div class="modal-footer">
   {{d-button
     class="btn-danger perform-silence"
-    action="silence"
+    action=(action "silence")
     disabled=submitDisabled
     icon="microphone-slash"
     label="admin.user.silence"}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
   {{conditional-loading-spinner condition=loading size="small"}}
 </div>

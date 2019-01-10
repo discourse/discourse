@@ -1,5 +1,5 @@
 {{#if value}}
-  {{#d-button class="btn-small group-manage-logs-filter" action="clearFilter" actionParam=type}}
+  {{#d-button class="btn-small group-manage-logs-filter" action=(action "clearFilter") actionParam=type}}
     <span>{{label}}</span>: {{filterText}}
     {{d-icon "times-circle"}}
   {{/d-button}}

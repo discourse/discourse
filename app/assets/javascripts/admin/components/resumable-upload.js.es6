@@ -8,8 +8,8 @@ import { bufferedRender } from "discourse-common/lib/buffered-render";
 
     {{resumable-upload
         target="/admin/backups/upload"
-        success="successAction"
-        error="errorAction"
+        success=(action "successAction")
+        error=(action "errorAction")
         uploadText="UPLOAD"
     }}
 **/
@@ -100,7 +100,7 @@ export default Ember.Component.extend(
           // mark as not uploading anymore
           self._reset();
           // fire an event to allow the parent route to reload its model
-          self.sendAction("success", file.fileName);
+          self.success(file.fileName);
         });
       });
 
@@ -109,7 +109,7 @@ export default Ember.Component.extend(
           // mark as not uploading anymore
           self._reset();
           // fire an event to allow the parent route to display the error message
-          self.sendAction("error", file.fileName, message);
+          self.error(file.fileName, message);
         });
       });
     }.on("init"),

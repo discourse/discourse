@@ -1,14 +1,14 @@
      <div class="backup-options">
         {{#if localBackupStorage}}
-        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title" class="btn-default"}}
+        {{resumable-upload target="/admin/backups/upload" success=(route-action "uploadSuccess") error=(route-action "uploadError") uploadText=uploadLabel title="admin.backups.upload.title" class="btn-default"}}
         {{else}}
-          {{backup-uploader done="remoteUploadSuccess"}}
+          {{backup-uploader done=(route-action "remoteUploadSuccess")}}
         {{/if}}
 
         {{#if site.isReadOnly}}
-          {{d-button class="btn-default" icon="far-eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
+          {{d-button class="btn-default" icon="far-eye" action=(action "toggleReadOnlyMode") disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
         {{else}}
-          {{d-button class="btn-default" icon="far-eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
+          {{d-button class="btn-default" icon="far-eye" action=(action "toggleReadOnlyMode") disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
         {{/if}}
       </div>
 <table class="grid">
@@ -25,17 +25,17 @@
       <td class="backup-controls">
         <div>
           {{d-button class="btn-default download"
-                     action="download"
+                     action=(action "download")
                      actionParam=backup
                      icon="download"
                      title="admin.backups.operations.download.title"
                      label="admin.backups.operations.download.label"}}
           {{#if status.isOperationRunning}}
-            {{d-button icon="far-trash-alt" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
-            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
+            {{d-button icon="far-trash-alt" action=(route-action "destroyBackup") actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
+            {{d-button icon="play" action=(route-action "startRestore") actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{else}}
-            {{d-button icon="far-trash-alt" action="destroyBackup" actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
-            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
+            {{d-button icon="far-trash-alt" action=(route-action "destroyBackup") actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
+            {{d-button icon="play" action=(route-action "startRestore") actionParam=backup disabled=status.restoreDisabled class="btn-default" title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{/if}}
         </div>
       </td>

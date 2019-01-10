@@ -17,7 +17,7 @@ export default {
           id: "emoji",
           group: "extras",
           icon: "smile-o",
-          action: "emoji",
+          action: () => toolbar.context.send("emoji"),
           title: "composer.emoji"
         });
       });

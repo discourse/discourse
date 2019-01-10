@@ -5,13 +5,13 @@
 <div class="col timestamp">{{createdAt}}</div>
 <div class="col completion">{{completion}}</div>
 <div class="col actions">
-  {{d-button icon='ellipsis-v' action='toggleRequest' label='admin.web_hooks.events.request'}}
-  {{d-button icon='ellipsis-v' action='toggleResponse' label='admin.web_hooks.events.response'}}
-  {{d-button icon='refresh' action='redeliver' label='admin.web_hooks.events.redeliver'}}
+  {{d-button icon="ellipsis-v" action=(action "toggleRequest") label="admin.web_hooks.events.request"}}
+  {{d-button icon="ellipsis-v" action=(action "toggleResponse") label="admin.web_hooks.events.response"}}
+  {{d-button icon="refresh" action=(action "redeliver") label="admin.web_hooks.events.redeliver"}}
 </div>
 {{#if expandDetails}}
   <div class="details">
-    <h3>{{i18n 'admin.web_hooks.events.headers'}}</h3>
+    <h3>{{i18n "admin.web_hooks.events.headers"}}</h3>
     <pre><code>{{headers}}</code></pre>
     <h3>{{bodyLabel}}</h3>
     <pre><code>{{body}}</code></pre>
