@@ -201,7 +201,7 @@ end
 #  homepage_id                      :integer
 #  theme_ids                        :integer          default([]), not null, is an Array
 #  hide_profile_and_presence        :boolean          default(FALSE), not null
-#  font_size_id                     :integer          default(0), not null
+#  text_size_key                    :integer          default(0), not null
 #
 # Indexes
 #
