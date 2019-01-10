@@ -50,7 +50,6 @@ class S3Inventory
     @tmp_directory = File.join(Rails.root, "tmp", "inventory", @current_db, @timestamp)
     @archive_filename = File.join(@tmp_directory, File.basename(file.key))
     @csv_filename = @archive_filename[0...-3]
-    @logs = []
 
     FileUtils.mkdir_p(@tmp_directory)
     copy_archive_to_tmp_directory
@@ -191,19 +190,6 @@ class S3Inventory
   def log(message, ex = nil)
     timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
     puts(message)
-    publish_log(message, timestamp)
-    save_log(message, timestamp)
     Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
   end
-
-  def publish_log(message, timestamp)
-    return unless @publish_to_message_bus
-    data = { timestamp: timestamp, operation: "restore", message: message }
-    MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
-  end
-
-  def save_log(message, timestamp)
-    @logs << "[#{timestamp}] #{message}"
-  end
-
 end
