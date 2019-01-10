@@ -11,7 +11,9 @@ class S3Inventory
     Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
 
-  attr_reader :inventory_id, :s3_client, :source_bucket_name, :source_bucket_path, :destination_bucket_name, :destination_bucket_path
+  attr_reader :inventory_id, :s3_client, :csv_filename,
+              :source_bucket_name, :source_bucket_path,
+              :destination_bucket_name, :destination_bucket_path
 
   CSV_ETAG_INDEX ||= 2.freeze
 
@@ -48,6 +50,7 @@ class S3Inventory
     @tmp_directory = File.join(Rails.root, "tmp", "inventory", @current_db, @timestamp)
     @archive_filename = File.join(@tmp_directory, File.basename(file.key))
     @csv_filename = @archive_filename[0...-3]
+    @logs = []
 
     FileUtils.mkdir_p(@tmp_directory)
     copy_archive_to_tmp_directory
@@ -57,7 +60,7 @@ class S3Inventory
     connection = ActiveRecord::Base.connection.raw_connection
     connection.exec('CREATE TEMP TABLE etags(val text PRIMARY KEY)')
 
-    CSV.foreach(@csv_filename, headers: true) do |row|
+    CSV.foreach(csv_filename, headers: false) do |row|
       next if row[1]["/optimized/"].present? && skip_optimized
 
       etags << row[S3Inventory::CSV_ETAG_INDEX]
@@ -67,6 +70,11 @@ class S3Inventory
         connection.exec("INSERT INTO etags VALUES #{etags_clause}")
         etags = []
       end
+    end
+
+    if etags.present?
+      etags_clause = etags.map { |i| "('#{PG::Connection.escape_string(i.to_s)}')" }.join(",")
+      connection.exec("INSERT INTO etags VALUES #{etags_clause}")
     end
 
     list_missing(Upload)
@@ -178,6 +186,24 @@ class S3Inventory
 
   def inventory_data_path
     "#{source_bucket_name}/#{inventory_id}/data"
+  end
+
+  def log(message, ex = nil)
+    timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    puts(message)
+    publish_log(message, timestamp)
+    save_log(message, timestamp)
+    Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
+  end
+
+  def publish_log(message, timestamp)
+    return unless @publish_to_message_bus
+    data = { timestamp: timestamp, operation: "restore", message: message }
+    MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
+  end
+
+  def save_log(message, timestamp)
+    @logs << "[#{timestamp}] #{message}"
   end
 
 end
