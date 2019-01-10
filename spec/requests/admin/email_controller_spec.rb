@@ -69,8 +69,8 @@ describe Admin::EmailController do
       )
 
       [
-        "17-ff04",
-        "2d447423-c625-4fb9-8717-ff04ac60eee8"
+        "17ff04",
+        "2d447423c6254fb98717ff04ac60eee8"
       ].each do |reply_key|
         get "/admin/email/sent.json", params: {
           reply_key: reply_key

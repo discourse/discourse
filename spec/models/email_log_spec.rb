@@ -103,7 +103,8 @@ describe EmailLog do
         .pluck("bounce_key::text")
         .first
 
-      expect(raw_key).to eq(hex)
+      expect(raw_key).to_not eq(hex)
+      expect(raw_key.delete('-')).to eq(hex)
       expect(EmailLog.find(email_log.id).bounce_key).to eq(hex)
     end
   end
