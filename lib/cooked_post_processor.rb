@@ -655,7 +655,7 @@ class CookedPostProcessor
     )
 
     if title = inline_onebox&.dig(:title)
-      element.children = title
+      element.children = CGI.escapeHTML(title)
       element.add_class(INLINE_ONEBOX_CSS_CLASS)
     end
 
