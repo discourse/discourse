@@ -57,8 +57,8 @@ class Admin::EmailController < Admin::AdminController
           *tuples
         )
         .pluck(:post_id, :user_id, "reply_key::text")
-        .each do |post_id, user_id, reply_key|
-          reply_keys[[post_id, user_id]] = reply_key
+        .each do |post_id, user_id, key|
+          reply_keys[[post_id, user_id]] = key
         end
     end
 
