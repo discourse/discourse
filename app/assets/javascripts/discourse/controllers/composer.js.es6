@@ -754,15 +754,10 @@ export default Ember.Controller.extend({
       scopedCategoryId: null
     });
 
-    // If we show the subcategory list, scope the categories drop down to
-    // the category we opened the composer with.
+    // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
       const category = this.site.categories.findBy("id", opts.categoryId);
-      if (
-        category &&
-        (category.get("show_subcategory_list") ||
-          category.get("parentCategory.show_subcategory_list"))
-      ) {
+      if (category) {
         this.set("scopedCategoryId", opts.categoryId);
       }
     }
