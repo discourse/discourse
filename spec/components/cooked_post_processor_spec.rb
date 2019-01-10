@@ -185,7 +185,8 @@ describe CookedPostProcessor do
           ]
         end
 
-        let(:title) { 'some title' }
+        let(:title) { '<b>some title</b>' }
+        let(:escaped_title) { CGI.escapeHTML(title) }
 
         let(:post) do
           Fabricate(:post, raw: <<~RAW)
@@ -203,7 +204,7 @@ describe CookedPostProcessor do
           urls.each do |url|
             stub_request(:get, url).to_return(
               status: 200,
-              body: "<html><head><title>#{title}</title></head></html>"
+              body: "<html><head><title>#{escaped_title}</title></head></html>"
             )
           end
         end
