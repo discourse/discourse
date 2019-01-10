@@ -39,7 +39,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  COMPILER_VERSION = 5
+  COMPILER_VERSION = 6
 
   belongs_to :theme
 
