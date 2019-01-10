@@ -1,8 +1,8 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
   <div class="show-mores">
-    <div class='alert alert-info clickable' {{action "showInserted"}}>
-      <a tabindex="0" href="" {{action "showInserted"}}>
+    <div class='alert alert-info clickable' {{action showInserted}}>
+      <a tabindex="0" href="" {{action showInserted}}>
         {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
       </a>
     </div>

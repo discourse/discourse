@@ -89,13 +89,13 @@ export default Ember.Component.extend({
 
   actions: {
     recheckPermission() {
-      this.propertyDidChange("notificationsPermission");
+      this.notifyPropertyChange("notificationsPermission");
     },
 
     turnoff() {
       if (this.get("isEnabledDesktop")) {
         this.set("notificationsDisabled", "disabled");
-        this.propertyDidChange("notificationsPermission");
+        this.notifyPropertyChange("notificationsPermission");
       }
       if (this.get("isEnabledPush")) {
         unsubscribePushNotification(this.currentUser, () => {
@@ -113,7 +113,7 @@ export default Ember.Component.extend({
         this.set("notificationsDisabled", "");
         Notification.requestPermission(() => {
           confirmNotification();
-          this.propertyDidChange("notificationsPermission");
+          this.notifyPropertyChange("notificationsPermission");
         });
       }
     }

@@ -17,6 +17,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="upload" disabled=disabled class='btn btn-primary' icon='upload' label='admin.customize.theme.upload'}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button action=(action "upload") disabled=disabled class='btn btn-primary' icon='upload' label='admin.customize.theme.upload'}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

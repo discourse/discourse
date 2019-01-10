@@ -129,7 +129,7 @@ export default Ember.Component.extend({
     };
 
     onClick("button.bulk-select", function() {
-      this.sendAction("toggleBulkSelect");
+      this.toggleBulkSelect();
       this.rerender();
     });
 
@@ -142,7 +142,7 @@ export default Ember.Component.extend({
     });
 
     onClick("th.sortable", function(e2) {
-      this.sendAction("changeSort", e2.data("sort-order"));
+      this.changeSort(e2.data("sort-order"));
       this.rerender();
     });
   }

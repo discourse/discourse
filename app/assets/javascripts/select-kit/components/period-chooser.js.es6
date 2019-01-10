@@ -26,7 +26,9 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect() {
-      this.sendAction("action", this.get("computedValue"));
+      if (this.action) {
+        this.action(this.get("computedValue"));
+      }
     }
   }
 });

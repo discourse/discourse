@@ -19,11 +19,15 @@ export default Ember.Object.extend(Ember.Array, {
     );
   },
 
+  nextObject(index) {
+    return this.objectAt(index);
+  },
+
   _changeArray(cb, offset, removed, inserted) {
     this.arrayContentWillChange(offset, removed, inserted);
     cb();
     this.arrayContentDidChange(offset, removed, inserted);
-    this.propertyDidChange("length");
+    this.notifyPropertyChange("length");
   },
 
   clear(cb) {

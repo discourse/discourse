@@ -34,8 +34,8 @@
   {{/admin-form-row}}
 
   {{#admin-form-row}}
-    {{d-button action="save" class="btn-primary" icon="check" label="admin.user_fields.save"}}
-    {{d-button action="cancel" class="btn-danger" icon="times" label="admin.user_fields.cancel"}}
+    {{d-button action=(action "save") class="btn-primary" icon="check" label="admin.user_fields.save"}}
+    {{d-button action=(action "cancel") class="btn-danger" icon="times" label="admin.user_fields.cancel"}}
   {{/admin-form-row}}
 {{else}}
   <div class="row">
@@ -46,10 +46,11 @@
     </div>
     <div class='form-display'>{{fieldName}}</div>
     <div class='form-element controls'>
-      {{d-button action="edit" class="btn-default" icon="pencil" label="admin.user_fields.edit"}}
-      {{d-button action="destroy" class="btn-danger" icon="trash-o" label="admin.user_fields.delete"}}
-      {{d-button action="moveUp" class="btn-default" icon="arrow-up" disabled=cantMoveUp}}
-      {{d-button action="moveDown" class="btn-default" icon="arrow-down" disabled=cantMoveDown}}
+      {{d-button action=(action "edit") class="btn-default" icon="pencil" label="admin.user_fields.edit"}}
+
+      {{d-button action=destroyAction actionParam=userField class="btn-danger" icon="trash-o" label="admin.user_fields.delete"}}
+      {{d-button action=moveUpAction actionParam=userField class="btn-default" icon="arrow-up" disabled=cantMoveUp}}
+      {{d-button action=moveDownAction actionParam=userField class="btn-default" icon="arrow-down" disabled=cantMoveDown}}
     </div>
   </div>
   <div class="row">{{flags}}</div>

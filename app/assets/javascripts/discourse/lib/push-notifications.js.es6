@@ -91,7 +91,10 @@ export function register(user, mobileView, router, appEvents) {
         }
         setupActivityListeners(appEvents);
       })
-      .catch(e => Ember.Logger.error(e));
+      .catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
   });
 
   navigator.serviceWorker.addEventListener("message", event => {
@@ -115,7 +118,10 @@ export function subscribe(callback, applicationServerKey, mobileView) {
         sendSubscriptionToServer(subscription, true);
         if (callback) callback();
       })
-      .catch(e => Ember.Logger.error(e));
+      .catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
   });
 }
 
@@ -138,7 +144,10 @@ export function unsubscribe(user, callback, mobileView) {
           });
         }
       })
-      .catch(e => Ember.Logger.error(e));
+      .catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
 
     if (callback) callback();
   });

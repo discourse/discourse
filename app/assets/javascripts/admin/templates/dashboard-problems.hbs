@@ -19,7 +19,7 @@
 
         <p class="actions">
           <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
-          {{d-button action="refreshProblems" class="btn-default btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
+          {{d-button action=(action "refreshProblems") class="btn-default btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
         </p>
       {{/conditional-loading-section}}
     </div>

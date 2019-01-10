@@ -10,7 +10,7 @@
       </thead>
       <tbody>
       {{#each embedding.embeddable_hosts as |host|}}
-        {{embeddable-host host=host deleteHost="deleteHost"}}
+        {{embeddable-host host=host deleteHost=(action "deleteHost")}}
       {{/each}}
       </tbody>
     </table>
@@ -18,7 +18,7 @@
     <p>{{i18n "admin.embedding.get_started"}}</p>
   {{/if}}
 
-  {{d-button label="admin.embedding.add_host" action="addHost" icon="plus" class="btn-primary add-host"}}
+  {{d-button label="admin.embedding.add_host" action=(action "addHost") icon="plus" class="btn-primary add-host"}}
 </div>
 
 {{#if showSecondary}}
@@ -69,7 +69,7 @@
 
   <div class='embedding-secondary'>
     {{d-button label="admin.embedding.save"
-               action="saveChanges"
+               action=(action "saveChanges")
                class="btn-primary embed-save"
                disabled=embedding.isSaving}}
 

@@ -479,10 +479,7 @@ module BackupRestore
 
     def clear_theme_cache
       log "Clear theme cache"
-      ThemeField.all.each do |field|
-        field.compiler_version = 0
-        field.ensure_baked!
-      end
+      ThemeField.force_recompilation!
       Theme.expire_site_cache!
     end
 

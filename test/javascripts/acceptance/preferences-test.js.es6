@@ -57,12 +57,11 @@ QUnit.test("update some fields", async assert => {
   );
   assert.ok(exists(".user-preferences"), "it shows the preferences");
 
-  const savePreferences = () => {
-    click(".save-user");
+  const savePreferences = async () => {
     assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
-    andThen(() => {
-      assert.ok(exists(".saved-user"), "it displays the saved message");
-    });
+    await click(".save-user");
+    assert.ok(exists(".saved-user"), "it displays the saved message");
+    find(".saved-user").remove();
   };
 
   fillIn(".pref-name input[type=text]", "Jon Snow");

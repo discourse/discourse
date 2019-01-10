@@ -1,14 +1,14 @@
 {{#composer-body composer=model
                  showPreview=showPreview
-                 openIfDraft="openIfDraft"
-                 typed="typed"
-                 cancelled="cancelled"
-                 save="save"}}
+                 openIfDraft=(action "openIfDraft")
+                 typed=(action "typed")
+                 cancelled=(action "cancelled")
+                 save=(action "save")}}
 
   {{#if visible}}
       {{composer-messages composer=model
                           messageCount=messageCount
-                          addLinkLookup="addLinkLookup"}}
+                          addLinkLookup=(action "addLinkLookup")}}
       {{#if model.viewOpenOrFullscreen}}
         <div class="reply-area {{if canEditTags 'with-tags'}}">
           <div class='composer-fields'>
@@ -16,7 +16,12 @@
             <div class='reply-to'>
               {{#unless model.viewFullscreen}}
                 <div class="reply-details">
-                  {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
+                  {{composer-action-title
+                    model=model
+                    openComposer=(action "openComposer")
+                    closeComposer=(action "closeComposer")
+                    canWhisper=canWhisper
+                    tabindex=8}}
                   {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                   {{#unless site.mobileView}}
@@ -91,8 +96,9 @@
                             composer=model
                             lastValidatedAt=lastValidatedAt
                             canWhisper=canWhisper
-                            storeToolbarState="storeToolbarState"
+                            storeToolbarState=(action "storeToolbarState")
                             onPopupMenuAction=(action "onPopupMenuAction")
+                            showUploadModal=(route-action "showUploadSelector")
                             popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
@@ -102,11 +108,10 @@
                             uploadProgress=uploadProgress
                             groupsMentioned="groupsMentioned"
                             cannotSeeMention="cannotSeeMention"
-                            importQuote="importQuote"
-                            togglePreview="togglePreview"
+                            importQuote=(action "importQuote")
+                            togglePreview=(action "togglePreview")
                             showToolbar=showToolbar
-                            showUploadSelector="showUploadSelector"
-                            afterRefresh="afterRefresh"}}
+                            afterRefresh=(action "afterRefresh")}}
 
           <div class='submit-panel'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
@@ -169,7 +174,7 @@
                 {{/if}}
 
                 {{#if showPreview}}
-                  {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
+                  {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
                 {{/if}}
               {{else}}
                 <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>

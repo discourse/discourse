@@ -78,14 +78,14 @@
           {{d-button
             title="admin.flags.disagree_flag_unhide_post_title"
             class="btn-default disagree-flag"
-            action="disagree"
+            action=(action "disagree")
             icon="thumbs-o-down"
             label="admin.flags.disagree_flag_unhide_post"}}
         {{else}}
           {{d-button
             title="admin.flags.disagree_flag_title"
             class="btn-default disagree-flag"
-            action="disagree"
+            action=(action "disagree")
             icon="thumbs-o-down"
             label="admin.flags.disagree_flag"}}
         {{/if}}
@@ -93,7 +93,7 @@
         {{d-button
           class="btn-default defer-flag"
           title="admin.flags.ignore_flag_title"
-          action="defer"
+          action=(action "defer")
           icon="external-link"
           label="admin.flags.ignore_flag"}}
 

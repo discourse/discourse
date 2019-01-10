@@ -1,6 +1,7 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   default as computed,
+  observes,
   on
 } from "ember-addons/ember-computed-decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
@@ -24,6 +25,15 @@ export default DropdownSelectBoxComponent.extend({
     return iconForSelectedDetails;
   },
 
+  @on("init")
+  @observes("i18nPostfix")
+  _setNotificationsButtonComponentOptions() {
+    this.get("rowComponentOptions").setProperties({
+      i18nPrefix: this.get("i18nPrefix"),
+      i18nPostfix: this.get("i18nPostfix")
+    });
+  },
+
   iconForSelectedDetails: Ember.computed.alias("selectedDetails.icon"),
 
   computeHeaderContent() {
@@ -35,14 +45,6 @@ export default DropdownSelectBoxComponent.extend({
     );
     content.hasSelection = this.get("hasSelection");
     return content;
-  },
-
-  @on("didReceiveAttrs")
-  _setNotificationsButtonComponentOptions() {
-    this.get("rowComponentOptions").setProperties({
-      i18nPrefix: this.get("i18nPrefix"),
-      i18nPostfix: this.get("i18nPostfix")
-    });
   },
 
   @computed("computedValue")

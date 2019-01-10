@@ -166,7 +166,7 @@ export default Ember.Component.extend({
       if (similarTopics.get("length") > 0) {
         message.set("similarTopics", similarTopics);
         this.send("popup", message);
-      } else if (message) {
+      } else if (message && !(this.isDestroyed || this.isDestroying)) {
         this.send("hideMessage", message);
       }
     });
@@ -200,10 +200,7 @@ export default Ember.Component.extend({
       // Checking composer messages on replies can give us a list of links to check for
       // duplicates
       if (messages.extras && messages.extras.duplicate_lookup) {
-        this.sendAction(
-          "addLinkLookup",
-          new LinkLookup(messages.extras.duplicate_lookup)
-        );
+        this.addLinkLookup(new LinkLookup(messages.extras.duplicate_lookup));
       }
 
       this.set("checkedMessages", true);

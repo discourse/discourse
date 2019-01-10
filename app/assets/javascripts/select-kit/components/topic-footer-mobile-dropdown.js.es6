@@ -21,35 +21,43 @@ export default ComboBoxComponent.extend({
       content.push({
         id: "invite",
         icon: "users",
-        name: I18n.t("topic.invite_reply.title")
+        name: I18n.t("topic.invite_reply.title"),
+        __sk_row_type: "noopRow"
       });
     }
 
-    if (topic.get("bookmarked")) {
+    if (
+      (topic.get("bookmarked") && !topic.get("bookmarking")) ||
+      (!topic.get("bookmarked") && topic.get("bookmarking"))
+    ) {
       content.push({
         id: "bookmark",
         icon: "bookmark",
-        name: I18n.t("bookmarked.clear_bookmarks")
+        name: I18n.t("bookmarked.clear_bookmarks"),
+        __sk_row_type: "noopRow"
       });
     } else {
       content.push({
         id: "bookmark",
         icon: "bookmark",
-        name: I18n.t("bookmarked.title")
+        name: I18n.t("bookmarked.title"),
+        __sk_row_type: "noopRow"
       });
     }
 
     content.push({
       id: "share",
       icon: "link",
-      name: I18n.t("topic.share.title")
+      name: I18n.t("topic.share.title"),
+      __sk_row_type: "noopRow"
     });
 
     if (details.get("can_flag_topic")) {
       content.push({
         id: "flag",
         icon: "flag",
-        name: I18n.t("topic.flag_topic.title")
+        name: I18n.t("topic.flag_topic.title"),
+        __sk_row_type: "noopRow"
       });
     }
 
@@ -58,35 +66,41 @@ export default ComboBoxComponent.extend({
 
   autoHighlight() {},
 
-  mutateValue(value) {
-    const topic = this.get("topic");
+  actions: {
+    onSelect(value) {
+      const topic = this.get("topic");
 
-    if (!topic.get("id")) {
-      return;
-    }
+      if (!topic.get("id")) {
+        return;
+      }
 
-    const refresh = () => this.deselect(this.get("selection"));
+      const refresh = () => {
+        this._compute();
+        this.deselect();
+      };
 
-    switch (value) {
-      case "invite":
-        this.attrs.showInvite();
-        refresh();
-        break;
-      case "bookmark":
-        topic.toggleBookmark().then(() => refresh());
-        break;
-      case "share":
-        this.appEvents.trigger(
-          "share:url",
-          topic.get("shareUrl"),
-          $("#topic-footer-buttons")
-        );
-        refresh();
-        break;
-      case "flag":
-        this.attrs.showFlagTopic();
-        refresh();
-        break;
+      switch (value) {
+        case "flag":
+          this.showFlagTopic();
+          refresh();
+          break;
+        case "bookmark":
+          topic.toggleBookmark().then(refresh());
+          break;
+        case "share":
+          this.appEvents.trigger(
+            "share:url",
+            topic.get("shareUrl"),
+            $("#topic-footer-buttons")
+          );
+          refresh();
+          break;
+        case "invite":
+          this.showInvite();
+          refresh();
+          break;
+        default:
+      }
     }
   }
 });

@@ -30,7 +30,7 @@ const Theme = RestModel.extend({
     return hash;
   },
 
-  @computed("theme_fields", "theme_fields.@each")
+  @computed("theme_fields", "theme_fields.[]")
   uploads(fields) {
     if (!fields) {
       return [];
@@ -47,7 +47,7 @@ const Theme = RestModel.extend({
     );
   },
 
-  @computed("theme_fields.@each")
+  @computed("theme_fields.[]")
   editedFields(fields) {
     return fields.filter(
       field => !Em.isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
@@ -130,7 +130,7 @@ const Theme = RestModel.extend({
     }
   },
 
-  @computed("childThemes.@each")
+  @computed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
       return childThemes.map(theme => Ember.get(theme, "id"));

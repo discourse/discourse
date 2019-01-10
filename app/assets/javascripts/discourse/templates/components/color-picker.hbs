@@ -1,5 +1,5 @@
 {{#each colors as |c|}}
-  {{#color-picker-choice color=c usedColors=usedColors selectColor="selectColor"}}
+  {{#color-picker-choice color=c usedColors=usedColors selectColor=(action "selectColor")}}
     {{d-icon 'check'}}
   {{/color-picker-choice}}
 {{/each}}

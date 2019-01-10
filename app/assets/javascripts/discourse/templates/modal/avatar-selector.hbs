@@ -16,7 +16,7 @@
       {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
       <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} {{{i18n 'user.change_avatar.gravatar'}}} {{user.email}}</label>
 
-      {{d-button action="refreshGravatar"
+      {{d-button action=(action "refreshGravatar")
                  title="user.change_avatar.refresh_gravatar_title"
                  disabled=gravatarRefreshDisabled
                  icon="refresh"
@@ -41,7 +41,7 @@
                           uploadedAvatarTemplate=user.custom_avatar_template
                           uploadedAvatarId=user.custom_avatar_upload_id
                           uploading=uploading
-                          done="uploadComplete"}}
+                          done=(action "uploadComplete")}}
       </div>
     {{/if}}
   {{/if}}
@@ -49,7 +49,7 @@
 
 {{#unless siteSettings.selectable_avatars_enabled}}
   <div class="modal-footer">
-    {{d-button action="saveAvatarSelection" class="btn-primary" disabled=uploading label="save"}}
-    {{d-modal-cancel close=(action "closeModal")}}
+    {{d-button action=(action "saveAvatarSelection") class="btn-primary" disabled=uploading label="save"}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
   </div>
 {{/unless}}
