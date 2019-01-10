@@ -14,6 +14,7 @@ module SvgSprite
     "angle-up",
     "archive",
     "arrows-alt-h",
+    "arrows-alt-v",
     "arrow-down",
     "arrow-up",
     "arrow-left",
