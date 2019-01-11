@@ -32,20 +32,22 @@ export default Ember.Component.extend({
       return;
     }
 
-    searchForTerm(title, { typeFilter: "topic", searchForId: true }).then(
-      function(results) {
-        if (results && results.posts && results.posts.length > 0) {
-          self.set(
-            "topics",
-            results.posts
-              .mapBy("topic")
-              .filter(t => t.get("id") !== currentTopicId)
-          );
-        } else {
-          self.setProperties({ topics: null, loading: false });
-        }
+    searchForTerm(title, {
+      typeFilter: "topic",
+      searchForId: true,
+      restrictToArchetype: "regular"
+    }).then(function(results) {
+      if (results && results.posts && results.posts.length > 0) {
+        self.set(
+          "topics",
+          results.posts
+            .mapBy("topic")
+            .filter(t => t.get("id") !== currentTopicId)
+        );
+      } else {
+        self.setProperties({ topics: null, loading: false });
       }
-    );
+    });
   }, 300),
 
   actions: {
