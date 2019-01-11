@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     const self = this,
       currentTopicId = this.get("currentTopicId");
 
-    if (Em.isEmpty(title)) {
+    if (Ember.isEmpty(title)) {
       self.setProperties({ topics: null, loading: false });
       return;
     }
@@ -50,7 +50,7 @@ export default Ember.Component.extend({
 
   actions: {
     chooseTopic(topic) {
-      const topicId = Em.get(topic, "id");
+      const topicId = Ember.get(topic, "id");
       this.set("selectedTopicId", topicId);
       Ember.run.next(() =>
         $("#choose-topic-" + topicId).prop("checked", "true")

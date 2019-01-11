@@ -100,7 +100,7 @@ export default Ember.Mixin.create({
   }.on("willDestroyElement"),
 
   _save() {
-    Em.warn("You should define a `_save` method", {
+    Ember.warn("You should define a `_save` method", {
       id: "admin.mixins.setting-component"
     });
     return Ember.RSVP.resolve();

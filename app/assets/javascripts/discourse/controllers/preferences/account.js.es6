@@ -28,8 +28,8 @@ export default Ember.Controller.extend(
 
     showAllAuthTokens: false,
 
-    cannotDeleteAccount: Em.computed.not("currentUser.can_delete_account"),
-    deleteDisabled: Em.computed.or(
+    cannotDeleteAccount: Ember.computed.not("currentUser.can_delete_account"),
+    deleteDisabled: Ember.computed.or(
       "model.isSaving",
       "deleting",
       "cannotDeleteAccount"

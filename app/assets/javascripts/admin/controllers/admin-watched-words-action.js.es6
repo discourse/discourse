@@ -43,7 +43,7 @@ export default Ember.Controller.extend({
       if (a) {
         a.words.unshiftObject(arg);
         a.incrementProperty("count");
-        Em.run.schedule("afterRender", () => {
+        Ember.run.schedule("afterRender", () => {
           // remove from other actions lists
           let match = null;
           this.get("adminWatchedWords.model").forEach(action => {

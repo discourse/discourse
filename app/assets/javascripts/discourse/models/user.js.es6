@@ -26,9 +26,9 @@ export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
 const isForever = dt => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
-  hasPMs: Em.computed.gt("private_messages_stats.all", 0),
-  hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
-  hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
+  hasPMs: Ember.computed.gt("private_messages_stats.all", 0),
+  hasStartedPMs: Ember.computed.gt("private_messages_stats.mine", 0),
+  hasUnreadPMs: Ember.computed.gt("private_messages_stats.unread", 0),
 
   redirected_to_top: {
     reason: null
@@ -54,7 +54,7 @@ const User = RestModel.extend({
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Em.computed.or("admin", "moderator"),
+  staff: Ember.computed.or("admin", "moderator"),
 
   destroySession() {
     return ajax(`/session/${this.get("username")}`, { type: "DELETE" });
@@ -80,7 +80,7 @@ const User = RestModel.extend({
   @computed("profile_background")
   profileBackground(bgUrl) {
     if (
-      Em.isEmpty(bgUrl) ||
+      Ember.isEmpty(bgUrl) ||
       !Discourse.SiteSettings.allow_profile_backgrounds
     ) {
       return "".htmlSafe();
@@ -103,7 +103,7 @@ const User = RestModel.extend({
     const keys = this.get("user_api_keys");
     if (keys) {
       return keys.map(raw => {
-        let obj = Em.Object.create(raw);
+        let obj = Ember.Object.create(raw);
 
         obj.revoke = () => {
           this.revokeApiKey(obj);
@@ -190,10 +190,10 @@ const User = RestModel.extend({
     );
   },
 
-  isBasic: Em.computed.equal("trust_level", 0),
-  isLeader: Em.computed.equal("trust_level", 3),
-  isElder: Em.computed.equal("trust_level", 4),
-  canManageTopic: Em.computed.or("staff", "isElder"),
+  isBasic: Ember.computed.equal("trust_level", 0),
+  isLeader: Ember.computed.equal("trust_level", 3),
+  isElder: Ember.computed.equal("trust_level", 4),
+  canManageTopic: Ember.computed.or("staff", "isElder"),
 
   @computed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
@@ -337,7 +337,7 @@ const User = RestModel.extend({
     })
       .then(result => {
         this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = Em.getProperties(
+        const userProps = Ember.getProperties(
           this.get("user_option"),
           "enable_quoting",
           "external_links_in_new_tab",
@@ -467,7 +467,7 @@ const User = RestModel.extend({
     return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
       return ajax(userPath(`${user.get("username")}.json`), { data: options });
     }).then(json => {
-      if (!Em.isEmpty(json.user.stats)) {
+      if (!Ember.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
           json.user.stats.map(s => {
             if (s.count) s.count = parseInt(s.count, 10);
@@ -476,7 +476,7 @@ const User = RestModel.extend({
         );
       }
 
-      if (!Em.isEmpty(json.user.groups)) {
+      if (!Ember.isEmpty(json.user.groups)) {
         const groups = [];
 
         for (let i = 0; i < json.user.groups.length; i++) {
@@ -492,7 +492,7 @@ const User = RestModel.extend({
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
       }
 
-      if (!Em.isEmpty(json.user.featured_user_badge_ids)) {
+      if (!Ember.isEmpty(json.user.featured_user_badge_ids)) {
         const userBadgesMap = {};
         UserBadge.createFromJson(json).forEach(userBadge => {
           userBadgesMap[userBadge.get("id")] = userBadge;
@@ -750,7 +750,7 @@ User.reopenClass(Singleton, {
       responses.set("count", responses.get("count") + stat.get("count"));
     });
 
-    const result = Em.A();
+    const result = Ember.A();
     result.pushObjects(stats.rejectBy("isResponse"));
 
     let insertAt = 0;

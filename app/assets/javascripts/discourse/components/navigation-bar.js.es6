@@ -68,7 +68,7 @@ export default Ember.Component.extend({
       if (this.get("expanded")) {
         DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
 
-        Em.run.next(() => {
+        Ember.run.next(() => {
           if (!this.get("expanded")) {
             return;
           }

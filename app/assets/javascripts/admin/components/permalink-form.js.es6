@@ -34,7 +34,7 @@ export default Ember.Component.extend({
             self.set("permalink_type_value", "");
             self.set("formSubmitted", false);
             self.action(Permalink.create(result.permalink));
-            Em.run.schedule("afterRender", function() {
+            Ember.run.schedule("afterRender", function() {
               self.$(".permalink-url").focus();
             });
           },
@@ -60,7 +60,7 @@ export default Ember.Component.extend({
   didInsertElement: function() {
     var self = this;
     self._super();
-    Em.run.schedule("afterRender", function() {
+    Ember.run.schedule("afterRender", function() {
       self.$(".external-url").keydown(function(e) {
         if (e.keyCode === 13) {
           // enter key

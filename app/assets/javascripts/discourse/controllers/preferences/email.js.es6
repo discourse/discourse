@@ -10,8 +10,8 @@ export default Ember.Controller.extend({
   success: false,
   newEmail: null,
 
-  newEmailEmpty: Em.computed.empty("newEmail"),
-  saveDisabled: Em.computed.or(
+  newEmailEmpty: Ember.computed.empty("newEmail"),
+  saveDisabled: Ember.computed.or(
     "saving",
     "newEmailEmpty",
     "taken",

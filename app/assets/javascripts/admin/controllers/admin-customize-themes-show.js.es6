@@ -10,7 +10,7 @@ const THEME_UPLOAD_VAR = 2;
 export default Ember.Controller.extend({
   downloadUrl: url("model.id", "/admin/themes/%@"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Em.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
 
   @computed("model", "allThemes", "model.component")

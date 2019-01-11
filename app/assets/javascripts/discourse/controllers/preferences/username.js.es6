@@ -15,8 +15,8 @@ export default Ember.Controller.extend({
 
   maxLength: setting("max_username_length"),
   minLength: setting("min_username_length"),
-  newUsernameEmpty: Em.computed.empty("newUsername"),
-  saveDisabled: Em.computed.or(
+  newUsernameEmpty: Ember.computed.empty("newUsername"),
+  saveDisabled: Ember.computed.or(
     "saving",
     "newUsernameEmpty",
     "taken",

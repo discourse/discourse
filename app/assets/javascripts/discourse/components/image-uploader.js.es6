@@ -1,12 +1,12 @@
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Em.Component.extend(UploadMixin, {
+export default Ember.Component.extend(UploadMixin, {
   classNames: ["image-uploader"],
 
   @computed("imageUrl")
   backgroundStyle(imageUrl) {
-    if (Em.isEmpty(imageUrl)) {
+    if (Ember.isEmpty(imageUrl)) {
       return "".htmlSafe();
     }
 

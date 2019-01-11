@@ -2,9 +2,9 @@
 export default Ember.Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
-  parentCategory: Em.computed.alias("category.parentCategory"),
+  parentCategory: Ember.computed.alias("category.parentCategory"),
 
-  parentCategories: Em.computed.filter("categories", function(c) {
+  parentCategories: Ember.computed.filter("categories", function(c) {
     if (
       c.id === this.site.get("uncategorized_category_id") &&
       !this.siteSettings.allow_uncategorized_topics

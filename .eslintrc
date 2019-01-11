@@ -28,7 +28,6 @@
     "currentURL": true,
     "define": true,
     "Discourse": true,
-    "Em": true,
     "Ember": true,
     "exists": true,
     "expandSelectKit": true,

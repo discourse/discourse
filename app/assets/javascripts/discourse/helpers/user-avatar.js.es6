@@ -30,9 +30,9 @@ function renderAvatar(user, options) {
   options = options || {};
 
   if (user) {
-    const name = Em.get(user, options.namePath || "name");
-    const username = Em.get(user, options.usernamePath || "username");
-    const avatarTemplate = Em.get(
+    const name = Ember.get(user, options.namePath || "name");
+    const username = Ember.get(user, options.usernamePath || "username");
+    const avatarTemplate = Ember.get(
       user,
       options.avatarTemplatePath || "avatar_template"
     );
@@ -46,11 +46,11 @@ function renderAvatar(user, options) {
     let title = options.title;
     if (!title && !options.ignoreTitle) {
       // first try to get a title
-      title = Em.get(user, "title");
+      title = Ember.get(user, "title");
       // if there was no title provided
       if (!title) {
         // try to retrieve a description
-        const description = Em.get(user, "description");
+        const description = Ember.get(user, "description");
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
@@ -61,7 +61,7 @@ function renderAvatar(user, options) {
 
     return avatarImg({
       size: options.imageSize,
-      extraClasses: Em.get(user, "extras") || options.extraClasses,
+      extraClasses: Ember.get(user, "extras") || options.extraClasses,
       title: title || displayName,
       avatarTemplate: avatarTemplate
     });

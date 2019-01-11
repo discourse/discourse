@@ -97,7 +97,7 @@ export function translateResults(results, opts) {
     !results.categories.length
   );
 
-  return noResults ? null : Em.Object.create(results);
+  return noResults ? null : Ember.Object.create(results);
 }
 
 export function searchForTerm(term, opts) {
