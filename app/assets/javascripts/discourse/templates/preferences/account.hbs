@@ -120,7 +120,7 @@
           {{else}}
             <td colspan=2>
               {{#if authProvider.method.can_connect}}
-                {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" icon="plug" disabled=disableConnectButtons}}
+                {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" class="btn-default" icon="plug" disabled=disableConnectButtons}}
               {{else}}
                 {{i18n 'user.associated_accounts.not_connected'}}
               {{/if}}
