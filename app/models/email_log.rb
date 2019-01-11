@@ -84,8 +84,8 @@ end
 # Table name: email_logs
 #
 #  id         :integer          not null, primary key
-#  to_address :string(255)      not null
-#  email_type :string(255)      not null
+#  to_address :string           not null
+#  email_type :string           not null
 #  user_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

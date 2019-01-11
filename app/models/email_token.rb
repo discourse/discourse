@@ -94,8 +94,8 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  email      :string(255)      not null
-#  token      :string(255)      not null
+#  email      :string           not null
+#  token      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
 #  created_at :datetime         not null
