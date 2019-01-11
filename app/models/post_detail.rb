@@ -11,8 +11,8 @@ end
 #
 #  id         :integer          not null, primary key
 #  post_id    :integer
-#  key        :string
-#  value      :string
+#  key        :string(255)
+#  value      :string(255)
 #  extra      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

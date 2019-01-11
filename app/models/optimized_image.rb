@@ -429,11 +429,14 @@ end
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
-#  url       :string           not null
+#  url       :string(255)      not null
 #  filesize  :integer
+#  etag      :string
+#  version   :integer
 #
 # Indexes
 #
+#  index_optimized_images_on_etag                            (etag)
 #  index_optimized_images_on_upload_id                       (upload_id)
 #  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
 #

@@ -749,7 +749,7 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string           not null
+#  name                               :string(255)      not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
@@ -757,7 +757,7 @@ end
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string
+#  title                              :string(255)
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
