@@ -270,14 +270,6 @@
     min-height: 0;
   }
 
-  .d-editor-button-bar .btn {
-    padding: 4px 8px;
-    display: inline-block;
-    @media all and (max-width: 800px) {
-      padding: 5px;
-    }
-  }
-
   .submit-panel {
     display: flex;
     flex-shrink: 0;
