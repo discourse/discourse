@@ -164,6 +164,24 @@ describe FileStore::S3Store do
         store.remove_upload(upload)
       end
 
+      it "removes the optimized image from s3 with the right paths" do
+        optimized = Fabricate(:optimized_image, version: 1)
+        upload = optimized.upload
+        path = "optimized/1X/#{upload.sha1}_#{optimized.version}_#{optimized.width}x#{optimized.height}.png"
+
+        store.expects(:get_depth_for).with(upload.id).returns(0)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+        optimized.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}")
+        s3_object = stub
+
+        s3_bucket.expects(:object).with("tombstone/#{path}").returns(s3_object)
+        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{path}")
+        s3_bucket.expects(:object).with(path).returns(s3_object)
+        s3_object.expects(:delete)
+
+        store.remove_optimized_image(optimized)
+      end
+
       describe "when s3_upload_bucket includes folders path" do
         before do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
