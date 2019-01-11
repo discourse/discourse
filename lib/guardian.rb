@@ -54,7 +54,6 @@ class Guardian
     end
   end
 
-  attr_accessor :can_see_emails
   attr_reader :request
 
   def initialize(user = nil, request = nil)
@@ -379,10 +378,6 @@ class Guardian
         SiteSetting.enable_personal_email_messages
       )
     )
-  end
-
-  def can_see_emails?
-    @can_see_emails
   end
 
   def can_export_entity?(entity)
