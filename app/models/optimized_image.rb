@@ -429,7 +429,7 @@ end
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
-#  url       :string(255)      not null
+#  url       :string           not null
 #  filesize  :integer
 #  etag      :string
 #  version   :integer

@@ -634,7 +634,7 @@ end
 #
 #  id                                :integer          not null, primary key
 #  name                              :string(50)       not null
-#  color                             :string(6)        default("AB9364"), not null
+#  color                             :string(6)        default("0088CC"), not null
 #  topic_id                          :integer
 #  topic_count                       :integer          default(0), not null
 #  created_at                        :datetime         not null
@@ -643,7 +643,7 @@ end
 #  topics_year                       :integer          default(0)
 #  topics_month                      :integer          default(0)
 #  topics_week                       :integer          default(0)
-#  slug                              :string(255)      not null
+#  slug                              :string           not null
 #  description                       :text
 #  text_color                        :string(6)        default("FFFFFF"), not null
 #  read_restricted                   :boolean          default(FALSE), not null
@@ -656,7 +656,7 @@ end
 #  posts_year                        :integer          default(0)
 #  posts_month                       :integer          default(0)
 #  posts_week                        :integer          default(0)
-#  email_in                          :string(255)
+#  email_in                          :string
 #  email_in_allow_strangers          :boolean          default(FALSE)
 #  topics_day                        :integer          default(0)
 #  posts_day                         :integer          default(0)
@@ -683,7 +683,7 @@ end
 #
 # Indexes
 #
-#  index_categories_on_email_in            (email_in) UNIQUE
-#  index_categories_on_forum_thread_count  (topic_count)
-#  unique_index_categories_on_name         (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #

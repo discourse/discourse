@@ -42,8 +42,8 @@ end
 # Table name: screened_urls
 #
 #  id            :integer          not null, primary key
-#  url           :string(255)      not null
-#  domain        :string(255)      not null
+#  url           :string           not null
+#  domain        :string           not null
 #  action_type   :integer          not null
 #  match_count   :integer          default(0), not null
 #  last_match_at :datetime
