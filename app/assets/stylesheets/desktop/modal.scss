@@ -39,7 +39,8 @@
   }
 }
 
-.close {
+.close,
+.close:visited {
   font-size: $font-up-3;
   text-decoration: none;
   color: dark-light-choose($primary-high, $secondary-low);
