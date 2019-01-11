@@ -22,6 +22,8 @@ describe BasicUserSerializer do
       expect(json[:name]).to be_blank
     end
 
+    it "returns the avatar_template" do
+      expect(json[:avatar_template]).to be_present
+    end
   end
-
 end
