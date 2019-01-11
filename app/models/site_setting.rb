@@ -175,7 +175,18 @@ class SiteSetting < ActiveRecord::Base
     site_logo_small_url
     site_mobile_logo_url
     site_favicon_url
+    site_home_logo_url
   }.each { |client_setting| client_settings << client_setting }
+
+  def self.site_home_logo_url
+    upload = SiteSetting.logo
+
+    if SiteSetting.defaults.get(:title) != SiteSetting.title && !upload
+      ''
+    else
+      full_cdn_url(upload ? upload.url : '/images/d-logo-sketch.png')
+    end
+  end
 
   def self.site_logo_url
     upload = self.logo
