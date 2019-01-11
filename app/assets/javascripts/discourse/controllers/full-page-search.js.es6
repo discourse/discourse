@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
 
   @computed("q")
   hasAutofocus(q) {
-    return Em.isEmpty(q);
+    return Ember.isEmpty(q);
   },
 
   @computed("q")

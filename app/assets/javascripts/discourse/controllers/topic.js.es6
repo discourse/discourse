@@ -889,7 +889,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       composerController
         .open(options)
         .then(() => {
-          return Em.isEmpty(quotedText) ? "" : quotedText;
+          return Ember.isEmpty(quotedText) ? "" : quotedText;
         })
         .then(q => {
           const postUrl = `${location.protocol}//${location.host}${post.get(
@@ -1243,7 +1243,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
             if (callback) {
               callback(this, data);
             } else {
-              Em.Logger.warn("unknown topic bus message type", data);
+              Ember.Logger.warn("unknown topic bus message type", data);
             }
           }
         }

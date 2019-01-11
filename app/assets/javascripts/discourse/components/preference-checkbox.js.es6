@@ -1,4 +1,4 @@
-export default Em.Component.extend({
+export default Ember.Component.extend({
   classNames: ["controls"],
 
   label: function() {

@@ -114,7 +114,7 @@ export default TextField.extend({
   @observes("usernames")
   _clearInput: function() {
     if (arguments.length > 1) {
-      if (Em.isEmpty(this.get("usernames"))) {
+      if (Ember.isEmpty(this.get("usernames"))) {
         this.$()
           .parent()
           .find("a")

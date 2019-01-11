@@ -19,7 +19,7 @@ export default {
   **/
   getAndRemove(key, finder) {
     if (this.data[key]) {
-      var promise = Em.RSVP.resolve(this.data[key]);
+      var promise = Ember.RSVP.resolve(this.data[key]);
       delete this.data[key];
       return promise;
     }

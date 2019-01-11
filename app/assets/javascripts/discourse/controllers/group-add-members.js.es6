@@ -17,7 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       const model = this.get("model");
       const usernames = model.get("usernames");
-      if (Em.isEmpty(usernames)) {
+      if (Ember.isEmpty(usernames)) {
         return;
       }
       let promise;

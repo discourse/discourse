@@ -77,7 +77,7 @@ export default Ember.Component.extend(
 
     willDestroyElement() {
       if (this._delayedRerender) {
-        Em.run.cancel(this._delayedRerender);
+        Ember.run.cancel(this._delayedRerender);
       }
     },
 

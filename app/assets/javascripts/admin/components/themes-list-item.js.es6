@@ -9,9 +9,9 @@ export default Ember.Component.extend({
   childrenExpanded: false,
   classNames: ["themes-list-item"],
   classNameBindings: ["theme.selected:selected"],
-  hasComponents: Em.computed.gt("children.length", 0),
-  displayComponents: Em.computed.and("hasComponents", "theme.isActive"),
-  displayHasMore: Em.computed.gt("theme.childThemes.length", MAX_COMPONENTS),
+  hasComponents: Ember.computed.gt("children.length", 0),
+  displayComponents: Ember.computed.and("hasComponents", "theme.isActive"),
+  displayHasMore: Ember.computed.gt("theme.childThemes.length", MAX_COMPONENTS),
 
   click(e) {
     if (!$(e.target).hasClass("others-count")) {

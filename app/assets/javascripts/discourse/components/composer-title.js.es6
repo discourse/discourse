@@ -79,7 +79,7 @@ export default Ember.Component.extend({
     }
 
     if (Ember.testing) {
-      Em.run.next(() =>
+      Ember.run.next(() =>
         // not ideal but we don't want to run this in current
         // runloop to avoid an error in console
         this._checkForUrl()

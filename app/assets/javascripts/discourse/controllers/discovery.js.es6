@@ -7,10 +7,10 @@ export default Ember.Controller.extend({
 
   loading: false,
 
-  category: Em.computed.alias("navigationCategory.category"),
-  noSubcategories: Em.computed.alias("navigationCategory.noSubcategories"),
+  category: Ember.computed.alias("navigationCategory.category"),
+  noSubcategories: Ember.computed.alias("navigationCategory.noSubcategories"),
 
-  loadedAllItems: Em.computed.not("discoveryTopics.model.canLoadMore"),
+  loadedAllItems: Ember.computed.not("discoveryTopics.model.canLoadMore"),
 
   _showFooter: function() {
     this.set("application.showFooter", this.get("loadedAllItems"));

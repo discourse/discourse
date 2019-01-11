@@ -307,7 +307,7 @@ I18n.enableVerboseLocalization = function() {
       if (!_.isEmpty(value)) {
         message += ", parameters: " + JSON.stringify(value);
       }
-      Em.Logger.info(message);
+      Ember.Logger.info(message);
     }
     return t.apply(I18n, [scope, value]) + " (#" + current + ")";
   };

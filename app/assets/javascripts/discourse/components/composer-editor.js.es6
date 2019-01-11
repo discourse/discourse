@@ -583,7 +583,7 @@ export default Ember.Component.extend({
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          Em.run.later(
+          Ember.run.later(
             this,
             () => {
               if (
