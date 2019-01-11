@@ -236,14 +236,14 @@ end
 #  id                :integer          not null, primary key
 #  remote_url        :string           not null
 #  remote_version    :string
-#  branch            :string
 #  local_version     :string
 #  about_url         :string
 #  license_url       :string
 #  commits_behind    :integer
 #  remote_updated_at :datetime
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  created_at        :datetime
+#  updated_at        :datetime
 #  private_key       :text
 #  last_error_text   :text
+#  branch            :string
 #

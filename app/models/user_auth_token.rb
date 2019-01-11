@@ -237,8 +237,8 @@ end
 #  auth_token_seen :boolean          default(FALSE), not null
 #  client_ip       :inet
 #  rotated_at      :datetime         not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  created_at      :datetime
+#  updated_at      :datetime
 #  seen_at         :datetime
 #
 # Indexes
