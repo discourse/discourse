@@ -122,7 +122,6 @@ module Discourse
       google-tag-manager.js
       google-universal-analytics.js
       preload-application-data.js
-      authentication-complete.js
       print-page.js
       omniauth-complete.js
       activate-account.js
