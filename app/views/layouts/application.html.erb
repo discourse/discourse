@@ -57,7 +57,6 @@
 
     <%- if !current_user && cookies[:authentication_data] %>
       <meta id="data-authentication" data-authentication-data="<%= cookies.delete(:authentication_data) %>">
-      <%= preload_script "authentication-complete" %>
     <%- end %>
   </head>
 
