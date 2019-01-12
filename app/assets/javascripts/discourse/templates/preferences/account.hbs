@@ -45,7 +45,7 @@
       </div>
     {{else}}
       <div class="controls">
-        {{d-button action=(action "checkEmail") class="btn-default" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+        {{d-button action=(route-action "checkEmail") class="btn-default" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
   </div>
@@ -132,7 +132,7 @@
       </table>
     {{else}}
       <div class="controls">
-        {{d-button action=(action "checkEmail") actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+        {{d-button action=(route-action "checkEmail") actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
       </div>
     {{/if}}
   </div>
