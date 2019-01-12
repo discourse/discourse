@@ -126,10 +126,6 @@ export default Ember.Controller.extend(
     },
 
     actions: {
-      checkEmail() {
-        this.send("checkEmail");
-      },
-
       save() {
         this.set("saved", false);
 
