@@ -2,8 +2,8 @@
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
-      {{d-button action=(action "finishedEditingName") class="btn-primary btn-small submit-edit" icon="check"}}
-      {{d-button action=(action "cancelEditingName") class="btn-small cancel-edit" icon="times"}}
+      {{d-button action=(action "finishedEditingName") class="btn-primary submit-edit" icon="check"}}
+      {{d-button action=(action "cancelEditingName") class="btn-default cancel-edit" icon="times"}}
     {{else}}
       {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
@@ -49,8 +49,8 @@
                                        value=colorSchemeId
                                        icon="paint-brush"}}
          {{#if colorSchemeChanged}}
-            {{d-button action=(action "changeScheme") class="btn-primary btn-small submit-edit" icon="check"}}
-            {{d-button action=(action "cancelChangeScheme") class="btn-default btn-small cancel-edit" icon="times"}}
+            {{d-button action=(action "changeScheme") class="btn-primary submit-edit" icon="check"}}
+            {{d-button action=(action "cancelChangeScheme") class="btn-default cancel-edit" icon="times"}}
          {{/if}}
       </div>
       {{#link-to 'adminCustomize.colors' class="btn btn-default edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
@@ -119,7 +119,7 @@
         <li>
           <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
           <span class='col'>
-            {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-small cancel-edit" icon="times"}}
+            {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
           </span>
         </li>
         {{/each}}
@@ -147,7 +147,7 @@
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
-            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default btn-small cancel-edit col" icon="times"}}</li>
+            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}</li>
           {{/each}}
         </ul>
       {{/if}}
