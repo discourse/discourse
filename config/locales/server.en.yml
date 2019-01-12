@@ -3347,6 +3347,9 @@ en:
     welcome_message: |
       ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
+    welcome_message_invite_only: |
+      ## [Welcome to %{title}](#welcome)
+      An account is required. Please ask an existing member for an invite or log in to continue.
 
   terms_of_service:
     title: "Terms of Service"
