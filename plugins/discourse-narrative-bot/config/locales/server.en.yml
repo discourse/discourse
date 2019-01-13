@@ -163,11 +163,11 @@ en:
         instructions: |-
           Next, can you share one of these links with me? Reply with **a link on a line by itself**, and it’ll automatically expand to include a nifty summary.
 
-          To copy a link, tap and hold on mobile, or right click your mouse:
+          To copy any link, tap and hold on mobile, or right click your pointing device:
 
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
+           <https://en.wikipedia.org/wiki/Inherently_funny_word>
+           <https://en.wikipedia.org/wiki/Death_by_coconut>
+           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Cool! This will work for most <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
