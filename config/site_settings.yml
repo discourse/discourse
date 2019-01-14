@@ -1811,6 +1811,14 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ''
+  
+  default_text_size:
+    type: enum
+    default: normal
+    choices:
+      - normal
+      - larger
+      - largest
 
 api:
   retain_web_hook_events_period_days:

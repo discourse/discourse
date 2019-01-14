@@ -909,6 +909,13 @@ en:
       website: "Web Site"
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
+
+      text_size:
+        title: "Text Size"
+        normal: "Normal"
+        larger: "Larger"
+        largest: "Largest"
+
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"
