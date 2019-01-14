@@ -36,15 +36,6 @@
   display: inline;
 }
 
-/* both blocks that appear under the standard post control buttons */
-.notification-options,
-.pinned-options {
-  float: left;
-  margin-top: 0;
-  padding-top: 1px;
-  clear: both;
-}
-
 .topic-status-info {
   padding-left: 10px;
   border-top: 1px solid $primary-low;
