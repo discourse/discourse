@@ -138,14 +138,6 @@ sw:
       reset_trigger: "mtumiaji mpya"
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
       onebox:
-        instructions: |-
-          Baada ya hapo, je unaweza kunipa hivi viungo na mimi? Jibu na **kila kiungo kwenye mstari wake**, na itaongezeka kuonyesha muhtasari kuhusiana na hicho kiungo.
-
-          Kunakili kiungo, bonyeza bila kuachia kwenye simu yako ya mkononi, au bonyeza upande wa kulia wa puku ya komputa yako:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Vizuri! Hii itafaa kwa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> viungo. Kumbuka, inabidi kiwe kwenye mstari mmoja _yenyewe_, bila maneno yoyote mbele, au nyuma yake.
         not_found: |-

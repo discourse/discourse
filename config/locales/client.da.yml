@@ -2663,7 +2663,6 @@ da:
         last_emailed: "Sidst mailet"
         not_found: "Beklager, brugernavnet findes ikke i vores system."
         id_not_found: "Desværre, dette bruger id findes ikke på vores system."
-        active: "Aktiv"
         show_emails: "Vis Emails"
         nav:
           new: "Ny"

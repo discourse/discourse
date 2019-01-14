@@ -77,6 +77,15 @@ sl:
   activerecord:
     errors:
       <<: *errors
+  user_activity:
+    no_default:
+      self: "Nimate nobene aktivnosti."
+    no_bookmarks:
+      self: "Nimate zaznamkov; dodajte zaznamek na objavo, da jih lahko hitreje najdete."
+    no_replies:
+      self: "Nisi odgovoril na nobeno objavo."
+    no_drafts:
+      self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
   site_settings:
     avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."
   user_notifications:

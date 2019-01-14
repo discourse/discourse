@@ -1881,7 +1881,6 @@ gl:
         last_emailed: "Últimos envíos por correo-e"
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
-        active: "Activo"
         show_emails: "Amosar correos-e"
         nav:
           new: "Novo"

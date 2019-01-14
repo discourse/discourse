@@ -143,6 +143,7 @@ it:
       reset_trigger: "nuovo utente"
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
+        title: "Saluti!"
         message: |-
           Grazie per esserti unito a %{title}, e benvenuto!
 
@@ -152,14 +153,6 @@ it:
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
-        instructions: |-
-          Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sé stante**, e verrà automaticamente espanso per includere un bel sommario.
-
-          Per copiare un collegamento, toccalo e tienilo premuto su mobile, o fai click col tasto destro del mouse:
-
-          - https://it.wikipedia.org/wiki/Italia
-          - https://it.wikipedia.org/wiki/Pagina_principale
-          - https://it.wikipedia.org/wiki/Traduzione
         reply: |-
           Fantastico! Funziona per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
         not_found: |-

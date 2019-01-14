@@ -1036,7 +1036,6 @@ it:
     num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare. "
     num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
     notify_mods_when_user_silenced: "Se un utente è silenziato automaticamente, manda un messaggio ai moderatori."
-    flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
@@ -1064,7 +1063,6 @@ it:
     topics_per_period_in_top_page: "Numero di argomenti popolari mostrati nella vista espansa 'Mostra Altro'"
     redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti popolari."
     top_page_default_timeframe: "Lasso di tempo di default per la pagina principale."
-    show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     prioritize_username_in_ux: "Nella pagina utente mostra prima il nome utente, la sua scheda e i suoi messaggi (quando l'opzione è disabilitata viene mostrato prima il nome)"
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
     enable_badges: "Attiva il sistema a distintivi"
@@ -1464,6 +1462,10 @@ it:
     errors:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Un messaggio è stato spostato in un nuovo %{entity}: %{topic_link}"
+      other: "%{count} messaggi sono stati spostati in un nuovo %{entity}: %{topic_link}"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
@@ -1651,9 +1653,6 @@ it:
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
     deferred: "Grazie per averci informato. Stiamo provvedendo."
     deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
-  temporarily_closed_due_to_flags:
-    one: "Questo argomento resterà temporaneamente chiuso per 1 ora per via di un elevato numero di segnalazioni da parte della comunità. "
-    other: "Questo argomento resterà temporaneamente chiuso per %{count}ore per via di un elevato numero di segnalazioni da parte della comunità. "
   system_messages:
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
@@ -2017,6 +2016,7 @@ it:
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
