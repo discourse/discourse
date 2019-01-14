@@ -3234,7 +3234,6 @@ pl_PL:
         last_emailed: "Ostatnio wysłano email"
         not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
-        active: "Aktywny"
         show_emails: "Pokaż emaile"
         nav:
           new: "Nowi"

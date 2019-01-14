@@ -1030,7 +1030,6 @@ nb_NO:
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall tråder som vises i standard oppsummering av mest populære tråder."
-    show_email_on_profile: "Vis en brukers e-postadresse vedkommendes profil (kun synlig for brukeren selv og forumstaben)"
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
     enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"

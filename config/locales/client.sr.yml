@@ -1685,7 +1685,6 @@ sr:
         last_emailed: "Poslednji e-mail"
         not_found: "Žao nam je, taj korisnik ne postoji u našem sistemu."
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
-        active: "Aktivni"
         show_emails: "Pokaži Email-ove"
         nav:
           new: "Novo"

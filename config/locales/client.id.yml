@@ -966,7 +966,6 @@ id:
             ip_address: "Alamat IP"
       users:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
-        active: "Aktif"
         nav:
           new: "Baru"
           staff: 'Staf'

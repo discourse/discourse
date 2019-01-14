@@ -3256,7 +3256,6 @@ pt_BR:
         last_emailed: "Último email enviado"
         not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
         id_not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
-        active: "Ativo"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novos"

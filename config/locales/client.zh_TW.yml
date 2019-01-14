@@ -2680,7 +2680,6 @@ zh_TW:
         last_emailed: "最近寄出電子郵件"
         not_found: "抱歉，系統裡無此用戶名稱。"
         id_not_found: "抱歉，系統裡無此用戶名稱。"
-        active: "啟用的"
         show_emails: "顯示電子郵件"
         nav:
           new: "新用戶"

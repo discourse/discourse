@@ -884,6 +884,15 @@ cs:
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
+    forgot_password:
+      subject_template: "[%{email_prefix}] Obnovení hesla"
+      text_body_template: |
+        Někdo zažádal o změna Tvého hesla na [%{site_name}](%{base_url}).
+
+        Pokud jsi to Ty nebyl, můžeš v klidu ignorovat tento email.
+
+        Pro změnu hesla klikni na tento odkaz:
+        %{base_url}/u/password-reset/%{email_token}
     account_created:
       title: "Účet vytvořen"
     signup_after_approval:
@@ -923,6 +932,8 @@ cs:
       name: Populární odkaz
     admired:
       name: Obdivovaný
+    first_emoji:
+      name: První smajlík
   admin_login:
     success: "E-mail odeslán"
     submit_button: "Odeslat e-mail"

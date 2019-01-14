@@ -2521,7 +2521,6 @@ ca:
         last_emailed: "Darrer correu"
         not_found: "Disculpa, aquesta nom de persona usuària no existeix al nostre sistema."
         id_not_found: "Disculpa, aquesta identitat usuària no existeix al nostre sistema."
-        active: "Actiu"
         show_emails: "Mostra correus"
         nav:
           new: "Nou"

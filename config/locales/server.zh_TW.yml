@@ -739,7 +739,6 @@ zh_TW:
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
-    flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
     post_undo_action_window_mins: "允許使用者還原文章上近期動作（讚、標記等）的時間長度（分鐘數）。"
     must_approve_users: "新用戶在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員用戶的訪問權限！"
@@ -763,7 +762,6 @@ zh_TW:
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新用戶或長時間未使用的用戶自動重新導向至熱門頁面"
     top_page_default_timeframe: "頂部查看頁面的預設時間表"
-    show_email_on_profile: "在用戶頁面顯示用戶的電郵地址（只有用戶自己和職員可見）"
     prioritize_username_in_ux: "在用戶頁、用戶卡片和帖子上優先顯示用戶名（未選時，暱稱將先顯示）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
@@ -1249,8 +1247,6 @@ zh_TW:
     disagreed: "感謝你讓我們知道。我們正在調查。"
     deferred: "感謝你讓我們知道。我們正在調查。"
     deferred_and_deleted: "感謝通知我們。我們已經刪除了帖子。"
-  temporarily_closed_due_to_flags:
-    other: "這個話題因為大量的社群投訴暫時關閉 %{count} 小時。"
   system_messages:
     post_hidden:
       title: "文章已隱藏"

@@ -2197,7 +2197,6 @@ vi:
         last_emailed: "Email trước đây"
         not_found: "Xin lỗi, username không tồn tại trong hệ thống."
         id_not_found: "Xin lỗi, id người dùng không tồn tại trong hệ thống."
-        active: "Kích hoạt"
         show_emails: "Hiện địa chỉ Email"
         nav:
           new: "Mới"

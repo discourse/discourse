@@ -789,7 +789,6 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af likes pr dag for tl2 (member) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
-    flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP adresse som den der startede emnet, så rapporter begge at deres indlæg potentielt er spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
     must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
@@ -805,7 +804,6 @@ da:
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
-    show_email_on_profile: "Vis en brugers email på deres profil (kun synligt for brugerne selv - samt admin)"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver badge systemet"
     enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
@@ -1047,9 +1045,6 @@ da:
     disagreed: "Tak for din henvendelse. Vi kigger på det."
     deferred: "Tak for din henvendelse. Vi kigger på det."
     deferred_and_deleted: "Tak for din henvendelse. Vi har fjernet indlægget."
-  temporarily_closed_due_to_flags:
-    one: "Emnet er lukket i 1 time pga. et stort antal flagmarkeringer."
-    other: "Emnet er lukket i %{count} timer pga. et stort antal flagmarkeringer."
   system_messages:
     private_topic_title: "Emne #%{id}"
     contents_hidden: "Gå venligst til indlægget for at se indholdet."

@@ -1227,7 +1227,6 @@ fr:
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis sous silence, envoyer un message à tous les modérateurs."
-    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     enable_markdown_typographer: "Utiliser des règles typographiques pour améliorer la lisibilité du texte: remplacer les guillemets simples ' avec les guillemets bouclés ’, (c) (tm) avec les symbôles, -- avec emdash –, etc."
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
@@ -1270,7 +1269,6 @@ fr:
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
     top_page_default_timeframe: "Période par défaut pour la page la plus vue."
-    show_email_on_profile: "Afficher l'adresse du courriel de l'utilisateur sur leur page utilisateur (seulement visible pour l'utilisateur et les équipes techniques)"
     prioritize_username_in_ux: "Afficher le pseudonyme en premier sur la page d'un utilisateur, sa carte et ses messages (si désactivé, le nom est affiché en premier)"
     enable_rich_text_paste: "Permettre la conversion automatique de HTML en Markdown lors que du texte est collé dans l'éditeur. (Expérimental)"
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
@@ -2162,9 +2160,6 @@ fr:
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
-  temporarily_closed_due_to_flags:
-    one: "Ce sujet est fermé 1 heure suite à plusieurs signalements de la communauté."
-    other: "Ce sujet est fermé %{count} heures suite à plusieurs signalements de la communauté."
   system_messages:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Veuillez visiter le message pour voir son contenu."

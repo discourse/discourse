@@ -2510,7 +2510,6 @@ sv:
         last_emailed: "Senaste som mottog e-post"
         not_found: "Tyvärr, det användarnamnet existerar inte i vårt system."
         id_not_found: "Tyvärr, användar-ID existerar inte i vårt system."
-        active: "Aktiv"
         show_emails: "Visa e-post"
         nav:
           new: "Ny"

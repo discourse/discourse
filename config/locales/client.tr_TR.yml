@@ -3232,7 +3232,6 @@ tr_TR:
         last_emailed: "Son E-posta Gönderimi"
         not_found: "Üzgünüz, bu kullanıcı adı sistemimizde bulunmuyor. "
         id_not_found: "Üzgünüz, bu kullanıcı kimliği sistemimizde bulunmuyor."
-        active: "Aktif"
         show_emails: "E-postaları Göster"
         nav:
           new: "Yeni"
