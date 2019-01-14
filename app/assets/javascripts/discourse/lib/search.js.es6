@@ -107,6 +107,8 @@ export function searchForTerm(term, opts) {
   const data = { term: term, include_blurbs: "true" };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
+  if (opts.restrictToArchetype)
+    data.restrict_to_archetype = opts.restrictToArchetype;
 
   if (opts.searchContext) {
     data.search_context = {
