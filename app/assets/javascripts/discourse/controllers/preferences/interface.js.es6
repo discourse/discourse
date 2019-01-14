@@ -20,6 +20,8 @@ const USER_HOMES = {
   5: "top"
 };
 
+const TEXT_SIZES = ["normal", "larger", "largest"];
+
 export default Ember.Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")
   saveAttrNames(makeDefault) {
@@ -32,7 +34,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "automatically_unpin_topics",
       "allow_private_messages",
       "homepage_id",
-      "hide_profile_and_presence"
+      "hide_profile_and_presence",
+      "text_size"
     ];
 
     if (makeDefault) {
@@ -53,6 +56,13 @@ export default Ember.Controller.extend(PreferencesTabController, {
   @computed()
   themeId() {
     return currentThemeId();
+  },
+
+  @computed
+  textSizes() {
+    return TEXT_SIZES.map(value => {
+      return { name: I18n.t(`user.text_size.${value}`), value };
+    });
   },
 
   userSelectableThemes: function() {
@@ -114,6 +124,22 @@ export default Ember.Controller.extend(PreferencesTabController, {
           this.homeChanged();
         })
         .catch(popupAjaxError);
+    },
+
+    selectTextSize(newSize) {
+      const classList = document.documentElement.classList;
+
+      TEXT_SIZES.forEach(name => {
+        const className = `text-size-${name}`;
+        if (newSize === name) {
+          classList.add(className);
+        } else {
+          classList.remove(className);
+        }
+      });
+
+      // Force refresh when leaving this screen
+      Discourse.set("assetVersion", "forceRefresh");
     }
   }
 });

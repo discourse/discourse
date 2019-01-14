@@ -42,7 +42,10 @@
 .close {
   font-size: $font-up-3;
   text-decoration: none;
-  color: dark-light-choose($primary-high, $secondary-low);
+  color: $primary-high;
+  &:visited {
+    color: $primary-high;
+  }
   cursor: pointer;
   &:hover {
     color: $primary;

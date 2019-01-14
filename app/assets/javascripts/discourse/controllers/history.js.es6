@@ -31,10 +31,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  previousFeaturedLink: Em.computed.alias(
+  previousFeaturedLink: Ember.computed.alias(
     "model.featured_link_changes.previous"
   ),
-  currentFeaturedLink: Em.computed.alias("model.featured_link_changes.current"),
+  currentFeaturedLink: Ember.computed.alias(
+    "model.featured_link_changes.current"
+  ),
 
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
@@ -188,9 +190,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  displayingInline: Em.computed.equal("viewMode", "inline"),
-  displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
-  displayingSideBySideMarkdown: Em.computed.equal(
+  displayingInline: Ember.computed.equal("viewMode", "inline"),
+  displayingSideBySide: Ember.computed.equal("viewMode", "side_by_side"),
+  displayingSideBySideMarkdown: Ember.computed.equal(
     "viewMode",
     "side_by_side_markdown"
   ),

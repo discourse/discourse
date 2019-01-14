@@ -19,7 +19,8 @@ function hide(image) {
     src: image.src,
     srcset: image.srcset,
     width: image.width,
-    height: image.height
+    height: image.height,
+    className: image.className
   });
   image.removeAttribute("srcset");
 
@@ -47,10 +48,11 @@ function show(image) {
     copyImg.srcset = imageData.srcset || copyImg.srcset;
 
     copyImg.style.position = "absolute";
-    copyImg.style.top = 0;
-    copyImg.style.left = 0;
+    copyImg.style.top = `${image.offsetTop}px`;
+    copyImg.style.left = `${image.offsetLeft}px`;
     copyImg.style.width = imageData.width;
     copyImg.style.height = imageData.height;
+    copyImg.className = imageData.className;
 
     image.parentNode.appendChild(copyImg);
   } else {

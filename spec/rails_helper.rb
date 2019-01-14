@@ -135,7 +135,9 @@ RSpec.configure do |config|
     unfreeze_time
     ActionMailer::Base.deliveries.clear
 
-    raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
+    if ActiveRecord::Base.connection_pool.stat[:busy] > 1
+      raise ActiveRecord::Base.connection_pool.stat.inspect
+    end
   end
 
   config.before :each do |x|
@@ -197,6 +199,22 @@ RSpec.configure do |config|
     def log_off_user(session, cookies)
       session[:current_user_id] = nil
       super
+    end
+  end
+
+  # Normally we `use_transactional_fixtures` to clear out a database after a test
+  # runs. However, this does not apply to tests done for multisite. The second time
+  # a test runs you can end up with stale data that breaks things. This method will
+  # force a rollback after using a multisite connection.
+  def test_multisite_connection(name)
+    RailsMultisite::ConnectionManagement.with_connection(name) do
+      ActiveRecord::Base.transaction do
+        begin
+          yield
+        ensure
+          throw raise ActiveRecord::Rollback
+        end
+      end
     end
   end
 

@@ -108,7 +108,6 @@ da:
       close: 'luk'
       twitter: 'del dette link på Twitter'
       facebook: 'del dette link på Facebook'
-      google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
     action_codes:
       public_topic: "offentliggjorde dette emne %{when}"
@@ -2664,7 +2663,6 @@ da:
         last_emailed: "Sidst mailet"
         not_found: "Beklager, brugernavnet findes ikke i vores system."
         id_not_found: "Desværre, dette bruger id findes ikke på vores system."
-        active: "Aktiv"
         show_emails: "Vis Emails"
         nav:
           new: "Ny"

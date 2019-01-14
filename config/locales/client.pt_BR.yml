@@ -114,7 +114,6 @@ pt_BR:
       close: 'fechar'
       twitter: 'compartilhe este link no Twitter'
       facebook: 'compartilhe este link no Facebook'
-      google+: 'compartilhe este link no Google+'
       email: 'enviar esse link para um email'
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
@@ -3257,7 +3256,6 @@ pt_BR:
         last_emailed: "Último email enviado"
         not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
         id_not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
-        active: "Ativo"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novos"

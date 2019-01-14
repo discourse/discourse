@@ -79,9 +79,15 @@
   padding-left: 3px;
   border-bottom: 1px solid $primary-low;
 
-  button {
+  .btn,
+  .btn-default {
     background-color: transparent;
     color: $primary-high;
+    padding: 4px 8px;
+    display: inline-block;
+    @media all and (max-width: 800px) {
+      padding: 5px;
+    }
   }
 
   .btn:not(.no-text) {

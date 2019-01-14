@@ -134,7 +134,6 @@ ro:
       close: 'Închide'
       twitter: 'Distribuie pe Twitter'
       facebook: 'Distribuie pe Facebook'
-      google+: 'Distribuie pe Google+'
       email: 'Drimite pe email'
     action_codes:
       public_topic: "a făcut acest subiect public %{when}"
@@ -3017,7 +3016,6 @@ ro:
         last_emailed: "Ultimul email trimis"
         not_found: "Ne pare rău, acest nume de utilizator nu există în sistem."
         id_not_found: "Ne pare rău, dar acest utilizator nu există în sistem."
-        active: "Activi"
         show_emails: "Arată email"
         nav:
           new: "Noi"

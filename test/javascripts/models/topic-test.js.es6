@@ -33,7 +33,7 @@ QUnit.test("visited", assert => {
 });
 
 QUnit.test("lastUnreadUrl", assert => {
-  const category = Em.Object.create({
+  const category = Ember.Object.create({
     navigate_to_first_post_after_read: true
   });
 

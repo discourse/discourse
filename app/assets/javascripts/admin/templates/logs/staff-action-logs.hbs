@@ -33,7 +33,7 @@
     {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions value=filterActionId none="admin.logs.staff_actions.all"}}
   {{/if}}
 
-  {{d-button class="btn-default" action="exportStaffActionLogs" label="admin.export_csv.button_text" icon="download"}}
+  {{d-button class="btn-default" action=(action "exportStaffActionLogs") label="admin.export_csv.button_text" icon="download"}}
 </div>
 <div class="clearfix"></div>
 

@@ -154,7 +154,6 @@ sk:
       close: 'zatvoriť'
       twitter: 'zdieľaj odkaz na Twitteri'
       facebook: 'zdieľaj odkaz na Facebooku'
-      google+: 'zdieľaj odkaz na Google+'
       email: 'pošli odkaz emailom'
     action_codes:
       public_topic: "téma je verejná%{when}"
@@ -2744,7 +2743,6 @@ sk:
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
-        active: "Aktívny"
         show_emails: "Ukázať Emaily"
         nav:
           new: "Nový"

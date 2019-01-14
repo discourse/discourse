@@ -2,7 +2,7 @@
   <textarea id="backupCodes" class="backup-codes-area" readonly>{{formattedBackupCodes}}</textarea>
 
   {{d-button
-    action="copyToClipboard"
+    action=(action "copyToClipboard")
     class="backup-codes-copy-btn"
     icon="copy"}}
 

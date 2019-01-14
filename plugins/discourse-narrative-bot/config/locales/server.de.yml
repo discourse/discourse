@@ -153,14 +153,6 @@ de:
 
           - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu allen Zeiten.
       onebox:
-        instructions: |-
-          Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
-
-          Um einen Link zu kopieren, tippe und halte auf mobilen Geräten, oder klicke rechts mit deiner Maus:
-
-          - https://de.wikipedia.org/wiki/Antiwitz
-          - https://de.wikipedia.org/wiki/Tetraphobie
-          - https://de.wikipedia.org/wiki/Beghilos
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-

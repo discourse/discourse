@@ -140,7 +140,6 @@ en:
       close: 'close'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
-      google+: 'share this link on Google+'
       email: 'send this link in an email'
 
     action_codes:
@@ -910,6 +909,13 @@ en:
       website: "Web Site"
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
+
+      text_size:
+        title: "Text Size"
+        normal: "Normal"
+        larger: "Larger"
+        largest: "Largest"
+
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"
@@ -1817,6 +1823,8 @@ en:
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
       auto_delete:
         title: "Auto-Delete Topic"
+      auto_bump:
+        title: "Auto-Bump Topic"
       reminder:
         title: "Remind Me"
 
@@ -1826,6 +1834,7 @@ en:
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
         auto_delete: "This topic will be automatically deleted %{timeLeft}."
+        auto_bump: "This topic will be automatically bumped %{timeLeft}."
         auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:
@@ -3259,7 +3268,7 @@ en:
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
           local: "Local Storage"
-          s3: "Amazon S3"
+          s3: "S3"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
@@ -3716,7 +3725,7 @@ en:
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
         id_not_found: "Sorry, that user id doesn't exist in our system."
-        active: "Active"
+        active: "Activated"
         show_emails: "Show Emails"
         nav:
           new: "New"

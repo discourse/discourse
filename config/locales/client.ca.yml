@@ -114,7 +114,6 @@ ca:
       close: 'tanca'
       twitter: 'comparteix aquest enllaç a Twitter'
       facebook: 'comparteix aquest enllaç a Facebook'
-      google+: 'comparteix aquest enllaç a Google+'
       email: 'envia aquest enllaç per correu electrònic'
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
@@ -2522,7 +2521,6 @@ ca:
         last_emailed: "Darrer correu"
         not_found: "Disculpa, aquesta nom de persona usuària no existeix al nostre sistema."
         id_not_found: "Disculpa, aquesta identitat usuària no existeix al nostre sistema."
-        active: "Actiu"
         show_emails: "Mostra correus"
         nav:
           new: "Nou"

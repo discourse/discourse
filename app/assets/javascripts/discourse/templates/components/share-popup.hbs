@@ -10,7 +10,7 @@
 </div>
 
 {{#each sources as |s|}}
-  {{share-source source=s title=model.title action="share"}}
+  {{share-source source=s title=model.title action=(action "share")}}
 {{/each}}
 
 {{#if topic.details.can_reply_as_new_topic}}

@@ -114,7 +114,6 @@ fr:
       close: 'fermer'
       twitter: 'partager ce lien sur Twitter'
       facebook: 'partager ce lien sur Facebook'
-      google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
@@ -525,7 +524,7 @@ fr:
       topic_stat_sentence_month:
         one: "%{count} nouveau sujet dans le dernier mois."
         other: "%{count} nouveaux sujets dans le dernier mois."
-      n_more: "Catégories (%{count}additionnelles) ..."
+      n_more: "Catégories (%{count} autres) ..."
     ip_lookup:
       title: Rechercher l'adresse IP
       hostname: Nom de l'hôte
@@ -2967,8 +2966,6 @@ fr:
             label: "Revenir en arrière"
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
-        location:
-          s3: "Amazon S3"
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
@@ -3407,7 +3404,6 @@ fr:
         last_emailed: "Dernier courriel"
         not_found: "Désolé ce pseudo n'existe pas dans notre système."
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
-        active: "Actifs"
         show_emails: "Afficher les adresses de courriels"
         nav:
           new: "Nouveaux"

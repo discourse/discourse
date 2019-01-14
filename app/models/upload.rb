@@ -289,9 +289,11 @@ end
 #  extension         :string(10)
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
+#  etag              :string
 #
 # Indexes
 #
+#  index_uploads_on_etag        (etag)
 #  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE

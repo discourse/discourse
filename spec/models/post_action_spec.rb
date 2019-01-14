@@ -160,6 +160,26 @@ describe PostAction do
       expect(PostAction.flagged_posts_count).to eq(1)
     end
 
+    it "tl3 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 3)
+      post.user.update_column(:trust_level, 0)
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
+    it "tl4 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 4)
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
     it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.topic.trash!
@@ -255,28 +275,50 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-
-    it 'should generate notifications correctly' do
-
+    before do
       PostActionNotifier.enable
+    end
 
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
-      expect(Notification.count).to eq(1)
+    it 'should generate and remove notifications correctly' do
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(1)
 
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
+
+      expect do
+        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(-1)
+
+      expect(Notification.exists?(id: notification.id)).to eq(false)
+    end
+
+    it "should not generate a notification if liker has been muted" do
       mutee = Fabricate(:user)
-
-      post = Fabricate(:post)
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
-      PostAction.act(mutee, post, PostActionType.types[:like])
 
-      expect(Notification.count).to eq(1)
+      expect do
+        PostAction.act(mutee, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it "should generate a notification if liker is an admin irregardles of \
+      muting" do
 
       # you can not mute admin, sorry
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
-      PostAction.act(admin, post, PostActionType.types[:like])
 
-      expect(Notification.count).to eq(2)
+      expect do
+        PostAction.act(admin, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(1)
 
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
     end
 
     it 'should increase the `like_count` and `like_score` when a user likes something' do
@@ -569,54 +611,100 @@ describe PostAction do
       expect(post.hidden).to eq(false)
     end
 
-    it "will automatically pause a topic due to large community flagging" do
-      SiteSetting.flags_required_to_hide_post = 0
-      SiteSetting.num_flags_to_close_topic = 3
-      SiteSetting.num_flaggers_to_close_topic = 2
-      SiteSetting.num_hours_to_close_topic = 1
+    context "topic auto closing" do
+      let(:topic) { Fabricate(:topic) }
+      let(:post1) { create_post(topic: topic) }
+      let(:post2) { create_post(topic: topic) }
+      let(:post3) { create_post(topic: topic) }
 
-      topic = Fabricate(:topic)
-      post1 = create_post(topic: topic)
-      post2 = create_post(topic: topic)
-      post3 = create_post(topic: topic)
+      let(:flagger1) { Fabricate(:user) }
+      let(:flagger2) { Fabricate(:user) }
 
-      flagger1 = Fabricate(:user)
-      flagger2 = Fabricate(:user)
-
-      # reaching `num_flaggers_to_close_topic` isn't enough
-      [flagger1, flagger2].each do |flagger|
-        PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+      before do
+        SiteSetting.flags_required_to_hide_post = 0
+        SiteSetting.num_flags_to_close_topic = 3
+        SiteSetting.num_flaggers_to_close_topic = 2
+        SiteSetting.num_hours_to_close_topic = 1
       end
 
-      expect(topic.reload.closed).to eq(false)
-
-      # clean up
-      PostAction.where(post: post1).delete_all
-
-      # reaching `num_flags_to_close_topic` isn't enough
-      [post1, post2, post3].each do |post|
-        PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
-      end
-
-      expect(topic.reload.closed).to eq(false)
-
-      # clean up
-      PostAction.where(post: [post1, post2, post3]).delete_all
-
-      # reaching both should close the topic
-      [flagger1, flagger2].each do |flagger|
-        [post1, post2, post3].each do |post|
-          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+      it "will automatically pause a topic due to large community flagging" do
+        # reaching `num_flaggers_to_close_topic` isn't enough
+        [flagger1, flagger2].each do |flagger|
+          PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
         end
+
+        expect(topic.reload.closed).to eq(false)
+
+        # clean up
+        PostAction.where(post: post1).delete_all
+
+        # reaching `num_flags_to_close_topic` isn't enough
+        [post1, post2, post3].each do |post|
+          PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
+        end
+
+        expect(topic.reload.closed).to eq(false)
+
+        # clean up
+        PostAction.where(post: [post1, post2, post3]).delete_all
+
+        # reaching both should close the topic
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        topic_status_update = TopicTimer.last
+
+        expect(topic_status_update.topic).to eq(topic)
+        expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
+        expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
-      expect(topic.reload.closed).to eq(true)
+      it "will keep the topic in closed status until the community flags are handled" do
+        freeze_time
 
-      topic_status_update = TopicTimer.last
+        PostAction.stubs(:auto_close_threshold_reached?).returns(true)
+        PostAction.auto_close_if_threshold_reached(topic)
 
-      expect(topic_status_update.topic).to eq(topic)
-      expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
-      expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
+        expect(topic.reload.closed).to eq(true)
+
+        timer = TopicTimer.last
+        expect(timer.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        Jobs.expects(:enqueue_in).with(1.hour.to_i, :toggle_topic_closed, topic_timer_id: timer.id, state: false).returns(true)
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(true)
+        expect(timer.reload.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        PostAction.stubs(:auto_close_threshold_reached?).returns(false)
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
+
+      it "will reopen topic after the flags are auto handled" do
+        freeze_time
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        freeze_time 61.days.from_now
+        Jobs::AutoQueueHandler.new.execute({})
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: TopicTimer.last.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
     end
 
   end

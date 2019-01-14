@@ -114,7 +114,6 @@ es:
       close: 'cerrar'
       twitter: 'comparte este enlace en Twitter'
       facebook: 'comparte este enlace en Facebook'
-      google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
     action_codes:
       public_topic: "hizo este tema público %{when}"
@@ -148,7 +147,7 @@ es:
         enabled: 'hazlo un banner %{when}. Aparecerá arriba en cada página hasta que el usuario lo deje de destacar.'
         disabled: 'eliminar este banner %{when}. Ya no aparecerá en la parte superior de cada página.'
     topic_admin_menu: "acciones de administrador para el tema"
-    wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
+    wizard_required: "¡Bienvenido a tu nuevo foro Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo Bootstrap. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
     bootstrap_mode_disabled: "El modo Bootstrap se inhabilitará en 24 horas."
@@ -297,7 +296,13 @@ es:
     choose_topic:
       none_found: "Ningún tema encontrado."
       title:
+        search: "Busca un tema por título, URL o id:"
         placeholder: "escribe el título de tema aquí"
+    choose_message:
+      none_found: "No se ha encontrado ningún mensaje."
+      title:
+        search: "Buscar un mensaje por título:"
+        placeholder: "escribe el título del mensaje aquí"
     queue:
       topic: "Tema:"
       approve: 'Aprobar'
@@ -1128,6 +1133,7 @@ es:
       provide_new_email: "Poner un nuevo email, y te reenviaremos una confirmación de email."
       submit_new_email: "Actualizar Dirección de Email"
       sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentEmail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
+      sent_activation_email_again_generic: "Te hemos enviado otro correo de activación. Podría tardar unos minutos en llegar. Asegúrate de mirar la carpeta de Correo no deseado."
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
       forgot: "No me acuerdo de los detalles de mi cuenta."
@@ -1649,6 +1655,8 @@ es:
         based_on_last_post: "No cerrar hasta que el último post en el tema es al menos así de antiguo."
       auto_delete:
         title: "Auto-Eliminar Tema"
+      auto_bump:
+        title: "Actualizar automáticamente la fecha de este tema"
       reminder:
         title: "Recordarme"
       status_update_notice:
@@ -1657,6 +1665,7 @@ es:
         auto_publish_to_category: "Este tema será publicado en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tema será cerrado %{duration} después de la última respuesta."
         auto_delete: "Este tema se borrará automáticamente en %{timeLeft}."
+        auto_bump: "La fecha de este tema será actualizada %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
       auto_close_title: 'Configuración de auto-cerrado'
       auto_close_immediate:
@@ -1822,9 +1831,15 @@ es:
           one: "1 post"
           other: "{{count}} posts"
         cancel: "Quitar filtro"
+      move_to:
+        title: "Mover a"
+        action: "mover a"
+        error: "Ha ocurrido un error al mover los mensajes."
       split_topic:
         title: "Mover a un tema nuevo"
         action: "mover a un tema nuevo"
+        topic_name: "Título del nuevo tema"
+        radio_label: "Nuevo tema"
         error: "Hubo un error moviendo los posts al nuevo tema"
         instructions:
           one: "Estas a punto de crear un tema nuevo y rellenarlo con el post que has seleccionado."
@@ -1833,9 +1848,27 @@ es:
         title: "Mover a un tema existente"
         action: "mover a un tema existente"
         error: "Hubo un error moviendo los posts a ese tema"
+        radio_label: "Tema ya existente"
         instructions:
           one: "Por favor escoge el tema al que quieres mover ese post."
           other: "Por favor escoge el tema al que quieres mover esos <b>{{count}}</b> posts."
+      move_to_new_message:
+        title: "Mover a un nuevo mensaje"
+        action: "mover a un nuevo mensaje"
+        message_title: "Título del nuevo mensaje"
+        radio_label: "Nuevo mensaje"
+        participants: "Participantes"
+        instructions:
+          one: "Estás a punto de crear un nuevo mensaje y de llenarlo con el mensaje que has seleccionado."
+          other: "Estás a punto de crear un nuevo mensaje y de llenarlo con los <b>{{count}}</b> mensajes seleccionados."
+      move_to_existing_message:
+        title: "Mover a un mensaje ya existente"
+        action: "mover a un mensaje existente"
+        radio_label: "Mensaje existente"
+        participants: "Participantes"
+        instructions:
+          one: "Por favor, selecciona el mensaje al que te gustaría mover el mensaje."
+          other: "Por favor, selecciona el mensaje al que te gustaría mover los <b>{{count}}</b> mensajes."
       merge_posts:
         title: "Unir posts seleccionados"
         action: "unir posts seleccionados"
@@ -1881,7 +1914,7 @@ es:
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki editada por última vez"
-      last_edited_on: "post editado por última ven en"
+      last_edited_on: "post editado por última vez el"
       reply_as_new_topic: "Responder como tema enlazado"
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
@@ -2581,7 +2614,7 @@ es:
       title: 'Administrador de Discourse'
       moderator: 'Moderador'
       reports:
-        title: "Lista de reportes disponibles"
+        title: "Lista de informes disponibles"
       dashboard:
         title: "Panel"
         last_updated: "Panel actualizado el:"
@@ -2594,7 +2627,7 @@ es:
         please_upgrade: "¡Por favor, actualiza!"
         no_check_performed: "Una revisión de actualizaciones no ha sido realizada aún. Asegúrate de que sidekiq está funcionando."
         stale_data: "Una revisión de actualizaciones no ha sido realizada recientemente. Asegúrate de que sidekiq está funcionando."
-        version_check_pending: "Parece que has actualizado recientemente. Fantástico!"
+        version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
         installed_version: "Instalada"
         latest_version: "Última"
         problems_found: "Hemos encontrado algunos problemas con tu instalación de Discourse"
@@ -2625,17 +2658,17 @@ es:
         moderators_activity: Actividad de moderación
         whats_new_in_discourse: "¿Qué hay de nuevo en Discourse?"
         activity_metrics: Métricas de Actividad
-        all_reports: "Todos los reportes"
+        all_reports: "Todos los informes"
         general_tab: "General"
         moderation_tab: "Moderación"
         security_tab: "Seguridad"
-        reports_tab: "Reportes"
+        reports_tab: "Informes"
         disabled: Desactivado
         timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
         exception_error: "Lo siento, ha ocurrido un error al ejecutar la consulta"
         too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo."
         not_found_error: "Lo sentimos, este reporte no existe"
-        filter_reports: Filtrar reporte
+        filter_reports: Filtrar informe
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el periodo previo."
           today: "Hoy"
@@ -2977,7 +3010,6 @@ es:
             confirm: "¿Seguro que quieres retornar la base de datos al estado funcional previo?"
         location:
           local: "Almacenamiento local"
-          s3: "Amazon S3"
       export_csv:
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
@@ -3424,7 +3456,7 @@ es:
         last_emailed: "Último email enviado"
         not_found: "Lo sentimos, ese usuario no existe."
         id_not_found: "Lo sentimos, esa id de usuario no existe en nuestro sistema."
-        active: "Activo"
+        active: "Activado"
         show_emails: "Mostrar emails"
         nav:
           new: "Nuevo"
@@ -3726,6 +3758,7 @@ es:
           tags: "Etiquetas"
           search: "Búsqueda"
           groups: "Grupos"
+          dashboard: "Panel"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
       badges:

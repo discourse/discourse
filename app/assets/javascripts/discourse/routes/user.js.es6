@@ -59,7 +59,7 @@ export default Discourse.Route.extend({
 
   serialize(model) {
     if (!model) return {};
-    return { username: (Em.get(model, "username") || "").toLowerCase() };
+    return { username: (Ember.get(model, "username") || "").toLowerCase() };
   },
 
   setupController(controller, user) {

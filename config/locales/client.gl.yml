@@ -108,7 +108,6 @@ gl:
       close: 'pechar'
       twitter: 'compartir esta ligazón no Twitter'
       facebook: 'compartir esta ligazón no Facebook'
-      google+: 'compartir esta ligazón no Google+'
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
       public_topic: "fixo esta publicación pública no %{when}"
@@ -1882,7 +1881,6 @@ gl:
         last_emailed: "Últimos envíos por correo-e"
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
-        active: "Activo"
         show_emails: "Amosar correos-e"
         nav:
           new: "Novo"

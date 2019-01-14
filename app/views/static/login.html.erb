@@ -1,5 +1,5 @@
 <% if SiteSetting.login_required %>
   <div class='login-required'>
-    <%= PrettyText.cook(I18n.t('login_required.welcome_message', title: SiteSetting.title)).html_safe %>
+    <%= PrettyText.cook(I18n.t("login_required.#{SiteSetting.invite_only? ? "welcome_message_invite_only" : "welcome_message"}", title: SiteSetting.title)).html_safe %>
   </div>
 <% end %>

@@ -154,7 +154,6 @@ cs:
       close: 'zavřít'
       twitter: 'sdílet odkaz na Twitteru'
       facebook: 'sdílet odkaz na Facebooku'
-      google+: 'sdílet odkaz na Google+'
       email: 'odeslat odkaz emailem'
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
@@ -3486,7 +3485,6 @@ cs:
         last_emailed: "Email naposledy zaslán"
         not_found: "Bohužel uživatel s tímto jménem není v našem systému."
         id_not_found: "Bohužel uživatel s tímto id není v našem systému."
-        active: "Aktivní"
         show_emails: "Ukázat emailové adresy"
         nav:
           new: "Noví"

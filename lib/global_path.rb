@@ -11,7 +11,8 @@ module GlobalPath
     if SiteSetting.Upload.s3_cdn_url.present?
       p = Discourse.store.cdn_url(p)
     end
-    p =~ /^http/ ? p : cdn_path(p)
+
+    (p =~ /^http/ || p =~ /^\/\//) ? p : cdn_path(p)
   end
 
   def cdn_relative_path(path)

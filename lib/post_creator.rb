@@ -167,22 +167,21 @@ class PostCreator
         create_topic
         save_post
         extract_links
-        store_unique_post_key
         track_topic
         update_topic_stats
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
         link_post_uploads
-
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
-        @post.advance_draft_sequence
+        @post.advance_draft_sequence unless @opts[:import_mode]
         @post.save_reply_relationships
       end
     end
 
-    if @post && errors.blank?
+    if @post && errors.blank? && !@opts[:import_mode]
+      store_unique_post_key
       # update counters etc.
       @post.topic.reload
 
@@ -194,12 +193,10 @@ class PostCreator
 
       trigger_after_events unless opts[:skip_events]
 
-      auto_close unless @opts[:import_mode]
+      auto_close
     end
 
-    if @post || @spam
-      handle_spam unless @opts[:import_mode]
-    end
+    handle_spam if !opts[:import_mode] && (@post || @spam)
 
     @post
   end
@@ -428,6 +425,8 @@ class PostCreator
   end
 
   def update_topic_auto_close
+    return if @opts[:import_mode]
+
     if @topic.closed?
       @topic.delete_topic_timer(TopicTimer.types[:close])
     else
@@ -510,9 +509,7 @@ class PostCreator
   end
 
   def publish
-    return if @opts[:import_mode]
-    return unless @post.post_number > 1
-
+    return if @opts[:import_mode] || @post.post_number == 1
     @post.publish_change_to_clients! :created
   end
 
@@ -522,7 +519,7 @@ class PostCreator
   end
 
   def track_topic
-    return if @opts[:auto_track] == false
+    return if @opts[:import_mode] || @opts[:auto_track] == false
 
     unless @user.user_option.disable_jump_reply?
       TopicUser.change(@post.user_id,
@@ -540,8 +537,7 @@ class PostCreator
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
-    else
-      return if @topic.private_message?
+    elsif !@topic.private_message?
       notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end

@@ -108,7 +108,6 @@ nl:
       close: 'sluiten'
       twitter: 'deze koppeling delen op Twitter'
       facebook: 'deze koppeling delen op Facebook'
-      google+: 'deze koppeling delen op Google+'
       email: 'deze koppeling delen via e-mail'
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
@@ -2827,7 +2826,6 @@ nl:
         last_emailed: "Laatst gemaild"
         not_found: "Sorry, die gebruikersnaam bestaat niet in ons systeem."
         id_not_found: "Sorry, die gebruikers-ID bestaat niet in ons systeem."
-        active: "Actief"
         show_emails: "E-mails tonen"
         nav:
           new: "Nieuw"

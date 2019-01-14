@@ -160,7 +160,7 @@ const Category = RestModel.extend({
 
   @computed
   permissions() {
-    return Em.A([
+    return Ember.A([
       { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
       { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
       { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
@@ -219,15 +219,15 @@ Category.reopenClass({
   slugFor(category, separator = "/") {
     if (!category) return "";
 
-    const parentCategory = Em.get(category, "parentCategory");
+    const parentCategory = Ember.get(category, "parentCategory");
     let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = Em.get(category, "id"),
-      slug = Em.get(category, "slug");
+    const id = Ember.get(category, "id"),
+      slug = Ember.get(category, "slug");
 
     return !slug || slug.trim().length === 0
       ? `${result}${id}-category`

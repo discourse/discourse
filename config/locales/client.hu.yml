@@ -114,7 +114,6 @@ hu:
       close: 'bezár'
       twitter: 'a hivatkozás megosztása a Twitteren'
       facebook: 'a hivatkozás megosztása a Facebookon'
-      google+: 'a hivatkozás megosztása a Google+ -on'
       email: 'a hivatkozás elküldése e-mailben'
     action_codes:
       public_topic: "publikussá tette ezt a témát ekkor: %{when}"
@@ -2738,7 +2737,6 @@ hu:
         last_emailed: "Utoljára emailelt"
         not_found: "Sajnos ez a felhasználónév nem létezik."
         id_not_found: "Sajnos ez a felhasználó id nem található a rendszerben."
-        active: "Aktív"
         show_emails: "E-mailek mutatása"
         nav:
           new: "Új"

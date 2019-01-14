@@ -107,7 +107,6 @@ sq:
       close: 'mbylle'
       twitter: 'shpërndaje këtë lidhje në Twitter'
       facebook: 'postojeni këtë lidhje në Facebook'
-      google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgoje këtë lidhje me email'
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
@@ -2212,7 +2211,6 @@ sq:
         last_emailed: "Emaili i fundit"
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
-        active: "Aktivë"
         show_emails: "Trego adresat email"
         nav:
           new: "E Re"

@@ -116,7 +116,8 @@ module FileStore
 
     def get_path_for_optimized_image(optimized_image)
       upload = optimized_image.upload
-      extension = "_#{OptimizedImage::VERSION}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
+      version = optimized_image.version || 1
+      extension = "_#{version}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
       get_path_for("optimized".freeze, upload.id, upload.sha1, extension)
     end
 

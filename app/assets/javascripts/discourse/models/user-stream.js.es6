@@ -43,7 +43,7 @@ export default RestModel.extend({
 
   noContent: function() {
     return this.get("loaded") && this.get("content").length === 0;
-  }.property("loaded", "content.@each"),
+  }.property("loaded", "content.[]"),
 
   remove(userAction) {
     // 1) remove the user action from the child groups
@@ -93,7 +93,7 @@ export default RestModel.extend({
           self.set("noContentHelp", result.no_results_help);
         }
         if (result && result.user_actions) {
-          const copy = Em.A();
+          const copy = Ember.A();
           result.user_actions.forEach(function(action) {
             action.title = emojiUnescape(
               Handlebars.Utils.escapeExpression(action.title)

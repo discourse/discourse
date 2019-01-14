@@ -212,7 +212,6 @@ basic:
     choices:
      - twitter
      - facebook
-     - google+
      - email
   desktop_category_page_style:
     client: true
@@ -285,6 +284,7 @@ basic:
     default: ''
   short_title:
     default: ''
+    max: 12
   vapid_public_key_bytes:
     default: ''
     client: true
@@ -1411,7 +1411,7 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
   rebake_old_posts_count:
-    default: 100
+    default: 80
     min: 1
   migrate_to_new_scheme:
     hidden: true
@@ -1811,6 +1811,14 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ''
+  
+  default_text_size:
+    type: enum
+    default: normal
+    choices:
+      - normal
+      - larger
+      - largest
 
 api:
   retain_web_hook_events_period_days:

@@ -94,7 +94,6 @@ zh_TW:
       close: '關閉'
       twitter: '在 Twitter 分享此連結'
       facebook: '在 Facebook 分享此連結'
-      google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     action_codes:
       public_topic: "於 %{when}發佈這個話題"
@@ -2681,7 +2680,6 @@ zh_TW:
         last_emailed: "最近寄出電子郵件"
         not_found: "抱歉，系統裡無此用戶名稱。"
         id_not_found: "抱歉，系統裡無此用戶名稱。"
-        active: "啟用的"
         show_emails: "顯示電子郵件"
         nav:
           new: "新用戶"

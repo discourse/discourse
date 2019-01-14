@@ -108,7 +108,6 @@ sv:
       close: 'stäng'
       twitter: 'dela denna länk på Twitter'
       facebook: 'dela denna länk på Facebook'
-      google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett e-postmeddelande'
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
@@ -2511,7 +2510,6 @@ sv:
         last_emailed: "Senaste som mottog e-post"
         not_found: "Tyvärr, det användarnamnet existerar inte i vårt system."
         id_not_found: "Tyvärr, användar-ID existerar inte i vårt system."
-        active: "Aktiv"
         show_emails: "Visa e-post"
         nav:
           new: "Ny"

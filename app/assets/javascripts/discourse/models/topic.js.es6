@@ -163,8 +163,8 @@ const Topic = RestModel.extend({
     });
   }.property(),
 
-  invisible: Em.computed.not("visible"),
-  deleted: Em.computed.notEmpty("deleted_at"),
+  invisible: Ember.computed.not("visible"),
+  deleted: Ember.computed.notEmpty("deleted_at"),
 
   searchContext: function() {
     return { type: "topic", id: this.get("id") };
@@ -297,8 +297,8 @@ const Topic = RestModel.extend({
     );
   }.property("archetype"),
 
-  isPrivateMessage: Em.computed.equal("archetype", "private_message"),
-  isBanner: Em.computed.equal("archetype", "banner"),
+  isPrivateMessage: Ember.computed.equal("archetype", "private_message"),
+  isBanner: Ember.computed.equal("archetype", "banner"),
 
   toggleStatus(property) {
     this.toggleProperty(property);
@@ -344,7 +344,7 @@ const Topic = RestModel.extend({
     this.set("bookmarking", true);
 
     const stream = this.get("postStream");
-    const posts = Em.get(stream, "posts");
+    const posts = Ember.get(stream, "posts");
     const firstPost =
       posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
     const bookmark = !this.get("bookmarked");
@@ -512,7 +512,7 @@ const Topic = RestModel.extend({
     return emojiUnescape(excerpt);
   },
 
-  hasExcerpt: Em.computed.notEmpty("excerpt"),
+  hasExcerpt: Ember.computed.notEmpty("excerpt"),
 
   excerptTruncated: function() {
     const e = this.get("excerpt");
@@ -520,7 +520,7 @@ const Topic = RestModel.extend({
   }.property("excerpt"),
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),
-  canClearPin: Em.computed.and("pinned", "readLastPost"),
+  canClearPin: Ember.computed.and("pinned", "readLastPost"),
 
   archiveMessage() {
     this.set("archiving", true);
@@ -598,7 +598,7 @@ Topic.reopenClass({
 
   createActionSummary(result) {
     if (result.actions_summary) {
-      const lookup = Em.Object.create();
+      const lookup = Ember.Object.create();
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);

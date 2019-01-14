@@ -19,19 +19,19 @@
   {{/d-modal-body}}
 
   <div class="modal-footer">
-    {{d-button id="save-category" class="btn-primary" disabled=disabled action="saveCategory" label=saveLabel}}
+    {{d-button id="save-category" class="btn-primary" disabled=disabled action=(action "saveCategory") label=saveLabel}}
 
     {{#if model.can_delete}}
       {{d-button class="btn-danger pull-right"
                  disabled=deleteDisabled
-                 action="deleteCategory"
+                 action=(action "deleteCategory")
                  icon="trash-o"
                  label="category.delete"}}
     {{else if model.id}}
       <div class="disable_info_wrap">
         {{d-button disabled=deleteDisabled
                    class="btn-default disable-no-hover"
-                   action="toggleDeleteTooltip"
+                   action=(action "toggleDeleteTooltip")
                    icon="question-circle"
                    label="category.delete"}}
 

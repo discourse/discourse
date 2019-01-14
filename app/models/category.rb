@@ -3,6 +3,10 @@
 require_dependency 'distributed_cache'
 
 class Category < ActiveRecord::Base
+  self.ignored_columns = %w{
+    uploaded_meta_id
+  }
+
   include Searchable
   include Positionable
   include HasCustomFields
@@ -28,7 +32,6 @@ class Category < ActiveRecord::Base
   belongs_to :latest_post, class_name: "Post"
   belongs_to :uploaded_logo, class_name: "Upload"
   belongs_to :uploaded_background, class_name: "Upload"
-  belongs_to :uploaded_meta, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -666,7 +669,6 @@ end
 #  sort_ascending                    :boolean
 #  uploaded_logo_id                  :integer
 #  uploaded_background_id            :integer
-#  uploaded_meta_id                  :integer
 #  topic_featured_link_allowed       :boolean          default(TRUE)
 #  all_topics_wiki                   :boolean          default(FALSE), not null
 #  show_subcategory_list             :boolean          default(FALSE)
@@ -676,7 +678,7 @@ end
 #  default_top_period                :string(20)       default("all")
 #  mailinglist_mirror                :boolean          default(FALSE), not null
 #  suppress_from_latest              :boolean          default(FALSE)
-#  minimum_required_tags             :integer          default(0)
+#  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #
 # Indexes

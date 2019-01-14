@@ -207,7 +207,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   activate() {
     this._super();
-    Em.run.next(function() {
+    Ember.run.next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");
     });

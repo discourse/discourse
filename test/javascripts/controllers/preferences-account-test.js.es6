@@ -5,10 +5,10 @@ QUnit.test("updating of associated accounts", function(assert) {
     siteSettings: {
       enable_google_oauth2_logins: true
     },
-    model: Em.Object.create({
+    model: Ember.Object.create({
       second_factor_enabled: true
     }),
-    site: Em.Object.create({
+    site: Ember.Object.create({
       isMobileDevice: false
     })
   });

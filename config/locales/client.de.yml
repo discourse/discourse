@@ -114,7 +114,6 @@ de:
       close: 'Schließen'
       twitter: 'diesen Link auf Twitter teilen'
       facebook: 'diesen Link auf Facebook teilen'
-      google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     action_codes:
       public_topic: "hat das Thema öffentlich gemacht, %{when}"
@@ -1813,6 +1812,9 @@ de:
           one: "1 Beitrag"
           other: "{{count}} Beiträge"
         cancel: "Filter entfernen"
+      move_to:
+        title: "Verschieben"
+        action: "verschieben"
       split_topic:
         title: "In neues Thema verschieben"
         action: "in ein neues Thema verschieben"
@@ -2947,8 +2949,6 @@ de:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
-        location:
-          s3: "Amazon S3"
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
@@ -3387,7 +3387,6 @@ de:
         last_emailed: "Letzte E-Mail"
         not_found: "Entschuldige, dieser Benutzername ist im System nicht vorhanden."
         id_not_found: "Entschuldige, diese Benutzerkennung ist im System nicht vorhanden."
-        active: "Aktiv"
         show_emails: "E-Mails anzeigen"
         nav:
           new: "Neu"

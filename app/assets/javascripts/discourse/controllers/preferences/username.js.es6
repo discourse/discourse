@@ -15,8 +15,8 @@ export default Ember.Controller.extend({
 
   maxLength: setting("max_username_length"),
   minLength: setting("min_username_length"),
-  newUsernameEmpty: Em.computed.empty("newUsername"),
-  saveDisabled: Em.computed.or(
+  newUsernameEmpty: Ember.computed.empty("newUsername"),
+  saveDisabled: Ember.computed.or(
     "saving",
     "newUsernameEmpty",
     "taken",
@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
       Discourse.User.checkUsername(
         newUsername,
         undefined,
-        this.get("content.id")
+        this.get("model.id")
       ).then(result => {
         if (result.errors) {
           this.set("errorMessage", result.errors.join(" "));
@@ -71,7 +71,7 @@ export default Ember.Controller.extend({
         result => {
           if (result) {
             this.set("saving", true);
-            this.get("content")
+            this.get("model")
               .changeUsername(this.get("newUsername"))
               .then(() => {
                 DiscourseURL.redirectTo(

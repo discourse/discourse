@@ -114,7 +114,6 @@ fi:
       close: 'sulje'
       twitter: 'jaa tämä linkki Twitterissä'
       facebook: 'jaa tämä linkki Facebookissa'
-      google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"
@@ -1657,6 +1656,8 @@ fi:
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
       auto_delete:
         title: "Poista ketju ajastetusti"
+      auto_bump:
+        title: "Nosta ketjua ajastetusti"
       reminder:
         title: "Muistuta minua"
       status_update_notice:
@@ -1665,6 +1666,7 @@ fi:
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
         auto_delete: "Ketju poistetaan ajastetusti %{timeLeft}."
+        auto_bump: "Ketjua nostetaan ajastetusti %{timeLeft}."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_immediate:
@@ -3007,7 +3009,6 @@ fi:
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
         location:
           local: "Paikallinen"
-          s3: "Amazon S3"
       export_csv:
         success: "Vienti on käynnissä. Saat ilmoituksen viestillä, kun prosessi on valmis."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
@@ -3454,7 +3455,6 @@ fi:
         last_emailed: "Viimeksi lähetetty sähköpostia"
         not_found: "Pahoittelut, tuota käyttäjänimeä ei löydy järjestelmästä."
         id_not_found: "Pahoittelut, tuota käyttäjätunnusta ei löydy järjestelmästä."
-        active: "Aktiivinen"
         show_emails: "Näytä sähköpostit"
         nav:
           new: "Uudet"

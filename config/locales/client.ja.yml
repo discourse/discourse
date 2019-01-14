@@ -94,7 +94,6 @@ ja:
       close: '閉じる'
       twitter: 'Twitter でこのリンクを共有する'
       facebook: 'Facebook でこのリンクを共有する'
-      google+: 'Google+ でこのリンクを共有する'
       email: 'メールでこのリンクを送る'
     action_codes:
       public_topic: "トピックを公開しました: %{when} "

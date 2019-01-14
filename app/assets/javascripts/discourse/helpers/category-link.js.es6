@@ -2,7 +2,7 @@ import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-var get = Em.get,
+var get = Ember.get,
   escapeExpression = Handlebars.Utils.escapeExpression;
 
 let _renderer = defaultCategoryLinkRenderer;

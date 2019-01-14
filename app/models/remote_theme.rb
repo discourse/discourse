@@ -236,7 +236,6 @@ end
 #  id                :integer          not null, primary key
 #  remote_url        :string           not null
 #  remote_version    :string
-#  branch            :string
 #  local_version     :string
 #  about_url         :string
 #  license_url       :string
@@ -245,5 +244,6 @@ end
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  private_key       :text
+#  branch            :string
 #  last_error_text   :text
 #

@@ -28,7 +28,7 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
-export default Em.Component.extend({
+export default Ember.Component.extend({
   classNames: ["search-advanced-options"],
 
   inOptionsForUsers: [

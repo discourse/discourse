@@ -1,6 +1,6 @@
 {{#if showSelector}}
   {{user-selector topicId=topicId
-                  onChangeCallback='triggerResize'
+                  onChangeCallback=(action "triggerResize") 
                   id="private-message-users"
                   includeMessageableGroups='true'
                   placeholderKey="composer.users_placeholder"
@@ -11,6 +11,6 @@
 {{else}}
   <div class='ac-wrap composer-user-selector-limited' {{action "toggleSelector"}}>
     <span>{{limitedUsernames}}</span>
-    <span class='btn-small btn-primary'>{{hiddenUsersCount}}</span>
+    <span class='btn btn-primary'>{{hiddenUsersCount}}</span>
   </div>
 {{/if}}

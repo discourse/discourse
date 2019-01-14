@@ -96,7 +96,7 @@ export default TextField.extend({
           self.set("hasGroups", hasGroups);
 
           selected = items;
-          if (self.get("onChangeCallback")) self.sendAction("onChangeCallback");
+          if (self.get("onChangeCallback")) self.onChangeCallback();
         },
 
         reverseTransform(i) {
@@ -114,7 +114,7 @@ export default TextField.extend({
   @observes("usernames")
   _clearInput: function() {
     if (arguments.length > 1) {
-      if (Em.isEmpty(this.get("usernames"))) {
+      if (Ember.isEmpty(this.get("usernames"))) {
         this.$()
           .parent()
           .find("a")

@@ -13,6 +13,14 @@ html {
   background-color: $secondary;
   overflow-y: scroll;
   direction: ltr;
+
+  &.text-size-larger {
+    font-size: $base-font-size-larger;
+  }
+
+  &.text-size-largest {
+    font-size: $base-font-size-largest;
+  }
 }
 
 // Links

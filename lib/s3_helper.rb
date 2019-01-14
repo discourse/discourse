@@ -7,11 +7,12 @@ class S3Helper
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
+    @s3_client = options.delete(:client)
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
       raise Discourse::InvalidParameters.new("s3_bucket_name") if s3_bucket_name.blank?
-      s3_bucket_name.downcase.split("/".freeze, 2)
+      self.class.get_bucket_and_folder_path(s3_bucket_name)
     end
 
     @tombstone_prefix =
@@ -22,10 +23,27 @@ class S3Helper
       end
   end
 
+  def self.get_bucket_and_folder_path(s3_bucket_name)
+    s3_bucket_name.downcase.split("/".freeze, 2)
+  end
+
   def upload(file, path, options = {})
     path = get_path_for_s3_upload(path)
-    s3_bucket.object(path).upload_file(file, options)
-    path
+    obj = s3_bucket.object(path)
+
+    etag = begin
+      if File.size(file.path) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+        options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+        obj.upload_file(file, options)
+        obj.load
+        obj.etag
+      else
+        options[:body] = file
+        obj.put(options).etag
+      end
+    end
+
+    return path, etag
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
@@ -48,10 +66,10 @@ class S3Helper
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
       if @s3_bucket_folder_path
-        bucket_folder, filename = begin
+        folder, filename = begin
           source.split("/".freeze, 2)
         end
-        options[:copy_source] = File.join(@s3_bucket_name, bucket_folder, multisite_upload_path, filename)
+        options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
         options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
       end
@@ -210,8 +228,12 @@ class S3Helper
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
   end
 
+  def s3_client
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
+  end
+
   def s3_resource
-    Aws::S3::Resource.new(@s3_options)
+    Aws::S3::Resource.new(client: s3_client)
   end
 
   def s3_bucket

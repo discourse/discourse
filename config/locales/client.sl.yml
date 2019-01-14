@@ -154,7 +154,6 @@ sl:
       close: 'zapri'
       twitter: 'deli povezavo na Twitterju'
       facebook: 'deli povezao na Facebooku'
-      google+: 'deli povezavo na Google+'
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
       public_topic: "je naredil temo javno %{when}"
@@ -213,13 +212,13 @@ sl:
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
     yes_value: "Da"
-    submit: "Oddaj"
+    submit: "Išči"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
     sign_up: "Prijava"
     log_in: "Prijava"
     age: "Starost"
-    joined: "Pridružen"
+    joined: "Pridružitev"
     admin_title: "Administrator"
     flags_title: "Prijave"
     show_more: "Več"
@@ -396,7 +395,7 @@ sl:
       post_count_long: "Objavljeni Odgovori"
       no_results: "Noben rezultat ni bil najden."
       days_visited: "Obiski"
-      days_visited_long: "Dni obiskov"
+      days_visited_long: "Dni prisotnosti"
       posts_read: "Prebrano"
       posts_read_long: "Objave Prebrane"
       total_rows:
@@ -495,7 +494,7 @@ sl:
       activity: "Aktivnost"
       members:
         title: "Člani"
-        filter_placeholder_admin: "uporabniško ime ali e-pošta"
+        filter_placeholder_admin: "uporabniško ime ali e-naslov"
         filter_placeholder: "uporabniško ime"
         remove_member: "Odstrani člana"
         remove_member_description: "Odstrani <b>%{username}</b> iz te skupine"
@@ -572,6 +571,7 @@ sl:
         two: "1 tema"
         few: "%{count} tem"
         other: "%{count} tem"
+      n_more: "Kategorije (še %{count} več) ..."
     ip_lookup:
       title: Poizvedba IP naslova
       hostname: Ime gostitelja
@@ -586,7 +586,7 @@ sl:
       read_time: "čas prebiranja"
       topics_entered: "vstop v teme"
       post_count: "# objave"
-      confirm_delete_other_accounts: "Si prepričan, da želiš izbrisati te račune?"
+      confirm_delete_other_accounts: "Si prepričan/a, da želiš izbrisati te račune?"
     user_fields:
       none: "(izberi možnost)"
     user:
@@ -609,7 +609,7 @@ sl:
       collapse_profile: "Skrči"
       bookmarks: "Zaznamki"
       bio: "O meni"
-      invited_by: "Povabljen/a od"
+      invited_by: "Povabilo od"
       trust_level: "Nivo zaupanja"
       notifications: "Obvestila"
       statistics: "Statistika"
@@ -666,7 +666,7 @@ sl:
       muted_categories: "Zamolčano"
       no_category_access: "Kot moderator imaš omejen dostop do kategorije, shranjevanje je onemogočeno"
       delete_account: "Izbriši Moj Račun"
-      delete_account_confirm: "Si prepričan, da želiš trajno izbrisati svoj račun? Tega postopka ni mogoče razveljaviti!"
+      delete_account_confirm: "Si prepričan/a, da želiš trajno izbrisati svoj račun? Tega postopka ni mogoče razveljaviti!"
       deleted_yourself: "Vaš račun je bil uspešno izbrisan."
       delete_yourself_not_allowed: "Če želite izbrisati račun, prosim kontaktirajte osebje."
       unread_message_count: "Sporočila"
@@ -745,7 +745,7 @@ sl:
         title: "Ozadje kartice uporabnika"
         instructions: "Ozadje kartice bo centrirano in imelo širino 590px."
       email:
-        title: "E-pošta"
+        title: "E-naslov"
         instructions: "nikoli ne pokaži javno"
         invalid: "Prosim vnesite veljaven e-naslov"
         frequency:
@@ -785,12 +785,12 @@ sl:
         show_all: "Prikaži vse ({{count}})"
         show_few: "Prikaži manj"
       last_posted: "Zadnja objava"
-      last_seen: "Viden/a"
-      created: "Pridružen/a"
+      last_seen: "Prisotnost"
+      created: "Pridružitev"
       log_out: "Odjava"
       location: "Lokacija"
       website: "Spletna stran"
-      email_settings: "E-pošta"
+      email_settings: "E-naslov"
       hide_profile_and_presence: "Skrij moj javni profil and prisotnost"
       like_notification_frequency:
         title: "Obvesti o všečkih"
@@ -894,7 +894,7 @@ sl:
           one: "dan obiska"
           two: "dni obiska"
           few: "dni obiskov"
-          other: "dni obiskov"
+          other: "dni prisotnosti"
         topics_entered:
           one: "ogledana tema"
           two: "ogledani temi"
@@ -917,10 +917,12 @@ sl:
         more_topics: "Več tem"
         top_badges: "Najboljše značke"
         no_badges: "Ni značk."
+        more_badges: "Več značk"
         top_links: "Najboljše povezave"
         no_links: "Ni povezav."
         most_liked_by: "Največ všečkov od"
-        most_liked_users: "Največkrat všečkal/a"
+        most_liked_users: "Največ všečkov za"
+        most_replied_to_users: "NAJVEČKRAT ODGOVORJENO"
         no_likes: "Ni všečkov."
       avatar:
         title: "Profilna slika"
@@ -968,6 +970,7 @@ sl:
     private_message_info:
       edit: "Dodaj ali odstrani..."
     username: 'Uporabniško ime'
+    last_seen: 'Prisotnost'
     trust_level: 'Nivo zaupanja'
     search_hint: 'uporabniško ime, e-naslov ali IP naslov'
     create_account:
@@ -1022,6 +1025,7 @@ sl:
     emoji_picker:
       activity: Aktivnost
     composer:
+      options: "Možnosti"
       cannot_see_mention:
         category: "Omenil si uporabnika {{username}} , a ta ne bo obveščen saj nima dostopa do te kategorije. Dodati ga je potrebno v skupino ki lahko dostopa do kategorije."
         private: "Omenili ste uporabnika {{username}} , a ta ne bo obveščen, ker ne more videti tega osebnega sporočila. Moraii ga boste povabiti v to osebno sporočilo."
@@ -1032,6 +1036,7 @@ sl:
       reply_here: "Odgovori tu"
       reply: "Odgovori"
       create_topic: "Ustvari temo"
+      create_pm: "Pošlji"
       users_placeholder: "Dodaj uporabnika"
       title_placeholder: "Kaj je tema sporočila v kratkem stavku?"
       title_or_link_placeholder: "Na tem mestu vpiši naslov ali prilepi povezavo "
@@ -1041,6 +1046,10 @@ sl:
       show_preview: 'prikaži predogled &raquo;'
       hide_preview: '&laquo; skrij predogled'
       quote_post_title: "Citiraj celo objavo"
+      bold_title: "Krepko"
+      bold_text: "krepko"
+      link_title: "Povezava"
+      link_dialog_title: "Vstavi povezavo"
       paste_code_text: "vpiši ali prilepi kodo"
       composer_actions:
         reply_as_private_message:
@@ -1071,13 +1080,18 @@ sl:
     search:
       sort_by: "Uredi po"
       relevance: "Relevanci"
-      latest_post: "Zadnja objava"
-      latest_topic: "Zadnja tema"
+      latest_post: "Najnovejši objavi"
+      latest_topic: "Najnovejši temi"
       most_viewed: "Številu ogledov"
       most_liked: "Številu všečkov"
       select_all: "Izberi vse"
       clear_all: "Počisti vse"
       too_short: "Niz za iskanje je prekratek"
+      result_count:
+        one: "<span>1 zadetek za</span><span class='term'>{{term}}</span>"
+        two: "<span>1 zadetek za</span><span class='term'>{{term}}</span>"
+        few: "<span>1 zadetek za</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} zadetkov za</span><span class='term'>{{term}}</span>"
       title: "išči po temah, objavah, uporabnikih ali kategorijah"
       full_page_title: "išči teme ali objave"
       no_results: "Iskanje nima zadetkov."
@@ -1111,28 +1125,28 @@ sl:
           label: Označeno
         filters:
           label: Vrni samo teme/objave...
-          title: se ujema naslov
-          likes: Ki sem jih všečkal
-          posted: Objavil sem v
-          watching: Ki jih opazujem
-          tracking: Ki jim sledim
+          title: kjer se ujema naslov
+          likes: ki sem jih všečkal
+          posted: v keterih sem odgovarjal
+          watching: ki jih opazujem
+          tracking: ki jim sledim
           private: V mojih sporočilih
-          bookmarks: Kjer sem ustvaril zaznamek
+          bookmarks: kjer sem ustvaril zaznamek
           first: ob prvi objavi
           pinned: so pripete
           unpinned: niso pripete
-          seen: Ki sem jih prebral
-          unseen: Ki jih nisem prebral
+          seen: ki sem jih prebral
+          unseen: ki jih nisem prebral
           wiki: so wiki
           images: Vsebujejo sliko(e)
           all_tags: Vse zgornje oznake
         statuses:
-          label: Kjer tema
-          open: so odprte
-          closed: so zaprte
-          archived: so arhivirane
-          noreplies: nimajo nobenega odgovora
-          single_user: vključujejo samo enega uporabnika
+          label: Kjer so teme
+          open: odprte
+          closed: zaprte
+          archived: arhivirane
+          noreplies: brez odgovora
+          single_user: od samo enega uporabnika
         post:
           count:
             label: Minimalno število objav

@@ -114,7 +114,6 @@ tr_TR:
       close: 'kapat'
       twitter: 'bu bağlantıyı Twitter''da paylaş'
       facebook: 'bu bağlantıyı Facebook''da paylaş'
-      google+: 'bu bağlantıyı Google+''da paylaş'
       email: 'bu bağlantıyı e-posta ile gönder'
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
@@ -3233,7 +3232,6 @@ tr_TR:
         last_emailed: "Son E-posta Gönderimi"
         not_found: "Üzgünüz, bu kullanıcı adı sistemimizde bulunmuyor. "
         id_not_found: "Üzgünüz, bu kullanıcı kimliği sistemimizde bulunmuyor."
-        active: "Aktif"
         show_emails: "E-postaları Göster"
         nav:
           new: "Yeni"

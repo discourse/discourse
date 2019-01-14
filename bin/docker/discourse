@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PARAMS="$@"
+CMD="cd /src && USER=discourse RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RAILS_ENV=${RAILS_ENV:=development} script/discourse $PARAMS"
+docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

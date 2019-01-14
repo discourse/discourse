@@ -114,7 +114,6 @@ nb_NO:
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
-      google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
@@ -3247,7 +3246,6 @@ nb_NO:
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
-        active: "Aktiv"
         show_emails: "Vis e-poster"
         nav:
           new: "Ny"

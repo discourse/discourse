@@ -180,7 +180,6 @@ ar:
       close: 'أغلق'
       twitter: 'شارك هذا الرابط علي تويتر'
       facebook: 'شارك هذا الرابط علي الفيسبوك'
-      google+: 'شارك هذا الرابط علي جوجل+'
       email: 'شارك هذا الرابط علي بريد إلكتروني'
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
@@ -241,6 +240,7 @@ ar:
     submit: "أرسل"
     generic_error: "نأسف، حدث عطل ما."
     generic_error_with_reason: "حدث عطل ما: %{error}"
+    go_ahead: "انطلق"
     sign_up: "أنشأ حسابا"
     log_in: "تسجل الدخول"
     age: "العمر"
@@ -262,6 +262,7 @@ ar:
     privacy_policy: "سياسة الخصوصية "
     privacy: "الخصوصية "
     tos: "شروط الخدمة"
+    rules: "الشروط"
     mobile_view: "نسخة الهواتف"
     desktop_view: "نسخة سطح المكتب"
     you: "انت"
@@ -286,6 +287,8 @@ ar:
       few: "{{count}} محارف"
       many: "{{count}} محرفا"
       other: "{{count}} حرف"
+    related_messages:
+      title: "الرسائل ذات الصلة"
     suggested_topics:
       title: "المواضيع المقترحة"
       pm_title: "رسائل مقترحة "
@@ -297,6 +300,8 @@ ar:
       our_moderators: "المشرفين"
       stat:
         all_time: "منذ التأسيس"
+        last_7_days: "آخر 7"
+        last_30_days: "آخر 30"
       like_count: "الإعجابات"
       topic_count: "المواضيع"
       post_count: "المنشورات"
@@ -313,6 +318,9 @@ ar:
     bookmarks:
       created: "لقد وضعت علامة مرجعية علي هذا المنشور"
       remove: "أزل العلامة المرجعية"
+    drafts:
+      resume: "أكمل"
+      remove: "احذف"
     preview: "معاينة"
     cancel: "ألغِ"
     save: "احفظ التعديلات"
@@ -3176,7 +3184,6 @@ ar:
         last_emailed: "آخر بريد الكتروني"
         not_found: "عذرا، اسم المستخدم غير موجود في النظام."
         id_not_found: "عذرا، هذا الرقم التعريفي غير موجود في النظام."
-        active: "نشط"
         show_emails: "عرض الرسائل"
         nav:
           new: "الجدد"

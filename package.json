@@ -11,7 +11,8 @@
     "bootbox": "3.2.0",
     "chart.js": "2.7.2",
     "favcount": "https://github.com/chrishunt/favcount",
-    "handlebars": "4.0.5",
+    "handlebars": "4.0.12",
+    "highlight.js": "https://github.com/highlightjs/highlight.js",
     "htmlparser": "https://github.com/tautologistics/node-htmlparser",
     "intersection-observer": "^0.5.1",
     "jquery": "3.3.1",
@@ -35,7 +36,7 @@
     "pretender": "^1.6",
     "prettier": "1.14.3",
     "puppeteer": "1.4",
-    "qunit": "2.6",
+    "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^6.3.5"
   },

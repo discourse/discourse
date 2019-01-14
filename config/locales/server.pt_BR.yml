@@ -1033,7 +1033,6 @@ pt_BR:
     num_tl3_flags_to_silence_new_user: "Se as postagens de um novo usuário obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user diferentes usuários do nível de confiança 3, oculte todos os posts e evite postagens futuras. 0 para desabilitar."
     num_tl3_users_to_silence_new_user: "Se as postagens de um novo usuário obtiverem sinalizadores num_tl3_flags_to_silence_new_user a partir dos vários usuários diferentes do nível de confiança 3, oculte todas as postagens e evite postagens futuras. 0 para desativar."
     notify_mods_when_user_silenced: "Se um usuário for silenciado automaticamente, envie uma mensagem para todos os moderadores."
-    flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     enable_markdown_typographer: "Use as regras de tipografia para melhorar a legibilidade do texto: substitua as aspas normais por \"aspas curvas\", (c) (tm) pelos símbolos, - pelo emdash -, etc."
     markdown_linkify_tlds: "Lista de domínios de nível superior que são tratados automaticamente como links"
@@ -1067,7 +1066,6 @@ pt_BR:
     topics_per_period_in_top_page: "Número de melhores tópicos mostrados no 'Exibir Mais' melhores tópicos quando expandido."
     redirect_users_to_top_page: "Automaticamente redirecionar usuários novos e há muito ausentes para a página melhores."
     top_page_default_timeframe: "Intervalo de tempo padrão para a página de melhores publicações. "
-    show_email_on_profile: "Mostrar o email de um usuário em seus perfis (apenas visível a eles mesmos e staff)"
     prioritize_username_in_ux: "Mostrar primeiro o nome de usuário na página do usuário, cartão do usuário e publicações (quando desabilitado, o nome será mostrado primeiro) "
     enable_rich_text_paste: "Ative a conversão automática de HTML para Markdown ao colar texto no compositor. (Experimental)"
     email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
@@ -1764,9 +1762,6 @@ pt_BR:
     disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
-  temporarily_closed_due_to_flags:
-    one: "Este tópico está temporariamente fechado por 1 hora devido a um grande número de sinalizadores da comunidade."
-    other: "Este tópico está temporariamente fechado para %{count} horas devido a um grande número de sinalizações da comunidade."
   system_messages:
     private_topic_title: "Tópico #%{id}"
     contents_hidden: "Por favor, visite o post para ver o seu conteúdo."

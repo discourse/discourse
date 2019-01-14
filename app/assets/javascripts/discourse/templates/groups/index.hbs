@@ -1,7 +1,7 @@
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
     {{#if currentUser.admin}}
-      {{d-button action="new"
+      {{d-button action=(action "new")
           class="btn-default groups-header-new pull-right"
           icon="plus"
           label="admin.groups.new.title"}}
@@ -23,7 +23,7 @@
 
   {{#if model}}
     {{#conditional-loading-spinner condition=model.loading}}
-      {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
+      {{#load-more selector=".groups-table .groups-table-row" action=(action "loadMore")}}
         <div class='container'>
           <table class="groups-table">
             <thead>
@@ -82,7 +82,7 @@
                       </span>
                     {{/if}}
 
-                    {{group-membership-button tagName='' model=group showLogin='showLogin'}}
+                    {{group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
                   </td>
                 </tr>
               {{/each}}

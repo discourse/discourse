@@ -154,7 +154,6 @@ pl_PL:
       close: 'zamknij'
       twitter: 'udostępnij ten odnośnik na Twitterze'
       facebook: 'udostępnij ten odnośnik na Facebooku'
-      google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
@@ -3235,7 +3234,6 @@ pl_PL:
         last_emailed: "Ostatnio wysłano email"
         not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
-        active: "Aktywny"
         show_emails: "Pokaż emaile"
         nav:
           new: "Nowi"

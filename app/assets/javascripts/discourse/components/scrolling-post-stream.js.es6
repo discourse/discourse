@@ -203,7 +203,7 @@ export default MountWidget.extend({
             }
           });
         };
-        this.sendAction("topVisibleChanged", {
+        this.topVisibleChanged({
           post: first,
           refresh: topRefresh
         });
@@ -212,14 +212,14 @@ export default MountWidget.extend({
       const last = posts.objectAt(onscreen[onscreen.length - 1]);
       if (this._bottomVisible !== last) {
         this._bottomVisible = last;
-        this.sendAction("bottomVisibleChanged", { post: last, refresh });
+        this.bottomVisibleChanged({ post: last, refresh });
       }
 
       const changedPost = this._currentPost !== currentPost;
       if (changedPost) {
         this._currentPost = currentPost;
         const post = posts.objectAt(currentPost);
-        this.sendAction("currentPostChanged", { post });
+        this.currentPostChanged({ post });
       }
 
       if (percent !== null) {
@@ -227,7 +227,7 @@ export default MountWidget.extend({
 
         if (changedPost || this._currentPercent !== percent) {
           this._currentPercent = percent;
-          this.sendAction("currentPostScrolled", { percent });
+          this.currentPostScrolled({ percent });
         }
       }
     } else {

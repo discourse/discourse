@@ -22,7 +22,7 @@
           <p>{{i18n "topic.feature_topic.pin_note"}}</p>
         {{/if}}
         <p>{{{unPinMessage}}}</p>
-        <p>{{d-button action="unpin" icon="thumb-tack" label="topic.feature.unpin" class="btn-primary"}}</p>
+        <p>{{d-button action=(action "unpin") icon="thumb-tack" label="topic.feature.unpin" class="btn-primary"}}</p>
       </div>
     </div>
   {{else}}
@@ -61,7 +61,7 @@
           </p>
         {{/if}}
         <p>
-          {{d-button action="pin" icon="thumb-tack" label="topic.feature.pin" class="btn-primary"}}
+          {{d-button action=(action "pin") icon="thumb-tack" label="topic.feature.pin" class="btn-primary"}}
         </p>
       </div>
     </div>
@@ -105,7 +105,7 @@
           </p>
         {{/if}}
         <p>
-          {{d-button action="pinGlobally" icon="thumb-tack" label="topic.feature.pin_globally" class="btn-primary"}}
+          {{d-button action=(action "pinGlobally") icon="thumb-tack" label="topic.feature.pin_globally" class="btn-primary"}}
         </p>
       </div>
     </div>
@@ -134,14 +134,14 @@
       </p>
       <p>
         {{#if model.isBanner}}
-          {{d-button action="removeBanner" icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
+          {{d-button action=(action "removeBanner") icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
         {{else}}
-          {{d-button action="makeBanner" icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
+          {{d-button action=(action "makeBanner") icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
         {{/if}}
       </p>
     </div>
   </div>
 {{/d-modal-body}}
 <div class="modal-footer">
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

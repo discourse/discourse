@@ -185,6 +185,7 @@ en:
 
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -874,6 +875,7 @@ en:
     read: "read"
     read_write: "read/write"
     description: "\"%{application_name}\" is requesting the following access to your account:"
+    instructions: "We just generated a new user API key for you to use with \"%{application_name}\", please paste the following key into your application:"
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -1191,6 +1193,8 @@ en:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+    pwa_config_icon_warning: 'The server is missing a proper large icon which allows users to add a homescreen shortcut to this site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">the Site Settings</a> and upload an icon of the recommended size.'
+    pwa_config_title_warning: 'The server is missing a short title which allows users to add a homescreen shortcut to this site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">the Site Settings</a> and configure a title of the recommended length.'
     s3_config_warning: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
@@ -1315,7 +1319,7 @@ en:
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
-    flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
+    flag_sockpuppets: "If a new user replies to a topic from the same IP address as the user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     enable_markdown_typographer: "Use typography rules to improve readability of text: replace straight quotes ' with curly quotes ’, (c) (tm) with symbols, -- with emdash –, etc"
@@ -1361,7 +1365,7 @@ en:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
-    show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
+    show_email_on_profile: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
 
@@ -1873,6 +1877,8 @@ en:
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
+    default_text_size: "Text size which is selected by default"
+
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
 
@@ -2343,8 +2349,8 @@ en:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for 1 hour due to a large number of community flags."
-    other: "This topic is temporarily closed for %{count} hours due to a large number of community flags."
+    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
     private_topic_title: "Topic #%{id}"
@@ -2883,6 +2889,7 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
+  email_from: "%{user_name} via %{site_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -3342,6 +3349,9 @@ en:
     welcome_message: |
       ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
+    welcome_message_invite_only: |
+      ## [Welcome to %{title}](#welcome)
+      An account is required. Please ask an existing member for an invite or log in to continue.
 
   terms_of_service:
     title: "Terms of Service"
@@ -4052,6 +4062,11 @@ en:
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
     minimum_required_tags: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    forbidden:
+      in_this_category: "\"%{tag_name}\" cannot be used in this category"
+      restricted_to:
+        one: "\"%{tag_name}\" is restricted to the \"%{category_names}\" category"
+        other: "\"%{tag_name}\" is restricted to the following categories: %{category_names}"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:

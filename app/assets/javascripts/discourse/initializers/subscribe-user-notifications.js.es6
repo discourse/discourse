@@ -82,7 +82,7 @@ export default {
               }
               oldNotifications.insertAt(
                 insertPosition,
-                Em.Object.create(lastNotification)
+                Ember.Object.create(lastNotification)
               );
             }
 

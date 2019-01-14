@@ -44,7 +44,7 @@ function initializePolls(api) {
           if (existing) {
             this._polls[p.name].setProperties(p);
           } else {
-            this._polls[p.name] = Em.Object.create(p);
+            this._polls[p.name] = Ember.Object.create(p);
           }
         });
         this.set("pollsObject", this._polls);

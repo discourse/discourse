@@ -94,7 +94,6 @@ id:
       close: 'tutup'
       twitter: 'share link ini di Twitter'
       facebook: 'share link ini di Facebook'
-      google+: 'share link ini di Google+'
       email: 'kirim link ini melalui email'
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
@@ -967,7 +966,6 @@ id:
             ip_address: "Alamat IP"
       users:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
-        active: "Aktif"
         nav:
           new: "Baru"
           staff: 'Staf'

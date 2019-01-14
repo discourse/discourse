@@ -114,7 +114,6 @@ sw:
       close: 'funga'
       twitter: 'Shiriki hiki kiungo kwenye Twitter'
       facebook: 'Shiriki hiki kiungo kwenye Facebook'
-      google+: 'Kishiriki hiki kiungo kwenye Google+, mtandao wa kijamii'
       email: 'tuma kiungo hiki kwenye barua pepe'
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
@@ -3013,7 +3012,6 @@ sw:
         last_emailed: "Mara ya Mwisho Amepokea Barua Pepe"
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
-        active: "Mara kwa Mara"
         show_emails: "Onyesha Barua Pepe"
         nav:
           new: "Mpya"

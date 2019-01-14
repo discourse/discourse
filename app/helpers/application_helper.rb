@@ -109,7 +109,12 @@ module ApplicationHelper
   end
 
   def html_classes
-    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+    list = []
+    list << (mobile_view? ? 'mobile-view' : 'desktop-view')
+    list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
+    list << 'rtl' if rtl?
+    list << text_size_class
+    list.join(' ')
   end
 
   def body_classes
@@ -126,8 +131,9 @@ module ApplicationHelper
     result.join(' ')
   end
 
-  def rtl_class
-    rtl? ? 'rtl' : ''
+  def text_size_class
+    size = current_user&.user_option&.text_size || SiteSetting.default_text_size
+    "text-size-#{size}"
   end
 
   def escape_unicode(javascript)
@@ -210,17 +216,10 @@ module ApplicationHelper
       opts[:image] = SiteSetting.site_apple_touch_icon_url
     end
 
-    # Use the correct scheme for open graph image
-    if opts[:image].present?
-      if opts[:image].start_with?("//")
-        uri = URI(Discourse.base_url)
-        opts[:image] = "#{uri.scheme}:#{opts[:image]}"
-      elsif opts[:image].start_with?("/uploads/")
-        opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
-      elsif GlobalSetting.relative_url_root && opts[:image].start_with?(GlobalSetting.relative_url_root)
-        opts[:image] = "#{Discourse.base_url_no_prefix}#{opts[:image]}"
-      end
-    end
+    # Use the correct scheme for opengraph/twitter image
+    opts[:image] = get_absolute_image_url(opts[:image]) if opts[:image].present?
+    opts[:twitter_summary_large_image] =
+      get_absolute_image_url(opts[:twitter_summary_large_image]) if opts[:twitter_summary_large_image].present?
 
     # Add opengraph & twitter tags
     result = []
@@ -451,5 +450,18 @@ module ApplicationHelper
     end
 
     setup_data
+  end
+
+  def get_absolute_image_url(link)
+    absolute_url = link
+    if link.start_with?("//")
+      uri = URI(Discourse.base_url)
+      absolute_url = "#{uri.scheme}:#{link}"
+    elsif link.start_with?("/uploads/")
+      absolute_url = "#{Discourse.base_url}#{link}"
+    elsif GlobalSetting.relative_url_root && link.start_with?(GlobalSetting.relative_url_root)
+      absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
+    end
+    absolute_url
   end
 end

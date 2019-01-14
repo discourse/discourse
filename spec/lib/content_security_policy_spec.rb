@@ -16,6 +16,20 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'base-uri' do
+    it 'is set to none' do
+      base_uri = parse(policy)['base-uri']
+      expect(base_uri).to eq(["'none'"])
+    end
+  end
+
+  describe 'object-src' do
+    it 'is set to none' do
+      object_srcs = parse(policy)['object-src']
+      expect(object_srcs).to eq(["'none'"])
+    end
+  end
+
   describe 'worker-src' do
     it 'always has self and blob' do
       worker_srcs = parse(policy)['worker-src']
@@ -97,6 +111,8 @@ describe ContentSecurityPolicy do
 
     plugin.enabled = true
     expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+    expect(parse(policy)['object-src']).to include('https://test-stripping.com')
+    expect(parse(policy)['object-src']).to_not include("'none'")
 
     plugin.enabled = false
     expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')

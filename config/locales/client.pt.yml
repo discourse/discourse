@@ -114,7 +114,6 @@ pt:
       close: 'fechar'
       twitter: 'partilhar esta hiperligação no Twitter'
       facebook: 'partilhar esta hiperligação no Facebook'
-      google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por e-mail'
     action_codes:
       public_topic: "tornei este tópico publico %{when}"
@@ -2612,7 +2611,6 @@ pt:
         last_emailed: "Último email enviado"
         not_found: "Pedimos desculpa, esse nome de utilizador não existe no nosso sistema."
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
-        active: "Ativo"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novo"

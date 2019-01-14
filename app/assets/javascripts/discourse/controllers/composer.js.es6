@@ -80,11 +80,11 @@ export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
   application: Ember.inject.controller(),
 
-  replyAsNewTopicDraft: Em.computed.equal(
+  replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_TOPIC_KEY
   ),
-  replyAsNewPrivateMessageDraft: Em.computed.equal(
+  replyAsNewPrivateMessageDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
   ),
@@ -155,7 +155,7 @@ export default Ember.Controller.extend({
     return "title";
   },
 
-  showToolbar: Em.computed({
+  showToolbar: Ember.computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");
@@ -198,7 +198,7 @@ export default Ember.Controller.extend({
     return currentUser && currentUser.get("staff");
   },
 
-  canUnlistTopic: Em.computed.and("model.creatingTopic", "isStaffUser"),
+  canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
   @computed("canWhisper", "model.post")
   showWhisperToggle(canWhisper, repliedToPost) {
@@ -298,6 +298,40 @@ export default Ember.Controller.extend({
   uploadIcon: () => uploadIcon(),
 
   actions: {
+    togglePreview() {
+      this.toggleProperty("showPreview");
+    },
+
+    closeComposer() {
+      this.close();
+    },
+
+    openComposer(options, post, topic) {
+      this.open(options).then(() => {
+        let url;
+        if (post) url = post.get("url");
+        if (!post && topic) url = topic.get("url");
+
+        let topicTitle;
+        if (topic) topicTitle = topic.get("title");
+
+        if (!url || !topicTitle) return;
+
+        url = `${location.protocol}//${location.host}${url}`;
+        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
+        const continueDiscussion = I18n.t("post.continue_discussion", {
+          postLink: link
+        });
+
+        const reply = this.get("model.reply");
+        if (!reply || !reply.includes(continueDiscussion)) {
+          this.get("model").prependText(continueDiscussion, {
+            new_line: true
+          });
+        }
+      });
+    },
+
     cancelUpload() {
       this.set("model.uploadCancelled", true);
     },
@@ -308,10 +342,6 @@ export default Ember.Controller.extend({
 
     storeToolbarState(toolbarEvent) {
       this.set("toolbarEvent", toolbarEvent);
-    },
-
-    togglePreview() {
-      this.toggleProperty("showPreview");
     },
 
     typed() {
@@ -724,15 +754,10 @@ export default Ember.Controller.extend({
       scopedCategoryId: null
     });
 
-    // If we show the subcategory list, scope the categories drop down to
-    // the category we opened the composer with.
+    // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
       const category = this.site.categories.findBy("id", opts.categoryId);
-      if (
-        category &&
-        (category.get("show_subcategory_list") ||
-          category.get("parentCategory.show_subcategory_list"))
-      ) {
+      if (category) {
         this.set("scopedCategoryId", opts.categoryId);
       }
     }

@@ -147,15 +147,29 @@ describe ApplicationHelper do
     end
   end
 
-  describe '#rtl_class' do
-    it "returns 'rtl' when the I18n.locale is rtl" do
+  describe '#html_classes' do
+    it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
-      expect(helper.rtl_class).to eq('rtl')
+      expect(helper.html_classes.split(" ")).to include('rtl')
     end
 
     it 'returns an empty string when the I18n.locale is not rtl' do
       I18n.stubs(:locale).returns(:zh_TW)
-      expect(helper.rtl_class).to eq('')
+      expect(helper.html_classes.split(" ")).not_to include('rtl')
+    end
+
+    it 'includes the user specified text size' do
+      user = Fabricate(:user)
+      user.user_option.text_size = "larger"
+      user.user_option.save!
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_classes.split(" ")).to include('text-size-larger')
+    end
+
+    it 'falls back to the default text size for anon' do
+      expect(helper.html_classes.split(" ")).to include('text-size-normal')
+      SiteSetting.default_text_size = "largest"
+      expect(helper.html_classes.split(" ")).to include('text-size-largest')
     end
   end
 

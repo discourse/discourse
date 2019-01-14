@@ -94,7 +94,6 @@ ko:
       close: '닫기'
       twitter: '트위터로 공유'
       facebook: '페이스북으로 공유'
-      google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
       public_topic: "이 글을 %{when} 에 공개"
@@ -2921,7 +2920,6 @@ ko:
         last_emailed: "마지막 이메일"
         not_found: "죄송합니다, 그 이름은 시스템에 존재하지 않습니다."
         id_not_found: "죄송합니다. 해당 사용자가 시스템에 없습니다."
-        active: "활동"
         show_emails: "이메일 보기"
         nav:
           new: "새로운 사용자"

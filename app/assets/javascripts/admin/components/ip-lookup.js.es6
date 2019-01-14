@@ -21,7 +21,7 @@ export default Ember.Component.extend({
         ajax("/admin/users/ip-info", {
           data: { ip: this.get("ip") }
         }).then(function(location) {
-          self.set("location", Em.Object.create(location));
+          self.set("location", Ember.Object.create(location));
         });
       }
 

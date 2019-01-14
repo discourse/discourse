@@ -341,11 +341,31 @@ describe Search do
     end
 
     context "search for a topic by url" do
-      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic') }
-
       it 'returns the topic' do
+        result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')
         expect(result.posts.length).to eq(1)
         expect(result.posts.first.id).to eq(post.id)
+      end
+
+      context 'restrict_to_archetype' do
+        let(:personal_message) { Fabricate(:private_message_topic) }
+        let!(:p1) { Fabricate(:post, topic: personal_message, post_number: 1) }
+
+        it 'restricts result to topics' do
+          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'topic', restrict_to_archetype: Archetype.default)
+          expect(result.posts.length).to eq(0)
+
+          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic', restrict_to_archetype: Archetype.default)
+          expect(result.posts.length).to eq(1)
+        end
+
+        it 'restricts result to messages' do
+          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          expect(result.posts.length).to eq(0)
+
+          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          expect(result.posts.length).to eq(1)
+        end
       end
     end
 

@@ -134,7 +134,6 @@ sr:
       close: 'zatvori'
       twitter: 'podeli ovaj link na Twitteru'
       facebook: 'podeli ovaj link na Facebooku'
-      google+: 'podeli ovaj link na Google+'
       email: 'podeli ovaj link preko e-pošte'
     action_codes:
       public_topic: "objavi ovu temu javno %{when}"
@@ -1686,7 +1685,6 @@ sr:
         last_emailed: "Poslednji e-mail"
         not_found: "Žao nam je, taj korisnik ne postoji u našem sistemu."
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
-        active: "Aktivni"
         show_emails: "Pokaži Email-ove"
         nav:
           new: "Novo"

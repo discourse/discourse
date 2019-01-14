@@ -94,7 +94,6 @@ zh_CN:
       close: '关闭'
       twitter: '分享至 Twitter'
       facebook: '分享至 Facebook'
-      google+: '分享至 Google+'
       email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
@@ -160,6 +159,7 @@ zh_CN:
     submit: "提交"
     generic_error: "抱歉，出了点小问题。"
     generic_error_with_reason: "出错了：%{error}"
+    go_ahead: "继续"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -224,12 +224,12 @@ zh_CN:
       clear_bookmarks: "取消收藏"
       help:
         bookmark: "点击收藏该主题的第一个帖子"
-        unbookmark: "点击删除本主题的所以书签"
+        unbookmark: "点击删除本主题的所有收藏"
     bookmarks:
       created: "已经收藏了"
       not_bookmarked: "收藏此贴"
       remove: "取消收藏"
-      confirm_clear: "你确定要清空这个主题中的所有书签？"
+      confirm_clear: "你确定要清空这个主题中的所有收藏？"
     drafts:
       resume: "复位"
       remove: "移除"
@@ -916,7 +916,7 @@ zh_CN:
         title: "注册 IP 地址"
       avatar:
         title: "头像"
-        header_title: "个人页面、私信、书签和设置"
+        header_title: "个人信息、私信、收藏和设置"
       title:
         title: "头衔"
         none: "（无）"
@@ -2224,8 +2224,8 @@ zh_CN:
         title: "我的帖子"
         help: "你发表过帖子的主题"
       bookmarks:
-        title: "书签"
-        help: "你标上书签的主题"
+        title: "收藏"
+        help: "你收藏的主题"
       category:
         title: "{{categoryName}}"
         title_with_count:
@@ -2270,7 +2270,7 @@ zh_CN:
         unread: '<b>g</b>, <b>u</b> 未读'
         categories: '<b>g</b>, <b>c</b> 分类'
         top: '<b>g</b>, <b>t</b> 热门'
-        bookmarks: '<b>g</b>, <b>b</b> 书签'
+        bookmarks: '<b>g</b>, <b>b</b> 收藏'
         profile: '<b>g</b> 然后 <b>p</b> 个人页面'
         messages: '<b>g</b>, <b>m</b> 私信'
         drafts: '<b>g</b>，<b></b>草稿'
@@ -2835,7 +2835,6 @@ zh_CN:
             confirm: "你确定要将数据库回滚到之前的工作状态吗？"
         location:
           local: "本地存储"
-          s3: "Amazon S3"
       export_csv:
         success: "导出开始，完成后你将被通过私信通知。"
         failed: "导出失败。请检查日志。"
@@ -3279,7 +3278,6 @@ zh_CN:
         last_emailed: "最后一次邮寄"
         not_found: "抱歉，在我们的系统中此用户名不存在。"
         id_not_found: "抱歉，在我们的系统中此用户 id 不存在。"
-        active: "活跃"
         show_emails: "显示邮件"
         nav:
           new: "新建"

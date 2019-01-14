@@ -14,6 +14,7 @@ module SvgSprite
     "angle-up",
     "archive",
     "arrows-alt-h",
+    "arrows-alt-v",
     "arrow-down",
     "arrow-up",
     "arrow-left",
@@ -84,6 +85,7 @@ module SvgSprite
     "far-clipboard",
     "far-clock",
     "far-comment",
+    "far-copyright",
     "far-dot-circle",
     "far-edit",
     "far-envelope",
@@ -183,6 +185,9 @@ module SvgSprite
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }
 
+  SVG_SPRITE_PATHS = Dir.glob(["#{Rails.root}/vendor/assets/svg-icons/**/*.svg",
+                               "#{Rails.root}/plugins/*/svg-icons/*.svg"])
+
   def self.svg_sprite_cache
     @svg_sprite_cache ||= DistributedCache.new('svg_sprite')
   end
@@ -227,7 +232,7 @@ Discourse SVG subset of #{fa_license}
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 """.dup
 
-    Dir["#{Rails.root}/vendor/assets/svg-icons/**/*.svg"].each do |fname|
+    SVG_SPRITE_PATHS.each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
@@ -251,7 +256,7 @@ Discourse SVG subset of #{fa_license}
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    Dir["#{Rails.root}/vendor/assets/svg-icons/**/*.svg"].each do |fname|
+    SVG_SPRITE_PATHS.each do |fname|
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
