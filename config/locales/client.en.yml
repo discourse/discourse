@@ -3261,7 +3261,7 @@ en:
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
           local: "Local Storage"
-          s3: "Amazon S3"
+          s3: "S3"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
