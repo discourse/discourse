@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset, :update, :account_created,
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
-    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary
   ]
 
   before_action :respond_to_suspicious_request, only: [:create]
@@ -213,13 +213,20 @@ class UsersController < ApplicationController
   end
 
   def summary
-    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-
-    summary = UserSummary.new(user, guardian)
+    summary = UserSummary.new(@user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
-    render_json_dump(serializer)
+    respond_to do |format|
+      format.html do
+        @restrict_fields = guardian.restrict_user_fields?(@user)
+        render :show
+      end
+      format.json do
+        render_json_dump(serializer)
+      end
+    end
   end
 
   def invited
