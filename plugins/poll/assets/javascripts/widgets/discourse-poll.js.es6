@@ -144,7 +144,7 @@ createWidget("discourse-poll-voters", {
       return h("li", [
         avatarFor("tiny", {
           username: user.username,
-          url: userPath(user.username),
+          url: this.site.mobileView ? userPath(user.username) : undefined,
           template: user.avatar_template
         }),
         " "
