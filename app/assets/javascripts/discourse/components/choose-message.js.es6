@@ -36,7 +36,8 @@ export default Ember.Component.extend({
 
     searchForTerm(title, {
       typeFilter: "private_messages",
-      searchForId: true
+      searchForId: true,
+      restrictToArchetype: "private_message"
     }).then(results => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
