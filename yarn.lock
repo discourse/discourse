@@ -1131,6 +1131,10 @@ has-values@^1.0.0:
     is-number "^3.0.0"
     kind-of "^4.0.0"
 
+"highlight.js@https://github.com/highlightjs/highlight.js":
+  version "9.13.1"
+  resolved "https://github.com/highlightjs/highlight.js#1b10552510a1ec13a3d30d46281dc268553ad157"
+
 homedir-polyfill@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/homedir-polyfill/-/homedir-polyfill-1.0.1.tgz#4c2bbc8a758998feebf5ed68580f76d46768b4bc"
