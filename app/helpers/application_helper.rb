@@ -109,7 +109,12 @@ module ApplicationHelper
   end
 
   def html_classes
-    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+    list = []
+    list << (mobile_view? ? 'mobile-view' : 'desktop-view')
+    list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
+    list << 'rtl' if rtl?
+    list << text_size_class
+    list.join(' ')
   end
 
   def body_classes
@@ -126,8 +131,9 @@ module ApplicationHelper
     result.join(' ')
   end
 
-  def rtl_class
-    rtl? ? 'rtl' : ''
+  def text_size_class
+    size = current_user&.user_option&.text_size || SiteSetting.default_text_size
+    "text-size-#{size}"
   end
 
   def escape_unicode(javascript)

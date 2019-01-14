@@ -37,7 +37,8 @@ class UserUpdater
     :theme_ids,
     :allow_private_messages,
     :homepage_id,
-    :hide_profile_and_presence
+    :hide_profile_and_presence,
+    :text_size
   ]
 
   def initialize(actor, user)
