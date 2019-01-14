@@ -275,28 +275,50 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-
-    it 'should generate notifications correctly' do
-
+    before do
       PostActionNotifier.enable
+    end
 
-      PostAction.act(codinghorror, post, PostActionType.types[:like])
-      expect(Notification.count).to eq(1)
+    it 'should generate and remove notifications correctly' do
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(1)
 
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
+
+      expect do
+        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(-1)
+
+      expect(Notification.exists?(id: notification.id)).to eq(false)
+    end
+
+    it "should not generate a notification if liker has been muted" do
       mutee = Fabricate(:user)
-
-      post = Fabricate(:post)
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
-      PostAction.act(mutee, post, PostActionType.types[:like])
 
-      expect(Notification.count).to eq(1)
+      expect do
+        PostAction.act(mutee, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it "should generate a notification if liker is an admin irregardles of \
+      muting" do
 
       # you can not mute admin, sorry
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
-      PostAction.act(admin, post, PostActionType.types[:like])
 
-      expect(Notification.count).to eq(2)
+      expect do
+        PostAction.act(admin, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(1)
 
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
     end
 
     it 'should increase the `like_count` and `like_score` when a user likes something' do
