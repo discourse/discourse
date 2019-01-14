@@ -13,6 +13,12 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
+  scope :get_liked_by, ->(user) {
+    where("data::json ->> 'original_username' = ?", user.username_lower)
+      .where(notification_type: Notification.types[:liked])
+      .order(created_at: :desc)
+  }
+
   attr_accessor :skip_send_email
 
   after_commit :send_email, on: :create
@@ -53,7 +59,8 @@ class Notification < ActiveRecord::Base
                         group_mentioned: 15,
                         group_message_summary: 16,
                         watching_first_post: 17,
-                        topic_reminder: 18
+                        topic_reminder: 18,
+                        liked_consolidated: 19,
                        )
   end
 
