@@ -13,7 +13,7 @@ describe UserSummarySerializer do
     serializer = UserSummarySerializer.new(summary, scope: guardian, root: false)
     json = serializer.as_json
 
-    expect(json[:likes_given]).to be_present
+    expect(json[:likes_given]).to eq(1)
     expect(json[:likes_received]).to be_present
     expect(json[:posts_read_count]).to be_present
     expect(json[:topic_count]).to be_present
