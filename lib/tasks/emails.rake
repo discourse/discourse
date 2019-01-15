@@ -114,7 +114,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Check them and try again.
         =======================================================================================
       STR
-      j
+
     elsif e.to_s.match(/Connection refused/)
       message = <<~STR
         ======================================== ERROR ========================================
