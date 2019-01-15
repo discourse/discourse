@@ -144,7 +144,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
 
     else
-
       message = <<~STR
         ======================================== ERROR ========================================
                                             UNEXPECTED ERROR
@@ -154,7 +153,8 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         ====================================== SOLUTION =======================================
         This is not a common error. No recommended solution exists!
 
-        Please report the exact error message above. (And a solution, if you find one!)
+        Please report the exact error message above to https://meta.discourse.org/
+        (And a solution, if you find one!)
         =======================================================================================
       STR
     end
