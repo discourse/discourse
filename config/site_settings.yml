@@ -1256,7 +1256,7 @@ security:
   content_security_policy_report_only:
     default: false
   content_security_policy_collect_reports:
-    default: true
+    default: false
   content_security_policy_script_src:
     type: list
     default: ''
