@@ -275,7 +275,7 @@ def migrate_to_s3
 
   s3_objects = []
   prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: bucket, prefix: prefix }
+  options = { bucket: bucket, prefix: prefix + folder }
 
   loop do
     response = s3.list_objects_v2(options)
@@ -347,7 +347,7 @@ def migrate_to_s3
     }
 
     from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{folder}#{prefix}\\1"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"
