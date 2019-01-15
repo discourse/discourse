@@ -3016,7 +3016,6 @@ ro:
         last_emailed: "Ultimul email trimis"
         not_found: "Ne pare rău, acest nume de utilizator nu există în sistem."
         id_not_found: "Ne pare rău, dar acest utilizator nu există în sistem."
-        active: "Activi"
         show_emails: "Arată email"
         nav:
           new: "Noi"

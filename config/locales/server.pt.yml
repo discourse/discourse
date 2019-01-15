@@ -34,14 +34,27 @@ pt:
   disable_remote_images_download_reason: "A transferência remota de imagens foi desativada porque não existe espaço disponível no disco."
   anonymous: "Anónimo"
   remove_posts_deleted_by_author: "Eliminado pelo autor"
+  on_another_topic: "Noutro tópico"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
     error_importing: "Erro ao clonar o repositório de GIT, acesso foi negado ou o repositório não foi encontrado"
+    errors:
+      component_no_user_selectable: "Components de um tema não podem ser seleccionados por um utilizador"
+      component_no_default: "Components de um tema não podem ter o tema predefinido"
+      component_no_color_scheme: "Componentes de um tema não podem ter uma palete de cores"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
       data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
+      default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
+      default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
+      default_out_range: "O valor predefinido da configuração  `%{name}` não se encontra nos valores possiveis."
+      enum_value_not_valid: "O valor selecionado não é um dos enumerados."
+      number_value_not_valid: "O valor novo não está no intervalo permitido."
+      number_value_not_valid_min_max: "Deve estar entre %{min} e %{max}."
+      number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
+      number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
   emails:
     incoming:
       default_subject: "Este tópico precisa de um título"
@@ -776,7 +789,6 @@ pt:
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc2 (membro) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc3 (habitual) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
-    flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
@@ -800,7 +812,6 @@ pt:
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
     top_page_default_timeframe: "Intervalo de tempo por defeito para a página de visualizações do topo."
-    show_email_on_profile: "Mostrar o email do utilizador no seu perfil (apenas visível para si próprio e para o pessoal)"
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"

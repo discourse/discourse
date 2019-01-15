@@ -691,7 +691,7 @@ zh_CN:
       self: "你还没有活动。"
       others: "无活动。"
     no_bookmarks:
-      self: "你没有书签帖子; 书签可让你快速查阅特定帖子。"
+      self: "你没有收藏帖子；收藏可让你快速查阅特定帖子。"
       others: "没有收藏。"
     no_likes_given:
       self: "你还没有赞任何帖子。"
@@ -786,6 +786,7 @@ zh_CN:
         disagreed_flags: 否决的标记
         ignored_flags: 忽略的标记
         score: 评分
+      description: "按管理人员对标记的反馈比例排序的用户列表（反对到同意）。"
     moderators_activity:
       title: "版主活跃度"
       labels:
@@ -796,6 +797,7 @@ zh_CN:
         post_count: 创建的帖子
         pm_count: 创建的私信
         revision_count: 版本
+      description: 版主活动列表，包括已审核的标记，阅读时间，创建的主题，创建的帖子，创建的私信以及修订。
     flags_status:
       title: "标记状态"
       values:
@@ -809,34 +811,42 @@ zh_CN:
         poster: 发表人
         flagger: 标记人
         time_to_resolution: 解决时间
+      description: "标记状态列表，包括标记类型，作者，标记人和解决时间。"
     visits:
       title: "用户访问量"
       xaxis: "天"
       yaxis: "访问量"
+      description: "所有唯一身份用户访问次数。"
     signups:
       title: "注册"
       xaxis: "天"
       yaxis: "注册次数"
+      description: "此期间注册的新账户。"
     new_contributors:
       title: "新贡献者"
       xaxis: "天"
       yaxis: "新贡献者数"
+      description: "此期间首次发布帖子的用户数。"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
+      description: "在最后一天登录的成员数除以上个月登录的成员数——返回表示社区“粘性”的%。目标是>30％。"
     daily_engaged_users:
       title: "每日活跃用户"
       xaxis: "天"
       yaxis: "活跃的用户"
+      description: "在过去一天中赞过或发表过的用户数。"
     profile_views:
       title: "查看用户资料"
       xaxis: "天"
       yaxis: "已看的用户资料数量"
+      description: "用户个人信息页的新访问数。"
     topics:
       title: "新发表主题"
       xaxis: "天"
       yaxis: "新主题数"
+      description: "在此期间创建的新主题。"
     posts:
       title: "新发表帖子"
       xaxis: "天"
@@ -846,14 +856,17 @@ zh_CN:
       title: "新的赞"
       xaxis: "天"
       yaxis: "新的赞数"
+      description: "新的赞数。"
     flags:
       title: "标记"
       xaxis: "天"
       yaxis: "标记数"
+      description: "新标记数。"
     bookmarks:
       title: "收藏"
       xaxis: "天"
       yaxis: "新收藏数"
+      description: "新主题和帖子的收藏数。"
     users_by_trust_level:
       title: "各信任等级的用户数"
       xaxis: "用户等级"
@@ -1131,7 +1144,6 @@ zh_CN:
     num_tl3_flags_to_silence_new_user: "如果新用户被 num_tl3_users_to_silence_new_user 个信任等级3的用户标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
     num_tl3_users_to_silence_new_user: "如果新用户被不同信任等级3的用户标记 num_tl3_flags_to_silence_new_use 为标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
     notify_mods_when_user_silenced: "如果用户被自动禁言了，发私信给所有版主。"
-    flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     enable_markdown_typographer: "使用排版规则来提高文本的可读性：用引号替换直引号'，用符号代替（c）（tm），用emdash等等"
     enable_markdown_linkify: "自动将看起来像链接的文本视为链接：www.example.com和https://example.com将自动链接"
@@ -1176,7 +1188,6 @@ zh_CN:
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
     top_page_default_timeframe: "顶部查看页面的默认时间表"
-    show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和管理人员可见）"
     prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时自动启用HTML到Markdown转换。（实验性）"
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
@@ -1265,7 +1276,7 @@ zh_CN:
     rate_limit_new_user_create_post: "在发表帖子后，新用户必须等待(n)秒才能创建另一个帖子。"
     max_likes_per_day: "每个用户每天能赞的数量的最大值。"
     max_flags_per_day: "每个用户每天能标记的数量的最大值。"
-    max_bookmarks_per_day: "每个用户每天能做书签数量的最大值。"
+    max_bookmarks_per_day: "每用户每天能收藏的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_personal_messages_per_day: "用户每天可以创建的最大消息数。"
@@ -1976,8 +1987,6 @@ zh_CN:
     disagreed: "谢谢你的私信。我们正在进行处理。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
-  temporarily_closed_due_to_flags:
-    other: "因为大量社区成员的标记，这个主题被临时关闭 %{count} 小时。"
   system_messages:
     private_topic_title: "主题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
@@ -2956,7 +2965,7 @@ zh_CN:
 
       我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。
 
-      Discourse 提供了让社区共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。
+      Discourse 提供了让社区共同鉴别最棒（或最差）的贡献的工具：收藏、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。
 
       让我们创造一个更美好的社区。
 
@@ -2965,7 +2974,7 @@ zh_CN:
       ## [如果你发现问题了，标记它](#flag-problems)
       版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社区监察者，而不仅是守卫或者警察。
 
-      当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它。_如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。
+      当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它_。如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。
 
       为了维护我们的社区，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社区里发表的任何言论均不负责任。
 

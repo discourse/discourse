@@ -10,6 +10,13 @@
 </div>
 {{/if}}
 
+<div class="control-group text-size">
+  <label class="control-label">{{i18n 'user.text_size.title'}}</label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=textSizes value=model.user_option.text_size onSelect=(action "selectTextSize")}}
+  </div>
+</div>
+
 {{#if siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
     <label class="control-label">{{i18n 'user.locale.title'}}</label>

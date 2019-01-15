@@ -147,6 +147,7 @@ es:
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de copia de seguridad salvo que hayas rellenado '%{setting_name}'."
+      s3_bucket_reused: "No puedes usar el mismo bucket para 's3_upload_bucket' y 's3_backup_bucket'. Por favor, selecciona otro bucket o usa una ruta diferente para cada bucket."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, póngase en contacto con miembros del staff y envíe esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -160,6 +161,7 @@ es:
 
       <p>O bien, por favor <a href="%{base_url}/password-reset">Resetear Contraseña</a>.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, ¡ya <a href='%{base_path}/u/%{username}/summary'>tiene una cuenta!</a>"
+    confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam.</p>"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
     error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
@@ -198,6 +200,7 @@ es:
     continue: "Continuar discusión"
     error: "Error al insertar"
     referer: "Referente:"
+    mismatch: "El remitente no se envió o no coincide con ninguno de los siguientes hosts:"
     no_hosts: "No se han definido hosts para el insertado"
     configure: "Configurar insertado"
     more_replies:
@@ -793,6 +796,7 @@ es:
     read: "lectura"
     read_write: "lectura/escritura"
     description: "\"%{application_name}\" está solicitando el siguiente acceso a tu cuenta:"
+    instructions: "Acabamos de generar una nueva llave API de usuario para que uses con \"%{application_name}\", por favor pega la siguiente llave en tu aplicación: "
     no_trust_level: "Lo sentimos, no tienes el nivel de confianza requerido para acceder a la API de usuario"
     generic_error: "Lo sentimos, no pudimos emitir claves API de usuario, esta funcionalidad puede estar desactivada por el administrador del sitio"
     scopes:
@@ -812,7 +816,7 @@ es:
         percent: Porcentaje
         day: Día
     post_edits:
-      title: "Ediciones del mensaje"
+      title: "Ediciones de mensaje"
       labels:
         post: Post
         editor: Editor
@@ -827,6 +831,7 @@ es:
         disagreed_flags: Reportes en desacuerdo
         ignored_flags: Reportes ignorados
         score: Puntuación
+      description: "Lista de usuarios ordenada por la proporción de respuesta de staff a sus reportes (de acuerdo a en desacuerdo)."
     moderators_activity:
       title: "Actividad de moderación"
       labels:
@@ -837,6 +842,7 @@ es:
         post_count: Mensajes creados
         pm_count: Mensajes privados creados
         revision_count: Ediciones
+      description: "Lista de actividad de moderación incluyendo reportes revisados, tiempos de lectura, temas creados, mensajes privados iniciados y ediciones."
     flags_status:
       title: "Estado de reportes"
       values:
@@ -850,34 +856,42 @@ es:
         poster: Autor
         flagger: Reportado por
         time_to_resolution: Tiempo de resolución
+      description: "Lista de estados de reporte incluyendo el tipo de reporte, usuario que lo publica, usuario que reporta y el tiempo hasta ser resuelto."
     visits:
       title: "Visitas de usuario"
       xaxis: "Día"
       yaxis: "Número de visitas"
+      description: "Número de visitantes únicos."
     signups:
       title: "Registros"
       xaxis: "Día"
       yaxis: "Número de Registros"
+      description: "Nuevos registros de cuenta para este periodo"
     new_contributors:
       title: "Nuevos Colaboradores"
       xaxis: "Día"
       yaxis: "Número de nuevos colaboradores"
+      description: "Número de usuarios que han publicado su primer mensaje durante este periodo."
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
+      description: "Número de miembros que han iniciado sesión dividido entre el número de miembros que han iniciado sesión durante el último mes – devuelve un % que indica el grado de \"permanencia\". Intentar mantener por encima de 30%."
     daily_engaged_users:
       title: "Usuarios comprometidos a diario"
       xaxis: "Día"
       yaxis: "Usuarios Comprometidos"
+      description: "Número de usuarios que han dado me gusta o han publicado en el último día."
     profile_views:
       title: "Visitas a perfil de usuario"
       xaxis: "Día"
       yaxis: "Número de perfiles de usuario vistos"
+      description: "Número total de visitas a perfiles de usuario."
     topics:
       title: "Temas nuevos"
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
+      description: "Nuevos temas creados durante este periodo."
     posts:
       title: "Nuevos posts"
       xaxis: "día"
@@ -887,20 +901,24 @@ es:
       title: "Me gusta"
       xaxis: "Día"
       yaxis: "Número de 'me gusta' nuevos"
+      description: "Número de nuevos me gusta."
     flags:
       title: "Reportes"
       xaxis: "Día"
       yaxis: "Número de reportes"
+      description: "Número de nuevos reportes."
     bookmarks:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de nuevos marcadores"
+      description: "Número de nuevos temas y mensajes añadidos a marcadores."
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
       xaxis: "Día"
       yaxis: "Número de usuarios"
       labels:
         level: Nivel
+      description: "Número de usuarios agrupados por nivel de confianza."
     users_by_type:
       title: "Usuarios por Tipos"
       xaxis: "Tipo"
@@ -912,40 +930,49 @@ es:
         moderator: Moderador
         suspended: Suspendidos
         silenced: Silenciados
+      description: "Número de usuarios agrupados por administradores, moderadores, suspendidos y silenciados."
     trending_search:
       title: Tendencias de búsqueda
       labels:
         term: Término
         searches: Búsquedas
         click_through: CTR
+      description: "Términos de búsqueda más populares con sus porcentajes de clic"
     emails:
       title: "Correos enviados"
       xaxis: "Día"
       yaxis: "Número de correos"
+      description: "Número de nuevos emails enviados."
     user_to_user_private_messages:
       title: "Usuario a usuario (respuestas excluidas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de nuevos mensajes privados."
     user_to_user_private_messages_with_replies:
       title: "Usuario a usuario (con respuestas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de nuevos mensajes privados y sus respuestas."
     system_private_messages:
       title: "Sistema"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de mensajes privados enviados automáticamente por el sistema."
     moderator_warning_private_messages:
       title: "Advertencias al moderador"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de avisos enviados por mensaje privado por moderadores."
     notify_moderators_private_messages:
       title: "Notificaciones a moderadores"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de veces que los moderadores han sido notificados de forma privada por un reporte."
     notify_user_private_messages:
       title: "Notificaciones a usuarios"
       xaxis: "Día"
       yaxis: "Número de mensajes"
+      description: "Número de veces que los usuarios han sido notificados de forma privada por un reporte."
     top_referrers:
       title: "Los que más recomiendan"
       xaxis: "Usuario"
@@ -955,6 +982,7 @@ es:
         user: "Usuario"
         num_clicks: "Clics"
         num_topics: "Temas"
+      description: "Usuarios listados por número de clics en enlaces que han compartido"
     top_traffic_sources:
       title: "Las mayores fuentes de tráfico"
       xaxis: "Dominio"
@@ -965,35 +993,43 @@ es:
         domain: Dominio
         num_clicks: Clics
         num_topics: Temas
+      description: "Las fuentes externas que más han enlazado a este sitio."
     top_referred_topics:
       title: "Los temas más referidos"
       labels:
         num_clicks: "Clics"
         topic: "Tema"
+      description: "Los temas que más clics de fuentes externas han recibido."
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
       yaxis: "Páginas vistas anónimas"
+      description: "Número de nuevas impresiones de páginas de visitantes sin una sesión iniciada."
     page_view_logged_in_reqs:
       title: "Registrados"
       xaxis: "Día"
       yaxis: "Páginas vistas de usuarios logueados"
+      description: "Número de impresiones de página de usuarios con sesión iniciada."
     page_view_crawler_reqs:
       title: "Rastreadores web"
       xaxis: "Día"
       yaxis: "Páginas vistas de rastreadores web"
+      description: "Lista de webcrawlers por número de nuevas impresiones de páginas generadas."
     page_view_total_reqs:
       title: "Páginas vistas"
       xaxis: "Día"
       yaxis: "Total páginas vistas"
+      description: "Número de nuevas impresiones de páginas de todos los visitantes."
     page_view_logged_in_mobile_reqs:
       title: "Páginas vistas de usuarios logueados"
       xaxis: "Día"
       yaxis: "Páginas vistas de usuarios logueados a través de móvil"
+      description: "Número de impresiones de página de usuarios en dispositivos móviles y con sesión iniciada."
     page_view_anon_mobile_reqs:
       title: "Páginas vistas anónimas"
       xaxis: "Día"
       yaxis: "Páginas vistas anónimas desde móvil"
+      description: "Número de impresiones de página de visitantes desde dispositivos móviles que no tenían sesión iniciada."
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -1022,19 +1058,23 @@ es:
       title: "Tiempo transcurrido hasta la primera respuesta"
       xaxis: "Día"
       yaxis: "Tiempo medio (horas)"
+      description: "Tiempo medio (en horas) de la primera respuesta a nuevos temas."
     topics_with_no_response:
       title: "Temas sin respuesta"
       xaxis: "Día"
       yaxis: "Total"
+      description: "Número de nuevos temas creados que no han recibido respuestas."
     mobile_visits:
       title: "Visitas de usuarios (móvil)"
       xaxis: "Día"
       yaxis: "Número de visita"
+      description: "Número de usuarios únicos que han visitado desde dispositivos móviles."
     web_crawlers:
       title: "Solicitudes de Rastreadores Web"
       labels:
         user_agent: "Agente de usuario"
         page_views: "Páginas vistas"
+      description: "Número de impresiones de página generada por webcrawlers."
     suspicious_logins:
       title: "Inicios de sesión sospechosos"
       labels:
@@ -1045,12 +1085,22 @@ es:
         device: Dispositivo
         os: Sistema operativo
         login_time: Fecha y hora de inicio de sesión
+      description: "Detalles de nuevos inicios de sesión marcados como sospechosos."
     staff_logins:
       title: "Inicios de sesión del staff"
       labels:
         user: Usuario
         location: Ubicación
         login_at: Inicio de sesión el
+      description: "Lista de inicios de sesión de administradores y moderadores con fecha y lugar."
+    top_uploads:
+      title: "Top archivos subido"
+      labels:
+        filename: Nombre del archivo
+        extension: Extensión
+        author: Autor
+        filesize: Tamaño del archivo
+      description: "Lista de archivos subidos por extensión, tamaño y autor."
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
@@ -1173,7 +1223,6 @@ es:
     num_tl3_flags_to_silence_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todos sus posts y no podrá publicar más en un futuro. 0 para deshabilitar."
     num_tl3_users_to_silence_new_user: "Si los posts de un nuevo usuario reciben num_tl3_flags_to_silence_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todos sus posts y prevenir futuras publicaciones. 0 para desactivar esta opción."
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."
-    flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     enable_markdown_typographer: "Utilice reglas de tipografía para mejorar la legibilidad de texto: remplace citas rectas 'con comillas', (c) (tm) con símbolos, - con emdash -, etc."
     enable_markdown_linkify: "Trate automáticamente el texto que se ve como un enlace como un enlace: www.ejemplo.com y https://ejemplo.com se vincularán automáticamente"
@@ -1218,7 +1267,7 @@ es:
     topics_per_period_in_top_page: "Número de mejores temas mostrados en la vista expandida al clicar en 'ver más'."
     redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."
     top_page_default_timeframe: "Período de tiempo por defecto para la página de temas top"
-    show_email_on_profile: "Mostrar el e-mail los usuarios en su perfil (solamente visibles para ellos mismos y el staff)"
+    show_email_on_profile: "Permitir a los moderadores visualizar los emails de usuarios"
     prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
     enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown cuando pegues texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
@@ -1331,6 +1380,7 @@ es:
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del staff subir cualquier archivo en MP."
     strip_image_metadata: "Eliminar metadatos de imágenes."
     min_ratio_to_crop: "Ratio utilizado para recortar imágenes altas. Ingrese el resultado de ancho / alto."
+    simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -1559,6 +1609,7 @@ es:
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( serán convertidos a emojis"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
+    enable_inline_emoji_translation: "Habilita la traducción de emojis en línea (sin ningún espacio ni puntuación antes)"
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
@@ -1599,6 +1650,7 @@ es:
     min_trust_level_for_user_api_key: "Nivel de confianza necesario para generar claves de API de usuario"
     allowed_user_api_auth_redirects: "URL permitida para autentificar redirección para claves API de usuario"
     allowed_user_api_push_urls: "URL permitida para el 'server push' en claves API de usuario"
+    expire_user_api_keys_days: "Número de días antes de que la clave de la API de usuario caduque automáticamente (0 para nunca)"
     tagging_enabled: "¿Activar etiquetas para los temas?"
     min_trust_to_create_tag: "El mínimo nivel de confianza requerido para crear una etiqueta."
     max_tags_per_topic: "El máximo número de etiquetas que se pueden añadir a un tema."
@@ -1618,6 +1670,7 @@ es:
     governing_law: "Ley que rige"
     city_for_disputes: "Ciudad de Disputas"
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
+    dashboard_general_tab_activity_metrics: "Selecciona qué reportes se mostrarán como medidas de actividad en la pestaña general."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1647,6 +1700,8 @@ es:
       reply_by_email_disabled: "Primero debes habilitar 'reply by email' antes de habilitar esta configuración."
       sso_url_is_empty: "Debe establecer una 'sso url' antes de habilitar esta configuración."
       enable_local_logins_disabled: "Primero debes habilitar 'enable local logins'  antes de habilitar esta configuración."
+      min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
+      max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
     placeholder:
       sso_provider_secrets:
         key: "www.ejemplo.com"
@@ -1680,6 +1735,13 @@ es:
     errors:
       different_topics: "Mensajes que pertenecen a temas diferentes no pueden ser juntados."
       different_users: "Mensajes que pertenecen a diferentes usuarios no pueden ser juntados."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Un mensaje ha sido separado a un nuevo %{entity}: %{topic_link}"
+      other: "%{count} mensajes han sido separados a un nuevo %{entity}: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Un mensaje ha sido unido a un %{entity} existente: %{topic_link}"
+      other: "%{count} mensajes han sido unidos a un %{entity} existente: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad"
   topic_statuses:
@@ -1941,8 +2003,8 @@ es:
     deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
     deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   temporarily_closed_due_to_flags:
-    one: "Este tema está temporalmente cerrado por 1 hora debido a un gran número de reportes de la comunidad."
-    other: "Este tema está temporalmente cerrado por %{count} horas debido a un gran número de reportes de la comunidad."
+    one: "Este tema está cerrado temporalmente durante al menos 1 hora debido a un número elevado de reportes de la comunidad."
+    other: "Este tema está cerrado temporalmente durante al menos %{count} horas debido a un número elevado de reportes de la comunidad."
   system_messages:
     private_topic_title: "Tema #%{id}"
     contents_hidden: "Por favor, visita el post para ver su contenido."
@@ -2508,6 +2570,7 @@ es:
     Para cancelar estos emails, [clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3538,39 +3601,60 @@ es:
     member:
       name: Miembro
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Disponen</a> de invitaciones, mensaje a grupos y más \"me gusta\""
+      long_description: |
+        Esta medalla se concede al llegar a nivel de confianza 2. Gracias por participar durante estas semanas y unirte de verdad a nuestra comunidad. Ahora puedes enviar invitaciones desde tu página de usuario o desde los temas, crear mensajes personales grupales y dar más me gusta por día.
     regular:
       name: Habitual
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Disponen</a> del poder recategorizar, renombrar, publicar enlacer sin el tag no-follow y más me gusta"
+      long_description: |
+        Esta medalla se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos, y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus reportes tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
     leader:
       name: Líder
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dispone</a> de poder editar, destacar, cerrar, archivar, dividir y combinar temas globalmente"
     welcome:
       name: ¡Bienvenido/a!
       description: Recibió un "me gusta"
+      long_description: |
+        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Enhorabuena, has publicado algo útil que los demás miembros de la comunidad han considerado útil, interesante o chulo!
     autobiographer:
       name: Autobiógrafo
       description: "Detalló información en su <a href=\"%{base_uri}/my/preferences/profile\">perfil</a> de usuario"
+      long_description: |
+        Esta medalla se concede por rellenar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionar una foto de perfil. Al contar más sobre ti y lo que te interesa, la comunidad es más cercana y está más conectada. ¡Anímate!
     anniversary:
       name: Aniversario
       description: Miembro activo desde hace un año y que ha publicado al menos una vez
+      long_description: |
+        Esta medalla se concede cuando has sido miembro durante un año y has publicado al menos una vez durante este tiempo. Gracias por seguir con nosotros y contribuir durante todos este tiempo. ¡No sería lo mismo sin ti!
     nice_post:
       name: Buena respuesta
       description: Recibió 10 "me gusta" en una respuesta
+      long_description: "Esta medalla se concede cuando una de tus respuestas consigue 10 me gusta. ¡Tu respuesta ha gustado a la comunidad y ha ayudado a mantener viva la conversación! \n"
     good_post:
       name: Gran respuesta
       description: Recibió 25 "me gusta" en una respuesta
+      long_description: |
+        Esta medalla se concede cuando una de tus respuestas consigue 25 me gusta. Tu respuesta ha sido excepcional y ha conseguido hacer la conversación mucho más interesante.
     great_post:
       name: Excelente respuesta
       description: Recibió 50 "me gusta" en una respuesta
+      long_description: |
+        Esta medalla se concede cuando una de tus respuestas consigue 50 me gusta. ¡Increíble! ¡Tu respuesta ha sido fascinante, buenísima o inspiradora y le ha encantado a la comunidad!
     nice_topic:
       name: Buen tema
       description: Recibió 10 "me gusta" en un tema
+      long_description: |
+        Esta medalla se concede cuando un tema tuyo recibe 10 me gusta. Has empezado una conversación interesante que le ha gustado a la comunidad.
     good_topic:
       name: Gran tema
       description: Recibió 25 "me gusta" en un tema
+      long_description: |
+        Esta medalla se concede cuando un tema tuyo consigue 25 me gusta. Has iniciado una conversación que la comunidad ha disfrutado mucho.
     great_topic:
       name: Excelente tema
       description: Recibió 50 "me gusta" en un tema
+      long_description: |
+        Esta medalla se concede cuando un tema tuyo consigue 50 me gusta. Has comenzado un tema que a la comunidad le ha encantado y que ha resultado en una interesante conversación.
     nice_share:
       name: Buena contribución
       description: Compartió un post con 25 visitantes únicos
@@ -3580,9 +3664,13 @@ es:
     good_share:
       name: Gran contribución
       description: Compartió un post con 300 visitantes únicos
+      long_description: |
+        Esta medalla se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una gran conversación a unas cuantas personas y has ayudado a crecer la comunidad.
     great_share:
       name: Excelente contribución
       description: Compartió un post con 1000 visitantes únicos
+      long_description: |
+        Esta medalla se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia, y has ayudado a crecer la comunidad.
     first_like:
       name: Primer "me gusta"
       description: Le dio a "me gusta" a un post
@@ -3592,6 +3680,8 @@ es:
     first_flag:
       name: Primer reporte
       description: Reportó un post
+      long_description: |
+        Esta medalla se concede la primera vez que reportas algo. Reportar es la manera en la que mantenemos el foro en buen estado. Si ves algo que necesite ser revisado por un moderador por cualquier motivo, no dudes en reportar. Si ves im problema... ¡:flag_black: repórtalo!
     promoter:
       name: Promotor
       description: Invitó a un usuario
@@ -3619,9 +3709,13 @@ es:
     first_quote:
       name: Primera Cita
       description: Citó un post
+      long_description: |
+        Esta medalla se concede la primera vez que citas algo en una respuesta. Citar las partes relevantes de mensajes anteriores ayuda a mantener la conversación conectada y no desvariar. La manera más fácil de citar es seleccionando una parte de un mensaje y luego pulsar el botón de responder. ¡Cita a discreción!
     read_guidelines:
       name: Directrices leídas
       description: "Leyó las <a href=\"%{base_uri}/guidelines\">directrices de la comunidad</a>"
+      long_description: |
+        Esta medalla se concede por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Con seguir y compartir estas simples pautas, nos ayudarás a construir un foro más seguro, divertido y sostenible. Acuérdate de que detrás de cada usuario hay un ser humano, muy parecido a ti. ¡Pórtate bien!
     reader:
       name: Lector
       description: Leyó todas las respuestas en un tema con más de 100 respuestas
@@ -3679,6 +3773,8 @@ es:
     crazy_in_love:
       name: Generoso
       description: Utilizó 50 "me gusta" 20 veces
+      long_description: |
+        Esta medalla se concede cuando usas todos los 50 me gusta durante 20 días. ¡Genial! Eres un modelo a seguir por animar a los demás miembros de la comunidad.
     thank_you:
       name: Agradecido/a
       description: "Ha recibido me gusta en 20 posts y dado a 10 "
@@ -3694,6 +3790,8 @@ es:
     empathetic:
       name: Empático
       description: Ha recibido me gusta en 500 posts y dado a 1000
+      long_description: |
+        Esta medalla se concede cuando tienes 500 me gusta y le has dado 1000 me gusta a otros mensajes. Eres un modelo de generosidad y apreciación mutua :two_hearts:.
     first_emoji:
       name: Primer emoji
       description: Utilizó un emoji en un post
@@ -3703,9 +3801,13 @@ es:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en un post
+      long_description: |
+        Esta medalla se concede la primera vez que mencionas el @nombre de usuario de alguien en una publicación. Las menciones generan notificaciones a la persona mencionada, para que sepan que les estás mencionando. Simplemente empieza escribiendo @ (arroba) para mencionar a cualquiera, o, si está permitido, a un grupo – es una forma conveniente de captar la atención de alguien.
     first_onebox:
       name: Primer Onebox
       description: Publicó un enlace expandido vía Onebox
+      long_description: |
+        Esta medalla se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) foto.
     first_reply_by_email:
       name: Primera respuesta por email
       description: Respondió a un post vía email
@@ -3721,12 +3823,18 @@ es:
     enthusiast:
       name: Entusiasta
       description: 10 días de visitas
+      long_description: |
+        Esta medalla se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
     aficionado:
       name: Aficionado
       description: 100 días de visitas
+      long_description: |
+        Esta medalla se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
     devotee:
       name: Devoto
       description: 365 días de visitas
+      long_description: |
+        Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Un año entero!
     badge_title_metadata: "%{display_name} distintivo en %{site_title}"
   admin_login:
     success: "Email enviado"
@@ -3743,6 +3851,11 @@ es:
     staff_tag_disallowed: "La etiqueta \"%{tag}\" solo puede ser insertada por moderadores."
     staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" solo puede ser eliminada por moderadores."
     minimum_required_tags: "Debes seleccionar al menos %{count} etiquetas,"
+    forbidden:
+      in_this_category: "\"%{tag_name}\" no puede ser usada en esta categoría."
+      restricted_to:
+        one: "\"%{tag_name}\" está restringida a la categoría \"%{category_names}\""
+        other: "\"%{tag_name}\" está restringida a las siguientes categorías: %{category_names}"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "Enhorabuena, ¡has instalado Discourse!"
@@ -3788,6 +3901,7 @@ es:
             placeholder: "La mejor comunidad del mundo"
       introduction:
         title: "Introducción"
+        disabled: "<p>No hemos encontrado ningún tema con el título \"%{topic_title}\".</p> <ul> <li>Si has cambiado el título, edita ese tema para cambiar el texto introductorio de tu foro.</li> <li>Si lo has borrado, crea otro tema y titúlalo \"%{topic_title}\". El contenido del primer mensaje será el texto introductorio de tu foro.</li> </ul>"
         fields:
           welcome:
             label: "Tema de bienvenida"
@@ -3847,8 +3961,10 @@ es:
         fields:
           logo:
             label: "Logo Principal"
+            description: "La imagen del logo en la parte superior izquierda de la página. Usa una imagen ancha y rectangular con una altura de 120px y una relación de aspecto mayor de 3:1."
           logo_small:
             label: "Logo Compacto"
+            description: "La versión compacta de tu logo, mostrada en la parte superior izquierda de la página al bajar. Usa una imagen cuadrada. El tamaño recomendado es 120x120"
       icons:
         title: "Iconos"
         fields:
@@ -3884,8 +4000,12 @@ es:
       invites:
         title: "Invitar staff"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."
+        disabled: "Ya que los inicios de sesión locales están desactivados, no es posible enviar invitaciones a nadie. Por favor, ve al siguiente paso."
       finished:
         title: "Tu foro de Discourse está listo!"
+        description: |
+          <p>Si alguna vez quieres cambiar alguno de estos ajustes, <b>vuelve a lanzar este ayudante cuando quieras</b> o visita <a href='%{base_path}/admin' target='_blank'>el panel de administrador</a>; lo encontrarás al lado del icono de la llave inglesa en el menú.</p>
+          <p>¡Pásalo bien, y buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu comunidad!</a></p>
   search_logs:
     graph_title: "Cuenta de Búsquedas"
   joined: "Registrado"

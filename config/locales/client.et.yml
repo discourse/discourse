@@ -2596,8 +2596,6 @@ et:
             label: "Pööra tagasi"
             title: "Pööra andmebaas tagasi viimati toiminud olekusse"
             confirm: "Oled kindel, et soovid andmebaasi tagasi viimati toiminud olekusse pöörata?"
-        location:
-          s3: "Amazon S3"
       export_csv:
         success: "Eksportimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         failed: "Eksportimine ebaõnnestus. Kontrolli logisid."
@@ -2924,7 +2922,6 @@ et:
         last_emailed: "Viimati meilitud"
         not_found: "Vabanda, sellist kasutajanime ei eksisteeri meie süsteemis."
         id_not_found: "Vabanda, sellist kasutajatunnust ei eksisteeri meie süsteemis."
-        active: "Aktiivne"
         show_emails: "Näita meile"
         nav:
           new: "Uus"

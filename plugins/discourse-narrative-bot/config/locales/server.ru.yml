@@ -149,14 +149,6 @@ ru:
 
           - Мы верим в [цивилизованном поведении](%{base_uri}/guidelines) в нашем сообществе.
       onebox:
-        instructions: |-
-          Далее, вы можете поделиться одну из этих ссылок со мной? Ответить мне с **ссылкой с новой строки**.  Эти ссылки добавят отличный обзор.
-
-          Чтобы скопировать ссылку, нажмите и удерживайте на мобильном, или правой кнопкой мыши:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Здорово! Это будет работать для большинства <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> ссылок. Помните, ссылка должна быть на одной линии _и_, ничего позади или впереди не должно находиться.
         not_found: |-

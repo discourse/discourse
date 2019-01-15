@@ -2825,7 +2825,6 @@ lt:
         last_emailed: "Paskutinį kartą siųstas el. laiškas"
         not_found: "Atsiprašome, toks slapyvardis neegzistuoja mūsų sistemoje."
         id_not_found: "Atsiprašome, tačiau toks vartotojo ID sistemoje neegzistuoja"
-        active: "Aktivuotas"
         show_emails: "Rodyti el. pašto adresus"
         nav:
           new: "Nauji"

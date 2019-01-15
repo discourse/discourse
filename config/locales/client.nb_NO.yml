@@ -3246,7 +3246,6 @@ nb_NO:
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
-        active: "Aktiv"
         show_emails: "Vis e-poster"
         nav:
           new: "Ny"

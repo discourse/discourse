@@ -2737,7 +2737,6 @@ hu:
         last_emailed: "Utoljára emailelt"
         not_found: "Sajnos ez a felhasználónév nem létezik."
         id_not_found: "Sajnos ez a felhasználó id nem található a rendszerben."
-        active: "Aktív"
         show_emails: "E-mailek mutatása"
         nav:
           new: "Új"

@@ -2743,7 +2743,6 @@ sk:
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
-        active: "Aktívny"
         show_emails: "Ukázať Emaily"
         nav:
           new: "Nový"

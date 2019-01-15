@@ -150,14 +150,6 @@ pt_BR:
 
           - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
       onebox:
-        instructions: |-
-          Em seguida, você pode compartilhar um desses links comigo? Responda com ** um link em uma linha sozinho ** e ele será expandido automaticamente para incluir um resumo interessante.
-
-          Para copiar um link, toque e segure no celular ou clique com o botão direito do mouse:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Legal! isto vai funcionar para a maioria dos links. Lembre-se, deve estar na linha _all by itself_, com nada na frente ou atrás.
         not_found: |-

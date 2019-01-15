@@ -153,14 +153,6 @@ fr:
 
           - Nous croyons en [un comportement communautaire civilisé](%{base_uri}/guidelines) de tout temps.
       onebox:
-        instructions: |-
-          Maintenant, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec **un lien sur une ligne vide**, et il sera automatiquement transformé pour inclure un astucieux résumé.
-
-          Pour copier un lien, tapez et maintenant appuyé sur mobile, ou utilisez le clic droit de votre souris:
-
-          - https://fr.wikipedia.org/wiki/Jeu_de_mots
-          - https://fr.wikipedia.org/wiki/Liste_de_morts_insolites
-          - https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice
         reply: |-
           Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne _vide_, sans rien devant, ni derrière.
         not_found: |-
