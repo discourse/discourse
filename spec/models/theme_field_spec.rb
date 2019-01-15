@@ -194,13 +194,17 @@ HTML
     let!(:theme2) { Fabricate(:theme) }
     let!(:theme3) { Fabricate(:theme) }
 
-    let!(:en1) { ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
-                                    value: { en: { somestring1: "helloworld", group: { key1: "enval1" } } }.deep_stringify_keys.to_yaml
-                                    )
+    let!(:en1) {
+      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
+                         value: { en: { somestring1: "helloworld", group: { key1: "enval1" } } }
+                                  .deep_stringify_keys.to_yaml
+      )
     }
-    let!(:fr1) { ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "fr",
-                                    value: { fr: { somestring1: "bonjourworld", group: { key2: "frval2" } } }.deep_stringify_keys.to_yaml
-                                    )
+    let!(:fr1) {
+      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "fr",
+                         value: { fr: { somestring1: "bonjourworld", group: { key2: "frval2" } } }
+                                  .deep_stringify_keys.to_yaml
+      )
     }
     let!(:fr2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "fr", value: "") }
     let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en", value: "") }

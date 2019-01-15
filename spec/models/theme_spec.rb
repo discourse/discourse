@@ -318,10 +318,19 @@ HTML
       theme.save!
 
       transpiled = <<~HTML
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bob"});
+        }
+      })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return 'theme_translations.#{theme.id}.' + key;
+        };
         Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bob" };
-          var themePrefix = "theme_translations.#{theme.id}.";
           alert(settings.name);var a = function a() {};
         });
       }
@@ -335,10 +344,19 @@ HTML
       setting.value = 'bill'
 
       transpiled = <<~HTML
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bill"});
+        }
+      })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return 'theme_translations.#{theme.id}.' + key;
+        };
         Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bill" };
-          var themePrefix = "theme_translations.#{theme.id}.";
           alert(settings.name);var a = function a() {};
         });
       }

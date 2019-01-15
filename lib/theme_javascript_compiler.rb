@@ -42,7 +42,7 @@ class ThemeJavascriptCompiler
         }
       }
 
-      function manipulatePath(path){
+      function manipulatePath(path) {
         // Override old themeSetting syntax when it's a param inside another node
         if(path.parts[0] == "themeSetting"){
           const settingParts = path.parts.slice(1);

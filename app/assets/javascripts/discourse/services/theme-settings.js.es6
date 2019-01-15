@@ -3,18 +3,21 @@ export default Ember.Service.extend({
 
   init() {
     this._super(...arguments);
-    this.set("settings", {});
+    this._settings = {};
   },
 
   registerSettings(themeId, settingsObject) {
-    this.get("settings")[themeId] = settingsObject;
+    this._settings[themeId] = settingsObject;
   },
 
   getSetting(themeId, settingsKey) {
-    return this.get(`settings.${themeId}.${settingsKey}`);
+    if (this._settings[themeId]) {
+      return this._settings[themeId][settingsKey];
+    }
+    return null;
   },
 
   getObjectForTheme(themeId) {
-    return this.get(`settings.${themeId}`);
+    return this._settings[themeId];
   }
 });
