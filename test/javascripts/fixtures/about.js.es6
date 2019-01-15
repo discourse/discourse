@@ -21,37 +21,43 @@ export default {
           id: 3,
           username: "supermathie",
           uploaded_avatar_id: 5247,
-          avatar_template: "/images/avatar.png"
+          avatar_template: "/images/avatar.png",
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 32,
           username: "codinghorror",
           uploaded_avatar_id: 5297,
-          avatar_template: "/images/avatar.png"
+          avatar_template: "/images/avatar.png",
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 19,
           username: "eviltrout",
           uploaded_avatar_id: 5275,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 2,
           username: "neil",
           uploaded_avatar_id: 5245,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 1,
           username: "sam",
           uploaded_avatar_id: 5243,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 1995,
           username: "zogstrip",
           uploaded_avatar_id: 8630,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         }
       ],
       admins: [
@@ -60,48 +66,56 @@ export default {
           username: "supermathie",
           uploaded_avatar_id: 5247,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 32,
           username: "codinghorror",
           uploaded_avatar_id: 5297,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 19,
           username: "eviltrout",
           uploaded_avatar_id: 5275,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 38,
           username: "frandallfarmer",
           uploaded_avatar_id: 5307,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 6626,
           username: "riking",
           uploaded_avatar_id: 9779,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 2,
           username: "neil",
           uploaded_avatar_id: 5245,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 1,
           username: "sam",
           uploaded_avatar_id: 5243,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         },
         {
           id: 1995,
           username: "zogstrip",
           uploaded_avatar_id: 8630,
           avatar_template: "/images/avatar.png"
+          last_seen_at: "2019-01-15T06:17:45.799Z"
         }
       ]
     }
