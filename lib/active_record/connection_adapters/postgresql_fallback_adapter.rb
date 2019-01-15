@@ -68,6 +68,8 @@ class PostgreSQLFallbackHandler
         RailsMultisite::ConnectionManagement.with_connection(key) do
           begin
             logger.warn "#{log_prefix}: Checking master server..."
+            is_connection_active = false
+
             begin
               connection = ActiveRecord::Base.postgresql_connection(config)
               is_connection_active = connection.active?
@@ -99,7 +101,7 @@ class PostgreSQLFallbackHandler
   end
 
   def clear_connections
-    ActiveRecord::Base.connection_pool.disconnect!
+    ActiveRecord::Base.clear_all_connections!
   end
 
   private
