@@ -54,7 +54,7 @@ function show(image) {
     copyImg.style.height = imageData.height;
     copyImg.className = imageData.className;
 
-    image.parentNode.appendChild(copyImg);
+    image.parentNode.insertBefore(copyImg, image);
   } else {
     image.classList.remove("d-lazyload-hidden");
   }
