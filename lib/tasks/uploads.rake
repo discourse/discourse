@@ -275,7 +275,7 @@ def migrate_to_s3
 
   s3_objects = []
   prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: bucket, prefix: prefix + folder }
+  options = { bucket: bucket, prefix: folder + prefix }
 
   loop do
     response = s3.list_objects_v2(options)
