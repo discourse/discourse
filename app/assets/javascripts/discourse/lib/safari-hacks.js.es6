@@ -191,7 +191,14 @@ function positioningWorkaround($fixedElement) {
     });
   }, 100);
 
-  fixedElement.addEventListener("DOMNodeInserted", checkForInputs);
+  const config = {
+    childList: true,
+    subtree: true,
+    attributes: false,
+    characterData: false
+  };
+  const observer = new MutationObserver(checkForInputs);
+  observer.observe(fixedElement, config);
 }
 
 export default positioningWorkaround;
