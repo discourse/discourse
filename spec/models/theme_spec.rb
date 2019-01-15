@@ -326,7 +326,7 @@ HTML
       theme.save!
 
       transpiled = <<~HTML
-      if ('Discourse' in window) {
+      if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
         Discourse._registerPluginCode('1.0', function (api) {
           var settings = { "name": "bob" };
           alert(settings.name);var a = function a() {};
@@ -342,7 +342,7 @@ HTML
       setting.value = 'bill'
 
       transpiled = <<~HTML
-      if ('Discourse' in window) {
+      if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
         Discourse._registerPluginCode('1.0', function (api) {
           var settings = { "name": "bill" };
           alert(settings.name);var a = function a() {};
