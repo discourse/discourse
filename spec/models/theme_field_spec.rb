@@ -76,7 +76,7 @@ describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
 
-    expect(theme_field.javascript_cache.content).to eq(extracted)
+    expect(theme_field.javascript_cache.content).to include(extracted)
   end
 
   it "correctly extracts and generates errors for transpiled js" do
@@ -108,9 +108,8 @@ HTML
 
     expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
     expect(javascript_cache.content).to include("testing-div")
-    expect(javascript_cache.content).to include("theme-injector")
     expect(javascript_cache.content).to include("string_setting")
-    expect(javascript_cache.content).to include("test text \\\\\\\\u0022 123!")
+    expect(javascript_cache.content).to include("test text \\\" 123!")
   end
 
   it "correctly generates errors for transpiled css" do
@@ -296,20 +295,6 @@ HTML
         theme_field = ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)
         javascript_cache = theme_field.javascript_cache
         expect(javascript_cache.content).to include("inline discourse plugin")
-        expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")
-      end
-
-      it "injects into hbs templates" do
-        html = <<~HTML
-        <script type='text/x-handlebars' data-template-name='my-template'>
-            <div class="testing-div">{{themePrefix}}</div>
-        </script>
-        HTML
-
-        theme_field = ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)
-        javascript_cache = theme_field.javascript_cache
-        expect(javascript_cache.content).to include("testing-div")
-        expect(javascript_cache.content).to include("theme-injector")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")
       end
     end

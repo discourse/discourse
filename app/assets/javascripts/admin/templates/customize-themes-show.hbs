@@ -135,7 +135,7 @@
       <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
       {{#d-section class="form-horizontal theme settings"}}
         {{#each settings as |setting|}}
-          {{theme-setting setting=setting model=model class="theme-setting"}}
+          {{theme-setting-editor setting=setting model=model class="theme-setting"}}
         {{/each}}
       {{/d-section}}
     </div>

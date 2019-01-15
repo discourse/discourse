@@ -10,6 +10,15 @@ registerUnbound(
 
 registerUnbound(
   "theme-prefix",
-  (themeId, key, params) => `theme_translations.${themeId}.${key}`,
+  (themeId, key) => `theme_translations.${themeId}.${key}`,
+  2
+);
+
+registerUnbound(
+  "theme-setting",
+  (themeId, key) =>
+    Discourse.__container__
+      .lookup("service:theme-settings")
+      .getSetting(themeId, key),
   2
 );

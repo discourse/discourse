@@ -1,5 +1,6 @@
 require_dependency 'theme_settings_parser'
 require_dependency 'theme_translation_parser'
+require_dependency 'theme_javascript_compiler'
 
 class ThemeField < ActiveRecord::Base
 
@@ -63,102 +64,55 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :theme
 
-  def settings(source)
-
-    settings = {}
-
-    theme.cached_settings.each do |k, v|
-      if source.include?("settings.#{k}")
-        settings[k] = v
-      end
-    end
-
-    if settings.length > 0
-      "let settings = #{settings.to_json};"
-    else
-      ""
-    end
-  end
-
-  def transpile(es6_source, version)
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
-    wrapped = <<PLUGIN_API_JS
-if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-Discourse._registerPluginCode('#{version}', api => {
-  #{settings(es6_source)}
-  let themePrefix = (key) => `theme_translations.#{self.theme_id}.${key}`;
-  #{es6_source}
-});
-}
-PLUGIN_API_JS
-
-    template.babel_transpile(wrapped)
-  end
-
   def process_html(html)
-    errors = nil
+    errors = []
     javascript_cache || build_javascript_cache
-    javascript_cache.content = ''
+
+    js_compiler = ThemeJavascriptCompiler.new(theme_id)
 
     doc = Nokogiri::HTML.fragment(html)
+
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
-
       is_raw = name =~ /\.raw$/
-      setting_helpers = ''
-      theme.cached_settings.each do |k, v|
-        val = v.is_a?(String) ? "\"#{v.gsub('"', "\\u0022")}\"" : v
-        setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} parent=\"themeSettings\" key=\"#{k}\" value=#{val}}}\n"
-      end
-      setting_helpers += "{{theme-injector #{is_raw ? "" : "context=this"} key=\"themeId\" value=\"#{self.theme_id}\"}}\n"
-      hbs_template = setting_helpers + node.inner_html
+      hbs_template = node.inner_html
 
-      if is_raw
-        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(hbs_template)})"
-        javascript_cache.content << <<COMPILED
-          (function() {
-            if ('Discourse' in window) {
-              Discourse.RAW_TEMPLATES[#{name.sub(/\.raw$/, '').inspect}] = #{template};
-            }
-          })();
-COMPILED
-      else
-        template = "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(hbs_template)})"
-        javascript_cache.content << <<COMPILED
-          (function() {
-            if ('Em' in window) {
-              Ember.TEMPLATES[#{name.inspect}] = #{template};
-            }
-          })();
-COMPILED
+      begin
+        if is_raw
+          js_compiler.append_raw_template(name, hbs_template)
+        else
+          js_compiler.append_ember_template(name, hbs_template)
+        end
+      rescue ThemeJavascriptCompiler::CompileError => ex
+        errors << ex.message
       end
 
       node.remove
     end
 
     doc.css('script[type="text/discourse-plugin"]').each do |node|
-      if node['version'].present?
-        begin
-          javascript_cache.content << transpile(node.inner_html, node['version'])
-        rescue MiniRacer::RuntimeError => ex
-          javascript_cache.content << "console.error('Theme Transpilation Error:', #{ex.message.inspect});"
-
-          errors ||= []
-          errors << ex.message
-        end
-
-        node.remove
+      next unless node['version'].present?
+      begin
+        js_compiler.append_plugin_script(node.inner_html, node['version'])
+      rescue ThemeJavascriptCompiler::CompileError => ex
+        errors << ex.message
       end
+
+      node.remove
     end
 
     doc.css('script').each do |node|
       next unless inline_javascript?(node)
-
-      javascript_cache.content << node.inner_html
-      javascript_cache.content << "\n"
+      js_compiler.append_raw_script(node.inner_html)
       node.remove
     end
 
+    errors.each do |error|
+      js_compiler.append_js_error(error)
+    end
+
+    js_compiler.prepend_settings(theme.cached_settings) if js_compiler.content.present? && theme.cached_settings.present?
+    javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
     doc.add_child("<script src='#{javascript_cache.url}'></script>") if javascript_cache.content.present?
@@ -196,7 +150,7 @@ COMPILED
   def process_translation
     errors = []
     javascript_cache || build_javascript_cache
-    javascript_cache.content = ''
+    js_compiler = ThemeJavascriptCompiler.new(theme_id)
     begin
       data = translation_data
 
@@ -213,11 +167,12 @@ COMPILED
         }
       JS
 
-      javascript_cache.content << transpile(js, 0)
+      js_compiler.append_plugin_script(js, 0)
     rescue ThemeTranslationParser::InvalidYaml => e
       errors << e.message
     end
 
+    javascript_cache.content = js_compiler.content
     javascript_cache.save!
     doc = ""
     doc = "<script src='#{javascript_cache.url}'></script>" if javascript_cache.content.present?
@@ -284,6 +239,7 @@ COMPILED
     if ThemeField.html_fields.include?(self.name) || translation = Theme.targets[:translations] == self.target_id
       if !self.value_baked || compiler_version != COMPILER_VERSION
         self.value_baked, self.error = translation ? process_translation : process_html(self.value)
+        self.error = nil unless self.error.present?
         self.compiler_version = COMPILER_VERSION
 
         if self.will_save_change_to_value_baked? ||
