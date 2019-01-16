@@ -9,7 +9,9 @@ export default Ember.Mixin.create({
   uploadProgress: 0,
 
   uploadDone() {
-    Ember.warn("You should implement `uploadDone`");
+    Ember.warn("You should implement `uploadDone`", {
+      id: "discourse.upload.missing-upload-done"
+    });
   },
 
   validateUploadedFilesOptions() {
