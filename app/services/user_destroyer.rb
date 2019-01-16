@@ -18,7 +18,10 @@ class UserDestroyer
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
     @guardian.ensure_can_delete_user!(user)
 
-    User.transaction do
+    # default to using a transaction
+    opts[:transaction] = true if opts[:transaction] != false
+
+    optional_transaction(open_transaction: opts[:transaction]) do
 
       Draft.where(user_id: user.id).delete_all
       QueuedPost.where(user_id: user.id).delete_all
@@ -103,6 +106,16 @@ class UserDestroyer
           MessageBus.publish "/file-change", ["refresh"], user_ids: [u.id]
         end
       end
+    end
+  end
+
+  protected
+
+  def optional_transaction(open_transaction: true)
+    if open_transaction
+      User.transaction { yield  }
+    else
+      yield
     end
   end
 
