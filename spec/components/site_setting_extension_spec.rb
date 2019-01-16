@@ -42,16 +42,6 @@ describe SiteSettingExtension do
     SiteSettings::LocalProcessProvider.new
   end
 
-  def new_settings(provider)
-    # we want to avoid leaking a big pile of MessageBus subscriptions here (1 per class)
-    # so we set listen_for_changes to false
-    Class.new do
-      extend SiteSettingExtension
-      self.listen_for_changes = false
-      self.provider = provider
-    end
-  end
-
   let :settings do
     new_settings(provider_local)
   end

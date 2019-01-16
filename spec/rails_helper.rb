@@ -70,6 +70,7 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
+  config.include SiteSettingsHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!
