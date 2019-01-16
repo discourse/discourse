@@ -1702,7 +1702,7 @@ uncategorized:
 
   likes_notification_consolidation_threshold:
     default: 5
-    min: 3
+    min: 0
 
   likes_notification_consolidation_window_mins:
     default: 120
@@ -1819,7 +1819,7 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ''
-  
+
   default_text_size:
     type: enum
     default: normal
