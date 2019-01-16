@@ -30,15 +30,17 @@ export default RestModel.extend({
     "/user_actions.json?offset=%@&username=%@"
   ),
 
-  filterBy(filter, noContentHelpKey, actingUsername) {
-    this.setProperties({
-      filter,
-      itemsLoaded: 0,
-      content: [],
-      noContentHelpKey,
-      lastLoadedUrl: null,
-      actingUsername
-    });
+  filterBy(opts) {
+    this.setProperties(
+      Object.assign(
+        {
+          itemsLoaded: 0,
+          content: [],
+          lastLoadedUrl: null
+        },
+        opts
+      )
+    );
 
     return this.findItems();
   },
