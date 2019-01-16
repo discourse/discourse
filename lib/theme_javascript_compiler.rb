@@ -32,14 +32,24 @@ class ThemeJavascriptCompiler
               {
                 "type": "StringLiteral",
                 "value": settingName,
-                "original": settingName,
+                "original": settingName
               }
             ],
             "hash": {
               "type": "Hash",
-              "pairs": [],
+              "pairs": [
+                {
+                  "type": "HashPair",
+                  "key": "deprecated",
+                  "value": {
+                    "type": "BooleanLiteral",
+                    "value": true,
+                    "original": true
+                  }
+                }
+              ]
             }
-        }
+          }
       }
 
       function manipulatePath(path) {
