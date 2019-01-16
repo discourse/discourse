@@ -79,12 +79,6 @@ export default function() {
       return response(json);
     });
 
-    this.get("/u/test.json", () => {
-      const json = fixturesByUrl["/u/eviltrout.json"];
-      json.user.username = "test";
-      return response(json);
-    });
-
     this.get("/u/eviltrout/summary.json", () => {
       return response({
         user_summary: {
