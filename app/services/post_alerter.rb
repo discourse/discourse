@@ -193,7 +193,7 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned].map { |t|
+  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
     Notification.types[t]
   }
 
