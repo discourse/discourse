@@ -346,6 +346,21 @@ describe PostAction do
         expect(notification.read).to eq(false)
         expect(data["count"]).to eq(6)
 
+        # Like from a different user shouldn't be consolidated
+        expect do
+          PostAction.act(
+            Fabricate(:user),
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to change { likee.reload.notifications.count }.by(1)
+
+        notification = likee.notifications.last
+
+        expect(notification.notification_type).to eq(
+          Notification.types[:liked]
+        )
+
         freeze_time(
           SiteSetting.likes_notification_consolidation_window_mins.minutes.since
         )

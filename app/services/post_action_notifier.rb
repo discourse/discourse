@@ -89,9 +89,14 @@ class PostActionNotifier
     user_liked_consolidated_notification =
       user_notifications
         .where(
-          "created_at > ? AND notification_type = ?",
+          "
+            created_at > ? AND
+            notification_type = ? AND
+            data::json ->> 'display_username' = ?
+          ",
           consolidation_window,
-          Notification.types[:liked_consolidated]
+          Notification.types[:liked_consolidated],
+          post_action.user.username_lower
         )
         .first
 
