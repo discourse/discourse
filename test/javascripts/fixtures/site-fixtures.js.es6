@@ -1,3 +1,5 @@
+import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+
 export default {
   "site.json": {
     site: {
@@ -16,7 +18,8 @@ export default {
         posted: 9,
         moved_post: 10,
         linked: 11,
-        granted_badge: 12
+        granted_badge: 12,
+        liked_consolidated: LIKED_CONSOLIDATED_TYPE
       },
       post_types: {
         regular: 1,

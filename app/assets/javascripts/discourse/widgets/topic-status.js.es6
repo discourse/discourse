@@ -39,7 +39,7 @@ export default createWidget("topic-status", {
 
     renderIconIf("pinned", "thumbtack", "pinned");
     renderIconIf("unpinned", "thumbtack", "unpinned");
-    renderIconIf("invisible", "eye-slash", "invisible");
+    renderIconIf("invisible", "far-eye-slash", "unlisted");
 
     return result;
   }

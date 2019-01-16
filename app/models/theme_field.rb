@@ -63,7 +63,7 @@ class ThemeField < ActiveRecord::Base
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
-if ('Discourse' in window) {
+if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
 Discourse._registerPluginCode('#{version}', api => {
   #{settings(es6_source)}
   #{es6_source}

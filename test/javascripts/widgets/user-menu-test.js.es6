@@ -15,6 +15,30 @@ widgetTest("basics", {
   }
 });
 
+widgetTest("notifications", {
+  template: '{{mount-widget widget="user-menu"}}',
+
+  test(assert) {
+    const $links = find(".notifications li a");
+
+    assert.equal($links.length, 2);
+    assert.ok($links[0].href.includes("/t/a-slug/123"));
+
+    assert.ok(
+      $links[1].href.includes(
+        "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
+      )
+    );
+
+    assert.equal(
+      $links[1].text,
+      `aquaman ${I18n.t("notifications.liked_consolidated_description", {
+        count: 5
+      })}`
+    );
+  }
+});
+
 widgetTest("log out", {
   template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
 
