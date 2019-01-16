@@ -16,6 +16,7 @@ import {
 } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
+import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -101,7 +102,7 @@ export default Ember.Controller.extend({
   linkLookup: null,
   showPreview: true,
   forcePreview: Ember.computed.and("site.mobileView", "showPreview"),
-  whisperOrUnlistTopic: Ember.computed.or("model.whisper", "model.unlistTopic"),
+  whisperOrUnlistTopic: Ember.computed.or("isWhispering", "model.unlistTopic"),
   categories: Ember.computed.alias("site.categoriesList"),
 
   @on("init")
@@ -200,13 +201,40 @@ export default Ember.Controller.extend({
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
-  @computed("canWhisper", "model.post")
-  showWhisperToggle(canWhisper, repliedToPost) {
-    const replyingToWhisper =
-      repliedToPost &&
-      repliedToPost.get("post_type") === this.site.post_types.whisper;
-
+  @computed("canWhisper", "replyingToWhisper")
+  showWhisperToggle(canWhisper, replyingToWhisper) {
     return canWhisper && !replyingToWhisper;
+  },
+
+  @computed("model.post")
+  replyingToWhisper(repliedToPost) {
+    return (
+      repliedToPost &&
+      repliedToPost.get("post_type") === this.site.post_types.whisper
+    );
+  },
+
+  @computed("replyingToWhisper", "model.whisper")
+  isWhispering(replyingToWhisper, whisper) {
+    return replyingToWhisper || whisper;
+  },
+
+  @computed("model.action", "isWhispering")
+  saveIcon(action, isWhispering) {
+    if (isWhispering) {
+      return "eye-slash";
+    }
+    return SAVE_ICONS[action];
+  },
+
+  @computed("model.action", "isWhispering", "model.editConflict")
+  saveLabel(action, isWhispering, editConflict) {
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (isWhispering) {
+      return "composer.create_whisper";
+    }
+    return SAVE_LABELS[action];
   },
 
   @computed("isStaffUser", "model.action")
