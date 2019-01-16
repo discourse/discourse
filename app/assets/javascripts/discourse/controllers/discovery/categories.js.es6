@@ -49,7 +49,7 @@ export default DiscoveryController.extend({
   },
   actions: {
     refresh() {
-      this.send('triggerRefresh');
+      this.send("triggerRefresh");
     }
   }
 });
