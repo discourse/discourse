@@ -250,6 +250,32 @@ describe Notification do
     end
   end
 
+  describe '.get_liked_by' do
+    let(:post) { Fabricate(:post) }
+    let(:user) { Fabricate(:user) }
+
+    before do
+      PostActionNotifier.enable
+    end
+
+    it 'should return the right notifications' do
+      expect(Notification.get_liked_by(user)).to eq([])
+
+      expect do
+        PostAlerter.post_created(Fabricate(:basic_reply,
+          user: user,
+          topic: post.topic
+        ))
+
+        PostAction.act(user, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(2)
+
+      expect(Notification.get_liked_by(user)).to contain_exactly(
+        Notification.find_by(notification_type: Notification.types[:liked])
+      )
+    end
+  end
+
 end
 
 # pulling this out cause I don't want an observer

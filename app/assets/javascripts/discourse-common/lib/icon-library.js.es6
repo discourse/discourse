@@ -24,6 +24,7 @@ const REPLACEMENTS = {
   "notification.liked": "heart",
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",
+  "notification.liked_consolidated": "heart",
   "notification.private_message": "far-envelope",
   "notification.invited_to_private_message": "far-envelope",
   "notification.invited_to_topic": "hand-point-right",
