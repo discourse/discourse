@@ -300,15 +300,35 @@ describe PostAction do
       let(:liker) { Fabricate(:user) }
       let(:likee) { Fabricate(:user) }
 
-      before do
-        SiteSetting.likes_notification_consolidation_threshold = 3
+      it "can be disabled" do
+        SiteSetting.likes_notification_consolidation_threshold = 0
+
+        expect do
+          PostAction.act(
+            liker,
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to change { likee.reload.notifications.count }.by(1)
+
+        SiteSetting.likes_notification_consolidation_threshold = 1
+
+        expect do
+          PostAction.act(
+            liker,
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to_not change { likee.reload.notifications.count }
       end
 
       it 'should consolidate likes notification when the threshold is reached' do
+        SiteSetting.likes_notification_consolidation_threshold = 2
+
         freeze_time
 
         expect do
-          4.times do
+          3.times do
             PostAction.act(
               liker,
               Fabricate(:post, user: likee),
@@ -327,7 +347,7 @@ describe PostAction do
 
         expect(data["username"]).to eq(liker.username)
         expect(data["display_username"]).to eq(liker.username)
-        expect(data["count"]).to eq(4)
+        expect(data["count"]).to eq(3)
 
         notification.update!(read: true)
 
@@ -344,7 +364,7 @@ describe PostAction do
         data = JSON.parse(notification.reload.data)
 
         expect(notification.read).to eq(false)
-        expect(data["count"]).to eq(6)
+        expect(data["count"]).to eq(5)
 
         # Like from a different user shouldn't be consolidated
         expect do

@@ -76,6 +76,10 @@ class PostActionNotifier
     post = post_action.post
     return if post_action.user.blank?
 
+    if SiteSetting.likes_notification_consolidation_threshold.zero?
+      return create_liked_notification(alerter, post, post_action)
+    end
+
     user_notifications = post.user.notifications
 
     consolidation_window =
@@ -114,27 +118,30 @@ class PostActionNotifier
         post_action
       )
     else
-      alerter.create_notification(
-        post.user,
-        Notification.types[:liked],
-        post,
-        display_username: post_action.user.username,
-        post_action_id: post_action.id,
-        user_id: post_action.user_id
-      )
+      create_liked_notification(alerter, post, post_action)
     end
   end
 
-  def self.update_consolidated_liked_notification_count!(notification)
-    Notification.transaction do
-      data = JSON.parse(notification.data)
-      data["count"] += 1
+  def self.create_liked_notification(alerter, post, post_action)
+    alerter.create_notification(
+      post.user,
+      Notification.types[:liked],
+      post,
+      display_username: post_action.user.username,
+      post_action_id: post_action.id,
+      user_id: post_action.user_id
+    )
+  end
+  private_class_method :create_liked_notification
 
-      notification.update!(
-        data: data.to_json,
-        read: false
-      )
-    end
+  def self.update_consolidated_liked_notification_count!(notification)
+    data = JSON.parse(notification.data)
+    data["count"] += 1
+
+    notification.update!(
+      data: data.to_json,
+      read: false
+    )
   end
   private_class_method :update_consolidated_liked_notification_count!
 
