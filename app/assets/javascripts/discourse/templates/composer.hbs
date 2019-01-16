@@ -25,7 +25,7 @@
                   {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                   {{#unless site.mobileView}}
-                    {{#if model.whisper}}
+                    {{#if isWhispering}}
                       <span class='whisper'>{{d-icon 'eye-slash'}}</span>
                     {{/if}}
                     {{#if model.unlistTopic}}
@@ -119,8 +119,8 @@
             <div class='save-or-cancel'>
               {{#unless model.viewFullscreen}}
                 {{composer-save-button action=(action "save")
-                                       icon=model.saveIcon
-                                       label=model.saveLabel
+                                       icon=saveIcon
+                                       label=saveLabel
                                        disableSubmit=disableSubmit}}
 
               {{#if site.mobileView}}

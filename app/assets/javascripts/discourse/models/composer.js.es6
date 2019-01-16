@@ -52,7 +52,7 @@ const CLOSED = "closed",
     featuredLink: "topic.featured_link"
   };
 
-const SAVE_LABELS = {
+export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
   [REPLY]: "composer.reply",
   [CREATE_TOPIC]: "composer.create_topic",
@@ -61,7 +61,7 @@ const SAVE_LABELS = {
   [EDIT_SHARED_DRAFT]: "composer.save_edit"
 };
 
-const SAVE_ICONS = {
+export const SAVE_ICONS = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "clipboard",
   [REPLY]: "reply",
@@ -384,24 +384,6 @@ const Composer = RestModel.extend({
     if (this.get("titleLength") < this.get("minimumTitleLength")) return false;
     return this.get("titleLength") <= this.siteSettings.max_topic_title_length;
   }.property("minimumTitleLength", "titleLength", "post.static_doc"),
-
-  @computed("action", "whisper")
-  saveIcon(action, whisper) {
-    if (whisper) {
-      return "eye-slash";
-    }
-    return SAVE_ICONS[action];
-  },
-
-  @computed("action", "whisper", "editConflict")
-  saveLabel(action, whisper, editConflict) {
-    if (editConflict) {
-      return "composer.overwrite_edit";
-    } else if (whisper) {
-      return "composer.create_whisper";
-    }
-    return SAVE_LABELS[action];
-  },
 
   hasMetaData: function() {
     const metaData = this.get("metaData");
