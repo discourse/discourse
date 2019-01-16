@@ -214,7 +214,6 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
-  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -245,10 +244,11 @@ def migrate_to_s3
     exit 3
   end
 
+  bucket_has_folder_path = true if GlobalSetting.s3_bucket.include? "/"
   s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
 
   if bucket_has_folder_path
-    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
+    bucket, folder = S3Helper.get_bucket_and_folder_path(GlobalSetting.s3_bucket)
     folder = File.join(folder, "/")
   else
     bucket, folder = GlobalSetting.s3_bucket, ""
