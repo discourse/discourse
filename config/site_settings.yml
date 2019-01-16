@@ -1700,6 +1700,14 @@ uncategorized:
 
   disable_edit_notifications: false
 
+  likes_notification_consolidation_threshold:
+    default: 5
+    min: 3
+
+  likes_notification_consolidation_window_mins:
+    default: 120
+    min: 1
+
   delete_drafts_older_than_n_days:
     default: 180
 

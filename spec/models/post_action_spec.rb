@@ -296,6 +296,74 @@ describe PostAction do
       expect(Notification.exists?(id: notification.id)).to eq(false)
     end
 
+    describe 'likes consolidation' do
+      let(:liker) { Fabricate(:user) }
+      let(:likee) { Fabricate(:user) }
+
+      before do
+        SiteSetting.likes_notification_consolidation_threshold = 3
+      end
+
+      it 'should consolidate likes notification when the threshold is reached' do
+        freeze_time
+
+        expect do
+          4.times do
+            PostAction.act(
+              liker,
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end
+        end.to change { likee.reload.notifications.count }.by(1)
+
+        notification = likee.notifications.last
+
+        expect(notification.notification_type).to eq(
+          Notification.types[:liked_consolidated]
+        )
+
+        data = JSON.parse(notification.data)
+
+        expect(data["username"]).to eq(liker.username)
+        expect(data["display_username"]).to eq(liker.username)
+        expect(data["count"]).to eq(4)
+
+        notification.update!(read: true)
+
+        expect do
+          2.times do
+            PostAction.act(
+              liker,
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end
+        end.to_not change { likee.reload.notifications.count }
+
+        data = JSON.parse(notification.reload.data)
+
+        expect(notification.read).to eq(false)
+        expect(data["count"]).to eq(6)
+
+        freeze_time(
+          SiteSetting.likes_notification_consolidation_window_mins.minutes.since
+        )
+
+        expect do
+          PostAction.act(
+            liker,
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to change { likee.reload.notifications.count }.by(1)
+
+        notification = likee.notifications.last
+
+        expect(notification.notification_type).to eq(Notification.types[:liked])
+      end
+    end
+
     it "should not generate a notification if liker has been muted" do
       mutee = Fabricate(:user)
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)

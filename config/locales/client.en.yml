@@ -1522,6 +1522,10 @@ en:
       liked_many:
         one: "<span>{{username}}, {{username2}} and 1 other</span> {{description}}"
         other: "<span>{{username}}, {{username2}} and {{count}} others</span> {{description}}"
+      liked_consolidated_description:
+        one: "liked {{count}} of your posts"
+        other: "liked {{count}} of your posts"
+      liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
