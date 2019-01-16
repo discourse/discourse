@@ -9,7 +9,12 @@ class TrustLevelSetting < EnumSiteSetting
 
   def self.values
     levels = TrustLevel.all
-    @values ||= valid_values.map { |x| { name: "#{x}: #{levels[x.to_i].name}", value: x } }
+    @values ||= valid_values.map { |x|
+      {
+        name: x.is_a?(Integer) ? "#{x}: #{levels[x.to_i].name}" : x,
+        value: x
+      }
+    }
   end
 
   def self.valid_values
