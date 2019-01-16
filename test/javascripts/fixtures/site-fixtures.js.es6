@@ -19,7 +19,7 @@ export default {
         moved_post: 10,
         linked: 11,
         granted_badge: 12,
-        liked_consolidated: LIKED_CONSOLIDATED_TYPE,
+        liked_consolidated: LIKED_CONSOLIDATED_TYPE
       },
       post_types: {
         regular: 1,
