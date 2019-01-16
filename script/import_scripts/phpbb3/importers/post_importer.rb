@@ -25,6 +25,8 @@ module ImportScripts::PhpBB3
       is_first_post = row[:post_id] == row[:topic_first_post_id]
 
       attachments = import_attachments(row, user_id)
+      
+      puts "Processing post id: #{row[:post_id]}"
 
       mapped = {
         id: row[:post_id],
