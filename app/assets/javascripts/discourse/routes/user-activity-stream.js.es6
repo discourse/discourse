@@ -10,11 +10,12 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   afterModel(model, transition) {
-    return model.filterBy(
-      this.get("userActionType"),
-      this.get("noContentHelpKey") || "user_activity.no_default",
-      transition.queryParams.acting_username
-    );
+    return model.filterBy({
+      filter: this.get("userActionType"),
+      noContentHelpKey:
+        this.get("noContentHelpKey") || "user_activity.no_default",
+      actingUsername: transition.queryParams.acting_username
+    });
   },
 
   renderTemplate() {
