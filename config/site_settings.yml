@@ -1701,7 +1701,7 @@ uncategorized:
   disable_edit_notifications: false
 
   likes_notification_consolidation_threshold:
-    default: 5
+    default: 3
     min: 0
 
   likes_notification_consolidation_window_mins:
