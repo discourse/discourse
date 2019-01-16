@@ -2852,11 +2852,11 @@ en:
 
     dashboard_problems:
       title: "Dashboard Problems"
-      subject_template: "Problems have been found"
+      subject_template: "New advice on your site dashboard"
       text_body_template: |
-        Some problems are being reported on your admin dashboard.
+        We have some new advice and recommendations for you based on your current site settings.
 
-        [Please review and fix them](%{base_url}/admin).
+        [Visit your site dashboard](%{base_url}/admin) to see it.
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"
