@@ -17,8 +17,8 @@ export default {
         id: 456,
         notification_type: LIKED_CONSOLIDATED_TYPE,
         read: false,
-        data: { display_username: "aquaman", count: "5"  }
-      },
+        data: { display_username: "aquaman", count: "5" }
+      }
     ]
   }
 };
