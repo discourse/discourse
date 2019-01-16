@@ -303,6 +303,10 @@ describe Notification do
       fab(Notification.types[:liked], true)
     end
 
+    def liked_consolidated
+      fab(Notification.types[:liked_consolidated], true)
+    end
+
     it 'correctly finds visible notifications' do
       pm
       expect(Notification.visible.count).to eq(1)
@@ -321,6 +325,23 @@ describe Notification do
       notifications = Notification.recent_report(user, 3)
       expect(notifications.map { |n| n.id }).to eq([a.id, d.id, c.id])
 
+    end
+
+    describe 'for a user that does not want to be notify on liked' do
+      before do
+        user.user_option.update!(
+          like_notification_frequency:
+            UserOption.like_notification_frequency_type[:never]
+        )
+      end
+
+      it "should not return any form of liked notifications" do
+        notification = pm
+        regular
+        liked_consolidated
+
+        expect(Notification.recent_report(user)).to contain_exactly(notification)
+      end
     end
   end
 end

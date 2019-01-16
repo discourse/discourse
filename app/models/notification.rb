@@ -152,7 +152,14 @@ class Notification < ActiveRecord::Base
       .includes(:topic)
 
     if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-      notifications = notifications.where('notification_type <> ?', Notification.types[:liked])
+      [
+        Notification.types[:liked],
+        Notification.types[:liked_consolidated]
+      ].each do |notification_type|
+        notifications = notifications.where(
+          'notification_type <> ?', notification_type
+        )
+      end
     end
 
     notifications = notifications.to_a
