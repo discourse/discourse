@@ -250,7 +250,7 @@ describe Notification do
     end
   end
 
-  describe '.get_liked_by' do
+  describe '.filter_by_display_username_and_type' do
     let(:post) { Fabricate(:post) }
     let(:user) { Fabricate(:user) }
 
@@ -259,7 +259,9 @@ describe Notification do
     end
 
     it 'should return the right notifications' do
-      expect(Notification.get_liked_by(user)).to eq([])
+      expect(Notification.filter_by_display_username_and_type(
+        user.username_lower, Notification.types[:liked]
+      )).to eq([])
 
       expect do
         PostAlerter.post_created(Fabricate(:basic_reply,
@@ -270,7 +272,9 @@ describe Notification do
         PostAction.act(user, post, PostActionType.types[:like])
       end.to change { Notification.count }.by(2)
 
-      expect(Notification.get_liked_by(user)).to contain_exactly(
+      expect(Notification.filter_by_display_username_and_type(
+        user.username_lower, Notification.types[:liked]
+      )).to contain_exactly(
         Notification.find_by(notification_type: Notification.types[:liked])
       )
     end

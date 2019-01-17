@@ -381,6 +381,7 @@ describe PostAction do
 
     describe 'likes consolidation' do
       let(:liker) { Fabricate(:user) }
+      let(:liker2) { Fabricate(:user) }
       let(:likee) { Fabricate(:user) }
 
       it "can be disabled" do
@@ -405,80 +406,146 @@ describe PostAction do
         end.to_not change { likee.reload.notifications.count }
       end
 
-      it 'should consolidate likes notification when the threshold is reached' do
-        SiteSetting.likes_notification_consolidation_threshold = 2
+      describe 'frequency first_time_and_daily' do
+        before do
+          likee.user_option.update!(
+            like_notification_frequency:
+              UserOption.like_notification_frequency_type[:first_time_and_daily]
+          )
+        end
 
-        freeze_time
+        it 'should consolidate likes notification when the threshold is reached' do
+          SiteSetting.likes_notification_consolidation_threshold = 2
 
-        expect do
-          3.times do
+          expect do
+            3.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked_consolidated]
+          )
+
+          data = JSON.parse(notification.data)
+
+          expect(data["username"]).to eq(liker.username)
+          expect(data["display_username"]).to eq(liker.username)
+          expect(data["count"]).to eq(3)
+
+          notification.update!(read: true)
+
+          expect do
+            2.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to_not change { likee.reload.notifications.count }
+
+          data = JSON.parse(notification.reload.data)
+
+          expect(notification.read).to eq(false)
+          expect(data["count"]).to eq(5)
+
+          # Like from a different user shouldn't be consolidated
+          expect do
+            PostAction.act(
+              Fabricate(:user),
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked]
+          )
+
+          freeze_time((
+            SiteSetting.likes_notification_consolidation_window_mins.minutes +
+            1
+          ).since)
+
+          expect do
             PostAction.act(
               liker,
               Fabricate(:post, user: likee),
               PostActionType.types[:like]
             )
-          end
-        end.to change { likee.reload.notifications.count }.by(1)
+          end.to change { likee.reload.notifications.count }.by(1)
 
-        notification = likee.notifications.last
+          notification = likee.notifications.last
 
-        expect(notification.notification_type).to eq(
-          Notification.types[:liked_consolidated]
-        )
+          expect(notification.notification_type).to eq(Notification.types[:liked])
+        end
+      end
 
-        data = JSON.parse(notification.data)
+      describe 'frequency always' do
+        before do
+          likee.user_option.update!(
+            like_notification_frequency:
+              UserOption.like_notification_frequency_type[:always]
+          )
+        end
 
-        expect(data["username"]).to eq(liker.username)
-        expect(data["display_username"]).to eq(liker.username)
-        expect(data["count"]).to eq(3)
+        it 'should consolidate liked notifications when threshold is reached' do
+          SiteSetting.likes_notification_consolidation_threshold = 2
 
-        notification.update!(read: true)
+          post = Fabricate(:post, user: likee)
 
-        expect do
-          2.times do
+          expect do
+            [liker2, liker].each do |user|
+              PostAction.act(user, post, PostActionType.types[:like])
+            end
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+          data_hash = notification.data_hash
+
+          expect(data_hash["original_username"]).to eq(liker.username)
+          expect(data_hash["username2"]).to eq(liker2.username)
+          expect(data_hash["count"].to_i).to eq(2)
+
+          expect do
+            2.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to change { likee.reload.notifications.count }.by(2)
+
+          expect(likee.notifications.pluck(:notification_type).uniq)
+            .to contain_exactly(Notification.types[:liked])
+
+          expect do
             PostAction.act(
               liker,
               Fabricate(:post, user: likee),
               PostActionType.types[:like]
             )
-          end
-        end.to_not change { likee.reload.notifications.count }
+          end.to change { likee.reload.notifications.count }.by(-1)
 
-        data = JSON.parse(notification.reload.data)
+          notification = likee.notifications.last
 
-        expect(notification.read).to eq(false)
-        expect(data["count"]).to eq(5)
-
-        # Like from a different user shouldn't be consolidated
-        expect do
-          PostAction.act(
-            Fabricate(:user),
-            Fabricate(:post, user: likee),
-            PostActionType.types[:like]
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked_consolidated]
           )
-        end.to change { likee.reload.notifications.count }.by(1)
 
-        notification = likee.notifications.last
-
-        expect(notification.notification_type).to eq(
-          Notification.types[:liked]
-        )
-
-        freeze_time(
-          SiteSetting.likes_notification_consolidation_window_mins.minutes.since
-        )
-
-        expect do
-          PostAction.act(
-            liker,
-            Fabricate(:post, user: likee),
-            PostActionType.types[:like]
-          )
-        end.to change { likee.reload.notifications.count }.by(1)
-
-        notification = likee.notifications.last
-
-        expect(notification.notification_type).to eq(Notification.types[:liked])
+          expect(notification.data_hash["count"].to_i).to eq(3)
+          expect(notification.data_hash["username"]).to eq(liker.username)
+        end
       end
     end
 
@@ -488,6 +555,20 @@ describe PostAction do
 
       expect do
         PostAction.act(mutee, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it 'should not generate a notification if liker has the topic muted' do
+      post = Fabricate(:post, user: eviltrout)
+
+      TopicUser.create!(
+        topic: post.topic,
+        user: eviltrout,
+        notification_level: TopicUser.notification_levels[:muted]
+      )
+
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
       end.to_not change { Notification.count }
     end
 
