@@ -15,8 +15,8 @@ export default Ember.Component.extend({
     return composeState === "draft"
       ? "composer.open"
       : composeState === "fullscreen"
-        ? "composer.exit_fullscreen"
-        : "composer.enter_fullscreen";
+      ? "composer.exit_fullscreen"
+      : "composer.enter_fullscreen";
   },
 
   @computed("composeState")
@@ -31,7 +31,7 @@ export default Ember.Component.extend({
     return composeState === "draft"
       ? "chevron-up"
       : composeState === "fullscreen"
-        ? "discourse-compress"
-        : "discourse-expand";
+      ? "discourse-compress"
+      : "discourse-expand";
   }
 });

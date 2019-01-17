@@ -205,11 +205,10 @@ export default Ember.Component.extend({
 
       this.set("checkedMessages", true);
       const queuedForTyping = this.get("queuedForTyping");
-      messages.forEach(
-        msg =>
-          msg.wait_for_typing
-            ? queuedForTyping.addObject(msg)
-            : this.send("popup", msg)
+      messages.forEach(msg =>
+        msg.wait_for_typing
+          ? queuedForTyping.addObject(msg)
+          : this.send("popup", msg)
       );
     };
 
