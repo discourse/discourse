@@ -78,6 +78,12 @@ task 'emails:test', [:email] => [:environment] do |_, args|
 
     puts "Testing sending to #{email} using #{smtp[:user_name]}:#{smtp[:password]}@#{smtp[:address]}:#{smtp[:port]}."
 
+    # We would like to do this, but Net::SMTP errors out using starttls
+    #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|
+    #  s.starttls if !!smtp[:enable_starttls_auto] && s.capable_starttls?
+    #  s.auth_login(smtp[:user_name], smtp[:password])
+    #end
+
     Net::SMTP.start(smtp[:address], smtp[:port])
       .auth_login(smtp[:user_name], smtp[:password])
   rescue Exception => e
@@ -91,6 +97,11 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         If you are using a service like Mailgun or Sendgrid, try using port 2525.
         =======================================================================================
       STR
+
+    elsif e.to_s.match(/530.*STARTTLS/)
+      # We can't run a prelimary test with STARTTLS, we'll just try sending the test email.
+      message = "OK"
+
     elsif e.to_s.match(/535/)
       message = <<~STR
         ======================================== ERROR ========================================
@@ -103,7 +114,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Check them and try again.
         =======================================================================================
       STR
-      j
+
     elsif e.to_s.match(/Connection refused/)
       message = <<~STR
         ======================================== ERROR ========================================
@@ -133,7 +144,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
 
     else
-
       message = <<~STR
         ======================================== ERROR ========================================
                                             UNEXPECTED ERROR
@@ -143,7 +153,8 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         ====================================== SOLUTION =======================================
         This is not a common error. No recommended solution exists!
 
-        Please report the exact error message above. (And a solution, if you find one!)
+        Please report the exact error message above to https://meta.discourse.org/
+        (And a solution, if you find one!)
         =======================================================================================
       STR
     end
