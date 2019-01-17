@@ -74,7 +74,11 @@ en:
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
-    error_importing: "Error cloning git repository, access is denied or repository is not found"
+    import_error:
+      generic: An error occured while importing that theme
+      about_json: "Import Error: about.json does not exist, or is invalid"
+      git: "Error cloning git repository, access is denied or repository is not found"
+      unpack_failed: "Failed to unpack file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"

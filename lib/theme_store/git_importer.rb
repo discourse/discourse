@@ -58,6 +58,12 @@ class ThemeStore::GitImporter
     end
   end
 
+  def all_files
+    Dir.chdir(@temp_folder) do
+      Dir.glob("**/*").reject { |f| File.directory?(f) }
+    end
+  end
+
   def [](value)
     fullpath = real_path(value)
     return nil unless fullpath

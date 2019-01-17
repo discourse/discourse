@@ -8,7 +8,7 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
-  downloadUrl: url("model.id", "/admin/themes/%@"),
+  downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
