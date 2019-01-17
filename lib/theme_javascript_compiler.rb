@@ -205,15 +205,17 @@ class ThemeJavascriptCompiler
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<~PLUGIN_API_JS
-      if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        const settings = Discourse.__container__
-          .lookup("service:theme-settings")
-          .getObjectForTheme(#{@theme_id});
-        const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
-        Discourse._registerPluginCode('#{version}', api => {
-          #{es6_source}
-        });
-      }
+      (function() {
+        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          const settings = Discourse.__container__
+            .lookup("service:theme-settings")
+            .getObjectForTheme(#{@theme_id});
+          const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
+          Discourse._registerPluginCode('#{version}', api => {
+            #{es6_source}
+          });
+        }
+      })();
     PLUGIN_API_JS
 
     template.babel_transpile(wrapped)

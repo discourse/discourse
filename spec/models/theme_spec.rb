@@ -325,15 +325,17 @@ HTML
             .registerSettings(#{theme.id}, {"name":"bob"});
         }
       })();
-      if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-        var themePrefix = function themePrefix(key) {
-          return 'theme_translations.#{theme.id}.' + key;
-        };
-        Discourse._registerPluginCode('1.0', function (api) {
-          alert(settings.name);var a = function a() {};
-        });
-      }
+      (function () {
+        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          var themePrefix = function themePrefix(key) {
+            return 'theme_translations.#{theme.id}.' + key;
+          };
+          Discourse._registerPluginCode('1.0', function (api) {
+            alert(settings.name);var a = function a() {};
+          });
+        }
+      })();
       HTML
 
       theme_field.reload
@@ -351,15 +353,17 @@ HTML
             .registerSettings(#{theme.id}, {"name":"bill"});
         }
       })();
-      if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-        var themePrefix = function themePrefix(key) {
-          return 'theme_translations.#{theme.id}.' + key;
-        };
-        Discourse._registerPluginCode('1.0', function (api) {
-          alert(settings.name);var a = function a() {};
-        });
-      }
+      (function () {
+        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          var themePrefix = function themePrefix(key) {
+            return 'theme_translations.#{theme.id}.' + key;
+          };
+          Discourse._registerPluginCode('1.0', function (api) {
+            alert(settings.name);var a = function a() {};
+          });
+        }
+      })();
       HTML
 
       theme_field.reload
