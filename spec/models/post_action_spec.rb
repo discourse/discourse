@@ -280,20 +280,103 @@ describe PostAction do
     end
 
     it 'should generate and remove notifications correctly' do
-      expect do
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-      end.to change { Notification.count }.by(1)
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(1)
 
       notification = Notification.last
 
       expect(notification.user_id).to eq(post.user_id)
       expect(notification.notification_type).to eq(Notification.types[:liked])
 
-      expect do
-        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-      end.to change { Notification.count }.by(-1)
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
 
-      expect(Notification.exists?(id: notification.id)).to eq(false)
+      expect(Notification.count).to eq(0)
+
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(1)
+
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
+    end
+
+    it 'should not notify when never is selected' do
+      post.user.user_option.update!(
+        like_notification_frequency:
+          UserOption.like_notification_frequency_type[:never]
+      )
+
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it 'notifies on likes correctly' do
+      PostAction.act(eviltrout, post, PostActionType.types[:like])
+      PostAction.act(admin, post, PostActionType.types[:like])
+
+      # one like
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
+
+      post.user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always]
+      )
+
+      admin2 = Fabricate(:admin)
+
+      # Travel 1 hour in time to test that order post_actions by `created_at`
+      freeze_time 1.hour.from_now
+
+      expect do
+        PostAction.act(admin2, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+
+      # adds info to the notification
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
+
+      expect(notification.data_hash["count"].to_i).to eq(2)
+      expect(notification.data_hash["username2"]).to eq(eviltrout.username)
+
+      # this is a tricky thing ... removing a like should fix up the notifications
+      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
+
+      # rebuilds the missing notification
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
+
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
+
+      expect(notification.data_hash["count"]).to eq(2)
+      expect(notification.data_hash["username"]).to eq(admin2.username)
+      expect(notification.data_hash["username2"]).to eq(admin.username)
+
+      post.user.user_option.update!(
+        like_notification_frequency:
+        UserOption.like_notification_frequency_type[:first_time_and_daily]
+      )
+
+      # this gets skipped
+      admin3 = Fabricate(:admin)
+      PostAction.act(admin3, post, PostActionType.types[:like])
+
+      freeze_time 2.days.from_now
+
+      admin4 = Fabricate(:admin)
+      PostAction.act(admin4, post, PostActionType.types[:like])
+
+      # first happend within the same day, no need to notify
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(2)
     end
 
     describe 'likes consolidation' do
@@ -411,7 +494,6 @@ describe PostAction do
     it "should generate a notification if liker is an admin irregardles of \
       muting" do
 
-      # you can not mute admin, sorry
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
 
       expect do
@@ -440,18 +522,21 @@ describe PostAction do
       post.reload
       expect(post.like_count).to eq(2)
       expect(post.like_score).to eq(4)
+      expect(post.topic.like_count).to eq(2)
 
       # Removing likes
       PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
       post.reload
       expect(post.like_count).to eq(1)
       expect(post.like_score).to eq(3)
+      expect(post.topic.like_count).to eq(1)
       expect(value_for(codinghorror.id, Date.today)).to eq(0)
 
       PostAction.remove_act(moderator, post, PostActionType.types[:like])
       post.reload
       expect(post.like_count).to eq(0)
       expect(post.like_score).to eq(0)
+      expect(post.topic.like_count).to eq(0)
     end
 
     it "shouldn't change given_likes unless likes are given or removed" do
@@ -472,25 +557,6 @@ describe PostAction do
         actual_count = value_for(codinghorror.id, Date.today)
         expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
       end
-    end
-
-    it 'should increase the like counts when a user votes' do
-      expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-      }.to change(post, :like_count).by(1)
-    end
-
-    it 'should increase the forum topic vote count when a user votes' do
-      expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.to change(post.topic, :like_count).by(1)
-
-      expect {
-        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.to change(post.topic, :like_count).by(-1)
     end
   end
 
