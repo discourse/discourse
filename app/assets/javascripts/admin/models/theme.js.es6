@@ -188,6 +188,10 @@ const Theme = RestModel.extend({
     const settings = {};
     settings[name] = value;
     return this.save({ settings });
+  },
+
+  saveTranslation(name, value) {
+    return this.save({ translations: { [name]: value } });
   }
 });
 

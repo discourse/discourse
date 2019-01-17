@@ -132,8 +132,7 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     Theme.targets.keys.each do |target|
-      next if target == :settings
-
+      next if target == :settings || target == :translations
       ALLOWED_FIELDS.each do |field|
         lookup =
           if field == "scss"
@@ -151,6 +150,11 @@ class RemoteTheme < ActiveRecord::Base
 
     settings_yaml = importer["settings.yaml"] || importer["settings.yml"]
     theme.set_field(target: :settings, name: "yaml", value: settings_yaml)
+
+    I18n.available_locales.each do |locale|
+      value = importer["locales/#{locale}.yml"]
+      theme.set_field(target: :translations, name: locale, value: value)
+    end
 
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]

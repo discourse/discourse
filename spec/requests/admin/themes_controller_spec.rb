@@ -207,6 +207,47 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'can update translations' do
+      theme.set_field(target: :translations, name: :en, value: { en: { somegroup: { somestring: "defaultstring" } } }.deep_stringify_keys.to_yaml)
+      theme.save!
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          translations: {
+            "somegroup.somestring" => "overridenstring"
+          }
+        }
+      }
+
+      # Response correct
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["theme"]["translations"][0]["value"]).to eq("overridenstring")
+
+      # Database correct
+      theme.reload
+      expect(theme.theme_translation_overrides.count).to eq(1)
+      expect(theme.theme_translation_overrides.first.translation_key).to eq("somegroup.somestring")
+
+      # Set back to default
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          translations: {
+            "somegroup.somestring" => "defaultstring"
+          }
+        }
+      }
+      # Response correct
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["theme"]["translations"][0]["value"]).to eq("defaultstring")
+
+      # Database correct
+      theme.reload
+      expect(theme.theme_translation_overrides.count).to eq(0)
+
+    end
+
     it 'returns the right error message' do
       theme.update!(component: true)
 

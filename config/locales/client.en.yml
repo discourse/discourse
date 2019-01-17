@@ -3394,6 +3394,7 @@ en:
           add: "Add"
           theme_settings: "Theme Settings"
           no_settings: "This theme has no settings."
+          theme_translations: "Theme Translations"
           empty: "No items"
           commits_behind:
             one: "Theme is 1 commit behind!"

@@ -168,6 +168,7 @@ class Admin::ThemesController < Admin::AdminController
 
     set_fields
     update_settings
+    update_translations
     handle_switch
 
     save_remote = false
@@ -188,6 +189,7 @@ class Admin::ThemesController < Admin::AdminController
 
         update_default_theme
 
+        @theme.reload
         log_theme_change(original_json, @theme)
         format.json { render json: @theme, status: :ok }
       else
@@ -258,6 +260,7 @@ class Admin::ThemesController < Admin::AdminController
           :user_selectable,
           :component,
           settings: {},
+          translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
           child_theme_ids: []
         )
@@ -283,6 +286,14 @@ class Admin::ThemesController < Admin::AdminController
 
     target_settings.each_pair do |setting_name, new_value|
       @theme.update_setting(setting_name.to_sym, new_value)
+    end
+  end
+
+  def update_translations
+    return unless target_translations = theme_params[:translations]
+
+    target_translations.each_pair do |translation_key, new_value|
+      @theme.update_translation(translation_key, new_value)
     end
   end
 
