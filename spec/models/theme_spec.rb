@@ -13,14 +13,6 @@ describe Theme do
     Guardian.new(user)
   end
 
-  let :customization_params do
-    { name: 'my name', user_id: user.id, header: "my awesome header" }
-  end
-
-  let :customization do
-    Fabricate(:theme, customization_params)
-  end
-
   let(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
   it 'can properly clean up color schemes' do
@@ -326,9 +318,19 @@ HTML
       theme.save!
 
       transpiled = <<~HTML
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bob"});
+        }
+      })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return 'theme_translations.#{theme.id}.' + key;
+        };
         Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bob" };
           alert(settings.name);var a = function a() {};
         });
       }
@@ -342,9 +344,19 @@ HTML
       setting.value = 'bill'
 
       transpiled = <<~HTML
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bill"});
+        }
+      })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return 'theme_translations.#{theme.id}.' + key;
+        };
         Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bill" };
           alert(settings.name);var a = function a() {};
         });
       }
@@ -474,5 +486,90 @@ HTML
     json = cached_settings(theme.id)
     expect(json).not_to match(/\"integer_setting\":54/)
     expect(json).to match(/\"boolean_setting\":false/)
+  end
+
+  describe "theme translations" do
+    it "can list working theme_translation_manager objects" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          group_of_translations:
+            translation1: en test1
+            translation2: en test2
+          base_translation1: en test3
+          base_translation2: en test4
+      YAML
+      fr_translation = ThemeField.create!(theme_id: theme.id, name: "fr", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        fr:
+          group_of_translations:
+            translation2: fr test2
+          base_translation2: fr test4
+          base_translation3: fr test5
+      YAML
+
+      I18n.locale = :fr
+      theme.update_translation("group_of_translations.translation1", "overriddentest1")
+      translations = theme.translations
+      theme.reload
+
+      expect(translations.map(&:key)).to eq([
+        "group_of_translations.translation1",
+        "group_of_translations.translation2",
+        "base_translation1",
+        "base_translation2",
+        "base_translation3"
+      ])
+
+      expect(translations.map(&:default)).to eq([
+        "en test1",
+        "fr test2",
+        "en test3",
+        "fr test4",
+        "fr test5"
+      ])
+
+      expect(translations.map(&:value)).to eq([
+        "overriddentest1",
+        "fr test2",
+        "en test3",
+        "fr test4",
+        "fr test5"
+      ])
+    end
+
+    it "can create a hash of overridden values" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          group_of_translations:
+            translation1: en test1
+      YAML
+
+      theme.update_translation("group_of_translations.translation1", "overriddentest1")
+      I18n.locale = :fr
+      theme.update_translation("group_of_translations.translation1", "overriddentest2")
+      theme.reload
+      expect(theme.translation_override_hash).to eq(
+        "en" => {
+          "group_of_translations" => {
+            "translation1" => "overriddentest1"
+          }
+        },
+        "fr" => {
+          "group_of_translations" => {
+            "translation1" => "overriddentest2"
+          }
+        }
+      )
+    end
+
+    it "fall back when listing baked field" do
+      theme2 = Fabricate(:theme)
+
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+      fr_translation = ThemeField.create!(theme_id: theme.id, name: "fr", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+
+      en_translation2 = ThemeField.create!(theme_id: theme2.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+
+      expect(Theme.list_baked_fields([theme.id, theme2.id], :translations, 'fr').map(&:id)).to contain_exactly(fr_translation.id, en_translation2.id)
+    end
   end
 end

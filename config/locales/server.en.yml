@@ -82,6 +82,9 @@ en:
       string_value_not_valid_min_max: "It must be between %{min} and %{max} character long."
       string_value_not_valid_min: "It must be at least %{min} characters long."
       string_value_not_valid_max: "It must be at most %{max} characters long."
+    locale_errors:
+      top_level_locale: "The top level key in a locale file must match the locale name"
+      invalid_yaml: "Translation YAML invalid"
   emails:
     incoming:
       default_subject: "This topic needs a title"

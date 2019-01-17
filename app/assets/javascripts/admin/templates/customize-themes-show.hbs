@@ -138,7 +138,18 @@
       <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
       {{#d-section class="form-horizontal theme settings"}}
         {{#each settings as |setting|}}
-          {{theme-setting setting=setting model=model class="theme-setting"}}
+          {{theme-setting-editor setting=setting model=model class="theme-setting"}}
+        {{/each}}
+      {{/d-section}}
+    </div>
+  {{/if}}
+
+  {{#if hasTranslations}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.theme_translations"}}</div>
+      {{#d-section class="form-horizontal theme settings translations"}}
+        {{#each translations as |translation|}}
+          {{theme-translation translation=translation model=model class="theme-translation"}}
         {{/each}}
       {{/d-section}}
     </div>

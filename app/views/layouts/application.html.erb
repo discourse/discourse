@@ -36,6 +36,7 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
+      <%= raw theme_translations_lookup %>
       <%= raw theme_lookup("head_tag") %>
     <%- end %>
 

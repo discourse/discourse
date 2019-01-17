@@ -398,8 +398,13 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    lookup = Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-    lookup.html_safe if lookup
+    Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
+      &.html_safe
+  end
+
+  def theme_translations_lookup
+    Theme.lookup_field(theme_ids, :translations, I18n.locale)
+      &.html_safe
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
