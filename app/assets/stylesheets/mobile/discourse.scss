@@ -4,15 +4,6 @@
 // throughout the Discourse application
 
 // Base Elements
-html {
-  font-size: $base-font-size + 1; // Increasing overall font-size on mobile by 1px
-  &.text-size-larger {
-    font-size: $base-font-size-larger + 1;
-  }
-  &.text-size-largest {
-    font-size: $base-font-size-largest + 1;
-  }
-}
 
 body {
   background-color: $secondary;

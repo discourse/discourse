@@ -912,6 +912,7 @@ en:
 
       text_size:
         title: "Text Size"
+        smaller: "Smaller"
         normal: "Normal"
         larger: "Larger"
         largest: "Largest"
