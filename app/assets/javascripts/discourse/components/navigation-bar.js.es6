@@ -75,7 +75,14 @@ export default Ember.Component.extend({
 
           this.$(".drop a").on("click", () => {
             this.$(".drop").hide();
-            this.set("expanded", false);
+
+            Ember.run.next(() => {
+              if (!this.element || this.isDestroying || this.isDestroyed) {
+                return;
+              }
+              this.set("expanded", false);
+            });
+
             return true;
           });
 
