@@ -824,6 +824,12 @@ describe PostAction do
 
       expect(post.hidden).to be_falsey
 
+      post = create_post(user: user)
+      PostAction.act(Fabricate(:moderator), post, post_action_type)
+      post.reload
+
+      expect(post.hidden).to be_falsey
+
       user = Fabricate(:trust_level_4)
       post = create_post(user: user)
       PostAction.act(tl4_user, post, post_action_type)
