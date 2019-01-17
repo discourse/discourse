@@ -36,11 +36,11 @@
 {{/if}}
 
 <p class='excerpt' data-topic-id="{{item.topic_id}}" data-post-id="{{item.post_id}}" data-user-id="{{item.user_id}}">
-  {{#if item.expandedExcerpt}}
-    {{{item.expandedExcerpt}}}
+  {{~#if item.expandedExcerpt}}
+    {{~{item.expandedExcerpt}~}}
   {{else}}
-    {{{item.excerpt}}}
-  {{/if}}
+    {{~{item.excerpt}~}}
+  {{/if~}}
 </p>
 
 {{#each item.children as |child|}}
