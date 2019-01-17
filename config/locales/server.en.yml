@@ -1274,15 +1274,15 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
-    logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
-    logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square image. The recommended size is 120px by 120px. If left blank, a home glyph will be shown."
+    logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
+    logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
-    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
-    large_icon: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
+    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
+    large_icon: "Image used as logo/splash image on Android. Required size is 512 × 512."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
-    apple_touch_icon: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    apple_touch_icon: "Icon used for Apple touch devices. Required size is 144 × 144."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image or site logo."
-    twitter_summary_large_image: "Default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
+    twitter_summary_large_image: "Default Twitter summary card image (should be at least 280 in width, and at least 150 in height)."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1917,7 +1917,7 @@ en:
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
 
     push_notifications_prompt: "Display user consent prompt."
-    push_notifications_icon: "The badge icon that appears in the notification corner. Recommended size is 96px by 96px."
+    push_notifications_icon: "The badge icon that appears in the notification corner. Required size is 96 × 96."
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. A maximum of 12 characters is recommended."
 
@@ -4200,20 +4200,20 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120px and an aspect ratio greater than 3:1"
+            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
           logo_small:
             label: "Compact Logo"
-            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square image. The recommended size is 120x120"
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square 120 × 120 image."
 
       icons:
         title: "Icons"
         fields:
           favicon:
             label: "Small Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px. Recommended image extensions are PNG or JPG."
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32 × 32. Recommended image extensions are PNG or JPG."
           apple_touch_icon:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 512px by 512px."
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Required size is at least 512 × 512."
 
       homepage:
         description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
