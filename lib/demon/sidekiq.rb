@@ -34,7 +34,7 @@ class Demon::Sidekiq < Demon::Base
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
 
-    [['critical', 4], ['default', 2], ['low', 1]].each do |queue_name, weight|
+    [['critical', 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
       if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)
