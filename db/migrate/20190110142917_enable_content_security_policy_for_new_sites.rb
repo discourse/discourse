@@ -14,7 +14,7 @@ class EnableContentSecurityPolicyForNewSites < ActiveRecord::Migration[5.2]
   end
 
   def row_exists?
-    return DB.query("SELECT 1 AS one FROM site_settings where name='content_security_policy'").present?
+    DB.query("SELECT 1 AS one FROM site_settings where name='content_security_policy'").present?
   end
 
   def instance_is_new?
