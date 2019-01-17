@@ -301,9 +301,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
       const bufferedIds = this.get("customGroupIdsBuffer");
       const availableGroups = this.get("availableGroups");
 
-      bufferedIds.filter(id => !currentIds.includes(id)).forEach(id => {
-        this.groupAdded(availableGroups.findBy("id", id));
-      });
+      bufferedIds
+        .filter(id => !currentIds.includes(id))
+        .forEach(id => {
+          this.groupAdded(availableGroups.findBy("id", id));
+        });
 
       currentIds
         .filter(id => !bufferedIds.includes(id))
