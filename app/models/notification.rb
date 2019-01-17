@@ -13,9 +13,9 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  scope :get_liked_by, ->(user) {
-    where("data::json ->> 'original_username' = ?", user.username_lower)
-      .where(notification_type: Notification.types[:liked])
+  scope :filter_by_display_username_and_type, ->(username, notification_type) {
+    where("data::json ->> 'display_username' = ?", username)
+      .where(notification_type: notification_type)
       .order(created_at: :desc)
   }
 

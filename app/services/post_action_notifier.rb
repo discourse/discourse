@@ -76,53 +76,6 @@ class PostActionNotifier
     post = post_action.post
     return if post_action.user.blank?
 
-    if SiteSetting.likes_notification_consolidation_threshold.zero?
-      return create_liked_notification(alerter, post, post_action)
-    end
-
-    user_notifications = post.user.notifications
-
-    consolidation_window =
-      SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
-
-    liked_by_user_notifications =
-      user_notifications
-        .get_liked_by(post_action.user)
-        .where("created_at > ?", consolidation_window)
-
-    user_liked_consolidated_notification =
-      user_notifications
-        .where(
-          "
-            created_at > ? AND
-            notification_type = ? AND
-            data::json ->> 'display_username' = ?
-          ",
-          consolidation_window,
-          Notification.types[:liked_consolidated],
-          post_action.user.username_lower
-        )
-        .first
-
-    if user_liked_consolidated_notification
-      update_consolidated_liked_notification_count!(
-        user_liked_consolidated_notification
-      )
-    elsif (
-      liked_by_user_notifications.count >=
-      SiteSetting.likes_notification_consolidation_threshold
-    )
-      create_consolidated_liked_notification!(
-        liked_by_user_notifications,
-        post,
-        post_action
-      )
-    else
-      create_liked_notification(alerter, post, post_action)
-    end
-  end
-
-  def self.create_liked_notification(alerter, post, post_action)
     alerter.create_notification(
       post.user,
       Notification.types[:liked],
@@ -132,42 +85,6 @@ class PostActionNotifier
       user_id: post_action.user_id
     )
   end
-  private_class_method :create_liked_notification
-
-  def self.update_consolidated_liked_notification_count!(notification)
-    data = JSON.parse(notification.data)
-    data["count"] += 1
-
-    notification.update!(
-      data: data.to_json,
-      read: false
-    )
-  end
-  private_class_method :update_consolidated_liked_notification_count!
-
-  def self.create_consolidated_liked_notification!(notifications,
-                                                  post,
-                                                  post_action)
-
-    Notification.transaction do
-      timestamp = notifications.last.created_at
-
-      Notification.create!(
-        notification_type: Notification.types[:liked_consolidated],
-        user_id: post.user_id,
-        data: {
-          username: post_action.user.username,
-          display_username: post_action.user.username,
-          count: notifications.count + 1
-        }.to_json,
-        updated_at: timestamp,
-        created_at: timestamp
-      )
-
-      notifications.delete_all
-    end
-  end
-  private_class_method :create_consolidated_liked_notification!
 
   def self.after_create_post_revision(post_revision)
     return if @disabled
