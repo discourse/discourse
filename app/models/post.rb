@@ -515,7 +515,7 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, changes, opts)
   end
 
-  def self.rebake_old(limit, priority: :normal)
+  def self.rebake_old(limit, priority: :normal, rate_limiter: true)
 
     limiter = RateLimiter.new(
       nil,
@@ -537,7 +537,7 @@ class Post < ActiveRecord::Base
         post.rebake!(priority: priority)
 
         begin
-          limiter.performed!
+          limiter.performed! if rate_limiter
         rescue RateLimiter::LimitExceeded
           break
         end
@@ -700,8 +700,8 @@ class Post < ActiveRecord::Base
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     args[:cooking_options] = self.cooking_options
 
-    if priority == :low
-      args[:queue] = 'low'
+    if priority && priority != :normal
+      args[:queue] = priority.to_s
     end
 
     Jobs.enqueue(:process_post, args)
