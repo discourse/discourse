@@ -1384,7 +1384,7 @@ en:
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by staff."
+    invite_only: "Public registration is disabled, all new users must be explicitly invited by trusted users or staff."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
