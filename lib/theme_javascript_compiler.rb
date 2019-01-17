@@ -206,7 +206,7 @@ class ThemeJavascriptCompiler
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<~PLUGIN_API_JS
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        const themeSetting = Discourse.__container__
+        const settings = Discourse.__container__
           .lookup("service:theme-settings")
           .getObjectForTheme(#{@theme_id});
         const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
