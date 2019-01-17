@@ -326,7 +326,7 @@ HTML
         }
       })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
         var themePrefix = function themePrefix(key) {
           return 'theme_translations.#{theme.id}.' + key;
         };
@@ -352,7 +352,7 @@ HTML
         }
       })();
       if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-        var themeSetting = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
         var themePrefix = function themePrefix(key) {
           return 'theme_translations.#{theme.id}.' + key;
         };
