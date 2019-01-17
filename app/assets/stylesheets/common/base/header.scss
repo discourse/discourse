@@ -9,7 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    width: 100%;
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
     height: 100%;
     .contents {
       display: flex;
