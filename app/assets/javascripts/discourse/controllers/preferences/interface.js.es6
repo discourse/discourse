@@ -20,7 +20,7 @@ const USER_HOMES = {
   5: "top"
 };
 
-const TEXT_SIZES = ["normal", "larger", "largest"];
+const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 
 export default Ember.Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")

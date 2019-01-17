@@ -1824,6 +1824,7 @@ user_preferences:
     type: enum
     default: normal
     choices:
+      - smaller
       - normal
       - larger
       - largest
