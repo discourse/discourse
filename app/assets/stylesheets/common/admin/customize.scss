@@ -146,10 +146,16 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+    .remote-url,
     .about-url,
-    license-url {
+    .license-url {
       display: block;
       margin-bottom: 10px;
+    }
+    .remote-url {
+      margin-top: -5px;
+      font-size: $font-down-1;
+      font-style: italic;
     }
     .mini-title {
       font-size: $font-up-1;

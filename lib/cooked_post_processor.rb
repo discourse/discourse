@@ -33,10 +33,10 @@ class CookedPostProcessor
     @disable_loading_image = !!opts[:disable_loading_image]
   end
 
-  def post_process(bypass_bump = false)
+  def post_process(bypass_bump: false, new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      removed_direct_reply_full_quotes
+      removed_direct_reply_full_quotes if new_post
       post_process_oneboxes
       post_process_images
       post_process_quotes

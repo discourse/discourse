@@ -2877,7 +2877,7 @@ en:
         version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
-        problems_found: "Some problems have been found with your installation of Discourse:"
+        problems_found: "Some advice based on your current site settings:"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."

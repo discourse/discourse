@@ -38,7 +38,7 @@ class PostJobsEnqueuer
   end
 
   def trigger_post_post_process
-    @post.trigger_post_process
+    @post.trigger_post_process(new_post: true)
   end
 
   def after_post_create

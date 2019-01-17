@@ -17,6 +17,9 @@
   {{/each}}
 
   {{#if model.remote_theme}}
+    {{#if model.remote_theme.remote_url}}
+      <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{model.remote_theme.remote_url}}</a>
+    {{/if}}
     <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
     {{#if model.remote_theme.license_url}}
       <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>

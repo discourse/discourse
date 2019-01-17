@@ -64,9 +64,11 @@ createWidget("notification-item", {
 
     if (attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
       return userPath(
-        `${
-          this.currentUser.username
-        }/notifications/likes-received?acting_username=${data.display_username}`
+        `${this.attrs.username ||
+          this.currentUser
+            .username}/notifications/likes-received?acting_username=${
+          data.display_username
+        }`
       );
     }
 

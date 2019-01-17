@@ -19,7 +19,9 @@ const Mixin = {
 
 export function bufferedRender(obj) {
   if (!obj.buildBuffer) {
-    Ember.warn("Missing `buildBuffer` method");
+    Ember.warn("Missing `buildBuffer` method", {
+      id: "discourse.buffered-render.missing-build-buffer"
+    });
     return obj;
   }
 

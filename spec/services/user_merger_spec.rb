@@ -671,7 +671,7 @@ describe UserMerger do
 
     it "merges when target_post_id is not set" do
       a1 = log_pending_action(source_user, post1)
-      a2 = log_pending_action(source_user, post2)
+      _a2 = log_pending_action(source_user, post2)
       a3 = log_pending_action(target_user, post2)
       a4 = log_pending_action(target_user, post3)
 
@@ -686,7 +686,7 @@ describe UserMerger do
     end
 
     it "merges when target_post_id is set" do
-      a1 = log_like_action(source_user, walter, post1)
+      _a1 = log_like_action(source_user, walter, post1)
       a2 = log_like_action(target_user, walter, post1)
       a3 = log_like_action(source_user, walter, post2)
 
@@ -720,9 +720,9 @@ describe UserMerger do
         Fabricate.build(:topic_allowed_user, user: target_user)
       ])
 
-      a1 = log_got_private_message(walter, source_user, pm_topic1)
+      _a1 = log_got_private_message(walter, source_user, pm_topic1)
       a2 = log_got_private_message(walter, target_user, pm_topic1)
-      a3 = log_got_private_message(walter, coding_horror, pm_topic1)
+      _a3 = log_got_private_message(walter, coding_horror, pm_topic1)
       a4 = log_got_private_message(walter, source_user, pm_topic2)
       a5 = log_got_private_message(walter, target_user, pm_topic3)
 

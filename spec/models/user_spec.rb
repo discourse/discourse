@@ -1966,4 +1966,27 @@ describe User do
       end
     end
   end
+
+  context "#destroy!" do
+    it 'clears up associated data on destroy!' do
+      user = Fabricate(:user)
+      post = Fabricate(:post)
+
+      PostAction.act(user, post, PostActionType.types[:like])
+      PostAction.remove_act(user, post, PostActionType.types[:like])
+
+      UserAction.create!(user_id: user.id, action_type: UserAction::LIKE)
+      UserAction.create!(user_id: -1, action_type: UserAction::LIKE, target_user_id: user.id)
+      UserAction.create!(user_id: -1, action_type: UserAction::LIKE, acting_user_id: user.id)
+
+      user.reload
+
+      user.destroy!
+
+      expect(UserAction.where(user_id: user.id).length).to eq(0)
+      expect(UserAction.where(target_user_id: user.id).length).to eq(0)
+      expect(UserAction.where(acting_user_id: user.id).length).to eq(0)
+      expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
+    end
+  end
 end
