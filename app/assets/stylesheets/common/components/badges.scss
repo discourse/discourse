@@ -163,9 +163,8 @@
 
 .badge-notification {
   @extend %badge;
-  padding: 3px 5px;
-  min-width: 8px;
-  vertical-align: middle;
+  padding: 0.21em 0.42em;
+  min-width: 0.5em;
   color: $secondary;
   font-size: $font-down-2;
   line-height: $line-height-small;
