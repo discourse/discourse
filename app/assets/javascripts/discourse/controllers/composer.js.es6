@@ -835,9 +835,8 @@ export default Ember.Controller.extend({
         }
       }
 
-      // check if there is another draft saved on server
-      // or get a draft sequence number
-      if (!opts.draft || opts.draftSequence === undefined) {
+      // we need a draft sequence for the composer to work
+      if (opts.draftSequence === undefined) {
         return Draft.get(opts.draftKey)
           .then(data => {
             if (opts.skipDraftCheck) {
@@ -848,16 +847,25 @@ export default Ember.Controller.extend({
             return self.confirmDraftAbandon(data);
           })
           .then(data => {
-            opts.draft = opts.draft || data.draft;
-
-            // we need a draft sequence for the composer to work
-            if (opts.draft_sequence === undefined) {
-              opts.draftSequence = data.draft_sequence;
+            if (!opts.draft && data.draft) {
+              opts.draft = data.draft;
             }
-
+            opts.draftSequence = data.draft_sequence;
             self._setModel(composerModel, opts);
           })
           .then(resolve, reject);
+      }
+      // otherwise, do the draft check async
+      else if (!opts.draft && !opts.skipDraftCheck) {
+        Draft.get(opts.draftKey)
+          .then(data => self.confirmDraftAbandon(data))
+          .then(data => {
+            if (data.draft) {
+              opts.draft = data.draft;
+              opts.draftSequence = data.draft_sequence;
+              self.open(opts);
+            }
+          });
       }
 
       self._setModel(composerModel, opts);
