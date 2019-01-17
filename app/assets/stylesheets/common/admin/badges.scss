@@ -1,117 +1,183 @@
 // Styles for admin/badges
-
-// Badges area
-.badges {
-  .content-list ul {
-    margin-bottom: 10px;
-    .list-badge {
-      float: right;
-      font-size: $font-down-1;
-      font-weight: normal;
-      padding: 0 6px;
-      color: $secondary;
-      background-color: $tertiary-medium;
-      border-radius: 3px;
-    }
-  }
-  .current-badge {
-    margin: 20px;
-    p.help {
+.admin-badges {
+  .badges-header {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $primary-low;
+    border-bottom: 1px solid $primary-low;
+    .badges-heading {
       margin: 0;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: $font-down-1;
+      padding: 0 10px;
     }
-
-    .badge-grouping-control {
-      display: flex;
-      align-items: center;
-
-      .badge-selector {
-        margin-right: 5px;
-      }
+    .create-new-badge {
+      margin-left: auto;
     }
   }
-  .form-horizontal {
-    .ace-wrapper {
-      position: relative;
-      height: 270px;
-      margin-bottom: 10px;
-      .ace_editor {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        border: 1px solid #e9e9e9;
-        border-radius: 3px;
-        .ace_gutter {
-          border-right: 1px solid #e9e9e9;
-          background: #f4f4f4;
+  .badges {
+    .content-list {
+      overflow-x: hidden; // used to hide list scrollbar
+      border-right: 1px solid $primary-low;
+      border-left: 1px solid $primary-low;
+      ul {
+        height: 700px; // matches theme list height
+        overflow-y: scroll; // force badge list to scroll
+        padding-bottom: 100px; // padding so that last item is not faded
+        margin-right: -20px; // pull scrollbar out of view
+        li {
+          &:first-of-type {
+            border-top: none;
+          }
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+        .list-badge {
+          float: right;
+          font-size: $font-down-1;
+          font-weight: normal;
+          padding: 0 6px;
+          color: $secondary;
+          background-color: $tertiary-medium;
+          border-radius: 3px;
         }
       }
-      &[data-disabled="true"] {
-        cursor: not-allowed;
-        opacity: 0.5;
-        .ace_editor {
+      .user-badge {
+        border: none;
+        background-color: unset;
+      }
+      // add gradient at the bottom of the list to indicate more content
+      .scroll-gradient {
+        position: relative;
+        &:before {
+          content: "";
+          width: 100%;
+          height: 100px;
+          bottom: 0;
+          position: absolute;
           pointer-events: none;
-          .ace_cursor {
-            visibility: hidden;
+          background: linear-gradient(
+            to top,
+            $secondary 0%,
+            rgba($secondary, 0) 100%
+          );
+        }
+      }
+    }
+    .badge-intro {
+      display: flex;
+      margin-left: 45%;
+      margin-top: 10%;
+      .badge-intro-emoji {
+        // it's an emoji so we want fixed deminsions
+        height: 55px;
+        width: 55px;
+        margin-top: 5px;
+        margin-right: 5px;
+      }
+      .content-wrapper {
+        display: inline-block;
+        max-width: 60%; // short lines look better
+      }
+      .external-link {
+        display: block;
+        margin-bottom: 5px;
+      }
+    }
+    .current-badge {
+      margin: 20px;
+      p.help {
+        margin: 0;
+        margin-top: 5px;
+        color: $primary-medium;
+        font-size: $font-down-1;
+      }
+      .badge-grouping-control {
+        display: flex;
+        align-items: center;
+        .badge-selector {
+          margin-right: 5px;
+        }
+      }
+    }
+    .form-horizontal {
+      .ace-wrapper {
+        position: relative;
+        height: 270px;
+        .ace_editor {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+        }
+        &[data-disabled="true"] {
+          cursor: not-allowed;
+          opacity: 0.5;
+          .ace_editor {
+            pointer-events: none;
+            .ace_cursor {
+              visibility: hidden;
+            }
           }
         }
       }
+      textarea {
+        height: 200px;
+      }
     }
-    .delete-link {
-      margin-left: 15px;
-      margin-top: 5px;
+    .current-badge-actions {
+      margin: 10px;
+      padding: 10px;
+      border-top: 1px solid $primary-low;
     }
-    textarea {
-      height: 200px;
-    }
-  }
-  .current-badge-actions {
-    margin: 10px;
-    padding: 10px;
-    border-top: 1px solid dark-light-choose($primary-low, $secondary-high);
-  }
-  .buttons {
-    float: left;
-    width: 200px;
-    .saving {
-      padding: 5px 0 0 0;
-      margin-left: 10px;
-      width: 80px;
-      color: $primary;
+    .buttons {
+      float: left;
+      width: 200px;
+      .saving {
+        padding: 5px 0 0 0;
+        margin-left: 10px;
+        width: 80px;
+        color: $primary;
+      }
     }
   }
 }
 
+// badge-grouping modal
+.badge-groupings-modal {
+  .badge-groupings {
+    margin-bottom: 10px;
+  }
+  .badge-groupings-list {
+    list-style: none;
+    margin: 0;
+    .badge-grouping-item {
+      border-bottom: 1px solid $primary-low;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .badge-grouping {
+      .badge-grouping-name-input {
+        margin: 0;
+      }
+    }
+  }
+}
+
+// badge preview modal
 .badge-query-preview {
-  .grant-count,
-  .sample,
-  .error-header {
-    margin-left: 10px;
-  }
-  .badge-errors {
-    font-size: $font-0;
-    line-height: $line-height-medium;
-    padding: 4px;
-    background-color: $primary-low;
-  }
+  .badge-errors,
   .badge-query-plan {
-    font-size: $font-down-1;
-    line-height: $line-height-medium;
-    padding: 4px;
+    padding: 5px;
     background-color: $primary-low;
   }
   .count-warning {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
-    margin: 0 0 7px 0;
-    padding: 10px 20px;
+    background-color: $danger-low;
+    margin-bottom: 5px;
+    padding: 10px;
     p {
       margin: 0;
     }
@@ -122,28 +188,32 @@
   }
 }
 
-.badge-groupings {
-  list-style: none;
-  margin: 0;
-  padding: 10px 3px;
-
-  .badge-grouping-item {
-    border-bottom: 1px solid #dfdfdf;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .badge-grouping {
-    .badge-grouping-name-input {
-      margin: 0;
+// mobile specific styles - mostly commmon style overrides
+// TODO move to mobile sheet once mobile view has a seprate template.
+.mobile-view {
+  .badges {
+    .content-list {
+      width: 100%;
+      float: none;
+      ul {
+        border: none;
+        height: 200px;
+        padding-bottom: 50px; // padding so that last item is not faded
+        // on desktop we hide the scrollbar by adding margins this is not needed
+        // on mobile.
+        margin-right: 0;
+      }
+      .scroll-gradient {
+        &:before {
+          height: 70px;
+        }
+      }
     }
-  }
-
-  .actions {
-    float: right;
-    .btn {
-      padding: 3px 6px;
+    .badge-intro {
+      margin-left: 12.5%;
+      .content-wrapper {
+        max-width: 70%;
+      }
     }
   }
 }
