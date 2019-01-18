@@ -34,7 +34,7 @@ class Admin::UsersController < Admin::AdminController
 
     opts = {}
     if params[:show_emails] == "true"
-      StaffActionLogger.new(current_user).log_show_emails(users)
+      StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
     end
 
