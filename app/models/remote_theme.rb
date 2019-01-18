@@ -112,25 +112,6 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    theme_info["fields"]&.each do |name, info|
-      unless Hash === info
-        info = {
-          "target" => :common,
-          "type" => :theme_var,
-          "value" => info
-        }
-      end
-
-      if info["type"] == "color"
-        info["type"] = :theme_color_var
-      end
-
-      theme.set_field(target: info["target"] || :common,
-                      name: name,
-                      value: info["value"],
-                      type: info["type"] || :theme_var)
-    end
-
     Theme.targets.keys.each do |target|
       next if target == :settings || target == :translations
       ALLOWED_FIELDS.each do |field|

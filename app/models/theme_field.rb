@@ -41,13 +41,13 @@ class ThemeField < ActiveRecord::Base
     @types ||= Enum.new(html: 0,
                         scss: 1,
                         theme_upload_var: 2,
-                        theme_color_var: 3,
-                        theme_var: 4,
+                        theme_color_var: 3, # No longer used
+                        theme_var: 4, # No longer used
                         yaml: 5)
   end
 
   def self.theme_var_type_ids
-    @theme_var_type_ids ||= [2, 3, 4]
+    @theme_var_type_ids ||= [2]
   end
 
   def self.force_recompilation!

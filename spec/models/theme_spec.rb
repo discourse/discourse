@@ -239,37 +239,7 @@ HTML
     end
   end
 
-  context 'theme vars' do
-
-    it 'works in parent theme' do
-      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
-      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
-      theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
-      theme.component = true
-      theme.save
-
-      parent_theme = Fabricate(:theme)
-      parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
-      parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
-      parent_theme.save
-      parent_theme.add_child_theme!(theme)
-
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: parent_theme.id)
-      expect(scss).to include("color:red")
-      expect(scss).to include("background-color:blue")
-    end
-
-    it 'can generate scss based off theme vars' do
-      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
-      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
-      theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
-      theme.save
-
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
-      expect(scss).to include("red")
-      expect(scss).to include('"Sam\'s Test"')
-    end
-
+  context 'theme upload vars' do
     let :image do
       file_from_fixtures("logo.png")
     end
