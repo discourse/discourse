@@ -139,8 +139,8 @@ class RemoteTheme < ActiveRecord::Base
       theme.set_field(target: :translations, name: locale, value: value)
     end
 
-    self.license_url ||= theme_info["license_url"]
-    self.about_url ||= theme_info["about_url"]
+    self.license_url = theme_info["license_url"]
+    self.about_url = theme_info["about_url"]
 
     if !skip_update
       self.remote_updated_at = Time.zone.now

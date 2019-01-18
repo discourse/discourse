@@ -18,11 +18,11 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing")
+    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
           "name": "awesome theme",
-          "about_url": "https://www.site.com/about",
+          "about_url": "#{about_url}",
           "license_url": "https://www.site.com/license",
           "assets": {
             "font": "assets/awesome.woff2"
@@ -99,7 +99,7 @@ describe RemoteTheme do
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
 
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
-      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA", about_url: "https://newsite.com/about"))
 
       File.write("#{initial_repo}/settings.yml", "integer_setting: 32")
       `cd #{initial_repo} && git add settings.yml`
@@ -131,6 +131,7 @@ describe RemoteTheme do
       expect(@theme.settings.first.value).to eq(32)
 
       expect(remote.remote_updated_at).to eq(time)
+      expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well
       File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))
