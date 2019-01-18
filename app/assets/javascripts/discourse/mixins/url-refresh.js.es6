@@ -13,6 +13,6 @@ export default {
   willDestroyElement() {
     this._super(...arguments);
 
-    this.appEvents.off("url:refresh", this, this.refresh);
+    this.appEvents.off("url:refresh");
   }
 };
