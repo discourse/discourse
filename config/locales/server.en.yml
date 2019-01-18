@@ -2023,10 +2023,6 @@ en:
     post_revision_text: "Ownership transferred"
 
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_message_max_posts:
       one: "This message was automatically closed after reaching the maximum limit of 1 reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
@@ -2073,12 +2069,6 @@ en:
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
-    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
     auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
