@@ -27,14 +27,6 @@ describe RemoteTheme do
           "assets": {
             "font": "assets/awesome.woff2"
           },
-          "fields": {
-            "color": {
-              "target": "desktop",
-              "value": "#FEF",
-              "type": "color"
-            },
-            "name": "sam"
-          },
           "color_schemes": {
             "#{color_scheme_name}": {
               "love": "#{love_color}"
@@ -81,7 +73,7 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
 
-      expect(@theme.theme_fields.length).to eq(8)
+      expect(@theme.theme_fields.length).to eq(6)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -89,15 +81,13 @@ describe RemoteTheme do
       expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
 
-      expect(mapped["1-color"]).to eq("#FEF")
       expect(mapped["0-font"]).to eq("")
-      expect(mapped["0-name"]).to eq("sam")
 
       expect(mapped["3-yaml"]).to eq("boolean_setting: true")
 
       expect(mapped["4-en"]).to eq("sometranslations")
 
-      expect(mapped.length).to eq(8)
+      expect(mapped.length).to eq(6)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
