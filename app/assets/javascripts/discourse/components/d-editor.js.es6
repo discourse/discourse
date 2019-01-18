@@ -314,7 +314,6 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    mouseTrap.unbind("ctrl+/", "command+/");
     this.$(".d-editor-preview").off("click.preview");
   },
 
