@@ -13,9 +13,6 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
-  # TODO remove 01-01-2019
-  self.ignored_columns = ["percent_rank", "vote_count"]
-
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
