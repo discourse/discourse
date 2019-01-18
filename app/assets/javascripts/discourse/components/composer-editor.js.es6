@@ -108,6 +108,13 @@ export default Ember.Component.extend({
     this._resetUpload(true);
   },
 
+  @observes("focusTarget")
+  setFocus() {
+    if (this.get("focusTarget") === "editor") {
+      this.$("textarea").putCursorAtEnd();
+    }
+  },
+
   @computed
   markdownOptions() {
     return {

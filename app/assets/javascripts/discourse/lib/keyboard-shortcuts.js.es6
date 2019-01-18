@@ -16,7 +16,7 @@ const bindings = {
   C: { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
-  "ctrl+p": { handler: "printTopic", anonymous: true, global: true },
+  "ctrl+p": { handler: "printTopic", anonymous: true },
   "command+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
