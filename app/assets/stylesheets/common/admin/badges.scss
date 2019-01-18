@@ -1,145 +1,135 @@
 // Styles for admin/badges
 .admin-badges {
+  // flex page layout
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    .badges-header {
+      display: flex;
+      align-items: center;
+      flex: 1 0 100%;
+      .create-new-badge {
+        margin-left: auto;
+      }
+    }
+    .badge-intro {
+      display: inline-flex;
+      flex: 0 1 50%;
+    }
+    .content-list {
+      flex: 0 0 27%;
+    }
+    .current-badges {
+      display: flex;
+      justify-content: center;
+      flex: 1 1 72%;
+    }
+  }
   .badges-header {
     padding: 10px 0;
-    display: flex;
-    align-items: center;
     border-top: 1px solid $primary-low;
     border-bottom: 1px solid $primary-low;
     .badges-heading {
       margin: 0;
       padding: 0 10px;
     }
-    .create-new-badge {
-      margin-left: auto;
-    }
   }
-  .badges {
-    .content-list {
-      overflow-x: hidden; // used to hide list scrollbar
+  .content-list {
+    ul {
+      height: 70vh;
+      overflow-y: scroll;
       border-right: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
-      ul {
-        height: 700px; // matches theme list height
-        overflow-y: scroll; // force badge list to scroll
-        padding-bottom: 100px; // padding so that last item is not faded
-        margin-right: -20px; // pull scrollbar out of view
-        li {
-          &:first-of-type {
-            border-top: none;
-          }
-          &:last-of-type {
-            border-bottom: none;
-          }
-        }
-        .list-badge {
-          float: right;
-          font-size: $font-down-1;
-          font-weight: normal;
-          padding: 0 6px;
-          color: $secondary;
-          background-color: $tertiary-medium;
-          border-radius: 3px;
+      li {
+        &:first-of-type {
+          border-top: none;
         }
       }
-      .user-badge {
-        border: none;
-        background-color: unset;
-      }
-      // add gradient at the bottom of the list to indicate more content
-      .scroll-gradient {
-        position: relative;
-        &:before {
-          content: "";
-          width: 100%;
-          height: 100px;
-          bottom: 0;
-          position: absolute;
-          pointer-events: none;
-          background: linear-gradient(
-            to top,
-            $secondary 0%,
-            rgba($secondary, 0) 100%
-          );
-        }
+      .list-badge {
+        float: right;
+        font-size: $font-down-1;
+        font-weight: normal;
+        padding: 0 6px;
+        color: $secondary;
+        background-color: $tertiary-medium;
+        border-radius: 3px;
       }
     }
-    .badge-intro {
+    .user-badge {
+      border: none;
+      background-color: unset;
+    }
+  }
+  .badge-intro {
+    margin-top: 10%;
+    .badge-intro-emoji {
+      // it's an emoji so we want fixed deminsions
+      height: 55px;
+      width: 55px;
+      margin-top: 5px;
+      margin-right: 5px;
+      flex: 0 0 auto; // IE flex fix
+    }
+    .external-link {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+  .current-badge {
+    margin: 20px;
+    p.help {
+      margin: 0;
+      margin-top: 5px;
+      color: $primary-medium;
+      font-size: $font-down-1;
+    }
+    .badge-grouping-control {
       display: flex;
-      margin-left: 45%;
-      margin-top: 10%;
-      .badge-intro-emoji {
-        // it's an emoji so we want fixed deminsions
-        height: 55px;
-        width: 55px;
-        margin-top: 5px;
+      align-items: center;
+      .badge-selector {
         margin-right: 5px;
       }
-      .content-wrapper {
-        display: inline-block;
-        max-width: 60%; // short lines look better
-      }
-      .external-link {
-        display: block;
-        margin-bottom: 5px;
-      }
     }
-    .current-badge {
-      margin: 20px;
-      p.help {
-        margin: 0;
-        margin-top: 5px;
-        color: $primary-medium;
-        font-size: $font-down-1;
+  }
+  .form-horizontal {
+    .ace-wrapper {
+      position: relative;
+      height: 270px;
+      .ace_editor {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
       }
-      .badge-grouping-control {
-        display: flex;
-        align-items: center;
-        .badge-selector {
-          margin-right: 5px;
-        }
-      }
-    }
-    .form-horizontal {
-      .ace-wrapper {
-        position: relative;
-        height: 270px;
+      &[data-disabled="true"] {
+        cursor: not-allowed;
+        opacity: 0.5;
         .ace_editor {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-        }
-        &[data-disabled="true"] {
-          cursor: not-allowed;
-          opacity: 0.5;
-          .ace_editor {
-            pointer-events: none;
-            .ace_cursor {
-              visibility: hidden;
-            }
+          pointer-events: none;
+          .ace_cursor {
+            visibility: hidden;
           }
         }
       }
-      textarea {
-        height: 200px;
-      }
     }
-    .current-badge-actions {
-      margin: 10px;
-      padding: 10px;
-      border-top: 1px solid $primary-low;
+    textarea {
+      height: 200px;
     }
-    .buttons {
-      float: left;
-      width: 200px;
-      .saving {
-        padding: 5px 0 0 0;
-        margin-left: 10px;
-        width: 80px;
-        color: $primary;
-      }
+  }
+  .current-badge-actions {
+    margin: 10px;
+    padding: 10px;
+    border-top: 1px solid $primary-low;
+  }
+  .buttons {
+    float: left;
+    width: 200px;
+    .saving {
+      padding: 5px 0 0 0;
+      margin-left: 10px;
+      width: 80px;
+      color: $primary;
     }
   }
 }
@@ -191,29 +181,25 @@
 // mobile specific styles - mostly commmon style overrides
 // TODO move to mobile sheet once mobile view has a seprate template.
 .mobile-view {
-  .badges {
+  .admin-badges {
     .content-list {
-      width: 100%;
-      float: none;
+      flex: 0 0 100%;
       ul {
-        border: none;
-        height: 200px;
-        padding-bottom: 50px; // padding so that last item is not faded
-        // on desktop we hide the scrollbar by adding margins this is not needed
-        // on mobile.
+        max-height: 40vh;
         margin-right: 0;
-      }
-      .scroll-gradient {
-        &:before {
-          height: 70px;
-        }
       }
     }
     .badge-intro {
-      margin-left: 12.5%;
+      flex: 0 1 75%;
       .content-wrapper {
-        max-width: 70%;
       }
+    }
+    .current-badge {
+      margin: 20px 0;
+      width: 100%;
+    }
+    input[type="text"] {
+      width: 100%;
     }
   }
 }
