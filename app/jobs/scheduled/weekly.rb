@@ -11,7 +11,7 @@ module Jobs
       Post.calculate_avg_time
       Topic.calculate_avg_time
       ScoreCalculator.new.calculate
-      SchedulerStat.purge_old
+      MiniScheduler::Stat.purge_old
       Draft.cleanup!
       UserAuthToken.cleanup!
     end
