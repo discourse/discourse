@@ -1806,7 +1806,7 @@ en:
 
     likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
 
-    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reaced. The threshold can be configured via `SiteSetting.likes_notification_consolidation_threshold`."
+    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.likes_notification_consolidation_threshold`."
 
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
