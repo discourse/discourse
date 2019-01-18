@@ -273,6 +273,9 @@ ol.category-breadcrumb {
 
 div.education {
   color: dark-light-choose($primary-medium, $secondary-medium);
+  .badge-notification.new-posts {
+    vertical-align: text-bottom;
+  }
 }
 
 .list-cell {
