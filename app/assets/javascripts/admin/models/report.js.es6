@@ -351,7 +351,8 @@ const Report = Discourse.Model.extend({
     return {
       property: properties.title,
       value: postTitle,
-      formatedValue: `<a href='${href}'>${postTitle}</a>`
+      formatedValue:
+        postTitle && href ? `<a href='${href}'>${postTitle}</a>` : "—"
     };
   },
 
