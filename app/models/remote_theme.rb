@@ -107,7 +107,9 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = UploadCreator.new(File.open(path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
+        new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
+        File.rename(path, new_path) # OptimizedImage has strict file name restrictions, so rename temporarily
+        upload = UploadCreator.new(File.open(new_path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
         theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
       end
     end
