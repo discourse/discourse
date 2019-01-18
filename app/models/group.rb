@@ -12,12 +12,14 @@ class Group < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
+  has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
 
   has_many :group_archived_messages, dependent: :destroy
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
 
   has_and_belongs_to_many :web_hooks

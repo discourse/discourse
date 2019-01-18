@@ -503,6 +503,7 @@ Discourse::Application.routes.draw do
       %w{
         activity
         activity/:filter
+        requests
         messages
         messages/inbox
         messages/archive
@@ -518,6 +519,7 @@ Discourse::Application.routes.draw do
 
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
+      put "membership_request" => "groups#membership_request"
       post "request_membership" => "groups#request_membership"
       post "notifications" => "groups#set_notifications"
     end
