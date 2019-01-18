@@ -214,6 +214,39 @@ class GroupsController < ApplicationController
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
 
+    if params[:requesters]
+      guardian.ensure_can_edit!(group)
+
+      users = group.requesters
+      total = users.count
+
+      if (filter = params[:filter]).present?
+        filter = filter.split(',') if filter.include?(',')
+
+        if current_user&.admin
+          users = users.filter_by_username_or_email(filter)
+        else
+          users = users.filter_by_username(filter)
+        end
+      end
+
+      users = users
+        .select("users.*, group_requests.reason, group_requests.created_at requested_at")
+        .order(params[:order] == 'requested_at' ? "group_requests.created_at #{dir}" : "")
+        .order(username_lower: dir)
+        .limit(limit)
+        .offset(offset)
+
+      return render json: {
+        members: serialize_data(users, GroupRequesterSerializer),
+        meta: {
+          total: total,
+          limit: limit,
+          offset: offset
+        }
+      }
+    end
+
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
     elsif params[:order] == 'added_at'
@@ -294,6 +327,23 @@ class GroupsController < ApplicationController
     end
   end
 
+  def membership_request
+    group = Group.find(params[:id])
+    guardian.ensure_can_edit!(group)
+
+    user = User.find(params[:user_id])
+    raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+
+    if params[:accept]
+      group.add(user)
+      GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+    end
+
+    GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
+
+    render json: success_json
+  end
+
   def mentionable
     group = find_group(:group_id, ensure_can_see: false)
 
@@ -361,6 +411,8 @@ class GroupsController < ApplicationController
 
     group = find_group(:id)
     group_name = group.name
+
+    GroupRequest.create(group: group, user: current_user, reason: params[:reason])
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')

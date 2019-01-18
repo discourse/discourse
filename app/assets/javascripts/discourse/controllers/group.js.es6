@@ -28,6 +28,16 @@ export default Ember.Controller.extend({
 
     const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
 
+    if (canManageGroup) {
+      defaultTabs.push(
+        Tab.create({
+          name: "requests",
+          i18nKey: "requests.title",
+          icon: "user-plus"
+        })
+      );
+    }
+
     if (showMessages) {
       defaultTabs.push(
         Tab.create({
