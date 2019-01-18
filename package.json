@@ -34,7 +34,7 @@
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
     "pretender": "^1.6",
-    "prettier": "1.14.3",
+    "prettier": "^1.15.3",
     "puppeteer": "1.4",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",

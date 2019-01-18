@@ -3,6 +3,8 @@ require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
 require_dependency 'theme_settings_parser'
 require_dependency 'theme_settings_manager'
+require_dependency 'theme_translation_parser'
+require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
 
@@ -15,6 +17,7 @@ class Theme < ActiveRecord::Base
   belongs_to :color_scheme
   has_many :theme_fields, dependent: :destroy
   has_many :theme_settings, dependent: :destroy
+  has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :color_schemes
@@ -203,7 +206,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4)
   end
 
   def self.lookup_target(target_id)
@@ -269,10 +272,15 @@ class Theme < ActiveRecord::Base
 
   def self.list_baked_fields(theme_ids, target, name)
     target = target.to_sym
+    name = name.to_sym
 
-    fields = ThemeField.find_by_theme_ids(theme_ids)
-      .where(target_id: [Theme.targets[target], Theme.targets[:common]])
-      .where(name: name.to_s)
+    if target == :translations
+      fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
+    else
+      fields = ThemeField.find_by_theme_ids(theme_ids)
+        .where(target_id: [Theme.targets[target], Theme.targets[:common]])
+        .where(name: name.to_s)
+    end
 
     fields.each(&:ensure_baked!)
     fields
@@ -305,7 +313,7 @@ class Theme < ActiveRecord::Base
     target_id = Theme.targets[target.to_sym]
     raise "Unknown target #{target} passed to set field" unless target_id
 
-    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
+    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name: name, target: target)
     raise "Unknown type #{type} passed to set field" unless type_id
 
     value ||= ""
@@ -344,6 +352,21 @@ class Theme < ActiveRecord::Base
       save!
     else
       raise Discourse::InvalidParameters.new(new_relation.errors.full_messages.join(", "))
+    end
+  end
+
+  def translations
+    fallbacks = I18n.fallbacks[I18n.locale]
+    begin
+      data = theme_fields.find_first_locale_fields([id], fallbacks).first&.translation_data(with_overrides: false)
+      return {} if data.nil?
+      best_translations = {}
+      fallbacks.reverse.each do |locale|
+        best_translations.deep_merge! data[locale] if data[locale]
+      end
+      ThemeTranslationManager.list_from_hash(theme: self, hash: best_translations, locale: I18n.locale)
+    rescue ThemeTranslationParser::InvalidYaml
+      {}
     end
   end
 
@@ -388,6 +411,25 @@ class Theme < ActiveRecord::Base
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
+  end
+
+  def update_translation(translation_key, new_value)
+    target_translation = translations.find { |translation| translation.key == translation_key }
+    raise Discourse::NotFound unless target_translation
+    target_translation.value = new_value
+  end
+
+  def translation_override_hash
+    hash = {}
+    theme_translation_overrides.each do |override|
+      cursor = hash
+      path = [override.locale] + override.translation_key.split(".")
+      path[0..-2].each do |key|
+        cursor = (cursor[key] ||= {})
+      end
+      cursor[path[-1]] = override.value
+    end
+    hash
   end
 end
 

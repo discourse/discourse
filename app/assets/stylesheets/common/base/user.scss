@@ -2,6 +2,7 @@
 // These styles are also used for "/groups" — test those pages if making significant changes
 .user-right {
   .list-actions {
+    display: flex;
     margin-bottom: 10px;
 
     .btn {

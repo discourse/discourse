@@ -29,7 +29,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.text_sizes
-    @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2)
+    @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2, smaller: 3)
   end
 
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }

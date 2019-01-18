@@ -9,7 +9,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && mkdir desktop mobile common assets`
+      `cd #{repo_dir} && mkdir desktop mobile common assets locales`
       files.each do |name, data|
         File.write("#{repo_dir}/#{name}", data)
         `cd #{repo_dir} && git add #{name}`
@@ -56,7 +56,8 @@ describe RemoteTheme do
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
         "assets/awesome.woff2" => "FAKE FONT",
-        "settings.yaml" => "boolean_setting: true"
+        "settings.yaml" => "boolean_setting: true",
+        "locales/en.yml" => "sometranslations"
       )
     end
 
@@ -80,7 +81,7 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
 
-      expect(@theme.theme_fields.length).to eq(7)
+      expect(@theme.theme_fields.length).to eq(8)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -94,7 +95,9 @@ describe RemoteTheme do
 
       expect(mapped["3-yaml"]).to eq("boolean_setting: true")
 
-      expect(mapped.length).to eq(7)
+      expect(mapped["4-en"]).to eq("sometranslations")
+
+      expect(mapped.length).to eq(8)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)

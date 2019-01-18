@@ -9,7 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    width: 100%;
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
     height: 100%;
     .contents {
       display: flex;
@@ -178,7 +178,7 @@
     z-index: z("base");
     left: 0;
     top: -4px;
-    min-width: 6px;
+    min-width: 0.6em;
   }
   .unread-notifications {
     left: auto;

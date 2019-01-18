@@ -52,6 +52,10 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  .badge-notification {
+    vertical-align: text-bottom;
+  }
 }
 
 .menu-links.columned {
@@ -191,7 +195,7 @@
       .d-icon {
         float: left;
         margin-right: 5px;
-        padding-top: 2px;
+        padding-top: 0.2em;
       }
     }
     .is-warning {

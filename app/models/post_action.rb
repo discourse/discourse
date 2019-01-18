@@ -613,6 +613,7 @@ class PostAction < ActiveRecord::Base
     elsif PostActionType.auto_action_flag_types.include?(post_action_type)
 
       if acting_user.has_trust_level?(TrustLevel[4]) &&
+         !acting_user.staff? &&
          post.user&.trust_level != TrustLevel[4]
 
         hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl4_user])
