@@ -385,11 +385,50 @@ describe UserNotifications do
       expect(mail.html_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(response.raw)
     end
+
+    it "uses the original subject for staged users" do
+      incoming_email = Fabricate(
+        :incoming_email,
+        subject: "Original Subject",
+        post: post,
+        topic: post.topic,
+        user: user
+      )
+
+      mail = UserNotifications.user_posted(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to match(/Super cool topic/)
+
+      user.update!(staged: true)
+      mail = UserNotifications.user_posted(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to eq("Re: Original Subject")
+
+      another_post = Fabricate(:post, topic: topic)
+      incoming_email.update!(post_id: another_post.id)
+
+      mail = UserNotifications.user_private_message(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to match(/Super cool topic/)
+    end
   end
 
   describe '.user_private_message' do
     let(:response_by_user) { Fabricate(:user, name: "", username: "john") }
-    let(:topic) { Fabricate(:private_message_topic) }
+    let(:topic) { Fabricate(:private_message_topic, title: "Super cool topic") }
+    let(:post) { Fabricate(:post, topic: topic) }
     let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:private_message_notification, user: user, post: response) }
@@ -523,6 +562,44 @@ describe UserNotifications do
           expect(mail.subject).to include("[PM] ")
         end
       end
+    end
+
+    it "uses the original subject for staged users when topic was started via email" do
+      incoming_email = Fabricate(
+        :incoming_email,
+        subject: "Original Subject",
+        post: post,
+        topic: topic,
+        user: user
+      )
+
+      mail = UserNotifications.user_private_message(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to match(/Super cool topic/)
+
+      user.update!(staged: true)
+      mail = UserNotifications.user_private_message(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to eq("Re: Original Subject")
+
+      another_post = Fabricate(:post, topic: topic)
+      incoming_email.update!(post_id: another_post.id)
+
+      mail = UserNotifications.user_private_message(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to match(/Super cool topic/)
     end
   end
 
