@@ -54,7 +54,7 @@ class ThemeJavascriptCompiler
 
       function manipulatePath(path) {
         // Override old themeSetting syntax when it's a param inside another node
-        if(path.parts[0] == "themeSetting"){
+        if(path.parts[0] == "themeSettings"){
           const settingParts = path.parts.slice(1);
           path.type = "SubExpression";
           Object.assign(path, generateHelper(settingParts))
@@ -72,7 +72,7 @@ class ThemeJavascriptCompiler
         }
 
         // Override old themeSetting syntax when it's in its own node
-        if (node.path.parts[0] == "themeSetting") {
+        if (node.path.parts[0] == "themeSettings") {
           Object.assign(node, generateHelper(node.path.parts.slice(1)))
         }
       }
@@ -93,14 +93,14 @@ class ThemeJavascriptCompiler
         Handlebars.Compiler.prototype.compile = function(program, options) {
 
           // `replaceGet()` in raw-handlebars.js.es6 adds a `get` in front of things
-          // so undo this specific case for the old themeSetting.blah syntax
+          // so undo this specific case for the old themeSettings.blah syntax
           let visitor = new Handlebars.Visitor();
           visitor.mutating = true;
           visitor.MustacheStatement = (node) => {
             if(node.path.original == 'get'
               && node.params
               && node.params[0]
-              && node.params[0].parts[0] == 'themeSetting'){
+              && node.params[0].parts[0] == 'themeSettings'){
                 node.path.parts = node.params[0].parts
                 node.params = []
             }
