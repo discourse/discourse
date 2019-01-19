@@ -28,14 +28,14 @@ export function bufferedRender(obj) {
   const caller = {};
 
   caller.didRender = function() {
-    this._super();
+    this._super(...arguments);
     this._customRender();
   };
 
   const triggers = obj.rerenderTriggers;
   if (triggers) {
     caller.init = function() {
-      this._super();
+      this._super(...arguments);
       triggers.forEach(k => this.addObserver(k, this.rerenderBuffer));
     };
   }

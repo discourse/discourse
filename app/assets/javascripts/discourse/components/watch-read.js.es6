@@ -2,7 +2,7 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
 export default Ember.Component.extend({
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const currentUser = this.currentUser;
     if (!currentUser) {
       return;
@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $(window).off("load.faq resize.faq scroll.faq");
   }
 });

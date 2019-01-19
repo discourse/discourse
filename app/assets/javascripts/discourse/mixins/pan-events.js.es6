@@ -11,7 +11,7 @@ export default Ember.Mixin.create({
   _panState: null,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     if (this.site.mobileView) {
       if ("onpointerdown" in document.documentElement) {
@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
 
     if (this.site.mobileView) {
       this.$()

@@ -27,7 +27,7 @@ export default Ember.Component.extend({
   saving: null,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.autoFocus();
   },
 

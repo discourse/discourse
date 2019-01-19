@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   elementId: "navigation-bar",
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 

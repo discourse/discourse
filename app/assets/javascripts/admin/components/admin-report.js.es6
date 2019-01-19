@@ -311,7 +311,7 @@ export default Ember.Component.extend({
   },
 
   _fetchReport() {
-    this._super();
+    this._super(...arguments);
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 

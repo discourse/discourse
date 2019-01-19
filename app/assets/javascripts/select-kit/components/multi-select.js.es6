@@ -23,7 +23,7 @@ export default SelectKitComponent.extend({
   values: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     this.set("computedValues", []);
 

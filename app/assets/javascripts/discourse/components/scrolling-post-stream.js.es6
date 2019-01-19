@@ -263,7 +263,7 @@ export default MountWidget.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const debouncedScroll = () =>
       Ember.run.debounce(this, this._scrollTriggered, 10);
 
@@ -313,7 +313,7 @@ export default MountWidget.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $(document).unbind("touchmove.post-stream");
     $(window).unbind("scroll.post-stream");
     this.appEvents.off("post-stream:refresh");
