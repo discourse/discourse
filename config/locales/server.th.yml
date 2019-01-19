@@ -86,7 +86,7 @@ th:
       num_users: "ผู้ใช้"
   search:
     types:
-      user: 'ผู้ใช้'
+      user: "ผู้ใช้"
   login:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
   subject_re: "ตอบ: "
@@ -104,6 +104,6 @@ th:
     user_posted_pm_staged:
       text_body_template: |2
 
-          %{message}
+        %{message}
   page_not_found:
     see_more: "อื่น"

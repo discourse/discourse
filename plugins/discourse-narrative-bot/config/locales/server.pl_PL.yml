@@ -163,7 +163,6 @@ pl_PL:
         instructions: |-
           Czy możesz **pogrubić** lub zastosować _kursywę_ dla części słów w swojej odpowiedzi?
 
-
           - napisz '**pogrub**' lub '_kursywa_'
 
           - lub, naciśnij przycisk<kbd><b>B</b></kbd> lub<kbd><i>I</i></kbd> w edytorze.

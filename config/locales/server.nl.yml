@@ -57,7 +57,7 @@ nl:
         screened_email_error: "Gebeurt wanneer het e-mailadres van de afzender al was gecontroleerd."
       unrecognized_error: "Onbekende Fout"
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "is beperkt tot %{max} tekens; u hebt er %{length} ingevoerd."
       invalid_boolean: "Ongeldige boolean."
@@ -82,7 +82,7 @@ nl:
       not_a_number: is niet een getal
       not_an_integer: moet een integer zijn
       odd: moet oneven zijn
-      record_invalid: 'Validatie mislukt: %{errors}'
+      record_invalid: "Validatie mislukt: %{errors}"
       restrict_dependent_destroy:
         one: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk is"
         many: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk zijn"
@@ -97,10 +97,10 @@ nl:
         other: heeft de verkeerde lengte (moet %{count} tekens zijn)
       other_than: "moet anders zijn dan %{count}"
     template:
-      body: 'Er waren problemen met de volgende velden:'
+      body: "Er waren problemen met de volgende velden:"
       header:
         one: 1 fout heeft voorkomen dat %{model} kon worden opgeslagen
-        other: '%{count} fouten hebben voorkomen dat %{model} kon worden opgeslagen'
+        other: "%{count} fouten hebben voorkomen dat %{model} kon worden opgeslagen"
     embed:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
     site_settings:
@@ -229,7 +229,7 @@ nl:
     until_posts:
       one: "1 bericht"
       other: "%{count} berichten"
-    'new-topic': |
+    "new-topic": |
       Welkom op %{site_name} &ndash; **bedankt voor het starten van een nieuwe conversatie!**
 
       - Klinkt de titel interessant als u deze hardop leest? Is het een goede samenvatting?
@@ -239,7 +239,7 @@ nl:
       - Gebruik algemeen gebruikte woorden, zodat anderen uw topic kunnen *vinden*. Selecteer een categorie om uw topic met verwante topics te groeperen.
 
       [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Welkom op %{site_name} &ndash; **bedankt voor uw bijdrage!**
 
       - Levert uw antwoord een nuttige bijdrage aan de conversatie, hoe klein dan ook?
@@ -290,8 +290,8 @@ nl:
       category:
         name: "Categorienaam"
       topic:
-        title: 'Titel'
-        featured_link: 'Uitgelichte link'
+        title: "Titel"
+        featured_link: "Uitgelichte link"
       post:
         raw: "Inhoud"
       user_profile:
@@ -351,23 +351,22 @@ nl:
     title: "Welkom bij Discourse"
     body: |2
 
-        De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
+      De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
 
-        **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
+      **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
 
-        - Voor wie is deze bestemd?
-        - Wat kunnen ze hier vinden?
-        - Waarom zouden ze hier moeten komen?
-        - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
+      - Voor wie is deze bestemd?
+      - Wat kunnen ze hier vinden?
+      - Waarom zouden ze hier moeten komen?
+      - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
 
-        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
+      Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
     title: "Welkom in de Lounge"
   category:
     topic_prefix: "Over de categorie %{category}"
-    replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van uw nieuwe categorie. Deze leidraad verschijnt in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden. **Voordat u deze beschrijving bewerkt of topics aanmaakt, verschijnt deze categorie niet op de categoriepagina.**)"
     post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een langere beschrijving, of om richtlijnen of regels voor de categorie op te stellen:\n\n- Waarom zouden mensen deze categorie gebruiken? Waar dient deze voor?\n\n- Op welke punten onderscheidt deze categorie zich van andere categorieën die we al hebben?\n\n- Wat dienen topics in deze categorie over het algemeen te bevatten?\n\n- Hebben we deze categorie nodig? Kunnen we deze samenvoegen met een andere categorie of subcategorie?\n"
     errors:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
@@ -479,9 +478,9 @@ nl:
     no_token: "Sorry, die koppeling voor het wijzigen van uw wachtwoord is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
     choose_new: "Een nieuw wachtwoord kiezen"
     choose: "Een wachtwoord kiezen"
-    update: 'Wachtwoord bijwerken'
-    save: 'Wachtwoord instellen'
-    title: 'Wachtwoord herinitialiseren'
+    update: "Wachtwoord bijwerken"
+    save: "Wachtwoord instellen"
+    title: "Wachtwoord herinitialiseren"
     success: "U hebt uw wachtwoord met succes gewijzigd en bent nu aangemeld."
     success_unapproved: "U hebt uw wachtwoord met succes gewijzigd."
   change_email:
@@ -510,42 +509,42 @@ nl:
       back_to: "Terug naar %{title}"
   post_action_types:
     off_topic:
-      title: 'Off-topic'
-      description: 'Dit bericht is niet relevant voor de huidige discussie zoals beschreven door de titel en het eerste bericht, en dient wellicht naar een ander topic te worden verplaatst.'
-      short_description: 'Niet relevant voor de discussie'
-      long_form: 'heeft dit als off-topic gemarkeerd'
+      title: "Off-topic"
+      description: "Dit bericht is niet relevant voor de huidige discussie zoals beschreven door de titel en het eerste bericht, en dient wellicht naar een ander topic te worden verplaatst."
+      short_description: "Niet relevant voor de discussie"
+      long_form: "heeft dit als off-topic gemarkeerd"
     spam:
-      title: 'Spam'
-      description: 'Dit bericht is een advertentie of vandalisme. Het is niet relevant voor het huidige onderwerp.'
-      short_description: 'Dit is spam'
-      long_form: 'heeft dit als spam gemarkeerd'
+      title: "Spam"
+      description: "Dit bericht is een advertentie of vandalisme. Het is niet relevant voor het huidige onderwerp."
+      short_description: "Dit is spam"
+      long_form: "heeft dit als spam gemarkeerd"
       email_title: '''%{title}'' is als spam gemarkeerd'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Ongepast'
-      long_form: 'heeft dit als ongepast gemarkeerd'
+      title: "Ongepast"
+      long_form: "heeft dit als ongepast gemarkeerd"
     notify_user:
-      title: '@{{username}} een bericht sturen'
-      long_form: 'bericht verstuurd naar gebruiker'
+      title: "@{{username}} een bericht sturen"
+      long_form: "bericht verstuurd naar gebruiker"
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit bericht vereist aandacht van een staflid om een andere reden dan hierboven vermeld.'
-      short_description: 'Dit bericht vereist aandacht van een staflid om een andere reden'
-      long_form: 'heeft dit gemarkeerd voor aandacht van een staflid'
+      description: "Dit bericht vereist aandacht van een staflid om een andere reden dan hierboven vermeld."
+      short_description: "Dit bericht vereist aandacht van een staflid om een andere reden"
+      long_form: "heeft dit gemarkeerd voor aandacht van een staflid"
       email_title: 'Een bericht in ''%{title}'' vereist aandacht van een staflid'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Bladwijzer maken'
-      description: 'Bladwijzer voor dit bericht maken'
-      short_description: 'Bladwijzer voor dit bericht maken'
-      long_form: 'heeft een bladwijzer voor dit bericht gemaakt'
+      title: "Bladwijzer maken"
+      description: "Bladwijzer voor dit bericht maken"
+      short_description: "Bladwijzer voor dit bericht maken"
+      long_form: "heeft een bladwijzer voor dit bericht gemaakt"
     like:
-      title: 'Leuk'
-      description: 'Dit bericht leuk vinden'
-      short_description: 'Like dit bericht'
-      long_form: 'vindt dit bericht leuk'
+      title: "Leuk"
+      description: "Dit bericht leuk vinden"
+      short_description: "Like dit bericht"
+      long_form: "vindt dit bericht leuk"
   user_activity:
     no_bookmarks:
       others: "Geen bladwijzers."
@@ -557,19 +556,19 @@ nl:
       others: "Geen antwoorden."
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Dit topic is een advertentie. Het is niet nuttig of relevant voor deze website, maar promotioneel van aard.'
-      long_form: 'heeft dit als spam gemarkeerd'
+      title: "Spam"
+      description: "Dit topic is een advertentie. Het is niet nuttig of relevant voor deze website, maar promotioneel van aard."
+      long_form: "heeft dit als spam gemarkeerd"
     inappropriate:
-      title: 'Ongepast'
-      long_form: 'heeft dit als ongepast gemarkeerd'
+      title: "Ongepast"
+      long_form: "heeft dit als ongepast gemarkeerd"
     notify_moderators:
       title: "Iets anders"
-      long_form: 'heeft dit gemarkeerd voor aandacht van een moderator'
+      long_form: "heeft dit gemarkeerd voor aandacht van een moderator"
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Uw bericht is gemarkeerd door de gemeenschap en is tijdelijk verborgen.</p>'
+    user_must_edit: "<p>Uw bericht is gemarkeerd door de gemeenschap en is tijdelijk verborgen.</p>"
   archetypes:
     regular:
       title: "Normaal topic"
@@ -597,7 +596,7 @@ nl:
     authorize: "Autoriseren"
     read: "lezen"
     read_write: "lezen/schrijven"
-    description: "'%{application_name}' vraagt de volgende toegang tot uw account:"
+    description: '''%{application_name}'' vraagt de volgende toegang tot uw account:'
     no_trust_level: "Sorry, u hebt niet het vereiste vertrouwensniveau voor toegang tot de gebruikers-API."
     generic_error: "Sorry, we kunnen geen API-sleutels voor gebruikers uitgeven; deze functie is mogelijk uitgeschakeld door de websitebeheerder."
     scopes:
@@ -740,8 +739,8 @@ nl:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
     sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg ervoor dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
-    queue_size_warning: 'Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit zou op een probleem met Sidekiq-processen kunnen duiden, of mogelijk dient u meer Sidekiq-workers toe te voegen.'
-    memory_warning: 'Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen.'
+    queue_size_warning: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit zou op een probleem met Sidekiq-processen kunnen duiden, of mogelijk dient u meer Sidekiq-workers toe te voegen."
+    memory_warning: "Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen."
     subfolder_ends_in_slash: "Uw submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
     email_polling_errored_recently:
       one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
@@ -783,7 +782,7 @@ nl:
     max_image_height: "Maximale hoogte van een thumbnail van afbeeldingen in een bericht"
     fixed_category_positions: "Wanneer aangevinkt, kunt u categorieën in een vaste volgorde schikken. Wanneer niet aangevinkt, worden categorieën op activiteit vermeld."
     fixed_category_positions_on_create: "Wanneer aangevinkt, wordt de categorievolgorde bij het maken van een topic aangehouden (vereist fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Voeg ''rel nofollow'' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: "rake posts:rebake"'
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     show_pinned_excerpt_mobile: "Laat een fragment bij vastgemaakte topics zien op mobiel."
     show_pinned_excerpt_desktop: "Laat een fragment bij vastgemaakte topics zien op desktop."
@@ -836,7 +835,6 @@ nl:
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
-    invite_only: "Openbare registratie is uitgeschakeld; alle nieuwe gebruikers moeten expliciet worden uitgenodigd door stafleden."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
     min_password_length: "Minimum lengte wachtwoord."
     min_admin_password_length: "Minimale wachtwoordlengte voor de beheerder."
@@ -1086,9 +1084,9 @@ nl:
   search:
     within_post: "#%{post_number} door %{username}"
     types:
-      category: 'Categorieën'
-      topic: 'Resultaten'
-      user: 'Leden'
+      category: "Categorieën"
+      topic: "Resultaten"
+      user: "Leden"
   sso:
     login_error: "Aanmeldingsfout"
     not_found: "Uw account kon niet worden gevonden. Neem contact op met de beheerder van de website."
@@ -1105,10 +1103,6 @@ nl:
     new_user: "Welkom bij onze gemeenschap! Dit zijn de meest populaire recente topics."
     not_seen_in_a_month: "Welkom terug! We hebben u een tijdje niet gezien. Dit zijn de meest populaire topics sinds uw afwezigheid."
   topic_statuses:
-    archived_enabled: "Dit topic is nu gearchiveerd. Het is bevroren en kan op geen enkele manier worden gewijzigd."
-    archived_disabled: "Dit topic is nu niet meer gearchiveerd. Het is niet meer bevroren en kan worden gewijzigd."
-    closed_enabled: "Dit topic is nu gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
-    closed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_message_max_posts:
       one: "Dit bericht is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
       other: "Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
@@ -1153,12 +1147,6 @@ nl:
       other: "Dit topic is %{count} minuten na het laatste antwoord automatisch geopend."
     autoclosed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
-    pinned_enabled: "Dit topic is nu vastgemaakt. Het verschijnt bovenaan de categorie ervan totdat het door een staflid wordt losgemaakt voor iedereen, of door individuele gebruikers voor henzelf."
-    pinned_disabled: "Dit topic is nu losgemaakt. Het verschijnt niet meer bovenaan de categorie ervan."
-    pinned_globally_enabled: "Dit topic is nu globaal vastgemaakt. Het verschijnt bovenaan de categorie ervan en alle topiclijsten totdat het door een staflid wordt losgemaakt voor iedereen, of door individuele gebruikers voor henzelf."
-    pinned_globally_disabled: "Dit topic is nu losgemaakt. Het verschijnt niet meer bovenaan de categorie ervan."
-    visible_enabled: "Dit topic is nu zichtbaar. Het wordt in topiclijsten weergegeven."
-    visible_disabled: "Dit topic is nu onzichtbaar. Het wordt niet meer in topiclijsten weergegeven. De enige manier om dit topic te zien, is via een directe koppeling."
   login:
     not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
@@ -1251,14 +1239,12 @@ nl:
 
         Het account dat bij dit e-mailadres hoort, is niet geactiveerd. Je moet je account activeren voordat je e-mails instuurt.
     email_reject_empty:
-      text_body_template: |+
+      text_body_template: |
         Het spijt ons, maar het plaatsen van uw e-mailbericht naar %{destination} (getiteld %{former_title}) is niet gelukt.
 
         We konden geen antwoordtekst in uw e-mail vinden.
 
         Als u deze melding ziet en _wel_ een antwoord had bijgevoegd, kunt u het opnieuw proberen met een eenvoudigere opmaak.
-
-
     email_reject_parsing:
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
@@ -1340,7 +1326,7 @@ nl:
     search_title: "Zoeken op deze website"
   terms_of_service:
     title: "Servicevoorwaarden"
-  deleted: 'verwijderd'
+  deleted: "verwijderd"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat u probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
