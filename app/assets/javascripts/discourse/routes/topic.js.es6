@@ -165,7 +165,7 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     willTransition() {
-      this._super();
+      this._super(...arguments);
       Ember.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -227,7 +227,7 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   activate() {
-    this._super();
+    this._super(...arguments);
     isTransitioning = false;
 
     const topic = this.modelFor("topic");
@@ -235,7 +235,7 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   deactivate() {
-    this._super();
+    this._super(...arguments);
 
     this.searchService.set("searchContext", null);
     this.controllerFor("user-card").set("visible", false);

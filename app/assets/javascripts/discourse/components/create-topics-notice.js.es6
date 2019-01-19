@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   requiredPosts: Ember.computed.alias("siteSettings.tl1_requires_read_posts"),
 
   init() {
-    this._super();
+    this._super(...arguments);
     if (this.get("shouldSee")) {
       let topicCount = 0,
         postCount = 0;

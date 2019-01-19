@@ -48,7 +48,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.bindScrolling({ name: "topic-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
@@ -117,7 +117,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.unbindScrolling("topic-view");
     $(window).unbind("resize.discourse-on-scroll");
 

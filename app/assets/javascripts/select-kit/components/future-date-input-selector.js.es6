@@ -169,7 +169,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     "future-date-input-selector/future-date-input-selector-header",
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
     content.name = this.get("selection.name") || content.name;
     content.hasSelection = this.get("hasSelection");

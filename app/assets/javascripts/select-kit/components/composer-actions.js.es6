@@ -30,7 +30,7 @@ export default DropdownSelectBoxComponent.extend({
   isHidden: Ember.computed.empty("content"),
 
   didReceiveAttrs() {
-    this._super();
+    this._super(...arguments);
 
     // if we change topic we want to change both snapshots
     if (
@@ -53,7 +53,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     switch (this.get("action")) {
       case PRIVATE_MESSAGE:

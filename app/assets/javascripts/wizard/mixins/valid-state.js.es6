@@ -11,7 +11,7 @@ export default {
   errorDescription: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("_validState", States.UNCHECKED);
   },
 

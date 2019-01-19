@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   nameInput: null,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const name = this.get("model.name");
 
     if (name) {

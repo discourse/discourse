@@ -48,7 +48,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     willTransition() {
       var router = getOwner(this).lookup("router:main");
       Ember.run.once(router, router.trigger, "willTransition");
-      return this._super();
+      return this._super(...arguments);
     },
 
     postWasEnqueued(details) {
@@ -206,7 +206,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   activate() {
-    this._super();
+    this._super(...arguments);
     Ember.run.next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");

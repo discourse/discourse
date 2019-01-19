@@ -2,7 +2,7 @@ export default Ember.Component.extend({
   classNames: ["create-account"],
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     if ($.cookie("email")) {
       this.set("email", $.cookie("email"));
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.$().off("keydown.discourse-create-account");
   }
 });

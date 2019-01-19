@@ -26,7 +26,7 @@ export default SingleSelectComponent.extend({
   },
 
   didSelect() {
-    this._super();
+    this._super(...arguments);
     this.close();
   }
 });

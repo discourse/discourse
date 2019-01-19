@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
     this.set("content", []);
-    this._super();
+    this._super(...arguments);
   }
 });
 
