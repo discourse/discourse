@@ -520,10 +520,6 @@ aside.quote {
     margin-right: 0;
   }
   &.via-email,
-  &.whisper {
-    line-height: $line-height-medium;
-  }
-  &.via-email,
   &.whisper,
   &.post-locked {
     .d-icon {
