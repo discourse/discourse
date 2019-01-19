@@ -9,7 +9,7 @@ const DiscourseRoute = Ember.Route.extend({
   resfreshQueryWithoutTransition: false,
 
   activate() {
-    this._super();
+    this._super(...arguments);
     if (this.get("showFooter")) {
       this.controllerFor("application").set("showFooter", true);
     }
@@ -17,7 +17,7 @@ const DiscourseRoute = Ember.Route.extend({
 
   refresh() {
     if (!this.refreshQueryWithoutTransition) {
-      return this._super();
+      return this._super(...arguments);
     }
 
     const router = getOwner(this).lookup("router:main");

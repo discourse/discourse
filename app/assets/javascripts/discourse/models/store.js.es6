@@ -52,7 +52,7 @@ export default Ember.Object.extend({
   },
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.register = this.register || getRegister(this);
   },
 

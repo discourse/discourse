@@ -9,7 +9,7 @@ export default DropdownSelectBox.extend({
   headerIcon: "trash-o",
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.name = `${I18n.t("admin.flags.delete")}...`;
     return content;
   },

@@ -136,7 +136,7 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     const joinedTags = this.get("selection")
       .map(s => Ember.get(s, "value"))

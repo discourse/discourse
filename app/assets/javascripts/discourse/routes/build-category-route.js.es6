@@ -185,7 +185,7 @@ export default (filterArg, params) => {
     },
 
     deactivate() {
-      this._super();
+      this._super(...arguments);
       this.searchService.set("searchContext", null);
     },
 

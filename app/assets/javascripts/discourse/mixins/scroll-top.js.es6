@@ -22,7 +22,7 @@ export default Ember.Mixin.create({
     deprecated(
       "The `ScrollTop` mixin is deprecated. Replace it with a `{{d-section}}` component"
     );
-    this._super();
+    this._super(...arguments);
     scrollTop();
   }
 });

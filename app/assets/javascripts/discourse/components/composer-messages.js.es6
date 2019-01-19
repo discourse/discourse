@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.on("composer:typed-reply", this, this._typedReply);
     this.appEvents.on("composer:opened", this, this._findMessages);
     this.appEvents.on("composer:find-similar", this, this._findSimilar);

@@ -15,7 +15,7 @@ export default TextField.extend({
   },
 
   didInsertElement(opts) {
-    this._super();
+    this._super(...arguments);
 
     const bool = n => {
       const val = this.get(n);
@@ -106,7 +106,7 @@ export default TextField.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.$().autocomplete("destroy");
   },
 

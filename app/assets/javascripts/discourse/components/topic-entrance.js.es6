@@ -52,7 +52,7 @@ export default Ember.Component.extend(CleansUp, {
   bottomDate: (bumpedDate, showTime) => entranceDate(bumpedDate, showTime),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.on("topic-entrance:show", data => this._show(data));
   },
 

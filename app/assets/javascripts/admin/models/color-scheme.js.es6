@@ -3,7 +3,7 @@ import ColorSchemeColor from "admin/models/color-scheme-color";
 
 const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   init: function() {
-    this._super();
+    this._super(...arguments);
     this.startTrackingChanges();
   },
 
