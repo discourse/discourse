@@ -36,12 +36,20 @@ describe UserMerger do
   end
 
   it "changes owner of personal messages" do
-    pm_topic = Fabricate(:private_message_topic)
+    pm_topic = Fabricate(:private_message_topic, topic_allowed_users: [
+      Fabricate.build(:topic_allowed_user, user: target_user),
+      Fabricate.build(:topic_allowed_user, user: walter),
+      Fabricate.build(:topic_allowed_user, user: source_user)
+    ])
 
     post1 = Fabricate(:post, topic: pm_topic, user: source_user)
     post2 = Fabricate(:post, topic: pm_topic, user: walter)
     post3 = Fabricate(:post, topic: pm_topic, user: target_user)
     post4 = Fabricate(:post, topic: pm_topic, user: source_user, deleted_at: Time.now)
+
+    small1 = pm_topic.add_small_action(source_user, "invited_user", "carol")
+    small2 = pm_topic.add_small_action(target_user, "invited_user", "david")
+    small3 = pm_topic.add_small_action(walter, "invited_user", "eve")
 
     merge_users!
 
@@ -49,6 +57,10 @@ describe UserMerger do
     expect(post2.reload.user).to eq(walter)
     expect(post3.reload.user).to eq(target_user)
     expect(post4.reload.user).to eq(target_user)
+
+    expect(small1.reload.user).to eq(target_user)
+    expect(small2.reload.user).to eq(target_user)
+    expect(small3.reload.user).to eq(walter)
   end
 
   it "changes owner of categories" do
