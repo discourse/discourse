@@ -1052,9 +1052,6 @@ files:
     shadowed_by_global: true
   enable_s3_inventory:
     default: false
-  s3_inventory_bucket:
-    default: ''
-    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
   allow_profile_backgrounds:
     client: true
     default: true

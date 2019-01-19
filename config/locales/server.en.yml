@@ -168,7 +168,6 @@ en:
         other: 'You specified the invalid choices %{name}'
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
-      s3_inventory_bucket_is_required: "You cannot enable inventory to S3 unless you've provided the 's3_inventory_bucket'."
       enable_s3_uploads_is_required: "You cannot enable inventory to S3 unless you've enabled the S3 uploads."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
@@ -1455,7 +1454,6 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
-    s3_inventory_bucket: "The Amazon S3 bucket name that inventory reports will be generated into. WARNING: must be lowercase, no periods, no underscores."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."

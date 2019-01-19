@@ -215,6 +215,10 @@ class S3Helper
     @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
+  def s3_inventory_path(path = 'inventory')
+    get_path_for_s3_upload(path)
+  end
+
   private
 
   def default_s3_options

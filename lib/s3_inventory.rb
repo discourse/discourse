@@ -11,27 +11,13 @@ class S3Inventory
     Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
 
-  attr_reader :inventory_id, :s3_client, :csv_filename,
-              :source_bucket_name, :source_bucket_path,
-              :destination_bucket_name, :destination_bucket_path
+  attr_reader :inventory_id, :s3_client, :csv_filename
 
   CSV_ETAG_INDEX ||= 2.freeze
 
-  def initialize(inventory_id = "uploads")
-    @source_bucket_name, @source_bucket_path = begin
-      raise Discourse::InvalidParameters.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-      S3Helper.get_bucket_and_folder_path(SiteSetting.s3_upload_bucket)
-    end
-
-    @destination_bucket_name, @destination_bucket_path = begin
-      raise Discourse::InvalidParameters.new("s3_inventory_bucket") if SiteSetting.s3_inventory_bucket.blank?
-      S3Helper.get_bucket_and_folder_path(SiteSetting.s3_inventory_bucket)
-    end
-
-    s3_options = S3Helper.s3_options(SiteSetting)
-    @s3_helper = S3Helper.new(SiteSetting.s3_inventory_bucket, '', s3_options)
+  def initialize(s3_helper, inventory_id = "uploads")
+    @s3_helper = s3_helper
     @s3_client = @s3_helper.s3_client
-
     @inventory_id = inventory_id
   end
 
@@ -112,7 +98,7 @@ class S3Inventory
 
   def update_bucket_policy
     s3_client.put_bucket_policy(
-      bucket: destination_bucket_name,
+      bucket: s3_helper.s3_bucket_name,
       policy: {
         "Version": "2012-10-17",
         "Statement": [
@@ -121,10 +107,10 @@ class S3Inventory
             "Effect": "Allow",
             "Principal": { "Service": "s3.amazonaws.com" },
             "Action": ["s3:PutObject"],
-            "Resource": ["arn:aws:s3:::#{destination_bucket_name}/*"],
+            "Resource": ["arn:aws:s3:::#{s3_helper.s3_bucket_name}/#{s3_helper.s3_inventory_path}/*"],
             "Condition": {
               "ArnLike": {
-                "aws:SourceArn": "arn:aws:s3:::#{source_bucket_name}"
+                "aws:SourceArn": "arn:aws:s3:::#{s3_helper.s3_bucket_name}"
               },
               "StringEquals": {
                 "s3:x-amz-acl": "bucket-owner-full-control"

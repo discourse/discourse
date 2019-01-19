@@ -11,7 +11,6 @@ describe "S3Inventory" do
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_access_key_id = "abc"
     SiteSetting.s3_secret_access_key = "def"
-    SiteSetting.s3_inventory_bucket = "ghi"
     SiteSetting.enable_s3_inventory = true
 
     s3_helper = store.inventory.instance_variable_get(:@s3_helper)

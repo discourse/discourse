@@ -9,12 +9,17 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
-    attr_reader :s3_helper
+    attr_reader :s3_helper, :s3_inventory
 
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper || S3Helper.new(s3_bucket,
         Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX
       )
+
+      if SiteSetting.enable_s3_inventory
+        require 's3_inventory'
+        @s3_inventory = S3Inventory.new(@s3_helper)
+      end
     end
 
     def store_upload(file, upload, content_type = nil)
@@ -125,17 +130,10 @@ module FileStore
 
     def list_missing_uploads(skip_optimized: false)
       if SiteSetting.enable_s3_inventory
-        inventory.list_missing_uploads(skip_optimized: skip_optimized)
+        s3_inventory.list_missing_uploads(skip_optimized: skip_optimized)
       else
         list_missing(Upload, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized
-      end
-    end
-
-    def inventory
-      @inventory ||= begin
-        require 's3_inventory'
-        S3Inventory.new
       end
     end
 
