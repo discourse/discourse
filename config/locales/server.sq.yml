@@ -44,7 +44,7 @@ sq:
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         inactive_user_error: "Happens when the sender is not active."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
@@ -58,7 +58,7 @@ sq:
       exclusion: është i rezervuar
       invalid: është i pavlefshëm
       not_a_number: nuk është një numër
-      record_invalid: 'Verifikimi dështoj: %{errors}'
+      record_invalid: "Verifikimi dështoj: %{errors}"
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
@@ -119,7 +119,7 @@ sq:
     until_posts:
       one: "1 postim"
       other: "%{count} postime"
-    'new-topic': |
+    "new-topic": |
       Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
 
       - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
@@ -129,7 +129,7 @@ sq:
       - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
 
       Për më tepër, [lexoni porositë e bashkësisë](%{base_path}/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
-    'new-reply': |
+    "new-reply": |
       Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
 
       - Jini të sjellshëm me anëtarët e tjerë të faqes.
@@ -271,9 +271,9 @@ sq:
         other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
-    update: 'Rifresko Fjalëkalimin'
-    save: 'Vendos Fjalëkalim'
-    title: 'Rivendos Fjalëkalimin'
+    update: "Rifresko Fjalëkalimin"
+    save: "Vendos Fjalëkalim"
+    title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   change_email:
@@ -292,49 +292,49 @@ sq:
     welcome_to: "Mirë se vini tek %{site_name}!"
   post_action_types:
     off_topic:
-      title: 'Jashtë teme'
-      description: 'Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër.'
-      long_form: 'sinjalizoi këtë postim si jashtë teme'
+      title: "Jashtë teme"
+      description: "Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër."
+      long_form: "sinjalizoi këtë postim si jashtë teme"
     spam:
-      title: 'Spam'
-      long_form: 'sinjalizoi këtë postim si spam'
+      title: "Spam"
+      long_form: "sinjalizoi këtë postim si spam"
       email_title: '"%{title}" u sinjalizua si spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'i papërshtatshëm'
-      long_form: 'sinjalizoi këtë postim si të papërshtatshëm'
+      title: "i papërshtatshëm"
+      long_form: "sinjalizoi këtë postim si të papërshtatshëm"
     notify_user:
-      title: 'Dërgoji @{{username}} një mesazh'
-      long_form: 'messaged user'
+      title: "Dërgoji @{{username}} një mesazh"
+      long_form: "messaged user"
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Diçka tjetër"
-      description: 'Ky postim kërkon vëmendjen e stafit për një arsye që nuk është radhitur më lart.'
+      description: "Ky postim kërkon vëmendjen e stafit për një arsye që nuk është radhitur më lart."
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Shto tek të preferuarat'
-      description: 'Shto postimin tek të preferuarat'
-      long_form: 'shtoi postimin tek të preferuarat'
+      title: "Shto tek të preferuarat"
+      description: "Shto postimin tek të preferuarat"
+      long_form: "shtoi postimin tek të preferuarat"
     like:
-      title: 'Pëlqe'
-      description: 'Më pëlqen ky postim'
-      long_form: 'pëlqeu këtë'
+      title: "Pëlqe"
+      description: "Më pëlqen ky postim"
+      long_form: "pëlqeu këtë"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me këtë faqe, por ka natyrë promovuese.'
-      long_form: 'sinjalizoi këtë postim si spam'
+      title: "Spam"
+      description: "Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me këtë faqe, por ka natyrë promovuese."
+      long_form: "sinjalizoi këtë postim si spam"
     inappropriate:
-      title: 'I papërshtatshëm'
-      long_form: 'shënoje si të papërshtatshme'
+      title: "I papërshtatshëm"
+      long_form: "shënoje si të papërshtatshme"
     notify_moderators:
       title: "Diçka Tjetër"
-      long_form: 'shënoje për vëmendjen e moderatorëve'
+      long_form: "shënoje për vëmendjen e moderatorëve"
       email_title: 'Tema "%{title}" kërkon redaktimin e një moderatori'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>'
+    user_must_edit: "<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>"
   archetypes:
     regular:
       title: "Temë e zakonshme"
@@ -355,7 +355,7 @@ sq:
   user_api_key:
     title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
-    description: "\"%{application_name}\" po kërkon këto të drejta në lidhje me llogarinë tuaj:"
+    description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     scopes:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
@@ -483,8 +483,8 @@ sq:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
+    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -511,7 +511,7 @@ sq:
     max_image_height: "Maximum thumbnail height of images in a post"
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -742,9 +742,9 @@ sq:
   search:
     within_post: "#%{post_number} nga %{username}"
     types:
-      category: 'Categories'
-      topic: 'Results'
-      user: 'Users'
+      category: "Categories"
+      topic: "Results"
+      user: "Users"
   original_poster: "Postuesi fillestar"
   most_posts: "Most Posts"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
@@ -753,10 +753,6 @@ sq:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_message_max_posts:
       one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
       other: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
@@ -783,12 +779,6 @@ sq:
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
-    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
@@ -872,12 +862,6 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-    dashboard_problems:
-      subject_template: "Gjetëm ca probleme"
-      text_body_template: |
-        Në panelin e kontrollit keni disa probleme që duhen riparuar.
-
-        [Shikoji dhe rregulloji](%{base_url}/admin).
   unsubscribe_link: |
     Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1003,7 +987,7 @@ sq:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{email_prefix}] Përmbledhja"
@@ -1044,7 +1028,7 @@ sq:
     search_title: "Kërko në këtë faqe"
   terms_of_service:
     title: "Kushtet e shërbimit"
-  deleted: 'deleted'
+  deleted: "deleted"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1181,9 +1165,8 @@ sq:
     respected:
       name: I respektuar
       description: Mori 2 pëlqime në 100 postime
-      long_description: |+
+      long_description: |
         Kjo stemë jepet kur merrni të paktën 2 pëlqime në 100 postime të ndryshme. Po fitoni respektin e komunitetit për mundin e shumtë nëpër bisedimet këtu.
-
     admired:
       name: I admiruar
       description: Mori 5 pëlqime në 300 postime

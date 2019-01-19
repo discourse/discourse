@@ -13,7 +13,7 @@ id:
         delimiter: "."
       human:
         storage_units:
-          format: '%n %u'
+          format: "%n %u"
           units:
             byte:
               other: Bit
@@ -85,16 +85,16 @@ id:
           other: "%{count} bulan kemudian"
         x_years:
           other: "%{count} bulan kemudian"
-      previous_month: 'Bulan Lalu'
-      next_month: 'Bulan Depan'
+      previous_month: "Bulan Lalu"
+      next_month: "Bulan Depan"
       placeholder: tanggal
     share:
-      topic: 'share link ke topik ini'
-      post: 'post #%{postNumber}'
-      close: 'tutup'
-      twitter: 'share link ini di Twitter'
-      facebook: 'share link ini di Facebook'
-      email: 'kirim link ini melalui email'
+      topic: "share link ke topik ini"
+      post: "post #%{postNumber}"
+      close: "tutup"
+      twitter: "share link ini di Twitter"
+      facebook: "share link ini di Facebook"
+      email: "kirim link ini melalui email"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -105,23 +105,23 @@ id:
       removed_user: "menghapus %{who} %{when}"
       removed_group: "%{who}dikeluarkan %{when}"
       autoclosed:
-        enabled: 'ditutup %{when}'
-        disabled: 'dibuka %{when}'
+        enabled: "ditutup %{when}"
+        disabled: "dibuka %{when}"
       closed:
-        enabled: 'ditutup %{when}'
-        disabled: 'dibuka %{when}'
+        enabled: "ditutup %{when}"
+        disabled: "dibuka %{when}"
       archived:
-        enabled: 'diarsipkan %{when}'
-        disabled: 'tidak diarsipkan %{when}'
+        enabled: "diarsipkan %{when}"
+        disabled: "tidak diarsipkan %{when}"
       pinned:
-        enabled: 'disematkan %{when}'
-        disabled: 'tidak disematkan %{when}'
+        enabled: "disematkan %{when}"
+        disabled: "tidak disematkan %{when}"
       pinned_globally:
-        enabled: 'disematkan secara global %{when}'
-        disabled: 'tidak disematkan %{when}'
+        enabled: "disematkan secara global %{when}"
+        disabled: "tidak disematkan %{when}"
       visible:
-        enabled: 'terdaftar %{when}'
-        disabled: 'tidak terdaftar %{when}'
+        enabled: "terdaftar %{when}"
+        disabled: "tidak terdaftar %{when}"
     topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     themes:
@@ -143,7 +143,7 @@ id:
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    edit: 'Ubah judul dan kategori topik ini'
+    edit: "Ubah judul dan kategori topik ini"
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
     yes_value: "Ya"
@@ -170,7 +170,7 @@ id:
     you: "Anda"
     or: "atau"
     now: "baru saja"
-    read_more: 'baca selengkapnya'
+    read_more: "baca selengkapnya"
     more: "Selengkapnya"
     less: "Lebih Singkat"
     never: "tidak pernah"
@@ -237,9 +237,9 @@ id:
         placeholder: "tulis judul topik disini"
     queue:
       topic: "Topik:"
-      approve: 'Terima'
-      reject: 'Tolak'
-      delete_user: 'Hapus Pengguna'
+      approve: "Terima"
+      reject: "Tolak"
+      delete_user: "Hapus Pengguna"
       title: "Membutuhan Persetujuan"
       none: "Tidak ada pos untuk di pratinjau."
       edit: "Ubah"
@@ -297,9 +297,9 @@ id:
         title: "Tambahkan Anggota"
         usernames: "Nama Pengguna"
       manage:
-        title: 'Mengelola'
-        name: 'Nama'
-        full_name: 'Nama Lengkap'
+        title: "Mengelola"
+        name: "Nama"
+        full_name: "Nama Lengkap"
         add_members: "Menambahkan Anggota"
         logs:
           when: "Ketika"
@@ -450,7 +450,7 @@ id:
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
         each_browser_note: "Catatan : Anda  harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
-      dismiss: 'Bubar'
+      dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       disable_jump_reply: "Jangan pindah ke kiriman saya setelah saya balas"
@@ -724,11 +724,11 @@ id:
         fixed: "Mengakses Halaman"
     close: "Tutup"
     refresh: "Segarkan"
-    all_time: 'total'
-    year: 'tahun'
-    month: 'bulan'
-    week: 'minggu'
-    day: 'hari'
+    all_time: "total"
+    year: "tahun"
+    month: "bulan"
+    week: "minggu"
+    day: "hari"
     mute: Bisu
     unmute: Buka Bisu
     time_read: Dibaca
@@ -740,19 +740,19 @@ id:
       hide_session: "Ingat saya besok"
       hide_forever: "tidak, terima kasih"
     summary:
-      enable: 'Rangkum Topik Ini'
-      disable: 'Tampilkan Semua Postingan'
+      enable: "Rangkum Topik Ini"
+      disable: "Tampilkan Semua Postingan"
     deleted_filter:
       enable: "Sembunyikan Tulisan Terhapus"
     private_message_info:
       title: "Pesan"
-    email: 'Surel'
-    username: 'Nama Pengguna'
-    last_seen: 'Terlihat'
-    created: 'Dibuat'
-    created_lowercase: 'dibuat'
-    trust_level: 'Tingkat Kepercayaan'
-    search_hint: 'username, email, atau alamat IP'
+    email: "Surel"
+    username: "Nama Pengguna"
+    last_seen: "Terlihat"
+    created: "Dibuat"
+    created_lowercase: "dibuat"
+    trust_level: "Tingkat Kepercayaan"
+    search_hint: "username, email, atau alamat IP"
     create_account:
       title: "Buat Akun Baru"
     forgot_password:
@@ -769,7 +769,7 @@ id:
       email_placeholder: "email atau username"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       blank_username_or_password: "Silahkan masukkan email atau nama pengguna dan kata sandi anda"
-      reset_password: 'Atur Ulang Kata Sandi'
+      reset_password: "Atur Ulang Kata Sandi"
       or: "atau"
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
@@ -839,8 +839,8 @@ id:
       saving: "Menyimpan"
       saved: "Tersimpan!"
       uploading: "Mengunggah..."
-      show_preview: 'tunjukkan pratinjau &raquo;'
-      hide_preview: '&laquo; sembunyikan pratinjau'
+      show_preview: "tunjukkan pratinjau &raquo;"
+      hide_preview: "&laquo; sembunyikan pratinjau"
       bold_label: "B"
       bold_title: "Strong"
       italic_label: "I"
@@ -864,11 +864,11 @@ id:
       bottom:
         new: "Tidak ada topik baru lagi"
     topic:
-      create: 'Topik Baru'
-      create_long: 'Pilih topik baru'
-      new: 'topik baru'
+      create: "Topik Baru"
+      create_long: "Pilih topik baru"
+      new: "topik baru"
       new_topics:
-        other: '{{count}} topik baru'
+        other: "{{count}} topik baru"
       invalid_access:
         description: "Maaf,  kamu tidak berhak mengakses topik tersebut."
       server_error:
@@ -925,8 +925,8 @@ id:
         all_time: "Sepanjang Waktu"
   admin_js:
     admin:
-      title: 'Admin Discourse'
-      moderator: 'Moderator'
+      title: "Admin Discourse"
+      moderator: "Moderator"
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"
@@ -953,7 +953,7 @@ id:
         delivery_method: "Metode Pengiriman"
         html: "html"
       logs:
-        edit: 'Ubah'
+        edit: "Ubah"
         staff_actions:
           new_value: "Baru"
           deleted: "Tidak ada nilai baru. Catatan telah dihapus."
@@ -968,15 +968,15 @@ id:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         nav:
           new: "Baru"
-          staff: 'Staf'
+          staff: "Staf"
         titles:
-          new: 'Pengguna Baru'
+          new: "Pengguna Baru"
           staff: "Staf"
         check_email:
           title: "Tampilkan alamat email pengguna ini"
       user:
         suspend_reason: "Alasan"
-        approve: 'Terima'
+        approve: "Terima"
         delete: "Hapus Pengguna"
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
       user_fields:
@@ -984,7 +984,7 @@ id:
         cancel: "Batal"
       site_settings:
         categories:
-          users: 'Pengguna'
+          users: "Pengguna"
       badges:
         new_badge: Badge Baru
         new: Baru

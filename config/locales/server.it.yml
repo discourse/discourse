@@ -87,8 +87,8 @@ it:
         email_not_allowed: "Succede quando l'indirizzo email non è in lista bianca oppure è nella lista nera."
       unrecognized_error: "Errore Non Riconosciuto"
   errors: &errors
-    format: '%{attribute} %{message}'
-    format_with_full_message: '<b>%{attribute}</b>: %{message}'
+    format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "ha un massimo di%{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
@@ -113,7 +113,7 @@ it:
       not_a_number: non è un numero
       not_an_integer: deve essere un intero
       odd: deve essere dispari
-      record_invalid: 'Validazione fallita: %{errors}'
+      record_invalid: "Validazione fallita: %{errors}"
       max_emojis: "non può avere più di %{max_emojis_count} emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
       restrict_dependent_destroy:
@@ -130,16 +130,16 @@ it:
         other: ha una lunghezza errata (dovrebbe essere di %{count} caratteri)
       other_than: "deve essere diverso da %{count}"
     template:
-      body: 'Sono stati riscontrati problemi con i seguenti campi:'
+      body: "Sono stati riscontrati problemi con i seguenti campi:"
       header:
         one: 1 errore ha impedito il salvataggio di questo %{model}
-        other: '%{count} errori hanno impedito il salvataggio di questo %{model}'
+        other: "%{count} errori hanno impedito il salvataggio di questo %{model}"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
       invalid_choice:
-        one: 'Hai specificato la scelta non valida %{name}'
-        other: 'Hai specificato le scelte non valide %{name}'
+        one: "Hai specificato la scelta non valida %{name}"
+        other: "Hai specificato le scelte non valide %{name}"
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
     conflicting_google_user_id: 'Il Google Account ID per questo account è cambiato; l''intervento dello staff è richiesto per motivi di sicurezza. Si prega di contattare staff e puntarli a  <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -298,7 +298,7 @@ it:
     until_posts:
       one: "1 messaggio"
       other: "%{count} messaggi"
-    'new-topic': |
+    "new-topic": |
       Benvenuto su %{site_name} &mdash; **grazie per voler iniziare una nuova conversazione!**
 
       - Il titolo ti sembra interessante se lo leggi ad alta voce? E' un buon riassunto?
@@ -308,7 +308,7 @@ it:
       - Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria.
 
       Per maggiori informazioni, [leggi le linee guida della comunità](%{base_path}/guidelines). Questo pannello sarà visualizzato solo per i tuoi primi %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Benvenuto su %{site_name} &mdash; **grazie per il tuo contributo!**
 
       - La tua risposta migliora in qualche modo la conversazione?
@@ -340,7 +340,7 @@ it:
       Questo argomento è evidentemente importante per te &ndash; hai inviato più del %{percent}% delle risposte.
 
       Sei sicuro di lasciare anche agli altri abbastanza tempo per esprimere il loro punto di vista?
-    get_a_room: |+
+    get_a_room: |
       ### Considera la risposta a più persone
 
       Hai già risposto %{count}volte a @%{reply_username} in questo argomento.
@@ -348,28 +348,25 @@ it:
       Hai già considerato di rispondere ad *altre* persone nella stessa discussione? Una buona discussione coinvolge più voci e prospettive.
 
       Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](%{base_path}/u/%{reply_username}).
-
-    too_many_replies: |+
+    too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
       Spiacenti, ma i nuovi utenti hanno un limite temporaneo di  %{newuser_max_replies_per_topic} risposte nello stesso argomento.
 
       Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
-
-    reviving_old_topic: |+
+    reviving_old_topic: |
       ### Resuscitare questo argomento?
 
       L'ultima risposta a questo argomento risale a **%{time_ago}**. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
 
       Sei sicuro di voler continuare questa vecchia discussione?
-
   activerecord:
     attributes:
       category:
         name: "Nome Categoria"
       topic:
-        title: 'Titolo'
-        featured_link: 'Collegamento Evidenziato'
+        title: "Titolo"
+        featured_link: "Collegamento Evidenziato"
       post:
         raw: "Contenuto"
       user_profile:
@@ -456,7 +453,6 @@ it:
     title: "Benvenuto nel Salotto"
   category:
     topic_prefix: "Definizione della categoria %{category}"
-    replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
     post_template: "%{replace_paragraph}\n\nUsa i seguenti paragrafi per una descrizione più estesa, ed anche per stabilire delle regole o linee guida per la categoria:\n\n- Perché la gente dovrebbe usare questa categoria? A che serve?  \n\n- In cosa esattamente questa categoria è diversa dalle altre categorie già esistenti? \n\n- Cosa dovrebbero contenere gli argomenti in questa categoria? \n\n- C'è bisogno di questa categoria? Possiamo fonderla con un'altra categoria o sottocategoria?\n"
     errors:
       not_found: "Categoria non trovata!"
@@ -593,9 +589,9 @@ it:
     no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Clicca su Connetti e poi su 'Ho dimenticato la password' per ricevere un nuovo collegamento."
     choose_new: "Scegli una nuova password"
     choose: "Scegli una password"
-    update: 'Aggiorna Password'
-    save: 'Imposta Password'
-    title: 'Reimposta Password'
+    update: "Aggiorna Password"
+    save: "Imposta Password"
+    title: "Reimposta Password"
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."
   user_auth_tokens:
@@ -652,44 +648,44 @@ it:
       back_to: "Torna a %{title}"
   post_action_types:
     off_topic:
-      title: 'Fuori Tema'
-      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrebbe probabilmente essere spostato altrove. '
-      short_description: 'Non pertinente alla discussione'
-      long_form: 'segnalato come fuori tema'
+      title: "Fuori Tema"
+      description: "Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrebbe probabilmente essere spostato altrove. "
+      short_description: "Non pertinente alla discussione"
+      long_form: "segnalato come fuori tema"
     spam:
-      title: 'Spam'
-      description: 'Questo messaggio è una pubblicità o vandalismo. Non è né utile né pertinente ai fini di questo argomento.'
-      short_description: 'E'' pubblicità o vandalismo'
-      long_form: 'segnalato come spam'
+      title: "Spam"
+      description: "Questo messaggio è una pubblicità o vandalismo. Non è né utile né pertinente ai fini di questo argomento."
+      short_description: "E' pubblicità o vandalismo"
+      long_form: "segnalato come spam"
       email_title: '"%{title}" è stato segnalato come spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Inappropriato'
-      long_form: 'segnalato come inappropriato'
+      title: "Inappropriato"
+      long_form: "segnalato come inappropriato"
     notify_user:
-      title: 'Invia un messaggio a @{{username}}'
-      description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
-      short_description: 'Voglio parlare con questa persona direttamente a proposito del suo messaggio.'
-      long_form: 'messaggio inviato'
+      title: "Invia un messaggio a @{{username}}"
+      description: "Voglio parlare con questa persona direttamente a proposito del suo messaggio."
+      short_description: "Voglio parlare con questa persona direttamente a proposito del suo messaggio."
+      long_form: "messaggio inviato"
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
-      description: 'Questo messaggio richiede attenzione da parte dello staff per un altro motivo non elencato.'
-      short_description: 'Richiede l''attenzione dello staff per un''altra ragione'
-      long_form: 'segnalato all''attenzione dello staff'
+      description: "Questo messaggio richiede attenzione da parte dello staff per un altro motivo non elencato."
+      short_description: "Richiede l'attenzione dello staff per un'altra ragione"
+      long_form: "segnalato all'attenzione dello staff"
       email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Segnalibro'
-      description: 'Messaggio nei segnalibri'
-      short_description: 'Aggiungi il messaggio ai segnalibri'
-      long_form: 'Messaggio inserito nei segnalibri'
+      title: "Segnalibro"
+      description: "Messaggio nei segnalibri"
+      short_description: "Aggiungi il messaggio ai segnalibri"
+      long_form: "Messaggio inserito nei segnalibri"
     like:
-      title: 'Mi piace'
-      description: 'Metti "Mi piace" a questo messaggio'
-      short_description: 'Metti "Mi piace" a questo messaggio'
-      long_form: 'hanno messo "Mi piace"'
+      title: "Mi piace"
+      description: "Metti \"Mi piace\" a questo messaggio"
+      short_description: "Metti \"Mi piace\" a questo messaggio"
+      long_form: "hanno messo \"Mi piace\""
   user_activity:
     no_default:
       self: "Non hai ancora nessuna attività."
@@ -707,20 +703,20 @@ it:
       self: "Non hai bozze. Iniziando a scrivere una risposta a un qualsiasi Argomento, questa verrà automaticamente salvata come nuova Bozza."
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Questo argomento è una pubblicità. Non è utile né rilevante per il sito, bensì promozionale.'
-      long_form: 'segnalato come spam'
+      title: "Spam"
+      description: "Questo argomento è una pubblicità. Non è utile né rilevante per il sito, bensì promozionale."
+      long_form: "segnalato come spam"
     inappropriate:
-      title: 'Inappropriato'
-      long_form: 'segnalato come inappropriato'
+      title: "Inappropriato"
+      long_form: "segnalato come inappropriato"
     notify_moderators:
       title: "Altro"
-      long_form: 'segnalato all''attenzione dei moderatori'
+      long_form: "segnalato all'attenzione dei moderatori"
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. Per favore  <a href="%{path}">controlla i tuoi messaggi</a>.</p>'
-    user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
+    user_must_edit: "<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>"
   archetypes:
     regular:
       title: "Argomento Normale"
@@ -749,7 +745,7 @@ it:
     authorize: "Autorizza"
     read: "lettura"
     read_write: "lettura/scrittura"
-    description: "\"%{application_name}\" richiede il seguente accesso al tuo account:"
+    description: '"%{application_name}" richiede il seguente accesso al tuo account:'
     no_trust_level: "Spiacenti, non hai il livello di esperienza richiesto per accedere alle user API"
     generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
     scopes:
@@ -954,8 +950,8 @@ it:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
-    queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq.'
-    memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
+    queue_size_warning: "Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
+    memory_warning: "Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli."
@@ -999,7 +995,7 @@ it:
     max_image_height: "Altezza massima delle miniature delle immagini in un messaggio"
     fixed_category_positions: "Se attivata, potrai ordinare le categorie. Se non attivata, le categorie vengono elencate in ordine di attività."
     fixed_category_positions_on_create: "Se attivata, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Aggiungi l''attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Un elenco di domini dove l'attributo nofollow non dovrebbe essere aggiunto ai collegamenti. \"esempio.com\" consentirà automaticamente anche \"sub.esempio.com\". Come minimo si dovrebbe aggiungere il dominio di questo sito per aiutare i web crawler a trovare tutti i contenuti. Se altre parti del tuo sito web sono in altri domini, aggiungi anche quelle."
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella vista mobile."
@@ -1041,14 +1037,13 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
     whitelist_internal_hosts: "Un elenco di host interni di cui Discourse può eseguire la scansione in modo sicuro per la funzione di onebox e altri scopi"
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
-    blacklisted_crawler_user_agents: 'Parola univoca, indipendente dalle maiuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l''accesso al sito. Non si applica se è stata definita una lista bianca.'
+    blacklisted_crawler_user_agents: "Parola univoca, indipendente dalle maiuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l'accesso al sito. Non si applica se è stata definita una lista bianca."
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per difetto nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
@@ -1074,7 +1069,6 @@ it:
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
-    invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere esplicitamente invitati dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito si romperà!"
     max_username_length: "Lunghezza massima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più lunghi di questo, il tuo sito si romperà!"
@@ -1282,7 +1276,7 @@ it:
     pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
     pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
     pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
-    email_in: "Permetti agli utenti di pubblicare nuovi argomenti via email (richiede il polling manuale o pop3). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria. "
+    email_in: 'Permetti agli utenti di pubblicare nuovi argomenti via email (richiede il polling manuale o pop3). Configura gli indirizzi nella scheda "Impostazioni" di ciascuna categoria. '
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
@@ -1436,9 +1430,9 @@ it:
   search:
     within_post: "n°%{post_number} di %{username}"
     types:
-      category: 'Categorie'
-      topic: 'Risultati'
-      user: 'Utenti'
+      category: "Categorie"
+      topic: "Risultati"
+      user: "Utenti"
     results_page: "Risultati della ricerca per '%{term}'"
   sso:
     login_error: "Errore Login"
@@ -1467,10 +1461,6 @@ it:
       one: "Un messaggio è stato spostato in un nuovo %{entity}: %{topic_link}"
       other: "%{count} messaggi sono stati spostati in un nuovo %{entity}: %{topic_link}"
   topic_statuses:
-    archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
-    archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
-    closed_enabled: "Questo argomento è stato chiuso. Non è più possibile inviare risposte."
-    closed_disabled: "Questo argomento è stato aperto. È di nuovo possibile rispondere."
     autoclosed_message_max_posts:
       one: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di 1 risposta."
       other: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposte."
@@ -1515,12 +1505,6 @@ it:
       other: "This topic was automatically opened %{count} minutes after the last reply."
     autoclosed_disabled: "Questo argomento è ora aperto. Sono permesse altre risposte."
     autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
-    pinned_enabled: "Questo argomento è stato puntato. Sarà mostrato in cima alla sua categoria finché non sarà spuntato da un membro dello staff - e allora varrà per tutti - oppure dai singoli utenti - e varrà solo per loro stessi."
-    pinned_disabled: "Questo argomento è stato spuntato. Non sarà più mostrato in cima alla sua categoria."
-    pinned_globally_enabled: "Questo argomento è ora puntato globalmente. Apparirà in cima sia alla sua categoria sia alle liste di tutti argomenti finché non sarà spuntato dallo staff - e allora varrà per tutti - oppure dai singoli utenti - e allora varrà solo per loro stessi."
-    pinned_globally_disabled: "Questo argomento è ora spuntato. Non apparirà più in cima alla sua categoria."
-    visible_enabled: "Questo argomento è stato reso visibile. Sarà mostrato nelle liste degli argomenti."
-    visible_disabled: "Questo argomento è ora invisibile. Non verrà più mostrato in nessuna lista degli argomenti. Sarà possibile accedervi solo tramite collegamento diretto."
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
   login:
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
@@ -1594,7 +1578,6 @@ it:
       Se desideri confermare, clicca su questo collegamento:
 
       %{confirm_unsubscribe_link}
-
 
       Se desideri continuare a ricevere aggiornamenti via email, puoi ignorare questa email.
   invite_mailer:
@@ -1983,11 +1966,6 @@ it:
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
     dashboard_problems:
       title: "Problemi Cruscotto"
-      subject_template: "Si sono riscontrati problemi"
-      text_body_template: |
-        Alcuni problemi sono stati riportati sul tuo cruscotto di amministratore.
-
-        [Per favore esaminali e risolvili](%{base_url}/admin).
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
       subject_template: "Sei il Nuovo Utente del Mese!"
@@ -2200,7 +2178,7 @@ it:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
@@ -2346,7 +2324,7 @@ it:
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
   terms_of_service:
     title: "Termini di Servizio"
-  deleted: 'cancellati'
+  deleted: "cancellati"
   image: "immagine"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
@@ -2801,8 +2779,8 @@ it:
     initial_topic_title: Rapporti sul rendimento del sito web
   tags:
     title: "Etichette"
-    staff_tag_disallowed: "L'etichetta \"%{tag}\" può essere applicata solo dallo staff."
-    staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
+    staff_tag_disallowed: 'L''etichetta "%{tag}" può essere applicata solo dallo staff.'
+    staff_tag_remove_disallowed: 'L''etichetta "%{tag}" può essere cancellata soltanto dallo staff.'
     minimum_required_tags: "Devi selezionare almeno %{count} Etichette."
   rss_by_tag: "Argomenti etichettati %{tag}"
   finish_installation:
@@ -2917,7 +2895,7 @@ it:
         title: "Il tuo Discourse è Pronto!"
   discourse_push_notifications:
     popup:
-      confirm_body: 'Successo! Le notifiche sono state abilitate.'
+      confirm_body: "Successo! Le notifiche sono state abilitate."
   staff_action_logs:
     not_found: "non trovato"
     unknown: "sconosciuto"

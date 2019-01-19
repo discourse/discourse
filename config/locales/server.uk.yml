@@ -35,7 +35,7 @@ uk:
         other: надто довге (максимум %{count} символів)
       other_than: "має бути іншим ніж %{count}"
     template:
-      body: 'Проблеми на цих полях:'
+      body: "Проблеми на цих полях:"
     embed:
       load_from_remote: "Під час завантаження допису виникла проблема."
   activemodel:
@@ -116,7 +116,7 @@ uk:
       category:
         name: "Назва категорії"
       topic:
-        title: 'Назва'
+        title: "Назва"
       post:
         raw: "Тіло"
       user_profile:
@@ -173,9 +173,9 @@ uk:
         many: "%{count} секунд тому"
         other: "%{count} секунд тому"
   password_reset:
-    update: 'Оновити пароль'
-    save: 'Встановити пароль'
-    title: 'Скинути пароль'
+    update: "Оновити пароль"
+    save: "Встановити пароль"
+    title: "Скинути пароль"
     success: "Ви успішно змінили свій пароль і зараз Ви в системі."
     success_unapproved: "Ви успішно змінили свій пароль."
   change_email:
@@ -187,34 +187,34 @@ uk:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
     off_topic:
-      title: 'Недотичне до теми'
-      long_form: 'flagged this as off-topic'
+      title: "Недотичне до теми"
+      long_form: "flagged this as off-topic"
     spam:
-      title: 'Спам'
-      long_form: 'flagged this as spam'
+      title: "Спам"
+      long_form: "flagged this as spam"
     inappropriate:
-      title: 'Неприпустиме'
-      long_form: 'flagged this as inappropriate'
+      title: "Неприпустиме"
+      long_form: "flagged this as inappropriate"
     notify_user:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Лишити закладку'
-      description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      title: "Лишити закладку"
+      description: "Bookmark this post"
+      long_form: "bookmarked this post"
     like:
-      title: 'Вподобати'
-      description: 'Like this post'
-      long_form: 'liked this'
+      title: "Вподобати"
+      description: "Like this post"
+      long_form: "liked this"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.'
-      long_form: 'flagged this as spam'
+      title: "Spam"
+      description: "This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature."
+      long_form: "flagged this as spam"
     inappropriate:
-      title: 'Inappropriate'
-      long_form: 'flagged this as inappropriate'
+      title: "Inappropriate"
+      long_form: "flagged this as inappropriate"
     notify_moderators:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -287,7 +287,7 @@ uk:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
@@ -332,20 +332,15 @@ uk:
       invalid_string_max: "Має бути не більше ніж %{max} символів."
   search:
     types:
-      category: 'Categories'
-      topic: 'Результати'
-      user: 'Users'
+      category: "Categories"
+      topic: "Результати"
+      user: "Users"
   original_poster: "Перший дописувач"
   most_posts: "Найбільше дописів"
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
   topic_statuses:
-    archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
-    archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
-    closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
-    closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
-    pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
   login:
     not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
     incorrect_username_email_or_password: "Неправильне ім'я користувача, електронна скринька або пароль"
@@ -398,7 +393,7 @@ uk:
     search_title: "Пошук на цьому сайті"
   terms_of_service:
     title: "Умови Використання"
-  deleted: 'deleted'
+  deleted: "deleted"
   upload:
     edit_reason: "завантажені локальні копії забражень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
