@@ -1097,4 +1097,43 @@ describe Report do
 
     include_examples "no data"
   end
+
+  describe "report_top_uploads" do
+    after do
+      ApplicationRequest.clear_cache!
+    end
+
+    let(:reports) { Report.find('consolidated_page_views') }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each do |report|
+          expect(report[:data]).to be_empty
+        end
+      end
+    end
+
+    context "with data" do
+      it "works" do
+        freeze_time(Time.now.at_midnight)
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        ApplicationRequest.increment!(:page_view_anon)
+        ApplicationRequest.write_cache!
+
+        page_view_crawler_report = reports.data.find { |r| r[:req] == "page_view_crawler" }
+        page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
+        page_view_anon_report = reports.data.find { |r| r[:req] == "page_view_anon" }
+
+        expect(page_view_crawler_report[:color]).to eql("rgba(228,87,53,0.75)")
+        expect(page_view_crawler_report[:data][0][:y]).to eql(3)
+
+        expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
+
+        expect(page_view_anon_report[:color]).to eql("rgba(0,136,204,0.5)")
+        expect(page_view_anon_report[:data][0][:y]).to eql(1)
+      end
+    end
+  end
 end

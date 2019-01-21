@@ -15,6 +15,11 @@
       <div class="section-body">
         <div class="charts">
           {{admin-report
+            dataSourceName="consolidated_page_views"
+            forcedModes="stacked-chart"
+            filters=filters}}
+
+          {{admin-report
             dataSourceName="signups"
             showTrend=true
             forcedModes="chart"

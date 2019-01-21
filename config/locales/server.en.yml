@@ -967,6 +967,11 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    consolidated_page_views:
+      title: "Consolidated Pageviews"
+      xaxis: "Pagesviews"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users and crawlers."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
