@@ -2412,7 +2412,7 @@ en:
         This post was flagged by the community and a staff member opted to remove it.
 
         [details="Click to expand removed post"]
-        ```markdown
+        ``` markdown
         %{flagged_post_raw_content}
         ```
         [/details]
@@ -2473,7 +2473,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2485,7 +2485,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2497,7 +2497,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2509,7 +2509,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2526,7 +2526,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2771,7 +2771,7 @@ en:
 
       ### Details
 
-      ```text
+      ``` text
       %{raw}
       ```
 
