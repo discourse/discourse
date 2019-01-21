@@ -50,7 +50,7 @@ export default Ember.Component.extend({
       labels: chartData[0].data.map(cd => cd.x),
       datasets: chartData.map(cd => {
         return {
-          label: cd.req,
+          label: cd.label,
           stack: "pageviews-stack",
           data: cd.data.map(d => Math.round(parseFloat(d.y))),
           backgroundColor: cd.color

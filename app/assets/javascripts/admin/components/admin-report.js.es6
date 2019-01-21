@@ -396,6 +396,7 @@ export default Ember.Component.extend({
           return {
             data: collapseWeekly(chartData.data),
             req: chartData.req,
+            label: chartData.label,
             color: chartData.color
           };
         } else {
