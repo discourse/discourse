@@ -1098,7 +1098,12 @@ describe Report do
     include_examples "no data"
   end
 
-  describe "report_top_uploads" do
+  describe "consolidated_page_views" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      ApplicationRequest.clear_cache!
+    end
+
     after do
       ApplicationRequest.clear_cache!
     end
@@ -1115,7 +1120,6 @@ describe Report do
 
     context "with data" do
       it "works" do
-        freeze_time(Time.now.at_midnight)
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }
         ApplicationRequest.increment!(:page_view_anon)
