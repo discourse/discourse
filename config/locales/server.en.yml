@@ -2407,15 +2407,15 @@ en:
 
         This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
 
-        [details="Click to expand removed post"]
-        ```markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
         %{flag_reason}
 
         This post was flagged by the community and a staff member opted to remove it.
+
+        [details="Click to expand removed post"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
 
