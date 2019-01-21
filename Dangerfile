@@ -18,6 +18,11 @@ if locales_changes.any? && has_non_en_locales_changes
   fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
 end
 
+
+p git.added_files
+p git.modified_files
+p (git.added_files + git.modified_files)
+
 files = (git.added_files + git.modified_files)
   .reject! { |path| path.start_with?("plugins/") }
   .reject! { |path| !(path.end_with?("es6") || path.end_with?("rb")) }
