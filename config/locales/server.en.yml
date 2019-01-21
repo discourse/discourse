@@ -969,9 +969,17 @@ en:
       description: "Number of users who made their first post during this period."
     consolidated_page_views:
       title: "Consolidated Pageviews"
-      xaxis: "Pagesviews"
+      xaxis:
+        page_view_crawler: "Crawlers"
+        page_view_anon: "Anonymous users"
+        page_view_logged_in: "Logged in users"
       yaxis: "Day"
       description: "Pageviews for logged in users, anonymous users and crawlers."
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"

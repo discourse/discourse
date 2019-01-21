@@ -221,6 +221,7 @@ class Report
 
       {
         req: filter,
+        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
         color: color,
         data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
       }

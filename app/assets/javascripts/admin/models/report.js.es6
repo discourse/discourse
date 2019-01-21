@@ -478,6 +478,7 @@ Report.reopenClass({
         report[filledField] = report[dataField].map(rep => {
           return {
             req: rep.req,
+            label: rep.label,
             color: rep.color,
             data: fillMissingDates(
               JSON.parse(JSON.stringify(rep.data)),
