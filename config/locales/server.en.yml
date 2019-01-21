@@ -1456,8 +1456,8 @@ en:
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret. See <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
 
     enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key for Instagram authentication"
