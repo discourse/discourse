@@ -83,6 +83,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
+    return unless is_git
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
     begin
       importer.import!
@@ -96,7 +97,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_from_remote(importer = nil, skip_update: false)
-    return unless remote_url
+    return unless is_git
     cleanup = false
 
     unless importer
@@ -203,6 +204,11 @@ class RemoteTheme < ActiveRecord::Base
       org_repo = url.gsub(GITHUB_SSH_REGEXP, "")
       "https://github.com/#{org_repo}"
     end
+  end
+
+  def is_git
+    return true if remote_url.present?
+    false
   end
 end
 

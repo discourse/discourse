@@ -214,7 +214,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      if (this.get("model.remote_theme")) {
+      if (this.get("model.remote_theme.is_git")) {
         bootbox.confirm(
           I18n.t("admin.customize.theme.edit_confirm"),
           result => {
