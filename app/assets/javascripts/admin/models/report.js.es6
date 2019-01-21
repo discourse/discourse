@@ -473,11 +473,26 @@ Report.reopenClass({
         .utc(report[endDate])
         .locale("en")
         .format("YYYY-MM-DD");
-      report[filledField] = fillMissingDates(
-        JSON.parse(JSON.stringify(report[dataField])),
-        startDateFormatted,
-        endDateFormatted
-      );
+
+      if (report.modes[0] === "stacked_chart") {
+        report[filledField] = report[dataField].map(rep => {
+          return {
+            req: rep.req,
+            color: rep.color,
+            data: fillMissingDates(
+              JSON.parse(JSON.stringify(rep.data)),
+              startDateFormatted,
+              endDateFormatted
+            )
+          };
+        });
+      } else {
+        report[filledField] = fillMissingDates(
+          JSON.parse(JSON.stringify(report[dataField])),
+          startDateFormatted,
+          endDateFormatted
+        );
+      }
     }
   },
 
