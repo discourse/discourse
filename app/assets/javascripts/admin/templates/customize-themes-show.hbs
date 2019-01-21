@@ -26,11 +26,11 @@
     {{/if}}
   {{/if}}
 
-  {{#if parentThemes}}
+  {{#if model.parentThemes}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
       <ul>
-        {{#each parentThemes as |theme|}}
+        {{#each model.parentThemes as |theme|}}
           <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
         {{/each}}
       </ul>

@@ -32,7 +32,7 @@ class ThemeFieldSerializer < ApplicationSerializer
   end
 end
 
-class ChildThemeSerializer < ApplicationSerializer
+class BasicThemeSerializer < ApplicationSerializer
   attributes :id, :name, :created_at, :updated_at, :default, :component
 
   def include_default?
@@ -60,13 +60,14 @@ class RemoteThemeSerializer < ApplicationSerializer
   end
 end
 
-class ThemeSerializer < ChildThemeSerializer
+class ThemeSerializer < BasicThemeSerializer
   attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings, :errors
 
   has_one :user, serializer: UserNameSerializer, embed: :object
 
   has_many :theme_fields, serializer: ThemeFieldSerializer, embed: :objects
-  has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
+  has_many :child_themes, serializer: BasicThemeSerializer, embed: :objects
+  has_many :parent_themes, serializer: BasicThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
   has_many :translations, serializer: ThemeTranslationSerializer, embed: :objects
 
@@ -77,6 +78,10 @@ class ThemeSerializer < ChildThemeSerializer
 
   def child_themes
     object.child_themes
+  end
+
+  def parent_themes
+    object.parent_themes
   end
 
   def settings
