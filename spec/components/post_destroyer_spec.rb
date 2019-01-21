@@ -655,7 +655,7 @@ describe PostDestroyer do
 
       Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
 
-      expect(Post.last.raw).to include("[details=\"Click to expand removed post\"]\n```markdown\n#{second_post.raw}\n```\n[/details]")
+      expect(Post.last.raw).to include("[details=\"Click to expand removed post\"]\n``` markdown\n#{second_post.raw}\n```\n[/details]")
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
