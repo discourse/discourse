@@ -18,8 +18,12 @@ class PostgreSQLFallbackHandler
 
     MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload, pid|
       if @initialized && pid != Process.pid
-        RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
-          clear_connections
+        begin
+          RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
+            clear_connections
+          end
+        rescue PG::UnableToSend
+          # Site has already failed over
         end
       end
     end
