@@ -5,7 +5,7 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_s3_inventory? && SiteSetting.enable_s3_uploads?
 
-      s3_inventory = Discourse.store.inventory
+      s3_inventory = Discourse.store.s3_inventory
       s3_inventory.update_bucket_policy
       s3_inventory.update_bucket_inventory_configuration
     end

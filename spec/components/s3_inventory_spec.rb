@@ -4,7 +4,7 @@ require "file_store/s3_store"
 
 describe "S3Inventory" do
   let(:store) { FileStore::S3Store.new }
-  let(:inventory) { store.inventory }
+  let(:inventory) { store.s3_inventory }
   let(:csv_filename) { File.new("#{Rails.root}/spec/fixtures/csv/s3_inventory.csv") }
 
   before do
@@ -13,35 +13,35 @@ describe "S3Inventory" do
     SiteSetting.s3_secret_access_key = "def"
     SiteSetting.enable_s3_inventory = true
 
-    s3_helper = store.inventory.instance_variable_get(:@s3_helper)
+    s3_helper = store.s3_inventory.instance_variable_get(:@s3_helper)
     client = Aws::S3::Client.new(stub_responses: true)
-    client.stub_responses(:list_objects, {
+    client.stub_responses(:list_objects,
       contents: [
         {
-          etag: "\"70ee1738b6b21e2c8a43f3a5ab0eee71\"", 
-          key: "example1.csv.gz", 
-          last_modified: Time.parse("2014-11-21T19:40:05.000Z"), 
+          etag: "\"70ee1738b6b21e2c8a43f3a5ab0eee71\"",
+          key: "example1.csv.gz",
+          last_modified: Time.parse("2014-11-21T19:40:05.000Z"),
           owner: {
-            display_name: "myname", 
-            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc", 
-          }, 
-          size: 11, 
+            display_name: "myname",
+            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
+          },
+          size: 11,
           storage_class: "STANDARD",
-        }, 
+        },
         {
-          etag: "\"9c8af9a76df052144598c115ef33e511\"", 
-          key: "example2.csv.gz", 
-          last_modified: Time.parse("2013-11-15T01:10:49.000Z"), 
+          etag: "\"9c8af9a76df052144598c115ef33e511\"",
+          key: "example2.csv.gz",
+          last_modified: Time.parse("2013-11-15T01:10:49.000Z"),
           owner: {
-            display_name: "myname", 
-            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc", 
-          }, 
-          size: 713193, 
-          storage_class: "STANDARD", 
+            display_name: "myname",
+            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
+          },
+          size: 713193,
+          storage_class: "STANDARD",
         }
       ],
       next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ=="
-    })
+    )
     s3_helper.stubs(:s3_client).returns(client)
     Discourse.stubs(:store).returns(store)
   end

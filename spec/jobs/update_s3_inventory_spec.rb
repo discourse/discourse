@@ -10,7 +10,7 @@ describe Jobs::UpdateS3Inventory do
 
     store = FileStore::S3Store.new
     @client = Aws::S3::Client.new(stub_responses: true)
-    store.inventory.stubs(:s3_client).returns(@client)
+    store.s3_inventory.stubs(:s3_client).returns(@client)
     Discourse.stubs(:store).returns(store)
   end
 
