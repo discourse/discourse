@@ -19,8 +19,8 @@ if locales_changes.any? && has_non_en_locales_changes
 end
 
 files = (git.added_files + git.modified_files)
-  .reject! { |path| path.start_with?("plugins/") }
-  .reject! { |path| !(path.end_with?("es6") || path.end_with?("rb")) }
+  .select { |path| !path.start_with?("plugins/") }
+  .select { |path| path.end_with?("es6") || path.end_with?("rb") }
 
 super_offenses = []
 
