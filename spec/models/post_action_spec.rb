@@ -920,6 +920,21 @@ describe PostAction do
         expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
+      context "on a staff post" do
+        let(:staff_user) { Fabricate(:user, moderator: true) }
+        let(:topic) { Fabricate(:topic, user: staff_user) }
+
+        it "will not close topics opened by staff" do
+          [flagger1, flagger2].each do |flagger|
+            [post1, post2, post3].each do |post|
+              PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+            end
+          end
+
+          expect(topic.reload.closed).to eq(false)
+        end
+      end
+
       it "will keep the topic in closed status until the community flags are handled" do
         freeze_time
 
