@@ -822,11 +822,11 @@ es:
       email_settings: "E-mail"
       hide_profile_and_presence: "Ocultar mi perfil público y características de presencia"
       text_size:
-        title: "Tamaño del Texto"
+        title: "Tamaño del texto"
         smaller: "Más pequeño"
         normal: "Normal"
         larger: "Grande"
-        largest: "Muy Grande"
+        largest: "Muy grande"
       like_notification_frequency:
         title: "Notificar cuando me dan Me gusta"
         always: "Con cada Me gusta que reciban mis posts"
@@ -1093,7 +1093,7 @@ es:
       complete_email_found: "Encontramos una cuenta que coincide con el e-mail <b>%{email}</b>, deberías recibir en breve un e-mail con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "Ninguna cuenta concuerda con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "Ninguna cuenta concuerda con <b>%{email}</b>"
-      help: "¿No llegó el email? Asegúrese de chequear primero su carpeta de correo no deseado. <p>¿No estás seguro de qué email usaste? Ingrese su email y le avisaremos si existe aquí.</p><p>Si no tienes acceso al email de tu cuenta, por favor contacta <a href='%{basePath}/about'>a nuestro staff.</a></p>"
+      help: "¿Te ha llegado el correo? Asegúrate de comprobar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Introduce tu email y te avisaremos si existe aquí.</p><p>Si no tienes acceso al email de tu cuenta, por favor contacta <a href='%{basePath}/about'>a nuestro staff.</a></p>"
       button_ok: "OK"
       button_help: "Ayuda"
     email_login:

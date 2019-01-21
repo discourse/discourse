@@ -1658,49 +1658,15 @@ ur:
     backup_succeeded:
       title: "بیک اَپ کامیاب"
       subject_template: "بیک اَپ کامیابی سے مکمل کر لیا گیا"
-      text_body_template: |
-        بیک اَپ کامیاب ہو گیا تھا۔
-
-        اپنا نیا بیک اَپ ڈاؤن لوڈ کرنے کیلئے [ایڈمن > بیک اَپ سیکشن](%{base_url}/admin/backups) ملاحظہ کریں۔
-
-        یہ لاگ ہے:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "بیک اَپ ناکام"
       subject_template: "بیک اَپ ناکام ہو گیا"
-      text_body_template: |
-        بیک اَپ ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "رِیسٹور کامیاب"
       subject_template: "رِیسٹور کامیابی سے مکمل ہو گیا"
-      text_body_template: |
-        رِیسٹور کامیاب ہو گیا تھا۔
-
-        یہ لاگ ہے:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "رِیسٹور ناکام"
       subject_template: "رِیسٹور ناکام ہو گیا"
-      text_body_template: |
-        رِیسٹور ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "بَلک مدعو کامیاب"
       subject_template: "بَلک صارف دعوت ناموں پر کامیابی سے عملدرآمد ہو گیا"
@@ -1708,14 +1674,6 @@ ur:
     bulk_invite_failed:
       title: "بَلک مدعو ناکام"
       subject_template: "بَلک صارف دعوت ناموں پر خرابں کے ساتھ عملدرآمد ہو گیا"
-      text_body_template: |
-        آپ کے بَلک صارف دعوت نامے فائل پر عملدرآمد کر دیا گیا، %{sent} دعوتیں میل کر دی گئیں اور %{failed} خرابی(وں) کا سامنا کرنا پڑا۔
-
-        یہ لاگ ہے:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV ایکسپورٹ کامیاب"
     csv_export_failed:

@@ -1983,6 +1983,8 @@ ru:
         unhide: "Снова сделать видимым"
         change_owner: "Изменить владельца"
         grant_badge: "Выдать награду"
+        lock_post: "Заморозить сообщение"
+        unlock_post: "Разморозить сообщение"
       actions:
         flag: "Жалоба"
         undo:
@@ -3215,8 +3217,8 @@ ru:
             backup_destroy: "удалить резервную копию"
             reviewed_post: "просмотренное сообщение"
             custom_staff: "действия в плагинах"
-            post_locked: "сообщение заблокировано"
-            post_unlocked: "сообщение разблокировано"
+            post_locked: "сообщение заморожено"
+            post_unlocked: "сообщение разморожено"
             check_personal_message: "проверить личное сообщение"
         screened_emails:
           title: "Почтовые адреса"

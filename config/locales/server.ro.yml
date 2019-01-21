@@ -1268,46 +1268,12 @@ ro:
       subject_template: "Bine ai venit pe %{site_name}!"
     backup_succeeded:
       subject_template: "Backup terminat cu succes"
-      text_body_template: |
-        Backup-ul a reușit.
-
-        Vizitează [secțiunea admin > backup](%{base_url}/admin/backups) pentru a descărca noul backup.
-
-        Acesta este raportul:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       subject_template: "Backup eşuat"
-      text_body_template: |
-        Backup-ul a eșuat.
-
-        Acesta e raportul:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restaurarea terminată cu succes."
-      text_body_template: |
-        Restaurarea s-a terminat cu succes.
-
-        Acesta este raportul:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       subject_template: "Restaurare eşuată"
-      text_body_template: |
-        Restaurarea a eșuat.
-
-        Acesta este raportul:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Invitația multiplă a fost procesată cu succes"
       text_body_template: "Fișierul tău de invitații multiple a fost procesat, %{sent} (de) invitații trimise."

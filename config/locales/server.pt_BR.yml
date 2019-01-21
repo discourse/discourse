@@ -1786,18 +1786,6 @@ pt_BR:
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
-      text_body_template: |
-        Olá,
-
-        Essa é uma mensagem automatizada de %{site_name} para que você saiba que sua postagem foi removida.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Este post foi sinalizado pela comunidade e um membro da equipe optou por removê-lo.
-
-        Por favor, reveja nossas [diretrizes da comunidade](%{base_url}/diretrizes) para detalhes.
     usage_tips:
       text_body_template: |
         Para algumas dicas rápidas sobre como começar como um novo usuário, [confira este post no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1837,49 +1825,15 @@ pt_BR:
     backup_succeeded:
       title: "Backup foi bem-sucedido"
       subject_template: "Backup completado com sucesso"
-      text_body_template: |
-        O backup foi bem sucedido.
-
-        Visite o [admin > backup section](%{base_url}/admin/backups) para baixar seu novo backup.
-
-        Aqui está o log:
-
-        ```texto
-        %{logs}
-        ```
     backup_failed:
       title: "Backup Falhou"
       subject_template: "O backup falhou"
-      text_body_template: |
-        O backup falhou.
-
-        Aqui está o log:
-
-        ```texto
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauração com Sucesso"
       subject_template: "Restauração terminada com sucesso"
-      text_body_template: |
-        A restauração foi bem sucedida.
-
-        Aqui está o log:
-
-        ```texto
-        %{logs}
-        ```
     restore_failed:
       title: "Restauração falhou"
       subject_template: "A restauração falhou"
-      text_body_template: |
-        A restauração falhou.
-
-        Aqui está o log:
-
-        ```texto
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Convite em massa foi bem-sucedido"
       subject_template: "Seus convites foram enviados com sucesso."
@@ -1887,14 +1841,6 @@ pt_BR:
     bulk_invite_failed:
       title: "Convite em massa falhou"
       subject_template: "Seus convites não forma enviados, contate os moderadores."
-      text_body_template: |
-        Seu arquivo de convite do usuário em massa foi processado, %{sent} convite enviado pelo correio com%{failed} erro(s).
-
-        Aqui está o log:
-
-        ```texto
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
