@@ -3,7 +3,7 @@ require "s3_inventory"
 require "file_store/s3_store"
 
 describe "S3Inventory" do
-  let(:store) { FileStore::S3Store.new }
+  let(:store) { Discourse.store }
   let(:inventory) { S3Inventory.new(store.s3_helper, :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
@@ -13,7 +13,6 @@ describe "S3Inventory" do
     SiteSetting.s3_secret_access_key = "def"
     SiteSetting.enable_s3_inventory = true
 
-    s3_helper = store.s3_helper
     client = Aws::S3::Client.new(stub_responses: true)
     client.stub_responses(:list_objects,
       contents: [
@@ -42,8 +41,7 @@ describe "S3Inventory" do
       ],
       next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ=="
     )
-    s3_helper.stubs(:s3_client).returns(client)
-    Discourse.stubs(:store).returns(store)
+    store.s3_helper.stubs(:s3_client).returns(client)
   end
 
   it "will return recent inventory file name" do
