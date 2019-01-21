@@ -586,7 +586,7 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 4.6em;
+  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
   color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -628,6 +628,7 @@ blockquote > *:last-child {
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
+    flex: 0 0 auto;
     .d-icon {
       font-size: 2em;
       width: 45px;

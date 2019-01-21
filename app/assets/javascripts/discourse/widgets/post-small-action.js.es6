@@ -62,7 +62,7 @@ export function addPostSmallActionIcon(key, icon) {
 
 export default createWidget("post-small-action", {
   buildKey: attrs => `post-small-act-${attrs.id}`,
-  tagName: "div.small-action.onscreen-post.clearfix",
+  tagName: "div.small-action.onscreen-post",
 
   buildId(attrs) {
     return `post_${attrs.post_number}`;
