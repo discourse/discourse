@@ -1412,49 +1412,15 @@ fa_IR:
     backup_succeeded:
       title: "پشتیبان گیری موفق"
       subject_template: "پشتیبان‌گیری با موفقیت انجام شد"
-      text_body_template: |
-        پشتیبان گیری با موفقیت انجام شد.
-
-        قسمت [مدیریت> پشتیبان گیری](%{base_url}/admin/backups) را برای دانلود نسخه پشتیبان ببینید.
-
-        گزارش:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "پشتیبان گیری ناموفق"
       subject_template: "پشتیبان‌گیری با شکست مواجه شد."
-      text_body_template: |
-        پشتیبان گیری ناموفق.
-
-        گزارش:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "بازگردانی موفق"
       subject_template: "بازگردانی با موفقیت کامل شد "
-      text_body_template: |
-        بازگردانی موفق.
-
-        گزارش:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "بازگردانی ناموفق"
       subject_template: "بازگردانی ناموفق"
-      text_body_template: |
-        بازگردانی ناموفق.
-
-        گزارش:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "دعوت عمومی موفق"
       subject_template: "دعوت گروهی کاربران با موفقیت انجام شد"
@@ -1462,14 +1428,6 @@ fa_IR:
     bulk_invite_failed:
       title: "دعوت گروهی ناموفق"
       subject_template: "دعوت انبوه کاربر با مشکل پردازش شد"
-      text_body_template: |
-        فایل دعوت گروهی کاربران شما پردازش شد، %{sent} دعوت ایمیلی با  %{failed} خطا(ها) انجام شد.
-
-        گزارش:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "خروجی CSV موفق"
     csv_export_failed:

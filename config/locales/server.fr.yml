@@ -2060,19 +2060,6 @@ fr:
     flags_agreed_and_post_deleted:
       title: "Message signalé, retiré par un responsable"
       subject_template: "Message signalé, retiré par un responsable"
-      text_body_template: |2
-
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
-
-        <%{base_url}%{url} >
-
-        %{flag_reason}
-
-        Les message a été signalé par la communauté et un responsable a décidé de le retirer.
-
-        Pour plus d'informations, merci de vous référer à notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |2
 
@@ -2119,61 +2106,15 @@ fr:
     backup_succeeded:
       title: "Sauvegarde réussie"
       subject_template: "Sauvegarde terminée avec succès"
-      text_body_template: |2
-
-        La sauvegarde a réussi.
-
-        Rendez-vous dans la section [Sauvegardes](%{base_url}/admin/backups) pour la télécharger.
-
-        Voici le détail :
-
-        ```text
-
-        %{logs}
-
-        ```
     backup_failed:
       title: "Sauvegarde échouée"
       subject_template: "Échec de la sauvegarde"
-      text_body_template: |2
-
-        La sauvegarde a échoué.
-
-        Voici le détail :
-
-        ```text
-
-        %{logs}
-
-        ```
     restore_succeeded:
       title: "Restauration réussie"
       subject_template: "Restauration terminée avec succès"
-      text_body_template: |2
-
-        La restauration a réussi.
-
-        Voici le détail :
-
-        ```text
-
-        %{logs}
-
-        ```
     restore_failed:
       title: "Restauration échouée"
       subject_template: "Échec de la restauration"
-      text_body_template: |2
-
-        La restauration a échoué.
-
-        Voici le détail :
-
-        ```text
-
-        %{logs}
-
-        ```
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
@@ -2181,17 +2122,6 @@ fr:
     bulk_invite_failed:
       title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
-      text_body_template: |2
-
-        Votre envoi d'invitations en masse a été effectué. %{sent} invitations envoyées avec %{failed} erreur(s).
-
-        Voici le détail :
-
-        ```text
-
-        %{logs}
-
-        ```
     csv_export_succeeded:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"
@@ -2425,14 +2355,6 @@ fr:
         Nous sommes désolés, mais nous avons de la difficulté à vous joindre par courriel. Nos derniers courriels vous ont tous été renvoyés comme non livrables.
 
         Pouvez-vous vous assurer que [votre adresse email](%{base_url}/my/preferences/email) est valide et fonctionne ? Vous pouvez également ajouter notre adresse e-mail à votre carnet d'adresses / liste de contacts pour améliorer la délivrabilité.
-    email_bounced: |
-      Le message à%{email} a été rejeté.
-
-      ### Détails
-
-      ```text
-      %{raw}
-      ```
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"

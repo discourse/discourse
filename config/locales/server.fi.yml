@@ -2091,18 +2091,6 @@ fi:
     flags_agreed_and_post_deleted:
       title: "Henkilökunta poisti liputetun viestin"
       subject_template: "Henkilökunta poisti liputetun viestin"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle, että viestisi poistettiin.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Yhteisö piilotti viestin ja henkilökunnan jäsen päätti poistaa sen.
-
-        Kertaa [yhteisön säännöt](%{base_url}/guidelines) jos kaipaat lisätietoa.
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
@@ -2146,49 +2134,15 @@ fi:
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
-      text_body_template: |
-        Varmuuskopiointi onnistui.
-
-        Lataa varmuuskopio siirtymällä [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
-
-        Tässä loki:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Varmuuskopiointi epäonnistui"
       subject_template: "Varmmuskopiointi epäonnistui"
-      text_body_template: |
-        Varmuuskopiointi epäonnistui.
-
-        Tässä loki:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Palautus onnistui"
       subject_template: "Palauttaminen suoritettu onnistuneesti"
-      text_body_template: |
-        Palauttaminen onnistui.
-
-        Tässä loki:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Palautus epäonnistui"
       subject_template: "Palauttaminen epäonnistui"
-      text_body_template: |
-        Palauttaminen epäonnistui.
-
-        Tässä loki:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui."
@@ -2196,14 +2150,6 @@ fi:
     bulk_invite_failed:
       title: "Massakutsun lähetys epäonnistui"
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, joista %{failed} virhe(ttä).
-
-        Tässä on loki:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV:n vienti onnistui"
       subject_template: "[%{export_title}] Tiedostojen vienti valmis"
@@ -2412,14 +2358,6 @@ fi:
         Pahoittelut, mutta meidän on vaikeaa tavoittaa sinua sähköpostitse. Muutamasta viimeisimmästä sähköpostista kaikki ovat palanneet takaisin. koska eivät ole päässeet perille.
 
         Voisitko varmistaa että [sähköpostiosoitteesi](%{base_url}/my/preferences/email) on käypä ja toimiva? Voit myös lisätä sähköpostiosoitteemme osoitekirjaasi / yhteystietoihisi, mikä parantaa viestien perille saapumista.
-    email_bounced: |
-      Viesti sähköpostiin %{email} palautui.
-
-      ### Tietoja
-
-      ```text
-      %{raw}
-      ```
     too_many_spam_flags:
       title: "Liian monta roskapostiliputusta"
       subject_template: "Uusi tili on estetty"

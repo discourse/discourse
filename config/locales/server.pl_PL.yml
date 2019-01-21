@@ -1485,49 +1485,15 @@ pl_PL:
     backup_succeeded:
       title: "Kopia zapasowa została utworzona "
       subject_template: "Kopia zapasowa jest gotowa"
-      text_body_template: |
-        Kopia zapasowa została wykonana pomyślnie.
-
-        Odwiedź [admin > backup section](%{base_url}/admin/backups) aby ją pobrać.
-
-        Log poniżej
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Kopia zapasowa nie została utworzona "
       subject_template: "Kopia zapasowa nieudana"
-      text_body_template: |
-        Stworzenie kopii zapasowej było nieudane.
-
-        Log poniżej:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Przywracanie udane"
       subject_template: "Przywrócenie udane"
-      text_body_template: |
-        Odtworzenie kopii zapasowej było udane.
-
-        Log poniżej:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Przywracanie nieudane"
       subject_template: "Przywracanie nieudane"
-      text_body_template: |
-        Odtworzenie kopii zapasowej było nieudane.
-
-        Log poniżej:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Zaproszenia hurtowe udane"
       subject_template: "Przetwarzanie masowej ilości zaproszeń zakończyło się sukcesem."
@@ -1535,14 +1501,6 @@ pl_PL:
     bulk_invite_failed:
       title: "Zaproszenia hurtowe Nieudane"
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |
-        Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
-
-        Dziennik operacji:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "Eksport CSV udany "
     csv_export_failed:

@@ -2005,18 +2005,6 @@ zh_CN:
     flags_agreed_and_post_deleted:
       title: "管理人员删除了已标记的帖子"
       subject_template: "管理人员删除了已标记的帖子"
-      text_body_template: |
-        你好，
-
-        这是来自%{site_name}的自动消息，通知你帖子已被删除。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        该帖子被社区标记，管理人员选择将其删除。
-
-        有关详细信息，请查看我们的[社区指引](%{base_url}/指引)。
     usage_tips:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -2060,49 +2048,15 @@ zh_CN:
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"
-      text_body_template: |
-        备份成功。
-
-        访问[管理 > 备份](%{base_url}/admin/backups)下载你的新备份文件。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "备份失败"
       subject_template: "备份失败"
-      text_body_template: |
-        备份已经失败了。
-
-        以下是日志：
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "成功恢复"
       subject_template: "恢复成功完成"
-      text_body_template: |
-        恢复成功。
-
-        以下是日志：
-
-        ```
-        %{logs}
-        ```
     restore_failed:
       title: "恢复失败"
       subject_template: "恢复失败"
-      text_body_template: |
-        恢复失败。
-
-        以下是日志：
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请成功完成"
@@ -2110,14 +2064,6 @@ zh_CN:
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量邀请完成，并有一些错误"
-      text_body_template: |
-        正在处理批量邀请用户文件中，%{sent}个邀请已经发送，其中有%{failed}个失败。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "成功导致CSV格式"
       subject_template: "[%{export_title}]数据导出完成"
@@ -2326,14 +2272,6 @@ zh_CN:
         很抱歉，我们无法通过邮件与你联系。我们最后几封给你的邮件都因无法投递而全部退回。
 
         你能否确保[你的邮件地址](%{base_url}/我的/设置/邮件)有效且有效？你可能还希望将我们的邮件地址添加到您的地址簿/联系人列表中，以提高可投递性。
-    email_bounced: |
-      %{email}的邮件已退回。
-
-      ### 细节
-
-      ```文本
-      %{raw}
-      ```
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"

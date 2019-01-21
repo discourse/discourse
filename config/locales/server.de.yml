@@ -196,8 +196,8 @@ de:
     one: "Entschuldigung, aber neue Benutzer sind vorübergehend auf eine Antwort pro Thema beschränkt."
     other: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antworten pro Thema beschränkt."
   max_consecutive_replies:
-    one: "Es sind nicht mehr als %{count} aufeinanderfolgende Antworten erlaubte. Bitte bearbeite stattdessen deine letzte Antwort oder warte, bis dir jemand antwortet."
-    other: "Es sind nicht mehr als %{count} aufeinanderfolgende Antworten erlaubte. Bitte bearbeite stattdessen deine letzte Antwort oder warte, bis dir jemand antwortet."
+    one: "Es ist nicht mehr als %{count} aufeinanderfolgende Antwort erlaubt. Bitte bearbeite stattdessen deine letzte Antwort oder warte, bis dir jemand antwortet."
+    other: "Es sind nicht mehr als %{count} aufeinanderfolgende Antworten erlaubt. Bitte bearbeite stattdessen deine letzte Antwort oder warte, bis dir jemand antwortet."
   embed:
     start_discussion: "Diskussion beginnen"
     continue: "Diskussion fortsetzen"
@@ -2113,18 +2113,6 @@ de:
     flags_agreed_and_post_deleted:
       title: "Gemeldeter Beitrag von Team entfernt"
       subject_template: "Gemeldeter Beitrag von Team entfernt"
-      text_body_template: |
-        Hallo,
-
-        Dies ist eine automatische Nachricht von %{site_name} um Dich wissen zu lassen, dass Dein Beitrag entfernt wurde.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Dieser Beitrag war von der Gemeinschaft gemeldet worden und ein Moderationsmitglied den Beitrag entfernt.
-
-        Bitte sieh Dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2168,49 +2156,15 @@ de:
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"
-      text_body_template: |
-        Backup erfolgreich erstellt.
-
-        Besuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen.
-
-        Hier ist das Protokoll:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Backup fehlgeschlagen"
       subject_template: "Sicherung fehlgeschlagen"
-      text_body_template: |
-        Die Sicherung ist fehlgeschlagen.
-
-        Hier ist das Protokoll:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Wiederherstellung erfolgreich"
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
-      text_body_template: |
-        Die Wiederherstellung war erfolgreich.
-
-        Hier ist das Protokoll:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Wiederherstellung fehlgeschlagen"
       subject_template: "Wiederherstellung fehlgeschlagen"
-      text_body_template: |
-        Die Wiederherstellung ist fehlgeschlagen.
-
-        Hier ist das Protokoll:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
@@ -2218,14 +2172,6 @@ de:
     bulk_invite_failed:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
-      text_body_template: |
-        Deine Datei zur Massenbenutzereinladung wurde verarbeitet, %{sent} Einladungen wurden verschickt mit %{failed} Fehler(n).
-
-        Hier ist das Protokoll:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV-Export erfolgreich"
       subject_template: "[%{export_title}] Datenexport abgeschlossen"
@@ -2434,14 +2380,6 @@ de:
         Es tut uns leid aber wir haben Probleme Dich per E-Mail zu erreichen. Unsere letzten E-Mails an Dich sind alle als unzustellbar zurück gekommen.
 
         Bitte stelle sicher, dass [E-Mail Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
-    email_bounced: |
-      Die Nachricht an %{email} konnte nicht zugestellt werden.
-
-      ### Details
-
-      ```text
-      %{raw}
-      ```
     too_many_spam_flags:
       title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"

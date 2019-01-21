@@ -1051,46 +1051,12 @@ tr_TR:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
-      text_body_template: |
-        Yedekleme başarılı oldu.
-
-        Yedeğinizi indirmek için [yönetici> yedekleme alanını](%{base_url}/admin/backups) ziyaret edin.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       subject_template: "Yedekleme başarısız"
-      text_body_template: |
-        Yedekleme başarısız oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Geri alma başarıyla tamamlandı"
-      text_body_template: |
-        Geri yükleme başarılı oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       subject_template: "Geri alma başarısız"
-      text_body_template: |
-        Geri yükleme başarısız oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"
       text_body_template: "Toplu davet dosyanız işlendi, %{sent} davetiye gönderildi. "

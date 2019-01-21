@@ -1268,49 +1268,15 @@ ca:
     backup_succeeded:
       title: "Còpia de seguretat reeixida"
       subject_template: "Còpia de seguretat completada amb èxit"
-      text_body_template: |
-        La còpia de seguretat ha estat reeixida.
-
-        Visita [admin > secció de còpia de seguretat](%{base_url}/admin/backups) per desar la nova còpia de seguretat.
-
-        Aquí tens el registre:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "La còpia de seguretat ha fallat"
       subject_template: "La còpia de seguretat ha fallat"
-      text_body_template: |
-        Ha fallat la còpia de seguretat.
-
-        Aquí tens el registre:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauració reeixida"
       subject_template: "Restauració completament reeixida"
-      text_body_template: |
-        Restauració reeixida.
-
-        Aquí tens el registre:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Ha fallat la restauració"
       subject_template: "Ha fallat la restauració"
-      text_body_template: |
-        Ha fallat la restauració.
-
-        Aquí tens el registre:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invitació massiva reeixida"
       subject_template: "Invitació personal massiva processada amb èxit"

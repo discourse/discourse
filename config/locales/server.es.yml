@@ -2024,18 +2024,6 @@ es:
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha sido eliminado.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Este mensaje ha sido reportado por la comunidad y un miembro del equipo ha decidido eliminarlo.
-
-        Por favor, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines) para más detalles.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2081,50 +2069,15 @@ es:
     backup_succeeded:
       title: "Copia de seguridad completada con éxito"
       subject_template: "La copia de seguridad se completo exitosamente"
-      text_body_template: |
-        Copia de seguridad realizada con éxito.
-
-        Visita la sección [admin > copias de seguridad](%{base_url}/admin/backups) para descargarla.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-
-        ```
     backup_failed:
       title: "Error en la copia de seguridad"
       subject_template: "La copia de seguridad falló"
-      text_body_template: |
-        La copia de seguridad ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauración completada con éxito"
       subject_template: "Restauración completada exitosamente."
-      text_body_template: |
-        La restauración se ha completado con éxito.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Error en la restauración"
       subject_template: "La restauración falló."
-      text_body_template: |
-        La restauración ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invitación en masa completada con éxito"
       subject_template: "Invitación masiva procesada con éxito"
@@ -2132,14 +2085,6 @@ es:
     bulk_invite_failed:
       title: "Error en la invitación en masa"
       subject_template: "Invitación masiva procesada con algunos errores"
-      text_body_template: |
-        Tu archivo de invitación masiva ha sido procesada, se han enviado %{sent} invitaciones y se han producido %{failed} error(es).
-
-        Este es el registro:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "Exportación de datos en CSV completada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
@@ -2359,14 +2304,6 @@ es:
         Lo sentimos, pero estamos teniendo problemas para contactarte por correo. Nuestros últimos mensajes nos han sido devueltos como imposibles de entregar.
 
         ¿Podrías comprobar que [tu dirección de email](%{base_url}/my/preferences/email) es válida y funciona? También puedes añadir nuestra dirección a tu agenda para mejorar la entregabilidad.
-    email_bounced: |
-      El mensaje a %{email} ha rebotado.
-
-      ### Detalles
-
-      ```text
-      %{raw}
-      ```
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"

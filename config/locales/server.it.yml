@@ -1678,49 +1678,15 @@ it:
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
-      text_body_template: |
-        Il backup è avvenuto con successo.
-
-        Visita la  [sezione admin > backup](%{base_url}/admin/backups) per scaricare il nuovo backup.
-
-        Ecco il log:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Backup Fallito"
       subject_template: "Backup fallito"
-      text_body_template: |
-        Il backup è fallito.
-
-        Ecco il log:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Ripristino Riuscito"
       subject_template: "Il ripristino è avvenuto con successo."
-      text_body_template: |
-        Il ripristino è avvenuto con successo.
-
-        Ecco il rapporto:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Ripristino Fallito"
       subject_template: "Ripristino fallito"
-      text_body_template: |
-        Il ripristino è fallito.
-
-        Ecco il rapporto:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invito di Massa Riuscito"
       subject_template: "Invito di massa processato con successo"
@@ -1728,14 +1694,6 @@ it:
     bulk_invite_failed:
       title: "Invito di Massa Fallito"
       subject_template: "Invito di massa processato con errori"
-      text_body_template: |
-        Il tuo invito di massa è stato processato, %{sent}inviti spediti con %{failed}errore(i).
-
-        Ecco il log:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "Esportazione CSV Riuscita"
     csv_export_failed:

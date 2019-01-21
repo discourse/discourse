@@ -1268,49 +1268,15 @@ zh_TW:
     backup_succeeded:
       title: "備份成功"
       subject_template: "備份成功完成"
-      text_body_template: |
-        備份成功。
-
-        訪問[管理 > 備份](%{base_url}/admin/backups)下載你的新備份檔案。
-
-        以下為日誌：
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "備份失敗"
       subject_template: "備份失敗"
-      text_body_template: |
-        備份已經失敗了。
-
-        以下是日誌：
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "復原成功"
       subject_template: "恢復成功完成"
-      text_body_template: |
-        恢復成功。
-
-        以下是日誌：
-
-        ```
-        %{logs}
-        ```
     restore_failed:
       title: "復原失敗"
       subject_template: "復原失敗"
-      text_body_template: |
-        恢復失敗。
-
-        以下是日誌：
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "批量邀請成功"
       subject_template: "批次用戶邀請已完成處理"
@@ -1318,14 +1284,6 @@ zh_TW:
     bulk_invite_failed:
       title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
-      text_body_template: |
-        你的批次使用者邀請已結束，發出 %{sent} 個邀請、共有 %{failed} 個錯誤。
-
-        查看紀錄：
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
     csv_export_failed:

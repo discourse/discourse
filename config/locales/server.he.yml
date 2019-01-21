@@ -1516,49 +1516,15 @@ he:
     backup_succeeded:
       title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."
-      text_body_template: |
-        הגיבוי הצליח.
-
-        בקרו ב [ניהול > גיבויים](%{base_url}/admin/backups) כדי להוריד את הגיבוי החדש שלכם.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     backup_failed:
       title: "גיבוי נכשל"
       subject_template: "הגיבוי נכשל."
-      text_body_template: |
-        הגיבוי נכשל.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     restore_succeeded:
       title: "שחזור הצליח"
       subject_template: "השחזור הסתיים בהצלחה."
-      text_body_template: |
-        השחזור הצליח.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     restore_failed:
       title: "שחזור נכשל"
       subject_template: "השחזור נכשל"
-      text_body_template: |
-        השחזור נכשל.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
@@ -1566,14 +1532,6 @@ he:
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
-      text_body_template: |
-        קובץ המשתמשים שלכם מעובד כעת, נשלחו %{sent} הזמנות עם %{failed} שגיאה(ות).
-
-        הנה היומן:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "יצוא CSV הצליח"
     csv_export_failed:

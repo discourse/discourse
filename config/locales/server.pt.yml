@@ -1276,61 +1276,15 @@ pt:
     backup_succeeded:
       title: "Cópia de segurança bem-sucedida"
       subject_template: "Cópia de segurança completa corretamente"
-      text_body_template: |2
-
-        A cópia de segurança foi bem-sucedida.
-
-        Visite [admin > secção de cópias de segurança](%{base_url}/admin/backups) para transferir a sua nova cópia de segurança.
-
-        Aqui está o registo:
-
-        ```text
-
-        %{logs}
-
-        ```
     backup_failed:
       title: "Cópia de segurança falhou"
       subject_template: "A cópia de segurança falhou"
-      text_body_template: |2
-
-        A cópia de segurança falhou.
-
-        Aqui está o registo:
-
-        ```text
-
-        %{logs}
-
-        ```
     restore_succeeded:
       title: "Restauro bem-sucedido"
       subject_template: "Restauração completa corretamente"
-      text_body_template: |2
-
-        A restauração foi bem sucedida.
-
-        Aqui está o registo:
-
-        ```text
-
-        %{logs}
-
-        ```
     restore_failed:
       title: "Restauro falhou"
       subject_template: "A restauração falhou"
-      text_body_template: |2
-
-        A restauração falhou.
-
-        Aqui está o registo:
-
-        ```text
-
-        %{logs}
-
-        ```
     bulk_invite_succeeded:
       subject_template: "Convites de utilizadores em massa processados com sucesso"
       text_body_template: "O seu ficheiro de convites de utilizadores em massa foi processado, %{sent} convites enviados."
