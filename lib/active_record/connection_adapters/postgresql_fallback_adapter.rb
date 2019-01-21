@@ -16,8 +16,8 @@ class PostgreSQLFallbackHandler
     @mutex = Mutex.new
     @initialized = false
 
-    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload, pid|
-      if @initialized && pid != Process.pid
+    MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload|
+      if @initialized && payload.data["pid"].to_i != Process.pid
         begin
           RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
             clear_connections
