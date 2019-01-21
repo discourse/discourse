@@ -4,8 +4,8 @@ require "file_store/s3_store"
 
 describe "S3Inventory" do
   let(:store) { FileStore::S3Store.new }
-  let(:inventory) { store.s3_inventory }
-  let(:csv_filename) { File.new("#{Rails.root}/spec/fixtures/csv/s3_inventory.csv") }
+  let(:inventory) { S3Inventory.new(store.s3_helper, :upload) }
+  let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
   before do
     SiteSetting.enable_s3_uploads = true
@@ -13,7 +13,7 @@ describe "S3Inventory" do
     SiteSetting.s3_secret_access_key = "def"
     SiteSetting.enable_s3_inventory = true
 
-    s3_helper = store.s3_inventory.instance_variable_get(:@s3_helper)
+    s3_helper = store.s3_helper
     client = Aws::S3::Client.new(stub_responses: true)
     client.stub_responses(:list_objects,
       contents: [
@@ -52,7 +52,7 @@ describe "S3Inventory" do
 
   it "will raise storage error if inventory file not found" do
     inventory.stubs(:file).returns(nil)
-    expect { inventory.list_missing_uploads }.to raise_error(S3Inventory::StorageError)
+    expect { inventory.list_missing }.to raise_error(S3Inventory::StorageError)
   end
 
   it "will raise storage error if inventory file not found" do
@@ -66,6 +66,6 @@ describe "S3Inventory" do
     inventory.stubs(:csv_filename).returns(csv_filename)
     STDOUT.expects(:puts).with(upload.url)
     STDOUT.expects(:puts).with("1 of 4 uploads are missing")
-    inventory.list_missing_uploads
+    inventory.list_missing
   end
 end

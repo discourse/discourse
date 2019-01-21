@@ -11,29 +11,36 @@ class S3Inventory
     Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
 
-  attr_reader :inventory_id, :s3_client, :csv_filename
+  attr_reader :inventory_id, :csv_filename, :model
 
   CSV_ETAG_INDEX ||= 2.freeze
+  INVENTORY_PREFIX ||= "inventory".freeze
 
-  def initialize(s3_helper, inventory_id = "uploads")
+  def initialize(s3_helper, type)
     @s3_helper = s3_helper
-    @s3_client = @s3_helper.s3_client
-    @inventory_id = inventory_id
+
+    if type == :upload
+      @inventory_id = "uploads"
+      @model = Upload
+    elsif type == :optimized
+      @inventory_id = "optimized"
+      @model = OptimizedImage
+    end
   end
 
   def file
     @file ||= unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
   end
 
-  def list_missing_uploads(skip_optimized: false)
+  def list_missing
     if file.blank?
       Rails.logger.warn("Failed to list inventory from S3")
       raise StorageError
     end
 
-    @current_db = RailsMultisite::ConnectionManagement.current_db
-    @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
-    @tmp_directory = File.join(Rails.root, "tmp", "inventory", @current_db, @timestamp)
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
+    @tmp_directory = File.join(Rails.root, "tmp", INVENTORY_PREFIX, current_db, timestamp)
     @archive_filename = File.join(@tmp_directory, File.basename(file.key))
     @csv_filename = @archive_filename[0...-3]
 
@@ -41,35 +48,12 @@ class S3Inventory
     copy_archive_to_tmp_directory
     unzip_archive
 
-    etags = []
+    table_name = "#{inventory_id}_inventory"
     connection = ActiveRecord::Base.connection.raw_connection
-    connection.exec('CREATE TEMP TABLE etags(val text PRIMARY KEY)')
+    connection.exec("CREATE TEMP TABLE #{table_name}(bucket varchar, key text UNIQUE, etag text PRIMARY KEY)")
+    connection.exec("COPY #{table_name} FROM '#{csv_filename}' DELIMITERS ',' CSV")
 
-    CSV.foreach(csv_filename, headers: false) do |row|
-      next if row[1]["/optimized/"].present? && skip_optimized
-
-      etags << row[S3Inventory::CSV_ETAG_INDEX]
-
-      if etags.length == 1000
-        etags_clause = etags.map { |i| "('#{PG::Connection.escape_string(i.to_s)}')" }.join(",")
-        connection.exec("INSERT INTO etags VALUES #{etags_clause}")
-        etags = []
-      end
-    end
-
-    if etags.present?
-      etags_clause = etags.map { |i| "('#{PG::Connection.escape_string(i.to_s)}')" }.join(",")
-      connection.exec("INSERT INTO etags VALUES #{etags_clause}")
-    end
-
-    list_missing(Upload)
-    list_missing(OptimizedImage) unless skip_optimized
-  ensure
-    connection.exec('DROP TABLE etags') unless connection.nil?
-  end
-
-  def list_missing(model)
-    missing_uploads = model.joins('LEFT JOIN etags ON etags.val = etag').where("etags.val is NULL")
+    missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
     missing_count = missing_uploads.count
 
     if missing_count > 0
@@ -79,6 +63,8 @@ class S3Inventory
 
       puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
     end
+  ensure
+    connection.exec("DROP TABLE #{table_name}") unless connection.nil?
   end
 
   def copy_archive_to_tmp_directory
@@ -97,8 +83,8 @@ class S3Inventory
   end
 
   def update_bucket_policy
-    s3_client.put_bucket_policy(
-      bucket: s3_helper.s3_bucket_name,
+    @s3_helper.s3_client.put_bucket_policy(
+      bucket: bucket_name,
       policy: {
         "Version": "2012-10-17",
         "Statement": [
@@ -107,10 +93,10 @@ class S3Inventory
             "Effect": "Allow",
             "Principal": { "Service": "s3.amazonaws.com" },
             "Action": ["s3:PutObject"],
-            "Resource": ["arn:aws:s3:::#{s3_helper.s3_bucket_name}/#{s3_helper.s3_inventory_path}/*"],
+            "Resource": ["arn:aws:s3:::#{inventory_path}/*"],
             "Condition": {
               "ArnLike": {
-                "aws:SourceArn": "arn:aws:s3:::#{s3_helper.s3_bucket_name}"
+                "aws:SourceArn": "arn:aws:s3:::#{bucket_name}"
               },
               "StringEquals": {
                 "s3:x-amz-acl": "bucket-owner-full-control"
@@ -123,8 +109,8 @@ class S3Inventory
   end
 
   def update_bucket_inventory_configuration
-    s3_client.put_bucket_inventory_configuration(
-      bucket: source_bucket_name,
+    @s3_helper.s3_client.put_bucket_inventory_configuration(
+      bucket: bucket_name,
       id: inventory_id,
       inventory_configuration: inventory_configuration,
       use_accelerate_endpoint: false
@@ -132,12 +118,24 @@ class S3Inventory
   end
 
   def inventory_configuration
-    config = {
+    filter_prefix = inventory_id
+    destination_prefix = File.join(INVENTORY_PREFIX, inventory_id)
+
+    if bucket_folder_path.present?
+      filter_prefix = File.join(bucket_folder_path, filter_prefix)
+      destination_prefix = File.join(bucket_folder_path, destination_prefix)
+    end
+
+    {
       destination: {
         s3_bucket_destination: {
-          bucket: "arn:aws:s3:::#{destination_bucket_name}",
+          bucket: "arn:aws:s3:::#{bucket_name}",
+          prefix: destination_prefix,
           format: "CSV"
         }
+      },
+      filter: {
+        prefix: filter_prefix
       },
       is_enabled: SiteSetting.enable_s3_inventory,
       id: inventory_id,
@@ -147,17 +145,22 @@ class S3Inventory
         frequency: "Daily"
       }
     }
-    config[:filter] = { prefix: source_bucket_path } if source_bucket_path.present?
-    config[:destination][:s3_bucket_destination][:prefix] = destination_bucket_path if destination_bucket_path.present?
-    config
   end
 
   private
 
+  def bucket_name
+    @s3_helper.s3_bucket_name
+  end
+
+  def bucket_folder_path
+    @s3_helper.s3_bucket_folder_path
+  end
+
   def unsorted_files
     objects = []
 
-    @s3_helper.list(inventory_data_path).each do |obj|
+    @s3_helper.list(File.join(inventory_path, "data")).each do |obj|
       if obj.key.match?(/\.csv\.gz$/i)
         objects << obj
       end
@@ -169,12 +172,11 @@ class S3Inventory
     raise StorageError
   end
 
-  def inventory_data_path
-    "#{source_bucket_name}/#{inventory_id}/data"
+  def inventory_path
+    File.join(bucket_name, bucket_folder_path || "", INVENTORY_PREFIX, inventory_id)
   end
 
   def log(message, ex = nil)
-    timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
     puts(message)
     Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
   end

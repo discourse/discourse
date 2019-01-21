@@ -1,3 +1,5 @@
+require "s3_inventory"
+
 module Jobs
   # if upload bucket changes or inventory bucket changes we want to update s3 bucket policy and inventory configuration
   class UpdateS3Inventory < Jobs::Base
@@ -5,9 +7,11 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_s3_inventory? && SiteSetting.enable_s3_uploads?
 
-      s3_inventory = Discourse.store.s3_inventory
-      s3_inventory.update_bucket_policy
-      s3_inventory.update_bucket_inventory_configuration
+      [:upload, :optimized].each do |type|
+        s3_inventory = S3Inventory.new(Discourse.store.s3_helper, type)
+        s3_inventory.update_bucket_policy
+        s3_inventory.update_bucket_inventory_configuration
+      end
     end
   end
 end
