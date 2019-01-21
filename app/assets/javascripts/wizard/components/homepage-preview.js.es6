@@ -387,7 +387,6 @@ export default createPreviewComponent(659, 320, {
     ctx.fillStyle = textColor;
     ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
     ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Users", cols[1], headingY);
     ctx.fillText("Replies", cols[2], headingY);
     ctx.fillText("Views", cols[3], headingY);
     ctx.fillText("Activity", cols[4], headingY);
