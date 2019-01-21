@@ -72,7 +72,7 @@ class Middleware::RequestTracker
 
   def self.log_request_on_site(data, host)
     RailsMultisite::ConnectionManagement.with_hostname(host) do
-      unless Discourse.readonly_mode?([Discourse::PG_READONLY_MODE_KEY])
+      unless Discourse.pg_readonly_mode?
         log_request(data)
       end
     end

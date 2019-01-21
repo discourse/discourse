@@ -355,6 +355,10 @@ module Discourse
     recently_readonly? || $redis.mget(*keys).compact.present?
   end
 
+  def self.pg_readonly_mode?
+    $redis.get(PG_READONLY_MODE_KEY).present?
+  end
+
   def self.last_read_only
     @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
   end
