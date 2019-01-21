@@ -2405,9 +2405,13 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was removed.
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
 
-        <%{base_url}%{url}>
+        [details="Click to expand removed post"]
+        ```markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
 
         %{flag_reason}
 
