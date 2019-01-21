@@ -87,7 +87,7 @@ class RemoteTheme < ActiveRecord::Base
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
     begin
       importer.import!
-    rescue ThemeStore::GitImporter::ImportFailed => err
+    rescue RemoteTheme::ImportError => err
       self.last_error_text = err.message
     else
       self.updated_at = Time.zone.now
@@ -105,7 +105,7 @@ class RemoteTheme < ActiveRecord::Base
       importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
       begin
         importer.import!
-      rescue ThemeStore::GitImporter::ImportFailed => err
+      rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
         return self
       else

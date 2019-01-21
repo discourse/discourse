@@ -2,7 +2,6 @@ module ThemeStore; end
 
 class ThemeStore::GitImporter
 
-  class ImportFailed < StandardError; end
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
@@ -79,8 +78,8 @@ class ThemeStore::GitImporter
       else
         Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
       end
-    rescue => err
-      raise ImportFailed.new(err.message)
+    rescue RuntimeError => err
+      raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
     end
   end
 
@@ -100,8 +99,8 @@ class ThemeStore::GitImporter
       else
         Discourse::Utils.execute_command(git_ssh_command, "git", "clone", @url, @temp_folder)
       end
-    rescue => err
-      raise ImportFailed.new(err.message)
+    rescue RuntimeError => err
+      raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
     end
   ensure
     FileUtils.rm_rf ssh_folder

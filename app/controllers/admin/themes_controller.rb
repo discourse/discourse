@@ -81,9 +81,8 @@ class Admin::ThemesController < Admin::AdminController
         branch = params[:branch] ? params[:branch] : nil
         @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
-      rescue RuntimeError => e
-        Discourse.warn_exception(e, message: "Error importing theme")
-        render_json_error I18n.t('themes.import_error.git')
+      rescue RemoteTheme::ImportError => e
+        render_json_error e.message
       end
     elsif params[:bundle] || params[:theme] && params[:theme].content_type == "application/x-gzip"
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
