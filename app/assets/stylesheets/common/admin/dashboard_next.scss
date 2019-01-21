@@ -144,6 +144,11 @@
     -ms-grid-rows: 1fr 1fr;
     .admin-report {
       -ms-grid-column-span: 4;
+
+      &.consolidated-page-views {
+        -ms-grid-column-span: 12;
+      }
+
       &:nth-of-type(1) {
         -ms-grid-row: 1;
         -ms-grid-column: 1;
@@ -172,6 +177,10 @@
 
     .admin-report {
       grid-column: span 4;
+
+      &.consolidated-page-views {
+        grid-column: span 12;
+      }
     }
 
     @include breakpoint(medium) {
@@ -292,7 +301,7 @@
 
 .counters-list {
   display: flex;
-  flex: 1 0 0;
+  flex: 1 0 0px;
   flex-direction: column;
 
   .counters-header {

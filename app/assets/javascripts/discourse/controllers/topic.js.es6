@@ -107,7 +107,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.on("post:show-revision", (postNumber, revision) => {
       const post = this.model.get("postStream").postForPostNumber(postNumber);
       if (!post) {

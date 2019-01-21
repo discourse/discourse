@@ -64,7 +64,7 @@ export default Ember.Component.extend({
   ],
 
   init() {
-    this._super();
+    this._super(...arguments);
     this._init();
     Ember.run.scheduleOnce("afterRender", () => {
       this._update();

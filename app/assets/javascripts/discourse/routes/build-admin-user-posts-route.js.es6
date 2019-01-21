@@ -14,10 +14,8 @@ export default function(filter) {
       return this.modelFor("user").get("postsStream");
     },
 
-    afterModel() {
-      return this.modelFor("user")
-        .get("postsStream")
-        .filterBy(filter);
+    afterModel(model) {
+      return model.filterBy({ filter });
     },
 
     setupController(controller, model) {

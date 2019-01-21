@@ -101,7 +101,7 @@ export default Ember.Mixin.create({
 
   _save() {
     Ember.warn("You should define a `_save` method", {
-      id: "admin.mixins.setting-component"
+      id: "discourse.setting-component.missing-save"
     });
     return Ember.RSVP.resolve();
   },

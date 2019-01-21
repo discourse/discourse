@@ -55,7 +55,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
   },
 
   _close() {
-    this._super();
+    this._super(...arguments);
 
     this.set("group", null);
   },

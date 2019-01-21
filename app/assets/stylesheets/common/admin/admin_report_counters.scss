@@ -1,7 +1,7 @@
 .admin-report {
   .admin-report-counters {
     display: grid;
-    flex: 1 0 0;
+    flex: 1 0 0px;
     grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(32px, 1fr));
     align-items: center;

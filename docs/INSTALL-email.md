@@ -40,3 +40,7 @@ Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP
   [gun]: http://www.mailgun.com/
    [sg]: https://sendgrid.com/
   [sg2]: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html
+
+### Bounce Handling
+
+When using a third party email service, you will need to enable VERP, or activate their **webhooks** in order to handle bouncing emails. [Full details here.](https://meta.discourse.org/t/handling-bouncing-e-mails/45343)

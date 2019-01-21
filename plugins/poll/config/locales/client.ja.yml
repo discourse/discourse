@@ -14,7 +14,12 @@ ja:
         other: "合計得票数"
       average_rating: "平均評価: <strong>%{average}</strong>."
       public:
-        title: "投票は公開されています。"
+        title: "投票は<strong>公開</strong>されています。"
+      results:
+        vote:
+          title: "結果は<strong>投票</strong>したとき表示されます。"
+        closed:
+          title: "結果は<strong>クローズ</strong>したとき表示されます。"
       multiple:
         help:
           at_least_min_options:
@@ -34,13 +39,16 @@ ja:
         title: "投票に戻る"
         label: "結果を非表示にする"
       open:
-        title: "投票を開く"
-        label: "開く"
+        title: "投票をオープンする"
+        label: "オープン"
         confirm: "この投票をオープンにしてもよろしいですか？"
       close:
-        title: "投票を締め切る"
-        label: "投票を締め切る"
-        confirm: "この投票を締め切ってもよろしいですか？"
+        title: "投票をクローズする"
+        label: "投票をクローズする"
+        confirm: "この投票をクローズしてもよろしいですか？"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong>にクローズ"
+        age: "クローズ <strong>%{age}</strong>"
       error_while_toggling_status: "申し訳ありませんが、この投票のステータスを切り替える際にエラーが発生しました。"
       error_while_casting_votes: "申し訳ありませんが、投票の際にエラーが発生しました。"
       error_while_fetching_voters: "申し訳ありませんが、有権者を表示する際にエラーが発生しました。"
@@ -56,6 +64,11 @@ ja:
           regular: 一つだけ選択
           multiple: 複数選択
           number: 数字で評価
+        poll_result:
+          label: 結果
+          always: 常に表示する
+          vote: 投票したとき
+          closed: 投票をクローズしたとき
         poll_config:
           max: 最大
           min: 最小
@@ -64,3 +77,5 @@ ja:
           label: 誰が投票したか表示する
         poll_options:
           label: 1行ごとに1つの選択肢を入力します
+        automatic_close:
+          label: 投票を自動的に終了する

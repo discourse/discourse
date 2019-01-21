@@ -15,7 +15,7 @@ export default Ember.Component.extend({
   }.property("tab"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     Ember.run.scheduleOnce("afterRender", this, this._addToCollection);
   },
 

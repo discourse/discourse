@@ -214,7 +214,6 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
-  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -245,13 +244,18 @@ def migrate_to_s3
     exit 3
   end
 
-  s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+
+  s3 = Aws::S3::Client.new(
+    region: ENV["DISCOURSE_S3_REGION"],
+    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"])
 
   if bucket_has_folder_path
     bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
     folder = File.join(folder, "/")
   else
-    bucket, folder = GlobalSetting.s3_bucket, ""
+    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
   end
 
   begin
@@ -275,7 +279,7 @@ def migrate_to_s3
 
   s3_objects = []
   prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: bucket, prefix: prefix }
+  options = { bucket: bucket, prefix: folder + prefix }
 
   loop do
     response = s3.list_objects_v2(options)
@@ -347,7 +351,7 @@ def migrate_to_s3
     }
 
     from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{folder}#{prefix}\\1"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"

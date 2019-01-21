@@ -1,4 +1,7 @@
 plugins:
+  discourse_local_dates_email_format:
+    default: "YYYY-MM-DDTHH:mm:ss[Z]"
+    client: true
   discourse_local_dates_enabled:
     default: true
     client: true

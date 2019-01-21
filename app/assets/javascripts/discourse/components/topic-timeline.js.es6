@@ -83,7 +83,7 @@ export default MountWidget.extend(Docking, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     if (this.get("fullscreen") && !this.get("addShowClass")) {
       Ember.run.next(() => {

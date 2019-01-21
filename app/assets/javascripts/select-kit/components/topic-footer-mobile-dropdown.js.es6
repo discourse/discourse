@@ -8,7 +8,7 @@ export default ComboBoxComponent.extend({
   allowInitialValueMutation: false,
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.name = I18n.t("topic.controls");
     return content;
   },

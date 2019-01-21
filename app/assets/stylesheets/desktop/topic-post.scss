@@ -356,15 +356,16 @@ nav.post-controls {
         text-align: center;
       }
     }
-    a,
     .number {
-      line-height: $line-height-large;
+      color: $primary-high;
     }
     .number,
     .d-icon {
-      color: dark-light-choose($primary-high, $secondary-low);
       font-size: $font-up-2;
       line-height: $line-height-medium;
+    }
+    button .d-icon {
+      color: $primary-high;
     }
     .avatar a {
       float: left;

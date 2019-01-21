@@ -57,12 +57,15 @@
 
 <section class='user-right messages'>
 
-<div class="clearfix list-actions">
-    {{#if showToggleBulkSelect}}
-      <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
-        {{d-icon "list"}}
-      </button>
-    {{/if}}
+<div class="list-actions">
+  
+    {{#unless site.mobileView}}
+      {{#if showToggleBulkSelect}}
+        <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
+          {{d-icon "list"}}
+        </button>
+      {{/if}}
+    {{/unless}}
 
     {{#if site.mobileView}}
       {{#if showNewPM}}

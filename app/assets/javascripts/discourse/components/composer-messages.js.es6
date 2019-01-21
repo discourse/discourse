@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.on("composer:typed-reply", this, this._typedReply);
     this.appEvents.on("composer:opened", this, this._findMessages);
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
@@ -205,11 +205,10 @@ export default Ember.Component.extend({
 
       this.set("checkedMessages", true);
       const queuedForTyping = this.get("queuedForTyping");
-      messages.forEach(
-        msg =>
-          msg.wait_for_typing
-            ? queuedForTyping.addObject(msg)
-            : this.send("popup", msg)
+      messages.forEach(msg =>
+        msg.wait_for_typing
+          ? queuedForTyping.addObject(msg)
+          : this.send("popup", msg)
       );
     };
 

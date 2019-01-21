@@ -22,7 +22,7 @@ describe Jobs::PeriodicalUpdates do
       jobs = Jobs::ProcessPost.jobs
       expect(jobs.length).to eq(1)
 
-      expect(jobs[0]["queue"]).to eq("low")
+      expect(jobs[0]["queue"]).to eq("ultra_low")
     end
 
     post.reload

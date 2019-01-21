@@ -60,7 +60,7 @@ export default Ember.Component.extend({
   particles: null,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     const canvas = this.$()[0];
     this.ctx = canvas.getContext("2d");
@@ -78,7 +78,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $(window).off("resize.wizard");
   },
 

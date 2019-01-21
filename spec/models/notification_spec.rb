@@ -250,6 +250,36 @@ describe Notification do
     end
   end
 
+  describe '.filter_by_display_username_and_type' do
+    let(:post) { Fabricate(:post) }
+    let(:user) { Fabricate(:user) }
+
+    before do
+      PostActionNotifier.enable
+    end
+
+    it 'should return the right notifications' do
+      expect(Notification.filter_by_display_username_and_type(
+        user.username_lower, Notification.types[:liked]
+      )).to eq([])
+
+      expect do
+        PostAlerter.post_created(Fabricate(:basic_reply,
+          user: user,
+          topic: post.topic
+        ))
+
+        PostAction.act(user, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(2)
+
+      expect(Notification.filter_by_display_username_and_type(
+        user.username_lower, Notification.types[:liked]
+      )).to contain_exactly(
+        Notification.find_by(notification_type: Notification.types[:liked])
+      )
+    end
+  end
+
 end
 
 # pulling this out cause I don't want an observer
@@ -277,6 +307,10 @@ describe Notification do
       fab(Notification.types[:liked], true)
     end
 
+    def liked_consolidated
+      fab(Notification.types[:liked_consolidated], true)
+    end
+
     it 'correctly finds visible notifications' do
       pm
       expect(Notification.visible.count).to eq(1)
@@ -295,6 +329,23 @@ describe Notification do
       notifications = Notification.recent_report(user, 3)
       expect(notifications.map { |n| n.id }).to eq([a.id, d.id, c.id])
 
+    end
+
+    describe 'for a user that does not want to be notify on liked' do
+      before do
+        user.user_option.update!(
+          like_notification_frequency:
+            UserOption.like_notification_frequency_type[:never]
+        )
+      end
+
+      it "should not return any form of liked notifications" do
+        notification = pm
+        regular
+        liked_consolidated
+
+        expect(Notification.recent_report(user)).to contain_exactly(notification)
+      end
     end
   end
 end

@@ -68,7 +68,7 @@ export default Discourse.Route.extend({
   },
 
   activate() {
-    this._super();
+    this._super(...arguments);
     const user = this.modelFor("user");
     this.messageBus.subscribe("/u/" + user.get("username_lower"), function(
       data
@@ -78,7 +78,7 @@ export default Discourse.Route.extend({
   },
 
   deactivate() {
-    this._super();
+    this._super(...arguments);
     this.messageBus.unsubscribe(
       "/u/" + this.modelFor("user").get("username_lower")
     );

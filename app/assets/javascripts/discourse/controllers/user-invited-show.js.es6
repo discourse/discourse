@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   rescindedAll: false,
 
   init: function() {
-    this._super();
+    this._super(...arguments);
     this.set("searchTerm", "");
   },
 

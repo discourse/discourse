@@ -117,7 +117,7 @@ You will get email reminders as new versions of Discourse are released. Please s
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
-```
+``` text
 Usage: launcher COMMAND CONFIG [--skip-prereqs] [--docker-args STRING]
 Commands:
     start:      Start/initialize a container

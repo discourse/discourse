@@ -85,7 +85,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const $replyControl = $("#reply-control");
     const resize = () => Ember.run(() => this.resize());
 
@@ -112,7 +112,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
   },
 

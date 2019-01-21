@@ -30,14 +30,18 @@ export default RestModel.extend({
     "/user_actions.json?offset=%@&username=%@"
   ),
 
-  filterBy(filter, noContentHelpKey) {
-    this.setProperties({
-      filter,
-      itemsLoaded: 0,
-      content: [],
-      noContentHelpKey: noContentHelpKey,
-      lastLoadedUrl: null
-    });
+  filterBy(opts) {
+    this.setProperties(
+      Object.assign(
+        {
+          itemsLoaded: 0,
+          content: [],
+          lastLoadedUrl: null
+        },
+        opts
+      )
+    );
+
     return this.findItems();
   },
 
@@ -75,6 +79,10 @@ export default RestModel.extend({
     }
     if (this.get("noContentHelpKey")) {
       findUrl += "&no_results_help_key=" + this.get("noContentHelpKey");
+    }
+
+    if (this.get("actingUsername")) {
+      findUrl += `&acting_username=${this.get("actingUsername")}`;
     }
 
     // Don't load the same stream twice. We're probably at the end.

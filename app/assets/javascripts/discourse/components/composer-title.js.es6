@@ -12,7 +12,7 @@ export default Ember.Component.extend({
   watchForLink: Ember.computed.alias("composer.canEditTopicFeaturedLink"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     if (this.get("focusTarget") === "title") {
       const $input = this.$("input");
 

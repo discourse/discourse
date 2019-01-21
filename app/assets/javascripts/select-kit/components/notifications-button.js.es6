@@ -37,7 +37,7 @@ export default DropdownSelectBoxComponent.extend({
   iconForSelectedDetails: Ember.computed.alias("selectedDetails.icon"),
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.name = I18n.t(
       `${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}${this.get(
         "i18nPostfix"

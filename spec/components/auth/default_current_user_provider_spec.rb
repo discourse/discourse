@@ -160,18 +160,20 @@ describe Auth::DefaultCurrentUserProvider do
           ).should_update_last_seen?).to eq(false)
   end
 
-  it "should not update last seen for suspended users" do
-    user = Fabricate(:user)
-    provider = provider('/')
-    cookies = {}
-    provider.log_on_user(user, {}, cookies)
-    unhashed_token = cookies["_t"][:value]
+  describe "#current_user" do
+    after do
+      $redis.flushall
+    end
 
-    freeze_time
-    Sidekiq::Testing.inline! do
-      # Need to clear this key from redis, otherwise
-      # this test could fail if run twice in 1 minute
-      $redis.del("user:#{user.id}:#{Time.now.to_date}")
+    it "should not update last seen for suspended users" do
+      provider = provider('/')
+      user = Fabricate(:user)
+      cookies = {}
+      provider.log_on_user(user, {}, cookies)
+      unhashed_token = cookies["_t"][:value]
+
+      freeze_time
+
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       u = provider2.current_user
       u.reload
@@ -190,7 +192,6 @@ describe Auth::DefaultCurrentUserProvider do
       u.reload
       expect(u.last_seen_at).to eq(nil)
     end
-
   end
 
   it "should update ajax reqs with discourse visible" do

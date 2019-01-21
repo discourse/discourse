@@ -22,7 +22,7 @@ export default function(page) {
     },
 
     activate() {
-      this._super();
+      this._super(...arguments);
       jumpToElement(document.location.hash.substr(1));
     },
 

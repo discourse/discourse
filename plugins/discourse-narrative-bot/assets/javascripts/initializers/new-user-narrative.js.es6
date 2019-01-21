@@ -7,7 +7,7 @@ function initialize(api) {
 
   api.modifyClass("component:site-header", {
     didInsertElement() {
-      this._super();
+      this._super(...arguments);
       this.dispatch("header:search-context-trigger", "header");
     }
   });

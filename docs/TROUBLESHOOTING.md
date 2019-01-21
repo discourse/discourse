@@ -47,7 +47,7 @@ reaching out to the community for help:
 
 9. Are you having problems bundling:
 
-```
+``` text
 ArgumentError: invalid byte sequence in US-ASCII
 An error occurred while installing active_model_serializers (0.7.0), and Bundler cannot continue.
 Make sure that `gem install active_model_serializers -v '0.7.0'` succeeds before bundling.
@@ -55,14 +55,14 @@ Make sure that `gem install active_model_serializers -v '0.7.0'` succeeds before
 
    Try this in console:
 
-```
+``` text
 $ export LANG="en_US.UTF-8"
 $ export LC_ALL="en_US.UTF-8"
 ```
 
    And/or this in top of `Gemfile`:
 
-```
+``` text
 if RUBY_VERSION =~ /1.9/
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8

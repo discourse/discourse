@@ -9,7 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    width: 100%;
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
     height: 100%;
     .contents {
       display: flex;
@@ -112,8 +112,8 @@
     transition: all linear 0.15s;
     outline: none;
     img.avatar {
-      width: 2.2857em;
-      height: 2.2857em;
+      width: 2.1333em;
+      height: 2.1333em;
     }
     &:hover,
     &:focus {
@@ -178,7 +178,7 @@
     z-index: z("base");
     left: 0;
     top: -4px;
-    min-width: 6px;
+    min-width: 0.6em;
   }
   .unread-notifications {
     left: auto;
@@ -258,7 +258,7 @@
   .badge-wrapper {
     margin-right: 8px;
     &.bullet {
-      padding-top: 1px; // alignment hack
+      padding-top: 2px; // alignment hack
     }
   }
   .badge-wrapper.bullet {

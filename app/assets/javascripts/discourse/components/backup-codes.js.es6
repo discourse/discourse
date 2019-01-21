@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   },
 
   didRender() {
-    this._super();
+    this._super(...arguments);
 
     const $backupCodes = this.$("#backupCodes");
     if ($backupCodes.length) {

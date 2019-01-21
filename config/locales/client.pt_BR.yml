@@ -13,7 +13,7 @@ pt_BR:
         delimiter: "."
       human:
         storage_units:
-          format: '%n %u'
+          format: "%n %u"
           units:
             byte:
               one: Byte
@@ -105,16 +105,16 @@ pt_BR:
         x_years:
           one: "1 ano depois"
           other: "%{count} anos depois"
-      previous_month: 'Mês Anterior'
-      next_month: 'Mês Seguinte'
+      previous_month: "Mês Anterior"
+      next_month: "Mês Seguinte"
       placeholder: data
     share:
-      topic: 'compartilhe o link desse tópico'
-      post: 'mensagem #%{postNumber}'
-      close: 'fechar'
-      twitter: 'compartilhe este link no Twitter'
-      facebook: 'compartilhe este link no Facebook'
-      email: 'enviar esse link para um email'
+      topic: "compartilhe o link desse tópico"
+      post: "mensagem #%{postNumber}"
+      close: "fechar"
+      twitter: "compartilhe este link no Twitter"
+      facebook: "compartilhe este link no Facebook"
+      email: "enviar esse link para um email"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
       private_topic: "transformar esse tópico em uma mensagem pessoal %{when}"
@@ -126,26 +126,26 @@ pt_BR:
       removed_group: "removido %{who} %{when}"
       autobumped: "automaticamente colidido %{when}"
       autoclosed:
-        enabled: 'fechou %{when}'
-        disabled: 'abriu %{when}'
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       closed:
-        enabled: 'fechou %{when}'
-        disabled: 'abriu %{when}'
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       archived:
-        enabled: 'arquivou %{when}'
-        disabled: 'desarquivou %{when}'
+        enabled: "arquivou %{when}"
+        disabled: "desarquivou %{when}"
       pinned:
-        enabled: 'fixou %{when}'
-        disabled: 'desafixou %{when}'
+        enabled: "fixou %{when}"
+        disabled: "desafixou %{when}"
       pinned_globally:
-        enabled: 'fixou globalmente %{when}'
-        disabled: 'desafixou %{when}'
+        enabled: "fixou globalmente %{when}"
+        disabled: "desafixou %{when}"
       visible:
-        enabled: 'listou %{when}'
-        disabled: 'desalistou %{when}'
+        enabled: "listou %{when}"
+        disabled: "desalistou %{when}"
       banner:
-        enabled: 'tornou isso um banner %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário.'
-        disabled: 'removeu esse banner %{when}. Ele não vai mais aparecer no topo de todas as páginas.'
+        enabled: "tornou isso um banner %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
+        disabled: "removeu esse banner %{when}. Ele não vai mais aparecer no topo de todas as páginas."
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
@@ -171,7 +171,7 @@ pt_BR:
         us_gov_west_1: "AWS GovCloud (EUA)"
         us_west_1: "Oeste dos EUA (N. da Califórnia)"
         us_west_2: "Leste dos EUA (Oregon)"
-    edit: 'edite o título e a categoria deste tópico'
+    edit: "edite o título e a categoria deste tópico"
     not_implemented: "Esse recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
     yes_value: "Sim"
@@ -200,7 +200,7 @@ pt_BR:
     you: "Você"
     or: "ou"
     now: "agora"
-    read_more: 'leia mais'
+    read_more: "leia mais"
     more: "Mais"
     less: "Menos"
     never: "nunca"
@@ -286,9 +286,9 @@ pt_BR:
         placeholder: "digite o título do tópico aqui"
     queue:
       topic: "Tópico:"
-      approve: 'Aprovar'
-      reject: 'Rejeitar'
-      delete_user: 'Deletar Usuário'
+      approve: "Aprovar"
+      reject: "Rejeitar"
+      delete_user: "Deletar Usuário"
       title: "Aprovação Necessária"
       none: "Não existem mensagens para revisar."
       edit: "Editar"
@@ -353,9 +353,9 @@ pt_BR:
         description: "Administrar a associação desse grupo"
         usernames: "Nomes de usuários"
       manage:
-        title: 'Administrar'
-        name: 'Nome'
-        full_name: 'Nome Completo'
+        title: "Administrar"
+        name: "Nome"
+        full_name: "Nome Completo"
         add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do '%{group}' grupo?"
         profile:
@@ -559,7 +559,7 @@ pt_BR:
         enable: "Ativar Notificações"
         each_browser_note: "Nota: Você deve modificar essa configuração em todos navegadores que você usa."
         consent_prompt: "Você quer notificações ao vivo quando as pessoas respondem às suas postagens?"
-      dismiss: 'Descartar'
+      dismiss: "Descartar"
       dismiss_notifications: "Descartar tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
@@ -961,23 +961,23 @@ pt_BR:
         one: "1 erro/%{duration}"
         other: "%{count} erros/%{duration}"
     learn_more: "aprenda mais..."
-    all_time: 'total'
-    all_time_desc: 'total de tópicos criados'
-    year: 'ano'
-    year_desc: 'tópicos criados nos últimos 365 dias'
-    month: 'mês'
-    month_desc: 'tópicos criados nos últimos 30 dias'
-    week: 'semana'
-    week_desc: 'tópicos criados nos últimos 7 dias'
-    day: 'dia'
+    all_time: "total"
+    all_time_desc: "total de tópicos criados"
+    year: "ano"
+    year_desc: "tópicos criados nos últimos 365 dias"
+    month: "mês"
+    month_desc: "tópicos criados nos últimos 30 dias"
+    week: "semana"
+    week_desc: "tópicos criados nos últimos 7 dias"
+    day: "dia"
     first_post: Primeira resposta
     mute: Silenciar
     unmute: Reativar
     last_post: Publicado
     time_read: Lido
-    time_read_recently: '%{time_read} recentememte'
-    time_read_tooltip: '%{time_read} tempo total lido'
-    time_read_recently_tooltip: '%{time_read} tempo total lido (%{recent_time_read} nos últimos 60 dias)'
+    time_read_recently: "%{time_read} recentememte"
+    time_read_tooltip: "%{time_read} tempo total lido"
+    time_read_recently_tooltip: "%{time_read} tempo total lido (%{recent_time_read} nos últimos 60 dias)"
     last_reply_lowercase: última resposta
     replies_lowercase:
       one: resposta
@@ -991,8 +991,8 @@ pt_BR:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
       description: "Existem <b>{{replyCount}}</b> respostas."
       description_time: "Existem <b>{{replyCount}}</b> respostas com tempo de leitura estimado em <b>{{readingTime}} minutos</b>."
-      enable: 'Resumir Este Tópico'
-      disable: 'Exibir Todas as Mensagens'
+      enable: "Resumir Este Tópico"
+      disable: "Exibir Todas as Mensagens"
     deleted_filter:
       enabled_description: "Este tópico contém posts deletados, que foram escondidos."
       disabled_description: "Os posts deletados deste tópico estão sendo mostrados."
@@ -1004,13 +1004,13 @@ pt_BR:
       leave_message: "Você quer mesmo sair desta mensagem?"
       remove_allowed_user: "Tem certeza que deseja remover {{name}} desta mensagem?"
       remove_allowed_group: "Tem certeza que deseja remover {{name}} desta mensagem?"
-    email: 'Email'
-    username: 'Nome de Usuário'
-    last_seen: 'Visto'
-    created: 'Criado'
-    created_lowercase: 'criado'
-    trust_level: 'Nível de confiança'
-    search_hint: 'nome de usuário, email ou endereço de IP'
+    email: "Email"
+    username: "Nome de Usuário"
+    last_seen: "Visto"
+    created: "Criado"
+    created_lowercase: "criado"
+    trust_level: "Nível de confiança"
+    search_hint: "nome de usuário, email ou endereço de IP"
     create_account:
       disclaimer: "Ao se registrar, você concorda com a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar nova conta"
@@ -1055,7 +1055,7 @@ pt_BR:
       rate_limit: "Por favor aguarde antes de tentar logar novamente."
       blank_username: "Por favor, digite seu e-mail ou nome de usuário."
       blank_username_or_password: "Por favor, coloque seu email ou Nome de Usuário, e senha."
-      reset_password: 'Recuperar senha'
+      reset_password: "Recuperar senha"
       logging_in: "Entrando..."
       or: "Ou"
       authenticating: "Autenticando..."
@@ -1127,9 +1127,9 @@ pt_BR:
       categories_and_latest_topics: "Categorias e Últimos Tópicos"
       categories_and_top_topics: "Categorias e tópicos principais"
     shortcut_modifier_key:
-      shift: 'Shift'
-      ctrl: 'Ctrl'
-      alt: 'Alt'
+      shift: "Shift"
+      ctrl: "Ctrl"
+      alt: "Alt"
     conditional_loading_section:
       loading: Carregando...
     select_kit:
@@ -1225,8 +1225,8 @@ pt_BR:
       saved: "Salvo!"
       saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
       uploading: "Enviando..."
-      show_preview: 'mostrar pré-visualização &raquo;'
-      hide_preview: '&laquo; esconder pré-visualização'
+      show_preview: "mostrar pré-visualização &raquo;"
+      hide_preview: "&laquo; esconder pré-visualização"
       quote_post_title: "Citar toda a resposta"
       bold_label: "B"
       bold_title: "Negrito"
@@ -1327,8 +1327,8 @@ pt_BR:
         posted: '{{username}} postou em "{{topic}}" - {{site_title}}'
         private_message: '{{username}} enviou-lhe uma mensagem pessoal em "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkou o seu post de "{{topic}}" - {{site_title}}'
-        confirm_title: 'Notificações ativadas - %{site_title}'
-        confirm_body: 'Sucesso! Notificações foram ativadas.'
+        confirm_title: "Notificações ativadas - %{site_title}"
+        confirm_body: "Sucesso! Notificações foram ativadas."
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou arquivo"
@@ -1421,9 +1421,9 @@ pt_BR:
             after: depois
     hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
-    go_back: 'voltar'
-    not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
-    current_user: 'ir para a sua página de usuário'
+    go_back: "voltar"
+    not_logged_in_user: "página do usuário com resumo de atividades correntes e preferencias"
+    current_user: "ir para a sua página de usuário"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -1483,29 +1483,29 @@ pt_BR:
       filter_to:
         one: "1 publicação no tópico"
         other: "{{count}} publicações no tópico"
-      create: 'Novo tópico'
-      create_long: 'Criar um novo tópico'
+      create: "Novo tópico"
+      create_long: "Criar um novo tópico"
       open_draft: "Rascunho aberto"
-      private_message: 'Iniciar uma mensagem'
+      private_message: "Iniciar uma mensagem"
       archive_message:
-        help: 'Mover mensagens para o seu arquivo'
-        title: 'Arquivar'
+        help: "Mover mensagens para o seu arquivo"
+        title: "Arquivar"
       move_to_inbox:
-        title: 'Mover para caixa de entrada'
-        help: 'Mover mensagem para Caixa de Entrada'
+        title: "Mover para caixa de entrada"
+        help: "Mover mensagem para Caixa de Entrada"
       edit_message:
-        help: 'Editar primeiro post da mensagem'
-        title: 'Editar Mensagem'
-      list: 'Tópicos'
-      new: 'novo tópico'
-      unread: 'não lido'
+        help: "Editar primeiro post da mensagem"
+        title: "Editar Mensagem"
+      list: "Tópicos"
+      new: "novo tópico"
+      unread: "não lido"
       new_topics:
-        one: '1 tópico novo'
-        other: '{{count}} novos tópicos'
+        one: "1 tópico novo"
+        other: "{{count}} novos tópicos"
       unread_topics:
-        one: '1 tópico não lido'
-        other: '{{count}} tópicos não lidos'
-      title: 'Tópico'
+        one: "1 tópico não lido"
+        other: "{{count}} tópicos não lidos"
+      title: "Tópico"
       invalid_access:
         title: "Tópico é particular"
         description: "Desculpe, você não tem acesso a esse tópico!"
@@ -1589,7 +1589,7 @@ pt_BR:
         auto_close_based_on_last_post: "Este tópico fechará %{duration} após a última resposta."
         auto_delete: "Este tópico será automaticamente apagado %{timeLeft}."
         auto_reminder: "Você será lembrado sobre esse tópico%{timeLeft}."
-      auto_close_title: 'Configurações para fechar automaticamente'
+      auto_close_title: "Configurações para fechar automaticamente"
       auto_close_immediate:
         one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
         other: "A última publicação no tópico já tem %{count} horas, portanto ele será fechado imediatamente."
@@ -1615,21 +1615,21 @@ pt_BR:
         title: altere a frequência de notificações deste tópico
         reasons:
           mailing_list_mode: "Você está com o modo de lista de discussão ativado, portanto será notificado sobre as respostas deste tópico por email."
-          "3_10": 'Você receberá notificações porque está acompanhando uma etiqueta neste tópico.'
-          "3_6": 'Você receberá notificações porque você está observando esta categoria.'
-          "3_5": 'Você receberá notificações porque começou a observar este tópico automaticamente.'
-          "3_2": 'Você receberá notificações porque está observando este tópico.'
-          "3_1": 'Você receberá notificações porque criou este tópico.'
-          "3": 'Você receberá notificações porque você está observando este tópico.'
-          "2_8": 'Você verá uma contagem de novas respostas porque está acompanhando essa categoria.'
-          "2_4": 'Você verá uma contagem de novas respostas porque postou uma resposta a este tópico.'
-          "2_2": 'Você verá uma contagem de novas respostas porque está acompanhando este tópico.'
+          "3_10": "Você receberá notificações porque está acompanhando uma etiqueta neste tópico."
+          "3_6": "Você receberá notificações porque você está observando esta categoria."
+          "3_5": "Você receberá notificações porque começou a observar este tópico automaticamente."
+          "3_2": "Você receberá notificações porque está observando este tópico."
+          "3_1": "Você receberá notificações porque criou este tópico."
+          "3": "Você receberá notificações porque você está observando este tópico."
+          "2_8": "Você verá uma contagem de novas respostas porque está acompanhando essa categoria."
+          "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
+          "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
           "2": 'Você verá uma contagem de novas respostas porque você <a href="{{basePath}}/u/{{username}}/preferences">leu este tópico</a>.'
-          "1_2": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          "1": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          "0_7": 'Você está ignorando todas as notificações nessa categoria.'
-          "0_2": 'Você está ignorando todas as notificações deste tópico.'
-          "0": 'Você está ignorando todas as notificações deste tópico.'
+          "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
+          "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
+          "0_7": "Você está ignorando todas as notificações nessa categoria."
+          "0_2": "Você está ignorando todas as notificações deste tópico."
+          "0": "Você está ignorando todas as notificações deste tópico."
         watching_pm:
           title: "Observando"
           description: "Você será notificado de cada mensagem nova neste tópico. Um contador de mensagens novas e não lidas também aparecerá próximo ao tópico."
@@ -1677,21 +1677,21 @@ pt_BR:
         make_banner: "Banner Tópico"
         remove_banner: "Remover Banner Tópico"
       reply:
-        title: 'Responder'
-        help: 'começar a escrever uma resposta para este tópico'
+        title: "Responder"
+        help: "começar a escrever uma resposta para este tópico"
       clear_pin:
         title: "Remover destaque"
         help: "Retirar destaque deste tópico para que ele não apareça mais no topo da sua lista de tópicos"
       share:
-        title: 'Compartilhar'
-        help: 'compartilhar um link deste tópico'
+        title: "Compartilhar"
+        help: "compartilhar um link deste tópico"
       print:
-        title: 'Imprimir'
-        help: 'Abrir uma versão imprimível deste tópico'
+        title: "Imprimir"
+        help: "Abrir uma versão imprimível deste tópico"
       flag_topic:
-        title: 'Sinalizar'
-        help: 'sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isso'
-        success_message: 'Você sinalizou com sucesso este tópico.'
+        title: "Sinalizar"
+        help: "sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isso"
+        success_message: "Você sinalizou com sucesso este tópico."
       feature_topic:
         title: "Destacar este tópico"
         pin: "Fazer que este tópico apareça no topo da categoria  {{categoryLink}} até"
@@ -1721,7 +1721,7 @@ pt_BR:
       inviting: "Convidando..."
       automatically_add_to_groups: "Este convite também inclui acesso para esses grupos:"
       invite_private:
-        title: 'Convidar para Conversa Privada'
+        title: "Convidar para Conversa Privada"
         email_or_username: "E-mail ou Nome de Usuário do Convidado"
         email_or_username_placeholder: "email ou Nome de Usuário"
         action: "Convite"
@@ -1731,22 +1731,22 @@ pt_BR:
         group_name: "nome do grupo"
       controls: "Controles do Tópico"
       invite_reply:
-        title: 'Convite'
+        title: "Convite"
         username_placeholder: "nome de usuário"
-        action: 'Enviar Convite'
-        help: 'Convidar outros para este tópico por email ou notificação'
+        action: "Enviar Convite"
+        help: "Convidar outros para este tópico por email ou notificação"
         to_forum: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
         sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
         to_topic_blank: "Entrar o nome de usuário ou endereço de email da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de email. Nós enviaremos um convite por email que permite seu amigo responder imediatamente a este tópico."
         to_topic_username: "Você inseriu um nome de usuário. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
         to_username: "Insira o nome de usuário da pessoa que você gostaria de convidas. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
-        email_placeholder: 'nome@exemplo.com'
+        email_placeholder: "nome@exemplo.com"
         success_email: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
         success_username: "Nós convidamos o usuário para participar neste tópico."
         error: "Desculpe, nós não pudemos convidar esta pessoa. Talvez já seja usuário? (convites têm taxa limitada)"
         success_existing_email: "Um usuário com e-mail <b>{{emailOrUsername}}</b> já existe. Convidamos esse usuário a participar deste tópico."
-      login_reply: 'Logar para Responder'
+      login_reply: "Logar para Responder"
       filters:
         n_posts:
           one: "1 mensagem"
@@ -1785,20 +1785,20 @@ pt_BR:
         error: "Ocorreu um erro alterando o horário do tópico."
         instructions: "Por favor selecione um novo horário para o tópico. Mensagens no tópico serão atualizadas para manter a mesma diferença de tempo."
       multi_select:
-        select: 'selecionar'
-        selected: '({{count}}) selecionados'
+        select: "selecionar"
+        selected: "({{count}}) selecionados"
         select_post:
-          label: 'selecione'
-          title: 'Adicionar postagem à seleção'
+          label: "selecione"
+          title: "Adicionar postagem à seleção"
         selected_post:
-          label: 'selecionado'
-          title: 'Clique para remover a postagem da seleção'
+          label: "selecionado"
+          title: "Clique para remover a postagem da seleção"
         select_replies:
-          label: 'selecionar + respostas'
-          title: 'Adicionar post e todas as suas respostas à seleção'
+          label: "selecionar + respostas"
+          title: "Adicionar post e todas as suas respostas à seleção"
         select_below:
-          label: 'selecione + abaixo'
-          title: 'Adicionar post e tudo depois dele para seleção'
+          label: "selecione + abaixo"
+          title: "Adicionar post e tudo depois dele para seleção"
         delete: apagar selecionados
         cancel: cancelar seleção
         select_all: selecionar tudo
@@ -1817,7 +1817,7 @@ pt_BR:
       continue_discussion: "Continuando a discussão do {{postLink}}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
-      show_hidden: 'Ver conteúdo escondido'
+      show_hidden: "Ver conteúdo escondido"
       deleted_by_author:
         one: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} hora a exceto se forem sinalizadas)"
         other: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} horas a exceto se forem sinalizadas)"
@@ -1861,7 +1861,7 @@ pt_BR:
       wiki:
         about: "esta postagem é uma wiki"
       archetypes:
-        save: 'Salvar as opções'
+        save: "Salvar as opções"
       few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas poucas curtidas sobrando para você usar hoje."
       controls:
         reply: "começar a escrever uma resposta para esta postagem"
@@ -1901,7 +1901,7 @@ pt_BR:
         delete_topic_disallowed_modal: "Você não tem permissão para apagar este tópico. Se você realmente quiser que ele seja excluído, envie um sinalizador para a atenção do moderador juntamente com o raciocínio."
         delete_topic_disallowed: "você não tem permissão para apagar este tópico"
       actions:
-        flag: 'Sinalização'
+        flag: "Sinalização"
         defer_flags:
           one: "Ignorar sinalizações"
           other: "Ignorar sinalizações"
@@ -1996,34 +1996,34 @@ pt_BR:
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"
-            button: 'HTML'
+            button: "HTML"
           side_by_side:
             title: "Exibir as diferentes saídas renderizadas lado a lado"
-            button: 'HTML'
+            button: "HTML"
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
-            button: 'Texto Bruto'
+            button: "Texto Bruto"
       raw_email:
         displays:
           raw:
             title: "Mostrar Email"
-            button: 'Texto Bruto'
+            button: "Texto Bruto"
           text_part:
             title: "Mostrar texto do email"
-            button: 'Texto'
+            button: "Texto"
           html_part:
             title: "Mostrar texto html do email"
-            button: 'HTML'
+            button: "HTML"
     category:
-      can: 'pode&hellip; '
-      none: '(sem categoria)'
-      all: 'Todas as categorias'
-      choose: 'category&hellip;'
-      edit: 'editar'
+      can: "pode&hellip; "
+      none: "(sem categoria)"
+      all: "Todas as categorias"
+      choose: "category&hellip;"
+      edit: "editar"
       edit_long: "Editar"
-      view: 'Ver tópicos na categoria'
-      general: 'Geral'
-      settings: 'Configurações'
+      view: "Ver tópicos na categoria"
+      general: "Geral"
+      settings: "Configurações"
       topic_template: "Modelo de Tópico"
       tags: "Etiquetas"
       tags_allowed_tags: "Apenas permita que essas tags sejam usadas nesta categoria:"
@@ -2031,12 +2031,12 @@ pt_BR:
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
-      delete: 'Apagar categoria'
-      create: 'Nova categoria'
-      create_long: 'Criar uma nova categoria'
-      save: 'Salvar categoria'
-      slug: 'Slug da Categoria'
-      slug_placeholder: '(Opcional) palavras hifenizadas para url'
+      delete: "Apagar categoria"
+      create: "Nova categoria"
+      create_long: "Criar uma nova categoria"
+      save: "Salvar categoria"
+      slug: "Slug da Categoria"
+      slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
       name: "Nome da Categoria"
@@ -2054,7 +2054,7 @@ pt_BR:
       list: "Lista de categorias"
       no_description: "Adicione uma descrição para essa categoria."
       change_in_category_topic: "Editar Descrição"
-      already_used: 'Esta cor já foi usada para outra categoria'
+      already_used: "Esta cor já foi usada para outra categoria"
       security: "Segurança"
       special_warning: "Atenção: Esta categoria é uma categoria padrão e as configurações de segurança e não podem ser editadas. Se você não quer usar esta categoria, apague-a ao invés de reaproveitá-la."
       images: "Imagens"
@@ -2082,10 +2082,10 @@ pt_BR:
       default_position: "Posição Padrão"
       position_disabled: "Categorias serão mostradas em ordem de atividade. Para controlar a ordem das categorias em listas,"
       position_disabled_click: 'habilitar a configuração de "posição de categoria fixa".'
-      minimum_required_tags: 'Número mínimo de tags requeridas em um tópico:'
+      minimum_required_tags: "Número mínimo de tags requeridas em um tópico:"
       parent: "Categoria Principal"
-      num_auto_bump_daily: 'Número de tópicos em aberto para dar um bump diário automaticamente:'
-      navigate_to_first_post_after_read: 'Navegue até a primeira postagem depois que os tópicos forem lidos'
+      num_auto_bump_daily: "Número de tópicos em aberto para dar um bump diário automaticamente:"
+      navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"
       notifications:
         watching:
           title: "Observar"
@@ -2111,19 +2111,19 @@ pt_BR:
         posters: "Participantes"
         category: "Categoria"
         created: "Criado"
-      sort_ascending: 'Ascendente'
-      sort_descending: 'Descendente'
+      sort_ascending: "Ascendente"
+      sort_descending: "Descendente"
       subcategory_list_styles:
         rows: "Linhas"
         rows_with_featured_topics: "Linhas com Tópicos em destaque"
         boxes: "Caixas"
         boxes_with_featured_topics: "Caixas com tópicos em destaque"
     flagging:
-      title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
-      action: 'Sinalizar resposta'
+      title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
+      action: "Sinalizar resposta"
       take_action: "Tomar Atitude"
-      notify_action: 'Mensagem'
-      official_warning: 'Aviso Oficial'
+      notify_action: "Mensagem"
+      official_warning: "Aviso Oficial"
       delete_spammer: "Apagar Spammer"
       delete_confirm_MF: "Você está prestes a remover {POSTS, plural, one {<b>1</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>{ip_address}</b>, e adicionando o email dele <b>{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
@@ -2132,7 +2132,7 @@ pt_BR:
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
-      notify_staff: 'Avisar a equipe privadamente'
+      notify_staff: "Avisar a equipe privadamente"
       formatted_name:
         off_topic: "É Off-Tópico"
         inappropriate: "É inapropriado"
@@ -2186,8 +2186,6 @@ pt_BR:
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
-      invisible:
-        help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Postagens"
     posts_long: "há {{number}} mensagens neste tópico"
     posts_likes_MF: |
@@ -2304,61 +2302,61 @@ pt_BR:
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
-      title: 'Atalhos de teclado'
+      title: "Atalhos de teclado"
       jump_to:
-        title: 'Ir Para'
-        home: '<b>g</b>, <b>h</b> Início'
-        latest: '<b>g</b>, <b>l</b> Mais recentes'
-        new: '<b>g</b>, <b>n</b> Novos'
-        unread: '<b>g</b>, <b>u</b> Não Lidos'
-        categories: '<b>g</b>, <b>c</b> Categorias'
-        top: '<b>g</b>, <b>t</b> Topo'
-        bookmarks: '<b>g</b>, <b>b</b> Favoritos'
-        profile: '<b>g</b>, <b>p</b> Perfil'
-        messages: '<b>g</b>, <b>m</b> Mensagens'
-        drafts: '<b>g</b>, <b>d</b> Rascunhos'
+        title: "Ir Para"
+        home: "<b>g</b>, <b>h</b> Início"
+        latest: "<b>g</b>, <b>l</b> Mais recentes"
+        new: "<b>g</b>, <b>n</b> Novos"
+        unread: "<b>g</b>, <b>u</b> Não Lidos"
+        categories: "<b>g</b>, <b>c</b> Categorias"
+        top: "<b>g</b>, <b>t</b> Topo"
+        bookmarks: "<b>g</b>, <b>b</b> Favoritos"
+        profile: "<b>g</b>, <b>p</b> Perfil"
+        messages: "<b>g</b>, <b>m</b> Mensagens"
+        drafts: "<b>g</b>, <b>d</b> Rascunhos"
       navigation:
-        title: 'Navegação'
-        jump: '<b>#</b> Ir para a mensagem #'
-        back: '<b>u</b> Voltar'
-        up_down: '<b>k</b>/<b>j</b> Move seleção &uarr; &darr;'
-        open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Pŕoxima seção/seção anterior'
+        title: "Navegação"
+        jump: "<b>#</b> Ir para a mensagem #"
+        back: "<b>u</b> Voltar"
+        up_down: "<b>k</b>/<b>j</b> Move seleção &uarr; &darr;"
+        open: "<b>o</b> ou <b>Enter</b> Abre tópico selecionado"
+        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Pŕoxima seção/seção anterior"
       application:
-        title: 'Aplicação'
-        create: '<b>c</b> Criar um tópico novo'
-        notifications: '<b>n</b> Abre notificações'
-        hamburger_menu: '<b>=</b> Abrir o menu hambúrguer'
-        user_profile_menu: '<b>p</b> Abrir menu do usuário'
-        show_incoming_updated_topics: '<b>.</b> Exibir tópicos atualizados'
-        search: '<b>/</b> ou <b>ctrl</b>+<b>alt</b>+<b>f</b> Procurar'
-        help: '<b>?</b> Abrir ajuda de teclado'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Novas Postagens'
-        dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Deslogar'
+        title: "Aplicação"
+        create: "<b>c</b> Criar um tópico novo"
+        notifications: "<b>n</b> Abre notificações"
+        hamburger_menu: "<b>=</b> Abrir o menu hambúrguer"
+        user_profile_menu: "<b>p</b> Abrir menu do usuário"
+        show_incoming_updated_topics: "<b>.</b> Exibir tópicos atualizados"
+        search: "<b>/</b> ou <b>ctrl</b>+<b>alt</b>+<b>f</b> Procurar"
+        help: "<b>?</b> Abrir ajuda de teclado"
+        dismiss_new_posts: "<b>x</b>, <b>r</b> Descartar Novas Postagens"
+        dismiss_topics: "<b>x</b>, <b>t</b> Descartar Tópicos"
+        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Deslogar"
       composing:
-        title: 'Composição'
-        return: '<b>shift</b>+<b>c</b> Retornar ao compositor'
+        title: "Composição"
+        return: "<b>shift</b>+<b>c</b> Retornar ao compositor"
       actions:
-        title: 'Ações'
-        bookmark_topic: '<b>f</b> Favoritar o tópico'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Fixar/Desfixar tópico'
-        share_topic: '<b>shift</b>+<b>s</b> Compartilhar tópico'
-        share_post: '<b>s</b> Compartilhar mensagem'
-        reply_as_new_topic: '<b>t</b> Responder como tópico linkado'
-        reply_topic: '<b>shift</b>+<b>r</b> Responder ao tópico'
-        reply_post: '<b>r</b> Responder a mensagem'
-        quote_post: '<b>q</b> Citar resposta'
-        like: '<b>l</b> Curtir a mensagem'
-        flag: '<b>!</b> Sinalizar mensagem'
-        bookmark: '<b>b</b> Favoritar mensagem'
-        edit: '<b>e</b> Editar mensagem'
-        delete: '<b>d</b> Excluir mensagem'
-        mark_muted: '<b>m</b>, <b>m</b> Silenciar tópico'
-        mark_regular: '<b>m</b>, <b>r</b> Tópico regular (padrão)'
-        mark_tracking: '<b>m</b>, <b>t</b> Monitorar o tópico'
-        mark_watching: '<b>m</b>, <b>w</b> Observar o tópico'
-        print: '<b>ctrl</b>+<b>p</b> Imprimir tópico'
+        title: "Ações"
+        bookmark_topic: "<b>f</b> Favoritar o tópico"
+        pin_unpin_topic: "<b>shift</b>+<b>p</b> Fixar/Desfixar tópico"
+        share_topic: "<b>shift</b>+<b>s</b> Compartilhar tópico"
+        share_post: "<b>s</b> Compartilhar mensagem"
+        reply_as_new_topic: "<b>t</b> Responder como tópico linkado"
+        reply_topic: "<b>shift</b>+<b>r</b> Responder ao tópico"
+        reply_post: "<b>r</b> Responder a mensagem"
+        quote_post: "<b>q</b> Citar resposta"
+        like: "<b>l</b> Curtir a mensagem"
+        flag: "<b>!</b> Sinalizar mensagem"
+        bookmark: "<b>b</b> Favoritar mensagem"
+        edit: "<b>e</b> Editar mensagem"
+        delete: "<b>d</b> Excluir mensagem"
+        mark_muted: "<b>m</b>, <b>m</b> Silenciar tópico"
+        mark_regular: "<b>m</b>, <b>r</b> Tópico regular (padrão)"
+        mark_tracking: "<b>m</b>, <b>t</b> Monitorar o tópico"
+        mark_watching: "<b>m</b>, <b>w</b> Observar o tópico"
+        print: "<b>ctrl</b>+<b>p</b> Imprimir tópico"
     badges:
       earned_n_times:
         one: "Emblema adquirido 1 vez"
@@ -2487,8 +2485,8 @@ pt_BR:
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
-      title: 'Discourse Admin'
-      moderator: 'Moderador'
+      title: "Discourse Admin"
+      moderator: "Moderador"
       reports:
         title: "Lista de relatórios disponíveis"
       dashboard:
@@ -2506,14 +2504,13 @@ pt_BR:
         version_check_pending: "Parece que você atualizou recentemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Última versão"
-        problems_found: "Alguns problemas foram encontrados na sua instalação do Discourse:"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
-        moderators: 'Moderadores:'
-        admins: 'Admins:'
-        silenced: 'Silenciado:'
-        suspended: 'Suspenso:'
+        moderators: "Moderadores:"
+        admins: "Admins:"
+        silenced: "Silenciado:"
+        suspended: "Suspenso:"
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
         mobile_title: "Mobile"
@@ -2986,14 +2983,14 @@ pt_BR:
           revert: "reverter"
           revert_title: "Apagar esta cor do projeto padrão de cores do Discourse."
           primary:
-            name: 'primário'
-            description: 'Maioria dos textos, ícones e bordas.'
+            name: "primário"
+            description: "Maioria dos textos, ícones e bordas."
           secondary:
-            name: 'secundário'
-            description: 'A cor de fundo principal e o texto de alguns botões.'
+            name: "secundário"
+            description: "A cor de fundo principal e o texto de alguns botões."
           tertiary:
-            name: 'terciário'
-            description: 'Links, alguns botões, notificações e cor realçada.'
+            name: "terciário"
+            description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
             name: "quaternário"
             description: "Links de navegação."
@@ -3004,16 +3001,16 @@ pt_BR:
             name: "cabeçalho: primário"
             description: "Texto e ícones no cabeçalho do site."
           highlight:
-            name: 'destaque'
-            description: 'A cor de fundo dos elementos em destaque na página, como mensagens e tópicos.'
+            name: "destaque"
+            description: "A cor de fundo dos elementos em destaque na página, como mensagens e tópicos."
           danger:
-            name: 'perigo'
-            description: 'Cor de destaque para ações como remover mensagens e tópicos.'
+            name: "perigo"
+            description: "Cor de destaque para ações como remover mensagens e tópicos."
           success:
-            name: 'sucesso'
-            description: 'Usado para indicar que a ação foi bem sucedida.'
+            name: "sucesso"
+            description: "Usado para indicar que a ação foi bem sucedida."
           love:
-            name: 'curtir'
+            name: "curtir"
             description: "A cor do botão curtir."
       email:
         title: "Emails"
@@ -3096,9 +3093,9 @@ pt_BR:
         topic_id: "ID do Tópico"
         post_id: "ID Mensagem"
         category_id: "ID da Categoria"
-        delete: 'Excluir'
-        edit: 'Editar'
-        save: 'Salvar'
+        delete: "Excluir"
+        edit: "Editar"
+        save: "Salvar"
         screened_actions:
           block: "bloquear"
           do_nothing: "não fazer nada"
@@ -3227,22 +3224,22 @@ pt_BR:
           one: "1 palavra"
           other: "%{count} palavras"
         actions:
-          block: 'Bloqueado'
-          censor: 'Censor'
-          require_approval: 'Requerer aprovação'
-          flag: 'Bandeira,Sinalização'
+          block: "Bloqueado"
+          censor: "Censor"
+          require_approval: "Requerer aprovação"
+          flag: "Bandeira,Sinalização"
         action_descriptions:
-          block: 'Impedir que postagens contendo essas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem.'
-          censor: 'Permitir postagens contendo essas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas.'
-          require_approval: 'As postagens contendo essas palavras exigirão aprovação da equipe antes que elas possam ser vistas.'
-          flag: 'Permita postagens contendo essas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las.'
+          block: "Impedir que postagens contendo essas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
+          censor: "Permitir postagens contendo essas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."
+          require_approval: "As postagens contendo essas palavras exigirão aprovação da equipe antes que elas possam ser vistas."
+          flag: "Permita postagens contendo essas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
         form:
-          label: 'Nova Palavra:'
-          placeholder: 'palavra completa ou * como curinga'
+          label: "Nova Palavra:"
+          placeholder: "palavra completa ou * como curinga"
           placeholder_regexp: "expressão regular"
-          add: 'Adicionar'
-          success: 'Sucesso'
-          exists: 'Já existe'
+          add: "Adicionar"
+          success: "Sucesso"
+          exists: "Já existe"
           upload: "Upload"
           upload_successful: "Upload successful. Words have been added."
       impersonate:
@@ -3251,8 +3248,8 @@ pt_BR:
         not_found: "Esse usuário não pode ser encontrado."
         invalid: "Desculpe, não é possível personificar esse usuário."
       users:
-        title: 'Usuários'
-        create: 'Adicionar Usuário Admin'
+        title: "Usuários"
+        create: "Adicionar Usuário Admin"
         last_emailed: "Último email enviado"
         not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
         id_not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
@@ -3261,11 +3258,11 @@ pt_BR:
           new: "Novos"
           active: "Ativos"
           pending: "Pendentes"
-          staff: 'Equipe'
-          suspended: 'Suspenso'
-          silenced: 'Silenciado'
-          suspect: 'Suspeito'
-          staged: 'Encenado'
+          staff: "Equipe"
+          suspended: "Suspenso"
+          silenced: "Silenciado"
+          suspect: "Suspeito"
+          staged: "Encenado"
         approved: "Aprovado?"
         approved_selected:
           one: "aprovar usuário"
@@ -3274,21 +3271,21 @@ pt_BR:
           one: "rejeitar usuário"
           other: "rejeitar usuários ({{count}})"
         titles:
-          active: 'Usuários Ativos'
-          new: 'Usuários Novos'
-          pending: 'Usuários com Confirmação Pendente'
-          newuser: 'Usuários no Nível de Confiança 0 (Usuário Novo)'
-          basic: 'Usuários no Nível de Confiança 1 (Usuário Básico)'
-          member: 'Usuário em Nível de Confiança 2 (Membro)'
-          regular: 'Usuário em Nível de Confiança 3 (Habitual)'
-          leader: 'Usuário em Nível de Confiança 4 (Líder)'
+          active: "Usuários Ativos"
+          new: "Usuários Novos"
+          pending: "Usuários com Confirmação Pendente"
+          newuser: "Usuários no Nível de Confiança 0 (Usuário Novo)"
+          basic: "Usuários no Nível de Confiança 1 (Usuário Básico)"
+          member: "Usuário em Nível de Confiança 2 (Membro)"
+          regular: "Usuário em Nível de Confiança 3 (Habitual)"
+          leader: "Usuário em Nível de Confiança 4 (Líder)"
           staff: "Equipe de apoio"
-          admins: 'Usuários Administradores'
-          moderators: 'Moderadores'
-          silenced: 'Usuários Silenciados'
-          suspended: 'Usuários Suspensos'
-          suspect: 'Usuários suspeitos'
-          staged: 'Usuários em etapas'
+          admins: "Usuários Administradores"
+          moderators: "Moderadores"
+          silenced: "Usuários Silenciados"
+          suspended: "Usuários Suspensos"
+          suspect: "Usuários suspeitos"
+          staged: "Usuários em etapas"
         reject_successful:
           one: "1 usuário foi rejeitado com sucesso."
           other: "%{count} usuários foram rejeitados com sucesso."
@@ -3341,18 +3338,18 @@ pt_BR:
         refresh_browsers: "Forçar atualização da página no browser"
         refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"
-        impersonate: 'Personificar'
+        impersonate: "Personificar"
         action_logs: "Registro de Atividades"
         ip_lookup: "Pesquisa do IP"
         log_out: "Log Out"
         logged_out: "Usuário foi desconectado em todos os dipositivos"
-        revoke_admin: 'Revogar Admin'
-        grant_admin: 'Conceder Admin'
+        revoke_admin: "Revogar Admin"
+        grant_admin: "Conceder Admin"
         grant_admin_confirm: "Nós o enviamos um email para verificar o novo administrador. Por favor abra-o e siga as instruções."
-        revoke_moderation: 'Revogar Moderação'
-        grant_moderation: 'Conceder Moderação'
-        unsuspend: 'Readmitir'
-        suspend: 'Suspender'
+        revoke_moderation: "Revogar Moderação"
+        grant_moderation: "Conceder Moderação"
+        unsuspend: "Readmitir"
+        suspend: "Suspender"
         show_flags_received: "Mostrar sinalizações recebidas"
         flags_received_by: "sinalizações recebidas por %{username}"
         flags_received_none: "Este usuário não recebeu nenhum sinalizador."
@@ -3360,7 +3357,7 @@ pt_BR:
         permissions: Permissões
         activity: Atividade
         like_count: Curtidas dados / recebidos
-        last_100_days: 'nos últimos 100 dias'
+        last_100_days: "nos últimos 100 dias"
         private_topics_count: Tópicos Privados
         posts_read_count: Mensagens lidas
         post_count: Mensagens criadas
@@ -3369,8 +3366,8 @@ pt_BR:
         flags_given_count: Sinalizações dadas
         flags_received_count: Sinalizações recebidas
         warnings_received_count: Avisos Recebidos
-        flags_given_received_count: 'Sinalizações dados / recebidos'
-        approve: 'Aprovar'
+        flags_given_received_count: "Sinalizações dados / recebidos"
+        approve: "Aprovar"
         approved_by: "aprovado por"
         approve_success: "Usuário aprovado e email enviado com instruções de ativação."
         approve_bulk_success: "Sucesso! Todos os usuários selecionados foram aprovados e notificados."
@@ -3391,7 +3388,6 @@ pt_BR:
         cant_delete_all_too_many_posts:
           one: "Não pode remover porque o usuário tem mais de uma mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
-        delete_confirm: "Você tem CERTEZA de que quer deletar este usuário? Isto é permanente!"
         delete_and_block: "Deletar e <b>bloquear</b> este email e endereço IP"
         delete_dont_block: "Apagar apenas"
         deleting_user: "Excluindo usuário ..."
@@ -3404,10 +3400,10 @@ pt_BR:
         activate_failed: "Houve um problema ao tornar o usuário ativo."
         deactivate_account: "Desativar Conta"
         deactivate_failed: "Houve um problema ao desativar o usuário."
-        unsilence_failed: 'Houve um problema ao anular o usuário.'
-        silence_failed: 'Houve um problema ao silenciar o usuário.'
-        silence_confirm: 'Tem certeza de que deseja silenciar esse usuário? Eles não poderão criar novos tópicos ou postagens.'
-        silence_accept: 'Sim, silenciar este usuário'
+        unsilence_failed: "Houve um problema ao anular o usuário."
+        silence_failed: "Houve um problema ao silenciar o usuário."
+        silence_confirm: "Tem certeza de que deseja silenciar esse usuário? Eles não poderão criar novos tópicos ou postagens."
+        silence_accept: "Sim, silenciar este usuário"
         bounce_score: "Pontuação de Devolução"
         reset_bounce_score:
           label: "Redefinir"
@@ -3496,25 +3492,25 @@ pt_BR:
           enabled: "exibir no cartão de usuário"
           disabled: "não exibido no cartão de usuário"
         field_types:
-          text: 'Campo Texto'
-          confirm: 'Confirmação'
+          text: "Campo Texto"
+          confirm: "Confirmação"
           dropdown: "Caixa de seleção"
       site_text:
         description: "Você pode personalizar qualquer parte do texto em seu fórum. Por favor, comece pesquisando abaixo:"
         search: "Procure peloo texto que você gostaria de editar"
-        title: 'Conteúdo do Texto'
-        edit: 'editar'
+        title: "Conteúdo do Texto"
+        edit: "editar"
         revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter as alterações?"
         go_back: "Voltar para pesquisa"
         recommended: "Recomendamos a personalização do seguinte texto para se adequar as suas necessidades:"
-        show_overriden: 'Apenas mostrar valores alterados'
+        show_overriden: "Apenas mostrar valores alterados"
       settings:
-        show_overriden: 'Mostrar apenas substituído'
-        reset: 'resetar'
-        none: 'nenhum'
+        show_overriden: "Mostrar apenas substituído"
+        reset: "resetar"
+        none: "nenhum"
       site_settings:
-        title: 'Configurações'
+        title: "Configurações"
         no_results: "Nenhum resultado encontrado."
         more_than_30_results: "Existem mais de 30 resultados. Por favor, refine sua pesquisa ou selecione uma categoria."
         clear_filter: "Limpar"
@@ -3529,25 +3525,25 @@ pt_BR:
         selectable_avatars:
           title: "Lista de usuários avatares podem escolher"
         categories:
-          all_results: 'Todas'
-          required: 'Requerido'
-          basic: 'Configuração Básica'
-          users: 'Usuários'
-          posting: 'Publicando'
-          email: 'E-mail'
-          files: 'Arquivos'
-          trust: 'Níveis de Confiança'
-          security: 'Segurança'
+          all_results: "Todas"
+          required: "Requerido"
+          basic: "Configuração Básica"
+          users: "Usuários"
+          posting: "Publicando"
+          email: "E-mail"
+          files: "Arquivos"
+          trust: "Níveis de Confiança"
+          security: "Segurança"
           onebox: "Onebox"
-          seo: 'SEO'
-          spam: 'Spam'
-          rate_limits: 'Taxa de Limites'
-          developer: 'Desenvolvedor'
+          seo: "SEO"
+          spam: "Spam"
+          rate_limits: "Taxa de Limites"
+          developer: "Desenvolvedor"
           embedding: "Incorporação"
           legal: "Jurídico"
-          api: 'API'
-          user_api: 'API de Usuário'
-          uncategorized: 'Outros'
+          api: "API"
+          user_api: "API de Usuário"
+          uncategorized: "Outros"
           backups: "Backups"
           login: "Entrar"
           plugins: "Plugins"
