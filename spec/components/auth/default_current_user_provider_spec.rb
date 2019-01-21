@@ -192,28 +192,6 @@ describe Auth::DefaultCurrentUserProvider do
       u.reload
       expect(u.last_seen_at).to eq(nil)
     end
-
-    describe "when readonly mode is enabled due to postgres" do
-      let(:test_provider) { provider("/") }
-      let(:user) { Fabricate(:user) }
-
-      before do
-        test_provider.log_on_user(user, {}, {})
-        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
-      end
-
-      after do
-        Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
-      end
-
-      it "should not update last seen at" do
-        expect(test_provider.current_user).to eq(user)
-
-        expect do
-          provider("/?api_key=hello").current_user
-        end.to raise_error(Discourse::ReadOnly)
-      end
-    end
   end
 
   it "should update ajax reqs with discourse visible" do
