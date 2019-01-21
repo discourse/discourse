@@ -44,6 +44,16 @@ describe "S3Inventory" do
     store.s3_helper.stubs(:s3_client).returns(client)
   end
 
+  def capture_stdout
+    old_stdout = $stdout
+    io = StringIO.new
+    $stdout = io
+    yield
+    io.string
+  ensure
+    $stdout = old_stdout
+  end
+
   it "will return recent inventory file name" do
     expect(inventory.file.key).to eq("example1.csv.gz")
   end
@@ -53,7 +63,7 @@ describe "S3Inventory" do
     expect { inventory.list_missing }.to raise_error(S3Inventory::StorageError)
   end
 
-  it "will raise storage error if inventory file not found" do
+  it "should display missing uploads correctly" do
     CSV.foreach(csv_filename, headers: false) do |row|
       Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX])
     end
@@ -62,8 +72,11 @@ describe "S3Inventory" do
     inventory.stubs(:unzip_archive)
     inventory.stubs(:log)
     inventory.stubs(:csv_filename).returns(csv_filename)
-    STDOUT.expects(:puts).with(upload.url)
-    STDOUT.expects(:puts).with("1 of 4 uploads are missing")
-    inventory.list_missing
+
+    output = capture_stdout do
+      inventory.list_missing
+    end
+
+    expect(output).to eq("#{upload.url}\n1 of 4 uploads are missing\n")
   end
 end
