@@ -25,6 +25,7 @@ class Auth::DefaultCurrentUserProvider
   # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
+    raise Discourse::ReadOnly if Discourse.pg_readonly_mode?
 
     # bypass if we have the shared session header
     if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
@@ -241,8 +242,6 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
-    return false if Discourse.pg_readonly_mode?
-
     if @request.xhr?
       @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
     elsif !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])

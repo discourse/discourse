@@ -161,20 +161,13 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#current_user" do
-    let(:unhashed_token) do
-      provider = provider('/')
-      cookies = {}
-      provider.log_on_user(Fabricate(:user), {}, cookies)
-      cookies["_t"][:value]
-    end
-
     after do
       $redis.flushall
     end
 
     it "should not update last seen for suspended users" do
-      user = Fabricate(:user)
       provider = provider('/')
+      user = Fabricate(:user)
       cookies = {}
       provider.log_on_user(user, {}, cookies)
       unhashed_token = cookies["_t"][:value]
@@ -201,7 +194,11 @@ describe Auth::DefaultCurrentUserProvider do
     end
 
     describe "when readonly mode is enabled due to postgres" do
+      let(:test_provider) { provider("/") }
+      let(:user) { Fabricate(:user) }
+
       before do
+        test_provider.log_on_user(user, {}, {})
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
 
@@ -210,10 +207,11 @@ describe Auth::DefaultCurrentUserProvider do
       end
 
       it "should not update last seen at" do
-        provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
-        u = provider2.current_user
-        u.reload
-        expect(u.last_seen_at).to eq(nil)
+        expect(test_provider.current_user).to eq(user)
+
+        expect do
+          provider("/?api_key=hello").current_user
+        end.to raise_error(Discourse::ReadOnly)
       end
     end
   end
