@@ -6,7 +6,7 @@ export default DropdownSelectBox.extend({
   classNames: ["delete-flag", "admin-delete-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",
-  headerIcon: "trash-o",
+  headerIcon: "far-trash-alt",
 
   computeHeaderContent() {
     let content = this._super(...arguments);

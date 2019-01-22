@@ -26,7 +26,7 @@
 
                   {{#unless site.mobileView}}
                     {{#if isWhispering}}
-                      <span class='whisper'>{{d-icon 'eye-slash'}}</span>
+                      <span class='whisper'>{{d-icon "far-eye-slash"}}</span>
                     {{/if}}
                     {{#if model.unlistTopic}}
                       <span class='whisper'>({{i18n 'composer.unlist'}})</span>
@@ -128,7 +128,7 @@
                   {{#if canEdit}}
                     {{d-icon "times"}}
                   {{else}}
-                    {{d-icon "trash-o"}}
+                    {{d-icon "far-trash-alt"}}
                   {{/if}}
                 </a>
               {{else}}
@@ -140,7 +140,7 @@
               {{#if site.mobileView}}
                 {{#if whisperOrUnlistTopic}}
                   <span class='whisper'>
-                    {{d-icon "eye-slash"}}
+                    {{d-icon "far-eye-slash"}}
                   </span>
                 {{/if}}
                 {{#if model.noBump}}

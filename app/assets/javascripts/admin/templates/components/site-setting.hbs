@@ -11,7 +11,7 @@
   </div>
 {{else if setting.overridden}}
   {{#if setting.secret}}
-    {{d-button action=(action "toggleSecret") icon="eye-slash"}}
+    {{d-button action=(action "toggleSecret") icon="far-eye-slash"}}
   {{/if}}
   {{d-button class="btn-default undo" action=(action "resetDefault") icon="undo" label="admin.settings.reset"}}
 {{/if}}

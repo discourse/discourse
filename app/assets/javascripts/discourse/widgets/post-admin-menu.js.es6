@@ -31,7 +31,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (!attrs.isWhisper && currentUser.staff) {
     const buttonAtts = {
       action: "togglePostType",
-      icon: "shield",
+      icon: "shield-alt",
       className: "btn-default toggle-post-type"
     };
 
@@ -53,7 +53,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
 
     if (attrs.hidden) {
       contents.push({
-        icon: "eye",
+        icon: "far-eye",
         label: "post.controls.unhide",
         action: "unhidePost",
         className: "btn-default unhide-post"

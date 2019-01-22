@@ -6,13 +6,13 @@ componentTest("with image", {
 
   test(assert) {
     assert.equal(
-      this.$(".d-icon-picture-o").length,
+      this.$(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      this.$(".d-icon-trash-o").length,
+      this.$(".d-icon-far-trash-alt").length,
       1,
       "it displays the trash icon"
     );
@@ -24,13 +24,13 @@ componentTest("without image", {
 
   test(assert) {
     assert.equal(
-      this.$(".d-icon-picture-o").length,
+      this.$(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      this.$(".d-icon-trash-o").length,
+      this.$(".d-icon-far-trash-alt").length,
       0,
       "it does not display trash icon"
     );

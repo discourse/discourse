@@ -222,7 +222,7 @@ export default Ember.Controller.extend({
   @computed("model.action", "isWhispering")
   saveIcon(action, isWhispering) {
     if (isWhispering) {
-      return "eye-slash";
+      return "far-eye-slash";
     }
     return SAVE_ICONS[action];
   },
@@ -267,7 +267,7 @@ export default Ember.Controller.extend({
         this._setupPopupMenuOption(() => {
           return {
             action: "toggleInvisible",
-            icon: "eye-slash",
+            icon: "far-eye-slash",
             label: "composer.toggle_unlisted",
             condition: "canUnlistTopic"
           };
@@ -278,7 +278,7 @@ export default Ember.Controller.extend({
         this._setupPopupMenuOption(() => {
           return {
             action: "toggleWhisper",
-            icon: "eye-slash",
+            icon: "far-eye-slash",
             label: "composer.toggle_whisper",
             condition: "showWhisperToggle"
           };

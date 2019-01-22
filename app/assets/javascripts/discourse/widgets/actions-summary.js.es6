@@ -162,7 +162,7 @@ createWidget("deleted-post", {
 
   html(attrs) {
     return [
-      iconNode("trash-o"),
+      iconNode("far-trash-alt"),
       " ",
       avatarFor.call(this, "small", {
         template: attrs.deletedByAvatarTemplate,
