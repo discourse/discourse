@@ -156,7 +156,6 @@ module ActiveRecord
           if !fallback_handler.initialized
             return postgresql_fallback_connection(config)
           else
-            fallback_handler.clear_connections
             raise e
           end
         end
