@@ -59,7 +59,7 @@ export default DropdownSelectBoxComponent.extend({
       case PRIVATE_MESSAGE:
       case CREATE_TOPIC:
       case REPLY:
-        content.icon = "mail-forward";
+        content.icon = "share";
         content.title = I18n.t("composer.composer_actions.reply");
         break;
       case EDIT:
@@ -106,7 +106,7 @@ export default DropdownSelectBoxComponent.extend({
           postUsername: _postSnapshot.get("username")
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
-        icon: "mail-forward",
+        icon: "share",
         id: "reply_to_post"
       });
     }
@@ -136,7 +136,7 @@ export default DropdownSelectBoxComponent.extend({
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
         description: I18n.t("composer.composer_actions.reply_to_topic.desc"),
-        icon: "mail-forward",
+        icon: "share",
         id: "reply_to_topic"
       });
     }
@@ -186,7 +186,7 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t(
           "composer.composer_actions.reply_as_new_topic.desc"
         ),
-        icon: "mail-forward",
+        icon: "share",
         id: "create_topic"
       });
     }
