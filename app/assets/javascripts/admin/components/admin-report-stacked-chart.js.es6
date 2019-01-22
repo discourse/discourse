@@ -76,6 +76,13 @@ export default Ember.Component.extend({
           mode: "index",
           intersect: false,
           callbacks: {
+            beforeFooter: tooltipItem => {
+              let total = 0;
+              tooltipItem.forEach(
+                item => (total += parseInt(item.yLabel || 0, 10))
+              );
+              return `= ${total}`;
+            },
             title: tooltipItem =>
               moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL")
           }
