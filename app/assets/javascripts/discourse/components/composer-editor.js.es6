@@ -835,7 +835,7 @@ export default Ember.Component.extend({
       toolbar.addButton({
         id: "options",
         group: "extras",
-        icon: "gear",
+        icon: "cog",
         title: "composer.options",
         sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true

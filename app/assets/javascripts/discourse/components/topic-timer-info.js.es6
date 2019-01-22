@@ -41,7 +41,7 @@ export default Ember.Component.extend(
 
       let autoCloseHours = this.get("duration") || 0;
 
-      buffer.push(`<h3>${iconHTML("clock-o")} `);
+      buffer.push(`<h3>${iconHTML("far-clock")} `);
 
       let options = {
         timeLeft: duration.humanize(true),

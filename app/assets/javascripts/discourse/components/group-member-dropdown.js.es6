@@ -32,7 +32,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.remove_owner_description", {
             username: this.get("member.username")
           }),
-          icon: "shield"
+          icon: "shield-alt"
         });
       } else {
         items.push({
@@ -41,7 +41,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.make_owner_description", {
             username: this.get("member.username")
           }),
-          icon: "shield"
+          icon: "shield-alt"
         });
       }
     }

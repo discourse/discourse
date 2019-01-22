@@ -16,7 +16,7 @@ export default DropdownSelectBoxComponent.extend({
       },
       {
         id: "logOut",
-        icon: "sign-out",
+        icon: "sign-out-alt",
         name: I18n.t("user.log_out"),
         description: ""
       }

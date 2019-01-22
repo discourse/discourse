@@ -32,7 +32,7 @@ export default DropdownSelectBox.extend({
 
     if (post.user_deleted) {
       content.push({
-        icon: "eye",
+        icon: "far-eye",
         id: "confirm-agree-restore",
         action: () => this.send("perform", "restore"),
         label: I18n.t("admin.flags.agree_flag_restore_post"),
@@ -41,7 +41,7 @@ export default DropdownSelectBox.extend({
     } else {
       if (!post.get("postHidden")) {
         content.push({
-          icon: "eye-slash",
+          icon: "far-eye-slash",
           action: () => this.send("perform", "hide"),
           id: "confirm-agree-hide",
           label: I18n.t("admin.flags.agree_flag_hide_post"),

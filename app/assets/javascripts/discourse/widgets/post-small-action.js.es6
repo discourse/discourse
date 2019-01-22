@@ -81,7 +81,7 @@ export default createWidget("post-small-action", {
       contents.push(
         this.attach("button", {
           className: "small-action-delete",
-          icon: "trash",
+          icon: "trash-alt",
           action: "deletePost",
           title: "post.controls.delete"
         })
@@ -92,7 +92,7 @@ export default createWidget("post-small-action", {
       contents.push(
         this.attach("button", {
           className: "small-action-edit",
-          icon: "pencil",
+          icon: "pencil-alt",
           action: "editPost",
           title: "post.controls.edit"
         })

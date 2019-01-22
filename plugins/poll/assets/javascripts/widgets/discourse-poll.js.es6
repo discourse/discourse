@@ -435,7 +435,7 @@ createWidget("discourse-poll-buttons", {
           className: "btn toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
-          icon: "eye-slash",
+          icon: "far-eye-slash",
           disabled: hideResultsDisabled,
           action: "toggleResults"
         })
@@ -451,7 +451,7 @@ createWidget("discourse-poll-buttons", {
             className: "btn toggle-results",
             label: "poll.show-results.label",
             title: "poll.show-results.title",
-            icon: "eye",
+            icon: "far-eye",
             disabled: poll.get("voters") === 0,
             action: "toggleResults"
           })

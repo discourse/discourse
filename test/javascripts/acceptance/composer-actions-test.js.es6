@@ -89,7 +89,9 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("toggle_whisper");
 
-  assert.ok(find(".composer-fields .whisper .d-icon-eye-slash").length === 1);
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1
+  );
 });
 
 QUnit.test("replying to post - reply_as_new_topic", async assert => {
@@ -100,7 +102,7 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 
   await visit("/t/internationalization-localization/280");
 
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
   await categoryChooser.expand();
   await categoryChooser.selectRowByValue(4);
   await click("#topic-title .submit-edit");
