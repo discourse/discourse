@@ -60,7 +60,11 @@ export default Ember.Component.extend({
           backgroundColor: prevChartData.length
             ? "transparent"
             : model.secondary_color,
-          borderColor: model.primary_color
+          borderColor: model.primary_color,
+          pointRadius: 3,
+          borderWidth: 1,
+          pointBackgroundColor: model.primary_color,
+          pointBorderColor: model.primary_color
         }
       ]
     };
