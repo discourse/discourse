@@ -7,6 +7,9 @@ acceptance("Composer Actions", {
   settings: {
     enable_whispers: true
   },
+  site: {
+    can_tag_topics: true
+  },
   beforeEach() {
     _clearSnapshots();
   }
@@ -131,15 +134,20 @@ QUnit.test("shared draft", async assert => {
   toggleCheckDraftPopup(true);
 
   const composerActions = selectKit(".composer-actions");
+  const tags = selectKit(".mini-tag-chooser");
 
   await visit("/");
   await click("#create-topic");
 
   await fillIn("#reply-title", "This is the new text for the title");
   await fillIn(".d-editor-input", "This is the new text for the post");
+  await tags.expand();
+  await tags.selectRowByValue("monkey");
 
   await composerActions.expand();
   await composerActions.selectRowByValue("shared_draft");
+
+  assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
   assert.equal(
     find("#reply-control .btn-primary.create .d-button-label").text(),
