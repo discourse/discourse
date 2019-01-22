@@ -1,9 +1,5 @@
 .admin-report-stacked-chart {
-  display: flex;
-  justify-content: space-between;
-
   .chart-canvas-container {
-    flex: 5;
-    margin: 0;
+    height: 250px;
   }
 }

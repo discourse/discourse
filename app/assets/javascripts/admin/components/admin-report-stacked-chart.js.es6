@@ -68,9 +68,9 @@ export default Ember.Component.extend({
     return {
       type: "bar",
       data,
-      responsive: true,
-      maintainAspectRatio: false,
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         hover: { mode: "index" },
         tooltips: {
           mode: "index",
