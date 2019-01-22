@@ -50,27 +50,29 @@ class S3Inventory
       copy_archive_to_tmp_directory
       unzip_archive
 
-      table_name = "#{inventory_id}_inventory"
-      connection = ActiveRecord::Base.connection.raw_connection
-      connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text PRIMARY KEY)")
-      connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
-        CSV.foreach(csv_filename, headers: false) do |row|
-          connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
-        end
-      end
-
-      missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
-      missing_count = missing_uploads.count
-
-      if missing_count > 0
-        missing_uploads.find_each do |upload|
-          puts upload.url
+      begin
+        table_name = "#{inventory_id}_inventory"
+        connection = ActiveRecord::Base.connection.raw_connection
+        connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text PRIMARY KEY)")
+        connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
+          CSV.foreach(csv_filename, headers: false) do |row|
+            connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+          end
         end
 
-        puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+        missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
+        missing_count = missing_uploads.count
+
+        if missing_count > 0
+          missing_uploads.find_each do |upload|
+            puts upload.url
+          end
+
+          puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+        end
+      ensure
+        connection.exec("DROP TABLE #{table_name}") unless connection.nil?
       end
-    ensure
-      connection.exec("DROP TABLE #{table_name}") unless connection.nil?
     end
   end
 
