@@ -201,7 +201,7 @@ describe Auth::DefaultCurrentUserProvider do
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
 
-       after do
+      after do
         Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
 
