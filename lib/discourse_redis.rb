@@ -7,7 +7,9 @@ class DiscourseRedis
   class FallbackHandler
     include Singleton
 
-    MASTER_LINK_STATUS = "master_link_status:up".freeze
+    MASTER_ROLE_STATUS = "role:master".freeze
+    MASTER_LOADING_STATUS = "loading:1".freeze
+    MASTER_LOADED_STATUS = "loading:0".freeze
     CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
     def initialize
@@ -39,25 +41,31 @@ class DiscourseRedis
       success = false
 
       begin
-        slave_client = ::Redis::Client.new(@slave_config)
+        master_client = ::Redis::Client.new(DiscourseRedis.config)
         logger.warn "#{log_prefix}: Checking connection to master server..."
+        info = master_client.call([:info])
 
-        if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
-          logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
+        if info.include?(MASTER_LOADED_STATUS) && info.include?(MASTER_ROLE_STATUS)
+          begin
+            logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
 
-          self.master = true
+            self.master = true
+            slave_client = ::Redis::Client.new(@slave_config)
 
-          CONNECTION_TYPES.each do |connection_type|
-            slave_client.call([:client, [:kill, 'type', connection_type]])
+            CONNECTION_TYPES.each do |connection_type|
+              slave_client.call([:client, [:kill, 'type', connection_type]])
+            end
+
+            MessageBus.keepalive_interval = @message_bus_keepalive_interval
+            Discourse.clear_readonly!
+            Discourse.request_refresh!
+            success = true
+          ensure
+            slave_client&.disconnect
           end
-
-          MessageBus.keepalive_interval = @message_bus_keepalive_interval
-          Discourse.clear_readonly!
-          Discourse.request_refresh!
-          success = true
         end
       ensure
-        slave_client.disconnect
+        master_client&.disconnect
       end
 
       success
@@ -108,7 +116,11 @@ class DiscourseRedis
         options = @options.dup
         options.delete(:connector)
         client ||= Redis::Client.new(options)
-        loading = client.call([:info]).split("\r\n").include?("loading:1")
+
+        loading = client.call([:info, :persistence]).include?(
+          DiscourseRedis::FallbackHandler::MASTER_LOADING_STATUS
+        )
+
         loading ? @slave_options : @options
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
         raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
