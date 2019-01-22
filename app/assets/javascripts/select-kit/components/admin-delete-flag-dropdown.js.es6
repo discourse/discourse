@@ -29,7 +29,7 @@ export default DropdownSelectBox.extend({
     const canDeleteSpammer = this.get("canDeleteSpammer");
 
     content.push({
-      icon: "external-link",
+      icon: "external-link-alt",
       id: "delete-defer",
       action: () => this.send("deletePostDeferFlag"),
       label: I18n.t("admin.flags.delete_post_defer_flag"),

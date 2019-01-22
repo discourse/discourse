@@ -56,7 +56,7 @@ export default Ember.Component.extend({
 
     if (originalUser) {
       editTitle += `
-        ${iconHTML("mail-forward", { class: "reply-to-glyph" })}
+        ${iconHTML("share", { class: "reply-to-glyph" })}
         ${originalUser.avatar}
         <span class="original-username">${originalUser.username}</span>
       `;

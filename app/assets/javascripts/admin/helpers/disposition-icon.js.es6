@@ -9,7 +9,7 @@ export default Ember.Helper.extend({
     let title = "admin.flags.dispositions." + disposition;
     switch (disposition) {
       case "deferred": {
-        icon = "external-link";
+        icon = "external-link-alt";
         break;
       }
       case "agreed": {
