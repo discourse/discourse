@@ -83,7 +83,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
-    return unless is_git
+    return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
     begin
       importer.import!
