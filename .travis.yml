@@ -1,6 +1,7 @@
 language: ruby
 
-depth: false
+git:
+  depth: false
 
 branches:
   only:
