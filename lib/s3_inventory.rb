@@ -13,6 +13,7 @@ class S3Inventory
 
   attr_reader :inventory_id, :csv_filename, :model
 
+  CSV_KEY_INDEX ||= 1.freeze
   CSV_ETAG_INDEX ||= 2.freeze
   INVENTORY_PREFIX ||= "inventory".freeze
 
@@ -38,33 +39,39 @@ class S3Inventory
       raise StorageError
     end
 
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
-    @tmp_directory = File.join(Rails.root, "tmp", INVENTORY_PREFIX, current_db, timestamp)
-    @archive_filename = File.join(@tmp_directory, File.basename(file.key))
-    @csv_filename = @archive_filename[0...-3]
+    DistributedMutex.synchronize("s3_inventory_list_missing_#{inventory_id}") do
+      current_db = RailsMultisite::ConnectionManagement.current_db
+      timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
+      @tmp_directory = File.join(Rails.root, "tmp", INVENTORY_PREFIX, current_db, timestamp)
+      @archive_filename = File.join(@tmp_directory, File.basename(file.key))
+      @csv_filename = @archive_filename[0...-3]
 
-    FileUtils.mkdir_p(@tmp_directory)
-    copy_archive_to_tmp_directory
-    unzip_archive
+      FileUtils.mkdir_p(@tmp_directory)
+      copy_archive_to_tmp_directory
+      unzip_archive
 
-    table_name = "#{inventory_id}_inventory"
-    connection = ActiveRecord::Base.connection.raw_connection
-    connection.exec("CREATE TEMP TABLE #{table_name}(bucket varchar, key text UNIQUE, etag text PRIMARY KEY)")
-    connection.exec("COPY #{table_name} FROM '#{csv_filename}' DELIMITERS ',' CSV")
-
-    missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
-    missing_count = missing_uploads.count
-
-    if missing_count > 0
-      missing_uploads.find_each do |upload|
-        puts upload.url
+      table_name = "#{inventory_id}_inventory"
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text PRIMARY KEY)")
+      connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
+        CSV.foreach(csv_filename, headers: false) do |row|
+          connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+        end
       end
 
-      puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+      missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
+      missing_count = missing_uploads.count
+
+      if missing_count > 0
+        missing_uploads.find_each do |upload|
+          puts upload.url
+        end
+
+        puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+      end
+    ensure
+      connection.exec("DROP TABLE #{table_name}") unless connection.nil?
     end
-  ensure
-    connection.exec("DROP TABLE #{table_name}") unless connection.nil?
   end
 
   def copy_archive_to_tmp_directory
