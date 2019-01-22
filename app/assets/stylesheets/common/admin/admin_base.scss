@@ -750,6 +750,9 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  .btn {
+    line-height: $line-height-medium;
+  }
   @media (max-width: $mobile-breakpoint) {
     .btn {
       margin: 2px;
