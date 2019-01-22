@@ -41,7 +41,9 @@ class DiscourseRedis
       success = false
 
       begin
-        master_client = ::Redis::Client.new(DiscourseRedis.config)
+        redis_config = DiscourseRedis.config.dup
+        redis_config.delete(:connector)
+        master_client = ::Redis::Client.new(redis_config)
         logger.warn "#{log_prefix}: Checking connection to master server..."
         info = master_client.call([:info])
 
@@ -64,6 +66,8 @@ class DiscourseRedis
             slave_client&.disconnect
           end
         end
+      rescue => e
+        logger.warn "#{log_prefix}: Connection to Master server failed with '#{e.message}'"
       ensure
         master_client&.disconnect
       end
