@@ -35,18 +35,18 @@ describe ThemeStore::TgzExporter do
   let(:dir) do
     tmpdir = Dir.tmpdir
     dir = "#{tmpdir}/#{SecureRandom.hex}"
-    `mkdir #{dir}`
+    FileUtils.mkdir(dir)
     dir
   end
 
   after do
-    `rm -rf #{dir}`
+    FileUtils.rm_rf(dir)
   end
 
   let(:package) do
     exporter = ThemeStore::TgzExporter.new(theme)
     filename = exporter.package_filename
-    `cp #{filename} #{dir}`
+    FileUtils.cp(filename, dir)
     exporter.cleanup!
     "#{dir}/discourse-header-icons-theme.tar.gz"
   end

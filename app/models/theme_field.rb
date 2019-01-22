@@ -279,7 +279,14 @@ class ThemeField < ActiveRecord::Base
 
   class ThemeFileMatcher
     OPTIONS = %i{name type target}
-    def initialize(regex, canonical:, target:, name:, type:)
+    # regex: used to match file names to fields (import).
+    #        can contain named capture groups for name/type/target
+    # canonical: a lambda which converts name/type/target
+    #            to filename (export)
+    # target/name/type: can be nil if any value is allowed
+    #                          single value
+    #                          array of allowed values
+    def initialize(regex:, canonical:, target:, name:, type:)
       @allowed_values = {}
       @allowed_values[:name] = Array(name) if name
       @allowed_values[:target] = Array(target) if target
@@ -300,35 +307,33 @@ class ThemeField < ActiveRecord::Base
     end
 
     def filename_from_opts(opts)
-      is_match = true
-      OPTIONS.each do |option|
-        next if @allowed_values[option] == nil
-        next if @allowed_values[option].include?(opts[option])
-        is_match = false
+      is_match = OPTIONS.all? do |option|
+        next true if @allowed_values[option] == nil # Allows any value
+        next true if @allowed_values[option].include?(opts[option]) # Value is allowed
       end
       is_match ? @canonical.call(opts) : nil
     end
   end
 
   FILE_MATCHERS = [
-    ThemeFileMatcher.new(/^(?<target>(?:mobile|desktop|common))\/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$/,
-      target: [:mobile, :desktop, :common], name: ["head_tag", "header", "after_header", "body_tag", "footer"], type: :html,
-      canonical: -> (h) { "#{h[:target]}/#{h[:name]}.html" }),
-    ThemeFileMatcher.new(/^(?<target>(?:mobile|desktop|common))\/(?:\k<target>)\.scss$/,
-      target: [:mobile, :desktop, :common], name: "scss", type: :scss,
-      canonical: -> (h) { "#{h[:target]}/#{h[:target]}.scss" }),
-    ThemeFileMatcher.new(/^common\/embedded\.scss$/,
-      target: :common, name: "embedded_scss", type: :scss,
-      canonical: -> (h) { "common/embedded.scss" }),
-    ThemeFileMatcher.new(/^settings\.ya?ml$/,
-      name: "yaml", type: :yaml, target: :settings,
-      canonical: -> (h) { "settings.yml" }),
-    ThemeFileMatcher.new(/^locales\/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$/,
-      name: I18n.available_locales.map(&:to_s), type: :yaml, target: :translations,
-      canonical: -> (h) { "locales/#{h[:name]}.yml" }),
-    ThemeFileMatcher.new(/(?!)/, # Never match uploads by filename, they must be named in about.json
-      name: nil, type: :theme_upload_var, target: :common,
-      canonical: -> (h) { "assets/#{h[:filename]}" }),
+    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$/,
+                         target: [:mobile, :desktop, :common], name: ["head_tag", "header", "after_header", "body_tag", "footer"], type: :html,
+                         canonical: -> (h) { "#{h[:target]}/#{h[:name]}.html" }),
+    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?:\k<target>)\.scss$/,
+                         target: [:mobile, :desktop, :common], name: "scss", type: :scss,
+                         canonical: -> (h) { "#{h[:target]}/#{h[:target]}.scss" }),
+    ThemeFileMatcher.new(regex: /^common\/embedded\.scss$/,
+                         target: :common, name: "embedded_scss", type: :scss,
+                         canonical: -> (h) { "common/embedded.scss" }),
+    ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
+                         name: "yaml", type: :yaml, target: :settings,
+                         canonical: -> (h) { "settings.yml" }),
+    ThemeFileMatcher.new(regex: /^locales\/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$/,
+                         name: I18n.available_locales.map(&:to_s), type: :yaml, target: :translations,
+                         canonical: -> (h) { "locales/#{h[:name]}.yml" }),
+    ThemeFileMatcher.new(regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
+                         name: nil, type: :theme_upload_var, target: :common,
+                         canonical: -> (h) { "assets/#{h[:filename]}" }),
   ]
 
   # For now just work for standard fields

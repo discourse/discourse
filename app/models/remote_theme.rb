@@ -30,7 +30,7 @@ class RemoteTheme < ActiveRecord::Base
     theme = Theme.find_by(name: theme_info["name"]) if match_theme
     theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
 
-    theme.component = [true, "true"].include?(theme_info["component"])
+    theme.component = theme_info["component"].to_s == "true"
 
     remote_theme = new
     remote_theme.theme = theme
@@ -97,7 +97,6 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_from_remote(importer = nil, skip_update: false)
-    return unless is_git
     cleanup = false
 
     unless importer
@@ -206,9 +205,8 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
-  def is_git
-    return true if remote_url.present?
-    false
+  def is_git?
+    remote_url.present?
   end
 end
 
