@@ -153,7 +153,7 @@ createWidget("post-avatar", {
   html(attrs) {
     let body;
     if (!attrs.user_id) {
-      body = iconNode("trash-o", { class: "deleted-user-avatar" });
+      body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
       body = avatarFor.call(this, this.settings.size, {
         template: attrs.avatar_template,
@@ -236,7 +236,7 @@ createWidget("post-meta-data", {
           {
             attributes: { title: I18n.t("post.whisper") }
           },
-          iconNode("eye-slash")
+          iconNode("far-eye-slash")
         )
       );
     }

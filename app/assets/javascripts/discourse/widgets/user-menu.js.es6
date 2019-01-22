@@ -89,7 +89,7 @@ createWidget("user-menu-links", {
     glyphs.push({
       label: "user.preferences",
       className: "user-preferences-link",
-      icon: "gear",
+      icon: "cog",
       href: `${path}/preferences/account`
     });
 
@@ -161,7 +161,7 @@ export default createWidget("user-menu", {
               this.attach("link", {
                 action: "logout",
                 className: "logout",
-                icon: "sign-out",
+                icon: "sign-out-alt",
                 href: "",
                 label: "user.log_out"
               })

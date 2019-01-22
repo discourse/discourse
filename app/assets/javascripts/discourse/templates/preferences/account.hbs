@@ -4,7 +4,7 @@
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
       {{#link-to "preferences.username" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-      {{d-icon "pencil"}} {{/link-to}}
+      {{d-icon "pencil-alt"}} {{/link-to}}
     {{/if}}
   </div>
   {{#if siteSettings.enable_mentions}}
@@ -37,7 +37,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -76,7 +76,7 @@
 
     {{#if isCurrentUser}}
       {{#link-to "preferences.second-factor" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-        {{d-icon "pencil"}}
+        {{d-icon "pencil-alt"}}
       {{/link-to}}
     {{/if}}
   </div>
@@ -91,7 +91,7 @@
 
       {{#if isCurrentUser}}
         {{#link-to "preferences.second-factor-backup" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-          {{d-icon "pencil"}}
+          {{d-icon "pencil-alt"}}
         {{/link-to}}
       {{/if}}
     {{/if}}
@@ -113,7 +113,7 @@
             <td>
               {{#if authProvider.method.can_revoke}}
                 {{#conditional-loading-spinner condition=revoking size='small'}}
-                  {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash" }}
+                  {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash-alt" }}
                 {{/conditional-loading-spinner}}
               {{/if}}
             </td>
@@ -144,7 +144,7 @@
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
-      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil"}}
+      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
     </div>
   </div>
 {{/unless}}
@@ -199,7 +199,7 @@
       </a>
     {{/if}}
 
-    <a {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
+    <a {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n 'user.auth_tokens.log_out_all'}}</a>
   </div>
 {{/if}}
 
@@ -222,7 +222,7 @@
   <div class="control-group delete-account">
     <br/>
     <div class="controls">
-      {{d-button action=(action "delete") disabled=deleteDisabled class="btn-danger" icon="trash-o" label="user.delete_account"}}
+      {{d-button action=(action "delete") disabled=deleteDisabled class="btn-danger" icon="far-trash-alt" label="user.delete_account"}}
     </div>
   </div>
 {{/if}}

@@ -1,11 +1,11 @@
 <div class="uploaded-image-preview input-xxlarge" style={{backgroundStyle}}>
   <div class="image-upload-controls">
     <label class="btn btn-default pad-left no-text {{if uploading 'disabled'}}">
-      {{d-icon "picture-o"}}
+      {{d-icon "far-image"}}
       <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
     </label>
     {{#if hasBackgroundStyle}}
-      <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "trash-o"}}</button>
+      <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "far-trash-alt"}}</button>
     {{/if}}
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
   </div>

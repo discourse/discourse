@@ -49,7 +49,7 @@
           <td class="settings">
             {{#if currentUser.admin}}
               {{#if plugin.enabled_setting}}
-                {{d-button class="btn-default" action=(route-action "showSettings") actionParam=plugin icon="gear" label="admin.plugins.change_settings_short"}}
+                {{d-button class="btn-default" action=(route-action "showSettings") actionParam=plugin icon="cog" label="admin.plugins.change_settings_short"}}
               {{/if}}
             {{/if}}
           </td>

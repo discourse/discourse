@@ -259,10 +259,10 @@
     <div class='value'>{{i18n-yes-no model.admin}}</div>
     <div class='controls'>
       {{#if model.can_revoke_admin}}
-        {{d-button class="btn-default" action=(action "revokeAdmin") icon="shield" label="admin.user.revoke_admin"}}
+        {{d-button class="btn-default" action=(action "revokeAdmin") icon="shield-alt" label="admin.user.revoke_admin"}}
       {{/if}}
       {{#if model.can_grant_admin}}
-        {{d-button class="btn-default" action=(action "grantAdmin") icon="shield" label="admin.user.grant_admin"}}
+        {{d-button class="btn-default" action=(action "grantAdmin") icon="shield-alt" label="admin.user.grant_admin"}}
       {{/if}}
     </div>
   </div>
@@ -272,10 +272,10 @@
     <div class='value'>{{i18n-yes-no model.moderator}}</div>
     <div class='controls'>
       {{#if model.can_revoke_moderation}}
-        {{d-button class="btn-default" action=(action "revokeModeration") icon="shield" label="admin.user.revoke_moderation"}}
+        {{d-button class="btn-default" action=(action "revokeModeration") icon="shield-alt" label="admin.user.revoke_moderation"}}
       {{/if}}
       {{#if model.can_grant_moderation}}
-        {{d-button class="btn-default" action=(action "grantModeration") icon="shield" label="admin.user.grant_moderation"}}
+        {{d-button class="btn-default" action=(action "grantModeration") icon="shield-alt" label="admin.user.grant_moderation"}}
       {{/if}}
     </div>
   </div>
@@ -480,7 +480,7 @@
     <div class='controls'>
       {{#if model.can_delete_all_posts}}
         {{#if model.post_count}}
-          {{d-button class="btn-danger" action=(action "deleteAllPosts") icon="trash-o" label="admin.user.delete_all_posts"}}
+          {{d-button class="btn-danger" action=(action "deleteAllPosts") icon="far-trash-alt" label="admin.user.delete_all_posts"}}
         {{/if}}
       {{else}}
         {{deleteAllPostsExplanation}}

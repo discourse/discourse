@@ -9,11 +9,11 @@
 {{/if}}
 
 {{#if canDeleteSelected}}
-  {{d-button action=(action "deleteSelected") icon="trash-o" label="topic.multi_select.delete" class="btn-danger"}}
+  {{d-button action=(action "deleteSelected") icon="far-trash-alt" label="topic.multi_select.delete" class="btn-danger"}}
 {{/if}}
 
 {{#if canMergeTopic}}
-  {{d-button action=(route-action "moveToTopic") icon="sign-out" label="topic.move_to.action" class="move-to-topic"}}
+  {{d-button action=(route-action "moveToTopic") icon="sign-out-alt" label="topic.move_to.action" class="move-to-topic"}}
 {{/if}}
 
 {{#if canChangeOwner}}

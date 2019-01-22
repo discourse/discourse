@@ -63,7 +63,7 @@ export default DropdownSelectBoxComponent.extend({
         content.title = I18n.t("composer.composer_actions.reply");
         break;
       case EDIT:
-        content.icon = "pencil";
+        content.icon = "pencil-alt";
         content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
@@ -151,7 +151,7 @@ export default DropdownSelectBoxComponent.extend({
       items.push({
         name: I18n.t("composer.composer_actions.toggle_whisper.label"),
         description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
-        icon: "eye-slash",
+        icon: "far-eye-slash",
         id: "toggle_whisper"
       });
     }

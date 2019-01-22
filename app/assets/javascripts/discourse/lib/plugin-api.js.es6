@@ -369,7 +369,7 @@ class PluginApi {
    * api.addToolbarPopupMenuOptionsCallback(() => {
    *  return {
    *    action: 'toggleWhisper',
-   *    icon: 'eye-slash',
+   *    icon: 'far-eye-slash',
    *    label: 'composer.toggle_whisper',
    *    condition: "canWhisper"
    *  };
