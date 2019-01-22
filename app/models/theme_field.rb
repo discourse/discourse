@@ -119,17 +119,17 @@ class ThemeField < ActiveRecord::Base
     [doc.to_s, errors&.join("\n")]
   end
 
-  def raw_translation_data
+  def raw_translation_data(internal: false)
     # Might raise ThemeTranslationParser::InvalidYaml
-    ThemeTranslationParser.new(self).load
+    ThemeTranslationParser.new(self, internal: internal).load
   end
 
-  def translation_data(with_overrides: true)
+  def translation_data(with_overrides: true, internal: false)
     fallback_fields = theme.theme_fields.find_locale_fields([theme.id], I18n.fallbacks[name])
 
     fallback_data = fallback_fields.each_with_index.map do |field, index|
       begin
-        field.raw_translation_data
+        field.raw_translation_data(internal: internal)
       rescue ThemeTranslationParser::InvalidYaml
         # If this is the locale with the error, raise it.
         # If not, let the other theme_field raise the error when it processes itself

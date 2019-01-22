@@ -1,8 +1,10 @@
 class ThemeTranslationParser
+  INTERNAL_KEYS = [:theme_metadata]
   class InvalidYaml < StandardError; end
 
-  def initialize(setting_field)
+  def initialize(setting_field, internal: internal)
     @setting_field = setting_field
+    @internal = internal
   end
 
   def self.check_contains_hashes(hash)
@@ -21,6 +23,9 @@ class ThemeTranslationParser
     raise InvalidYaml.new(I18n.t("themes.locale_errors.top_level_locale")) unless parsed.keys.length == 1 && parsed.keys[0] == @setting_field.name
 
     parsed.deep_symbolize_keys!
+
+    parsed[@setting_field.name.to_sym].slice!(*INTERNAL_KEYS) if @internal
+    parsed[@setting_field.name.to_sym].except!(*INTERNAL_KEYS) if !@internal
 
     parsed
   end

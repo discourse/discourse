@@ -3,6 +3,7 @@ require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
+  METADATA_PROPERTIES = %i{license_url about_url authors theme_version minimum_discourse_version maximum_discourse_version}
 
   class ImportError < StandardError; end
 
@@ -15,6 +16,8 @@ class RemoteTheme < ActiveRecord::Base
   scope :joined_remotes, -> {
     joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(remote_url: "")
   }
+
+  validates_format_of :minimum_discourse_version, :maximum_discourse_version, with: /\A\d+\.\d+\.\d+(\.beta\d+)?\z/, allow_nil: true
 
   def self.extract_theme_info(importer)
     JSON.parse(importer["about.json"])
@@ -123,8 +126,12 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    self.license_url = theme_info["license_url"]
-    self.about_url = theme_info["about_url"]
+    METADATA_PROPERTIES.each do |property|
+      self.public_send(:"#{property}=", theme_info[property.to_s])
+    end
+    if !self.valid?
+      raise ImportError, I18n.t("themes.import_error.about_json_values", errors: self.errors.full_messages.join(","))
+    end
 
     importer.all_files.each do |filename|
       next unless opts = ThemeField.opts_from_file_path(filename)

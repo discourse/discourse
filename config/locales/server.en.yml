@@ -77,6 +77,7 @@ en:
     import_error:
       generic: An error occured while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid"
+      about_json_values: "about.json contains invalid values: %{errors}"
       git: "Error cloning git repository, access is denied or repository is not found"
       unpack_failed: "Failed to unpack file"
     errors:
