@@ -2,7 +2,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   init() {
-    this._super();
+    this._super(...arguments);
 
     this._previousScrollParentOverflow = null;
     this._previousCSSContext = null;

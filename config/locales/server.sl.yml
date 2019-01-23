@@ -74,18 +74,90 @@ sl:
       everyone: "vsi"
       admins: "administratorji"
       moderators: "moderatorji"
+  education:
+    until_posts:
+      one: "1 objave"
+      two: "%{count} objavi"
+      few: "%{count} objav"
+      other: "%{count} objav"
+    "new-topic": |
+      Dobrodošli na &mdash; **hvala za novo temo!**
+
+      - Ali je naslov teme dovolj zanimiv če ga preberete naglas? Ali je dober povzetek vsebine?
+
+      - Koga bo to zanimalo? Zakaj je pomembno? Kakšne odzive hočete?
+
+      - Uporabite splošno uporabljane izraze in tako omogočite da ostali uporabniki *najdejo* vašo temo. Izberite ustrezno kategorijo za vašo temo.
+
+      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
+    "new-reply": |
+      Dobrodošli na %{site_name} &mdash; **hvala za vaš prispevek!**
+
+      - Ali vaš odgovor prispeva k boljši diskusiji?
+
+      - Bodite prijazni do ostalih uporabnikov v skupnosti.
+
+      - Konstruktivna kritika je dobrodošla, vendar kritiziraj *ideje* in ne ljudi.
+
+      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
+    avatar: |
+      ### Dodaj sliko svojemu profilu?
+
+      Objavili ste že nekaj tem in odgovorov, ampak vaša profilna slika še vedno ni tako unikatna kot ste vi - je samo črka.
+
+      Ste razmišljali, da bi **[obiskali svoj uporabniški profil](%{profile_path})** in bi naložili sliko, ki vas bolje predstavlja?
+
+      Veliko lažje je spremljati pogovore in najti zanimive ljudi v debatah, ko imajo vsi udeleženci edinstveno profilno sliko!
   activerecord:
     errors:
       <<: *errors
+  category:
+    uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
+  trust_levels:
+    newuser:
+      title: "nov uporabnik"
+    basic:
+      title: "uporabnik"
+    member:
+      title: "član"
+    regular:
+      title: "redni uporabnik"
+    leader:
+      title: "vodja"
+  activation:
+    welcome_to: "Dobrodošli na %{site_name}!"
+  post_action_types:
+    off_topic:
+      description: "Ta objava ne ustreza diskusiji v tej temi kot je definirana z naslovom teme in prvo objavo v temi in bi verjetno sodila nekam drugam."
+    spam:
+      description: "Ta objava sodi med oglaševanje ali je vandalizem. Objava ni uporabna in relevantna za to temo."
+    inappropriate:
+      description: 'Ta objava vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
+    notify_user:
+      title: "Pošlji zasebno sporočilo uporabniku @{{username}}"
+      description: "Rad bi osebno opozoril uporabnika o njegovi objavi preko zasebnega sporočila."
+      short_description: "Rad bi osebno opozoril uporabnika o njegovi objavi preko zasebnega sporočila."
+      long_form: "opozorjen uporabnik"
+    notify_moderators:
+      title: "Drug razlog"
+      description: "Ta objava potrebuje pregled s strani moderatorja iz drugega razloga."
   user_activity:
     no_default:
       self: "Nimate nobene aktivnosti."
     no_bookmarks:
       self: "Nimate zaznamkov; dodajte zaznamek na objavo, da jih lahko hitreje najdete."
+    no_likes_given:
+      self: "Niste všečkali nobeno objavo."
     no_replies:
       self: "Nisi odgovoril na nobeno objavo."
     no_drafts:
       self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
+  topic_flag_types:
+    notify_moderators:
+      title: "Drug razlog"
+  reports:
+    notify_user_private_messages:
+      description: "Kolikokrat so bili uporabniki zasebno opozorjeni z prijavo."
   site_settings:
     avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."
   user_notifications:
@@ -95,6 +167,9 @@ sl:
     welcome_message: |
       ## [Dobrodošli na %{title}](#welcome)
       Za dostop morate biti prijavljeni. Ustvarite račun in se prijavite za nadaljevanje.
+    welcome_message_invite_only: |
+      ## [Dobrodošli na %{title}](#welcome)
+      Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
   badges:
     anniversary:
       name: Obletnica

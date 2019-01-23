@@ -114,6 +114,7 @@ module ApplicationHelper
     list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
     list << 'rtl' if rtl?
     list << text_size_class
+    list << 'anon' unless current_user
     list.join(' ')
   end
 
@@ -281,7 +282,13 @@ module ApplicationHelper
   end
 
   def application_logo_url
-    @application_logo_url ||= (mobile_view? && SiteSetting.site_mobile_logo_url).presence || SiteSetting.site_logo_url
+    @application_logo_url ||= begin
+      if mobile_view? && SiteSetting.site_mobile_logo_url
+        SiteSetting.site_mobile_logo_url
+      else
+        SiteSetting.site_home_logo_url
+      end
+    end
   end
 
   def login_path

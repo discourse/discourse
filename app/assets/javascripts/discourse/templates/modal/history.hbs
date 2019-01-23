@@ -15,7 +15,7 @@
     {{#if displayEdit}}
       {{d-button action=(action "editPost")
           class="btn-default"
-          icon="pencil"
+          icon="pencil-alt"
           label=editButtonLabel}}
     {{/if}}
 
@@ -41,7 +41,7 @@
     </div>
   </div>
   <div id="revision-details">
-    {{d-icon "pencil"}}
+    {{d-icon "pencil-alt"}}
     {{#link-to 'user' model.username}}
       {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
     {{/link-to}}
@@ -58,7 +58,7 @@
         &mdash; {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
       {{/if}}
       {{#if model.post_type_changes}}
-        &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
+        &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
       {{/if}}
       {{#if model.category_id_changes}}
         &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
@@ -85,7 +85,7 @@
       {{/if}}
       {{#if model.post_type_changes}}
         <div class="row">
-          {{disabled-icon icon="shield" disabled=postTypeDisabled}}
+          {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
         </div>
       {{/if}}
       {{#if model.category_id_changes}}
@@ -128,7 +128,7 @@
     {{/if}}
 
     {{#if displayHide}}
-      {{d-button action=(action "hideVersion") icon="eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+      {{d-button action=(action "hideVersion") icon="far-eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
     {{/if}}
 
     {{#if displayShow}}
@@ -137,7 +137,7 @@
 
     {{#if displayEdit}}
       {{d-button action=(action "editPost")
-          icon="pencil"
+          icon="pencil-alt"
           class="btn-default"
           label=editButtonLabel}}
     {{/if}}

@@ -22,7 +22,7 @@
 
   {{#if item.deleted_by}}
     <span class="delete-info">
-      {{d-icon "trash-o"}}
+      {{d-icon "far-trash-alt"}}
       {{avatar item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
       {{format-date item.deleted_at leaveAgo="true"}}
     </span>
@@ -61,7 +61,7 @@
 
 {{#if item.editableDraft}}
   <div class='user-stream-item-draft-actions'>
-    {{d-button action=resumeDraft actionParam=item icon="pencil" label='drafts.resume' class="btn-default resume-draft"}}
-    {{d-button action=removeDraft actionParam=item icon="trash-o" label='drafts.remove' class="btn-default remove-draft"}}
+    {{d-button action=resumeDraft actionParam=item icon="pencil-alt" label='drafts.resume' class="btn-default resume-draft"}}
+    {{d-button action=removeDraft actionParam=item icon="far-trash-alt" label='drafts.remove' class="btn-default remove-draft"}}
   </div>
 {{/if}}

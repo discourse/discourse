@@ -396,7 +396,7 @@ aside.quote {
 
       .remove-invited {
         display: flex;
-        flex: 1 0 0;
+        flex: 1 0 0px;
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
@@ -479,8 +479,8 @@ aside.quote {
     bottom: -2px;
     right: 0;
   }
-  .fa {
-    font-size: $font-0;
+  .d-icon {
+    font-size: $font-down-2;
   }
 }
 .topic-avatar .poster-avatar-extra {
@@ -518,10 +518,6 @@ aside.quote {
 
   &.post-date {
     margin-right: 0;
-  }
-  &.via-email,
-  &.whisper {
-    line-height: $line-height-medium;
   }
   &.via-email,
   &.whisper,
@@ -590,7 +586,7 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 4.6em;
+  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
   color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -632,6 +628,7 @@ blockquote > *:last-child {
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
+    flex: 0 0 auto;
     .d-icon {
       font-size: 2em;
       width: 45px;

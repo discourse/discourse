@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   },
 
   init() {
-    this._super();
+    this._super(...arguments);
     const topicList = this.get("topicList");
     if (topicList) {
       this._initFromTopicList(topicList);

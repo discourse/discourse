@@ -14,7 +14,7 @@ export default RestModel.extend({
   loaded: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.setProperties({
       itemsLoaded: 0,
       content: [],

@@ -141,7 +141,7 @@ const UserAction = RestModel.extend({
       groups = {
         likes: UserActionGroup.create({ icon: "heart" }),
         stars: UserActionGroup.create({ icon: "star" }),
-        edits: UserActionGroup.create({ icon: "pencil" }),
+        edits: UserActionGroup.create({ icon: "pencil-alt" }),
         bookmarks: UserActionGroup.create({ icon: "bookmark" })
       };
     }

@@ -7,6 +7,9 @@ acceptance("Composer Actions", {
   settings: {
     enable_whispers: true
   },
+  site: {
+    can_tag_topics: true
+  },
   beforeEach() {
     _clearSnapshots();
   }
@@ -89,7 +92,9 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
   await composerActions.expand();
   await composerActions.selectRowByValue("toggle_whisper");
 
-  assert.ok(find(".composer-fields .whisper .d-icon-eye-slash").length === 1);
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1
+  );
 });
 
 QUnit.test("replying to post - reply_as_new_topic", async assert => {
@@ -100,7 +105,7 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 
   await visit("/t/internationalization-localization/280");
 
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
   await categoryChooser.expand();
   await categoryChooser.selectRowByValue(4);
   await click("#topic-title .submit-edit");
@@ -129,15 +134,20 @@ QUnit.test("shared draft", async assert => {
   toggleCheckDraftPopup(true);
 
   const composerActions = selectKit(".composer-actions");
+  const tags = selectKit(".mini-tag-chooser");
 
   await visit("/");
   await click("#create-topic");
 
   await fillIn("#reply-title", "This is the new text for the title");
   await fillIn(".d-editor-input", "This is the new text for the post");
+  await tags.expand();
+  await tags.selectRowByValue("monkey");
 
   await composerActions.expand();
   await composerActions.selectRowByValue("shared_draft");
+
+  assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
   assert.equal(
     find("#reply-control .btn-primary.create .d-button-label").text(),

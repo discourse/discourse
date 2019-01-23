@@ -1,7 +1,7 @@
 <p>{{i18n 'admin.logs.screened_ips.description'}}</p>
 
 <div class="screened-ip-controls">
-  <div class="filter-screened-ip-address"> 
+  <div class="filter-screened-ip-address">
     {{text-field value=filter class="ip-address-input" placeholderKey="admin.logs.screened_ips.form.filter" autocorrect="off" autocapitalize="off"}}
     {{d-button class="btn-default" action=(action "rollUp") title="admin.logs.screened_ips.roll_up.title" label="admin.logs.screened_ips.roll_up.text"}}
     {{d-button class="btn-default" action=(action "exportScreenedIpList") icon="download" title="admin.export_csv.button_title.screened_ip" label="admin.export_csv.button_text"}}
@@ -52,13 +52,13 @@
 
           <td class="col last_match_at">
             {{#if item.last_match_at}}
-               <div class="label">{{i18n 'admin.logs.last_match_at'}} {{age-with-tooltip item.last_match_at}}</div>  
+               <div class="label">{{i18n 'admin.logs.last_match_at'}} {{age-with-tooltip item.last_match_at}}</div>
             {{/if}}
           </td>
           <td class="col actions">
             {{#unless item.editing}}
-              {{d-button class="btn-default" action=(action "destroy") actionParam=item icon="trash-o" class="btn-danger"}}
-              {{d-button class="btn-default"action=(action "edit") actionParam=item icon="pencil"}}
+              {{d-button class="btn-default" action=(action "destroy") actionParam=item icon="far-trash-alt" class="btn-danger"}}
+              {{d-button class="btn-default"action=(action "edit") actionParam=item icon="pencil-alt"}}
               {{#if item.isBlocked}}
                 {{d-button class="btn-default" action=(action "allow") actionParam=item icon="check" label="admin.logs.screened_ips.actions.do_nothing"}}
               {{else}}

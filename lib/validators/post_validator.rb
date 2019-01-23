@@ -146,7 +146,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if SiteSetting.max_consecutive_replies == 0 || post.id || post.acting_user&.staff? || private_message?(post)
 
     topic = post.topic
-    return if topic&.posts&.first&.user == post.user
+    return if topic&.ordered_posts&.first&.user == post.user
 
     last_posts_count = DB.query_single(<<~SQL, topic_id: post.topic_id, user_id: post.acting_user.id, max_replies: SiteSetting.max_consecutive_replies).first
       SELECT COUNT(*)
@@ -164,7 +164,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if last_posts_count < SiteSetting.max_consecutive_replies
 
     guardian = Guardian.new(post.acting_user)
-    if guardian.can_edit?(topic.posts.last)
+    if guardian.can_edit?(topic.ordered_posts.last)
       post.errors.add(:base, I18n.t(:max_consecutive_replies, count: SiteSetting.max_consecutive_replies))
     end
   end

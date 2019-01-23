@@ -115,7 +115,7 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    'new-topic': |
+    "new-topic": |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
       - Does the title accurately describe your topic? Does it sound interesting?
@@ -125,7 +125,7 @@ bs_BA:
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
@@ -196,9 +196,9 @@ bs_BA:
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
-    update: 'Obnovi Šifru'
-    save: 'Namjesti Šifru'
-    title: 'Resetuj Šifru'
+    update: "Obnovi Šifru"
+    save: "Namjesti Šifru"
+    title: "Resetuj Šifru"
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   change_email:
@@ -213,45 +213,45 @@ bs_BA:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
     off_topic:
-      title: 'Nije Relevantno'
-      description: 'Ovaj post iz korjena mjenja tok ove teme i najvjerovatnije bi ga trebalo premjestiti. Ako je ovo prvi post to jest sama tema, onda mu najvjerovatnije nije mjesto ovde.'
-      long_form: 'opomeni kao ne-relevantno'
+      title: "Nije Relevantno"
+      description: "Ovaj post iz korjena mjenja tok ove teme i najvjerovatnije bi ga trebalo premjestiti. Ako je ovo prvi post to jest sama tema, onda mu najvjerovatnije nije mjesto ovde."
+      long_form: "opomeni kao ne-relevantno"
     spam:
-      title: 'Spam'
-      long_form: 'opomeni kao spam'
+      title: "Spam"
+      long_form: "opomeni kao spam"
     inappropriate:
-      title: 'Neprikladno'
-      long_form: 'opomeni kao neprikladno'
+      title: "Neprikladno"
+      long_form: "opomeni kao neprikladno"
     notify_user:
-      long_form: 'korisnik obavješten'
+      long_form: "korisnik obavješten"
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Obavijesti Moderatore"
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Sačuvaj'
-      description: 'Sačuvaj ovaj post'
-      long_form: 'sačuvan post'
+      title: "Sačuvaj"
+      description: "Sačuvaj ovaj post"
+      long_form: "sačuvan post"
     like:
-      title: 'Like'
-      description: 'Lajkuj ovaj post'
-      long_form: 'lajkovao si ovo'
+      title: "Like"
+      description: "Lajkuj ovaj post"
+      long_form: "lajkovao si ovo"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Ova tema je reklamnog karaktera i ne doprinosi razvoju teme jer je tu iz materijalnih razloga.'
-      long_form: 'opomenuo kao spam'
+      title: "Spam"
+      description: "Ova tema je reklamnog karaktera i ne doprinosi razvoju teme jer je tu iz materijalnih razloga."
+      long_form: "opomenuo kao spam"
     inappropriate:
-      title: 'Inappropriate'
-      long_form: 'opomenuto kao neprikladno'
+      title: "Inappropriate"
+      long_form: "opomenuto kao neprikladno"
     notify_moderators:
       title: "Obavijesti Moderatore"
-      long_form: 'moderator obaviješten'
+      long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
+    user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
   archetypes:
     regular:
       title: "Regular Topic"
@@ -336,7 +336,7 @@ bs_BA:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -360,7 +360,7 @@ bs_BA:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -538,9 +538,9 @@ bs_BA:
   search:
     within_post: "#%{post_number} od %{username}"
     types:
-      category: 'Kategorije'
-      topic: 'Rezultati'
-      user: 'Korisnici'
+      category: "Kategorije"
+      topic: "Rezultati"
+      user: "Korisnici"
   original_poster: "Originalni Autor"
   most_posts: "Najviše postova"
   most_recent_poster: "Posljednji Autor"
@@ -549,17 +549,7 @@ bs_BA:
     new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "Ova teme je zaključana. Otvaranje novog posta je onemogućeno."
-    closed_disabled: "Ova tema je sada otvorena. Novi postovi su dozvoljeni."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
-    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
@@ -646,7 +636,7 @@ bs_BA:
     search_title: "Pretraži stranicu"
   terms_of_service:
     title: "Terms of Service"
-  deleted: 'obrisano'
+  deleted: "obrisano"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."

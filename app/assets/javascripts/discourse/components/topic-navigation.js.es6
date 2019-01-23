@@ -12,7 +12,7 @@ export default Ember.Component.extend(PanEvents, {
   isPanning: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("info", Ember.Object.create());
   },
 
@@ -176,7 +176,7 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     this.appEvents
       .on("topic:current-post-scrolled", this, this._topicScrolled)
@@ -198,7 +198,7 @@ export default Ember.Component.extend(PanEvents, {
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
 
     this.appEvents
       .off("topic:current-post-scrolled", this, this._topicScrolled)

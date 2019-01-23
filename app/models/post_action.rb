@@ -565,6 +565,7 @@ class PostAction < ActiveRecord::Base
   MAXIMUM_FLAGS_PER_POST = 3
 
   def self.auto_close_threshold_reached?(topic)
+    return if topic.user&.staff?
     flags = PostAction.active
       .flags
       .joins(:post)

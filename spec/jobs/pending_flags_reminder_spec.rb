@@ -28,13 +28,6 @@ describe Jobs::PendingFlagsReminder do
       described_class.new.execute({})
     end
 
-    it "sends message when there is a flag older than 48 hours" do
-      Fabricate(:flag, created_at: 49.hours.ago)
-      PostAction.stubs(:flagged_posts_count).returns(1)
-      PostCreator.expects(:create).once.returns(true)
-      described_class.new.execute({})
-    end
-
     it "doesn't send a message if there are no new flags older than 48 hours old" do
       old_flag = Fabricate(:flag, created_at: 50.hours.ago)
       new_flag = Fabricate(:flag, created_at: 47.hours.ago)
@@ -45,5 +38,21 @@ describe Jobs::PendingFlagsReminder do
       job.execute({})
       expect(job.last_notified_id).to eq(old_flag.id)
     end
+
+    it "doesn't send a message when min_flags_staff_visibility is not met" do
+      SiteSetting.min_flags_staff_visibility = 2
+      Fabricate(:flag, created_at: 49.hours.ago)
+      PostAction.stubs(:flagged_posts_count).returns(1)
+      PostCreator.expects(:create).never
+      described_class.new.execute({})
+    end
+
+    it "sends message when there is a flag older than 48 hours" do
+      Fabricate(:flag, created_at: 49.hours.ago)
+      PostAction.stubs(:flagged_posts_count).returns(1)
+      PostCreator.expects(:create).once.returns(true)
+      described_class.new.execute({})
+    end
+
   end
 end

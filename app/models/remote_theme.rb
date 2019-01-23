@@ -107,28 +107,11 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = UploadCreator.new(File.open(path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
+        new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
+        File.rename(path, new_path) # OptimizedImage has strict file name restrictions, so rename temporarily
+        upload = UploadCreator.new(File.open(new_path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
         theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
       end
-    end
-
-    theme_info["fields"]&.each do |name, info|
-      unless Hash === info
-        info = {
-          "target" => :common,
-          "type" => :theme_var,
-          "value" => info
-        }
-      end
-
-      if info["type"] == "color"
-        info["type"] = :theme_color_var
-      end
-
-      theme.set_field(target: info["target"] || :common,
-                      name: name,
-                      value: info["value"],
-                      type: info["type"] || :theme_var)
     end
 
     Theme.targets.keys.each do |target|
@@ -156,8 +139,8 @@ class RemoteTheme < ActiveRecord::Base
       theme.set_field(target: :translations, name: locale, value: value)
     end
 
-    self.license_url ||= theme_info["license_url"]
-    self.about_url ||= theme_info["about_url"]
+    self.license_url = theme_info["license_url"]
+    self.about_url = theme_info["about_url"]
 
     if !skip_update
       self.remote_updated_at = Time.zone.now

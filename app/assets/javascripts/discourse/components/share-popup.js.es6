@@ -93,7 +93,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     const $html = $("html");
     $html.on("mousedown.outside-share-link", e => {
@@ -152,7 +152,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $("html")
       .off("click.discourse-share-link")
       .off("mousedown.outside-share-link")

@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   defaultUsernameCount: 0,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     if (this.get("focusTarget") === "usernames") {
       this.$("input").putCursorAtEnd();

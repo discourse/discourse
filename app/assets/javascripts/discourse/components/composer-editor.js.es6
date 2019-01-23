@@ -816,7 +816,7 @@ export default Ember.Component.extend({
       toolbar.addButton({
         id: "quote",
         group: "fontStyles",
-        icon: "comment-o",
+        icon: "far-comment",
         sendAction: this.get("importQuote"),
         title: "composer.quote_post_title",
         unshift: true
@@ -835,7 +835,7 @@ export default Ember.Component.extend({
       toolbar.addButton({
         id: "options",
         group: "extras",
-        icon: "gear",
+        icon: "cog",
         title: "composer.options",
         sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true

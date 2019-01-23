@@ -18,7 +18,7 @@ export default ComboBoxComponent.extend({
   permissionType: PermissionType.FULL,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     this.get("rowComponentOptions").setProperties({
       allowUncategorized: this.get("allowUncategorized")
@@ -71,7 +71,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);

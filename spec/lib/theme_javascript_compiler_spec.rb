@@ -55,11 +55,11 @@ describe ThemeJavascriptCompiler do
     end
 
     it 'works with the old settings syntax' do
-      expect(render("{{themeSetting.setting_key}}")).
+      expect(render("{{themeSettings.setting_key}}")).
         to eq('setting(22:setting_key)')
 
       # Works when used inside other statements
-      expect(render("{{dummy-helper themeSetting.setting_key}}")).
+      expect(render("{{dummy-helper themeSettings.setting_key}}")).
         to eq('dummy(setting(22:setting_key))')
     end
   end
@@ -90,11 +90,11 @@ describe ThemeJavascriptCompiler do
     end
 
     it 'works with the old settings syntax' do
-      expect(statement("{{themeSetting.setting_key}}")).
+      expect(statement("{{themeSettings.setting_key}}")).
         to eq([[1, [27, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]], false]])
 
       # Works when used inside other statements
-      expect(statement("{{dummy-helper themeSetting.setting_key}}")).
+      expect(statement("{{dummy-helper themeSettings.setting_key}}")).
         to eq([[1, [27, "dummy-helper", [[27, "theme-setting", [22, "setting_key"], [["deprecated"], [true]]]], nil], false]])
     end
   end

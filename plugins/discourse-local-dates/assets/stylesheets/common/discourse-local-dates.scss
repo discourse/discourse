@@ -66,7 +66,7 @@
   flex-direction: row;
 
   .form {
-    flex: 1 0 0;
+    flex: 1 0 0px;
 
     label {
       font-weight: 700;
@@ -118,7 +118,7 @@
       }
 
       .preview {
-        flex: 1 0 0;
+        flex: 1 0 0px;
         margin-top: 16px;
         text-align: center;
       }

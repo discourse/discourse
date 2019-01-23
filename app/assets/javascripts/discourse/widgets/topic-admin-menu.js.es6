@@ -147,7 +147,7 @@ export default createWidget("topic-admin-menu", {
         className: "topic-admin-delete",
         buttonClass: "btn-danger",
         action: "deleteTopic",
-        icon: "trash-o",
+        icon: "far-trash-alt",
         label: "actions.delete"
       });
     }
@@ -184,7 +184,7 @@ export default createWidget("topic-admin-menu", {
       className: "topic-admin-status-update",
       buttonClass: "btn-default",
       action: "showTopicStatusUpdate",
-      icon: "clock-o",
+      icon: "far-clock",
       label: "actions.timed_update"
     });
 
@@ -206,7 +206,7 @@ export default createWidget("topic-admin-menu", {
         className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
         action: "showChangeTimestamp",
-        icon: "calendar",
+        icon: "calendar-alt",
         label: "change_timestamp.title"
       });
     }
@@ -234,7 +234,7 @@ export default createWidget("topic-admin-menu", {
       className: "topic-admin-visible",
       buttonClass: "btn-default",
       action: "toggleVisibility",
-      icon: visible ? "eye-slash" : "eye",
+      icon: visible ? "far-eye-slash" : "far-eye",
       label: visible ? "actions.invisible" : "actions.visible"
     });
 

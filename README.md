@@ -87,7 +87,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2018 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2019 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

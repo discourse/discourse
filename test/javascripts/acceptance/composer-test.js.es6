@@ -384,7 +384,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
     "it sets the post type to whisper"
   );
 
@@ -392,7 +392,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
     "it removes the whisper mode"
   );
 
@@ -424,7 +424,7 @@ QUnit.test("Switching composer whisper state", async assert => {
   await click("#topic-footer-buttons .btn.create");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
     "doesn’t set topic reply as whisper"
   );
 
@@ -432,7 +432,7 @@ QUnit.test("Switching composer whisper state", async assert => {
 
   assert.ok(find(".topic-post:last").hasClass("whisper"));
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
     "sets post reply as a whisper"
   );
 
@@ -440,7 +440,7 @@ QUnit.test("Switching composer whisper state", async assert => {
 
   assert.notOk(find(".topic-post:nth-last-child(2)").hasClass("whisper"));
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
     "doesn’t set post reply as a whisper"
   );
 });
@@ -499,7 +499,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -508,7 +508,7 @@ QUnit.test(
 
     await click("#create-topic");
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
       "it should reset the state of the composer's model"
     );
 

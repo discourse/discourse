@@ -5,7 +5,7 @@
       {{d-button action=(action "finishedEditingName") class="btn-primary submit-edit" icon="check"}}
       {{d-button action=(action "cancelEditingName") class="btn-default cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
+      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil-alt"}}</a>
     {{/if}}
   </div>
 
@@ -178,5 +178,5 @@
   <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
-  {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash" class="btn-danger"}}
+  {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
 </div>

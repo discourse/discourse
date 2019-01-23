@@ -89,7 +89,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     this.appEvents
       .on("composer:will-open", this, this._dock)
@@ -113,7 +113,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents
       .off("composer:will-open", this, this._dock)
       .off("composer:resized", this, this._dock)

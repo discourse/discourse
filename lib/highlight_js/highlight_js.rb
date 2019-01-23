@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module HighlightJs
-  HIGHLIGHTJS_DIR = "#{Rails.root}/vendor/assets/javascripts/highlightjs/"
+  HIGHLIGHTJS_DIR ||= "#{Rails.root}/vendor/assets/javascripts/highlightjs/"
 
   def self.languages
     langs = Dir.glob(HIGHLIGHTJS_DIR + "languages/*.js").map do |path|

@@ -296,6 +296,14 @@
       }
     }
   }
+  .user-content {
+    .admin-controls nav {
+      margin: 0;
+      .nav-pills {
+        overflow-x: auto;
+      }
+    }
+  }
 }
 
 .user-field {
@@ -377,10 +385,6 @@
   p.error {
     color: $danger;
   }
-}
-
-.new-private-message {
-  margin-bottom: 15px;
 }
 
 .user-nav {

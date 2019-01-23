@@ -42,7 +42,7 @@ sr:
       less_than: "mora biti manje od 1%{count}"
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
-      record_invalid: 'Verifikacija neuspešna: 1%{errors}'
+      record_invalid: "Verifikacija neuspešna: 1%{errors}"
     embed:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
@@ -100,7 +100,7 @@ sr:
       category:
         name: "Ime kategorije"
       topic:
-        title: 'Naslov'
+        title: "Naslov"
       user_profile:
         bio_raw: "O meni"
     errors:

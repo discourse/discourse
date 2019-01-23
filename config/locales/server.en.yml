@@ -567,7 +567,7 @@ en:
 
   category:
     topic_prefix: "About the %{category} category"
-    replace_paragraph: "(Replace this first paragraph with a brief description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. **Until you edit this description or create topics, this category won't appear on the categories page.**)"
+    replace_paragraph: "(Replace this first paragraph with a brief description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.)"
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, or to establish category guidelines or rules:\n\n- Why should people use this category? What is it for?\n\n- How exactly is this different than the other categories we already have?\n\n- What should topics in this category generally contain?\n\n- Do we need this category? Can we merge with another category, or subcategory?\n"
     errors:
       not_found: "Category not found!"
@@ -967,6 +967,19 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    consolidated_page_views:
+      title: "Consolidated Pageviews"
+      xaxis:
+        page_view_crawler: "Crawlers"
+        page_view_anon: "Anonymous users"
+        page_view_logged_in: "Logged in users"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users and crawlers."
+      labels:
+        post: Post
+        editor: Editor
+        author: Author
+        edit_reason: Reason
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -1209,7 +1222,7 @@ en:
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
     pwa_config_icon_warning: 'Your site is missing a 512 × 512 icon which allows users to add a homescreen shortcut to this site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">the Site Settings</a> and upload a 512 × 512 icon.'
-    pwa_config_title_warning: 'Your site is missing a short title which allows users to add a homescreen shortcut to your site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">the Site Settings</a> and add a short title of less than 12 characters.'
+    pwa_config_title_warning: 'Your site is missing a short title which allows users to add a homescreen shortcut to your site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">the Site Settings</a> and add a short title, limited to 12 characters.'
     s3_config_warning: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
@@ -1443,8 +1456,8 @@ en:
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret. See <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
 
     enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key for Instagram authentication"
@@ -1806,7 +1819,7 @@ en:
 
     likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
 
-    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reaced. The threshold can be configured via `SiteSetting.likes_notification_consolidation_threshold`."
+    likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.likes_notification_consolidation_threshold`."
 
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
@@ -1934,7 +1947,7 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. Required size is 96 × 96."
 
-    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be less than 12 characters."
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
@@ -2023,10 +2036,6 @@ en:
     post_revision_text: "Ownership transferred"
 
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_message_max_posts:
       one: "This message was automatically closed after reaching the maximum limit of 1 reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
@@ -2073,12 +2082,6 @@ en:
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
-    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
     auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
@@ -2415,13 +2418,17 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was removed.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
 
         %{flag_reason}
 
         This post was flagged by the community and a staff member opted to remove it.
+
+        [details="Click to expand removed post"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
 
@@ -2479,7 +2486,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2491,7 +2498,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2503,7 +2510,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2515,7 +2522,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2532,7 +2539,7 @@ en:
 
         Here's the log:
 
-        ```text
+        ``` text
         %{logs}
         ```
 
@@ -2777,7 +2784,7 @@ en:
 
       ### Details
 
-      ```text
+      ``` text
       %{raw}
       ```
 

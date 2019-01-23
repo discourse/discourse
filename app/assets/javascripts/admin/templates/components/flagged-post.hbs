@@ -7,7 +7,7 @@
         {{/link-to}}
         {{#if flaggedPost.wasEdited}}
           <div class='edited-after'>
-            {{d-icon "pencil" title="admin.flags.was_edited"}}
+            {{d-icon "pencil-alt" title="admin.flags.was_edited"}}
           </div>
         {{/if}}
       {{/if}}
@@ -94,7 +94,7 @@
           class="btn-default defer-flag"
           title="admin.flags.ignore_flag_title"
           action=(action "defer")
-          icon="external-link"
+          icon="external-link-alt"
           label="admin.flags.ignore_flag"}}
 
         {{admin-delete-flag-dropdown

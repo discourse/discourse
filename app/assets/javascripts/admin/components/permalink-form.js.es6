@@ -1,70 +1,76 @@
+import { default as computed } from "ember-addons/ember-computed-decorators";
+import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
 
 export default Ember.Component.extend({
   classNames: ["permalink-form"],
   formSubmitted: false,
   permalinkType: "topic_id",
+  permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
 
-  permalinkTypes: function() {
+  @computed
+  permalinkTypes() {
     return [
       { id: "topic_id", name: I18n.t("admin.permalink.topic_id") },
       { id: "post_id", name: I18n.t("admin.permalink.post_id") },
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") }
     ];
-  }.property(),
+  },
 
-  permalinkTypePlaceholder: function() {
-    return "admin.permalink." + this.get("permalinkType");
-  }.property("permalinkType"),
+  focusPermalink() {
+    Ember.run.schedule("afterRender", () => this.$(".permalink-url").focus());
+  },
 
   actions: {
-    submit: function() {
+    submit() {
       if (!this.get("formSubmitted")) {
-        const self = this;
-        self.set("formSubmitted", true);
-        const permalink = Permalink.create({
-          url: self.get("url"),
-          permalink_type: self.get("permalinkType"),
-          permalink_type_value: self.get("permalink_type_value")
-        });
-        permalink.save().then(
-          function(result) {
-            self.set("url", "");
-            self.set("permalink_type_value", "");
-            self.set("formSubmitted", false);
-            self.action(Permalink.create(result.permalink));
-            Ember.run.schedule("afterRender", function() {
-              self.$(".permalink-url").focus();
-            });
-          },
-          function(e) {
-            self.set("formSubmitted", false);
-            let error;
-            if (e.responseJSON && e.responseJSON.errors) {
-              error = I18n.t("generic_error_with_reason", {
-                error: e.responseJSON.errors.join(". ")
+        this.set("formSubmitted", true);
+
+        Permalink.create({
+          url: this.get("url"),
+          permalink_type: this.get("permalinkType"),
+          permalink_type_value: this.get("permalink_type_value")
+        })
+          .save()
+          .then(
+            result => {
+              this.setProperties({
+                url: "",
+                permalink_type_value: "",
+                formSubmitted: false
               });
-            } else {
-              error = I18n.t("generic_error");
+
+              this.action(Permalink.create(result.permalink));
+
+              this.focusPermalink();
+            },
+            e => {
+              this.set("formSubmitted", false);
+
+              let error;
+              if (e.responseJSON && e.responseJSON.errors) {
+                error = I18n.t("generic_error_with_reason", {
+                  error: e.responseJSON.errors.join(". ")
+                });
+              } else {
+                error = I18n.t("generic_error");
+              }
+              bootbox.alert(error, () => this.focusPermalink());
             }
-            bootbox.alert(error, function() {
-              self.$(".permalink-url").focus();
-            });
-          }
-        );
+          );
       }
     }
   },
 
-  didInsertElement: function() {
-    var self = this;
-    self._super();
-    Ember.run.schedule("afterRender", function() {
-      self.$(".external-url").keydown(function(e) {
+  didInsertElement() {
+    this._super(...arguments);
+
+    Ember.run.schedule("afterRender", () => {
+      this.$(".external-url").keydown(e => {
+        // enter key
         if (e.keyCode === 13) {
-          // enter key
-          self.send("submit");
+          this.send("submit");
         }
       });
     });

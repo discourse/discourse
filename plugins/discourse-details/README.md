@@ -9,7 +9,7 @@ NOTE: Does not work on IE9, but we don't support IE9 as of Jan 1 2016.
 In your posts, surround text with `[details=your summary]` ... `[/details]`.
 For example:
 
-```
+``` text
    I watched the murder mystery on TV last night. [details=Who did it?]The butler did it[/details].
 ```
 

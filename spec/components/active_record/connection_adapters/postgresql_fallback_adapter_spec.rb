@@ -81,6 +81,7 @@ describe ActiveRecord::ConnectionHandling do
         end.first
 
         expect(message.data[:db]).to eq('default')
+        expect(message.data[:pid]).to eq(Process.pid)
 
         expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
           .to change { Discourse.readonly_mode? }.from(false).to(true)

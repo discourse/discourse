@@ -67,7 +67,7 @@ export default Ember.Mixin.create({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     afterTransition(this.$(), this._hide.bind(this));
     const id = this.get("elementId");
     const triggeringLinkClass = this.get("triggeringLinkClass");
@@ -226,7 +226,7 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     const clickOutsideEventName = this.get("clickOutsideEventName");
     const clickDataExpand = this.get("clickDataExpand");
     const clickMention = this.get("clickMention");
