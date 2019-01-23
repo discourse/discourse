@@ -186,6 +186,9 @@
 // TODO move to mobile sheet once mobile view has a seprate template.
 .mobile-view {
   .admin-badges {
+    .badges {
+      margin: 0 0.25em;
+    }
     .content-list {
       flex: 0 0 100%;
       .admin-badge-list {
