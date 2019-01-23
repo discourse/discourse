@@ -258,13 +258,6 @@ def migrate_to_s3
     bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
   end
 
-  begin
-    s3.head_bucket(bucket: bucket)
-  rescue Aws::S3::Errors::NotFound
-    puts "Bucket '#{bucket}' not found. Creating it..."
-    s3.create_bucket(bucket: bucket) unless dry_run
-  end
-
   puts "Uploading files to S3..."
   print " - Listing local files"
 
