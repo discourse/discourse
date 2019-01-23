@@ -1,5 +1,8 @@
 language: ruby
 
+git:
+  depth: false
+
 branches:
   only:
     - master

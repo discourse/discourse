@@ -277,6 +277,89 @@ class ThemeField < ActiveRecord::Base
     Theme.targets.invert[target_id].to_s
   end
 
+  class ThemeFileMatcher
+    OPTIONS = %i{name type target}
+    # regex: used to match file names to fields (import).
+    #        can contain named capture groups for name/type/target
+    # canonical: a lambda which converts name/type/target
+    #            to filename (export)
+    # targets/names/types: can be nil if any value is allowed
+    #                          single value
+    #                          array of allowed values
+    def initialize(regex:, canonical:, targets:, names:, types:)
+      @allowed_values = {}
+      @allowed_values[:names] = Array(names) if names
+      @allowed_values[:targets] = Array(targets) if targets
+      @allowed_values[:types] = Array(types) if types
+      @canonical = canonical
+      @regex = regex
+    end
+
+    def opts_from_filename(filename)
+      match = @regex.match(filename)
+      return false unless match
+      hash = {}
+      OPTIONS.each do |option|
+        plural = :"#{option}s"
+        hash[option] = @allowed_values[plural][0] if @allowed_values[plural].length == 1
+        hash[option] = match[option] if hash[option].nil?
+      end
+      hash
+    end
+
+    def filename_from_opts(opts)
+      is_match = OPTIONS.all? do |option|
+        plural = :"#{option}s"
+        next true if @allowed_values[plural] == nil # Allows any value
+        next true if @allowed_values[plural].include?(opts[option]) # Value is allowed
+      end
+      is_match ? @canonical.call(opts) : nil
+    end
+  end
+
+  FILE_MATCHERS = [
+    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$/,
+                         targets: [:mobile, :desktop, :common], names: ["head_tag", "header", "after_header", "body_tag", "footer"], types: :html,
+                         canonical: -> (h) { "#{h[:target]}/#{h[:name]}.html" }),
+    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?:\k<target>)\.scss$/,
+                         targets: [:mobile, :desktop, :common], names: "scss", types: :scss,
+                         canonical: -> (h) { "#{h[:target]}/#{h[:target]}.scss" }),
+    ThemeFileMatcher.new(regex: /^common\/embedded\.scss$/,
+                         targets: :common, names: "embedded_scss", types: :scss,
+                         canonical: -> (h) { "common/embedded.scss" }),
+    ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
+                         names: "yaml", types: :yaml, targets: :settings,
+                         canonical: -> (h) { "settings.yml" }),
+    ThemeFileMatcher.new(regex: /^locales\/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$/,
+                         names: I18n.available_locales.map(&:to_s), types: :yaml, targets: :translations,
+                         canonical: -> (h) { "locales/#{h[:name]}.yml" }),
+    ThemeFileMatcher.new(regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
+                         names: nil, types: :theme_upload_var, targets: :common,
+                         canonical: -> (h) { "assets/#{h[:filename]}" }),
+  ]
+
+  # For now just work for standard fields
+  def file_path
+    FILE_MATCHERS.each do |matcher|
+      if filename = matcher.filename_from_opts(target: target_name.to_sym,
+                                               name: name,
+                                               type: ThemeField.types[type_id],
+                                               filename: upload&.original_filename)
+        return filename
+      end
+    end
+    nil # Not a file (e.g. a theme variable/color)
+  end
+
+  def self.opts_from_file_path(filename)
+    FILE_MATCHERS.each do |matcher|
+      if opts = matcher.opts_from_filename(filename)
+        return opts
+      end
+    end
+    nil
+  end
+
   before_save do
     validate_yaml!
 

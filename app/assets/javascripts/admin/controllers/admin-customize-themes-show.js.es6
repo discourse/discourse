@@ -8,7 +8,7 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
-  downloadUrl: url("model.id", "/admin/themes/%@"),
+  downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
@@ -203,7 +203,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      if (this.get("model.remote_theme")) {
+      if (this.get("model.remote_theme.is_git")) {
         bootbox.confirm(
           I18n.t("admin.customize.theme.edit_confirm"),
           result => {

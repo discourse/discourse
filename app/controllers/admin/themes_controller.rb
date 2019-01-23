@@ -1,9 +1,10 @@
 require_dependency 'upload_creator'
+require_dependency 'theme_store/tgz_exporter'
 require 'base64'
 
 class Admin::ThemesController < Admin::AdminController
 
-  skip_before_action :check_xhr, only: [:show, :preview]
+  skip_before_action :check_xhr, only: [:show, :preview, :export]
 
   def preview
     @theme = Theme.find(params[:id])
@@ -38,7 +39,8 @@ class Admin::ThemesController < Admin::AdminController
 
   def import
     @theme = nil
-    if params[:theme]
+    if params[:theme] && params[:theme].content_type == "application/json"
+      # .dcstyle.json import. Deprecated, but still available to allow conversion
       json = JSON::parse(params[:theme].read)
       theme = json['theme']
 
@@ -79,19 +81,21 @@ class Admin::ThemesController < Admin::AdminController
         branch = params[:branch] ? params[:branch] : nil
         @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
-      rescue RuntimeError => e
-        Discourse.warn_exception(e, message: "Error importing theme")
-        render_json_error I18n.t('themes.error_importing')
+      rescue RemoteTheme::ImportError => e
+        render_json_error e.message
       end
-    elsif params[:bundle]
+    elsif params[:bundle] || params[:theme] && params[:theme].content_type == "application/x-gzip"
+      # params[:bundle] used by theme CLI. params[:theme] used by admin UI
+      bundle = params[:bundle] || params[:theme]
       begin
-        @theme = RemoteTheme.update_tgz_theme(params[:bundle].path, user: current_user)
+        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: !!params[:bundle], user: current_user)
+        log_theme_change(nil, @theme)
         render json: @theme, status: :created
-      rescue RuntimeError
-        render_json_error I18n.t('themes.error_importing')
+      rescue RemoteTheme::ImportError => e
+        render_json_error e.message
       end
     else
-      render json: @theme.errors, status: :unprocessable_entity
+      render_json_error status: :unprocessable_entity
     end
   end
 
@@ -217,22 +221,20 @@ class Admin::ThemesController < Admin::AdminController
 
   def show
     @theme = Theme.find(params[:id])
+    render json: ThemeSerializer.new(@theme)
+  end
 
-    respond_to do |format|
-      format.json do
-        check_xhr
-        render json: ThemeSerializer.new(@theme)
-      end
+  def export
+    @theme = Theme.find(params[:id])
 
-      format.any(:html, :text) do
-        raise RenderEmpty.new if request.xhr?
-
-        response.headers['Content-Disposition'] = "attachment; filename=#{@theme.name.parameterize}.dcstyle.json"
-        response.sending_file = true
-        render json: ::ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
-      end
-    end
-
+    exporter = ThemeStore::TgzExporter.new(@theme)
+    file_path = exporter.package_filename
+    headers['Content-Length'] = File.size(file_path).to_s
+    send_data File.read(file_path),
+      filename: File.basename(file_path),
+      content_type: "application/x-gzip"
+  ensure
+    exporter.cleanup!
   end
 
   private

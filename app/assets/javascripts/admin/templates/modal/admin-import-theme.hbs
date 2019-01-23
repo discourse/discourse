@@ -4,7 +4,7 @@
     <label class="radio" for="local">{{i18n 'upload_selector.from_my_computer'}}</label>
     {{#if local}}
       <div class="inputs">
-        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept='.dcstyle.json,application/json'><br>
+        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept='.dcstyle.json,application/json,.tar.gz,application/x-gzip'><br>
         <span class="description">{{i18n 'admin.customize.theme.import_file_tip'}}</span>
       </div>
     {{/if}}
@@ -19,7 +19,7 @@
         <span class="description">{{i18n 'admin.customize.theme.import_web_tip'}}</span>
         </div>
         <div class='branch'>
-        {{input value=branch placeholder="beta"}}
+        {{input value=branch placeholder="master"}}
         <span class="description">{{i18n 'admin.customize.theme.remote_branch'}}</span>
         </div>
         <div class='check-private'>

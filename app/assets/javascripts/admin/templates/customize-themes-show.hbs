@@ -75,7 +75,7 @@
       </div>
     {{/if}}
 
-    {{#if model.remote_theme}}
+    {{#if model.remote_theme.is_git}}
       {{#if model.remote_theme.commits_behind}}
         {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
       {{else}}
@@ -84,7 +84,7 @@
     {{/if}}
 
     {{#d-button action=(action "editTheme") class="btn btn-default edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
-    {{#if model.remote_theme}}
+    {{#if model.remote_theme.is_git}}
       <span class='status-message'>
         {{#if updatingRemote}}
           {{i18n 'admin.customize.theme.updating'}}
@@ -111,6 +111,10 @@
           <code>{{model.remoteError}}</code>
         </div>
       {{/if}}
+    {{else if model.remote_theme}}
+      <span class='status-message'>
+        {{d-icon "info-circle"}} {{i18n "admin.customize.theme.imported_from_archive"}}
+      </span>
     {{/if}}
   </div>
 

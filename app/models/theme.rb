@@ -433,6 +433,28 @@ class Theme < ActiveRecord::Base
     end
     hash
   end
+
+  def generate_metadata_hash
+    {
+      name: name,
+      about_url: remote_theme&.about_url,
+      license_url: remote_theme&.license_url,
+      component: component,
+      assets: {}.tap do |hash|
+        theme_fields.where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
+          hash[field.name] = "assets/#{field.upload.original_filename}"
+        end
+      end,
+      color_schemes: {}.tap do |hash|
+        schemes = self.color_schemes
+        # The selected color scheme may not belong to the theme, so include it anyway
+        schemes = [self.color_scheme] + schemes if self.color_scheme
+        schemes.uniq.each do |scheme|
+          hash[scheme.name] = {}.tap { |colors| scheme.colors.each { |color| colors[color.name] = color.hex } }
+        end
+      end
+    }
+  end
 end
 
 # == Schema Information
