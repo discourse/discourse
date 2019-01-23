@@ -9,9 +9,9 @@
     </div>
   </div>
   <div class='content-list'>
-    <ul>
+    <ul class="admin-badge-list">
       {{#each model as |badge|}}
-        <li>
+        <li class="admin-badge-list-item">
           {{#link-to 'adminBadges.show' badge.id}}
             {{badge-button badge=badge}}
             {{#if badge.newBadge}}
