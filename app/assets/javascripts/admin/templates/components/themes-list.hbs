@@ -9,28 +9,28 @@
 
 <div class="themes-list-container">
   {{#if hasThemes}}
-    {{#if componentsTabActive}}
-      {{#each themesList as |theme|}}
+    {{#if hasActiveThemes}}
+      {{#each activeThemes as |theme|}}
         {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
       {{/each}}
-    {{else}}
-      {{#if hasUserThemes}}
-        {{#each userThemes as |theme|}}
-          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
-        {{/each}}
-
-        {{#if hasInactiveThemes}}
-          <div class="themes-list-item inactive-indicator">
-            <span class="empty">{{I18n "admin.customize.theme.inactive_themes"}}</span>
-          </div>
-        {{/if}}
-      {{/if}}
 
       {{#if hasInactiveThemes}}
-        {{#each inactiveThemes as |theme|}}
-          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
-        {{/each}}
+        <div class="themes-list-item inactive-indicator">
+          <span class="empty">
+            {{#if themesTabActive}}
+              {{I18n "admin.customize.theme.inactive_themes"}}
+            {{else}}
+              {{I18n "admin.customize.theme.inactive_components"}}
+            {{/if}}
+          </span>
+        </div>
       {{/if}}
+    {{/if}}
+
+    {{#if hasInactiveThemes}}
+      {{#each inactiveThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
     {{/if}}
   {{else}}
     <div class="themes-list-item">

@@ -19,7 +19,9 @@ class Theme < ActiveRecord::Base
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
+  has_many :parent_theme_relation, class_name: 'ChildTheme', foreign_key: 'child_theme_id', dependent: :destroy
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
+  has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
   belongs_to :remote_theme
 

@@ -97,6 +97,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def index
     @themes = Theme.order(:name).includes(:child_themes,
+                                          :parent_themes,
                                           :remote_theme,
                                           :theme_settings,
                                           :settings_field,

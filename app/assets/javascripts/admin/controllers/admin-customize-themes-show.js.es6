@@ -13,17 +13,6 @@ export default Ember.Controller.extend({
   addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
 
-  @computed("model", "allThemes", "model.component")
-  parentThemes(model, allThemes) {
-    if (!model.get("component")) {
-      return null;
-    }
-    const parents = allThemes.filter(theme =>
-      _.contains(theme.get("childThemes"), model)
-    );
-    return parents.length === 0 ? null : parents;
-  },
-
   @computed("model.editedFields")
   editedFieldsFormatted() {
     const descriptions = [];
