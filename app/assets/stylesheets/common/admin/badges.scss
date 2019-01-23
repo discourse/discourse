@@ -40,8 +40,12 @@
       overflow-y: scroll;
       border-right: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
       .admin-badge-list-item {
-        &:first-of-type {
+        &:first-child {
+          border-top: none;
+        }
+        &:last-child {
           border-top: none;
         }
       }
@@ -184,7 +188,7 @@
   .admin-badges {
     .content-list {
       flex: 0 0 100%;
-      ul {
+      .admin-badge-list {
         max-height: 40vh;
         margin-right: 0;
       }
