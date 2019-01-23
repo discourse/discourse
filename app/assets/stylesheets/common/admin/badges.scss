@@ -35,12 +35,12 @@
     }
   }
   .content-list {
-    ul {
+    .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
       border-right: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
-      li {
+      .admin-badge-list-item {
         &:first-of-type {
           border-top: none;
         }
