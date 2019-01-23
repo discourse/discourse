@@ -343,7 +343,7 @@ class Guardian
     can_send_private_message?(group)
   end
 
-  def can_send_private_message?(target)
+  def can_send_private_message?(target, notify_moderators: false)
     is_user = target.is_a?(User)
     is_group = target.is_a?(Group)
 
@@ -351,11 +351,11 @@ class Guardian
     # User is authenticated
     authenticated? &&
     # Have to be a basic level at least
-    @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
+    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled
-    (is_staff? || SiteSetting.enable_personal_messages) &&
+    (is_staff? || SiteSetting.enable_personal_messages || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
