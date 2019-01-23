@@ -59,6 +59,9 @@
         color: $primary;
 
         &.groups {
+          span:not(:last-of-type) {
+            margin-right: 0.25em;
+          }
           span:after {
             content: ",";
           }
