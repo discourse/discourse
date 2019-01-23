@@ -729,6 +729,11 @@ a.mention-group {
   .topics {
     padding-bottom: 15px;
   }
+  .suggested-topics-message {
+    .badge-wrapper {
+      margin-right: 0;
+    }
+  }
 }
 
 .large-image-placeholder {
