@@ -153,6 +153,8 @@ export default {
 
   replyToTopic() {
     this._replyToPost();
+
+    return false;
   },
 
   selectDown() {
@@ -332,6 +334,8 @@ export default {
         }
       }
     }
+
+    return false;
   },
 
   _bindToSelectedPost(action, binding) {
