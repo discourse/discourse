@@ -1,5 +1,5 @@
 .post-info a {
-  color: #aaa;
+  color: $primary-medium;
 }
 
 .topic-meta-data-inside {
@@ -13,7 +13,6 @@
 }
 
 #topic-title {
-  //margin-bottom: 20px;
   margin: 0 60px 10px 0;
   h1 {
     font-size: $font-up-3;

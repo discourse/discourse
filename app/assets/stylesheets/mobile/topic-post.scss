@@ -400,7 +400,7 @@ blockquote {
 }
 
 span.highlighted {
-  background-color: dark-light-choose($highlight-low, $highlight);
+  background-color: $highlight-low;
 }
 
 .topic-avatar {
@@ -446,11 +446,11 @@ span.highlighted {
 }
 
 .username.new-user a {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: $primary-low-mid;
 }
 
 .user-title {
-  color: #aaa;
+  color: $primary-medium;
   overflow: hidden;
   margin-right: 50px;
 }
