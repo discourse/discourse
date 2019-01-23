@@ -1,41 +1,36 @@
 import { ajax } from "discourse/lib/ajax";
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed } from "ember-addons/ember-computed-decorators";
+import { setting, i18n } from "discourse/lib/computed";
 
 export default Ember.Controller.extend({
   adminBackups: Ember.inject.controller(),
   status: Ember.computed.alias("adminBackups.model"),
+  uploadLabel: i18n("admin.backups.upload.label"),
+  backupLocation: setting("backup_location"),
+  localBackupStorage: Ember.computed.equal("backupLocation", "local"),
 
-  @computed
-  localBackupStorage() {
-    return this.siteSettings.backup_location === "local";
-  },
-
-  uploadLabel: function() {
-    return I18n.t("admin.backups.upload.label");
-  }.property(),
-
-  restoreTitle: function() {
-    if (!this.get("status.allowRestore")) {
+  @computed("status.allowRestore", "status.isOperationRunning")
+  restoreTitle(allowRestore, isOperationRunning) {
+    if (!allowRestore) {
       return "admin.backups.operations.restore.is_disabled";
-    } else if (this.get("status.isOperationRunning")) {
+    } else if (isOperationRunning) {
       return "admin.backups.operations.is_running";
     } else {
       return "admin.backups.operations.restore.title";
     }
-  }.property("status.{allowRestore,isOperationRunning}"),
+  },
 
   actions: {
     toggleReadOnlyMode() {
-      var self = this;
       if (!this.site.get("isReadOnly")) {
         bootbox.confirm(
           I18n.t("admin.backups.read_only.enable.confirm"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          function(confirmed) {
+          confirmed => {
             if (confirmed) {
               Discourse.User.currentProp("hideReadOnlyAlert", true);
-              self._toggleReadOnlyMode(true);
+              this._toggleReadOnlyMode(true);
             }
           }
         );
@@ -45,20 +40,17 @@ export default Ember.Controller.extend({
     },
 
     download(backup) {
-      let link = backup.get("filename");
-      ajax("/admin/backups/" + link, { type: "PUT" }).then(() => {
-        bootbox.alert(I18n.t("admin.backups.operations.download.alert"));
-      });
+      const link = backup.get("filename");
+      ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
+        bootbox.alert(I18n.t("admin.backups.operations.download.alert"))
+      );
     }
   },
 
   _toggleReadOnlyMode(enable) {
-    var site = this.site;
     ajax("/admin/backups/readonly", {
       type: "PUT",
-      data: { enable: enable }
-    }).then(() => {
-      site.set("isReadOnly", enable);
-    });
+      data: { enable }
+    }).then(() => this.site.set("isReadOnly", enable));
   }
 });
