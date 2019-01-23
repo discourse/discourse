@@ -45,7 +45,10 @@ function show(image) {
     };
 
     copyImg.src = imageData.src;
-    copyImg.srcset = imageData.srcset || copyImg.srcset;
+
+    if (imageData.srcset) {
+      copyImg.srcset = imageData.srcset;
+    }
 
     copyImg.style.position = "absolute";
     copyImg.style.top = `${image.offsetTop}px`;
