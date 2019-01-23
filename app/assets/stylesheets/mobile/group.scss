@@ -2,10 +2,6 @@
   margin-top: 15px;
 }
 
-.group-header {
-  margin: 0;
-}
-
 .group-name {
   margin: 5px 0 0 0;
 }
@@ -14,46 +10,9 @@
   width: 100%;
 }
 
-.group-details-container {
-  margin-bottom: 15px;
-}
-
-.group-nav.mobile-nav {
-  float: left;
-}
-
 .group-activity,
 .group-manage {
   position: relative;
-}
-
-.group-navigation {
-  &.mobile-nav {
-    position: absolute;
-    right: 0;
-    top: -51px;
-  }
-}
-
-.group-activity-outlet,
-.group-messages-outlet {
-  float: none;
-}
-
-.form-horizontal {
-  .control-group {
-    margin-bottom: 10px;
-  }
-
-  .group-flair-inputs {
-    .group-flair-right {
-      margin: 0;
-    }
-  }
-}
-
-table.group-manage-logs {
-  width: 130%;
 }
 
 .group-members {
@@ -71,7 +30,7 @@ table.group-manage-logs {
     }
 
     .group-member-info {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
 
       label {
         margin-bottom: 0;
@@ -80,28 +39,4 @@ table.group-manage-logs {
       }
     }
   }
-}
-
-.group-outlet {
-  .group-username-filter {
-    position: absolute;
-    right: 0px;
-    top: -42px;
-    height: 27px;
-    margin-bottom: 0px;
-  }
-
-  .group-members-manage {
-    width: 100%;
-    text-align: right;
-  }
-
-  .group-members-dropdown,
-  .group-members-add {
-    margin: 5px 0px;
-  }
-}
-
-.group-add-members-btn {
-  margin-bottom: 10px;
 }
