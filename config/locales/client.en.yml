@@ -3356,6 +3356,7 @@ en:
           convert_theme_alert: "Are you sure you want to convert this theme to component? It will be removed as a parent from %{relatives}."
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
+          inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"

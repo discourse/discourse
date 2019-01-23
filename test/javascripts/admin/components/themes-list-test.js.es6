@@ -7,7 +7,11 @@ const themes = [1, 2, 3, 4, 5].map(num =>
   Theme.create({ name: `Theme ${num}` })
 );
 const components = [1, 2, 3, 4, 5].map(num =>
-  Theme.create({ name: `Child ${num}`, component: true })
+  Theme.create({
+    name: `Child ${num}`,
+    component: true,
+    parentThemes: [themes[num - 1]]
+  })
 );
 
 componentTest("current tab is themes", {
