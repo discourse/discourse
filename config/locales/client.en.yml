@@ -3382,7 +3382,7 @@ en:
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
-          import_file_tip: ".dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
@@ -3403,6 +3403,7 @@ en:
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
+          imported_from_archive: "This theme was imported from a .tar.gz file"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"

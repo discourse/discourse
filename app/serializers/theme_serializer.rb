@@ -47,7 +47,7 @@ end
 class RemoteThemeSerializer < ApplicationSerializer
   attributes :id, :remote_url, :remote_version, :local_version, :about_url,
              :license_url, :commits_behind, :remote_updated_at, :updated_at,
-             :github_diff_link, :last_error_text
+             :github_diff_link, :last_error_text, :is_git?
 
   # wow, AMS has some pretty nutty logic where it tries to find the path here
   # from action dispatch, tell it not to
@@ -101,34 +101,5 @@ class ThemeSerializer < BasicThemeSerializer
 
   def include_errors?
     @errors.present?
-  end
-end
-
-class ThemeFieldWithEmbeddedUploadsSerializer < ThemeFieldSerializer
-  attributes :raw_upload
-
-  def include_raw_upload?
-    object.upload
-  end
-
-  def raw_upload
-    filename = Discourse.store.path_for(object.upload)
-    raw = nil
-
-    if filename
-      raw = File.read(filename)
-    else
-      raw = Discourse.store.download(object.upload).read
-    end
-
-    Base64.encode64(raw)
-  end
-end
-
-class ThemeWithEmbeddedUploadsSerializer < ThemeSerializer
-  has_many :theme_fields, serializer: ThemeFieldWithEmbeddedUploadsSerializer, embed: :objects
-
-  def include_settings?
-    false
   end
 end
