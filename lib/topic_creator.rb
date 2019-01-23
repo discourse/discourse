@@ -212,7 +212,7 @@ class TopicCreator
     len = 0
 
     User.includes(:user_option).where(username: names).find_each do |user|
-      check_can_send_permission!(topic, user)
+      check_can_send_permission!(topic, user) unless topic.present? && topic.subtype == TopicSubtype.notify_moderators
       @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)
       len += 1
@@ -260,7 +260,10 @@ class TopicCreator
   end
 
   def check_can_send_permission!(topic, obj)
-    rollback_with!(topic, :cant_send_pm) unless @opts[:skip_validations] || @guardian.can_send_private_message?(obj)
+    unless @opts[:skip_validations] ||
+      @guardian.can_send_private_message?(obj)
+      rollback_with!(topic, :cant_send_pm)
+    end
   end
 
   def find_or_create_user(email, display_name)

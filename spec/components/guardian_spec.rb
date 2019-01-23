@@ -171,15 +171,13 @@ describe Guardian do
       SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
-    it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
+    it "returns false for notify_user if private messages are enabled but threshold not met" do
       SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     describe "trust levels" do
