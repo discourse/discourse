@@ -315,7 +315,12 @@ def migrate_to_s3
     }
 
     if !FileHelper.is_supported_image?(name)
-      options[:content_disposition] = %Q{attachment; filename="#{name}"}
+      upload = Upload.find_by(url: "/#{file}")
+
+      if upload&.original_filename
+        options[:content_disposition] =
+          %Q{attachment; filename="#{upload.original_filename}"}
+      end
     end
 
     if dry_run
