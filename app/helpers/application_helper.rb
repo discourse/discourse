@@ -114,6 +114,7 @@ module ApplicationHelper
     list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
     list << 'rtl' if rtl?
     list << text_size_class
+    list << 'anon' unless current_user
     list.join(' ')
   end
 

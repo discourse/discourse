@@ -148,6 +148,8 @@ describe ApplicationHelper do
   end
 
   describe '#html_classes' do
+    let(:user) { Fabricate(:user) }
+
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
       expect(helper.html_classes.split(" ")).to include('rtl')
@@ -159,7 +161,6 @@ describe ApplicationHelper do
     end
 
     it 'includes the user specified text size' do
-      user = Fabricate(:user)
       user.user_option.text_size = "larger"
       user.user_option.save!
       helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
@@ -170,6 +171,12 @@ describe ApplicationHelper do
       expect(helper.html_classes.split(" ")).to include('text-size-normal')
       SiteSetting.default_text_size = "largest"
       expect(helper.html_classes.split(" ")).to include('text-size-largest')
+    end
+
+    it "includes 'anon' for anonymous users and excludes when logged in" do
+      expect(helper.html_classes.split(" ")).to include('anon')
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_classes.split(" ")).not_to include('anon')
     end
   end
 
