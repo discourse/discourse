@@ -343,47 +343,35 @@ def migrate_to_s3
   elsif s3_objects.size + synced >= local_files.size
     puts "Updating the URLs in the database..."
 
-    excluded_tables = %w{
-      email_logs
-      incoming_emails
-      notifications
-      post_search_data
-      search_logs
-      stylesheet_cache
-      user_auth_token_logs
-      user_auth_tokens
-      web_hooks_events
-    }
-
-    from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+    from = "/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"
     else
-      DbHelper.regexp_replace(from, to, excluded_tables: excluded_tables)
-    end
-
-    # Uploads that were on base hostname will now be on S3 CDN
-    from = "#{Discourse.base_url}#{SiteSetting.Upload.s3_base_url}"
-    to = SiteSetting.Upload.s3_cdn_url
-
-    if dry_run
-      puts "REMAPPING '#{from}' TO '#{to}'"
-    else
-      DbHelper.remap(from, to, excluded_tables: excluded_tables)
+      DbHelper.remap(from, to, anchor_left: true)
     end
 
     if Discourse.asset_host.present?
       # Uploads that were on local CDN will now be on S3 CDN
-      from = "#{Discourse.asset_host}#{SiteSetting.Upload.s3_base_url}"
-      to = SiteSetting.Upload.s3_cdn_url
+      from = "#{Discourse.asset_host}/uploads/#{db}/original/"
+      to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
 
       if dry_run
         puts "REMAPPING '#{from}' TO '#{to}'"
       else
-        DbHelper.remap(from, to, excluded_tables: excluded_tables)
+        DbHelper.remap(from, to)
       end
+    end
+
+    # Uploads that were on base hostname will now be on S3 CDN
+    from = "#{Discourse.base_url}/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
+
+    if dry_run
+      puts "REMAPPING '#{from}' TO '#{to}'"
+    else
+      DbHelper.remap(from, to)
     end
   end
 
