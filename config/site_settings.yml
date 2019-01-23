@@ -1244,7 +1244,7 @@ security:
     list_type: compact
   blacklisted_crawler_user_agents:
     type: list
-    default: "mauibot"
+    default: "mauibot|semrushbot"
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
