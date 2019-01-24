@@ -128,7 +128,7 @@ export default createWidget("user-menu", {
   buildKey: () => "user-menu",
 
   settings: {
-    maxWidth: 300,
+    maxWidth: 320,
     showLogoutButton: true
   },
 
