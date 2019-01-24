@@ -91,10 +91,9 @@ QUnit.test("update some fields", async assert => {
     "tags tab isn't there when tags are disabled"
   );
 
-  // Error: Unhandled request in test environment: /themes/assets/10d71596-7e4e-4dc0-b368-faa3b6f1ce6d?_=1493833562388 (GET)
-  // click(".preferences-nav .nav-interface a");
-  // click('.control-group.other input[type=checkbox]:first');
-  // savePreferences();
+  click(".preferences-nav .nav-interface a");
+  click(".control-group.other input[type=checkbox]:first");
+  savePreferences();
 
   assert.ok(
     !exists(".preferences-nav .nav-apps a"),
