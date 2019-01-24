@@ -79,10 +79,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return [];
   },
 
-  @computed("model.username_lower")
-  preferencesPath(username) {
-    return userPath(`${username}/preferences`);
-  },
+  preferencesPath: fmt("model.username_lower", userPath("%@/preferences")),
 
   @computed("model.can_delete_all_posts", "model.staff", "model.post_count")
   deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
