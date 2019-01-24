@@ -44,10 +44,10 @@
             <ul>
               {{#if model.can_send_private_message_to_user}}
               <li>
-                {{#d-button class="btn btn-primary compose-pm" action=(route-action "composePrivateMessage" model)}}
-                  {{d-icon "envelope"}}
-                  {{i18n "user.private_message"}}
-                {{/d-button}}
+                {{d-button class="btn btn-primary compose-pm"
+                  action=(route-action "composePrivateMessage" model)
+                  icon="envelope"
+                  label="user.private_message"}}
               </li>
               {{/if}}
               {{#if currentUser.staff}}
