@@ -163,7 +163,11 @@ export default Ember.Component.extend({
             includeMentionableGroups: true
           }),
         key: "@",
-        transformComplete: v => v.username || v.name
+        transformComplete: v => v.username || v.name,
+        afterComplete() {
+          // ensures textarea scroll position is correct
+          Ember.run.scheduleOnce("afterRender", () => $input.blur().focus());
+        }
       });
     }
 
