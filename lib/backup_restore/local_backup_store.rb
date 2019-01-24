@@ -33,7 +33,7 @@ module BackupRestore
       path = path_from_filename(filename)
 
       if File.exists?(path)
-        FileUtils.remove_file(path, force: true)
+        File.delete(path)
         reset_cache
       end
     end
