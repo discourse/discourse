@@ -18,7 +18,7 @@ sup img.emoji {
   display: none;
   flex-direction: row;
   height: 300px;
-  color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
+  color: $primary;
   background-color: $secondary;
   border: 1px solid $primary-low;
 }
