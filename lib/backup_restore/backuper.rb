@@ -256,9 +256,6 @@ module BackupRestore
       content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
       archive_path = File.join(@archive_directory, @backup_filename)
       @store.upload_file(@backup_filename, archive_path, content_type)
-    ensure
-      log "Removing archive from local storage..."
-      FileUtils.remove_file(archive_path, force: true)
     end
 
     def after_create_hook
@@ -294,11 +291,25 @@ module BackupRestore
 
     def clean_up
       log "Cleaning stuff up..."
+      delete_uploaded_archive
       remove_tar_leftovers
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
+    end
+
+    def delete_uploaded_archive
+      return unless @store.remote?
+
+      archive_path = File.join(@archive_directory, @backup_filename)
+
+      if File.exist?(archive_path)
+        log "Removing archive from local storage..."
+        File.delete(archive_path)
+      end
+    rescue => ex
+      log "Something went wrong while deleting uploaded archive from local storage.", ex
     end
 
     def refresh_disk_space
