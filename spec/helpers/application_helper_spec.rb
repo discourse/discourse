@@ -160,17 +160,40 @@ describe ApplicationHelper do
       expect(helper.html_classes.split(" ")).not_to include('rtl')
     end
 
-    it 'includes the user specified text size' do
-      user.user_option.text_size = "larger"
-      user.user_option.save!
-      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
-      expect(helper.html_classes.split(" ")).to include('text-size-larger')
-    end
+    describe 'text size' do
+      context "with a user option" do
+        before do
+          user.user_option.text_size = "larger"
+          user.user_option.save!
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+        end
 
-    it 'falls back to the default text size for anon' do
-      expect(helper.html_classes.split(" ")).to include('text-size-normal')
-      SiteSetting.default_text_size = "largest"
-      expect(helper.html_classes.split(" ")).to include('text-size-largest')
+        it 'ignores invalid text sizes' do
+          helper.request.cookies["text_size"] = "invalid"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'ignores missing text size' do
+          helper.request.cookies["text_size"] = nil
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'prioritises the cookie specified text size' do
+          helper.request.cookies["text_size"] = "normal"
+          expect(helper.html_classes.split(" ")).to include('text-size-normal')
+        end
+
+        it 'includes the user specified text size' do
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+      end
+
+      it 'falls back to the default text size for anon' do
+        expect(helper.html_classes.split(" ")).to include('text-size-normal')
+        SiteSetting.default_text_size = "largest"
+        expect(helper.html_classes.split(" ")).to include('text-size-largest')
+      end
     end
 
     it "includes 'anon' for anonymous users and excludes when logged in" do
