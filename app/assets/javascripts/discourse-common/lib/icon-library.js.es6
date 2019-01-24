@@ -32,7 +32,7 @@ const REPLACEMENTS = {
   "notification.moved_post": "sign-out",
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
-  "notification.topic_reminder": "hand-point-right",
+  "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "group"
 };
