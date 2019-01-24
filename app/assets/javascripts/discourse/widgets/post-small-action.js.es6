@@ -102,7 +102,7 @@ export default createWidget("post-small-action", {
     contents.push(
       avatarFor.call(this, "small", {
         template: attrs.avatar_template,
-        username: attrs.avatar,
+        username: attrs.username,
         url: attrs.usernameUrl
       })
     );
