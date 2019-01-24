@@ -1364,7 +1364,7 @@ class Report
       FROM (
         SELECT DISTINCT ON (t.client_ip, t.user_id) t.client_ip, t.user_id, t.created_at
         FROM user_auth_token_logs t
-        WHERE t.user_id IN (#{User.admins.pluck(:id).join(',')})
+        WHERE t.user_id IN (#{User.staff.pluck(:id).join(',')})
           AND t.created_at >= :start_date
           AND t.created_at <= :end_date
         ORDER BY t.client_ip, t.user_id, t.created_at DESC
