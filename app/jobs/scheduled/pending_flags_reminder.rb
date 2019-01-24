@@ -8,14 +8,12 @@ module Jobs
 
     def execute(args)
       if SiteSetting.notify_about_flags_after > 0
-
         flagged_posts_count = PostAction.flagged_posts_count
-
         return unless flagged_posts_count > 0
 
         flag_ids = pending_flag_ids
 
-        if flag_ids.size >= SiteSetting.min_flags_staff_visibility && last_notified_id.to_i < flag_ids.max
+        if flag_ids.size > 0 && last_notified_id.to_i < flag_ids.max
 
           usernames = active_moderator_usernames
           mentions = usernames.size > 0 ? "@#{usernames.join(', @')} " : ""
