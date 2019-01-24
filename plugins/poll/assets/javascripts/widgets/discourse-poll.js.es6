@@ -45,7 +45,7 @@ createWidget("discourse-poll-option", {
     if (attrs.isMultiple) {
       contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
     } else {
-      contents.push(iconNode(chosen ? "far-dot-circle" : "far-circle"));
+      contents.push(iconNode(chosen ? "circle" : "far-circle"));
     }
 
     contents.push(" ");
