@@ -1,4 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import {
   default as NavItem,
@@ -7,7 +10,7 @@ import {
 } from "discourse/models/nav-item";
 
 if (extraNavItemProperties) {
-  extraNavItemProperties(function(text, opts) {
+  extraNavItemProperties((text, opts) => {
     if (opts && opts.tagId) {
       return { tagId: opts.tagId };
     } else {
@@ -17,16 +20,16 @@ if (extraNavItemProperties) {
 }
 
 if (customNavItemHref) {
-  customNavItemHref(function(navItem) {
+  customNavItemHref(navItem => {
     if (navItem.get("tagId")) {
-      var name = navItem.get("name");
+      const name = navItem.get("name");
 
       if (!Discourse.Site.currentProp("filters").includes(name)) {
         return null;
       }
 
-      var path = "/tags/",
-        category = navItem.get("category");
+      let path = "/tags/";
+      const category = navItem.get("category");
 
       if (category) {
         path += "c/";
@@ -37,7 +40,7 @@ if (customNavItemHref) {
         path += "/";
       }
 
-      path += navItem.get("tagId") + "/l/";
+      path += `${navItem.get("tagId")}/l/`;
       return path + name.replace(" ", "-");
     } else {
       return null;
@@ -52,7 +55,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   additionalTags: null,
   list: null,
   canAdminTag: Ember.computed.alias("currentUser.staff"),
-  filterMode: null,
+  filterMode: "",
   navMode: "latest",
   loading: false,
   canCreateTopic: false,
@@ -63,18 +66,6 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   search: null,
   max_posts: null,
   q: null,
-
-  categories: Ember.computed.alias("site.categoriesList"),
-
-  createTopicLabel: function() {
-    return this.get("list.draft") ? "topic.open_draft" : "topic.create";
-  }.property("list", "list.draft"),
-
-  @computed("canCreateTopic", "category", "canCreateTopicOnCategory")
-  createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
-    return !canCreateTopic || (category && !canCreateTopicOnCategory);
-  },
-
   queryParams: [
     "order",
     "ascending",
@@ -85,48 +76,55 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  navItems: function() {
-    return NavItem.buildList(this.get("category"), {
-      tagId: this.get("tag.id"),
-      filterMode: this.get("filterMode")
-    });
-  }.property("category", "tag.id", "filterMode"),
+  categories: Ember.computed.alias("site.categoriesList"),
 
-  showTagFilter: function() {
+  @computed("list.draft", "list")
+  createTopicLabel(listDraft) {
+    return listDraft ? "topic.open_draft" : "topic.create";
+  },
+
+  @computed("canCreateTopic", "category", "canCreateTopicOnCategory")
+  createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
+    return !canCreateTopic || (category && !canCreateTopicOnCategory);
+  },
+
+  @computed("category", "tag.id", "filterMode")
+  navItems(category, tagId, filterMode) {
+    return NavItem.buildList(category, { tagId, filterMode });
+  },
+
+  @computed("category")
+  showTagFilter() {
     return Discourse.SiteSettings.show_filter_by_tag;
-  }.property("category"),
+  },
 
-  showAdminControls: function() {
-    return (
-      !this.get("additionalTags") &&
-      this.get("canAdminTag") &&
-      !this.get("category")
-    );
-  }.property("additionalTags", "canAdminTag", "category"),
+  @computed("additionalTags", "canAdminTag", "category")
+  showAdminControls(additionalTags, canAdminTag, category) {
+    return !additionalTags && canAdminTag && !category;
+  },
 
   loadMoreTopics() {
     return this.get("list").loadMore();
   },
 
-  _showFooter: function() {
+  @observes("list.canLoadMore")
+  _showFooter() {
     this.set("application.showFooter", !this.get("list.canLoadMore"));
-  }.observes("list.canLoadMore"),
+  },
 
-  footerMessage: function() {
-    if (this.get("loading") || this.get("list.topics.length") !== 0) {
+  @computed("navMode", "list.topics.length", "loading")
+  footerMessage(navMode, listTopicsLength, loading) {
+    if (loading || listTopicsLength !== 0) {
       return;
     }
 
-    if (this.get("list.topics.length") === 0) {
-      return I18n.t("tagging.topics.none." + this.get("navMode"), {
-        tag: this.get("tag.id")
-      });
+    const tag = this.get("tag.id");
+    if (listTopicsLength === 0) {
+      return I18n.t(`tagging.topics.none.${navMode}`, { tag });
     } else {
-      return I18n.t("tagging.topics.bottom." + this.get("navMode"), {
-        tag: this.get("tag.id")
-      });
+      return I18n.t(`tagging.topics.bottom.${navMode}`, { tag });
     }
-  }.property("navMode", "list.topics.length", "loading"),
+  },
 
   actions: {
     changeSort(sortBy) {
@@ -139,38 +137,33 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     },
 
     refresh() {
-      const self = this;
       // TODO: this probably doesn't work anymore
       return this.store
-        .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
-        .then(function(list) {
-          self.set("list", list);
-          self.resetSelected();
+        .findFiltered("topicList", { filter: `tags/${this.get("tag.id")}` })
+        .then(list => {
+          this.set("list", list);
+          this.resetSelected();
         });
     },
 
     deleteTag() {
-      const self = this;
       const numTopics =
         this.get("list.topic_list.tags.firstObject.topic_count") || 0;
+
       const confirmText =
         numTopics === 0
           ? I18n.t("tagging.delete_confirm_no_topics")
           : I18n.t("tagging.delete_confirm", { count: numTopics });
-      bootbox.confirm(confirmText, function(result) {
+
+      bootbox.confirm(confirmText, result => {
         if (!result) {
           return;
         }
 
-        self
-          .get("tag")
+        this.get("tag")
           .destroyRecord()
-          .then(function() {
-            self.transitionToRoute("tags.index");
-          })
-          .catch(function() {
-            bootbox.alert(I18n.t("generic_error"));
-          });
+          .then(() => this.transitionToRoute("tags.index"))
+          .catch(() => bootbox.alert(I18n.t("generic_error")));
       });
     },
 
