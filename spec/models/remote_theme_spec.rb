@@ -75,7 +75,7 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
       expect(remote.theme_version).to eq("1.0")
-      expect(remote.minimum_discourse_version).to eq("1.0")
+      expect(remote.minimum_discourse_version).to eq("1.0.0")
 
       expect(@theme.theme_fields.length).to eq(6)
 
