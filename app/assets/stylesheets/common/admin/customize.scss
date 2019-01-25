@@ -283,6 +283,9 @@
       &.selected {
         color: $secondary;
         background-color: $tertiary;
+        .components-list {
+          color: $secondary;
+        }
         .fa {
           color: inherit;
         }
