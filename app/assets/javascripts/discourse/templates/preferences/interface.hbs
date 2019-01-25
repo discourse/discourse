@@ -13,7 +13,10 @@
 <div class="control-group text-size">
   <label class="control-label">{{i18n 'user.text_size.title'}}</label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=textSizes value=model.user_option.text_size onSelect=(action "selectTextSize")}}
+    {{combo-box valueAttribute="value" content=textSizes value=textSize onSelect=(action "selectTextSize")}}
+  </div>
+  <div class="controls">
+    {{preference-checkbox labelKey="user.text_size_default_on_all_devices" checked=makeTextSizeDefault}}
   </div>
 </div>
 

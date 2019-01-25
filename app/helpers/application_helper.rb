@@ -133,7 +133,8 @@ module ApplicationHelper
   end
 
   def text_size_class
-    size = current_user&.user_option&.text_size || SiteSetting.default_text_size
+    cookie_size = cookies[:text_size] if UserOption.text_sizes.keys.include?(cookies[:text_size]&.to_sym)
+    size = cookie_size || current_user&.user_option&.text_size || SiteSetting.default_text_size
     "text-size-#{size}"
   end
 
