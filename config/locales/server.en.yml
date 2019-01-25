@@ -1199,12 +1199,12 @@ en:
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
     staff_logins:
-      title: "Staff Logins"
+      title: "Admin Logins"
       labels:
         user: User
         location: Location
         login_at: Login at
-      description: "List of admin and moderator login times with locations."
+      description: "List of admin login times with locations."
     top_uploads:
       title: "Top Uploads"
       labels:
