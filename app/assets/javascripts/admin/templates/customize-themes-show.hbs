@@ -16,33 +16,91 @@
     </div>
   {{/each}}
 
-  {{#if model.remote_theme}}
-    {{#if model.remote_theme.remote_url}}
-      <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{model.remote_theme.remote_url}}</a>
-    {{/if}}
-    <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
-    {{#if model.remote_theme.license_url}}
-      <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>
-    {{/if}}
-  {{/if}}
-
-  {{#if model.parentThemes}}
-    <div class="control-unit">
-      <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
-      <ul>
-        {{#each model.parentThemes as |theme|}}
-          <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
-        {{/each}}
-      </ul>
+  {{#unless model.enabled}}
+    <div class="alert alert-error">
+      {{i18n "admin.customize.theme.required_version.error"}}
+      {{#if model.remote_theme.minimum_discourse_version}}
+        {{i18n "admin.customize.theme.required_version.minimum" version=model.remote_theme.minimum_discourse_version}}
+      {{/if}}
+      {{#if model.remote_theme.maximum_discourse_version}}
+        {{i18n "admin.customize.theme.required_version.minimum" version=model.remote_theme.maximum_discourse_version}}
+      {{/if}}
     </div>
-  {{/if}}
+  {{/unless}}
 
   {{#unless model.component}}
     <div class="control-unit">
       {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default}}
       {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
     </div>
+  {{/unless}}
 
+  {{#if model.remote_theme}}
+
+    {{#if model.remote_theme.remote_url}}
+      <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}} {{d-icon "link"}}</a>
+    {{/if}}
+    {{#if model.remote_theme.about_url}}
+    <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}} {{d-icon "link"}}</a>
+    {{/if}}
+    {{#if model.remote_theme.license_url}}
+      <a class="url license-url" href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "link"}}</a>
+    {{/if}}
+
+    {{#if model.description}}
+      <span class="theme-description">{{model.description}}</span>
+    {{/if}}
+
+    <span class="metadata">
+      {{#if model.remote_theme.authors}}<span class="authors"><span class="heading">{{i18n "admin.customize.theme.authors"}}</span> {{model.remote_theme.authors}}</span>{{/if}}
+      {{#if model.remote_theme.theme_version}}<span class="version"><span class="heading">{{i18n "admin.customize.theme.version"}}</span> {{model.remote_theme.theme_version}}</span>{{/if}}
+    </span>
+
+    <div class="control-unit">
+      {{#if model.remote_theme.is_git}}
+
+        {{#if showRemoteError}}
+          <div class="error-message">
+            {{d-icon "exclamation-triangle"}} {{I18n "admin.customize.theme.repo_unreachable"}}
+          </div>
+          <div class="raw-error">
+            <code>{{model.remoteError}}</code>
+          </div>
+        {{/if}}
+        
+        {{#if model.remote_theme.commits_behind}}
+          {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+        {{else}}
+          {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+        {{/if}}
+        
+        <span class='status-message'>
+            {{#if updatingRemote}}
+              {{i18n 'admin.customize.theme.updating'}}
+            {{else}}
+              {{#if model.remote_theme.commits_behind}}
+                {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+                {{#if model.remote_theme.github_diff_link}}
+                  <a href="{{model.remote_theme.github_diff_link}}">
+                    {{i18n 'admin.customize.theme.compare_commits'}}
+                  </a>
+                {{/if}}
+              {{else}}
+                {{#unless showRemoteError}}
+                  {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+                {{/unless}}
+              {{/if}}
+            {{/if}}
+          </span>
+      {{else}}
+        <span class='status-message'>
+          {{d-icon "info-circle"}} {{i18n "admin.customize.theme.imported_from_archive"}}
+        </span>
+      {{/if}}
+    </div>
+  {{/if}}
+
+  {{#unless model.component}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.color_scheme"}}</div>
       <div class="description">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
@@ -60,6 +118,17 @@
     </div>
   {{/unless}}
 
+  {{#if parentThemes}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
+      <ul>
+        {{#each parentThemes as |theme|}}
+          <li>{{#link-to 'adminCustomizeThemes.show' theme replace=true}}{{theme.name}}{{/link-to}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
   <div class="control-unit">
     <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
     {{#if model.hasEditedFields}}
@@ -75,47 +144,7 @@
       </div>
     {{/if}}
 
-    {{#if model.remote_theme.is_git}}
-      {{#if model.remote_theme.commits_behind}}
-        {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
-      {{else}}
-        {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
-      {{/if}}
-    {{/if}}
-
     {{#d-button action=(action "editTheme") class="btn btn-default edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
-    {{#if model.remote_theme.is_git}}
-      <span class='status-message'>
-        {{#if updatingRemote}}
-          {{i18n 'admin.customize.theme.updating'}}
-        {{else}}
-          {{#if model.remote_theme.commits_behind}}
-            {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
-            {{#if model.remote_theme.github_diff_link}}
-              <a href="{{model.remote_theme.github_diff_link}}">
-                {{i18n 'admin.customize.theme.compare_commits'}}
-              </a>
-            {{/if}}
-          {{else}}
-            {{#unless showRemoteError}}
-              {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
-            {{/unless}}
-          {{/if}}
-        {{/if}}
-      </span>
-      {{#if showRemoteError}}
-        <div class="error-message">
-          {{d-icon "exclamation-triangle"}} {{I18n "admin.customize.theme.repo_unreachable"}}
-        </div>
-        <div class="raw-error">
-          <code>{{model.remoteError}}</code>
-        </div>
-      {{/if}}
-    {{else if model.remote_theme}}
-      <span class='status-message'>
-        {{d-icon "info-circle"}} {{i18n "admin.customize.theme.imported_from_archive"}}
-      </span>
-    {{/if}}
   </div>
 
   <div class="control-unit">

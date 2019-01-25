@@ -31,7 +31,7 @@ export default Ember.Component.extend({
   )
   inactiveThemes(themes) {
     if (this.get("componentsTabActive")) {
-      return themes.filter(theme => theme.get("parentThemes.length") <= 0);
+      return themes.filter(theme => theme.get("parent_themes.length") <= 0);
     }
     return themes.filter(
       theme => !theme.get("user_selectable") && !theme.get("default")
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
   )
   activeThemes(themes) {
     if (this.get("componentsTabActive")) {
-      return themes.filter(theme => theme.get("parentThemes.length") > 0);
+      return themes.filter(theme => theme.get("parent_themes.length") > 0);
     } else {
       themes = themes.filter(
         theme => theme.get("user_selectable") || theme.get("default")

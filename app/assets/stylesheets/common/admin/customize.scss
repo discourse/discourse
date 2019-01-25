@@ -137,26 +137,35 @@
     display: inline-block;
     vertical-align: top;
 
-    .url {
-      margin-bottom: 10px;
-    }
-
     .title {
       font-size: $font-up-4;
       font-weight: bold;
       margin-bottom: 10px;
     }
+
+    .theme-description {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .metadata {
+      .authors,
+      .version {
+        display: block;
+
+        .heading {
+          font-weight: bold;
+        }
+      }
+    }
+
     .remote-url,
     .about-url,
     .license-url {
-      display: block;
-      margin-bottom: 10px;
+      display: inline-block;
+      margin-right: 10px;
     }
-    .remote-url {
-      margin-top: -5px;
-      font-size: $font-down-1;
-      font-style: italic;
-    }
+
     .mini-title {
       font-size: $font-up-1;
       font-weight: bold;
@@ -347,6 +356,7 @@
     }
     .setting-label {
       width: 25%;
+      word-wrap: break-word;
       h3 {
         margin-top: 0;
         margin-bottom: 0.5rem;

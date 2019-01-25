@@ -11,7 +11,9 @@ describe ThemeStore::TgzExporter do
       image = file_from_fixtures("logo.png")
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
-      theme.build_remote_theme(remote_url: "", about_url: "abouturl", license_url: "licenseurl")
+      theme.build_remote_theme(remote_url: "", about_url: "abouturl", license_url: "licenseurl",
+                               authors: "David Taylor", theme_version: "1.0", minimum_discourse_version: "1.0.0",
+                               maximum_discourse_version: "3.0.0.beta1")
 
       cs1 = Fabricate(:color_scheme, name: 'Orphan Color Scheme', color_scheme_colors: [
         Fabricate(:color_scheme_color, name: 'header_primary',  hex: 'F0F0F0'),
@@ -71,6 +73,10 @@ describe ThemeStore::TgzExporter do
         "assets": {
           "logo": "assets/logo.png"
         },
+        "authors": "David Taylor",
+        "minimum_discourse_version": "1.0.0",
+        "maximum_discourse_version": "3.0.0.beta1",
+        "theme_version": "1.0",
         "color_schemes": {
           "Orphan Color Scheme": {
             "header_primary": "F0F0F0",
