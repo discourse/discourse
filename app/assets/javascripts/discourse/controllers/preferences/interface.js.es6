@@ -59,16 +59,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return currentThemeId();
   },
 
-  @computed()
-  textSize() {
-    const cookie = $.cookie("text_size");
-    if (TEXT_SIZES.includes(cookie)) {
-      return cookie;
-    } else {
-      return this.get("model.user_option.text_size");
-    }
-  },
-
   @computed
   textSizes() {
     return TEXT_SIZES.map(value => {
