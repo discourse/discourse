@@ -101,6 +101,55 @@ QUnit.test("update some fields", async assert => {
   );
 });
 
+QUnit.test("font size change", async assert => {
+  $.removeCookie("text_size");
+
+  const savePreferences = async () => {
+    assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
+    await click(".save-user");
+    assert.ok(exists(".saved-user"), "it displays the saved message");
+    find(".saved-user").remove();
+  };
+
+  await visit("/u/eviltrout/preferences/interface");
+
+  // Live changes without reload
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  assert.ok(document.documentElement.classList.contains("text-size-larger"));
+
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  assert.ok(document.documentElement.classList.contains("text-size-largest"));
+
+  assert.equal($.cookie("text_size"), null, "cookie is not set");
+
+  // Click save (by default this sets for all browsers, no cookie)
+  await savePreferences();
+
+  assert.equal($.cookie("text_size"), null, "cookie is not set");
+
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await click(".text-size input[type=checkbox]");
+
+  await savePreferences();
+
+  assert.equal($.cookie("text_size"), "larger", "cookie is set");
+  await click(".text-size input[type=checkbox]");
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+
+  await savePreferences();
+  assert.equal(
+    $.cookie("text_size"),
+    null,
+    "cookie is unset when matches user preference"
+  );
+
+  $.removeCookie("text_size");
+});
+
 QUnit.test("username", async assert => {
   await visit("/u/eviltrout/preferences/username");
   assert.ok(exists("#change_username"), "it has the input element");
