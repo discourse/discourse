@@ -121,20 +121,21 @@ class Theme < ActiveRecord::Base
   end
 
   def self.transform_ids(ids, extend: true)
-    get_set_cache "transformed_ids_#{ids.join("_")}" do
+    get_set_cache "#{extend ? "extended_" : ""}transformed_ids_#{ids.join("_")}" do
       next [] if ids.blank?
 
+      ids = ids.dup
       ids.uniq!
-      parent = ids.first
+      parent = ids.shift
 
-      components = ids[1..-1]
+      components = ids
       components.push(*components_for(parent)) if extend
       components.sort!.uniq!
 
       all_ids = [parent, *components]
 
       enabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
-        .select(&:enabled?).map(&:id)
+        .select(&:enabled?).pluck(:id)
 
       all_ids & enabled_ids # Maintain ordering using intersection
     end
@@ -155,20 +156,15 @@ class Theme < ActiveRecord::Base
   end
 
   def enabled?
-    enabled = true
-
-    minimum_version = remote_theme&.minimum_discourse_version
-    maximum_version = remote_theme&.maximum_discourse_version
-
-    if minimum_version
-      enabled = false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
+    if minimum_version = remote_theme&.minimum_discourse_version
+      return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
     end
 
-    if maximum_version
-      enabled = false unless Discourse.has_needed_version?(maximum_version, Discourse::VERSION::STRING)
+    if maximum_version = remote_theme&.maximum_discourse_version
+      return false unless Discourse.has_needed_version?(maximum_version, Discourse::VERSION::STRING)
     end
 
-    enabled
+    true
   end
 
   def component_validations

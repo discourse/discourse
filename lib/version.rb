@@ -1,4 +1,6 @@
 module Discourse
+  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/ unless defined? ::Discourse::VERSION_REGEXP
+
   # work around reloader
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:

@@ -3,7 +3,14 @@ require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
-  METADATA_PROPERTIES = %i{license_url about_url authors theme_version minimum_discourse_version maximum_discourse_version}
+  METADATA_PROPERTIES = %i{
+                            license_url
+                            about_url
+                            authors
+                            theme_version
+                            minimum_discourse_version
+                            maximum_discourse_version
+                          }
 
   class ImportError < StandardError; end
 
@@ -17,7 +24,7 @@ class RemoteTheme < ActiveRecord::Base
     joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(remote_url: "")
   }
 
-  validates_format_of :minimum_discourse_version, :maximum_discourse_version, with: /\A\d+\.\d+\.\d+(\.beta\d+)?\z/, allow_nil: true
+  validates_format_of :minimum_discourse_version, :maximum_discourse_version, with: Discourse::VERSION_REGEXP, allow_nil: true
 
   def self.extract_theme_info(importer)
     JSON.parse(importer["about.json"])
