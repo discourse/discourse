@@ -57,10 +57,12 @@ describe Theme do
 
   end
 
-  it 'can correctly find parent themes' do
-    theme.add_child_theme!(child)
+  it "can automatically disable for mismatching version" do
+    expect(theme.enabled?).to eq(true)
+    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
+    expect(theme.enabled?).to eq(false)
 
-    expect(child.dependant_themes.length).to eq(1)
+    expect(Theme.transform_ids([theme.id])).to be_empty
   end
 
   it "doesn't allow multi-level theme components" do
@@ -174,12 +176,20 @@ HTML
   end
 
   describe ".transform_ids" do
+    let!(:orphan1) { Fabricate(:theme, component: true) }
     let!(:child) { Fabricate(:theme, component: true) }
     let!(:child2) { Fabricate(:theme, component: true) }
+    let!(:orphan2) { Fabricate(:theme, component: true) }
+    let!(:orphan3) { Fabricate(:theme, component: true) }
+    let!(:orphan4) { Fabricate(:theme, component: true) }
 
     before do
       theme.add_child_theme!(child)
       theme.add_child_theme!(child2)
+    end
+
+    it "returns an empty array if no ids are passed" do
+      expect(Theme.transform_ids([])).to eq([])
     end
 
     it "adds the child themes of the parent" do
@@ -187,17 +197,13 @@ HTML
 
       expect(Theme.transform_ids([theme.id])).to eq([theme.id, *sorted])
 
-      fake_id = [child.id, child2.id, theme.id].min - 5
-      fake_id2 = [child.id, child2.id, theme.id].max + 5
-
-      expect(Theme.transform_ids([theme.id, fake_id2, fake_id]))
-        .to eq([theme.id, fake_id, *sorted, fake_id2])
+      expect(Theme.transform_ids([theme.id, orphan1.id, orphan2.id])).to eq([theme.id, orphan1.id, *sorted, orphan2.id])
     end
 
     it "doesn't insert children when extend is false" do
-      fake_id = theme.id + 1
-      fake_id2 = fake_id + 2
-      fake_id3 = fake_id2 + 3
+      fake_id = orphan2.id
+      fake_id2 = orphan3.id
+      fake_id3 = orphan4.id
 
       expect(Theme.transform_ids([theme.id], extend: false)).to eq([theme.id])
       expect(Theme.transform_ids([theme.id, fake_id3, fake_id, fake_id2, fake_id2], extend: false))
@@ -466,6 +472,8 @@ HTML
     it "can list working theme_translation_manager objects" do
       en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
         en:
+          theme_metadata:
+            description: "Description of my theme"
           group_of_translations:
             translation1: en test1
             translation2: en test2
@@ -508,6 +516,18 @@ HTML
         "fr test4",
         "fr test5"
       ])
+    end
+
+    it "can list internal theme_translation_manager objects" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          theme_metadata:
+            description: "Description of my theme"
+          another_translation: en test4
+      YAML
+      translations = theme.internal_translations
+      expect(translations.map(&:key)).to contain_exactly("theme_metadata.description")
+      expect(translations.map(&:value)).to contain_exactly("Description of my theme")
     end
 
     it "can create a hash of overridden values" do

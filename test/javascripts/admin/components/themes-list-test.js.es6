@@ -10,7 +10,8 @@ const components = [1, 2, 3, 4, 5].map(num =>
   Theme.create({
     name: `Child ${num}`,
     component: true,
-    parentThemes: [themes[num - 1]]
+    parentThemes: [themes[num - 1]],
+    parent_themes: [1, 2, 3, 4, 5]
   })
 );
 
