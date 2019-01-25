@@ -1186,7 +1186,7 @@ en:
       labels:
         user_agent: "User Agent"
         page_views: "Pageviews"
-      description: "List of webcrawler user agents ordered by pageviews."
+      description: "List of web crawler user agents, sorted by pageviews."
     suspicious_logins:
       title: "Suspicious Logins"
       labels:
