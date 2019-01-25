@@ -134,10 +134,10 @@ class Theme < ActiveRecord::Base
 
       all_ids = [parent, *components]
 
-      enabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
-        .select(&:enabled?).pluck(:id)
+      disabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
+        .reject(&:enabled?).pluck(:id)
 
-      all_ids & enabled_ids # Maintain ordering using intersection
+      all_ids - disabled_ids
     end
   end
 

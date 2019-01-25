@@ -65,6 +65,11 @@ describe Theme do
     expect(Theme.transform_ids([theme.id])).to be_empty
   end
 
+  it "#transform_ids works with nil values" do
+    # Used in safe mode
+    expect(Theme.transform_ids([nil])).to eq([nil])
+  end
+
   it "doesn't allow multi-level theme components" do
     grandchild = Fabricate(:theme, user: user)
     grandparent = Fabricate(:theme, user: user)
