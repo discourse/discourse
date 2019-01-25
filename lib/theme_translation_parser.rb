@@ -2,7 +2,7 @@ class ThemeTranslationParser
   INTERNAL_KEYS = [:theme_metadata]
   class InvalidYaml < StandardError; end
 
-  def initialize(setting_field, internal: internal)
+  def initialize(setting_field, internal: false)
     @setting_field = setting_field
     @internal = internal
   end
