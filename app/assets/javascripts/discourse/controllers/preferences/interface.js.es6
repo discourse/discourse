@@ -61,7 +61,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   textSize() {
-    let cookie = $.cookie("text_size");
+    const cookie = $.cookie("text_size");
     if (TEXT_SIZES.includes(cookie)) {
       return cookie;
     } else {
