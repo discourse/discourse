@@ -59,6 +59,40 @@ const Topic = RestModel.extend({
     return user || this.get("creator");
   },
 
+  @computed("posters.[]", "participants.[]")
+  featuredUsers(posters, participants) {
+    let users = posters;
+    const maxUserCount = 5;
+    const posterCount = users.length;
+
+    if (
+      this.get("isPrivateMessage") &&
+      participants &&
+      posterCount < maxUserCount
+    ) {
+      let pushOffset = 0;
+      if (posterCount > 1) {
+        const lastUser = users[posterCount - 1];
+        if (lastUser.extras && lastUser.extras.includes("latest")) {
+          pushOffset = 1;
+        }
+      }
+
+      const poster_ids = _.pluck(posters, "user_id");
+      participants.some(p => {
+        if (!poster_ids.includes(p.user_id)) {
+          users.splice(users.length - pushOffset, 0, p);
+          if (users.length === maxUserCount) {
+            return true;
+          }
+        }
+        return false;
+      });
+    }
+
+    return users;
+  },
+
   @computed("fancy_title")
   fancyTitle(title) {
     let fancyTitle = censor(
