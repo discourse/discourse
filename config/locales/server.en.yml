@@ -1781,8 +1781,8 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
-    staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
+    public_user_custom_fields: "A list of user custom fields that can be retrieved with the API."
+    staff_user_custom_fields: "A list of user custom fields that can be retrieved for staff members with the API."
     enable_user_directory: "Provide a directory of users for browsing"
     enable_group_directory: "Provide a directory of groups for browsing"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
