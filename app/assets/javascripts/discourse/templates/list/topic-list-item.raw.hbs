@@ -44,10 +44,6 @@
 
 {{raw "list/posts-count-column" topic=topic}}
 
-{{#if showParticipants}}
-  {{raw "list/posters-column" posters=topic.participants}}
-{{/if}}
-
 {{#if showLikes}}
   <td class="num likes">
     {{#if hasLikes}}

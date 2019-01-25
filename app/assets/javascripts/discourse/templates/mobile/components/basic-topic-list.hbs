@@ -46,13 +46,6 @@
                   {{category-link t.category}}
                 </div>
               {{/unless}}
-              {{#if showParticipants}}
-                <div class='participants'>
-                  {{#each participants as |p|}}
-                    <a href="{{unbound p.user.path}}" class="{{unbound p.extras}}">{{avatar p usernamePath="user.username" imageSize="small"}}</a>
-                  {{/each}}
-                </div>
-              {{/if}}
               <div class="clearfix"></div>
             </div>
           </td>
