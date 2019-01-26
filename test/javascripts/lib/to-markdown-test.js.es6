@@ -352,3 +352,18 @@ QUnit.test("keeps emoji syntax for custom emoji", assert => {
 
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts image lightboxes to markdown", assert => {
+  let html = `
+  <a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"><div class="meta">
+  <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
+  </div></a>
+  `;
+  const markdown = `![sherlock3_sig.jpg](https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg)`;
+
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `<a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"></a>`;
+
+  assert.equal(toMarkdown(html), markdown);
+});
