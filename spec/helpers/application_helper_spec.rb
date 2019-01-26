@@ -178,9 +178,18 @@ describe ApplicationHelper do
           expect(helper.html_classes.split(" ")).to include('text-size-larger')
         end
 
+        it 'ignores cookies with lower sequence' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "normal|1"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
         it 'prioritises the cookie specified text size' do
-          helper.request.cookies["text_size"] = "normal"
-          expect(helper.html_classes.split(" ")).to include('text-size-normal')
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "largest|4"
+          expect(helper.html_classes.split(" ")).to include('text-size-largest')
         end
 
         it 'includes the user specified text size' do

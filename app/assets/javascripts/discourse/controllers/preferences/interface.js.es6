@@ -126,13 +126,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
               this.get("model.user_option.theme_key_seq")
             );
           }
-          if (
-            makeTextSizeDefault ||
-            this.get("model.user_option.text_size") === $.cookie("text_size")
-          ) {
-            $.removeCookie("text_size");
-          } else {
-            $.cookie("text_size", this.get("textSize"));
+          if (!makeTextSizeDefault) {
+            this.get("model").updateTextSizeCookie(this.get("textSize"));
           }
 
           this.homeChanged();

@@ -106,7 +106,9 @@ export default {
       }
     ],
     user: {
-      user_option: {},
+      user_option: {
+        text_size_seq: 1
+      },
       id: 19,
       username: "eviltrout",
       uploaded_avatar_id: null,
