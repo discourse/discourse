@@ -54,7 +54,7 @@ describe "S3Inventory" do
     $stdout = old_stdout
   end
 
-  it "will return recent inventory file name" do
+  it "should return the latest inventory file name" do
     expect(inventory.file.key).to eq("example1.csv.gz")
   end
 
