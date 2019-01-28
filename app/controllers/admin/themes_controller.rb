@@ -84,7 +84,7 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || params[:theme] && params[:theme].content_type == "application/x-gzip"
+    elsif params[:bundle] || params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type)
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       begin
@@ -95,7 +95,7 @@ class Admin::ThemesController < Admin::AdminController
         render_json_error e.message
       end
     else
-      render_json_error status: :unprocessable_entity
+      render_json_error I18n.t("themes.import_error.unknown_file_type"), status: :unprocessable_entity
     end
   end
 
