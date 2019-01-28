@@ -109,4 +109,12 @@ describe ThemeStore::TgzExporter do
     end.to raise_error(RuntimeError)
   end
 
+  it "doesn't prepend 'discourse' to filename if already there" do
+    theme.update!(name: "Discourse Header Icons")
+    exporter = ThemeStore::TgzExporter.new(theme)
+    filename = exporter.package_filename
+    exporter.cleanup!
+    expect(filename).to end_with "/discourse-header-icons-theme.tar.gz"
+  end
+
 end
