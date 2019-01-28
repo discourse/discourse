@@ -710,9 +710,7 @@ const User = RestModel.extend({
   @computed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
     if ($.cookie("text_size")) {
-      const parts = $.cookie("text_size").split("|");
-      const cookieSize = parts[0];
-      const cookieSeq = parts[1];
+      const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -722,7 +720,10 @@ const User = RestModel.extend({
 
   updateTextSizeCookie(newSize) {
     const seq = this.get("user_option.text_size_seq");
-    $.cookie("text_size", `${newSize}|${seq}`);
+    $.cookie("text_size", `${newSize}|${seq}`, {
+      path: "/",
+      expires: 9999
+    });
   }
 });
 
