@@ -329,7 +329,6 @@ gl:
       title: "Sesión iniciada"
       xaxis: "Día"
     page_view_crawler_reqs:
-      title: "Extractores web"
       xaxis: "Día"
     page_view_total_reqs:
       xaxis: "Día"

@@ -25,7 +25,7 @@ sl:
     pm: "pm"
   title: "Discourse"
   topics: "Teme"
-  posts: "objave"
+  posts: "prispevkov"
   loading: "Nalagam"
   log_in: "Vpis"
   errors: &errors
@@ -53,11 +53,25 @@ sl:
   activemodel:
     errors:
       <<: *errors
+  invite:
+    not_found: "Vaša koda povabila ni pravilna. Kontaktirajte administatorja."
+    not_found_template: |
+      <p>Vaše povabilo na <a href="%{base_url}">%{site_name}</a> je bilo že sprejeto.</p>
+
+      <p>Če poznate svoje geslo, potem se lahko <a href="%{base_url}/login">prijavite</a>.</p>
+
+      <p>Drugače lahko<a href="%{base_url}/password-reset">zamenjate geslo</a>.</p>
+    user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
+    confirm_email: "<p>Ste skoraj koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
+  topic_invite:
+    failed_to_invite: "Uporabnika ne moremo povabiti v to temo ker ni član ene od naslednjih skupin uporabnikov: %{group_names}."
+    user_exists: "Uporabnik je bil že povabljen. Uporabnika lahko povabite na vsako temo samo enkrat."
   reading_time: "Čas branja"
   likes: "Všečki"
   embed:
     start_discussion: "Začni razpravo"
     continue: "Nadaljuj razpravo"
+  user_is_suspended: "Suspendirani uporabniki ne morejo objavljati."
   next_page: "naslednja stran →"
   prev_page: "← prejšnja stran"
   page_num: "Stran %{num}"
@@ -68,20 +82,23 @@ sl:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Zadnje teme"
+    hot: "Vroče teme"
+    badge: "%{display_name} značka na %{site_title}"
   excerpt_image: "slika"
   groups:
     default_names:
       everyone: "vsi"
       admins: "administratorji"
       moderators: "moderatorji"
+      staff: "osebje"
   education:
     until_posts:
-      one: "1 objave"
-      two: "%{count} objavi"
-      few: "%{count} objav"
-      other: "%{count} objav"
+      one: "1 prispevek"
+      two: "%{count} prispevka"
+      few: "%{count} prispevkov"
+      other: "%{count} prispevkov"
     "new-topic": |
-      Dobrodošli na &mdash; **hvala za novo temo!**
+      Dobrodošli na %{site_name} &mdash; **hvala za novo temo!**
 
       - Ali je naslov teme dovolj zanimiv če ga preberete naglas? Ali je dober povzetek vsebine?
 
@@ -109,8 +126,22 @@ sl:
 
       Veliko lažje je spremljati pogovore in najti zanimive ljudi v debatah, ko imajo vsi udeleženci edinstveno profilno sliko!
   activerecord:
+    attributes:
+      topic:
+        featured_link: "Izpostavljena povezava"
     errors:
       <<: *errors
+      models:
+        user:
+          attributes:
+            password:
+              common: "je eno od 10000 najbolj uporabljenih gesel. Uporabite bolj varno geslo."
+              same_as_username: "je enako kot vaše uporabniško ime. Uporabite bolj varno geslo."
+              same_as_email: "je enako kot vaš e-naslov. Uporabite bolj varno geslo."
+              same_as_current: "je enako kot vaše trenutno geslo."
+              unique_characters: "vsebuje preveč enakih znakov. Uporabite bolj varno geslo."
+  staff_category_name: "Osebje"
+  staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   category:
     uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
   trust_levels:
@@ -124,57 +155,591 @@ sl:
       title: "redni uporabnik"
     leader:
       title: "vodja"
+  password_reset:
+    no_token: "Povezava za zamenjavo gesla je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo.."
+    choose_new: "Vnesite novo geslo"
+    choose: "Vnesite geslo"
+    update: "Spremenite geslo"
+    save: "Nastavi geslo"
+    title: "Zamenjaj geslo"
+    success: "Uspešno ste zamenjali geslo in ste sedaj prijavljeni."
+    success_unapproved: "Uspešno ste zamenjali geslo."
+  email_login:
+    invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
   activation:
     welcome_to: "Dobrodošli na %{site_name}!"
   post_action_types:
     off_topic:
-      description: "Ta objava ne ustreza diskusiji v tej temi kot je definirana z naslovom teme in prvo objavo v temi in bi verjetno sodila nekam drugam."
+      description: "Prispevek ne ustreza diskusiji v tej temi kot je definirana z naslovom teme in prvim prispevkom v temi in bi verjetno sodila nekam drugam."
     spam:
-      description: "Ta objava sodi med oglaševanje ali je vandalizem. Objava ni uporabna in relevantna za to temo."
+      description: "Prispevek sodi med oglaševanje ali vandalizem. Prispevek ni uporaben in relevanten za to temo."
+      short_description: "To je oglas ali vandalizem"
     inappropriate:
-      description: 'Ta objava vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
+      description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
     notify_user:
       title: "Pošlji zasebno sporočilo uporabniku @{{username}}"
-      description: "Rad bi osebno opozoril uporabnika o njegovi objavi preko zasebnega sporočila."
-      short_description: "Rad bi osebno opozoril uporabnika o njegovi objavi preko zasebnega sporočila."
+      description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
+      short_description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       long_form: "opozorjen uporabnik"
     notify_moderators:
       title: "Drug razlog"
-      description: "Ta objava potrebuje pregled s strani moderatorja iz drugega razloga."
+      description: "Prispevek potrebuje pregled osebja iz drugega razloga."
+      short_description: "Potrebuje pregled osebja iz drugega razloga"
+      long_form: "prijavljeno za pregled osebja"
+      email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
   user_activity:
     no_default:
       self: "Nimate nobene aktivnosti."
     no_bookmarks:
-      self: "Nimate zaznamkov; dodajte zaznamek na objavo, da jih lahko hitreje najdete."
+      self: "Nimate zaznamkov na prispevkih; dodajte zaznamek na prispevek, da jih lahko hitreje najdete."
     no_likes_given:
-      self: "Niste všečkali nobeno objavo."
+      self: "Niste všečkali noben prispevek."
     no_replies:
-      self: "Nisi odgovoril na nobeno objavo."
+      self: "Nisi odgovoril na noben prispevek."
     no_drafts:
       self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
   topic_flag_types:
+    spam:
+      description: "Tema sodi med oglaševanje ali vandalizem. Ni uporabna in relevantna za ta forum."
+      short_description: "To je oglas"
+    inappropriate:
+      description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
     notify_moderators:
       title: "Drug razlog"
+      description: 'Prispevek potrebuje pregled osebja na podlagi <a href="%{base_path}/guidelines">pravil skupnosti</a>, <a href="%{tos_url}">pogojev uporabe</a>, ali iz drugega razloga, ki ni naveden zgoraj.'
+      short_description: "Potrebuje pregled osebja iz drugega razloga"
+  archetypes:
+    banner:
+      title: "Tema na oglasnem traku"
+      message:
+        make: "Ta tema je sedaj na oglasnem traku. Pojavila se bo na vrhu vsake strani dokler jo uporabnik ne zapre."
+        remove: "Ta tema ni več na oglasnem traku. Ne bo se več pojavljala na vrhu strani."
+  unsubscribe:
+    mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
+    disable_digest_emails: "Ne pošiljaj mi več e-sporočil s povzetki"
   reports:
+    moderators_activity:
+      labels:
+        revision_count: Verzije
     notify_user_private_messages:
       description: "Kolikokrat so bili uporabniki zasebno opozorjeni z prijavo."
-  site_settings:
-    avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."
+  topic_statuses:
+    auto_deleted_by_timer: "Samodejno izbrisana s strani opomnika."
+  login:
+    wait_approval: "Hvala za registracijo. Obvestili vas bomo, ko bo vaš račun potrjen."
+    suspended_with_reason: "Suspendiran račun do%{date}: %{reason}"
+  user:
+    ip_address:
+      max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
+  invite_mailer:
+    subject_template: "%{inviter_name} vas je povabil(a) da sodelujete v '%{topic_title}' na %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} vas je povabil(a) da sodelujete v
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Če vas zanima, sledite povezavi:
+
+      %{invite_link}
+  custom_invite_mailer:
+    subject_template: "%{inviter_name} vas je povabil(a) da sodelujete v '%{topic_title}' na %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} vas je povabil(a) da sodelujete v
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Dodatno sporočilo:
+
+      > %{user_custom_message}
+
+      Če vas zanima, sledite povezavi:
+
+      %{invite_link}
+  invite_forum_mailer:
+    subject_template: "%{inviter_name} vas je povabil(a) da se pridružite %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} vas je povabil(a) da se pridružite
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Če vas zanima, sledite povezavi:
+
+      %{invite_link}
+  custom_invite_forum_mailer:
+    subject_template: "%{inviter_name} vas je povabil(a) da se pridružite %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} vas je povabil(a) da se pridružite
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Dodatno sporočilo:
+
+      > %{user_custom_message}
+
+      Če vas zanima, seledite povezavi:
+
+      %{invite_link}
+  invite_password_instructions:
+    subject_template: "Nastavite geslo za vaš %{site_name} račun"
+    text_body_template: |
+      Hvala za sprejeto povabilo na %{site_name} -- dobrodošli!
+
+      Sledite povezavi za nastavitev gesla:
+      %{base_url}/u/password-reset/%{email_token}
+
+      (Če je zgornja povezava potekla, izberite "Pozabil sem geslo" pri prijavi z e-naslovom.)
+  flag_reasons:
+    inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
+    spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in relevanten za temo."
+    notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
+  system_messages:
+    post_hidden:
+      text_body_template: |
+        Pozdravljeni,
+
+        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit, zato premislite kako bi lahko prispevek spremenili, da bo upošteval njihove pripombe. **Če vaš prispevek uredite najkasneje %{edit_delay} minut po objavi, bo samodejno ponovno prikazan.**
+
+        Vendar, če bo prispevek ponovno skrit zaradi prijav članov skupnosti, potem bo skrit dokler ga ne pregleda član osebja foruma.
+
+        Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
+    post_hidden_again:
+      text_body_template: |
+        Pozdravljeni,
+
+        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit. **Ker je bil prispevek skrit večkrat, bo ostal skrit dokler ga ne pregleda član osebja foruma.**
+
+        Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted:
+      text_body_template: |
+        Pozdravljeni,
+
+        To je samodejno sporočilo od %{site_name} da je bil [vaš prispevek](%{base_url}%{url}) odstranjen.
+
+        %{flag_reason}
+
+        Ta prispevek je bil prijavljen s strani skupnosti in član osebja foruma se je odločil da ga odstrani.
+
+        [details="Izberi za prikaz odstranjenega prispevka"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        Za več informacij preberite [pravila skupnosti](%{base_url}/guidelines).
+    welcome_user:
+      text_body_template: |
+        Hvala za prijavo na %{site_name} in dobrodošli!
+
+        %{new_user_tips}
+
+        Ker podpiramo prijazno komunikacijo, želimo da spoštujete [pravila skupnosti](%{base_url}/guidelines).
+
+        Lepo se imejte v naši družbi!
+    welcome_invite:
+      subject_template: "Dobrodošli na %{site_name}!"
+      text_body_template: |
+        Hvala da ste sprejeli povabilo na  %{site_name} -- dobrodošli!
+
+        - Naredili smo uporabniški račun **%{username}** za vas. Spremenite lahko ime ali geslo v [uporabniških nastavitvah][prefs].
+
+        - Za prijavo **uporabite enak e-naslov kot v povabilu** — drugače ne bomo mogli vedeti, da ste to vi!
+
+        %{new_user_tips}
+
+        Ker podpiramo prijazno komunikacijo, želimo da spoštujete [pravila skupnosti](%{base_url}/guidelines).
+
+        Lepo se imejte v naši družbi!
+
+        [prefs]: %{user_preferences_url}
+    bulk_invite_succeeded:
+      title: "Množično povabilo je uspelo"
+      subject_template: "Množično povabilo uporabnikov je uspelo"
+      text_body_template: "Vaše datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil."
+    bulk_invite_failed:
+      title: "Množično povabilo ni uspelo"
+      subject_template: "Množično pobvabilo uporabnikov je končalo z napakami"
+      text_body_template: |
+        Vaša datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil z %{failed} napakami.
+
+        Tukaj je dnevnik napak:
+
+        ``` text
+        %{logs}
+        ```
+    csv_export_succeeded:
+      title: "CSV izvoz uspel"
+      subject_template: "[%{export_title}] Izvoz podatkov končan"
+      text_body_template: |
+        Vaš izvoz podatkov je končan! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Zgornja povezava za prenos bo aktivna naslednjih 48 ur.
+
+        Podatki so stisnjeni v gzip datoteki. Če se datoteka ne razširi samodejno, ko jo odprete, uporabite eno od navedenih orodij: https://www.gzip.org/#faq4
+    csv_export_failed:
+      title: "CSV izvoz ni uspel"
+      subject_template: "Izvoz podatkov ni uspel"
+      text_body_template: "Izvoz podatkov ni uspel. Preverite dnevnike ali [kontaktirajte člana osebja foruma](%{base_url}/about)."
+    too_many_spam_flags:
+      text_body_template: |
+        Pozdravljeni,
+
+        To samodejno sporočilo iz %{site_name} vam sporoča da so bili vaši prispevki začasno skriti, ker so bili prijavljeni s strani skupnosti.
+
+        Kot preventivni ukrep je bil vaš uporabniški račun utišan, zato ne boste mogli odgovarjati na prispevke ali teme dokler vas ne pregleda član osebja foruma. Opravičujemo se vam za neprijetnosti.
+
+        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      text_body_template: |
+        Pozdravljeni,
+
+        To samodejno sporočilo iz %{site_name} vam sporoča da je bil vaš uporabniški račun dan na čakanje zaradi velikega števila prijav s strani skupnosti.
+
+        Kot preventivni ukrep je bil vaš uporabniški račun utišan, zato ne boste mogli odgovarjati na prispevke ali teme dokler vas ne pregleda član osebja foruma. Opravičujemo se vam za neprijetnosti.
+
+        Za dodatne informacije preberite [pravila skupnosti] (%{base_url}/guidelines).
+    silenced_by_staff:
+      title: "Utišan s strani osebja"
+      text_body_template: |
+        Pozdravljeni,
+
+        To samodejno sporočilo iz %{site_name} vam sporoča da je bil vaš uporabniški račun zaradi preventivnega ukrepa začasno dan na čakanje.
+
+        Lahko še naprej brskate po forumu, vendar ne boste mogli odgovarjati na prispevke ali teme dokler [član osebja foruma](%{base_url}/about) ne pregleda vaše zadnje prispevke.  Opravičujemo se vam za neprijetnosti.
+
+        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
+    user_automatically_silenced:
+      title: "Uporabnik samodejno utišan"
+      subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
+      text_body_template: |
+        To je samodejno sporočilo.
+
+        Novi uporabnik [%{username}](%{user_url}) je bil samodejno utišan, ker je več uporabnikov prijavilo prispevke od %{username}.
+
+        [Preverite prijave](%{base_url}/admin/flags). Če je bil uporabnik %{username} po nepotrebnem utišan, kliknite gumb Ukini utišanje uporabnika na [admin strani uporabnika](%{user_url}).
+
+        Ta nastavitev se lahko sprememni preko `silence_new_user` nastavitve.
   user_notifications:
+    invited_group_to_private_message_body: |
+      %{username} je povabil(a) @%{group_name} da sodeluje v
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+    invited_to_private_message_body: |
+      %{username} vas je povabil(a) da sodelujete v
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} vas je povabil(a) da sodelujete v
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      subject_template: "[%{email_prefix}] %{username} je povabil(a)  @%{group_name} da sodelujete v '%{topic_title}'"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{email_prefix}] %{username} vas je povabil(a) da sodelujete v '%{topic_title}'"
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{email_prefix}] %{username} vas je povabil(a) da sodelujete v '%{topic_title}'"
+    user_invited_to_topic:
+      title: "Uporabnik povabljen v temo"
+    account_suspended:
+      title: "Suspendiran račun"
+      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
+      text_body_template: |
+        Suspendirani ste bili iz foruma do %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+    account_second_factor_disabled:
+      text_body_template: "Preverjanje v dveh korakih je bilo onemogočeno na vašem računu pri %{site_name}. Sedaj se lahko prijavite samo z geslom - dodatna potrditvena koda ni več potrebna.\n\nČe niste sami izklopili preverjanje v dveh korakih je mogoče, da je nekdo posegel v vaš račun. \n\nČe imate kakršnakoli vprašanja, [kontaktirajte osebje foruma](%{base_url}/about).\n"
+    digest:
+      why: "Kratek povzetek %{site_link} od vašega zadnjega obiska %{last_seen_at}"
+      since_last_visit: "Od vašega zadnjega obiska"
+      new_topics: "Nove teme"
+      unread_messages: "Neprebrana zasebna sporočila"
+      unread_notifications: "Neprebrana obvestila"
+      liked_received: "Prejetih všečkov"
+      new_posts: "Novih prispevkov"
+      new_users: "Novih uporabnikov"
+      popular_topics: "Zanimivih tem"
+      follow_topic: "Sledi tej temi"
+      join_the_discussion: "Preberi"
+      popular_posts: "Zanimivi prispevki"
+      more_new: "Novo za vas"
+      subject_template: "[%{email_prefix}] povzetek"
+      unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ko vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link}, ali %{unsubscribe_link} za odjavo."
+      your_email_settings: "vaše nastavitve e-pošte"
+      click_here: "klikni tukaj"
+      from: "%{site_name} povzetek"
+      preheader: "Strnjen povzetek od vašega zadnjega obiska %{last_seen_at}"
+    email_login:
+      text_body_template: |
+        Tukaj je vaša povezava za prijavo na [%{site_name}](%{base_url}).
+
+        Če niste vi zahtevali te povezave, lahko ignorirate to e-sporočilo.
+
+        Za prijavo sledite povezavi:
+        %{base_url}/session/email-login/%{email_token}
+    set_password:
+      text_body_template: |
+        Nekdo je zahteval dodajanje gesla na vašemu računu pri [%{site_name}](%{base_url}). Alternativno se lahko prijavite tudi s podprtimi zunanjimi računi (Google, Facebook...), ki se ujemajo z vašim e-naslovom.
+
+        Če niste vi podali te zahteve, lahko to e-sporočilo ignorirate.
+
+        Sledite povezavi za izbiro gesla:
+        %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      text_body_template: |
+        Nekdo je zahteval prijavo na vaš račun pri [%{site_name}](%{base_url}).
+
+        Če niste vi podali te zahteve, lahko to e-sporočilo ignorirate.
+
+        Za prijavo sledite povezavi:
+        %{base_url}/u/admin-login/%{email_token}
+    account_created:
+      text_body_template: |
+        Ustvarjen je bil nov uporabniški račun na %{site_name}
+
+        Spedite povezavi za nastavitev gesla za vaš novi uporabniški račun:
+        %{base_url}/u/password-reset/%{email_token}
     signup_after_approval:
+      title: "Registracija po potrditvi"
       subject_template: "Potrjeni ste bili na %{site_name}!"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Član osebja foruma je potrdil vaš račun pri %{site_name}.
+
+        Do vašega računa lahko dostopate s prijavo na:
+        %{base_url}
+
+        Če zgornja povezava ne deluje, poizkusite kopirati povezavo v naslov v vašem spletnem brskalniku.
+
+        %{new_user_tips}
+
+        Ker podpiramo prijazno komunikacijo, želimo da spoštujete [pravila skupnosti](%{base_url}/guidelines).
+
+        Lepo se imejte v naši družbi!
+    signup:
+      title: "Registracija"
+    suspicious_login:
+      text_body_template: |
+        Pozdravljeni,
+
+        Zaznali smo prijavo iz naprave ali lokacije, ki jo ponavadi ne uporabljate. Ste bili to vi?
+
+         - Lokacija: %{location} (%{client_ip})
+         - Brskalnik: %{browser}
+         - Naprava: %{device} – %{os}
+
+        Če ste bili to vi, super! Ne potrebujete storiti ničesar.
+
+        Če to niste bili vi, potem [preverite nedavno uporabljene naprave](%{base_url}/my/preferences/account) in razmislite o zamenjavi gesla.
   login_required:
     welcome_message: |
       ## [Dobrodošli na %{title}](#welcome)
-      Za dostop morate biti prijavljeni. Ustvarite račun in se prijavite za nadaljevanje.
+      Za dostop morate biti prijavljeni. Registrirajte nov uporabniški račun ali se prijavite za nadaljevanje.
     welcome_message_invite_only: |
       ## [Dobrodošli na %{title}](#welcome)
       Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
+  terms_of_service:
+    signup_form_message: 'Prebral sem in sprejemam <a href="%{base_path}/tos" target="_blank">pogoje uporabe</a>.'
   badges:
+    editor:
+      name: Urednik
+      description: Prvič uredili prispevek
+      long_description: |
+        Ta značka vam je podeljena, ko prvič uredite enega od vaših prispevkov. Čeprav vam ne bo omogočeno urejanje prispevkov v nedogled je urejanje zaželjeno - tako lahko popravite oblikovanje, popravite manjše napake ali dodate kar ste pozabili v izvirni objavi. Urejajte prispevke, da bodo še boljši!
+    wiki_editor:
+      name: Wiki urednik
+      description: Prvič uredili wiki prispevek
+      long_description: |
+        Ta značka vam je podeljena, ko prvič uredite eno wiki prispevek.
+    basic_user:
+      name: Osnovni
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljene</a> vse osnovne funkcije skupnosti"
+      long_description: |
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Zahvaljujemo se vam da ste vztrajali in prebrali nekaj tem in spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočene so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
+    member:
+      name: Član
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> povabila, skupinska zasebna sporočila, več všečkov"
+      long_description: |
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 2. Zahvaljujemo se vam, da ste sodelovali nekaj tednov in resnično postali član skupnosti. Sedaj lahko pošiljate povabila novim uporabnikom na svoji uporabniški strani, ustvarite skupniska zasebna sporočila in lahko podelite več všečkov vsak dan.
+    regular:
+      name: Redni
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov"
+      long_description: |
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Zahvaljujemo se vam, da ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
+    leader:
+      name: Vodja
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov"
+      long_description: |
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 4. Ste eden od vodilnih v skupnosti, izbran s strani osebja, ker z svojimi dejanji in besedami dajete pozitiven zgled ostalim v skupnosti. Sedaj lahko urejate vse prispevke in uporabljate osnovne mooderatorska dejanja kot so globalno pripenjanje, zapiranje, skrivanje, izločevanje, arhiviranje, razdruževanje in združevanje tem.
+    welcome:
+      name: Dobrodošli
+      description: Prejeli ste všeček
+      long_description: |
+        Ta značka vam je podeljena, ko vaša prispevek prejme prvi všeček. Čestitamo, prispevali ste nekaj, kar ostali člani skupnosti ocenjujejo kot zanimivo, uporabno in kul!
+    autobiographer:
+      name: Avtobiograf
+      description: "Izpolnili ste podatke v svojem <a href=\"%{base_uri}/my/preferences/profile\">uporabniškem profilu</a>"
+      long_description: |
+        Ta značka vam je podeljena, ker ste izpolnili podatke v <a href="%{base_uri}/my/preferences/profile">svojem uporabniškem profilu</a> in ste izbrali profilno sliko. Tako ste omogočili skupnosti, da bolje spozna kdo ste in kaj so vas zanima, kar omogoča bolj povezano skupnost. Pridruži se!
     anniversary:
       name: Obletnica
+      description: "Aktiven uporabnik že eno leto, objavil vsaj en prispevek"
       long_description: |
-        Ta značka je podeljena, ko ste bili član eno leto in ste v tem letu naredili vsaj eno objavo. Hvala, da ste ostali in prispevali k naši skupnosti. Brez vas ne bi zmogli.
+        Ta značka vam je podeljena, ker ste uporabnik že eno leto in ste objavili vsaj en prispevek v tem letu. Hvala, ker ostajate z nami in prispevate skupnosti. Ne bi mogli brez vas.
+    nice_post:
+      name: Privlačen odgovor
+      description: Prejeli 10 všečkov na odgovor
+      long_description: |
+        Ta značka vam je podeljena, ker je vaš odgovor prejel 10 všečkov. Vaš odgovor je naredil vtis na skupnost in je pomagal da je pogovor stekel naprej.
+    good_post:
+      name: Dober odgovor
+      description: Prejeli 25 všečkov na odgovor
+      long_description: |
+        Ta značka vam je podeljena, ker je vaš odgovor prejel 25 všečkov. Vaš odgovor je izjemen in je naredil pogovor bolj zanimiv.
+    great_post:
+      name: Odličen odgovor
+      description: Prejeli 50 všečkov na odgovor
+      long_description: |
+        Ta značka vam je podeljena, ker je vaš odgovor prejel 50 všečkov. Neverjetno! Vaš odgovor je bil navdušujoč, zelo zabaven ali pronicljiv in skupnost ga je z navdušenjem sprejela.
+    nice_topic:
+      name: Privlačna tema
+      description: Prejeli 10 všečkov na temi
+      long_description: |
+        Ta značka vam je podeljena, ker je vaša tema prejela 10 všečkov. Ustvarili ste zanimivo temo in skupnost je v njej uživala.
+    good_topic:
+      name: Dobra tema
+      description: Prejeli 25 všečkov na temi
+      long_description: |
+        Ta značka vam je podeljena, ker je vaša tema prejela 25 všečkov. Ustvarili ste živahno temo okoli katere se je zbrala skupnost.
+    great_topic:
+      name: Odlična tema
+      description: Prejeli 50 všečkov na temi
+      long_description: |
+        Ta značka vam je podeljena, ker je vaša tema prejela 50 všečkov. Ustvarili ste navdušujočo temo in skupnosti je bil všeč živahen pogovor, ki ga je sprožila.
+    nice_share:
+      name: Privlačno deljenje z drugimi
+      description: Delili ste povezavo na prispevek s 25 edinstvenimi obiskovalci
+      long_description: |
+        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 25 zunanjih obiskovalcev. Zahvaljujemo se vam, ker delite dobro besedo o naših pogovorih in naši skupnosti.
+    good_share:
+      name: Dobro deljenje z drugimi
+      description: Delili ste povezavo na prispevek s 300 edinstvenimi obiskovalci
+      long_description: |
+        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 300 zunanjih obiskovalcev. Pokazali ste odličen pogovor veliko novim ljudem in ste tako omogočili, da naša skupnost raste.
+    great_share:
+      name: Odlično deljenje z drugimi
+      description: Delili ste povezavo na prispevek s 1000 edinstvenimi obiskovalci
+      long_description: |
+        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 1000 zunanjih obiskovalcev. Delili ste zanimiv pogovor ogromno novim ljudem in ste tako zelo prispevali, da naša skupnost raste.
+    first_like:
+      name: Prvi všeček
+      description: Všečkali prvi prispevek
+      long_description: |
+        Ta značka vam je bila podeljena, ker ste prvič všečkali prispevek z :heart: gumbom. Všečkanje prispevkov je dober način, da sporočite ostalim v skupnosti, da je bil njihov prispevek zanimiv, uporaben, zabaven ali kul. Delite ljubezen!
+    first_flag:
+      name: Prva prijava
+      description: Prijavili prvi prispevek
+      long_description: |
+        Ta značka vam je bila podeljena, ker ste prvič prijavili prispevek. Prijava je način, kako mi vsi skupaj skrbimo, da tu ostane prijazno okolje za vse. Če opazite prispevek, ki bi potreboval pregled s strani moderatorja, ne oklevajte in ga enostavno :flag_black: prijavite.
+    promoter:
+      name: Zagovornik
+      description: Povabili ste uporabnika
+      long_description: "Ta značka vam je podeljena, ko povabite nekoga da se pridruži skupnosti preko uporabniške strani ali na dnu posamezne teme. Povabiti prijatelje, ki bi jih znal določen pogovor zanimati, je super način kako predstaviti našo skupnost novim ljudem. \n"
+    campaigner:
+      name: Aktivist
+      description: Povabili ste 3 osnovne uporabnike
+      long_description: |
+        Ta značka vam je podeljena, ker ste povabili 3 ljudi, ki so ostali z nami dovolj časa, da so postali osnovni uporabniki. Živahna skupnost potrebuje reden dotok novih uporabnikov, ki redno sodelujejo in dodajo svoj glas v pogovorih.
+    champion:
+      name: Šampion
+      description: Povabili ste 3 člane
+      long_description: |
+        Ta značka vam je podeljena, ker ste povabili 5 ljudi, ki so z nami ostali tako dolgo, da so postali polnopravni člani. Zahvaljujemo se vam, ker ste obogatili našo skupnost z novimi člani!
+    first_share:
+      name: Prvo deljenje prispevka
+      description: Delili ste prispevek
+      long_description: |
+        Ta značka vam je podeljena, ker ste prvič delili povezavo na prispevek ali temo s uporabo Deli gumba. Deljenje povezav je dober način, da se pokažejo zanimivi pogovori zunanjemu svetu in omogoča rast skupnosti.
+    first_link:
+      name: Prva povezava teme
+      description: Dodali ste povezavo na drugo temo
+      long_description: |
+        Ta značka vam je podeljena, ker ste prvič dodali povezavo na drugo temo. Povezovanje tem pomaga ostalim bralcem, da najdejo zanimive relevantne pogovore in povezuejejo v obe smeri. Preprosto povezujte!
+    first_quote:
+      name: Prvo citiranje
+      description: Prvič ste citirali prispevek
+      long_description: |
+        Ta značka vam je podeljena, ker ste prvič citirali prispevek v svojem odgovoru. Citiranje relevantnih delov prejšnih prispevkov v svojem odgovoru pomaga ohranjati pogovor povezan in znotraj teme. Najlažji način za citiranje je da označite del besedila in potem pritisnete gumb Odgovori. Citirajte velikodušno!
+    read_guidelines:
+      name: Prebrali pravila skupnosti
+      description: "Prebrali <a href=\"%{base_uri}/guidelines\">pravila skupnosti</a>"
+      long_description: |
+        Ta značka je podeljena, ker ste <a href="%{base_uri}/guidelines">prebrali pravila skupnosti</a>. Sledenje in deljenje teh enostavnih pravil omogoča, da zgradimo varno, zabavno in obstojno skupnost za vse. Vedno imejte v mislih, da je na drugi strani zaslona človek, podoben kot ste sami. Bodite prijazni!
+    reader:
+      name: Bralec
+      description: Prebrali ste vse odgovore v temi z več kot 100 odgovori
+      long_description: |
+        Ta značka vam je dodeljena, ker ste prvič prebrali dolgo temo z več kot 100 odgovori. Natančno branje pogovora omogoča, da sledite pogovoru, zastopite različne poglede in vodi do zanimivih izmenjav mnenj. Več kot preberete, bolj zanimiv bo pogovor. Kot pravijo: branje je ključno! :slight_smile:
+    popular_link:
+      name: Popularna povezava
+      description: Objavili ste zunanjo povezavo z več kot 50 kliki
+      long_description: |
+        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 50 klikov. Zahvaljujemo se vam za uporabno povezavo, ki je dodala zanimiv kontekst k pogovoru.
+    hot_link:
+      name: Vroča povezava
+      description: Objavili ste zunanjo povezavo z več kot 300 kliki
+      long_description: |
+        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 300 klikov. Zahvaljujemo se vam za navdušujočo povezavo, ki je nesla pogovor in je marsikaj razjasnila.
     aficionado:
       long_description: |
         Ta značka je podeljena za obiskovanje 100 zaporednih dni. To je več kot tri mesece!

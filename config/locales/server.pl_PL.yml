@@ -747,7 +747,6 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Zalogowane odsłony"
     page_view_crawler_reqs:
-      title: "Bot indeksujący"
       xaxis: "Dzień"
       yaxis: "Odsłony botów indeksujących"
     page_view_total_reqs:
@@ -1133,8 +1132,6 @@ pl_PL:
     email_link_color: "Kolor linków w mailach wysyłanych w trybie HTML. Wprowadź angielską nazwę koloru HTML (\"blue\") lub wartość szesnastkową (\"#0000ff\")."
     detect_custom_avatars: "Czy sprawdzać, czy użytkownik wgrał własne zdjęcie profilowe?"
     max_daily_gravatar_crawls: "Maksymalna liczba razy Discourse sprawdzi Gravatar w poszukiwaniu nowych niestandardowych avatorów w czasie jednego dnia"
-    public_user_custom_fields: "Biała lista pól niestandardowych dla użytkownika, które mogą być wyświetlane publicznie."
-    staff_user_custom_fields: "Biała lista niestandardowych pól dla użytkownika, które mogą być wyświetlane dla personelu."
     enable_user_directory: "Dostarcz katalog użytkowników do wyszukiwania"
     enable_group_directory: "Dostarcz katalog grup do wyszukiwania"
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
@@ -1150,7 +1147,6 @@ pl_PL:
     disable_avatar_education_message: "Wyłącz wiadomość edukacyjną dla zmiany avataru."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
-    global_notice: "Wyświetl PILNY, NAGŁY WYPADEK globalny baner, aby poinformować wszystkich gości, zmień na pusty, aby go ukryć (HTML dozwolony)."
     disable_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
     automatically_unpin_topics: "Automatycznie odpinaj wątki,  gdy użytkownik dotknie dna."
     read_time_word_count: "Licznik słów na minutę dla kalkulacji szacowanego czasu czytania."

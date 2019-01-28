@@ -699,7 +699,6 @@ ko:
       xaxis: "일"
       yaxis: "회원 페이지뷰"
     page_view_crawler_reqs:
-      title: "웹크롤러"
       xaxis: "일"
       yaxis: "로봇 페이지뷰"
     page_view_total_reqs:
@@ -1078,8 +1077,6 @@ ko:
     email_link_color: "HTML 이메일의 링크 색상. 색상명('blue')나 hex값('#0000FF')를 입력하세요."
     detect_custom_avatars: "사용자가 커스텀 프로필 사진을 올렸는지의 체크 여부."
     max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
-    public_user_custom_fields: "유저가 쓸 수 있는 공개 커스텀 필드 목록"
-    staff_user_custom_fields: "스태프가 쓸 수 있는 공개 커스텀 필드 목록"
     enable_user_directory: "브라우징을 위한 유저의 디렉토리 제공"
     enable_group_directory: "브라우징을 위한 그룹의 디렉토리 제공"
     allow_anonymous_posting: "익명 모드 허용"
@@ -1095,7 +1092,6 @@ ko:
     disable_avatar_education_message: "아바타 변경 교육 메시지 해제."
     suppress_uncategorized_badge: "글타래 리스트에서 카테고리가 없는 글타래에 대한 훈장을 보여주지 않는다."
     permalink_normalizations: "퍼마링크를 매칭하기 전에 다음 정규표현식을 적용. 예: /(topic.*)\\?.*/\\1 를 적용하면 토픽 루트에서 퀴리 스트링을 뽑아냅니다. 캡쳐된 값에 접근하려면 정규표현식+스트링 형식에 \\1 등을 사용하면 됩니다."
-    global_notice: "긴급, 비상 전체 배너를 모든 방문자에게 표시합니다. 숨기려면 빈칸으로 바꾸면 됩니다(HTML 허용)."
     disable_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
     read_time_word_count: "읽은 시간 추정치 계산을 위한 1분 당 워드 카운트."

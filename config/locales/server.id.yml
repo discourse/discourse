@@ -366,7 +366,6 @@ id:
     page_view_logged_in_reqs:
       xaxis: "Hari"
     page_view_crawler_reqs:
-      title: "Penjelajah Web"
       xaxis: "Hari"
     page_view_total_reqs:
       xaxis: "Hari"
