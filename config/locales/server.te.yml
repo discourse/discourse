@@ -395,7 +395,6 @@ te:
       title: "లాగిన్ అయిన"
       xaxis: "రోజు"
     page_view_crawler_reqs:
-      title: "జాల క్రాలర్లు"
       xaxis: "రోజు"
     page_view_total_reqs:
       xaxis: "రోజు"

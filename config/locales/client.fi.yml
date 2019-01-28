@@ -598,6 +598,7 @@ fi:
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
       dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
+      text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
       allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
@@ -1784,7 +1785,7 @@ fi:
       feature_topic:
         title: "Nosta tämä ketju"
         pin: "Kiinnitä tämä ketju alueen  {{categoryLink}} ylimmäiseksi kunnes"
-        confirm_pin: "Olet kiinnittänyt jo {{count}} ketjua. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun tällä alueella?"
+        confirm_pin: "Jo {{count}} ketjua on kiinnitetty. Liian monta kiinnitettyä ketjua voi olla taakaksi uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittää yhden ketjun lisää tälle alueelle?"
         unpin: "Älä enää pidä tätä ketjua {{categoryLink}}-aluen ylimmäisenä."
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -1794,7 +1795,7 @@ fi:
           one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
           other: "Alueelle {{categoryLink}} kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
-        confirm_pin_globally: "Olet kiinnittänyt jo {{count}} ketjua kaikille alueille. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun kaikille alueille?"
+        confirm_pin_globally: "Jo {{count}} ketjua on kiinnitetty koko palstalle. Liian monta kiinnitettyä ketjua voi olla taakaksi uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittää yhden ketjun lisää koko palstalle?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -2175,7 +2176,7 @@ fi:
       special_warning: "Varoitus: Tämä on valmiiksi luotu alue, ja sen turvallisuusasetuksia ei voi muuttaa. Jos et näe käyttöä alueelle, älä muuta sen tarkoitusta vaan poista se."
       images: "Kuvat"
       email_in: "Saapuvan postin sähköpostiosoite:"
-      email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
+      email_in_allow_strangers: "Hyväksy sähköpostit anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
@@ -2640,7 +2641,7 @@ fi:
         version_check_pending: "Näyttäisi, että olet päivittänyt lähiaikoina. Hienoa!"
         installed_version: "Asennettu"
         latest_version: "Uusin"
-        problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen:"
+        problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."
@@ -2668,7 +2669,7 @@ fi:
         moderators_activity: Valvojien toiminta
         whats_new_in_discourse: "Mitä uutta Discoursessa?"
         activity_metrics: Aktiivisuusmittareita
-        all_reports: "Kaikki raport"
+        all_reports: "Kaikki raportit"
         general_tab: "Yleistä"
         moderation_tab: "Valvonta"
         security_tab: "Tietoturva"
@@ -2696,7 +2697,7 @@ fi:
           end_date: "Loppupäivämäärä"
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
-          totals_for_sample: "Summat otokselle"
+          totals_for_sample: "Otos yhteensä"
           total: "Kaikki yhteensä"
           no_data: "Ei näytettäviä tietoja"
           trending_search:
@@ -3097,6 +3098,7 @@ fi:
           convert_theme_alert: "Oletko varma että haluat muuttaa tämän teeman komponentiksi? Se ei sen jälkeen enää ole komponenttien %{relatives} emoteema."
           convert_theme_tooltip: "Muunna teema komponentiksi"
           inactive_themes: "Teemat, jotka eivät käytössä:"
+          inactive_components: "Käyttämättömät komponentit:"
           broken_theme_tooltip: "Teeman CSS:ssä, HTML:ssä tai YAML:ssä on virheitä"
           default_theme_tooltip: "Tämä on sivuston oletusteema"
           updates_available_tooltip: "Teemalle on päivityksiä saatavilla"
@@ -3122,12 +3124,19 @@ fi:
           edit_css_html_help: "Et ole muokannut CSS:ää tai HTML:ää"
           delete_upload_confirm: "Poista ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           import_web_tip: "Tietovarasto, jossa teema on"
-          import_file_tip: ".dcstyle.json-tiedosto, jossa teema on"
+          import_file_tip: ".tar.gz or .dcstyle.json -tiedosto, jossa teema on"
           is_private: "Teema in yksityisessä git-tietovarastossa"
           remote_branch: "Haaran nimi (valinnainen)"
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
-          about_theme: "Tietoa teemasta"
+          about_theme: "Tietoa"
           license: "Lisenssi"
+          version: "Versio:"
+          authors: "Tekijä:"
+          source_url: "Lähde"
+          required_version:
+            error: "Teema poistettiin automaattisesti käytöstä, koska se ei ole yhteensopiva tämän Discourse-version kanssa."
+            minimum: "Vaatii Discourse-version {{version}}tai uudemman."
+            maximum: "Vaatii Discourse-version {{version}}tai vanhemman."
           component_of: "Teemojen komponentti:"
           update_to_latest: "Päivitä tuoreimpaan"
           check_for_updates: "Hae päivityksiä"
@@ -3136,12 +3145,14 @@ fi:
           add: "Lisää"
           theme_settings: "Teeman asetukset"
           no_settings: "Teemalla ei ole asetuksia."
+          theme_translations: "Teemakäännökset"
           empty: "Ei mitään"
           commits_behind:
             one: "Teema on yhden muutoksen perässä!"
             other: "Teema on {{count}} muutosta perässä!"
           compare_commits: "(Näytä uudet muutokset)"
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
+          imported_from_archive: "Teema tuotiin .tar.gz-tiedostosta"
           scss:
             text: "CSS"
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"
@@ -3602,6 +3613,7 @@ fi:
         cant_delete_all_too_many_posts:
           one: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin 1 viesti. (delete_all_posts_max)"
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
+        delete_confirm: "On yleisesti järkevämpää anonymisoida käyttäjä kuin poistaa hänet, jottei olemassa olevista keskusteluista poistu sisältöä.<br><br>Oletko VARMA että haluat poistaa tämän käyttäjän? Peruuttaminen ei ole mahdollista!"
         delete_and_block: "Poista ja <b>estä</b> tämä sähköposti ja IP-osoite."
         delete_dont_block: "Ainoastaan poista"
         deleting_user: "Poistetaan käyttäjää..."
@@ -3837,6 +3849,10 @@ fi:
             with_post: "<span class=\"username\">%{username}</span> viestille ketjussa %{link}"
             with_post_time: "<span class=\"username\">%{username}</span> viestille ketjussa %{link} <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span>"
+        badge_intro:
+          title: 'Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi'
+          what_are_badges_title: 'Mitä ansiomerkit ovat?'
+          badge_query_examples_title: 'Esimerkkejä ansiomerkin tietokantakyselyistä'
       emoji:
         title: "Emoji"
         help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"

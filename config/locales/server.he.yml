@@ -768,7 +768,6 @@ he:
       xaxis: "יום"
       yaxis: "צפיות בדפים של מחוברים"
     page_view_crawler_reqs:
-      title: "זחלן רשת"
       xaxis: "יום"
       yaxis: "צפיות בדפים של זחלני רשת"
     page_view_total_reqs:
@@ -1150,8 +1149,6 @@ he:
     email_link_color: "צבע הקישורים במיילים מסוג HTML. הכניסו שם צבע ('blue') או ערך הקסדצימלי ('#0000FF')."
     detect_custom_avatars: "האם לבדוק או לא לבדוק שמשתמשים העלו תמונות פרופיל אישיות."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
-    public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
-    staff_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים לאנשי צוות."
     enable_user_directory: "ספקו ספריייה של משתמשים לגלישה"
     enable_group_directory: "ספקו ספריה של קבוצות לסיור"
     allow_anonymous_posting: "אפשרו למשתמשים לעבור למצב אנונימי"
@@ -1167,7 +1164,6 @@ he:
     disable_avatar_education_message: "ניטרול הודעה שמלמדת על שינוי דמות."
     suppress_uncategorized_badge: "אל תציגו את העיטור לנושאים נטולי קטגוריה ברשימת הנושאים."
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
-    global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."

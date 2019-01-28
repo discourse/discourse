@@ -39,7 +39,6 @@ de:
   themes:
     bad_color_scheme: "Kann Motiv nicht aktualisieren, ungültiges Farbschema"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
-    error_importing: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
     errors:
       component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein "
       component_no_default: "Theme Komponenten können nicht Standard Theme sein"
@@ -825,7 +824,6 @@ de:
         post_count: Erstellte Beiträge
         pm_count: Erstellte Nachrichten
         revision_count: Revisionen
-      description: "Liste der Moderator-Aktivität einschließlich gesichteter Meldungen, Lesezeit, erstellter Themen, erstellter Beiträge, erstellter Nachrichten und Bearbeitungen."
     flags_status:
       title: "Meldungsstatus"
       values:
@@ -855,6 +853,19 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
       description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben"
+    consolidated_page_views:
+      title: "Zusammengefasste Seitenaufrufe"
+      xaxis:
+        page_view_crawler: "Suchmaschinen"
+        page_view_anon: "Anonyme Benutzer"
+        page_view_logged_in: "Angemeldete Benutzer"
+      yaxis: "Tag"
+      description: "Seitenaufrufe von angemeldeten Benutzer, anonymen Benutzern und Suchmaschinen."
+      labels:
+        post: Beitrag
+        editor: Editor
+        author: Ersteller
+        edit_reason: Grund
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
@@ -930,22 +941,18 @@ de:
       title: "Benutzer-an-Benutzer (ohne Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl neu angefangener Nachrichten. "
     user_to_user_private_messages_with_replies:
       title: "Benutzer-zu-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl aller neuen Nachrichten und Antworten."
     system_private_messages:
       title: "System"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl der automatischen Nachrichten durch das System."
     moderator_warning_private_messages:
       title: "Warnungen von Moderatoren"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl der Warnungen, die von Moderatoren als Nachricht geschickt wurden."
     notify_moderators_private_messages:
       title: "Meldungen an Moderatoren"
       xaxis: "Tag"
@@ -994,10 +1001,8 @@ de:
       yaxis: "Seitenaufrufe durch angemeldete Benutzer"
       description: "Anzahl neuer Seitenaufrufe von angemeldeten Benutzern."
     page_view_crawler_reqs:
-      title: "Suchmaschinen"
       xaxis: "Tag"
       yaxis: "Aufrufe durch Suchmaschinen"
-      description: "Webcrawlers nach der Anzahl der Seitenaufrufe"
     page_view_total_reqs:
       title: "Seitenaufrufe"
       xaxis: "Tag"
@@ -1053,11 +1058,9 @@ de:
       yaxis: "Anzahl der Besuche"
       description: "Anzahl der eindeutigen Benutzern, die die Seite mit einem mobilen Endgerät besucht haben."
     web_crawlers:
-      title: "Anfragen von Suchmaschinen"
       labels:
         user_agent: "Browserkennung"
         page_views: "Seitenaufrufe"
-      description: "Anzahl neuer Seitenaufrufe durch Webcrawler"
     suspicious_logins:
       title: "Verdächtige Anmeldungen"
       labels:
@@ -1070,12 +1073,10 @@ de:
         login_time: Anmeldezeitpunkt
       description: "Details neuer Anmeldungen, die verdächtig von vorherigen Anmeldungen abweichen."
     staff_logins:
-      title: "Team-Anmeldungen"
       labels:
         user: Benutzer
         location: Standort
         login_at: Anmeldung um
-      description: "Liste der Anmeldungen von Administratoren und Moderatoren mit Standort."
     top_uploads:
       title: "Top-Uploads"
       labels:
@@ -1307,8 +1308,6 @@ de:
     google_oauth2_prompt: "Eine optionale Leerzeichen getrennte Liste von Zeichen Werten die angeben ob der Berechtigungsserver den Benutzer zur Re-Authentifizierung auffordert. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> für mögliche Werte."
     google_oauth2_hd: "Eine optionale Google Apps gehostete Domain zu welches das Anmelden limitiert sein wird. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> für weitere Informationen."
     enable_twitter_logins: "Twitter-Authentifizierung aktivieren, erfordert twitter_consumer_key und twitter_consumer_secret. Siehe <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
-    twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert unter <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com/</a>"
-    twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert unter <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
     enable_instagram_logins: "Aktiviere Instagram-Authentifizierung (benötigt instagram_consumer_key und instagram_consumer_secret)."
     instagram_consumer_key: "Consumer Key für Instagram-Authentifizierung"
     instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
@@ -1559,8 +1558,6 @@ de:
     email_link_color: "Die Farbe von Links in HTML-Mails. Gib’ einen Namen ('blue') oder einen Hex-Wert ('#0000FF') der Farbe an."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
-    public_user_custom_fields: "Liste selbst definierter Profil-Felder, die öffentlich angezeigt werden dürfen."
-    staff_user_custom_fields: "Eine Liste von benutzerdefinierten Benutzerfeldern, die vom Team eingesehen werden können."
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf die erste Gruppe in der Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
@@ -1581,9 +1578,9 @@ de:
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im der Header Dropdown-Liste angezeigt werden können."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw. um Teilausdrücke zu verwenden"
-    global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Benutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     likes_notification_consolidation_threshold: "Anzahl der Like-Benachrichtigungen, bevor die Benachrichtigungen in eine einzelne zusammengeführt werden. Ein Wert von 0 deaktiviert die Funktion. Das Zeitfenster kann via ``SiteSetting.likes_notification_consolidation_window_mins` eingestellt werden."
+    likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere Like-Benachrichtigungen in eine einzelne Benachrichtigung zusammengeführt werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann via `SiteSetting.likes_notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
@@ -1971,9 +1968,9 @@ de:
     title: "Backup-Download Mailer"
     subject_template: "[%{email_prefix}] Backup der Seite herunterladen"
     text_body_template: |
-      Here ist der [Seiten-Backup-Download](%{backup_file_path}), den du angefordert hast.
+      Hier ist der von dir angeforderte [Download-Link für das Backup](%{backup_file_path}).
 
-      Wir haben diesen Download-Link aus Sicherheitsgründen an deine überprüfte E-Mail-Adresse geschickt.
+      Aus Sicherheitsgründen haben wir diesen Link an deine überprüfte E-Mail-Adresse geschickt.
 
       (Wenn du diesen Download *nicht* angefordert hast, solltest du in Sorge sein -- jemand hat Administrationszugriff auf deine Seite.)
     no_token: |
@@ -2113,6 +2110,22 @@ de:
     flags_agreed_and_post_deleted:
       title: "Gemeldeter Beitrag von Team entfernt"
       subject_template: "Gemeldeter Beitrag von Team entfernt"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass [dein Beitrag](%{base_url}%{url}) entfernt wurde.
+
+        %{flag_reason}
+
+        Dieser Beitrag wurde von der Community gemeldet und ein Team-Mitglied hat entschieden, ihn zu entfernen.
+
+        [details="Klicke, um den gelöschten Beitrag auszuklappen"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        Bitte sieh Dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2156,15 +2169,49 @@ de:
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"
+      text_body_template: |
+        Backup erfolgreich erstellt.
+
+        Besuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen.
+
+        Hier ist das Protokoll:
+
+        ``` text
+        %{logs}
+        ```
     backup_failed:
       title: "Backup fehlgeschlagen"
       subject_template: "Sicherung fehlgeschlagen"
+      text_body_template: |
+        Die Sicherung ist fehlgeschlagen.
+
+        Hier ist das Protokoll:
+
+        ``` text
+        %{logs}
+        ```
     restore_succeeded:
       title: "Wiederherstellung erfolgreich"
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Wiederherstellung war erfolgreich..
+
+        Hier ist das Protokoll:
+
+        ``` text
+        %{logs}
+        ```
     restore_failed:
       title: "Wiederherstellung fehlgeschlagen"
       subject_template: "Wiederherstellung fehlgeschlagen"
+      text_body_template: |
+        Die Wiederherstellung ist fehlgeschlagen.
+
+        Hier ist das Protokoll:
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_succeeded:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
@@ -2172,6 +2219,14 @@ de:
     bulk_invite_failed:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
+      text_body_template: |
+        Deine Datei zur Massenbenutzereinladung wurde verarbeitet, %{sent} Einladungen wurden verschickt mit %{failed} Fehler(n).
+
+        Hier ist das Protokoll:
+
+        ``` text
+        %{logs}
+        ```
     csv_export_succeeded:
       title: "CSV-Export erfolgreich"
       subject_template: "[%{export_title}] Datenexport abgeschlossen"
@@ -2380,6 +2435,14 @@ de:
         Es tut uns leid aber wir haben Probleme Dich per E-Mail zu erreichen. Unsere letzten E-Mails an Dich sind alle als unzustellbar zurück gekommen.
 
         Bitte stelle sicher, dass [E-Mail Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
+    email_bounced: |
+      Die Nachricht an %{email} konnte nicht zugestellt werden.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
     too_many_spam_flags:
       title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"

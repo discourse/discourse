@@ -554,7 +554,6 @@ zh_CN:
       first_notification: "你的头一个通知！选中它开始。"
       disable_jump_reply: "回复后不跳转至新帖子"
       dynamic_favicon: "在浏览器图标中显示主题更新数量"
-      theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
       allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
       enable_quoting: "在选择文字时显示引用回复按钮"
@@ -2493,12 +2492,15 @@ zh_CN:
         activity_metrics: 活跃指标
         all_reports: "所有报告"
         general_tab: "常规"
-        moderation_tab: "管理"
+        moderation_tab: "审核"
+        security_tab: "安全"
+        reports_tab: "报告"
         disabled: 停用
         timeout_error: 对不起，查询时间太长，请选择较短的间隔
         exception_error: 抱歉，执行查询时发生错误
         too_many_requests: 你执行这个操作太多次了，请稍后再试。
         not_found_error: 抱歉，报告不存在
+        filter_reports: 过滤报告
         reports:
           trend_title: "%{percent}更改。目前%{current}，在前一期间是%{prev}。"
           today: "今天"
@@ -2935,11 +2937,9 @@ zh_CN:
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
           import_web_tip: "目录包含主题"
-          import_file_tip: ".dcstyle.json 文件包含主题"
           is_private: "主题在私有git存储库中"
           remote_branch: "分支名称（可选）"
           public_key: "授予对repo的以下公钥访问权限："
-          about_theme: "关于主题"
           license: "许可证"
           component_of: "组件："
           update_to_latest: "更新到最新"

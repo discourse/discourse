@@ -38,7 +38,6 @@ lt:
   themes:
     bad_color_scheme: "Nepavyko atnaujinti temos, netinkamos spalvų schemos"
     other_error: "Įvyko klaida atnaujinant temą"
-    error_importing: "Klaida git kapinyno klonavimui, prieiga atmetama arba saugykla nerasta"
     errors:
       component_no_user_selectable: "Tematikos komponentai negali būti pasirinktini vartotojui"
       component_no_default: "Tema komponentai negali būti numatytoji tema"
@@ -545,7 +544,6 @@ lt:
       title: "Prisijungęs"
       xaxis: "Diena"
     page_view_crawler_reqs:
-      title: "Interneto skaitytuvai"
       xaxis: "Diena"
     page_view_total_reqs:
       xaxis: "Diena"

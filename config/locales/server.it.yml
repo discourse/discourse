@@ -38,7 +38,6 @@ it:
   themes:
     bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
-    error_importing: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
     errors:
       component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
@@ -891,7 +890,6 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi"
     page_view_crawler_reqs:
-      title: "Web Crawler"
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
@@ -1303,8 +1301,6 @@ it:
     email_link_color: "Colore dei collegamenti nelle email HTML. Inserire il nome di un colore ('blue') o un valore esadecimale ('#0000FF')."
     detect_custom_avatars: "Controllare o meno che gli utenti abbiano caricato immagini personalizzate sul profilo."
     max_daily_gravatar_crawls: "Numero massimo di volte al giorno in cui Discourse controllerà Gravatar per gli avatar personalizzati"
-    public_user_custom_fields: "Una lista bianca di campi personalizzati di un utente che possono essere mostrati pubblicamente."
-    staff_user_custom_fields: "Una lista bianca di campi personalizzati di un utente che possono essere mostrati allo staff."
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
@@ -1321,7 +1317,6 @@ it:
     disable_avatar_education_message: "Disabilita il messaggio educativo per cambiare avatar"
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle catture"
-    global_notice: "Mostra a tutti i visitatori un avviso con striscione globale URGENTE, EMERGENZA, lascia vuoto per nasconderlo (HTML consentito)."
     disable_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
     read_time_word_count: "Conteggio di parole al minuto per calcolare il tempo stimato di lettura."

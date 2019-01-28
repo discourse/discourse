@@ -545,7 +545,6 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Giriş Yapılmış Sayfa Görüntülemeleri"
     page_view_crawler_reqs:
-      title: "Arama botları"
       xaxis: "Gün"
     page_view_total_reqs:
       xaxis: "Gün"
@@ -858,8 +857,6 @@ tr_TR:
     disable_digest_emails: "Tüm kullanıcılar için özet e-postaları devre dışı bırak."
     detect_custom_avatars: "Kullanıcıların özel profil resimleri yükleyip yüklemediklerini kontrol et ya da etme."
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
-    public_user_custom_fields: "Kullanıcıların için, herkes tarafından görüntülenebilir özel alanların beyaz listesi."
-    staff_user_custom_fields: "Kullanıcıların için, sadece görevlilere görüntülenebilir özel alanların beyaz listesi."
     enable_user_directory: "Göz atılabilmesi için kullanıcıların olduğu bir dizin sağla"
     allow_anonymous_posting: "Kullanıcıların anonim moda geçebilmelerine izin ver"
     anonymous_posting_min_trust_level: "Anonim gönderi oluşturabilmeyi etkinleştirebilmek için gereken en az güven seviyesi"
@@ -870,7 +867,6 @@ tr_TR:
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
     disable_avatar_education_message: "Avatar değiştirme için eğitici iletileri kapat."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
-    global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM global manşet uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
     automatically_unpin_topics: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
     read_time_word_count: "Tahmini okuma süresini hesaplamak için dakika başına kelime sayısı."

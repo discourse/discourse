@@ -39,7 +39,12 @@ es:
   themes:
     bad_color_scheme: "No puedes actualizar theme, esquema de color inválido"
     other_error: "Algo salió mal actualizando el theme"
-    error_importing: "Error al clonar el repositorio de git, acceso denegado o no se encuentra el repositorio"
+    import_error:
+      generic: Ha ocurrido un error al importar el tema
+      about_json: "Error de importación: el archivo about.json no existe o no es válido"
+      about_json_values: "El archivo about.json contiene valores no válidos: %{errors}"
+      git: "Error al clonar el repositorio de git, el acceso ha sido denegado o el repositorio no existe"
+      unpack_failed: "No se ha podido descomprimir el archivo"
     errors:
       component_no_user_selectable: "Los componentes de tema no pueden ser seleccionables por los usuarios"
       component_no_default: "Los componentes de temas no pueden ser el tema por defecto"
@@ -61,6 +66,8 @@ es:
       string_value_not_valid_min_max: "Debe ser entre %{min} y %{max} de longitud de caracteres."
       string_value_not_valid_min: "Debe ser al menos de %{min} caracteres de longitud."
       string_value_not_valid_max: "Debe ser como máximo de %{max} caracteres de longitud."
+    locale_errors:
+      invalid_yaml: "YAML de traducción no válido"
   emails:
     incoming:
       default_subject: "Este tema necesita un título"
@@ -491,6 +498,7 @@ es:
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "Definición de la categoría %{category}"
+    replace_paragraph: "(Sustituye este párrafo con una descripción corta de tu nueva categoría. Este texto aparecerá en el área de selección de categoría, así que intenta que no supere los 200 caracteres.)"
     post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos para una descripción más detallada, o establece las directrices o reglas de la categoría::\n\n- ¿Para qué podrían usar los usuarios esta categoría? ¿De qué trata?\n\n- ¿Cómo se distingue de otras categorías existentes?\n\n- ¿Qué temas debería contener esta categoría normalmente?\n\n- ¿Necesitamos esta categoría? ¿Podría agruparse o converger con otra categoría o subcategoría?\n"
     errors:
       not_found: "¡Categoría no encontrada!"
@@ -841,7 +849,7 @@ es:
         post_count: Mensajes creados
         pm_count: Mensajes privados creados
         revision_count: Ediciones
-      description: "Lista de actividad de moderación incluyendo reportes revisados, tiempos de lectura, temas creados, mensajes privados iniciados y ediciones."
+      description: "Lista de actividad de moderación incluyendo reportes revisados, tiempo de lectura, temas creados, respuestas creadas, mensajes personales creados y ediciones."
     flags_status:
       title: "Estado de reportes"
       values:
@@ -871,6 +879,19 @@ es:
       xaxis: "Día"
       yaxis: "Número de nuevos colaboradores"
       description: "Número de usuarios que han publicado su primer mensaje durante este periodo."
+    consolidated_page_views:
+      title: "Número de páginas vistas consolidado"
+      xaxis:
+        page_view_crawler: "Crawlers"
+        page_view_anon: "Usuarios anónimos"
+        page_view_logged_in: "Usuarios con sesión inciada"
+      yaxis: "Día"
+      description: "Impresiones de página para usuarios con sesión iniciada, anónimos y crawlers."
+      labels:
+        post: Publicación
+        editor: Editor
+        author: Autoría
+        edit_reason: Razón
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -946,22 +967,18 @@ es:
       title: "Usuario a usuario (respuestas excluidas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de nuevos mensajes privados."
     user_to_user_private_messages_with_replies:
       title: "Usuario a usuario (con respuestas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de nuevos mensajes privados y sus respuestas."
     system_private_messages:
       title: "Sistema"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de mensajes privados enviados automáticamente por el sistema."
     moderator_warning_private_messages:
       title: "Advertencias al moderador"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de avisos enviados por mensaje privado por moderadores."
     notify_moderators_private_messages:
       title: "Notificaciones a moderadores"
       xaxis: "Día"
@@ -1010,10 +1027,8 @@ es:
       yaxis: "Páginas vistas de usuarios logueados"
       description: "Número de impresiones de página de usuarios con sesión iniciada."
     page_view_crawler_reqs:
-      title: "Rastreadores web"
       xaxis: "Día"
       yaxis: "Páginas vistas de rastreadores web"
-      description: "Lista de webcrawlers por número de nuevas impresiones de páginas generadas."
     page_view_total_reqs:
       title: "Páginas vistas"
       xaxis: "Día"
@@ -1069,11 +1084,9 @@ es:
       yaxis: "Número de visita"
       description: "Número de usuarios únicos que han visitado desde dispositivos móviles."
     web_crawlers:
-      title: "Solicitudes de Rastreadores Web"
       labels:
         user_agent: "Agente de usuario"
         page_views: "Páginas vistas"
-      description: "Número de impresiones de página generada por webcrawlers."
     suspicious_logins:
       title: "Inicios de sesión sospechosos"
       labels:
@@ -1086,12 +1099,10 @@ es:
         login_time: Fecha y hora de inicio de sesión
       description: "Detalles de nuevos inicios de sesión marcados como sospechosos."
     staff_logins:
-      title: "Inicios de sesión del staff"
       labels:
         user: Usuario
         location: Ubicación
         login_at: Inicio de sesión el
-      description: "Lista de inicios de sesión de administradores y moderadores con fecha y lugar."
     top_uploads:
       title: "Top archivos subido"
       labels:
@@ -1547,8 +1558,6 @@ es:
     email_link_color: "El color de los enlaces en el HTML de los emails. Introduce un nombre de color ('blue') o un valor hexadecimal ('#0000FF')."
     detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
-    public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
-    staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     enable_user_directory: "Proporcionar un directorio de usuarios"
     enable_group_directory: "Activa un directorio de grupos para explorar"
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
@@ -1568,7 +1577,6 @@ es:
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cuántas categorías pueden ser mostradas en el dropdown menú de encabezado."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de los enlaces, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
-    global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
     disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
