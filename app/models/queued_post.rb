@@ -91,6 +91,12 @@ class QueuedPost < ActiveRecord::Base
       end
     end
 
+    if create_options[:tags].present? &&
+      created_post.post_number == 1 &&
+      created_post.topic.tags.blank?
+      DiscourseTagging.tag_topic_by_names(created_post.topic, Guardian.new(approved_by), create_options[:tags])
+    end
+
     # Do sidekiq work outside of the transaction
     creator.enqueue_jobs
     creator.trigger_after_events

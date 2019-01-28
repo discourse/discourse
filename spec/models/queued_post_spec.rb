@@ -110,6 +110,7 @@ describe QueuedPost do
                                      title: 'This is the topic title to queue up',
                                      archetype: 'regular',
                                      category: category.id,
+                                     tags: ['evil', 'trout'],
                                      meta_data: { evil: 'trout' }
                                    }) }
 
@@ -122,6 +123,8 @@ describe QueuedPost do
       end
 
       it "creates the post and topic" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.min_trust_level_to_tag_topics = 4
         topic_count, post_count = Topic.count, Post.count
         post = qp.approve!(admin)
 
@@ -134,6 +137,7 @@ describe QueuedPost do
         topic = post.topic
         expect(topic).to be_present
         expect(topic.category).to eq(category)
+        expect(topic.tags.map(&:name)).to contain_exactly('evil', 'trout')
 
         expect(UserHistory.where(action: UserHistory.actions[:post_approved]).count).to eq(1)
       end
