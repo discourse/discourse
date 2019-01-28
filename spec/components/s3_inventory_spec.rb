@@ -58,7 +58,7 @@ describe "S3Inventory" do
     expect(inventory.file.key).to eq("example1.csv.gz")
   end
 
-  it "will raise storage error if inventory file not found" do
+  it "should raise the right error if an inventory file is not found" do
     inventory.stubs(:file).returns(nil)
     expect { inventory.list_missing }.to raise_error(S3Inventory::StorageError)
   end
