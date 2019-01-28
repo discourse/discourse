@@ -134,7 +134,7 @@ class Toolbar {
       this.addButton({
         id: "toggle-direction",
         group: "extras",
-        icon: "exchange",
+        icon: "exchange-alt",
         shortcut: "Shift+6",
         title: "composer.toggle_direction",
         perform: e => e.toggleDirection()
@@ -385,10 +385,14 @@ export default Ember.Component.extend({
 
   _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
+    const self = this;
 
     this.$(".d-editor-input").autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
+      afterComplete() {
+        self._focusTextArea();
+      },
       transformComplete(obj) {
         return obj.text;
       },
@@ -416,6 +420,7 @@ export default Ember.Component.extend({
       key: ":",
       afterComplete(text) {
         self.set("value", text);
+        self._focusTextArea();
       },
 
       onKeyUp(text, cp) {
@@ -722,7 +727,7 @@ export default Ember.Component.extend({
     $textarea.prop("selectionStart", (pre + text).length + 2);
     $textarea.prop("selectionEnd", (pre + text).length + 2);
 
-    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
+    this._focusTextArea();
   },
 
   _addText(sel, text, options) {
@@ -747,7 +752,8 @@ export default Ember.Component.extend({
     $textarea.val(value);
     $textarea.prop("selectionStart", insert.length);
     $textarea.prop("selectionEnd", insert.length);
-    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
+
+    this._focusTextArea();
   },
 
   _extractTable(text) {
@@ -838,6 +844,12 @@ export default Ember.Component.extend({
     }
   },
 
+  // ensures textarea scroll position is correct
+  _focusTextArea() {
+    const $textarea = this.$("textarea.d-editor-input");
+    Ember.run.scheduleOnce("afterRender", () => $textarea.blur().focus());
+  },
+
   actions: {
     emoji() {
       if (this.get("disabled")) {
@@ -850,6 +862,7 @@ export default Ember.Component.extend({
     emojiSelected(code) {
       let selected = this._getSelected();
       const captures = selected.pre.match(/\B:(\w*)$/);
+
       if (_.isEmpty(captures)) {
         this._addText(selected, `:${code}:`);
       } else {

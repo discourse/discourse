@@ -634,7 +634,6 @@ sk:
       first_notification: "Vaša prvé upozornenie! Vyberte ho ak chcete začať."
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
       dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
-      theme_default_on_all_devices: "Urobiť z tohto predvolenú tému na všetkých mojich zariadeniach"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"

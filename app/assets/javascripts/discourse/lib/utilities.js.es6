@@ -415,7 +415,7 @@ export function allowsAttachments() {
 }
 
 export function uploadIcon() {
-  return allowsAttachments() ? "upload" : "picture-o";
+  return allowsAttachments() ? "upload" : "far-image";
 }
 
 export function uploadLocation(url) {

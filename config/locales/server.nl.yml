@@ -38,7 +38,7 @@ nl:
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
   emails:
     incoming:
-      default_subject: "Deze topic heeft een titel nodig"
+      default_subject: "Dit topic heeft een titel nodig"
       show_trimmed_content: "Toon getrimde inhoud"
       maximum_staged_user_per_email_reached: "Het maximum aantal staged gebruikers dat per e-mail kan worden aangemaakt is bereikt."
       errors:
@@ -686,7 +686,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Paginaweergaven door aangemelde gebruikers"
     page_view_crawler_reqs:
-      title: "Webcrawlers"
       xaxis: "Dag"
       yaxis: "Webcrawler-paginaweergaven"
     page_view_total_reqs:
@@ -1007,8 +1006,6 @@ nl:
     email_link_color: "De kleur van koppelingen in HTML-e-mails. Voer een kleurnaam ('blue') of hex-waarde ('#0000FF') in."
     detect_custom_avatars: "Wel of niet te verifiëren of gebruikers eigen profielfoto's hebben geüpload.  "
     max_daily_gravatar_crawls: "Maximale aantal keren dat Discourse op een dag bij Gravatar op aangepaste gravatars controleert"
-    public_user_custom_fields: "Een toegestane lijst van veldnamen voor een gebruiker dat publiekelijk kan worden getoond."
-    staff_user_custom_fields: "Een toegestane lijst van veldnamen voor een gebruiker dat aan medewerkers wordt getoond."
     enable_user_directory: "Biedt een overzicht van gebruikers aan om door te bladeren."
     allow_anonymous_posting: "Sta gebruikers toe naar de anonimiteitsmodus over te schakelen."
     anonymous_posting_min_trust_level: "minimum vertrouwensniveau benodigd om anoniem posten in te kunnen schakelen."
@@ -1020,7 +1017,6 @@ nl:
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     dominating_topic_minimum_percent: "Welk percentage van de berichten een gebruiker moet maken in een onderwerp voordat ze worden herinnerd aan het te veel domineren van een topic."
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
-    global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
     disable_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
     automatically_unpin_topics: "Automatisch ont-pinnen van topics als de gebruiker onderaan de pagina komt."
     read_time_word_count: "Woorden per minuut voor bepalen van geschatte leestijd."
@@ -1289,8 +1285,8 @@ nl:
     unsubscribe:
       title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
-    reply_by_email: "[Bezoek topic (het)](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
-    visit_link_to_respond: "[Bezoek topic (het)](%{base_url}%{url}) om te reageren."
+    reply_by_email: "[Bezoek topic](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
+    visit_link_to_respond: "[Bezoek topic](%{base_url}%{url}) om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."

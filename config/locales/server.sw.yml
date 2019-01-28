@@ -38,7 +38,6 @@ sw:
   themes:
     bad_color_scheme: "Hauwezi kusasisha mandhari, mpango wa rangi batili"
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
-    error_importing: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
       data_type_not_a_number: "Aina ya mpangilio `%{name}` hauruhusiwi. Aina zinazoruhusiwa ni `namba kamili`, `bool`, `orodha` na `enum`"
@@ -648,7 +647,6 @@ sw:
       title: "Ameingia"
       xaxis: "Siku"
     page_view_crawler_reqs:
-      title: "Vidudu vya Kuchunza Mitandao"
       xaxis: "Siku"
     page_view_total_reqs:
       xaxis: "Siku"
@@ -692,8 +690,6 @@ sw:
     mobile_visits:
       xaxis: "Siku"
       yaxis: "Namba ya watu waliyotembelea"
-    web_crawlers:
-      title: "Vidudu vya kuchunza mitandao vina maombi"
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."

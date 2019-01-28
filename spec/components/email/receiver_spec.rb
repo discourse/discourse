@@ -522,9 +522,13 @@ describe Email::Receiver do
     end
 
     it "supports attachments" do
-      SiteSetting.authorized_extensions = "txt"
+      SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>text\.txt<\/a>/)
+      expect(topic.posts.last.uploads.length).to eq 1
+
+      expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match /<img.+?src="\/uploads\/default\/original\//
       expect(topic.posts.last.uploads.length).to eq 1
     end
 

@@ -59,7 +59,7 @@ module BackupRestore
       objects = []
 
       @s3_helper.list.each do |obj|
-        if obj.key.match?(/\.t?gz$/i)
+        if obj.key.match?(file_regex)
           objects << create_file_from_object(obj)
         end
       end
@@ -103,6 +103,19 @@ module BackupRestore
         File.join(SiteSetting.s3_backup_bucket, MULTISITE_PREFIX, RailsMultisite::ConnectionManagement.current_db)
       else
         SiteSetting.s3_backup_bucket
+      end
+    end
+
+    def file_regex
+      @file_regex ||= begin
+        path = @s3_helper.s3_bucket_folder_path || ""
+
+        if path.present?
+          path = "#{path}/" unless path.end_with?("/")
+          path = Regexp.quote(path)
+        end
+
+        /^#{path}[^\/]*\.t?gz$/i
       end
     end
 

@@ -39,7 +39,11 @@ fr:
   themes:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
     other_error: "Il y a eu un problème pendant la mise à jour du thème"
-    error_importing: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
+    import_error:
+      generic: "Désolé, une erreur est survenu lors de l'importation du thème"
+      about_json: "Erreur d'importation : about.json n'existe pas, ou pas valide"
+      git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
+      unpack_failed: "Impossible de décompresser le fichier"
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
@@ -61,6 +65,9 @@ fr:
       string_value_not_valid_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       string_value_not_valid_min: "Doit être d'au moins %{count} caractères."
       string_value_not_valid_max: "Doit être de %{max} caractères au plus."
+    locale_errors:
+      top_level_locale: "La clé de premier niveau dans un fichier de localisation doit correspondre au nom de locale"
+      invalid_yaml: "Traduction YAML non valide"
   emails:
     incoming:
       default_subject: "Ce sujet a besoin d'un titre"
@@ -124,7 +131,7 @@ fr:
         one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
         many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
-        one: est trop long (le maximum est de %{count} caractère)
+        one: est trop long (le maximum est de 1 caractère)
         other: est trop long (le maximum est de %{count} caractères)
       too_short:
         one: est trop court (le minimum est de 1 caractère)
@@ -146,7 +153,8 @@ fr:
         other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
-      s3_backup_requires_s3_settings: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le '%{setting_name}'."
+      s3_backup_requires_s3_settings: "Il n'est pas possible d'utiliser le lieu de sauvegarde S3 sans renseigner le '%{setting_name}'."
+      s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour 's3_upload_bucket' and 's3_backup_bucket'. Choisir un autre bucket ou utiliser un chemin d'accès différent pour chaque bucket."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -160,10 +168,12 @@ fr:
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">Réinitialiser mot de passe</a>.</p>
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
+    confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
   topic_invite:
+    failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
     user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer un nouveau processus pour l'instant."
@@ -189,11 +199,15 @@ fr:
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à 1 réponse par sujet."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponses par sujet."
+  max_consecutive_replies:
+    one: "Aucun message supplémentaire est possible. Veuillez modifier votre réponse précédente, ou attendre que quelqu'un vous réponde."
+    other: "Seules %{count} réponses à la suite sont possibles. Veuillez modifier votre réponse précédente, ou attendre que quelqu'un vous réponde."
   embed:
     start_discussion: "Démarrer la discussion"
     continue: "Continuer la discussion"
     error: "Erreur d'intégration"
     referer: "Référent :"
+    mismatch: "Le référent n'a pas été envoyé, ou ne correspondait à aucun des hôtes suivants :"
     no_hosts: "Aucun hôte n'a été configuré pour l'intégration."
     configure: "Configurer l'intégration"
     more_replies:
@@ -234,7 +248,8 @@ fr:
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
   not_accepting_pms: "Désolé, %{username} n'accepte pas de messages pour le moment."
   max_pm_recepients: "Désolé, vous pouvez envoyer un message à un maximum de %{recipients_limit} destinataires."
-  pm_reached_recipients_limit: "Désolé, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un message."
+  pm_reached_recipients_limit: "Désolé, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un message direct."
+  removed_direct_reply_full_quotes: "La citation de l'entier du message précédent a été supprimé automatiquement."
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   invalid_characters: "contient des caractères invalides"
   is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
@@ -266,7 +281,7 @@ fr:
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
     user_topics: "Derniers sujets par @%{username}"
-    tag: "Sujets tagués"
+    tag: "Sujets étiquettés"
     badge: "%{display_name} badge sur %{site_title}"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   edit_conflict: "Ce message a été modifié par une autre utilisateur, vos modifications ne peuvent plus être sauvegardées."
@@ -494,6 +509,7 @@ fr:
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "À propos de la catégorie %{category}"
+    replace_paragraph: "(Remplacez ce paragraphe par une courte description de votre nouvelle catégorie. Cette information apparaîtra dans la zone de sélection de la catégorie, donc viser en dessous des 200 caractères.)"
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description ou pour établir des règles :\n\n- À quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi est-elle différente des autres catégories existantes ?\n\n- Quels sujets devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
       not_found: "Catégorie introuvée !"
@@ -705,7 +721,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapproprié"
-      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="%{base_path}/guidelines">charte de notre communauté</a>.'
+      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="%{base_path}/guidelines">charte communautaire</a>.'
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
       long_form: "signalé comme inapproprié"
     notify_user:
@@ -798,6 +814,7 @@ fr:
     read: "lecture"
     read_write: "lecture/écriture"
     description: '« %{application_name} » demande l''accès suivant à votre compte :'
+    instructions: 'Nous venons de générer une nouvelle clé API utilisateur à utiliser avec "%{application_name}", merci de coller cette clé dans votre application :'
     no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
     generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité a peut-être été désactivée par l'administrateur"
     scopes:
@@ -817,11 +834,13 @@ fr:
         percent: Pourcentage
         day: Jour
     post_edits:
+      title: "Modifications de message"
       labels:
         post: Message
         editor: Éditeur
         author: Auteur
         edit_reason: Raison
+      description: "Nombre de nouvelles modifications de messages"
     user_flagging_ratio:
       title: "Ratio de signalements utilisateur"
       labels:
@@ -830,7 +849,9 @@ fr:
         disagreed_flags: Signalements rejetés
         ignored_flags: Signalements ignorés
         score: Score
+      description: "Liste d'utilisateurs par ratio de réponse (rejetés à acceptés) des responsables aux signalements."
     moderators_activity:
+      title: "Activité des modérateurs"
       labels:
         moderator: Modérateur
         flag_count: Signalements examinés
@@ -840,6 +861,7 @@ fr:
         pm_count: Messages privés créés
         revision_count: Révisions
     flags_status:
+      title: "Statut des signalements"
       values:
         agreed: Acceptés
         disagreed: Rejetés
@@ -851,34 +873,55 @@ fr:
         poster: Auteur
         flagger: Signalant
         time_to_resolution: Temps de résolution
+      description: "Liste de statuts de signalements : type de signalement, auteur, signaleur, et temps de résolution."
     visits:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
+      description: "Nombre de visites d'utilisateurs uniques"
     signups:
       title: "Inscriptions"
       xaxis: "Jour"
       yaxis: "Nombre d'inscriptions"
+      description: "Nouvelles créations de compte pour cette période."
     new_contributors:
       title: "Nouveaux contributeurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
+      description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période."
+    consolidated_page_views:
+      title: "Pages vues unifiées"
+      xaxis:
+        page_view_crawler: "Crawlers Web"
+        page_view_anon: "Utilisateurs anonymes"
+        page_view_logged_in: "Utilisateurs connectés"
+      yaxis: "Jour"
+      description: "Vues des utilisateurs connectés, anonmyes et les crawler web."
+      labels:
+        post: Message
+        editor: Editeur
+        author: Auteur
+        edit_reason: Raison
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
+      description: "Nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en % qui représente le taux \"d'adhérence\" de la communauté. Viser > 30%."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
       yaxis: "Utilisateurs impliqués"
+      description: "Nombre d'utilisateurs ayant aimé ou publié un message dans les derniers 24h."
     profile_views:
       title: "Vues des profils d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de profils utilisateurs consultés"
+      description: "Total des nouvelles vues de profils utilisateur."
     topics:
       title: "Sujets"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux sujets"
+      description: "Nouveaux sujets crées pour cette période."
     posts:
       title: "Messages"
       xaxis: "Jour"
@@ -888,20 +931,24 @@ fr:
       title: "J'aime"
       xaxis: "Jour"
       yaxis: "Nombre de nouveau J'aime"
+      description: "Nombre de nouveau J'aime."
     flags:
       title: "Signalements"
       xaxis: "Jour"
       yaxis: "Nombre de signalements"
+      description: "Nombre de nouveaux signalements."
     bookmarks:
       title: "Signets"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux signets"
+      description: "Nombre de nouveaux sujets et messages ajoutés aux signets."
     users_by_trust_level:
       title: "Utilisateurs par niveau de confiance"
       xaxis: "Niveau de confiance"
       yaxis: "Nombre d'utilisateurs"
       labels:
         level: Niveau
+      description: "Nombre d'utilisateurs groupés par niveau de confiance."
     users_by_type:
       title: "Utilisateurs par type"
       xaxis: "Type"
@@ -913,15 +960,19 @@ fr:
         moderator: Modérateur
         suspended: Suspendu
         silenced: Sous silence
+      description: "Nombre d'utilisateurs groupés par admin, modérateur, suspendu et mis sous silence."
     trending_search:
+      title: Critères de recherche tendance
       labels:
         term: Terme
         searches: Recherches
         click_through: CTR
+      description: "Les critères de recherche les plus tendance, avec leurs taux de suivi."
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
       yaxis: "Nombre de courriels"
+      description: "Nombre de nouveaux courriels envoyés."
     user_to_user_private_messages:
       title: "Utilisateur à utilisateur (sans réponses)"
       xaxis: "Jour"
@@ -942,10 +993,12 @@ fr:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre de fois que les modérateurs ont été informés d'un signalement par message direct."
     notify_user_private_messages:
       title: "Notifications aux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre de fois que les utilisateurs ont été informés d'un signalement par message direct."
     top_referrers:
       title: "Meilleurs référants"
       xaxis: "Utilisateurs"
@@ -955,6 +1008,7 @@ fr:
         user: "Utilisateur"
         num_clicks: "Clics"
         num_topics: "Sujets"
+      description: "Utilisateurs par ordre du nombre de clics sur des liens qu'ils ont partagés."
     top_traffic_sources:
       title: "Meilleures sources de traffic"
       xaxis: "Domaine"
@@ -965,35 +1019,41 @@ fr:
         domain: Domaine
         num_clicks: Clics
         num_topics: Sujets
+      description: "Liens externes qui ont envoyés le plus de clics ici."
     top_referred_topics:
       title: "Sujets les plus référencés"
       labels:
         num_clicks: "Clics"
         topic: "Sujet"
+      description: "Sujets qui ont reçu le plus de visites depuis des sources externes."
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés"
+      description: "Nombre de nouvelles vues de pages par des visiteurs sans compte."
     page_view_logged_in_reqs:
       title: "Connecté"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs connectés"
+      description: "Nombre de nouvelles vues d'utilisateurs connectés."
     page_view_crawler_reqs:
-      title: "Crawlers Web"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les robots d'indexation"
     page_view_total_reqs:
       title: "Pages vues"
       xaxis: "Jour"
       yaxis: "Total de pages vues"
+      description: "Nombre de vues par tous les visiteurs."
     page_view_logged_in_mobile_reqs:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs connectés sur mobile"
+      description: "Nombre de nouvelles vues de pages par des utilisateurs connectés, et sur des appareils mobiles."
     page_view_anon_mobile_reqs:
       title: "Nombre de vues par les utilisateurs non connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
+      description: "Nombre de nouvelles vues de pages par des utilisateurs anonymes, et sur des appareils mobiles."
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -1022,16 +1082,18 @@ fr:
       title: "Délai de première réponse"
       xaxis: "Jour"
       yaxis: "Temps moyen (heures)"
+      description: "Temps moyen (en heures) avant la première réponse dans des nouveaux sujets."
     topics_with_no_response:
       title: "Sujets sans réponses"
       xaxis: "Jour"
       yaxis: "Total"
+      description: "Nombre de nouveaux sujets qui n'ont pas de réponse."
     mobile_visits:
       title: "Visites d'utilisateur (mobile)"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
+      description: "Nombre de visites uniques d'utilisateurs sur appareils mobiles."
     web_crawlers:
-      title: "Requêtes de crawler web"
       labels:
         user_agent: "User Agent"
         page_views: "Pages vues"
@@ -1045,6 +1107,20 @@ fr:
         device: Appareil
         os: Système d'exploitation
         login_time: Heure de connexion
+      description: "Détails de nouveaux identifiants qui ont des différences suspectes avec les précédents."
+    staff_logins:
+      labels:
+        user: Utilisateur
+        location: Localisation
+        login_at: Connexion à
+    top_uploads:
+      title: "Principaux téléchargements"
+      labels:
+        filename: Nom du fichier
+        extension: Extension
+        author: Auteur
+        filesize: Taille de fichier
+      description: "Liste de tous les envois de fichier, par extension, taille de fichier, et auteur."
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
@@ -1056,6 +1132,8 @@ fr:
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramétres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
+    pwa_config_icon_warning: 'Votre site n''a pas d''icône 512 x 512 qui permettrait aux utilisateurs d''ajouter un raccourci vers ce site sur les appareils Android. Aller au <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">Paramètres du site</a> et télécharger un icône 512 x 512.'
+    pwa_config_title_warning: 'Votre site n''a pas titre court qui permettrait aux utilisateurs d''ajouter un raccourci vers ce site sur les appareils Android. Aller au Paramètres du site et ajouter un titre court, limité à 12 caractères.'
     s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="https://www.imagemagick.org/script/download.php" target="_blank">pour télécharger la dernière version</a>.'
@@ -1100,8 +1178,9 @@ fr:
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
-    title: "Le nom du site, utilisé dans la balise title."
+    title: "Le nom du site, utilisé dans le tag du titre."
     site_description: "Décrivez ce site en une seule phrase, utilisée dans le tag meta description."
+    short_site_description: "Description courte, utilisée dans le tag du titre et la page d'accueil."
     contact_email: "Adresse de courriel de la personne responsable de ce site. Utilisée pour des notifications critiques et des faits urgents en provenance du formulaire de contact de la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
     contact_url: "Adresse de courriel de ce site. Utilisée pour des faits urgents en provenance du formulaire de contact de la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
@@ -1131,8 +1210,15 @@ fr:
     inline_onebox_domains_whitelist: "Une liste de domaines qui seront transformé en Onebox s'ils ont été liés sans titre"
     enable_inline_onebox_on_all_domains: "Ignorer le paramètre inline_onebox_domain_whitelist et permettre des onebox 'inline' pour tous les domaines."
     max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
+    logo: "L'image de votre logo situé en haut à gauche de votre site. Utiliser une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360. Si vous laissez ce champ vide, le nom de votre site apparaitra."
+    logo_small: "La petite image logo affiché en haut à gauche du site quand la page est défilée vers le bas. Utiliser une image carré de 120 x 120. Si vide, une glyphe 'maison' sera affichée."
+    digest_logo: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Doit être en forme de rectangle large et ne pas être une image SVG. Si vide, l'image du paramètre `logo` sera utilisé."
+    mobile_logo: "L'image de votre logo utilisé sur la version mobile de votre site. Utiliser une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360. Si vide, l'image du paramètre `logo` sera utilisé. "
+    large_icon: "Image utilisée comme logo sur Android. Taille requise : 512 x 512."
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a>, pour fonctionner correctement à travers un CDN il doit être PNG."
+    apple_touch_icon: "Icône utilisée pour les appareils d'Apple. Taille requise : 144 x 144."
     opengraph_image: "Image opengraph par défaut, utilisée quand la page n'a pas d'autre image or logo de site approprié."
+    twitter_summary_large_image: "Image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280 en largeur et 150 en hauteur). "
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels standards. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1163,6 +1249,7 @@ fr:
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis sous silence, envoyer un message à tous les modérateurs."
+    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que l'utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     enable_markdown_typographer: "Utiliser des règles typographiques pour améliorer la lisibilité du texte: remplacer les guillemets simples ' avec les guillemets bouclés ’, (c) (tm) avec les symbôles, -- avec emdash –, etc."
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
@@ -1174,10 +1261,11 @@ fr:
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking  de Google</a>."
+    gtm_container_id: "Identifiant de container Google Tag Manager. P.ex : GTM-ABCDEF. <br/>Note: les scripts tiers chargés par GTM devront peut-être être mis sur liste blanche dans 'content security policy script src'."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
-    use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP surveillées (Admin > Journaux > IP surveillés)."
+    use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP sous surveillance (Admin > Journaux > IP surveillés)."
     blacklist_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être crawlés par Discourse"
     whitelist_internal_hosts: "Une liste de domaines internes que Discourse peut crawler en sécurité pour les Onebox et autres"
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
@@ -1185,8 +1273,11 @@ fr:
     blacklisted_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'exploration Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si une whitelist est définie."
     slow_down_crawler_user_agents: "Agents de crawlers web qui devrait être limité dans robots.txt avec la commande Crawl-delay."
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents est spécifié ce taux s'appliquera aux crawlers web (secondes d'attente entre requêtes)"
+    content_security_policy: "Activer Content-Security-Policy"
+    content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Activer collecte de rapports CSP violation à /csp_reports"
     content_security_policy_script_src: "Sources supplementaires de scripts acceptés. L'hôte actuel et le CDN sont inclus par défaut."
+    invalidate_inactive_admin_email_after_days: "Les comptes admin qui n'ont pas visité le site depuis ce nombre de jours devront re-valider leurs adresses courriel avant de se connecter. 0 pour désactiver."
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
@@ -1196,12 +1287,14 @@ fr:
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à' sur un message quand la seule réponse est juste en dessus de ce dernier."
+    remove_full_quote: "Supprimer automatiquement la citation dans les réponses directes."
     suppress_reply_when_quoting: "Ne pas affiché le panneau \"En réponse à\" sur un message qui répond à une citation."
     max_reply_history: "Nombre maximum de réponses à développer lors du développement d'une \"réponse à\""
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
     top_page_default_timeframe: "Période par défaut pour la page la plus vue."
+    show_email_on_profile: "Permettre aux modérateurs de voir les adresses courriel des utilisateurs"
     prioritize_username_in_ux: "Afficher le pseudonyme en premier sur la page d'un utilisateur, sa carte et ses messages (si désactivé, le nom est affiché en premier)"
     enable_rich_text_paste: "Permettre la conversion automatique de HTML en Markdown lors que du texte est collé dans l'éditeur. (Expérimental)"
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
@@ -1215,6 +1308,7 @@ fr:
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides"
+    invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent être invités spécifiquement par les membres de niveau de confiance 3 & 4 ou un responsable."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
     min_username_length: "Longueur minimale du nom d'utilisateur en caractères. ATTENTION : si des utilisateurs ou groupes existants ont des noms plus courts que celui-ci, votre site se cassera !"
     max_username_length: "Longueur maximale du nom d'utilisateur en caractères. ATTENTION : si des utilisateurs ou groupes existants ont des noms plus longs que celui-ci, votre site se cassera !"
@@ -1250,8 +1344,8 @@ fr:
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à se réauthentifier et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour des valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour plus de détails."
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer Twitter login (avec rich embeds) pour Discourse</a>."
-    twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
-    twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://apps.twitter.com/' target='_blank'>https://apps.twitter.com</a>"
+    twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et  instagram_consumer_secret"
     instagram_consumer_key: "« Consumer key » pour l'identification Instagram"
     instagram_consumer_secret: "« Consumer secret » pour l'identification Instagram"
@@ -1311,7 +1405,7 @@ fr:
     purge_unactivated_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé. Régler à 0 pour ne jamais purger les utilisateurs non activés."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">profile d''instance AWS EC2 </a> pour accorder l''accès au S3 bucket. NOTE: pour cela, Discourse doit être exécuté dans une instance EC2 correctement configurée, et remplace les paramètres "s3 access key id" et "s3 secret access key".'
-    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans caractères de soulignement."
+    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans tirets bas."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
@@ -1421,7 +1515,7 @@ fr:
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) Niveau de confiance 0 comptes à partir de cette adresse IP ( et aucun n'est un membre du personnel ou au NC2 ou ultérieure), ne plus accepter de nouvelles inscriptions de cette IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses de courriel sous surveillance  sans correspondance après (N) jours"
-    max_age_unmatched_ips: "Effacer les adresses IP sous surveillenace sans correspondance après (N) jours"
+    max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_hours_to_close_topic: "Nombre d'heures de fermeture d'un sujet pour intervention."
@@ -1502,8 +1596,6 @@ fr:
     email_link_color: "La couleur des liens dans les courriels HTML. Entrez un nom de couleur (« blue ») ou une valeur hexadécimale (« #0000FF »)."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
-    public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
-    staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
     enable_user_directory: "Fournir un répertoire des utilisateurs"
     enable_group_directory: "Proposer un répertoire pour parcourir les groupes"
     group_in_subject: "<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Mettre %%{optional_pm} dans le sujet du courriel au nom du premier groupe dans le MD. Voir : Customiser format du sujet pour les mails standards"
@@ -1524,8 +1616,10 @@ fr:
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
     header_dropdown_category_count: "Nombre de catégories qui peuvent être affiché dans le menu déroulant d'en-tête."
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de détecter les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les chaînes de requête des chemins de sujet. Le format est regex+string, utilisez \\1 etc. pour capturer des séquences"
-    global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
+    global_notice: "Afficher une bannière de notification globale, d'URGENCE, et qui ne peut pas être ignoré, à tous les visiteurs, vide pour cacher (HTML admis)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
+    likes_notification_consolidation_threshold: "Nombre de notifications reçues et aimées avant que les notifications ne soient regroupées en une seule. Régler à 0 pour désactiver. La fenêtre peut être configurée via `SiteSetting.likes_notification_consolidation_window_mins`."
+    likes_notification_consolidation_window_mins: "Durée en minutes où les notifications aimées sont regroupées en une seule une fois le seuil atteint. Le seuil peut être configuré via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     topic_page_title_includes_category: "Le titre de la page du sujet inclut le nom de la catégorie."
@@ -1550,7 +1644,7 @@ fr:
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     notify_about_flags_after: "S'il y a des signalements qui n'ont pas été gérés après ce nombre d'heures, envoyer un message direct aux modérateurs. 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
-    delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
+    delete_drafts_older_than_n_days: Supprimer les ébauches plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux visiteurs. ATTENTION : cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
@@ -1558,6 +1652,7 @@ fr:
     enable_emoji_shortcuts: "Les textes de smiley courants :) :p :( seront convertis en emojis"
     emoji_set: "Comment aimeriez-vous vos emoji ?"
     emoji_autocomplete_min_chars: "Nombre minimum de caractères nécessaires pour invoquer la fenêtre contextuelle d'emoji"
+    enable_inline_emoji_translation: "Permet la traduction d'émojis en ligne (sans espace ni ponctuation auparavant)"
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
@@ -1591,6 +1686,7 @@ fr:
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
+    default_text_size: "Taille de texte par défaut"
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événement des Web hooks."
     retry_web_hook_events: "Réessayez automatiquement 4 fois les événements de hook web qui ont échoué. Les intervalles entre les tentatives sont de 1, 5, 25 et 125 minutes."
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
@@ -1600,25 +1696,29 @@ fr:
     allowed_user_api_auth_redirects: "URL autorisées pour la redirection d'authentification pour les clés de l'API utilisateur"
     allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
     expire_user_api_keys_days: "Nombre de jours avant l'expiration automatique d'une clé API utilisateur (0 pour jamais)"
-    tagging_enabled: "Activer les tags sur les sujets ?"
-    min_trust_to_create_tag: "Le niveau de confiance minimum requis pour créer un tag."
-    max_tags_per_topic: "Le nombre maximum de tags pouvant être ajoutés à un sujet."
-    max_tag_length: "Le nombre maximum de caractères pouvant être utilisés pour un tag."
-    max_tag_search_results: "Lors d'une recherche de tags, le nombre maximum de résultats à afficher."
-    show_filter_by_tag: "Afficher une liste déroulante pour filtrer une liste de sujet par tag."
-    max_tags_in_filter_list: "Nombre maximum de tags à afficher dans la liste déroulante de filtres. Les tags les plus utilisés seront affichés."
-    tags_sort_alphabetically: "Afficher les tags par ordre alphabétique. Par défaut, ils sont affichés par ordre de popularité."
-    tags_listed_by_group: "Lister les tags par groupe de tag sur la <a href='%{base_path}/tags' target='_blank'>page Tags</a>."
-    tag_style: "Style visuel pour tag badges."
-    allow_staff_to_tag_pms: "Autoriser les responsables à signaler n'importe quel message direct"
-    min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour taguer des sujets"
-    suppress_overlapping_tags_in_list: "Si des tags correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces tags"
-    remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des tags silencieux dans la liste des sujets récents."
-    force_lowercase_tags: "Forcer les nouveaux tags à être entièrement en miniscule"
+    tagging_enabled: "Activer les étiquettes sur les sujets ?"
+    min_trust_to_create_tag: "Le niveau de confiance minimum requis pour créer une étiquette."
+    max_tags_per_topic: "Le nombre maximum de étiquettes pouvant être ajoutés à un sujet."
+    max_tag_length: "Le nombre maximum de caractères pouvant être utilisés pour une étiquette."
+    max_tag_search_results: "Lors d'une recherche d'étiquettes, le nombre maximum de résultats à afficher."
+    show_filter_by_tag: "Afficher une liste déroulante pour filtrer une liste de sujet par étiquette."
+    max_tags_in_filter_list: "Nombre maximum d'étiquettes à afficher dans la liste déroulante de filtres. Les étiquettes les plus utilisés seront affichées."
+    tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, ils sont affichés par ordre de popularité."
+    tags_listed_by_group: "Lister les étiquettes par groupe d'étiquette sur la <a href='%{base_path}/tags' target='_blank'>page Etiquettes</a>."
+    tag_style: "Style visuel pour badges d'étiquette."
+    allow_staff_to_tag_pms: "Autoriser les responsables à étiquetter n'importe quel message direct"
+    min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour étiquetter des sujets"
+    suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
+    remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes silencieuses dans la liste des sujets récents."
+    force_lowercase_tags: "Forcer les nouvelles étiquettes à être entièrement en miniscule"
     company_name: "Nom de société"
+    governing_law: "Droit applicable"
     city_for_disputes: "For juridique"
     shared_drafts_category: "Activez la fonction Ébauches partagées en désignant une catégorie pour les ébauches de sujet. Les sujets dans cette catégorie ne figureront pas dans les listes de sujets des responsables."
     push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
+    push_notifications_icon: "L'icône de badge qui apparait dans le coin notifications. Taille requise : 96 x 96."
+    short_title: "Le titre court sera utilisé sur la page d'accueil de l'utilisateur, dans le launcheur, ou d'autres endroits ou la place disponible est limitée. Il devrait être limité à 12 caractères."
+    dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1685,6 +1785,13 @@ fr:
     errors:
       different_topics: "Des messages appartenant à différents sujets ne peuvent pas être fusionnés."
       different_users: "Des messages appartenant à différents utilisateurs ne peuvent pas être fusionnés."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Un message a été scindé en un nouveau %{entity}: %{topic_link}"
+      other: "%{count} messages ont été scindés en un nouveau%{entity}: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Un message a été fusionné en un %{entity} existant : %{topic_link}"
+      other: "%{count} messages ont été fusionnés dans un %{entity} existant : %{topic_link}"
   change_owner:
     post_revision_text: "Propriété transférée"
   topic_statuses:
@@ -2020,6 +2127,9 @@ fr:
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
+  temporarily_closed_due_to_flags:
+    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    other: "Ce sujet est fermé pour au moins 1 heure suite à plusieurs signalements de la communauté."
   system_messages:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Veuillez visiter le message pour voir son contenu."
@@ -2060,6 +2170,22 @@ fr:
     flags_agreed_and_post_deleted:
       title: "Message signalé, retiré par un responsable"
       subject_template: "Message signalé, retiré par un responsable"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que [votre message](%{base_url}%{url}) a été retiré.
+
+        %{flag_reason}
+
+        Ce message a été signalé par la communauté et un responsable a décidé de le retirer.
+
+        [details="Clic pour développer message retiré"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        Pour plus d'informations, merci de vous référer à notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |2
 
@@ -2106,15 +2232,49 @@ fr:
     backup_succeeded:
       title: "Sauvegarde réussie"
       subject_template: "Sauvegarde terminée avec succès"
+      text_body_template: |
+        La sauvegarde a réussi.
+
+        Rendez-vous dans la section [Administration > Sauvegardes](%{base_url}/admin/backups) pour la télécharger.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       title: "Sauvegarde échouée"
       subject_template: "Échec de la sauvegarde"
+      text_body_template: |
+        La sauvegarde a échoué.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     restore_succeeded:
       title: "Restauration réussie"
       subject_template: "Restauration terminée avec succès"
+      text_body_template: |
+        La restauration a réussi.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       title: "Restauration échouée"
       subject_template: "Échec de la restauration"
+      text_body_template: |
+        La restauration a échoué.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
@@ -2122,6 +2282,14 @@ fr:
     bulk_invite_failed:
       title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
+      text_body_template: |
+        Votre envoi d'invitations en masse a été effectué. %{sent} invitations envoyées avec %{failed} erreur(s).
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     csv_export_succeeded:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"
@@ -2355,6 +2523,14 @@ fr:
         Nous sommes désolés, mais nous avons de la difficulté à vous joindre par courriel. Nos derniers courriels vous ont tous été renvoyés comme non livrables.
 
         Pouvez-vous vous assurer que [votre adresse email](%{base_url}/my/preferences/email) est valide et fonctionne ? Vous pouvez également ajouter notre adresse e-mail à votre carnet d'adresses / liste de contacts pour améliorer la délivrabilité.
+    email_bounced: |
+      Le courriel envoyé à %{email} a été rejeté.
+
+      ### Détails
+
+      ``` text
+      %{raw}
+      ```
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -2440,14 +2616,18 @@ fr:
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
     dashboard_problems:
       title: "Problèmes du tableau de bord"
+      subject_template: "Des nouveaux conseils sur votre tableau de bord"
+      text_body_template: |
+        Nous avons de nouveaux conseils et recommendations pour vous, sur la base de vos paramètres.
+
+        [Rendez-vous sur votre tableau de bord](%{base_url}/admin) pour les voir.
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur du mois !"
       subject_template: "Vous êtes un nouvel utilisateur du mois !"
-      text_body_template: |2
-
+      text_body_template: |
         Félicitations, vous avez reçu le prix du **nouveau membre du mois de %{month_year}**. :trophy:
 
-        Ce prix est seulement décerné à deux nouveaux membres par mois et sera listé [dans vos badges](%{url}).
+        Ce prix est seulement accordé à deux nouveaux membres par mois et sera listé [dans vos badges](%{url}).
 
         Vous êtes rapidement devenu un membre précieux de notre communauté. Merci de nous avoir rejoint et continuez à participer ainsi !
     queued_posts_reminder:
@@ -2473,6 +2653,7 @@ fr:
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -2910,6 +3091,9 @@ fr:
       ## [Bienvenue sur %{title}](#welcome)
 
       Un compte est nécessaire. Veuillez en créer un ou connectez-vous pour continuer.
+    welcome_message_invite_only: |
+      # [Bienvenue sur %{title}](#welcome)
+      Un compte est nécessaire. Veuillez demander une invitation à un membre ou connectez-vous pour continuer.
   terms_of_service:
     title: "Conditions générales d'utilisation"
     signup_form_message: 'J''ai lu et j''accepte les <a href="%{base_path}/tos" target="_blank">conditions générales d''utilisation</a>.'
@@ -3098,6 +3282,179 @@ fr:
       Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](%{base_path}/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](%{base_path}/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
+    body: |
+      (Désolé, il n'existe pas encore de traduction de ce texte)
+      These terms govern use of the Internet forum at <%{base_url}>.  To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+
+      The company may offer other products and services, under different terms.  These terms apply only to use of the forum.
+
+      Skip to:
+
+      - [Important Terms](#heading--important-terms)
+      - [Your Permission to Use the Forum](#heading--permission)
+      - [Conditions for Use of the Forum](#heading--conditions)
+      - [Acceptable Use](#heading--acceptable-use)
+      - [Content Standards](#heading--content-standards)
+      - [Enforcement](#heading--enforcement)
+      - [Your Account](#heading--your-account)
+      - [Your Content](#heading--your-content)
+      - [Your Responsibility](#heading--responsibility)
+      - [Disclaimers](#heading--disclaimers)
+      - [Limits on Liability](#heading--liability)
+      - [Feedback](#heading--feedback)
+      - [Termination](#heading--termination)
+      - [Disputes](#heading--disputes)
+      - [General Terms](#heading--general)
+      - [Contact](#heading--contact)
+      - [Changes](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Important Terms</a></h2>
+
+      ***These terms include a number of important provisions that affect your rights and responsibilities, such as the disclaimers in [Disclaimers](#heading--disclaimers), limits on the company's liability to you in [Limits on Liability](#heading--liability), your agreement to cover the company for damages caused by your misuse of the forum in [Responsibility for Your Use](#heading--responsibility), and an agreement to arbitrate disputes in [Disputes](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
+
+      Subject to these terms, the company gives you permission to use the forum.  Everyone needs to agree to these terms to use the forum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
+
+      Your permission to use the forum is subject to the following conditions:
+
+      1.  You must be at least thirteen years old.
+
+      2.  You may no longer use the forum if the company contacts you directly to say that you may not.
+
+      3.  You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
+
+      1.  You may not break the law using the forum.
+
+      2.  You may not use or try to use another's account on the forum without their specific permission.
+
+      3.  You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
+
+      4.  You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
+
+      5.  You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser.  You may crawl the forum to index it for a publicly available search engine, if you run one.
+
+      6.  You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
+
+      7.  You may not falsely imply that you're affiliated with or endorsed by the company.
+
+      8.  You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+
+      9.  You may not remove any marks showing proprietary ownership from materials you download from the forum.
+
+      10.  You may not show any part of the forum on other websites with `<iframe>`.
+
+      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
+
+      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
+
+      13.  You may not impersonate others through the forum.
+
+      14. You may not encourage or help anyone in violation of these terms.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+
+      1.  You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others.  This includes content that is harassing, inappropriate, or abusive.
+
+      2.  You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
+
+      3.  You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
+
+      4.  You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
+
+      5.  You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
+
+      The company may investigate and prosecute violations of these terms to the fullest legal extent.  The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
+
+      The company reserves the right to change, redact, and delete content on the forum for any reason.  If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
+
+      You must create and log into an account to use some features of the forum.
+
+      To create an account, you must provide some information about yourself.  If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date.  You may close your account at any time by e-mailing <%{contact_email}>.
+
+      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised.  You agree to notify the company immediately if you suspect your account has been compromised.  You agree to select a secure password for your account, and keep it secret.
+
+      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
+
+      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum.  Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
+
+      Between you and the company, you remain solely responsible for content you submit to the forum.  You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company.  These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
+
+      Content you submit to the forum belongs to you, and you decide what permission to give others for it.  But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum.  That special license allows the company to copy, publish, and analyze content you submit to the forum.
+
+      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems.  Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed.  Those licenses may give others, or the company itself, the right to share your content through the forum again.
+
+      Others who receive content you submit to the forum may violate the terms on which you license your content.  You agree that the company will not be liable to you for those violations or their consequences.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
+
+      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum.  Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible.  If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice.  You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts.  The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
+
+      ***You accept all risk of using the forum and content on the forum.  As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
+
+      The forum may hyperlink to and integrate forums and services run by others.  The company does not make any warranty about services run by others, or content they may provide.  Use of services run by others may be governed by other terms between you and the one running service.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
+
+      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
+
+      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
+
+      The company welcomes your feedback and suggestions for the forum.  See the [Contact](#heading--contact) section below for ways to get in touch with us.
+
+      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you.  You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
+
+      Either you or the company may end the agreement written out in these terms at any time.  When our agreement ends, your permission to use the forum also ends.
+
+      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
+
+      %{governing_law} will govern any dispute related to these terms or your use of the forum.
+
+      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+
+      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
+
+      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
+
+      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable.  Otherwise, that provision should be removed.
+
+      You may not assign your agreement with the company.  The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum.  Any attempted assignment against these terms has no legal effect.
+
+      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
+
+      These terms embody all the terms of agreement between you and the company about use of the forum.  These terms entirely replace any other agreements about your use of the forum, written or not.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+
+      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
+
+      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
+
+      The company last updated these terms on July 12, 2018, and may update these terms again.  The company will post all updates to the forum.  For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address.  The company may also announce updates with special messages or alerts on the forum.
+
+      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
   privacy_topic:
     title: "Politique de confidentialité"
     body: |2
@@ -3204,8 +3561,7 @@ fr:
     member:
       name: Membre
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Accès accordé</a> aux invitations, aux messages de groupe et à plus de J'aime"
-      long_description: |2
-
+      long_description: |
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés, et avez des J'aime supplémentaires chaque jour.
     regular:
       name: Habitué
@@ -3481,12 +3837,17 @@ fr:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
   tags:
-    title: "Tags"
-    staff_tag_disallowed: 'Le tag "%{tag}" ne peut être mis que par un responsable.'
-    staff_tag_remove_disallowed: 'Le tag "%{tag}" ne peut être retiré que par un responsable.'
-    minimum_required_tags: "Vous devez choisir au moins %{count} tags."
-    upload_row_too_long: "Le fichier CSV devrait avoir un tag par ligne. Le tag peut être suivi d'une virgule et par un nom de groupe de tags."
-  rss_by_tag: "Sujets avec le tag %{tag}"
+    title: "Etiquettes"
+    staff_tag_disallowed: 'L''étiquette "%{tag}" ne peut être appliquée que par un responsable.'
+    staff_tag_remove_disallowed: 'L''étiquette "%{tag}" ne peut être retirée que par un responsable.'
+    minimum_required_tags: "Vous devez choisir au moins %{count} étiquettes."
+    upload_row_too_long: "Le fichier CSV devrait avoir une étiquette par ligne. L'étiquette peut être suivie d'une virgule et par un nom de groupe d'étiquettes."
+    forbidden:
+      in_this_category: '"%{tag_name}" ne peut pas être utilisé dans cette catégorie'
+      restricted_to:
+        one: '"%{tag_name}" est réservée à la catégorie "%{category_names}"'
+        other: '"%{tag_name}" est réservé aux catégories suivantes : %{category_names}'
+  rss_by_tag: "Sujets avec l'étiquette %{tag}"
   finish_installation:
     congratulations: "Félicitations, vous avez installé Discourse !"
     register:
@@ -3526,8 +3887,12 @@ fr:
           site_description:
             label: "Dévrivez votre communauté en une courte phrase"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
+          short_site_description:
+            label: "Décrivez votre communauté en quelques mots"
+            placeholder: "Meilleure communauté de tous les temps"
       introduction:
         title: "Introduction"
+        disabled: "<p>Nous n'avons pas trouvé de sujet avec le titre “%{topic_title}”.</p> <ul> <li>Si vous avez modifié le titre, modifier le sujet pour modifier le texte d'introduction de votre site.</li> <li>Si vous avez supprimé ce sujet, créer un nouveau sujet avec le titre “%{topic_title}” comme titre. Le contenu du premier message est le message d'introduction de votre site.</li> </ul>"
         fields:
           welcome:
             label: "Sujet de bienvenue"
@@ -3567,6 +3932,7 @@ fr:
             label: "Nom de société"
             placeholder: "Société exemple"
           governing_law:
+            label: "Droit applicable"
             placeholder: "Loi californienne"
           city_for_disputes:
             label: "For juridique"
@@ -3586,15 +3952,19 @@ fr:
         fields:
           logo:
             label: "Logo principal"
+            description: "L'image de votre logo situé en haut à gauche de votre site. Utiliser une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360"
           logo_small:
             label: "Logo compact"
+            description: "Une version compacte de votre logo qui est affichée dans le coin supérieur gauche de votre site quand vous défilez la page vers le bas. Utiliser une image carré de 120 x 120."
       icons:
         title: "Icônes"
         fields:
           favicon:
             label: "Petite icône"
+            description: "Icône utilisée pour représenter le site dans les navigateurs Web et qui rend bien à de petites tailles comme 32 x 32. PNG ou JPG recommandés."
           apple_touch_icon:
             label: "Grande icône"
+            description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 512 x 512."
       homepage:
         description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"

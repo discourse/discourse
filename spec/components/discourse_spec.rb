@@ -238,6 +238,20 @@ describe Discourse do
         expect(Discourse.last_read_only['default']).to eq(time)
       end
     end
+
+    describe ".clear_readonly!" do
+      it "publishes the right message" do
+        Discourse.received_readonly!
+        messages = []
+
+        expect do
+          messages = MessageBus.track_publish { Discourse.clear_readonly! }
+        end.to change { Discourse.last_read_only['default'] }.to(nil)
+
+        expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
+          .to eq(true)
+      end
+    end
   end
 
   context "#handle_exception" do

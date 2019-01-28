@@ -3,6 +3,16 @@ require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
+  METADATA_PROPERTIES = %i{
+                            license_url
+                            about_url
+                            authors
+                            theme_version
+                            minimum_discourse_version
+                            maximum_discourse_version
+                          }
+
+  class ImportError < StandardError; end
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
@@ -14,14 +24,23 @@ class RemoteTheme < ActiveRecord::Base
     joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(remote_url: "")
   }
 
-  def self.update_tgz_theme(filename, user: Discourse.system_user)
+  validates_format_of :minimum_discourse_version, :maximum_discourse_version, with: Discourse::VERSION_REGEXP, allow_nil: true
+
+  def self.extract_theme_info(importer)
+    JSON.parse(importer["about.json"])
+  rescue TypeError, JSON::ParserError
+    raise ImportError.new I18n.t("themes.import_error.about_json")
+  end
+
+  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user)
     importer = ThemeStore::TgzImporter.new(filename)
     importer.import!
 
-    theme_info = JSON.parse(importer["about.json"])
-
-    theme = Theme.find_by(name: theme_info["name"])
+    theme_info = RemoteTheme.extract_theme_info(importer)
+    theme = Theme.find_by(name: theme_info["name"]) if match_theme
     theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+
+    theme.component = theme_info["component"].to_s == "true"
 
     remote_theme = new
     remote_theme.theme = theme
@@ -42,7 +61,7 @@ class RemoteTheme < ActiveRecord::Base
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
     importer.import!
 
-    theme_info = JSON.parse(importer["about.json"])
+    theme_info = RemoteTheme.extract_theme_info(importer)
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
 
@@ -74,10 +93,11 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
+    return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
     begin
       importer.import!
-    rescue ThemeStore::GitImporter::ImportFailed => err
+    rescue RemoteTheme::ImportError => err
       self.last_error_text = err.message
     else
       self.updated_at = Time.zone.now
@@ -87,7 +107,6 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_from_remote(importer = nil, skip_update: false)
-    return unless remote_url
     cleanup = false
 
     unless importer
@@ -95,7 +114,7 @@ class RemoteTheme < ActiveRecord::Base
       importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
       begin
         importer.import!
-      rescue ThemeStore::GitImporter::ImportFailed => err
+      rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
         return self
       else
@@ -103,7 +122,7 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    theme_info = JSON.parse(importer["about.json"])
+    theme_info = RemoteTheme.extract_theme_info(importer)
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
@@ -114,33 +133,18 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    Theme.targets.keys.each do |target|
-      next if target == :settings || target == :translations
-      ALLOWED_FIELDS.each do |field|
-        lookup =
-          if field == "scss"
-            "#{target}.scss"
-          elsif field == "embedded_scss" && target == :common
-            "embedded.scss"
-          else
-            "#{field}.html"
-          end
-
-        value = importer["#{target}/#{lookup}"]
-        theme.set_field(target: target.to_sym, name: field, value: value)
-      end
+    METADATA_PROPERTIES.each do |property|
+      self.public_send(:"#{property}=", theme_info[property.to_s])
+    end
+    if !self.valid?
+      raise ImportError, I18n.t("themes.import_error.about_json_values", errors: self.errors.full_messages.join(","))
     end
 
-    settings_yaml = importer["settings.yaml"] || importer["settings.yml"]
-    theme.set_field(target: :settings, name: "yaml", value: settings_yaml)
-
-    I18n.available_locales.each do |locale|
-      value = importer["locales/#{locale}.yml"]
-      theme.set_field(target: :translations, name: locale, value: value)
+    importer.all_files.each do |filename|
+      next unless opts = ThemeField.opts_from_file_path(filename)
+      value = importer[filename]
+      theme.set_field(opts.merge(value: value))
     end
-
-    self.license_url = theme_info["license_url"]
-    self.about_url = theme_info["about_url"]
 
     if !skip_update
       self.remote_updated_at = Time.zone.now
@@ -213,6 +217,10 @@ class RemoteTheme < ActiveRecord::Base
       org_repo = url.gsub(GITHUB_SSH_REGEXP, "")
       "https://github.com/#{org_repo}"
     end
+  end
+
+  def is_git?
+    remote_url.present?
   end
 end
 

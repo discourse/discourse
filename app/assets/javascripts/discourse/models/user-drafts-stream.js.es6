@@ -45,7 +45,7 @@ export default RestModel.extend({
 
   remove(draft) {
     let content = this.get("content").filter(
-      item => item.sequence !== draft.sequence
+      item => item.draft_key !== draft.draft_key
     );
     this.setProperties({ content, itemsLoaded: content.length });
   },

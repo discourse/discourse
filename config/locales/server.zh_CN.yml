@@ -39,7 +39,6 @@ zh_CN:
   themes:
     bad_color_scheme: "色彩空间无效，无法更新主题"
     other_error: "更新主题时出错"
-    error_importing: "克隆git存储库时出错，访问被拒绝或找不到存储库"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -797,7 +796,6 @@ zh_CN:
         post_count: 创建的帖子
         pm_count: 创建的私信
         revision_count: 版本
-      description: 版主活动列表，包括已审核的标记，阅读时间，创建的主题，创建的帖子，创建的私信以及修订。
     flags_status:
       title: "标记状态"
       values:
@@ -951,7 +949,6 @@ zh_CN:
       xaxis: "天"
       yaxis: "已登录页面访问"
     page_view_crawler_reqs:
-      title: "Web 爬虫"
       xaxis: "天"
       yaxis: "Web 爬虫页面访问"
     page_view_total_reqs:
@@ -1003,7 +1000,6 @@ zh_CN:
       xaxis: "天"
       yaxis: "访问次数"
     web_crawlers:
-      title: "Web 爬虫请求"
       labels:
         user_agent: "用户代理"
         page_views: "浏览量"
@@ -1018,7 +1014,6 @@ zh_CN:
         os: 操作系统
         login_time: 登录时间
     staff_logins:
-      title: "管理人员登录"
       labels:
         user: 用户
         location: 地点
@@ -1230,8 +1225,6 @@ zh_CN:
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新认证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a >为可能的值。"
     google_oauth2_hd: "登录将受限的可选Google Apps Hosted域。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd- param</a>了解更多详情。"
     enable_twitter_logins: "启用Twitter身份验证，需要twitter_consumer_key和twitter_consumer_secret。请参阅<a href='https://meta.discourse.org/t/13395'target='_blank'>为话语配置Twitter登录（和丰富的嵌入）</a>。"
-    twitter_consumer_key: "Twitter身份验证的消费者密钥，在<a href='https://apps.twitter.com/' target='_blank'> https://apps.twitter.com</a>上注册"
-    twitter_consumer_secret: "Twitter身份验证的客户secret，在<a href='https://apps.twitter.com/' target='_blank'> https://apps.twitter.com</a>上注册"
     enable_instagram_logins: "启用 Instagram 验证，需要 instagram_consumer_key 和 instagram_consumer_secret"
     instagram_consumer_key: "Instagram 验证的 Consumer key"
     instagram_consumer_secret: "Instagram 验证的 Consumer secret"
@@ -1482,8 +1475,6 @@ zh_CN:
     email_link_color: "HTML 邮件中的链接颜色。输入色彩名字（“blue”）或十六进制值（“#0000FF”）。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
-    public_user_custom_fields: "可公开显示的用户自定义属性白名单"
-    staff_user_custom_fields: "可给管理人员公开显示的用户自定义属性白名单。"
     enable_user_directory: "提供可供浏览的用户目录"
     enable_group_directory: "提供可供浏览的群组目录"
     group_in_subject: "在邮件标题中设置%%{optional_pm}，取决于PM中第一个组的名称，请参阅：<a href ='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target ='_blank'>自定义标准邮件的标题格式</a>"
@@ -1504,7 +1495,6 @@ zh_CN:
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     header_dropdown_category_count: "标题下拉菜单可显示多少分类。"
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
-    global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
     read_time_word_count: "一分钟阅读的词的数量，用于估计阅读时间。"

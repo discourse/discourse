@@ -37,7 +37,6 @@ sk:
   themes:
     bad_color_scheme: "Nepodarilo sa aktualizovať tému, neplatná farebná schéma"
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
-    error_importing: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
       data_type_not_a_number: "Hodnota nastavenia typu `%{name}` nie je podporovaná. Podporované typy sú `integer`, `bool`, `list` a `enum`"
@@ -654,7 +653,6 @@ sk:
       title: "Prihlásený"
       xaxis: "Deň"
     page_view_crawler_reqs:
-      title: "Webové prehľadávače"
       xaxis: "Deň"
     page_view_total_reqs:
       xaxis: "Deň"
@@ -933,8 +931,6 @@ sk:
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
     max_daily_gravatar_crawls: "Koľkokrát denne má Discourse kontrolovať Gravatar na zistenie vlastného avatara."
-    public_user_custom_fields: "Schválený zoznam vlastných polí používateľa, ktoré budú verejne zobrazené."
-    staff_user_custom_fields: "Schválený zoznam vlastných polí používateľa, ktoré budú zobrazené zamestnancom."
     enable_user_directory: "Povoliť prezeranie zoznamu používateľov."
     allow_anonymous_posting: "Povoliť používateľom prepnutie do anonymného režimu."
     anonymous_posting_min_trust_level: "Minimálna úroveň dôvery na zapnutie anonymného prispievania."
@@ -946,7 +942,6 @@ sk:
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
-    global_notice: "Pre všetkých návštevníkov zobraz URGENTNÉ, KRÍZOVÉ globálné záhlavie, zmeň na čierne a schovaj (HTML povolené)."
     disable_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
     automatically_unpin_topics: "Automaticky odopnúť témy ak používateľ dostanie posledný príspevok."
     read_time_word_count: "Počet slov za minútu určený na výpočet odkazovaného času čítania."

@@ -48,6 +48,9 @@ nl:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -57,6 +60,9 @@ nl:
         x_days:
           one: "1d"
           other: "%{count}d"
+        x_months:
+          one: "1 maand"
+          other: "%{count}maanden"
         about_x_years:
           one: "1j"
           other: "%{count}j"
@@ -173,6 +179,7 @@ nl:
     submit: "Verstuur"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
+    go_ahead: "Ga je gang"
     sign_up: "Registreren"
     log_in: "Inloggen"
     age: "Leeftijd"
@@ -191,6 +198,7 @@ nl:
     privacy: "Privacy"
     tos: "Algemene Voorwaarden"
     rules: "Regels"
+    conduct: "Gedragscode"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
     you: "Jij"
@@ -211,6 +219,8 @@ nl:
     character_count:
       one: "{{count}} teken"
       other: "{{count}} tekens"
+    related_messages:
+      title: "Gerelateerde Berichten"
     suggested_topics:
       title: "Aanbevolen topics"
       pm_title: "Voorgestelde berichten"
@@ -239,13 +249,19 @@ nl:
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
     bookmarks:
       created: "je hebt een bladwijzer voor dit bericht gemaakt"
+      not_bookmarked: "bladwijzer voor dit bericht maken"
       remove: "Bladwijzer verwijderen"
+      confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
     drafts:
       resume: "Doorgaan"
       remove: "Verwijderen"
-      new_topic: "Nieuw topic (het) concept"
+      new_topic: "Nieuw topic concept"
       new_private_message: "Nieuw privé bericht concept"
       topic_reply: "Reageer concept"
+      abandon:
+        confirm: "Je hebt al een ander concept geopend in dit topic. Weet je zeker dat je deze wilt stoppen?"
+        yes_value: "Ja, stop"
+        no_value: "Nee, behoud"
     topic_count_latest:
       one: "Zie {{count}} nieuwe of bijgewerkte topic (het)."
       other: "Zie {{count}} nieuwe of bijgewerkte topics."
@@ -262,6 +278,7 @@ nl:
     saved: "Opgeslagen!"
     upload: "Uploaden"
     uploading: "Uploaden..."
+    uploading_filename: "Uploaden: {{filename}}..."
     clipboard: "klembord"
     uploaded: "Geupload!"
     pasting: "Plakken..."
@@ -279,7 +296,13 @@ nl:
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
+        search: "Zoek voor een topic op naam, url of id:"
         placeholder: "typ hier de titel van het topic"
+    choose_message:
+      none_found: "Geen berichten gevonden."
+      title:
+        search: "Zoek voor een bericht op titel:"
+        placeholder: "Typ hier de titel van het bericht."
     queue:
       topic: "Topic:"
       approve: "Goedkeuren"
@@ -350,6 +373,7 @@ nl:
         description: "Het lidmaatschap van deze groep beheren"
         usernames: "Gebruikersnamen"
       manage:
+        title: "Beheer"
         name: "Naam"
         full_name: "Volledige naam"
         add_members: "Leden toevoegen"
@@ -403,13 +427,19 @@ nl:
         title: "Groepen"
         all: "Alle groepen"
         empty: "Er zijn geen zichtbare groepen."
+        filter: "Filteren op groep type"
         owner_groups: "Mijn groepen"
+        close_groups: "Besloten Groepen"
+        automatic_groups: "Automatische Groepen"
         automatic: "Automatisch"
         closed: "Gesloten"
         public: "Openbaar"
         private: "Privaat"
         public_groups: "Publieke groepen"
+        automatic_group: Automatische Groep
+        close_group: Besloten Groep
         my_groups: "Mijn groepen"
+        group_type: "Groep Type"
         is_group_user: "Lid"
         is_group_owner: "Eigenaar"
       title:
@@ -420,6 +450,13 @@ nl:
         title: "Leden"
         filter_placeholder_admin: "gebruikersnaam of e-mail, e-mailadres"
         filter_placeholder: "gebruikersnaam"
+        remove_member: "Verwijder Lid"
+        remove_member_description: "Verwijder <b>%{username}</b> uit deze groep"
+        make_owner: "Eigenaar Maken"
+        make_owner_description: "Maak <b>%{username}</b> een eigenaar van deze groep."
+        remove_owner: "Verwijder als Eigenaar"
+        remove_owner_description: "Verwijder <b>%{username}</b> als een eigenaar van deze groep"
+        owner: "Eigenaar"
       topics: "Topics"
       posts: "Berichten"
       mentions: "Vermeldingen"
@@ -545,7 +582,6 @@ nl:
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       disable_jump_reply: "Niet naar mijn bericht gaan nadat ik antwoord"
       dynamic_favicon: "Aantal nieuwe / bijgewerkte topics tonen in browserpictogram"
-      theme_default_on_all_devices: "Maak dit mijn standaard thema op al mijn devices"
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor geselecteerde tekst inschakelen"
       change: "wijzigen"
@@ -2585,8 +2621,6 @@ nl:
           edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
           delete_upload_confirm: "Deze upload verwijderen? (Thema CSS zou kunnen stoppen met werken!)"
           import_web_tip: "Repository die thema bevat"
-          import_file_tip: ".dcstyle.json-bestand dat thema bevat"
-          about_theme: "Over thema"
           license: "Licentie"
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"

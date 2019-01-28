@@ -45,7 +45,7 @@ createWidget("discourse-poll-option", {
     if (attrs.isMultiple) {
       contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
     } else {
-      contents.push(iconNode(chosen ? "far-dot-circle" : "far-circle"));
+      contents.push(iconNode(chosen ? "circle" : "far-circle"));
     }
 
     contents.push(" ");
@@ -144,7 +144,7 @@ createWidget("discourse-poll-voters", {
       return h("li", [
         avatarFor("tiny", {
           username: user.username,
-          url: userPath(user.username),
+          url: this.site.mobileView ? userPath(user.username) : undefined,
           template: user.avatar_template
         }),
         " "
@@ -435,7 +435,7 @@ createWidget("discourse-poll-buttons", {
           className: "btn toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
-          icon: "eye-slash",
+          icon: "far-eye-slash",
           disabled: hideResultsDisabled,
           action: "toggleResults"
         })
@@ -451,7 +451,7 @@ createWidget("discourse-poll-buttons", {
             className: "btn toggle-results",
             label: "poll.show-results.label",
             title: "poll.show-results.title",
-            icon: "eye",
+            icon: "far-eye",
             disabled: poll.get("voters") === 0,
             action: "toggleResults"
           })

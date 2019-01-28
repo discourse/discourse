@@ -24,6 +24,8 @@ describe RemoteTheme do
           "name": "awesome theme",
           "about_url": "#{about_url}",
           "license_url": "https://www.site.com/license",
+          "theme_version": "1.0",
+          "minimum_discourse_version": "1.0.0",
           "assets": {
             "font": "assets/awesome.woff2"
           },
@@ -72,6 +74,8 @@ describe RemoteTheme do
 
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
+      expect(remote.theme_version).to eq("1.0")
+      expect(remote.minimum_discourse_version).to eq("1.0.0")
 
       expect(@theme.theme_fields.length).to eq(6)
 

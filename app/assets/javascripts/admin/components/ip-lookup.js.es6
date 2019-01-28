@@ -1,3 +1,4 @@
+import { default as computed } from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";
@@ -5,43 +6,39 @@ import copyText from "discourse/lib/copy-text";
 export default Ember.Component.extend({
   classNames: ["ip-lookup"],
 
-  otherAccountsToDelete: function() {
+  @computed("other_accounts.length", "totalOthersWithSameIP")
+  otherAccountsToDelete(otherAccountsLength, totalOthersWithSameIP) {
     // can only delete up to 50 accounts at a time
-    var total = Math.min(50, this.get("totalOthersWithSameIP") || 0);
-    var visible = Math.min(50, this.get("other_accounts.length") || 0);
+    const total = Math.min(50, totalOthersWithSameIP || 0);
+    const visible = Math.min(50, otherAccountsLength || 0);
     return Math.max(visible, total);
-  }.property("other_accounts", "totalOthersWithSameIP"),
+  },
 
   actions: {
-    lookup: function() {
-      var self = this;
+    lookup() {
       this.set("show", true);
 
       if (!this.get("location")) {
-        ajax("/admin/users/ip-info", {
-          data: { ip: this.get("ip") }
-        }).then(function(location) {
-          self.set("location", Ember.Object.create(location));
-        });
+        ajax("/admin/users/ip-info", { data: { ip: this.get("ip") } }).then(
+          location => this.set("location", Ember.Object.create(location))
+        );
       }
 
       if (!this.get("other_accounts")) {
         this.set("otherAccountsLoading", true);
 
-        var data = {
+        const data = {
           ip: this.get("ip"),
           exclude: this.get("userId"),
           order: "trust_level DESC"
         };
 
-        ajax("/admin/users/total-others-with-same-ip", { data }).then(function(
-          result
-        ) {
-          self.set("totalOthersWithSameIP", result.total);
-        });
+        ajax("/admin/users/total-others-with-same-ip", { data }).then(result =>
+          this.set("totalOthersWithSameIP", result.total)
+        );
 
-        AdminUser.findAll("active", data).then(function(users) {
-          self.setProperties({
+        AdminUser.findAll("active", data).then(users => {
+          this.setProperties({
             other_accounts: users,
             otherAccountsLoading: false
           });
@@ -49,11 +46,11 @@ export default Ember.Component.extend({
       }
     },
 
-    hide: function() {
+    hide() {
       this.set("show", false);
     },
 
-    copy: function() {
+    copy() {
       let text = `IP: ${this.get("ip")}\n`;
       const location = this.get("location");
       if (location) {
@@ -73,25 +70,25 @@ export default Ember.Component.extend({
           text += `: ${location.organization}\n`;
         }
       }
-      const copyRange = $('<p id="copy-range"></p>');
-      copyRange.html(text.trim().replace(/\n/g, "<br>"));
-      $(document.body).append(copyRange);
-      if (copyText(text, copyRange[0])) {
+
+      const $copyRange = $('<p id="copy-range"></p>');
+      $copyRange.html(text.trim().replace(/\n/g, "<br>"));
+      $(document.body).append($copyRange);
+      if (copyText(text, $copyRange[0])) {
         this.set("copied", true);
         Ember.run.later(() => this.set("copied", false), 2000);
       }
-      copyRange.remove();
+      $copyRange.remove();
     },
 
-    deleteOtherAccounts: function() {
-      var self = this;
+    deleteOtherAccounts() {
       bootbox.confirm(
         I18n.t("ip_lookup.confirm_delete_other_accounts"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function(confirmed) {
+        confirmed => {
           if (confirmed) {
-            self.setProperties({
+            this.setProperties({
               other_accounts: null,
               otherAccountsLoading: true,
               totalOthersWithSameIP: null
@@ -100,13 +97,11 @@ export default Ember.Component.extend({
             ajax("/admin/users/delete-others-with-same-ip.json", {
               type: "DELETE",
               data: {
-                ip: self.get("ip"),
-                exclude: self.get("userId"),
+                ip: this.get("ip"),
+                exclude: this.get("userId"),
                 order: "trust_level DESC"
               }
-            }).then(function() {
-              self.send("lookup");
-            });
+            }).then(() => this.send("lookup"));
           }
         }
       );

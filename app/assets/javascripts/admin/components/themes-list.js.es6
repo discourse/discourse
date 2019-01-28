@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   classNames: ["themes-list"],
 
   hasThemes: Ember.computed.gt("themesList.length", 0),
-  hasUserThemes: Ember.computed.gt("userThemes.length", 0),
+  hasActiveThemes: Ember.computed.gt("activeThemes.length", 0),
   hasInactiveThemes: Ember.computed.gt("inactiveThemes.length", 0),
 
   themesTabActive: Ember.computed.equal("currentTab", THEMES),
@@ -31,7 +31,7 @@ export default Ember.Component.extend({
   )
   inactiveThemes(themes) {
     if (this.get("componentsTabActive")) {
-      return [];
+      return themes.filter(theme => theme.get("parent_themes.length") <= 0);
     }
     return themes.filter(
       theme => !theme.get("user_selectable") && !theme.get("default")
@@ -44,20 +44,21 @@ export default Ember.Component.extend({
     "themesList.@each.user_selectable",
     "themesList.@each.default"
   )
-  userThemes(themes) {
+  activeThemes(themes) {
     if (this.get("componentsTabActive")) {
-      return [];
+      return themes.filter(theme => theme.get("parent_themes.length") > 0);
+    } else {
+      themes = themes.filter(
+        theme => theme.get("user_selectable") || theme.get("default")
+      );
+      return _.sortBy(themes, t => {
+        return [
+          !t.get("default"),
+          !t.get("user_selectable"),
+          t.get("name").toLowerCase()
+        ];
+      });
     }
-    themes = themes.filter(
-      theme => theme.get("user_selectable") || theme.get("default")
-    );
-    return _.sortBy(themes, t => {
-      return [
-        !t.get("default"),
-        !t.get("user_selectable"),
-        t.get("name").toLowerCase()
-      ];
-    });
   },
 
   didRender() {

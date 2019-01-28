@@ -586,7 +586,6 @@ bs_BA:
       first_notification: "Vaša prva obavijest! Selektirajte je kako bi započeli."
       disable_jump_reply: "Ne skači na moju objavu na dnu nakon što odgovorim na nečiju"
       dynamic_favicon: "Pokaži broj novih / ažuriranih tema u ikoni na web pregledniku"
-      theme_default_on_all_devices: "Postavi ovu temu kao moju uobičajenu temu na svim mojim uređajima"
       allow_private_messages: "Dozvoli drugim korisnicima da mi mogu slati privatne poruke"
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
       enable_quoting: "Uključi \"citiran odgovor\" za označen tekst"

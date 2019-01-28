@@ -689,7 +689,6 @@ fa_IR:
       xaxis: "روز"
       yaxis: "نمایش صفحات به کاربران وارد شده"
     page_view_crawler_reqs:
-      title: "خزندگان وب"
       xaxis: "روز"
       yaxis: "نمایش صفحات به خزندگان وب"
     page_view_total_reqs:
@@ -1068,8 +1067,6 @@ fa_IR:
     email_link_color: "رنگ پیوند‌ها در ایمیل‌های HTML. یک نام رنگ مثل ('blue') یا کد هگز ('#0000FF') وارد کنید"
     detect_custom_avatars: "بررسی کن که کاربران تصویر پروفایل سفارشی بارگذاری کرده‌اند یا خیر."
     max_daily_gravatar_crawls: "حداکثر زمانی که دیسکورس Gravatar را چک می کند برای آواتار سفارشی در هر روز. "
-    public_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به همه نشان داده شود."
-    staff_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به مدیران نشان داده شود."
     enable_user_directory: "شاخه کاربری را برای مرور ارائه کن"
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
     allow_anonymous_posting: "به کاربر اجازه بده که به حالت ناشناس بروند"
@@ -1085,7 +1082,6 @@ fa_IR:
     disable_avatar_education_message: "غیر‌فعال‌سازی پیام‌ آموزشی برای تغییر آواتار"
     suppress_uncategorized_badge: "نشان برای موضوعات دسته‌بندی نشده را در فهرست موضوعات را نشان نده. "
     permalink_normalizations: "اعمال Regex زیر قبل از تطابق پیوند یکتا، برای مثال  /(topic.*)\\?.*/\\1 نوار query string را از پیوند موضوع جدا می‌کند. فرمت regex+string از \\1 استفاده می‌کند. برای دسترسی به تصویر‌برداری."
-    global_notice: "بنر فوری ٬‌ اضطراری  را به‌صورت سراسری به تمام بازدیدکنندگان نشان بده٬ برای مخفی کردن خالی بگذارید (HTML allowed)."
     disable_edit_notifications: "ویرایش اعلان‌ها را از طریق کاربر سیستم  کار بینداز وقتی  'download_remote_images_to_local' فعال است "
     automatically_unpin_topics: "خارج کردن خودکار موضوع از حالت سنجاقی وقتی کرابر به پایین صفحه می‌رسد."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."

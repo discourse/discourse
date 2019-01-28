@@ -96,6 +96,10 @@ class UserUpdater
       end
     end
 
+    if attributes.key?(:text_size)
+      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s != attributes[:text_size]
+    end
+
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true

@@ -84,9 +84,9 @@ class PostgreSQLFallbackHandler
             if is_connection_active
               logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
               self.master_up(key)
+              clear_connections
               disable_readonly_mode
               Sidekiq.unpause!
-              clear_connections
             end
           rescue => e
             logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
@@ -156,7 +156,6 @@ module ActiveRecord
           if !fallback_handler.initialized
             return postgresql_fallback_connection(config)
           else
-            fallback_handler.clear_connections
             raise e
           end
         end

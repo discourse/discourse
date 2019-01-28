@@ -179,6 +179,7 @@ fr:
     submit: "Envoyer"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
+    go_ahead: "Procéder"
     sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
@@ -197,6 +198,7 @@ fr:
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
+    conduct: "Charte"
     mobile_view: "Vue mobile"
     desktop_view: "Vue bureau"
     you: "Vous"
@@ -254,8 +256,12 @@ fr:
       resume: "Reprendre"
       remove: "Supprimer"
       new_topic: "Nouveau brouillon de sujet"
-      new_private_message: "Nouveau brouillon de message privé"
+      new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
+      abandon:
+        confirm: "Vous avez déjà ouvert un autre brouillon dans ce sujet. Etes-vous sûr de vouloir l'abandonner ?"
+        yes_value: "Oui, abandonner"
+        no_value: "Non, garder"
     topic_count_latest:
       one: "Voir {{count}} sujet récent ou mis à jour."
       other: "Voir {{count}} sujets récents ou mis à jour"
@@ -290,7 +296,13 @@ fr:
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
+        search: "Rechercher sujet par titre, url ou ID :"
         placeholder: "entrez ici le titre du sujet"
+    choose_message:
+      none_found: "Aucun message trouvé."
+      title:
+        search: "Rechercher messages par titre :"
+        placeholder: "saisir le titre du message ici"
     queue:
       topic: "Sujet :"
       approve: "Approuver"
@@ -465,6 +477,7 @@ fr:
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
+          description: "Vous serez averti de nouveaux sujets dans ce groupe mais pas de réponses aux sujets."
         tracking:
           title: "Suivre"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -584,7 +597,6 @@ fr:
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
-      theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
@@ -612,13 +624,13 @@ fr:
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)"
         few_per_day: "M'envoyer un courriel pour chaque nouveau message (environ 2 par jour)"
         warning: "Mode liste de diffusion activé. Les paramètres de notification par e-mail sont remplacés."
-      tag_settings: "Tags"
+      tag_settings: "Etiquettes"
       watched_tags: "Surveillés"
-      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets avec ces tags. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
+      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets avec ces étiquettes. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_tags: "Suivis"
-      tracked_tags_instructions: "Vous allez suivre automatiquement tous les sujets avec ces tags. Le nombre de nouveaux messages apparaîtra à côté du sujet."
+      tracked_tags_instructions: "Vous allez suivre automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_tags: "Silencieux"
-      muted_tags_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets avec ces tags, et ils n'apparaîtront pas dans la liste des sujets récents."
+      muted_tags_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets avec ces étiquettes, et ils n'apparaîtront pas dans la liste des sujets récents."
       watched_categories: "Surveillées"
       watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_categories: "Suivies"
@@ -626,7 +638,7 @@ fr:
       watched_first_post_categories: "Surveiller les nouveaux sujets"
       watched_first_post_categories_instructions: "Vous serez notifié du premier message de chaque sujet dans ces catégories."
       watched_first_post_tags: "Surveiller les nouveaux sujets"
-      watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces tags."
+      watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces étiquettes."
       muted_categories: "Silencieuses"
       muted_categories_instructions: "Vous ne serez aucunement notifié à propos de nouveaux sujets dans ces catégories et ils n'apparaîtront pas sur les pages \"Catégories\" ou \"Dernier\"."
       no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
@@ -668,14 +680,14 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Tout sélectionner"
-        tags: "Tags"
+        tags: "Etiquettes"
       preferences_nav:
         account: "Compte"
         profile: "Profil"
         emails: "Courriels"
         notifications: "Notifications"
         categories: "Catégories"
-        tags: "Tags"
+        tags: "Etiquettes"
         interface: "Interface"
         apps: "Applications"
       change_password:
@@ -693,8 +705,8 @@ fr:
         enable: "Activer"
         enable_long: "Activer les codes de secours"
         manage: "Gérer les codes de secours"
-        copied_to_clipboard: "Copié dans le presse-papier"
-        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        copied_to_clipboard: "Copié dans le presse-papiers"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
         codes:
           title: "Codes de secours générés"
@@ -809,6 +821,12 @@ fr:
       website: "Site internet"
       email_settings: "Courriel"
       hide_profile_and_presence: "Cacher mon profil public et statistiques"
+      text_size:
+        title: "Taille de texte"
+        smaller: "Petit"
+        normal: "Normal"
+        larger: "Grand"
+        largest: "Plus grand"
       like_notification_frequency:
         title: "Notifier lors d'un J'aime"
         always: "Toujours"
@@ -896,6 +914,7 @@ fr:
           text: "Invitation massive depuis un fichier"
           success: "Le fichier a été correctement importé. Vous serez notifié par message direct lorsque le traitement sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
+          confirmation_message: "Vous êtes sur le point d'envoyer un courriel à toutes les adresses dans le fichier téléchargé."
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -1120,6 +1139,7 @@ fr:
       provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
       submit_new_email: "Mettre à jour l'adresse de courriel"
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
+      sent_activation_email_again_generic: "Nous avons envoyé un autre courriel d'activation. Il se peut que cela prenne quelques minutes pour arriver ; vérifier aussi votre spam."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
       forgot: "J'ai oublié les détails de mon compte"
@@ -1251,7 +1271,7 @@ fr:
         post_length: "Le message doit avoir au moins {{min}} caractères"
         try_like: "Avez-vous essayé le bouton {{heart}} ?"
         category_missing: "Vous devez choisir une catégorie"
-        tags_missing: "Vous devez choisir au moins {{count}} tags"
+        tags_missing: "Vous devez choisir au moins {{count}} étiquettes"
       save_edit: "Sauvegarder"
       overwrite_edit: "Ecraser la modification"
       reply_original: "Répondre sur le sujet d'origine"
@@ -1306,6 +1326,7 @@ fr:
       toggle_direction: "Basculer sens"
       help: "Aide Markdown"
       collapse: "réduire le panneau d'édition"
+      open: "ouvrir l'éditeur"
       abandon: "fermer le panneau d'édition et supprimer le brouillon"
       enter_fullscreen: "utiliser éditeur plein écran"
       exit_fullscreen: "sortir de l'éditeur plein écran"
@@ -1367,6 +1388,10 @@ fr:
       liked_many:
         one: "<span>{{username}}, {{username2}} et 1 autre</span> {{description}}"
         other: "<span>{{username}}, {{username2}} et {{count}} autres</span> {{description}}"
+      liked_consolidated_description:
+        one: "a aimé de vos messages"
+        other: "a aimé {{count}} de vos messages"
+      liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1447,7 +1472,7 @@ fr:
         with_badge:
           label: Avec le badge
         with_tags:
-          label: Avec les tags
+          label: Etiquetté
         filters:
           label: Seulement retourner les sujets/messages...
           title: Seuls les titres correspondent
@@ -1464,7 +1489,7 @@ fr:
           unseen: je n'ai pas lu
           wiki: qui sont des wikis
           images: inclure le(s) images(s)
-          all_tags: Contient tous les tags
+          all_tags: Contient toutes les étiquettes
         statuses:
           label: Dont les sujets
           open: sont ouverts
@@ -1509,11 +1534,11 @@ fr:
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
-        change_tags: "Changer les tags"
-        append_tags: "Ajouter les tags"
-        choose_new_tags: "Choisir les nouveaux tags pour ces sujets :"
-        choose_append_tags: "Choisissez de nouveaux tags à ajouter à ces sujets :"
-        changed_tags: "Les tags de ces sujets ont été modifiés."
+        change_tags: "Changer les étiquettes"
+        append_tags: "Ajouter les étiquettes"
+        choose_new_tags: "Choisir les nouvelles étiquettes pour ces sujets :"
+        choose_append_tags: "Choisissez de nouvelles étiquettes à ajouter à ces sujets :"
+        changed_tags: "Les étiquettes de ces sujets ont été modifiées."
       none:
         unread: "Vous n'avez aucun sujet non lu."
         new: "Vous n'avez aucun nouveau sujet."
@@ -1640,6 +1665,8 @@ fr:
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
       auto_delete:
         title: "Auto-suppression du sujet"
+      auto_bump:
+        title: "Remonter automatiquement le sujet"
       reminder:
         title: "Me rappeler"
       status_update_notice:
@@ -1648,6 +1675,7 @@ fr:
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
         auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
+        auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}."
       auto_close_title: "Paramètres de fermeture automatique"
       auto_close_immediate:
@@ -1675,7 +1703,7 @@ fr:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
           mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc notifié des réponses à ce sujet par courriel."
-          "3_10": "Vous recevrez des notifications car vous surveillez un tag de ce sujet."
+          "3_10": "Vous recevrez des notifications car vous surveillez une étiquette de ce sujet."
           "3_6": "Vous recevrez des notifications parce que vous surveillez cette catégorie."
           "3_5": "Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement."
           "3_2": "Vous recevrez des notifications car vous surveillez ce sujet."
@@ -1813,9 +1841,15 @@ fr:
           one: "1 message"
           other: "{{count}} messages"
         cancel: "Supprimer le filtre"
+      move_to:
+        title: "Déplacer vers"
+        action: "déplacer vers"
+        error: "Il y a eu une erreur en déplaçant les messages."
       split_topic:
         title: "Déplacer vers un nouveau sujet"
         action: "déplacer vers un nouveau sujet"
+        topic_name: "Titre du nouveau sujet"
+        radio_label: "Nouveau sujet"
         error: "Il y a eu une erreur en déplaçant les messages vers un nouveau sujet."
         instructions:
           one: "Vous êtes sur le point de créer un nouveau sujet avec le message que vous avez sélectionné."
@@ -1824,9 +1858,27 @@ fr:
         title: "Déplacer vers un sujet existant"
         action: "déplacer vers un sujet existant"
         error: "Il y a eu une erreur en déplaçant les messages dans ce sujet."
+        radio_label: "Sujet existant"
         instructions:
           one: "Merci de sélectionner le sujet dans lequel vous souhaitez déplacer ce message."
           other: "Merci de sélectionner le sujet dans lequel vous souhaitez déplacer ces <b>{{count}}</b> messages."
+      move_to_new_message:
+        title: "Déplacer vers un nouveau message"
+        action: "déplacer vers un nouveau message"
+        message_title: "Titre du nouveau message"
+        radio_label: "Nouveau message"
+        participants: "Participants"
+        instructions:
+          one: "Vous êtes sur le point de créer un nouveau message avec le message que vous avez sélectionné."
+          other: "Vous êtes sur le point de créer un nouveau message avec les <b>{{count}}</b> messages que vous avez sélectionné."
+      move_to_existing_message:
+        title: "Déplacer vers un message existant"
+        action: "déplacer vers un message existant"
+        radio_label: "Message existant"
+        participants: "Participants"
+        instructions:
+          one: "Merci de sélectionner le message dans lequel vous souhaitez déplacer ce message."
+          other: "Merci de sélectionner le message dans lequel vous souhaitez déplacer ces <b>{{count}}</b> messages."
       merge_posts:
         title: "Fusionner les messages sélectionnés"
         action: "fusionner les messages sélectionnés"
@@ -1962,6 +2014,7 @@ fr:
         unlock_post_description: "permettre l'utilisateur de modifier le message"
         delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
+        delete_topic: "supprimer le sujet"
       actions:
         flag: "Signaler"
         defer_flags:
@@ -2088,11 +2141,11 @@ fr:
       general: "Général"
       settings: "Paramètres"
       topic_template: "Modèle de sujet"
-      tags: "Tags"
-      tags_allowed_tags: "N'autoriser que ces tags à être utilisés dans cette catégorie :"
-      tags_allowed_tag_groups: "N'autoriser que les tags de ces groupes à être utilisés dans cette catégorie :"
-      tags_placeholder: "(Facultatif) liste des tags autorisés"
-      tag_groups_placeholder: "(Facultatif) liste des groupes de tags autorisés"
+      tags: "Etiquettes"
+      tags_allowed_tags: "N'autoriser que ces étiquettes à être utilisées dans cette catégorie :"
+      tags_allowed_tag_groups: "N'autoriser que les étiquettes de ces groupes à être utilisées dans cette catégorie :"
+      tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
+      tag_groups_placeholder: "(Facultatif) liste des groupes de étiquettes autorisées"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"
@@ -2145,7 +2198,7 @@ fr:
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
-      minimum_required_tags: "Nombre minimum de tags requis dans un sujet :"
+      minimum_required_tags: "Nombre minimum d'étiquettes requises dans un sujet :"
       parent: "Catégorie parente"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
       navigate_to_first_post_after_read: "Naviguer vers le premier message après que les sujets sont lus"
@@ -2155,6 +2208,7 @@ fr:
           description: "Vous surveillerez automatiquement tous les sujets dans ces catégories. Vous serez notifié des nouveaux messages dans tous les sujets, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
+          description: "Vous serez averti de nouveaux sujets dans cette catégorie mais pas de réponses aux sujets."
         tracking:
           title: "Suivi"
           description: "Vous allez suivre automatiquement tous les sujets dans ces catégories. Vous serez notifié lorsque quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -2249,6 +2303,8 @@ fr:
       pinned:
         title: "Épinglé"
         help: "Ce sujet est épinglé pour vous ; il s'affichera en haut de sa catégorie"
+      unlisted:
+        help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |2
@@ -2477,74 +2533,75 @@ fr:
 
       </p>
     tagging:
-      all_tags: "Tous les tags"
-      other_tags: "Autres tags"
-      selector_all_tags: "tous les tags"
-      selector_no_tags: "aucun tag"
-      changed: "tags modifiés :"
-      tags: "Tags"
-      choose_for_topic: "tags optionnels"
-      delete_tag: "Supprimer le tag"
+      all_tags: "Toutes les étiquettes"
+      other_tags: "Autres étiquettes"
+      selector_all_tags: "toutes les étiquettes"
+      selector_no_tags: "aucune étiquette"
+      changed: "étiquettes modifiées :"
+      tags: "Etiquettes"
+      choose_for_topic: "étiquettes optionnelles"
+      delete_tag: "Supprimer l'étiquette"
       delete_confirm:
-        one: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de 1 sujet auquel il est assigné ?"
-        other: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de {{count}} sujets auxquels il est assigné ?"
-      delete_confirm_no_topics: "Êtes-vous sûr de vouloir supprimer ce tag ?"
-      rename_tag: "Renommer le tag"
-      rename_instructions: "Choisir un nouveau nom pour ce tag :"
+        one: "Êtes-vous sûr de vouloir supprimer cette étiquettes et l'enlever de 1 sujet auquel elle est assignée ?"
+        other: "Êtes-vous sûr de vouloir supprimer cette étiquette et l'enlever de {{count}} sujets auxquels elle est assignée ?"
+      delete_confirm_no_topics: "Êtes-vous sûr de vouloir supprimer cette étiquette ?"
+      rename_tag: "Renommer l'étiquette"
+      rename_instructions: "Choisir un nouveau nom pour cette étiquette :"
       sort_by: "Trier par :"
       sort_by_count: "nombre"
       sort_by_name: "nom"
-      manage_groups: "Gérer les groupes de tags"
-      manage_groups_description: "Définir des groupes pour organiser les tags"
-      upload: "Télécharger des tags"
-      upload_description: "Télécharger un fichier csv pour créer des Tags en masse"
-      upload_instructions: "Un par ligne, avec optionnellement un groupe sous la forme 'tag_name,tag_group'."
-      upload_successful: "Tags téléchargés réussi"
+      manage_groups: "Gérer les groupes d'étiquette"
+      manage_groups_description: "Définir des groupes pour organiser les étiquettes"
+      upload: "Télécharger des étiquettes"
+      upload_description: "Télécharger un fichier csv pour créer des étiquettes en masse"
+      upload_instructions: "Un par ligne, avec optionnellement un groupe d'étiquettes sous la forme 'tag_name,tag_group'."
+      upload_successful: "Etiquettes téléchargées avec succès"
       delete_unused_confirmation:
-        one: "%{count} tag sera supprimé : %{tags}"
-        other: "%{count} tags seront supprimés : %{tags}"
+        one: "%{count} étiquette sera supprimée : %{tags}"
+        other: "%{count} étiquettes seront supprimées : %{tags}"
       delete_unused_confirmation_more_tags:
         one: "%{tags} et %{count} plus"
         other: "%{tags} et %{count} plus"
-      delete_unused: "Supprimer tags inutilisés"
-      delete_unused_description: "Supprimer tous les tags qui ne sont pas associés à des sujets ou messages directs"
+      delete_unused: "Supprimer étiquettes inutilisées"
+      delete_unused_description: "Supprimer toutes les étiquettes qui ne sont pas associées à des sujets ou messages directs"
       cancel_delete_unused: "Annuler"
       filters:
         without_category: "%{filter} %{tag} sujets"
         with_category: "%{filter} %{tag} sujets dans %{category}"
-        untagged_without_category: "%{filter} sujets non tagués"
-        untagged_with_category: "%{filter} sujets non tagués dans %{category}"
+        untagged_without_category: "%{filter} sujets sans étiquette"
+        untagged_with_category: "%{filter} sujets sans étiquette dans %{category}"
       notifications:
         watching:
           title: "Surveiller"
-          description: "Vous surveillerez automatiquement tous les sujets avec ce tag. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
+          description: "Vous surveillerez automatiquement tous les sujets avec cette étiquette. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
+          description: "Vous serez averti de nouveaux sujets avec cette étiquette mais pas de réponses aux sujets."
         tracking:
           title: "Suivi"
-          description: "Vous allez suivre automatiquement tous les sujets avec ce tag. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
+          description: "Vous allez suivre automatiquement tous les sujets avec cette étiquette. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
           description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou répond à votre message."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification sur des nouveaux sujets avec ce tag, et ils n’apparaîtront pas dans l'onglet non lus."
+          description: "Vous ne recevrez aucune notification sur des nouveaux sujets avec cette étiquette, et ils n’apparaîtront pas dans l'onglet non lus."
       groups:
-        title: "Groupes de tags"
-        about: "Ajouter des tags aux groupes pour les gérer plus facilement."
+        title: "Groupes d'étiquette"
+        about: "Ajouter des étiquettes aux groupes pour les gérer plus facilement."
         new: "Nouveau groupe"
-        tags_label: "Tags dans ce groupe :"
-        parent_tag_label: "Tag parent :"
+        tags_label: "Etiquettes dans ce groupe :"
+        parent_tag_label: "Etiquette parent :"
         parent_tag_placeholder: "Facultatif"
-        parent_tag_description: "Les tags de ce groupe ne peuvent pas être utilisés sauf si le tag parent est présent."
-        one_per_topic_label: "Limiter à un tag de ce groupe par sujet"
-        new_name: "Nouveau groupe de tags"
+        parent_tag_description: "Les étiquette de ce groupe ne peuvent pas être utilisées sauf si l'étiquette parent est présente."
+        one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
+        new_name: "Nouveau groupe d'étiquettes"
         save: "Sauvegarder"
         delete: "Supprimer"
-        confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe de tags ?"
-        everyone_can_use: "Les tags peuvent être utilisé par tout le monde"
-        usable_only_by_staff: "Les tags sont visibles à tous, mais seuls les responsables peuvent l'utiliser"
-        visible_only_to_staff: "Les tags ne sont visibles qu'aux responsables"
+        confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
+        everyone_can_use: "Les étiquette peuvent être utilisées par tout le monde"
+        usable_only_by_staff: "Les étiquette sont visibles à tous, mais seuls les responsables peuvent les utiliser"
+        visible_only_to_staff: "Les étiquettes ne sont visibles qu'aux responsables"
       topics:
         none:
           unread: "Vous n'avez aucun sujet non lu."
@@ -2596,6 +2653,7 @@ fr:
         version_check_pending: "On dirait que vous avez récemment fait une mise à jour. Super !"
         installed_version: "Installée"
         latest_version: "Dernière"
+        problems_found: "Quelques conseils sur la base de vos paramètres actuels"
         last_checked: "Dernière vérification"
         refresh_problems: "Rafraîchir"
         no_problems: "Aucun problème n'a été trouvé."
@@ -2606,6 +2664,13 @@ fr:
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
         mobile_title: "Mobile"
+        space_used: "%{usedSize} utilisé"
+        space_used_and_free: "%{usedSize} (%{freeSize} disponibles)"
+        uploads: "Fichiers envoyés"
+        backups: "Sauvegardes"
+        backup_count:
+          one: "%{count} sauvegarde sur %{location}"
+          other: "%{count} sauvegardes sur %{location}"
         lastest_backup: "Plus récent: %{date}"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
@@ -2619,11 +2684,14 @@ fr:
         all_reports: "Tous les rapports"
         general_tab: "Général"
         moderation_tab: "Modération"
+        security_tab: "Sécurité"
+        reports_tab: "Rapports"
         disabled: Désactivé
         timeout_error: "Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court"
         exception_error: "Désolé, une erreur s'est produite à l'exécution de la requête"
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de ressayer.
         not_found_error: "Désolé, ce rapport n'existe pas"
+        filter_reports: Filtrer les rapports
         reports:
           trend_title: "%{percent} modifié. Actuellement %{current}, était %{prev} pour la période précédente."
           today: "Aujourd'hui"
@@ -2838,8 +2906,8 @@ fr:
         active_notice: "Nous delivrerons les détails de l'évènement quand il se produit."
         categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laisser vide pour les déclencher pour toutes les catégories."
         categories_filter: "Catégories"
-        tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux tags définis. Laisser vide pour les déclencher pour tous les tags."
-        tags_filter: "Tags déclenchés"
+        tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux étiquettes définies. Laisser vide pour les déclencher pour toutes les étiquettes."
+        tags_filter: "Etiquettes déclenchées"
         groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laisser vide pour les déclencher pour tous les groupes."
         groups_filter: "Groupes"
         delete_confirm: "Supprimer ce Webhook ?"
@@ -2859,8 +2927,8 @@ fr:
           name: "Événement de catégorie"
           details: "Quand une catégorie est créée, mise à jour ou supprimée."
         tag_event:
-          name: "Événement de tag"
-          details: "Quand un tag est créé, mis à jour ou supprimé."
+          name: "Événement d'étiquette"
+          details: "Quand une étiquette est créée, mise à jour ou supprimée."
         flag_event:
           name: "Evènement de signalement"
           details: "Quand un signalement est crée, approuvé, désapprouvé ou ignoré."
@@ -2963,6 +3031,9 @@ fr:
             label: "Revenir en arrière"
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
+        location:
+          local: "Stockage locale"
+          s3: "S3"
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
@@ -2992,9 +3063,9 @@ fr:
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
-        copy_to_clipboard: "Copier dans le presse-papier"
-        copied_to_clipboard: "Copié dans le presse-papier"
-        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        copy_to_clipboard: "Copier dans le presse-papiers"
+        copied_to_clipboard: "Copié dans le presse-papiers"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "Modèle de courriel"
@@ -3041,6 +3112,7 @@ fr:
           convert_theme_alert: "Êtes-vous sûr·e de vouloir convertir ce thème en composant ? Il sera éliminé comme parent de %{relatives}."
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs : "
+          inactive_components: "Composants non-utilisés :"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
           default_theme_tooltip: "Ce thème est celui par défaut du site"
           updates_available_tooltip: "Des mises à jour sont disponibles pour ce thème"
@@ -3066,11 +3138,10 @@ fr:
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer cet upload? (Le thème CSS pourrait ne plus fonctionner!)"
           import_web_tip: "Dépôt contenant le thème"
-          import_file_tip: "Fichier .dcstyle.json contenant le thème"
+          import_file_tip: "Fichier .tar.gz ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt git privé"
           remote_branch: "Nom de branche (optionnel)"
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
-          about_theme: "À propos du thème"
           license: "Licence"
           component_of: "Composant de :"
           update_to_latest: "Mettre à jour"
@@ -3080,12 +3151,14 @@ fr:
           add: "Ajouter"
           theme_settings: "Paramètres thème"
           no_settings: "Ce thème n'a pas de paramètres."
+          theme_translations: "Traductions de thème"
           empty: "Aucun élément"
           commits_behind:
             one: "Le thème est en retard de 1 commit !"
             other: "Le thème est en retard de {{count}} commits !"
           compare_commits: "(Voir les nouveaux changements)"
           repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur :  "
+          imported_from_archive: "Ce thème a été importé d'un fichier .tar.gz"
           scss:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
@@ -3160,6 +3233,13 @@ fr:
         settings: "Paramètrage"
         templates: "Modèles"
         preview_digest: "Prévisualisation du courriel"
+        advanced_test:
+          title: "Test avancé"
+          desc: "Voir comment Discourse gère les courriels reçus. Pour gérer correctement le courriel, merci de coller ci-dessous l'entier du courriel."
+          email: "Message d'origine"
+          run: "Exécuter test"
+          text: "Corps de texte sélectionné"
+          elided: "Texte élidé"
         sending_test: "Envoi du courriel de test…"
         error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux courriels, et réessayer."
@@ -3294,14 +3374,14 @@ fr:
             grant_moderation: "Accorder les droits de modération"
             revoke_moderation: "Révoquer les droits de modération"
             backup_create: "créer une sauvegarde"
-            deleted_tag: "tag supprimé"
-            deleted_unused_tags: "supprimer tags inutilisés"
-            renamed_tag: "tag renommé"
+            deleted_tag: "étiquette supprimée"
+            deleted_unused_tags: "supprimer étiquette inutilisées"
+            renamed_tag: "étiquette renommée"
             revoke_email: "révoquer le courriel"
             lock_trust_level: "verrouiller le niveau de confiance "
             unlock_trust_level: "déverouiller le niveau de confiance"
             activate_user: "activer l'utilisateur"
-            deactivate_user: "désactvier l'utilisateur"
+            deactivate_user: "désactiver l'utilisateur"
             change_readonly_mode: "changer le mode de lecteur seule"
             backup_download: "télécharger la sauvegarde"
             backup_destroy: "détruire la sauvegarde"
@@ -3322,21 +3402,21 @@ fr:
             entity_export: "exporter l'entité"
             change_name: "modifier nom"
         screened_emails:
-          title: "Courriels affichés"
+          title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
           email: "Courriel"
           actions:
             allow: "Autoriser"
         screened_urls:
-          title: "URL affichées"
+          title: "URL sous surveillance"
           description: "Les URL listées ici ont été utilisées dans des messages émis par des utilisateurs ayant été identifié comme spammeur."
           url: "URL"
           domain: "Domaine"
         screened_ips:
-          title: "IP surveillées"
+          title: "IP sous surveillance"
           description: 'Adresses IP qui sont surveillés. Utiliser "Autoriser" pour ajouter les adresses IP à la liste blanche.'
           delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
-          roll_up_confirm: "Êtes-vous sûr de vouloir consolider les adresses IP interdites sous forme de plages de sous réseaux ?"
+          roll_up_confirm: "Êtes-vous sûr de vouloir consolider les adresses IP sous surveillance sous forme de plages de sous réseaux ?"
           rolled_up_some_subnets: "Consolidation réussie des adresses IP interdites vers ces plages de sous réseau: %{subnets}."
           rolled_up_no_subnet: "Aucune consolidation possible."
           actions:
@@ -3355,6 +3435,7 @@ fr:
           title: "Journaux de recherche"
           term: "Terme"
           searches: "Recherches"
+          click_through_rate: "CTR"
           types:
             all_search_types: "Tous les types de recherche"
             header: "Entête"
@@ -3401,6 +3482,7 @@ fr:
         last_emailed: "Dernier courriel"
         not_found: "Désolé ce pseudo n'existe pas dans notre système."
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
+        active: "Activé"
         show_emails: "Afficher les adresses de courriels"
         nav:
           new: "Nouveaux"
@@ -3466,6 +3548,8 @@ fr:
         suspended_until: "(jusqu'à %{until})"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
         delete_all_posts: "Supprimer tous les messages"
+        delete_posts_progress: "Messages en cours de suppression..."
+        delete_posts_failed: "Il y a eu un problème lors de la suppression des messages."
         penalty_post_actions: "Qu'aimeriez-vous faire du message associé ?"
         penalty_post_delete: "Supprimer le message"
         penalty_post_edit: "Modifier le message"
@@ -3536,6 +3620,7 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
+        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter d'enlever du contenu de discussions existantes. <br><br> Etes-vous sûr de vouloir supprimer cet utilisateur ? C'est irreversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse de courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur"
@@ -3598,7 +3683,7 @@ fr:
           qualifies: "Admissible au niveau de confiance 3."
           does_not_qualify: "Non admissible au niveau de confiance 3."
           will_be_promoted: "Sera bientôt promu."
-          will_be_demoted: "Sera bientôt rétrogragé."
+          will_be_demoted: "Sera bientôt rétrogradé."
           on_grace_period: "Actuellement en période de grâce, ne sera pas rétrogradé."
           locked_will_not_be_promoted: "Niveau de confiance verrouillé. Ne sera jamais promu."
           locked_will_not_be_demoted: "Niveau de confiance verrouillé. Ne sera jamais rétrogradé."
@@ -3696,9 +3781,10 @@ fr:
           login: "Connexion"
           plugins: "Extensions"
           user_preferences: "Préférences"
-          tags: "Tags"
+          tags: "Etiquettes"
           search: "Rechercher"
           groups: "Groupes"
+          dashboard: "Tableau de bord"
         secret_list:
           invalid_input: "Les champs de saisi ne peuvent pas être vide ou contenir le caractère barre verticale"
       badges:
@@ -3770,6 +3856,10 @@ fr:
             with_post: "<span class=\"username\">%{username}</span> pour son message dans %{link}"
             with_post_time: "<span class=\"username\">%{username}</span> pour son message dans %{link} à <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> à <span class=\"time\">%{time}</span>"
+        badge_intro:
+          title: 'Choisir un badge existant ou en créer un nouveau pour commencer'
+          what_are_badges_title: 'Qu''est-ce que les badges ?'
+          badge_query_examples_title: 'Exemple de requête de badge'
       emoji:
         title: "Emoji"
         help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil: glisser-déposer plusieurs fichiers en même temps)"

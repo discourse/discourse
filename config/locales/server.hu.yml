@@ -37,7 +37,6 @@ hu:
   themes:
     bad_color_scheme: "Nem lehet az oldal stílust frissíteni, érvénytelen szín séma."
     other_error: "Hiba történt az oldal stílusának frissítése közben"
-    error_importing: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
     settings_errors:
       invalid_yaml: "Az adott YAML érvénytelen."
       default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
@@ -561,7 +560,6 @@ hu:
       title: "Bejelentkezve"
       xaxis: "Nap"
     page_view_crawler_reqs:
-      title: "Kereső Robotok"
       xaxis: "Nap"
     page_view_total_reqs:
       title: "Oldalmegtekintések"

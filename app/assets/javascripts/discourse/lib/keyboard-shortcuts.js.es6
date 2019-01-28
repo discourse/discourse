@@ -153,6 +153,8 @@ export default {
 
   replyToTopic() {
     this._replyToPost();
+
+    return false;
   },
 
   selectDown() {
@@ -194,12 +196,21 @@ export default {
   },
 
   createTopic() {
-    if (this.currentUser && this.currentUser.can_create_topic) {
-      this.container.lookup("controller:composer").open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.CREATE_TOPIC
-      });
+    if (!(this.currentUser && this.currentUser.can_create_topic)) {
+      return;
     }
+
+    // If the page has a create-topic button, use it for context sensitive attributes like category
+    let $createTopicButton = $("#create-topic");
+    if ($createTopicButton.length) {
+      $createTopicButton.click();
+      return;
+    }
+
+    this.container.lookup("controller:composer").open({
+      action: Composer.CREATE_TOPIC,
+      draftKey: Composer.CREATE_TOPIC
+    });
   },
 
   focusComposer() {
@@ -332,6 +343,8 @@ export default {
         }
       }
     }
+
+    return false;
   },
 
   _bindToSelectedPost(action, binding) {

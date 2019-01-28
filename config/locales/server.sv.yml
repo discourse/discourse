@@ -591,7 +591,6 @@ sv:
       xaxis: "Dag"
       yaxis: "Inloggade sidvisningar"
     page_view_crawler_reqs:
-      title: "Sökrobotar"
       xaxis: "Dag"
       yaxis: "Sökrobotars sidvisningar"
     page_view_total_reqs:
@@ -947,8 +946,6 @@ sv:
     disable_digest_emails: "Inaktivera e-postsammanfattningar för alla användare."
     detect_custom_avatars: "Huruvida det ska kontrolleras att användare har laddat upp anpassade profilbilder."
     max_daily_gravatar_crawls: "Högsta antal gånger per dag som Discourse kommer att kolla efter anpassade avatarer hos Gravatar."
-    public_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas publikt. "
-    staff_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas för personalen."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
@@ -964,7 +961,6 @@ sv:
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     permalink_normalizations: "Applicera följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    global_notice: "Visa en BRÅDSKANDE global banderollnotis för alla besökare, andra till blank för att dölja den (HTML tillåtet)."
     disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."

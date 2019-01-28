@@ -8,13 +8,14 @@
   align-items: center;
   background-color: $secondary;
   margin: 0 0 3px;
-  .d-icon {
-    margin-right: 0.25em;
-  }
 
   img {
     height: 16px;
     width: 16px;
+  }
+
+  .badge-display-name {
+    margin-left: 0.25em;
   }
 
   &.badge-type-gold .fa {

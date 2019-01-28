@@ -46,9 +46,9 @@
     </div>
     <div class='form-display'>{{fieldName}}</div>
     <div class='form-element controls'>
-      {{d-button action=(action "edit") class="btn-default" icon="pencil" label="admin.user_fields.edit"}}
+      {{d-button action=(action "edit") class="btn-default" icon="pencil-alt" label="admin.user_fields.edit"}}
 
-      {{d-button action=destroyAction actionParam=userField class="btn-danger" icon="trash-o" label="admin.user_fields.delete"}}
+      {{d-button action=destroyAction actionParam=userField class="btn-danger" icon="far-trash-alt" label="admin.user_fields.delete"}}
       {{d-button action=moveUpAction actionParam=userField class="btn-default" icon="arrow-up" disabled=cantMoveUp}}
       {{d-button action=moveDownAction actionParam=userField class="btn-default" icon="arrow-down" disabled=cantMoveDown}}
     </div>

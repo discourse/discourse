@@ -614,7 +614,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "已登錄頁面訪問"
     page_view_crawler_reqs:
-      title: "網絡爬蟲"
       xaxis: "天"
       yaxis: "Web 爬蟲頁面訪問"
     page_view_total_reqs:
@@ -981,8 +980,6 @@ zh_TW:
     email_link_color: "HTML 郵件中的連結顏色。輸入色彩名字（“blue”）或十六進制值（“#0000FF”）。"
     detect_custom_avatars: "檢測用戶是否上傳了自定義個人頭像。"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
-    public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
-    staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
     enable_user_directory: "提供可供瀏覽的用戶目錄"
     enable_group_directory: "提供可供瀏覽的群組目錄"
     allow_anonymous_posting: "允許用戶切換至匿名模式"
@@ -997,7 +994,6 @@ zh_TW:
     disable_avatar_education_message: "禁用更改頭像操作的教育消息。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
-    global_notice: "為所有訪客顯示「緊急的」全局橫幅主題，留空將其隱藏（可以使用 HTML）"
     disable_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     automatically_unpin_topics: "當用戶到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"

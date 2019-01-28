@@ -30,6 +30,7 @@ describe BackupRestore::LocalBackupStore do
     create_file(db_name: "default", filename: "a.tgz", last_modified: "2018-02-11T09:27:00Z", size_in_bytes: 29)
     create_file(db_name: "default", filename: "r.sql.gz", last_modified: "2017-12-20T03:48:00Z", size_in_bytes: 11)
     create_file(db_name: "default", filename: "no-backup.txt", last_modified: "2018-09-05T14:27:00Z", size_in_bytes: 12)
+    create_file(db_name: "default/subfolder", filename: "c.tar.gz", last_modified: "2019-01-24T18:44:00Z", size_in_bytes: 23)
 
     create_file(db_name: "second", filename: "multi-2.tar.gz", last_modified: "2018-11-27T03:16:54Z", size_in_bytes: 19)
     create_file(db_name: "second", filename: "multi-1.tar.gz", last_modified: "2018-11-26T03:17:09Z", size_in_bytes: 22)

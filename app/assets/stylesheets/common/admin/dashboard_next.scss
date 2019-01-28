@@ -145,32 +145,32 @@
     .admin-report {
       -ms-grid-column-span: 4;
 
-      &.consolidated-page-views {
-        -ms-grid-column-span: 12;
-      }
-
       &:nth-of-type(1) {
         -ms-grid-row: 1;
         -ms-grid-column: 1;
       }
       &:nth-of-type(2) {
-        -ms-grid-row: 1;
-        -ms-grid-column: 5;
-      }
-      &:nth-of-type(3) {
-        -ms-grid-row: 1;
-        -ms-grid-column: 9;
-      }
-      &:nth-of-type(4) {
         -ms-grid-row: 2;
         -ms-grid-column: 1;
       }
-      &:nth-of-type(5) {
+      &:nth-of-type(3) {
         -ms-grid-row: 2;
         -ms-grid-column: 5;
       }
-      &:nth-of-type(6) {
+      &:nth-of-type(4) {
         -ms-grid-row: 2;
+        -ms-grid-column: 9;
+      }
+      &:nth-of-type(5) {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+      }
+      &:nth-of-type(6) {
+        -ms-grid-row: 3;
+        -ms-grid-column: 5;
+      }
+      &:nth-of-type(7) {
+        -ms-grid-row: 3;
         -ms-grid-column: 9;
       }
     }
@@ -180,6 +180,7 @@
 
       &.consolidated-page-views {
         grid-column: span 12;
+        -ms-grid-column-span: 12;
       }
     }
 

@@ -685,7 +685,7 @@ componentTest("emoji", {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "smile-o",
+          icon: "far-smile",
           action: () => toolbar.context.send("emoji")
         });
       });

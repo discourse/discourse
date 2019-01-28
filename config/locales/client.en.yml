@@ -664,7 +664,8 @@ en:
       first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
-      theme_default_on_all_devices: "Make this my default theme on all my devices"
+      theme_default_on_all_devices: "Make this the default theme on all my devices"
+      text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
@@ -2878,7 +2879,7 @@ en:
         version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
-        problems_found: "Some advice based on your current site settings:"
+        problems_found: "Some advice based on your current site settings"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -3356,6 +3357,7 @@ en:
           convert_theme_alert: "Are you sure you want to convert this theme to component? It will be removed as a parent from %{relatives}."
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
+          inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
@@ -3381,12 +3383,19 @@ en:
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
-          import_file_tip: ".dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
-          about_theme: "About Theme"
+          about_theme: "About"
           license: "License"
+          version: "Version:"
+          authors: "Authored by:"
+          source_url: "Source"
+          required_version:
+            error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
+            minimum: "Requires Discourse version {{version}} or above."
+            maximum: "Requires Discourse version {{version}} or below."
           component_of: "Component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
@@ -3402,6 +3411,7 @@ en:
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
+          imported_from_archive: "This theme was imported from a .tar.gz file"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
@@ -4114,6 +4124,11 @@ en:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+        badge_intro:
+          title: 'Select an existing badge or create a new one to get started'
+          what_are_badges_title: 'What are badges?'
+          badge_query_examples_title: 'Badge query examples'
+
 
       emoji:
         title: "Emoji"
