@@ -88,7 +88,8 @@ describe ThemeStore::TgzExporter do
             "header_background": "1E1E1E",
             "tertiary": "858585"
           }
-        }
+        },
+        "_learn_more": "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
       )
 
       expect(File.read("common/body_tag.html")).to eq("<b>testtheme1</b>")

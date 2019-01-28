@@ -454,6 +454,8 @@ class Theme < ActiveRecord::Base
         end
       end
 
+      meta[:_learn_more] = "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+
     end
   end
 end
