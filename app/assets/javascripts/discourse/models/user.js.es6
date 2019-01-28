@@ -705,6 +705,25 @@ const User = RestModel.extend({
     });
 
     return _.uniq(titles).sort();
+  },
+
+  @computed("user_option.text_size_seq", "user_option.text_size")
+  currentTextSize(serverSeq, serverSize) {
+    if ($.cookie("text_size")) {
+      const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
+      if (cookieSeq >= serverSeq) {
+        return cookieSize;
+      }
+    }
+    return serverSize;
+  },
+
+  updateTextSizeCookie(newSize) {
+    const seq = this.get("user_option.text_size_seq");
+    $.cookie("text_size", `${newSize}|${seq}`, {
+      path: "/",
+      expires: 9999
+    });
   }
 });
 
