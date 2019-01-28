@@ -939,6 +939,7 @@ module Email
           attachments << part if part.attachment? && is_whitelisted_attachment?(part)
         end
 
+        attachments.uniq!
         attachments
       end
     end
