@@ -18,8 +18,8 @@ class EnableContentSecurityPolicyForNewSites < ActiveRecord::Migration[5.2]
   end
 
   def instance_is_new?
-    post = DB.query_single("SELECT created_at FROM posts ORDER BY created_at ASC LIMIT 1")
-    return post.blank? || (post.present? && post.first > 1.week.ago)
+    dates = DB.query_single("SELECT created_at FROM posts ORDER BY created_at ASC LIMIT 1")
+    dates.empty? || dates.first > 1.week.ago
   end
 
 end
