@@ -1,15 +1,19 @@
 require 'thread'
 
 class SidekiqPauser
+  TTL = 60
+  PAUSED_KEY = "sidekiq_is_paused_v2"
+
   def initialize
     @mutex = Mutex.new
+    @dbs ||= Set.new
   end
 
   def pause!
-    redis.setex paused_key, 60, "paused"
+    $redis.setex PAUSED_KEY, TTL, "paused"
 
     @mutex.synchronize do
-      @extend_lease_thread ||= extend_lease_thread
+      extend_lease_thread
       sleep 0.001 while !paused?
     end
 
@@ -17,38 +21,38 @@ class SidekiqPauser
   end
 
   def paused?
-    !!redis.get(paused_key)
+    !!$redis.get(PAUSED_KEY)
   end
 
   def unpause!
     @mutex.synchronize do
-      @extend_lease_thread = nil
+      @dbs.delete(RailsMultisite::ConnectionManagement.current_db)
+      @extend_lease_thread = nil if @dbs.size == 0
     end
 
-    redis.del(paused_key)
+    $redis.del(PAUSED_KEY)
     true
   end
 
   private
 
   def extend_lease_thread
-    Thread.new do
+    @dbs << RailsMultisite::ConnectionManagement.current_db
+
+    @extend_lease_thread ||= Thread.new do
       while true do
         break unless @mutex.synchronize { @extend_lease_thread }
-        redis.expire paused_key, 60
-        sleep(Rails.env.test? ? 0.01 : 30)
+
+        @dbs.each do |db|
+          RailsMultisite::ConnectionManagement.with_connection(db) do
+            $redis.expire PAUSED_KEY, TTL
+          end
+        end
+
+        sleep(Rails.env.test? ? 0.01 : TTL / 2)
       end
     end
   end
-
-  def redis
-    $redis.without_namespace
-  end
-
-  def paused_key
-    "sidekiq_is_paused_v2"
-  end
-
 end
 
 module Sidekiq
@@ -74,7 +78,7 @@ class Sidekiq::Pausable
   end
 
   def call(worker, msg, queue)
-    if Sidekiq.paused? && !(Jobs::RunHeartbeat === worker)
+    if sidekiq_paused?(msg) && !(Jobs::RunHeartbeat === worker)
       worker.class.perform_in(@delay, *msg['args'])
     else
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -82,6 +86,16 @@ class Sidekiq::Pausable
       duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
       DiscourseEvent.trigger(:sidekiq_job_ran, worker, msg, queue, duration)
       result
+    end
+  end
+
+  private
+
+  def sidekiq_paused?(msg)
+    if site_id = msg["args"]&.first&.dig("current_site_id")
+      RailsMultisite::ConnectionManagement.with_connection(site_id) do
+        Sidekiq.paused?
+      end
     end
   end
 
