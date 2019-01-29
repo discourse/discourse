@@ -7,6 +7,8 @@ QUnit.test("Stream", async assert => {
   assert.ok(find(".user-stream-item").length === 3, "has drafts");
 
   await click(".user-stream-item:last-child .remove-draft");
-  assert.ok(find(".user-stream-item").length === 2, "draft removed, list length diminished by one");
-
+  assert.ok(
+    find(".user-stream-item").length === 2,
+    "draft removed, list length diminished by one"
+  );
 });
