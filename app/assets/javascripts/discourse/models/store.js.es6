@@ -156,7 +156,7 @@ export default Ember.Object.extend({
   },
 
   appendResults(resultSet, type, url) {
-    return ajax(url).then(function(result) {
+    return ajax(url).then(result => {
       let typeName = Ember.String.underscore(this.pluralize(type));
 
       let pageTarget = result.meta || result;
