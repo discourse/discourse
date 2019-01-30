@@ -228,17 +228,21 @@ end
 #
 # Table name: remote_themes
 #
-#  id                :integer          not null, primary key
-#  remote_url        :string           not null
-#  remote_version    :string
-#  local_version     :string
-#  about_url         :string
-#  license_url       :string
-#  commits_behind    :integer
-#  remote_updated_at :datetime
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  private_key       :text
-#  branch            :string
-#  last_error_text   :text
+#  id                        :integer          not null, primary key
+#  remote_url                :string           not null
+#  remote_version            :string
+#  local_version             :string
+#  about_url                 :string
+#  license_url               :string
+#  commits_behind            :integer
+#  remote_updated_at         :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  private_key               :text
+#  branch                    :string
+#  last_error_text           :text
+#  authors                   :string
+#  theme_version             :string
+#  minimum_discourse_version :string
+#  maximum_discourse_version :string
 #
