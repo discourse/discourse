@@ -175,6 +175,14 @@ describe Admin::EmailController do
       expect(response.status).to eq(400)
     end
 
+    it "returns the right response when username is invalid" do
+      get "/admin/email/preview-digest.json", params: {
+        last_seen_at: 1.week.ago, username: "somerandomeusername"
+      }
+
+      expect(response.status).to eq(400)
+    end
+
     it "previews the digest" do
       get "/admin/email/preview-digest.json", params: {
         last_seen_at: 1.week.ago, username: admin.username

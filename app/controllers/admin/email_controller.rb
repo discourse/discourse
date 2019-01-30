@@ -89,6 +89,8 @@ class Admin::EmailController < Admin::AdminController
     params.require(:last_seen_at)
     params.require(:username)
     user = User.find_by_username(params[:username])
+    raise Discourse::InvalidParameters unless user
+
     renderer = Email::Renderer.new(UserNotifications.digest(user, since: params[:last_seen_at]))
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
