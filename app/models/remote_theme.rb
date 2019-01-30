@@ -32,12 +32,13 @@ class RemoteTheme < ActiveRecord::Base
     raise ImportError.new I18n.t("themes.import_error.about_json")
   end
 
-  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user)
+  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user, theme_id: nil)
     importer = ThemeStore::TgzImporter.new(filename)
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(name: theme_info["name"]) if match_theme
+    theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
+    theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
     theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
 
     theme.component = theme_info["component"].to_s == "true"

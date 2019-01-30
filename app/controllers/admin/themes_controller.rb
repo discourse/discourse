@@ -84,11 +84,13 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type)
+    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
+      theme_id = params[:theme_id]
+      match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: !!params[:bundle], user: current_user)
+        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: current_user, theme_id: theme_id)
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
