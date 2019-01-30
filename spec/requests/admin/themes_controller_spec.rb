@@ -113,7 +113,8 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
-    it 'updates an existing theme from an archive' do
+    it 'updates an existing theme from an archive by name' do
+      # Old theme CLI method, remove Jan 2020
       existing_theme = Fabricate(:theme, name: "Header Icons")
 
       expect do
@@ -123,6 +124,39 @@ describe Admin::ThemesController do
       json = ::JSON.parse(response.body)
 
       expect(json["theme"]["name"]).to eq("Header Icons")
+      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'updates an existing theme from an archive by id' do
+      # Used by theme CLI
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+      other_existing_theme = Fabricate(:theme, name: "Some other name")
+
+      expect do
+        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
+      end.to change { Theme.count }.by (0)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Some other name")
+      expect(json["theme"]["id"]).to eq(other_existing_theme.id)
+      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'creates a new theme when id specified as nil' do
+      # Used by theme CLI
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+
+      expect do
+        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: nil }
+      end.to change { Theme.count }.by (1)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Header Icons")
+      expect(json["theme"]["id"]).not_to eq(existing_theme.id)
       expect(json["theme"]["theme_fields"].length).to eq(5)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
