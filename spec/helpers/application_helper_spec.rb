@@ -229,4 +229,22 @@ describe ApplicationHelper do
       expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
     end
   end
+
+  describe 'crawlable_meta_data' do
+    context "opengraph image" do
+      it 'returns default_opengraph_image_url' do
+        SiteSetting.default_opengraph_image_url = "/images/og-image.png"
+        expect(helper.crawlable_meta_data).to include("/images/og-image.png")
+      end
+
+      it 'returns apple_touch_icon_url if default_opengraph_image_url is blank' do
+        expect(helper.crawlable_meta_data).to include("/images/default-apple-touch-icon.png")
+      end
+
+      it 'returns logo_url if apple_touch_icon_url is blank' do
+        SiteSetting.apple_touch_icon_url = ""
+        expect(helper.crawlable_meta_data).to include("/images/d-logo-sketch.png")
+      end
+    end
+  end
 end
