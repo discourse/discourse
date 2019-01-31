@@ -177,6 +177,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def update_theme_color_schemes(theme, schemes)
     missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
+    ordered_schemes = []
 
     schemes&.each do |name, colors|
       missing_scheme_names.delete(name)
@@ -189,18 +190,24 @@ class RemoteTheme < ActiveRecord::Base
             theme.notify_color_change(c)
           end
         end
+        ordered_schemes << existing
       else
         scheme = theme.color_schemes.build(name: name)
         ColorScheme.base.colors_hashes.each do |color|
           override = normalize_override(colors[color[:name]])
           scheme.color_scheme_colors << ColorSchemeColor.new(name: color[:name], hex: override || color[:hex])
         end
+        ordered_schemes << scheme
       end
     end
 
     if missing_scheme_names.length > 0
       ColorScheme.where(id: missing_scheme_names.values).delete_all
       # we may have stuff pointed at the incorrect scheme?
+    end
+
+    if theme.new_record?
+      theme.color_scheme = ordered_schemes.first
     end
   end
 
