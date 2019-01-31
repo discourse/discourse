@@ -318,6 +318,9 @@
 .d-modal-cancel {
   margin-left: 1em;
   color: $primary-medium;
+  &:hover {
+    color: $danger;
+  }
 }
 
 .delete-user-modal {

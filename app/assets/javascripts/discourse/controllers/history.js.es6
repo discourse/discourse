@@ -199,17 +199,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("displayingInline")
   inlineClass(displayingInline) {
-    return displayingInline ? "btn-primary" : "";
+    return displayingInline ? "btn-danger" : "btn-flat";
   },
 
   @computed("displayingSideBySide")
   sideBySideClass(displayingSideBySide) {
-    return displayingSideBySide ? "btn-primary" : "";
+    return displayingSideBySide ? "btn-danger" : "btn-flat";
   },
 
   @computed("displayingSideBySideMarkdown")
   sideBySideMarkdownClass(displayingSideBySideMarkdown) {
-    return displayingSideBySideMarkdown ? "btn-primary" : "";
+    return displayingSideBySideMarkdown ? "btn-danger" : "btn-flat";
   },
 
   @computed("model.category_id_changes")
