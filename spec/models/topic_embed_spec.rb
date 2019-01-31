@@ -105,20 +105,6 @@ describe TopicEmbed do
     end
   end
 
-  context '.topic_id_for_embed' do
-    it "returns correct topic id irrespective of url protocol" do
-      topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
-
-      expect(TopicEmbed.topic_id_for_embed('http://exAMPle.com/post/248')).to eq(topic_embed.topic_id)
-      expect(TopicEmbed.topic_id_for_embed('https://example.com/post/248/')).to eq(topic_embed.topic_id)
-
-      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/248/2')).to eq(nil)
-      expect(TopicEmbed.topic_id_for_embed('http://examples.com/post/248')).to eq(nil)
-      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/24')).to eq(nil)
-      expect(TopicEmbed.topic_id_for_embed('http://example.com/post')).to eq(nil)
-    end
-  end
-
   describe '.find_remote' do
 
     context ".title_scrub" do

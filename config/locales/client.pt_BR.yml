@@ -789,9 +789,6 @@ pt_BR:
       email_always: "Envie-me notificações mesmo quando eu estiver ativo no site."
       other_settings: "Outros"
       categories_settings: "Categorias"
-      enable_mailing_list:
-        one: "Você tem certeza de que deseja receber um email para cada novo post?"
-        other: "Você tem certeza de que deseja receber um email para cada novo post?<br><br>Isso vai resultar em aproximadamente <b>{{count}} emails</b> por dia."
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"

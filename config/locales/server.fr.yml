@@ -3555,35 +3555,6 @@ fr:
       ## [Changements à notre politique de confidentialité](#changes)
 
       Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
-  static:
-    search_help: |
-      <h3>Astuces</h3>
-      <p>
-      <ul>
-      <li>Les résultats dont le titre correspond à la recherche sont retournés en priorité &ndash; en cas de doutes, recherchez dans les titres</li>
-      <li>Pour obtenir de meilleurs résultats, utilisez toujours des mots rares ou peu fréquents</li>
-      <li>Dès que possible, limitez vos recherches à une catégorie en particulier, à un utilisateur ou à un sujet</li>
-      </ul>
-      </p>
-      <h3>Options</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Examples</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> cherchera les sujets dans la catégorie "parks" qui contiennent le mot "rainbows".</li>
-      <li><code>rainbows category:parks status:open order:latest</code> cherchera les sujets dans la catégorie "parks" en ordre chronologique qui contiennent le mot "rainbows" et qui ne sont ni fermé ni archivé.
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> cherchera les sujets dans la catégorie "parks and gardens" qui contiennent le mot "rainbows" et qui sont dans vos signets.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Éditeur

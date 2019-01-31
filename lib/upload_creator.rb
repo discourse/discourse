@@ -49,10 +49,10 @@ class UploadCreator
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
-          fix_orientation! if should_fix_orientation?
 
           return @upload   if is_still_too_big?
 
+          fix_orientation! if should_fix_orientation?
           crop!            if should_crop?
           optimize!        if should_optimize?
         end

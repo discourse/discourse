@@ -510,7 +510,6 @@ bs_BA:
       "14": "Na čekanju."
     categories:
       all: "Sve kategorije"
-      all_subcategories: "sve u %{categoryName}"
       no_subcategory: "nijedna"
       category: "Kategorija"
       category_list: "Prikaži listu kategorija"
