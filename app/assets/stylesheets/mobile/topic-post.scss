@@ -83,14 +83,20 @@ span.badge-posts {
         margin: 10px 0 10px 0;
       }
       &.reply {
-        color: $primary-high;
+        .d-icon {
+          color: $primary-high;
+        }
         margin-left: auto;
       }
       &.has-like {
-        color: $love;
+        .d-icon {
+          color: $love;
+        }
       }
       &.bookmarked {
-        color: $tertiary;
+        .d-icon {
+          color: $tertiary;
+        }
       }
     }
   }
