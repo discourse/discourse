@@ -48,7 +48,7 @@ class S3Inventory
 
       FileUtils.mkdir_p(@tmp_directory)
       download_inventory_file_to_tmp_directory
-      unzip_archive
+      decompress_inventory_file
 
       begin
         table_name = "#{inventory_id}_inventory"
@@ -126,6 +126,8 @@ class S3Inventory
     )
   end
 
+  private
+
   def inventory_configuration
     filter_prefix = inventory_id
     destination_prefix = File.join(INVENTORY_PREFIX, inventory_id)
@@ -155,8 +157,6 @@ class S3Inventory
       }
     }
   end
-
-  private
 
   def bucket_name
     @s3_helper.s3_bucket_name
