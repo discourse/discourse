@@ -102,7 +102,7 @@ class S3Inventory
             "Effect": "Allow",
             "Principal": { "Service": "s3.amazonaws.com" },
             "Action": ["s3:PutObject"],
-            "Resource": ["arn:aws:s3:::#{inventory_path}/*"],
+            "Resource": ["arn:aws:s3:::#{inventory_root_path}/*"],
             "Condition": {
               "ArnLike": {
                 "aws:SourceArn": "arn:aws:s3:::#{bucket_name}"
@@ -181,7 +181,11 @@ class S3Inventory
   end
 
   def inventory_path
-    File.join(bucket_name, bucket_folder_path || "", INVENTORY_PREFIX, inventory_id)
+    File.join(inventory_root_path, inventory_id)
+  end
+
+  def inventory_root_path
+    File.join(bucket_name, bucket_folder_path || "", INVENTORY_PREFIX)
   end
 
   def log(message, ex = nil)
