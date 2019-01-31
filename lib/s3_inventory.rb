@@ -60,15 +60,15 @@ class S3Inventory
           end
         end
 
-        missing_uploads = model.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
-        missing_count = missing_uploads.count
+        uploads = model.where("created_at < ?", file.last_modified)
+        missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
-        if missing_count > 0
+        if (missing_count = missing_uploads.count) > 0
           missing_uploads.select(:id, :url).find_each do |upload|
             log upload.url
           end
 
-          log "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+          log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
         end
       ensure
         connection.exec("DROP TABLE #{table_name}") unless connection.nil?

@@ -55,13 +55,17 @@ describe "S3Inventory" do
   end
 
   it "should display missing uploads correctly" do
-    CSV.foreach(csv_filename, headers: false) do |row|
-      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX])
-    end
+    freeze_time
 
-    upload = Fabricate(:upload, etag: "ETag")
+    CSV.foreach(csv_filename, headers: false) do |row|
+      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], created_at: 2.days.ago)
+    end
+    upload = Fabricate(:upload, etag: "ETag", created_at: 1.days.ago)
+    Fabricate(:upload, etag: "ETag2", created_at: Time.now)
+
     inventory.expects(:decompress_inventory_file)
     inventory.expects(:csv_filename).returns(csv_filename)
+    inventory.file.expects(:last_modified).returns(Time.now)
 
     output = capture_stdout do
       inventory.list_missing
