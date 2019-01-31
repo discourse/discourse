@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require "aws-sdk-s3"
 require "csv"
 require "discourse_event"
 
 class S3Inventory
-
-  class StorageError < RuntimeError; end
 
   ::DiscourseEvent.on(:site_setting_saved) do |site_setting|
     name = site_setting.name.to_s
@@ -13,9 +13,9 @@ class S3Inventory
 
   attr_reader :inventory_id, :csv_filename, :model
 
-  CSV_KEY_INDEX ||= 1.freeze
-  CSV_ETAG_INDEX ||= 2.freeze
-  INVENTORY_PREFIX ||= "inventory".freeze
+  CSV_KEY_INDEX ||= 1
+  CSV_ETAG_INDEX ||= 2
+  INVENTORY_PREFIX ||= "inventory"
 
   def initialize(s3_helper, type)
     @s3_helper = s3_helper
@@ -35,8 +35,8 @@ class S3Inventory
 
   def list_missing
     if file.blank?
-      Rails.logger.warn("Failed to list inventory from S3")
-      raise StorageError
+      error("Failed to list inventory from S3")
+      return
     end
 
     DistributedMutex.synchronize("s3_inventory_list_missing_#{inventory_id}") do
@@ -47,7 +47,7 @@ class S3Inventory
       @csv_filename = @archive_filename[0...-3]
 
       FileUtils.mkdir_p(@tmp_directory)
-      copy_archive_to_tmp_directory
+      download_inventory_file_to_tmp_directory
       unzip_archive
 
       begin
@@ -64,7 +64,7 @@ class S3Inventory
         missing_count = missing_uploads.count
 
         if missing_count > 0
-          missing_uploads.find_each do |upload|
+          missing_uploads.select(:url).find_each do |upload|
             puts upload.url
           end
 
@@ -76,9 +76,9 @@ class S3Inventory
     end
   end
 
-  def copy_archive_to_tmp_directory
-    log "Downloading archive to tmp directory..."
-    failure_message = "Failed to download archive to tmp directory."
+  def download_inventory_file_to_tmp_directory
+    log "Downloading inventory file to tmp directory..."
+    failure_message = "Failed to inventory file to tmp directory."
 
     @s3_helper.download_file(file.key, @archive_filename, failure_message)
   end
@@ -177,8 +177,7 @@ class S3Inventory
 
     objects
   rescue Aws::Errors::ServiceError => e
-    Rails.logger.warn("Failed to list inventory from S3: #{e.message.presence || e.class.name}")
-    raise StorageError
+    log("Failed to list inventory from S3", e)
   end
 
   def inventory_path
@@ -188,5 +187,9 @@ class S3Inventory
   def log(message, ex = nil)
     puts(message)
     Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
+  end
+
+  def error(message)
+    log(message, StandardError.new(message))
   end
 end
