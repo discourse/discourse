@@ -214,7 +214,6 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
-  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -245,20 +244,18 @@ def migrate_to_s3
     exit 3
   end
 
-  s3 = Aws::S3::Client.new(S3Helper.s3_options(GlobalSetting))
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+
+  s3 = Aws::S3::Client.new(
+    region: ENV["DISCOURSE_S3_REGION"],
+    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"])
 
   if bucket_has_folder_path
     bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
     folder = File.join(folder, "/")
   else
-    bucket, folder = GlobalSetting.s3_bucket, ""
-  end
-
-  begin
-    s3.head_bucket(bucket: bucket)
-  rescue Aws::S3::Errors::NotFound
-    puts "Bucket '#{bucket}' not found. Creating it..."
-    s3.create_bucket(bucket: bucket) unless dry_run
+    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
   end
 
   puts "Uploading files to S3..."
@@ -274,8 +271,15 @@ def migrate_to_s3
   print " - Listing S3 files"
 
   s3_objects = []
-  prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: bucket, prefix: prefix }
+
+  prefix =
+    if ENV["SKIP_MULTISITE_PREFIX"] || Rails.configuration.multisite
+      "uploads/#{db}/original/"
+    else
+      "original/"
+    end
+
+  options = { bucket: bucket, prefix: folder + prefix }
 
   loop do
     response = s3.list_objects_v2(options)
@@ -311,7 +315,12 @@ def migrate_to_s3
     }
 
     if !FileHelper.is_supported_image?(name)
-      options[:content_disposition] = %Q{attachment; filename="#{name}"}
+      upload = Upload.find_by(url: "/#{file}")
+
+      if upload&.original_filename
+        options[:content_disposition] =
+          %Q{attachment; filename="#{upload.original_filename}"}
+      end
     end
 
     if dry_run
@@ -334,47 +343,35 @@ def migrate_to_s3
   elsif s3_objects.size + synced >= local_files.size
     puts "Updating the URLs in the database..."
 
-    excluded_tables = %w{
-      email_logs
-      incoming_emails
-      notifications
-      post_search_data
-      search_logs
-      stylesheet_cache
-      user_auth_token_logs
-      user_auth_tokens
-      web_hooks_events
-    }
-
-    from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{folder}#{prefix}\\1"
+    from = "/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"
     else
-      DbHelper.regexp_replace(from, to, excluded_tables: excluded_tables)
-    end
-
-    # Uploads that were on base hostname will now be on S3 CDN
-    from = "#{Discourse.base_url}#{SiteSetting.Upload.s3_base_url}"
-    to = SiteSetting.Upload.s3_cdn_url
-
-    if dry_run
-      puts "REMAPPING '#{from}' TO '#{to}'"
-    else
-      DbHelper.remap(from, to, excluded_tables: excluded_tables)
+      DbHelper.remap(from, to, anchor_left: true)
     end
 
     if Discourse.asset_host.present?
       # Uploads that were on local CDN will now be on S3 CDN
-      from = "#{Discourse.asset_host}#{SiteSetting.Upload.s3_base_url}"
-      to = SiteSetting.Upload.s3_cdn_url
+      from = "#{Discourse.asset_host}/uploads/#{db}/original/"
+      to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
 
       if dry_run
         puts "REMAPPING '#{from}' TO '#{to}'"
       else
-        DbHelper.remap(from, to, excluded_tables: excluded_tables)
+        DbHelper.remap(from, to)
       end
+    end
+
+    # Uploads that were on base hostname will now be on S3 CDN
+    from = "#{Discourse.base_url}/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
+
+    if dry_run
+      puts "REMAPPING '#{from}' TO '#{to}'"
+    else
+      DbHelper.remap(from, to)
     end
   end
 

@@ -293,10 +293,10 @@ end
 #
 # Indexes
 #
+#  index_uploads_on_etag        (etag)
 #  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE
 #  index_uploads_on_url         (url)
 #  index_uploads_on_user_id     (user_id)
-#  index_uploads_on_etag        (etag)
 #

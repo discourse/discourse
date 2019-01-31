@@ -19,4 +19,19 @@ RSpec.describe FileStore::BaseStore do
       end
     end
   end
+
+  describe '#get_path_for_optimized_image' do
+    let(:upload) { Fabricate.build(:upload, id: 100) }
+    let(:optimized_path) { "optimized/1X/#{upload.sha1}_1_100x200.png" }
+
+    it 'should return the right path' do
+      optimized = Fabricate.build(:optimized_image, upload: upload, version: 1)
+      expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(optimized_path)
+    end
+
+    it 'should return the right path for `nil` version' do
+      optimized = Fabricate.build(:optimized_image, upload: upload, version: nil)
+      expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(optimized_path)
+    end
+  end
 end

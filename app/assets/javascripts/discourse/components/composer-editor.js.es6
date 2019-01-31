@@ -163,7 +163,11 @@ export default Ember.Component.extend({
             includeMentionableGroups: true
           }),
         key: "@",
-        transformComplete: v => v.username || v.name
+        transformComplete: v => v.username || v.name,
+        afterComplete() {
+          // ensures textarea scroll position is correct
+          Ember.run.scheduleOnce("afterRender", () => $input.blur().focus());
+        }
       });
     }
 
@@ -546,7 +550,7 @@ export default Ember.Component.extend({
         const $e = $(e);
         var name = $e.data("name");
         if (found.indexOf(name) === -1) {
-          this.sendAction("groupsMentioned", [
+          this.groupsMentioned([
             {
               name: name,
               user_count: $e.data("mentionable-user-count"),
@@ -583,14 +587,14 @@ export default Ember.Component.extend({
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          Em.run.later(
+          Ember.run.later(
             this,
             () => {
               if (
                 $preview.find('.mention.cannot-see[data-name="' + name + '"]')
                   .length > 0
               ) {
-                this.sendAction("cannotSeeMention", [{ name: name }]);
+                this.cannotSeeMention([{ name }]);
                 found.push(name);
               }
             },
@@ -789,31 +793,35 @@ export default Ember.Component.extend({
       this._teardownInputPreviewSync();
   },
 
+  showUploadSelector(toolbarEvent) {
+    this.send("showUploadSelector", toolbarEvent);
+  },
+
+  onExpandPopupMenuOptions(toolbarEvent) {
+    const selected = toolbarEvent.selected;
+    toolbarEvent.selectText(selected.start, selected.end - selected.start);
+    this.storeToolbarState(toolbarEvent);
+  },
+
   actions: {
     importQuote(toolbarEvent) {
-      this.sendAction("importQuote", toolbarEvent);
+      this.importQuote(toolbarEvent);
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
-      const selected = toolbarEvent.selected;
-      toolbarEvent.selectText(selected.start, selected.end - selected.start);
-      this.sendAction("storeToolbarState", toolbarEvent);
+      this.onExpandPopupMenuOptions(toolbarEvent);
     },
 
     togglePreview() {
-      this.sendAction("togglePreview");
-    },
-
-    showUploadModal(toolbarEvent) {
-      this.sendAction("showUploadSelector", toolbarEvent);
+      this.togglePreview();
     },
 
     extraButtons(toolbar) {
       toolbar.addButton({
         id: "quote",
         group: "fontStyles",
-        icon: "comment-o",
-        sendAction: "importQuote",
+        icon: "far-comment",
+        sendAction: this.get("importQuote"),
         title: "composer.quote_post_title",
         unshift: true
       });
@@ -824,16 +832,16 @@ export default Ember.Component.extend({
           group: "insertions",
           icon: this.get("uploadIcon"),
           title: "upload",
-          sendAction: "showUploadModal"
+          sendAction: this.get("showUploadModal")
         });
       }
 
       toolbar.addButton({
         id: "options",
         group: "extras",
-        icon: "gear",
+        icon: "cog",
         title: "composer.options",
-        sendAction: "onExpandPopupMenuOptions",
+        sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true
       });
 
@@ -843,7 +851,7 @@ export default Ember.Component.extend({
           group: "mobileExtras",
           icon: "television",
           title: "composer.show_preview",
-          sendAction: "togglePreview"
+          sendAction: this.get("togglePreview")
         });
       }
     },
@@ -952,7 +960,7 @@ export default Ember.Component.extend({
       }
 
       this.trigger("previewRefreshed", $preview);
-      this.sendAction("afterRefresh", $preview);
+      this.afterRefresh($preview);
     }
   }
 });

@@ -55,7 +55,19 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this.container.lookup("current-user:main");
+    return this._lookupContainer("current-user:main");
+  }
+
+  _lookupContainer(path) {
+    if (
+      !this.container ||
+      this.container.isDestroying ||
+      this.container.isDestroyed
+    ) {
+      return;
+    }
+
+    return this.container.lookup(path);
   }
 
   _resolveClass(resolverName, opts) {
@@ -133,12 +145,20 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<i class='fa fa-smile-o'></i>";
+   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#far-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
    *   node() {
-   *     return h('i', { className: 'fa fa-smile-o' });
+   *     return h("svg", {
+   *          attributes: { class: "fa d-icon d-icon-far-smile", "aria-hidden": true },
+   *          namespace: "http://www.w3.org/2000/svg"
+   *        },[
+   *          h("use", {
+   *          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          namespace: "http://www.w3.org/2000/svg"
+   *        })]
+   *     );
    *   }
    * });
    **/
@@ -214,7 +234,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    const site = this.container.lookup("site:main");
+    const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, dec => {
@@ -369,7 +389,7 @@ class PluginApi {
    * api.addToolbarPopupMenuOptionsCallback(() => {
    *  return {
    *    action: 'toggleWhisper',
-   *    icon: 'eye-slash',
+   *    icon: 'far-eye-slash',
    *    label: 'composer.toggle_whisper',
    *    condition: "canWhisper"
    *  };
@@ -416,8 +436,8 @@ class PluginApi {
     ```
   **/
   onAppEvent(name, fn) {
-    let appEvents = this.container.lookup("app-events:main");
-    appEvents.on(name, fn);
+    const appEvents = this._lookupContainer("app-events:main");
+    appEvents && appEvents.on(name, fn);
   }
 
   /**
@@ -554,7 +574,8 @@ class PluginApi {
    * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
-    this.container.lookup("service:store").addPluralization(thing, plural);
+    const store = this._lookupContainer("service:store");
+    store && store.addPluralization(thing, plural);
   }
 
   /**

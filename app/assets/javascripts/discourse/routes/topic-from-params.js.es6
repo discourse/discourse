@@ -9,7 +9,7 @@ export default Discourse.Route.extend({
   },
 
   deactivate() {
-    this._super();
+    this._super(...arguments);
     this.controllerFor("topic").unsubscribe();
   },
 

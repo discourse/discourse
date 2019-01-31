@@ -567,7 +567,7 @@
 
       .left,
       .right {
-        flex: 1 0 0;
+        flex: 1 0 0px;
       }
 
       .text {
@@ -578,8 +578,8 @@
   }
 }
 
-// split topic modal
-.split-modal {
+// move-to topic modal
+.move-to-modal {
   // move to existing topic
   .existing-topic {
     .radio {
@@ -590,7 +590,6 @@
     }
     .topic-categories {
       width: 100%;
-      margin-left: 5px;
     }
   }
 }

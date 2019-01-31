@@ -80,7 +80,7 @@ export function translateResults(results, opts) {
           more: groupedSearchResult[`more_${name}`]
         };
 
-        if (result.more && name === "posts" && opts.fullSearchUrl) {
+        if (result.more && componentName === "topic" && opts.fullSearchUrl) {
           result.more = false;
           result.moreUrl = opts.fullSearchUrl;
         }
@@ -97,7 +97,7 @@ export function translateResults(results, opts) {
     !results.categories.length
   );
 
-  return noResults ? null : Em.Object.create(results);
+  return noResults ? null : Ember.Object.create(results);
 }
 
 export function searchForTerm(term, opts) {
@@ -107,6 +107,8 @@ export function searchForTerm(term, opts) {
   const data = { term: term, include_blurbs: "true" };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
+  if (opts.restrictToArchetype)
+    data.restrict_to_archetype = opts.restrictToArchetype;
 
   if (opts.searchContext) {
     data.search_context = {

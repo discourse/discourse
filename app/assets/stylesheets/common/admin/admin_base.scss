@@ -402,7 +402,7 @@ $mobile-breakpoint: 700px;
 
   .username {
     input {
-      min-width: 220px;
+      min-width: 15em;
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
         width: 100%;
@@ -470,7 +470,7 @@ $mobile-breakpoint: 700px;
   nav {
     display: inline-flex;
     position: relative;
-    flex: 1 0 0;
+    flex: 1 0 0px;
     height: auto;
     overflow: hidden;
     padding: 0;
@@ -750,6 +750,9 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  .btn {
+    line-height: $line-height-medium;
+  }
   @media (max-width: $mobile-breakpoint) {
     .btn {
       margin: 2px;
@@ -892,7 +895,7 @@ table#user-badges {
 
     .value-input {
       box-sizing: border-box;
-      flex: 1 0 0;
+      flex: 1 0 0px;
       border-color: $primary-low;
       cursor: pointer;
       margin: 0;
@@ -919,7 +922,7 @@ table#user-badges {
     margin-left: -0.25em;
     margin-top: -0.125em;
     .new-value-input {
-      flex: 1 0 0;
+      flex: 1 0 0px;
     }
     .value-input,
     .new-value-input {
@@ -998,6 +1001,7 @@ table#user-badges {
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
 @import "common/admin/admin_report_chart";
+@import "common/admin/admin_report_stacked_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/dashboard_previous";

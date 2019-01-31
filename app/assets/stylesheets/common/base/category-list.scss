@@ -35,7 +35,7 @@
     border-left-width: 6px;
 
     border-style: solid;
-    border-color: blend-primary-secondary(20%);
+    border-color: $primary-low;
 
     .mobile-view & {
       width: 100%;
@@ -67,7 +67,7 @@
     border-left-width: 0;
 
     border-style: solid;
-    border-color: blend-primary-secondary(20%);
+    border-color: $primary-low;
   }
 
   &.no-logos {
@@ -174,7 +174,7 @@
   .featured-topics {
     padding: 0.5em 1em 1em 1em;
     ul {
-      color: blend-primary-secondary(70%);
+      color: $primary-medium;
       list-style: none;
       padding: 0;
       margin: 0;

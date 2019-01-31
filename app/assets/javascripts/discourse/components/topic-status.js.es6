@@ -65,7 +65,7 @@ export default Ember.Component.extend(
         "unpinned",
         this.get("canAct")
       );
-      renderIconIf("topic.invisible", "eye-slash", "invisible");
+      renderIconIf("topic.invisible", "far-eye-slash", "unlisted");
     }
   })
 );

@@ -1,32 +1,22 @@
 import AdminUser from "admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 
-const ApiKey = Discourse.Model.extend({
-  /**
-    Regenerates the api key
+const KEY_ENDPOINT = "/admin/api/key";
+const KEYS_ENDPOINT = "/admin/api/keys";
 
-    @method regenerate
-    @returns {Promise} a promise that resolves to the key
-  **/
-  regenerate: function() {
-    var self = this;
-    return ajax("/admin/api/key", {
+const ApiKey = Discourse.Model.extend({
+  regenerate() {
+    return ajax(KEY_ENDPOINT, {
       type: "PUT",
       data: { id: this.get("id") }
-    }).then(function(result) {
-      self.set("key", result.api_key.key);
-      return self;
+    }).then(result => {
+      this.set("key", result.api_key.key);
+      return this;
     });
   },
 
-  /**
-    Revokes the current key
-
-    @method revoke
-    @returns {Promise} a promise that resolves when the key has been revoked
-  **/
-  revoke: function() {
-    return ajax("/admin/api/key", {
+  revoke() {
+    return ajax(KEY_ENDPOINT, {
       type: "DELETE",
       data: { id: this.get("id") }
     });
@@ -34,45 +24,24 @@ const ApiKey = Discourse.Model.extend({
 });
 
 ApiKey.reopenClass({
-  /**
-    Creates an API key instance with internal user object
-
-    @method create
-    @param {...} var_args the properties to initialize this with
-    @returns {ApiKey} the ApiKey instance
-  **/
   create() {
-    var result = this._super.apply(this, arguments);
+    const result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = AdminUser.create(result.user);
     }
     return result;
   },
 
-  /**
-    Finds a list of API keys
-
-    @method find
-    @returns {Promise} a promise that resolves to the array of `ApiKey` instances
-  **/
-  find: function() {
-    return ajax("/admin/api/keys").then(function(keys) {
-      return keys.map(function(key) {
-        return ApiKey.create(key);
-      });
-    });
+  find() {
+    return ajax(KEYS_ENDPOINT).then(keys =>
+      keys.map(key => ApiKey.create(key))
+    );
   },
 
-  /**
-    Generates a master api key and returns it.
-
-    @method generateMasterKey
-    @returns {Promise} a promise that resolves to a master `ApiKey`
-  **/
-  generateMasterKey: function() {
-    return ajax("/admin/api/key", { type: "POST" }).then(function(result) {
-      return ApiKey.create(result.api_key);
-    });
+  generateMasterKey() {
+    return ajax(KEY_ENDPOINT, { type: "POST" }).then(result =>
+      ApiKey.create(result.api_key)
+    );
   }
 });
 

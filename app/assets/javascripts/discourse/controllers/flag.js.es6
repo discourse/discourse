@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return flagsAvailable;
     } else {
       // flagging topic
-      let lookup = Em.Object.create();
+      let lookup = Ember.Object.create();
       let model = this.get("model");
       model.get("actions_summary").forEach(a => {
         a.flagTopic = model;
@@ -94,7 +94,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return true;
   }.property("selected.is_custom_flag", "message.length"),
 
-  submitDisabled: Em.computed.not("submitEnabled"),
+  submitDisabled: Ember.computed.not("submitEnabled"),
 
   // Staff accounts can "take action"
   @computed("flagTopic", "selected.is_custom_flag")

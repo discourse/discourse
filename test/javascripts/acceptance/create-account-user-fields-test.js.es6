@@ -38,12 +38,19 @@ QUnit.test("create account with user fields", async assert => {
 
   await fillIn("#new-account-name", "Dr. Good Tuna");
   await fillIn("#new-account-password", "cool password bro");
+  // without this double fill, field will sometimes being empty
+  // got consistent repro by having browser search bar focused when starting test
+  await fillIn("#new-account-email", "good.tuna@test.com");
   await fillIn("#new-account-email", "good.tuna@test.com");
   await fillIn("#new-account-username", "goodtuna");
 
   assert.ok(
     exists("#username-validation.good"),
     "the username validation is good"
+  );
+  assert.ok(
+    exists("#account-email-validation.good"),
+    "the email validation is good"
   );
   assert.ok(
     exists(".modal-footer .btn-primary:disabled"),
@@ -58,14 +65,15 @@ QUnit.test("create account with user fields", async assert => {
   );
 
   await click(".user-field input[type=checkbox]");
-  assert.not(
-    exists(".modal-footer .btn-primary:disabled"),
-    "create account is enabled because field is not checked"
+
+  assert.ok(
+    !exists(".modal-footer .btn-primary:disabled"),
+    "create account is enabled because field is checked"
   );
 
   await click(".user-field input[type=checkbox]");
   assert.ok(
     exists(".modal-footer .btn-primary:disabled"),
-    "unclicking the checkbox disables the submit"
+    "unchecking the checkbox disables the create account button"
   );
 });

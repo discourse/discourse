@@ -99,9 +99,6 @@
       margin-bottom: 0;
       font-size: $font-down-2;
     }
-    .btn-small {
-      font-size: $font-down-2;
-    }
   }
 
   .field-error {
@@ -140,20 +137,35 @@
     display: inline-block;
     vertical-align: top;
 
-    .url {
-      margin-bottom: 10px;
-    }
-
     .title {
       font-size: $font-up-4;
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .about-url,
-    license-url {
+
+    .theme-description {
       display: block;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
+
+    .metadata {
+      .authors,
+      .version {
+        display: block;
+
+        .heading {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .remote-url,
+    .about-url,
+    .license-url {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
     .mini-title {
       font-size: $font-up-1;
       font-weight: bold;
@@ -196,7 +208,6 @@
       }
     }
     .external-link {
-      display: inline-block;
       display: block;
       margin-bottom: 5px;
     }
@@ -271,6 +282,9 @@
       &.selected {
         color: $secondary;
         background-color: $tertiary;
+        .components-list {
+          color: $secondary;
+        }
         .fa {
           color: inherit;
         }
@@ -336,13 +350,15 @@
   }
 
   .theme.settings {
-    .theme-setting {
+    .theme-setting,
+    .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;
       min-height: 35px;
     }
     .setting-label {
       width: 25%;
+      word-wrap: break-word;
       h3 {
         margin-top: 0;
         margin-bottom: 0.5rem;

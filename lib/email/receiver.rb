@@ -931,18 +931,21 @@ module Email
     end
 
     def attachments
-      # strip blacklisted attachments (mostly signatures)
       @attachments ||= begin
-        attachments =  @mail.parts.select { |part| part.attachment? && is_whitelisted_attachment?(part) }
+        attachments = @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
         attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+
+        @mail.parts.each do |part|
+          attachments << part if part.attachment? && is_whitelisted_attachment?(part)
+        end
+
+        attachments.uniq!
         attachments
       end
     end
 
     def create_post_with_attachments(options = {})
-      # deal with attachments
       options[:raw] = add_attachments(options[:raw], options[:user], options)
-
       create_post(options)
     end
 

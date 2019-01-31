@@ -415,7 +415,7 @@ export function allowsAttachments() {
 }
 
 export function uploadIcon() {
-  return allowsAttachments() ? "upload" : "picture-o";
+  return allowsAttachments() ? "upload" : "far-image";
 }
 
 export function uploadLocation(url) {
@@ -546,7 +546,6 @@ export function isAppleDevice() {
   // This will apply hack on all iDevices
   return (
     navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-    navigator.userAgent.match(/Safari/g) &&
     !navigator.userAgent.match(/Trident/g)
   );
 }

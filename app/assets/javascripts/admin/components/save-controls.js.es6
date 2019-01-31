@@ -8,11 +8,5 @@ export default Ember.Component.extend({
   @computed("model.isSaving")
   savingText(saving) {
     return saving ? "saving" : "save";
-  },
-
-  actions: {
-    saveChanges() {
-      this.sendAction();
-    }
   }
 });

@@ -5,7 +5,8 @@ export default RestrictedUserRoute.extend({
 
   setupController(controller, user) {
     controller.setProperties({
-      model: user
+      model: user,
+      textSize: user.get("currentTextSize")
     });
   }
 });

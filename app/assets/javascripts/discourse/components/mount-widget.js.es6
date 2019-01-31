@@ -21,7 +21,7 @@ export default Ember.Component.extend({
   dirtyKeys: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
     const name = this.get("widget");
 
     this.register = getRegister(this);

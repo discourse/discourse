@@ -782,26 +782,12 @@ class ImportScripts::Base
 
   def update_feature_topic_users
     puts "", "Updating featured topic users"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      topic.feature_topic_users
-      print_status(count += 1, total, get_start_time("feature_topic_user"))
-    end
+    TopicFeaturedUsers.ensure_consistency!
   end
 
   def reset_topic_counters
     puts "", "Resetting topic counters"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      Topic.reset_highest(topic.id)
-      print_status(count += 1, total, get_start_time("topic_counters"))
-    end
+    Topic.reset_all_highest!
   end
 
   def update_category_featured_topics

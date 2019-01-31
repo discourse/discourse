@@ -24,7 +24,7 @@ class TopicParticipantsSummary
   end
 
   def top_participants
-    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(3)
+    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(4)
   end
 
   def user_ids

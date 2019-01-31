@@ -24,6 +24,7 @@ const REPLACEMENTS = {
   "notification.liked": "heart",
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",
+  "notification.liked_consolidated": "heart",
   "notification.private_message": "far-envelope",
   "notification.invited_to_private_message": "far-envelope",
   "notification.invited_to_topic": "hand-point-right",
@@ -31,7 +32,7 @@ const REPLACEMENTS = {
   "notification.moved_post": "sign-out",
   "notification.linked": "link",
   "notification.granted_badge": "certificate",
-  "notification.topic_reminder": "hand-point-right",
+  "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "group"
 };

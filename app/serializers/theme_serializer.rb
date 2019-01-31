@@ -32,7 +32,7 @@ class ThemeFieldSerializer < ApplicationSerializer
   end
 end
 
-class ChildThemeSerializer < ApplicationSerializer
+class BasicThemeSerializer < ApplicationSerializer
   attributes :id, :name, :created_at, :updated_at, :default, :component
 
   def include_default?
@@ -45,9 +45,9 @@ class ChildThemeSerializer < ApplicationSerializer
 end
 
 class RemoteThemeSerializer < ApplicationSerializer
-  attributes :id, :remote_url, :remote_version, :local_version, :about_url,
-             :license_url, :commits_behind, :remote_updated_at, :updated_at,
-             :github_diff_link, :last_error_text
+  attributes :id, :remote_url, :remote_version, :local_version, :commits_behind,
+             :remote_updated_at, :updated_at, :github_diff_link, :last_error_text, :is_git?,
+             :license_url, :about_url, :authors, :theme_version, :minimum_discourse_version, :maximum_discourse_version
 
   # wow, AMS has some pretty nutty logic where it tries to find the path here
   # from action dispatch, tell it not to
@@ -60,14 +60,16 @@ class RemoteThemeSerializer < ApplicationSerializer
   end
 end
 
-class ThemeSerializer < ChildThemeSerializer
-  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings, :errors
+class ThemeSerializer < BasicThemeSerializer
+  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings, :errors, :enabled?, :description
 
   has_one :user, serializer: UserNameSerializer, embed: :object
 
   has_many :theme_fields, serializer: ThemeFieldSerializer, embed: :objects
-  has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
+  has_many :child_themes, serializer: BasicThemeSerializer, embed: :objects
+  has_many :parent_themes, serializer: BasicThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
+  has_many :translations, serializer: ThemeTranslationSerializer, embed: :objects
 
   def initialize(theme, options = {})
     super
@@ -76,6 +78,10 @@ class ThemeSerializer < ChildThemeSerializer
 
   def child_themes
     object.child_themes
+  end
+
+  def parent_themes
+    object.parent_themes
   end
 
   def settings
@@ -96,33 +102,8 @@ class ThemeSerializer < ChildThemeSerializer
   def include_errors?
     @errors.present?
   end
-end
 
-class ThemeFieldWithEmbeddedUploadsSerializer < ThemeFieldSerializer
-  attributes :raw_upload
-
-  def include_raw_upload?
-    object.upload
-  end
-
-  def raw_upload
-    filename = Discourse.store.path_for(object.upload)
-    raw = nil
-
-    if filename
-      raw = File.read(filename)
-    else
-      raw = Discourse.store.download(object.upload).read
-    end
-
-    Base64.encode64(raw)
-  end
-end
-
-class ThemeWithEmbeddedUploadsSerializer < ThemeSerializer
-  has_many :theme_fields, serializer: ThemeFieldWithEmbeddedUploadsSerializer, embed: :objects
-
-  def include_settings?
-    false
+  def description
+    object.internal_translations.find  { |t| t.key == "theme_metadata.description" } &.value
   end
 end

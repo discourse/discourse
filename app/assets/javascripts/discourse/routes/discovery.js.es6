@@ -36,12 +36,13 @@ export default Discourse.Route.extend(OpenComposer, {
       if (!this.session.get("topicListScrollPosition")) {
         scrollTop();
       }
+      return false;
     },
 
     didTransition() {
       this.controllerFor("discovery")._showFooter();
       this.send("loadingComplete");
-      return true;
+      return false;
     },
 
     // clear a pinned topic

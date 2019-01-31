@@ -440,10 +440,10 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "/u/#{name}"
+          element['href'] = "#{Discourse::base_uri}/u/#{name}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
         end
       end
     end

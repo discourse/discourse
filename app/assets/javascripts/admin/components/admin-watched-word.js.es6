@@ -14,7 +14,7 @@ export default Ember.Component.extend(
       this.get("word")
         .destroy()
         .then(() => {
-          this.sendAction("action", this.get("word"));
+          this.action(this.get("word"));
         })
         .catch(e => {
           bootbox.alert(

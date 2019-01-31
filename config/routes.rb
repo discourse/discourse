@@ -215,6 +215,7 @@ Discourse::Application.routes.draw do
 
       get 'themes/:id/:target/:field_name/edit' => 'themes#index'
       get 'themes/:id' => 'themes#index'
+      get "themes/:id/export" => "themes#export"
 
       # They have periods in their URLs often:
       get 'site_texts'             => 'site_texts#index'

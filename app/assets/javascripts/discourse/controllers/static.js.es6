@@ -5,7 +5,7 @@ import { userPath } from "discourse/lib/url";
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
 
-  showLoginButton: Em.computed.equal("model.path", "login"),
+  showLoginButton: Ember.computed.equal("model.path", "login"),
 
   @computed("model.path")
   bodyClass: path => `static-${path}`,

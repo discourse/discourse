@@ -49,6 +49,7 @@ task 'docker:test' do
   begin
     @good = true
     unless ENV['SKIP_LINT']
+      @good &&= run_or_fail("yarn install")
       puts "travis_fold:start:lint" if ENV["TRAVIS"]
       puts "Running linters/prettyfiers"
       puts "eslint #{`yarn eslint -v`}"

@@ -47,7 +47,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         .then(function() {
           self.send("closeModal");
           self.setProperties({ date: "", time: "", saving: false });
-          Em.run.next(() => {
+          Ember.run.next(() => {
             DiscourseURL.routeTo(topic.get("url"));
           });
         })

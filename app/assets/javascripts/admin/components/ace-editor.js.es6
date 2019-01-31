@@ -67,7 +67,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     loadScript("/javascripts/ace/ace.js").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {

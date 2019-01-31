@@ -32,12 +32,13 @@ class Admin::UsersController < Admin::AdminController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
+    opts = {}
     if params[:show_emails] == "true"
-      guardian.can_see_emails = true
-      StaffActionLogger.new(current_user).log_show_emails(users)
+      StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
+      opts[:emails_desired] = true
     end
 
-    render_serialized(users, AdminUserListSerializer)
+    render_serialized(users, AdminUserListSerializer, opts)
   end
 
   def show
@@ -408,6 +409,7 @@ class Admin::UsersController < Admin::AdminController
 
     options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
     options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+    options[:prepare_for_destroy] = true
 
     hijack do
       begin

@@ -10,13 +10,13 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.$().show();
   },
 
   actions: {
     closeMessage() {
-      this.sendAction("closeMessage", this.get("message"));
+      this.closeMessage(this.get("message"));
     }
   }
 });

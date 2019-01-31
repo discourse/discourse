@@ -2,7 +2,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 
 const Tab = Ember.Object.extend({
   init() {
-    this._super();
+    this._super(...arguments);
     let name = this.get("name");
     this.set("route", this.get("route") || `group.` + name);
     this.set("message", I18n.t(`groups.${this.get("i18nKey") || name}`));
@@ -119,7 +119,8 @@ export default Ember.Controller.extend({
                 this.transitionToRoute("groups.index");
               })
               .catch(error => {
-                Ember.Logger.error(error);
+                // eslint-disable-next-line no-console
+                console.error(error);
                 bootbox.alert(I18n.t("admin.groups.delete_failed"));
               })
               .finally(() => this.set("destroying", false));

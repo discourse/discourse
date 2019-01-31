@@ -221,22 +221,24 @@
       timezones.unshift(options.timezone);
     }
 
-    timezones.filter(z => z).forEach(timezone => {
-      if (_isEqualZones(timezone, displayedTimezone)) {
-        return;
-      }
+    timezones
+      .filter(z => z)
+      .forEach(timezone => {
+        if (_isEqualZones(timezone, displayedTimezone)) {
+          return;
+        }
 
-      if (_isEqualZones(timezone, watchingUserTimezone)) {
-        timezone = watchingUserTimezone;
-      }
+        if (_isEqualZones(timezone, watchingUserTimezone)) {
+          timezone = watchingUserTimezone;
+        }
 
-      previewedTimezones.push({
-        timezone,
-        dateTime: options.time
-          ? dateTime.tz(timezone).format("LLL")
-          : _createDateTimeRange(dateTime, timezone)
+        previewedTimezones.push({
+          timezone,
+          dateTime: options.time
+            ? dateTime.tz(timezone).format("LLL")
+            : _createDateTimeRange(dateTime, timezone)
+        });
       });
-    });
 
     if (!previewedTimezones.length) {
       previewedTimezones.push({

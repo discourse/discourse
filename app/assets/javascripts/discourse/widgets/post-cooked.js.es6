@@ -163,9 +163,10 @@ export default class PostCooked {
           $blockQuote.showHtml(div, "fast", finished);
         })
         .catch(e => {
-          if (e.jqXHR.status === 404) {
+          if ([403, 404].includes(e.jqXHR.status)) {
+            const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
             $blockQuote.showHtml(
-              $(`<div class='expanded-quote'>${iconHTML("trash-o")}</div>`),
+              $(`<div class='expanded-quote'>${iconHTML(icon)}</div>`),
               "fast",
               finished
             );

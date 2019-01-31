@@ -301,22 +301,22 @@ module SiteSettingExtension
 
     unless @subscribed
       MessageBus.subscribe("/site_settings") do |message|
-        process_message(message)
+        if message.data["process"] != process_id
+          process_message(message)
+        end
       end
+
       @subscribed = true
     end
   end
 
   def process_message(message)
-    data = message.data
-    if data["process"] != process_id
-      begin
-        @last_message_processed = message.global_id
-        MessageBus.on_connect.call(message.site_id)
-        refresh!
-      ensure
-        MessageBus.on_disconnect.call(message.site_id)
-      end
+    begin
+      @last_message_processed = message.global_id
+      MessageBus.on_connect.call(message.site_id)
+      refresh!
+    ensure
+      MessageBus.on_disconnect.call(message.site_id)
     end
   end
 

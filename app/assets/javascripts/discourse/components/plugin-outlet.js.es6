@@ -42,7 +42,7 @@ export default Ember.Component.extend({
       this.set("connectorTagName", "");
     }
 
-    this._super();
+    this._super(...arguments);
     const name = this.get("name");
     if (name) {
       const args = this.get("args");

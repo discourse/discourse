@@ -232,9 +232,10 @@ end
 #
 # Indexes
 #
-#  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
-#  index_user_histories_on_action_and_id                     (action,id)
-#  index_user_histories_on_category_id                       (category_id)
-#  index_user_histories_on_subject_and_id                    (subject,id)
-#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
+#  index_user_histories_on_acting_user_id_and_action_and_id        (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                           (action,id)
+#  index_user_histories_on_category_id                             (category_id)
+#  index_user_histories_on_subject_and_id                          (subject,id)
+#  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
+#  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)
 #

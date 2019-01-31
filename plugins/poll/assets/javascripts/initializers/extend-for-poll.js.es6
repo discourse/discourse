@@ -8,7 +8,7 @@ function initializePolls(api) {
 
   api.modifyClass("controller:topic", {
     subscribe() {
-      this._super();
+      this._super(...arguments);
       this.messageBus.subscribe("/polls/" + this.get("model.id"), msg => {
         const post = this.get("model.postStream").findLoadedPost(msg.post_id);
         if (post) {
@@ -18,7 +18,7 @@ function initializePolls(api) {
     },
     unsubscribe() {
       this.messageBus.unsubscribe("/polls/*");
-      this._super();
+      this._super(...arguments);
     }
   });
 
@@ -44,7 +44,7 @@ function initializePolls(api) {
           if (existing) {
             this._polls[p.name].setProperties(p);
           } else {
-            this._polls[p.name] = Em.Object.create(p);
+            this._polls[p.name] = Ember.Object.create(p);
           }
         });
         this.set("pollsObject", this._polls);

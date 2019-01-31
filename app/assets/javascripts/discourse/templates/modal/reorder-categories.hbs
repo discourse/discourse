@@ -12,10 +12,10 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
           {{/if}}
           {{number-field number=(readonly cat.position) change=(action 'change' cat)}}
-          {{d-button class="btn-default no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
-          {{d-button class="btn-default no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
+          {{d-button class="btn-default no-text" action=(action "moveUp") actionParam=cat icon="arrow-up"}}
+          {{d-button class="btn-default no-text" action=(action "moveDown") actionParam=cat icon="arrow-down"}}
           {{#if cat.hasBufferedChanges}}
-            {{d-button class="no-text ok" action="commit" icon="check"}}
+            {{d-button class="no-text ok" action=(action "commit") icon="check"}}
           {{/if}}
         </td>
         <td>{{category-badge cat allowUncategorized="true"}}</td>
@@ -27,8 +27,8 @@
 
 <div class="modal-footer">
   {{#if showApplyAll}}
-    {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
+    {{d-button action=(action "commit") icon="check" label="categories.reorder.apply_all"}}
   {{else}}
-    {{d-button class="btn-primary" action="saveOrder" label="categories.reorder.save"}}
+    {{d-button class="btn-primary" action=(action "saveOrder") label="categories.reorder.save"}}
   {{/if}}
 </div>

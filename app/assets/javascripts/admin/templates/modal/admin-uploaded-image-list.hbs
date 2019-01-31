@@ -11,5 +11,5 @@
 {{/d-modal-body}}
 <div class="modal-footer">
   {{d-button action=(action "close") label="close"}}
-  {{images-uploader uploading=uploading done="uploadDone" class="pull-right"}}
+  {{images-uploader uploading=uploading done=(action "uploadDone") class="pull-right"}}
 </div>

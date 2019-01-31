@@ -218,7 +218,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
-    if (Em.isEmpty(topics)) {
+    if (Ember.isEmpty(topics)) {
       return;
     }
 
@@ -392,8 +392,8 @@ const TopicTrackingState = Discourse.Model.extend({
       );
     }
 
-    let categoryId = category ? Em.get(category, "id") : null;
-    let categoryName = category ? Em.get(category, "name") : null;
+    let categoryId = category ? Ember.get(category, "id") : null;
+    let categoryName = category ? Ember.get(category, "name") : null;
 
     if (name === "new") {
       return this.countNew(categoryId);

@@ -232,6 +232,7 @@ class PostDestroyer
         user_id: @post.user_id,
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
+          flagged_post_raw_content: @post.raw,
           url: @post.url,
           flag_reason: I18n.t(
             "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",

@@ -16,6 +16,7 @@ import {
 } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
+import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -80,11 +81,11 @@ export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
   application: Ember.inject.controller(),
 
-  replyAsNewTopicDraft: Em.computed.equal(
+  replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_TOPIC_KEY
   ),
-  replyAsNewPrivateMessageDraft: Em.computed.equal(
+  replyAsNewPrivateMessageDraft: Ember.computed.equal(
     "model.draftKey",
     Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
   ),
@@ -101,7 +102,7 @@ export default Ember.Controller.extend({
   linkLookup: null,
   showPreview: true,
   forcePreview: Ember.computed.and("site.mobileView", "showPreview"),
-  whisperOrUnlistTopic: Ember.computed.or("model.whisper", "model.unlistTopic"),
+  whisperOrUnlistTopic: Ember.computed.or("isWhispering", "model.unlistTopic"),
   categories: Ember.computed.alias("site.categoriesList"),
 
   @on("init")
@@ -155,7 +156,7 @@ export default Ember.Controller.extend({
     return "title";
   },
 
-  showToolbar: Em.computed({
+  showToolbar: Ember.computed({
     get() {
       const keyValueStore = getOwner(this).lookup("key-value-store:main");
       const storedVal = keyValueStore.get("toolbar-enabled");
@@ -198,15 +199,42 @@ export default Ember.Controller.extend({
     return currentUser && currentUser.get("staff");
   },
 
-  canUnlistTopic: Em.computed.and("model.creatingTopic", "isStaffUser"),
+  canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
-  @computed("canWhisper", "model.post")
-  showWhisperToggle(canWhisper, repliedToPost) {
-    const replyingToWhisper =
-      repliedToPost &&
-      repliedToPost.get("post_type") === this.site.post_types.whisper;
-
+  @computed("canWhisper", "replyingToWhisper")
+  showWhisperToggle(canWhisper, replyingToWhisper) {
     return canWhisper && !replyingToWhisper;
+  },
+
+  @computed("model.post")
+  replyingToWhisper(repliedToPost) {
+    return (
+      repliedToPost &&
+      repliedToPost.get("post_type") === this.site.post_types.whisper
+    );
+  },
+
+  @computed("replyingToWhisper", "model.whisper")
+  isWhispering(replyingToWhisper, whisper) {
+    return replyingToWhisper || whisper;
+  },
+
+  @computed("model.action", "isWhispering")
+  saveIcon(action, isWhispering) {
+    if (isWhispering) {
+      return "far-eye-slash";
+    }
+    return SAVE_ICONS[action];
+  },
+
+  @computed("model.action", "isWhispering", "model.editConflict")
+  saveLabel(action, isWhispering, editConflict) {
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (isWhispering) {
+      return "composer.create_whisper";
+    }
+    return SAVE_LABELS[action];
   },
 
   @computed("isStaffUser", "model.action")
@@ -239,7 +267,7 @@ export default Ember.Controller.extend({
         this._setupPopupMenuOption(() => {
           return {
             action: "toggleInvisible",
-            icon: "eye-slash",
+            icon: "far-eye-slash",
             label: "composer.toggle_unlisted",
             condition: "canUnlistTopic"
           };
@@ -250,7 +278,7 @@ export default Ember.Controller.extend({
         this._setupPopupMenuOption(() => {
           return {
             action: "toggleWhisper",
-            icon: "eye-slash",
+            icon: "far-eye-slash",
             label: "composer.toggle_whisper",
             condition: "showWhisperToggle"
           };
@@ -298,6 +326,40 @@ export default Ember.Controller.extend({
   uploadIcon: () => uploadIcon(),
 
   actions: {
+    togglePreview() {
+      this.toggleProperty("showPreview");
+    },
+
+    closeComposer() {
+      this.close();
+    },
+
+    openComposer(options, post, topic) {
+      this.open(options).then(() => {
+        let url;
+        if (post) url = post.get("url");
+        if (!post && topic) url = topic.get("url");
+
+        let topicTitle;
+        if (topic) topicTitle = topic.get("title");
+
+        if (!url || !topicTitle) return;
+
+        url = `${location.protocol}//${location.host}${url}`;
+        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
+        const continueDiscussion = I18n.t("post.continue_discussion", {
+          postLink: link
+        });
+
+        const reply = this.get("model.reply");
+        if (!reply || !reply.includes(continueDiscussion)) {
+          this.get("model").prependText(continueDiscussion, {
+            new_line: true
+          });
+        }
+      });
+    },
+
     cancelUpload() {
       this.set("model.uploadCancelled", true);
     },
@@ -308,10 +370,6 @@ export default Ember.Controller.extend({
 
     storeToolbarState(toolbarEvent) {
       this.set("toolbarEvent", toolbarEvent);
-    },
-
-    togglePreview() {
-      this.toggleProperty("showPreview");
     },
 
     typed() {
@@ -724,15 +782,10 @@ export default Ember.Controller.extend({
       scopedCategoryId: null
     });
 
-    // If we show the subcategory list, scope the categories drop down to
-    // the category we opened the composer with.
+    // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
       const category = this.site.categories.findBy("id", opts.categoryId);
-      if (
-        category &&
-        (category.get("show_subcategory_list") ||
-          category.get("parentCategory.show_subcategory_list"))
-      ) {
+      if (category) {
         this.set("scopedCategoryId", opts.categoryId);
       }
     }
@@ -782,9 +835,8 @@ export default Ember.Controller.extend({
         }
       }
 
-      // check if there is another draft saved on server
-      // or get a draft sequence number
-      if (!opts.draft || opts.draftSequence === undefined) {
+      // we need a draft sequence for the composer to work
+      if (opts.draftSequence === undefined) {
         return Draft.get(opts.draftKey)
           .then(data => {
             if (opts.skipDraftCheck) {
@@ -795,16 +847,25 @@ export default Ember.Controller.extend({
             return self.confirmDraftAbandon(data);
           })
           .then(data => {
-            opts.draft = opts.draft || data.draft;
-
-            // we need a draft sequence for the composer to work
-            if (opts.draft_sequence === undefined) {
-              opts.draftSequence = data.draft_sequence;
+            if (!opts.draft && data.draft) {
+              opts.draft = data.draft;
             }
-
+            opts.draftSequence = data.draft_sequence;
             self._setModel(composerModel, opts);
           })
           .then(resolve, reject);
+      }
+      // otherwise, do the draft check async
+      else if (!opts.draft && !opts.skipDraftCheck) {
+        Draft.get(opts.draftKey)
+          .then(data => self.confirmDraftAbandon(data))
+          .then(data => {
+            if (data.draft) {
+              opts.draft = data.draft;
+              opts.draftSequence = data.draft_sequence;
+              self.open(opts);
+            }
+          });
       }
 
       self._setModel(composerModel, opts);

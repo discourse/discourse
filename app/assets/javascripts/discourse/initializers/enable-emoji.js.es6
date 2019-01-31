@@ -16,8 +16,8 @@ export default {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "smile-o",
-          action: "emoji",
+          icon: "far-smile",
+          action: () => toolbar.context.send("emoji"),
           title: "composer.emoji"
         });
       });

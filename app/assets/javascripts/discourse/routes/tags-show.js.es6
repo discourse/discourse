@@ -6,6 +6,11 @@ import PermissionType from "discourse/models/permission-type";
 export default Discourse.Route.extend({
   navMode: "latest",
 
+  queryParams: {
+    ascending: { refreshModel: true },
+    order: { refreshModel: true }
+  },
+
   renderTemplate() {
     const controller = this.controllerFor("tags.show");
     this.render("tags.show", { controller });
@@ -60,11 +65,13 @@ export default Discourse.Route.extend({
     return tag;
   },
 
-  afterModel(tag) {
+  afterModel(tag, transition) {
     const controller = this.controllerFor("tags.show");
     controller.set("loading", true);
 
     const params = controller.getProperties("order", "ascending");
+    params.order = transition.queryParams.order || params.order;
+    params.ascending = transition.queryParams.ascending || params.ascending;
 
     const categorySlug = this.get("categorySlug");
     const parentCategorySlug = this.get("parentCategorySlug");

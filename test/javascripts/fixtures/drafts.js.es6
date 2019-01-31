@@ -43,7 +43,7 @@ export default {
         excerpt: "here goes a reply to a PM.",
         created_at: "2018-07-20T16:58:47.433Z",
         draft_key: "topic_93",
-        sequence: 1,
+        sequence: 0,
         draft_username: "eviltrout",
         avatar_template: "/user_avatar/localhost/eviltrout/{size}/2_1.png",
         data:

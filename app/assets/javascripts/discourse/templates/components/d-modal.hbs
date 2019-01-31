@@ -4,7 +4,9 @@
       <div class="modal-header">
         {{#if dismissable}}
           <div class='modal-close'>
-            <a class="close" {{action closeModal}}>{{d-icon "times"}}</a>
+            <a class="close" href {{action closeModal}}>
+              {{d-icon "times"}}
+            </a>
           </div>
         {{/if}}
 

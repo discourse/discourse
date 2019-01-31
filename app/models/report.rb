@@ -196,6 +196,48 @@ class Report
     report
   end
 
+  def self.report_consolidated_page_views(report)
+    filters = %w[
+      page_view_crawler
+      page_view_logged_in
+      page_view_anon
+    ]
+
+    report.modes = [:stacked_chart]
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    danger = ColorScheme.hex_for_name('danger') || 'e45735'
+
+    requests = filters.map do |filter|
+      color = report.rgba_color(tertiary)
+
+      if filter == "page_view_anon"
+        color = report.rgba_color(tertiary, 0.5)
+      end
+
+      if filter == "page_view_crawler"
+        color = report.rgba_color(danger, 0.75)
+      end
+
+      {
+        req: filter,
+        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
+        color: color,
+        data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+      }
+    end
+
+    requests.each do |request|
+      request[:data] = request[:data].where('date >= ? AND date <= ?', report.start_date, report.end_date)
+        .order(date: :asc)
+        .group(:date)
+        .sum(:count)
+        .map { |date, count| { x: date, y: count } }
+    end
+
+    report.data = requests
+  end
+
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
@@ -234,7 +276,7 @@ class Report
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
     add_counts report, UserVisit, 'visited_at'
 
-    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    report.prev30Days = UserVisit.where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
   end
 
   def self.report_mobile_visits(report)
@@ -607,10 +649,10 @@ class Report
     url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { url: url.call("admins"), icon: "shield", key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { url: url.call("admins"), icon: "shield-alt", key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { url: url.call("moderators"), icon: "shield", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { url: url.call("moderators"), icon: "shield-alt", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
     report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
@@ -1505,16 +1547,6 @@ class Report
     end
   end
 
-  private
-
-  def hex_to_rgbs(hex_color)
-    hex_color = hex_color.gsub('#', '')
-    rgbs = hex_color.scan(/../)
-    rgbs
-      .map! { |color| color.hex }
-      .map! { |rgb| rgb.to_i }
-  end
-
   def rgba_color(hex, opacity = 1)
     if hex.size == 3
       chars = hex.scan(/\w/)
@@ -1528,5 +1560,15 @@ class Report
     rgbs = hex_to_rgbs(hex)
 
     "rgba(#{rgbs.join(',')},#{opacity})"
+  end
+
+  private
+
+  def hex_to_rgbs(hex_color)
+    hex_color = hex_color.gsub('#', '')
+    rgbs = hex_color.scan(/../)
+    rgbs
+      .map! { |color| color.hex }
+      .map! { |rgb| rgb.to_i }
   end
 end

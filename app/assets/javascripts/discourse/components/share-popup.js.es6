@@ -93,7 +93,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     const $html = $("html");
     $html.on("mousedown.outside-share-link", e => {
@@ -152,7 +152,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $("html")
       .off("click.discourse-share-link")
       .off("mousedown.outside-share-link")
@@ -165,7 +165,7 @@ export default Ember.Component.extend({
       const postId =
         this.get("postId") || postStream.findPostIdForPostNumber(1);
       const post = postStream.findLoadedPost(postId);
-      this.sendAction("replyAsNewTopic", post);
+      this.get("replyAsNewTopic")(post);
       this.send("close");
     },
 

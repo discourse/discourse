@@ -20,17 +20,21 @@ export default Discourse.Model.extend({
     "/posts/%@/%@?offset=%@"
   ),
 
-  filterBy(filter) {
-    if (this.get("loaded") && this.get("filter") === filter) {
+  filterBy(opts) {
+    if (this.get("loaded") && this.get("filter") === opts.filter) {
       return Ember.RSVP.resolve();
     }
 
-    this.setProperties({
-      filter: filter,
-      itemsLoaded: 0,
-      canLoadMore: true,
-      content: []
-    });
+    this.setProperties(
+      Object.assign(
+        {
+          itemsLoaded: 0,
+          content: [],
+          lastLoadedUrl: null
+        },
+        opts
+      )
+    );
 
     return this.findItems();
   },

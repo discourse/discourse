@@ -17,3 +17,26 @@ has_non_en_locales_changes = locales_changes.grep_v(/config\/locales\/(client|se
 if locales_changes.any? && has_non_en_locales_changes
   fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
 end
+
+files = (git.added_files + git.modified_files)
+  .select { |path| !path.start_with?("plugins/") }
+  .select { |path| path.end_with?("es6") || path.end_with?("rb") }
+
+super_offenses = []
+
+files.each do |path|
+  diff = git.diff_for_file(path)
+
+  next if !diff
+
+  diff.patch.lines.grep(/^\+\s\s/).each do |added_line|
+    super_offenses << path if added_line['this._super()']
+  end
+end
+
+if !super_offenses.empty?
+  warn(%{
+When possible use `this._super(...arguments)` instead of `this._super()`\n
+#{super_offenses.uniq.map { |o| github.html_link(o) }.join("\n")}
+  })
+end

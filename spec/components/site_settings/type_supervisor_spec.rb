@@ -6,13 +6,6 @@ describe SiteSettings::TypeSupervisor do
     SiteSettings::LocalProcessProvider.new
   end
 
-  def new_settings(provider)
-    Class.new do
-      extend SiteSettingExtension
-      self.provider = provider
-    end
-  end
-
   let :settings do
     new_settings(provider_local)
   end

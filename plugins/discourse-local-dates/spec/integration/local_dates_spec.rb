@@ -21,7 +21,7 @@ RSpec.describe "Local Dates" do
       'data-timezones="Europe/Paris|America/Los_Angeles"'
     )
 
-    expect(cooked).to include('data-email-preview="05/09/2018 12:00:00 AM (Europe: Paris)"')
+    expect(cooked).to include('data-email-preview="2018-05-08T22:00:00Z UTC"')
     expect(cooked).to include('05/08/2018 10:00:00 PM')
   end
 

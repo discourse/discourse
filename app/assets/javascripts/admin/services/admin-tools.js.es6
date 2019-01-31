@@ -10,7 +10,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Service.extend({
   init() {
-    this._super();
+    this._super(...arguments);
 
     // TODO: Make `siteSettings` a service that can be injected
     this.siteSettings = getOwner(this).lookup("site-settings:main");

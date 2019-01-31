@@ -17,7 +17,7 @@
 
     .select-kit-filter {
       border: 0;
-      flex: 1 0 0;
+      flex: 1 0 0px;
       margin: 1px;
     }
 
@@ -89,7 +89,7 @@
         min-width: 50px;
         padding: 0;
         outline: none;
-        flex: 1 0 0;
+        flex: 1 0 0px;
 
         .filter-input,
         .filter-input:focus {
@@ -112,7 +112,7 @@
       .selected-color {
         .selected-color-wrapper {
           display: flex;
-          flex: 1 0 0;
+          flex: 1 0 0px;
           flex-direction: column;
         }
 
@@ -137,7 +137,7 @@
           padding: 2px 4px;
           line-height: $line-height-medium;
           display: flex;
-          flex: 1 0 0;
+          flex: 1 0 0px;
           align-items: center;
         }
       }

@@ -15,6 +15,11 @@ describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
+  it "still returns something for no themes" do
+    link = Stylesheet::Manager.stylesheet_link_tag(:desktop, 'all', [])
+    expect(link).not_to eq("")
+  end
+
   it 'can correctly compile theme css' do
     theme = Fabricate(:theme)
 

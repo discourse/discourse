@@ -147,15 +147,68 @@ describe ApplicationHelper do
     end
   end
 
-  describe '#rtl_class' do
-    it "returns 'rtl' when the I18n.locale is rtl" do
+  describe '#html_classes' do
+    let(:user) { Fabricate(:user) }
+
+    it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
-      expect(helper.rtl_class).to eq('rtl')
+      expect(helper.html_classes.split(" ")).to include('rtl')
     end
 
     it 'returns an empty string when the I18n.locale is not rtl' do
       I18n.stubs(:locale).returns(:zh_TW)
-      expect(helper.rtl_class).to eq('')
+      expect(helper.html_classes.split(" ")).not_to include('rtl')
+    end
+
+    describe 'text size' do
+      context "with a user option" do
+        before do
+          user.user_option.text_size = "larger"
+          user.user_option.save!
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+        end
+
+        it 'ignores invalid text sizes' do
+          helper.request.cookies["text_size"] = "invalid"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'ignores missing text size' do
+          helper.request.cookies["text_size"] = nil
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'ignores cookies with lower sequence' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "normal|1"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'prioritises the cookie specified text size' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "largest|4"
+          expect(helper.html_classes.split(" ")).to include('text-size-largest')
+        end
+
+        it 'includes the user specified text size' do
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+      end
+
+      it 'falls back to the default text size for anon' do
+        expect(helper.html_classes.split(" ")).to include('text-size-normal')
+        SiteSetting.default_text_size = "largest"
+        expect(helper.html_classes.split(" ")).to include('text-size-largest')
+      end
+    end
+
+    it "includes 'anon' for anonymous users and excludes when logged in" do
+      expect(helper.html_classes.split(" ")).to include('anon')
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_classes.split(" ")).not_to include('anon')
     end
   end
 

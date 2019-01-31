@@ -245,8 +245,7 @@ a.reply-to-tab {
   }
 }
 
-#topic-footer-buttons p {
-  clear: both;
+#topic-footer-buttons .reason {
   /* this is to force the drop-down notification state description para below the button */
   margin: 0;
   color: dark-light-choose($primary-medium, $secondary-medium);
@@ -401,7 +400,7 @@ blockquote {
 }
 
 span.highlighted {
-  background-color: dark-light-choose($highlight-low, $highlight);
+  background-color: $highlight-low;
 }
 
 .topic-avatar {
@@ -447,11 +446,11 @@ span.highlighted {
 }
 
 .username.new-user a {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: $primary-low-mid;
 }
 
 .user-title {
-  color: #aaa;
+  color: $primary-medium;
   overflow: hidden;
   margin-right: 50px;
 }

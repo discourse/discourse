@@ -33,8 +33,11 @@ class User < ActiveRecord::Base
   has_many :user_api_keys, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
-  has_many :user_actions, dependent: :destroy
-  has_many :post_actions, dependent: :destroy
+
+  # dependent deleting handled via before_destroy
+  has_many :user_actions
+  has_many :post_actions
+
   has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :delete_all
@@ -130,6 +133,11 @@ class User < ActiveRecord::Base
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
     PostTiming.where(user_id: self.id).delete_all
     TopicViewItem.where(user_id: self.id).delete_all
+    UserAction.where('user_id = :user_id OR target_user_id = :user_id OR acting_user_id = :user_id', user_id: self.id).delete_all
+
+    # we need to bypass the default scope here, which appears not bypassed for :delete_all
+    # however :destroy it is bypassed
+    PostAction.with_deleted.where(user_id: self.id).delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin

@@ -16,7 +16,7 @@ export default DropdownSelectBoxComponent.extend({
       },
       {
         id: "logOut",
-        icon: "sign-out",
+        icon: "sign-out-alt",
         name: I18n.t("user.log_out"),
         description: ""
       }
@@ -29,10 +29,10 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(id) {
       switch (id) {
         case "notYou":
-          this.sendAction("showToken", this.get("token"));
+          this.showToken(this.get("token"));
           break;
         case "logOut":
-          this.sendAction("revokeAuthToken", this.get("token"));
+          this.revokeAuthToken(this.get("token"));
           break;
       }
     }

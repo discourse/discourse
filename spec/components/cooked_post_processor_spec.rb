@@ -185,7 +185,8 @@ describe CookedPostProcessor do
           ]
         end
 
-        let(:title) { 'some title' }
+        let(:title) { '<b>some title</b>' }
+        let(:escaped_title) { CGI.escapeHTML(title) }
 
         let(:post) do
           Fabricate(:post, raw: <<~RAW)
@@ -203,7 +204,7 @@ describe CookedPostProcessor do
           urls.each do |url|
             stub_request(:get, url).to_return(
               status: 200,
-              body: "<html><head><title>#{title}</title></head></html>"
+              body: "<html><head><title>#{escaped_title}</title></head></html>"
             )
           end
         end
@@ -1169,7 +1170,7 @@ describe CookedPostProcessor do
     let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
 
     let(:raw) do
-      <<~RAW
+      <<~RAW.strip
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
       this is the first post
       [/quote]
@@ -1179,7 +1180,7 @@ describe CookedPostProcessor do
     end
 
     let(:raw2) do
-      <<~RAW
+      <<~RAW.strip
       and this is the third reply
 
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -1188,9 +1189,11 @@ describe CookedPostProcessor do
       RAW
     end
 
-    it 'works' do
+    before do
       SiteSetting.remove_full_quote = true
+    end
 
+    it 'works' do
       hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
       small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = Fabricate(:post, topic: topic, raw: raw)
@@ -1209,8 +1212,6 @@ describe CookedPostProcessor do
     end
 
     it 'does not delete quote if not first paragraph' do
-      SiteSetting.remove_full_quote = true
-
       reply = Fabricate(:post, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
       expect(topic.posts).to eq([post, reply])
@@ -1224,6 +1225,21 @@ describe CookedPostProcessor do
 
       CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
       expect(reply.raw).to eq(raw)
+    end
+
+    it "works only on new posts" do
+      SiteSetting.queue_jobs = false
+
+      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
+      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+
+      reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
+      CookedPostProcessor.new(reply).post_process
+      expect(reply.raw).to eq(raw)
+
+      PostRevisor.new(reply).revise!(Discourse.system_user, raw: raw, edit_reason: "put back full quote")
+      CookedPostProcessor.new(reply).post_process(new_post: true)
+      expect(reply.raw).to eq("and this is the third reply")
     end
 
   end

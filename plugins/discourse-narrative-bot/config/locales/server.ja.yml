@@ -7,7 +7,6 @@
 
 ja:
   site_settings:
-    discourse_narrative_bot_enabled: 'ディスコースの自動ナレーターを許可してください。'
     disable_discourse_narrative_bot_welcome_post: "ディスコースナレーター、ボットからのようこそ投稿を無効にしてください。"
     discourse_narrative_bot_ignored_usernames: "ディスコースナレーター、ボットのユーザー名は気にするべきではありません。"
     discourse_narrative_bot_disable_public_replies: "ディスコースナレーター、ボットからの返信を無効にして下さい。"

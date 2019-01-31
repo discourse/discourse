@@ -227,7 +227,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && @results.type_filter == 'topic'
+    if @opts[:search_for_id] && (@results.type_filter == 'topic' || @results.type_filter == 'private_messages')
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -629,7 +629,14 @@ class Search
 
   # If we're searching for a single topic
   def single_topic(id)
-    post = Post.find_by(topic_id: id, post_number: 1)
+    if @opts[:restrict_to_archetype].present?
+      archetype = @opts[:restrict_to_archetype] == Archetype.default ? Archetype.default : Archetype.private_message
+      post = Post.joins(:topic)
+        .where("topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1", id: id, archetype: archetype)
+        .first
+    else
+      post = Post.find_by(topic_id: id, post_number: 1)
+    end
     return nil unless @guardian.can_see?(post)
 
     @results.add(post)

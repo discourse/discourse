@@ -15,6 +15,14 @@ QUnit.test("Messages", async assert => {
 QUnit.test("Notifications", async assert => {
   await visit("/u/eviltrout/notifications");
   assert.ok($("body.user-notifications-page").length, "has the body class");
+
+  const $links = find(".item.notification a");
+
+  assert.ok(
+    $links[1].href.includes(
+      "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
+    )
+  );
 });
 
 QUnit.test("Root URL - Viewing Self", async assert => {
@@ -30,6 +38,7 @@ QUnit.test("Root URL - Viewing Self", async assert => {
 
 QUnit.test("Viewing Summary", async assert => {
   await visit("/u/eviltrout/summary");
+
   assert.ok(exists(".replies-section li a"), "replies");
   assert.ok(exists(".topics-section li a"), "topics");
   assert.ok(exists(".links-section li a"), "links");

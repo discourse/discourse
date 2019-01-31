@@ -384,7 +384,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
     "it sets the post type to whisper"
   );
 
@@ -392,7 +392,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
     "it removes the whisper mode"
   );
 
@@ -404,6 +404,44 @@ QUnit.test("Composer can toggle whispers", async assert => {
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
+  );
+});
+
+QUnit.test("Switching composer whisper state", async assert => {
+  const menu = selectKit(".toolbar-popup-menu-options");
+
+  await visit("/t/this-is-a-test-topic/9");
+  await click(".topic-post:eq(0) button.reply");
+
+  await menu.expand();
+  await menu.selectRowByValue("toggleWhisper");
+
+  await fillIn(".d-editor-input", "this is the content of my reply");
+  await click("#reply-control button.create");
+
+  assert.ok(find(".topic-post:last").hasClass("whisper"));
+
+  await click("#topic-footer-buttons .btn.create");
+
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+    "doesn’t set topic reply as whisper"
+  );
+
+  await click(".topic-post:last button.reply");
+
+  assert.ok(find(".topic-post:last").hasClass("whisper"));
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+    "sets post reply as a whisper"
+  );
+
+  await click(".topic-post:nth-last-child(2) button.reply");
+
+  assert.notOk(find(".topic-post:nth-last-child(2)").hasClass("whisper"));
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+    "doesn’t set post reply as a whisper"
   );
 });
 
@@ -461,7 +499,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -470,7 +508,7 @@ QUnit.test(
 
     await click("#create-topic");
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
       "it should reset the state of the composer's model"
     );
 

@@ -1,35 +1,47 @@
 {{#if model}}
-  <table class='api-keys grid'>
+  <table class="api-keys grid">
   <thead>
-    <th>{{i18n 'admin.api.key'}}</th>
-    <th>{{i18n 'admin.api.user'}}</th>
+    <th>{{i18n "admin.api.key"}}</th>
+    <th>{{i18n "admin.api.user"}}</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
     {{#each model as |k|}}
       <tr>
-        <td class='key'>{{k.key}}</td>
+        <td class="key">{{k.key}}</td>
         <td class="key-user">
           {{#if k.user}}
-            {{#link-to 'adminUser' k.user}}
+            {{#link-to "adminUser" k.user}}
               {{avatar k.user imageSize="small"}}
             {{/link-to}}
           {{else}}
-            {{i18n 'admin.api.all_users'}}
+            {{i18n "admin.api.all_users"}}
           {{/if}}
         </td>
         <td class="key-controls">
-          {{d-button class="btn-default" action="regenerateKey" actionParam=k icon="undo" label='admin.api.regenerate'}}
-          {{d-button class="btn-default" action="revokeKey" actionParam=k icon="times" label='admin.api.revoke'}}
+          {{d-button
+            class="btn-default"
+            action=(action "regenerateKey")
+            actionParam=k icon="undo"
+            label="admin.api.regenerate"}}
+          {{d-button
+            class="btn-default"
+            action=(action "revokeKey")
+            actionParam=k
+            icon="times"
+            label="admin.api.revoke"}}
         </td>
       </tr>
     {{/each}}
   </tbody>
   </table>
 {{else}}
-  <p>{{i18n 'admin.api.none'}}</p>
+  <p>{{i18n "admin.api.none"}}</p>
 {{/if}}
 
 {{#unless hasMasterKey}}
-<button class='btn btn-icon no-text btn-primary' {{action "generateMasterKey"}}>{{d-icon "key"}}</button>
+  {{d-button
+    class="btn-primary"
+    action=(action "generateMasterKey")
+    icon="key"}}
 {{/unless}}

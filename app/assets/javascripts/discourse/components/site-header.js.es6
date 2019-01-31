@@ -225,7 +225,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", topic => this.setTopic(topic));
@@ -252,7 +252,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $("body").off("keydown.header");
     $(window).off("resize.discourse-menu-panel");
 

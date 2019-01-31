@@ -37,7 +37,8 @@ class UserUpdater
     :theme_ids,
     :allow_private_messages,
     :homepage_id,
-    :hide_profile_and_presence
+    :hide_profile_and_presence,
+    :text_size
   ]
 
   def initialize(actor, user)
@@ -93,6 +94,10 @@ class UserUpdater
       else
         attributes.delete(:theme_ids)
       end
+    end
+
+    if attributes.key?(:text_size)
+      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s != attributes[:text_size]
     end
 
     OPTION_ATTR.each do |attribute|

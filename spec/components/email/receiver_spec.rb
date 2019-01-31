@@ -522,45 +522,54 @@ describe Email::Receiver do
     end
 
     it "supports attachments" do
-      SiteSetting.authorized_extensions = "txt"
+      SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>text\.txt<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\APlease find some text file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?txt'>text\.txt<\/a> \(20 Bytes\)\z/)
+      expect(post.uploads.size).to eq 1
+
+      expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
+      post = topic.posts.last
+      expect(post.raw).to match(/\APicture below\.\s+<img.+?src="\/uploads\/default\/original\/.+?jpeg" class="">\s+Picture above\.\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>sample\.eml<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\APlease find the eml file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?eml'>sample\.eml<\/a> \(193 Bytes\)\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     context "when attachment is rejected" do
       it "sends out the warning email" do
         expect { process(:attached_txt_file) }.to change { EmailLog.count }.by(1)
         expect(EmailLog.last.email_type).to eq("email_reject_attachment")
-        expect(topic.posts.last.uploads.length).to eq 0
+        expect(topic.posts.last.uploads.size).to eq 0
       end
 
       it "doesn't send out the warning email if sender is staged user" do
         user.update_columns(staged: true)
         expect { process(:attached_txt_file) }.not_to change { EmailLog.count }
-        expect(topic.posts.last.uploads.length).to eq 0
+        expect(topic.posts.last.uploads.size).to eq 0
       end
 
       it "creates the post with attachment missing message" do
         missing_attachment_regex = Regexp.escape(I18n.t('emails.incoming.missing_attachment', filename: "text.txt"))
         expect { process(:attached_txt_file) }.to change { topic.posts.count }
-        expect(topic.posts.last.raw).to match(/#{missing_attachment_regex}/)
-        expect(topic.posts.last.uploads.length).to eq 0
+        post = topic.posts.last
+        expect(post.raw).to match(/#{missing_attachment_regex}/)
+        expect(post.uploads.size).to eq 0
       end
     end
 
     it "supports emails with just an attachment" do
       SiteSetting.authorized_extensions = "pdf"
       expect { process(:attached_pdf_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>discourse\.pdf<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\A\s+<a class='attachment' href='\/uploads\/default\/original\/.+?pdf'>discourse\.pdf<\/a> \(64 KB\)\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     it "supports liking via email" do

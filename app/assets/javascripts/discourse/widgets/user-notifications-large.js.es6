@@ -22,6 +22,11 @@ createWidget("large-notification-item", {
 export default createWidget("user-notifications-large", {
   html(attrs) {
     const notifications = attrs.notifications;
-    return notifications.map(n => this.attach("large-notification-item", n));
+    const username = notifications.findArgs.username;
+
+    return notifications.map(n => {
+      n.username = username;
+      return this.attach("large-notification-item", n);
+    });
   }
 });

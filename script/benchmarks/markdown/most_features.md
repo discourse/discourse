@@ -96,7 +96,7 @@ console.log(foo(5));
 ```
 
 
-```text
+``` text
 var foo = function (bar) {
   return bar++;
 };

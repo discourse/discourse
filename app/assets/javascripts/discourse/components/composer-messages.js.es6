@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   hidden: Ember.computed.not("composer.viewOpenOrFullscreen"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.on("composer:typed-reply", this, this._typedReply);
     this.appEvents.on("composer:opened", this, this._findMessages);
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
@@ -166,7 +166,7 @@ export default Ember.Component.extend({
       if (similarTopics.get("length") > 0) {
         message.set("similarTopics", similarTopics);
         this.send("popup", message);
-      } else if (message) {
+      } else if (message && !(this.isDestroyed || this.isDestroying)) {
         this.send("hideMessage", message);
       }
     });
@@ -200,19 +200,15 @@ export default Ember.Component.extend({
       // Checking composer messages on replies can give us a list of links to check for
       // duplicates
       if (messages.extras && messages.extras.duplicate_lookup) {
-        this.sendAction(
-          "addLinkLookup",
-          new LinkLookup(messages.extras.duplicate_lookup)
-        );
+        this.addLinkLookup(new LinkLookup(messages.extras.duplicate_lookup));
       }
 
       this.set("checkedMessages", true);
       const queuedForTyping = this.get("queuedForTyping");
-      messages.forEach(
-        msg =>
-          msg.wait_for_typing
-            ? queuedForTyping.addObject(msg)
-            : this.send("popup", msg)
+      messages.forEach(msg =>
+        msg.wait_for_typing
+          ? queuedForTyping.addObject(msg)
+          : this.send("popup", msg)
       );
     };
 

@@ -17,7 +17,7 @@ export default Ember.Component.extend({
 
   actions: {
     clearFilter(param) {
-      this.sendAction("clearFilter", param);
+      this.clearFilter(param);
     }
   }
 });

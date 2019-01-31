@@ -26,11 +26,7 @@ componentTest("pending updates", {
 
   test(assert) {
     assert.expect(1);
-    assert.equal(
-      this.$(".d-icon-refresh").length,
-      1,
-      "shows pending update icon"
-    );
+    assert.equal(this.$(".d-icon-sync").length, 1, "shows pending update icon");
   }
 });
 
