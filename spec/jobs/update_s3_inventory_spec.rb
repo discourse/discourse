@@ -15,6 +15,7 @@ describe Jobs::UpdateS3Inventory do
   end
 
   it "updates the bucket policy and inventory configuration in S3" do
+    id = "original"
     @client.expects(:put_bucket_policy).with(
       bucket: "bucket",
       policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"InventoryAndAnalyticsPolicy\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"s3:PutObject\"],\"Resource\":[\"arn:aws:s3:::bucket/inventory/*\"],\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::bucket\"},\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}}}]}"
@@ -22,20 +23,20 @@ describe Jobs::UpdateS3Inventory do
     @client.expects(:put_bucket_inventory_configuration)
     @client.expects(:put_bucket_inventory_configuration).with(
       bucket: "bucket",
-      id: "uploads",
+      id: id,
       inventory_configuration: {
         destination: {
           s3_bucket_destination: {
             bucket: "arn:aws:s3:::bucket",
-            prefix: "inventory/uploads",
+            prefix: "inventory/#{id}",
             format: "CSV"
           }
         },
         filter: {
-          prefix: "uploads"
+          prefix: id
         },
         is_enabled: true,
-        id: "uploads",
+        id: id,
         included_object_versions: "Current",
         optional_fields: ["ETag"],
         schedule: { frequency: "Daily" }
