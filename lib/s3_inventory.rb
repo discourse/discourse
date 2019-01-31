@@ -68,7 +68,7 @@ class S3Inventory
             log upload.url
           end
 
-          puts "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
+          log "#{missing_count} of #{model.count} #{model.name.underscore.pluralize} are missing"
         end
       ensure
         connection.exec("DROP TABLE #{table_name}") unless connection.nil?
