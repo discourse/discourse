@@ -7,23 +7,26 @@ describe WebhooksController do
   let(:message_id) { "12345@il.com" }
 
   context "mailgun" do
-    it "works" do
-      SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
 
+    let(:token) { "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de" }
+    let(:timestamp) { Time.now.to_i }
+    let(:data) { "#{timestamp}#{token}" }
+    let(:signature) { OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, data) }
+
+    before do
+      SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
+    end
+
+    it "works (deprecated)" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
-
-      token = "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de"
-      timestamp = Time.now.to_i
-      data = "#{timestamp}#{token}"
-      signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, SiteSetting.mailgun_api_key, data)
 
       post "/webhooks/mailgun.json", params: {
         "token" => token,
         "timestamp" => timestamp,
         "event" => "dropped",
         "recipient" => email,
-        "Message-Id" => "<12345@il.com>",
+        "Message-Id" => "<#{message_id}>",
         "signature" => signature
       }
 
@@ -31,7 +34,36 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "works (new)" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailgun.json", params: {
+        "signature" => {
+          "token" => token,
+          "timestamp" => timestamp,
+          "signature" => signature,
+        },
+        "event-data" => {
+          "event" => "failed",
+          "severity" => "temporary",
+          "recipient" => email,
+          "message" => {
+            "headers" => {
+              "message-id" => message_id,
+            }
+          }
+        }
+      }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
   end
 
@@ -55,7 +87,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
 
@@ -75,7 +107,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
 
@@ -100,7 +132,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
 
@@ -127,7 +159,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.user_stat.bounce_score).to eq(2)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
 end

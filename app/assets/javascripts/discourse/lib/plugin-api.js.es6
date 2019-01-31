@@ -55,7 +55,19 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this.container.lookup("current-user:main");
+    return this._lookupContainer("current-user:main");
+  }
+
+  _lookupContainer(path) {
+    if (
+      !this.container ||
+      this.container.isDestroying ||
+      this.container.isDestroyed
+    ) {
+      return;
+    }
+
+    return this.container.lookup(path);
   }
 
   _resolveClass(resolverName, opts) {
@@ -222,7 +234,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    const site = this.container.lookup("site:main");
+    const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, dec => {
@@ -424,8 +436,8 @@ class PluginApi {
     ```
   **/
   onAppEvent(name, fn) {
-    let appEvents = this.container.lookup("app-events:main");
-    appEvents.on(name, fn);
+    const appEvents = this._lookupContainer("app-events:main");
+    appEvents && appEvents.on(name, fn);
   }
 
   /**
@@ -562,7 +574,8 @@ class PluginApi {
    * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
-    this.container.lookup("service:store").addPluralization(thing, plural);
+    const store = this._lookupContainer("service:store");
+    store && store.addPluralization(thing, plural);
   }
 
   /**

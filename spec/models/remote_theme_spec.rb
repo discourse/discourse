@@ -102,6 +102,9 @@ describe RemoteTheme do
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
 
+      expect(@theme.color_scheme_id).to eq(scheme.id)
+      @theme.update(color_scheme_id: nil)
+
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
       File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA", about_url: "https://newsite.com/about"))
 
@@ -125,6 +128,7 @@ describe RemoteTheme do
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
+      expect(@theme.color_scheme_id).to eq(nil) # Should only be set on first import
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 

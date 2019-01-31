@@ -23,7 +23,7 @@
   .actions .fade-out {
     .discourse-no-touch & {
       opacity: 0.7;
-      transition: opacity 0.7s ease-in-out;
+      transition: background 0.25s, opacity 0.7s ease-in-out;
     }
     .discourse-touch & {
       opacity: 1;
@@ -64,6 +64,9 @@ nav.post-controls {
       }
       .d-hover {
         background: none;
+      }
+      .d-icon {
+        color: $love;
       }
     }
     &:active {
@@ -146,6 +149,9 @@ nav.post-controls {
     margin-right: 0;
     color: dark-light-choose($primary-high, $secondary-low);
     margin-left: 10px;
+    .d-icon {
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
   }
   .create .d-icon {
     margin-right: 5px;
@@ -172,16 +178,23 @@ nav.post-controls {
       position: relative;
     }
     &.delete.d-hover,
+    &.delete:hover,
     &.delete:focus {
       background: $danger;
       color: $secondary;
+      .d-icon {
+        color: $secondary;
+      }
     }
     &.like.d-hover,
     &.like:focus {
       color: $love;
       background: $love-low;
+      .d-icon {
+        color: $love;
+      }
     }
-    &.has-like {
+    &.has-like .d-icon {
       color: $love;
     }
     &.has-like[disabled]:hover {
@@ -192,7 +205,7 @@ nav.post-controls {
     }
     &.bookmark {
       padding: 8px 11px;
-      &.bookmarked {
+      &.bookmarked .d-icon {
         color: $tertiary;
       }
     }
@@ -364,7 +377,8 @@ nav.post-controls {
       font-size: $font-up-2;
       line-height: $line-height-medium;
     }
-    button .d-icon {
+    button .d-icon,
+    button:hover .d-icon {
       color: $primary-high;
     }
     .avatar a {

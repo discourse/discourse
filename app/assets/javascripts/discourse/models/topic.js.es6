@@ -78,7 +78,7 @@ const Topic = RestModel.extend({
         }
       }
 
-      const poster_ids = _.pluck(posters, "user_id");
+      const poster_ids = posters.map(p => p.user && p.user.id).filter(id => id);
       participants.some(p => {
         if (!poster_ids.includes(p.user_id)) {
           users.splice(users.length - pushOffset, 0, p);
