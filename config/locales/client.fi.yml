@@ -2772,14 +2772,14 @@ fi:
             one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippu yhteensä)"
             other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippua yhteensä)"
           agreed:
-            one: "{{count}} samaa mieltä"
+            one: "{{count}} % samaa mieltä"
             other: "{{count}}% samaa mieltä"
           disagreed:
-            one: "{{count}} eri mieltä"
-            other: "{{count}} eri mieltä"
+            one: "{{count}} % eri mieltä"
+            other: "{{count}} % eri mieltä"
           ignored:
-            one: "{{count}} sivuutettu"
-            other: "{{count}} sivuutettu"
+            one: "{{count}} % sivuutettu"
+            other: "{{count}} % sivuutettu"
         details: "yksityiskohdat"
         flagged_topics:
           topic: "Ketju"

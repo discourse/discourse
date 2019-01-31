@@ -219,6 +219,7 @@ sk:
     submit: "Odoslať"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
+    go_ahead: "Pokračujte"
     sign_up: "Registrácia"
     log_in: "Prihlásenie"
     age: "Vek"
@@ -298,6 +299,9 @@ sk:
       resume: "Pokračovať"
       remove: "Odstrániť"
       new_topic: "Nová téma"
+      abandon:
+        yes_value: "Áno, opustiť"
+        no_value: "Nie, ponechať"
     topic_count_latest:
       one: "Pozri si {{count}} novú alebo upravenú tému."
       few: "Pozri si {{count}} nových alebo upravených tém."
@@ -320,6 +324,7 @@ sk:
     saved: "Zmeny uložené."
     upload: "Upload"
     uploading: "Upload prebieha..."
+    uploading_filename: "Nahrávam: {{filename}}..."
     clipboard: "schránka"
     uploaded: "Upload úspešne dokončený."
     pasting: "Vkladám..."
@@ -338,6 +343,8 @@ sk:
       none_found: "Nenašli sa žiadne témy."
       title:
         placeholder: "sem napíšte názov témy"
+    choose_message:
+      none_found: "Žiadne správy."
     queue:
       topic: "Téma:"
       approve: "Schváliť"
@@ -807,6 +814,10 @@ sk:
           few: "Odošleme vám email iba ak sme vás nevideli posledné {{count}} minúty."
           many: "Odošleme vám email iba ak sme vás nevideli posledných {{count}} minút"
           other: "Odošleme vám email iba ak sme vás nevideli posledných {{count}} minút"
+      associated_accounts:
+        connect: "Pripojiť"
+        revoke: "Odobrať"
+        not_connected: "(nepripojený)"
       name:
         title: "Meno"
         instructions: "vaše celé meno (nepovinné)"
@@ -831,6 +842,11 @@ sk:
         any: "hocijaký"
       password_confirmation:
         title: "Heslo znova"
+      auth_tokens:
+        ip: "IP adresa"
+        details: "Detaily"
+        log_out_all: "Odhlásiť všetky"
+        secure_account: "Zabezpečiť moje konto"
       last_posted: "Posledný príspevok"
       last_emailed: "Posledný odemailovaný"
       last_seen: "Videný"
@@ -839,6 +855,12 @@ sk:
       location: "Poloha"
       website: "Webová stránka"
       email_settings: "Email"
+      text_size:
+        title: "Veľkosť textu"
+        smaller: "Menšie"
+        normal: "Normálne"
+        larger: "Väčšie"
+        largest: "Najväčšie"
       like_notification_frequency:
         title: "Oznámiť pri lajknutí"
         always: "Vždy"
@@ -977,6 +999,7 @@ sk:
         most_liked_users: "Najviac lajkované"
         most_replied_to_users: "Najviac reakcií na"
         no_likes: "Zatiaľ žiadne lajky."
+        top_categories: "Top kategórie"
         topics: "Témy"
         replies: "Odpovede"
       ip_address:
@@ -1039,6 +1062,7 @@ sk:
     mute: Ignorovať
     unmute: Prestať ignorovať
     last_post: Odoslané
+    time_read: Prečítané
     last_reply_lowercase: posledná odpoveď
     replies_lowercase:
       one: odpoveď
@@ -1063,6 +1087,8 @@ sk:
       disable: "Zobraziť zmazané príspevky"
     private_message_info:
       title: "Správa"
+      invite: "Pozvať ďalších"
+      edit: "Pridať alebo odobrať"
       remove_allowed_user: "Skutočne chcete odstrániť {{name}} z tejto správy?"
     email: "Email"
     username: "Používateľské meno"
