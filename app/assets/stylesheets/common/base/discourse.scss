@@ -73,7 +73,9 @@ button {
   &.ok {
     background: $success;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($success, 10%);
       color: $secondary;
@@ -83,7 +85,9 @@ button {
   &.cancel {
     background: $danger;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($danger, 10%);
       color: $secondary;
