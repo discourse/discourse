@@ -241,7 +241,7 @@ describe Email::Receiver do
     let(:category) { Fabricate(:category) }
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
     let(:topic) { create_topic(category: category, user: user) }
-    let(:post) { create_post(topic: topic, user: user) }
+    let(:post) { create_post(topic: topic) }
 
     let!(:post_reply_key) do
       Fabricate(:post_reply_key,
