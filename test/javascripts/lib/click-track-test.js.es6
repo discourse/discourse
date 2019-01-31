@@ -30,7 +30,8 @@ QUnit.module("lib:click-track", {
           <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
           <aside class="quote">
-            <a class="inside-quote" href="http://discuss.domain.com">foobar</a>
+            <a href="https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30">foo</a>
+            <a href="https://google.com">bar</a>
           </aside>
         </article>
       </div>`
@@ -45,14 +46,14 @@ var generateClickEventOn = function(selector) {
   return $.Event("click", { currentTarget: fixture(selector)[0] });
 };
 
-QUnit.test("does not track clicks on lightboxes", function(assert) {
+QUnit.test("does not track clicks on lightboxes", assert => {
   var clickEvent = generateClickEventOn(".lightbox");
   sandbox.stub(clickEvent, "preventDefault");
   assert.ok(track(clickEvent));
   assert.ok(!clickEvent.preventDefault.calledOnce);
 });
 
-QUnit.test("it calls preventDefault when clicking on an a", function(assert) {
+QUnit.test("it calls preventDefault when clicking on an a", assert => {
   var clickEvent = generateClickEventOn("a");
   sandbox.stub(clickEvent, "preventDefault");
   track(clickEvent);
@@ -60,28 +61,66 @@ QUnit.test("it calls preventDefault when clicking on an a", function(assert) {
   assert.ok(DiscourseURL.redirectTo.calledOnce);
 });
 
-QUnit.test("does not track clicks when forcibly disabled", function(assert) {
+QUnit.test("does not track clicks when forcibly disabled", assert => {
   assert.ok(track(generateClickEventOn(".no-track-link")));
 });
 
-QUnit.test("does not track clicks on back buttons", function(assert) {
+QUnit.test("does not track clicks on back buttons", assert => {
   assert.ok(track(generateClickEventOn(".back")));
 });
 
-QUnit.test("does not track clicks in quotes", function(assert) {
-  track(generateClickEventOn(".inside-quote"));
-  assert.ok(DiscourseURL.redirectTo.calledWith("http://discuss.domain.com"));
+QUnit.test("does not track right clicks inside quotes", assert => {
+  const event = generateClickEventOn(".quote a:first-child");
+  event.which = 3;
+  assert.ok(track(event));
+});
+
+QUnit.test("does not track clicks to internal links in quotes", assert => {
+  sandbox.stub(DiscourseURL, "routeTo");
+  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+
+  track(generateClickEventOn(".quote a:first-child"));
+  assert.ok(
+    DiscourseURL.routeTo.calledWith(
+      "https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30"
+    )
+  );
+});
+
+QUnit.test("can open links inside quotes in new window", assert => {
+  sandbox.stub(DiscourseURL, "routeTo");
+  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+
+  track(
+    $.Event("click", {
+      currentTarget: fixture(".quote a:first-child")[0],
+      ctrlKey: true,
+      which: 1
+    })
+  );
+
+  assert.ok(
+    window.open.calledWith(
+      "https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30",
+      "_blank"
+    )
+  );
+});
+
+QUnit.test("does not track clicks to external links in quotes", assert => {
+  track(generateClickEventOn(".quote a:last-child"));
+  assert.ok(DiscourseURL.redirectTo.calledWith("https://google.com"));
 });
 
 QUnit.test("does not track clicks on category badges", assert => {
   assert.ok(track(generateClickEventOn(".hashtag")));
 });
 
-QUnit.test("does not track clicks on mailto", function(assert) {
+QUnit.test("does not track clicks on mailto", assert => {
   assert.ok(track(generateClickEventOn(".mailto")));
 });
 
-QUnit.test("removes the href and put it as a data attribute", function(assert) {
+QUnit.test("removes the href and put it as a data attribute", assert => {
   track(generateClickEventOn("a"));
 
   var $link = fixture("a").first();
@@ -92,7 +131,7 @@ QUnit.test("removes the href and put it as a data attribute", function(assert) {
   assert.ok(DiscourseURL.redirectTo.calledOnce);
 });
 
-asyncTestDiscourse("restores the href after a while", function(assert) {
+asyncTestDiscourse("restores the href after a while", assert => {
   assert.expect(1);
 
   track(generateClickEventOn("a"));
@@ -110,7 +149,7 @@ var badgeClickCount = function(assert, id, expected) {
   assert.equal(parseInt($badge.html(), 10), expected);
 };
 
-QUnit.test("does not update badge clicks on my own link", function(assert) {
+QUnit.test("does not update badge clicks on my own link", assert => {
   sandbox
     .stub(Discourse.User, "currentProp")
     .withArgs("id")
@@ -118,7 +157,7 @@ QUnit.test("does not update badge clicks on my own link", function(assert) {
   badgeClickCount(assert, "with-badge", 1);
 });
 
-QUnit.test("does not update badge clicks in my own post", function(assert) {
+QUnit.test("does not update badge clicks in my own post", assert => {
   sandbox
     .stub(Discourse.User, "currentProp")
     .withArgs("id")
@@ -126,14 +165,14 @@ QUnit.test("does not update badge clicks in my own post", function(assert) {
   badgeClickCount(assert, "with-badge-but-not-mine", 1);
 });
 
-QUnit.test("updates badge counts correctly", function(assert) {
+QUnit.test("updates badge counts correctly", assert => {
   badgeClickCount(assert, "inside-onebox", 1);
   badgeClickCount(assert, "inside-onebox-forced", 2);
   badgeClickCount(assert, "with-badge", 2);
 });
 
 var testOpenInANewTab = function(description, clickEventModifier) {
-  test(description, function(assert) {
+  test(description, assert => {
     var clickEvent = generateClickEventOn("a");
     clickEventModifier(clickEvent);
     sandbox.stub(clickEvent, "preventDefault");
@@ -166,7 +205,7 @@ testOpenInANewTab("it opens in a new tab on middle click", function(
   clickEvent.button = 2;
 });
 
-QUnit.test("tracks via AJAX if we're on the same site", function(assert) {
+QUnit.test("tracks via AJAX if we're on the same site", assert => {
   sandbox.stub(DiscourseURL, "routeTo");
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
@@ -174,7 +213,7 @@ QUnit.test("tracks via AJAX if we're on the same site", function(assert) {
   assert.ok(DiscourseURL.routeTo.calledOnce);
 });
 
-QUnit.test("does not track via AJAX for attachments", function(assert) {
+QUnit.test("does not track via AJAX for attachments", assert => {
   sandbox.stub(DiscourseURL, "routeTo");
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 

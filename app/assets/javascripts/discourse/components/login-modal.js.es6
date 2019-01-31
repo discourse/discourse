@@ -1,6 +1,6 @@
 export default Ember.Component.extend({
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     const prefillUsername = $("#hidden-login-form input[name=username]").val();
     if (prefillUsername) {

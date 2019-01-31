@@ -36,7 +36,7 @@ export function createPreviewComponent(width, height, obj) {
       loaded: false,
 
       didInsertElement() {
-        this._super();
+        this._super(...arguments);
         const c = this.$("canvas")[0];
         this.ctx = c.getContext("2d");
         this.reload();
@@ -151,19 +151,32 @@ export function createPreviewComponent(width, height, obj) {
         );
         ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
 
-        const headerFontSize = headerHeight / 44;
-
-        ctx.font = `${headerFontSize}em FontAwesome`;
-        ctx.fillText(
-          "\uf0c9",
-          width - avatarSize * 2 - headerMargin * 0.5,
-          avatarSize
+        const pathScale = headerHeight / 1200;
+        // search icon SVG path
+        const searchIcon = new Path2D(
+          "M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
         );
-        ctx.fillText(
-          "\uf002",
+        // hamburger icon
+        const hamburgerIcon = new Path2D(
+          "M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+        );
+        ctx.save(); // Save the previous state for translation and scale
+        ctx.translate(
           width - avatarSize * 3 - headerMargin * 0.5,
-          avatarSize
+          avatarSize / 2
         );
+        // need to scale paths otherwise they're too large
+        ctx.scale(pathScale, pathScale);
+        ctx.fill(searchIcon);
+        ctx.restore();
+        ctx.save();
+        ctx.translate(
+          width - avatarSize * 2 - headerMargin * 0.5,
+          avatarSize / 2
+        );
+        ctx.scale(pathScale, pathScale);
+        ctx.fill(hamburgerIcon);
+        ctx.restore();
       },
 
       drawPills(colors, headerHeight, opts) {
@@ -176,36 +189,40 @@ export function createPreviewComponent(width, height, obj) {
         const headerMargin = headerHeight * 0.2;
 
         ctx.beginPath();
-        ctx.fillStyle = darkLightDiff(
-          colors.primary,
-          colors.secondary,
-          90,
-          -65
-        );
+        ctx.strokeStyle = colors.primary;
+        ctx.lineWidth = 0.5;
         ctx.rect(
           headerMargin,
           headerHeight + headerMargin,
           categoriesSize,
           badgeHeight
         );
-        ctx.fill();
+        ctx.stroke();
 
         const fontSize = Math.round(badgeHeight * 0.5);
+
         ctx.font = `${fontSize}px 'Arial'`;
         ctx.fillStyle = colors.primary;
         ctx.fillText(
           "all categories",
           headerMargin * 1.5,
-          headerHeight + headerMargin * 1.42 + fontSize
+          headerHeight + headerMargin * 1.4 + fontSize
         );
 
-        ctx.font = "0.9em 'FontAwesome'";
-        ctx.fillStyle = colors.primary;
-        ctx.fillText(
-          "\uf0da",
-          categoriesSize - headerMargin / 4,
-          headerHeight + headerMargin * 1.6 + fontSize
+        const pathScale = badgeHeight / 1000;
+        // caret icon
+        const caretIcon = new Path2D(
+          "M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
         );
+
+        ctx.save();
+        ctx.translate(
+          categoriesSize - headerMargin / 4,
+          headerHeight + headerMargin + badgeHeight / 4
+        );
+        ctx.scale(pathScale, pathScale);
+        ctx.fill(caretIcon);
+        ctx.restore();
 
         const text = opts.categories ? "Categories" : "Latest";
 

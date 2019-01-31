@@ -15,8 +15,6 @@ sq:
         one: "total vota"
         other: "totali votave"
       average_rating: "Vlerësimi mesatar: <strong>%{average}</strong>."
-      public:
-        title: "Votat janë publike."
       multiple:
         help:
           at_least_min_options:

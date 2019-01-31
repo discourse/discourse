@@ -30,7 +30,11 @@
       padding: 6px 12px;
       color: $primary;
       font-size: $font-up-1;
-      line-height: $line-height-medium;
+      line-height: $line-height-small;
+      box-sizing: border-box;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
       transition: background 0.15s;
 
       .d-icon {
@@ -109,7 +113,7 @@
     font-size: $font-down-1;
     width: 1.25em;
     text-align: center;
-    margin-right: 0.5em;
+    margin-right: 0.25em;
     line-height: $line-height-large;
   }
 }

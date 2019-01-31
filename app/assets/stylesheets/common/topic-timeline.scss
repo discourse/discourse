@@ -119,7 +119,7 @@
       .timeline-last-read {
         right: 0;
         margin-left: 0;
-        i.progress {
+        .progress {
           display: none;
         }
       }
@@ -180,7 +180,6 @@
 
   .topic-timeline {
     margin-left: 3em;
-    width: 150px;
     transition: opacity 0.2s ease-in;
     touch-action: none;
 
@@ -195,6 +194,7 @@
     .timeline-footer-controls {
       margin-top: 1.5em;
       transition: opacity 0.2s ease-in;
+      display: flex;
 
       button {
         margin-right: 0.5em;
@@ -263,8 +263,7 @@
     .timeline-last-read {
       position: absolute;
       margin-left: -0.35em;
-
-      i.progress {
+      .progress {
         font-size: 0.8em;
         color: $tertiary;
         margin-right: 1em;
@@ -273,6 +272,7 @@
     }
 
     .back-button {
+      min-height: unset;
       padding: 2px 5px;
     }
 
@@ -281,9 +281,6 @@
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-top: 0.5em;
-      i {
-        margin-left: 0.15em;
-      }
     }
   }
 }

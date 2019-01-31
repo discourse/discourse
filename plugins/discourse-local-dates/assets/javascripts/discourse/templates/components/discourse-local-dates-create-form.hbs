@@ -53,7 +53,7 @@
       <span class="preview">{{currentUserTimezone}}</span>
     </div>
 
-    {{#unless validDate}}
+    {{#unless isValid}}
       <span class="validation-error">{{i18n "discourse_local_dates.create.form.invalid_date"}}</span>
     {{/unless}}
 
@@ -111,9 +111,9 @@
 {{/d-modal-body}}
 
 <div class="modal-footer discourse-local-dates-create-modal-footer">
-  {{#if validDate}}
-    {{d-button class="btn"
-      action="save"
+  {{#if isValid}}
+    {{d-button class="btn btn-default"
+      action=(action "save")
       label="discourse_local_dates.create.form.insert"}}
   {{/if}}
 
@@ -122,7 +122,7 @@
   </a>
 
   {{d-button
-    class="advanced-mode-btn"
+    class="btn-default advanced-mode-btn"
     action=(action "advancedMode")
     icon="cog"
     label=toggleModeBtnLabel}}

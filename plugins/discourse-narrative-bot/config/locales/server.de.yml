@@ -136,32 +136,32 @@ de:
         second_response: |-
           Es tut mir leid, aber ich verstehe es noch immer nicht. :anguished:
 
-          Ich bin nur ein Bot. Schau dir [unsere Kontaktinformationen](/about) an, falls du dich mit einer echten Person unterhalten möchtest.
+          Ich bin nur ein Bot. Schau dir [unsere Kontaktinformationen](%{base_path}/about) an, falls du dich mit einer echten Person unterhalten möchtest.
 
           In der Zwischenzeit lass ich dich erst mal in Ruhe.
     new_user_narrative:
       reset_trigger: "neuer Benutzer"
-      title: "Zertifikat für erfolgreiche Beendigung des Lerntrainings"
+      title: "Abschlußzertifikat für neue Benutzer Lektionen"
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
-        title: ":robot: Grüß dich!"
+        title: "Sei gegrüßt!"
         message: |-
-          Willkommen bei %{title}. Danke, dass du beigetreten bist.
+          Danke, dass du %{title} beigetreten bist. Willkommen!
 
-          - Ich bin nur ein Roboter, aber [unser freundliches Team](/about) ist auch da um zu helfen, wenn du eine Person erreichen möchtest.
+          - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch da um zu helfen, wenn du eine Person erreichen möchtest.
 
-          - Aus Sicherheitsgründen begrenzen wir vorübergehend, was neue Benutzer tun können. Du wirst neue Fähigkeiten (und [Abzeichen](/badges)) erhalten, während wir uns kennenlernen.
+          - Aus Sicherheitsgründen begrenzen wir vorübergehend, was neue Benutzer tun können. Du wirst neue Fähigkeiten (und [Abzeichen](%{base_uri}/badges)) erhalten, während wir uns kennenlernen.
 
-          - Wir glauben an [zivilisiertes Community-Verhalten](/guidelines) zu allen Zeiten.
+          - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu allen Zeiten.
       onebox:
         instructions: |-
           Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
 
           Um einen Link zu kopieren, tippe und halte auf mobilen Geräten, oder klicke rechts mit deiner Maus:
 
-          - https://de.wikipedia.org/wiki/Antiwitz
-          - https://de.wikipedia.org/wiki/Tetraphobie
-          - https://de.wikipedia.org/wiki/Beghilos
+          <https://de.wikipedia.org/wiki/Antiwitz>
+          <https://de.wikipedia.org/wiki/Tetraphobie>
+          <https://de.wikipedia.org/wiki/Beghilos>
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-
@@ -266,7 +266,7 @@ de:
 
           Ich denke, du weißt was zu tun ist. Leg los und **melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> als unangemessen!
         reply: |-
-          [Unser Team](/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
+          [Unser Team](%{base_uri}/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
         not_found: |-
           Oh nein, mein anstößiger Beitrag wurde noch nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, um weitere Aktionen für den jeweiligen Beitrag einzublenden.
       search:
@@ -292,13 +292,13 @@ de:
           Hm… es sieht so aus, als hättest du Schwierigkeiten. Das tut mir leid. Hast du nach dem Begriff **Capy&#8203;bara** gesucht <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">?
       end:
         message: |-
-          Danke, dass du mir treu geblieben bist, @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
+          Danke, dass du mir treu geblieben bist,  @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
 
           %{certificate}
 
-          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**](/latest) oder [**Diskussionskategorien**](/categories) an. :sunglasses:
+          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**]((%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
 
-          (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}`!)
+          (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}` zu jeder Zeit!)
       certificate:
         alt: 'Urkunde'
     advanced_user_narrative:
@@ -306,7 +306,7 @@ de:
       cert_title: "In Anerkennung des erfolgreichen Abschlusses des Tutorials für fortgeschrittene Benutzer"
       title: ':arrow_up: Fortgeschrittene Benutzerfunktionen'
       start_message: |-
-        @%{username}, als fortgeschrittener Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](/my/preferences) angesehen, oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
+        Als ein _fortgeschrittener_ Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](%{base_uri}/my/preferences) angesehen @%{username}oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
 
         Aber ich schweife ab. Lass uns beginnen!
       edit:
@@ -371,7 +371,7 @@ de:
         reply: |-
           Fantastische Arbeit! Ich hoffe, dass du das Thema stumm geschaltet hast, denn ich kann manchmal ein bisschen gesprächig sein :grin:.
 
-          Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](/my/preferences) ändern.
+          Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](%{base_uri}/my/preferences) ändern.
       poll:
         instructions: |-
           Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Versuche, das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor zu verwenden, um **eine Umfrage zu erstellen**.

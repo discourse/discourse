@@ -18,16 +18,19 @@
     }
 
     .select-kit-filter {
-      line-height: $line-height-medium;
       padding: $input-padding;
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
+
+      .spinner {
+        flex: 0 0 auto;
+      }
 
       .filter-input,
       .filter-input:focus,
       .filter-input:active {
-        width: auto;
-        max-width: 90%; // Firefox quirk
+        flex: 0 0 auto;
+        width: 90%; // Firefox quirk
       }
 
       .filter-icon {
@@ -38,11 +41,9 @@
     .select-kit-header {
       background: $secondary;
       border: 1px solid $primary-medium;
-      padding: $input-padding;
+      padding: 0 5px 0 10px;
       font-weight: 500;
       font-size: $font-0;
-      line-height: $line-height-large;
-      min-height: 2em; // when no content is available
 
       &.is-focused {
         border: 1px solid $tertiary;

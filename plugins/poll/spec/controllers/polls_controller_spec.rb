@@ -1,5 +1,4 @@
 require "rails_helper"
-require_relative "../helpers"
 
 describe ::DiscoursePoll::PollsController do
   routes { ::DiscoursePoll::Engine.routes }
@@ -8,21 +7,79 @@ describe ::DiscoursePoll::PollsController do
   let(:topic) { Fabricate(:topic) }
   let(:poll)  { Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]") }
   let(:multi_poll)  { Fabricate(:post, topic: topic, user: user, raw: "[poll min=1 max=2 type=multiple public=true]\n- A\n- B\n[/poll]") }
+  let(:public_poll_on_vote) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_vote]\n- A\n- B\n[/poll]") }
+  let(:public_poll_on_close) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_close]\n- A\n- B\n[/poll]") }
 
   describe "#vote" do
 
     it "works" do
-      MessageBus.expects(:publish)
-
-      put :vote, params: {
-        post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
-      }, format: :json
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
+      end.first
 
       expect(response.status).to eq(200)
+
       json = ::JSON.parse(response.body)
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to eq(nil)
+      expect(message.group_ids).to eq(nil)
+    end
+
+    it "works in PM" do
+      user2 = Fabricate(:user)
+      topic = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: user2)
+      ])
+      poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
+      end.first
+
+      expect(response.status).to eq(200)
+
+      json = ::JSON.parse(response.body)
+      expect(json["poll"]["name"]).to eq("poll")
+      expect(json["poll"]["voters"]).to eq(1)
+      expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to contain_exactly(user.id, user2.id)
+      expect(message.group_ids).to eq(nil)
+    end
+
+    it "works in secure categories" do
+      group = Fabricate(:group)
+      group.add_owner(user)
+      category = Fabricate(:private_category, group: group)
+      topic = Fabricate(:topic, category: category)
+      poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      message = MessageBus.track_publish do
+        put :vote, params: {
+          post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+        }, format: :json
+      end.first
+
+      expect(response.status).to eq(200)
+
+      json = ::JSON.parse(response.body)
+      expect(json["poll"]["name"]).to eq("poll")
+      expect(json["poll"]["voters"]).to eq(1)
+      expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.user_ids).to eq(nil)
+      expect(message.group_ids).to contain_exactly(group.id)
     end
 
     it "requires at least 1 valid option" do
@@ -53,7 +110,7 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["options"][1]["votes"]).to eq(1)
     end
 
-    it "works even if topic is closed" do
+    it "works on closed topics" do
       topic.update_attribute(:closed, true)
 
       put :vote, params: {
@@ -99,16 +156,6 @@ describe ::DiscoursePoll::PollsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
     end
 
-    it "ensures polls are associated with the post" do
-      put :vote, params: {
-        post_id: Fabricate(:post).id, poll_name: "foobar", options: ["A"]
-      }, format: :json
-
-      expect(response.status).not_to eq(200)
-      json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.no_polls_associated_with_this_post"))
-    end
-
     it "checks the name of the poll" do
       put :vote, params: {
         post_id: poll.id, poll_name: "foobar", options: ["A"]
@@ -132,8 +179,10 @@ describe ::DiscoursePoll::PollsController do
     end
 
     it "doesn't discard anonymous votes when someone votes" do
-      default_poll = poll.custom_fields["polls"]["poll"]
-      add_anonymous_votes(poll, default_poll, 17, "5c24fc1df56d764b550ceae1b9319125" => 11, "e89dec30bbd9bf50fabf6a05b4324edf" => 6)
+      the_poll = poll.polls.first
+      the_poll.update_attribute(:anonymous_voters, 17)
+      the_poll.poll_options[0].update_attribute(:anonymous_votes, 11)
+      the_poll.poll_options[1].update_attribute(:anonymous_votes, 6)
 
       put :vote, params: {
         post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
@@ -146,84 +195,38 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["options"][0]["votes"]).to eq(12)
       expect(json["poll"]["options"][1]["votes"]).to eq(6)
     end
-
-    it "tracks the users ids for public polls" do
-      public_poll = Fabricate(:post, topic_id: topic.id, user_id: user.id, raw: "[poll public=true]\n- A\n- B\n[/poll]")
-      body = { post_id: public_poll.id, poll_name: "poll" }
-
-      message = MessageBus.track_publish do
-        put :vote,
-          params: body.merge(options: ["5c24fc1df56d764b550ceae1b9319125"]),
-          format: :json
-      end.first
-
-      expect(response.status).to eq(200)
-
-      json = ::JSON.parse(response.body)
-      expect(json["poll"]["voters"]).to eq(1)
-      expect(json["poll"]["options"][0]["votes"]).to eq(1)
-      expect(json["poll"]["options"][1]["votes"]).to eq(0)
-      expect(json["poll"]["options"][0]["voter_ids"]).to eq([user.id])
-      expect(json["poll"]["options"][1]["voter_ids"]).to eq([])
-      expect(message.data[:post_id].to_i).to eq(public_poll.id)
-      expect(message.data[:user][:id].to_i).to eq(user.id)
-
-      put :vote,
-        params: body.merge(options: ["e89dec30bbd9bf50fabf6a05b4324edf"]),
-        format: :json
-
-      expect(response.status).to eq(200)
-
-      json = ::JSON.parse(response.body)
-      expect(json["poll"]["voters"]).to eq(1)
-      expect(json["poll"]["options"][0]["votes"]).to eq(0)
-      expect(json["poll"]["options"][1]["votes"]).to eq(1)
-      expect(json["poll"]["options"][0]["voter_ids"]).to eq([])
-      expect(json["poll"]["options"][1]["voter_ids"]).to eq([user.id])
-
-      another_user = Fabricate(:user)
-      log_in_user(another_user)
-
-      put :vote,
-        params: body.merge(options: ["e89dec30bbd9bf50fabf6a05b4324edf", "5c24fc1df56d764b550ceae1b9319125"]),
-        format: :json
-
-      expect(response.status).to eq(200)
-
-      json = ::JSON.parse(response.body)
-      expect(json["poll"]["voters"]).to eq(2)
-      expect(json["poll"]["options"][0]["votes"]).to eq(1)
-      expect(json["poll"]["options"][1]["votes"]).to eq(2)
-      expect(json["poll"]["options"][0]["voter_ids"]).to eq([another_user.id])
-      expect(json["poll"]["options"][1]["voter_ids"]).to eq([user.id, another_user.id])
-    end
   end
 
   describe "#toggle_status" do
 
     it "works for OP" do
-      MessageBus.expects(:publish)
+      message = MessageBus.track_publish do
+        put :toggle_status, params: {
+          post_id: poll.id, poll_name: "poll", status: "closed"
+        }, format: :json
 
-      put :toggle_status, params: {
-        post_id: poll.id, poll_name: "poll", status: "closed"
-      }, format: :json
+        expect(response.status).to eq(200)
+      end.first
 
-      expect(response.status).to eq(200)
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
     end
 
     it "works for staff" do
       log_in(:moderator)
-      MessageBus.expects(:publish)
 
-      put :toggle_status, params: {
-        post_id: poll.id, poll_name: "poll", status: "closed"
-      }, format: :json
+      message = MessageBus.track_publish do
+        put :toggle_status, params: {
+          post_id: poll.id, poll_name: "poll", status: "closed"
+        }, format: :json
 
-      expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
+      end.first
+
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
+      expect(message.channel).to eq("/polls/#{poll.topic_id}")
     end
 
     it "ensures post is not trashed" do
@@ -240,13 +243,12 @@ describe ::DiscoursePoll::PollsController do
 
   end
 
-  describe "votes" do
+  describe "#voters" do
+
+    let(:first) { "5c24fc1df56d764b550ceae1b9319125" }
+    let(:second) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
     it "correctly handles offset" do
-
-      first = "5c24fc1df56d764b550ceae1b9319125"
-      second = "e89dec30bbd9bf50fabf6a05b4324edf"
-
       user1 = log_in
 
       put :vote, params: {
@@ -266,15 +268,13 @@ describe ::DiscoursePoll::PollsController do
       user3 = log_in
 
       put :vote, params: {
-        post_id: multi_poll.id,
-        poll_name: "poll",
-        options: [first, second]
+        post_id: multi_poll.id, poll_name: "poll", options: [first, second]
       }, format: :json
 
       expect(response.status).to eq(200)
 
       get :voters, params: {
-        poll_name: 'poll', post_id: multi_poll.id, voter_limit: 2
+        poll_name: 'poll', post_id: multi_poll.id, limit: 2
       }, format: :json
 
       expect(response.status).to eq(200)
@@ -282,25 +282,81 @@ describe ::DiscoursePoll::PollsController do
       json = JSON.parse(response.body)
 
       # no user3 cause voter_limit is 2
-      expect(json["poll"][first].map { |h| h["id"] }.sort).to eq([user1.id, user2.id])
-      expect(json["poll"][second].map { |h| h["id"] }).to eq([user3.id])
+      expect(json["voters"][first].map { |h| h["id"] }).to contain_exactly(user1.id, user2.id)
+      expect(json["voters"][second].map { |h| h["id"] }).to contain_exactly(user3.id)
+    end
 
-      reloaded = Post.find(multi_poll.id)
-
-      # break the custom poll and make sure we still return something sane here
-      # TODO: normalize this data so we don't store the information twice and there is a chance
-      # that somehow a bg job can cause both fields to be out-of-sync
-      poll_votes = reloaded.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
-      poll_votes.delete user2.id.to_s
-
-      reloaded.save_custom_fields(true)
-
-      get :voters, params: {
-        poll_name: 'poll', post_id: multi_poll.id, voter_limit: 2
+    it "ensures voters can only be seen after casting a vote" do
+      put :vote, params: {
+        post_id: public_poll_on_vote.id, poll_name: "poll", options: [first]
       }, format: :json
 
       expect(response.status).to eq(200)
 
+      get :voters, params: {
+        poll_name: "poll", post_id: public_poll_on_vote.id
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+
+      expect(json["voters"][first].size).to eq(1)
+
+      user2 = log_in
+
+      get :voters, params: {
+        poll_name: "poll", post_id: public_poll_on_vote.id
+      }, format: :json
+
+      expect(response.status).to eq(422)
+
+      put :vote, params: {
+        post_id: public_poll_on_vote.id, poll_name: "poll", options: [second]
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      get :voters, params: {
+        poll_name: "poll", post_id: public_poll_on_vote.id
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+
+      expect(json["voters"][first].size).to eq(1)
+      expect(json["voters"][second].size).to eq(1)
+    end
+
+    it "ensures voters can only be seen when poll is closed" do
+      put :vote, params: {
+        post_id: public_poll_on_close.id, poll_name: "poll", options: [first]
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      get :voters, params: {
+        poll_name: "poll", post_id: public_poll_on_close.id
+      }, format: :json
+
+      expect(response.status).to eq(422)
+
+      put :toggle_status, params: {
+        post_id: public_poll_on_close.id, poll_name: "poll", status: "closed"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      get :voters, params: {
+        poll_name: "poll", post_id: public_poll_on_close.id
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      json = JSON.parse(response.body)
+
+      expect(json["voters"][first].size).to eq(1)
     end
 
   end

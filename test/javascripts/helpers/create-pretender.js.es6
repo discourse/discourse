@@ -350,6 +350,10 @@ export default function() {
       return response(200, fixturesByUrl["/groups.json"]);
     });
 
+    this.get("/groups.json", () => {
+      return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
+    });
+
     this.get("groups/search.json", () => {
       return response(200, []);
     });
@@ -501,6 +505,10 @@ export default function() {
     this.post("/admin/badges", success);
     this.delete("/admin/badges/:id", success);
 
+    this.get("/admin/logs/staff_action_logs.json", () => {
+      return response(200, { staff_action_logs: [], user_history_actions: [] });
+    });
+
     this.get("/admin/logs/watched_words", () => {
       return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
     });
@@ -526,6 +534,20 @@ export default function() {
           data: [{ x: "2017-07-20", y: 2 }]
         }
       });
+    });
+
+    this.get("/inline-onebox", request => {
+      if (
+        request.queryParams.urls.includes(
+          "http://www.example.com/has-title.html"
+        )
+      ) {
+        return [
+          200,
+          { "Content-Type": "application/html" },
+          '{"inline-oneboxes":[{"url":"http://www.example.com/has-title.html","title":"This is a great title"}]}'
+        ];
+      }
     });
 
     this.get("/onebox", request => {

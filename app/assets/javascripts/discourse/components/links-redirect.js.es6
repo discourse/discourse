@@ -3,7 +3,7 @@ import { selectedText } from "discourse/lib/utilities";
 
 export default Ember.Component.extend({
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     this.$().on("mouseup.discourse-redirect", "#revisions a", function(e) {
       // bypass if we are selecting stuff
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.$().off("mouseup.discourse-redirect", "#revisions a");
   }
 });

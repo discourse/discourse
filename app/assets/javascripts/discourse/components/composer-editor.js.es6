@@ -17,11 +17,12 @@ import {
   fetchUnseenTagHashtags
 } from "discourse/lib/link-tag-hashtag";
 import Composer from "discourse/models/composer";
-import { load } from "pretty-text/oneboxer";
+import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import InputValidation from "discourse/models/input-validation";
 import { findRawTemplate } from "discourse/lib/raw-templates";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   displayErrorForUpload,
@@ -35,6 +36,11 @@ import {
   cacheShortUploadUrl,
   resolveAllShortUrls
 } from "pretty-text/image-short-url";
+
+import {
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/inline-oneboxer";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -53,10 +59,15 @@ export default Ember.Component.extend({
   _xhr: null,
   shouldBuildScrollMap: true,
   scrollMap: null,
+  uploadFilenamePlaceholder: null,
 
-  @computed
-  uploadPlaceholder() {
-    return `[${I18n.t("uploading")}]() `;
+  @computed("uploadFilenamePlaceholder")
+  uploadPlaceholder(uploadFilenamePlaceholder) {
+    const clipboard = I18n.t("clipboard");
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+    return `[${I18n.t("uploading_filename", { filename })}]() `;
   },
 
   @computed("composer.requiredCategoryMissing")
@@ -152,7 +163,11 @@ export default Ember.Component.extend({
             includeMentionableGroups: true
           }),
         key: "@",
-        transformComplete: v => v.username || v.name
+        transformComplete: v => v.username || v.name,
+        afterComplete() {
+          // ensures textarea scroll position is correct
+          Ember.run.scheduleOnce("afterRender", () => $input.blur().focus());
+        }
       });
     }
 
@@ -205,7 +220,9 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
       const tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
-        reason += "<br/>" + I18n.t("composer.error.try_like");
+        reason +=
+          "<br/>" +
+          I18n.t("composer.error.try_like", { heart: iconHTML("heart") });
       }
     }
 
@@ -216,6 +233,53 @@ export default Ember.Component.extend({
         lastShownAt: lastValidatedAt
       });
     }
+  },
+
+  _setUploadPlaceholderSend(data) {
+    const filename = this._filenamePlaceholder(data);
+    this.set("uploadFilenamePlaceholder", filename);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png...]
+    // and add order nr to the next one: [Uplodading: test.png(1)...]
+    const regexString = `\\[${I18n.t("uploading_filename", {
+      filename: filename + "(?:\\()?([0-9])?(?:\\))?"
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)[1]
+        ? parseInt(regex.exec(lastMatch)[1]) + 1
+        : 1;
+      data.orderNr = orderNr;
+      const filenameWithOrderNr = `${filename}(${orderNr})`;
+      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
+    }
+  },
+
+  _setUploadPlaceholderDone(data) {
+    const filename = this._filenamePlaceholder(data);
+    const filenameWithSize = `${filename} (${data.total})`;
+    this.set("uploadFilenamePlaceholder", filenameWithSize);
+
+    if (data.orderNr) {
+      const filenameWithOrderNr = `${filename}(${data.orderNr})`;
+      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
+    } else {
+      this.set("uploadFilenamePlaceholder", filename);
+    }
+  },
+
+  _filenamePlaceholder(data) {
+    return data.files[0].name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  },
+
+  _resetUploadFilenamePlaceholder() {
+    this.set("uploadFilenamePlaceholder", null);
   },
 
   _enableAdvancedEditorPreviewSync() {
@@ -456,7 +520,7 @@ export default Ember.Component.extend({
     applyInlineOneboxes(inline, ajax);
   },
 
-  _loadOneboxes($oneboxes) {
+  _loadOneboxes(oneboxes) {
     const post = this.get("composer.post");
     let refresh = false;
 
@@ -466,15 +530,17 @@ export default Ember.Component.extend({
       post.set("refreshedPost", true);
     }
 
-    $oneboxes.each((_, o) =>
-      load({
-        elem: o,
-        refresh,
-        ajax,
-        categoryId: this.get("composer.category.id"),
-        topicId: this.get("composer.topic.id")
-      })
-    );
+    Object.values(oneboxes).forEach(onebox => {
+      onebox.forEach($onebox => {
+        load({
+          elem: $onebox,
+          refresh,
+          ajax,
+          categoryId: this.get("composer.category.id"),
+          topicId: this.get("composer.topic.id")
+        });
+      });
+    });
   },
 
   _warnMentionedGroups($preview) {
@@ -484,7 +550,7 @@ export default Ember.Component.extend({
         const $e = $(e);
         var name = $e.data("name");
         if (found.indexOf(name) === -1) {
-          this.sendAction("groupsMentioned", [
+          this.groupsMentioned([
             {
               name: name,
               user_count: $e.data("mentionable-user-count"),
@@ -521,14 +587,14 @@ export default Ember.Component.extend({
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          Em.run.later(
+          Ember.run.later(
             this,
             () => {
               if (
                 $preview.find('.mention.cannot-see[data-name="' + name + '"]')
                   .length > 0
               ) {
-                this.sendAction("cannotSeeMention", [{ name: name }]);
+                this.cannotSeeMention([{ name }]);
                 found.push(name);
               }
             },
@@ -542,33 +608,34 @@ export default Ember.Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    if (this._validUploads > 0) {
-      this._validUploads--;
-    }
-    if (this._validUploads === 0) {
-      this.setProperties({
-        uploadProgress: 0,
-        isUploading: false,
-        isCancellable: false
-      });
-    }
-    if (removePlaceholder) {
-      this.appEvents.trigger(
-        "composer:replace-text",
-        this.get("uploadPlaceholder"),
-        ""
-      );
-    }
+    Ember.run.next(() => {
+      if (this._validUploads > 0) {
+        this._validUploads--;
+      }
+      if (this._validUploads === 0) {
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading: false,
+          isCancellable: false
+        });
+      }
+      if (removePlaceholder) {
+        this.appEvents.trigger(
+          "composer:replace-text",
+          this.get("uploadPlaceholder"),
+          ""
+        );
+      }
+      this._resetUploadFilenamePlaceholder();
+    });
   },
 
   _bindUploadTarget() {
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
-
     this._pasted = false;
 
     const $element = this.$();
     const csrf = this.session.get("csrfToken");
-    const uploadPlaceholder = this.get("uploadPlaceholder");
 
     $element.fileupload({
       url: Discourse.getURL(
@@ -595,12 +662,23 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsubmit", (e, data) => {
+      const max = this.siteSettings.simultaneous_uploads;
+
+      // Limit the number of simultaneous uploads
+      if (max > 0 && data.files.length > max) {
+        bootbox.alert(
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", { max })
+        );
+        return false;
+      }
+
       // Look for a matching file upload handler contributed from a plugin
       const matcher = handler => {
         const ext = handler.extensions.join("|");
         const regex = new RegExp(`\\.(${ext})$`, "i");
         return regex.test(data.files[0].name);
       };
+
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
         matchingHandler.method(data.files[0]);
@@ -637,7 +715,13 @@ export default Ember.Component.extend({
     $element.on("fileuploadsend", (e, data) => {
       this._pasted = false;
       this._validUploads++;
-      this.appEvents.trigger("composer:insert-text", uploadPlaceholder);
+
+      this._setUploadPlaceholderSend(data);
+
+      this.appEvents.trigger(
+        "composer:insert-text",
+        this.get("uploadPlaceholder")
+      );
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
@@ -647,13 +731,13 @@ export default Ember.Component.extend({
 
     $element.on("fileuploaddone", (e, data) => {
       let upload = data.result;
-
+      this._setUploadPlaceholderDone(data);
       if (!this._xhr || !this._xhr._userCancelled) {
         const markdown = getUploadMarkdown(upload);
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          uploadPlaceholder.trim(),
+          this.get("uploadPlaceholder").trim(),
           markdown
         );
         this._resetUpload(false);
@@ -663,6 +747,7 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadfail", (e, data) => {
+      this._setUploadPlaceholderDone(data);
       this._resetUpload(true);
 
       const userCancelled = this._xhr && this._xhr._userCancelled;
@@ -677,106 +762,6 @@ export default Ember.Component.extend({
       $("#reply-control .mobile-file-upload").on("click.uploader", function() {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();
-      });
-    }
-
-    this._firefoxPastingHack();
-  },
-
-  // Believe it or not pasting an image in Firefox doesn't work without this code
-  _firefoxPastingHack() {
-    const uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
-    if (uaMatch) {
-      let uaVersion = parseInt(uaMatch[1]);
-      if (uaVersion < 24 || 50 <= uaVersion) {
-        // The hack is no longer required in FF 50 and later.
-        // See: https://bugzilla.mozilla.org/show_bug.cgi?id=906420
-        return;
-      }
-      this.$().append(
-        Ember.$(
-          "<div id='contenteditable' contenteditable='true' style='height: 0; width: 0; overflow: hidden'></div>"
-        )
-      );
-      this.$("textarea").off("keydown.contenteditable");
-      this.$("textarea").on("keydown.contenteditable", event => {
-        // Catch Ctrl+v / Cmd+v and hijack focus to a contenteditable div. We can't
-        // use the onpaste event because for some reason the paste isn't resumed
-        // after we switch focus, probably because it is being executed too late.
-        if ((event.ctrlKey || event.metaKey) && event.keyCode === 86) {
-          // Save the current textarea selection.
-          const textarea = this.$("textarea")[0];
-          const selectionStart = textarea.selectionStart;
-          const selectionEnd = textarea.selectionEnd;
-
-          // Focus the contenteditable div.
-          const contentEditableDiv = this.$("#contenteditable");
-          contentEditableDiv.focus();
-
-          // The paste doesn't finish immediately and we don't have any onpaste
-          // event, so wait for 100ms which _should_ be enough time.
-          setTimeout(() => {
-            const pastedImg = contentEditableDiv.find("img");
-
-            if (pastedImg.length === 1) {
-              pastedImg.remove();
-            }
-
-            // For restoring the selection.
-            textarea.focus();
-            const textareaContent = $(textarea).val(),
-              startContent = textareaContent.substring(0, selectionStart),
-              endContent = textareaContent.substring(selectionEnd);
-
-            const restoreSelection = function(pastedText) {
-              $(textarea).val(startContent + pastedText + endContent);
-              textarea.selectionStart = selectionStart + pastedText.length;
-              textarea.selectionEnd = textarea.selectionStart;
-            };
-
-            if (contentEditableDiv.html().length > 0) {
-              // If the image wasn't the only pasted content we just give up and
-              // fall back to the original pasted text.
-              contentEditableDiv.find("br").replaceWith("\n");
-              restoreSelection(contentEditableDiv.text());
-            } else {
-              // Depending on how the image is pasted in, we may get either a
-              // normal URL or a data URI. If we get a data URI we can convert it
-              // to a Blob and upload that, but if it is a regular URL that
-              // operation is prevented for security purposes. When we get a regular
-              // URL let's just create an <img> tag for the image.
-              const imageSrc = pastedImg.attr("src");
-
-              if (imageSrc.match(/^data:image/)) {
-                // Restore the cursor position, and remove any selected text.
-                restoreSelection("");
-
-                // Create a Blob to upload.
-                const image = new Image();
-                image.onload = () => {
-                  // Create a new canvas.
-                  const canvas = document.createElementNS(
-                    "http://www.w3.org/1999/xhtml",
-                    "canvas"
-                  );
-                  canvas.height = image.height;
-                  canvas.width = image.width;
-                  const ctx = canvas.getContext("2d");
-                  ctx.drawImage(image, 0, 0);
-
-                  canvas.toBlob(blob =>
-                    this.$().fileupload("add", { files: blob })
-                  );
-                };
-                image.src = imageSrc;
-              } else {
-                restoreSelection("<img src='" + imageSrc + "'>");
-              }
-            }
-
-            contentEditableDiv.html("");
-          }, 100);
-        }
       });
     }
   },
@@ -808,31 +793,35 @@ export default Ember.Component.extend({
       this._teardownInputPreviewSync();
   },
 
+  showUploadSelector(toolbarEvent) {
+    this.send("showUploadSelector", toolbarEvent);
+  },
+
+  onExpandPopupMenuOptions(toolbarEvent) {
+    const selected = toolbarEvent.selected;
+    toolbarEvent.selectText(selected.start, selected.end - selected.start);
+    this.storeToolbarState(toolbarEvent);
+  },
+
   actions: {
     importQuote(toolbarEvent) {
-      this.sendAction("importQuote", toolbarEvent);
+      this.importQuote(toolbarEvent);
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
-      const selected = toolbarEvent.selected;
-      toolbarEvent.selectText(selected.start, selected.end - selected.start);
-      this.sendAction("storeToolbarState", toolbarEvent);
+      this.onExpandPopupMenuOptions(toolbarEvent);
     },
 
     togglePreview() {
-      this.sendAction("togglePreview");
-    },
-
-    showUploadModal(toolbarEvent) {
-      this.sendAction("showUploadSelector", toolbarEvent);
+      this.togglePreview();
     },
 
     extraButtons(toolbar) {
       toolbar.addButton({
         id: "quote",
         group: "fontStyles",
-        icon: "comment-o",
-        sendAction: "importQuote",
+        icon: "far-comment",
+        sendAction: this.get("importQuote"),
         title: "composer.quote_post_title",
         unshift: true
       });
@@ -843,16 +832,16 @@ export default Ember.Component.extend({
           group: "insertions",
           icon: this.get("uploadIcon"),
           title: "upload",
-          sendAction: "showUploadModal"
+          sendAction: this.get("showUploadModal")
         });
       }
 
       toolbar.addButton({
         id: "options",
         group: "extras",
-        icon: "gear",
+        icon: "cog",
         title: "composer.options",
-        sendAction: "onExpandPopupMenuOptions",
+        sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true
       });
 
@@ -862,7 +851,7 @@ export default Ember.Component.extend({
           group: "mobileExtras",
           icon: "television",
           title: "composer.show_preview",
-          sendAction: "togglePreview"
+          sendAction: this.get("togglePreview")
         });
       }
     },
@@ -910,28 +899,57 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      const $oneboxes = $("a.onebox", $preview);
-      if (
-        $oneboxes.length > 0 &&
-        $oneboxes.length <= this.siteSettings.max_oneboxes_per_post
-      ) {
-        Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
-      }
+      Ember.run.debounce(
+        this,
+        () => {
+          const inlineOneboxes = {};
+          const oneboxes = {};
 
+          let oneboxLeft =
+            this.siteSettings.max_oneboxes_per_post -
+            $(
+              `aside.onebox, a.${INLINE_ONEBOX_CSS_CLASS}, a.${LOADING_ONEBOX_CSS_CLASS}`
+            ).length;
+
+          $preview
+            .find(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}, a.onebox`)
+            .each((_index, link) => {
+              const $link = $(link);
+              const text = $link.text();
+
+              const isInline =
+                $link.attr("class") === INLINE_ONEBOX_LOADING_CSS_CLASS;
+
+              const map = isInline ? inlineOneboxes : oneboxes;
+
+              if (oneboxLeft <= 0) {
+                if (map[text] !== undefined) {
+                  map[text].push(link);
+                } else if (isInline) {
+                  $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
+                }
+              } else {
+                if (!map[text]) {
+                  map[text] = [];
+                  oneboxLeft--;
+                }
+
+                map[text].push(link);
+              }
+            });
+
+          if (Object.keys(oneboxes).length > 0) {
+            this._loadOneboxes(oneboxes);
+          }
+
+          if (Object.keys(inlineOneboxes).length > 0) {
+            this._loadInlineOneboxes(inlineOneboxes);
+          }
+        },
+        450
+      );
       // Short upload urls need resolution
       resolveAllShortUrls(ajax);
-
-      let inline = {};
-      $("a.inline-onebox-loading", $preview).each(function(index, link) {
-        let $link = $(link);
-        $link.removeClass("inline-onebox-loading");
-        let text = $link.text();
-        inline[text] = inline[text] || [];
-        inline[text].push($link);
-      });
-      if (Object.keys(inline).length > 0) {
-        Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
-      }
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
@@ -942,7 +960,7 @@ export default Ember.Component.extend({
       }
 
       this.trigger("previewRefreshed", $preview);
-      this.sendAction("afterRefresh", $preview);
+      this.afterRefresh($preview);
     }
   }
 });

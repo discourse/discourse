@@ -4,6 +4,7 @@ import deprecated from "discourse-common/lib/deprecated";
 const keySelector = "meta[name=discourse_theme_ids]";
 
 export function currentThemeKey() {
+  // eslint-disable-next-line no-console
   if (console && console.warn && console.trace) {
     // TODO: Remove this code Jan 2019
     deprecated(
@@ -38,7 +39,7 @@ export function setLocalTheme(ids, themeSeq) {
       expires: 9999
     });
   } else {
-    $.cookie("theme_ids", null, { path: "/", expires: 1 });
+    $.removeCookie("theme_ids", { path: "/", expires: 1 });
   }
 }
 

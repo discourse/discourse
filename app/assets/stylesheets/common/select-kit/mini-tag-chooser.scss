@@ -18,10 +18,11 @@
 
       .select-kit-body {
         max-width: 32em;
-        width: 32em;
       }
 
       .select-kit-header {
+        height: 30px;
+
         .selected-name {
           margin: 0;
           border: 0;
@@ -29,6 +30,7 @@
           outline: none;
           box-shadow: none;
           cursor: pointer;
+          max-width: 250px;
         }
       }
 
@@ -80,16 +82,13 @@
               box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
             }
 
-            &:after {
-              content: "\f00d";
+            .d-icon {
               color: $primary-low-mid;
-              font-family: "FontAwesome";
+              vertical-align: middle;
             }
 
-            &:hover {
-              &:after {
-                color: $danger;
-              }
+            &:hover .d-icon {
+              color: $danger;
             }
           }
         }

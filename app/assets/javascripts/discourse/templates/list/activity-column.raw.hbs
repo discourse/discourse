@@ -1,1 +1,6 @@
-<{{tagName}} class="{{class}} {{cold-age-class topic.createdAt startDate=topic.bumpedAt class=""}} activity" title="{{{topic.bumpedAtTitle}}}"><a class="post-activity" href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a></{{tagName}}>
+<{{tagName}} class="{{class}} {{cold-age-class topic.createdAt startDate=topic.bumpedAt class=""}} activity" title="{{{topic.bumpedAtTitle}}}">
+  <a class="post-activity" href="{{topic.lastPostUrl}}">
+    {{~raw-plugin-outlet name="topic-list-before-relative-date"~}}
+    {{~format-date topic.bumpedAt format="tiny" noTitle="true"~}}
+  </a>
+</{{tagName}}>

@@ -16,25 +16,36 @@ export default createWidget("home-logo", {
     return typeof href === "function" ? href() : href;
   },
 
+  logoUrl() {
+    return this.siteSettings.site_home_logo_url || "";
+  },
+
+  mobileLogoUrl() {
+    return this.siteSettings.site_mobile_logo_url || "";
+  },
+
+  smallLogoUrl() {
+    return this.siteSettings.site_logo_small_url || "";
+  },
+
   logo() {
     const { siteSettings } = this;
     const mobileView = this.site.mobileView;
 
-    const mobileLogoUrl = siteSettings.mobile_logo_url || "";
+    const mobileLogoUrl = this.mobileLogoUrl();
     const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
 
-    const logoUrl = siteSettings.logo_url || "";
+    const logoUrl = this.logoUrl();
     const title = siteSettings.title;
 
-    if (!mobileView && this.attrs.minimized) {
-      const logoSmallUrl = siteSettings.logo_small_url || "";
+    if (this.attrs.minimized) {
+      const logoSmallUrl = this.smallLogoUrl();
       if (logoSmallUrl.length) {
         return h("img#site-logo.logo-small", {
           key: "logo-small",
           attributes: {
             src: Discourse.getURL(logoSmallUrl),
-            width: 33,
-            height: 33,
+            width: 36,
             alt: title
           }
         });

@@ -3,7 +3,9 @@ require "nokogiri"
 class HtmlToMarkdown
 
   class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head = "", body = "", opened = false, markdown = ""); super; end
+    def initialize(name, head = "", body = "", opened = false, markdown = "")
+      super
+    end
   end
 
   def initialize(html, opts = {})
@@ -14,8 +16,10 @@ class HtmlToMarkdown
   end
 
   # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
+  INLINE_ELEMENTS ||= %w{span font}
+  BLOCK_ELEMENTS ||= %w{div p}
   def fix_span_elements(node)
-    if node.name == 'span' && node.at('div')
+    if (INLINE_ELEMENTS.include?(node.name) && BLOCK_ELEMENTS.any? { |e| node.at(e) })
       node.swap(node.children)
     end
 
@@ -30,6 +34,7 @@ class HtmlToMarkdown
         node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && node.parent.description&.block?
         node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element&.description&.block?
         node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/\r\n?/, "\n")
         node.remove if node.content.empty?
       end
     end
@@ -198,7 +203,7 @@ class HtmlToMarkdown
         @stack[-1].markdown << " " if node.text[0] == " "
         @stack[-1].markdown << delimiter
         traverse(node)
-        @stack[-1].markdown.chomp!
+        @stack[-1].markdown.gsub!(/\n+$/, "")
         if @stack[-1].markdown[-1] == " "
           @stack[-1].markdown.chomp!(" ")
           append_space = true

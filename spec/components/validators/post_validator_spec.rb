@@ -219,6 +219,53 @@ describe Validators::PostValidator do
     end
   end
 
+  context "force_edit_last_validator" do
+
+    let(:user) { Fabricate(:user) }
+    let(:other_user) { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic) }
+
+    before do
+      SiteSetting.max_consecutive_replies = 2
+    end
+
+    it "should always allow original poster to post" do
+      [user, user, user, other_user, user, user, user].each_with_index do |u, i|
+        post = Post.new(user: u, topic: topic, raw: "post number #{i}")
+        validator.force_edit_last_validator(post)
+        expect(post.errors.count).to eq(0)
+        post.save!
+      end
+    end
+
+    it "should not allow posting more than 2 consecutive replies" do
+      Post.create!(user: user, topic: topic, raw: "post number 2", post_number: 2)
+      Post.create!(user: user, topic: topic, raw: "post number 3", post_number: 3)
+      Post.create!(user: other_user, topic: topic, raw: "post number 1", post_number: 1)
+
+      post = Post.new(user: user, topic: topic, raw: "post number 4", post_number: 4)
+      validator.force_edit_last_validator(post)
+      expect(post.errors.count).to eq(1)
+    end
+
+    it "should always allow editing" do
+      post = Fabricate(:post, user: user, topic: topic)
+      post = Fabricate(:post, user: user, topic: topic)
+
+      revisor = PostRevisor.new(post)
+      revisor.revise!(post.user, raw: 'hello world123456789')
+    end
+
+    it "should allow posting more than 2 replies" do
+      3.times do
+        post = Fabricate(:post, user: user, topic: topic)
+        Fabricate(:post, user: other_user, topic: topic)
+        validator.force_edit_last_validator(post)
+        expect(post.errors.count).to eq(0)
+      end
+    end
+  end
+
   shared_examples "almost no validations" do
     it "skips most validations" do
       validator.expects(:stripped_length).never
@@ -229,6 +276,7 @@ describe Validators::PostValidator do
       validator.expects(:max_attachments_validator).never
       validator.expects(:newuser_links_validator).never
       validator.expects(:unique_post_validator).never
+      validator.expects(:force_edit_last_validator).never
       validator.validate(post)
     end
   end

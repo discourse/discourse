@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   rescindedAll: false,
 
   init: function() {
-    this._super();
+    this._super(...arguments);
     this.set("searchTerm", "");
   },
 
@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
     });
   }, 250).observes("searchTerm"),
 
-  inviteRedeemed: Em.computed.equal("filter", "redeemed"),
+  inviteRedeemed: Ember.computed.equal("filter", "redeemed"),
 
   showBulkActionButtons: function() {
     return (

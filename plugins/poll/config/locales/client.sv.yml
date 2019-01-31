@@ -15,8 +15,6 @@ sv:
         one: "totalt antal röst"
         other: "totalt antal röster"
       average_rating: "Medelbetyg: <strong>%{average}</strong>."
-      public:
-        title: "Omröstningar är allmänna."
       multiple:
         help:
           at_least_min_options:

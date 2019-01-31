@@ -14,6 +14,8 @@ class ThemeStore::TgzImporter
     Dir.chdir(@temp_folder) do
       Discourse::Utils.execute_command("tar", "-xzvf", @filename, "--strip", "1")
     end
+  rescue RuntimeError
+    raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
   end
 
   def cleanup!
@@ -35,6 +37,12 @@ class ThemeStore::TgzImporter
       fullpath
     else
       nil
+    end
+  end
+
+  def all_files
+    Dir.chdir(@temp_folder) do
+      Dir.glob("**/*").reject { |f| File.directory?(f) }
     end
   end
 

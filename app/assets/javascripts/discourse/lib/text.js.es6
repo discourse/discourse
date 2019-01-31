@@ -46,9 +46,10 @@ export function sanitizeAsync(text, options) {
 
 function loadMarkdownIt() {
   if (Discourse.MarkdownItURL) {
-    return loadScript(Discourse.MarkdownItURL).catch(e =>
-      Ember.Logger.error(e)
-    );
+    return loadScript(Discourse.MarkdownItURL).catch(e => {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    });
   } else {
     return Ember.RSVP.Promise.resolve();
   }

@@ -99,7 +99,11 @@ class UserAvatarsController < ApplicationController
     upload_id, version = params[:version].split("_")
 
     version = (version || OptimizedImage::VERSION).to_i
-    return render_blank if version != OptimizedImage::VERSION
+
+    # old versions simply get new avatar
+    if version > OptimizedImage::VERSION
+      return render_blank
+    end
 
     upload_id = upload_id.to_i
     return render_blank unless upload_id > 0
@@ -184,6 +188,7 @@ class UserAvatarsController < ApplicationController
 
   def get_optimized_image(upload, size)
     return if !upload
+    return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
     # TODO decide if we want to detach here

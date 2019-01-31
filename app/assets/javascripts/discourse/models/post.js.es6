@@ -28,13 +28,13 @@ const Post = RestModel.extend({
     }
   }.property("url"),
 
-  new_user: Em.computed.equal("trust_level", 0),
-  firstPost: Em.computed.equal("post_number", 1),
+  new_user: Ember.computed.equal("trust_level", 0),
+  firstPost: Ember.computed.equal("post_number", 1),
 
   // Posts can show up as deleted if the topic is deleted
-  deletedViaTopic: Em.computed.and("firstPost", "topic.deleted_at"),
-  deleted: Em.computed.or("deleted_at", "deletedViaTopic"),
-  notDeleted: Em.computed.not("deleted"),
+  deletedViaTopic: Ember.computed.and("firstPost", "topic.deleted_at"),
+  deleted: Ember.computed.or("deleted_at", "deletedViaTopic"),
+  notDeleted: Ember.computed.not("deleted"),
 
   showName: function() {
     const name = this.get("name");
@@ -91,18 +91,27 @@ const Post = RestModel.extend({
       .catch(popupAjaxError);
   },
 
-  internalLinks: function() {
+  @computed("link_counts.@each.internal")
+  internalLinks() {
     if (Ember.isEmpty(this.get("link_counts"))) return null;
+
     return this.get("link_counts")
       .filterBy("internal")
       .filterBy("title");
-  }.property("link_counts.@each.internal"),
+  },
 
-  flagsAvailable: function() {
+  @computed("actions_summary.@each.can_act")
+  flagsAvailable() {
+    // TODO: Investigate why `this.site` is sometimes null when running
+    // Search - Search with context
+    if (!this.site) {
+      return [];
+    }
+
     return this.site.get("flagTypes").filter(item => {
       return this.get(`actionByName.${item.get("name_key")}.can_act`);
     });
-  }.property("actions_summary.@each.can_act"),
+  },
 
   afterUpdate(res) {
     if (res.category) {
@@ -217,7 +226,7 @@ const Post = RestModel.extend({
       });
     }
 
-    return promise || Em.RSVP.Promise.resolve();
+    return promise || Ember.RSVP.Promise.resolve();
   },
 
   /**
@@ -271,7 +280,7 @@ const Post = RestModel.extend({
         if (key === "reply_to_user" && value && oldValue) {
           skip =
             value.username === oldValue.username ||
-            Em.get(value, "username") === Em.get(oldValue, "username");
+            Ember.get(value, "username") === Ember.get(oldValue, "username");
         }
 
         if (!skip) {
@@ -338,7 +347,7 @@ const Post = RestModel.extend({
 Post.reopenClass({
   munge(json) {
     if (json.actions_summary) {
-      const lookup = Em.Object.create();
+      const lookup = Ember.Object.create();
 
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(function(a) {
@@ -369,10 +378,10 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(post_ids) {
+  deleteMany(post_ids, { deferFlags = false } = {}) {
     return ajax("/posts/destroy_many", {
       type: "DELETE",
-      data: { post_ids }
+      data: { post_ids, defer_flags: deferFlags }
     });
   },
 

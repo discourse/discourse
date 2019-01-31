@@ -731,7 +731,6 @@ class Topic < ActiveRecord::Base
                               post_type: opts[:post_type] || Post.types[:moderator_action],
                               action_code: opts[:action_code],
                               no_bump: opts[:bump].blank?,
-                              skip_notifications: opts[:skip_notifications],
                               topic_id: self.id,
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
@@ -897,10 +896,10 @@ class Topic < ActiveRecord::Base
   end
 
   def move_posts(moved_by, post_ids, opts)
-    post_mover = PostMover.new(self, moved_by, post_ids)
+    post_mover = PostMover.new(self, moved_by, post_ids, move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message")
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id])
+      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
 
       DiscourseEvent.trigger(:topic_merged,
         post_mover.original_topic,
@@ -1357,8 +1356,8 @@ class Topic < ActiveRecord::Base
     post = ordered_posts.where(
       user_deleted: false,
       hidden: false,
-      post_type: Topic.visible_post_types
-    ).last
+      post_type: Post.types[:regular]
+    ).last || first_post
 
     update!(bumped_at: post.created_at)
   end

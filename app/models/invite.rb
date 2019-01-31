@@ -92,7 +92,8 @@ class Invite < ActiveRecord::Base
     if user = find_user_by_email(lower_email)
       raise UserExists.new(I18n.t("invite.user_exists",
         email: lower_email,
-        username: user.username
+        username: user.username,
+        base_path: Discourse.base_path
       ))
     end
 
@@ -106,10 +107,19 @@ class Invite < ActiveRecord::Base
       invite = nil
     end
 
-    invite.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now) if invite
+    if invite
+      invite.update_columns(
+        created_at: Time.zone.now,
+        updated_at: Time.zone.now,
+        via_email: invite.via_email && send_email
+      )
+    else
+      create_args = {
+        invited_by: invited_by,
+        email: lower_email,
+        via_email: send_email
+      }
 
-    if !invite
-      create_args = { invited_by: invited_by, email: lower_email }
       create_args[:moderator] = true if opts[:moderator]
       create_args[:custom_message] = custom_message if custom_message
       invite = Invite.create!(create_args)
@@ -150,9 +160,6 @@ class Invite < ActiveRecord::Base
     end
     group_ids
   end
-
-  INVITE_ORDER = <<~SQL
-  SQL
 
   def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
@@ -259,6 +266,7 @@ end
 #  invalidated_at :datetime
 #  moderator      :boolean          default(FALSE), not null
 #  custom_message :text
+#  via_email      :boolean          default(FALSE), not null
 #
 # Indexes
 #

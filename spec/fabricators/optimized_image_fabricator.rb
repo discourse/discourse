@@ -5,4 +5,5 @@ Fabricator(:optimized_image) do
   width 100
   height 200
   url "138569_100x200.png"
+  version OptimizedImage::VERSION
 end

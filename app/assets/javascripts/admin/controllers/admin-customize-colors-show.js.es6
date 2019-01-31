@@ -40,7 +40,7 @@ export default Ember.Controller.extend({
         );
       }
 
-      setTimeout(() => {
+      Ember.run.later(() => {
         this.set("model.savingStatus", null);
       }, 2000);
 
@@ -51,7 +51,7 @@ export default Ember.Controller.extend({
     },
 
     copy() {
-      var newColorScheme = Em.copy(this.get("model"), true);
+      var newColorScheme = Ember.copy(this.get("model"), true);
       newColorScheme.set(
         "name",
         I18n.t("admin.customize.colors.copy_name_prefix") +

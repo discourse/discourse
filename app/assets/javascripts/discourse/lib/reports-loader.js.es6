@@ -5,7 +5,7 @@ let _queue = [];
 let _processing = 0;
 
 // max number of reports which will be requested in one bulk request
-const MAX_JOB_SIZE = 5;
+const MAX_JOB_SIZE = 4;
 
 // max number of concurrent bulk requests
 const MAX_CONCURRENCY = 3;
@@ -74,9 +74,7 @@ export default {
       .finally(() => {
         _processing--;
 
-        // when a request is done we want to start processing queue
-        // without waiting for debouncing
-        debounce(this, this._processQueue, DEBOUNCING_DELAY, true);
+        debounce(this, this._processQueue, DEBOUNCING_DELAY);
       });
   },
 

@@ -10,19 +10,16 @@ export default MultiSelectComponent.extend({
   filterable: true,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     if (!isNone(this.get("settingName"))) {
       this.set("nameProperty", this.get("settingName"));
     }
 
     if (this.get("nameProperty").indexOf("color") > -1) {
-      this.set(
-        "headerComponentOptions",
-        Ember.Object.create({
-          selectedNameComponent: "multi-select/selected-color"
-        })
-      );
+      this.get("headerComponentOptions").setProperties({
+        selectedNameComponent: "multi-select/selected-color"
+      });
     }
   },
 

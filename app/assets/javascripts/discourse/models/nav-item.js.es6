@@ -59,16 +59,12 @@ const NavItem = Discourse.Model.extend({
   href(filterMode) {
     let customHref = null;
 
-    _.each(
-      NavItem.customNavItemHrefs,
-      function(cb) {
-        customHref = cb.call(this, this);
-        if (customHref) {
-          return false;
-        }
-      },
-      this
-    );
+    NavItem.customNavItemHrefs.forEach(function(cb) {
+      customHref = cb.call(this, this);
+      if (customHref) {
+        return false;
+      }
+    }, this);
 
     if (customHref) {
       return customHref;
@@ -143,7 +139,7 @@ NavItem.reopenClass({
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    _.each(NavItem.extraArgsCallbacks, function(cb) {
+    NavItem.extraArgsCallbacks.forEach(cb => {
       extra = cb.call(self, text, opts);
       _.merge(args, extra);
     });
@@ -163,7 +159,7 @@ NavItem.reopenClass({
 
     if (
       args.filterMode &&
-      !_.some(items, i => i.indexOf(args.filterMode) !== -1)
+      !items.some(i => i.indexOf(args.filterMode) !== -1)
     ) {
       items.push(args.filterMode);
     }

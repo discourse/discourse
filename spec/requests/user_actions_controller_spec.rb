@@ -9,6 +9,15 @@ describe UserActionsController do
       expect(response.status).to eq(400)
     end
 
+    it "returns a 404 for a user with a hidden profile" do
+      UserActionCreator.enable
+      post = Fabricate(:post)
+      post.user.user_option.update_column(:hide_profile_and_presence, true)
+
+      get "/user_actions.json", params: { username: post.user.username }
+      expect(response.code).to eq("404")
+    end
+
     it 'renders list correctly' do
       UserActionCreator.enable
       post = Fabricate(:post)
@@ -23,6 +32,29 @@ describe UserActionsController do
       expect(action["acting_name"]).to eq(post.user.name)
       expect(action["email"]).to eq(nil)
       expect(action["post_number"]).to eq(1)
+    end
+
+    it 'can be filtered by acting_username' do
+      UserActionCreator.enable
+      PostActionNotifier.enable
+
+      post = Fabricate(:post)
+      user = Fabricate(:user)
+      PostAction.act(user, post, PostActionType.types[:like])
+
+      get "/user_actions.json", params: {
+        username: post.user.username,
+        acting_username: user.username
+      }
+
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+
+      expect(response_body["user_actions"].count).to eq(1)
+
+      expect(response_body["user_actions"].first["acting_username"])
+        .to eq(user.username)
     end
 
     it 'renders help text if provided for self' do

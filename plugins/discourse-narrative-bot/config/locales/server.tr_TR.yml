@@ -59,7 +59,6 @@ tr_TR:
         '8': "İyi görünüm"
         '9': "Evet"
         '10': "İşaretler evet'i gösteriyor"
-        '11': "Cevaplar bulanık, tekrar deneyin"
         '12': "Sonra tekrar sor"
         '13': "En iyisi şimdi söylememek"
         '14': "Şimdi tahmin edemiyorum"
@@ -75,8 +74,6 @@ tr_TR:
       help_trigger: 'yardımı görüntüle'
     new_user_narrative:
       reset_trigger: "yeni kullanıcı"
-      hello:
-        title: ":robot: Selamlar!"
       quoting:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:

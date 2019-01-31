@@ -286,6 +286,42 @@ RSpec.describe SessionController do
       sso
     end
 
+    it 'does not create superflous auth tokens when already logged in' do
+      user = Fabricate(:user)
+      sign_in(user)
+
+      sso = get_sso("/")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      expect do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user.id).to eq(user.id)
+      end.not_to change { UserAuthToken.count }
+
+    end
+
+    it 'will never redirect back to /session/sso path' do
+      sso = get_sso("/session/sso?bla=1")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to('/')
+
+      sso = get_sso("http://#{Discourse.current_hostname}/session/sso?bla=1")
+      sso.email = user.email
+      sso.external_id = 'abc'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to('/')
+
+    end
+
     it 'can take over an account' do
       sso = get_sso("/")
       user = Fabricate(:user)
@@ -521,151 +557,56 @@ RSpec.describe SessionController do
       expect(response.status).to eq(419)
     end
 
-    describe 'can act as an SSO provider' do
+    context "when sso provider is enabled" do
       before do
-        stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
-          status: 200,
-          body: lambda { |request| file_from_fixtures("logo.png") }
-        )
-
         SiteSetting.enable_sso_provider = true
-        SiteSetting.enable_sso = false
-        SiteSetting.enable_local_logins = true
-        SiteSetting.sso_secret = "topsecret"
-
-        @sso = SingleSignOn.new
-        @sso.nonce = "mynonce"
-        @sso.sso_secret = SiteSetting.sso_secret
-        @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
-
-        @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
-        group = Fabricate(:group)
-        group.add(@user)
-
-        @user.create_user_avatar!
-        UserAvatar.import_url_for_user(logo_fixture, @user)
-        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
-        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
-
-        @user.reload
-        @user.user_avatar.reload
-        @user.user_profile.reload
-        EmailToken.update_all(confirmed: true)
+        SiteSetting.sso_provider_secrets = [
+          "*|secret,forAll",
+          "*.rainbow|wrongSecretForOverRainbow",
+          "www.random.site|secretForRandomSite",
+          "somewhere.over.rainbow|secretForOverRainbow",
+        ].join("\n")
       end
 
-      it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload), headers: headers
+      it "doesn't break" do
+        sso = get_sso('/hello/world')
+        sso.external_id = '997'
+        sso.sso_url = "http://somewhere.over.com/sso_login"
+        sso.return_sso_url = "http://someurl.com"
 
-        expect(response).to redirect_to("/login")
+        user = Fabricate(:user)
+        user.create_single_sign_on_record(external_id: '997', last_payload: '')
 
-        post "/session.json",
-          params: { login: @user.username, password: "myfrogs123ADMIN" }, xhr: true
-        location = response.cookies["sso_destination_url"]
-        # javascript code will handle redirection of user to return_sso_url
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
-        payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload, "topsecret")
+        user.single_sign_on_record.reload
+        expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
 
-        expect(sso2.email).to eq(@user.email)
-        expect(sso2.name).to eq(@user.name)
-        expect(sso2.username).to eq(@user.username)
-        expect(sso2.external_id).to eq(@user.id.to_s)
-        expect(sso2.admin).to eq(true)
-        expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+        expect(response).to redirect_to('/hello/world')
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-        expect(sso2.avatar_url.blank?).to_not eq(true)
-        expect(sso2.profile_background_url.blank?).to_not eq(true)
-        expect(sso2.card_background_url.blank?).to_not eq(true)
-
-        expect(sso2.avatar_url).to start_with(Discourse.base_url)
-        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
-        expect(sso2.card_background_url).to start_with(Discourse.base_url)
+        expect(user.id).to eq(logged_on_user.id)
       end
+    end
 
-      it "successfully redirects user to return_sso_url when the user is logged in" do
-        sign_in(@user)
+    it 'returns the correct error code for invalid signature' do
+      sso = get_sso('/hello/world')
+      sso.external_id = '997'
+      sso.sso_url = "http://somewhere.over.com/sso_login"
 
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload), headers: headers
+      correct_params = Rack::Utils.parse_query(sso.payload)
+      get "/session/sso_login", params: correct_params.merge("sig": "thisisnotthesigyouarelookingfor"), headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
 
-        location = response.header["Location"]
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
-
-        payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload, "topsecret")
-
-        expect(sso2.email).to eq(@user.email)
-        expect(sso2.name).to eq(@user.name)
-        expect(sso2.username).to eq(@user.username)
-        expect(sso2.external_id).to eq(@user.id.to_s)
-        expect(sso2.admin).to eq(true)
-        expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
-
-        expect(sso2.avatar_url.blank?).to_not eq(true)
-        expect(sso2.profile_background_url.blank?).to_not eq(true)
-        expect(sso2.card_background_url.blank?).to_not eq(true)
-
-        expect(sso2.avatar_url).to start_with(Discourse.base_url)
-        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
-        expect(sso2.card_background_url).to start_with(Discourse.base_url)
-      end
-
-      it 'handles non local content correctly' do
-        SiteSetting.avatar_sizes = "100|49"
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = "XXX"
-        SiteSetting.s3_secret_access_key = "XXX"
-        SiteSetting.s3_upload_bucket = "test"
-        SiteSetting.s3_cdn_url = "http://cdn.com"
-
-        stub_request(:any, /test.s3.dualstack.us-east-1.amazonaws.com/).to_return(status: 200, body: "", headers: {})
-
-        @user.create_user_avatar!
-        upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
-
-        Fabricate(:optimized_image,
-          sha1: SecureRandom.hex << "A" * 8,
-          upload: upload,
-          width: 98,
-          height: 98,
-          url: "//test.s3.amazonaws.com/something/else"
-        )
-
-        @user.update_columns(uploaded_avatar_id: upload.id)
-        @user.user_profile.update_columns(
-          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
-          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
-        )
-
-        @user.reload
-        @user.user_avatar.reload
-        @user.user_profile.reload
-
-        sign_in(@user)
-
-        stub_request(:get, "http://cdn.com/something/else").to_return(
-          body: lambda { |request| File.new(Rails.root + 'spec/fixtures/images/logo.png') }
-        )
-
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload), headers: headers
-
-        location = response.header["Location"]
-        # javascript code will handle redirection of user to return_sso_url
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
-
-        payload = location.split("?")[1]
-        sso2 = SingleSignOn.parse(payload, "topsecret")
-
-        expect(sso2.avatar_url.blank?).to_not eq(true)
-        expect(sso2.profile_background_url.blank?).to_not eq(true)
-        expect(sso2.card_background_url.blank?).to_not eq(true)
-
-        expect(sso2.avatar_url).to start_with("#{SiteSetting.s3_cdn_url}/original")
-        expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
-        expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
-      end
+      correct_params = Rack::Utils.parse_query(sso.payload)
+      get "/session/sso_login", params: correct_params.merge("sig": "thisisasignaturewith@special!characters"), headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
     end
 
     describe 'local attribute override from SSO payload' do
@@ -724,91 +665,164 @@ RSpec.describe SessionController do
   end
 
   describe '#sso_provider' do
-    before do
-      stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
-        status: 200,
-        body: lambda { |request| file_from_fixtures("logo.png") }
-      )
+    let(:headers) { { host: Discourse.current_hostname } }
 
-      SiteSetting.enable_sso_provider = true
-      SiteSetting.enable_sso = false
-      SiteSetting.enable_local_logins = true
-      SiteSetting.sso_secret = "topsecret"
+    describe 'can act as an SSO provider' do
+      before do
+        stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
+          status: 200,
+          body: lambda { |request| file_from_fixtures("logo.png") }
+        )
 
-      @sso = SingleSignOn.new
-      @sso.nonce = "mynonce"
-      @sso.sso_secret = SiteSetting.sso_secret
-      @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+        SiteSetting.enable_sso_provider = true
+        SiteSetting.enable_sso = false
+        SiteSetting.enable_local_logins = true
+        SiteSetting.sso_provider_secrets = [
+          "*|secret,forAll",
+          "*.rainbow|wrongSecretForOverRainbow",
+          "www.random.site|secretForRandomSite",
+          "somewhere.over.rainbow|secretForOverRainbow",
+        ].join("\n")
 
-      @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
-      @user.create_user_avatar!
-      UserAvatar.import_url_for_user(logo_fixture, @user)
-      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
-      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
+        @sso = SingleSignOnProvider.new
+        @sso.nonce = "mynonce"
+        @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
-      @user.reload
-      @user.user_avatar.reload
-      @user.user_profile.reload
-      EmailToken.update_all(confirmed: true)
-    end
+        @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
+        group = Fabricate(:group)
+        group.add(@user)
 
-    it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
-      get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload)
-      expect(response).to redirect_to("/login")
+        @user.create_user_avatar!
+        UserAvatar.import_url_for_user(logo_fixture, @user)
+        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
+        UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
 
-      post "/session.json",
-        params: { login: @user.username, password: "myfrogs123ADMIN" },
-        xhr: true
+        @user.reload
+        @user.user_avatar.reload
+        @user.user_profile.reload
+        EmailToken.update_all(confirmed: true)
+      end
 
-      location = response.cookies["sso_destination_url"]
-      # javascript code will handle redirection of user to return_sso_url
-      expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+      it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
-      payload = location.split("?")[1]
-      sso2 = SingleSignOn.parse(payload, "topsecret")
+        expect(response).to redirect_to("/login")
 
-      expect(sso2.email).to eq(@user.email)
-      expect(sso2.name).to eq(@user.name)
-      expect(sso2.username).to eq(@user.username)
-      expect(sso2.external_id).to eq(@user.id.to_s)
-      expect(sso2.admin).to eq(true)
-      expect(sso2.moderator).to eq(false)
-      expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+        post "/session.json",
+          params: { login: @user.username, password: "myfrogs123ADMIN" }, xhr: true, headers: headers
 
-      expect(sso2.avatar_url.blank?).to_not eq(true)
-      expect(sso2.profile_background_url.blank?).to_not eq(true)
-      expect(sso2.card_background_url.blank?).to_not eq(true)
+        location = response.cookies["sso_destination_url"]
+        # javascript code will handle redirection of user to return_sso_url
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
-      expect(sso2.avatar_url).to start_with(Discourse.base_url)
-      expect(sso2.profile_background_url).to start_with(Discourse.base_url)
-      expect(sso2.card_background_url).to start_with(Discourse.base_url)
-    end
+        payload = location.split("?")[1]
+        sso2 = SingleSignOnProvider.parse(payload)
 
-    it "successfully redirects user to return_sso_url when the user is logged in" do
-      sign_in(@user)
+        expect(sso2.email).to eq(@user.email)
+        expect(sso2.name).to eq(@user.name)
+        expect(sso2.username).to eq(@user.username)
+        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.admin).to eq(true)
+        expect(sso2.moderator).to eq(false)
+        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
 
-      get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload)
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
 
-      location = response.header["Location"]
-      expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        expect(sso2.avatar_url).to start_with(Discourse.base_url)
+        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+        expect(sso2.card_background_url).to start_with(Discourse.base_url)
+      end
 
-      payload = location.split("?")[1]
-      sso2 = SingleSignOn.parse(payload, "topsecret")
+      it "it fails to log in if secret is wrong" do
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
 
-      expect(sso2.email).to eq(@user.email)
-      expect(sso2.name).to eq(@user.name)
-      expect(sso2.username).to eq(@user.username)
-      expect(sso2.external_id).to eq(@user.id.to_s)
-      expect(sso2.admin).to eq(true)
-      expect(sso2.moderator).to eq(false)
+        expect(response.status).to eq(500)
+      end
 
-      expect(sso2.avatar_url.blank?).to_not eq(true)
-      expect(sso2.profile_background_url.blank?).to_not eq(true)
-      expect(sso2.card_background_url.blank?).to_not eq(true)
+      it "successfully redirects user to return_sso_url when the user is logged in" do
+        sign_in(@user)
 
-      expect(sso2.avatar_url).to start_with("#{Discourse.store.absolute_base_url}/original")
-      expect(sso2.profile_background_url).to start_with(Discourse.base_url)
-      expect(sso2.card_background_url).to start_with(Discourse.base_url)
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+
+        payload = location.split("?")[1]
+        sso2 = SingleSignOnProvider.parse(payload)
+
+        expect(sso2.email).to eq(@user.email)
+        expect(sso2.name).to eq(@user.name)
+        expect(sso2.username).to eq(@user.username)
+        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.admin).to eq(true)
+        expect(sso2.moderator).to eq(false)
+        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
+
+        expect(sso2.avatar_url).to start_with(Discourse.base_url)
+        expect(sso2.profile_background_url).to start_with(Discourse.base_url)
+        expect(sso2.card_background_url).to start_with(Discourse.base_url)
+      end
+
+      it 'handles non local content correctly' do
+        SiteSetting.avatar_sizes = "100|49"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = "XXX"
+        SiteSetting.s3_secret_access_key = "XXX"
+        SiteSetting.s3_upload_bucket = "test"
+        SiteSetting.s3_cdn_url = "http://cdn.com"
+
+        stub_request(:any, /test.s3.dualstack.us-east-1.amazonaws.com/).to_return(status: 200, body: "", headers: { referer: "fgdfds" })
+
+        @user.create_user_avatar!
+        upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
+
+        Fabricate(:optimized_image,
+          sha1: SecureRandom.hex << "A" * 8,
+          upload: upload,
+          width: 98,
+          height: 98,
+          url: "//test.s3.amazonaws.com/something/else"
+        )
+
+        @user.update_columns(uploaded_avatar_id: upload.id)
+        @user.user_profile.update_columns(
+          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
+          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
+        )
+
+        @user.reload
+        @user.user_avatar.reload
+        @user.user_profile.reload
+
+        sign_in(@user)
+
+        stub_request(:get, "http://cdn.com/something/else").to_return(
+          body: lambda { |request| File.new(Rails.root + 'spec/fixtures/images/logo.png') }
+        )
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        # javascript code will handle redirection of user to return_sso_url
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+
+        payload = location.split("?")[1]
+        sso2 = SingleSignOnProvider.parse(payload)
+
+        expect(sso2.avatar_url.blank?).to_not eq(true)
+        expect(sso2.profile_background_url.blank?).to_not eq(true)
+        expect(sso2.card_background_url.blank?).to_not eq(true)
+
+        expect(sso2.avatar_url).to start_with("#{SiteSetting.s3_cdn_url}/original")
+        expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
+        expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
+      end
     end
   end
 

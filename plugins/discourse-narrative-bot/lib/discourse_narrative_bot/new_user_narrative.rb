@@ -302,7 +302,6 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      @post.post_analyzer.cook(@post.raw, {})
       transition = true
       attempted_count = get_state_data(:attempted) || 0
 
@@ -313,7 +312,9 @@ module DiscourseNarrativeBot
         @data[:skip_attempted] = false
       end
 
-      if @post.post_analyzer.image_count > 0
+      cooked = @post.post_analyzer.cook(@post.raw, {})
+
+      if Nokogiri::HTML.fragment(cooked).css("img").size > 0
         set_state_data(:post_id, @post.id)
 
         if get_state_data(:liked)

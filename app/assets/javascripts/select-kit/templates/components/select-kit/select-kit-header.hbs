@@ -1,5 +1,9 @@
 {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
 <span class="selected-name">
-  {{{label}}}
+  {{#if forceEscape}}
+    {{label}}
+  {{else}}
+    {{{label}}}
+  {{/if}}
 </span>

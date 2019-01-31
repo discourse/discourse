@@ -111,6 +111,14 @@ describe UploadsController do
         expect(response.status).to eq(422)
       end
 
+      it 'always allows admins to upload avatars' do
+        sign_in(Fabricate(:admin))
+        SiteSetting.allow_uploaded_avatars = false
+
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(200)
+      end
+
       it 'allows staff to upload any file in PM' do
         SiteSetting.authorized_extensions = "jpg"
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true
@@ -124,7 +132,26 @@ describe UploadsController do
 
         expect(response.status).to eq(200)
         id = JSON.parse(response.body)["id"]
-        expect(id).to be_present
+        expect(Upload.last.id).to eq(id)
+      end
+
+      it 'allows staff to upload supported images for site settings' do
+        SiteSetting.authorized_extensions = ''
+        user.update!(admin: true)
+
+        post "/uploads.json", params: {
+          file: logo,
+          type: "site_setting",
+          for_site_setting: "true",
+        }
+
+        expect(response.status).to eq(200)
+        id = JSON.parse(response.body)["id"]
+
+        upload = Upload.last
+
+        expect(upload.id).to eq(id)
+        expect(upload.original_filename).to eq('logo.png')
       end
 
       it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
@@ -196,6 +223,14 @@ describe UploadsController do
 
     it "returns 404 when the upload doesn't exist" do
       get "/uploads/#{site}/#{sha}.pdf"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when the path is nil" do
+      upload = upload_file("logo.png")
+      upload.update_column(:url, "invalid-url")
+
+      get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
       expect(response.status).to eq(404)
     end
 

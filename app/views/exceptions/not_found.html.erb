@@ -11,7 +11,7 @@
           <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
         </div>
       <% end %>
-      <a href="<%= path "/top" %>" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
+      <a href="<%= path "/top" %>" class="btn btn-default"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </div>
     <div class="recent-topics">
       <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
@@ -20,7 +20,7 @@
           <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
         </div>
       <% end %>
-      <a href="<%= path "/latest" %>" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
+      <a href="<%= path "/latest" %>" class="btn btn-default"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </div>
   </div>
 <% end %>
@@ -38,11 +38,5 @@
     </div>
   </div>
 
-  <script language="Javascript">
-    window.onpopstate = function(event) {
-      if (event.state && !window.hasOwnProperty("Discourse")) {  //check if Discourse object exists if not take care of back navigation
-        window.location = document.location;
-      }
-    };
-  </script>
+  <%= preload_script('onpopstate-handler') %>
 <%- end %>

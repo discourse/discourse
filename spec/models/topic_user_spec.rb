@@ -240,7 +240,7 @@ describe TopicUser do
         create_post(
           archetype: Archetype.private_message,
           target_usernames: target_user.username
-        );
+        )
       end
 
       let(:topic) { post.topic }

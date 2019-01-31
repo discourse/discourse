@@ -17,7 +17,7 @@ export default RestrictedUserRoute.extend({
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
   deactivate: function() {
-    this._super();
+    this._super(...arguments);
     this.render("preferences", { into: "user", controller: "preferences" });
   },
 
@@ -38,7 +38,7 @@ export default RestrictedUserRoute.extend({
           function() {
             // model failed to save
             controller.set("saving", false);
-            alert(I18n.t("generic_error"));
+            bootbox.alert(I18n.t("generic_error"));
           }
         );
     }

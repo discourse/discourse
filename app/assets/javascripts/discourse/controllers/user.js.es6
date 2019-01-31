@@ -16,9 +16,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return currentUser && username === currentUser.get("username");
   },
 
-  @computed("viewingSelf")
-  canExpandProfile(viewingSelf) {
-    return viewingSelf;
+  @computed("viewingSelf", "model.profile_hidden")
+  canExpandProfile(viewingSelf, profileHidden) {
+    return !profileHidden && viewingSelf;
   },
 
   @computed("model.profileBackground")
@@ -26,8 +26,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !Ember.isEmpty(background.toString());
   },
 
-  @computed("indexStream", "viewingSelf", "forceExpand")
-  collapsedInfo(indexStream, viewingSelf, forceExpand) {
+  @computed("model.profile_hidden", "indexStream", "viewingSelf", "forceExpand")
+  collapsedInfo(profileHidden, indexStream, viewingSelf, forceExpand) {
+    if (profileHidden) {
+      return true;
+    }
     return (!indexStream || viewingSelf) && !forceExpand;
   },
 
@@ -50,7 +53,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !suspended || isStaff;
   },
 
-  linkWebsite: Em.computed.not("model.isBasic"),
+  linkWebsite: Ember.computed.not("model.isBasic"),
 
   @computed("model.trust_level")
   removeNoFollow(trustLevel) {

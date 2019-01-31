@@ -6,7 +6,7 @@ widgetTest("icon only button", {
   template: '{{mount-widget widget="button" args=args}}',
 
   beforeEach() {
-    this.set("args", { icon: "smile-o" });
+    this.set("args", { icon: "far-smile" });
   },
 
   test(assert) {
@@ -15,7 +15,7 @@ widgetTest("icon only button", {
       "it has all the classes"
     );
     assert.ok(
-      this.$("button .d-icon.d-icon-smile-o").length,
+      this.$("button .d-icon.d-icon-far-smile").length,
       "it has the icon"
     );
   }

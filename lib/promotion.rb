@@ -24,7 +24,7 @@ class Promotion
 
   def review_tl0
     if Promotion.tl1_met?(@user) && change_trust_level!(TrustLevel[1])
-      @user.enqueue_member_welcome_message
+      @user.enqueue_member_welcome_message unless @user.badges.where(id: Badge::BasicUser).count > 0
       return true
     end
     false
@@ -121,9 +121,11 @@ class Promotion
     end
 
     # Then consider the group locked level
-    if user.group_locked_trust_level
+    user_group_granted_trust_level = user.group_granted_trust_level
+
+    unless user_group_granted_trust_level.blank?
       return user.update!(
-        trust_level: user.group_locked_trust_level
+        trust_level: user_group_granted_trust_level
       )
     end
 

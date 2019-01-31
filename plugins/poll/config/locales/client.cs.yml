@@ -19,8 +19,6 @@ cs:
         many: "hlasů celkem"
         other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
-      public:
-        title: "Hlasy jsou veřejné."
       multiple:
         help:
           at_least_min_options:

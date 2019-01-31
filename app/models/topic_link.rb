@@ -111,147 +111,34 @@ SQL
   def self.extract_from(post)
     return if post.blank? || post.whisper?
 
-    added_urls = []
-    TopicLink.transaction do
+    current_urls = []
+    reflected_ids = []
 
-      added_urls = []
-      reflected_ids = []
+    PrettyText
+      .extract_links(post.cooked)
+      .map do |u|
+        uri = UrlHelper.relaxed_parse(u.url)
+        [u, uri]
+      end
+      .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
+      .uniq { |_, p| p }
+      .each do |link, parsed|
 
-      PrettyText
-        .extract_links(post.cooked)
-        .map do |u|
-          uri = begin
-            URI.parse(u.url)
-          rescue URI::Error
-          end
-
-          [u, uri]
-        end
-        .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
-        .uniq { |_, p| p }
-        .each do |link, parsed|
+      TopicLink.transaction do
         begin
-          url = link.url
-          internal = false
-          topic_id = nil
-          post_number = nil
-
-          if upload = Upload.get_from_url(url)
-            internal = Discourse.store.internal?
-            # Store the same URL that will be used in the cooked version of the post
-            url = UrlHelper.cook_url(upload.url)
-          elsif route = Discourse.route_for(parsed)
-            internal = true
-
-            # We aren't interested in tracking internal links to users
-            next if route[:controller] == 'users'
-
-            topic_id = route[:topic_id].to_i
-            post_number = route[:post_number] || 1
-
-            # Store the canonical URL
-            topic = Topic.find_by(id: topic_id)
-            topic_id = nil unless topic
-
-            if topic.present?
-              url = "#{Discourse.base_url_no_prefix}#{topic.relative_url}"
-              url << "/#{post_number}" if post_number.to_i > 1
-            end
-          end
-
-          # Skip linking to ourselves
-          next if topic_id == post.topic_id
-
-          reflected_post = nil
-          if post_number && topic_id
-            reflected_post = Post.find_by(topic_id: topic_id, post_number: post_number.to_i)
-          end
-
-          url = url[0...TopicLink.max_url_length]
-          next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
-
-          added_urls << url
-
-          unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
-            file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
-            begin
-              TopicLink.create!(post_id: post.id,
-                                user_id: post.user_id,
-                                topic_id: post.topic_id,
-                                url: url,
-                                domain: parsed.host || Discourse.current_hostname,
-                                internal: internal,
-                                link_topic_id: topic_id,
-                                link_post_id: reflected_post.try(:id),
-                                quote: link.is_quote,
-                                extension: file_extension)
-            rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
-              # it's fine
-            end
-          end
-
-          # Create the reflection if we can
-          if topic_id.present?
-            topic = Topic.find_by(id: topic_id)
-
-            if topic && post.topic && topic.archetype != 'private_message' && post.topic.archetype != 'private_message' && post.topic.visible?
-              prefix = Discourse.base_url_no_prefix
-              reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
-              tl = TopicLink.find_by(topic_id: topic_id,
-                                     post_id: reflected_post.try(:id),
-                                     url: reflected_url)
-
-              unless tl
-                tl = TopicLink.create(user_id: post.user_id,
-                                      topic_id: topic_id,
-                                      post_id: reflected_post.try(:id),
-                                      url: reflected_url,
-                                      domain: Discourse.current_hostname,
-                                      reflection: true,
-                                      internal: true,
-                                      link_topic_id: post.topic_id,
-                                      link_post_id: post.id)
-
-              end
-
-              reflected_ids << tl.id if tl.persisted?
-            end
-          end
-
+          url, reflected_id = self.ensure_entry_for(post, link, parsed)
+          current_urls << url unless url.nil?
+          reflected_ids << reflected_id unless reflected_id.nil?
         rescue URI::Error
           # if the URI is invalid, don't store it.
         rescue ActionController::RoutingError
           # If we can't find the route, no big deal
         end
       end
-
-      # Remove links that aren't there anymore
-      if added_urls.present?
-        TopicLink.where(
-          "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
-          urls: added_urls, post_id: post.id
-        ).delete_all
-
-        reflected_ids.compact!
-        if reflected_ids.present?
-          TopicLink.where(
-            "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-            reflected_ids: reflected_ids, post_id: post.id
-          ).delete_all
-        else
-          TopicLink
-            .where("link_post_id = :post_id AND reflection", post_id: post.id)
-            .delete_all
-        end
-      else
-        TopicLink
-          .where(
-            "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
-            post_id: post.id
-          )
-          .delete_all
-      end
     end
+
+    self.cleanup_entries(post, current_urls, reflected_ids)
+
   end
 
   # Crawl a link's title after it's saved
@@ -277,6 +164,128 @@ SQL
     end
 
     lookup
+  end
+
+  private
+
+  def self.ensure_entry_for(post, link, parsed)
+    url = link.url
+    internal = false
+    topic_id = nil
+    post_number = nil
+
+    if upload = Upload.get_from_url(url)
+      internal = Discourse.store.internal?
+      # Store the same URL that will be used in the cooked version of the post
+      url = UrlHelper.cook_url(upload.url)
+    elsif route = Discourse.route_for(parsed)
+      internal = true
+
+      # We aren't interested in tracking internal links to users
+      return nil if route[:controller] == 'users'
+
+      topic_id = route[:topic_id].to_i
+      post_number = route[:post_number] || 1
+
+      # Store the canonical URL
+      topic = Topic.find_by(id: topic_id)
+      topic_id = nil unless topic
+
+      if topic.present?
+        url = "#{Discourse.base_url_no_prefix}#{topic.relative_url}"
+        url << "/#{post_number}" if post_number.to_i > 1
+      end
+    end
+
+    # Skip linking to ourselves
+    return nil if topic_id == post.topic_id
+
+    reflected_post = nil
+    if post_number && topic_id
+      reflected_post = Post.find_by(topic_id: topic_id, post_number: post_number.to_i)
+    end
+
+    url = url[0...TopicLink.max_url_length]
+    return nil if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
+
+    unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+      file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
+      begin
+        TopicLink.create!(post_id: post.id,
+                          user_id: post.user_id,
+                          topic_id: post.topic_id,
+                          url: url,
+                          domain: parsed.host || Discourse.current_hostname,
+                          internal: internal,
+                          link_topic_id: topic_id,
+                          link_post_id: reflected_post.try(:id),
+                          quote: link.is_quote,
+                          extension: file_extension)
+      rescue ActiveRecord::RecordNotUnique
+        # it's fine
+      end
+    end
+
+    reflected_id = nil
+
+    # Create the reflection if we can
+    if topic_id.present?
+      topic = Topic.find_by(id: topic_id)
+
+      if topic && post.topic && topic.archetype != 'private_message' && post.topic.archetype != 'private_message' && post.topic.visible?
+        prefix = Discourse.base_url_no_prefix
+        reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
+        tl = TopicLink.find_by(topic_id: topic_id,
+                               post_id: reflected_post.try(:id),
+                               url: reflected_url)
+
+        unless tl
+          tl = TopicLink.create(user_id: post.user_id,
+                                topic_id: topic_id,
+                                post_id: reflected_post.try(:id),
+                                url: reflected_url,
+                                domain: Discourse.current_hostname,
+                                reflection: true,
+                                internal: true,
+                                link_topic_id: post.topic_id,
+                                link_post_id: post.id)
+
+        end
+
+        reflected_id = tl.id if tl.persisted?
+      end
+    end
+
+    [url, reflected_id]
+  end
+
+  def self.cleanup_entries(post, current_urls, current_reflected_ids)
+    # Remove links that aren't there anymore
+    if current_urls.present?
+      TopicLink.where(
+        "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
+        urls: current_urls, post_id: post.id
+      ).delete_all
+
+      current_reflected_ids.compact!
+      if current_reflected_ids.present?
+        TopicLink.where(
+          "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+          reflected_ids: current_reflected_ids, post_id: post.id
+        ).delete_all
+      else
+        TopicLink
+          .where("link_post_id = :post_id AND reflection", post_id: post.id)
+          .delete_all
+      end
+    else
+      TopicLink
+        .where(
+          "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+          post_id: post.id
+        )
+        .delete_all
+    end
   end
 end
 

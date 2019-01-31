@@ -5,6 +5,8 @@ require_dependency 'final_destination'
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
+  ONEBOX_CSS_CLASS = "onebox"
+
   # keep reloaders happy
   unless defined? Oneboxer::Result
     Result = Struct.new(:doc, :changed) do
@@ -24,6 +26,10 @@ module Oneboxer
 
   def self.force_get_hosts
     @force_get_hosts ||= ['http://us.battle.net']
+  end
+
+  def self.allowed_post_types
+    @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
   end
 
   def self.preview(url, options = nil)
@@ -63,11 +69,11 @@ module Oneboxer
   end
 
   # Parse URLs out of HTML, returning the document when finished.
-  def self.each_onebox_link(string_or_doc)
+  def self.each_onebox_link(string_or_doc, extra_paths: [])
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
 
-    onebox_links = doc.search("a.onebox")
+    onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
       onebox_links.each do |link|
         yield(link['href'], link) if link['href'].present?
@@ -79,13 +85,14 @@ module Oneboxer
 
   HTML5_BLOCK_ELEMENTS ||= %w{address article aside blockquote canvas center dd div dl dt fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr li main nav noscript ol output p pre section table tfoot ul video}
 
-  def self.apply(string_or_doc, args = nil)
+  def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
     changed = false
 
-    each_onebox_link(doc) do |url, element|
+    each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
+
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0
@@ -197,7 +204,7 @@ module Oneboxer
       topic.posts.where(post_number: post_number).first :
       topic.ordered_posts.first
 
-    return if !post || post.hidden || post.post_type != Post.types[:regular]
+    return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
     if post_number > 1 && current_topic&.id == topic.id
       excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -248,13 +255,19 @@ module Oneboxer
     end
   end
 
+  def self.blacklisted_domains
+    SiteSetting.onebox_domains_blacklist.split("|")
+  end
+
+  def self.preserve_fragment_url_hosts
+    @preserve_fragment_url_hosts ||= ['http://github.com']
+  end
+
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      ignored = SiteSetting.onebox_domains_blacklist.split("|")
-
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: ignored, force_get_hosts: force_get_hosts)
+      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
-      return blank_onebox if uri.blank? || ignored.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
         cache: {},

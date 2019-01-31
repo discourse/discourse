@@ -2,8 +2,14 @@ import { registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-var get = Em.get,
+var get = Ember.get,
   escapeExpression = Handlebars.Utils.escapeExpression;
+
+let _renderer = defaultCategoryLinkRenderer;
+
+export function replaceCategoryLinkRenderer(fn) {
+  _renderer = fn;
+}
 
 function categoryStripe(color, classes) {
   var style = color ? "style='background-color: #" + color + ";'" : "";
@@ -32,6 +38,43 @@ export function categoryBadgeHTML(category, opts) {
   )
     return "";
 
+  return _renderer(category, opts);
+}
+
+export function categoryLinkHTML(category, options) {
+  var categoryOptions = {};
+
+  // TODO: This is a compatibility layer with the old helper structure.
+  // Can be removed once we migrate to `registerUnbound` fully
+  if (options && options.hash) {
+    options = options.hash;
+  }
+
+  if (options) {
+    if (options.allowUncategorized) {
+      categoryOptions.allowUncategorized = true;
+    }
+    if (options.link !== undefined) {
+      categoryOptions.link = options.link;
+    }
+    if (options.extraClasses) {
+      categoryOptions.extraClasses = options.extraClasses;
+    }
+    if (options.hideParent) {
+      categoryOptions.hideParent = true;
+    }
+    if (options.categoryStyle) {
+      categoryOptions.categoryStyle = options.categoryStyle;
+    }
+  }
+  return new Handlebars.SafeString(
+    categoryBadgeHTML(category, categoryOptions)
+  );
+}
+
+registerUnbound("category-link", categoryLinkHTML);
+
+function defaultCategoryLinkRenderer(category, opts) {
   let description = get(category, "description_text");
   let restricted = get(category, "read_restricted");
   let url = opts.url
@@ -103,36 +146,3 @@ export function categoryBadgeHTML(category, opts) {
   extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>`;
 }
-
-export function categoryLinkHTML(category, options) {
-  var categoryOptions = {};
-
-  // TODO: This is a compatibility layer with the old helper structure.
-  // Can be removed once we migrate to `registerUnbound` fully
-  if (options && options.hash) {
-    options = options.hash;
-  }
-
-  if (options) {
-    if (options.allowUncategorized) {
-      categoryOptions.allowUncategorized = true;
-    }
-    if (options.link !== undefined) {
-      categoryOptions.link = options.link;
-    }
-    if (options.extraClasses) {
-      categoryOptions.extraClasses = options.extraClasses;
-    }
-    if (options.hideParent) {
-      categoryOptions.hideParent = true;
-    }
-    if (options.categoryStyle) {
-      categoryOptions.categoryStyle = options.categoryStyle;
-    }
-  }
-  return new Handlebars.SafeString(
-    categoryBadgeHTML(category, categoryOptions)
-  );
-}
-
-registerUnbound("category-link", categoryLinkHTML);

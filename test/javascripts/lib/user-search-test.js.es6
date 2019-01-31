@@ -66,3 +66,8 @@ QUnit.test("it places groups unconditionally for exact match", async assert => {
   let results = await userSearch({ term: "Team" });
   assert.equal(results[results.length - 1]["name"], "team");
 });
+
+QUnit.test("it strips @ from the beginning", async assert => {
+  let results = await userSearch({ term: "@Team" });
+  assert.equal(results[results.length - 1]["name"], "team");
+});

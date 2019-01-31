@@ -38,11 +38,16 @@ class CurrentUserSerializer < BasicUserSerializer
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
-             :primary_group_name,
              :can_create_topic,
              :link_posting_access,
              :external_id,
-             :top_category_ids
+             :top_category_ids,
+             :hide_profile_and_presence,
+             :groups
+
+  def groups
+    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
+  end
 
   def link_posting_access
     scope.link_posting_access
@@ -66,6 +71,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def reply_count
     object.user_stat.topic_reply_count
+  end
+
+  def hide_profile_and_presence
+    object.user_option.hide_profile_and_presence
   end
 
   def enable_quoting
@@ -201,14 +210,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_primary_group_id?
     object.primary_group_id.present?
-  end
-
-  def primary_group_name
-    object.primary_group.name.downcase
-  end
-
-  def include_primary_group_name?
-    object.primary_group&.name.present?
   end
 
   def external_id

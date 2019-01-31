@@ -14,6 +14,26 @@ describe Scheduler::Defer do
     end
   end
 
+  class TrackingLogger < ::Logger
+    attr_reader :messages
+    def initialize
+      super(nil)
+      @messages = []
+    end
+    def add(*args, &block)
+      @messages << args
+    end
+  end
+
+  def track_log_messages
+    old_logger = Rails.logger
+    logger = Rails.logger = TrackingLogger.new
+    yield logger.messages
+    logger.messages
+  ensure
+    Rails.logger = old_logger
+  end
+
   before do
     @defer = DeferInstance.new
     @defer.async = true
@@ -21,6 +41,26 @@ describe Scheduler::Defer do
 
   after do
     @defer.stop!
+  end
+
+  it "supports timeout reporting" do
+    @defer.timeout = 0.05
+
+    m = track_log_messages do |messages|
+      10.times do
+        @defer.later("fast job") {}
+      end
+      @defer.later "weird slow job" do
+        sleep
+      end
+
+      wait_for(200) do
+        messages.length == 1
+      end
+    end
+
+    expect(m.length).to eq(1)
+    expect(m[0][2]).to include("weird slow job")
   end
 
   it "can pause and resume" do

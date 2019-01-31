@@ -2,7 +2,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   init() {
-    this._super();
+    this._super(...arguments);
 
     this._previousScrollParentOverflow = null;
     this._previousCSSContext = null;
@@ -63,10 +63,9 @@ export default Ember.Mixin.create({
     return this.$(this.filterInputSelector);
   },
 
-  @on("didRender")
   _adjustPosition() {
-    this._applyFixedPosition();
     this._applyDirection();
+    this._applyFixedPosition();
     this._positionWrapper();
   },
 
@@ -124,15 +123,27 @@ export default Ember.Mixin.create({
     });
     this.focusFilterOrHeader();
     this.autoHighlight();
-    this._boundaryActionHandler("onExpand", this);
+
+    Ember.run.next(() => {
+      this._boundaryActionHandler("onExpand", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._adjustPosition();
+        }
+      });
+    });
   },
 
   collapse() {
     this.set("isExpanded", false);
 
     Ember.run.next(() => {
-      Ember.run.schedule("afterRender", () => this._removeFixedPosition());
       this._boundaryActionHandler("onCollapse", this);
+      Ember.run.schedule("afterRender", () => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._removeFixedPosition();
+        }
+      });
     });
   },
 
@@ -181,38 +192,61 @@ export default Ember.Mixin.create({
         : windowWidth;
       const bodyWidth = this._computedStyle(this.$body()[0], "width");
 
-      let marginToEdge;
+      let spaceToLeftEdge;
       if (this.$scrollableParent().length) {
-        marginToEdge =
+        spaceToLeftEdge =
           this.$().offset().left - this.$scrollableParent().offset().left;
       } else {
-        marginToEdge = this.get("element").getBoundingClientRect().left;
+        spaceToLeftEdge = this.get("element").getBoundingClientRect().left;
       }
 
-      const enoughMarginToOppositeEdge =
-        parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset") >
-        0;
-      if (enoughMarginToOppositeEdge) {
-        this.setProperties({ isLeftAligned: true, isRightAligned: false });
-        options.left = this.get("horizontalOffset");
-        options.right = "unset";
+      let isLeftAligned = true;
+      const spaceToRightEdge = parentWidth - spaceToLeftEdge;
+      const elementWidth = this.get("element").getBoundingClientRect().width;
+      if (spaceToRightEdge > spaceToLeftEdge + elementWidth) {
+        isLeftAligned = false;
+      }
+
+      if (isLeftAligned) {
+        this.$()
+          .addClass("is-left-aligned")
+          .removeClass("is-right-aligned");
+
+        if (this._isRTL()) {
+          options.right = this.get("horizontalOffset");
+        } else {
+          options.left =
+            -bodyWidth + elementWidth - this.get("horizontalOffset");
+        }
       } else {
-        this.setProperties({ isLeftAligned: false, isRightAligned: true });
-        options.left = "unset";
-        options.right = this.get("horizontalOffset");
+        this.$()
+          .addClass("is-right-aligned")
+          .removeClass("is-left-aligned");
+
+        if (this._isRTL()) {
+          options.right =
+            -bodyWidth + elementWidth - this.get("horizontalOffset");
+        } else {
+          options.left = this.get("horizontalOffset");
+        }
       }
     }
 
     const fullHeight =
       this.get("verticalOffset") + bodyHeight + componentHeight;
-    const hasBelowSpace = $(window).height() - offsetBottom - fullHeight > 0;
-    const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight > 0;
+    const hasBelowSpace = $(window).height() - offsetBottom - fullHeight >= -1;
+    const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight >= -1;
     const headerHeight = this._computedStyle(this.$header()[0], "height");
+
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
-      this.setProperties({ isBelow: true, isAbove: false });
+      this.$()
+        .addClass("is-below")
+        .removeClass("is-above");
       options.top = headerHeight + this.get("verticalOffset");
     } else {
-      this.setProperties({ isBelow: false, isAbove: true });
+      this.$()
+        .addClass("is-above")
+        .removeClass("is-below");
       options.bottom = headerHeight + this.get("verticalOffset");
     }
 
@@ -260,6 +294,7 @@ export default Ember.Mixin.create({
       display: "inline-block",
       width,
       height,
+      "margin-bottom": this.$().css("margin-bottom"),
       "vertical-align": "middle"
     });
 

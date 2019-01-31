@@ -3,7 +3,11 @@
 
   <section class='category-heading'>
     {{#if category.uploaded_logo.url}}
-      {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
+      {{cdn-img
+        src=category.uploaded_logo.url
+        class="category-logo"
+        width=category.uploaded_logo.width
+        height=category.uploaded_logo.height}}
       {{#if category.description}}
         <p>{{{dir-span category.description}}}</p>
       {{/if}}

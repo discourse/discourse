@@ -3,7 +3,7 @@ require 'rails_helper'
 describe ApplicationRequest do
   before do
     ApplicationRequest.last_flush = Time.now.utc
-    ApplicationRequest.clear_cache!
+    $redis.flushall
   end
 
   after do

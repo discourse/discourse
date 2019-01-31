@@ -1,32 +1,73 @@
 module SiteSettings; end
 
 module SiteSettings::DeprecatedSettings
-  DEPRECATED_SETTINGS = [
-    %w[use_https force_https 1.7],
-    %w[min_private_message_post_length min_personal_message_post_length 2.0],
-    %w[min_private_message_title_length min_personal_message_title_length 2.0],
-    %w[enable_private_messages enable_personal_messages 2.0],
-    %w[enable_private_email_messages enable_personal_email_messages 2.0],
-    %w[private_email_time_window_seconds personal_email_time_window_seconds 2.0],
-    %w[max_private_messages_per_day max_personal_messages_per_day 2.0],
-    %w[default_email_private_messages default_email_personal_messages 2.0]
+  SETTINGS = [
+    ['logo_url', 'logo', false, '2.4'],
+    ['logo_small_url', 'logo_small', false, '2.4'],
+    ['digest_logo_url', 'digest_logo', false, '2.4'],
+    ['mobile_logo_url', 'mobile_logo', false, '2.4'],
+    ['large_icon_url', 'large_icon', false, '2.4'],
+    ['favicon_url', 'favicon', false, '2.4'],
+    ['apple_touch_icon_url', 'apple_touch_icon', false, '2.4'],
+    ['default_opengraph_image_url', 'opengraph_image', false, '2.4'],
+    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.4'],
+    ['push_notifications_icon_url', 'push_notifications_icon', false, '2.4']
   ]
 
   def setup_deprecated_methods
-    DEPRECATED_SETTINGS.each do |old_setting, new_setting, version|
-      define_singleton_method old_setting do
-        logger.warn("`SiteSetting.#{old_setting}` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}` instead")
-        self.public_send new_setting
+    SETTINGS.each do |old_setting, new_setting, override, version|
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}", :"#{old_setting}"
+        )
       end
 
-      define_singleton_method "#{old_setting}?" do
-        logger.warn("`SiteSetting.#{old_setting}?` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}?` instead")
-        self.public_send "#{new_setting}?"
+      define_singleton_method old_setting do |warn: true|
+        if warn
+          logger.warn(
+            "`SiteSetting.#{old_setting}` has been deprecated and will be " +
+            "removed in the #{version} Release. Please use " +
+            "`SiteSetting.#{new_setting}` instead"
+          )
+        end
+
+        self.public_send(override ? new_setting : "_#{old_setting}")
       end
 
-      define_singleton_method "#{old_setting}=" do |val|
-        logger.warn("`SiteSetting.#{old_setting}=` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}=` instead")
-        self.public_send "#{new_setting}=", val
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}?", :"#{old_setting}?"
+        )
+      end
+
+      define_singleton_method "#{old_setting}?" do |warn: true|
+        if warn
+          logger.warn(
+            "`SiteSetting.#{old_setting}?` has been deprecated and will be " +
+            "removed in the #{version} Release. Please use " +
+            "`SiteSetting.#{new_setting}?` instead"
+          )
+        end
+
+        self.public_send("#{override ? new_setting : "_" + old_setting}?")
+      end
+
+      unless override
+        SiteSetting.singleton_class.public_send(
+          :alias_method, :"_#{old_setting}=", :"#{old_setting}="
+        )
+      end
+
+      define_singleton_method "#{old_setting}=" do |val, warn: true|
+        if warn
+          logger.warn(
+            "`SiteSetting.#{old_setting}=` has been deprecated and will be " +
+            "removed in the #{version} Release. Please use " +
+            "`SiteSetting.#{new_setting}=` instead"
+          )
+        end
+
+        self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
       end
     end
   end

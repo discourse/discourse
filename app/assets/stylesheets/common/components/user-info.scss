@@ -7,6 +7,12 @@
   .user-image {
     float: left;
     padding-right: 4px;
+    margin-right: 10px;
+  }
+
+  .user-image-inner {
+    position: relative;
+    display: inline-block;
   }
 
   .user-detail {

@@ -33,12 +33,34 @@ def upload(path, remote_path, content_type, content_encoding = nil)
     puts "Skipping: #{remote_path}"
   else
     puts "Uploading: #{remote_path}"
-    helper.upload(path, remote_path, options)
+
+    File.open(path) do |file|
+      helper.upload(file, remote_path, options)
+    end
   end
 end
 
+def use_db_s3_config
+  ENV["USE_DB_S3_CONFIG"]
+end
+
 def helper
-  @helper ||= S3Helper.new(GlobalSetting.s3_bucket.downcase, '', S3Helper.s3_options(GlobalSetting))
+  @helper ||= begin
+    bucket, options =
+      if use_db_s3_config
+        [
+          SiteSetting.s3_upload_bucket.downcase,
+          S3Helper.s3_options(SiteSetting)
+        ]
+      else
+        [
+          GlobalSetting.s3_bucket.downcase,
+          S3Helper.s3_options(GlobalSetting)
+        ]
+      end
+
+    S3Helper.new(bucket, '', options)
+  end
 end
 
 def assets
@@ -76,14 +98,50 @@ def asset_paths
 end
 
 def ensure_s3_configured!
-  unless GlobalSetting.use_s3?
+  unless GlobalSetting.use_s3? || use_db_s3_config
     STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
     exit 1
   end
 end
 
+task 's3:correct_acl' => :environment do
+  ensure_s3_configured!
+
+  puts "ensuring public-read is set on every upload and optimized image"
+
+  i = 0
+
+  base_url = Discourse.store.absolute_base_url
+
+  objects = Upload.pluck(:id, :url).map { |array| array << :upload }
+  objects.concat(OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image })
+
+  puts "#{objects.length} objects found"
+
+  objects.each do |id, url, type|
+    i += 1
+    if !url.start_with?(base_url)
+      puts "Skipping #{type} #{id} since it is not stored on s3, url is #{url}"
+    else
+      begin
+        key = url[(base_url.length + 1)..-1]
+        object = Discourse.store.s3_helper.object(key)
+        object.acl.put(acl: "public-read")
+      rescue => e
+        puts "Skipping #{type} #{id} url is #{url} #{e}"
+      end
+    end
+    if i % 100 == 0
+      puts "#{i} done"
+    end
+  end
+
+end
+
 task 's3:upload_assets' => :environment do
   ensure_s3_configured!
+
+  puts "installing CORS rule"
   helper.ensure_cors!
 
   assets.each do |asset|

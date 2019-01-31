@@ -17,8 +17,6 @@ bs_BA:
         few: "ukupno glasova"
         other: "ukupno glasova"
       average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
-      public:
-        title: "Glasovi su javni."
       multiple:
         help:
           at_least_min_options:

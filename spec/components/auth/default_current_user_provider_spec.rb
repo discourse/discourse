@@ -32,7 +32,11 @@ describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct per-user api key" do
       user = Fabricate(:user)
       ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
-      expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
+      good_provider = provider("/?api_key=hello")
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(good_provider.is_api?).to eq(true)
+      expect(good_provider.is_user_api?).to eq(false)
+      expect(good_provider.should_update_last_seen?).to eq(false)
 
       user.update_columns(active: false)
 
@@ -156,18 +160,23 @@ describe Auth::DefaultCurrentUserProvider do
           ).should_update_last_seen?).to eq(false)
   end
 
-  it "should not update last seen for suspended users" do
-    user = Fabricate(:user)
-    provider = provider('/')
-    cookies = {}
-    provider.log_on_user(user, {}, cookies)
-    unhashed_token = cookies["_t"][:value]
+  describe "#current_user" do
+    let(:user) { Fabricate(:user) }
 
-    freeze_time
-    Sidekiq::Testing.inline! do
-      # Need to clear this key from redis, otherwise
-      # this test could fail if run twice in 1 minute
-      $redis.del("user:#{user.id}:#{Time.now.to_date}")
+    let(:unhashed_token) do
+      new_provider = provider('/')
+      cookies = {}
+      new_provider.log_on_user(user, {}, cookies)
+      cookies["_t"][:value]
+    end
+
+    after do
+      $redis.flushall
+    end
+
+    it "should not update last seen for suspended users" do
+      freeze_time
+
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       u = provider2.current_user
       u.reload
@@ -187,6 +196,22 @@ describe Auth::DefaultCurrentUserProvider do
       expect(u.last_seen_at).to eq(nil)
     end
 
+    describe "when readonly mode is enabled due to postgres" do
+      before do
+        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
+
+      after do
+        Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
+
+      it "should not update last seen at" do
+        provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+        u = provider2.current_user
+        u.reload
+        expect(u.last_seen_at).to eq(nil)
+      end
+    end
   end
 
   it "should update ajax reqs with discourse visible" do
@@ -399,6 +424,7 @@ describe Auth::DefaultCurrentUserProvider do
       expect(good_provider.current_user.id).to eq(user.id)
       expect(good_provider.is_api?).to eq(false)
       expect(good_provider.is_user_api?).to eq(true)
+      expect(good_provider.should_update_last_seen?).to eq(false)
 
       expect {
         provider("/", params.merge("REQUEST_METHOD" => "POST")).current_user

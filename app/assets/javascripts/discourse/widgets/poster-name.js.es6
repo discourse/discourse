@@ -42,7 +42,9 @@ export default createWidget("poster-name", {
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator) {
-      return iconNode("shield", { title: I18n.t("user.moderator_tooltip") });
+      return iconNode("shield-alt", {
+        title: I18n.t("user.moderator_tooltip")
+      });
     }
   },
 

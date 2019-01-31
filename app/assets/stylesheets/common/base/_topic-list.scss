@@ -15,12 +15,12 @@
   clear: both;
   margin-bottom: 5px;
   .combo-box .combo-box-header {
-    background: $primary-low;
+    background: $secondary;
     color: $primary;
-    border: 1px solid transparent;
-    padding: 5px 6px 5px 10px;
+    border: 1px solid $primary-medium;
     font-size: $font-0;
     transition: none;
+    height: 10px; // IE11 needs any height here for vertical centering, overriden elsewhere by min-height
   }
   .select-kit {
     align-self: center;
@@ -33,6 +33,7 @@
       }
     }
     &.categories-admin-dropdown,
+    &.tags-admin-dropdown,
     &.category-notifications-button,
     &.tag-notifications-button {
       float: right;
@@ -40,6 +41,9 @@
         display: inline-block;
       }
     }
+  }
+  .category-heading {
+    max-width: 100%;
   }
 }
 
@@ -93,7 +97,7 @@
     border: none;
 
     td {
-      border-bottom: 1px solid $danger-low;
+      border-bottom: 1px solid $danger-medium;
       line-height: 0.1em;
       padding: 0;
       text-align: center;
@@ -101,7 +105,7 @@
 
     td span {
       background-color: $secondary;
-      color: $danger-low;
+      color: $danger-medium;
       padding: 0 8px;
       font-size: $font-down-1;
     }
@@ -130,34 +134,42 @@
     @extend .topic-list-main-link;
   }
 
-  .topic-featured-link {
-    padding-left: 5px;
+  .link-bottom-line {
+    font-size: $font-down-1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    .discourse-tags {
+      flex-wrap: wrap;
+      // IE11 is being very stubborn but this is only protection for topics with
+      // a very excessive number of extra long tags - edge case.
+      -ms-flex: 1 0 0px;
+    }
+    a.badge-wrapper.box,
+    a.discourse-tag.box {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .discourse-tag.simple:after,
+    .discourse-tag.box {
+      margin-right: 0.25em;
+    }
   }
 
-  span.badge-category {
-    .category-name {
-      max-width: 150px;
-    }
+  .topic-featured-link {
+    padding-left: 5px;
   }
 
   .topic-excerpt {
     font-size: $font-down-1;
     margin-top: 5px;
-    color: dark-light-choose($primary-high, $secondary-high);
+    color: $primary-high;
     word-wrap: break-word;
     line-height: $line-height-large;
     padding-right: 20px;
   }
   .topic-statuses:empty {
     display: none;
-  }
-  .topic-status {
-    margin-right: 4px;
-    padding: 0;
-    font-size: 1.071em;
-    &:last-of-type {
-      margin-right: 0;
-    }
   }
 
   .num {
@@ -250,16 +262,8 @@ ol.category-breadcrumb {
   }
 }
 
-.d-icon-thumb-tack.unpinned {
-  @include fa-icon-rotate(180deg, 1);
-  color: $primary;
-  /* because it is rotated, right becomes left! */
-  padding-left: 3px;
-  padding-right: 0 !important;
-}
-
-.topic-statuses .fa {
-  padding-right: 3px;
+.d-icon-thumbtack.unpinned {
+  @include fa-rotate(180deg, 1);
 }
 
 .top-title-buttons {
@@ -272,6 +276,9 @@ ol.category-breadcrumb {
 
 div.education {
   color: dark-light-choose($primary-medium, $secondary-medium);
+  .badge-notification.new-posts {
+    vertical-align: text-bottom;
+  }
 }
 
 .list-cell {
@@ -295,4 +302,6 @@ div.education {
 //     right *
 .topic-post-badges {
   white-space: nowrap;
+  align-self: center;
+  line-height: $line-height-medium;
 }

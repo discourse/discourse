@@ -2,5 +2,11 @@
   {{{template}}}
 {{else}}
   {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
-  <span class="name">{{{label}}}</span>
+  <span class="name">
+    {{#if forceEscape}}
+      {{label}}
+    {{else}}
+      {{{label}}}
+    {{/if}}
+  </span>
 {{/if}}

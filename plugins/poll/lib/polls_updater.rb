@@ -1,132 +1,116 @@
+# frozen_string_literal: true
+
 module DiscoursePoll
   class PollsUpdater
-    VALID_POLLS_CONFIGS = %w{type min max public close}.map(&:freeze)
+
+    POLL_ATTRIBUTES ||= %w{close_at max min results status step type visibility}
 
     def self.update(post, polls)
-      # load previous polls
-      previous_polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] || {}
+      ::Poll.transaction do
+        has_changed = false
+        edit_window = SiteSetting.poll_edit_window_mins
 
-      # extract options
-      current_option_ids = extract_option_ids(polls)
-      previous_option_ids = extract_option_ids(previous_polls)
+        old_poll_names = ::Poll.where(post: post).pluck(:name)
+        new_poll_names = polls.keys
 
-      # are the polls different?
-      if polls_updated?(polls, previous_polls) || (current_option_ids != previous_option_ids)
-        has_votes = total_votes(previous_polls) > 0
+        deleted_poll_names = old_poll_names - new_poll_names
+        created_poll_names = new_poll_names - old_poll_names
 
-        # outside of the edit window?
-        poll_edit_window_mins = SiteSetting.poll_edit_window_mins
+        # delete polls
+        if deleted_poll_names.present?
+          ::Poll.where(post: post, name: deleted_poll_names).destroy_all
+        end
 
-        if post.created_at < poll_edit_window_mins.minutes.ago && has_votes
-          # deal with option changes
-          if User.staff.where(id: post.last_editor_id).exists?
-            # staff can edit options
-            polls.each_key do |poll_name|
-              if polls.dig(poll_name, "options")&.size != previous_polls.dig(poll_name, "options")&.size && previous_polls.dig(poll_name, "voters").to_i > 0
-                post.errors.add(:base, I18n.t("poll.edit_window_expired.staff_cannot_add_or_remove_options", minutes: poll_edit_window_mins))
+        # create polls
+        if created_poll_names.present?
+          has_changed = true
+          polls.slice(*created_poll_names).values.each do |poll|
+            Poll.create!(post.id, poll)
+          end
+        end
+
+        # update polls
+        ::Poll.includes(:poll_votes, :poll_options).where(post: post).find_each do |old_poll|
+          new_poll = polls[old_poll.name]
+          new_poll_options = new_poll["options"]
+
+          attributes = new_poll.slice(*POLL_ATTRIBUTES)
+          attributes["visibility"] = new_poll["public"] == "true" ? "everyone" : "secret"
+          attributes["close_at"] = Time.zone.parse(new_poll["close"]) rescue nil
+          attributes["status"] = old_poll["status"]
+          poll = ::Poll.new(attributes)
+
+          if is_different?(old_poll, poll, new_poll_options)
+
+            # only prevent changes when there's at least 1 vote
+            if old_poll.poll_votes.size > 0
+              # can't change after edit window (when enabled)
+              if edit_window > 0 && old_poll.created_at < edit_window.minutes.ago
+                error = poll.name == DiscoursePoll::DEFAULT_POLL_NAME ?
+                  I18n.t("poll.edit_window_expired.cannot_edit_default_poll_with_votes", minutes: edit_window) :
+                  I18n.t("poll.edit_window_expired.cannot_edit_named_poll_with_votes", minutes: edit_window, name: poll.name)
+
+                post.errors.add(:base, error)
                 return
               end
             end
-          else
-            # OP cannot edit poll options
-            post.errors.add(:base, I18n.t("poll.edit_window_expired.op_cannot_edit_options", minutes: poll_edit_window_mins))
-            return
+
+            # update poll
+            POLL_ATTRIBUTES.each do |attr|
+              old_poll.send("#{attr}=", poll.send(attr))
+            end
+            old_poll.save!
+
+            # keep track of anonymous votes
+            anonymous_votes = old_poll.poll_options.map { |pv| [pv.digest, pv.anonymous_votes] }.to_h
+
+            # destroy existing options & votes
+            ::PollOption.where(poll: old_poll).destroy_all
+
+            # create new options
+            new_poll_options.each do |option|
+              ::PollOption.create!(
+                poll: old_poll,
+                digest: option["id"],
+                html: option["html"].strip,
+                anonymous_votes: anonymous_votes[option["id"]],
+              )
+            end
+
+            has_changed = true
           end
         end
 
-        # try to merge votes
-        polls.each_key do |poll_name|
-          next unless previous_polls.has_key?(poll_name)
-          return if has_votes && private_to_public_poll?(post, previous_polls, polls, poll_name)
-
-          # when the # of options has changed, reset all the votes
-          if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
-            PostCustomField.where(post_id: post.id, name: DiscoursePoll::VOTES_CUSTOM_FIELD).destroy_all
-            post.clear_custom_fields
-            next
-          end
-
-          polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
-
-          if previous_polls[poll_name].has_key?("anonymous_voters")
-            polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"]
-          end
-
-          previous_options = previous_polls[poll_name]["options"]
-          public_poll = polls[poll_name]["public"] == "true"
-
-          polls[poll_name]["options"].each_with_index do |option, index|
-            previous_option = previous_options[index]
-            option["votes"] = previous_option["votes"]
-
-            if previous_option["id"] != option["id"]
-              if votes_fields = post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
-                votes_fields.each do |key, value|
-                  next unless value[poll_name]
-                  index = value[poll_name].index(previous_option["id"])
-                  votes_fields[key][poll_name][index] = option["id"] if index
-                end
-              end
-            end
-
-            if previous_option.has_key?("anonymous_votes")
-              option["anonymous_votes"] = previous_option["anonymous_votes"]
-            end
-
-            if public_poll && previous_option.has_key?("voter_ids")
-              option["voter_ids"] = previous_option["voter_ids"]
-            end
-          end
+        if ::Poll.exists?(post: post)
+          post.custom_fields[HAS_POLLS] = true
+        else
+          post.custom_fields.delete(HAS_POLLS)
         end
 
-        # immediately store the polls
-        post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = polls
         post.save_custom_fields(true)
 
-        # re-schedule jobs
-        DiscoursePoll::Poll.schedule_jobs(post)
-
-        # publish the changes
-        MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
-      end
-    end
-
-    def self.polls_updated?(current_polls, previous_polls)
-      return true if (current_polls.keys.sort != previous_polls.keys.sort)
-
-      current_polls.each_key do |poll_name|
-        if !previous_polls[poll_name] || (current_polls[poll_name].values_at(*VALID_POLLS_CONFIGS) != previous_polls[poll_name].values_at(*VALID_POLLS_CONFIGS))
-          return true
+        if has_changed
+          polls = ::Poll.includes(poll_options: :poll_votes).where(post: post)
+          polls = ActiveModel::ArraySerializer.new(polls, each_serializer: PollSerializer, root: false).as_json
+          post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
         end
       end
-
-      false
-    end
-
-    def self.extract_option_ids(polls)
-      polls.values.map { |p| p["options"].map { |o| o["id"] } }.flatten.sort
-    end
-
-    def self.total_votes(polls)
-      polls.map { |key, value| value["voters"].to_i }.sum
     end
 
     private
 
-    def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
-      previous_poll = previous_polls[poll_name]
-      current_poll  = current_polls[poll_name]
-
-      if previous_poll["public"].nil? && current_poll["public"] == "true"
-        error = poll_name == DiscoursePoll::DEFAULT_POLL_NAME ?
-          I18n.t("poll.default_cannot_be_made_public") :
-          I18n.t("poll.named_cannot_be_made_public", name: poll_name)
-
-        post.errors.add(:base, error)
-        return true
+    def self.is_different?(old_poll, new_poll, new_options)
+      # an attribute was changed?
+      POLL_ATTRIBUTES.each do |attr|
+        return true if old_poll.send(attr) != new_poll.send(attr)
       end
 
+      # an option was changed?
+      return true if old_poll.poll_options.map { |o| o.digest }.sort != new_options.map { |o| o["id"] }.sort
+
+      # it's the same!
       false
     end
+
   end
 end

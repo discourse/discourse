@@ -6,8 +6,23 @@ export default Ember.Component.extend({
   limit: 8,
   total: 0,
 
+  init() {
+    this._super(...arguments);
+
+    this.resizeHandler = () =>
+      Ember.run.debounce(this, this._scheduleChartRendering, 500);
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    $(window).on("resize.chart", this.resizeHandler);
+  },
+
   willDestroyElement() {
     this._super(...arguments);
+
+    $(window).off("resize.chart", this.resizeHandler);
 
     this._resetChart();
   },
@@ -15,49 +30,59 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
+    Ember.run.debounce(this, this._scheduleChartRendering, 100);
+  },
+
+  _scheduleChartRendering() {
     Ember.run.schedule("afterRender", () => {
-      const $chartCanvas = this.$(".chart-canvas");
-      if (!$chartCanvas || !$chartCanvas.length) return;
+      this._renderChart(this.get("model"), this.$(".chart-canvas"));
+    });
+  },
 
-      const context = $chartCanvas[0].getContext("2d");
-      const model = this.get("model");
-      const chartData = Ember.makeArray(
-        model.get("chartData") || model.get("data")
-      );
-      const prevChartData = Ember.makeArray(
-        model.get("prevChartData") || model.get("prev_data")
-      );
+  _renderChart(model, $chartCanvas) {
+    if (!$chartCanvas || !$chartCanvas.length) return;
 
-      const labels = chartData.map(d => d.x);
+    const context = $chartCanvas[0].getContext("2d");
+    const chartData = Ember.makeArray(
+      model.get("chartData") || model.get("data")
+    );
+    const prevChartData = Ember.makeArray(
+      model.get("prevChartData") || model.get("prev_data")
+    );
 
-      const data = {
-        labels,
-        datasets: [
-          {
-            data: chartData.map(d => Math.round(parseFloat(d.y))),
-            backgroundColor: prevChartData.length
-              ? "transparent"
-              : model.secondary_color,
-            borderColor: model.primary_color
-          }
-        ]
-      };
+    const labels = chartData.map(d => d.x);
 
-      if (prevChartData.length) {
-        data.datasets.push({
-          data: prevChartData.map(d => Math.round(parseFloat(d.y))),
+    const data = {
+      labels,
+      datasets: [
+        {
+          data: chartData.map(d => Math.round(parseFloat(d.y))),
+          backgroundColor: prevChartData.length
+            ? "transparent"
+            : model.secondary_color,
           borderColor: model.primary_color,
-          borderDash: [5, 5],
-          backgroundColor: "transparent",
+          pointRadius: 3,
           borderWidth: 1,
-          pointRadius: 0
-        });
-      }
+          pointBackgroundColor: model.primary_color,
+          pointBorderColor: model.primary_color
+        }
+      ]
+    };
 
-      loadScript("/javascripts/Chart.min.js").then(() => {
-        this._resetChart();
-        this._chart = new window.Chart(context, this._buildChartConfig(data));
+    if (prevChartData.length) {
+      data.datasets.push({
+        data: prevChartData.map(d => Math.round(parseFloat(d.y))),
+        borderColor: model.primary_color,
+        borderDash: [5, 5],
+        backgroundColor: "transparent",
+        borderWidth: 1,
+        pointRadius: 0
       });
+    }
+
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      this._resetChart();
+      this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },
 
@@ -89,7 +114,12 @@ export default Ember.Component.extend({
           yAxes: [
             {
               display: true,
-              ticks: { callback: label => number(label) }
+              ticks: {
+                userCallback: label => {
+                  if (Math.floor(label) === label) return label;
+                },
+                callback: label => number(label)
+              }
             }
           ],
           xAxes: [

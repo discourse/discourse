@@ -2,7 +2,7 @@
   <div class="section dashboard-problems">
     <div class="section-title">
       <h2>
-        {{d-icon "exclamation-triangle"}}
+        {{d-icon "heart"}}
         {{i18n 'admin.dashboard.problems_found'}}
       </h2>
     </div>
@@ -18,8 +18,8 @@
         </div>
 
         <p class="actions">
-          <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
-          {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
+          {{d-button action=(action "refreshProblems") class="btn-default" icon="refresh" label="admin.dashboard.refresh_problems"}}
+          {{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}
         </p>
       {{/conditional-loading-section}}
     </div>

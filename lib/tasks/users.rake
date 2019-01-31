@@ -147,6 +147,48 @@ task "users:disable_2fa", [:username] => [:environment] do |_, args|
   puts "2FA disabled for #{username}"
 end
 
+desc "Anonymize all users except staff"
+task "users:anonymize_all" => :environment do
+  require 'highline/import'
+
+  non_staff_users = User.where('NOT admin AND NOT moderator')
+  total = non_staff_users.count
+  anonymized = 0
+
+  confirm_anonymize = ask("Are you sure you want to anonymize #{total} users? (Y/n)")
+  exit 1 unless (confirm_anonymize == "" || confirm_anonymize.downcase == 'y')
+
+  system_user = Discourse.system_user
+  non_staff_users.each do |user|
+    begin
+      UserAnonymizer.new(user, system_user).make_anonymous
+      print_status(anonymized += 1, total)
+    rescue
+      # skip
+    end
+  end
+
+  puts "", "#{total} users anonymized.", ""
+end
+
+desc "List all users which have been staff in the last month"
+task "users:list_recent_staff" => :environment do
+  current_staff_ids = User.human_users.where("admin OR moderator").pluck(:id)
+  recent_actions = UserHistory.where("created_at > ?", 1.month.ago)
+  recent_admin_ids = recent_actions.where(action: UserHistory.actions[:revoke_admin]).pluck(:target_user_id)
+  recent_moderator_ids = recent_actions.where(action: UserHistory.actions[:revoke_moderation]).pluck(:target_user_id)
+
+  all_ids = current_staff_ids + recent_admin_ids + recent_moderator_ids
+  users = User.where(id: all_ids.uniq)
+
+  puts "Users which have had staff privileges in the last month:"
+  users.each do |user|
+    puts "#{user.id}: #{user.username} (#{user.email})"
+  end
+  puts "----"
+  puts "user_ids = [#{all_ids.uniq.join(',')}]"
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 

@@ -190,7 +190,11 @@ class TopicCreator
     add_users(topic, @opts[:target_usernames])
     add_emails(topic, @opts[:target_emails])
     add_groups(topic, @opts[:target_group_names])
-    topic.topic_allowed_users.build(user_id: @user.id)
+
+    if !@added_users.include?(user)
+      topic.topic_allowed_users.build(user_id: @user.id)
+    end
+
   end
 
   def save_topic(topic)
@@ -228,8 +232,10 @@ class TopicCreator
         display_name = email.split("@").first
 
         if user = find_or_create_user(email, display_name)
-          @added_users << user
-          topic.topic_allowed_users.build(user_id: user.id)
+          if !@added_users.include?(user)
+            @added_users << user
+            topic.topic_allowed_users.build(user_id: user.id)
+          end
           len += 1
         end
       end
@@ -254,7 +260,10 @@ class TopicCreator
   end
 
   def check_can_send_permission!(topic, obj)
-    rollback_with!(topic, :cant_send_pm) unless @opts[:skip_validations] || @guardian.can_send_private_message?(obj)
+    unless @opts[:skip_validations] ||
+      @guardian.can_send_private_message?(obj, notify_moderators: topic&.subtype == TopicSubtype.notify_moderators)
+      rollback_with!(topic, :cant_send_pm)
+    end
   end
 
   def find_or_create_user(email, display_name)

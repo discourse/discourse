@@ -58,6 +58,26 @@ describe Jobs::UserEmail do
     end
   end
 
+  context "disable_emails setting" do
+    it "sends when no" do
+      SiteSetting.disable_emails = 'no'
+      Email::Sender.any_instance.expects(:send).once
+      Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
+    end
+
+    it "does not send an email when yes" do
+      SiteSetting.disable_emails = 'yes'
+      Email::Sender.any_instance.expects(:send).never
+      Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
+    end
+
+    it "sends when critical" do
+      SiteSetting.disable_emails = 'yes'
+      Email::Sender.any_instance.expects(:send)
+      Jobs::CriticalUserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
+    end
+  end
+
   context "recently seen" do
     let(:post) { Fabricate(:post, user: user) }
 

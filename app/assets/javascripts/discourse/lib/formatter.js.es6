@@ -1,15 +1,15 @@
 /* global BreakString:true */
 
 /*
-* memoize.js
-* by @philogb and @addyosmani
-* with further optimizations by @mathias
-* and @DmitryBaranovsk
-* perf tests: http://bit.ly/q3zpG3
-* Released under an MIT license.
-*
-* modified with cap by Sam
-*/
+ * memoize.js
+ * by @philogb and @addyosmani
+ * with further optimizations by @mathias
+ * and @DmitryBaranovsk
+ * perf tests: http://bit.ly/q3zpG3
+ * Released under an MIT license.
+ *
+ * modified with cap by Sam
+ */
 function cappedMemoize(fn, max) {
   fn.maxMemoize = max;
   fn.memoizeLength = 0;

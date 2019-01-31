@@ -85,19 +85,19 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     options = {
       setup: lambda { |env|
         strategy = env["omniauth.strategy"]
-         strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
-         strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+        strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
+        strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+
+        if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
+          strategy.options[:hd] = google_oauth2_hd
+        end
+
+        if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
+          strategy.options[:prompt] = google_oauth2_prompt.gsub("|", " ")
+        end
       },
       skip_jwt: true
     }
-
-    if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
-      options[:prompt] = google_oauth2_prompt.gsub("|", " ")
-    end
-
-    google_oauth2_hd = SiteSetting.google_oauth2_hd
-    options[:hd] = google_oauth2_hd if google_oauth2_hd.present?
-
     # jwt encoding is causing auth to fail in quite a few conditions
     # skipping
     omniauth.provider :google_oauth2, options

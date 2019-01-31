@@ -4,22 +4,40 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("raw LIKE '%upload:\/\/%'").find_each do |post|
+    posts.where("raw LIKE '%upload:\/\/%' OR raw LIKE '%href=%'").find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-        analyzer.cooked_stripped.css("img").each do |img|
-          if dom_class = img["class"]
-            if (Post.white_listed_image_classes & dom_class.split).count > 0
-              next
+        analyzer.cooked_stripped.css("img", "a").each do |media|
+          if media.name == "img"
+            if dom_class = media["class"]
+              if (Post.white_listed_image_classes & dom_class.split).count > 0
+                next
+              end
             end
-          end
 
-          if img["data-orig-src"]
-            if @dry_run
-              puts "#{post.full_url} #{img["data-orig-src"]}"
-            else
-              recover_post_upload(post, img["data-orig-src"])
+            orig_src = media["data-orig-src"]
+
+            if orig_src
+              if @dry_run
+                puts "#{post.full_url} #{orig_src}"
+              else
+                recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
+              end
+            end
+          elsif media.name == "a"
+            href = media["href"]
+
+            if href && data = Upload.extract_upload_url(href)
+              sha1 = data[2]
+
+              unless upload = Upload.get_from_url(href)
+                if @dry_run
+                  puts "#{post.full_url} #{href}"
+                else
+                  recover_post_upload(post, sha1)
+                end
+              end
             end
           end
         end
@@ -30,11 +48,47 @@ class UploadRecovery
     end
   end
 
+  def recover_user_profile_backgrounds
+    UserProfile
+      .where("profile_background IS NOT NULL OR card_background IS NOT NULL")
+      .find_each do |user_profile|
+
+      %i{card_background profile_background}.each do |column|
+        background = user_profile.public_send(column)
+
+        if background.present? && !Upload.exists?(url: background)
+          data = Upload.extract_upload_url(background)
+          next unless data
+          sha1 = data[2]
+
+          if @dry_run
+            puts "#{background}"
+          else
+            recover_user_profile_background(sha1, user_profile.user_id) do |upload|
+              user_profile.update!("#{column}" => upload.url) if upload.persisted?
+            end
+          end
+        end
+      end
+    end
+  end
+
   private
 
-  def recover_post_upload(post, short_url)
-    sha1 = Upload.sha1_from_short_url(short_url)
-    return unless sha1.present?
+  def recover_user_profile_background(sha1, user_id, &block)
+    return unless valid_sha1?(sha1)
+
+    attributes = { sha1: sha1, user_id: user_id }
+
+    if Discourse.store.external?
+      recover_from_s3(attributes, &block)
+    else
+      recover_from_local(attributes, &block)
+    end
+  end
+
+  def recover_post_upload(post, sha1)
+    return unless valid_sha1?(sha1)
 
     attributes = {
       post: post,
@@ -42,13 +96,25 @@ class UploadRecovery
     }
 
     if Discourse.store.external?
-      recover_from_s3(attributes)
+      recover_post_upload_from_s3(attributes)
     else
-      recover_from_local(attributes)
+      recover_post_upload_from_local(attributes)
     end
   end
 
-  def recover_from_local(post:, sha1:)
+  def recover_post_upload_from_local(post:, sha1:)
+    recover_from_local(sha1: sha1, user_id: post.user_id) do |upload|
+      post.rebake! if upload.persisted?
+    end
+  end
+
+  def recover_post_upload_from_s3(post:, sha1:)
+    recover_from_s3(sha1: sha1, user_id: post.user_id) do |upload|
+      post.rebake! if upload.persisted?
+    end
+  end
+
+  def recover_from_local(sha1:, user_id:)
     public_path = Rails.root.join("public")
 
     @paths ||= begin
@@ -73,16 +139,20 @@ class UploadRecovery
     @paths.each do |path|
       if path =~ /#{sha1}/
         begin
-          file = File.open(path, "r")
-          create_upload(file, File.basename(path), post)
+          tmp = Tempfile.new
+          tmp.write(File.read(path))
+          tmp.rewind
+
+          upload = create_upload(tmp, File.basename(path), user_id)
+          yield upload if block_given?
         ensure
-          file&.close
+          tmp&.close
         end
       end
     end
   end
 
-  def recover_from_s3(post:, sha1:)
+  def recover_from_s3(sha1:, user_id:)
     @object_keys ||= begin
       s3_helper = Discourse.store.s3_helper
 
@@ -115,7 +185,10 @@ class UploadRecovery
             tmp_file_name: "recover_from_s3"
           )
 
-          create_upload(tmp, File.basename(key), post) if tmp
+          if tmp
+            upload = create_upload(tmp, File.basename(key), user_id)
+            yield upload if block_given?
+          end
         ensure
           tmp&.close
         end
@@ -123,8 +196,11 @@ class UploadRecovery
     end
   end
 
-  def create_upload(file, filename, post)
-    upload = UploadCreator.new(file, filename).create_for(post.user_id)
-    post.rebake! if upload.persisted?
+  def create_upload(file, filename, user_id)
+    UploadCreator.new(file, filename).create_for(user_id)
+  end
+
+  def valid_sha1?(sha1)
+    sha1.present? && sha1.length == Upload::SHA1_LENGTH
   end
 end

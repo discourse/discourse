@@ -52,7 +52,7 @@ export default Ember.Object.extend({
   },
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.register = this.register || getRegister(this);
   },
 
@@ -83,12 +83,9 @@ export default Ember.Object.extend({
 
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
-    const self = this;
     return this.adapterFor(type)
       .find(this, type, findArgs)
-      .then(function(result) {
-        return self._build(type, result);
-      });
+      .then(result => this._build(type, result));
   },
 
   _hydrateFindResults(result, type, findArgs) {
@@ -149,28 +146,25 @@ export default Ember.Object.extend({
   },
 
   refreshResults(resultSet, type, url) {
-    const self = this;
     return ajax(url).then(result => {
-      const typeName = Ember.String.underscore(self.pluralize(type));
+      const typeName = Ember.String.underscore(this.pluralize(type));
       const content = result[typeName].map(obj =>
-        self._hydrate(type, obj, result)
+        this._hydrate(type, obj, result)
       );
       resultSet.set("content", content);
     });
   },
 
   appendResults(resultSet, type, url) {
-    const self = this;
-
-    return ajax(url).then(function(result) {
-      let typeName = Ember.String.underscore(self.pluralize(type));
+    return ajax(url).then(result => {
+      let typeName = Ember.String.underscore(this.pluralize(type));
 
       let pageTarget = result.meta || result;
       let totalRows =
         pageTarget["total_rows_" + typeName] || resultSet.get("totalRows");
       let loadMoreUrl = pageTarget["load_more_" + typeName];
       let content = result[typeName].map(obj =>
-        self._hydrate(type, obj, result)
+        this._hydrate(type, obj, result)
       );
 
       resultSet.setProperties({ totalRows, loadMoreUrl });
@@ -300,20 +294,19 @@ export default Ember.Object.extend({
   },
 
   _hydrateEmbedded(type, obj, root) {
-    const self = this;
-    Object.keys(obj).forEach(function(k) {
+    Object.keys(obj).forEach(k => {
       const m = /(.+)\_id(s?)$/.exec(k);
       if (m) {
         const subType = m[1];
 
         if (m[2]) {
-          const hydrated = obj[k].map(function(id) {
-            return self._lookupSubType(subType, type, id, root);
-          });
-          obj[self.pluralize(subType)] = hydrated || [];
+          const hydrated = obj[k].map(id =>
+            this._lookupSubType(subType, type, id, root)
+          );
+          obj[this.pluralize(subType)] = hydrated || [];
           delete obj[k];
         } else {
-          const hydrated = self._lookupSubType(subType, type, obj[k], root);
+          const hydrated = this._lookupSubType(subType, type, obj[k], root);
           if (hydrated) {
             obj[subType] = hydrated;
             delete obj[k];

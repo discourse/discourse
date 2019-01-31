@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
     this.set("content", []);
-    this._super();
+    this._super(...arguments);
   }
 });
 
@@ -52,10 +52,14 @@ CategoryList.reopenClass({
           const unit = I18n.t(statPeriod);
           if (stat > 0) {
             c.stat = `<span class="value">${stat}</span> / <span class="unit">${unit}</span>`;
-            c.statTitle = I18n.t("categories.topic_stat_sentence", {
-              count: stat,
-              unit: unit
-            });
+
+            c.statTitle = I18n.t(
+              `categories.topic_stat_sentence_${statPeriod}`,
+              {
+                count: stat
+              }
+            );
+
             c[
               "pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)
             ] = true;

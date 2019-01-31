@@ -148,6 +148,6 @@ module TopicGuardian
   end
 
   def can_update_bumped_at?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 end

@@ -39,7 +39,7 @@ module DiscourseTagging
         # guardian is explicitly nil cause we don't want to strip all
         # staff tags that already passed validation
         tags = filter_allowed_tags(
-          Tag.where(name: tag_names),
+          Tag.where_name(tag_names),
           nil, # guardian
           for_topic: true,
           category: category,
@@ -48,7 +48,7 @@ module DiscourseTagging
 
         if tags.size < tag_names.size && (category.nil? || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
-            unless Tag.where(name: name).exists?
+            unless Tag.where_name(name).exists?
               tags << Tag.create(name: name)
             end
           end
@@ -82,8 +82,7 @@ module DiscourseTagging
   #   for_topic: results are for tagging a topic
   #   selected_tags: an array of tag names that are in the current selection
   def self.filter_allowed_tags(query, guardian, opts = {})
-
-    selected_tag_ids = opts[:selected_tags] ? Tag.where(name: opts[:selected_tags]).pluck(:id) : []
+    selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
 
     if !opts[:for_topic] && !selected_tag_ids.empty?
       query = query.where('tags.id NOT IN (?)', selected_tag_ids)
@@ -92,8 +91,8 @@ module DiscourseTagging
     term = opts[:term]
     if term.present?
       term.gsub!("_", "\\_")
-      term = clean_tag(term)
-      query = query.where('tags.name like ?', "%#{term}%")
+      term = clean_tag(term).downcase
+      query = query.where('lower(tags.name) like ?', "%#{term}%")
     end
 
     # Filters for category-specific tags:
@@ -203,16 +202,20 @@ module DiscourseTagging
   end
 
   def self.clean_tag(tag)
-    tag.downcase.strip
-      .gsub(/\s+/, '-').squeeze('-')
-      .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
+    tag = tag.dup
+    tag.downcase! if SiteSetting.force_lowercase_tags
+    tag.strip!
+    tag.gsub!(/\s+/, '-')
+    tag.squeeze!('-')
+    tag.gsub!(TAGS_FILTER_REGEXP, '')
+    tag[0...SiteSetting.max_tag_length]
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})
 
     return [] unless guardian.can_tag_topics? && tags_arg.present?
 
-    tag_names = Tag.where(name: tags_arg).pluck(:name)
+    tag_names = Tag.where_name(tags_arg).pluck(:name)
 
     if guardian.can_create_tag?
       tag_names += (tags_arg - tag_names).map { |t| clean_tag(t) }
@@ -226,7 +229,7 @@ module DiscourseTagging
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})
     tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) || []
     if taggable.tags.pluck(:name).sort != tag_names.sort
-      taggable.tags = Tag.where(name: tag_names).all
+      taggable.tags = Tag.where_name(tag_names).all
       if taggable.tags.size < tag_names.size
         new_tag_names = tag_names - taggable.tags.map(&:name)
         new_tag_names.each do |name|

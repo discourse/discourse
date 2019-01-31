@@ -2,7 +2,12 @@ export default Discourse.Route.extend({
   showFooter: true,
 
   model() {
-    return this.modelFor("user").summary();
+    const user = this.modelFor("user");
+    if (user.get("profile_hidden")) {
+      return this.replaceWith("user.profile-hidden");
+    }
+
+    return user.summary();
   },
 
   actions: {

@@ -33,6 +33,10 @@ $user_card_background: $secondary;
     z-index: z("composer", "content") + 1;
   }
 
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+
   .card-content {
     padding: 12px 12px 0 12px;
     background: rgba($user_card_background, 0.85);
@@ -81,7 +85,7 @@ $user_card_background: $secondary;
     a {
       color: $user_card_primary;
     }
-    i {
+    .d-icon {
       font-size: $font-down-1;
       color: $user_card_primary;
     }
@@ -185,7 +189,7 @@ $user_card_background: $secondary;
       max-width: 90%;
       overflow: hidden;
       align-items: baseline;
-      i {
+      .d-icon {
         margin-right: 0.25em;
       }
     }
@@ -224,7 +228,7 @@ $user_card_background: $secondary;
       background-position: center;
       background-size: $size;
       color: $primary;
-      i {
+      .d-icon {
         margin: auto;
         font-size: $size / 1.5 !important;
       }
@@ -279,12 +283,13 @@ $user_card_background: $secondary;
   }
 
   .badge-section {
-    float: left;
-    width: 500px;
+    display: flex;
+    align-items: flex-start;
     padding-bottom: 10px;
     margin-top: 5px;
 
     .user-badge {
+      margin-right: 0.5em;
       background: $primary-very-low;
       border: 1px solid $primary-low;
       color: $user_card_primary;

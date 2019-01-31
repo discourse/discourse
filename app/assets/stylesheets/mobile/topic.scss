@@ -1,5 +1,5 @@
 .post-info a {
-  color: #aaa;
+  color: $primary-medium;
 }
 
 .topic-meta-data-inside {
@@ -13,7 +13,6 @@
 }
 
 #topic-title {
-  //margin-bottom: 20px;
   margin: 0 60px 10px 0;
   h1 {
     font-size: $font-up-3;
@@ -36,15 +35,6 @@
   display: inline;
 }
 
-/* both blocks that appear under the standard post control buttons */
-.notification-options,
-.pinned-options {
-  float: left;
-  margin-top: 0;
-  padding-top: 1px;
-  clear: both;
-}
-
 .topic-status-info {
   padding-left: 10px;
   border-top: 1px solid $primary-low;
@@ -61,6 +51,9 @@
   bottom: 0;
   z-index: z("timeline");
   margin-right: 148px;
+  .topic-admin-menu-button-container .toggle-admin-menu {
+    height: 43px;
+  }
 }
 
 #topic-progress-expanded {
@@ -75,7 +68,7 @@
   button.full {
     width: 100%;
     margin-bottom: 5px;
-    i {
+    .d-icon {
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
@@ -114,14 +107,14 @@
   border: 1px solid $tertiary-low;
   border-bottom: none;
   width: 145px;
-  height: 34px;
+  height: 42px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
 
   .nums {
     position: relative;
-    top: 9px;
+    top: 12px;
     width: 100%;
     text-align: center;
     z-index: z("base");
@@ -186,18 +179,16 @@ sub sub {
   width: 100%;
 
   input#edit-title {
-    box-sizing: border-box;
     width: 100%;
-    height: 32px;
-  }
-  .btn-small {
-    padding: 6px 12px;
-    margin: 6px 6px 0 0;
   }
 
   .select-kit.combo-box.category-chooser {
     width: 100%;
     margin-top: 0;
+  }
+
+  .topic-statuses {
+    line-height: $line-height-small;
   }
 }
 

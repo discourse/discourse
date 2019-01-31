@@ -1,8 +1,8 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import BufferedContent from "discourse/mixins/buffered-content";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(BufferedContent, {
+export default Ember.Controller.extend(bufferedProperty("model"), {
   adminBadges: Ember.inject.controller(),
   saving: false,
   savingStatus: "",
@@ -54,10 +54,8 @@ export default Ember.Controller.extend(BufferedContent, {
         ];
 
         if (this.get("buffered.system")) {
-          var protectedFields = this.get("protectedSystemFields");
-          fields = _.filter(fields, function(f) {
-            return !_.include(protectedFields, f);
-          });
+          var protectedFields = this.get("protectedSystemFields") || [];
+          fields = _.filter(fields, f => !protectedFields.includes(f));
         }
 
         this.set("saving", true);
@@ -77,7 +75,7 @@ export default Ember.Controller.extend(BufferedContent, {
         const buffered = this.get("buffered");
         fields.forEach(function(field) {
           var d = buffered.get(field);
-          if (_.include(boolFields, field)) {
+          if (boolFields.includes(field)) {
             d = !!d;
           }
           data[field] = d;

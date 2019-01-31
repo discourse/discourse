@@ -1,4 +1,7 @@
 {{#conditional-loading-spinner condition=loading}}
+  <div class="alert alert-info">
+    The old dashboard is going to be removed in Discourse 2.2
+  </div>
   <div class="dashboard-left">
     <div class="dashboard-stats trust-levels">
       <table class="table table-condensed table-hover">
@@ -23,13 +26,13 @@
     <div class="dashboard-stats totals">
       <table>
         <tr>
-          <td class="title">{{d-icon "shield"}} {{i18n 'admin.dashboard.admins'}}</td>
+          <td class="title">{{d-icon "shield-alt"}} {{i18n 'admin.dashboard.admins'}}</td>
           <td class="value">{{#link-to 'adminUsersList.show' 'admins'}}{{admins}}{{/link-to}}</td>
           <td class="title">{{d-icon "ban"}} {{i18n 'admin.dashboard.suspended'}}</td>
           <td class="value">{{#link-to 'adminUsersList.show' 'suspended'}}{{suspended}}{{/link-to}}</td>
         </tr>
         <tr>
-          <td class="title">{{d-icon "shield"}} {{i18n 'admin.dashboard.moderators'}}</td>
+          <td class="title">{{d-icon "shield-alt"}} {{i18n 'admin.dashboard.moderators'}}</td>
           <td class="value">{{#link-to 'adminUsersList.show' 'moderators'}}{{moderators}}{{/link-to}}</td>
           <td class="title">{{d-icon "ban"}} {{i18n 'admin.dashboard.silenced'}}</td>
           <td class="value">{{#link-to 'adminUsersList.show' 'silenced'}}{{silenced}}{{/link-to}}</td>
@@ -113,27 +116,6 @@
           {{#each mobile_reports as |r|}}
             {{admin-report-counts report=r}}
           {{/each}}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="dashboard-stats">
-      <table class="table table-condensed table-hover">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{i18n 'admin.dashboard.uploads'}}</td>
-            <td>{{disk_space.uploads_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.uploads_free}})</td>
-            <td>{{#if currentUser.admin}}<a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a>{{/if}}</td>
-            <td>{{disk_space.backups_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.backups_free}})</td>
-          </tr>
         </tbody>
       </table>
     </div>

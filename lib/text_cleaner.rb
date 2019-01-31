@@ -12,7 +12,7 @@ class TextCleaner
     {
       deduplicate_exclamation_marks: SiteSetting.title_prettify,
       deduplicate_question_marks: SiteSetting.title_prettify,
-      replace_all_upper_case: SiteSetting.title_prettify,
+      replace_all_upper_case: SiteSetting.title_prettify && !SiteSetting.allow_uppercase_posts,
       capitalize_first_letter: SiteSetting.title_prettify,
       remove_all_periods_from_the_end: SiteSetting.title_prettify,
       remove_extraneous_space: SiteSetting.title_prettify && SiteSetting.default_locale == "en",
@@ -57,7 +57,7 @@ class TextCleaner
   @@whitespaces_regexp = Regexp.new("(\u00A0|\u1680|\u180E|[\u2000-\u200A]|\u2028|\u2029|\u202F|\u205F|\u3000)", "u").freeze
 
   def self.normalize_whitespaces(text)
-    text.gsub(@@whitespaces_regexp, ' ')
+    text&.gsub(@@whitespaces_regexp, ' ')
   end
 
 end

@@ -4,6 +4,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   elementId: "suggested-topics",
+  classNames: ["suggested-topics"],
 
   @computed("topic")
   suggestedTitle(topic) {
@@ -31,7 +32,7 @@ export default Ember.Component.extend({
 
     if (
       category &&
-      Em.get(category, "id") ===
+      Ember.get(category, "id") ===
         Discourse.Site.currentProp("uncategorized_category_id")
     ) {
       category = null;
@@ -60,7 +61,8 @@ export default Ember.Component.extend({
         NEW: newTopics,
         CATEGORY: category ? true : false,
         latestLink: opts.latestLink,
-        catLink: opts.catLink
+        catLink: opts.catLink,
+        basePath: ""
       });
     } else if (category) {
       return I18n.t("topic.read_more_in_category", opts);

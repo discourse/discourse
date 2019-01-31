@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ja: {}
+ja:
+  site_settings:
+    details_enabled: "詳細機能を有効にします。これを変更した場合は、「rake posts：rebake」ですべての投稿を再作成する必要があります。"

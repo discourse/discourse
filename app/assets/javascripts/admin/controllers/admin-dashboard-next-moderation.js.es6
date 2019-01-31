@@ -12,6 +12,16 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     };
   },
 
+  @computed
+  userFlaggingRatioOptions() {
+    return {
+      table: {
+        total: false,
+        perPage: 10
+      }
+    };
+  },
+
   @computed("startDate", "endDate")
   filters(startDate, endDate) {
     return { startDate, endDate };

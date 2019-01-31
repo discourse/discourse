@@ -11,7 +11,7 @@ export default Ember.Component.extend(
       let notices = [];
 
       if ($.cookie("dosp") === "1") {
-        $.cookie("dosp", null, { path: "/" });
+        $.removeCookie("dosp", { path: "/" });
         notices.push([I18n.t("forced_anonymous"), "forced-anonymous"]);
       }
 
@@ -72,14 +72,16 @@ export default Ember.Component.extend(
 
       if (notices.length > 0) {
         buffer.push(
-          _.map(notices, n => {
-            var html = `<div class='row'><div class='alert alert-info ${
-              n[1]
-            }'>`;
-            if (n[2]) html += n[2];
-            html += `${n[0]}</div></div>`;
-            return html;
-          }).join("")
+          notices
+            .map(n => {
+              var html = `<div class='row'><div class='alert alert-info ${
+                n[1]
+              }'>`;
+              if (n[2]) html += n[2];
+              html += `${n[0]}</div></div>`;
+              return html;
+            })
+            .join("")
         );
       }
     },

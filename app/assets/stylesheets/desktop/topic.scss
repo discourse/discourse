@@ -33,9 +33,6 @@
       color: $primary;
     }
   }
-  .topic-statuses {
-    margin-top: -2px;
-  }
   .private-message-glyph {
     display: none;
   }
@@ -76,7 +73,7 @@
   border-top: 1px solid $primary-low;
   padding: 10px 0;
   height: 20px;
-  max-width: 757px;
+  max-width: 758px;
 }
 
 #topic-progress-wrapper {
@@ -102,7 +99,7 @@
   button.full {
     width: 100%;
     margin-bottom: 5px;
-    i {
+    .d-icon {
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;

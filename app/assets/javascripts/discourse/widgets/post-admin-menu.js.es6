@@ -22,6 +22,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (currentUser.staff) {
     contents.push({
       icon: "list",
+      className: "btn-default",
       label: "admin.flags.moderation_history",
       action: "showModerationHistory"
     });
@@ -30,8 +31,8 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (!attrs.isWhisper && currentUser.staff) {
     const buttonAtts = {
       action: "togglePostType",
-      icon: "shield",
-      className: "toggle-post-type"
+      icon: "shield-alt",
+      className: "btn-default toggle-post-type"
     };
 
     if (attrs.isModeratorAction) {
@@ -47,15 +48,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "cog",
       label: "post.controls.rebake",
       action: "rebakePost",
-      className: "rebuild-html"
+      className: "btn-default rebuild-html"
     });
 
     if (attrs.hidden) {
       contents.push({
-        icon: "eye",
+        icon: "far-eye",
         label: "post.controls.unhide",
         action: "unhidePost",
-        className: "unhide-post"
+        className: "btn-default unhide-post"
       });
     }
   }
@@ -65,7 +66,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       icon: "user",
       label: "post.controls.change_owner",
       action: "changePostOwner",
-      className: "change-owner"
+      className: "btn-default change-owner"
     });
   }
 
@@ -75,7 +76,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         icon: "certificate",
         label: "post.controls.grant_badge",
         action: "grantBadge",
-        className: "grant-badge"
+        className: "btn-default grant-badge"
       });
     }
 
@@ -85,7 +86,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       label: `post.controls.${action}_post`,
       action: `${action}Post`,
       title: `post.controls.${action}_post_description`,
-      className: `${action}-post`
+      className: `btn-default ${action}-post`
     });
   }
 
@@ -95,14 +96,14 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         action: "toggleWiki",
         label: "post.controls.unwiki",
         icon: "pencil-square-o",
-        className: "wiki wikied"
+        className: "btn-default wiki wikied"
       });
     } else {
       contents.push({
         action: "toggleWiki",
         label: "post.controls.wiki",
         icon: "pencil-square-o",
-        className: "wiki"
+        className: "btn-default wiki"
       });
     }
   }

@@ -337,7 +337,7 @@ createWidget("timeline-footer-controls", {
       if (topic.get("details.can_create_post")) {
         controls.push(
           this.attach("button", {
-            className: "create",
+            className: "btn-default create",
             icon: "reply",
             title: "topic.reply.help",
             action: "replyToPost"
@@ -395,7 +395,7 @@ export default createWidget("topic-timeline", {
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    setTimeout(() => {
+    Ember.run.later(() => {
       if (!this.state.position === pos) {
         return;
       }

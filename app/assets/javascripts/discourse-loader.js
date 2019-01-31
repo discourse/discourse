@@ -119,7 +119,7 @@ var define, requirejs;
     if (!mod) {
       var moved = MOVED_MODULES[name];
       if (moved) {
-        console.warn("DEPRECATION: `" + name + "` was moved to `" + moved + "`");
+        console.warn("DEPRECATION: `" + name + "` was moved to `" + moved + "`"); // eslint-disable-line no-console
       }
       mod = registry[moved];
     }

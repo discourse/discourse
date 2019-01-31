@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
 
   @computed("q")
   hasAutofocus(q) {
-    return Em.isEmpty(q);
+    return Ember.isEmpty(q);
   },
 
   @computed("q")
@@ -196,7 +196,7 @@ export default Ember.Controller.extend({
 
   @computed("expanded")
   searchAdvancedIcon(expanded) {
-    return iconHTML(expanded ? "caret-down fa-fw" : "caret-right fa-fw");
+    return iconHTML(expanded ? "caret-down" : "caret-right");
   },
 
   @computed("page")

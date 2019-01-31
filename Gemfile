@@ -13,13 +13,15 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'actionmailer', '5.2'
-  gem 'actionpack', '5.2'
-  gem 'actionview', '5.2'
-  gem 'activemodel', '5.2'
-  gem 'activerecord', '5.2'
-  gem 'activesupport', '5.2'
-  gem 'railties', '5.2'
+  # until rubygems gives us optional dependencies we are stuck with this
+  # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
+  gem 'actionmailer', '5.2.2'
+  gem 'actionpack', '5.2.2'
+  gem 'actionview', '5.2.2'
+  gem 'activemodel', '5.2.2'
+  gem 'activerecord', '5.2.2'
+  gem 'activesupport', '5.2.2'
+  gem 'railties', '5.2.2'
   gem 'sprockets-rails'
   gem 'seed-fu'
 end
@@ -34,16 +36,21 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.60'
+gem 'onebox', '1.8.76'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source', '2.13.3'
-gem 'ember-handlebars-template', '0.7.5'
+gem 'discourse-ember-source', '~> 3.5.1'
+gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
-gem 'message_bus'
+# message bus 2.2.0 should be very stable
+# we trimmed some of the internal API surface down so we went with
+# a pre release here to make we don't do a full release prior to
+# baking here. Remove 2.2.0.pre no later than Jan 2019 and move back
+# to the standard releases
+gem 'message_bus', '2.2.0.pre.1'
 
 gem 'rails_multisite'
 
@@ -187,10 +194,11 @@ if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
-  gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
+  gem 'ruby-bbcode-to-md', git: 'https://github.com/nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
   gem 'tiny_tds'
 end
 
 gem 'webpush', require: false
 gem 'colored2', require: false
+gem 'maxminddb'

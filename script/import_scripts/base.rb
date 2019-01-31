@@ -54,6 +54,8 @@ class ImportScripts::Base
       update_last_posted_at
       update_last_seen_at
       update_user_stats
+      update_topic_users
+      update_post_timings
       update_feature_topic_users
       update_category_featured_topics
       update_topic_count_replies
@@ -253,7 +255,7 @@ class ImportScripts::Base
 
         if user_id_from_imported_user_id(import_id)
           skipped += 1
-        elsif u[:email].present?
+        else
           new_user = create_user(u, import_id)
           created_user(new_user)
 
@@ -270,9 +272,6 @@ class ImportScripts::Base
               end
             end
           end
-        else
-          failed += 1
-          puts "Skipping user id #{import_id} because email is blank"
         end
       end
 
@@ -283,6 +282,7 @@ class ImportScripts::Base
   end
 
   def create_user(opts, import_id)
+    original_opts = opts.dup
     opts.delete(:id)
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
@@ -313,9 +313,9 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
 
-    unless opts[:email].match(EmailValidator.email_regex)
-      opts[:email] = "invalid#{SecureRandom.hex}@no-email.invalid"
-      puts "Invalid email #{original_email} for #{opts[:username]}. Using: #{opts[:email]}"
+    unless opts[:email][EmailValidator.email_regex]
+      opts[:email] = fake_email
+      puts "Invalid email '#{original_email}' for '#{opts[:username]}'. Using '#{opts[:email]}'"
     end
 
     opts[:name] = original_username if original_name.blank? && opts[:username] != original_username
@@ -328,7 +328,7 @@ class ImportScripts::Base
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
-    u.custom_fields["import_username"] = opts[:username] if original_username.present?
+    u.custom_fields["import_username"] = original_username if original_username.present? && original_username != opts[:username]
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
     u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
     u.custom_fields["import_email"] = original_email if original_email != opts[:email]
@@ -360,7 +360,7 @@ class ImportScripts::Base
           u = existing
         end
       else
-        puts "Error on record: #{opts.inspect}"
+        puts "Error on record: #{original_opts.inspect}"
         raise e
       end
     end
@@ -392,7 +392,8 @@ class ImportScripts::Base
   end
 
   def find_existing_user(email, username)
-    User.joins(:user_emails).where("user_emails.email = ? OR username = ?", email.downcase, username).first
+    # Force the use of the index on the 'user_emails' table
+    UserEmail.where("lower(email) = ?", email.downcase).first&.user || User.where(username: username).first
   end
 
   def created_category(category)
@@ -507,21 +508,19 @@ class ImportScripts::Base
         import_id = params.delete(:id).to_s
 
         if post_id_from_imported_post_id(import_id)
-          skipped += 1 # already imported this post
+          skipped += 1
         else
           begin
             new_post = create_post(params, import_id)
             if new_post.is_a?(Post)
               add_post(import_id, new_post)
               add_topic(new_post)
-
               created_post(new_post)
-
               created += 1
             else
               skipped += 1
               puts "Error creating post #{import_id}. Skipping."
-              puts new_post.inspect
+              p new_post
             end
           rescue Discourse::InvalidAccess => e
             skipped += 1
@@ -560,7 +559,7 @@ class ImportScripts::Base
 
     opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
-      opts[:raw] = opts[:raw].bbcode_to_md(false) rescue opts[:raw]
+      opts[:raw] = opts[:raw].bbcode_to_md(false, {}, :disable, :quote) rescue opts[:raw]
     end
 
     post_creator = PostCreator.new(user, opts)
@@ -633,7 +632,7 @@ class ImportScripts::Base
   def update_topic_status
     puts "", "Updating topic status"
 
-    DB.exec(<<~SQL)
+    DB.exec <<~SQL
       UPDATE topics AS t
       SET closed = TRUE
       WHERE EXISTS(
@@ -643,7 +642,7 @@ class ImportScripts::Base
       )
     SQL
 
-    DB.exec(<<~SQL)
+    DB.exec <<~SQL
       UPDATE topics AS t
       SET archived = TRUE
       WHERE EXISTS(
@@ -653,7 +652,7 @@ class ImportScripts::Base
       )
     SQL
 
-    DB.exec(<<~SQL)
+    DB.exec <<~SQL
       DELETE FROM topic_custom_fields
       WHERE name IN ('import_closed', 'import_archived')
     SQL
@@ -661,13 +660,16 @@ class ImportScripts::Base
 
   def update_bumped_at
     puts "", "Updating bumped_at on topics"
-    DB.exec("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
+    DB.exec <<~SQL
+      UPDATE topics t
+         SET bumped_at = COALESCE((SELECT MAX(created_at) FROM posts WHERE topic_id = t.id AND post_type = #{Post.types[:regular]}), bumped_at)
+    SQL
   end
 
   def update_last_posted_at
     puts "", "Updating last posted at on users"
 
-    sql = <<-SQL
+    DB.exec <<~SQL
       WITH lpa AS (
         SELECT user_id, MAX(posts.created_at) AS last_posted_at
         FROM posts
@@ -680,8 +682,6 @@ class ImportScripts::Base
       WHERE u1.id = users.id
         AND users.last_posted_at <> lpa.last_posted_at
     SQL
-
-    DB.exec(sql)
   end
 
   def update_user_stats
@@ -700,7 +700,7 @@ class ImportScripts::Base
 
     puts "", "Updating first_post_created_at..."
 
-    sql = <<-SQL
+    DB.exec <<~SQL
       WITH sub AS (
         SELECT user_id, MIN(posts.created_at) AS first_post_created_at
         FROM posts
@@ -714,11 +714,9 @@ class ImportScripts::Base
         AND user_stats.first_post_created_at <> sub.first_post_created_at
     SQL
 
-    DB.exec(sql)
-
     puts "", "Updating user post_count..."
 
-    sql = <<-SQL
+    DB.exec <<~SQL
       WITH sub AS (
         SELECT user_id, COUNT(*) AS post_count
         FROM posts
@@ -732,11 +730,9 @@ class ImportScripts::Base
         AND user_stats.post_count <> sub.post_count
     SQL
 
-    DB.exec(sql)
-
     puts "", "Updating user topic_count..."
 
-    sql = <<-SQL
+    DB.exec <<~SQL
       WITH sub AS (
         SELECT user_id, COUNT(*) AS topic_count
         FROM topics
@@ -749,8 +745,6 @@ class ImportScripts::Base
       WHERE u1.user_id = user_stats.user_id
         AND user_stats.topic_count <> sub.topic_count
     SQL
-
-    DB.exec(sql)
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method
@@ -761,28 +755,39 @@ class ImportScripts::Base
     DB.exec("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
   end
 
+  def update_topic_users
+    puts "", "Updating topic users"
+
+    DB.exec <<~SQL
+      INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, highest_seen_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
+           SELECT user_id, topic_id, 't' , MAX(post_number), MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * 5000
+             FROM posts
+            WHERE user_id > 0
+         GROUP BY user_id, topic_id
+      ON CONFLICT DO NOTHING
+    SQL
+  end
+
+  def update_post_timings
+    puts "", "Updating post timings"
+
+    DB.exec <<~SQL
+      INSERT INTO post_timings (topic_id, post_number, user_id, msecs)
+           SELECT topic_id, post_number, user_id, 5000
+             FROM posts
+            WHERE user_id > 0
+      ON CONFLICT DO NOTHING
+    SQL
+  end
+
   def update_feature_topic_users
     puts "", "Updating featured topic users"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      topic.feature_topic_users
-      print_status(count += 1, total, get_start_time("feature_topic_user"))
-    end
+    TopicFeaturedUsers.ensure_consistency!
   end
 
   def reset_topic_counters
     puts "", "Resetting topic counters"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      Topic.reset_highest(topic.id)
-      print_status(count += 1, total, get_start_time("topic_counters"))
-    end
+    Topic.reset_all_highest!
   end
 
   def update_category_featured_topics
@@ -879,5 +884,9 @@ class ImportScripts::Base
       yield offset
       offset += batch_size
     end
+  end
+
+  def fake_email
+    SecureRandom.hex << "@domain.com"
   end
 end

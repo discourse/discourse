@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   dismissable: true,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     $("#modal-alert").hide();
 
     let fixedParent = this.$().closest(".d-modal.fixed-modal");
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.off("modal-body:flash");
     this.appEvents.off("modal-body:clearFlash");
   },

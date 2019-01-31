@@ -32,11 +32,11 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def description
-    i18n('description', tos_url: tos_path)
+    i18n('description', tos_url: tos_path, base_path: Discourse.base_path)
   end
 
   def short_description
-    i18n('short_description', tos_url: tos_path)
+    i18n('short_description', tos_url: tos_path, base_path: Discourse.base_path)
   end
 
   def name_key
@@ -49,5 +49,4 @@ class PostActionTypeSerializer < ApplicationSerializer
     key = "post_action_types.#{name_key}.#{field}"
     vars ? I18n.t(key, vars) : I18n.t(key)
   end
-
 end

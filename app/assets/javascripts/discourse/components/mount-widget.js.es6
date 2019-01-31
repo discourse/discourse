@@ -21,7 +21,7 @@ export default Ember.Component.extend({
   dirtyKeys: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
     const name = this.get("widget");
 
     this.register = getRegister(this);
@@ -30,6 +30,7 @@ export default Ember.Component.extend({
       queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
 
     if (!this._widgetClass) {
+      // eslint-disable-next-line no-console
       console.error(`Error: Could not find widget: ${name}`);
     }
 
@@ -130,6 +131,7 @@ export default Ember.Component.extend({
       this.dirtyKeys.renderedKey("*");
 
       if (this.profileWidget) {
+        // eslint-disable-next-line no-console
         console.log(new Date().getTime() - t0);
       }
     }

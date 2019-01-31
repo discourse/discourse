@@ -10,8 +10,7 @@
       <thead>
         <th class="col heading term">{{i18n 'admin.logs.search_logs.term'}}</th>
         <th class="col heading">{{i18n 'admin.logs.search_logs.searches'}}</th>
-        <th class="col heading">{{i18n 'admin.logs.search_logs.click_through'}}</th>
-        <th class="col heading" title="{{i18n 'admin.logs.search_logs.unique_title'}}">{{i18n 'admin.logs.search_logs.unique'}}</th>
+        <th class="col heading">{{i18n 'admin.logs.search_logs.click_through_rate'}}</th>
       </thead>
       <tbody>
       {{#each model as |item|}}
@@ -20,8 +19,7 @@
             {{#link-to 'adminSearchLogs.term' item.term}}{{item.term}}{{/link-to}}
           </td>
           <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.searches'}}</div>{{item.searches}}</td>
-          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.click_through'}}</div>{{item.click_through}}</td>
-          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.unique'}}</div>{{item.unique}}</td>
+          <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.click_through_rate'}}</div>{{item.ctr}}%</td>
         </tr>
       {{/each}}
       </tbody>

@@ -12,7 +12,7 @@ class AllowUserLocaleEnabledValidator
   end
 
   def error_message
-    I18n.t("site_settings.errors.user_locale_not_enabled");
+    I18n.t("site_settings.errors.user_locale_not_enabled")
   end
 
 end

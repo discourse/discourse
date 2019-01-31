@@ -93,7 +93,6 @@ ca:
         '8': "Bon pronòstic"
         '9': "Sí"
         '10': "Sembla ser que sí"
-        '11': "Resposta confusa, torna a intentar-ho"
         '12': "Pregunta-ho més tard"
         '13': "Millor no t'ho explico ara"
         '14': "No es pot predir ara"
@@ -135,30 +134,13 @@ ca:
         second_response: |-
           Ai, ho sento. Encara no ho he captat. :anguished:
 
-          Només sóc un robot, però si vols contactar amb una persona, vés a [la nostra pàgina de contacte](/about).
+          Només sóc un robot, però si vols contactar amb una persona, vés a [la nostra pàgina de contacte](%{base_path}/about).
 
           Mentrestant, no et destorbaré.
     new_user_narrative:
       reset_trigger: "nou usuari"
       cert_title: "En reconeixement per haver completat satisfactòriament el tutorial de nou usuari"
-      hello:
-        title: ":robot: Salutacions!"
-        message: |-
-          Gràcies per unir-te a %{title}, i benvingut!
-          - Només sóc un robot però [el nostre amable personal](/about) està disposat a ajudar-te si necessites contactar amb una persona.
-
-          - Per raons de seguretat, limitem temporalment les accions que poden realitzar els nous usuaris. Obtindràs noves habilitats (i [distintius](/badges)) quan ens coneguem millor.
-
-          - Creiem en el [comportament civilitzat en comunitat](/guidelines) en tot moment.
       onebox:
-        instructions: |-
-          Seguidament, pots compartir un d'aquests enllaços amb mi? Respon amb  **un enllaç d'una línia sense res més**, i s'expandirà automàticament per incloure un breu resum.
-
-          Per copiar un enllaç, punteja i mantingues al mòbil o fes clic amb el botó dret del ratolí:
-
-          - https://ca.wikipedia.org/wiki/Patufeta
-          - https://ca.wikipedia.org/wiki/Botifarra_dolça
-          - https://ca.wikipedia.org/wiki/Ortografia_de_la_calculadora
         reply: |-
           Genial! Això funcionarà per a la majoria d'enllaços <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Recorda, ha d'estar en una línia _tot per si mateix_, res a davant, ni a darrere.
         not_found: |-
@@ -262,7 +244,6 @@ ca:
           > :imp: He escrit quelcom desagradable aquí
 
           Crec que ja saps que fer. Endavant, **reporta aquest missatge** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> com inapropiat!
-        reply: "\e\e[El nostre personal](/groups/staff) serà notificat de forma privada sobre el teu avís. Si més membres de la comunitat avisen sobre una publicació, s'ocultarà automàticament com a precaució. (Com que realment no vaig escriure una publicació desagradable :angel:, de moment he decidit  treure l'avís de la publicació.)"
         not_found: |-
           Oh no, la meva publicació desagradable encara no ha estat avisada! :worried: Pots fer un avís de publicació inapropiada utilitzant la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No oblidis utilitzar el botó mostrar més <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per desplegar més accions per a cada publicació.
       search:
@@ -286,25 +267,12 @@ ca:
           - Si tens un :keyboard: físic, prem <kbd>?</kbd> per visualitzar les nostres dreceres de teclat.
         not_found: |-
           Ui... sembla que tens problemes. Em sap greu. Has buscat <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> el terme **capy&#8203;bara**?
-      end:
-        message: |-
-          Gràcies per romandre al meu costat @%{username}! He creat això per a tu, crec que t'ho has guanyat:
-
-          %{certificate}
-
-          Això és tot per ara! Consulta [**els nostres darrers temes de discussió**](/latest) o [**categories de discussió**](/categories). :sunglasses:
-
-          (Si vols parlar amb mi novament per obtenir més informació, envia'm un missatge o menciona `@%{discobot_username}` quan ho necessitis!)
       certificate:
         alt: 'Certificat d&#39;Assoliment'
     advanced_user_narrative:
       reset_trigger: 'usuari avançat'
       cert_title: "En reconeixement a la finalització satisfactòria del tutorial d'usuari avançat"
       title: ':arrow_up: Funcionalitats d''usuari avançat'
-      start_message: |-
-        Com a usuari _avançat_, ja has visitat [la teva pàgina de preferències](/my/preferences) @ %{username}? Hi ha moltes opcions perquè puguis personalitzar la teva experiència, com ara seleccionar un fons fosc o clar.
-
-        Però em despisto, comencem!
       edit:
         bot_created_post_raw: "@%{discobot_username} és, amb diferència, el millor robot que conec :wink:"
         instructions: |-
@@ -362,10 +330,6 @@ ca:
           Intentem canviar el nivell de notificació d'aquest tema. A la part inferior del tema, trobareu un botó que mostra que estàs **veient ** aquest tema. Es pot canviar el nivell de notificació al **seguint**?
         not_found: |-
           Sembla que encara estàs mirant :eyes: aquest tema! Si tens problemes per trobar-lo, el botó de nivell de notificació es troba a la part inferior del tema.
-        reply: |-
-          Un treball increïble! Espero que no hagis silenciat aquest tema, perquè a vegades puc ser una mica xerraire :grin:
-
-          Tingues en compte que quan respons a un tema o llegeixes un tema durant més d'uns minuts, s'estableix automàticament en un nivell de notificació de "seguiment". Pots canviar això a [les teves preferències d'usuari](/my/preferences).
       poll:
         instructions: |-
           Saps que pots incorporar una enquesta a qualsevol publicació? Prova-ho utilitzant l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor per **crear una enquesta**.

@@ -65,6 +65,7 @@ const bindings = {
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
   "shift+u": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
+  "shift+f11": { handler: "fullscreenComposer" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -129,9 +130,7 @@ export default {
   quoteReply() {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    setTimeout(function() {
-      $(".d-editor .quote").click();
-    }, 500);
+    Ember.run.later(() => $(".d-editor .quote").click(), 500);
   },
 
   goToFirstPost() {
@@ -154,6 +153,8 @@ export default {
 
   replyToTopic() {
     this._replyToPost();
+
+    return false;
   },
 
   selectDown() {
@@ -195,12 +196,21 @@ export default {
   },
 
   createTopic() {
-    if (this.currentUser && this.currentUser.can_create_topic) {
-      this.container.lookup("controller:composer").open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.CREATE_TOPIC
-      });
+    if (!(this.currentUser && this.currentUser.can_create_topic)) {
+      return;
     }
+
+    // If the page has a create-topic button, use it for context sensitive attributes like category
+    let $createTopicButton = $("#create-topic");
+    if ($createTopicButton.length) {
+      $createTopicButton.click();
+      return;
+    }
+
+    this.container.lookup("controller:composer").open({
+      action: Composer.CREATE_TOPIC,
+      draftKey: Composer.CREATE_TOPIC
+    });
   },
 
   focusComposer() {
@@ -209,6 +219,13 @@ export default {
       setTimeout(() => $("textarea.d-editor-input").focus(), 0);
     } else {
       composer.send("openIfDraft");
+    }
+  },
+
+  fullscreenComposer() {
+    const composer = this.container.lookup("controller:composer");
+    if (composer.get("model")) {
+      composer.toggleFullscreen();
     }
   },
 
@@ -225,6 +242,8 @@ export default {
       type: "search",
       event
     });
+
+    return false;
   },
 
   toggleHamburgerMenu(event) {
@@ -311,10 +330,11 @@ export default {
         .findBy("id", selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
-        let actionMethod = topicController._actions[action];
+
+        let actionMethod = topicController.actions[action];
         if (!actionMethod) {
           const topicRoute = container.lookup("route:topic");
-          actionMethod = topicRoute._actions[action];
+          actionMethod = topicRoute.actions[action];
         }
 
         const result = actionMethod.call(topicController, post);
@@ -323,6 +343,8 @@ export default {
         }
       }
     }
+
+    return false;
   },
 
   _bindToSelectedPost(action, binding) {

@@ -46,6 +46,25 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
+      it "do off topic quoting of posts from secure categories" do
+        category = Fabricate(:category, read_restricted: true)
+        topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
+
+        expected = <<~HTML
+          <aside class="quote no-group" data-post="3" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
+          </div>
+          <blockquote>
+          <p>I have nothing to say.</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"maja, post:3, topic:#{topic.id}\"]\nI have nothing to say.\n[/quote]", topic_id: 1)).to eq(n(expected))
+      end
+
       it "indifferent about missing quotations" do
         md = <<~MD
           [quote=#{user.username}, post:123, topic:456, full:true]
@@ -220,10 +239,75 @@ describe PrettyText do
       expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
     end
 
-    it "can handle mention with hyperlinks" do
-      Fabricate(:user, username: "sam")
-      expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
-      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
+    it "handles user and group mentions correctly" do
+      ['User', 'user2'].each do |username |
+        Fabricate(:user, username: username)
+      end
+
+      ['Group', 'group2'].each do |name|
+        Fabricate(:group,
+          name: name,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone]
+        )
+      end
+
+      [
+        [
+          'hi @uSer! @user2 hi',
+          '<p>hi <a class="mention" href="/u/user">@uSer</a>! <a class="mention" href="/u/user2">@user2</a> hi</p>'
+        ],
+        [
+          "hi\n@user. @GROUP @somemention @group2",
+          %Q|<p>hi<br>\n<a class="mention" href="/u/user">@user</a>. <a class="mention-group" href="/groups/group">@GROUP</a> <span class="mention">@somemention</span> <a class="mention-group" href="/groups/group2">@group2</a></p>|
+        ]
+      ].each do |input, expected|
+        expect(PrettyText.cook(input)).to eq(expected)
+      end
+    end
+
+    context 'subfolder' do
+      before do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+      end
+
+      it "handles user and group mentions correctly" do
+        Fabricate(:user, username: 'user1')
+        Fabricate(:group, name: 'groupA', mentionable_level: Group::ALIAS_LEVELS[:everyone])
+
+        input = 'hi there @user1 and @groupA'
+        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group" href="/forum/groups/groupa">@groupA</a></p>'
+
+        expect(PrettyText.cook(input)).to eq(expected)
+      end
+    end
+
+    it "does not create mention for a non mentionable group" do
+      group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody])
+
+      expect(PrettyText.cook("test @#{group.name} test")).to eq(
+        %Q|<p>test <span class="mention">@#{group.name}</span> test</p>|
+      )
+    end
+
+    it 'does not mention staged users' do
+      user = Fabricate(:user, staged: true)
+
+      expect(PrettyText.cook("something @#{user.username} something")).to eq(
+        %Q|<p>something <span class="mention">@#{user.username}</span> something</p>|
+      )
+    end
+
+    describe 'when mentions are disabled' do
+      before do
+        SiteSetting.enable_mentions = false
+      end
+
+      it 'should not convert mentions to links' do
+        _user = Fabricate(:user)
+
+        expect(PrettyText.cook('hi @user')).to eq('<p>hi @user</p>')
+      end
     end
 
     it "can handle mentions inside a hyperlink" do
@@ -512,6 +596,17 @@ describe PrettyText do
       expect(PrettyText.excerpt(nil, 100)).to eq('')
     end
 
+    it "handles custom bbcode excerpt" do
+      raw = <<~RAW
+      [excerpt]
+      hello [site](https://site.com)
+      [/excerpt]
+      more stuff
+      RAW
+      post = Fabricate(:post, raw: raw)
+      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"nofollow noopener\">site</a>")
+    end
+
     it "handles span excerpt at the beginning of a post" do
       expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test", 100)).to eq('hi')
       post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
@@ -797,6 +892,10 @@ describe PrettyText do
       expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
       expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
     end
+
+    it "correctly strips VARIATION SELECTOR-16 character (ufe0f) from some emojis" do
+      expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
+    end
   end
 
   describe "custom emoji" do
@@ -971,42 +1070,6 @@ HTML
     expect(PrettyText.cook("<img src='a'>\nhttp://a.com")).to include('onebox')
   end
 
-  it 'handles mini onebox' do
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com/a")
-
-    stub_request(:get, "http://cnn.com/a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
-    expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
-  end
-
-  it 'handles mini onebox with query param' do
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com?a")
-
-    stub_request(:get, "http://cnn.com?a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
-    expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
-  end
-
-  it 'skips mini onebox for primary domain' do
-
-    # we only include mini onebox if there is something in path or query params
-
-    SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com/")
-
-    stub_request(:get, "http://cnn.com/").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
-
-    expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
-    expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)
-  end
-
   it "can handle bbcode" do
     expect(PrettyText.cook("a[b]b[/b]c")).to eq('<p>a<span class="bbcode-b">b</span>c</p>')
     expect(PrettyText.cook("a[i]b[/i]c")).to eq('<p>a<span class="bbcode-i">b</span>c</p>')
@@ -1083,13 +1146,13 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports nesting tags in url" do
     cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1181,39 +1244,6 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
-  end
-
-  describe "inline onebox" do
-    it "includes the topic title" do
-      topic = Fabricate(:topic)
-
-      raw = "Hello #{topic.url}"
-
-      cooked = <<~HTML
-        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).to eq(cooked.strip)
-    end
-
-    it "invalidates the onebox url" do
-      topic = Fabricate(:topic)
-      url = topic.url
-      raw = "Hello #{url}"
-
-      PrettyText.cook(raw)
-
-      topic.title = "Updated: #{topic.title}"
-      topic.save
-
-      cooked = <<~HTML
-        <p>Hello <a href="#{url}">#{topic.title}</a></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).not_to eq(cooked.strip)
-      expect(PrettyText.cook(raw, invalidate_oneboxes: true)).to eq(cooked.strip)
-      expect(PrettyText.cook(raw)).to eq(cooked.strip)
-    end
   end
 
   describe "image decoding" do

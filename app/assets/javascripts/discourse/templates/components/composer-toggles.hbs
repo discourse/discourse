@@ -10,5 +10,13 @@
     class="toggler"
     icon=toggleIcon
     action=toggleComposer
-    title=title}}
+    title=toggleTitle}}
+
+  {{#unless site.mobileView}}
+    {{flat-button
+      class="toggle-fullscreen"
+      icon=fullscreenIcon
+      action=toggleFullscreen
+      title=fullscreenTitle}}
+  {{/unless}}
 </div>

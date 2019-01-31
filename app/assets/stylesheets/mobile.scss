@@ -22,12 +22,13 @@
 @import "mobile/emoji";
 @import "mobile/ring";
 @import "mobile/group";
-@import "mobile/groups";
 @import "mobile/dashboard_next";
+@import "mobile/admin_customize";
 @import "mobile/admin_reports";
 @import "mobile/admin_report";
 @import "mobile/admin_report_table";
 @import "mobile/admin_report_counters";
+@import "mobile/menu-panel";
 
 // Import all component-specific files
 @import "mobile/components/*";

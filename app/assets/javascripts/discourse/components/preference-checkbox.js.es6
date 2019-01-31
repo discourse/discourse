@@ -1,4 +1,4 @@
-export default Em.Component.extend({
+export default Ember.Component.extend({
   classNames: ["controls"],
 
   label: function() {
@@ -9,7 +9,7 @@ export default Em.Component.extend({
     const warning = this.get("warning");
 
     if (warning && this.get("checked")) {
-      this.sendAction("warning");
+      this.warning();
       return false;
     }
 

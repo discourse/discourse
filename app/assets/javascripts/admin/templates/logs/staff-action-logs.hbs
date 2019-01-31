@@ -32,8 +32,8 @@
   {{else}}
     {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions value=filterActionId none="admin.logs.staff_actions.all"}}
   {{/if}}
-  
-  {{d-button action="exportStaffActionLogs" label="admin.export_csv.button_text" icon="download"}}
+
+  {{d-button class="btn-default" action=(action "exportStaffActionLogs") label="admin.export_csv.button_text" icon="download"}}
 </div>
 <div class="clearfix"></div>
 
@@ -57,8 +57,14 @@
       <tr class='admin-list-item'>
         <td class="staff-users">
           <div class="staff-user">
-          {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
-          <a {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
+            {{#if item.acting_user}}
+              {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
+              <a {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
+            {{else}}
+              <span class="deleted-user" title="{{i18n 'admin.user.deleted'}}">
+                {{d-icon "far-trash-alt"}}
+              </span>
+            {{/if}}
           </div>
         </td>
         <td class="col value action">

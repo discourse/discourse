@@ -6,27 +6,69 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 sl:
+  badges:
+    certified:
+      name: Certificirani
+      description: "Dokončali naš uvodni vodič"
+      long_description: |
+        Ta značka je podeljena po uspešno opravljenem uvodnem vodiču. Preveli ste pobudo, da ste se naučili osnovnih orodij za pogovore in ste sedaj certificirani!
+    licensed:
+      name: Licencirani
+      description: "Dokončali ste naš napredni vodič"
+      long_description: |
+        Ta značka vam je podeljena po uspečno opravljenem naprednem vodiču. Sedaj obvladate napredna orodja za pogovore - in tako ste licencirani!
   discourse_narrative_bot:
+    bio: "Pozdravljeni, jaz nisem prava oseba. Sem robot, ki te lahko nauči o tej strani. Za pogovor z menoj mi pošlji sporočilo ali me omeni z **`@%{discobot_username}`**."
+    timeout:
+      message: |-
+        Pozdravljen @%{username}, samo preverjam, ker vas že nekaj časa nisem slišal.
+
+        - Za nadaljevanje, mi pošlji sporočilo - kadarkoli.
+
+        - Če bi rad preskočil ta korak, mi recite `%{skip_trigger}`.
+
+        - Za začetek znova recite `%{reset_trigger}`.
+
+        Če nočete pa je tudi prav. Sem robot. Ne boste me prizadeli. :sob:
+    dice:
+      trigger: "vreči"
+      invalid: |-
+        Oprostite, matematično ni mogoče vreči to kombinacijo kock. :confounded:
+      not_enough_dice: |-
+        Imam samo %{num_of_dice} kock. [Sramotno](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), vem!
+      out_of_range: |-
+        Ali ste vedeli da je [največje število strani](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematično pravično kocko 120?
     quote:
+      trigger: "citiraj"
       '1':
+        quote: "V centru vsake težave leži priložnost"
         author: "Albert Einstein"
       '2':
+        quote: "Svobodo se ne splača imeti, če ne vključuje tudi pravico do napake."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Ne jokaj zato ker je konec, ampak se nasmej ker se je zgodilo."
         author: "Dr Seuss"
       '4':
+        quote: "Če hočeš da je nekaj narejeno pravilno, potem naredi sam."
         author: "Charles-Guillaume Étienne"
       '5':
+        quote: "Verjemi da zmoreš in si že na pol poti."
         author: "Theodore Roosevelt"
       '6':
+        quote: "Življenje je kot škatla s čokoladicami. Nikoli ne veš, katero boš dobil."
         author: "Forrest Gumpova mama"
       '7':
+        quote: "To je majhen korak za človeka, velik za človeštvo."
         author: "Neil Armstrong"
       '8':
+        quote: "Vsak dan naredi eno stvar ki te straši."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Napake so vedno odpustljive, če le imaš pogum da jih priznaš."
         author: "Bruce Lee"
       '10':
+        quote: "Karkoli si človek lahko zamisli ali verjame, lahko tudi doseže."
         author: "Napoleon Hill"
     magic_8_ball:
       answers:
@@ -41,5 +83,3 @@ sl:
       help_trigger: 'prikaži pomoč'
     new_user_narrative:
       reset_trigger: "novi uporabnik"
-      hello:
-        title: ":robot: Pozdrav!"

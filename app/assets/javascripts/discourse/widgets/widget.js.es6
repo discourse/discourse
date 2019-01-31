@@ -133,6 +133,7 @@ export function createWidget(name, opts) {
 export function reopenWidget(name, opts) {
   let existing = _registry[name];
   if (!existing) {
+    // eslint-disable-next-line no-console
     console.error(`Could not find widget ${name} in registry`);
     return;
   }
@@ -205,9 +206,7 @@ export default class Widget {
     return {};
   }
 
-  destroy() {
-    console.log("destroy called");
-  }
+  destroy() {}
 
   render(prev) {
     const { dirtyKeys } = this;
@@ -268,6 +267,7 @@ export default class Widget {
 
     if (!WidgetClass) {
       if (!this.register) {
+        // eslint-disable-next-line no-console
         console.error("couldn't find register");
         return;
       }
@@ -310,15 +310,16 @@ export default class Widget {
     if (view) {
       const method = view.get(name);
       if (!method) {
+        // eslint-disable-next-line no-console
         console.warn(`${name} not found`);
         return;
       }
 
       if (typeof method === "string") {
-        view.sendAction(method, param);
+        view[method](param);
         promise = Ember.RSVP.resolve();
       } else {
-        const target = view.get("targetObject") || view;
+        const target = view.get("target") || view;
         promise = method.call(target, param);
         if (!promise || !promise.then) {
           promise = Ember.RSVP.resolve(promise);

@@ -44,7 +44,7 @@ sq:
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         inactive_user_error: "Happens when the sender is not active."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
@@ -58,7 +58,7 @@ sq:
       exclusion: është i rezervuar
       invalid: është i pavlefshëm
       not_a_number: nuk është një numër
-      record_invalid: 'Verifikimi dështoj: %{errors}'
+      record_invalid: "Verifikimi dështoj: %{errors}"
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
@@ -67,7 +67,7 @@ sq:
     errors:
       <<: *errors
   invite:
-    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
+    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   reading_time: "Koha e leximit"
@@ -81,9 +81,6 @@ sq:
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
     in_reply_to: "▶ %{username}"
-    replies:
-      one: "1 përgjigje"
-      other: "%{count} përgjigje"
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
     one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
@@ -122,7 +119,7 @@ sq:
     until_posts:
       one: "1 postim"
       other: "%{count} postime"
-    'new-topic': |
+    "new-topic": |
       Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
 
       - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
@@ -131,8 +128,8 @@ sq:
 
       - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
 
-      Për më tepër, [lexoni porositë e bashkësisë](/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
-    'new-reply': |
+      Për më tepër, [lexoni porositë e bashkësisë](%{base_path}/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
+    "new-reply": |
       Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
 
       - Jini të sjellshëm me anëtarët e tjerë të faqes.
@@ -141,7 +138,7 @@ sq:
 
       - A i shton diçka diskutimit përgjigja juaj?
 
-      Për më shumë, shikoni [udhëzimet e faqes](/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
+      Për më shumë, shikoni [udhëzimet e faqes](%{base_path}/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -274,9 +271,9 @@ sq:
         other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
-    update: 'Rifresko Fjalëkalimin'
-    save: 'Vendos Fjalëkalim'
-    title: 'Rivendos Fjalëkalimin'
+    update: "Rifresko Fjalëkalimin"
+    save: "Vendos Fjalëkalim"
+    title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   change_email:
@@ -295,51 +292,49 @@ sq:
     welcome_to: "Mirë se vini tek %{site_name}!"
   post_action_types:
     off_topic:
-      title: 'Jashtë teme'
-      description: 'Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër.'
-      long_form: 'sinjalizoi këtë postim si jashtë teme'
+      title: "Jashtë teme"
+      description: "Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër."
+      long_form: "sinjalizoi këtë postim si jashtë teme"
     spam:
-      title: 'Spam'
-      long_form: 'sinjalizoi këtë postim si spam'
+      title: "Spam"
+      long_form: "sinjalizoi këtë postim si spam"
       email_title: '"%{title}" u sinjalizua si spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'i papërshtatshëm'
-      description: 'Ky postim përmban pjesë që një person i arsyeshëm do ta quante ofenduese, fyese, ose kundër <a href="/guidelines">udhëzimeve të komunitetit tonë</a>.'
-      long_form: 'sinjalizoi këtë postim si të papërshtatshëm'
+      title: "i papërshtatshëm"
+      long_form: "sinjalizoi këtë postim si të papërshtatshëm"
     notify_user:
-      title: 'Dërgoji @{{username}} një mesazh'
-      long_form: 'messaged user'
+      title: "Dërgoji @{{username}} një mesazh"
+      long_form: "messaged user"
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Diçka tjetër"
-      description: 'Ky postim kërkon vëmendjen e stafit për një arsye që nuk është radhitur më lart.'
+      description: "Ky postim kërkon vëmendjen e stafit për një arsye që nuk është radhitur më lart."
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Shto tek të preferuarat'
-      description: 'Shto postimin tek të preferuarat'
-      long_form: 'shtoi postimin tek të preferuarat'
+      title: "Shto tek të preferuarat"
+      description: "Shto postimin tek të preferuarat"
+      long_form: "shtoi postimin tek të preferuarat"
     like:
-      title: 'Pëlqe'
-      description: 'Më pëlqen ky postim'
-      long_form: 'pëlqeu këtë'
+      title: "Pëlqe"
+      description: "Më pëlqen ky postim"
+      long_form: "pëlqeu këtë"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me këtë faqe, por ka natyrë promovuese.'
-      long_form: 'sinjalizoi këtë postim si spam'
+      title: "Spam"
+      description: "Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me këtë faqe, por ka natyrë promovuese."
+      long_form: "sinjalizoi këtë postim si spam"
     inappropriate:
-      title: 'I papërshtatshëm'
-      description: 'Ky postim përmban pjesë që një person i arsyeshëm do ta quante ofenduese, fyese, ose kundër <a href="/guidelines">udhëzimeve të komunitetit tonë</a>.'
-      long_form: 'shënoje si të papërshtatshme'
+      title: "I papërshtatshëm"
+      long_form: "shënoje si të papërshtatshme"
     notify_moderators:
       title: "Diçka Tjetër"
-      long_form: 'shënoje për vëmendjen e moderatorëve'
+      long_form: "shënoje për vëmendjen e moderatorëve"
       email_title: 'Tema "%{title}" kërkon redaktimin e një moderatori'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>'
+    user_must_edit: "<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>"
   archetypes:
     regular:
       title: "Temë e zakonshme"
@@ -360,7 +355,7 @@ sq:
   user_api_key:
     title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
-    description: "\"%{application_name}\" po kërkon këto të drejta në lidhje me llogarinë tuaj:"
+    description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     scopes:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
@@ -394,8 +389,6 @@ sq:
       title: "Të preferuarat"
       xaxis: "Ditë"
       yaxis: "Numri i postimeve të preferuar të rinj"
-    starred:
-      xaxis: "Ditë"
     users_by_trust_level:
       title: "Përdorues për Nivel Besimi"
       xaxis: "Niveli i besimit"
@@ -443,7 +436,6 @@ sq:
       title: "Logged In"
       xaxis: "Day"
     page_view_crawler_reqs:
-      title: "Web Crawlers"
       xaxis: "Day"
     page_view_total_reqs:
       xaxis: "Day"
@@ -489,15 +481,9 @@ sq:
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
-    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
-    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
-    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
+    queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
+    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -514,27 +500,21 @@ sq:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
-    contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
-    post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
-    logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    email_subject: "Customizable subject format for standard emails. See https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
@@ -551,12 +531,9 @@ sq:
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
-    flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
@@ -572,42 +549,29 @@ sq:
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
-    show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Aktivizo sistemin e targetave"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
-    version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
-    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
-    sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_yahoo_logins: "Enable Yahoo authentication"
-    enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
-    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
-    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
-    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -667,9 +631,7 @@ sq:
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
-    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
@@ -704,7 +666,7 @@ sq:
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_enabled: "Enable replying to topics via email."
-    reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -714,7 +676,6 @@ sq:
     pop3_polling_host: "The host to poll for email via POP3."
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    log_mail_processing_failures: "Log all email processing failures to http://yoursitename.com/logs"
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -729,8 +690,6 @@ sq:
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
-    staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
     enable_user_directory: "Provide a directory of users for browsing"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
@@ -739,7 +698,6 @@ sq:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
@@ -759,7 +717,6 @@ sq:
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
-    enforce_square_emoji: "Force a square aspect ratio to all emojis."
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
@@ -777,13 +734,13 @@ sq:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      invalid_reply_by_email_address: "Value must contain '%%{reply_key}' and be different from the notification email."
   search:
     within_post: "#%{post_number} nga %{username}"
     types:
-      category: 'Categories'
-      topic: 'Results'
-      user: 'Users'
+      category: "Categories"
+      topic: "Results"
+      user: "Users"
   original_poster: "Postuesi fillestar"
   most_posts: "Most Posts"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
@@ -791,18 +748,7 @@ sq:
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
-  move_posts:
-    new_topic_moderator_post:
-      one: "A post was split to a new topic: %{topic_link}"
-      other: "%{count} posts were split to a new topic: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "A post was merged into an existing topic: %{topic_link}"
-      other: "%{count} posts were merged into an existing topic: %{topic_link}"
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_message_max_posts:
       one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
       other: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
@@ -829,12 +775,6 @@ sq:
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
-    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
-    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
@@ -871,7 +811,7 @@ sq:
       [Konfirmo llogarinë e administratorit](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
   flags_dispositions:
@@ -918,12 +858,6 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-    dashboard_problems:
-      subject_template: "Gjetëm ca probleme"
-      text_body_template: |
-        Në panelin e kontrollit keni disa probleme që duhen riparuar.
-
-        [Shikoji dhe rregulloji](%{base_url}/admin).
   unsubscribe_link: |
     Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1049,7 +983,7 @@ sq:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{email_prefix}] Përmbledhja"
@@ -1090,8 +1024,7 @@ sq:
     search_title: "Kërko në këtë faqe"
   terms_of_service:
     title: "Kushtet e shërbimit"
-    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
-  deleted: 'deleted'
+  deleted: "deleted"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1228,9 +1161,8 @@ sq:
     respected:
       name: I respektuar
       description: Mori 2 pëlqime në 100 postime
-      long_description: |+
+      long_description: |
         Kjo stemë jepet kur merrni të paktën 2 pëlqime në 100 postime të ndryshme. Po fitoni respektin e komunitetit për mundin e shumtë nëpër bisedimet këtu.
-
     admired:
       name: I admiruar
       description: Mori 5 pëlqime në 300 postime

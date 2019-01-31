@@ -61,11 +61,17 @@ const TopicRoute = Discourse.Route.extend({
 
     showTopicStatusUpdate() {
       const model = this.modelFor("topic");
-      model.set("topic_timer", Ember.Object.create(model.get("topic_timer")));
-      model.set(
-        "private_topic_timer",
-        Ember.Object.create(model.get("private_topic_timer"))
-      );
+
+      const topicTimer = model.get("topic_timer");
+      if (!topicTimer) {
+        model.set("topic_timer", {});
+      }
+
+      const privateTopicTimer = model.get("private_topic_timer");
+      if (!privateTopicTimer) {
+        model.set("private_topic_timer", {});
+      }
+
       showModal("edit-topic-timer", { model });
       this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
     },
@@ -114,15 +120,11 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor("raw_email").loadRawEmail(model.get("id"));
     },
 
-    mergeTopic() {
-      showModal("merge-topic", {
+    moveToTopic() {
+      showModal("move-to-topic", {
         model: this.modelFor("topic"),
-        title: "topic.merge_topic.title"
+        title: "topic.move_to.title"
       });
-    },
-
-    splitTopic() {
-      showModal("split-topic", { model: this.modelFor("topic") });
     },
 
     changeOwner() {
@@ -146,9 +148,9 @@ const TopicRoute = Discourse.Route.extend({
           postUrl += "/" + currentPost;
         }
 
-        Em.run.cancel(scheduledReplace);
+        Ember.run.cancel(scheduledReplace);
         lastScrollPos = parseInt($(document).scrollTop(), 10);
-        scheduledReplace = Em.run.later(
+        scheduledReplace = Ember.run.later(
           this,
           "_replaceUnlessScrolling",
           postUrl,
@@ -163,8 +165,8 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     willTransition() {
-      this._super();
-      Em.run.cancel(scheduledReplace);
+      this._super(...arguments);
+      Ember.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
     }
@@ -179,7 +181,7 @@ const TopicRoute = Discourse.Route.extend({
       return;
     }
     lastScrollPos = currentPos;
-    scheduledReplace = Em.run.later(
+    scheduledReplace = Ember.run.later(
       this,
       "_replaceUnlessScrolling",
       url,
@@ -189,13 +191,13 @@ const TopicRoute = Discourse.Route.extend({
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
-    postStream.set("summary", Em.get(params, "filter") === "summary");
+    postStream.set("summary", Ember.get(params, "filter") === "summary");
 
-    const usernames = Em.get(params, "username_filters"),
+    const usernames = Ember.get(params, "username_filters"),
       userFilters = postStream.get("userFilters");
 
     userFilters.clear();
-    if (!Em.isEmpty(usernames) && usernames !== "undefined") {
+    if (!Ember.isEmpty(usernames) && usernames !== "undefined") {
       userFilters.addObjects(usernames.split(","));
     }
 
@@ -225,7 +227,7 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   activate() {
-    this._super();
+    this._super(...arguments);
     isTransitioning = false;
 
     const topic = this.modelFor("topic");
@@ -233,7 +235,7 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   deactivate() {
-    this._super();
+    this._super(...arguments);
 
     this.searchService.set("searchContext", null);
     this.controllerFor("user-card").set("visible", false);

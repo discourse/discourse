@@ -26,7 +26,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     help() {
       this.setProperties({
-        offerHelp: I18n.t("forgot_password.help"),
+        offerHelp: I18n.t("forgot_password.help", {
+          basePath: Discourse.BaseUri
+        }),
         helpSeen: true
       });
     },

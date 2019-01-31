@@ -47,7 +47,7 @@ export default Ember.Component.extend({
 
   click() {
     if (this.get("isLocked")) return false;
-    this.sendAction("onClickSelectionItem", [this.get("computedContent")]);
+    this.onClickSelectionItem([this.get("computedContent")]);
     return false;
   }
 });

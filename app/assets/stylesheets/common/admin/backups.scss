@@ -61,13 +61,8 @@ $rollback-darker: darken($rollback, 20%) !default;
 }
 
 .admin-backups-logs {
-  max-height: 500px;
+  max-height: 65vh;
   overflow: auto;
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    max-height: 65vh;
-  }
 }
 
 button.ru {

@@ -1,5 +1,6 @@
 import loadScript from "discourse/lib/load-script";
 import { escapeExpression } from "discourse/lib/utilities";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
 export default function($elem) {
   if (!$elem) {
@@ -45,9 +46,7 @@ export default function($elem) {
             const href = item.el.data("download-href") || item.src;
             let src = [
               escapeExpression(item.el.attr("title")),
-              $("span.informations", item.el)
-                .text()
-                .replace("x", "&times;")
+              $("span.informations", item.el).text()
             ];
             if (
               !Discourse.SiteSettings.prevent_anons_from_downloading_files ||
@@ -57,6 +56,7 @@ export default function($elem) {
                 '<a class="image-source-link" href="' +
                   href +
                   '">' +
+                  renderIcon("string", "download") +
                   I18n.t("lightbox.download") +
                   "</a>"
               );

@@ -1,0 +1,197 @@
+.search-menu {
+  .search-input {
+    position: relative;
+  }
+
+  .search-context .show-help {
+    float: right;
+  }
+
+  .heading {
+    padding: 5px 0 5px 5px;
+    .filter {
+      padding: 0 5px;
+    }
+  }
+
+  input[type="text"] {
+    margin: 0.5em 3px;
+    box-sizing: border-box;
+    width: calc(100% - 6px);
+    height: 32px;
+  }
+
+  .search-context {
+    padding: 0 5px;
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
+  .search-context + .results {
+    margin-top: 5px;
+  }
+
+  .results {
+    display: flex;
+    flex-direction: row;
+
+    .list {
+      .item {
+        .blurb {
+          // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          -ms-word-break: break-all;
+          word-break: break-all;
+          word-break: break-word;
+          -ms-hyphens: auto;
+          -moz-hyphens: auto;
+          -webkit-hyphens: auto;
+          hyphens: auto;
+        }
+      }
+    }
+
+    .main-results {
+      display: flex;
+      flex: 1 1 auto;
+      .topic-statuses {
+        color: $primary-medium;
+      }
+    }
+
+    .main-results + .secondary-results {
+      border-left: 1px solid $primary-low;
+      margin-left: 1em;
+      padding-left: 1em;
+      max-width: 33%;
+    }
+
+    .secondary-results {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+
+      .classification-results {
+        border-bottom: 1px solid $primary-low;
+        margin-bottom: 1em;
+        padding-bottom: 1em;
+      }
+
+      .search-result-category {
+      }
+
+      .search-result-tag {
+        .list {
+          .item {
+            display: inline-flex;
+
+            .widget-link.search-link {
+              display: inline;
+              font-size: $font-0;
+              padding: 5px;
+            }
+          }
+        }
+      }
+
+      .search-result-user {
+        .user-result {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .avatar {
+            margin-right: 0.5em;
+            display: block;
+            min-width: 25px;
+          }
+
+          .user-titles {
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            line-height: $line-height-medium;
+
+            .username,
+            .name {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .username {
+              color: dark-light-choose($primary-high, $secondary-low);
+              font-size: $font-0;
+              font-weight: 700;
+            }
+
+            .name {
+              color: dark-light-choose($primary-high, $secondary-low);
+              font-size: $font-down-1;
+            }
+          }
+        }
+      }
+
+      &.no-main-results .search-result-user {
+        .user-titles {
+          flex-direction: row;
+          align-items: center;
+
+          .name {
+            margin: 0 0 0 0.25em;
+            font-size: $font-0;
+          }
+        }
+      }
+    }
+
+    .show-more {
+      padding: 5px;
+    }
+  }
+
+  .searching {
+    position: absolute;
+    top: 1.15em;
+    right: 1em;
+
+    .spinner {
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      margin: 0;
+    }
+  }
+
+  .no-results {
+    padding: 5px;
+  }
+
+  .filter {
+    padding: 0;
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  .search-link {
+    margin-bottom: 0.25em;
+
+    .badge-category-parent {
+      line-height: $line-height-small;
+    }
+
+    .topic {
+      display: inline-block;
+      line-height: $line-height-medium;
+    }
+
+    .topic-title {
+      margin-right: 0.25em;
+    }
+  }
+}

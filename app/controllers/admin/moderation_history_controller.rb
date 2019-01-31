@@ -10,7 +10,8 @@ class Admin::ModerationHistoryController < Admin::AdminController
         :suspend_user,
         :silence_user,
         :delete_post,
-        :delete_topic
+        :delete_topic,
+        :post_approved,
       ).values
     )
 

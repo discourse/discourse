@@ -26,14 +26,14 @@ function init(messageBus, appEvents) {
   try {
     keyValueStore.getItem(focusTrackerKey);
   } catch (e) {
-    Em.Logger.info(
+    Ember.Logger.info(
       "Discourse desktop notifications are disabled - localStorage denied."
     );
     return;
   }
 
   if (!("Notification" in window)) {
-    Em.Logger.info(
+    Ember.Logger.info(
       "Discourse desktop notifications are disabled - not supported by browser"
     );
     return;
@@ -47,7 +47,7 @@ function init(messageBus, appEvents) {
       return;
     }
   } catch (e) {
-    Em.Logger.warn(
+    Ember.Logger.warn(
       "Unexpected error, Notification is defined on window but not a responding correctly " +
         e
     );
@@ -58,7 +58,7 @@ function init(messageBus, appEvents) {
     // Preliminary checks passed, continue with setup
     setupNotifications(appEvents);
   } catch (e) {
-    Em.Logger.error(e);
+    Ember.Logger.error(e);
   }
 }
 
@@ -70,8 +70,8 @@ function confirmNotification() {
     {
       body: I18n.t("notifications.popup.confirm_body"),
       icon:
-        Discourse.SiteSettings.logo_small_url ||
-        Discourse.SiteSettings.logo_url,
+        Discourse.SiteSettings.site_logo_small_url ||
+        Discourse.SiteSettings.site_logo_url,
       tag: "confirm-subscription"
     }
   );
@@ -79,7 +79,7 @@ function confirmNotification() {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  setTimeout(() => {
+  Ember.run.later(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);
@@ -150,8 +150,11 @@ function onNotification(data) {
   });
 
   const notificationBody = data.excerpt;
+
   const notificationIcon =
-    Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url;
+    Discourse.SiteSettings.site_logo_small_url ||
+    Discourse.SiteSettings.site_logo_url;
+
   const notificationTag =
     "discourse-notification-" +
     Discourse.SiteSettings.title +
@@ -174,7 +177,7 @@ function onNotification(data) {
     }
 
     notification.addEventListener("click", clickEventHandler);
-    setTimeout(function() {
+    Ember.run.later(() => {
       notification.close();
       notification.removeEventListener("click", clickEventHandler);
     }, 10 * 1000);

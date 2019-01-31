@@ -15,7 +15,7 @@ describe Stylesheet::Importer do
 
     expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(#{background.url})}")
 
-    GlobalSetting.expects(:cdn_url).returns("//awesome.cdn")
+    GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
     expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(//awesome.cdn#{background.url})}")
   end
 
@@ -30,7 +30,33 @@ describe Stylesheet::Importer do
     background = Fabricate(:upload_s3)
     category = Fabricate(:category, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/uploads")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
+  end
+
+  context "#theme_variables" do
+
+    let(:theme) { Fabricate(:theme) }
+
+    let(:importer) { described_class.new(theme: theme) }
+
+    let(:upload) { Fabricate(:upload) }
+    let(:upload_s3) { Fabricate(:upload_s3) }
+
+    let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "var", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
+    let(:theme_field_s3) { ThemeField.create!(theme: theme, target_id: 1, name: "var_s3", upload: upload_s3, value: "", type_id: ThemeField.types[:theme_upload_var]) }
+
+    it "should contain the URL" do
+      theme_field.save!
+      import = importer.imports("theme_variables", nil)
+      expect(import.source).to include(upload.url)
+    end
+
+    it "should contain the S3 URL" do
+      theme_field_s3.save!
+      import = importer.imports("theme_variables", nil)
+      expect(import.source).to include(upload_s3.url)
+    end
+
   end
 
 end

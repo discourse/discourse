@@ -33,6 +33,15 @@ describe HtmlToMarkdown do
   it "converts <b>" do
     expect(html_to_markdown("<b>Bold</b>")).to eq("**Bold**")
     expect(html_to_markdown("<b>B*ld</b>")).to eq("__B*ld__")
+
+    html = <<~HTML
+      <p><b>Bold
+      <br>
+      <br>
+      </b>
+      </p>
+    HTML
+    expect(html_to_markdown(html)).to eq("**Bold**")
   end
 
   it "converts <em>" do
@@ -227,9 +236,14 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("<style>* { margin: 0 }</style>")).to eq("")
   end
 
-  it "handles divs within spans" do
-    html = "<div>1st paragraph<span><div>2nd paragraph</div></span></div>"
-    expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph")
+  it "handles <p> and <div> within <span>" do
+    html = "<div>1st paragraph<span><div>2nd paragraph</div><p>3rd paragraph</p></span></div>"
+    expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph\n\n3rd paragraph")
+  end
+
+  it "handles <p> and <div> within <font>" do
+    html = "<font>1st paragraph<br><span>2nd paragraph</span><div>3rd paragraph</div><p>4th paragraph</p></font>"
+    expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph\n3rd paragraph\n\n4th paragraph")
   end
 
   context "with an oddly placed <br>" do

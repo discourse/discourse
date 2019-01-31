@@ -10,26 +10,6 @@ describe PostActionNotifier do
   let!(:evil_trout) { Fabricate(:evil_trout) }
   let(:post) { Fabricate(:post) }
 
-  context 'liking' do
-    context 'when liking a post' do
-      it 'creates a notification' do
-        expect {
-          PostAction.act(evil_trout, post, PostActionType.types[:like])
-          # one like (welcome badge deferred)
-        }.to change(Notification, :count).by(1)
-      end
-    end
-
-    context 'when removing a liked post' do
-      it 'removes a notification' do
-        PostAction.act(evil_trout, post, PostActionType.types[:like])
-        expect {
-          PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
-        }.to change(Notification, :count).by(-1)
-      end
-    end
-  end
-
   context 'when editing a post' do
     it 'notifies a user of the revision' do
       expect {

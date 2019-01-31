@@ -27,7 +27,14 @@ describe UserOption do
       user.user_option.expects(:redirected_to_top).returns(nil)
       expect(user.user_option.should_be_redirected_to_top).to eq(false)
     end
+  end
 
+  describe "defaults" do
+    let(:user) { Fabricate(:user) }
+
+    it "should not hide the profile and presence by default" do
+      expect(user.user_option.hide_profile_and_presence).to eq(false)
+    end
   end
 
   describe "#mailing_list_mode" do

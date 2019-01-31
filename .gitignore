@@ -122,3 +122,5 @@ vendor/bundle/*
 # ignore nodejs files
 /node_modules
 /package-lock.json
+
+/vendor/data/GeoLite2-City.mmdb

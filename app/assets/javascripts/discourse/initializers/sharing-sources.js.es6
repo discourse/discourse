@@ -6,7 +6,7 @@ export default {
   initialize: function() {
     Sharing.addSource({
       id: "twitter",
-      icon: "twitter-square",
+      icon: "fab-twitter-square",
       generateUrl: function(link, title) {
         return (
           "http://twitter.com/intent/tweet?url=" +
@@ -22,7 +22,7 @@ export default {
 
     Sharing.addSource({
       id: "facebook",
-      icon: "facebook-square",
+      icon: "fab-facebook-square",
       title: I18n.t("share.facebook"),
       generateUrl: function(link, title) {
         return (
@@ -33,17 +33,6 @@ export default {
         );
       },
       shouldOpenInPopup: true
-    });
-
-    Sharing.addSource({
-      id: "google+",
-      icon: "google-plus-square",
-      title: I18n.t("share.google+"),
-      generateUrl: function(link) {
-        return "https://plus.google.com/share?url=" + encodeURIComponent(link);
-      },
-      shouldOpenInPopup: true,
-      popupHeight: 600
     });
 
     Sharing.addSource({

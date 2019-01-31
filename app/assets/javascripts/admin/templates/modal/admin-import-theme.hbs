@@ -4,7 +4,7 @@
     <label class="radio" for="local">{{i18n 'upload_selector.from_my_computer'}}</label>
     {{#if local}}
       <div class="inputs">
-        <input type="file" id="file-input" accept='.dcstyle.json,application/json'><br>
+        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept='.dcstyle.json,application/json,.tar.gz,application/x-gzip'><br>
         <span class="description">{{i18n 'admin.customize.theme.import_file_tip'}}</span>
       </div>
     {{/if}}
@@ -14,31 +14,36 @@
     <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
     {{#if remote}}
       <div class="inputs">
-        {{input value=uploadUrl placeholder="https://github.com/discourse/discourse/sample_theme"}}
+        <div class='repo'>
+        {{input value=uploadUrl placeholder=urlPlaceholder}}
         <span class="description">{{i18n 'admin.customize.theme.import_web_tip'}}</span>
+        </div>
+        <div class='branch'>
+        {{input value=branch placeholder="master"}}
+        <span class="description">{{i18n 'admin.customize.theme.remote_branch'}}</span>
+        </div>
+        <div class='check-private'>
+        <label>
+          {{input type="checkbox" checked=privateChecked}}
+          {{i18n 'admin.customize.theme.is_private'}}
+        </label>
+        </div>
         {{#if checkPrivate}}
-          <div class='check-private'>
-          <label>
-            {{input type="checkbox" checked=privateChecked}}
-            {{i18n 'admin.customize.theme.is_private'}}
-          </label>
           {{#if privateChecked}}
           {{#if publicKey}}
           <div class='public-key'>
             {{i18n 'admin.customize.theme.public_key'}}
-            {{textarea disabled=true value=publicKey}}
+            {{textarea readonly=true value=publicKey}}
           </div>
           {{/if}}
           {{/if}}
-          </div>
         {{/if}}
       </div>
-
     {{/if}}
   </div>
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="importTheme" disabled=loading class='btn btn-primary' icon='upload' label='admin.customize.import'}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button action=(action "importTheme") disabled=importDisabled class='btn btn-primary' icon='upload' label='admin.customize.import'}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

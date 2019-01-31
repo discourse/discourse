@@ -1,0 +1,15 @@
+<div class="sections">
+  {{plugin-outlet name="admin-dashboard-security-top"}}
+
+  <div class="main-section">
+    {{admin-report
+      dataSourceName="suspicious_logins"
+      filters=lastWeekfilters}}
+
+    {{admin-report
+      dataSourceName="staff_logins"
+      filters=lastWeekfilters}}
+
+    {{plugin-outlet name="admin-dashboard-security-bottom"}}
+  </div>
+</div>

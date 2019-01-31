@@ -1,23 +1,37 @@
 <div class="themes-list-header">
-  <b>{{I18n title}}</b>
+  <div {{action "changeView" THEMES}} class="themes-tab tab {{if themesTabActive 'active' ''}}">
+    {{d-icon "cube"}}
+    {{I18n "admin.customize.theme.title"}}
+  </div><div {{action "changeView" COMPONENTS}} class="components-tab tab {{if componentsTabActive 'active' ''}}">
+    {{I18n "admin.customize.theme.components"}}
+  </div>
 </div>
 
 <div class="themes-list-container">
   {{#if hasThemes}}
-    {{#each themes as |theme|}}
-      <div class="themes-list-item {{if theme.active 'active' ''}}">
-        {{#link-to 'adminCustomizeThemes.show' theme replace=true}}
-          {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName='span' args=(hash theme=theme)}}
-          {{theme.name}}
-          {{#if theme.user_selectable}}
-            {{d-icon "user"}}
-          {{/if}}
-          {{#if theme.default}}
-            {{d-icon "asterisk"}}
-          {{/if}}
-        {{/link-to}}
-      </div>
-    {{/each}}
+    {{#if hasActiveThemes}}
+      {{#each activeThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
+
+      {{#if hasInactiveThemes}}
+        <div class="themes-list-item inactive-indicator">
+          <span class="empty">
+            {{#if themesTabActive}}
+              {{I18n "admin.customize.theme.inactive_themes"}}
+            {{else}}
+              {{I18n "admin.customize.theme.inactive_components"}}
+            {{/if}}
+          </span>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if hasInactiveThemes}}
+      {{#each inactiveThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
+    {{/if}}
   {{else}}
     <div class="themes-list-item">
       <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>

@@ -1,0 +1,16 @@
+.admin-customize {
+  .show-current-style {
+    padding-left: 10px;
+    padding-top: 10px;
+    width: 70%;
+  }
+
+  .themes-list {
+    width: 28%;
+  }
+
+  .customize-themes-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}

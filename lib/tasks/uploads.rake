@@ -121,6 +121,8 @@ def migrate_from_s3
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
 
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
   Post
     .where("user_id > 0")
     .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
@@ -131,7 +133,7 @@ def migrate_from_s3
       post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+            file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
             sha1 = Upload.generate_digest(file)
             origin = nil
 
@@ -160,7 +162,7 @@ def migrate_from_s3
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
                 filename = upload.original_filename
                 origin = upload.origin
                 upload.destroy
@@ -201,9 +203,6 @@ end
 ################################################################################
 
 task "uploads:migrate_to_s3" => :environment do
-  require "file_store/s3_store"
-  require "file_store/local_store"
-
   ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
 end
 
@@ -212,67 +211,183 @@ def migrate_to_s3_all_sites
 end
 
 def migrate_to_s3
-  # make sure s3 is enabled
-  if !SiteSetting.Upload.enable_s3_uploads
-    puts "You must enable s3 uploads before running that task"
-    return
-  end
-
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Migrating uploads to S3 (#{SiteSetting.Upload.s3_upload_bucket}) for '#{db}'..."
+  dry_run = !!ENV["DRY_RUN"]
 
-  # will throw an exception if the bucket is missing
-  s3 = FileStore::S3Store.new
-  local = FileStore::LocalStore.new
+  puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
+  puts "Migrating uploads to S3 for '#{db}'..."
 
-  # Migrate all uploads
-  Upload.where.not(sha1: nil)
-    .where("url NOT LIKE '#{s3.absolute_base_url}%'")
-    .find_each do |upload|
-    # remove invalid uploads
-    if upload.url.blank?
-      upload.destroy!
-      next
-    end
-    # store the old url
-    from = upload.url
-    # retrieve the path to the local file
-    path = local.path_for(upload)
-    # make sure the file exists locally
-    if !path || !File.exists?(path)
-      putc "X"
-      next
-    end
+  if Upload.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
+    puts <<~TEXT
+      Some uploads were not migrated to the new scheme. Please run these commands in the rails console
 
-    begin
-      file = File.open(path)
-      content_type = `file --mime-type -b #{path}`.strip
-      to = s3.store_upload(file, upload, content_type)
-    rescue
-      putc "X"
-      next
-    ensure
-      file&.close
-    end
-
-    # remap the URL
-    DbHelper.remap(from, to)
-
-    putc "."
+      SiteSetting.migrate_to_new_scheme = true
+      Jobs::MigrateUploadScheme.new.execute(nil)
+    TEXT
+    exit 1
   end
+
+  unless GlobalSetting.use_s3?
+    puts <<~TEXT
+      Please provide the following environment variables
+        - DISCOURSE_S3_BUCKET
+        - DISCOURSE_S3_REGION
+        - DISCOURSE_S3_ACCESS_KEY_ID
+        - DISCOURSE_S3_SECRET_ACCESS_KEY
+    TEXT
+    exit 2
+  end
+
+  if SiteSetting.Upload.s3_cdn_url.blank?
+    puts "Please provide the 'DISCOURSE_S3_CDN_URL' environment variable"
+    exit 3
+  end
+
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+
+  s3 = Aws::S3::Client.new(
+    region: ENV["DISCOURSE_S3_REGION"],
+    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"])
+
+  if bucket_has_folder_path
+    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
+    folder = File.join(folder, "/")
+  else
+    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
+  end
+
+  puts "Uploading files to S3..."
+  print " - Listing local files"
+
+  local_files = []
+  IO.popen("cd public && find uploads/#{db}/original -type f").each do |file|
+    local_files << file.chomp
+    putc "." if local_files.size % 1000 == 0
+  end
+
+  puts " => #{local_files.size} files"
+  print " - Listing S3 files"
+
+  s3_objects = []
+
+  prefix =
+    if ENV["SKIP_MULTISITE_PREFIX"] || Rails.configuration.multisite
+      "uploads/#{db}/original/"
+    else
+      "original/"
+    end
+
+  options = { bucket: bucket, prefix: folder + prefix }
+
+  loop do
+    response = s3.list_objects_v2(options)
+    s3_objects.concat(response.contents)
+    putc "."
+    break if response.next_continuation_token.blank?
+    options[:continuation_token] = response.next_continuation_token
+  end
+
+  puts " => #{s3_objects.size} files"
+  puts " - Syncing files to S3"
+
+  synced = 0
+  failed = []
+
+  local_files.each do |file|
+    path = File.join("public", file)
+    name = File.basename(path)
+    etag = Digest::MD5.file(path).hexdigest
+    key = file[file.index(prefix)..-1]
+    key.prepend(folder) if bucket_has_folder_path
+
+    if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
+      next if File.size(path) == s3_object.size && s3_object.etag[etag]
+    end
+
+    options = {
+      acl: "public-read",
+      body: File.open(path, "rb"),
+      bucket: bucket,
+      content_type: MiniMime.lookup_by_filename(name)&.content_type,
+      key: key,
+    }
+
+    if !FileHelper.is_supported_image?(name)
+      upload = Upload.find_by(url: "/#{file}")
+
+      if upload&.original_filename
+        options[:content_disposition] =
+          %Q{attachment; filename="#{upload.original_filename}"}
+      end
+    end
+
+    if dry_run
+      puts "#{file} => #{options[:key]}"
+      synced += 1
+    elsif s3.put_object(options).etag[etag]
+      putc "."
+      synced += 1
+    else
+      putc "X"
+      failed << path
+    end
+  end
+
+  puts
+
+  if failed.size > 0
+    puts "Failed to upload #{failed.size} files"
+    puts failed.join("\n")
+  elsif s3_objects.size + synced >= local_files.size
+    puts "Updating the URLs in the database..."
+
+    from = "/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}"
+
+    if dry_run
+      puts "REPLACING '#{from}' WITH '#{to}'"
+    else
+      DbHelper.remap(from, to, anchor_left: true)
+    end
+
+    if Discourse.asset_host.present?
+      # Uploads that were on local CDN will now be on S3 CDN
+      from = "#{Discourse.asset_host}/uploads/#{db}/original/"
+      to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
+
+      if dry_run
+        puts "REMAPPING '#{from}' TO '#{to}'"
+      else
+        DbHelper.remap(from, to)
+      end
+    end
+
+    # Uploads that were on base hostname will now be on S3 CDN
+    from = "#{Discourse.base_url}/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
+
+    if dry_run
+      puts "REMAPPING '#{from}' TO '#{to}'"
+    else
+      DbHelper.remap(from, to)
+    end
+  end
+
+  puts "Done!"
 end
 
 ################################################################################
-#                                  clean_up                                   #
+#                                  clean_up                                    #
 ################################################################################
 
 task "uploads:clean_up" => :environment do
-  if ENV["RAILS_DB"]
-    clean_up_uploads
-  else
-    RailsMultisite::ConnectionManagement.each_connection { clean_up_uploads }
-  end
+  ENV["RAILS_DB"] ? clean_up_uploads : clean_up_uploads_all_sites
+end
+
+def clean_up_uploads_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { clean_up_uploads }
 end
 
 def clean_up_uploads
@@ -376,44 +491,7 @@ task "uploads:missing" => :environment do
 end
 
 def list_missing_uploads(skip_optimized: false)
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  public_directory = "#{Rails.root}/public"
-
-  Upload.find_each do |upload|
-
-    # could be a remote image
-    next unless upload.url =~ /^\/[^\/]/
-
-    path = "#{public_directory}#{upload.url}"
-    bad = true
-    begin
-      bad = false if File.size(path) != 0
-    rescue
-      # something is messed up
-    end
-    puts path if bad
-  end
-
-  unless skip_optimized
-    OptimizedImage.find_each do |optimized_image|
-      # remote?
-      next unless optimized_image.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{optimized_image.url}"
-
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      puts path if bad
-    end
-  end
+  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
 end
 
 ################################################################################

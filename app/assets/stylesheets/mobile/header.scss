@@ -2,35 +2,54 @@
 // Discourse header
 // --------------------------------------------------
 
-#site-text-logo {
-  font-size: $font-up-3;
-}
-@include breakpoint(mobile-small) {
-  #site-text-logo {
-    font-size: $font-up-2;
-  }
-}
-
 .d-header {
-  #site-logo {
-    max-width: 9.2857em;
-  }
+  height: 3.66em;
 
   // some protection for text-only site titles
   .title {
-    max-width: 50%;
-    height: 39px;
+    max-width: 75%;
+    white-space: nowrap;
     overflow: hidden;
-    padding: 0;
-    text-overflow: clip;
-    display: table;
+    text-overflow: ellipsis;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
     a {
-      display: table-cell;
-      vertical-align: middle;
+      display: block;
+      width: 100%;
     }
   }
 
+  #site-logo {
+    max-height: 2.4em;
+    max-width: 100%;
+  }
+  #site-text-logo {
+    margin: 0;
+    font-size: $font-up-1;
+  }
+  .extra-info-wrapper {
+    .extra-info {
+      // header title should not be centered if there's no tags / categories
+      &:not(.two-rows) {
+        min-height: 2.25em;
+      }
+      h1 {
+        font-size: $font-0;
+      }
+      .private-message-glyph-wrapper {
+        float: left;
+      }
+    }
+  }
   button.sign-up-button {
+    display: none;
+  }
+  // styles for mobile scroll logo / topic
+  .panel {
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+  }
+  &.scroll-down .panel {
     display: none;
   }
 }
@@ -52,8 +71,4 @@
 
 .search-link .badge-category {
   display: none;
-}
-
-.search-link .topic-statuses .topic-status i {
-  font-size: $font-0;
 }

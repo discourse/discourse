@@ -13,8 +13,7 @@ if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.l
   Rack::MiniProfilerRails.initialize!(Rails.application)
 end
 
-if defined?(Rack::MiniProfiler)
-
+if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   # note, we may want to add some extra security here that disables mini profiler in a multi hosted env unless user global admin
   #   raw_connection means results are not namespaced
   #
@@ -32,6 +31,7 @@ if defined?(Rack::MiniProfiler)
     /\/letter_avatar\//,
     /\/letter_avatar_proxy\//,
     /\/highlight-js\//,
+    /\/svg-sprite\//,
     /qunit/,
     /srv\/status/,
     /commits-widget/,

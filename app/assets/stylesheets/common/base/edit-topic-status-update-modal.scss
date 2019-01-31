@@ -23,11 +23,12 @@
     margin-bottom: 10px;
   }
   label {
-    vertical-align: middle;
-    display: inline-block;
+    display: inline-flex;
     padding-right: 5px;
+    margin-bottom: 0;
+    align-items: center;
     input {
-      vertical-align: middle;
+      margin-top: 0;
     }
   }
   .btn.pull-right {
@@ -60,6 +61,6 @@
 // mobile styles
 .mobile-view .edit-topic-timer-modal {
   .select-kit.combo-box {
-    flex: 1;
+    flex: 1 0 0px;
   }
 }

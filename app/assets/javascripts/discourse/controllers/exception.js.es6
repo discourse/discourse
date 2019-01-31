@@ -33,10 +33,10 @@ export default Ember.Controller.extend({
     return false;
   }.property(),
 
-  isNotFound: Em.computed.equal("thrown.status", 404),
-  isForbidden: Em.computed.equal("thrown.status", 403),
-  isServer: Em.computed.gte("thrown.status", 500),
-  isUnknown: Em.computed.none("isNetwork", "isServer"),
+  isNotFound: Ember.computed.equal("thrown.status", 404),
+  isForbidden: Ember.computed.equal("thrown.status", 403),
+  isServer: Ember.computed.gte("thrown.status", 500),
+  isUnknown: Ember.computed.none("isNetwork", "isServer"),
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
@@ -63,7 +63,7 @@ export default Ember.Controller.extend({
     }
   }.property("isNetwork", "isServer", "isUnknown"),
 
-  requestUrl: Em.computed.alias("thrown.requestedUrl"),
+  requestUrl: Ember.computed.alias("thrown.requestedUrl"),
 
   desc: function() {
     if (this.get("networkFixed")) {
@@ -100,7 +100,7 @@ export default Ember.Controller.extend({
     tryLoading: function() {
       this.set("loading", true);
       var self = this;
-      Em.run.schedule("afterRender", function() {
+      Ember.run.schedule("afterRender", function() {
         self.get("lastTransition").retry();
         self.set("loading", false);
       });

@@ -40,7 +40,7 @@ module ImportScripts
     end
 
     def html_for_upload(upload, display_filename)
-      if FileHelper.is_image?(upload.url)
+      if FileHelper.is_supported_image?(upload.url)
         embedded_image_html(upload)
       else
         attachment_html(upload, display_filename)

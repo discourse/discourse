@@ -15,8 +15,6 @@ ca:
         one: "vot total"
         other: "vots totals"
       average_rating: "Classificació mitjana: <strong>%{average}</strong>."
-      public:
-        title: "Els vots són públics."
       multiple:
         help:
           at_least_min_options:

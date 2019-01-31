@@ -15,8 +15,6 @@ et:
         one: "häält kokku"
         other: "hääli kokku"
       average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
-      public:
-        title: "Antud hääled on avalikud."
       multiple:
         help:
           at_least_min_options:

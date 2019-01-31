@@ -102,6 +102,7 @@ export default function() {
     "user",
     { path: "/u/:username", resetNamespace: true },
     function() {
+      this.route("profile-hidden");
       this.route("summary");
       this.route(
         "userActivity",
@@ -180,6 +181,7 @@ export default function() {
   this.route("privacy", { path: "/privacy" });
   this.route("guidelines", { path: "/guidelines" });
   this.route("rules", { path: "/rules" });
+  this.route("conduct", { path: "/conduct" });
 
   this.route("new-topic", { path: "/new-topic" });
   this.route("new-message", { path: "/new-message" });

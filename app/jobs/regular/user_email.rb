@@ -9,9 +9,19 @@ module Jobs
 
     sidekiq_options queue: 'low'
 
+    # Can be overridden by subclass, for example critical email
+    # should always consider being sent
+    def quit_email_early?
+      SiteSetting.disable_emails == 'yes'
+    end
+
     def execute(args)
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       raise Discourse::InvalidParameters.new(:type)    unless args[:type].present?
+
+      # This is for performance. Quit out fast without doing a bunch
+      # of extra work when emails are disabled.
+      return if quit_email_early?
 
       post = nil
       notification = nil
@@ -135,6 +145,11 @@ module Jobs
 
       email_args[:email_token] = email_token if email_token.present?
       email_args[:new_email] = user.email if type.to_s == "notify_old_email"
+
+      if args[:client_ip] && args[:user_agent]
+        email_args[:client_ip] = args[:client_ip]
+        email_args[:user_agent] = args[:user_agent]
+      end
 
       if EmailLog.reached_max_emails?(user, type.to_s)
         return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])

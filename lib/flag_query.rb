@@ -35,8 +35,8 @@ module FlagQuery
       .group(:post_id)
       .order('MIN(post_actions.created_at) DESC')
 
-    if opts[:filter] != "old" && SiteSetting.min_flags_staff_visibility > 1
-      post_ids_relation = post_ids_relation.having("count(*) >= ?", SiteSetting.min_flags_staff_visibility)
+    if opts[:filter] != "old"
+      post_ids_relation = PostAction.apply_minimum_visibility(post_ids_relation)
     end
 
     post_ids = post_ids_relation.pluck(:post_id).uniq
@@ -202,52 +202,61 @@ module FlagQuery
   end
 
   def self.flagged_topics
-
-    results = PostAction
-      .flags
-      .active
-      .includes(post: [:user, :topic])
-      .references(:post)
-      .where("posts.user_id > 0")
-      .order('post_actions.created_at DESC')
+    results = DB.query(<<~SQL)
+      SELECT pa.post_action_type_id,
+        pa.post_id,
+        p.topic_id,
+        pa.created_at AS last_flag_at,
+        p.user_id
+      FROM post_actions AS pa
+      INNER JOIN posts AS p ON pa.post_id = p.id
+      INNER JOIN topics AS t ON t.id = p.topic_id
+      WHERE pa.post_action_type_id IN (#{PostActionType.notify_flag_type_ids.join(',')})
+        AND pa.disagreed_at IS NULL
+        AND pa.deferred_at IS NULL
+        AND pa.agreed_at IS NULL
+        AND pa.deleted_at IS NULL
+        AND p.user_id > 0
+        AND p.deleted_at IS NULL
+        AND t.deleted_at IS NULL
+      ORDER BY pa.created_at DESC
+    SQL
 
     ft_by_id = {}
-    users_by_id = {}
-    topics_by_id = {}
     counts_by_post = {}
+    user_ids = Set.new
 
     results.each do |pa|
-      if pa.post.present? && pa.post.topic.present?
-        topic_id = pa.post.topic.id
 
-        ft = ft_by_id[topic_id] ||= OpenStruct.new(
-          topic: pa.post.topic,
-          flag_counts: {},
-          user_ids: [],
-          last_flag_at: pa.created_at,
-          meets_minimum: false
-        )
+      ft = ft_by_id[pa.topic_id] ||= OpenStruct.new(
+        topic_id: pa.topic_id,
+        flag_counts: {},
+        user_ids: Set.new,
+        last_flag_at: pa.last_flag_at,
+        meets_minimum: false
+      )
 
-        counts_by_post[pa.post.id] ||= 0
-        sum = counts_by_post[pa.post.id] += 1
-        ft.meets_minimum = true if sum >= SiteSetting.min_flags_staff_visibility
+      counts_by_post[pa.post_id] ||= 0
+      sum = counts_by_post[pa.post_id] += 1
+      ft.meets_minimum = true if sum >= SiteSetting.min_flags_staff_visibility
 
-        topics_by_id[topic_id] = pa.post.topic
-        ft.flag_counts[pa.post_action_type_id] ||= 0
-        ft.flag_counts[pa.post_action_type_id] += 1
+      ft.flag_counts[pa.post_action_type_id] ||= 0
+      ft.flag_counts[pa.post_action_type_id] += 1
 
-        ft.user_ids << pa.post.user_id
-        ft.user_ids.uniq!
-
-        users_by_id[pa.post.user_id] ||= pa.post.user
-      end
+      ft.user_ids << pa.user_id
+      user_ids << pa.user_id
     end
 
+    all_topics = Topic.where(id: ft_by_id.keys).to_a
+    all_topics.each { |t| ft_by_id[t.id].topic = t }
+
     flagged_topics = ft_by_id.values.select { |ft| ft.meets_minimum }
+    Topic.preload_custom_fields(all_topics, TopicList.preloaded_custom_fields)
 
-    Topic.preload_custom_fields(topics_by_id.values, TopicList.preloaded_custom_fields)
-
-    { flagged_topics: flagged_topics, users: users_by_id.values }
+    {
+      flagged_topics: flagged_topics,
+      users: User.where(id: user_ids)
+    }
   end
 
   private

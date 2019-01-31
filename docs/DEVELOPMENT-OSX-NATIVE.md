@@ -4,13 +4,13 @@ These instructions assume you have read and understood the **[Discourse Advanced
 
 OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](http://discourse.org)** in your native environment. These instructions should get you there.
 
-Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.4+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
+Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.5+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
 ## Quick Setup
 
 If you don't already have a Ruby environment that's tuned to your liking, you can do most of this set up in just a few steps:
 
-1. Install XCode and/or the XCode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). This should also install Git.
+1. Install Xcode and/or the Xcode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). (Please note that you need an Apple Developer account to access this page. If you don't have one, you can use your current iCloud or Apple ID, or [sign up for a new free account](https://appleid.apple.com/account).) This should also install Git.
 2. Clone the Discourse repo and cd into it.
 3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
@@ -35,7 +35,7 @@ As the [RVM website](http://rvm.io) makes clear, there are some serious issues b
 
 This means that you need to do a little bit of groundwork if you do not already have an environment that you know for certain yields working rubies and gems.
 
-You will want to install XCode Command Line Tools. If you already have XCode installed, you can do this from within XCode's preferences. You can also install just the command line tools, without the rest of XCode, at [Apple's developer site](https://developer.apple.com/downloads/index.action). You will need these more for some of the headers they include than the compilers themselves.
+You will want to install Xcode Command Line Tools. If you already have Xcode installed, you can do this from within Xcode's preferences. You can also install just the command line tools, without the rest of Xcode, at [Apple's developer site](https://developer.apple.com/downloads/index.action). You will need these more for some of the headers they include than the compilers themselves.
 
 You will then need the old GCC-4.2 compilers, which leads us to...
 
@@ -76,11 +76,11 @@ If you do already have RVM installed, this should make sure everything is up to 
     # If autolibs is set to 0-2, it will give an error for things that are missing, instead.
     rvm requirements
 
-Either way, you'll now want to install Ruby 2.4+ (we recommend 2.4.4 or higher).
+Either way, you'll now want to install Ruby 2.5+ (we recommend 2.5.2 or higher).
 
     # Now, install Ruby
-    rvm install 2.4.4
-    rvm use 2.4.4 --default # Careful with this if you're already developing Ruby
+    rvm install 2.5.3
+    rvm use 2.5.3 --default # Careful with this if you're already developing Ruby
 
 ## Git
 
@@ -96,9 +96,9 @@ You should now be able to check out a clone of Discourse.
 
 Atlassian has a free Git client for OS X called [SourceTree](http://www.sourcetreeapp.com/download/) which can be extremely useful for keeping visual track of what's going on in Git-land. While it's arguably not a full substitute for command-line git (especially if you know the command line well), it's extremely powerful for a GUI version-control client.
 
-## Postgres 9.3
+## Postgres 10
 
-OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.app](http://postgresapp.com).
+OS X might ship with Postgres 9.x, but you're better off going with 10 and above from Homebrew or [Postgres.app](http://postgresapp.com).
 
 ### Using Postgres.app
 

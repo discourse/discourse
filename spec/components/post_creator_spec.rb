@@ -270,6 +270,21 @@ describe PostCreator do
         }.to_not change { topic.excerpt }
       end
 
+      it 'supports custom excerpts' do
+        raw = <<~MD
+          <div class='excerpt'>
+          I am
+
+          a custom excerpt
+          </div>
+
+          testing
+        MD
+        post = create_post(raw: raw)
+
+        expect(post.excerpt).to eq("I am\na custom excerpt")
+      end
+
       it 'creates post stats' do
 
         Draft.set(user, 'new_topic', 0, "test")
@@ -565,8 +580,9 @@ describe PostCreator do
 
       it "returns blank for another post with the same content" do
         creator.create
-        new_post_creator.create
-        expect(new_post_creator.errors).to be_present
+        post = new_post_creator.create
+
+        expect(post.errors[:raw]).to include(I18n.t(:just_posted_that))
       end
 
       it "returns a post for admins" do
@@ -1131,6 +1147,7 @@ describe PostCreator do
 
   context "private message to a muted user" do
     let(:muted_me) { Fabricate(:evil_trout) }
+    let(:another_user) { Fabricate(:user) }
 
     it 'should fail' do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1141,10 +1158,14 @@ describe PostCreator do
         title: 'this message is to someone who muted me!',
         raw: "you will have to see this even if you muted me!",
         archetype: Archetype.private_message,
-        target_usernames: "#{muted_me.username}"
+        target_usernames: "#{muted_me.username},#{another_user.username}"
       )
+
       expect(pc).not_to be_valid
-      expect(pc.errors).to be_present
+
+      expect(pc.errors.full_messages).to contain_exactly(
+        I18n.t(:not_accepting_pms, username: muted_me.username)
+      )
     end
 
     let(:staff_user) { Fabricate(:admin) }

@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
+# note, we require 2.5.2 and up cause 2.5.1 had some mail bugs we no longer
+# monkey patch, so this avoids people booting with this problem version
 begin
-  if !RUBY_VERSION.match?(/^2\.[456]/)
-    STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  if !RUBY_VERSION.match?(/^2\.(([67])|(5\.[2-9]))/)
+    STDERR.puts "Discourse requires Ruby 2.5.2 or up"
     exit 1
   end
 rescue
   # no String#match?
-  STDERR.puts "Discourse requires Ruby 2.4.0 or up"
+  STDERR.puts "Discourse requires Ruby 2.5.2 or up"
   exit 1
 end
 
@@ -117,6 +119,16 @@ module Discourse
       plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
+      google-tag-manager.js
+      google-universal-analytics.js
+      preload-application-data.js
+      print-page.js
+      omniauth-complete.js
+      activate-account.js
+      auto-redirect.js
+      wizard-start.js
+      onpopstate-handler.js
+      embed-application.js
     }
 
     # Precompile all available locales
@@ -186,8 +198,14 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    require 'middleware/enforce_hostname'
-    config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
+    unless Rails.env.development?
+      require 'middleware/enforce_hostname'
+      config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
+    end
+
+    require 'content_security_policy/middleware'
+    config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware, ContentSecurityPolicy::Middleware
+
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
@@ -227,6 +245,7 @@ module Discourse
     end
 
     require_dependency 'stylesheet/manager'
+    require_dependency 'svg_sprite/svg_sprite'
 
     config.after_initialize do
       # require common dependencies that are often required by plugins

@@ -17,7 +17,7 @@ export default Ember.Component.extend(
 
     click(e) {
       // only pin unpin for now
-      if (this.get("canAct") && $(e.target).hasClass("d-icon-thumb-tack")) {
+      if (this.get("canAct") && $(e.target).hasClass("d-icon-thumbtack")) {
         const topic = this.get("topic");
         topic.get("pinned") ? topic.clearPin() : topic.rePin();
       }
@@ -58,14 +58,14 @@ export default Ember.Component.extend(
         renderIconIf("topic.archived", "lock", "archived");
       }
 
-      renderIconIf("topic.pinned", "thumb-tack", "pinned", this.get("canAct"));
+      renderIconIf("topic.pinned", "thumbtack", "pinned", this.get("canAct"));
       renderIconIf(
         "topic.unpinned",
-        "thumb-tack",
+        "thumbtack",
         "unpinned",
         this.get("canAct")
       );
-      renderIconIf("topic.invisible", "eye-slash", "invisible");
+      renderIconIf("topic.invisible", "far-eye-slash", "unlisted");
     }
   })
 );

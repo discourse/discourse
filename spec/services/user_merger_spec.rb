@@ -36,12 +36,20 @@ describe UserMerger do
   end
 
   it "changes owner of personal messages" do
-    pm_topic = Fabricate(:private_message_topic)
+    pm_topic = Fabricate(:private_message_topic, topic_allowed_users: [
+      Fabricate.build(:topic_allowed_user, user: target_user),
+      Fabricate.build(:topic_allowed_user, user: walter),
+      Fabricate.build(:topic_allowed_user, user: source_user)
+    ])
 
     post1 = Fabricate(:post, topic: pm_topic, user: source_user)
     post2 = Fabricate(:post, topic: pm_topic, user: walter)
     post3 = Fabricate(:post, topic: pm_topic, user: target_user)
     post4 = Fabricate(:post, topic: pm_topic, user: source_user, deleted_at: Time.now)
+
+    small1 = pm_topic.add_small_action(source_user, "invited_user", "carol")
+    small2 = pm_topic.add_small_action(target_user, "invited_user", "david")
+    small3 = pm_topic.add_small_action(walter, "invited_user", "eve")
 
     merge_users!
 
@@ -49,6 +57,10 @@ describe UserMerger do
     expect(post2.reload.user).to eq(walter)
     expect(post3.reload.user).to eq(target_user)
     expect(post4.reload.user).to eq(target_user)
+
+    expect(small1.reload.user).to eq(target_user)
+    expect(small2.reload.user).to eq(target_user)
+    expect(small3.reload.user).to eq(walter)
   end
 
   it "changes owner of categories" do
@@ -671,7 +683,7 @@ describe UserMerger do
 
     it "merges when target_post_id is not set" do
       a1 = log_pending_action(source_user, post1)
-      a2 = log_pending_action(source_user, post2)
+      _a2 = log_pending_action(source_user, post2)
       a3 = log_pending_action(target_user, post2)
       a4 = log_pending_action(target_user, post3)
 
@@ -686,7 +698,7 @@ describe UserMerger do
     end
 
     it "merges when target_post_id is set" do
-      a1 = log_like_action(source_user, walter, post1)
+      _a1 = log_like_action(source_user, walter, post1)
       a2 = log_like_action(target_user, walter, post1)
       a3 = log_like_action(source_user, walter, post2)
 
@@ -720,9 +732,9 @@ describe UserMerger do
         Fabricate.build(:topic_allowed_user, user: target_user)
       ])
 
-      a1 = log_got_private_message(walter, source_user, pm_topic1)
+      _a1 = log_got_private_message(walter, source_user, pm_topic1)
       a2 = log_got_private_message(walter, target_user, pm_topic1)
-      a3 = log_got_private_message(walter, coding_horror, pm_topic1)
+      _a3 = log_got_private_message(walter, coding_horror, pm_topic1)
       a4 = log_got_private_message(walter, source_user, pm_topic2)
       a5 = log_got_private_message(walter, target_user, pm_topic3)
 
@@ -964,24 +976,22 @@ describe UserMerger do
   end
 
   it "deletes external auth infos of source user" do
-    FacebookUserInfo.create(user_id: source_user.id, facebook_user_id: "example")
+    UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
     GoogleUserInfo.create(user_id: source_user.id, google_user_id: "google@gmail.com")
     InstagramUserInfo.create(user_id: source_user.id, screen_name: "example", instagram_user_id: "examplel123123")
     Oauth2UserInfo.create(user_id: source_user.id, uid: "example", provider: "example")
     SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
-    TwitterUserInfo.create(user_id: source_user.id, screen_name: "example", twitter_user_id: "examplel123123")
     UserOpenId.create(user_id: source_user.id, email: source_user.email, url: "http://example.com/openid", active: true)
 
     merge_users!
 
-    expect(FacebookUserInfo.where(user_id: source_user.id).count).to eq(0)
+    expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
     expect(GithubUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(GoogleUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(InstagramUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(Oauth2UserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(SingleSignOnRecord.where(user_id: source_user.id).count).to eq(0)
-    expect(TwitterUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(UserOpenId.where(user_id: source_user.id).count).to eq(0)
   end
 

@@ -12,6 +12,7 @@ class SiteSettings::YamlLoader
         if hash.is_a?(Hash)
           # Get default value for the site setting:
           value = hash.delete('default')
+
           if value.is_a?(Hash)
             raise Discourse::Deprecation, "The site setting `#{setting_name}` can no longer be set based on Rails environment. See also `config/environments/<env>.rb`."
           elsif value.nil?

@@ -114,11 +114,39 @@ describe Report do
         freeze_time DateTime.parse('2000-01-01')
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 1.day.ago)
-        user.user_visits.create(visited_at: 2.days.ago)
+        user.user_visits.create(visited_at: 2.days.ago, mobile: true)
+        user.user_visits.create(visited_at: 45.days.ago)
+        user.user_visits.create(visited_at: 46.days.ago, mobile: true)
+
         expect(report.data).to be_present
+        expect(report.data.count).to eq(3)
         expect(report.data.select { |v| v[:x].today? }).to be_present
+        expect(report.prev30Days).to eq(2)
       end
 
+    end
+  end
+
+  describe 'mobile visits report' do
+    let(:report) { Report.find('mobile_visits') }
+
+    include_examples 'no data'
+
+    context "with visits" do
+      let(:user) { Fabricate(:user) }
+
+      it "returns a report with data" do
+        freeze_time DateTime.parse('2000-01-01')
+        user.user_visits.create(visited_at: 1.hour.from_now)
+        user.user_visits.create(visited_at: 2.days.ago, mobile: true)
+        user.user_visits.create(visited_at: 45.days.ago)
+        user.user_visits.create(visited_at: 46.days.ago, mobile: true)
+
+        expect(report.data).to be_present
+        expect(report.data.count).to eq(1)
+        expect(report.data.select { |v| v[:x].today? }).not_to be_present
+        expect(report.prev30Days).to eq(1)
+      end
     end
   end
 
@@ -396,11 +424,11 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data[0][:term]).to eq("ruby")
-        expect(report.data[0][:unique_searches]).to eq(2)
+        expect(report.data[0][:searches]).to eq(3)
         expect(report.data[0][:ctr]).to eq(33.4)
 
         expect(report.data[1][:term]).to eq("php")
-        expect(report.data[1][:unique_searches]).to eq(1)
+        expect(report.data[1][:searches]).to eq(1)
       end
     end
   end
@@ -498,7 +526,7 @@ describe Report do
         expect(report.data).to be_present
 
         row = report.data[0]
-        expect(row[:action_type]).to eq("spam")
+        expect(row[:post_type]).to eq("spam")
         expect(row[:staff_username]).to eq(nil)
         expect(row[:staff_id]).to eq(nil)
         expect(row[:poster_username]).to eq(post.user.username)
@@ -813,6 +841,31 @@ describe Report do
     end
   end
 
+  describe "unexpected error on report initialization" do
+    before do
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
+    end
+
+    it "returns no report" do
+      class ReportInitError < StandardError; end
+
+      Report.stubs(:new).raises(ReportInitError.new("x"))
+
+      report = Report.find('signups')
+
+      expect(report).to be_nil
+
+      expect(Rails.logger.errors).to eq([
+        'Couldn’t create report `signups`: <ReportInitError x>'
+      ])
+    end
+  end
+
   describe 'posts' do
     let(:report) { Report.find('posts') }
 
@@ -871,6 +924,219 @@ describe Report do
 
           include_examples 'category filtering on subcategories'
         end
+      end
+    end
+  end
+
+  describe 'likes' do
+    let(:report) { Report.find('likes') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      include_examples 'with data x/y'
+
+      before(:each) do
+        topic = Fabricate(:topic, category_id: 2)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+
+        topic = Fabricate(:topic, category_id: 4)
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
+        PostAction.act(Fabricate(:user), post, PostActionType.types[:like]).tap do |pa|
+          pa.created_at = 45.days.ago
+        end.save!
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find('likes', category_id: 2) }
+
+        include_examples 'category filtering'
+
+        context "on subcategories" do
+          let(:report) { Report.find('likes', category_id: 3) }
+
+          include_examples 'category filtering on subcategories'
+        end
+      end
+    end
+  end
+
+  describe 'user_flagging_ratio' do
+    let(:joffrey) { Fabricate(:user, username: "joffrey") }
+    let(:robin) { Fabricate(:user, username: "robin") }
+    let(:moderator) { Fabricate(:moderator) }
+
+    context 'with data' do
+      it "it works" do
+        10.times do
+          post_disagreed = Fabricate(:post)
+          PostAction.act(joffrey, post_disagreed, PostActionType.types[:spam])
+          PostAction.clear_flags!(post_disagreed, moderator)
+        end
+
+        3.times do
+          post_disagreed = Fabricate(:post)
+          PostAction.act(robin, post_disagreed, PostActionType.types[:spam])
+          PostAction.clear_flags!(post_disagreed, moderator)
+        end
+        post_agreed = Fabricate(:post)
+        PostAction.act(robin, post_agreed, PostActionType.types[:off_topic])
+        PostAction.agree_flags!(post_agreed, moderator)
+
+        report = Report.find('user_flagging_ratio')
+
+        first = report.data[0]
+        expect(first[:username]).to eq("joffrey")
+        expect(first[:score]).to eq(10)
+        expect(first[:agreed_flags]).to eq(0)
+        expect(first[:disagreed_flags]).to eq(10)
+
+        second = report.data[1]
+        expect(second[:username]).to eq("robin")
+        expect(second[:agreed_flags]).to eq(1)
+        expect(second[:disagreed_flags]).to eq(3)
+      end
+    end
+  end
+
+  describe "report_suspicious_logins" do
+    let(:joffrey) { Fabricate(:user, username: "joffrey") }
+    let(:robin) { Fabricate(:user, username: "robin") }
+
+    context "with data" do
+      it "works" do
+        SiteSetting.verbose_auth_token_logging = true
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        UserAuthToken.log(action: "suspicious", user_id: robin.id)
+        UserAuthToken.log(action: "suspicious", user_id: joffrey.id)
+        UserAuthToken.log(action: "suspicious", user_id: joffrey.id)
+
+        report = Report.find("suspicious_logins")
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("robin")
+        expect(report.data[1][:username]).to eq("joffrey")
+        expect(report.data[2][:username]).to eq("joffrey")
+      end
+    end
+  end
+
+  describe "report_staff_logins" do
+    let(:joffrey) { Fabricate(:admin, username: "joffrey") }
+    let(:robin) { Fabricate(:admin, username: "robin") }
+    let(:james) { Fabricate(:user, username: "james") }
+
+    context "with data" do
+      it "works" do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        ip = [81, 2, 69, 142]
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))
+        Resolv::DNS.any_instance.stubs(:getname).with(ip.join(".")).returns("ip-#{ip.join("-")}.example.com")
+
+        UserAuthToken.log(action: "generate", user_id: robin.id, client_ip: ip.join("."), created_at: 1.hour.ago)
+        UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: "1.2.3.4")
+        UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: ip.join("."), created_at: 2.hours.ago)
+        UserAuthToken.log(action: "generate", user_id: james.id)
+
+        report = Report.find("staff_logins")
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("joffrey")
+
+        expect(report.data[1][:username]).to eq("robin")
+        expect(report.data[1][:location]).to eq("London, England, United Kingdom")
+
+        expect(report.data[2][:username]).to eq("joffrey")
+      end
+    end
+  end
+
+  describe "report_top_uploads" do
+    let(:report) { Report.find("top_uploads") }
+    let(:tarek) { Fabricate(:admin, username: "tarek") }
+    let(:khalil) { Fabricate(:admin, username: "khalil") }
+
+    context "with data" do
+      let!(:tarek_upload) do
+        Fabricate(:upload, user: tarek,
+                           url: "/uploads/default/original/1X/tarek.jpg",
+                           extension: "jpg",
+                           original_filename: "tarek.jpg",
+                           filesize: 1000)
+      end
+      let!(:khalil_upload) do
+        Fabricate(:upload, user: khalil,
+                           url: "/uploads/default/original/1X/khalil.png",
+                           extension: "png",
+                           original_filename: "khalil.png",
+                           filesize: 2000)
+      end
+
+      it "works" do
+        expect(report.data.length).to eq(2)
+        expect_row_to_be_equal(report.data[0], khalil, khalil_upload)
+        expect_row_to_be_equal(report.data[1], tarek, tarek_upload)
+      end
+
+      def expect_row_to_be_equal(row, user, upload)
+        expect(row[:author_id]).to eq(user.id)
+        expect(row[:author_username]).to eq(user.username)
+        expect(row[:author_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
+        expect(row[:filesize]).to eq(upload.filesize)
+        expect(row[:extension]).to eq(upload.extension)
+        expect(row[:file_url]).to eq(Discourse.store.cdn_url(upload.url))
+        expect(row[:file_name]).to eq(upload.original_filename.truncate(25))
+      end
+    end
+
+    include_examples "no data"
+  end
+
+  describe "consolidated_page_views" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      ApplicationRequest.clear_cache!
+    end
+
+    after do
+      ApplicationRequest.clear_cache!
+    end
+
+    let(:reports) { Report.find('consolidated_page_views') }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each do |report|
+          expect(report[:data]).to be_empty
+        end
+      end
+    end
+
+    context "with data" do
+      it "works" do
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        ApplicationRequest.increment!(:page_view_anon)
+        ApplicationRequest.write_cache!
+
+        page_view_crawler_report = reports.data.find { |r| r[:req] == "page_view_crawler" }
+        page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
+        page_view_anon_report = reports.data.find { |r| r[:req] == "page_view_anon" }
+
+        expect(page_view_crawler_report[:color]).to eql("rgba(228,87,53,0.75)")
+        expect(page_view_crawler_report[:data][0][:y]).to eql(3)
+
+        expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
+
+        expect(page_view_anon_report[:color]).to eql("rgba(0,136,204,0.5)")
+        expect(page_view_anon_report[:data][0][:y]).to eql(1)
       end
     end
   end

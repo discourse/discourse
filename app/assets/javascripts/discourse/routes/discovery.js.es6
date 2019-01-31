@@ -13,6 +13,7 @@ export default Discourse.Route.extend(OpenComposer, {
   beforeModel(transition) {
     if (
       (transition.intent.url === "/" ||
+        transition.intent.url === "/latest" ||
         transition.intent.url === "/categories") &&
       transition.targetName.indexOf("discovery.top") === -1 &&
       Discourse.User.currentProp("should_be_redirected_to_top")
@@ -35,12 +36,13 @@ export default Discourse.Route.extend(OpenComposer, {
       if (!this.session.get("topicListScrollPosition")) {
         scrollTop();
       }
+      return false;
     },
 
     didTransition() {
       this.controllerFor("discovery")._showFooter();
       this.send("loadingComplete");
-      return true;
+      return false;
     },
 
     // clear a pinned topic

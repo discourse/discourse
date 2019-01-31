@@ -98,6 +98,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   deleteAllPosts() {
+    let deletedPosts = 0;
     const user = this,
       message = I18n.messageFormat("admin.user.delete_all_posts_confirm_MF", {
         POSTS: user.get("post_count"),
@@ -114,13 +115,52 @@ const AdminUser = Discourse.User.extend({
             `${iconHTML("exclamation-triangle")} ` +
             I18n.t("admin.user.delete_all_posts"),
           class: "btn btn-danger",
-          callback: function() {
-            ajax("/admin/users/" + user.get("id") + "/delete_all_posts", {
-              type: "PUT"
-            }).then(() => user.set("post_count", 0));
+          callback: () => {
+            openProgressModal();
+            performDelete();
           }
         }
-      ];
+      ],
+      openProgressModal = () => {
+        bootbox.dialog(
+          `<p>${I18n.t(
+            "admin.user.delete_posts_progress"
+          )}</p><div class='progress-bar'><span></span></div>`,
+          [],
+          { classes: "delete-posts-progress" }
+        );
+      },
+      performDelete = () => {
+        let deletedPercentage = 0;
+        return ajax(`/admin/users/${user.get("id")}/delete_posts_batch`, {
+          type: "PUT"
+        })
+          .then(({ posts_deleted }) => {
+            if (posts_deleted === 0) {
+              user.set("post_count", 0);
+              bootbox.hideAll();
+            } else {
+              deletedPosts += posts_deleted;
+              deletedPercentage = Math.floor(
+                (deletedPosts * 100) / user.get("post_count")
+              );
+              $(".delete-posts-progress .progress-bar > span").css({
+                width: `${deletedPercentage}%`
+              });
+              performDelete();
+            }
+          })
+          .catch(e => {
+            bootbox.hideAll();
+            let error;
+            AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+            if (e.responseJSON && e.responseJSON.errors) {
+              error = e.responseJSON.errors[0];
+            }
+            error = error || I18n.t("admin.user.delete_posts_failed");
+            bootbox.alert(error);
+          });
+      };
     bootbox.dialog(message, buttons, { classes: "delete-all-posts" });
   },
 
@@ -265,7 +305,7 @@ const AdminUser = Discourse.User.extend({
     return this.get("trust_level") < 4;
   }.property("trust_level"),
 
-  canSuspend: Em.computed.not("staff"),
+  canSuspend: Ember.computed.not("staff"),
 
   suspendDuration: function() {
     const suspended_at = moment(this.suspended_at),
@@ -542,7 +582,7 @@ const AdminUser = Discourse.User.extend({
 
 AdminUser.reopenClass({
   bulkApprove(users) {
-    _.each(users, function(user) {
+    users.forEach(user => {
       user.setProperties({
         approved: true,
         can_approve: false,
@@ -557,7 +597,7 @@ AdminUser.reopenClass({
   },
 
   bulkReject(users) {
-    _.each(users, function(user) {
+    users.forEach(user => {
       user.set("can_approve", false);
       user.set("selected", false);
     });

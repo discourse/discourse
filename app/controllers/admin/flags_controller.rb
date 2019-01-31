@@ -73,13 +73,21 @@ class Admin::FlagsController < Admin::AdminController
 
     post_action_type = PostAction.post_action_type_for_post(post.id)
 
+    if !post_action_type
+      render_json_error(
+        I18n.t("flags.errors.already_handled"),
+        status: 409
+      )
+      return
+    end
+
     keep_post = ['silenced', 'suspended', 'keep'].include?(params[:action_on_post])
     delete_post = params[:action_on_post] == "delete"
     restore_post = params[:action_on_post] == "restore"
 
     if delete_post
       # PostDestroy calls PostAction.agree_flags!
-      PostDestroyer.new(current_user, post).destroy
+      destroy_post(post)
     elsif restore_post
       PostAction.agree_flags!(post, current_user, delete_post)
       PostDestroyer.new(current_user, post).recover
@@ -123,9 +131,19 @@ class Admin::FlagsController < Admin::AdminController
     )
 
     PostAction.defer_flags!(post, current_user, params[:delete_post])
-    PostDestroyer.new(current_user, post).destroy if params[:delete_post]
+    destroy_post(post) if params[:delete_post]
 
     render body: nil
   end
 
+  private
+
+  def destroy_post(post)
+    if post.is_first_post?
+      topic = Topic.find_by(id: post.topic_id)
+      guardian.ensure_can_delete!(topic) if topic.present?
+    end
+
+    PostDestroyer.new(current_user, post).destroy
+  end
 end

@@ -82,7 +82,7 @@ describe WebHook do
     describe '#enqueue_hooks' do
       it 'accepts additional parameters' do
         payload = { test: 'some payload' }.to_json
-        WebHook.enqueue_hooks(:post, payload: payload)
+        WebHook.enqueue_hooks(:post, :post_created, payload: payload)
 
         job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
@@ -96,7 +96,7 @@ describe WebHook do
 
         describe '#enqueue_hooks' do
           it 'enqueues hooks with ids' do
-            WebHook.enqueue_hooks(:post)
+            WebHook.enqueue_hooks(:post, :post_created)
 
             job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
@@ -292,12 +292,15 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
 
+      email = user.email
+      user.reload
       UserDestroyer.new(Discourse.system_user).destroy(user)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_destroyed")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
+      expect(payload["email"]).to eq(email)
     end
 
     it 'should enqueue the right hooks for category events' do
@@ -401,6 +404,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(post_action.id)
 
+      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam])
       PostAction.clear_flags!(post, moderator)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 

@@ -14,7 +14,12 @@ zh_CN:
         other: "总票数"
       average_rating: "平均评分：<strong>%{average}</strong>。"
       public:
-        title: "投票是公开的。"
+        title: "投票<strong>公开</strong>。"
+      results:
+        vote:
+          title: "结果将显示在<strong>投票</strong>上。"
+        closed:
+          title: "结果将显示一次<strong>关闭</strong>。"
       multiple:
         help:
           at_least_min_options:
@@ -41,6 +46,9 @@ zh_CN:
         title: "关闭投票"
         label: "关闭"
         confirm: "你确定要关闭这个投票？"
+      automatic_close:
+        closes_in: "于<strong>%{timeLeft}</strong>关闭"
+        age: "<strong>%{age}</strong>关闭"
       error_while_toggling_status: "对不起，改变投票状态时出错了。"
       error_while_casting_votes: "对不起，投票时出错了。"
       error_while_fetching_voters: "对不起，显示投票者时出错了。"
@@ -56,6 +64,11 @@ zh_CN:
           regular: 单选
           multiple: 多选
           number: 评分
+        poll_result:
+          label: 结果
+          always: 总是可见
+          vote: 投票
+          closed: 关闭时
         poll_config:
           max: 最大
           min: 最小
@@ -64,3 +77,5 @@ zh_CN:
           label: 显示投票人
         poll_options:
           label: 每行输入一个调查选项
+        automatic_close:
+          label: 自动关闭投票

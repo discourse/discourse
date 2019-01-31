@@ -2,6 +2,9 @@
   position: fixed;
   right: 0;
   box-shadow: shadow("header");
+  &.animate {
+    transition: right 0.2s ease-out, left 0.2s ease-out;
+  }
 
   .panel-body {
     position: absolute;
@@ -9,6 +12,9 @@
     bottom: 37px;
     width: 97%;
   }
+}
+.header-cloak {
+  display: none;
 }
 
 .menu-panel.drop-down {
@@ -42,8 +48,13 @@
   }
 
   .panel-body {
+    touch-action: pan-y pinch-zoom;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .badge-notification {
+    vertical-align: text-bottom;
   }
 }
 
@@ -131,110 +142,6 @@
   }
 }
 
-.search-menu {
-  .search-input {
-    position: relative;
-  }
-
-  .search-context .show-help {
-    float: right;
-  }
-
-  .heading {
-    padding: 5px 0 5px 5px;
-    .filter {
-      padding: 0 5px;
-    }
-  }
-
-  input[type="text"] {
-    margin: 0.5em 3px;
-    box-sizing: border-box;
-    width: calc(100% - 6px);
-    height: 32px;
-  }
-
-  .search-context {
-    padding: 0 5px;
-    label {
-      margin-bottom: 0;
-    }
-  }
-
-  .searching {
-    position: absolute;
-    top: 1.15em;
-    right: 1em;
-
-    .spinner {
-      width: 10px;
-      height: 10px;
-      border-width: 2px;
-      margin: 0;
-    }
-  }
-  // I am ghetto using this to display "Show More".. be warned
-  .no-results {
-    padding: 5px;
-    text-align: center;
-  }
-
-  .filter {
-    padding: 0;
-    &:hover {
-      background: transparent;
-    }
-  }
-
-  .search-link {
-    .badge-category-parent {
-      line-height: $line-height-small;
-    }
-    .topic-title {
-      margin-right: 6px;
-    }
-
-    .topic-statuses {
-      float: none;
-      display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      margin: 0;
-      .fa {
-        margin: 0;
-      }
-    }
-  }
-
-  li:not(.category):not(.heading) {
-    font-size: $font-0;
-    line-height: $line-height-medium;
-
-    .fa {
-      font-size: inherit;
-    }
-
-    a {
-      &:not(.discourse-tag) {
-        display: block;
-        padding: 5px;
-      }
-      transition: all linear 0.15s;
-
-      .user-results {
-        color: dark-light-choose($primary-high, $secondary-low);
-      }
-    }
-
-    &:hover a:not(.badge-notification) {
-      background-color: $highlight-medium;
-    }
-
-    button {
-      margin-left: 5px;
-    }
-  }
-}
-
 .user-menu {
   .notifications {
     width: 100%;
@@ -246,18 +153,19 @@
       margin: 0.5em 0;
     }
 
-    .fa {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .d-icon,
+    &:hover .d-icon {
+      color: $primary-medium;
     }
     .icon {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high;
     }
     li {
       background-color: $tertiary-low;
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
-      div i.fa {
+      div .fa {
         display: none;
       }
 
@@ -285,17 +193,14 @@
     }
     li:not(.show-all) {
       padding: 0.25em 0.5em;
-      i {
+      .d-icon {
         float: left;
         margin-right: 5px;
-        padding-top: 2px;
+        padding-top: 0.2em;
       }
     }
     .is-warning {
-      .d-icon-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
+      .d-icon-far-envelope {
         color: $danger;
       }
     }

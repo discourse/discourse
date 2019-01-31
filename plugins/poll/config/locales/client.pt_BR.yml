@@ -16,7 +16,7 @@ pt_BR:
         other: "votos totais"
       average_rating: "Resultado médio: <strong>%{average}</strong>."
       public:
-        title: "A votação é pública."
+        title: "A votação é <strong>pública</strong>."
       multiple:
         help:
           at_least_min_options:

@@ -2,8 +2,9 @@ import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import { observes } from "ember-addons/ember-computed-decorators";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(CanCheckEmails, {
   query: null,
   queryParams: ["order", "ascending"],
   order: null,
@@ -13,15 +14,15 @@ export default Ember.Controller.extend({
   listFilter: null,
   selectAll: false,
 
-  queryNew: Em.computed.equal("query", "new"),
-  queryPending: Em.computed.equal("query", "pending"),
-  queryHasApproval: Em.computed.or("queryNew", "queryPending"),
-  showApproval: Em.computed.and(
+  queryNew: Ember.computed.equal("query", "new"),
+  queryPending: Ember.computed.equal("query", "pending"),
+  queryHasApproval: Ember.computed.or("queryNew", "queryPending"),
+  showApproval: Ember.computed.and(
     "siteSettings.must_approve_users",
     "queryHasApproval"
   ),
   searchHint: i18n("search_hint"),
-  hasSelection: Em.computed.gt("selectedCount", 0),
+  hasSelection: Ember.computed.gt("selectedCount", 0),
 
   selectedCount: function() {
     var model = this.get("model");

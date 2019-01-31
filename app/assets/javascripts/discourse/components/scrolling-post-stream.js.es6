@@ -192,11 +192,18 @@ export default MountWidget.extend({
             // Quickly going back might mean the element is destroyed
             const position = $refreshedElem.position();
             if (position && position.top) {
-              $("html, body").scrollTop(position.top + distToElement);
+              let whereY = position.top + distToElement;
+              $("html, body").scrollTop(whereY);
+
+              // This seems weird, but somewhat infrequently a rerender
+              // will cause the browser to scroll to the top of the document
+              // in Chrome. This makes sure the scroll works correctly if that
+              // happens.
+              Ember.run.next(() => $("html, body").scrollTop(whereY));
             }
           });
         };
-        this.sendAction("topVisibleChanged", {
+        this.topVisibleChanged({
           post: first,
           refresh: topRefresh
         });
@@ -205,14 +212,14 @@ export default MountWidget.extend({
       const last = posts.objectAt(onscreen[onscreen.length - 1]);
       if (this._bottomVisible !== last) {
         this._bottomVisible = last;
-        this.sendAction("bottomVisibleChanged", { post: last, refresh });
+        this.bottomVisibleChanged({ post: last, refresh });
       }
 
       const changedPost = this._currentPost !== currentPost;
       if (changedPost) {
         this._currentPost = currentPost;
         const post = posts.objectAt(currentPost);
-        this.sendAction("currentPostChanged", { post });
+        this.currentPostChanged({ post });
       }
 
       if (percent !== null) {
@@ -220,7 +227,7 @@ export default MountWidget.extend({
 
         if (changedPost || this._currentPercent !== percent) {
           this._currentPercent = percent;
-          this.sendAction("currentPostScrolled", { percent });
+          this.currentPostScrolled({ percent });
         }
       }
     } else {
@@ -245,7 +252,7 @@ export default MountWidget.extend({
       uncloak(post, this);
     });
 
-    Object.keys(prev).forEach(pn => cloak(prev[pn], this));
+    Object.values(prev).forEach(node => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);
@@ -256,7 +263,7 @@ export default MountWidget.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const debouncedScroll = () =>
       Ember.run.debounce(this, this._scrollTriggered, 10);
 
@@ -306,7 +313,7 @@ export default MountWidget.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $(document).unbind("touchmove.post-stream");
     $(window).unbind("scroll.post-stream");
     this.appEvents.off("post-stream:refresh");

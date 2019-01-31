@@ -27,12 +27,6 @@ sw:
     default_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye machaguo mengi una vigezo ambavyo si sahihi."
     named_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye jina <strong>%{name}</strong>, ambao una machaguo mengi, una vigezo ambavyo si sahihi."
     requires_at_least_1_valid_option: "Lazima uchague angalau chaguo 1  sahihi."
-    default_cannot_be_made_public: "Uchaguzi wenye kura hauwezi kugeuzwa ili usiwe wa siri."
-    named_cannot_be_made_public: "Uchaguzi ulioitwa <strong>%{name}</strong> una kura na hauwezi kufanyika kwa umma."
-    edit_window_expired:
-      op_cannot_edit_options: "Huwezi ukaongeza au kupunguza machaguo ya uchaguzi baada ya dakika %{minutes} za kwanza. Tafadhali wasiliana na msimamizi wa jukwaa kama utahitaji kuhariri chaguo la uchaguzi."
-      staff_cannot_add_or_remove_options: "Huwezi kuongeza au kupunguza machaguo ya uchaguzi baada ya dakika %{minutes}za mwanzo. Unapaswa kufunga mada hii na kuanzisha mada mpya badala yake."
-    no_polls_associated_with_this_post: "Hakuna chaguzi zinazohusiana na bandiko hili."
     no_poll_with_this_name: "Hakuna uchaguzi wenye jina <strong>%{name}</strong> unaohusiana na bandiko hili."
     post_is_deleted: "Huwezi kufanyia kazi bandiko lililofutwa."
     user_cant_post_in_topic: "Huwezi kupiga kura kwa sababu hauwezi kuchangia kwenye hii mada."

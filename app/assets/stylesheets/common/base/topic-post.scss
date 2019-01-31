@@ -28,14 +28,19 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: middle;
     a {
+      vertical-align: middle;
       color: dark-light-choose($primary-high, $secondary-low);
     }
   }
   .fa {
     font-size: $font-down-1;
-    margin-left: 3px;
     color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .svg-icon-title {
+    margin-left: 3px;
+    margin-right: 0px;
   }
   .new_user a,
   .user-title,
@@ -161,7 +166,8 @@
 
   .post-infos {
     display: flex;
-    align-items: baseline;
+    flex: 0 0 auto;
+    align-items: center;
   }
 }
 
@@ -227,8 +233,9 @@ aside.quote {
 .quote-controls {
   float: right;
   display: flex;
-  .d-icon {
-    margin-left: 0.2em;
+  align-items: center;
+  a {
+    margin-left: 0.3em;
   }
 }
 
@@ -389,7 +396,7 @@ aside.quote {
 
       .remove-invited {
         display: flex;
-        flex: 1;
+        flex: 1 0 0px;
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
@@ -412,7 +419,8 @@ aside.quote {
 .avatar-flair-preview,
 .user-card-avatar,
 .topic-map .poster,
-.user-profile-avatar {
+.user-profile-avatar,
+.user-image {
   .avatar-flair {
     display: flex;
     align-items: center;
@@ -426,7 +434,8 @@ aside.quote {
 }
 .topic-avatar .avatar-flair,
 .avatar-flair-preview .avatar-flair,
-.collapsed-info .user-profile-avatar .avatar-flair {
+.collapsed-info .user-profile-avatar .avatar-flair,
+.user-image .avatar-flair {
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
@@ -470,8 +479,8 @@ aside.quote {
     bottom: -2px;
     right: 0;
   }
-  .fa {
-    font-size: $font-0;
+  .d-icon {
+    font-size: $font-down-2;
   }
 }
 .topic-avatar .poster-avatar-extra {
@@ -495,18 +504,12 @@ aside.quote {
   // this is necessary for ANYTHING that extends past the right edge of
   // the post body, such as an image in a deeply nested list, image in
   // a deeply nested blockquote, and so on.. you get the idea.
-  .contents .cooked {
+  .cooked {
     overflow: hidden;
   }
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
-}
-
-// this ensures consistent top margin on topic posts even if the first line of a post
-// is a top-margin-less element like a list or image.
-.topic-body .regular {
-  margin-top: 15px;
 }
 
 .post-info {
@@ -515,10 +518,6 @@ aside.quote {
 
   &.post-date {
     margin-right: 0;
-  }
-  &.via-email,
-  &.whisper {
-    line-height: $line-height-medium;
   }
   &.via-email,
   &.whisper,
@@ -545,7 +544,7 @@ pre {
   code {
     word-wrap: normal;
     display: block;
-    padding: 5px 10px;
+    padding: 0.5em;
     color: $primary;
     background: blend-primary-secondary(5%);
     max-height: 500px;
@@ -587,7 +586,7 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 4.6em;
+  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
   color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -622,14 +621,15 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
-  max-width: 755px;
+  max-width: 758px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
     align-self: flex-start;
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
-    i {
+    flex: 0 0 auto;
+    .d-icon {
       font-size: 2em;
       width: 45px;
       text-align: center;
@@ -725,9 +725,14 @@ a.mention-group {
   }
 }
 
-#suggested-topics {
+.suggested-topics {
   .topics {
     padding-bottom: 15px;
+  }
+  .suggested-topics-message {
+    .badge-wrapper {
+      margin-right: 0;
+    }
   }
 }
 
@@ -739,9 +744,10 @@ a.mention-group {
 
     > * {
       overflow: hidden;
+      vertical-align: middle;
     }
 
-    > i.fa {
+    > .d-icon {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 6px;
       font-size: $font-0;
@@ -832,11 +838,6 @@ a.mention-group {
   .reply-to-tab {
     span {
       display: none;
-    }
-  }
-  .names {
-    span {
-      display: block;
     }
   }
   .user-title {

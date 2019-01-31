@@ -1,7 +1,7 @@
 {{#if visible}}
   <div class="card-content">
     <div class="group-card-avatar">
-      <a href={{groupPath}} {{action "showGroup"}} class="card-huge-avatar">
+      <a href={{groupPath}} {{action "showGroup" group}} class="card-huge-avatar">
         {{avatar-flair
           flairURL=group.flair_url
           flairBgColor=group.flair_bg_color
@@ -13,7 +13,7 @@
     <div class="names">
       <span>
         <h1 class="{{ group.name }}">
-          <a href={{groupPath}} {{action "showGroup"}}>{{ group.name }}</a>
+          <a href={{groupPath}} {{action "showGroup" group}}>{{ group.name }}</a>
         </h1>
         {{#if group.full_name}}
           <h2 class='full-name'>{{group.full_name}}</h2>
@@ -26,11 +26,11 @@
     <div class="usercard-controls group-details-button">
       {{group-membership-button
         model=group
-        showLogin='showLogin'}}
+        showLogin=(route-action "showLogin")}}
 
       {{#if group.messageable}}
         {{d-button
-          action="messageGroup"
+          action=(action "messageGroup")
           class="btn-primary group-message-button inline"
           icon="envelope"
           label="groups.message"}}
@@ -63,7 +63,7 @@
           <a href={{user.path}} {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
         {{/each}}
         {{#if showMoreMembers}}
-          <a href={{groupPath}} {{action "showGroup"}}>+{{ moreMembersCount }} {{i18n "more"}}</a>
+          <a href={{groupPath}} {{action "showGroup" group}}>+{{ moreMembersCount }} {{i18n "more"}}</a>
         {{/if}}
       </span>
     </div>

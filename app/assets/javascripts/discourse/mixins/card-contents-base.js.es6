@@ -16,6 +16,7 @@ export default Ember.Mixin.create({
   cardTarget: null,
   post: null,
   isFixed: false,
+  isDocked: false,
 
   _show(username, $target) {
     // No user card for anon
@@ -25,8 +26,9 @@ export default Ember.Mixin.create({
 
     username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
-    // Don't show on mobile
-    if (this.site.mobileView) {
+    // Don't show on mobile or nested
+    if (this.site.mobileView || $target.parents(".card-content").length) {
+      this._close();
       DiscourseURL.routeTo($target.attr("href"));
       return false;
     }
@@ -65,7 +67,7 @@ export default Ember.Mixin.create({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     afterTransition(this.$(), this._hide.bind(this));
     const id = this.get("elementId");
     const triggeringLinkClass = this.get("triggeringLinkClass");
@@ -120,6 +122,11 @@ export default Ember.Mixin.create({
       this.set("isFixed", true);
       return this._show($target.text().replace(/^@/, ""), $target);
     });
+
+    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
+      this.setProperties({ isFixed: true, isDocked: true });
+      return this._show(username, $target);
+    });
   },
 
   _positionCard(target) {
@@ -130,6 +137,7 @@ export default Ember.Mixin.create({
     const width = this.$().width();
     const height = 175;
     const isFixed = this.get("isFixed");
+    const isDocked = this.get("isDocked");
 
     let verticalAdjustments = 0;
 
@@ -178,8 +186,16 @@ export default Ember.Mixin.create({
               position.top = "unset";
             }
           }
+
+          const avatarOverflowSize = 44;
+          if (isDocked && position.top < avatarOverflowSize) {
+            position.top = avatarOverflowSize;
+          }
+
           this.$().css(position);
         }
+
+        this.$().toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
         //
@@ -204,12 +220,13 @@ export default Ember.Mixin.create({
       loading: null,
       cardTarget: null,
       post: null,
-      isFixed: false
+      isFixed: false,
+      isDocked: false
     });
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     const clickOutsideEventName = this.get("clickOutsideEventName");
     const clickDataExpand = this.get("clickDataExpand");
     const clickMention = this.get("clickMention");

@@ -94,7 +94,7 @@ fr:
         '8': "De bonnes perspectives"
         '9': "Oui"
         '10': "Les signent tendent vers le oui"
-        '11': "Réponse incertaine essayez de nouveau"
+        '11': "Réponse incertaine, essayez de nouveau"
         '12': "Demander à nouveau plus tard"
         '13': "Il vaut mieux ne pas vous le dire maintenant"
         '14': "Impossible à prédire pour le moment"
@@ -136,7 +136,7 @@ fr:
         second_response: |-
           Vraiment désolé. Je ne comprend toujours pas .:anguished:
 
-          Je suis juste un robot, mais si vous souhaitez contacter une personne réelle, consultez [notre page de contact](/ about).
+          Je suis juste un robot, mais si vous souhaitez contacter une personne réelle, consultez [notre page de contact](%{base_path}/ about).
 
           Pendant ce temps là, je serais silencieux.
     new_user_narrative:
@@ -144,24 +144,24 @@ fr:
       title: "Certificat de complétion des étapes de nouvel utilisateur"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
       hello:
-        title: ":robot: Bienvenue !"
+        title: "Bienvenue !"
         message: |-
           Merci de vous être inscrit à %{title}, et bienvenue !
 
-          - Je ne suis qu'un robot, mais [notre équipe](/about) est également disponible si vous avez besoin de contacter quelqu'un.
+          - Je ne suis qu'un robot, mais [notre équipe](%{base_uri}/about) est également disponible si vous avez besoin de contacter quelqu'un.
 
-          - Pour des raisons de sécurité, nous avons temporairement limité ce que les nouveaux utilisateurs peuvent faire. Vous obtiendrez de nouvelles possibilités (et des [badges](/badges)) au fur et à mesure que nous vous connaitrons.
+          - Pour des raisons de sécurité, nous avons temporairement limité ce que les nouveaux utilisateurs peuvent faire. Vous obtiendrez de nouvelles possibilités (et des [badges](%{base_uri}/badges)) au fur et à mesure que nous vous connaitrons.
 
-          - Nous croyons en [un comportement communautaire civilisé](/guidelines) de tout temps.
+          - Nous croyons en [un comportement communautaire civilisé](%{base_uri}/guidelines) de tout temps.
       onebox:
         instructions: |-
           Maintenant, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec **un lien sur une ligne vide**, et il sera automatiquement transformé pour inclure un astucieux résumé.
 
-          Pour copier un lien, tapez et maintenant appuyé sur mobile, ou utilisez le clic droit de votre souris:
+          Pour copier un lien, tapez et maintenant appuyé sur mobile, ou utilisez le clic droit de votre dispositif de pointage (souris):
 
-          - https://fr.wikipedia.org/wiki/Jeu_de_mots
-          - https://fr.wikipedia.org/wiki/Liste_de_morts_insolites
-          - https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice
+          <https://fr.wikipedia.org/wiki/Jeu_de_mots>
+          <https://fr.wikipedia.org/wiki/Liste_de_morts_insolites>
+          <https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice>
         reply: |-
           Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne _vide_, sans rien devant, ni derrière.
         not_found: |-
@@ -223,11 +223,11 @@ fr:
           Sectionner n'importe quel texte dans mon message fera apparaitre le bouton <kbd>**Citer**</kbd>. Et appuyer sur "Répondre" avec du texte sélectionné fonctionnera également ! Pouvez-vous essayer de nouveau ?
       bookmark:
         instructions: |-
-          Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** marquez ce message privé**. Si vous le faites, il pourrait y avoir un :gift: dans le futur !
+          Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ajouter ce message direct aux signets**. Si vous le faites, il pourrait y avoir un :gift: dans le futur !
         reply: |-
           Excellent ! Maintenant, vous pouvez facilement retrouver notre conversation privée à tout moment, à partir de [l'onglet marque page sur votre profil](%{profile_page_url}/activity/bookmarks). Sélectionnez juste votre photo de profil dans le coin en haut à droite &#8599;
         not_found: |-
-          Uh oh, je ne vois aucun marque page sur ce sujet ! Avez-vous trouvé le marque page sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
+          Uh oh, je ne vois aucun signet sur ce sujet ! Avez-vous trouvé le bouton signet sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:
         instructions: |-
           Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
@@ -266,7 +266,7 @@ fr:
 
           Je devine que vous savez ce que vous avez à faire. **Signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> comme inapproprié !
         reply: |-
-          [Notre équipe](/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
+          [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
         not_found: |-
           Oh non, mon méchant message n'a pas encore été signalé. :worried: Pouvez-vous le signaler comme inapproprié en utilisant le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
@@ -297,7 +297,7 @@ fr:
 
           %{certificate}
 
-          C'est tout pour le moment ! Regardez  [**nos dernières discussions**](/latest) ou [**les catégories de discussion**](/categories). :sunglasses:
+          C'est tout pour le moment ! Regardez  [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses:
 
           (Si vous souhaitez parler avec moi encore une fois pour en apprendre plus, envoyez moi un message ou mentionnez `@%{discobot_username}` n'importe quand !)
       certificate:
@@ -307,7 +307,7 @@ fr:
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
       title: ':arrow_up: Fonctionnalités utilisateur avancé'
       start_message: |-
-        En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](/my/preferences) @%{username}? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
+        En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username}? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
 
         Mais je divague, commençons !
       edit:
@@ -349,9 +349,9 @@ fr:
           Notez que vous n'avez que 24 heures pour restaurer un message supprimé.
       category_hashtag:
         instructions: |-
-          Saviez-vous que vous pouviez faire référence aux catégories et tags dans vos messages ? Par exemple avez-vous vu la catégorie %{category}?
+          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple avez-vous vu la catégorie %{category}?
 
-          Tapez `#` au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou tag.
+          Tapez `#` au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
         not_found: |-
           Hmm, je ne vois pas de catégorie nulle part. Notez que `#` ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
@@ -359,12 +359,12 @@ fr:
           Je peux créer un lien de catégorie via #
           ```
         reply: |-
-          Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les tags, si les tags sont activés.
+          Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:
         instructions: |-
           Chaque sujet a un niveau de notification. Il démarre comme 'normal', c'est à dire que vous ne serez notifié que quand quelqu'un vous parle directement.
 
-          Par défaut, le niveau de notification pour un message privé est configuré au plus haut niveau de 'surveillance', c'est à dire que vous serez notifié à chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet en 'Surveiller', 'Suivi', ou 'Silencieux'.
+          Par défaut, le niveau de notification pour un message direct est configuré au plus haut niveau de 'surveillance', c'est à dire que vous serez notifié à chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet en 'Surveiller', 'Suivi', ou 'Silencieux'.
 
           Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi**'?
         not_found: |-
@@ -372,7 +372,7 @@ fr:
         reply: |-
           Super boulot ! J’espère que vous n'avez pas mis ce sujet en silencieux car il m'arrive parfois d'être un peu bavard :grin:
 
-          Remarquez que quand vous répondez à un sujet, ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement mis sur 'Suivi'. Vous pouvez changer cela dans [vos préférences utilisateur](/my/preferences).
+          Remarquez que quand vous répondez à un sujet, ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement mis sur 'Suivi'. Vous pouvez modifier cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Savez-vous que vous pouvez ajouter un sondage sur n'importe quel message ? Essayez en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur pour **créer un sondage**.
@@ -400,7 +400,7 @@ fr:
 
           - Quand vous discutez d'un film ou d'une série TV et que vous pourriez spoiler la communauté.
 
-          - Quand votre message a besoin de beaucoup de détails qui peuvent rendre le sujet illisible
+          - Quand votre message a besoin de beaucoup de détails optionnels qui peuvent rendre le sujet illisible
 
           [details=Sélectionnez ceci pour voir comment cela fonctionne !]
           1. Sélectionnez la roue <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dans l'éditeur.

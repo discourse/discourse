@@ -195,6 +195,47 @@ describe UserSerializer do
       expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
       expect(json[:custom_fields]['secret_field']).to eq(nil)
     end
+
+    context "with user custom field" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.whitelist_public_user_custom_field :public_field
+      end
+
+      after do
+        User.plugin_public_user_custom_fields.clear
+      end
+
+      it "serializes the fields listed in plugin_public_user_custom_fields" do
+        expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
+        expect(json[:custom_fields]['secret_field']).to eq(nil)
+      end
+    end
+  end
+
+  context "with user fields" do
+    let(:user) { Fabricate(:user) }
+
+    let! :fields do
+      [
+        Fabricate(:user_field),
+        Fabricate(:user_field),
+        Fabricate(:user_field, show_on_profile: true),
+        Fabricate(:user_field, show_on_user_card: true),
+        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true)
+      ]
+    end
+
+    let(:other_user_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:user)), root: false).as_json }
+    let(:self_json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
+    let(:admin_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
+
+    it "includes the correct fields for each audience" do
+      expect(admin_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+      expect(other_user_json[:user_fields].keys).to contain_exactly(*fields[2..5].map { |f| f.id.to_s })
+      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+    end
+
   end
 
   context "with user fields" do

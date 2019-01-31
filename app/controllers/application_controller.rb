@@ -215,6 +215,10 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
+  rescue_from ActionController::ParameterMissing do |e|
+    render_json_error e.message, status: 400
+  end
+
   def redirect_with_client_support(url, options)
     if request.xhr?
       response.headers['Discourse-Xhr-Redirect'] = 'true'
@@ -248,7 +252,11 @@ class ApplicationController < ActionController::Base
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
-        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
+        return render(
+          status: status_code,
+          layout: false,
+          plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
+        )
       end
 
       render_json_error message, type: type, status: status_code
@@ -404,7 +412,7 @@ class ApplicationController < ActionController::Base
   end
 
   def guardian
-    @guardian ||= Guardian.new(current_user)
+    @guardian ||= Guardian.new(current_user, request)
   end
 
   def current_homepage
@@ -446,7 +454,7 @@ class ApplicationController < ActionController::Base
   end
 
   def can_cache_content?
-    current_user.blank? && flash[:authentication_data].blank?
+    current_user.blank? && cookies[:authentication_data].blank?
   end
 
   # Our custom cache method
@@ -680,7 +688,9 @@ class ApplicationController < ActionController::Base
     return if current_user || (request.format.json? && is_api?)
 
     if SiteSetting.login_required?
+
       flash.keep
+      dont_cache_page
 
       if SiteSetting.enable_sso?
         # save original URL in a session so we can redirect after login

@@ -14,7 +14,7 @@
     }
 
     .select-kit-body {
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px solid $primary-low;
       background-clip: padding-box;
       box-shadow: shadow("dropdown");
       max-width: 300px;
@@ -29,6 +29,7 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
+        flex: 0 0 auto;
         -webkit-box-align: start;
         -ms-flex-align: start;
         align-items: flex-start;
@@ -37,7 +38,7 @@
         justify-content: center;
         -ms-flex-item-align: start;
         align-self: flex-start;
-        margin-right: 10px;
+        margin-right: 0.357em;
         margin-top: 2px;
         width: 30px;
 
@@ -51,11 +52,11 @@
       }
 
       .texts {
-        min-width: 0;
+        width: 0; //IE11
         line-height: $line-height-large;
         -webkit-box-flex: 1;
         -ms-flex: 1;
-        flex: 1;
+        flex: 1 1 0%;
         -webkit-box-align: start;
         -ms-flex-align: start;
         align-items: flex-start;
@@ -72,7 +73,7 @@
         .name {
           -webkit-box-flex: 1;
           -ms-flex: 1;
-          flex: 1;
+          flex: 1 1 auto;
           font-weight: bold;
           font-size: $font-0;
           color: $primary;
@@ -86,7 +87,8 @@
         .desc {
           -webkit-box-flex: 1;
           -ms-flex: 1;
-          flex: 1;
+          flex: 1 1 auto;
+          width: 100%; //IE11
           font-size: $font-down-1;
           font-weight: normal;
           color: dark-light-choose(
@@ -125,12 +127,6 @@
 
       .d-icon + .d-icon {
         margin-left: 5px;
-      }
-
-      &:hover {
-        .d-icon {
-          color: $primary-low;
-        }
       }
 
       &.is-focused {

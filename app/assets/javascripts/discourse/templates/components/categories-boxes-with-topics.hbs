@@ -1,10 +1,13 @@
 {{#each categories as |c|}}
-  <div class='category-box category-box-{{unbound c.slug}}' style={{border-color c.color}}>
+  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}}>
     <div class='category-box-inner'>
       <div class='category-box-heading'>
         <a href={{c.url}}>
           {{#if c.uploaded_logo.url}}
-            {{cdn-img src=c.uploaded_logo.url class="logo"}}
+            {{cdn-img src=c.uploaded_logo.url
+                class="logo"
+                width=c.uploaded_logo.width
+                height=c.uploaded_logo.height}}
           {{/if}}
 
           <h3>

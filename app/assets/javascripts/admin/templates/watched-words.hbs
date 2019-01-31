@@ -1,8 +1,8 @@
 <div class='admin-controls'>
   <div class='controls'>
-    {{d-button action="toggleMenu" class="menu-toggle" icon="bars"}}
+    {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
     {{text-field value=filter placeholderKey="admin.watched_words.search" class="no-blur"}}
-    {{d-button action="clearFilter" label="admin.watched_words.clear_filter"}}
+    {{d-button action=(action "clearFilter") label="admin.watched_words.clear_filter"}}
   </div>
 </div>
 

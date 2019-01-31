@@ -6,7 +6,7 @@ QUnit.test("Viewing Members as anon user", async assert => {
   await visit("/groups/discourse");
 
   assert.ok(
-    count(".avatar-flair .fa-adjust") === 1,
+    count(".avatar-flair .d-icon-adjust") === 1,
     "it displays the group's avatar flair"
   );
   assert.ok(count(".group-members tr") > 0, "it lists group members");

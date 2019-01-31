@@ -11,8 +11,8 @@ class SearchIndexer
     @disabled = false
   end
 
-  def self.scrub_html_for_search(html)
-    HtmlScrubber.scrub(html)
+  def self.scrub_html_for_search(html, strip_diacritics: SiteSetting.search_ignore_accents)
+    HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
   end
 
   def self.inject_extra_terms(raw)
@@ -105,7 +105,7 @@ class SearchIndexer
   end
 
   def self.update_tags_index(tag_id, name)
-    update_index(table: 'tag', id: tag_id, raw_data: [name])
+    update_index(table: 'tag', id: tag_id, raw_data: [name.downcase])
   end
 
   def self.queue_post_reindex(topic_id)
@@ -167,20 +167,10 @@ class SearchIndexer
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
 
-    DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
-
-    def self.strip_diacritics(str)
-      s = str.unicode_normalize(:nfkd)
-      s.gsub!(DIACRITICS, "")
-      s.strip!
-      s
-    end
-
     attr_reader :scrubbed
 
     def initialize(strip_diacritics: false)
       @scrubbed = +""
-      # for now we are disabling this per: https://meta.discourse.org/t/discourse-should-ignore-if-a-character-is-accented-when-doing-a-search/90198/16?u=sam
       @strip_diacritics = strip_diacritics
     end
 
@@ -189,7 +179,7 @@ class SearchIndexer
 
       me = new(strip_diacritics: strip_diacritics)
       Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
-      me.scrubbed
+      me.scrubbed.squish
     end
 
     ATTRIBUTES ||= %w{alt title href data-youtube-title}
@@ -205,7 +195,7 @@ class SearchIndexer
     end
 
     def characters(str)
-      str = HtmlScrubber.strip_diacritics(str) if @strip_diacritics
+      str = Search.strip_diacritics(str) if @strip_diacritics
       scrubbed << " #{str} "
     end
   end

@@ -56,7 +56,7 @@ export default Ember.Component.extend({
 
     if (originalUser) {
       editTitle += `
-        ${iconHTML("mail-forward", { class: "reply-to-glyph" })}
+        ${iconHTML("share", { class: "reply-to-glyph" })}
         ${originalUser.avatar}
         <span class="original-username">${originalUser.username}</span>
       `;
@@ -66,9 +66,9 @@ export default Ember.Component.extend({
   },
 
   _formatReplyToTopic(link) {
-    return `<a class="topic-link" href="${link.href}">${
-      link.anchor
-    }</a>`.htmlSafe();
+    return `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
+      "model.topic.id"
+    )}">${link.anchor}</a>`.htmlSafe();
   },
 
   _formatReplyToUserPost(avatar, link) {

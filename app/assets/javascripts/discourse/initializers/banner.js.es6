@@ -5,7 +5,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const banner = Em.Object.create(PreloadStore.get("banner")),
+    const banner = Ember.Object.create(PreloadStore.get("banner")),
       site = container.lookup("site:main");
 
     site.set("banner", banner);
@@ -16,7 +16,7 @@ export default {
     }
 
     messageBus.subscribe("/site/banner", function(ban) {
-      site.set("banner", Em.Object.create(ban));
+      site.set("banner", Ember.Object.create(ban));
     });
   }
 };

@@ -7,6 +7,7 @@
 
 fi:
   site_settings:
+    discourse_narrative_bot_enabled: 'Ota Discoursen opastava botti käyttöön (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Estä bottia lähettämästä tervetuloviestejä"
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
@@ -135,31 +136,32 @@ fi:
         second_response: |-
           Voi ei, en vieläkään tajua. :anguished:
 
-          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](/about).
+          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](%{base_path}/about).
 
           En häiritse sinua enempää nyt.
     new_user_narrative:
       reset_trigger: "peruskurssi"
+      title: "Diplomi peruskurssin suorittamisesta"
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
       hello:
-        title: ":robot: Tervehdys!"
+        title: "Tervehdys!"
         message: |-
           Kiitos kun liityit sivustollemme %{title}. Tervetuloa!
 
-          - Olen vain robotti, mutta [avulias henkilökunta](/about) auttaa myös mielellään, jos sinulla on asiaa heille.
+          - Olen vain robotti, mutta [avulias henkilökunta](%{base_uri}/about) auttaa myös mielellään, jos sinulla on asiaa heille.
 
-          - Turvallisuussyistä uusi käyttäjä ei voi tehdä ihan kaikkea. Saat uusia toimintoja käyttöösi (ja [ansiomerkkejä](/badges)) kun tutustumme sinuun.
+          - Turvallisuussyistä uusi käyttäjä ei voi tehdä ihan kaikkea. Saat uusia toimintoja käyttöösi (ja [ansiomerkkejä](%{base_uri}/badges)) kun tutustumme sinuun.
 
-          - Vannomme [sivistyneen yhteisökäyttäytymisen](/guidelines) nimeen kaikissa tilanteissa.
+          - Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
         instructions: |-
           Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.
 
-          Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa, tai klikkaa sitä hiiresi oikealla painikkeella:
+          Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa tai klikkaa sitä hiiresi oikealla painikkeella:
 
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
         not_found: |-
@@ -264,7 +266,7 @@ fi:
 
           Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
         reply: |-
-          [Henkilökuntamme](/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
+          [Henkilökuntamme](%{base_uri}/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
         not_found: |-
           Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
       search:
@@ -294,7 +296,7 @@ fi:
 
           %{certificate}
 
-          Siinä kaikki tältä erää! Tsekkaa [**tuoreimmat ketjut**](/latest) tai tutki [**keskustelualueita**](/categories). :sunglasses:
+          Siinä kaikki tältä erää! Tsekkaa [**tuoreimmat ketjut**](%{base_uri}/latest) tai tutki [**keskustelualueita**](%{base_uri}/categories). :sunglasses:
 
           (Jos haluat vielä jutella kanssani ja oppia lisää, lähetä minulle `@%{discobot_username}` yksityisviesti tai mainitse minut koska vain!)
       certificate:
@@ -304,7 +306,7 @@ fi:
       cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
       title: ':arrow_up: Jatkokurssi'
       start_message: |-
-        _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäasetussivulla](/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
+        _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäjäasetussivulla](%{base_uri}/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
 
         Vaan eipä harhauduta asiasta vaan aloitetaan!
       edit:
@@ -369,7 +371,7 @@ fi:
         reply: |-
           Mahtavaa! Toivottavasti et kuitenkaan vaimentanut tätä ketjua, vaikka saatan välillä olla vähän liiankin puhelias. :grin:.
 
-          Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](/my/preferences).
+          Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Tiesitkö, että viesteihin voi lisätä äänestyksiä? **Luo äänestys** valitsemalla viestieditorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.

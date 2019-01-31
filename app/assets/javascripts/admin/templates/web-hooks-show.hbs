@@ -51,6 +51,13 @@
         {{category-selector categories=model.categories}}
         <div class="instructions">{{i18n 'admin.web_hooks.categories_filter_instructions'}}</div>
       </div>
+      {{#if showTagsFilter}}
+        <div class="filter">
+          <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.tags_filter'}}</label>
+          {{tag-chooser tags=model.tag_names everyTag=true}}
+          <div class="instructions">{{i18n 'admin.web_hooks.tags_filter_instructions'}}</div>
+        </div>
+      {{/if}}
       <div class="filter">
         <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.groups_filter'}}</label>
         {{group-selector groupNames=model.groupsFilterInName groupFinder=model.groupFinder}}
@@ -74,9 +81,10 @@
   </form>
 
   <div class='controls'>
-    <button class='btn btn-default' {{action 'save'}} disabled={{saveButtonDisabled}}>{{saveButtonText}}</button>
+    {{d-button class="btn-default" translatedLabel=saveButtonText action=(action "save") disabled=saveButtonDisabled}}
+
     {{#unless model.isNew}}
-      {{d-button class="btn-danger" label="admin.web_hooks.destroy" action="destroy"}}
+      {{d-button class="btn-danger" label="admin.web_hooks.destroy" action=(action "destroy")}}
       {{#link-to 'adminWebHooks.showEvents' model.id class="btn"}}
         {{i18n 'admin.web_hooks.events.go_events'}}
       {{/link-to}}

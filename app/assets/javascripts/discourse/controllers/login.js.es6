@@ -32,10 +32,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
-  loginRequired: Em.computed.alias("application.loginRequired"),
+  loginRequired: Ember.computed.alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
-  resetForm: function() {
+  resetForm() {
     this.setProperties({
       authenticate: null,
       loggingIn: false,
@@ -57,28 +57,27 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Determines whether at least one login button is enabled
-  hasAtLeastOneLoginButton: function() {
-    return findAll(this.siteSettings).length > 0;
-  }.property(),
+  @computed("canLoginLocalWithEmail")
+  hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
+    return findAll(this.siteSettings).length > 0 || canLoginLocalWithEmail;
+  },
 
   @computed("loggingIn")
   loginButtonLabel(loggingIn) {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
-  loginDisabled: Em.computed.or("loggingIn", "loggedIn"),
+  loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
 
-  showSignupLink: function() {
-    return (
-      this.get("application.canSignUp") &&
-      !this.get("loggingIn") &&
-      Ember.isEmpty(this.get("authenticate"))
-    );
-  }.property("loggingIn", "authenticate"),
+  @computed("loggingIn", "authenticate", "application.canSignUp")
+  showSignupLink(loggingIn, authenticate, canSignUp) {
+    return canSignUp && !loggingIn && Ember.isEmpty(authenticate);
+  },
 
-  showSpinner: function() {
-    return this.get("loggingIn") || this.get("authenticate");
-  }.property("loggingIn", "authenticate"),
+  @computed("loggingIn", "authenticate")
+  showSpinner(loggingIn, authenticate) {
+    return loggingIn || authenticate;
+  },
 
   @computed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
@@ -158,12 +157,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
               .val(self.get("loginPassword"));
 
             if (ssoDestinationUrl) {
-              $.cookie("sso_destination_url", null);
+              $.removeCookie("sso_destination_url");
               window.location.assign(ssoDestinationUrl);
               return;
             } else if (destinationUrl) {
               // redirect client to the original URL
-              $.cookie("destination_url", null);
+              $.removeCookie("destination_url");
               $hidden_login_form
                 .find("input[name=redirect]")
                 .val(destinationUrl);
@@ -203,11 +202,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin: function(loginMethod) {
+    externalLogin(loginMethod) {
       loginMethod.doLogin();
     },
 
-    createAccount: function() {
+    createAccount() {
       const createAccountController = this.get("createAccount");
       if (createAccountController) {
         createAccountController.resetForm();
@@ -221,7 +220,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.send("showCreateAccount");
     },
 
-    forgotPassword: function() {
+    forgotPassword() {
       const forgotPasswordController = this.get("forgotPassword");
       if (forgotPasswordController) {
         forgotPasswordController.set(
@@ -327,7 +326,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         $.cookie("destination_url") || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
-        $.cookie("destination_url", null);
+        $.removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === Discourse.getURL("/login")) {
         window.location.pathname = Discourse.getURL("/");

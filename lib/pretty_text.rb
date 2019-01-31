@@ -156,10 +156,8 @@ module PrettyText
         __optInput.formatUsername = __formatUsername;
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
-        __optInput.mentionLookup = __mentionLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupInlineOnebox = __lookupInlineOnebox;
         __optInput.lookupImageUrls = __lookupImageUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
@@ -172,12 +170,7 @@ module PrettyText
         buffer << "__optInput.userId = #{opts[:user_id].to_i};\n"
       end
 
-      if opts[:invalidate_oneboxes]
-        buffer << "__optInput.invalidateOneboxes = true;\n"
-      end
-
       buffer << "__textOptions = __buildOptions(__optInput);\n"
-
       buffer << ("__pt = new __PrettyText(__textOptions);")
 
       # Be careful disabling sanitization. We allow for custom emails
@@ -263,6 +256,10 @@ module PrettyText
 
     if SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
       add_s3_cdn(doc)
+    end
+
+    if SiteSetting.enable_mentions
+      add_mentions(doc, user_id: opts[:user_id])
     end
 
     doc.to_html
@@ -417,6 +414,76 @@ module PrettyText
     files.each do |file|
       ctx.load(app_root + file)
     end
+  end
+
+  private
+
+  USER_TYPE ||= 'user'
+  GROUP_TYPE ||= 'group'
+
+  def self.add_mentions(doc, user_id: nil)
+    elements = doc.css("span.mention")
+    names = elements.map { |element| element.text[1..-1] }
+
+    mentions = lookup_mentions(names, user_id: user_id)
+
+    doc.css("span.mention").each do |element|
+      name = element.text[1..-1]
+      name.downcase!
+
+      if type = mentions[name]
+        element.name = 'a'
+
+        element.children = PrettyText::Helpers.format_username(
+          element.children.text
+        )
+
+        case type
+        when USER_TYPE
+          element['href'] = "#{Discourse::base_uri}/u/#{name}"
+        when GROUP_TYPE
+          element['class'] = 'mention-group'
+          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+        end
+      end
+    end
+  end
+
+  def self.lookup_mentions(names, user_id: nil)
+    return {} if names.blank?
+
+    sql = <<~SQL
+    (
+      SELECT
+        :user_type AS type,
+        username_lower AS name
+      FROM users
+      WHERE username_lower IN (:names) AND staged = false
+    )
+    UNION
+    (
+      SELECT
+        :group_type AS type,
+        lower(name) AS name
+      FROM groups
+      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause})
+    )
+    SQL
+
+    user = User.find_by(id: user_id)
+    names.each(&:downcase!)
+
+    results = DB.query(sql,
+      names: names,
+      user_type: USER_TYPE,
+      group_type: GROUP_TYPE,
+      levels: Group.alias_levels(user),
+      user_id: user_id
+    )
+
+    mentions = {}
+    results.each { |result| mentions[result.name] = result.type }
+    mentions
   end
 
 end

@@ -42,16 +42,6 @@ describe SiteSettingExtension do
     SiteSettings::LocalProcessProvider.new
   end
 
-  def new_settings(provider)
-    # we want to avoid leaking a big pile of MessageBus subscriptions here (1 per class)
-    # so we set listen_for_changes to false
-    Class.new do
-      extend SiteSettingExtension
-      self.listen_for_changes = false
-      self.provider = provider
-    end
-  end
-
   let :settings do
     new_settings(provider_local)
   end
@@ -133,6 +123,24 @@ describe SiteSettingExtension do
       settings.foo = "baz"
       expect(settings.foo).to eq("baz")
     end
+
+    it "clears the cache for site setting uploads" do
+      settings.setting(:upload_type, "", type: :upload)
+      upload = Fabricate(:upload)
+      settings.upload_type = upload
+
+      expect(settings.upload_type).to eq(upload)
+      expect(settings.send(:uploads)[:upload_type]).to eq(upload)
+
+      upload2 = Fabricate(:upload)
+      settings.provider.save(:upload_type, upload2.id, SiteSetting.types[:upload])
+
+      expect do
+        settings.refresh!
+      end.to change { settings.send(:uploads)[:upload_type] }.from(upload).to(nil)
+
+      expect(settings.upload_type).to eq(upload2)
+    end
   end
 
   describe "multisite" do
@@ -155,8 +163,11 @@ describe SiteSettingExtension do
     end
 
     it "should have the correct desc" do
-      I18n.expects(:t).with("site_settings.test_setting").returns("test description")
-      expect(settings.description(:test_setting)).to eq("test description")
+      I18n.backend.store_translations(:en, site_settings: { test_setting: "test description <a href='%{base_path}/admin'>/admin</a>" })
+      expect(settings.description(:test_setting)).to eq("test description <a href='/admin'>/admin</a>")
+
+      Discourse.stubs(:base_path).returns("/forum")
+      expect(settings.description(:test_setting)).to eq("test description <a href='/forum/admin'>/admin</a>")
     end
 
     it "should have the correct default" do
@@ -698,6 +709,41 @@ describe SiteSettingExtension do
       expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
     end
 
+  end
+
+  describe '.client_settings_json_uncached' do
+    it 'should return the right json value' do
+      upload = Fabricate(:upload)
+      settings.setting(:upload_type, upload.id.to_s, type: :upload, client: true)
+      settings.setting(:string_type, 'haha', client: true)
+      settings.refresh!
+
+      expect(settings.client_settings_json_uncached).to eq(
+        %Q|{"default_locale":"en","upload_type":"#{upload.url}","string_type":"haha"}|
+      )
+    end
+  end
+
+  describe '.setup_methods' do
+    describe 'for uploads site settings' do
+      let(:upload) { Fabricate(:upload) }
+      let(:upload2) { Fabricate(:upload) }
+
+      it 'should return the upload record' do
+        settings.setting(:some_upload, upload.id.to_s, type: :upload)
+
+        expect(settings.some_upload).to eq(upload)
+
+        # Ensure that we cache the upload record
+        expect(settings.some_upload.object_id).to eq(
+          settings.some_upload.object_id
+        )
+
+        settings.some_upload = upload2
+
+        expect(settings.some_upload).to eq(upload2)
+      end
+    end
   end
 
 end

@@ -1,24 +1,18 @@
-.groups-page {
-  h1 {
-    margin-bottom: 20px;
-    display: inline-block;
-  }
-}
-
 .groups-header {
   margin-bottom: 30px;
 }
 
 .groups-header-filters {
-  display: inline-block;
+  display: flex;
 
+  .groups-header-filters-name,
   .groups-header-filters-type {
-    vertical-align: middle;
+    margin-right: 5px;
+    margin-bottom: 0;
   }
 
-  .groups-header-filters-name {
-    vertical-align: middle;
-    margin: 0;
+  &:last-child {
+    margin-right: 0;
   }
 }
 
@@ -49,7 +43,7 @@
     }
 
     td.group-user-status {
-      i {
+      .d-icon {
         color: $primary;
       }
     }
@@ -57,6 +51,9 @@
     td.groups-user-count {
       width: 17%;
       font-size: $font-up-2;
+      .d-icon {
+        display: none;
+      }
     }
 
     td.groups-table-type {
@@ -65,18 +62,130 @@
     }
 
     td.groups-table-membership {
+      font-size: $font-up-1;
+
       .group-membership-button {
+        font-size: $font-down-1;
         display: inline-block;
+        margin-left: 5px;
+        &:empty {
+          display: none;
+        }
+      }
+    }
+    @include breakpoint(mobile) {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding: 10px 0;
+      td.groups-info,
+      td.groups-user-count,
+      td.groups-table-type,
+      td.groups-table-membership {
+        width: 100%;
+        padding: 0;
+        text-align: right;
+        font-size: $font-0;
+      }
+      td.groups-info {
+        grid-column-start: 1;
+        grid-column-end: 4;
+        grid-row-start: 1;
+        grid-row-end: 3;
+        text-align: left;
+        line-height: $line-height-medium;
+        margin-bottom: 0.5em;
+        a {
+          display: flex;
+        }
+        .group-avatar-flair {
+          margin-right: 0.5em;
+        }
+        .groups-info-name {
+          word-break: break-all;
+          max-width: 45vw;
+        }
+        .groups-info-full-name {
+          font-size: $font-down-1;
+        }
+      }
+      td.groups-user-count {
+        display: flex;
+        align-items: center;
+        grid-column-start: 4;
+        grid-row-start: 1;
+        .d-icon {
+          display: inline-block;
+          margin-right: 0.25em;
+          color: $primary-low-mid;
+        }
+      }
+      td.groups-table-type {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        text-align: left;
+        align-self: center;
+        .d-icon {
+          margin-right: 0.25em;
+        }
+      }
+      td.groups-table-membership {
+        grid-row-start: 3;
+        grid-column-start: 3;
+        grid-column-end: 5;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        button {
+          margin-left: 5px;
+          display: flex;
+        }
+        &:empty {
+          display: none;
+        }
       }
 
-      > span {
-        margin-right: 5px;
-        font-size: $font-up-1;
+      // IE11 grid support
+
+      display: -ms-grid;
+      -ms-grid-columns: 1fr 1fr;
+      -ms-grid-rows: 1fr 1fr;
+      td.groups-info {
+        display: -ms-grid;
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+      }
+      td.groups-user-count {
+        justify-content: flex-end;
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+      }
+      td.groups-table-type {
+        display: flex;
+        align-items: center;
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+      }
+      td.groups-table-membership {
+        display: flex;
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
       }
     }
   }
 
+  @include breakpoint(mobile) {
+    thead {
+      display: none;
+    }
+  }
+
   .groups-info {
+    .group-info-details {
+      vertical-align: middle;
+    }
+
     .groups-info-name {
       font-weight: bold;
       color: $primary;
@@ -92,19 +201,31 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
+    .group-avatar-flair {
+      vertical-align: middle;
+      color: $primary;
+    }
+
     span {
       display: inline-block;
-      vertical-align: middle;
     }
 
     $size: 40px;
+    $icon-size: $size / 1.8;
 
     .avatar-flair {
       background-size: $size;
       height: $size;
+      width: $size;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-repeat: no-repeat;
 
-      i {
-        font-size: $size !important;
+      .d-icon {
+        height: $icon-size;
+        width: $icon-size;
       }
     }
 

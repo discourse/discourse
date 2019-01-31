@@ -10,6 +10,16 @@
 </div>
 {{/if}}
 
+<div class="control-group text-size">
+  <label class="control-label">{{i18n 'user.text_size.title'}}</label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=textSizes value=textSize onSelect=(action "selectTextSize")}}
+  </div>
+  <div class="controls">
+    {{preference-checkbox labelKey="user.text_size_default_on_all_devices" checked=makeTextSizeDefault}}
+  </div>
+</div>
+
 {{#if siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
     <label class="control-label">{{i18n 'user.locale.title'}}</label>
@@ -37,10 +47,10 @@
   {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
   {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
   {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
-
   {{#if siteSettings.automatically_unpin_topics}}
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
   {{/if}}
+  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence}}
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}

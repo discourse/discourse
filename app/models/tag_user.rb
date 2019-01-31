@@ -19,7 +19,7 @@ class TagUser < ActiveRecord::Base
     records = TagUser.where(user: user, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
-    tag_ids = tags.empty? ? [] : Tag.where('name in (?)', tags).pluck(:id)
+    tag_ids = tags.empty? ? [] : Tag.where_name(tags).pluck(:id)
 
     remove = (old_ids - tag_ids)
     if remove.present?
@@ -113,12 +113,11 @@ class TagUser < ActiveRecord::Base
     builder.exec(watching: notification_levels[:watching],
                  tracking: notification_levels[:tracking],
                  regular: notification_levels[:regular],
-                 auto_watch_tag:  TopicUser.notification_reasons[:auto_watch_tag])
+                 auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag])
 
   end
 
   def self.auto_track(opts)
-
     builder = DB.build <<~SQL
       UPDATE topic_users
       SET notification_level = :tracking, notifications_reason_id = :auto_track_tag
@@ -147,7 +146,7 @@ class TagUser < ActiveRecord::Base
 
     builder.exec(tracking: notification_levels[:tracking],
                  regular: notification_levels[:regular],
-                 auto_track_tag:  TopicUser.notification_reasons[:auto_track_tag])
+                 auto_track_tag: TopicUser.notification_reasons[:auto_track_tag])
   end
 
 end

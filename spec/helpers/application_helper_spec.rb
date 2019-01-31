@@ -147,15 +147,68 @@ describe ApplicationHelper do
     end
   end
 
-  describe '#rtl_class' do
-    it "returns 'rtl' when the I18n.locale is rtl" do
+  describe '#html_classes' do
+    let(:user) { Fabricate(:user) }
+
+    it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
-      expect(helper.rtl_class).to eq('rtl')
+      expect(helper.html_classes.split(" ")).to include('rtl')
     end
 
     it 'returns an empty string when the I18n.locale is not rtl' do
       I18n.stubs(:locale).returns(:zh_TW)
-      expect(helper.rtl_class).to eq('')
+      expect(helper.html_classes.split(" ")).not_to include('rtl')
+    end
+
+    describe 'text size' do
+      context "with a user option" do
+        before do
+          user.user_option.text_size = "larger"
+          user.user_option.save!
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+        end
+
+        it 'ignores invalid text sizes' do
+          helper.request.cookies["text_size"] = "invalid"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'ignores missing text size' do
+          helper.request.cookies["text_size"] = nil
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'ignores cookies with lower sequence' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "normal|1"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
+        it 'prioritises the cookie specified text size' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "largest|4"
+          expect(helper.html_classes.split(" ")).to include('text-size-largest')
+        end
+
+        it 'includes the user specified text size' do
+          helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+      end
+
+      it 'falls back to the default text size for anon' do
+        expect(helper.html_classes.split(" ")).to include('text-size-normal')
+        SiteSetting.default_text_size = "largest"
+        expect(helper.html_classes.split(" ")).to include('text-size-largest')
+      end
+    end
+
+    it "includes 'anon' for anonymous users and excludes when logged in" do
+      expect(helper.html_classes.split(" ")).to include('anon')
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_classes.split(" ")).not_to include('anon')
     end
   end
 
@@ -165,4 +218,45 @@ describe ApplicationHelper do
     end
   end
 
+  describe 'preloaded_json' do
+    it 'returns empty JSON if preloaded is empty' do
+      @preloaded = nil
+      expect(helper.preloaded_json).to eq('{}')
+    end
+
+    it 'escapes and strips invalid unicode and strips in json body' do
+      @preloaded = { test: %{["< \x80"]} }
+      expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+    end
+  end
+
+  describe 'crawlable_meta_data' do
+    context "opengraph image" do
+      it 'returns the correct image' do
+        SiteSetting.default_opengraph_image_url = '/images/og-image.png'
+        SiteSetting.twitter_summary_large_image_url = '/images/twitter.png'
+        SiteSetting.large_icon_url = '/images/large_icon.png'
+        SiteSetting.apple_touch_icon_url = '/images/default-apple-touch-icon.png'
+        SiteSetting.logo_url = '/images/d-logo-sketch.png'
+
+        expect(helper.crawlable_meta_data(image: "some-image.png")).to include("some-image.png")
+        expect(helper.crawlable_meta_data).to include("/images/og-image.png")
+
+        SiteSetting.default_opengraph_image_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/twitter.png")
+
+        SiteSetting.twitter_summary_large_image_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/large_icon.png")
+
+        SiteSetting.large_icon_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/default-apple-touch-icon.png")
+
+        SiteSetting.apple_touch_icon_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/d-logo-sketch.png")
+
+        SiteSetting.logo_url = ''
+        expect(helper.crawlable_meta_data).to_not include("/images")
+      end
+    end
+  end
 end

@@ -7,8 +7,9 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
 
-      if latest_backup = Backup.all[0]
-        date = File.ctime(latest_backup.path).getutc.to_date
+      store = BackupRestore::BackupStore.create
+      if latest_backup = store.latest_file
+        date = latest_backup.last_modified.to_date
         return if (date + SiteSetting.backup_frequency.days) > Time.now.utc.to_date
       end
 
@@ -18,6 +19,18 @@ module Jobs
       seconds = time_of_day.hour.hours + time_of_day.min.minutes + rand(10.minutes)
 
       Jobs.enqueue_in(seconds, :create_backup)
+    rescue => e
+      notify_user(e)
+      raise
+    end
+
+    def notify_user(ex)
+      post = SystemMessage.create_from_system_user(
+        Discourse.system_user,
+        :backup_failed,
+        logs: "#{ex}\n" + ex.backtrace.join("\n")
+      )
+      post.topic.invite_group(Discourse.system_user, Group[:admins])
     end
   end
 end

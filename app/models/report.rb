@@ -29,8 +29,10 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
-    @primary_color = rgba_color(ColorScheme.hex_for_name('tertiary'))
-    @secondary_color = rgba_color(ColorScheme.hex_for_name('tertiary'), 0.1)
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    @primary_color = rgba_color(tertiary)
+    @secondary_color = rgba_color(tertiary, 0.1)
   end
 
   def self.cache_key(report)
@@ -47,8 +49,10 @@ class Report
     ].compact.map(&:to_s).join(':')
   end
 
-  def self.clear_cache
-    Discourse.cache.keys("reports:*").each do |key|
+  def self.clear_cache(type = nil)
+    pattern = type ? "reports:#{type}:*" : "reports:*"
+
+    Discourse.cache.keys(pattern).each do |key|
       Discourse.cache.redis.del(key)
     end
   end
@@ -74,9 +78,9 @@ class Report
 
     {
       type: type,
-      title: I18n.t("reports.#{type}.title"),
-      xaxis: I18n.t("reports.#{type}.xaxis"),
-      yaxis: I18n.t("reports.#{type}.yaxis"),
+      title: I18n.t("reports.#{type}.title", default: nil),
+      xaxis: I18n.t("reports.#{type}.xaxis", default: nil),
+      yaxis: I18n.t("reports.#{type}.yaxis", default: nil),
       description: description.presence ? description : nil,
       data: data,
       start_date: start_date&.iso8601,
@@ -174,15 +178,64 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+      # ensures that if anything unexpected prevents us from
+      # creating a report object we fail elegantly and log an error
+      if !report
+        Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
+        return nil
+      end
+
       report.error = :exception
 
       # given reports can be added by plugins we don’t want dashboard failures
       # on report computation, however we do want to log which report is provoking
       # an error
-      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}")
+      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}")
     end
 
     report
+  end
+
+  def self.report_consolidated_page_views(report)
+    filters = %w[
+      page_view_crawler
+      page_view_logged_in
+      page_view_anon
+    ]
+
+    report.modes = [:stacked_chart]
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    danger = ColorScheme.hex_for_name('danger') || 'e45735'
+
+    requests = filters.map do |filter|
+      color = report.rgba_color(tertiary)
+
+      if filter == "page_view_anon"
+        color = report.rgba_color(tertiary, 0.5)
+      end
+
+      if filter == "page_view_crawler"
+        color = report.rgba_color(danger, 0.75)
+      end
+
+      {
+        req: filter,
+        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
+        color: color,
+        data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+      }
+    end
+
+    requests.each do |request|
+      request[:data] = request[:data].where('date >= ? AND date <= ?', report.start_date, report.end_date)
+        .order(date: :asc)
+        .group(:date)
+        .sum(:count)
+        .map { |date, count| { x: date, y: count } }
+    end
+
+    report.data = requests
   end
 
   def self.req_report(report, filter = nil)
@@ -223,7 +276,7 @@ class Report
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
     add_counts report, UserVisit, 'visited_at'
 
-    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    report.prev30Days = UserVisit.where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
   end
 
   def self.report_mobile_visits(report)
@@ -234,6 +287,8 @@ class Report
 
   def self.report_signups(report)
     report.group_filtering = true
+
+    report.icon = 'user-plus'
 
     if report.group_id
       basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
@@ -594,10 +649,10 @@ class Report
     url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { url: url.call("admins"), icon: "shield", key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { url: url.call("admins"), icon: "shield-alt", key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { url: url.call("moderators"), icon: "shield", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { url: url.call("moderators"), icon: "shield-alt", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
     report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
@@ -664,8 +719,43 @@ class Report
       limit: report.limit || 8,
       category_id: report.category_id
     }
-    result = nil
+
     result = IncomingLinksReport.find(:top_traffic_sources, options)
+    report.data = result.data
+  end
+
+  def self.report_top_referrers(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :user_avatar_template,
+        },
+        title: I18n.t("reports.top_referrers.labels.user")
+      },
+      {
+        property: :num_clicks,
+        type: :number,
+        title: I18n.t("reports.top_referrers.labels.num_clicks")
+      },
+      {
+        property: :num_topics,
+        type: :number,
+        title: I18n.t("reports.top_referrers.labels.num_topics")
+      }
+    ]
+
+    options = {
+      end_date: report.end_date,
+      start_date: report.start_date,
+      limit: report.limit || 8
+    }
+
+    result = IncomingLinksReport.find(:top_referrers, options)
     report.data = result.data
   end
 
@@ -677,7 +767,7 @@ class Report
         title: I18n.t("reports.trending_search.labels.term")
       },
       {
-        property: :unique_searches,
+        property: :searches,
         type: :number,
         title: I18n.t("reports.trending_search.labels.searches")
       },
@@ -692,34 +782,16 @@ class Report
 
     report.modes = [:table]
 
-    select_sql = <<~SQL
-      lower(term) term,
-      COUNT(*) AS searches,
-      SUM(CASE
-               WHEN search_result_id IS NOT NULL THEN 1
-               ELSE 0
-           END) AS click_through,
-      COUNT(DISTINCT ip_address) AS unique_searches
-    SQL
-
-    trends = SearchLog.select(select_sql)
-      .where('created_at > ?  AND created_at <= ?', report.start_date, report.end_date)
-      .group('lower(term)')
-      .order('unique_searches DESC, click_through ASC, term ASC')
-      .limit(report.limit || 20).to_a
+    trends = SearchLog.trending_from(report.start_date,
+      end_date: report.end_date,
+      limit: report.limit
+    )
 
     trends.each do |trend|
-      ctr =
-        if trend.click_through == 0 || trend.searches == 0
-          0
-        else
-          trend.click_through.to_f / trend.searches.to_f
-        end
-
       report.data << {
         term: trend.term,
-        unique_searches: trend.unique_searches,
-        ctr: (ctr * 100).ceil(1)
+        searches: trend.searches,
+        ctr: trend.ctr
       }
     end
   end
@@ -913,7 +985,12 @@ class Report
 
     report.labels = [
       {
-        property: :action_type,
+        type: :post,
+        properties: {
+          topic_id: :topic_id,
+          number: :post_number,
+          truncated_raw: :post_type
+        },
         title: I18n.t("reports.flags_status.labels.flag")
       },
       {
@@ -952,7 +1029,7 @@ class Report
 
     report.data = []
 
-    flag_types = PostActionType.flag_types_without_custom
+    flag_types = PostActionType.flag_types
 
     sql = <<~SQL
     WITH period_actions AS (
@@ -969,13 +1046,16 @@ class Report
     user_id,
     COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
     FROM post_actions
-    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
-    AND created_at >= '#{report.start_date}'
-    AND created_at <= '#{report.end_date}'
+    WHERE post_action_type_id IN (#{flag_types.values.join(',')})
+      AND created_at >= '#{report.start_date}'
+      AND created_at <= '#{report.end_date}'
+    ORDER BY created_at DESC
     ),
     poster_data AS (
     SELECT pa.id,
     p.user_id AS poster_id,
+    p.topic_id as topic_id,
+    p.post_number as post_number,
     u.username_lower AS poster_username,
     u.uploaded_avatar_id AS poster_avatar_id
     FROM period_actions pa
@@ -1009,6 +1089,8 @@ class Report
     pd.poster_username,
     pd.poster_id,
     pd.poster_avatar_id,
+    pd.post_number,
+    pd.topic_id,
     fd.flagger_username,
     fd.flagger_id,
     fd.flagger_avatar_id,
@@ -1032,7 +1114,10 @@ class Report
 
     DB.query(sql).each do |row|
       data = {}
-      data[:action_type] = flag_types.key(row.post_action_type_id).to_s
+
+      data[:post_type] = flag_types.key(row.post_action_type_id).to_s
+      data[:post_number] = row.post_number
+      data[:topic_id] = row.topic_id
 
       if row.staff_id
         data[:staff_username] = row.staff_username
@@ -1172,6 +1257,311 @@ class Report
     end
   end
 
+  def self.report_user_flagging_ratio(report)
+    report.data = []
+
+    report.modes = [:table]
+
+    report.dates_filtering = false
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :avatar_template,
+        },
+        title: I18n.t("reports.user_flagging_ratio.labels.user")
+      },
+      {
+        type: :number,
+        property: :disagreed_flags,
+        title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
+      },
+      {
+        type: :number,
+        property: :agreed_flags,
+        title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
+      },
+      {
+        type: :number,
+        property: :ignored_flags,
+        title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
+      },
+      {
+        type: :number,
+        property: :score,
+        title: I18n.t("reports.user_flagging_ratio.labels.score")
+      },
+    ]
+
+    sql = <<~SQL
+      SELECT u.id,
+             u.username,
+             u.uploaded_avatar_id as avatar_id,
+             CASE WHEN u.silenced_till IS NOT NULL THEN 't' ELSE 'f' END as silenced,
+             us.flags_disagreed AS disagreed_flags,
+             us.flags_agreed AS agreed_flags,
+             us.flags_ignored AS ignored_flags,
+             ROUND((1-(us.flags_agreed::numeric / us.flags_disagreed::numeric)) *
+                   (us.flags_disagreed - us.flags_agreed)) AS score
+      FROM users AS u
+        INNER JOIN user_stats AS us ON us.user_id = u.id
+      WHERE u.id <> -1
+        AND flags_disagreed > flags_agreed
+      ORDER BY score DESC
+      LIMIT 100
+      SQL
+
+    DB.query(sql).each do |row|
+      flagger = {}
+      flagger[:user_id] = row.id
+      flagger[:username] = row.username
+      flagger[:avatar_template] = User.avatar_template(row.username, row.avatar_id)
+      flagger[:disagreed_flags] = row.disagreed_flags
+      flagger[:ignored_flags] = row.ignored_flags
+      flagger[:agreed_flags] = row.agreed_flags
+      flagger[:score] = row.score
+
+      report.data << flagger
+    end
+  end
+
+  def self.report_staff_logins(report)
+    report.modes = [:table]
+
+    report.data = []
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :avatar_template,
+        },
+        title: I18n.t("reports.staff_logins.labels.user")
+      },
+      {
+        property: :location,
+        title: I18n.t("reports.staff_logins.labels.location")
+      },
+      {
+        property: :created_at,
+        type: :precise_date,
+        title: I18n.t("reports.staff_logins.labels.login_at")
+      }
+    ]
+
+    sql = <<~SQL
+      SELECT
+        t1.created_at created_at,
+        t1.client_ip client_ip,
+        u.username username,
+        u.uploaded_avatar_id uploaded_avatar_id,
+        u.id user_id
+      FROM (
+        SELECT DISTINCT ON (t.client_ip, t.user_id) t.client_ip, t.user_id, t.created_at
+        FROM user_auth_token_logs t
+        WHERE t.user_id IN (#{User.admins.pluck(:id).join(',')})
+          AND t.created_at >= :start_date
+          AND t.created_at <= :end_date
+        ORDER BY t.client_ip, t.user_id, t.created_at DESC
+        LIMIT #{report.limit || 20}
+      ) t1
+      JOIN users u ON u.id = t1.user_id
+      ORDER BY created_at DESC
+    SQL
+
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
+      data = {}
+      data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:user_id] = row.user_id
+      data[:username] = row.username
+      data[:location] = DiscourseIpInfo.get(row.client_ip)[:location]
+      data[:created_at] = row.created_at
+
+      report.data << data
+    end
+  end
+
+  def self.report_suspicious_logins(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          username: :username,
+          id: :user_id,
+          avatar: :avatar_template,
+        },
+        title: I18n.t("reports.suspicious_logins.labels.user")
+      },
+      {
+        property: :client_ip,
+        title: I18n.t("reports.suspicious_logins.labels.client_ip")
+      },
+      {
+        property: :location,
+        title: I18n.t("reports.suspicious_logins.labels.location")
+      },
+      {
+        property: :browser,
+        title: I18n.t("reports.suspicious_logins.labels.browser")
+      },
+      {
+        property: :device,
+        title: I18n.t("reports.suspicious_logins.labels.device")
+      },
+      {
+        property: :os,
+        title: I18n.t("reports.suspicious_logins.labels.os")
+      },
+      {
+        type: :date,
+        property: :login_time,
+        title: I18n.t("reports.suspicious_logins.labels.login_time")
+      },
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+      SELECT u.id user_id, u.username, u.uploaded_avatar_id, t.client_ip, t.user_agent, t.created_at login_time
+      FROM user_auth_token_logs t
+      JOIN users u ON u.id = t.user_id
+      WHERE t.action = 'suspicious'
+        AND t.created_at >= :start_date
+        AND t.created_at <= :end_date
+    SQL
+
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
+      data = {}
+
+      ipinfo = DiscourseIpInfo.get(row.client_ip)
+      browser = BrowserDetection.browser(row.user_agent)
+      device = BrowserDetection.device(row.user_agent)
+      os = BrowserDetection.os(row.user_agent)
+
+      data[:username] = row.username
+      data[:user_id] = row.user_id
+      data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:client_ip] = row.client_ip.to_s
+      data[:location] = ipinfo[:location]
+      data[:browser] = I18n.t("user_auth_tokens.browser.#{browser}")
+      data[:device] = I18n.t("user_auth_tokens.device.#{device}")
+      data[:os] = I18n.t("user_auth_tokens.os.#{os}")
+      data[:login_time] = row.login_time
+
+      report.data << data
+    end
+  end
+
+  def self.report_storage_stats(report)
+    backup_stats = begin
+      BackupRestore::BackupStore.create.stats
+    rescue BackupRestore::BackupStore::StorageError
+      nil
+    end
+
+    report.data = {
+      backups: backup_stats,
+      uploads: {
+        used_bytes: DiskSpace.uploads_used_bytes,
+        free_bytes: DiskSpace.uploads_free_bytes
+      }
+    }
+  end
+
+  def self.report_top_uploads(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :link,
+        properties: [
+          :file_url,
+          :file_name,
+        ],
+        title: I18n.t("reports.top_uploads.labels.filename")
+      },
+      {
+        type: :user,
+        properties: {
+          username: :author_username,
+          id: :author_id,
+          avatar: :author_avatar_template,
+        },
+        title: I18n.t("reports.top_uploads.labels.author")
+      },
+      {
+        type: :text,
+        property: :extension,
+        title: I18n.t("reports.top_uploads.labels.extension")
+      },
+      {
+        type: :bytes,
+        property: :filesize,
+        title: I18n.t("reports.top_uploads.labels.filesize")
+      },
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+    SELECT
+    u.id as user_id,
+    u.username,
+    u.uploaded_avatar_id,
+    up.filesize,
+    up.original_filename,
+    up.extension,
+    up.url
+    FROM uploads up
+    JOIN users u
+    ON u.id = up.user_id
+    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    ORDER BY up.filesize DESC
+    LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      data = {}
+      data[:author_id] = row.user_id
+      data[:author_username] = row.username
+      data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:filesize] = row.filesize
+      data[:extension] = row.extension
+      data[:file_url] = Discourse.store.cdn_url(row.url)
+      data[:file_name] = row.original_filename.truncate(25)
+
+      report.data << data
+    end
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
+      clear_cache(:storage_stats)
+    end
+  end
+
+  def rgba_color(hex, opacity = 1)
+    if hex.size == 3
+      chars = hex.scan(/\w/)
+      hex = chars.zip(chars).flatten.join
+    end
+
+    if hex.size < 3
+      hex = hex.ljust(6, hex.last)
+    end
+
+    rgbs = hex_to_rgbs(hex)
+
+    "rgba(#{rgbs.join(',')},#{opacity})"
+  end
+
   private
 
   def hex_to_rgbs(hex_color)
@@ -1180,11 +1570,5 @@ class Report
     rgbs
       .map! { |color| color.hex }
       .map! { |rgb| rgb.to_i }
-  end
-
-  def rgba_color(hex, opacity = 1)
-    rgbs = hex_to_rgbs(hex)
-
-    "rgba(#{rgbs.join(',')},#{opacity})"
   end
 end

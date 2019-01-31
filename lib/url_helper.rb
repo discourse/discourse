@@ -1,5 +1,20 @@
 class UrlHelper
 
+  # At the moment this handles invalid URLs that browser address bar accepts
+  # where second # is not encoded
+  #
+  # Longer term we can add support of simpleidn and encode unicode domains
+  def self.relaxed_parse(url)
+    url, fragment = url.split("#", 2)
+    uri = URI.parse(url)
+    if uri
+      fragment = URI.escape(fragment) if fragment&.include?('#')
+      uri.fragment = fragment
+      uri
+    end
+  rescue URI::Error
+  end
+
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
@@ -36,7 +51,7 @@ class UrlHelper
 
     uri = URI.parse(url)
     filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_image?(filename)
+    is_attachment = !FileHelper.is_supported_image?(filename)
 
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 

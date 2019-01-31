@@ -92,7 +92,6 @@ sk:
         '8': "Výhľad je dobrý"
         '9': "Áno"
         '10': "Znamenia ukazujú na Áno"
-        '11': "Nejasná odpoveď, skús znovu"
         '12': "Opýtajte sa neskôr"
         '13': "Radšej ti to teraz nepoviem"
         '14': "Teraz to nie je možné predpovedať"
@@ -134,13 +133,11 @@ sk:
         second_response: |-
           Ach, prepáč, stále to chechápem. :anguished:
 
-          Som iba robot, ale ak chceš kontaktovať reálnu osobu, skús [našu kontaktnú stránku](/about).
+          Som iba robot, ale ak chceš kontaktovať reálnu osobu, skús [našu kontaktnú stránku](%{base_path}/about).
 
           Zatiaľ sa Ti nebudem pliesť do cesty.
     new_user_narrative:
       reset_trigger: "nový používateľ"
-      hello:
-        title: ":robot: Zdravím!"
       quoting:
         reply: |-
           Pekná práca, vybrali ste môj obľúbený citát! :left_speech_bubble:

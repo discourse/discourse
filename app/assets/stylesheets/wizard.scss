@@ -1,9 +1,9 @@
 @import "vendor/normalize";
-@import "vendor/font_awesome/font-awesome";
 @import "vendor/sweetalert";
 @import "common/foundation/colors";
 @import "common/foundation/variables";
 @import "common/select-kit/*";
+@import "common/components/svg";
 
 body.wizard {
   background-color: #fff;
@@ -84,7 +84,7 @@ body.wizard {
     align-items: center;
 
     input {
-      flex: 1 0 0;
+      flex: 1 0 0px;
     }
 
     span {
@@ -328,6 +328,11 @@ body.wizard {
     }
   }
 
+  .wizard-hidden-upload-field {
+    visibility: hidden;
+    position: absolute;
+  }
+
   .wizard-step-footer {
     display: flex;
     flex-direction: row;
@@ -365,7 +370,8 @@ body.wizard {
       margin-right: 0;
     }
 
-    button.wizard-btn.done {
+    button.wizard-btn.done,
+    button.wizard-btn.finish {
       color: #fff;
       background-color: #33b333;
 
@@ -535,7 +541,7 @@ body.wizard {
     margin: auto !important;
   }
   .wizard-step-form {
-    max-height: auto;
+    max-height: none;
   }
   .wizard-step-contents {
     min-height: auto !important;

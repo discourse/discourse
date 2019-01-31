@@ -24,7 +24,7 @@
                                      showInvite=showInvite
                                      showFlagTopic=showFlagTopic}}
     {{else}}
-      {{d-button class=bookmarkClass
+      {{d-button class=(concat "btn-default " bookmarkClass)
                  title=bookmarkTitle
                  label=bookmarkLabel
                  icon="bookmark"
@@ -33,7 +33,7 @@
       {{share-button url=topic.shareUrl}}
 
       {{#if topic.details.can_flag_topic}}
-        {{d-button class="flag-topic"
+        {{d-button class="btn-default flag-topic"
                    title="topic.flag_topic.help"
                    label="topic.flag_topic.title"
                    icon="flag"
@@ -44,7 +44,7 @@
   {{/unless}}
 
   {{#if canInviteTo}}
-    {{d-button class="invite-topic"
+    {{d-button class="btn-default invite-topic"
                title="topic.invite_reply.help"
                label="topic.invite_reply.title"
                icon="users"
@@ -53,7 +53,7 @@
   {{/if}}
 
   {{#if canArchive}}
-    {{d-button class="standard archive-topic"
+    {{d-button class="btn-default standard archive-topic"
                title=archiveTitle
                label=archiveLabel
                icon=archiveIcon
@@ -61,10 +61,10 @@
   {{/if}}
 
   {{#if showEditOnFooter}}
-    {{d-button class="edit-message"
+    {{d-button class="btn-default edit-message"
                title="topic.edit_message.help"
                label="topic.edit_message.title"
-               icon="pencil"
+               icon="pencil-alt"
                action=editFirstPost}}
   {{/if}}
 

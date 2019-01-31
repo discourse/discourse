@@ -17,11 +17,6 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
-    <script>
-      window.EmberENV = window.EmberENV || {};
-      window.EmberENV['FORCE_JQUERY'] = true;
-    </script>
-
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script "ember_jquery" %>
     <%= preload_script "preload-store" %>
@@ -41,6 +36,7 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
+      <%= raw theme_translations_lookup %>
       <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
@@ -53,11 +49,16 @@
     <%- end %>
 
     <%= render partial: "common/discourse_stylesheet" %>
-    <%= render partial: "common/special_font_face" %>
 
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
+
+    <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+
+    <%- if !current_user && cookies[:authentication_data] %>
+      <meta id="data-authentication" data-authentication-data="<%= cookies.delete(:authentication_data) %>">
+    <%- end %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -80,11 +81,11 @@
       </div>
 
       <footer id='noscript-footer'>
-        <p><%= t 'powered_by_html' %></p>
+        <p style="text-align:center;"><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
 
-    <%- unless customization_disabled? || loading_admin? %>
+    <%- unless customization_disabled? %>
       <%= theme_lookup("header") %>
       <%= build_plugin_html 'server:header' %>
     <%- end %>
@@ -104,20 +105,12 @@
       </form>
     <% end %>
 
-    <%- if @preloaded.present? %>
-      <script>
-      (function() {
-        var ps = require('preload-store').default;
-        <%- @preloaded.each do |key, json| %>
-          ps.store("<%= key %>", <%= escape_unicode(json) %>);
-        <% end %>
-      })();
-      </script>
-    <%- end %>
+    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+    <%= preload_script "preload-application-data" %>
 
     <%= yield :data %>
 
-    <%= render :partial => "common/discourse_javascript" %>
+    <%= preload_script 'browser-update' %>
 
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>

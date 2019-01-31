@@ -174,6 +174,7 @@ class PostRevisor
       !@post.wiki? &&
       @fields.has_key?('raw') &&
       @editor.staff? &&
+      @editor != Discourse.system_user &&
       !@post.user.staff?
     )
       PostLocker.new(@post, @editor).lock
@@ -204,7 +205,7 @@ class PostRevisor
   end
 
   def cleanup_whitespaces(raw)
-    TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "")
+    raw.present? ? TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "") : ""
   end
 
   def should_revise?
