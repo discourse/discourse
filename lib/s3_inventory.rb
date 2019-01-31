@@ -2,14 +2,8 @@
 
 require "aws-sdk-s3"
 require "csv"
-require "discourse_event"
 
 class S3Inventory
-
-  ::DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    name = site_setting.name.to_s
-    Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
-  end
 
   attr_reader :inventory_id, :csv_filename, :model
 
