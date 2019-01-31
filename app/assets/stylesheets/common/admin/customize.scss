@@ -137,6 +137,10 @@
     display: inline-block;
     vertical-align: top;
 
+    .btn {
+      line-height: $line-height-medium; // Temporary button-height fix
+    }
+
     .title {
       font-size: $font-up-4;
       font-weight: bold;

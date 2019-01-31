@@ -153,11 +153,12 @@
       margin: 0.5em 0;
     }
 
-    .fa {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .d-icon,
+    &:hover .d-icon {
+      color: $primary-medium;
     }
     .icon {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high;
     }
     li {
       background-color: $tertiary-low;
