@@ -64,7 +64,7 @@ class S3Inventory
         missing_count = missing_uploads.count
 
         if missing_count > 0
-          missing_uploads.select(:url).find_each do |upload|
+          missing_uploads.select(:id, :url).find_each do |upload|
             log upload.url
           end
 
@@ -84,10 +84,10 @@ class S3Inventory
   end
 
   def decompress_inventory_file
-    log "Unzipping archive, this may take a while..."
+    log "Decompressing inventory file, this may take a while..."
 
     FileUtils.cd(@tmp_directory) do
-      Discourse::Utils.execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to unzip archive.")
+      Discourse::Utils.execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to decompress inventory file.")
     end
   end
 
@@ -186,7 +186,7 @@ class S3Inventory
 
   def log(message, ex = nil)
     puts(message)
-    Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
+    Rails.logger.error("#{ex}\n" + (ex.backtrace || []).join("\n")) if ex
   end
 
   def error(message)

@@ -14,7 +14,7 @@ describe Jobs::UpdateS3Inventory do
     Discourse.stubs(:store).returns(store)
   end
 
-  it "picks gravatar if system avatar is picked and gravatar was just downloaded" do
+  it "updates the bucket policy and inventory configuration in S3" do
     @client.expects(:put_bucket_policy)
     @client.expects(:put_bucket_policy).with(
       bucket: "bucket",

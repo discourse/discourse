@@ -3,6 +3,7 @@ require "s3_inventory"
 require "file_store/s3_store"
 
 describe "S3Inventory" do
+  let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:store) { Discourse.store }
   let(:inventory) { S3Inventory.new(store.s3_helper, :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
@@ -13,7 +14,6 @@ describe "S3Inventory" do
     SiteSetting.s3_secret_access_key = "def"
     SiteSetting.enable_s3_inventory = true
 
-    client = Aws::S3::Client.new(stub_responses: true)
     client.stub_responses(:list_objects,
       contents: [
         {
@@ -44,23 +44,14 @@ describe "S3Inventory" do
     store.s3_helper.stubs(:s3_client).returns(client)
   end
 
-  def capture_stdout
-    old_stdout = $stdout
-    io = StringIO.new
-    $stdout = io
-    yield
-    io.string
-  ensure
-    $stdout = old_stdout
-  end
-
   it "should return the latest inventory file name" do
     expect(inventory.file.key).to eq("example1.csv.gz")
   end
 
-  it "should raise the right error if an inventory file is not found" do
-    inventory.stubs(:file).returns(nil)
-    expect { inventory.list_missing }.to raise_error(S3Inventory::StorageError)
+  it "should raise error if an inventory file is not found" do
+    client.stub_responses(:list_objects, contents: [])
+    output = capture_stdout { inventory.list_missing }
+    expect(output).to eq("Failed to list inventory from S3\n")
   end
 
   it "should display missing uploads correctly" do
@@ -69,14 +60,13 @@ describe "S3Inventory" do
     end
 
     upload = Fabricate(:upload, etag: "ETag")
-    inventory.stubs(:unzip_archive)
-    inventory.stubs(:log)
-    inventory.stubs(:csv_filename).returns(csv_filename)
+    inventory.expects(:decompress_inventory_file)
+    inventory.expects(:csv_filename).returns(csv_filename)
 
     output = capture_stdout do
       inventory.list_missing
     end
 
-    expect(output).to eq("#{upload.url}\n1 of 4 uploads are missing\n")
+    expect(output).to eq("Downloading inventory file to tmp directory...\n#{upload.url}\n1 of 4 uploads are missing\n")
   end
 end
