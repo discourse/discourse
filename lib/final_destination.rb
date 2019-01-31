@@ -267,11 +267,6 @@ class FinalDestination
       return true if SiteSetting.whitelist_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
 
-    # Whitelisted hosts
-    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
-      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
-      hostname_matches?(Discourse.base_url_no_prefix)
-
     address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s
 
