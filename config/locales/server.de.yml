@@ -39,6 +39,13 @@ de:
   themes:
     bad_color_scheme: "Kann Motiv nicht aktualisieren, ungültiges Farbschema"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
+    import_error:
+      generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
+      about_json: "Importfehler: about.json existiert nicht, oder ist ungültig"
+      about_json_values: "about.json enthält ungültige Werte: %{errors}"
+      git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
+      unpack_failed: "Fehler beim Entpacken der Datei"
+      unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
     errors:
       component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein "
       component_no_default: "Theme Komponenten können nicht Standard Theme sein"
@@ -824,6 +831,7 @@ de:
         post_count: Erstellte Beiträge
         pm_count: Erstellte Nachrichten
         revision_count: Revisionen
+      description: "Liste der Moderator-Aktivität einschließlich gesichteter Meldungen, Lesezeit, erstellter Themen, erstellter Beiträge, erstellter Nachrichten und Bearbeitungen."
     flags_status:
       title: "Meldungsstatus"
       values:
@@ -941,18 +949,22 @@ de:
       title: "Benutzer-an-Benutzer (ohne Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
+      description: "Anzahl neu angefangener Nachrichten."
     user_to_user_private_messages_with_replies:
       title: "Benutzer-zu-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
+      description: "Anzahl aller neuen Nachrichten und Antworten."
     system_private_messages:
       title: "System"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
+      description: "Anzahl der automatischen Nachrichten durch das System."
     moderator_warning_private_messages:
       title: "Warnungen von Moderatoren"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
+      description: "Anzahl der Warnungen, die von Moderatoren als Nachricht geschickt wurden."
     notify_moderators_private_messages:
       title: "Meldungen an Moderatoren"
       xaxis: "Tag"
@@ -1001,8 +1013,10 @@ de:
       yaxis: "Seitenaufrufe durch angemeldete Benutzer"
       description: "Anzahl neuer Seitenaufrufe von angemeldeten Benutzern."
     page_view_crawler_reqs:
+      title: "Aufrufe durch Suchmaschinen"
       xaxis: "Tag"
       yaxis: "Aufrufe durch Suchmaschinen"
+      description: "Suchmaschinen-Seitenaufrufe insgesamt im Zeitverlauf."
     page_view_total_reqs:
       title: "Seitenaufrufe"
       xaxis: "Tag"
@@ -1058,9 +1072,11 @@ de:
       yaxis: "Anzahl der Besuche"
       description: "Anzahl der eindeutigen Benutzern, die die Seite mit einem mobilen Endgerät besucht haben."
     web_crawlers:
+      title: "Suchmaschinen-Browserkennungen"
       labels:
         user_agent: "Browserkennung"
         page_views: "Seitenaufrufe"
+      description: "Liste von Suchmaschinen-Browserkennungen, sortiert nach Seitenaufrufen."
     suspicious_logins:
       title: "Verdächtige Anmeldungen"
       labels:
@@ -1073,10 +1089,12 @@ de:
         login_time: Anmeldezeitpunkt
       description: "Details neuer Anmeldungen, die verdächtig von vorherigen Anmeldungen abweichen."
     staff_logins:
+      title: "Administrator-Anmeldungen"
       labels:
         user: Benutzer
         location: Standort
         login_at: Anmeldung um
+      description: "Liste der Anmeldungen von Administratoren mit Standort."
     top_uploads:
       title: "Top-Uploads"
       labels:
@@ -1308,6 +1326,8 @@ de:
     google_oauth2_prompt: "Eine optionale Leerzeichen getrennte Liste von Zeichen Werten die angeben ob der Berechtigungsserver den Benutzer zur Re-Authentifizierung auffordert. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> für mögliche Werte."
     google_oauth2_hd: "Eine optionale Google Apps gehostete Domain zu welches das Anmelden limitiert sein wird. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> für weitere Informationen."
     enable_twitter_logins: "Twitter-Authentifizierung aktivieren, erfordert twitter_consumer_key und twitter_consumer_secret. Siehe <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
+    twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_instagram_logins: "Aktiviere Instagram-Authentifizierung (benötigt instagram_consumer_key und instagram_consumer_secret)."
     instagram_consumer_key: "Consumer Key für Instagram-Authentifizierung"
     instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
@@ -1558,6 +1578,8 @@ de:
     email_link_color: "Die Farbe von Links in HTML-Mails. Gib’ einen Namen ('blue') oder einen Hex-Wert ('#0000FF') der Farbe an."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
+    public_user_custom_fields: "Eine Liste von benutzerdefinertern Feldern, die über die API-Schnittstelle abgerufen werden können."
+    staff_user_custom_fields: "Eine Liste von benutzerdefinertern Feldern, die von Teammitgliedern über die API-Schnittstelle abgerufen werden können."
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf die erste Gruppe in der Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
@@ -1578,6 +1600,7 @@ de:
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im der Header Dropdown-Liste angezeigt werden können."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw. um Teilausdrücke zu verwenden"
+    global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Benutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     likes_notification_consolidation_threshold: "Anzahl der Like-Benachrichtigungen, bevor die Benachrichtigungen in eine einzelne zusammengeführt werden. Ein Wert von 0 deaktiviert die Funktion. Das Zeitfenster kann via ``SiteSetting.likes_notification_consolidation_window_mins` eingestellt werden."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere Like-Benachrichtigungen in eine einzelne Benachrichtigung zusammengeführt werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann via `SiteSetting.likes_notification_consolidation_threshold` eingestellt werden."

@@ -597,6 +597,8 @@ de:
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
+      theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
+      text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -2635,6 +2637,7 @@ de:
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
         installed_version: "Installiert"
         latest_version: "Neueste"
+        problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -3093,6 +3096,7 @@ de:
           convert_theme_alert: "Bist Du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest? Sie wird als übergeordnetes Element entfernt von %{relatives}."
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
+          inactive_components: "Nicht verwendete Komponenten:"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Seite."
           updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
@@ -3118,10 +3122,19 @@ de:
           edit_css_html_help: "Du hast kein CSS oder HTML bearbeitet"
           delete_upload_confirm: "Upload löschen? (Theme-CSS funktioniert eventuell nicht mehr!)"
           import_web_tip: "Repository mit dem Theme"
+          import_file_tip: ".tar.gz oder .dcstyle.json Datei mit dem Theme"
           is_private: "Theme ist in einem privaten Git-Repository"
           remote_branch: "Branch-Name (optional)"
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
+          about_theme: "Über uns"
           license: "Lizenz"
+          version: "Version:"
+          authors: "Erstellt von:"
+          source_url: "Quelle"
+          required_version:
+            error: "Dieses Theme wurde automatisch deaktiviert, weil es mit dieser Discourse-Version nicht kompatibel ist."
+            minimum: "Erfordert Discourse-Version {{version}} oder höher"
+            maximum: "Erfordert Discourse-Version {{version}} oder niedriger."
           component_of: "Komponente von:"
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
@@ -3137,6 +3150,7 @@ de:
             other: "Theme liegt {{count}} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
+          imported_from_archive: "Dieses Theme wurde aus einer .tar.gz-Datei importiert."
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
@@ -3834,6 +3848,10 @@ de:
             with_post: "<span class=\"username\">%{username}</span> für Beitrag in %{link}"
             with_post_time: "<span class=\"username\">%{username}</span> für Beitrag in %{link} um <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> um <span class=\"time\">%{time}</span>"
+        badge_intro:
+          title: 'Wähle ein bestehendes Abzeichen oder erstelle ein neues, um loszulegen'
+          what_are_badges_title: 'Was sind Abzeichen?'
+          badge_query_examples_title: 'Beispiele für Abzeichen-Abfragen'
       emoji:
         title: "Emoji"
         help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (Tipp: per Drag & Drop kannst du gleichzeitig mehrere Dateien hinzufügen)"

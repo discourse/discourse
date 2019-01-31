@@ -891,7 +891,7 @@ ru:
         title: "Размер текста"
         smaller: "Маленький"
         normal: "Нормальный"
-        larger: "Больше"
+        larger: "Большой"
         largest: "Самый большой"
       like_notification_frequency:
         title: "Уведомлять при получении симпатии"
@@ -1185,7 +1185,7 @@ ru:
       button_ok: "ОК"
       button_help: "Помощь"
     email_login:
-      button_label: "с email"
+      button_label: "E-mail"
       complete_username: "Если учетная запись совпадает с именем пользователя <b>%{username}</b>, вы должны получить электронное письмо со ссылкой для входа в систему в ближайшее время."
       complete_email: "Если данные аккаунта  совпадают с <b>%{email}</b>, вы должны получить электронное письмо со ссылкой для входа в систему в ближайшее время."
       complete_username_found: "Мы нашли учетную запись, которая соответствует имени пользователя <b>%{username}</b>, в ближайшее время вы получите электронное письмо со ссылкой для входа."
@@ -1233,19 +1233,19 @@ ru:
       not_approved: "Ваша учетная запись еще не прошла проверку. После успешной проверки мы отправим вам письмо с уведомлением, и вы сможете входить в свою учетную запись."
       google_oauth2:
         name: "Google"
-        title: "Через Google"
+        title: "Google"
         message: "Вход с помощью учетной записи Google (убедитесь, что блокировщик всплывающих окон отключен)"
       twitter:
         name: "Twitter"
-        title: "Через Twitter"
+        title: "Twitter"
         message: "Вход с помощью учетной записи Twitter (убедитесь, что блокировщик всплывающих окон отключен)"
       instagram:
         name: "Instagram"
-        title: "Через Instagram"
+        title: "Instagram"
         message: "Вход с помощью учетной записи Instagram (убедитесь, что блокировщик всплывающих окон отключен)"
       facebook:
         name: "Facebook"
-        title: "Через Facebook"
+        title: "Facebook"
         message: "Вход с помощью учетной записи Facebook (всплывающие окна должны быть разрешены)"
       yahoo:
         name: "Yahoo"
@@ -1253,7 +1253,7 @@ ru:
         message: "Вход с помощью учетной записи Yahoo (убедитесь, что блокировщик всплывающих окон отключен)"
       github:
         name: "GitHub"
-        title: "Через GitHub"
+        title: "GitHub"
         message: "Вход с помощью учетной записи GitHub (убедитесь, что блокировщик всплывающих окон отключен)"
     invites:
       accept_title: "Приглашение"
@@ -3052,7 +3052,7 @@ ru:
           as_owner: "Установить пользователя (ей) в качестве владельца (ов) этой группы"
         manage:
           interaction:
-            email: Email
+            email: E-mail
             incoming_email: "Специальный входящий адрес e-mail"
             incoming_email_placeholder: "введите e-mail адрес"
             visibility: Видимость

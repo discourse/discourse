@@ -42,8 +42,10 @@ fr:
     import_error:
       generic: "Désolé, une erreur est survenu lors de l'importation du thème"
       about_json: "Erreur d'importation : about.json n'existe pas, ou pas valide"
+      about_json_values: "about.json contient des valeurs invalides : %{errors}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
       unpack_failed: "Impossible de décompresser le fichier"
+      unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
@@ -860,6 +862,7 @@ fr:
         post_count: Messages créés
         pm_count: Messages privés créés
         revision_count: Révisions
+      description: "Liste d'activités des modérateurs, y compris revues de signalements, temps de lecture, sujets créés, messages créés, messages directs et révisions."
     flags_status:
       title: "Statut des signalements"
       values:
@@ -977,18 +980,22 @@ fr:
       title: "Utilisateur à utilisateur (sans réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre de nouveaux messages directs."
     user_to_user_private_messages_with_replies:
       title: "Utilisateur à utilisateur (avec réponses)"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre de nouveaux messages directs et réponses."
     system_private_messages:
       title: "Système"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre de messages directs envoyés automatiquement par le système."
     moderator_warning_private_messages:
       title: "Avertissements aux modérateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
+      description: "Nombre d'avertissements envoyés par message direct de la part des modérateurs."
     notify_moderators_private_messages:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
@@ -1037,8 +1044,10 @@ fr:
       yaxis: "Nombre de vues par les utilisateurs connectés"
       description: "Nombre de nouvelles vues d'utilisateurs connectés."
     page_view_crawler_reqs:
+      title: "Nombre de vues par les Crawler Web"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les robots d'indexation"
+      description: "Nombre de vues par des Crawler Web au fil du temps."
     page_view_total_reqs:
       title: "Pages vues"
       xaxis: "Jour"
@@ -1094,9 +1103,11 @@ fr:
       yaxis: "Nombre de visites"
       description: "Nombre de visites uniques d'utilisateurs sur appareils mobiles."
     web_crawlers:
+      title: "Agents utilisateur de crawler web"
       labels:
         user_agent: "User Agent"
         page_views: "Pages vues"
+      description: "Liste d'agents Web Crawler, par order de vues générées."
     suspicious_logins:
       title: "Connexions suspectes"
       labels:
@@ -1109,10 +1120,12 @@ fr:
         login_time: Heure de connexion
       description: "Détails de nouveaux identifiants qui ont des différences suspectes avec les précédents."
     staff_logins:
+      title: "Connexions administrateur"
       labels:
         user: Utilisateur
         location: Localisation
         login_at: Connexion à
+      description: "Liste des heures et localisations de connexion des administrateurs."
     top_uploads:
       title: "Principaux téléchargements"
       labels:
@@ -1596,6 +1609,8 @@ fr:
     email_link_color: "La couleur des liens dans les courriels HTML. Entrez un nom de couleur (« blue ») ou une valeur hexadécimale (« #0000FF »)."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
+    public_user_custom_fields: "Une liste de champs personnalisables qui peuvent être récupérés avec l'API."
+    staff_user_custom_fields: "Une liste de champs personnalisables qui peuvent être récupérés pour des responsables avec l'API."
     enable_user_directory: "Fournir un répertoire des utilisateurs"
     enable_group_directory: "Proposer un répertoire pour parcourir les groupes"
     group_in_subject: "<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Mettre %%{optional_pm} dans le sujet du courriel au nom du premier groupe dans le MD. Voir : Customiser format du sujet pour les mails standards"

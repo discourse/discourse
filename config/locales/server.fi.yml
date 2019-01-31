@@ -45,6 +45,7 @@ fi:
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
       unpack_failed: "Tiedoston purku epäonnistui"
+      unknown_file_type: "Lähettämäsi tiedosto ei vaikuta olevan käypä Discourse-teema."
     errors:
       component_no_user_selectable: "Teemakomponentti ei voi olla käyttäjän valittavissa"
       component_no_default: "Teemakomponentti ei voi olla oletusteema"
@@ -1331,6 +1332,7 @@ fi:
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 -tunnistautuminen. Tämä on tunnistautumistapa, jota Google nykyisellään tulee. Key ja secret vaaditaan. Katso <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Google-applikaatiosi Client ID."
     google_oauth2_client_secret: "Google-applikaatiosi Client secret."
+    google_oauth2_prompt: "Ei-pakollinen välilyönneillä eroteltu lista string-arvoja, jotka määräävät kysyykö todennuspalvelin käyttäjää uudelleentunnistautumista ja suostumusta. Ks. käyvät arvot: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>"
     enable_twitter_logins: "Ota käyttöön Twitter-tunnistautuminen, vaaditaan twitter_consumer_key ja twitter_consumer_secret. Katso <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Twitter-tunnistautumisen consumer key, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Twitter-tunnistautumisen consumer secret, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
