@@ -222,6 +222,8 @@ module ApplicationHelper
       opts[:image] = opengraph_image_url.present? ? opengraph_image_url : twitter_summary_large_image_url
     elsif opts[:image].blank? && SiteSetting.site_apple_touch_icon_url.present?
       opts[:image] = SiteSetting.site_apple_touch_icon_url
+    elsif opts[:image].blank? && SiteSetting.logo_url.present?
+      opts[:image] = SiteSetting.logo_url
     end
 
     # Use the correct scheme for opengraph/twitter image
@@ -477,6 +479,8 @@ module ApplicationHelper
       uri = URI(Discourse.base_url)
       absolute_url = "#{uri.scheme}:#{link}"
     elsif link.start_with?("/uploads/")
+      absolute_url = "#{Discourse.base_url}#{link}"
+    elsif link.start_with?("/images/")
       absolute_url = "#{Discourse.base_url}#{link}"
     elsif GlobalSetting.relative_url_root && link.start_with?(GlobalSetting.relative_url_root)
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
