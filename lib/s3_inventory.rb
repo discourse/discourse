@@ -15,7 +15,7 @@ class S3Inventory
     @s3_helper = s3_helper
 
     if type == :upload
-      @inventory_id = "uploads"
+      @inventory_id = "original"
       @model = Upload
     elsif type == :optimized
       @inventory_id = "optimized"
