@@ -5,7 +5,7 @@ class ThemeStore::TgzExporter
   def initialize(theme)
     @theme = theme
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
-    @export_name = "#{@theme.name.downcase.gsub(/[^0-9a-z.\-]/, '-')}-theme"
+    @export_name = @theme.name.downcase.gsub(/[^0-9a-z.\-]/, '-')
     @export_name = "discourse-#{@export_name}" unless @export_name.starts_with?("discourse")
   end
 
