@@ -232,18 +232,30 @@ describe ApplicationHelper do
 
   describe 'crawlable_meta_data' do
     context "opengraph image" do
-      it 'returns default_opengraph_image_url' do
-        SiteSetting.default_opengraph_image_url = "/images/og-image.png"
+      it 'returns the correct image' do
+        SiteSetting.default_opengraph_image_url = '/images/og-image.png'
+        SiteSetting.twitter_summary_large_image_url = '/images/twitter.png'
+        SiteSetting.large_icon_url = '/images/large_icon.png'
+        SiteSetting.apple_touch_icon_url = '/images/default-apple-touch-icon.png'
+        SiteSetting.logo_url = '/images/d-logo-sketch.png'
+
+        expect(helper.crawlable_meta_data(image: "some-image.png")).to include("some-image.png")
         expect(helper.crawlable_meta_data).to include("/images/og-image.png")
-      end
 
-      it 'returns apple_touch_icon_url if default_opengraph_image_url is blank' do
+        SiteSetting.default_opengraph_image_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/twitter.png")
+
+        SiteSetting.twitter_summary_large_image_url = ''
+        expect(helper.crawlable_meta_data).to include("/images/large_icon.png")
+
+        SiteSetting.large_icon_url = ''
         expect(helper.crawlable_meta_data).to include("/images/default-apple-touch-icon.png")
-      end
 
-      it 'returns logo_url if apple_touch_icon_url is blank' do
-        SiteSetting.apple_touch_icon_url = ""
+        SiteSetting.apple_touch_icon_url = ''
         expect(helper.crawlable_meta_data).to include("/images/d-logo-sketch.png")
+
+        SiteSetting.logo_url = ''
+        expect(helper.crawlable_meta_data).to_not include("/images")
       end
     end
   end
