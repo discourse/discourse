@@ -38,7 +38,7 @@ class ThemeStore::TgzExporter
 
         if ThemeField.types[field.type_id] == :theme_upload_var
           filename = Discourse.store.path_for(field.upload)
-          content = filename ? File.read(filename) : Discourse.store.download(object.upload).read
+          content = filename ? File.read(filename) : Discourse.store.download(field.upload).read
         else
           content = field.value
         end
