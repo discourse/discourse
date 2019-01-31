@@ -83,7 +83,7 @@ class S3Inventory
     @s3_helper.download_file(file.key, @archive_filename, failure_message)
   end
 
-  def unzip_archive
+  def decompress_inventory_file
     log "Unzipping archive, this may take a while..."
 
     FileUtils.cd(@tmp_directory) do
