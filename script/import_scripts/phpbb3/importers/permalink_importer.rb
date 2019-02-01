@@ -47,6 +47,9 @@ module ImportScripts::PhpBB3
     protected
 
     def add_normalization(normalizations, normalization)
+      if @settings.normalization_prefix
+        normalization = "/" + @settings.normalization_prefix + "\\" + normalization
+      end
       normalizations << normalization unless normalizations.include?(normalization)
     end
 
