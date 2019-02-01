@@ -11,16 +11,6 @@ describe Migration::SafeMigrate do
     Migration::SafeMigrate::SafeMigration.enable_safe!
   end
 
-  def capture_stdout
-    old_stdout = $stdout
-    io = StringIO.new
-    $stdout = io
-    yield
-    io.string
-  ensure
-    $stdout = old_stdout
-  end
-
   def migrate_up(path)
     migrations = ActiveRecord::MigrationContext.new(path).migrations
     ActiveRecord::Migrator.new(:up, migrations, migrations.first.version).run
