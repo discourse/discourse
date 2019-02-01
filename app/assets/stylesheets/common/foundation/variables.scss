@@ -206,10 +206,25 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -25%);
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%);
 
 //header_primary
-$header_primary-low: dark-light-diff($header_primary, $secondary, 90%, -78%);
-$header_primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%);
+$header_primary-low: dark-light-diff(
+  $header_primary,
+  $header_background,
+  90%,
+  -78%
+);
+$header_primary-low-mid: dark-light-diff(
+  $header_primary,
+  $header_background,
+  70%,
+  -45%
+);
 
-$header_primary-medium: dark-light-diff($header_primary, $secondary, 50%, -35%);
+$header_primary-medium: dark-light-diff(
+  $header_primary,
+  $header_background,
+  50%,
+  -35%
+);
 $header_primary-high: dark-light-diff(
   $header_primary,
   $header_background,
