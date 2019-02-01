@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe Report do
+  let(:c0) { Fabricate(:category, skip_category_definition: true) }  # id: 3
+  let(:c1) { Fabricate(:category, parent_category: c0, skip_category_definition: true) }  # id: 2
+  let(:c2) { Fabricate(:category, skip_category_definition: true) }  # id: 4
+
   shared_examples 'no data' do
     context "with no data" do
       it 'returns an empty report' do
@@ -16,13 +20,6 @@ describe Report do
   end
 
   shared_examples 'category filtering on subcategories' do
-    before do
-      c = Fabricate(:category, id: 3)
-      c.topic.destroy
-      c = Fabricate(:category, id: 2, parent_category_id: 3)
-      c.topic.destroy
-      # destroy the category description topics so the count is right, on filtered data
-    end
 
     it 'returns the filtered data' do
       expect(report.total).to eq(1)
@@ -753,7 +750,7 @@ describe Report do
       before(:each) do
         user = Fabricate(:user)
         post0 = Fabricate(:post)
-        post1 = Fabricate(:post, topic: Fabricate(:topic, category_id: 2))
+        post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1))
         post2 = Fabricate(:post)
         post3 = Fabricate(:post)
         PostAction.act(user, post0, PostActionType.types[:off_topic])
@@ -765,12 +762,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('flags', category_id: 2) }
+        let(:report) { Report.find('flags', category_id: c1.id) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('flags', category_id: 3) }
+          let(:report) { Report.find('flags', category_id: c0.id) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -788,18 +785,18 @@ describe Report do
 
       before(:each) do
         Fabricate(:topic)
-        Fabricate(:topic, category_id: 2)
+        Fabricate(:topic, category: c1)
         Fabricate(:topic)
         Fabricate(:topic, created_at: 45.days.ago)
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics', category_id: 2) }
+        let(:report) { Report.find('topics', category_id: c1.id) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics', category_id: 3) }
+          let(:report) { Report.find('topics', category_id: c0.id) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -876,7 +873,7 @@ describe Report do
 
       before(:each) do
         topic = Fabricate(:topic)
-        topic_with_category_id = Fabricate(:topic, category_id: 2)
+        topic_with_category_id = Fabricate(:topic, category: c1)
         Fabricate(:post, topic: topic)
         Fabricate(:post, topic: topic_with_category_id)
         Fabricate(:post, topic: topic)
@@ -884,12 +881,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('posts', category_id: 2) }
+        let(:report) { Report.find('posts', category_id: c1.id) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('posts', category_id: 3) }
+          let(:report) { Report.find('posts', category_id: c0.id) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -908,19 +905,19 @@ describe Report do
       include_examples 'with data x/y'
 
       before(:each) do
-        Fabricate(:topic, category_id: 2)
+        Fabricate(:topic, category: c1)
         Fabricate(:post, topic: Fabricate(:topic))
         Fabricate(:topic)
         Fabricate(:topic, created_at: 45.days.ago)
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics_with_no_response', category_id: 2) }
+        let(:report) { Report.find('topics_with_no_response', category_id: c1.id) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics_with_no_response', category_id: 3) }
+          let(:report) { Report.find('topics_with_no_response', category_id: c0.id) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -937,11 +934,11 @@ describe Report do
       include_examples 'with data x/y'
 
       before(:each) do
-        topic = Fabricate(:topic, category_id: 2)
+        topic = Fabricate(:topic, category: c1)
         post = Fabricate(:post, topic: topic)
         PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
 
-        topic = Fabricate(:topic, category_id: 4)
+        topic = Fabricate(:topic, category: c2)
         post = Fabricate(:post, topic: topic)
         PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
         PostAction.act(Fabricate(:user), post, PostActionType.types[:like])
@@ -951,12 +948,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('likes', category_id: 2) }
+        let(:report) { Report.find('likes', category_id: c1.id) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('likes', category_id: 3) }
+          let(:report) { Report.find('likes', category_id: c0.id) }
 
           include_examples 'category filtering on subcategories'
         end
